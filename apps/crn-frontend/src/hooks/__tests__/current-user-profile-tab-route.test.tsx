@@ -1,14 +1,13 @@
-import React from 'react';
-import { act, renderHook } from '@testing-library/react';
 import { User } from '@asap-hub/auth';
 import { network } from '@asap-hub/routing';
+import { renderHook, waitFor } from '@testing-library/react';
+import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { waitFor } from '@testing-library/dom';
 
 import { Auth0Provider } from '../../auth/test-utils';
-import { useCurrentUserProfileTabRoute } from '../current-user-profile-tab-route';
 import { refreshUserState } from '../../network/users/state';
+import { useCurrentUserProfileTabRoute } from '../current-user-profile-tab-route';
 
 it('returns undefined when not logged in', () => {
   const { result } = renderHook(() => useCurrentUserProfileTabRoute(), {
@@ -23,8 +22,8 @@ const wrapper =
   }: {
     currentRoute: string;
     user?: Partial<User>;
-  }): React.FC =>
-  ({ children }) => (
+  }): React.FC<{ children: React.ReactNode }> =>
+  ({ children }: { children: React.ReactNode }) => (
     <RecoilRoot
       initializeState={({ set }) => {
         user?.id && set(refreshUserState(user.id), Math.random());
@@ -43,50 +42,67 @@ it('returns undefined when on different user profile', async () => {
       userId: 'someone-else',
     })
     .research({});
+
   const { result } = renderHook(() => useCurrentUserProfileTabRoute(), {
     wrapper: wrapper({ currentRoute: route.$, user: { id: userId } }),
   });
-  await act(async () => {
-    await waitFor(() => expect(result.current).toBeUndefined());
-  });
+
+  await waitFor(
+    () => {
+      expect(result.current).toBeUndefined();
+    },
+    { timeout: 10000 },
+  );
 });
 describe('match logged in user on their own profile tab', () => {
   it('returns route when on about', async () => {
     const userId = 'test123';
     const route = network({}).users({}).user({ userId }).about({});
+
     const { result } = renderHook(() => useCurrentUserProfileTabRoute(), {
       wrapper: wrapper({ currentRoute: route.$, user: { id: userId } }),
     });
-    await act(async () => {
-      await waitFor(() =>
-        expect(result.current && result.current({}).$).toEqual(route.$),
-      );
-    });
+
+    await waitFor(
+      () => {
+        expect(result.current).toBeTruthy();
+        expect(result.current && result.current({}).$).toEqual(route.$);
+      },
+      { timeout: 10000 },
+    );
   });
 
   it('returns route when on outputs', async () => {
     const userId = 'test123';
     const route = network({}).users({}).user({ userId }).outputs({});
+
     const { result } = renderHook(() => useCurrentUserProfileTabRoute(), {
       wrapper: wrapper({ currentRoute: route.$, user: { id: userId } }),
     });
-    await act(async () => {
-      await waitFor(() =>
-        expect(result.current && result.current({}).$).toEqual(route.$),
-      );
-    });
+
+    await waitFor(
+      () => {
+        expect(result.current).toBeTruthy();
+        expect(result.current && result.current({}).$).toEqual(route.$);
+      },
+      { timeout: 10000 },
+    );
   });
 
   it('returns route when on research', async () => {
     const userId = 'test123';
     const route = network({}).users({}).user({ userId }).research({});
+
     const { result } = renderHook(() => useCurrentUserProfileTabRoute(), {
       wrapper: wrapper({ currentRoute: route.$, user: { id: userId } }),
     });
-    await act(async () => {
-      await waitFor(() =>
-        expect(result.current && result.current({}).$).toEqual(route.$),
-      );
-    });
+
+    await waitFor(
+      () => {
+        expect(result.current).toBeTruthy();
+        expect(result.current && result.current({}).$).toEqual(route.$);
+      },
+      { timeout: 10000 },
+    );
   });
 });

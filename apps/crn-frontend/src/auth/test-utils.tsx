@@ -102,18 +102,22 @@ export const Auth0Provider: React.FC<{
   const [auth0, setAuth0] = useRecoilState(auth0State);
   const resetAuth0 = useRecoilRefresher(auth0State);
   useEffect(() => {
+    let cancelled = false;
     const initAuth0 = async () => {
       const auth0Client = await createAuth0Client({
         domain: 'auth.example.com',
         client_id: 'client_id',
         redirect_uri: 'http://localhost',
       });
-      setAuth0(createAuth0(auth0Client, user, auth0Overrides));
+      if (!cancelled) {
+        setAuth0(createAuth0(auth0Client, user, auth0Overrides));
+      }
     };
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     initAuth0();
 
     return () => {
+      cancelled = true;
       resetAuth0();
     };
   }, [user, setAuth0, resetAuth0, auth0Overrides]);

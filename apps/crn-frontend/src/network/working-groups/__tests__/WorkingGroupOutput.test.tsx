@@ -50,11 +50,18 @@ const LocationCapture = () => {
   return null;
 };
 
+let consoleErrorSpy: jest.SpyInstance;
+
 beforeEach(() => {
   currentLocation = null;
   window.scrollTo = jest.fn();
   // TODO: fix act error
-  jest.spyOn(console, 'error').mockImplementation();
+  consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+});
+
+afterEach(() => {
+  consoleErrorSpy.mockRestore();
+  jest.clearAllTimers();
 });
 
 const mockCreateResearchOutput = createResearchOutput as jest.MockedFunction<
@@ -131,27 +138,36 @@ const mandatoryFields = async (
       const button = screen.getByRole('button', { name: /Publish/i });
       await user.click(button);
       await user.click(screen.getByRole('button', { name: /Publish Output/i }));
-      await waitFor(() => {
-        expect(button).toBeEnabled();
-      });
+      await waitFor(
+        () => {
+          expect(button).toBeEnabled();
+        },
+        { interval: 50 },
+      );
     },
     saveDraft: async () => {
       const saveDraftButton = screen.getByRole('button', {
         name: /Save Draft/i,
       });
       await user.click(saveDraftButton);
-      await waitFor(() => {
-        expect(saveDraftButton).toBeEnabled();
-      });
+      await waitFor(
+        () => {
+          expect(saveDraftButton).toBeEnabled();
+        },
+        { interval: 50 },
+      );
     },
     updatePublished: async () => {
       const updatePublishedButton = screen.getByRole('button', {
         name: /Save/i,
       });
       await user.click(updatePublishedButton);
-      await waitFor(() => {
-        expect(updatePublishedButton).toBeEnabled();
-      });
+      await waitFor(
+        () => {
+          expect(updatePublishedButton).toBeEnabled();
+        },
+        { interval: 50 },
+      );
     },
   };
 };
@@ -280,6 +296,13 @@ it('shows the sorry not found page when the working group does not exist', async
   expect(screen.getByText(/sorry.+page/i)).toBeVisible();
 });
 it('can submit a form when form data is valid', async () => {
+  // Override default mock for this test
+  mockCreateResearchOutput.mockResolvedValue({
+    ...createResearchOutputResponse(),
+    id: 'research-output-id',
+    published: true,
+  });
+
   const user = userEvent.setup();
   const workingGroupId = 'wg1';
   const link = 'https://example42.com';
@@ -356,11 +379,14 @@ it('can submit a form when form data is valid', async () => {
     },
     expect.anything(),
   );
-  await waitFor(() => {
-    expect(currentLocation?.pathname).toBe(
-      '/shared-research/research-output-id/publishedNow',
-    );
-  });
+  await waitFor(
+    () => {
+      expect(currentLocation?.pathname).toBe(
+        '/shared-research/research-output-id/publishedNow',
+      );
+    },
+    { interval: 50 },
+  );
 });
 
 it('can save draft when form data is valid', async () => {
@@ -440,11 +466,14 @@ it('can save draft when form data is valid', async () => {
     },
     expect.anything(),
   );
-  await waitFor(() => {
-    expect(currentLocation?.pathname).toBe(
-      '/shared-research/research-output-id',
-    );
-  });
+  await waitFor(
+    () => {
+      expect(currentLocation?.pathname).toBe(
+        '/shared-research/research-output-id',
+      );
+    },
+    { interval: 50 },
+  );
 });
 
 it('can publish a new version for an output', async () => {
@@ -482,22 +511,25 @@ it('can publish a new version for an output', async () => {
   const button = screen.getByRole('button', { name: /Publish new version/i });
   await user.click(button);
 
-  await waitFor(() => {
-    expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
-      baseResearchOutput.id,
-      expect.objectContaining({
-        changelog,
-        relatedManuscriptVersion: undefined,
-        descriptionMD,
-        doi,
-        link,
-        createVersion: true,
-        type: 'Preprint',
-        documentType: 'Article',
-      }),
-      expect.anything(),
-    );
-  });
+  await waitFor(
+    () => {
+      expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
+        baseResearchOutput.id,
+        expect.objectContaining({
+          changelog,
+          relatedManuscriptVersion: undefined,
+          descriptionMD,
+          doi,
+          link,
+          createVersion: true,
+          type: 'Preprint',
+          documentType: 'Article',
+        }),
+        expect.anything(),
+      );
+    },
+    { interval: 50 },
+  );
 });
 
 it('will show server side validation error for link', async () => {
@@ -624,14 +656,17 @@ it.each([
     if (buttonName === 'Publish') {
       await user.click(screen.getByRole('button', { name: /Publish Output/i }));
     }
-    await waitFor(() => {
-      expect(button).toBeEnabled();
-      expect(currentLocation?.pathname).toBe(
-        buttonName === 'Publish'
-          ? '/shared-research/research-output-id/publishedNow'
-          : '/shared-research/research-output-id',
-      );
-    });
+    await waitFor(
+      () => {
+        expect(button).toBeEnabled();
+        expect(currentLocation?.pathname).toBe(
+          buttonName === 'Publish'
+            ? '/shared-research/research-output-id/publishedNow'
+            : '/shared-research/research-output-id',
+        );
+      },
+      { interval: 50 },
+    );
 
     expect(mockUpdateResearchOutput).toHaveBeenCalledWith(
       id,

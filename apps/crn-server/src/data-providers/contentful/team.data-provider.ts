@@ -641,7 +641,7 @@ export const parseContentfulGraphQlTeam = (
     projectTitle: linkedProject?.title ?? '',
     linkedProjectId: linkedProject?.sys.id ?? '',
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
-    tags: item.researchTags || [],
+    tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
     tools,
     supplementGrant: getSupplementGrant(),
     ...parseManuscripts(),

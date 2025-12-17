@@ -23,6 +23,7 @@ const containerStyles = css({
     gridTemplateColumns: '1fr 1fr',
     columnGap: rem(32),
   },
+  color: 'rgb(77, 100, 107)'
 });
 
 const itemStyles = css({

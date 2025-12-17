@@ -45,10 +45,10 @@ export const getCookiePreferencesHandlerFactory =
       },
     });
 
-    let Item;
+    let item;
     try {
       const result = await client.send(command);
-      Item = result.Item;
+      item = result.Item;
     } catch (error) {
       // Extract error message from various error types (Error, AWS SDK errors, etc.)
       let errorMessage = 'Unknown error';
@@ -79,17 +79,17 @@ export const getCookiePreferencesHandlerFactory =
     }
 
     if (
-      !Item ||
+      !item ||
       !(
-        Item.preferences?.M?.analytics?.BOOL !== undefined &&
-        typeof Item.preferences.M.analytics.BOOL === 'boolean'
+        item.preferences?.M?.analytics?.BOOL !== undefined &&
+        typeof item.preferences.M.analytics.BOOL === 'boolean'
       ) ||
       !(
-        Item.preferences?.M?.essential?.BOOL !== undefined &&
-        typeof Item.preferences.M.essential.BOOL === 'boolean'
+        item.preferences?.M?.essential?.BOOL !== undefined &&
+        typeof item.preferences.M.essential.BOOL === 'boolean'
       ) ||
-      !Item.cookieId?.S ||
-      !Item.createdAt?.S
+      !item.cookieId?.S ||
+      !item.createdAt?.S
     ) {
       // Cookie not found - return 404 response
       // Frontend will handle this gracefully and use locally stored values
@@ -106,16 +106,16 @@ export const getCookiePreferencesHandlerFactory =
       };
     }
 
-    logger.info(`${JSON.stringify(Item)}`);
+    logger.info(`${JSON.stringify(item)}`);
 
     return {
       statusCode: 200,
       payload: {
-        createdAt: Item.createdAt.S,
-        cookieId: Item.cookieId.S,
+        createdAt: item.createdAt.S,
+        cookieId: item.cookieId.S,
         preferences: {
-          analytics: Item.preferences.M?.analytics?.BOOL,
-          essential: Item.preferences.M?.essential?.BOOL,
+          analytics: item.preferences.M?.analytics?.BOOL,
+          essential: item.preferences.M?.essential?.BOOL,
         },
       },
     };

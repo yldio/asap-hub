@@ -9,7 +9,7 @@ interface ResourceProjectIconProps {
 const ResourceProjectIcon: React.FC<ResourceProjectIconProps> = ({
   width = 24,
   height = 24,
-  color = '#00202C',
+  color = '#4D646B',
 }) => (
   <svg
     width={width}
@@ -18,6 +18,7 @@ const ResourceProjectIcon: React.FC<ResourceProjectIconProps> = ({
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Resource Project</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

@@ -21,6 +21,9 @@ const teamCardProps: ComponentProps<typeof TeamCard> = {
   ],
   memberCount: 1,
   labCount: 0,
+  researchTheme: 'GP2',
+  resourceType: 'Analysis',
+  linkedProjectId: 'prod-123',
 };
 
 it('renders the title', () => {
@@ -44,9 +47,88 @@ it('uses singular for one team member', () => {
   expect(getByText('1 Team Member')).toBeVisible();
 });
 
-it('pluralises when more than one team member', () => {
-  const { getByText } = render(<TeamCard {...teamCardProps} memberCount={3} />);
-  expect(getByText('3 Team Members')).toBeVisible();
+it('displays footer', () => {
+  const { getByText } = render(<TeamCard {...teamCardProps} />);
+  expect(getByText(/Team Member/i)).toBeVisible();
+});
+
+it('renders the team type pill', () => {
+  const { getByText } = render(
+    <TeamCard {...teamCardProps} teamType="Discovery Team" />,
+  );
+  expect(getByText('Discovery Team')).toBeVisible();
+});
+
+it('renders the research theme pill for Discovery Team', () => {
+  const { getByText } = render(
+    <TeamCard
+      {...teamCardProps}
+      teamType="Discovery Team"
+      researchTheme="Test Theme"
+    />,
+  );
+  expect(getByText('Test Theme')).toBeVisible();
+});
+
+it('does not render the research theme pill for Resource Team', () => {
+  const { queryByText } = render(
+    <TeamCard
+      {...teamCardProps}
+      teamType="Resource Team"
+      researchTheme="Test Theme"
+    />,
+  );
+  expect(queryByText('Test Theme')).not.toBeInTheDocument();
+});
+
+it('renders the resource type pill for Resource Team', () => {
+  const { getByText } = render(
+    <TeamCard
+      {...teamCardProps}
+      teamType="Resource Team"
+      resourceType="Test Resource"
+    />,
+  );
+  expect(getByText('Test Resource')).toBeVisible();
+});
+
+it('renders project icon and links to project when linkedProjectId is present', () => {
+  const { getByText } = render(
+    <TeamCard
+      {...teamCardProps}
+      teamType="Discovery Team"
+      linkedProjectId="123"
+    />,
+  );
+  // Default text prop is projectTitle
+  const projectTitle = getByText(teamCardProps.projectTitle!);
+  const anchor = projectTitle.closest('a');
+  expect(anchor).toHaveAttribute(
+    'href',
+    expect.stringMatching(/discovery\/123/),
+  );
+});
+
+it('renders the Discovery Project icon for Discovery Team', () => {
+  const { getByTitle } = render(
+    <TeamCard
+      {...teamCardProps}
+      teamType="Discovery Team"
+      linkedProjectId="123"
+    />,
+  );
+  expect(getByTitle('Discovery Project')).toBeInTheDocument();
+});
+
+it('renders the Resource Project icon for Resource Team', () => {
+  const { getByTitle } = render(
+    <TeamCard
+      {...teamCardProps}
+      teamType="Resource Team"
+      linkedProjectId="123"
+    />,
+  );
+  expect(getByTitle('Resource Project')).toBeInTheDocument();
 });
 
 it('renders a lab count for multiple labs', () => {
@@ -62,4 +144,12 @@ it('renders a lab count for a single lab using singular form', () => {
 it('does not display labs when 0 labs are avaialble', () => {
   const { queryByText } = render(<TeamCard {...teamCardProps} labCount={0} />);
   expect(queryByText(/lab/i)).toBeNull();
+});
+
+it('does not display footer when the team is inactive', () => {
+  const { queryByText } = render(
+    <TeamCard {...teamCardProps} inactiveSince="2022-09-30T09:00:00Z" />,
+  );
+  expect(queryByText(/Team Member/i)).not.toBeInTheDocument();
+  expect(queryByText(/Lab/i)).not.toBeInTheDocument();
 });

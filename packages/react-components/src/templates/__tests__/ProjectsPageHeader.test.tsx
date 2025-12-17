@@ -201,13 +201,13 @@ describe('Tab Icons Default Colors', () => {
   it('renders DiscoveryProjectIcon with default color', () => {
     const { container } = render(<DiscoveryProjectIcon />);
     const paths = container.querySelectorAll('path');
-    expect(paths[0]).toHaveAttribute('fill', '#00202C');
+    expect(paths[0]).toHaveAttribute('fill', '#4D646B');
   });
 
   it('renders ResourceProjectIcon with default color', () => {
     const { container } = render(<ResourceProjectIcon />);
     const paths = container.querySelectorAll('path');
-    expect(paths[0]).toHaveAttribute('fill', '#00202C');
+    expect(paths[0]).toHaveAttribute('fill', '#4D646B');
   });
 
   it('renders TraineeProjectIcon with default color', () => {

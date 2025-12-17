@@ -3,6 +3,7 @@ import { GenericError, NotFoundError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import {
   fetchOrcidProfile,
+  isValidOrcidFormat,
   isValidOrcidResponse,
   parseUserDisplayName,
   transformOrcidWorks,
@@ -124,14 +125,6 @@ export default class UserController {
     logger.debug(orcid, 'ORCID');
 
     // Validate ORCID format before attempting to fetch
-    // ORCID format: 0000-0000-0000-0000 (16 digits in 4 groups separated by hyphens)
-    const isValidOrcidFormat = (orcidValue: string | undefined): boolean => {
-      if (!orcidValue || orcidValue === '-') {
-        return false;
-      }
-      return /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(orcidValue);
-    };
-
     if (!isValidOrcidFormat(orcid)) {
       logger.warn(
         { userId: id, orcid },

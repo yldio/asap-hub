@@ -15,6 +15,7 @@ import {
 } from '@asap-hub/model';
 import {
   fetchOrcidProfile,
+  isValidOrcidFormat,
   isValidOrcidResponse,
   parseUserDisplayName,
   transformOrcidWorks,
@@ -232,14 +233,6 @@ export default class UserController {
     const user = cachedUser || (fetchedUser as UserResponse);
 
     // Validate ORCID format before attempting to fetch
-    // ORCID format: 0000-0000-0000-0000 (16 digits in 4 groups separated by hyphens)
-    const isValidOrcidFormat = (orcid: string | undefined): boolean => {
-      if (!orcid || orcid === '-') {
-        return false;
-      }
-      return /^\d{4}-\d{4}-\d{4}-\d{4}$/.test(orcid);
-    };
-
     if (!isValidOrcidFormat(user?.orcid)) {
       logger.warn(
         { userId: user.id, orcid: user?.orcid },

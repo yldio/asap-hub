@@ -99,6 +99,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
       role: 'Collaborating PI',
     },
   ],
+  labs: [],
 });
 
 export const Normal = () => {

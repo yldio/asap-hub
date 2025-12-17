@@ -12,8 +12,9 @@ type PayloadType<T> = T extends SavePayload ? T['type'] : never;
 
 const isEventResponse = (data: SavePayload['data']): data is EventResponse =>
   (data as EventResponse).hidden !== undefined;
-export const eventFilter = <T extends SavePayload['data']>(event: T): event is T & EventResponse =>
-  isEventResponse(event) && !event.hidden;
+export const eventFilter = <T extends SavePayload['data']>(
+  event: T,
+): event is T & EventResponse => isEventResponse(event) && !event.hidden;
 
 const isUserResponse = (data: SavePayload['data']): data is UserResponse =>
   (data as UserResponse).onboarded !== undefined;

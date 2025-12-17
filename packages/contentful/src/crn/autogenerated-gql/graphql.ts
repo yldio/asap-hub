@@ -24938,7 +24938,7 @@ export type FetchPagesQuery = {
   >;
 };
 
-export type ProjectsContentDataFragment = Pick<
+export type ProjectsContentFieldsFragment = Pick<
   Projects,
   | 'title'
   | 'projectId'
@@ -25248,6 +25248,7 @@ export type FetchProjectsByTeamIdQuery = {
                           Sys,
                           'id' | 'firstPublishedAt' | 'publishedAt'
                         >;
+                        proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                         supplementGrant?: Maybe<
                           Pick<
                             SupplementGrant,
@@ -25296,7 +25297,9 @@ export type FetchProjectsByTeamIdQuery = {
                                   projectMember?: Maybe<
                                     | ({ __typename: 'Teams' } & Pick<
                                         Teams,
-                                        'displayName' | 'inactiveSince'
+                                        | 'displayName'
+                                        | 'inactiveSince'
+                                        | 'teamDescription'
                                       > & {
                                           sys: Pick<Sys, 'id'>;
                                           researchTheme?: Maybe<
@@ -25368,6 +25371,7 @@ export type FetchProjectsByUserIdQuery = {
                           Sys,
                           'id' | 'firstPublishedAt' | 'publishedAt'
                         >;
+                        proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                         supplementGrant?: Maybe<
                           Pick<
                             SupplementGrant,
@@ -25416,7 +25420,9 @@ export type FetchProjectsByUserIdQuery = {
                                   projectMember?: Maybe<
                                     | ({ __typename: 'Teams' } & Pick<
                                         Teams,
-                                        'displayName' | 'inactiveSince'
+                                        | 'displayName'
+                                        | 'inactiveSince'
+                                        | 'teamDescription'
                                       > & {
                                           sys: Pick<Sys, 'id'>;
                                           researchTheme?: Maybe<
@@ -25482,6 +25488,7 @@ export type FetchProjectsByMembershipIdQuery = {
                 | 'googleDriveLink'
               > & {
                 sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
+                proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                 supplementGrant?: Maybe<
                   Pick<
                     SupplementGrant,
@@ -25526,7 +25533,9 @@ export type FetchProjectsByMembershipIdQuery = {
                           projectMember?: Maybe<
                             | ({ __typename: 'Teams' } & Pick<
                                 Teams,
-                                'displayName' | 'inactiveSince'
+                                | 'displayName'
+                                | 'inactiveSince'
+                                | 'teamDescription'
                               > & {
                                   sys: Pick<Sys, 'id'>;
                                   researchTheme?: Maybe<
@@ -34406,12 +34415,12 @@ export const PageContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PageContentFragment, unknown>;
-export const ProjectsContentDataFragmentDoc = {
+export const ProjectsContentFieldsFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ProjectsContentData' },
+      name: { kind: 'Name', value: 'ProjectsContentFields' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Projects' },
@@ -34814,7 +34823,7 @@ export const ProjectsContentDataFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<ProjectsContentDataFragment, unknown>;
+} as unknown as DocumentNode<ProjectsContentFieldsFragment, unknown>;
 export const ManuscriptsCollectionContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -48470,7 +48479,7 @@ export const FetchProjectsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'ProjectsContentData' },
+                        name: { kind: 'Name', value: 'ProjectsContentFields' },
                       },
                     ],
                   },
@@ -48481,7 +48490,7 @@ export const FetchProjectsDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsContentFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchProjectsQuery, FetchProjectsQueryVariables>;
 export const FetchProjectByIdDocument = {
@@ -48525,7 +48534,7 @@ export const FetchProjectByIdDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'ProjectsContentData' },
+                  name: { kind: 'Name', value: 'ProjectsContentFields' },
                 },
               ],
             },
@@ -48533,7 +48542,7 @@ export const FetchProjectByIdDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsContentFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchProjectByIdQuery,
@@ -48666,7 +48675,7 @@ export const FetchProjectsByTeamIdDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value:
-                                                          'ProjectsContentData',
+                                                          'ProjectsContentFields',
                                                       },
                                                     },
                                                   ],
@@ -48693,7 +48702,7 @@ export const FetchProjectsByTeamIdDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsContentFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchProjectsByTeamIdQuery,
@@ -48826,7 +48835,7 @@ export const FetchProjectsByUserIdDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value:
-                                                          'ProjectsContentData',
+                                                          'ProjectsContentFields',
                                                       },
                                                     },
                                                   ],
@@ -48853,7 +48862,7 @@ export const FetchProjectsByUserIdDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsContentFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchProjectsByUserIdQuery,
@@ -48955,7 +48964,7 @@ export const FetchProjectsByMembershipIdDocument = {
                                     kind: 'FragmentSpread',
                                     name: {
                                       kind: 'Name',
-                                      value: 'ProjectsContentData',
+                                      value: 'ProjectsContentFields',
                                     },
                                   },
                                 ],
@@ -48973,7 +48982,7 @@ export const FetchProjectsByMembershipIdDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsContentFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchProjectsByMembershipIdQuery,

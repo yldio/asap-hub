@@ -50,16 +50,19 @@ export type Announcements = Entry &
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
 export type AnnouncementsDeadlineArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
 export type AnnouncementsDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
 export type AnnouncementsLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements) */
@@ -117,6 +120,7 @@ export type AnnouncementsLinkingCollectionsDashboardCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type AnnouncementsLinkingCollectionsEntryCollectionArgs = {
@@ -124,6 +128,7 @@ export type AnnouncementsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum AnnouncementsLinkingCollectionsDashboardCollectionOrder {
@@ -172,21 +177,25 @@ export type Asset = {
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetContentTypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetFileNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetHeightArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Represents a binary file in a space. An asset can be any file type. */
@@ -197,22 +206,26 @@ export type AssetLinkedFromArgs = {
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetSizeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetUrlArgs = {
   locale?: InputMaybe<Scalars['String']>;
   transform?: InputMaybe<ImageTransformOptions>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** Represents a binary file in a space. An asset can be any file type. */
 export type AssetWidthArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type AssetCollection = {
@@ -304,6 +317,7 @@ export type AssetLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type AssetLinkingCollectionsEventsCollectionArgs = {
@@ -311,6 +325,7 @@ export type AssetLinkingCollectionsEventsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type AssetLinkingCollectionsGuideCollectionArgs = {
@@ -318,6 +333,7 @@ export type AssetLinkingCollectionsGuideCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type AssetLinkingCollectionsNewsCollectionArgs = {
@@ -325,6 +341,7 @@ export type AssetLinkingCollectionsNewsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type AssetLinkingCollectionsUsersCollectionArgs = {
@@ -332,6 +349,7 @@ export type AssetLinkingCollectionsUsersCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum AssetOrder {
@@ -373,16 +391,19 @@ export type Calendars = Entry &
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
 export type CalendarsColorArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
 export type CalendarsGoogleApiMetadataArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
 export type CalendarsGoogleCalendarIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
@@ -393,6 +414,7 @@ export type CalendarsLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars) */
 export type CalendarsNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CalendarsCollection = {
@@ -443,6 +465,7 @@ export type CalendarsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CalendarsLinkingCollectionsEventsCollectionArgs = {
@@ -453,6 +476,7 @@ export type CalendarsLinkingCollectionsEventsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CalendarsLinkingCollectionsProjectsCollectionArgs = {
@@ -463,6 +487,7 @@ export type CalendarsLinkingCollectionsProjectsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CalendarsLinkingCollectionsWorkingGroupsCollectionArgs = {
@@ -473,6 +498,7 @@ export type CalendarsLinkingCollectionsWorkingGroupsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum CalendarsLinkingCollectionsEventsCollectionOrder {
@@ -656,11 +682,13 @@ export type ContributingCohortsLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts) */
 export type ContributingCohortsNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohorts) */
 export type ContributingCohortsStudyLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ContributingCohortsCollection = {
@@ -708,6 +736,7 @@ export type ContributingCohortsLinkingCollectionsContributingCohortsMembershipCo
     >;
     preview?: InputMaybe<Scalars['Boolean']>;
     skip?: InputMaybe<Scalars['Int']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
 export type ContributingCohortsLinkingCollectionsEntryCollectionArgs = {
@@ -715,6 +744,7 @@ export type ContributingCohortsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ContributingCohortsLinkingCollectionsOutputsCollectionArgs = {
@@ -727,6 +757,7 @@ export type ContributingCohortsLinkingCollectionsOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder {
@@ -796,6 +827,7 @@ export type ContributingCohortsMembership = Entry &
 export type ContributingCohortsMembershipContributingCohortArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ContributingCohortsFilter>;
 };
 
@@ -807,6 +839,7 @@ export type ContributingCohortsMembershipLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/contributingCohortsMembership) */
 export type ContributingCohortsMembershipRoleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ContributingCohortsMembershipCollection = {
@@ -843,6 +876,7 @@ export type ContributingCohortsMembershipLinkingCollectionsEntryCollectionArgs =
     locale?: InputMaybe<Scalars['String']>;
     preview?: InputMaybe<Scalars['Boolean']>;
     skip?: InputMaybe<Scalars['Int']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
 export type ContributingCohortsMembershipLinkingCollectionsUsersCollectionArgs =
@@ -856,6 +890,7 @@ export type ContributingCohortsMembershipLinkingCollectionsUsersCollectionArgs =
     >;
     preview?: InputMaybe<Scalars['Boolean']>;
     skip?: InputMaybe<Scalars['Int']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
 export enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
@@ -974,6 +1009,7 @@ export type DashboardAnnouncementsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<DashboardAnnouncementsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AnnouncementsFilter>;
 };
 
@@ -984,6 +1020,7 @@ export type DashboardGuidesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<DashboardGuidesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<GuideFilter>;
 };
 
@@ -991,6 +1028,7 @@ export type DashboardGuidesCollectionArgs = {
 export type DashboardLatestStatsArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<LatestStatsFilter>;
 };
 
@@ -1072,6 +1110,7 @@ export type DashboardLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum DashboardOrder {
@@ -1134,12 +1173,14 @@ export type EventSpeakersLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers) */
 export type EventSpeakersTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/eventSpeakers) */
 export type EventSpeakersUserArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<EventSpeakersUserFilter>;
 };
 
@@ -1176,6 +1217,7 @@ export type EventSpeakersLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type EventSpeakersLinkingCollectionsEventsCollectionArgs = {
@@ -1186,6 +1228,7 @@ export type EventSpeakersLinkingCollectionsEventsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
@@ -1307,47 +1350,56 @@ export type Events = Entry &
 export type EventsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<CalendarsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsCopyMeetingLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsEndDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsEndDateTimeZoneArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsEventLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsGoogleIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsHiddenArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsHideMeetingLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
@@ -1358,46 +1410,55 @@ export type EventsLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsMeetingLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsMeetingMaterialsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsMeetingMaterialsPermanentlyUnavailableArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsNotesArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsNotesPermanentlyUnavailableArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsNotesUpdatedAtArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsPresentationArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsPresentationPermanentlyUnavailableArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsPresentationUpdatedAtArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
@@ -1407,22 +1468,26 @@ export type EventsSpeakersCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<EventsSpeakersCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<EventSpeakersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsStartDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsStartDateTimeZoneArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
@@ -1432,6 +1497,7 @@ export type EventsTagsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<EventsTagsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TagsFilter>;
 };
 
@@ -1439,26 +1505,31 @@ export type EventsTagsCollectionArgs = {
 export type EventsThumbnailArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsVideoRecordingArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsVideoRecordingPermanentlyUnavailableArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events) */
 export type EventsVideoRecordingUpdatedAtArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type EventsCollection = {
@@ -1632,6 +1703,7 @@ export type EventsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type EventsLinkingCollectionsOutputsCollectionArgs = {
@@ -1642,6 +1714,7 @@ export type EventsLinkingCollectionsOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum EventsLinkingCollectionsOutputsCollectionOrder {
@@ -1911,11 +1984,13 @@ export type ExternalUsersLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
 export type ExternalUsersNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/externalUsers) */
 export type ExternalUsersOrcidArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ExternalUsersCollection = {
@@ -1957,6 +2032,7 @@ export type ExternalUsersLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ExternalUsersLinkingCollectionsEventSpeakersCollectionArgs = {
@@ -1969,6 +2045,7 @@ export type ExternalUsersLinkingCollectionsEventSpeakersCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ExternalUsersLinkingCollectionsOutputsCollectionArgs = {
@@ -1979,6 +2056,7 @@ export type ExternalUsersLinkingCollectionsOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder {
@@ -2048,7 +2126,7 @@ export enum ExternalUsersOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type Guide = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -2060,30 +2138,33 @@ export type Guide = Entry &
     title?: Maybe<Scalars['String']>;
   };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type GuideDescriptionCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<Array<InputMaybe<GuideDescriptionCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<GuideDescriptionFilter>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type GuideIconArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type GuideLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
+/** Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide) */
 export type GuideTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type GuideCollection = {
@@ -2109,16 +2190,19 @@ export type GuideDescription = Entry &
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
 export type GuideDescriptionBodyTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
 export type GuideDescriptionLinkTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
 export type GuideDescriptionLinkUrlArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
@@ -2129,6 +2213,7 @@ export type GuideDescriptionLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription) */
 export type GuideDescriptionTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type GuideDescriptionCollection = {
@@ -2200,6 +2285,7 @@ export type GuideDescriptionLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type GuideDescriptionLinkingCollectionsGuideCollectionArgs = {
@@ -2210,6 +2296,7 @@ export type GuideDescriptionLinkingCollectionsGuideCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum GuideDescriptionLinkingCollectionsGuideCollectionOrder {
@@ -2272,6 +2359,7 @@ export type GuideLinkingCollectionsDashboardCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type GuideLinkingCollectionsEntryCollectionArgs = {
@@ -2279,6 +2367,7 @@ export type GuideLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum GuideLinkingCollectionsDashboardCollectionOrder {
@@ -2416,11 +2505,13 @@ export type LatestStats = Entry &
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats) */
 export type LatestStatsArticleCountArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats) */
 export type LatestStatsCohortCountArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats) */
@@ -2431,6 +2522,7 @@ export type LatestStatsLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats) */
 export type LatestStatsSampleCountArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type LatestStatsCollection = {
@@ -2487,6 +2579,7 @@ export type LatestStatsLinkingCollectionsDashboardCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type LatestStatsLinkingCollectionsEntryCollectionArgs = {
@@ -2494,6 +2587,7 @@ export type LatestStatsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum LatestStatsLinkingCollectionsDashboardCollectionOrder {
@@ -2524,7 +2618,7 @@ export enum LatestStatsOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
+/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
 export type Media = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -2534,14 +2628,15 @@ export type Media = Entry &
     url?: Maybe<Scalars['String']>;
   };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
+/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
 export type MediaLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
+/** Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media) */
 export type MediaUrlArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MediaCollection = {
@@ -2574,6 +2669,7 @@ export type MediaLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum MediaOrder {
@@ -2589,7 +2685,7 @@ export enum MediaOrder {
   UrlDesc = 'url_DESC',
 }
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
 export type Migration = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -2600,19 +2696,21 @@ export type Migration = Entry &
     sys: Sys;
   };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
 export type MigrationContentTypeIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
 export type MigrationLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
+/** Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration) */
 export type MigrationStateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MigrationCollection = {
@@ -2646,6 +2744,7 @@ export type MigrationLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum MigrationOrder {
@@ -2677,11 +2776,13 @@ export type Milestones = Entry &
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
 export type MilestonesDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
 export type MilestonesExternalLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
@@ -2692,11 +2793,13 @@ export type MilestonesLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
 export type MilestonesStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/milestones) */
 export type MilestonesTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MilestonesCollection = {
@@ -2752,6 +2855,7 @@ export type MilestonesLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MilestonesLinkingCollectionsProjectsCollectionArgs = {
@@ -2762,6 +2866,7 @@ export type MilestonesLinkingCollectionsProjectsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MilestonesLinkingCollectionsWorkingGroupsCollectionArgs = {
@@ -2772,6 +2877,7 @@ export type MilestonesLinkingCollectionsWorkingGroupsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum MilestonesLinkingCollectionsProjectsCollectionOrder {
@@ -2849,7 +2955,7 @@ export enum MilestonesOrder {
   TitleDesc = 'title_DESC',
 }
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type News = Entry &
   _Node & {
     _id: Scalars['ID'];
@@ -2866,55 +2972,63 @@ export type News = Entry &
     type?: Maybe<Scalars['String']>;
   };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsLinkTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsPublishDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsTagsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<Array<InputMaybe<NewsTagsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TagsFilter>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsThumbnailArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
+/** Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news) */
 export type NewsTypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type NewsCollection = {
@@ -2987,6 +3101,7 @@ export type NewsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum NewsOrder {
@@ -3048,26 +3163,31 @@ export type OutputVersion = Entry &
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
 export type OutputVersionAccessionNumberArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
 export type OutputVersionAddedDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
 export type OutputVersionDocumentTypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
 export type OutputVersionDoiArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
 export type OutputVersionLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
@@ -3078,16 +3198,19 @@ export type OutputVersionLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
 export type OutputVersionRridArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
 export type OutputVersionTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion) */
 export type OutputVersionTypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type OutputVersionCollection = {
@@ -3172,6 +3295,7 @@ export type OutputVersionLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type OutputVersionLinkingCollectionsOutputsCollectionArgs = {
@@ -3182,6 +3306,7 @@ export type OutputVersionLinkingCollectionsOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum OutputVersionLinkingCollectionsOutputsCollectionOrder {
@@ -3287,16 +3412,19 @@ export type Outputs = Entry &
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsAccessionNumberArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsAddedDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsAdminNotesArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3305,6 +3433,7 @@ export type OutputsAuthorsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<OutputsAuthorsFilter>;
 };
 
@@ -3317,6 +3446,7 @@ export type OutputsContributingCohortsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ContributingCohortsFilter>;
 };
 
@@ -3324,37 +3454,44 @@ export type OutputsContributingCohortsCollectionArgs = {
 export type OutputsCreatedByArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<UsersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsDocumentTypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsDoiArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsGp2SupportedArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsLastUpdatedPartialArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3365,6 +3502,7 @@ export type OutputsLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsPublishDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3373,6 +3511,7 @@ export type OutputsRelatedEntitiesCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<OutputsRelatedEntitiesFilter>;
 };
 
@@ -3383,6 +3522,7 @@ export type OutputsRelatedEventsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<OutputsRelatedEventsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<EventsFilter>;
 };
 
@@ -3393,27 +3533,32 @@ export type OutputsRelatedOutputsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<OutputsRelatedOutputsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<OutputsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsRridArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsSharingStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsShortDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsSubtypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
@@ -3423,23 +3568,27 @@ export type OutputsTagsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<OutputsTagsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TagsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsTypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs) */
 export type OutputsUpdatedByArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<UsersFilter>;
 };
 
@@ -3450,6 +3599,7 @@ export type OutputsVersionsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<OutputsVersionsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<OutputVersionFilter>;
 };
 
@@ -3660,6 +3810,7 @@ export type OutputsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type OutputsLinkingCollectionsOutputsCollectionArgs = {
@@ -3670,6 +3821,7 @@ export type OutputsLinkingCollectionsOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum OutputsLinkingCollectionsOutputsCollectionOrder {
@@ -3951,11 +4103,13 @@ export type Pages = Entry &
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
 export type PagesLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
 export type PagesLinkTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
@@ -3966,21 +4120,25 @@ export type PagesLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
 export type PagesPathArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
 export type PagesShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
 export type PagesTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages) */
 export type PagesTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type PagesCollection = {
@@ -4044,6 +4202,7 @@ export type PagesLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum PagesOrder {
@@ -4122,12 +4281,14 @@ export type ProjectMembershipLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
 export type ProjectMembershipRoleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
 export type ProjectMembershipUserArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<UsersFilter>;
 };
 
@@ -4164,6 +4325,7 @@ export type ProjectMembershipLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ProjectMembershipLinkingCollectionsProjectsCollectionArgs = {
@@ -4176,6 +4338,7 @@ export type ProjectMembershipLinkingCollectionsProjectsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
@@ -4257,22 +4420,26 @@ export type Projects = Entry &
 export type ProjectsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<CalendarsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsEndDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsLeadEmailArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
@@ -4287,6 +4454,7 @@ export type ProjectsMembersCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ProjectsMembersCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ProjectMembershipFilter>;
 };
 
@@ -4297,37 +4465,44 @@ export type ProjectsMilestonesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ProjectsMilestonesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<MilestonesFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsOpportunitiesAvailableArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsOpportunitiesLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsOpportunitiesLinkNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsOpportunitiesShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsPmEmailArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsProjectProposalArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
@@ -4337,17 +4512,20 @@ export type ProjectsResourcesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ProjectsResourcesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResourcesFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsStartDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
@@ -4357,17 +4535,20 @@ export type ProjectsTagsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ProjectsTagsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TagsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects) */
 export type ProjectsTraineeProjectArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ProjectsCollection = {
@@ -4495,6 +4676,7 @@ export type ProjectsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ProjectsLinkingCollectionsOutputsCollectionArgs = {
@@ -4505,6 +4687,7 @@ export type ProjectsLinkingCollectionsOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum ProjectsLinkingCollectionsOutputsCollectionOrder {
@@ -4737,18 +4920,21 @@ export type Query_NodeArgs = {
   id: Scalars['ID'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type Query_NodesArgs = {
   ids: Array<Scalars['ID']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryAnnouncementsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryAnnouncementsCollectionArgs = {
@@ -4757,6 +4943,7 @@ export type QueryAnnouncementsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<AnnouncementsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AnnouncementsFilter>;
 };
 
@@ -4764,6 +4951,7 @@ export type QueryAssetArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryAssetCollectionArgs = {
@@ -4772,6 +4960,7 @@ export type QueryAssetCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<AssetOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AssetFilter>;
 };
 
@@ -4779,6 +4968,7 @@ export type QueryCalendarsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryCalendarsCollectionArgs = {
@@ -4787,6 +4977,7 @@ export type QueryCalendarsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<CalendarsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<CalendarsFilter>;
 };
 
@@ -4794,6 +4985,7 @@ export type QueryContributingCohortsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryContributingCohortsCollectionArgs = {
@@ -4802,6 +4994,7 @@ export type QueryContributingCohortsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ContributingCohortsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ContributingCohortsFilter>;
 };
 
@@ -4809,6 +5002,7 @@ export type QueryContributingCohortsMembershipArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryContributingCohortsMembershipCollectionArgs = {
@@ -4817,6 +5011,7 @@ export type QueryContributingCohortsMembershipCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ContributingCohortsMembershipOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ContributingCohortsMembershipFilter>;
 };
 
@@ -4824,6 +5019,7 @@ export type QueryDashboardArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryDashboardCollectionArgs = {
@@ -4832,6 +5028,7 @@ export type QueryDashboardCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<DashboardOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<DashboardFilter>;
 };
 
@@ -4841,6 +5038,7 @@ export type QueryEntryCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<EntryOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<EntryFilter>;
 };
 
@@ -4848,6 +5046,7 @@ export type QueryEventSpeakersArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryEventSpeakersCollectionArgs = {
@@ -4856,6 +5055,7 @@ export type QueryEventSpeakersCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<EventSpeakersOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<EventSpeakersFilter>;
 };
 
@@ -4863,6 +5063,7 @@ export type QueryEventsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryEventsCollectionArgs = {
@@ -4871,6 +5072,7 @@ export type QueryEventsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<EventsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<EventsFilter>;
 };
 
@@ -4878,6 +5080,7 @@ export type QueryExternalUsersArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryExternalUsersCollectionArgs = {
@@ -4886,6 +5089,7 @@ export type QueryExternalUsersCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ExternalUsersOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ExternalUsersFilter>;
 };
 
@@ -4893,6 +5097,7 @@ export type QueryGuideArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryGuideCollectionArgs = {
@@ -4901,6 +5106,7 @@ export type QueryGuideCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<GuideOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<GuideFilter>;
 };
 
@@ -4908,6 +5114,7 @@ export type QueryGuideDescriptionArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryGuideDescriptionCollectionArgs = {
@@ -4916,6 +5123,7 @@ export type QueryGuideDescriptionCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<GuideDescriptionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<GuideDescriptionFilter>;
 };
 
@@ -4923,6 +5131,7 @@ export type QueryLatestStatsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryLatestStatsCollectionArgs = {
@@ -4931,6 +5140,7 @@ export type QueryLatestStatsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<LatestStatsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<LatestStatsFilter>;
 };
 
@@ -4938,6 +5148,7 @@ export type QueryMediaArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryMediaCollectionArgs = {
@@ -4946,6 +5157,7 @@ export type QueryMediaCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<MediaOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<MediaFilter>;
 };
 
@@ -4953,6 +5165,7 @@ export type QueryMigrationArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryMigrationCollectionArgs = {
@@ -4961,6 +5174,7 @@ export type QueryMigrationCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<MigrationOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<MigrationFilter>;
 };
 
@@ -4968,6 +5182,7 @@ export type QueryMilestonesArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryMilestonesCollectionArgs = {
@@ -4976,6 +5191,7 @@ export type QueryMilestonesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<MilestonesOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<MilestonesFilter>;
 };
 
@@ -4983,6 +5199,7 @@ export type QueryNewsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryNewsCollectionArgs = {
@@ -4991,6 +5208,7 @@ export type QueryNewsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<NewsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<NewsFilter>;
 };
 
@@ -4998,6 +5216,7 @@ export type QueryOutputVersionArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryOutputVersionCollectionArgs = {
@@ -5006,6 +5225,7 @@ export type QueryOutputVersionCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<OutputVersionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<OutputVersionFilter>;
 };
 
@@ -5013,6 +5233,7 @@ export type QueryOutputsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryOutputsCollectionArgs = {
@@ -5021,6 +5242,7 @@ export type QueryOutputsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<OutputsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<OutputsFilter>;
 };
 
@@ -5028,6 +5250,7 @@ export type QueryPagesArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryPagesCollectionArgs = {
@@ -5036,6 +5259,7 @@ export type QueryPagesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<PagesOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<PagesFilter>;
 };
 
@@ -5043,6 +5267,7 @@ export type QueryProjectMembershipArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryProjectMembershipCollectionArgs = {
@@ -5051,6 +5276,7 @@ export type QueryProjectMembershipCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ProjectMembershipOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ProjectMembershipFilter>;
 };
 
@@ -5058,6 +5284,7 @@ export type QueryProjectsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryProjectsCollectionArgs = {
@@ -5066,6 +5293,7 @@ export type QueryProjectsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ProjectsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ProjectsFilter>;
 };
 
@@ -5073,6 +5301,7 @@ export type QueryResourcesArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryResourcesCollectionArgs = {
@@ -5081,6 +5310,7 @@ export type QueryResourcesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ResourcesOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResourcesFilter>;
 };
 
@@ -5088,6 +5318,7 @@ export type QueryTagsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryTagsCollectionArgs = {
@@ -5096,6 +5327,7 @@ export type QueryTagsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<TagsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TagsFilter>;
 };
 
@@ -5103,6 +5335,7 @@ export type QueryUsersArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryUsersCollectionArgs = {
@@ -5111,6 +5344,7 @@ export type QueryUsersCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<UsersOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<UsersFilter>;
 };
 
@@ -5118,6 +5352,7 @@ export type QueryWorkingGroupMembershipArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryWorkingGroupMembershipCollectionArgs = {
@@ -5126,6 +5361,7 @@ export type QueryWorkingGroupMembershipCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<WorkingGroupMembershipOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupMembershipFilter>;
 };
 
@@ -5133,6 +5369,7 @@ export type QueryWorkingGroupNetworkArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryWorkingGroupNetworkCollectionArgs = {
@@ -5141,6 +5378,7 @@ export type QueryWorkingGroupNetworkCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<WorkingGroupNetworkOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupNetworkFilter>;
 };
 
@@ -5148,6 +5386,7 @@ export type QueryWorkingGroupsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type QueryWorkingGroupsCollectionArgs = {
@@ -5156,6 +5395,7 @@ export type QueryWorkingGroupsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<WorkingGroupsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupsFilter>;
 };
 
@@ -5184,11 +5424,13 @@ export type Resources = Entry &
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
 export type ResourcesDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
 export type ResourcesExternalLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
@@ -5199,11 +5441,13 @@ export type ResourcesLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
 export type ResourcesTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/resources) */
 export type ResourcesTypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ResourcesCollection = {
@@ -5259,6 +5503,7 @@ export type ResourcesLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ResourcesLinkingCollectionsProjectsCollectionArgs = {
@@ -5269,6 +5514,7 @@ export type ResourcesLinkingCollectionsProjectsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ResourcesLinkingCollectionsWorkingGroupsCollectionArgs = {
@@ -5279,6 +5525,7 @@ export type ResourcesLinkingCollectionsWorkingGroupsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum ResourcesLinkingCollectionsProjectsCollectionOrder {
@@ -5422,6 +5669,7 @@ export type TagsLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/tags) */
 export type TagsNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type TagsCollection = {
@@ -5460,6 +5708,7 @@ export type TagsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type TagsLinkingCollectionsEventsCollectionArgs = {
@@ -5470,6 +5719,7 @@ export type TagsLinkingCollectionsEventsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type TagsLinkingCollectionsNewsCollectionArgs = {
@@ -5480,6 +5730,7 @@ export type TagsLinkingCollectionsNewsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type TagsLinkingCollectionsOutputsCollectionArgs = {
@@ -5490,6 +5741,7 @@ export type TagsLinkingCollectionsOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type TagsLinkingCollectionsProjectsCollectionArgs = {
@@ -5500,6 +5752,7 @@ export type TagsLinkingCollectionsProjectsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type TagsLinkingCollectionsUsersCollectionArgs = {
@@ -5510,6 +5763,7 @@ export type TagsLinkingCollectionsUsersCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type TagsLinkingCollectionsWorkingGroupsCollectionArgs = {
@@ -5520,6 +5774,7 @@ export type TagsLinkingCollectionsWorkingGroupsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum TagsLinkingCollectionsEventsCollectionOrder {
@@ -5833,52 +6088,62 @@ export type Users = Entry &
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersActivatedDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersActiveCampaignCreatedAtArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersActiveCampaignIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersAlternativeEmailArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersAvatarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersBiographyArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersBlogArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersBlueSkyArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersCityArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersConnectionsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
@@ -5890,47 +6155,56 @@ export type UsersContributingCohortsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ContributingCohortsMembershipFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersCountryArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersDegreesArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersEmailArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersFirstNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersFundingStreamsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersGithubArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersGoogleScholarArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersLastNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
@@ -5941,76 +6215,91 @@ export type UsersLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersLinkedInArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersMiddleNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersNicknameArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersOnboardedArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersOrcidArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersOrcidLastModifiedDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersOrcidLastSyncDateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersOrcidWorksArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersPositionsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersQuestionsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersRegionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersResearchGateArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersResearcherIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersRoleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersStateOrProvinceArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
@@ -6020,27 +6309,32 @@ export type UsersTagsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<UsersTagsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TagsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersTelephoneCountryCodeArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersTelephoneNumberArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersThreadsArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersTwitterArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type UsersCollection = {
@@ -6338,6 +6632,7 @@ export type UsersLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type UsersLinkingCollectionsEventSpeakersCollectionArgs = {
@@ -6348,6 +6643,7 @@ export type UsersLinkingCollectionsEventSpeakersCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type UsersLinkingCollectionsOutputsCollectionArgs = {
@@ -6358,6 +6654,7 @@ export type UsersLinkingCollectionsOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type UsersLinkingCollectionsProjectMembershipCollectionArgs = {
@@ -6368,6 +6665,7 @@ export type UsersLinkingCollectionsProjectMembershipCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type UsersLinkingCollectionsWorkingGroupMembershipCollectionArgs = {
@@ -6380,6 +6678,7 @@ export type UsersLinkingCollectionsWorkingGroupMembershipCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum UsersLinkingCollectionsEventSpeakersCollectionOrder {
@@ -6568,12 +6867,14 @@ export type WorkingGroupMembershipLinkedFromArgs = {
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership) */
 export type WorkingGroupMembershipRoleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership) */
 export type WorkingGroupMembershipUserArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<UsersFilter>;
 };
 
@@ -6610,6 +6911,7 @@ export type WorkingGroupMembershipLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionArgs =
@@ -6623,6 +6925,7 @@ export type WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionArgs 
     >;
     preview?: InputMaybe<Scalars['Boolean']>;
     skip?: InputMaybe<Scalars['Int']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
 export enum WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder {
@@ -6681,6 +6984,7 @@ export type WorkingGroupNetworkComplexDiseaseCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupsFilter>;
 };
 
@@ -6698,6 +7002,7 @@ export type WorkingGroupNetworkMonogenicCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupsFilter>;
 };
 
@@ -6710,6 +7015,7 @@ export type WorkingGroupNetworkOperationalCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupsFilter>;
 };
 
@@ -6722,6 +7028,7 @@ export type WorkingGroupNetworkSupportCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupsFilter>;
 };
 
@@ -6784,6 +7091,7 @@ export type WorkingGroupNetworkLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type WorkingGroupNetworkMonogenicCollection = {
@@ -6905,17 +7213,20 @@ export type WorkingGroups = Entry &
 export type WorkingGroupsCalendarArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<CalendarsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsLeadingMembersArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
@@ -6930,6 +7241,7 @@ export type WorkingGroupsMembersCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<WorkingGroupsMembersCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupMembershipFilter>;
 };
 
@@ -6940,12 +7252,14 @@ export type WorkingGroupsMilestonesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<WorkingGroupsMilestonesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<MilestonesFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsPrimaryEmailArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
@@ -6955,17 +7269,20 @@ export type WorkingGroupsResourcesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<WorkingGroupsResourcesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResourcesFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsSecondaryEmailArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsShortDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
@@ -6975,12 +7292,14 @@ export type WorkingGroupsTagsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<WorkingGroupsTagsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TagsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups) */
 export type WorkingGroupsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type WorkingGroupsCollection = {
@@ -7096,6 +7415,7 @@ export type WorkingGroupsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type WorkingGroupsLinkingCollectionsOutputsCollectionArgs = {
@@ -7106,6 +7426,7 @@ export type WorkingGroupsLinkingCollectionsOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionArgs = {
@@ -7118,6 +7439,7 @@ export type WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export enum WorkingGroupsLinkingCollectionsOutputsCollectionOrder {
@@ -12060,7 +12382,7 @@ export type FetchPagesQuery = {
   >;
 };
 
-export type ProjectsContentDataFragment = Pick<
+export type ProjectsContentFieldsFragment = Pick<
   Projects,
   | 'title'
   | 'startDate'
@@ -15822,12 +16144,12 @@ export const PageContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PageContentDataFragment, unknown>;
-export const ProjectsContentDataFragmentDoc = {
+export const ProjectsContentFieldsFragmentDoc = {
   kind: 'Document',
   definitions: [
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'ProjectsContentData' },
+      name: { kind: 'Name', value: 'ProjectsContentFields' },
       typeCondition: {
         kind: 'NamedType',
         name: { kind: 'Name', value: 'Projects' },
@@ -16132,7 +16454,7 @@ export const ProjectsContentDataFragmentDoc = {
       },
     },
   ],
-} as unknown as DocumentNode<ProjectsContentDataFragment, unknown>;
+} as unknown as DocumentNode<ProjectsContentFieldsFragment, unknown>;
 export const LatestStatsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -19847,7 +20169,7 @@ export const FetchProjectByIdDocument = {
               selections: [
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'ProjectsContentData' },
+                  name: { kind: 'Name', value: 'ProjectsContentFields' },
                 },
               ],
             },
@@ -19855,7 +20177,7 @@ export const FetchProjectByIdDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsContentFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchProjectByIdQuery,
@@ -19938,7 +20260,7 @@ export const FetchProjectsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'ProjectsContentData' },
+                        name: { kind: 'Name', value: 'ProjectsContentFields' },
                       },
                     ],
                   },
@@ -19949,7 +20271,7 @@ export const FetchProjectsDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsContentFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchProjectsQuery, FetchProjectsQueryVariables>;
 export const FetchProjectsByUserDocument = {
@@ -20093,7 +20415,7 @@ export const FetchProjectsByUserDocument = {
                                           kind: 'FragmentSpread',
                                           name: {
                                             kind: 'Name',
-                                            value: 'ProjectsContentData',
+                                            value: 'ProjectsContentFields',
                                           },
                                         },
                                       ],
@@ -20114,7 +20436,7 @@ export const FetchProjectsByUserDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsContentFieldsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchProjectsByUserQuery,

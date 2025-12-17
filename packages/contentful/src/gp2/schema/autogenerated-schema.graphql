@@ -4,28 +4,18 @@ schema {
 
 directive @contentSourceMaps on QUERY
 
-directive @delegatedResourceLink(contentTypeId: String, field: JSON) on FIELD_DEFINITION | OBJECT
-
-directive @enumMapper(value: JSON) on ENUM_VALUE
-
-directive @featureFlag(featureName: String) on FIELD
-
-directive @fieldResolver(data: JSON, kind: String) on FIELD_DEFINITION
-
 "Indicates exactly one field must be supplied and this field must not be `null`."
 directive @oneOf on INPUT_OBJECT
 
 directive @timeline(where: TimelineFilterInput!) on QUERY
 
-directive @typeIdentifier(contentTypeId: String) on OBJECT
-
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements)"""
 type Announcements implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
-  deadline(locale: String): DateTime
-  description(locale: String): String
-  link(locale: String): String
+  deadline(locale: String, useFallbackLocale: Boolean): DateTime
+  description(locale: String, useFallbackLocale: Boolean): String
+  link(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): AnnouncementsLinkingCollections
   sys: Sys!
 }
@@ -68,8 +58,8 @@ input AnnouncementsFilter {
 }
 
 type AnnouncementsLinkingCollections {
-  dashboardCollection(limit: Int = 100, locale: String, order: [AnnouncementsLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0): DashboardCollection
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  dashboardCollection(limit: Int = 100, locale: String, order: [AnnouncementsLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): DashboardCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
 }
 
 enum AnnouncementsLinkingCollectionsDashboardCollectionOrder {
@@ -102,17 +92,17 @@ enum AnnouncementsOrder {
 
 """Represents a binary file in a space. An asset can be any file type."""
 type Asset {
-  contentType(locale: String): String
+  contentType(locale: String, useFallbackLocale: Boolean): String
   contentfulMetadata: ContentfulMetadata!
-  description(locale: String): String
-  fileName(locale: String): String
-  height(locale: String): Int
+  description(locale: String, useFallbackLocale: Boolean): String
+  fileName(locale: String, useFallbackLocale: Boolean): String
+  height(locale: String, useFallbackLocale: Boolean): Int
   linkedFrom(allowedLocales: [String]): AssetLinkingCollections
-  size(locale: String): Int
+  size(locale: String, useFallbackLocale: Boolean): Int
   sys: Sys!
-  title(locale: String): String
-  url(locale: String, transform: ImageTransformOptions): String
-  width(locale: String): Int
+  title(locale: String, useFallbackLocale: Boolean): String
+  url(locale: String, transform: ImageTransformOptions, useFallbackLocale: Boolean): String
+  width(locale: String, useFallbackLocale: Boolean): Int
 }
 
 type AssetCollection {
@@ -192,11 +182,11 @@ input AssetFilter {
 }
 
 type AssetLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EventsCollection
-  guideCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): GuideCollection
-  newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): NewsCollection
-  usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): UsersCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventsCollection
+  guideCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): GuideCollection
+  newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): NewsCollection
+  usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): UsersCollection
 }
 
 enum AssetOrder {
@@ -225,12 +215,12 @@ enum AssetOrder {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/calendars)"""
 type Calendars implements Entry & _Node {
   _id: ID!
-  color(locale: String): String
+  color(locale: String, useFallbackLocale: Boolean): String
   contentfulMetadata: ContentfulMetadata!
-  googleApiMetadata(locale: String): JSON
-  googleCalendarId(locale: String): String
+  googleApiMetadata(locale: String, useFallbackLocale: Boolean): JSON
+  googleCalendarId(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): CalendarsLinkingCollections
-  name(locale: String): String
+  name(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
 }
 
@@ -271,10 +261,10 @@ input CalendarsFilter {
 }
 
 type CalendarsLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
-  projectsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
 }
 
 enum CalendarsLinkingCollectionsEventsCollectionOrder {
@@ -444,8 +434,8 @@ type ContributingCohorts implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ContributingCohortsLinkingCollections
-  name(locale: String): String
-  studyLink(locale: String): String
+  name(locale: String, useFallbackLocale: Boolean): String
+  studyLink(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
 }
 
@@ -478,9 +468,9 @@ input ContributingCohortsFilter {
 }
 
 type ContributingCohortsLinkingCollections {
-  contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder], preview: Boolean, skip: Int = 0): ContributingCohortsMembershipCollection
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  outputsCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ContributingCohortsMembershipCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
 }
 
 enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder {
@@ -539,9 +529,9 @@ enum ContributingCohortsLinkingCollectionsOutputsCollectionOrder {
 type ContributingCohortsMembership implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
-  contributingCohort(locale: String, preview: Boolean, where: ContributingCohortsFilter): ContributingCohorts
+  contributingCohort(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: ContributingCohortsFilter): ContributingCohorts
   linkedFrom(allowedLocales: [String]): ContributingCohortsMembershipLinkingCollections
-  role(locale: String): String
+  role(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
 }
 
@@ -569,8 +559,8 @@ input ContributingCohortsMembershipFilter {
 }
 
 type ContributingCohortsMembershipLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  usersCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  usersCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): UsersCollection
 }
 
 enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
@@ -673,10 +663,10 @@ enum ContributingCohortsOrder {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard)"""
 type Dashboard implements Entry & _Node {
   _id: ID!
-  announcementsCollection(limit: Int = 100, locale: String, order: [DashboardAnnouncementsCollectionOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): DashboardAnnouncementsCollection
+  announcementsCollection(limit: Int = 100, locale: String, order: [DashboardAnnouncementsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: AnnouncementsFilter): DashboardAnnouncementsCollection
   contentfulMetadata: ContentfulMetadata!
-  guidesCollection(limit: Int = 100, locale: String, order: [DashboardGuidesCollectionOrder], preview: Boolean, skip: Int = 0, where: GuideFilter): DashboardGuidesCollection
-  latestStats(locale: String, preview: Boolean, where: LatestStatsFilter): LatestStats
+  guidesCollection(limit: Int = 100, locale: String, order: [DashboardGuidesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: GuideFilter): DashboardGuidesCollection
+  latestStats(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: LatestStatsFilter): LatestStats
   linkedFrom(allowedLocales: [String]): DashboardLinkingCollections
   sys: Sys!
 }
@@ -746,7 +736,7 @@ enum DashboardGuidesCollectionOrder {
 }
 
 type DashboardLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
 }
 
 enum DashboardOrder {
@@ -807,8 +797,8 @@ type EventSpeakers implements Entry & _Node {
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): EventSpeakersLinkingCollections
   sys: Sys!
-  title(locale: String): String
-  user(locale: String, preview: Boolean, where: EventSpeakersUserFilter): EventSpeakersUser
+  title(locale: String, useFallbackLocale: Boolean): String
+  user(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: EventSpeakersUserFilter): EventSpeakersUser
 }
 
 type EventSpeakersCollection {
@@ -835,8 +825,8 @@ input EventSpeakersFilter {
 }
 
 type EventSpeakersLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventsCollection(limit: Int = 100, locale: String, order: [EventSpeakersLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [EventSpeakersLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventsCollection
 }
 
 enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
@@ -920,37 +910,37 @@ input EventSpeakersUserFilter {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/events)"""
 type Events implements Entry & _Node {
   _id: ID!
-  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
+  calendar(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
-  copyMeetingLink(locale: String): Boolean
-  description(locale: String): String
-  endDate(locale: String): DateTime
-  endDateTimeZone(locale: String): String
-  eventLink(locale: String): String
-  googleId(locale: String): String
-  hidden(locale: String): Boolean
-  hideMeetingLink(locale: String): Boolean
+  copyMeetingLink(locale: String, useFallbackLocale: Boolean): Boolean
+  description(locale: String, useFallbackLocale: Boolean): String
+  endDate(locale: String, useFallbackLocale: Boolean): DateTime
+  endDateTimeZone(locale: String, useFallbackLocale: Boolean): String
+  eventLink(locale: String, useFallbackLocale: Boolean): String
+  googleId(locale: String, useFallbackLocale: Boolean): String
+  hidden(locale: String, useFallbackLocale: Boolean): Boolean
+  hideMeetingLink(locale: String, useFallbackLocale: Boolean): Boolean
   linkedFrom(allowedLocales: [String]): EventsLinkingCollections
-  meetingLink(locale: String): String
-  meetingMaterials(locale: String): JSON
-  meetingMaterialsPermanentlyUnavailable(locale: String): Boolean
-  notes(locale: String): EventsNotes
-  notesPermanentlyUnavailable(locale: String): Boolean
-  notesUpdatedAt(locale: String): DateTime
-  presentation(locale: String): EventsPresentation
-  presentationPermanentlyUnavailable(locale: String): Boolean
-  presentationUpdatedAt(locale: String): DateTime
-  speakersCollection(limit: Int = 100, locale: String, order: [EventsSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventsSpeakersCollection
-  startDate(locale: String): DateTime
-  startDateTimeZone(locale: String): String
-  status(locale: String): String
+  meetingLink(locale: String, useFallbackLocale: Boolean): String
+  meetingMaterials(locale: String, useFallbackLocale: Boolean): JSON
+  meetingMaterialsPermanentlyUnavailable(locale: String, useFallbackLocale: Boolean): Boolean
+  notes(locale: String, useFallbackLocale: Boolean): EventsNotes
+  notesPermanentlyUnavailable(locale: String, useFallbackLocale: Boolean): Boolean
+  notesUpdatedAt(locale: String, useFallbackLocale: Boolean): DateTime
+  presentation(locale: String, useFallbackLocale: Boolean): EventsPresentation
+  presentationPermanentlyUnavailable(locale: String, useFallbackLocale: Boolean): Boolean
+  presentationUpdatedAt(locale: String, useFallbackLocale: Boolean): DateTime
+  speakersCollection(limit: Int = 100, locale: String, order: [EventsSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EventSpeakersFilter): EventsSpeakersCollection
+  startDate(locale: String, useFallbackLocale: Boolean): DateTime
+  startDateTimeZone(locale: String, useFallbackLocale: Boolean): String
+  status(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  tagsCollection(limit: Int = 100, locale: String, order: [EventsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): EventsTagsCollection
-  thumbnail(locale: String, preview: Boolean): Asset
-  title(locale: String): String
-  videoRecording(locale: String): EventsVideoRecording
-  videoRecordingPermanentlyUnavailable(locale: String): Boolean
-  videoRecordingUpdatedAt(locale: String): DateTime
+  tagsCollection(limit: Int = 100, locale: String, order: [EventsTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): EventsTagsCollection
+  thumbnail(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
+  title(locale: String, useFallbackLocale: Boolean): String
+  videoRecording(locale: String, useFallbackLocale: Boolean): EventsVideoRecording
+  videoRecordingPermanentlyUnavailable(locale: String, useFallbackLocale: Boolean): Boolean
+  videoRecordingUpdatedAt(locale: String, useFallbackLocale: Boolean): DateTime
 }
 
 type EventsCollection {
@@ -1107,8 +1097,8 @@ input EventsFilter {
 }
 
 type EventsLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  outputsCollection(limit: Int = 100, locale: String, order: [EventsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [EventsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
 }
 
 enum EventsLinkingCollectionsOutputsCollectionOrder {
@@ -1364,8 +1354,8 @@ type ExternalUsers implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ExternalUsersLinkingCollections
-  name(locale: String): String
-  orcid(locale: String): String
+  name(locale: String, useFallbackLocale: Boolean): String
+  orcid(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
 }
 
@@ -1398,9 +1388,9 @@ input ExternalUsersFilter {
 }
 
 type ExternalUsersLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventSpeakersCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
-  outputsCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  eventSpeakersCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventSpeakersCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
 }
 
 enum ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder {
@@ -1470,15 +1460,15 @@ enum ExternalUsersOrder {
   sys_publishedVersion_DESC
 }
 
-"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide)"""
+"""Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide)"""
 type Guide implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
-  descriptionCollection(limit: Int = 100, locale: String, order: [GuideDescriptionCollectionOrder], preview: Boolean, skip: Int = 0, where: GuideDescriptionFilter): GuideDescriptionCollection
-  icon(locale: String, preview: Boolean): Asset
+  descriptionCollection(limit: Int = 100, locale: String, order: [GuideDescriptionCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: GuideDescriptionFilter): GuideDescriptionCollection
+  icon(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   linkedFrom(allowedLocales: [String]): GuideLinkingCollections
   sys: Sys!
-  title(locale: String): String
+  title(locale: String, useFallbackLocale: Boolean): String
 }
 
 type GuideCollection {
@@ -1491,13 +1481,13 @@ type GuideCollection {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription)"""
 type GuideDescription implements Entry & _Node {
   _id: ID!
-  bodyText(locale: String): String
+  bodyText(locale: String, useFallbackLocale: Boolean): String
   contentfulMetadata: ContentfulMetadata!
-  linkText(locale: String): String
-  linkUrl(locale: String): String
+  linkText(locale: String, useFallbackLocale: Boolean): String
+  linkUrl(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): GuideDescriptionLinkingCollections
   sys: Sys!
-  title(locale: String): String
+  title(locale: String, useFallbackLocale: Boolean): String
 }
 
 type GuideDescriptionCollection {
@@ -1560,8 +1550,8 @@ input GuideDescriptionFilter {
 }
 
 type GuideDescriptionLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  guideCollection(limit: Int = 100, locale: String, order: [GuideDescriptionLinkingCollectionsGuideCollectionOrder], preview: Boolean, skip: Int = 0): GuideCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  guideCollection(limit: Int = 100, locale: String, order: [GuideDescriptionLinkingCollectionsGuideCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): GuideCollection
 }
 
 enum GuideDescriptionLinkingCollectionsGuideCollectionOrder {
@@ -1612,8 +1602,8 @@ input GuideFilter {
 }
 
 type GuideLinkingCollections {
-  dashboardCollection(limit: Int = 100, locale: String, order: [GuideLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0): DashboardCollection
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  dashboardCollection(limit: Int = 100, locale: String, order: [GuideLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): DashboardCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
 }
 
 enum GuideLinkingCollectionsDashboardCollectionOrder {
@@ -1745,11 +1735,11 @@ scalar JSON
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/latestStats)"""
 type LatestStats implements Entry & _Node {
   _id: ID!
-  articleCount(locale: String): Int
-  cohortCount(locale: String): Int
+  articleCount(locale: String, useFallbackLocale: Boolean): Int
+  cohortCount(locale: String, useFallbackLocale: Boolean): Int
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): LatestStatsLinkingCollections
-  sampleCount(locale: String): Int
+  sampleCount(locale: String, useFallbackLocale: Boolean): Int
   sys: Sys!
 }
 
@@ -1795,8 +1785,8 @@ input LatestStatsFilter {
 }
 
 type LatestStatsLinkingCollections {
-  dashboardCollection(limit: Int = 100, locale: String, order: [LatestStatsLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0): DashboardCollection
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  dashboardCollection(limit: Int = 100, locale: String, order: [LatestStatsLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): DashboardCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
 }
 
 enum LatestStatsLinkingCollectionsDashboardCollectionOrder {
@@ -1827,13 +1817,13 @@ enum LatestStatsOrder {
   sys_publishedVersion_DESC
 }
 
-"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media)"""
+"""Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media)"""
 type Media implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): MediaLinkingCollections
   sys: Sys!
-  url(locale: String): String
+  url(locale: String, useFallbackLocale: Boolean): String
 }
 
 type MediaCollection {
@@ -1858,7 +1848,7 @@ input MediaFilter {
 }
 
 type MediaLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
 }
 
 enum MediaOrder {
@@ -1874,13 +1864,13 @@ enum MediaOrder {
   url_DESC
 }
 
-"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration)"""
+"""Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration)"""
 type Migration implements Entry & _Node {
   _id: ID!
-  contentTypeId(locale: String): String
+  contentTypeId(locale: String, useFallbackLocale: Boolean): String
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): MigrationLinkingCollections
-  state(locale: String): JSON
+  state(locale: String, useFallbackLocale: Boolean): JSON
   sys: Sys!
 }
 
@@ -1907,7 +1897,7 @@ input MigrationFilter {
 }
 
 type MigrationLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
 }
 
 enum MigrationOrder {
@@ -1927,12 +1917,12 @@ enum MigrationOrder {
 type Milestones implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
-  description(locale: String): String
-  externalLink(locale: String): String
+  description(locale: String, useFallbackLocale: Boolean): String
+  externalLink(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): MilestonesLinkingCollections
-  status(locale: String): String
+  status(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  title(locale: String): String
+  title(locale: String, useFallbackLocale: Boolean): String
 }
 
 type MilestonesCollection {
@@ -1978,9 +1968,9 @@ input MilestonesFilter {
 }
 
 type MilestonesLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  projectsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
 }
 
 enum MilestonesLinkingCollectionsProjectsCollectionOrder {
@@ -2058,20 +2048,20 @@ enum MilestonesOrder {
   title_DESC
 }
 
-"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)"""
+"""Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)"""
 type News implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
-  link(locale: String): String
-  linkText(locale: String): String
+  link(locale: String, useFallbackLocale: Boolean): String
+  linkText(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): NewsLinkingCollections
-  publishDate(locale: String): DateTime
-  shortText(locale: String): String
+  publishDate(locale: String, useFallbackLocale: Boolean): DateTime
+  shortText(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  tagsCollection(limit: Int = 100, locale: String, order: [NewsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): NewsTagsCollection
-  thumbnail(locale: String, preview: Boolean): Asset
-  title(locale: String): String
-  type(locale: String): String
+  tagsCollection(limit: Int = 100, locale: String, order: [NewsTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): NewsTagsCollection
+  thumbnail(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
+  title(locale: String, useFallbackLocale: Boolean): String
+  type(locale: String, useFallbackLocale: Boolean): String
 }
 
 type NewsCollection {
@@ -2136,7 +2126,7 @@ input NewsFilter {
 }
 
 type NewsLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
 }
 
 enum NewsOrder {
@@ -2181,17 +2171,17 @@ enum NewsTagsCollectionOrder {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion)"""
 type OutputVersion implements Entry & _Node {
   _id: ID!
-  accessionNumber(locale: String): String
-  addedDate(locale: String): DateTime
+  accessionNumber(locale: String, useFallbackLocale: Boolean): String
+  addedDate(locale: String, useFallbackLocale: Boolean): DateTime
   contentfulMetadata: ContentfulMetadata!
-  documentType(locale: String): String
-  doi(locale: String): String
-  link(locale: String): String
+  documentType(locale: String, useFallbackLocale: Boolean): String
+  doi(locale: String, useFallbackLocale: Boolean): String
+  link(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): OutputVersionLinkingCollections
-  rrid(locale: String): String
+  rrid(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  title(locale: String): String
-  type(locale: String): String
+  title(locale: String, useFallbackLocale: Boolean): String
+  type(locale: String, useFallbackLocale: Boolean): String
 }
 
 type OutputVersionCollection {
@@ -2267,8 +2257,8 @@ input OutputVersionFilter {
 }
 
 type OutputVersionLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  outputsCollection(limit: Int = 100, locale: String, order: [OutputVersionLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [OutputVersionLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
 }
 
 enum OutputVersionLinkingCollectionsOutputsCollectionOrder {
@@ -2340,34 +2330,34 @@ enum OutputVersionOrder {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputs)"""
 type Outputs implements Entry & _Node {
   _id: ID!
-  accessionNumber(locale: String): String
-  addedDate(locale: String): DateTime
-  adminNotes(locale: String): String
-  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: OutputsAuthorsFilter): OutputsAuthorsCollection
+  accessionNumber(locale: String, useFallbackLocale: Boolean): String
+  addedDate(locale: String, useFallbackLocale: Boolean): DateTime
+  adminNotes(locale: String, useFallbackLocale: Boolean): String
+  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputsAuthorsFilter): OutputsAuthorsCollection
   contentfulMetadata: ContentfulMetadata!
-  contributingCohortsCollection(limit: Int = 100, locale: String, order: [OutputsContributingCohortsCollectionOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsFilter): OutputsContributingCohortsCollection
-  createdBy(locale: String, preview: Boolean, where: UsersFilter): Users
-  description(locale: String): String
-  documentType(locale: String): String
-  doi(locale: String): String
-  gp2Supported(locale: String): String
-  lastUpdatedPartial(locale: String): DateTime
-  link(locale: String): String
+  contributingCohortsCollection(limit: Int = 100, locale: String, order: [OutputsContributingCohortsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ContributingCohortsFilter): OutputsContributingCohortsCollection
+  createdBy(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
+  description(locale: String, useFallbackLocale: Boolean): String
+  documentType(locale: String, useFallbackLocale: Boolean): String
+  doi(locale: String, useFallbackLocale: Boolean): String
+  gp2Supported(locale: String, useFallbackLocale: Boolean): String
+  lastUpdatedPartial(locale: String, useFallbackLocale: Boolean): DateTime
+  link(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): OutputsLinkingCollections
-  publishDate(locale: String): DateTime
-  relatedEntitiesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, where: OutputsRelatedEntitiesFilter): OutputsRelatedEntitiesCollection
-  relatedEventsCollection(limit: Int = 100, locale: String, order: [OutputsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): OutputsRelatedEventsCollection
-  relatedOutputsCollection(limit: Int = 100, locale: String, order: [OutputsRelatedOutputsCollectionOrder], preview: Boolean, skip: Int = 0, where: OutputsFilter): OutputsRelatedOutputsCollection
-  rrid(locale: String): String
-  sharingStatus(locale: String): String
-  shortDescription(locale: String): String
-  subtype(locale: String): String
+  publishDate(locale: String, useFallbackLocale: Boolean): DateTime
+  relatedEntitiesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputsRelatedEntitiesFilter): OutputsRelatedEntitiesCollection
+  relatedEventsCollection(limit: Int = 100, locale: String, order: [OutputsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EventsFilter): OutputsRelatedEventsCollection
+  relatedOutputsCollection(limit: Int = 100, locale: String, order: [OutputsRelatedOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputsFilter): OutputsRelatedOutputsCollection
+  rrid(locale: String, useFallbackLocale: Boolean): String
+  sharingStatus(locale: String, useFallbackLocale: Boolean): String
+  shortDescription(locale: String, useFallbackLocale: Boolean): String
+  subtype(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  tagsCollection(limit: Int = 100, locale: String, order: [OutputsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): OutputsTagsCollection
-  title(locale: String): String
-  type(locale: String): String
-  updatedBy(locale: String, preview: Boolean, where: UsersFilter): Users
-  versionsCollection(limit: Int = 100, locale: String, order: [OutputsVersionsCollectionOrder], preview: Boolean, skip: Int = 0, where: OutputVersionFilter): OutputsVersionsCollection
+  tagsCollection(limit: Int = 100, locale: String, order: [OutputsTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): OutputsTagsCollection
+  title(locale: String, useFallbackLocale: Boolean): String
+  type(locale: String, useFallbackLocale: Boolean): String
+  updatedBy(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
+  versionsCollection(limit: Int = 100, locale: String, order: [OutputsVersionsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputVersionFilter): OutputsVersionsCollection
 }
 
 type OutputsAuthorsCollection {
@@ -2566,8 +2556,8 @@ input OutputsFilter {
 }
 
 type OutputsLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  outputsCollection(limit: Int = 100, locale: String, order: [OutputsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [OutputsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
 }
 
 enum OutputsLinkingCollectionsOutputsCollectionOrder {
@@ -2835,14 +2825,14 @@ enum OutputsVersionsCollectionOrder {
 type Pages implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
-  link(locale: String): String
-  linkText(locale: String): String
+  link(locale: String, useFallbackLocale: Boolean): String
+  linkText(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): PagesLinkingCollections
-  path(locale: String): String
-  shortText(locale: String): String
+  path(locale: String, useFallbackLocale: Boolean): String
+  shortText(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  text(locale: String): PagesText
-  title(locale: String): String
+  text(locale: String, useFallbackLocale: Boolean): PagesText
+  title(locale: String, useFallbackLocale: Boolean): String
 }
 
 type PagesCollection {
@@ -2898,7 +2888,7 @@ input PagesFilter {
 }
 
 type PagesLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
 }
 
 enum PagesOrder {
@@ -2963,9 +2953,9 @@ type ProjectMembership implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): ProjectMembershipLinkingCollections
-  role(locale: String): String
+  role(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  user(locale: String, preview: Boolean, where: UsersFilter): Users
+  user(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
 }
 
 type ProjectMembershipCollection {
@@ -2992,8 +2982,8 @@ input ProjectMembershipFilter {
 }
 
 type ProjectMembershipLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  projectsCollection(limit: Int = 100, locale: String, order: [ProjectMembershipLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ProjectMembershipLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
 }
 
 enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
@@ -3047,27 +3037,27 @@ enum ProjectMembershipOrder {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projects)"""
 type Projects implements Entry & _Node {
   _id: ID!
-  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
+  calendar(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
-  description(locale: String): String
-  endDate(locale: String): DateTime
-  leadEmail(locale: String): String
+  description(locale: String, useFallbackLocale: Boolean): String
+  endDate(locale: String, useFallbackLocale: Boolean): DateTime
+  leadEmail(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): ProjectsLinkingCollections
-  membersCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectsMembersCollection
-  milestonesCollection(limit: Int = 100, locale: String, order: [ProjectsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): ProjectsMilestonesCollection
-  opportunitiesAvailable(locale: String): Boolean
-  opportunitiesLink(locale: String): String
-  opportunitiesLinkName(locale: String): String
-  opportunitiesShortText(locale: String): String
-  pmEmail(locale: String): String
-  projectProposal(locale: String): String
-  resourcesCollection(limit: Int = 100, locale: String, order: [ProjectsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): ProjectsResourcesCollection
-  startDate(locale: String): DateTime
-  status(locale: String): String
+  membersCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ProjectMembershipFilter): ProjectsMembersCollection
+  milestonesCollection(limit: Int = 100, locale: String, order: [ProjectsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MilestonesFilter): ProjectsMilestonesCollection
+  opportunitiesAvailable(locale: String, useFallbackLocale: Boolean): Boolean
+  opportunitiesLink(locale: String, useFallbackLocale: Boolean): String
+  opportunitiesLinkName(locale: String, useFallbackLocale: Boolean): String
+  opportunitiesShortText(locale: String, useFallbackLocale: Boolean): String
+  pmEmail(locale: String, useFallbackLocale: Boolean): String
+  projectProposal(locale: String, useFallbackLocale: Boolean): String
+  resourcesCollection(limit: Int = 100, locale: String, order: [ProjectsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResourcesFilter): ProjectsResourcesCollection
+  startDate(locale: String, useFallbackLocale: Boolean): DateTime
+  status(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  tagsCollection(limit: Int = 100, locale: String, order: [ProjectsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): ProjectsTagsCollection
-  title(locale: String): String
-  traineeProject(locale: String): Boolean
+  tagsCollection(limit: Int = 100, locale: String, order: [ProjectsTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): ProjectsTagsCollection
+  title(locale: String, useFallbackLocale: Boolean): String
+  traineeProject(locale: String, useFallbackLocale: Boolean): Boolean
 }
 
 type ProjectsCollection {
@@ -3182,8 +3172,8 @@ input ProjectsFilter {
 }
 
 type ProjectsLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  outputsCollection(limit: Int = 100, locale: String, order: [ProjectsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [ProjectsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
 }
 
 enum ProjectsLinkingCollectionsOutputsCollectionOrder {
@@ -3356,63 +3346,63 @@ enum ProjectsTagsCollectionOrder {
 scalar Quality
 
 type Query {
-  _node(id: ID!, locale: String, preview: Boolean): _Node
-  _nodes(ids: [ID!]!, locale: String, preview: Boolean): [_Node]!
-  announcements(id: String!, locale: String, preview: Boolean): Announcements
-  announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, where: AnnouncementsFilter): AnnouncementsCollection
-  asset(id: String!, locale: String, preview: Boolean): Asset
-  assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, where: AssetFilter): AssetCollection
-  calendars(id: String!, locale: String, preview: Boolean): Calendars
-  calendarsCollection(limit: Int = 100, locale: String, order: [CalendarsOrder], preview: Boolean, skip: Int = 0, where: CalendarsFilter): CalendarsCollection
-  contributingCohorts(id: String!, locale: String, preview: Boolean): ContributingCohorts
-  contributingCohortsCollection(limit: Int = 100, locale: String, order: [ContributingCohortsOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsFilter): ContributingCohortsCollection
-  contributingCohortsMembership(id: String!, locale: String, preview: Boolean): ContributingCohortsMembership
-  contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsMembershipFilter): ContributingCohortsMembershipCollection
-  dashboard(id: String!, locale: String, preview: Boolean): Dashboard
-  dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, where: DashboardFilter): DashboardCollection
-  entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, where: EntryFilter): EntryCollection
-  eventSpeakers(id: String!, locale: String, preview: Boolean): EventSpeakers
-  eventSpeakersCollection(limit: Int = 100, locale: String, order: [EventSpeakersOrder], preview: Boolean, skip: Int = 0, where: EventSpeakersFilter): EventSpeakersCollection
-  events(id: String!, locale: String, preview: Boolean): Events
-  eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, where: EventsFilter): EventsCollection
-  externalUsers(id: String!, locale: String, preview: Boolean): ExternalUsers
-  externalUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], preview: Boolean, skip: Int = 0, where: ExternalUsersFilter): ExternalUsersCollection
-  guide(id: String!, locale: String, preview: Boolean): Guide
-  guideCollection(limit: Int = 100, locale: String, order: [GuideOrder], preview: Boolean, skip: Int = 0, where: GuideFilter): GuideCollection
-  guideDescription(id: String!, locale: String, preview: Boolean): GuideDescription
-  guideDescriptionCollection(limit: Int = 100, locale: String, order: [GuideDescriptionOrder], preview: Boolean, skip: Int = 0, where: GuideDescriptionFilter): GuideDescriptionCollection
-  latestStats(id: String!, locale: String, preview: Boolean): LatestStats
-  latestStatsCollection(limit: Int = 100, locale: String, order: [LatestStatsOrder], preview: Boolean, skip: Int = 0, where: LatestStatsFilter): LatestStatsCollection
-  media(id: String!, locale: String, preview: Boolean): Media
-  mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, where: MediaFilter): MediaCollection
-  migration(id: String!, locale: String, preview: Boolean): Migration
-  migrationCollection(limit: Int = 100, locale: String, order: [MigrationOrder], preview: Boolean, skip: Int = 0, where: MigrationFilter): MigrationCollection
-  milestones(id: String!, locale: String, preview: Boolean): Milestones
-  milestonesCollection(limit: Int = 100, locale: String, order: [MilestonesOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): MilestonesCollection
-  news(id: String!, locale: String, preview: Boolean): News
-  newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, where: NewsFilter): NewsCollection
-  outputVersion(id: String!, locale: String, preview: Boolean): OutputVersion
-  outputVersionCollection(limit: Int = 100, locale: String, order: [OutputVersionOrder], preview: Boolean, skip: Int = 0, where: OutputVersionFilter): OutputVersionCollection
-  outputs(id: String!, locale: String, preview: Boolean): Outputs
-  outputsCollection(limit: Int = 100, locale: String, order: [OutputsOrder], preview: Boolean, skip: Int = 0, where: OutputsFilter): OutputsCollection
-  pages(id: String!, locale: String, preview: Boolean): Pages
-  pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, where: PagesFilter): PagesCollection
-  projectMembership(id: String!, locale: String, preview: Boolean): ProjectMembership
-  projectMembershipCollection(limit: Int = 100, locale: String, order: [ProjectMembershipOrder], preview: Boolean, skip: Int = 0, where: ProjectMembershipFilter): ProjectMembershipCollection
-  projects(id: String!, locale: String, preview: Boolean): Projects
-  projectsCollection(limit: Int = 100, locale: String, order: [ProjectsOrder], preview: Boolean, skip: Int = 0, where: ProjectsFilter): ProjectsCollection
-  resources(id: String!, locale: String, preview: Boolean): Resources
-  resourcesCollection(limit: Int = 100, locale: String, order: [ResourcesOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): ResourcesCollection
-  tags(id: String!, locale: String, preview: Boolean): Tags
-  tagsCollection(limit: Int = 100, locale: String, order: [TagsOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): TagsCollection
-  users(id: String!, locale: String, preview: Boolean): Users
-  usersCollection(limit: Int = 100, locale: String, order: [UsersOrder], preview: Boolean, skip: Int = 0, where: UsersFilter): UsersCollection
-  workingGroupMembership(id: String!, locale: String, preview: Boolean): WorkingGroupMembership
-  workingGroupMembershipCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembershipFilter): WorkingGroupMembershipCollection
-  workingGroupNetwork(id: String!, locale: String, preview: Boolean): WorkingGroupNetwork
-  workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupNetworkFilter): WorkingGroupNetworkCollection
-  workingGroups(id: String!, locale: String, preview: Boolean): WorkingGroups
-  workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupsCollection
+  _node(id: ID!, locale: String, preview: Boolean, useFallbackLocale: Boolean): _Node
+  _nodes(ids: [ID!]!, locale: String, preview: Boolean, useFallbackLocale: Boolean): [_Node]!
+  announcements(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Announcements
+  announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: AnnouncementsFilter): AnnouncementsCollection
+  asset(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
+  assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: AssetFilter): AssetCollection
+  calendars(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Calendars
+  calendarsCollection(limit: Int = 100, locale: String, order: [CalendarsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: CalendarsFilter): CalendarsCollection
+  contributingCohorts(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): ContributingCohorts
+  contributingCohortsCollection(limit: Int = 100, locale: String, order: [ContributingCohortsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ContributingCohortsFilter): ContributingCohortsCollection
+  contributingCohortsMembership(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): ContributingCohortsMembership
+  contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ContributingCohortsMembershipFilter): ContributingCohortsMembershipCollection
+  dashboard(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Dashboard
+  dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: DashboardFilter): DashboardCollection
+  entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EntryFilter): EntryCollection
+  eventSpeakers(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): EventSpeakers
+  eventSpeakersCollection(limit: Int = 100, locale: String, order: [EventSpeakersOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EventSpeakersFilter): EventSpeakersCollection
+  events(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Events
+  eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EventsFilter): EventsCollection
+  externalUsers(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): ExternalUsers
+  externalUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ExternalUsersFilter): ExternalUsersCollection
+  guide(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Guide
+  guideCollection(limit: Int = 100, locale: String, order: [GuideOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: GuideFilter): GuideCollection
+  guideDescription(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): GuideDescription
+  guideDescriptionCollection(limit: Int = 100, locale: String, order: [GuideDescriptionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: GuideDescriptionFilter): GuideDescriptionCollection
+  latestStats(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): LatestStats
+  latestStatsCollection(limit: Int = 100, locale: String, order: [LatestStatsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: LatestStatsFilter): LatestStatsCollection
+  media(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Media
+  mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MediaFilter): MediaCollection
+  migration(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Migration
+  migrationCollection(limit: Int = 100, locale: String, order: [MigrationOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MigrationFilter): MigrationCollection
+  milestones(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Milestones
+  milestonesCollection(limit: Int = 100, locale: String, order: [MilestonesOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MilestonesFilter): MilestonesCollection
+  news(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): News
+  newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: NewsFilter): NewsCollection
+  outputVersion(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): OutputVersion
+  outputVersionCollection(limit: Int = 100, locale: String, order: [OutputVersionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputVersionFilter): OutputVersionCollection
+  outputs(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Outputs
+  outputsCollection(limit: Int = 100, locale: String, order: [OutputsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputsFilter): OutputsCollection
+  pages(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Pages
+  pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: PagesFilter): PagesCollection
+  projectMembership(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): ProjectMembership
+  projectMembershipCollection(limit: Int = 100, locale: String, order: [ProjectMembershipOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ProjectMembershipFilter): ProjectMembershipCollection
+  projects(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Projects
+  projectsCollection(limit: Int = 100, locale: String, order: [ProjectsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ProjectsFilter): ProjectsCollection
+  resources(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Resources
+  resourcesCollection(limit: Int = 100, locale: String, order: [ResourcesOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResourcesFilter): ResourcesCollection
+  tags(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Tags
+  tagsCollection(limit: Int = 100, locale: String, order: [TagsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): TagsCollection
+  users(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Users
+  usersCollection(limit: Int = 100, locale: String, order: [UsersOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: UsersFilter): UsersCollection
+  workingGroupMembership(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupMembership
+  workingGroupMembershipCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupMembershipFilter): WorkingGroupMembershipCollection
+  workingGroupNetwork(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupNetwork
+  workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupNetworkFilter): WorkingGroupNetworkCollection
+  workingGroups(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroups
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupsCollection
 }
 
 interface ResourceLink {
@@ -3428,12 +3418,12 @@ type ResourceSys {
 type Resources implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
-  description(locale: String): String
-  externalLink(locale: String): String
+  description(locale: String, useFallbackLocale: Boolean): String
+  externalLink(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): ResourcesLinkingCollections
   sys: Sys!
-  title(locale: String): String
-  type(locale: String): String
+  title(locale: String, useFallbackLocale: Boolean): String
+  type(locale: String, useFallbackLocale: Boolean): String
 }
 
 type ResourcesCollection {
@@ -3479,9 +3469,9 @@ input ResourcesFilter {
 }
 
 type ResourcesLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  projectsCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
 }
 
 enum ResourcesLinkingCollectionsProjectsCollectionOrder {
@@ -3612,7 +3602,7 @@ type Tags implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): TagsLinkingCollections
-  name(locale: String): String
+  name(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
 }
 
@@ -3638,13 +3628,13 @@ input TagsFilter {
 }
 
 type TagsLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0): EventsCollection
-  newsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0): NewsCollection
-  outputsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
-  projectsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0): ProjectsCollection
-  usersCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0): UsersCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  eventsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventsCollection
+  newsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): NewsCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+  usersCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): UsersCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
 }
 
 enum TagsLinkingCollectionsEventsCollectionOrder {
@@ -3910,48 +3900,48 @@ input TimelineFilterInput {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users)"""
 type Users implements Entry & _Node {
   _id: ID!
-  activatedDate(locale: String): DateTime
-  activeCampaignCreatedAt(locale: String): DateTime
-  activeCampaignId(locale: String): String
-  alternativeEmail(locale: String): String
-  avatar(locale: String, preview: Boolean): Asset
-  biography(locale: String): String
-  blog(locale: String): String
-  blueSky(locale: String): String
-  city(locale: String): String
-  connections(locale: String): [String]
+  activatedDate(locale: String, useFallbackLocale: Boolean): DateTime
+  activeCampaignCreatedAt(locale: String, useFallbackLocale: Boolean): DateTime
+  activeCampaignId(locale: String, useFallbackLocale: Boolean): String
+  alternativeEmail(locale: String, useFallbackLocale: Boolean): String
+  avatar(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
+  biography(locale: String, useFallbackLocale: Boolean): String
+  blog(locale: String, useFallbackLocale: Boolean): String
+  blueSky(locale: String, useFallbackLocale: Boolean): String
+  city(locale: String, useFallbackLocale: Boolean): String
+  connections(locale: String, useFallbackLocale: Boolean): [String]
   contentfulMetadata: ContentfulMetadata!
-  contributingCohortsCollection(limit: Int = 100, locale: String, order: [UsersContributingCohortsCollectionOrder], preview: Boolean, skip: Int = 0, where: ContributingCohortsMembershipFilter): UsersContributingCohortsCollection
-  country(locale: String): String
-  degrees(locale: String): [String]
-  email(locale: String): String
-  firstName(locale: String): String
-  fundingStreams(locale: String): String
-  github(locale: String): String
-  googleScholar(locale: String): String
-  lastName(locale: String): String
+  contributingCohortsCollection(limit: Int = 100, locale: String, order: [UsersContributingCohortsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ContributingCohortsMembershipFilter): UsersContributingCohortsCollection
+  country(locale: String, useFallbackLocale: Boolean): String
+  degrees(locale: String, useFallbackLocale: Boolean): [String]
+  email(locale: String, useFallbackLocale: Boolean): String
+  firstName(locale: String, useFallbackLocale: Boolean): String
+  fundingStreams(locale: String, useFallbackLocale: Boolean): String
+  github(locale: String, useFallbackLocale: Boolean): String
+  googleScholar(locale: String, useFallbackLocale: Boolean): String
+  lastName(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): UsersLinkingCollections
-  linkedIn(locale: String): String
-  middleName(locale: String): String
-  nickname(locale: String): String
-  onboarded(locale: String): Boolean
-  orcid(locale: String): String
-  orcidLastModifiedDate(locale: String): DateTime
-  orcidLastSyncDate(locale: String): DateTime
-  orcidWorks(locale: String): JSON
-  positions(locale: String): JSON
-  questions(locale: String): [String]
-  region(locale: String): String
-  researchGate(locale: String): String
-  researcherId(locale: String): String
-  role(locale: String): String
-  stateOrProvince(locale: String): String
+  linkedIn(locale: String, useFallbackLocale: Boolean): String
+  middleName(locale: String, useFallbackLocale: Boolean): String
+  nickname(locale: String, useFallbackLocale: Boolean): String
+  onboarded(locale: String, useFallbackLocale: Boolean): Boolean
+  orcid(locale: String, useFallbackLocale: Boolean): String
+  orcidLastModifiedDate(locale: String, useFallbackLocale: Boolean): DateTime
+  orcidLastSyncDate(locale: String, useFallbackLocale: Boolean): DateTime
+  orcidWorks(locale: String, useFallbackLocale: Boolean): JSON
+  positions(locale: String, useFallbackLocale: Boolean): JSON
+  questions(locale: String, useFallbackLocale: Boolean): [String]
+  region(locale: String, useFallbackLocale: Boolean): String
+  researchGate(locale: String, useFallbackLocale: Boolean): String
+  researcherId(locale: String, useFallbackLocale: Boolean): String
+  role(locale: String, useFallbackLocale: Boolean): String
+  stateOrProvince(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  tagsCollection(limit: Int = 100, locale: String, order: [UsersTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): UsersTagsCollection
-  telephoneCountryCode(locale: String): String
-  telephoneNumber(locale: String): String
-  threads(locale: String): String
-  twitter(locale: String): String
+  tagsCollection(limit: Int = 100, locale: String, order: [UsersTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): UsersTagsCollection
+  telephoneCountryCode(locale: String, useFallbackLocale: Boolean): String
+  telephoneNumber(locale: String, useFallbackLocale: Boolean): String
+  threads(locale: String, useFallbackLocale: Boolean): String
+  twitter(locale: String, useFallbackLocale: Boolean): String
 }
 
 type UsersCollection {
@@ -4229,11 +4219,11 @@ input UsersFilter {
 }
 
 type UsersLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0): EventSpeakersCollection
-  outputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
-  projectMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCollectionOrder], preview: Boolean, skip: Int = 0): ProjectMembershipCollection
-  workingGroupMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupMembershipCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventSpeakersCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  projectMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectMembershipCollection
+  workingGroupMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupMembershipCollection
 }
 
 enum UsersLinkingCollectionsEventSpeakersCollectionOrder {
@@ -4408,9 +4398,9 @@ type WorkingGroupMembership implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): WorkingGroupMembershipLinkingCollections
-  role(locale: String): String
+  role(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  user(locale: String, preview: Boolean, where: UsersFilter): Users
+  user(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
 }
 
 type WorkingGroupMembershipCollection {
@@ -4437,8 +4427,8 @@ input WorkingGroupMembershipFilter {
 }
 
 type WorkingGroupMembershipLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupsCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
 }
 
 enum WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder {
@@ -4478,12 +4468,12 @@ enum WorkingGroupMembershipOrder {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupNetwork)"""
 type WorkingGroupNetwork implements Entry & _Node {
   _id: ID!
-  complexDiseaseCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkComplexDiseaseCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkComplexDiseaseCollection
+  complexDiseaseCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkComplexDiseaseCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkComplexDiseaseCollection
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): WorkingGroupNetworkLinkingCollections
-  monogenicCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkMonogenicCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkMonogenicCollection
-  operationalCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOperationalCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkOperationalCollection
-  supportCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkSupportCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupsFilter): WorkingGroupNetworkSupportCollection
+  monogenicCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkMonogenicCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkMonogenicCollection
+  operationalCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOperationalCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkOperationalCollection
+  supportCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkSupportCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkSupportCollection
   sys: Sys!
 }
 
@@ -4538,7 +4528,7 @@ input WorkingGroupNetworkFilter {
 }
 
 type WorkingGroupNetworkLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
 }
 
 type WorkingGroupNetworkMonogenicCollection {
@@ -4639,20 +4629,20 @@ enum WorkingGroupNetworkSupportCollectionOrder {
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups)"""
 type WorkingGroups implements Entry & _Node {
   _id: ID!
-  calendar(locale: String, preview: Boolean, where: CalendarsFilter): Calendars
+  calendar(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: CalendarsFilter): Calendars
   contentfulMetadata: ContentfulMetadata!
-  description(locale: String): WorkingGroupsDescription
-  leadingMembers(locale: String): String
+  description(locale: String, useFallbackLocale: Boolean): WorkingGroupsDescription
+  leadingMembers(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
-  membersCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMembersCollectionOrder], preview: Boolean, skip: Int = 0, where: WorkingGroupMembershipFilter): WorkingGroupsMembersCollection
-  milestonesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, where: MilestonesFilter): WorkingGroupsMilestonesCollection
-  primaryEmail(locale: String): String
-  resourcesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, where: ResourcesFilter): WorkingGroupsResourcesCollection
-  secondaryEmail(locale: String): String
-  shortDescription(locale: String): String
+  membersCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMembersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupMembershipFilter): WorkingGroupsMembersCollection
+  milestonesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MilestonesFilter): WorkingGroupsMilestonesCollection
+  primaryEmail(locale: String, useFallbackLocale: Boolean): String
+  resourcesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResourcesFilter): WorkingGroupsResourcesCollection
+  secondaryEmail(locale: String, useFallbackLocale: Boolean): String
+  shortDescription(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  tagsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsTagsCollectionOrder], preview: Boolean, skip: Int = 0, where: TagsFilter): WorkingGroupsTagsCollection
-  title(locale: String): String
+  tagsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): WorkingGroupsTagsCollection
+  title(locale: String, useFallbackLocale: Boolean): String
 }
 
 type WorkingGroupsCollection {
@@ -4758,9 +4748,9 @@ input WorkingGroupsFilter {
 }
 
 type WorkingGroupsLinkingCollections {
-  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0): EntryCollection
-  outputsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0): OutputsCollection
-  workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionOrder], preview: Boolean, skip: Int = 0): WorkingGroupNetworkCollection
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  outputsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupNetworkCollection
 }
 
 enum WorkingGroupsLinkingCollectionsOutputsCollectionOrder {

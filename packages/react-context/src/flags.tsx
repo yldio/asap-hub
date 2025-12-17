@@ -53,7 +53,9 @@ export const FlagsContext = createContext<Flags>({
   setCurrentOverrides: () => setCurrentOverrides(parseCookie(document.cookie)),
 });
 
-export const LiveFlagsProvider: FC = ({ children }) => {
+export const LiveFlagsProvider: FC<{ readonly children: React.ReactNode }> = ({
+  children,
+}) => {
   // ignore overrides value, new flags object identity every time will be sufficient to update consumers
   const [, setOverrides] = useState(getOverrides());
   const flags: Flags = {

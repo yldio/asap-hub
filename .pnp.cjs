@@ -14193,6 +14193,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-react", "virtual:0762e49f8f05b99f9eb6dd38f03eda5b98ded70b1b47ed1df35530cdc8ad087c801fbb1f204a197ccf8be7b04ff15b66bfa340e3665730ffabc4fa1fedfe5459#npm:7.28.5"],\
             ["@babel/runtime-corejs3", "npm:7.28.4"],\
             ["@testing-library/dom", "npm:10.4.0"],\
+            ["@testing-library/jest-dom", "npm:6.9.1"],\
             ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/react", "npm:18.3.12"],\
@@ -14221,6 +14222,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-react", "virtual:0762e49f8f05b99f9eb6dd38f03eda5b98ded70b1b47ed1df35530cdc8ad087c801fbb1f204a197ccf8be7b04ff15b66bfa340e3665730ffabc4fa1fedfe5459#npm:7.28.5"],\
             ["@babel/runtime-corejs3", "npm:7.28.4"],\
             ["@testing-library/dom", "npm:10.4.0"],\
+            ["@testing-library/jest-dom", "npm:6.9.1"],\
             ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.0"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/react", "npm:18.3.12"],\

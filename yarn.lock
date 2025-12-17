@@ -1703,6 +1703,7 @@ __metadata:
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.4
     "@testing-library/dom": 10.4.0
+    "@testing-library/jest-dom": ^6.9.0
     "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/react": 18.3.12

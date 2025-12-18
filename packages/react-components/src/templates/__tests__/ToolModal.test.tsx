@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 
 import ToolModal from '../ToolModal';
 
@@ -14,18 +14,18 @@ const props: ComponentProps<typeof ToolModal> = {
 };
 it('renders the title', () => {
   const { getByText } = render(
-    <StaticRouter location="/">
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} title="ModalTitle" />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(getByText('ModalTitle', { selector: 'h3' })).toBeVisible();
 });
 
 it('indicates which fields are required or optional', () => {
   const { getByText } = render(
-    <StaticRouter location="/">
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} title="ModalTitle" />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   [
@@ -39,14 +39,14 @@ it('indicates which fields are required or optional', () => {
 
 it('renders default values into inputs', () => {
   const { queryAllByRole } = render(
-    <StaticRouter location="/">
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal
         {...props}
         name="LinkName"
         description="LinkDescription"
         url="http://example.com"
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(queryAllByRole('textbox').map((input) => input.getAttribute('value')))
     .toMatchInlineSnapshot(`
@@ -60,9 +60,9 @@ it('renders default values into inputs', () => {
 
 it('allows url with https protocol', () => {
   const { getByLabelText, queryByText } = render(
-    <StaticRouter location="/">
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} />
-    </StaticRouter>,
+    </MemoryRouter>,
     {},
   );
   const inputUrl = getByLabelText(/Add URL/i);
@@ -74,9 +74,9 @@ it('allows url with https protocol', () => {
 });
 it('allows url with http protocol', () => {
   const { getByLabelText, queryByText } = render(
-    <StaticRouter location="/">
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} />
-    </StaticRouter>,
+    </MemoryRouter>,
     {},
   );
 
@@ -95,9 +95,9 @@ it('allows url with http protocol', () => {
 
 it('does not allow any other uri scheme', async () => {
   const { getByLabelText, findByText } = render(
-    <StaticRouter location="/">
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   const inputUrl = getByLabelText(/Add URL/i);
 
@@ -117,11 +117,9 @@ it('does not allow any other uri scheme', async () => {
 });
 
 it('triggers the save function', async () => {
-  const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
-
   const jestFn = jest.fn();
   const { getByText } = render(
-    <StaticRouter location="/">
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal
         {...props}
         name="toolName"
@@ -129,7 +127,7 @@ it('triggers the save function', async () => {
         description="toolDescription"
         onSave={jestFn}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   await userEvent.click(getByText(/save/i));
@@ -142,22 +140,18 @@ it('triggers the save function', async () => {
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
-
-  consoleWarnSpy.mockRestore();
 });
 
 it('disables the form elements while submitting', async () => {
-  const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
-
   let resolveSubmit!: () => void;
   const handleSave = () =>
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
   const { getByText } = render(
-    <StaticRouter location="/">
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} onSave={handleSave} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   await userEvent.click(getByText(/save/i));
@@ -170,6 +164,4 @@ it('disables the form elements while submitting', async () => {
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
-
-  consoleWarnSpy.mockRestore();
 });

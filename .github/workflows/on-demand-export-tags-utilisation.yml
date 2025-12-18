@@ -1,0 +1,66 @@
+name: Export Tags Utilisation
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        required: true
+        type: choice
+        description: Choose which environment to export from
+        default: Production
+        options:
+          - Branch
+          - Development
+          - Production
+      contentful-environment-id:
+        required: true
+        type: string
+        description: The Contentful environment ID (e.g., master, development, or branch name)
+        default: master
+
+jobs:
+  export-tags:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+          pr-number: '0'
+      - name: Build
+        run: |
+          yarn install
+          yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/model,@asap-hub/server-common,@asap-hub/crn-server}' run build:babel"
+          yarn build:typecheck
+      - name: Run Tags Utilisation Export
+        run: |
+          yarn export:tags-utilisation
+        env:
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CRN_CONTENTFUL_ACCESS_TOKEN }}
+          CONTENTFUL_ENV_ID: ${{ inputs.contentful-environment-id }}
+      - name: Upload Excel file
+        uses: actions/upload-artifact@v4
+        with:
+          name: tags-utilisation-export-${{ github.run_number }}
+          path: tags-utilisation-*.xlsx
+          retention-days: 30
+      - name: Summary
+        run: |
+          echo "## Tags Utilisation Export Complete ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Excel file has been generated and uploaded as an artifact." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Download:** Go to the workflow run page and download the artifact named \`tags-utilisation-export-${{ github.run_number }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** ${{ inputs.environment-name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Contentful Environment:** ${{ inputs.contentful-environment-id }}" >> $GITHUB_STEP_SUMMARY

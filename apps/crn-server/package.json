@@ -96,7 +96,8 @@
     "serverless-http": "2.7.0",
     "source-map-support": "0.5.21",
     "ts-node": "10.9.2",
-    "uuid": "8.3.2"
+    "uuid": "8.3.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@asap-hub/fixtures": "workspace:*",

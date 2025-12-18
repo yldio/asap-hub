@@ -1151,6 +1151,7 @@ __metadata:
     supertest: 6.3.3
     ts-node: 10.9.2
     uuid: 8.3.2
+    xlsx: ^0.18.5
     yargs: 17.3.1
   dependenciesMeta:
     serverless:

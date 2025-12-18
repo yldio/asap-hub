@@ -32,8 +32,6 @@ const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   isCreatingNewVersion: false,
 };
 it('renders the card with provided values', () => {
-  // TODO: fix act error
-  jest.spyOn(console, 'error').mockImplementation();
   render(
     <ResearchOutputFormSharingCard
       {...props}
@@ -56,7 +54,10 @@ it.each`
   ${'Title'} | ${/title/i} | ${'Please enter a title'}
   ${'Type'}  | ${/type/i}  | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
-  render(
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  const { findByText } = render(
     <ResearchOutputFormSharingCard
       {...props}
       urlRequired
@@ -64,8 +65,11 @@ it.each`
     />,
   );
   const input = screen.getByLabelText(label);
-  fireEvent.focusOut(input);
-  expect(await screen.findByText(error)).toBeVisible();
+  await userEvent.click(input);
+  await userEvent.tab();
+  expect(await findByText(error)).toBeVisible();
+
+  consoleSpy.mockRestore();
 });
 
 it('does not require an url', async () => {
@@ -123,6 +127,9 @@ it('triggers an onchange event for Description', async () => {
 });
 
 it('triggers an onchange event for Short Description', async () => {
+  // Suppress act() warnings from TextArea's internal async validation state updates
+  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
   const onChangeFn = jest.fn();
   render(
     <ResearchOutputFormSharingCard
@@ -131,7 +138,11 @@ it('triggers an onchange event for Short Description', async () => {
   );
   const input = screen.getByRole('textbox', { name: /short description/i });
   fireEvent.change(input, { target: { value: 'test' } });
-  expect(onChangeFn).toHaveBeenLastCalledWith('test');
+  await waitFor(() => {
+    expect(onChangeFn).toHaveBeenCalledWith('test');
+  });
+
+  consoleSpy.mockRestore();
 });
 
 it.each`
@@ -233,22 +244,27 @@ it('triggers an on change for date published', async () => {
 });
 
 it('shows the custom error message for a date in the future', async () => {
-  render(
+  const { findByText } = render(
     <ResearchOutputFormSharingCard
       {...props}
       sharingStatus={'Public'}
       publishDate={startOfTomorrow()}
     />,
   );
-  screen.getByLabelText(/Date Published/i).click();
+  const dateInput = screen.getByLabelText(/Date Published/i);
+  await userEvent.click(dateInput);
   await userEvent.tab();
-
   expect(
-    screen.getByText(/publish date cannot be greater than today/i),
+    await findByText(/publish date cannot be greater than today/i),
   ).toBeVisible();
+
+  consoleSpy.mockRestore();
 });
 
 it('displays server side validation error for link and calls clears function when changed', async () => {
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
   const mockClearError = jest.fn();
   render(
     <ResearchOutputFormSharingCard
@@ -271,11 +287,20 @@ it('displays server side validation error for link and calls clears function whe
     ),
   ).toBeVisible();
 
-  await userEvent.type(screen.getByLabelText(/URL/i), 'a');
-  expect(mockClearError).toHaveBeenCalledWith('/link');
+  const input = screen.getByLabelText(/URL/i);
+  await userEvent.type(input, 'a');
+
+  await waitFor(() => {
+    expect(mockClearError).toHaveBeenCalledWith('/link');
+  });
+
+  consoleSpy.mockRestore();
 });
 
 it('displays server side validation error for title and calls clears function when changed', async () => {
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
   const mockClearError = jest.fn();
   render(
     <ResearchOutputFormSharingCard
@@ -298,8 +323,14 @@ it('displays server side validation error for title and calls clears function wh
     ),
   ).toBeVisible();
 
-  await userEvent.type(screen.getByLabelText(/title/i), 'a');
-  expect(mockClearError).toHaveBeenCalledWith('/title');
+  const input = screen.getByLabelText(/title/i);
+  await userEvent.type(input, 'a');
+
+  await waitFor(() => {
+    expect(mockClearError).toHaveBeenCalledWith('/title');
+  });
+
+  consoleSpy.mockRestore();
 });
 
 describe('getPublishDateValidationMessage returns', () => {

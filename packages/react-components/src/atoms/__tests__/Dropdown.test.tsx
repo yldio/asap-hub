@@ -1,6 +1,6 @@
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { Theme } from '@emotion/react';
 import { matchers } from '@emotion/jest';
 import { GroupTypeBase, OptionTypeBase, SingleValueProps } from 'react-select';

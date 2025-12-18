@@ -1,7 +1,7 @@
 import { researchTagSubtypeResponse } from '@asap-hub/fixtures';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, within, waitFor } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
 import { ComponentProps } from 'react';
 import { editorRef } from '../../atoms';
@@ -167,7 +167,7 @@ it('triggers an on change for type', async () => {
 
   const type = screen.getByLabelText(/type/i);
   await userEvent.type(type, 'Preprint');
-  await userEvent.type(type, specialChars.enter);
+  await userEvent.type(type, '{Enter}');
 
   expect(onChangeFn).toHaveBeenCalledWith('Preprint');
 });
@@ -185,7 +185,7 @@ it('triggers an on change for subtype', async () => {
 
   const type = screen.getByLabelText(/subtype/i);
   await userEvent.type(type, 'Metabolite');
-  await userEvent.type(type, specialChars.enter);
+  await userEvent.type(type, '{Enter}');
 
   expect(onChangeFn).toHaveBeenCalledWith('Metabolite');
 });

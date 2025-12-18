@@ -7,6 +7,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import * as flags from '@asap-hub/flags';
 
 import Teams from '../TeamList';
 import { getAlgoliaTeams } from '../api';
@@ -60,6 +61,7 @@ describe.each([
   };
 
   it('renders a list of teams information', async () => {
+    jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
     const response = createListTeamResponse(2);
 
     mockGetAlgoliaTeams.mockResolvedValue({

@@ -3,7 +3,7 @@
 import { gql } from 'graphql-tag';
 
 export const projectsContentQueryFragment = gql`
-  fragment ProjectsContentData on Projects {
+  fragment ProjectsContentFields on Projects {
     sys {
       id
       firstPublishedAt
@@ -89,7 +89,7 @@ export const projectsContentQueryFragment = gql`
 export const FETCH_PROJECT_BY_ID = gql`
   query FetchProjectById($id: String!) {
     projects(id: $id) {
-      ...ProjectsContentData
+      ...ProjectsContentFields
     }
   }
   ${projectsContentQueryFragment}
@@ -100,7 +100,7 @@ export const FETCH_PROJECTS = gql`
     projectsCollection(limit: $limit, skip: $skip, where: $where) {
       total
       items {
-        ...ProjectsContentData
+        ...ProjectsContentFields
       }
     }
   }
@@ -120,7 +120,7 @@ export const FETCH_PROJECTS_BY_USER = gql`
           projectsCollection(limit: 1) {
             total
             items {
-              ...ProjectsContentData
+              ...ProjectsContentFields
             }
           }
         }

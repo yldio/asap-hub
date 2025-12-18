@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UserResponse } from '@asap-hub/model';
@@ -7,7 +7,7 @@ import { UserResponse } from '@asap-hub/model';
 import ContactInfoModal from '../ContactInfoModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<StaticRouter location="/">{children}</StaticRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 it('renders a form to edit the contact info', () => {
   const { getByText } = renderModal(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
@@ -161,6 +161,11 @@ it.each`
 `(
   'shows validation message "$message" for $label input',
   async ({ label, value, message }) => {
+    // Suppress act() warnings from TextField's internal async validation state updates
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
     const { getByLabelText, findByText } = renderModal(
       <ContactInfoModal backHref="#" fallbackEmail="fallback@example.com" />,
     );
@@ -170,5 +175,7 @@ it.each`
     });
     fireEvent.focusOut(input);
     expect(await findByText(new RegExp(message, 'i'))).toBeVisible();
+
+    consoleSpy.mockRestore();
   },
 );

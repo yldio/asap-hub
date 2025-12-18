@@ -1,4 +1,4 @@
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -11,7 +11,7 @@ it('renders the text in an anchor', () => {
 
 describe.each`
   contextDescription    | wrapper
-  ${'with a router'}    | ${StaticRouter}
+  ${'with a router'}    | ${MemoryRouter}
   ${'without a router'} | ${undefined}
 `('$contextDescription', ({ wrapper }) => {
   describe.each`
@@ -74,7 +74,7 @@ describe('for an external link', () => {
 
 describe.each`
   description           | wrapper
-  ${'with a router'}    | ${StaticRouter}
+  ${'with a router'}    | ${MemoryRouter}
   ${'without a router'} | ${undefined}
 `('for an internal link $description to /', ({ wrapper }) => {
   it('does not set the anchor target', () => {
@@ -94,13 +94,13 @@ describe.each`
 describe('for an internal link with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const { getByRole } = render(
-      <StaticRouter location="/">
+      <MemoryRouter initialEntries={['/']}>
         <Anchor
           href={`${window.location.protocol}//${window.location.host}/page?query#fragment`}
         >
           text
         </Anchor>
-      </StaticRouter>,
+      </MemoryRouter>,
     );
     const anchor = getByRole('link') as HTMLAnchorElement;
     expect(fireEvent.click(anchor)).toBe(false);
@@ -108,10 +108,10 @@ describe('for an internal link with a router', () => {
 
   it('smoothly scrolls the anchor referenced by the fragment into view', async () => {
     const { getByRole } = render(
-      <StaticRouter location="/">
+      <MemoryRouter initialEntries={['/']}>
         <Anchor href={`#fragment`}>text</Anchor>
         <main id="fragment">text</main>
-      </StaticRouter>,
+      </MemoryRouter>,
     );
     const main = getByRole('main');
     const spyScrollIntoView = jest.spyOn(main, 'scrollIntoView');

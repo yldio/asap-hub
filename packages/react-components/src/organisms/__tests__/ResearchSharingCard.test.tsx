@@ -244,6 +244,9 @@ it('triggers an on change for date published', async () => {
 });
 
 it('shows the custom error message for a date in the future', async () => {
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
   const { findByText } = render(
     <ResearchOutputFormSharingCard
       {...props}

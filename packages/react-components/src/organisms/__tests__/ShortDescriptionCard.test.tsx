@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ShortDescriptionCard from '../ShortDescriptionCard';
 
 describe('ShortDescriptionCard', () => {
@@ -44,10 +45,10 @@ describe('ShortDescriptionCard', () => {
     );
 
     const generateButton = screen.getByRole('button', { name: /Generate/i });
-    generateButton.click();
+    await userEvent.click(generateButton);
 
-    expect(getShortDescription).toHaveBeenCalledTimes(1);
     await waitFor(() => {
+      expect(getShortDescription).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith('generated short description');
     });
   });
@@ -62,12 +63,11 @@ describe('ShortDescriptionCard', () => {
     );
 
     const generateButton = screen.getByRole('button', { name: /Generate/i });
-    generateButton.click();
+    await userEvent.click(generateButton);
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Generate/i }),
-      ).toHaveTextContent('Regenerate');
+    const regenerateButton = await screen.findByRole('button', {
+      name: /Regenerate/i,
     });
+    expect(regenerateButton).toBeVisible();
   });
 });

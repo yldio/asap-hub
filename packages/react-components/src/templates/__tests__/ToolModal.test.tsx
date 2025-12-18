@@ -93,25 +93,32 @@ it('allows url with http protocol', () => {
   ).toBeNull();
 });
 
-it('does not allow any other uri scheme', () => {
-  const { getByLabelText, queryByText } = render(
+it('does not allow any other uri scheme', async () => {
+  const { getByLabelText, findByText } = render(
     <StaticRouter location="/">
       <ToolModal {...props} />
     </StaticRouter>,
   );
   const inputUrl = getByLabelText(/Add URL/i);
-  fireEvent.change(inputUrl, {
-    target: { value: 'slack://tool' },
+
+  await userEvent.clear(inputUrl);
+  await userEvent.type(inputUrl, 'slack://tool');
+  await userEvent.tab(); // Trigger blur event
+
+  // Wait for validation error message to appear (this ensures state update completes)
+  await waitFor(async () => {
+    const errorMessage = await findByText(
+      'Please enter a valid URL, starting with http:// or https://',
+    );
+    expect(errorMessage).toBeVisible();
   });
-  fireEvent.focusOut(inputUrl);
 
   expect(inputUrl).toBeInvalid();
-  expect(
-    queryByText('Please enter a valid URL, starting with http:// or https://'),
-  ).toBeVisible();
 });
 
 it('triggers the save function', async () => {
+  const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+
   const jestFn = jest.fn();
   const { getByText } = render(
     <StaticRouter location="/">
@@ -135,9 +142,13 @@ it('triggers the save function', async () => {
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
+
+  consoleWarnSpy.mockRestore();
 });
 
 it('disables the form elements while submitting', async () => {
+  const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+
   let resolveSubmit!: () => void;
   const handleSave = () =>
     new Promise<void>((resolve) => {
@@ -159,4 +170,6 @@ it('disables the form elements while submitting', async () => {
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
+
+  consoleWarnSpy.mockRestore();
 });

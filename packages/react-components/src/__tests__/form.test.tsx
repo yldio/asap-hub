@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 
 import { useValidation } from '../form';
 import { noop } from '../utils';
@@ -47,14 +47,16 @@ describe('useValidation', () => {
     expect(await findByText(/match/i)).toBeVisible();
   });
 
-  it('shows a validation error message when the form is validated', () => {
-    const { getByRole, getByText } = render(
+  it('shows a validation error message when the form is validated', async () => {
+    const { getByRole, findByText } = render(
       <form>
         <ValidatedInput value="wrong" pattern="^val$" />
       </form>,
     );
-    (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
-    expect(getByText(/match/i)).toBeVisible();
+    await waitFor(() => {
+      (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
+    });
+    expect(await findByText(/match/i)).toBeVisible();
   });
 
   it('does not immediately show a custom validation error message', () => {
@@ -82,9 +84,9 @@ describe('useValidation', () => {
     expect(message).toHaveBeenCalled();
   });
 
-  it('shows a custom validation error message when the form is validated', () => {
+  it('shows a custom validation error message when the form is validated', async () => {
     const message = jest.fn(() => 'custom error message');
-    const { getByRole, getByText } = render(
+    const { getByRole, findByText } = render(
       <form>
         <ValidatedInput
           getValidationMessage={message}
@@ -93,8 +95,10 @@ describe('useValidation', () => {
         />
       </form>,
     );
-    (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
-    expect(getByText('custom error message')).toBeVisible();
+    await waitFor(() => {
+      (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
+    });
+    expect(await findByText('custom error message')).toBeVisible();
     expect(message).toHaveBeenCalled();
   });
 

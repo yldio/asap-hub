@@ -1,10 +1,4 @@
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import userEvent from '@testing-library/user-event';
 import DiscussionModal from '../DiscussionModal';
@@ -31,16 +25,19 @@ it('data is sent on form submission', async () => {
   await userEvent.type(titleInput, 'test title');
 
   const textInput = screen.getByTestId('editor');
-  await act(async () => {
-    await userEvent.click(textInput);
-    await userEvent.tab();
-    fireEvent.input(textInput, { data: 'test message' });
-    await userEvent.tab();
+  await userEvent.click(textInput);
+  await userEvent.tab();
+  fireEvent.input(textInput, { data: 'test message' });
+  await userEvent.tab();
+
+  await waitFor(() => {
+    const shareButton = screen.getByRole('button', { name: /Send/i });
+    expect(shareButton).toBeEnabled();
   });
 
   const shareButton = screen.getByRole('button', { name: /Send/i });
-  await waitFor(() => expect(shareButton).toBeEnabled());
   await userEvent.click(shareButton);
+
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
       title: 'test title',
@@ -56,14 +53,14 @@ it('send button is disabled when title is not provided', async () => {
   expect(sendButton).toBeDisabled();
 
   const textInput = screen.getByTestId('editor');
-  await act(async () => {
-    await userEvent.click(textInput);
-    await userEvent.tab();
-    fireEvent.input(textInput, { data: 'test message' });
-    await userEvent.tab();
-  });
+  await userEvent.click(textInput);
+  await userEvent.tab();
+  fireEvent.input(textInput, { data: 'test message' });
+  await userEvent.tab();
 
-  expect(sendButton).toBeDisabled();
+  await waitFor(() => {
+    expect(sendButton).toBeDisabled();
+  });
 });
 
 it('send button is disabled when text is not provided', async () => {
@@ -72,12 +69,12 @@ it('send button is disabled when text is not provided', async () => {
   const sendButton = screen.getByRole('button', { name: /Send/i });
   expect(sendButton).toBeDisabled();
 
-  await act(async () => {
-    const titleInput = screen.getByRole('textbox', { name: /Title/i });
-    await userEvent.type(titleInput, 'test title');
-  });
+  const titleInput = screen.getByRole('textbox', { name: /Title/i });
+  await userEvent.type(titleInput, 'test title');
 
-  expect(sendButton).toBeDisabled();
+  await waitFor(() => {
+    expect(sendButton).toBeDisabled();
+  });
 });
 
 it('displays error message when title is bigger than 100 characters', async () => {
@@ -88,26 +85,26 @@ it('displays error message when title is bigger than 100 characters', async () =
     titleInput,
     'test title, test title, test title, test title, test title, test title, test title, test title, test title',
   );
-  await act(async () => {
-    await userEvent.tab();
-  });
+  await userEvent.tab();
 
-  expect(
-    screen.getAllByText(/Title cannot exceed 100 characters./i).length,
-  ).toBeGreaterThanOrEqual(1);
+  await waitFor(() => {
+    expect(
+      screen.getAllByText(/Title cannot exceed 100 characters./i).length,
+    ).toBeGreaterThanOrEqual(1);
+  });
 });
 
 it('displays cancellation confirmation on cancel', async () => {
   render(<DiscussionModal {...defaultProps} />);
 
-  const cancelButton = screen.getByRole('button', { name: /Cancel/i });
-  await act(async () => {
-    await userEvent.click(cancelButton);
-  });
+  const cancelButton = await screen.findByRole('button', { name: /Cancel/i });
+  await userEvent.click(cancelButton);
 
-  expect(
-    screen.getByText(
-      /Cancelling now will result in the loss of all entered data./,
-    ),
-  ).toBeVisible();
+  const cancellationText = await screen.findByText(
+    /Cancelling now will result in the loss of all entered data./,
+  );
+
+  await waitFor(() => {
+    expect(cancellationText).toBeVisible();
+  });
 });

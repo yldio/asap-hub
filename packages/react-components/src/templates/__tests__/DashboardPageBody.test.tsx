@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { GuideDataObject } from '@asap-hub/model';
 import {
   createListEventResponse,
@@ -37,7 +37,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   recommendedUsers: createListUserResponse(3).items,
 };
 
-it('renders guides', () => {
+it('renders guides', async () => {
   const guides: GuideDataObject[] = [
     {
       title: 'Guide Title',
@@ -55,8 +55,12 @@ it('renders guides', () => {
 
   const guideTitle = screen.getByText('Guide Title');
   expect(guideTitle).toBeInTheDocument();
-  guideTitle.click();
-  const linkButton = screen.getByText('Test Link');
+
+  await waitFor(() => {
+    guideTitle.click();
+  });
+
+  const linkButton = await screen.findByText('Test Link');
   expect(linkButton.closest('a')).toHaveAttribute('href', 'https://test.com');
 });
 

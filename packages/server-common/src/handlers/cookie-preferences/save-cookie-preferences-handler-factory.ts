@@ -1,8 +1,10 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
+import { PutItemCommand } from '@aws-sdk/client-dynamodb';
 
 import { Logger } from '../../utils';
 import { validateCookieCreateData } from '../../validation';
+import { createDynamoDBClient } from './dynamo-init';
+import { handleDynamoDBError } from './error-handler';
 
 export const saveCookiePreferencesHandlerFactory =
   (
@@ -18,7 +20,7 @@ export const saveCookiePreferencesHandlerFactory =
       request.payload as Record<string, unknown>,
     );
 
-    const client = new DynamoDBClient();
+    const client = createDynamoDBClient(logger);
     const command = new PutItemCommand({
       TableName: tableName,
       Item: {
@@ -33,10 +35,19 @@ export const saveCookiePreferencesHandlerFactory =
       },
     });
 
-    const response = await client.send(command);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response),
-    };
+    try {
+      const response = await client.send(command);
+      logger.info(
+        `Successfully saved cookie preferences for cookieId: ${cookieId}`,
+      );
+      return {
+        statusCode: 200,
+        body: JSON.stringify(response),
+      };
+    } catch (error) {
+      throw handleDynamoDBError(error, logger, 'save', {
+        tableName,
+        cookieId,
+      });
+    }
   };

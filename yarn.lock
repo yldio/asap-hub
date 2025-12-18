@@ -1592,6 +1592,8 @@ __metadata:
     serverless: 3.38.0
     serverless-esbuild: ^1.50.1
     serverless-http: 2.7.0
+    serverless-offline: 8.8.1
+    serverless-offline-ssm: ^6.2.0
     serverless-s3-sync: 3.2.0
     serverless-webpack: 5.13.0
     source-map-support: 0.5.21

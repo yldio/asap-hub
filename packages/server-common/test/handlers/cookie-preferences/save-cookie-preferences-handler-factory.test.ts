@@ -9,6 +9,7 @@ jest.mock('@aws-sdk/client-dynamodb');
 const logger = {
   info: jest.fn(),
   debug: jest.fn(),
+  error: jest.fn(),
 } as unknown as jest.Mocked<Logger>;
 
 describe('Save cookie preferences handler', () => {
@@ -125,5 +126,34 @@ describe('Save cookie preferences handler', () => {
     );
 
     await expect(handler(request)).rejects.toThrow('DynamoDB error');
+  });
+
+  test('should handle non-Error exceptions', async () => {
+    const mockDynamoClient = new DynamoDBClient(
+      {},
+    ) as jest.Mocked<DynamoDBClient>;
+
+    // Mock a non-Error exception (e.g., a string or object)
+    (mockDynamoClient.send as jest.Mock).mockRejectedValueOnce('String error');
+
+    const request = getLambdaRequest(
+      {
+        cookieId: 'cookie-id',
+        preferences: {
+          essential: true,
+          analytics: false,
+        },
+      },
+      {},
+    );
+
+    await expect(handler(request)).rejects.toThrow('String error');
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining('Failed to save cookie preferences to DynamoDB'),
+      expect.objectContaining({
+        error: 'String error',
+        errorName: 'Error',
+      }),
+    );
   });
 });

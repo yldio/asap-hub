@@ -1,6 +1,7 @@
 import nock from 'nock';
 import {
   fetchOrcidProfile,
+  isValidOrcidFormat,
   isValidOrcidResponse,
   ORCIDWorksResponse,
   transformOrcidWorks,
@@ -49,6 +50,30 @@ describe('Fetch ORCID utils', () => {
         },
       );
       expect(result.works[0].publicationDate).toEqual({});
+    });
+  });
+
+  describe('isValidOrcidFormat', () => {
+    test('Should return true for valid ORCID with numeric checksum', () => {
+      expect(isValidOrcidFormat('0000-0000-0000-0000')).toBe(true);
+      expect(isValidOrcidFormat('1234-5678-9012-3456')).toBe(true);
+    });
+
+    test('Should return true for valid ORCID with X checksum', () => {
+      expect(isValidOrcidFormat('0000-0000-0000-000X')).toBe(true);
+      expect(isValidOrcidFormat('1234-5678-9012-345X')).toBe(true);
+    });
+
+    test('Should return false for invalid ORCID formats', () => {
+      expect(isValidOrcidFormat(undefined)).toBe(false);
+      expect(isValidOrcidFormat('')).toBe(false);
+      expect(isValidOrcidFormat('-')).toBe(false);
+      expect(isValidOrcidFormat('0000-0000-0000-000')).toBe(false); // too short
+      expect(isValidOrcidFormat('0000-0000-0000-00000')).toBe(false); // too long
+      expect(isValidOrcidFormat('0000-0000-0000-000x')).toBe(false); // lowercase x
+      expect(isValidOrcidFormat('0000-0000-000-0000')).toBe(false); // wrong group size
+      expect(isValidOrcidFormat('0000-0000-0000-00XX')).toBe(false); // multiple X
+      expect(isValidOrcidFormat('0000-0000-0000-X000')).toBe(false); // X in wrong position
     });
   });
 

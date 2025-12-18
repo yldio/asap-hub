@@ -108,6 +108,22 @@ describe('Cookie Modal & Button', () => {
   });
 
   it('closes modal when save button is clicked, shows the cookie button and saves cookies', async () => {
+    // Mock fetch for both the consistency check (GET) and save (POST) requests
+    (global.fetch as jest.Mock).mockImplementation((url, options) => {
+      // GET request is for checkConsistencyWithRemote
+      if (options?.method === 'GET' || !options?.method) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({}),
+        } as Response);
+      }
+      // POST request is for onSaveCookiePreferences
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(),
+      } as Response);
+    });
+
     render(<App />);
     userEvent.click(screen.getByText('Save and close'));
 
@@ -127,18 +143,24 @@ describe('Cookie Modal & Button', () => {
   });
 
   it('shows the cookie modal when cookie button is clicked', async () => {
-    document.cookie = `gp2-cookie-consent=${JSON.stringify({
+    const mockCookiesPreferences = {
       cookieId: 'a29956e6-897a-47c9-a2f6-3216986d20c7',
       preferences: { essential: true, analytics: false },
-    })};`;
+    };
+    document.cookie = `gp2-cookie-consent=${JSON.stringify(
+      mockCookiesPreferences,
+    )};`;
+
+    // Mock fetch for consistency check (GET request)
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockCookiesPreferences),
+    });
 
     render(<App />);
 
     const cookieButton = await screen.findByTestId('cookie-button');
     userEvent.click(cookieButton);
-
-    const saveAndCloseButton = await screen.findByText('Save and close');
-    userEvent.click(saveAndCloseButton);
 
     await waitFor(() => {
       expect(

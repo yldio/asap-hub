@@ -60,11 +60,10 @@ export const useCookieConsent = ({
     !hasGivenCookieConsent(name),
   );
 
-  const [isSaving, setisSaving] = useState(false);
-
   const cookieData = getConsentCookie(name);
 
   const checkConsistencyWithRemote = async () => {
+    // Only check consistency if user has saved preferences locally
     if (!cookieData?.cookieId) return;
     const getUrl = `${baseUrl}/${cookieData.cookieId}`;
 
@@ -75,18 +74,27 @@ export const useCookieConsent = ({
       },
     });
 
-    const remoteCookieData = await remoteCookieDataResponse?.json();
-
-    if (
-      remoteCookieData?.error &&
-      remoteCookieData?.statusCode === 404 &&
-      !isSaving
-    ) {
+    // If cookie not found in backend (404): consider inconsistent, show modal
+    if (remoteCookieDataResponse?.status === 404) {
       setShowCookieModal(true);
+      return;
     }
 
-    if (!remoteCookieData || remoteCookieData?.error) return;
+    // If fetch fails for other reasons: do not show modal, do nothing
+    if (!remoteCookieDataResponse || !remoteCookieDataResponse.ok) {
+      return;
+    }
 
+    const remoteCookieData = await remoteCookieDataResponse.json();
+
+    if (
+      !remoteCookieData ||
+      remoteCookieData?.error ||
+      !remoteCookieData?.preferences
+    )
+      return;
+
+    // Fetch successful: check if consistent with local
     const {
       cookieId: remoteCookieId,
       preferences: { analytics: remoteAnalytics },
@@ -101,17 +109,23 @@ export const useCookieConsent = ({
       remoteCookieId === cookieId && remoteAnalytics === analytics;
 
     if (isConsistent) {
+      // Consistent: don't show modal, do nothing
       setShowCookieModal(false);
       return;
     }
 
+    // Not consistent: show modal (user will save again, triggering onSaveCookiePreferences flow)
     setShowCookieModal(true);
   };
 
   const onSaveCookiePreferences = async (analytics: boolean) => {
-    setisSaving(true);
+    // Step 1: Save preferences locally first
     if (!analytics) {
       clearCookiesWithPrefix(GA_COOKIES_PREFIX);
+      // Clear dataLayer when analytics is disabled
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer = undefined;
+      }
     }
 
     const updatedCookieData = {
@@ -126,8 +140,10 @@ export const useCookieConsent = ({
     };
 
     setConsentCookie(name, updatedCookieData);
+    setShowCookieModal(false);
 
-    await fetch(saveUrl, {
+    // Step 2: Attempt to save to backend (errors will be caught by Sentry)
+    const response = await fetch(saveUrl, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -135,8 +151,12 @@ export const useCookieConsent = ({
       body: JSON.stringify(updatedCookieData),
     });
 
-    setShowCookieModal(false);
-    setisSaving(false);
+    if (!response || !response.ok) {
+      throw new Error(
+        `Failed to save cookie preferences: ${response?.status || 'unknown'}`,
+      );
+    }
+    // If saved successfully: do nothing (prefs already saved locally)
   };
 
   useEffect(() => {
@@ -148,7 +168,7 @@ export const useCookieConsent = ({
   return {
     showCookieModal,
     onSaveCookiePreferences,
-    toggleCookieModal: () => setShowCookieModal((prev) => !prev),
+    toggleCookieModal: () => setShowCookieModal((prev: boolean) => !prev),
     cookieData,
   };
 };

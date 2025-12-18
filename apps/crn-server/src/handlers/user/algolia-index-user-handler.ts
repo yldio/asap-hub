@@ -63,10 +63,10 @@ async function fetchUserFromTeamMembership(
 
   logger.debug(
     { membershipId, userId: first.id, detailType: 'TeamMembership' },
-    'Resolved user from TeamMembership',
+    'Successfully resolved user from TeamMembership',
   );
 
-  return userController.fetchById(first.id);
+  return userController.fetchByIdForAlgoliaList(first.id);
 }
 
 async function fetchUserFromEvent(
@@ -74,12 +74,11 @@ async function fetchUserFromEvent(
   detailType: string,
   payload: IndexUserPayload | TeamMembershipPayload,
 ): Promise<UserResponse> {
+  logger.info({ payload, detailType }, 'Fetching user from event payload');
   if (isTeamMembershipEvent(detailType)) {
     return fetchUserFromTeamMembership(userController, payload.resourceId);
   }
-
-  const user = await userController.fetchById(payload.resourceId);
-  logger.debug({ userId: user.id, detailType }, 'Fetched user by resourceId');
+  const user = await userController.fetchByIdForAlgoliaList(payload.resourceId);
   return user;
 }
 
@@ -89,10 +88,10 @@ async function syncUserToAlgolia(
 ): Promise<void> {
   if (shouldIndexUser(user)) {
     await algolia.save({ data: toUserListItem(user), type: 'user' });
-    logger.debug({ userId: user.id }, 'User indexed');
+    logger.info({ userId: user.id }, 'User indexed');
   } else {
     await algolia.remove(user.id);
-    logger.debug({ userId: user.id }, 'User removed (not indexable)');
+    logger.info({ userId: user.id }, 'User removed (not indexable)');
   }
 }
 
@@ -114,9 +113,9 @@ async function handleNotFoundError(
     return;
   }
   await algolia.remove(resourceId);
-  logger.debug(
+  logger.info(
     { userId: resourceId, detailType },
-    'User removed (not found on fetchById)',
+    'User removed (not found on fetchByIdForAlgoliaList)',
   );
 }
 

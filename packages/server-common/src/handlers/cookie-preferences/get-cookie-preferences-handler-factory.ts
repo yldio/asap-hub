@@ -1,8 +1,10 @@
-import { NotFoundError } from '@asap-hub/errors';
 import { framework as lambda } from '@asap-hub/services-common';
-import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb';
+import { GetItemCommand } from '@aws-sdk/client-dynamodb';
+import Boom from '@hapi/boom';
 
 import { Logger } from '../../utils';
+import { createDynamoDBClient } from './dynamo-init';
+import { handleDynamoDBError } from './error-handler';
 
 export const getCookiePreferencesHandlerFactory =
   (
@@ -19,6 +21,11 @@ export const getCookiePreferencesHandlerFactory =
             analytics: boolean;
             essential: boolean;
           };
+        }
+      | {
+          error: string;
+          message: string;
+          statusCode: number;
         };
   }>) =>
   async (request: lambda.Request) => {
@@ -31,7 +38,7 @@ export const getCookiePreferencesHandlerFactory =
       };
     }
 
-    const client = new DynamoDBClient();
+    const client = createDynamoDBClient(logger);
     const command = new GetItemCommand({
       TableName: tableName,
       Key: {
@@ -39,37 +46,55 @@ export const getCookiePreferencesHandlerFactory =
       },
     });
 
-    const { Item } = await client.send(command);
-
-    if (
-      !Item ||
-      !(
-        Item.preferences?.M?.analytics?.BOOL !== undefined &&
-        typeof Item.preferences.M.analytics.BOOL === 'boolean'
-      ) ||
-      !(
-        Item.preferences?.M?.essential?.BOOL !== undefined &&
-        typeof Item.preferences.M.essential.BOOL === 'boolean'
-      ) ||
-      !Item.cookieId?.S ||
-      !Item.createdAt?.S
-    ) {
-      throw new NotFoundError(
-        undefined,
-        `Cookie with id ${request.params.cookieId} not found`,
-      );
+    let item;
+    try {
+      const result = await client.send(command);
+      item = result.Item;
+    } catch (error) {
+      throw handleDynamoDBError(error, logger, 'get', {
+        tableName,
+        cookieId: request.params.cookieId,
+      });
     }
 
-    logger.info(`${JSON.stringify(Item)}`);
+    if (
+      !item ||
+      !(
+        item.preferences?.M?.analytics?.BOOL !== undefined &&
+        typeof item.preferences.M.analytics.BOOL === 'boolean'
+      ) ||
+      !(
+        item.preferences?.M?.essential?.BOOL !== undefined &&
+        typeof item.preferences.M.essential.BOOL === 'boolean'
+      ) ||
+      !item.cookieId?.S ||
+      !item.createdAt?.S
+    ) {
+      // Cookie not found - return 404 response
+      // Frontend will handle this gracefully and use locally stored values
+      const notFoundError = Boom.notFound(
+        `Cookie with id ${request.params.cookieId} not found`,
+      );
+      return {
+        statusCode: notFoundError.output.statusCode,
+        payload: {
+          error: notFoundError.output.payload.error,
+          message: notFoundError.output.payload.message,
+          statusCode: notFoundError.output.statusCode,
+        },
+      };
+    }
+
+    logger.info(`${JSON.stringify(item)}`);
 
     return {
       statusCode: 200,
       payload: {
-        createdAt: Item.createdAt.S,
-        cookieId: Item.cookieId.S,
+        createdAt: item.createdAt.S,
+        cookieId: item.cookieId.S,
         preferences: {
-          analytics: Item.preferences.M?.analytics?.BOOL,
-          essential: Item.preferences.M?.essential?.BOOL,
+          analytics: item.preferences.M?.analytics?.BOOL,
+          essential: item.preferences.M?.essential?.BOOL,
         },
       },
     };

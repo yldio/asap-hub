@@ -1,5 +1,4 @@
 import { framework as lambda } from '@asap-hub/services-common';
-import { isValidOrcidFormat } from '@asap-hub/server-common';
 import pThrottle from 'p-throttle';
 import { DateTime } from 'luxon';
 import Users from '../../controllers/user.controller';
@@ -44,10 +43,7 @@ const rawHandler = async (): Promise<lambda.Response> => {
   );
 
   for (const outdatedUser of outdatedUsers) {
-    // Skip users with invalid or placeholder ORCID values
-    if (isValidOrcidFormat(outdatedUser.orcid)) {
-      await throttledSyncOrcidProfile(outdatedUser);
-    }
+    await throttledSyncOrcidProfile(outdatedUser);
   }
 
   return {

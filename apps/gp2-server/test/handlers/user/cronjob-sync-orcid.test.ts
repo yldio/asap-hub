@@ -66,6 +66,11 @@ describe('Cronjob - Sync Users ORCID', () => {
         items: [user],
       });
 
+      mockDataProvider.fetchById.mockResolvedValueOnce({
+        ...fetchUserResponseDataObject(),
+        ...user,
+      });
+
       const { statusCode } = await unloggedHandler();
       expect(statusCode).toBe(200);
       expect(nock.pendingMocks()).toHaveLength(0);
@@ -82,6 +87,11 @@ describe('Cronjob - Sync Users ORCID', () => {
       mockDataProvider.fetchForOrcidSync.mockResolvedValueOnce({
         total: 1,
         items: [user],
+      });
+
+      mockDataProvider.fetchById.mockResolvedValueOnce({
+        ...fetchUserResponseDataObject(),
+        ...user,
       });
 
       const { statusCode } = await unloggedHandler();
@@ -102,6 +112,11 @@ describe('Cronjob - Sync Users ORCID', () => {
         items: [user],
       });
 
+      mockDataProvider.fetchById.mockResolvedValueOnce({
+        ...fetchUserResponseDataObject(),
+        ...user,
+      });
+
       const { statusCode } = await unloggedHandler();
       expect(statusCode).toBe(200);
       expect(nock.pendingMocks()).toHaveLength(0);
@@ -120,6 +135,11 @@ describe('Cronjob - Sync Users ORCID', () => {
         items: [user],
       });
 
+      mockDataProvider.fetchById.mockResolvedValueOnce({
+        ...fetchUserResponseDataObject(),
+        ...user,
+      });
+
       const { statusCode } = await unloggedHandler();
       expect(statusCode).toBe(200);
       expect(nock.pendingMocks()).toHaveLength(0);
@@ -136,6 +156,11 @@ describe('Cronjob - Sync Users ORCID', () => {
       mockDataProvider.fetchForOrcidSync.mockResolvedValueOnce({
         total: 1,
         items: [user],
+      });
+
+      mockDataProvider.fetchById.mockResolvedValueOnce({
+        ...fetchUserResponseDataObject(),
+        ...user,
       });
 
       const { statusCode } = await unloggedHandler();
@@ -166,10 +191,15 @@ describe('Cronjob - Sync Users ORCID', () => {
         items: [validUser, invalidUser],
       });
 
-      mockDataProvider.fetchById.mockResolvedValueOnce({
-        ...fetchUserResponseDataObject(),
-        ...validUser,
-      });
+      mockDataProvider.fetchById
+        .mockResolvedValueOnce({
+          ...fetchUserResponseDataObject(),
+          ...validUser,
+        })
+        .mockResolvedValueOnce({
+          ...fetchUserResponseDataObject(),
+          ...invalidUser,
+        });
 
       const { statusCode } = await unloggedHandler();
       expect(statusCode).toBe(200);

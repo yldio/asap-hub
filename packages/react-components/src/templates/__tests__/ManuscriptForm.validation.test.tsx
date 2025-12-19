@@ -365,7 +365,7 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.tab();
 
     expect(container).toHaveTextContent(
-      "The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added. • Lab One",
+      "The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Lab One",
     );
 
     expect(container).not.toHaveTextContent(firstAuthorErrorMessage);

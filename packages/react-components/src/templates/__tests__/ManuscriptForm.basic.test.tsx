@@ -414,8 +414,8 @@ describe('Manuscript form', () => {
     const addFileButtons = document.querySelectorAll(
       'button:disabled',
     ) as NodeListOf<HTMLButtonElement>;
-    const disabledAddFileButtons = Array.from(addFileButtons).filter(
-      (button) => button.textContent?.includes('Add File'),
+    const disabledAddFileButtons = Array.from(addFileButtons).filter((button) =>
+      button.textContent?.includes('Add File'),
     );
     expect(disabledAddFileButtons.length).toBeGreaterThan(0);
 
@@ -511,7 +511,7 @@ describe('Manuscript form', () => {
     await userEvent.click(getByText('Category B'));
     await userEvent.click(categoryInput);
     await userEvent.click(getByText('Category C'));
-    await categoryInput.blur();
+    categoryInput.blur();
 
     await waitFor(() => {
       expect(

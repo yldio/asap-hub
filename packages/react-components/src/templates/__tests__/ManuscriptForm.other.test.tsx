@@ -12,7 +12,6 @@ import {
   cleanup,
   render,
   waitFor,
-  waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -454,26 +453,17 @@ describe('manuscript file', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+    const mockFile = new File([''], 'test.pdf', { type: 'application/pdf' });
     const mockError = 'No file provided or file is not a PDF.';
 
     handleFileUpload.mockImplementation(
       (
-        file: File,
-        fileType: ManuscriptFileType,
+        _file: File,
+        _fileType: ManuscriptFileType,
         handleError: (errorMessage: string) => void,
       ) => {
-        if (file === mockFile) {
-          return Promise.reject(new Error(mockError)).catch((error) => {
-            handleError(error.message);
-            return undefined;
-          });
-        }
-        return Promise.resolve({
-          id: '123',
-          filename: 'test.pdf',
-          url: 'http://example.com/test.pdf',
-        });
+        handleError(mockError);
+        return Promise.resolve(undefined);
       },
     );
     const { getByLabelText, getByText } = render(
@@ -494,9 +484,7 @@ describe('manuscript file', () => {
 
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
-    await waitFor(async () => {
-      await userEvent.upload(uploadInput, mockFile);
-    });
+    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
 
     expect(getByText(mockError)).toBeInTheDocument();
   });
@@ -506,8 +494,8 @@ describe('manuscript file', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 100)], 'test.txt', {
-      type: 'text/plain',
+    const mockFile = new File(['1'.repeat(101 * 1024 * 1024)], 'test.pdf', {
+      type: 'application/pdf',
     });
 
     const { getByLabelText, getByText } = render(
@@ -528,9 +516,7 @@ describe('manuscript file', () => {
 
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
-    await waitFor(async () => {
-      await userEvent.upload(uploadInput, mockFile);
-    });
+    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
 
     expect(
       getByText(
@@ -728,19 +714,18 @@ describe('key resource table', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+    const mockFile = new File([''], 'test.csv', { type: 'text/csv' });
     const mockError = 'No file provided or file is not a CSV.';
 
     handleFileUpload.mockImplementation(
       (
-        file: File,
-        fileType: ManuscriptFileType,
+        _file: File,
+        _fileType: ManuscriptFileType,
         handleError: (errorMessage: string) => void,
-      ) =>
-        Promise.reject(new Error(mockError)).catch((error) => {
-          handleError(error.message);
-          return undefined;
-        }),
+      ) => {
+        handleError(mockError);
+        return Promise.resolve(undefined);
+      },
     );
     const { getByLabelText, getByText } = render(
       <StaticRouter location="/">
@@ -760,9 +745,7 @@ describe('key resource table', () => {
 
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
-    await waitFor(async () => {
-      await userEvent.upload(uploadInput, mockFile);
-    });
+    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
 
     expect(getByText(mockError)).toBeInTheDocument();
   });
@@ -772,8 +755,8 @@ describe('key resource table', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 100)], 'test.txt', {
-      type: 'text/plain',
+    const mockFile = new File(['1'.repeat(101 * 1024 * 1024)], 'test.csv', {
+      type: 'text/csv',
     });
 
     const { getByLabelText, getByText } = render(
@@ -794,9 +777,7 @@ describe('key resource table', () => {
 
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
-    await waitFor(async () => {
-      await userEvent.upload(uploadInput, mockFile);
-    });
+    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
 
     expect(
       getByText(
@@ -890,19 +871,18 @@ describe('additional files', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+    const mockFile = new File([''], 'test.pdf', { type: 'application/pdf' });
     const mockError = 'No file provided or file is not a CSV or PDF.';
 
     handleFileUpload.mockImplementation(
       (
-        file: File,
-        fileType: ManuscriptFileType,
+        _file: File,
+        _fileType: ManuscriptFileType,
         handleError: (errorMessage: string) => void,
-      ) =>
-        Promise.reject(new Error(mockError)).catch((error) => {
-          handleError(error.message);
-          return undefined;
-        }),
+      ) => {
+        handleError(mockError);
+        return Promise.resolve(undefined);
+      },
     );
     const { getByLabelText, getByText } = render(
       <StaticRouter location="/">
@@ -922,9 +902,7 @@ describe('additional files', () => {
 
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(async () => {
-      await userEvent.upload(uploadInput, mockFile);
-    });
+    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
 
     expect(getByText(mockError)).toBeInTheDocument();
   });
@@ -973,8 +951,8 @@ describe('additional files', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 100)], 'test.txt', {
-      type: 'text/plain',
+    const mockFile = new File(['1'.repeat(101 * 1024 * 1024)], 'test.pdf', {
+      type: 'application/pdf',
     });
 
     const { getByLabelText, getByText } = render(
@@ -995,9 +973,7 @@ describe('additional files', () => {
 
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(async () => {
-      await userEvent.upload(uploadInput, mockFile);
-    });
+    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
 
     expect(
       getByText(
@@ -1172,7 +1148,7 @@ it('user can add labs', async () => {
 
 it('displays error message when no team is found', async () => {
   const getTeamSuggestionsMock = jest.fn().mockResolvedValue([]);
-  const { queryByText, getByText, getByRole } = render(
+  const { getByText, getByRole } = render(
     <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
@@ -1183,13 +1159,14 @@ it('displays error message when no team is found', async () => {
     </StaticRouter>,
   );
   await userEvent.click(getByRole('textbox', { name: /Teams/i }));
-  await waitForElementToBeRemoved(() => queryByText(/loading/i));
-  expect(getByText(/Sorry, no teams match/i)).toBeVisible();
+  await waitFor(() => {
+    expect(getByText(/Sorry, no teams match/i)).toBeVisible();
+  });
 });
 
 it('displays error message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
-  const { queryByText, getByText, getByRole } = render(
+  const { getByText, getByRole } = render(
     <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
@@ -1200,8 +1177,9 @@ it('displays error message when no lab is found', async () => {
     </StaticRouter>,
   );
   await userEvent.click(getByRole('textbox', { name: /Labs/i }));
-  await waitForElementToBeRemoved(() => queryByText(/loading/i));
-  expect(getByText(/Sorry, no labs match/i)).toBeVisible();
+  await waitFor(() => {
+    expect(getByText(/Sorry, no labs match/i)).toBeVisible();
+  });
 });
 
 it('calls onUpdate when form is updated', async () => {

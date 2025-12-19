@@ -57,11 +57,13 @@ describe('DiscussionsTab', () => {
 
     await userEvent.type(screen.getByLabelText(/title/i), 'Test Discussion');
     const textInput = screen.getByTestId('editor');
-    await act(async () => {
-      await userEvent.click(textInput);
-      await userEvent.tab();
-      fireEvent.input(textInput, { data: 'Test Message' });
-      await userEvent.tab();
+    await userEvent.click(textInput);
+    await userEvent.tab();
+    fireEvent.input(textInput, { data: 'Test Message' });
+    await userEvent.tab();
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /send/i })).toBeEnabled();
     });
 
     await userEvent.click(screen.getByRole('button', { name: /send/i }));
@@ -72,6 +74,11 @@ describe('DiscussionsTab', () => {
         'Test Discussion',
         'Test Message',
       );
+    });
+
+    // Wait for the modal to close to ensure all async state updates complete
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
   });
 

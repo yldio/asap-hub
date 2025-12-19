@@ -184,7 +184,9 @@ describe('on submit', () => {
     await userEvent.click(screen.getByText('Chris Blue'));
     await userEvent.click(authors);
     await userEvent.type(authors, 'Alex White');
-    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
     await userEvent.click(screen.getAllByText('Alex White')[1]!);
 
     // access instructions

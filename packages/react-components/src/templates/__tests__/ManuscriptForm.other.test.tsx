@@ -484,9 +484,11 @@ describe('manuscript file', () => {
 
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
-    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(getByText(mockError)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(mockError)).toBeInTheDocument();
+    });
   });
 
   it('should show error when file size is greater than 100MB', async () => {
@@ -494,9 +496,11 @@ describe('manuscript file', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(101 * 1024 * 1024)], 'test.pdf', {
+    const mockFileContent = new Array(1024).fill('x').join('');
+    const mockFile = new File([mockFileContent], 'test.pdf', {
       type: 'application/pdf',
     });
+    Object.defineProperty(mockFile, 'size', { value: 101 * 1024 * 1024 });
 
     const { getByLabelText, getByText } = render(
       <StaticRouter location="/">
@@ -516,13 +520,15 @@ describe('manuscript file', () => {
 
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
-    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
   });
 
   it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
@@ -548,20 +554,20 @@ describe('manuscript file', () => {
     });
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
-    await waitFor(async () => {
-      await userEvent.upload(uploadInput, testFile);
-    });
+    await userEvent.upload(uploadInput, testFile);
 
-    expect(getByText(/test.pdf/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(/test.pdf/i)).toBeInTheDocument();
+    });
 
     const removeFileButton = getByRole('button', { name: /cross/i });
     expect(removeFileButton).toBeInTheDocument();
 
-    await waitFor(async () => {
-      await userEvent.click(removeFileButton);
-    });
+    await userEvent.click(removeFileButton);
 
-    expect(queryByText(/test.pdf/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText(/test.pdf/i)).not.toBeInTheDocument();
+    });
   });
 
   it('clears error when a valid manuscript file is uploaded after an error', async () => {
@@ -580,38 +586,37 @@ describe('manuscript file', () => {
       </StaticRouter>,
     );
 
-    const tooLargeFile = new File(
-      ['1'.repeat(101 * 1024 * 1024)],
-      'too-big.pdf',
-      {
-        type: 'application/pdf',
-      },
-    );
+    const tooLargeFile = new File(['x'], 'too-big.pdf', {
+      type: 'application/pdf',
+    });
+    Object.defineProperty(tooLargeFile, 'size', { value: 101 * 1024 * 1024 });
 
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
-    await waitFor(
-      async () => await userEvent.upload(uploadInput, tooLargeFile),
-    );
+    await userEvent.upload(uploadInput, tooLargeFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
 
     // Uploads a valid file
     const validFile = new File(['valid content'], 'valid.pdf', {
       type: 'application/pdf',
     });
 
-    await waitFor(async () => await userEvent.upload(uploadInput, validFile));
+    await userEvent.upload(uploadInput, validFile);
 
     // Error message should disappear
-    expect(
-      queryByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        queryByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('clears error when a valid key resource table is uploaded after an error', async () => {
@@ -628,37 +633,36 @@ describe('manuscript file', () => {
       </StaticRouter>,
     );
 
-    const tooLargeFile = new File(
-      ['1'.repeat(101 * 1024 * 1024)],
-      'too-big.csv',
-      {
-        type: 'text/csv',
-      },
-    );
+    const tooLargeFile = new File(['x'], 'too-big.csv', {
+      type: 'text/csv',
+    });
+    Object.defineProperty(tooLargeFile, 'size', { value: 101 * 1024 * 1024 });
 
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
-    await waitFor(
-      async () => await userEvent.upload(uploadInput, tooLargeFile),
-    );
+    await userEvent.upload(uploadInput, tooLargeFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
 
     // Uploads a valid file
     const validFile = new File(['valid content'], 'valid.csv', {
       type: 'text/csv',
     });
-    await waitFor(async () => await userEvent.upload(uploadInput, validFile));
+    await userEvent.upload(uploadInput, validFile);
 
     // Error message should disappear
-    expect(
-      queryByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        queryByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('clears error when a valid additional file is uploaded after an error', async () => {
@@ -675,36 +679,35 @@ describe('manuscript file', () => {
       </StaticRouter>,
     );
 
-    const tooLargeFile = new File(
-      ['1'.repeat(101 * 1024 * 1024)],
-      'too-big.pdf',
-      {
-        type: 'application/pdf',
-      },
-    );
+    const tooLargeFile = new File(['x'], 'too-big.pdf', {
+      type: 'application/pdf',
+    });
+    Object.defineProperty(tooLargeFile, 'size', { value: 101 * 1024 * 1024 });
 
     const uploadInput = getByLabelText(/Upload Additional Files/i);
-    await waitFor(
-      async () => await userEvent.upload(uploadInput, tooLargeFile),
-    );
+    await userEvent.upload(uploadInput, tooLargeFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
 
     // Upload a valid file
     const validFile = new File(['valid content'], 'valid.pdf', {
       type: 'application/pdf',
     });
-    await waitFor(async () => await userEvent.upload(uploadInput, validFile));
+    await userEvent.upload(uploadInput, validFile);
 
-    expect(
-      queryByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        queryByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).not.toBeInTheDocument();
+    });
   });
 });
 
@@ -745,9 +748,11 @@ describe('key resource table', () => {
 
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
-    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(getByText(mockError)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(mockError)).toBeInTheDocument();
+    });
   });
 
   it('should show error when file size is greater than 100MB', async () => {
@@ -755,9 +760,11 @@ describe('key resource table', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(101 * 1024 * 1024)], 'test.csv', {
+    const mockFileContent = new Array(1024).fill('x').join('');
+    const mockFile = new File([mockFileContent], 'test.csv', {
       type: 'text/csv',
     });
+    Object.defineProperty(mockFile, 'size', { value: 101 * 1024 * 1024 });
 
     const { getByLabelText, getByText } = render(
       <StaticRouter location="/">
@@ -777,13 +784,15 @@ describe('key resource table', () => {
 
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
-    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
   });
 
   it('should upload and remove file when user clicks on upload key resource table and remove button', async () => {
@@ -817,20 +826,20 @@ describe('key resource table', () => {
     });
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
-    await waitFor(async () => {
-      await userEvent.upload(uploadInput, testFile);
-    });
+    await userEvent.upload(uploadInput, testFile);
 
-    expect(getByText(/test.csv/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(/test.csv/i)).toBeInTheDocument();
+    });
 
     const removeFileButton = getByRole('button', { name: /cross/i });
     expect(removeFileButton).toBeInTheDocument();
 
-    await waitFor(async () => {
-      await userEvent.click(removeFileButton);
-    });
+    await userEvent.click(removeFileButton);
 
-    expect(queryByText(/test.csv/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText(/test.csv/i)).not.toBeInTheDocument();
+    });
   });
 });
 
@@ -860,11 +869,11 @@ describe('additional files', () => {
     });
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(async () => {
-      await userEvent.upload(uploadInput, testFile);
-    });
+    await userEvent.upload(uploadInput, testFile);
 
-    expect(getByText(/test.pdf/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(/test.pdf/i)).toBeInTheDocument();
+    });
   });
   it('should show error when file upload fails', async () => {
     const handleFileUpload: jest.MockedFunction<
@@ -902,9 +911,11 @@ describe('additional files', () => {
 
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(getByText(mockError)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(mockError)).toBeInTheDocument();
+    });
   });
 
   it('user cannot upload the same file multiple times', async () => {
@@ -939,11 +950,11 @@ describe('additional files', () => {
     });
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(async () => {
-      await userEvent.upload(uploadInput, testFile);
-    });
+    await userEvent.upload(uploadInput, testFile);
 
-    expect(getByText(/File uploaded already exists./i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(/File uploaded already exists./i)).toBeInTheDocument();
+    });
   });
 
   it('should show error when file size is greater than 100MB', async () => {
@@ -951,9 +962,11 @@ describe('additional files', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(101 * 1024 * 1024)], 'test.pdf', {
+    const mockFileContent = new Array(1024).fill('x').join('');
+    const mockFile = new File([mockFileContent], 'test.pdf', {
       type: 'application/pdf',
     });
+    Object.defineProperty(mockFile, 'size', { value: 101 * 1024 * 1024 });
 
     const { getByLabelText, getByText } = render(
       <StaticRouter location="/">
@@ -973,13 +986,15 @@ describe('additional files', () => {
 
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(async () => await userEvent.upload(uploadInput, mockFile));
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
   });
 
   it('should remove one of the additional files without removing the others', async () => {
@@ -1018,11 +1033,11 @@ describe('additional files', () => {
     })[0]!;
     expect(removeFileOneButton).toBeInTheDocument();
 
-    await waitFor(async () => {
-      await userEvent.click(removeFileOneButton);
-    });
+    await userEvent.click(removeFileOneButton);
 
-    expect(queryByText(/file_one.csv/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText(/file_one.csv/i)).not.toBeInTheDocument();
+    });
     expect(getByText(/file_two.pdf/i)).toBeInTheDocument();
   });
 });

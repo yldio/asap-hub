@@ -300,7 +300,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
               rules={{
                 required: 'Please select an option.',
               }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { value, onChange, onBlur } }) => (
                 <LabeledDropdown
                   name="Status"
                   title="Status"
@@ -311,6 +311,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   placeholder="Choose an option"
                   value={value ?? ''}
                   onChange={onChange}
+                  onBlur={onBlur}
                   renderValue={(val: ManuscriptStatus) =>
                     val && <StatusBadge status={val} />
                   }

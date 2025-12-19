@@ -77,15 +77,14 @@ export function useValidation<T extends ValidationTarget>(
     const input = inputRef.current;
     if (!input || skipValidation) return;
 
+    // Normalize undefined to empty string to ensure setCustomValidity works correctly
+    // (setCustomValidity(undefined) would convert to "undefined" string, keeping field invalid)
+    const normalizedMessage = customValidationMessage || '';
     // Set the custom validity on the input element so browser knows about it
-    // But DON'T set the validationMessage state here - that would display it immediately
-    input.setCustomValidity(customValidationMessage);
-    // Only update the validation message state if there's a custom message
-    // Don't call reportValidity() here - it will show errors immediately
-    // Validation display should only happen on blur, invalid events, or form submission
-    if (customValidationMessage) {
-      setValidationMessage(customValidationMessage);
-    }
+    input.setCustomValidity(normalizedMessage);
+    // Update the validation message state when customValidationMessage changes
+    // This handles both setting errors and clearing them when the field becomes valid
+    setValidationMessage(normalizedMessage);
 
     return () => {
       if (!skipValidation) {

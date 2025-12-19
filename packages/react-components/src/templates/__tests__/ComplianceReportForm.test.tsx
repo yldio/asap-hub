@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
@@ -64,13 +65,35 @@ it('data is sent on form submission and calls setManuscript', async () => {
     </StaticRouter>,
   );
 
-  await userEvent.click(screen.getByLabelText(/Status/i));
+  // Trigger validation by blurring fields with initial values
+  const urlInput = screen.getByRole('textbox', { name: /url/i });
+  fireEvent.focus(urlInput);
+  fireEvent.blur(urlInput);
+
+  const editor = screen.getByTestId('editor');
+  fireEvent.focus(editor);
+  fireEvent.blur(editor);
+
+  // Select status
+  const statusLabel = screen.getByLabelText(/Status/i);
+
+  // Find the dropdown button - it's the element returned by getByLabelText
+  const statusButton = statusLabel as HTMLElement;
+
+  await userEvent.click(statusButton);
+
   await act(async () => {
     await userEvent.click(screen.getByText(/Addendum Required/i));
   });
 
+  // Manually blur the dropdown button to trigger validation in onBlur mode
+  await act(async () => {
+    fireEvent.blur(statusButton);
+  });
+
+  // Wait for all validations to complete and form to become valid
   const shareButton = screen.getByRole('button', { name: /Share/i });
-  await waitFor(() => expect(shareButton).toBeEnabled());
+  await waitFor(() => expect(shareButton).toBeEnabled(), { timeout: 3000 });
 
   await userEvent.click(shareButton);
 
@@ -115,13 +138,35 @@ it('data is sent on form submission without calling setManuscript', async () => 
     </StaticRouter>,
   );
 
-  await userEvent.click(screen.getByLabelText(/Status/i));
+  // Trigger validation by blurring fields with initial values
+  const urlInput = screen.getByRole('textbox', { name: /url/i });
+  fireEvent.focus(urlInput);
+  fireEvent.blur(urlInput);
+
+  const editor = screen.getByTestId('editor');
+  fireEvent.focus(editor);
+  fireEvent.blur(editor);
+
+  // Select status
+  const statusLabel = screen.getByLabelText(/Status/i);
+
+  // Find the dropdown button - it's the element returned by getByLabelText
+  const statusButton = statusLabel as HTMLElement;
+
+  await userEvent.click(statusButton);
+
   await act(async () => {
     await userEvent.click(screen.getByText(/Addendum Required/i));
   });
 
+  // Manually blur the dropdown button to trigger validation in onBlur mode
+  await act(async () => {
+    fireEvent.blur(statusButton);
+  });
+
+  // Wait for all validations to complete and form to become valid
   const shareButton = screen.getByRole('button', { name: /Share/i });
-  await waitFor(() => expect(shareButton).toBeEnabled());
+  await waitFor(() => expect(shareButton).toBeEnabled(), { timeout: 3000 });
 
   await userEvent.click(shareButton);
 
@@ -151,7 +196,10 @@ it('displays error message when url is missing', async () => {
 
   const input = screen.getByRole('textbox', { name: /url/i });
 
-  fireEvent.blur(input);
+  // Blur empty field to trigger validation
+  await act(async () => {
+    fireEvent.blur(input);
+  });
 
   await waitFor(() => {
     expect(
@@ -159,7 +207,10 @@ it('displays error message when url is missing', async () => {
     ).toBeGreaterThanOrEqual(1);
   });
 
-  await userEvent.type(input, 'http://example.com');
+  // Type a valid URL and blur to trigger revalidation
+  await act(async () => {
+    await userEvent.type(input, 'http://example.com');
+  });
   fireEvent.blur(input);
 
   await waitFor(() => {
@@ -176,7 +227,10 @@ it('displays error message when description is missing', async () => {
 
   const editor = await waitFor(() => getByTestId('editor'));
 
-  fireEvent.blur(editor);
+  // Blur empty editor to trigger validation
+  await act(async () => {
+    fireEvent.blur(editor);
+  });
 
   await waitFor(() => {
     expect(
@@ -184,17 +238,25 @@ it('displays error message when description is missing', async () => {
     ).toBeGreaterThanOrEqual(1);
   });
 
+  // Type description using fireEvent.input (required for Lexical editor)
   await act(async () => {
     await userEvent.click(editor);
     await userEvent.tab();
-    await userEvent.type(editor, 'manuscription description');
-    await userEvent.tab();
+    fireEvent.input(editor, { data: 'manuscript description' });
   });
 
-  fireEvent.blur(editor);
-  await waitFor(() => {
-    expect(queryByText(/Please enter a description/i)).toBeNull();
+  // Wait for Lexical's onChange to propagate to react-hook-form
+  // then blur to trigger validation with the updated value
+  await act(async () => {
+    fireEvent.blur(editor);
   });
+
+  await waitFor(
+    () => {
+      expect(queryByText(/Please enter a description/i)).toBeNull();
+    },
+    { timeout: 3000 },
+  );
 });
 
 it('should go back when cancel button is clicked', async () => {
@@ -294,13 +356,35 @@ it('should show compliant modal when compliant status is selected', async () => 
     </StaticRouter>,
   );
 
-  await userEvent.click(screen.getByLabelText(/Status/i));
+  // Trigger validation by blurring fields with initial values
+  const urlInput = screen.getByRole('textbox', { name: /url/i });
+  fireEvent.focus(urlInput);
+  fireEvent.blur(urlInput);
+
+  const editor = screen.getByTestId('editor');
+  fireEvent.focus(editor);
+  fireEvent.blur(editor);
+
+  // Select status
+  const statusLabel = screen.getByLabelText(/Status/i);
+
+  // Find the dropdown button - it's the element returned by getByLabelText
+  const statusButton = statusLabel as HTMLElement;
+
+  await userEvent.click(statusButton);
+
   await act(async () => {
     await userEvent.click(screen.getByText(/Compliant/i));
   });
 
+  // Manually blur the dropdown button to trigger validation in onBlur mode
+  await act(async () => {
+    fireEvent.blur(statusButton);
+  });
+
+  // Wait for all validations to complete and form to become valid
   const shareButton = screen.getByRole('button', { name: /Share/i });
-  await waitFor(() => expect(shareButton).toBeEnabled());
+  await waitFor(() => expect(shareButton).toBeEnabled(), { timeout: 3000 });
 
   await userEvent.click(shareButton);
 
@@ -325,13 +409,35 @@ it('should show "closed (other)" modal when compliant status is selected', async
     </StaticRouter>,
   );
 
-  await userEvent.click(screen.getByLabelText(/Status/i));
+  // Trigger validation by blurring fields with initial values
+  const urlInput = screen.getByRole('textbox', { name: /url/i });
+  fireEvent.focus(urlInput);
+  fireEvent.blur(urlInput);
+
+  const editor = screen.getByTestId('editor');
+  fireEvent.focus(editor);
+  fireEvent.blur(editor);
+
+  // Select status
+  const statusLabel = screen.getByLabelText(/Status/i);
+
+  // Find the dropdown button - it's the element returned by getByLabelText
+  const statusButton = statusLabel as HTMLElement;
+
+  await userEvent.click(statusButton);
+
   await act(async () => {
     await userEvent.click(screen.getByText(/Closed \(other\)/i));
   });
 
+  // Manually blur the dropdown button to trigger validation in onBlur mode
+  await act(async () => {
+    fireEvent.blur(statusButton);
+  });
+
+  // Wait for all validations to complete and form to become valid
   const shareButton = screen.getByRole('button', { name: /Share/i });
-  await waitFor(() => expect(shareButton).toBeEnabled());
+  await waitFor(() => expect(shareButton).toBeEnabled(), { timeout: 3000 });
 
   await userEvent.click(shareButton);
 

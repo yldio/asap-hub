@@ -2,7 +2,7 @@ import { EngagementType } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { AnalyticsEngagementPageBody } from '..';
+import AnalyticsEngagementPageBody from '../AnalyticsEngagementPageBody';
 
 describe('AnalyticsEngagementPageBody', () => {
   const props: ComponentProps<typeof AnalyticsEngagementPageBody> = {
@@ -59,9 +59,8 @@ describe('AnalyticsEngagementPageBody', () => {
       <AnalyticsEngagementPageBody {...props} isMeetingRepAttendanceEnabled />,
     );
 
-    await userEvent.click(
-      screen.getAllByText('Representation of Presenters')[0]!,
-    );
+    const dropdowns = screen.getAllByRole('textbox', { hidden: false });
+    await userEvent.click(dropdowns[0] as Element);
     expect(screen.getByText('Meeting Rep Attendance')).toBeInTheDocument();
   });
   it('does not display attendance option when flag is disabled', async () => {
@@ -72,9 +71,8 @@ describe('AnalyticsEngagementPageBody', () => {
       />,
     );
 
-    await userEvent.click(
-      screen.getAllByText('Representation of Presenters')[0]!,
-    );
+    const dropdowns = screen.getAllByRole('textbox', { hidden: false });
+    await userEvent.click(dropdowns[0] as Element);
     expect(
       screen.queryByText('Meeting Rep Attendance'),
     ).not.toBeInTheDocument();

@@ -314,7 +314,7 @@ it('shows validation message when impact is not selected', async () => {
   );
 
   await waitFor(() => {
-    expect(screen.getByText('Please choose an impact.')).toBeInTheDocument();
+    expect(screen.getByText('Please add at least one impact.')).toBeInTheDocument();
   });
 });
 
@@ -336,7 +336,7 @@ it('does not show impact validation message when impact is selected', async () =
 
   await waitFor(() => {
     expect(
-      screen.queryByText('Please choose an impact.'),
+      screen.queryByText('Please add at least one impact.'),
     ).not.toBeInTheDocument();
   });
 });

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom/server';
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
@@ -92,16 +92,16 @@ describe('an edit button', () => {
   });
 
   it('is rendered for avatar', async () => {
-    const onImageSelect = jest.fn((file: File) => {});
+    const onImageSelect = jest.fn((_file: File) => {});
     const testFile = new File(['foo'], 'foo.png', { type: 'image/png' });
     const { getByLabelText } = render(
       <UserProfileHeader {...boilerplateProps} onImageSelect={onImageSelect} />,
     );
     const editButton = getByLabelText(/edit.+avatar/i);
-    const uploadInput = getByLabelText(/upload.+avatar/i);
+    const uploadInput = getByLabelText(/upload.+avatar/i) as HTMLInputElement;
     expect(editButton).toBeVisible();
     expect(uploadInput).not.toHaveAttribute('disabled');
-    await userEvent.upload(uploadInput, testFile);
+    fireEvent.change(uploadInput, { target: { files: [testFile] } });
     expect(onImageSelect).toHaveBeenCalledWith(testFile);
   });
 });

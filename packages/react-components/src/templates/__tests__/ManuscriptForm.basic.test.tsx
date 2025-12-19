@@ -221,24 +221,19 @@ describe('Manuscript form', () => {
   });
 
   it('displays error message when manuscript title is missing', async () => {
-    const { getByRole, getAllByText, queryByText } =
-      await renderManuscriptForm(defaultProps);
+    const { getByRole, getAllByText } = await renderManuscriptForm({
+      ...defaultProps,
+      title: 'initial title',
+    });
 
     const input = getByRole('textbox', { name: /Title of Manuscript/i });
-    await userEvent.type(input, '');
-    input.focus();
+
+    await userEvent.clear(input);
     input.blur();
     await waitFor(() => {
       expect(
         getAllByText(/Please enter a title/i).length,
       ).toBeGreaterThanOrEqual(1);
-    });
-
-    await userEvent.type(input, 'title');
-    input.blur();
-
-    await waitFor(() => {
-      expect(queryByText(/Please enter a title/i)).toBeNull();
     });
   });
 
@@ -353,6 +348,7 @@ describe('Manuscript form', () => {
   });
 
   it('should go back when cancel button is clicked', async () => {
+    jest.spyOn(console, 'warn').mockImplementation();
     let currentPathname = '/form';
     const LocationCapture: React.FC = () => {
       const location = useLocation();

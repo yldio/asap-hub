@@ -10,7 +10,9 @@ import {
 
 const mockSetTag = jest.fn();
 jest.mock('@sentry/react', () => ({
-  configureScope: jest.fn((callback) => callback({ setTag: mockSetTag })),
+  getCurrentScope: () => ({
+    setTag: mockSetTag,
+  }),
 }));
 
 const baseUrl = `https://example.com`;

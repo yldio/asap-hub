@@ -44,7 +44,7 @@ it('renders the form in signup mode', () => {
   expect(getByText(/continue$/i, { selector: 'button *' })).toBeVisible();
 });
 
-it.each(['Google', 'ORCID'])('initiates a SSO with %s', (provider) => {
+it.each(['Google', 'ORCID'])('initiates a SSO with %s', async (provider) => {
   const { getByText } = render(<Login email="" setEmail={() => {}} />);
 
   await userEvent.click(

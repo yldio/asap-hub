@@ -5,7 +5,9 @@ import userEvent from '@testing-library/user-event';
 import { useEffect, useState } from 'react';
 import NotificationMessages from '../NotificationMessages';
 
-const TestNotificationComponent: React.FC = ({ children }) => {
+const TestNotificationComponent: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { addNotification } = useNotificationContext();
 
   const [showWelcomeBackBanner, setShowWelcomeBackBanner] = useState(true);
@@ -30,7 +32,7 @@ describe('NotificationMessages', () => {
     render(<NotificationMessages>text content</NotificationMessages>);
     expect(screen.getByText('text content')).toBeVisible();
   });
-  it('provides a notification context', () => {
+  it('provides a notification context', async () => {
     render(
       <NotificationMessages>
         <TestNotificationComponent>

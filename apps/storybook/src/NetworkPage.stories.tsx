@@ -23,10 +23,10 @@ export const Normal = () => {
     'users',
   );
   const showDescription = boolean('Show Page Description', false);
-  const routes: Record<string, string> = {
+  const routes = {
     users: network({}).users({}).$,
-    'discovery-teams': '/network/discovery-teams',
-    'resource-teams': '/network/resource-teams',
+    'discovery-teams': network({}).discoveryTeams({}).$,
+    'resource-teams': network({}).resourceTeams({}).$,
     'interest-groups': network({}).interestGroups({}).$,
     'working-groups': network({}).workingGroups({}).$,
   };
@@ -62,10 +62,10 @@ export const WithPageDescription = () => {
     },
     'discovery-teams',
   );
-  const routes: Record<string, string> = {
+  const routes = {
     users: network({}).users({}).$,
-    'discovery-teams': '/network/discovery-teams',
-    'resource-teams': '/network/resource-teams',
+    'discovery-teams': network({}).discoveryTeams({}).$,
+    'resource-teams': network({}).resourceTeams({}).$,
     'interest-groups': network({}).interestGroups({}).$,
     'working-groups': network({}).workingGroups({}).$,
   };

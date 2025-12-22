@@ -538,8 +538,7 @@ export const parseContentfulGraphQlTeam = (
             {
               id: lab.sys.id,
               name: lab.name || '',
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              labPrincipalInvestigatorId: (lab as any).labPi?.sys.id,
+              labPrincipalInvestigatorId: lab.labPi?.sys.id,
             },
           ];
         },
@@ -658,8 +657,7 @@ export const parseContentfulGraphQlTeam = (
       : undefined,
     researchTheme: item.researchTheme?.name ?? undefined,
     resourceType: linkedProject?.resourceType?.name ?? undefined,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    teamDescription: (item as any).teamDescription ?? undefined,
+    teamDescription: item.teamDescription ?? undefined,
     labs: members
       .flatMap((member) => member.labs || [])
       .filter(

@@ -1,15 +1,13 @@
 import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
 import React from 'react';
-import { Headline2, Paragraph, Card, Pill } from '../atoms';
+import { Headline2, Paragraph, Card } from '../atoms';
 import { ExpandableText, TeamProfileTags } from '../molecules';
 import { rem } from '../pixels';
 
-const pillsStyles = css({
-  display: 'flex',
-  gap: rem(8),
-  marginBottom: rem(12),
-});
+const cardStyles = {
+  padding: `${rem(32)} ${rem(24)}`,
+};
 
 type TeamProfileOverviewProps = Pick<TeamResponse, 'tags' | 'teamDescription'> &
   Partial<Pick<TeamResponse, 'teamType' | 'researchTheme' | 'resourceType'>>;
@@ -21,25 +19,23 @@ type TeamProfileOverviewContentProps = {
   resourceType?: TeamResponse['resourceType'];
 };
 
+const overviewStyles = {
+  display: 'flex',
+  flexFlow: 'column',
+  gap: rem(24),
+};
+
 const TeamProfileOverviewContent: React.FC<TeamProfileOverviewContentProps> = ({
   description,
-  teamType,
-  researchTheme,
-  resourceType,
 }) => (
-  <>
-    {(teamType || researchTheme || resourceType) && (
-      <div css={pillsStyles}>
-        {teamType && <Pill noMargin>{teamType}</Pill>}
-        {researchTheme && <Pill noMargin>{researchTheme}</Pill>}
-        {resourceType && <Pill noMargin>{resourceType}</Pill>}
-      </div>
-    )}
-    <Headline2 styleAsHeading={3}>Team Description</Headline2>
+  <div css={overviewStyles}>
+    <Headline2 styleAsHeading={3} noMargin>
+      Team Description
+    </Headline2>
     <ExpandableText variant="arrow">
-      <Paragraph>{description}</Paragraph>
+      <Paragraph noMargin>{description}</Paragraph>
     </ExpandableText>
-  </>
+  </div>
 );
 
 const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
@@ -49,16 +45,14 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
   researchTheme,
   resourceType,
 }) => (
-  <Card>
-    <div>
-      <TeamProfileOverviewContent
-        description={teamDescription}
-        teamType={teamType}
-        researchTheme={researchTheme}
-        resourceType={resourceType}
-      />
-      {tags && tags.length ? <TeamProfileTags tags={tags} /> : null}
-    </div>
+  <Card overrideStyles={css(cardStyles)}>
+    <TeamProfileOverviewContent
+      description={teamDescription}
+      teamType={teamType}
+      researchTheme={researchTheme}
+      resourceType={resourceType}
+    />
+    {tags && tags.length ? <TeamProfileTags tags={tags} /> : null}
   </Card>
 );
 

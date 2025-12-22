@@ -9,11 +9,11 @@ import TagList from './TagList';
 
 const dividerStyles = css({
   marginTop: rem(24),
-  marginBottom: rem(16),
+  marginBottom: rem(24),
 });
 
 const contentStyles = css({
-  paddingTop: rem(20),
+  paddingTop: rem(32),
 });
 
 type TeamProfileTagsProps = {
@@ -26,7 +26,7 @@ const TeamProfileTags: React.FC<TeamProfileTagsProps> = ({ tags }) => (
       <Divider />
     </div>
     <Headline3 noMargin>Tags</Headline3>
-    <Paragraph accent="lead">
+    <Paragraph accent="lead" noMargin styles={css({ marginTop: rem(24) })}>
       Explore keywords related to skills, techniques, resources, and tools.
     </Paragraph>
     <div css={contentStyles}>

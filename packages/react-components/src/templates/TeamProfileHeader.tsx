@@ -1,3 +1,4 @@
+import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, projects } from '@asap-hub/routing';
@@ -269,7 +270,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               />
             </div>
           )}
-          {projectTitle && (
+          {isEnabled('PROJECTS_MVP') && projectTitle ? (
             <div css={projectNameStyles} data-testid="project-icon">
               {teamType === 'Discovery Team' ? (
                 <DiscoveryProjectIcon />
@@ -282,7 +283,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                 projectTitle
               )}
             </div>
-          )}
+          ) : null}
           {labCount > 0 && teamStatus === 'Active' && (
             <div css={labCountStyles}>
               <span css={iconStyles}>

@@ -206,10 +206,12 @@ it('calls algolia client with the right index name', async () => {
       expect.not.stringContaining('team_desc'),
     );
   });
-  
-  const sortIcon = await screen.findByTitle('Active Alphabetical Ascending Sort Icon');
+
+  const sortIcon = await screen.findByTitle(
+    'Active Alphabetical Ascending Sort Icon',
+  );
   await userEvent.click(sortIcon);
-  
+
   await waitFor(() => {
     expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
       expect.stringContaining('team_desc'),

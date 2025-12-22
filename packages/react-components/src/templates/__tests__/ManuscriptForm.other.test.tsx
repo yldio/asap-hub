@@ -8,12 +8,7 @@ import {
   QuickCheck,
   quickCheckQuestions,
 } from '@asap-hub/model';
-import {
-  cleanup,
-  render,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { cleanup, render, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom/server';

@@ -83,12 +83,9 @@ describe('useSelectAvatar', () => {
     };
     mockGetUser.mockResolvedValueOnce(user);
 
-    const { result } = renderHook(
-      () => useSelectAvatar(user.id),
-      {
-        wrapper: wrapper({ user }),
-      },
-    );
+    const { result } = renderHook(() => useSelectAvatar(user.id), {
+      wrapper: wrapper({ user }),
+    });
 
     await waitFor(() => {
       expect(result.current.onImageSelect).toBeDefined();
@@ -120,19 +117,16 @@ describe('useSelectAvatar', () => {
     const mockToken = jest.fn().mockResolvedValue('token');
     mockGetUser.mockResolvedValueOnce(user);
 
-    const { result } = renderHook(
-      () => useSelectAvatar(user.id),
-      {
-        wrapper: wrapper({ user }, (authClient, authUser) => ({
-          getTokenSilently:
-            authClient && authUser
-              ? mockToken
-              : () => {
-                  throw new Error('Not Ready');
-                },
-        })),
-      },
-    );
+    const { result } = renderHook(() => useSelectAvatar(user.id), {
+      wrapper: wrapper({ user }, (authClient, authUser) => ({
+        getTokenSilently:
+          authClient && authUser
+            ? mockToken
+            : () => {
+                throw new Error('Not Ready');
+              },
+      })),
+    });
 
     await waitFor(() => {
       expect(result.current.onImageSelect).toBeDefined();
@@ -155,12 +149,9 @@ describe('useSelectAvatar', () => {
     };
     mockGetUser.mockResolvedValueOnce(user);
 
-    const { result } = renderHook(
-      () => useSelectAvatar(user.id),
-      {
-        wrapper: wrapper({ user }),
-      },
-    );
+    const { result } = renderHook(() => useSelectAvatar(user.id), {
+      wrapper: wrapper({ user }),
+    });
     mockPostUserAvatar.mockRejectedValue(new Error('500'));
 
     await waitFor(() => {

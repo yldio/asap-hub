@@ -17,7 +17,9 @@ const props: ComponentProps<typeof Layout> = {
 
 it('renders an ASAP logo', async () => {
   // Suppress console.error for known React Router v6 migration issue with isActive prop
-  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleError = jest
+    .spyOn(console, 'error')
+    .mockImplementation(() => {});
 
   const { getByTitle } = render(
     <MemoryRouter>

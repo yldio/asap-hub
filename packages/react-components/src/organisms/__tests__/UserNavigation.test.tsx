@@ -31,7 +31,7 @@ it('renders the bottom links', () => {
   const { getByText } = render(
     <MemoryRouter>
       <UserNavigation {...props} />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
   expect(getByText(/terms/i)).toBeVisible();
   expect(getByText(/privacy/i)).toBeVisible();
@@ -42,7 +42,7 @@ it('applies the passed href', () => {
   const { getAllByRole } = render(
     <MemoryRouter>
       <UserNavigation {...props} userProfileHref="/profile" />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
   expect(
     getAllByRole('link').find(({ textContent }) =>
@@ -55,7 +55,7 @@ it('renders the associations sections', () => {
   const { getByText } = render(
     <MemoryRouter>
       <UserNavigation {...props} />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
   expect(getByText('MY TEAMS')).toBeVisible();
   expect(getByText(/team 1/i)).toBeVisible();
@@ -72,7 +72,7 @@ it('does not render the associations sections for missing associations', () => {
   const { queryByText } = render(
     <MemoryRouter>
       <UserNavigation {...props} interestGroups={[]} workingGroups={[]} />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   expect(queryByText('MY INTEREST GROUPS')).not.toBeInTheDocument();
@@ -99,7 +99,7 @@ it('does not render the associations sections if associations are not active', (
           },
         ]}
       />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   expect(queryByText('MY INTEREST GROUPS')).not.toBeInTheDocument();
@@ -124,7 +124,7 @@ it('does only renders associations which are active', () => {
           },
         ]}
       />
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   expect(queryByText('MY INTEREST GROUPS')).toBeVisible();

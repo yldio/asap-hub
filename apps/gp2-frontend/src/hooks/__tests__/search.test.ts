@@ -206,7 +206,9 @@ describe('useSearch', () => {
         wrapper: createWrapper(['/test/oldLocation?filter=test123']),
       });
       act(() => {
-        result.current.updateFilters('/test', { filter: ['test123', 'test345'] });
+        result.current.updateFilters('/test', {
+          filter: ['test123', 'test345'],
+        });
       });
       expect(result.current.filters).toEqual({
         filter: ['test123', 'test345'],

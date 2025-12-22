@@ -7,7 +7,7 @@ describe('MainNavigation', () => {
     render(
       <MemoryRouter>
         <MainNavigation />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(
       screen.getAllByRole('listitem').map(({ textContent }) => textContent),

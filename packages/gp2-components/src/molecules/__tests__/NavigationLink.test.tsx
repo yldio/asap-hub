@@ -7,7 +7,7 @@ describe('NavigationLink', () => {
     render(
       <MemoryRouter>
         <NavigationLink href="/" icon={<svg />} />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByRole('link')).toContainHTML('<svg');
   });
@@ -15,7 +15,7 @@ describe('NavigationLink', () => {
     render(
       <MemoryRouter>
         <NavigationLink href="/">Network</NavigationLink>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(screen.getByRole('link')).toHaveTextContent('Network');
   });

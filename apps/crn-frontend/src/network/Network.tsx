@@ -199,11 +199,11 @@ const Network: FC<Record<string, never>> = () => {
             onChangeFilter={toggleFilter}
             pageDescription={
               <Paragraph noMargin accent="lead">
-                Working Groups are time-bound, ad hoc groups formed by CRN members
-                to address specific needs in the PD field.Their work includes due
-                diligence, scoping, and thought leadership aimed at addressing the
-                identified need. A Working Group may conclude with a
-                recommendation that evolves into a formal project.
+                Working Groups are time-bound, ad hoc groups formed by CRN
+                members to address specific needs in the PD field.Their work
+                includes due diligence, scoping, and thought leadership aimed at
+                addressing the identified need. A Working Group may conclude
+                with a recommendation that evolves into a formal project.
               </Paragraph>
             }
           >

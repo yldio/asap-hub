@@ -36,7 +36,9 @@ const renderAdditionalDetails = async (id: string) => {
             >
               <Routes>
                 <Route
-                  path={`${gp2Routing.onboarding({}).additionalDetails.template}/*`}
+                  path={`${
+                    gp2Routing.onboarding({}).additionalDetails.template
+                  }/*`}
                   element={<AdditionalDetails />}
                 />
               </Routes>

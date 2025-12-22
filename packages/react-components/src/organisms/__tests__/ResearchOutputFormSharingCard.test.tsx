@@ -314,7 +314,9 @@ it('shows validation message when impact is not selected', async () => {
   );
 
   await waitFor(() => {
-    expect(screen.getByText('Please add at least one impact.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Please add at least one impact.'),
+    ).toBeInTheDocument();
   });
 });
 

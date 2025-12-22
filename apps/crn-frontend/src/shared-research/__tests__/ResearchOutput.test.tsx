@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Switch } from 'react-router-dom';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { sharedResearch } from '@asap-hub/routing';
 import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
 import * as flags from '@asap-hub/flags';
@@ -34,6 +35,16 @@ jest.mock('../../shared-api/impact');
 
 beforeEach(() => {
   window.scrollTo = jest.fn();
+  // Suppress React Router 6 warnings about nested routes and unmatched routes
+  jest.spyOn(console, 'warn').mockImplementation((message) => {
+    if (
+      typeof message === 'string' &&
+      (message.includes('rendered descendant <Routes>') ||
+        message.includes('No routes matched location'))
+    ) {
+      return;
+    }
+  });
 });
 
 const id = '42';
@@ -104,18 +115,18 @@ const renderComponent = async (path: string, user = defaultUser) => {
       <Auth0Provider user={user}>
         <WhenReady>
           <Suspense fallback="Loading...">
-            <MemoryRouter initialEntries={[path]} initialIndex={1}>
-              <Switch>
-                <Route path="/prev">Previous Page</Route>
+            <MemoryRouter initialEntries={[path]}>
+              <Routes>
+                <Route path="/prev" element={<div>Previous Page</div>} />
                 <Route
                   path={
                     sharedResearch.template +
-                    sharedResearch({}).researchOutput.template
+                    sharedResearch({}).researchOutput.template +
+                    '/*'
                   }
-                >
-                  <ResearchOutput />
-                </Route>
-              </Switch>
+                  element={<ResearchOutput />}
+                />
+              </Routes>
             </MemoryRouter>
           </Suspense>
         </WhenReady>
@@ -354,10 +365,10 @@ it('switches a draft research output to in review', async () => {
 
   expect(showModalButton).toBeVisible();
 
-  fireEvent.click(showModalButton as HTMLElement);
+  await userEvent.click(showModalButton as HTMLElement);
   const saveButton = getAllByText('Ready for PM Review')[1];
 
-  fireEvent.click(saveButton as HTMLElement);
+  await userEvent.click(saveButton as HTMLElement);
   await waitFor(() => {
     expect(saveButton).toBeEnabled();
   });
@@ -400,10 +411,10 @@ it('switches a in review research output back to draft', async () => {
 
   expect(showModalButton).toBeVisible();
 
-  fireEvent.click(showModalButton as HTMLElement);
+  await userEvent.click(showModalButton as HTMLElement);
   const saveButton = getAllByText('Switch to Draft')[1];
 
-  fireEvent.click(saveButton as HTMLElement);
+  await userEvent.click(saveButton as HTMLElement);
   await waitFor(() => {
     expect(saveButton).toBeEnabled();
   });
@@ -447,10 +458,10 @@ it('publishes a research output', async () => {
 
   expect(showPublishModalButton).toBeVisible();
 
-  fireEvent.click(showPublishModalButton as HTMLElement);
+  await userEvent.click(showPublishModalButton as HTMLElement);
   const publishButton = getByText('Publish Output');
 
-  fireEvent.click(publishButton);
+  await userEvent.click(publishButton);
   await waitFor(() => {
     expect(publishButton).toBeEnabled();
   });
@@ -497,7 +508,7 @@ describe('a research output linked to a manuscript', () => {
     const importVersionButton = queryByText('Import Manuscript Version');
     expect(importVersionButton).toBeVisible();
 
-    fireEvent.click(importVersionButton as HTMLElement);
+    await userEvent.click(importVersionButton as HTMLElement);
     await waitFor(() => {
       expect(getByText('Imported Manuscript Version')).toBeInTheDocument();
     });
@@ -537,7 +548,7 @@ describe('a research output linked to a manuscript', () => {
     const importVersionButton = queryByText('Import Manuscript Version');
     expect(importVersionButton).toBeVisible();
 
-    fireEvent.click(importVersionButton as HTMLElement);
+    await userEvent.click(importVersionButton as HTMLElement);
     await waitFor(() => {
       expect(getByText('No new manuscript versions available')).toBeVisible();
     });
@@ -576,7 +587,7 @@ describe('a research output linked to a manuscript', () => {
     const importVersionButton = queryByText('Import Manuscript Version');
     expect(importVersionButton).toBeVisible();
 
-    fireEvent.click(importVersionButton as HTMLElement);
+    await userEvent.click(importVersionButton as HTMLElement);
     await waitFor(() => {
       expect(getByText('No new manuscript versions available')).toBeVisible();
     });

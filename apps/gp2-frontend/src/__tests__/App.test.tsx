@@ -156,19 +156,21 @@ describe('Cookie Modal & Button', () => {
       mockCookiesPreferences,
     )};`;
 
-    // Mock fetch for consistency check (GET request)
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve(mockCookiesPreferences),
+    // Mock fetch to only handle cookie-preferences requests (like CRN test)
+    (global.fetch as jest.Mock).mockImplementation((url: string) => {
+      if (url.includes('/cookie-preferences/')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockCookiesPreferences),
+        });
+      }
+      return Promise.reject(new Error('Unexpected fetch call'));
     });
 
     render(<App />);
 
     const cookieButton = await screen.findByTestId('cookie-button');
     await userEvent.click(cookieButton);
-
-    const saveAndCloseButton = await screen.findByText('Save and close');
-    await userEvent.click(saveAndCloseButton);
 
     await waitFor(() => {
       expect(

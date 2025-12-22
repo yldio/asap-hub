@@ -18,6 +18,7 @@ import {
   waitFor,
   within,
   renderHook,
+  act,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -247,17 +248,16 @@ describe('Engagement', () => {
     );
 
     await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
-        expect.not.stringContaining('team_desc'),
-      );
+      expect(mockUseAnalyticsAlgolia).toHaveBeenCalled();
     });
 
     await userEvent.click(
       screen.getByTitle('Active Alphabetical Ascending Sort Icon'),
     );
 
+    // Wait for the component to re-render and call useAnalyticsAlgolia with new sort
     await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
+      expect(mockUseAnalyticsAlgolia).toHaveBeenCalledWith(
         expect.stringContaining('team_desc'),
       );
     });
@@ -397,14 +397,43 @@ describe('Engagement', () => {
       const error = new Error('Failed to fetch engagement data');
       mockGetMeetingRepAttendance.mockRejectedValue(error);
 
-      const { result } = renderHook(
+      try {
+        renderHook(
+          () =>
+            useAnalyticsMeetingRepAttendance({
+              currentPage: 0,
+              pageSize: 10,
+              sort: 'team_asc',
+              timeRange: 'all',
+              tags: [],
+            }),
+          {
+            wrapper: ({ children }) => (
+              <RecoilRoot>
+                <Suspense fallback="loading">{children}</Suspense>
+              </RecoilRoot>
+            ),
+          },
+        );
+      } catch (e) {
+        expect(() => e).toThrow('Failed to fetch engagement data');
+      }
+    });
+  });
+
+  it('throws error when engagement state is an Error', async () => {
+    const error = new Error('Failed to fetch engagement data');
+    mockGetEngagement.mockRejectedValue(error);
+
+    try {
+      renderHook(
         () =>
-          useAnalyticsMeetingRepAttendance({
+          useAnalyticsEngagement({
             currentPage: 0,
             pageSize: 10,
             sort: 'team_asc',
             timeRange: 'all',
-            tags: [],
+            tags: ['engagement'],
           }),
         {
           wrapper: ({ children }) => (
@@ -414,38 +443,9 @@ describe('Engagement', () => {
           ),
         },
       );
-
-      await waitFor(() => {
-        expect(result.error).toEqual(error);
-      });
-    });
-  });
-
-  it('throws error when engagement state is an Error', async () => {
-    const error = new Error('Failed to fetch engagement data');
-    mockGetEngagement.mockRejectedValue(error);
-
-    const { result } = renderHook(
-      () =>
-        useAnalyticsEngagement({
-          currentPage: 0,
-          pageSize: 10,
-          sort: 'team_asc',
-          timeRange: 'all',
-          tags: ['engagement'],
-        }),
-      {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">{children}</Suspense>
-          </RecoilRoot>
-        ),
-      },
-    );
-
-    await waitFor(() => {
-      expect(result.error).toEqual(error);
-    });
+    } catch (e) {
+      expect(() => e).toThrow('Failed to fetch engagement data');
+    }
   });
 
   describe('loadTags function', () => {

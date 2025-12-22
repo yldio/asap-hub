@@ -2,12 +2,18 @@ import { DEFAULT_COMPLETED_STATUS } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
 import { act, renderHook } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import React, { ComponentProps } from 'react';
 import { useComplianceSearch } from '../useComplianceSearch';
+
+const createWrapper =
+  (initialEntries: string[] = ['/']) =>
+  ({ children }: ComponentProps<typeof MemoryRouter>) =>
+    React.createElement(MemoryRouter, { initialEntries }, children);
 
 describe('useComplianceSearch', () => {
   it('returns default values when no URL params are present', () => {
     const { result } = renderHook(() => useComplianceSearch(), {
-      wrapper: MemoryRouter,
+      wrapper: createWrapper(),
     });
 
     expect(result.current).toMatchObject({
@@ -20,10 +26,7 @@ describe('useComplianceSearch', () => {
 
   it('reads search query from URL', () => {
     const { result } = renderHook(() => useComplianceSearch(), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [`/?${searchQueryParam}=test query`],
-      },
+      wrapper: createWrapper([`/?${searchQueryParam}=test query`]),
     });
 
     expect(result.current.searchQuery).toBe('test query');
@@ -31,10 +34,7 @@ describe('useComplianceSearch', () => {
 
   it('reads completedStatus from URL', () => {
     const { result } = renderHook(() => useComplianceSearch(), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: ['/?completedStatus=hide'],
-      },
+      wrapper: createWrapper(['/?completedStatus=hide']),
     });
 
     expect(result.current.completedStatus).toBe('hide');
@@ -54,10 +54,7 @@ describe('useComplianceSearch', () => {
 
   it('reads selected statuses from URL', () => {
     const { result } = renderHook(() => useComplianceSearch(), {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [`/?status=Waiting+for+Report&status=Compliant`],
-      },
+      wrapper: createWrapper([`/?status=Waiting+for+Report&status=Compliant`]),
     });
 
     expect(result.current.selectedStatuses).toEqual([
@@ -68,32 +65,25 @@ describe('useComplianceSearch', () => {
 
   describe('setSearchQuery', () => {
     it('updates search query in URL', () => {
-      const { result, rerender } = renderHook(() => useComplianceSearch(), {
-        wrapper: MemoryRouter,
+      const { result } = renderHook(() => useComplianceSearch(), {
+        wrapper: createWrapper(),
       });
 
       act(() => {
         result.current.setSearchQuery('new search');
       });
 
-      rerender();
-
       expect(result.current.searchQuery).toBe('new search');
     });
 
     it('removes search param when query is empty', () => {
-      const { result, rerender } = renderHook(() => useComplianceSearch(), {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: [`/?${searchQueryParam}=initial`],
-        },
+      const { result } = renderHook(() => useComplianceSearch(), {
+        wrapper: createWrapper([`/?${searchQueryParam}=initial`]),
       });
 
       act(() => {
         result.current.setSearchQuery('');
       });
-
-      rerender();
 
       expect(result.current.searchQuery).toBe('');
     });
@@ -101,15 +91,13 @@ describe('useComplianceSearch', () => {
 
   describe('setStatus', () => {
     it('adds status to URL when not present', () => {
-      const { result, rerender } = renderHook(() => useComplianceSearch(), {
-        wrapper: MemoryRouter,
+      const { result } = renderHook(() => useComplianceSearch(), {
+        wrapper: createWrapper(),
       });
 
       act(() => {
         result.current.setStatus('Manuscript Resubmitted');
       });
-
-      rerender();
 
       expect(result.current.selectedStatuses).toEqual([
         'Manuscript Resubmitted',
@@ -117,35 +105,27 @@ describe('useComplianceSearch', () => {
     });
 
     it('removes status from URL when already present', () => {
-      const { result, rerender } = renderHook(() => useComplianceSearch(), {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: ['/?status=Manuscript+Resubmitted'],
-        },
+      const { result } = renderHook(() => useComplianceSearch(), {
+        wrapper: createWrapper(['/?status=Manuscript+Resubmitted']),
       });
 
       act(() => {
         result.current.setStatus('Manuscript Resubmitted');
       });
 
-      rerender();
-
       expect(result.current.selectedStatuses).toEqual([]);
     });
 
     it('preserves other statuses when removing one', () => {
-      const { result, rerender } = renderHook(() => useComplianceSearch(), {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: [`/?status=Waiting+for+Report&status=Compliant`],
-        },
+      const { result } = renderHook(() => useComplianceSearch(), {
+        wrapper: createWrapper([
+          `/?status=Waiting+for+Report&status=Compliant`,
+        ]),
       });
 
       act(() => {
         result.current.setStatus('Compliant');
       });
-
-      rerender();
 
       expect(result.current.selectedStatuses).toEqual(['Waiting for Report']);
     });
@@ -155,7 +135,7 @@ describe('useComplianceSearch', () => {
 describe('generateLinkFactory', () => {
   it('generates URL with given parameters', () => {
     const { result } = renderHook(() => useComplianceSearch(), {
-      wrapper: MemoryRouter,
+      wrapper: createWrapper(),
     });
 
     const url = result.current.generateLinkFactory(
@@ -172,7 +152,7 @@ describe('generateLinkFactory', () => {
 
   it('includes all statuses when completedStatus is show', () => {
     const { result } = renderHook(() => useComplianceSearch(), {
-      wrapper: MemoryRouter,
+      wrapper: createWrapper(),
     });
 
     const url = result.current.generateLinkFactory(
@@ -189,7 +169,7 @@ describe('generateLinkFactory', () => {
 
   it('filters out Compliant and Closed statuses when completedStatus is hide', () => {
     const { result } = renderHook(() => useComplianceSearch(), {
-      wrapper: MemoryRouter,
+      wrapper: createWrapper(),
     });
 
     const url = result.current.generateLinkFactory(
@@ -206,7 +186,7 @@ describe('generateLinkFactory', () => {
 
   it('combines all parameters correctly', () => {
     const { result } = renderHook(() => useComplianceSearch(), {
-      wrapper: MemoryRouter,
+      wrapper: createWrapper(),
     });
 
     const url = result.current.generateLinkFactory(

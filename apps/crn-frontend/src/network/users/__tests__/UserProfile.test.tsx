@@ -259,124 +259,104 @@ describe('a header edit button', () => {
     expect(await screen.findByLabelText(/edit.+avatar/i)).toBeVisible();
   });
 
-  // TODO: React Router v6 migration - skipped due to: Edit modal routing issue.
-  // The edit button navigates to tabRoute({}).editPersonalInfo({}).$ which generates
-  // URLs like /research/edit-personal-info, but the Editing component only renders
-  // under the about/* route. This is a component-level routing bug in UserProfile.tsx
-  // and hooks/current-user-profile-tab-route.ts that needs to be fixed separately.
-  it.skip('can change personal info', async () => {
-    // const userProfile: UserResponse = {
-    //   ...createUserResponse(),
-    //   city: 'Lon',
-    //   stateOrProvince: 'State',
-    //   country: 'United Kingdom of Great Britain and Northern Ireland',
-    //   id: '42',
-    // };
-    // await renderUserProfile(userProfile);
-    // await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
-    // await userEvent.type(await screen.findByDisplayValue('Lon'), 'don');
-    // expect(await screen.findByDisplayValue('London')).toBeVisible();
-    // await userEvent.click(screen.getByText(/save/i));
-    // expect(await screen.findByText(/London/i)).toBeVisible();
-    // expect(mockPatchUser).toHaveBeenLastCalledWith(
-    //   '42',
-    //   expect.objectContaining({ city: 'London' }),
-    //   expect.any(String),
-    // );
+  it('can change personal info', async () => {
+    const userProfile: UserResponse = {
+      ...createUserResponse(),
+      city: 'Lon',
+      stateOrProvince: 'State',
+      country: 'United Kingdom of Great Britain and Northern Ireland',
+      id: '42',
+    };
+    await renderUserProfile(userProfile);
+    await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
+    await userEvent.type(await screen.findByDisplayValue('Lon'), 'don');
+    expect(await screen.findByDisplayValue('London')).toBeVisible();
+    await userEvent.click(screen.getByText(/save/i));
+    expect(await screen.findByText(/London/i)).toBeVisible();
+    expect(mockPatchUser).toHaveBeenLastCalledWith(
+      '42',
+      expect.objectContaining({ city: 'London' }),
+      expect.any(String),
+    );
   });
 
-  // TODO: React Router v6 migration - skipped due to: Edit modal routing issue.
-  // The edit button navigates to tabRoute({}).editPersonalInfo({}).$ which generates
-  // URLs like /research/edit-personal-info, but the Editing component only renders
-  // under the about/* route. This is a component-level routing bug in UserProfile.tsx
-  // and hooks/current-user-profile-tab-route.ts that needs to be fixed separately.
-  it.skip('remains on the same tab after closing a modal', async () => {
-    // const userProfile: UserResponse = {
-    //   ...createUserResponse(),
-    //   biography: 'My Bio',
-    // };
-    // await renderUserProfile(userProfile);
-    // // Open and close on research tab
-    // await userEvent.click(
-    //   await screen.findByText(/research/i, { selector: 'nav *' }),
-    // );
-    // expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
-    // expect(screen.queryByText(/main details/i)).toBeNull();
-    // await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
-    // expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
-    // expect(screen.getByText(/main details/i)).toBeVisible();
-    // await userEvent.click(screen.getByTitle(/Close/i));
-    // expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
-    // expect(screen.queryByText(/main details/i)).toBeNull();
-    // // Open and close on background tab
-    // await userEvent.click(
-    //   await screen.findByText(/background/i, { selector: 'nav *' }),
-    // );
-    // expect(await screen.findByText('My Bio')).toBeVisible();
-    // await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
-    // expect(screen.getByText(/my bio/i)).toBeVisible();
-    // expect(screen.getByText(/main details/i)).toBeVisible();
-    // await userEvent.click(screen.getByTitle(/Close/i));
-    // expect(screen.getByText(/my bio/i)).toBeVisible();
-    // expect(screen.queryByText(/main details/i)).toBeNull();
+  it('remains on the same tab after closing a modal', async () => {
+    const userProfile: UserResponse = {
+      ...createUserResponse(),
+      biography: 'My Bio',
+    };
+    await renderUserProfile(userProfile);
+    // Open and close on research tab
+    await userEvent.click(
+      await screen.findByText(/research/i, { selector: 'nav *' }),
+    );
+    expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
+    expect(screen.queryByText(/main details/i)).toBeNull();
+    await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
+    expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
+    expect(screen.getByText(/main details/i)).toBeVisible();
+    await userEvent.click(screen.getByTitle(/Close/i));
+    expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
+    expect(screen.queryByText(/main details/i)).toBeNull();
+    // Open and close on background tab
+    await userEvent.click(
+      await screen.findByText(/background/i, { selector: 'nav *' }),
+    );
+    expect(await screen.findByText('My Bio')).toBeVisible();
+    await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
+    expect(screen.getByText(/my bio/i)).toBeVisible();
+    expect(screen.getByText(/main details/i)).toBeVisible();
+    await userEvent.click(screen.getByTitle(/Close/i));
+    expect(screen.getByText(/my bio/i)).toBeVisible();
+    expect(screen.queryByText(/main details/i)).toBeNull();
   });
 
-  // TODO: React Router v6 migration - skipped due to: Edit modal routing issue.
-  // The edit button navigates to tabRoute({}).editContactInfo({}).$ which generates
-  // URLs like /research/edit-contact-info, but the Editing component only renders
-  // under the about/* route. This is a component-level routing bug in UserProfile.tsx
-  // and hooks/current-user-profile-tab-route.ts that needs to be fixed separately.
-  it.skip('can change contact info', async () => {
-    // const userProfile: UserResponse = {
-    //   ...createUserResponse(),
-    //   contactEmail: 'contact@example.com',
-    //   id: '42',
-    // };
-    // await renderUserProfile(userProfile);
-    // await userEvent.click(await screen.findByLabelText(/edit.+contact/i));
-    // await userEvent.type(
-    //   await screen.findByDisplayValue('contact@example.com'),
-    //   'm',
-    // );
-    // expect(
-    //   await screen.findByDisplayValue('contact@example.comm'),
-    // ).toBeVisible();
-    // await userEvent.click(screen.getByText(/save/i));
-    // expect(
-    //   (await screen.findByText(/contact/i, { selector: 'header *' })).closest(
-    //     'a',
-    //   ),
-    // ).toHaveAttribute('href', 'mailto:contact@example.comm');
-    // expect(mockPatchUser).toHaveBeenLastCalledWith(
-    //   '42',
-    //   expect.objectContaining({
-    //     contactEmail: 'contact@example.comm',
-    //   }),
-    //   expect.any(String),
-    // );
+  it('can change contact info', async () => {
+    const userProfile: UserResponse = {
+      ...createUserResponse(),
+      contactEmail: 'contact@example.com',
+      id: '42',
+    };
+    await renderUserProfile(userProfile);
+    await userEvent.click(await screen.findByLabelText(/edit.+contact/i));
+    await userEvent.type(
+      await screen.findByDisplayValue('contact@example.com'),
+      'm',
+    );
+    expect(
+      await screen.findByDisplayValue('contact@example.comm'),
+    ).toBeVisible();
+    await userEvent.click(screen.getByText(/save/i));
+    expect(
+      (await screen.findByText(/contact/i, { selector: 'header *' })).closest(
+        'a',
+      ),
+    ).toHaveAttribute('href', 'mailto:contact@example.comm');
+    expect(mockPatchUser).toHaveBeenLastCalledWith(
+      '42',
+      expect.objectContaining({
+        contactEmail: 'contact@example.comm',
+      }),
+      expect.any(String),
+    );
   });
 
-  // TODO: React Router v6 migration - skipped due to: Edit modal routing issue.
-  // The edit button navigates to tabRoute({}).editContactInfo({}).$ which generates
-  // URLs like /research/edit-contact-info, but the Editing component only renders
-  // under the about/* route. This is a component-level routing bug in UserProfile.tsx
-  // and hooks/current-user-profile-tab-route.ts that needs to be fixed separately.
-  it.skip('refreshes auth0 id token', async () => {
-    // const userProfile: UserResponse = {
-    //   ...createUserResponse(),
-    // };
-    // const mockToken = jest.fn().mockResolvedValue('token');
-    // await renderUserProfile(userProfile, {}, (authClient, user) => ({
-    //   getTokenSilently:
-    //     authClient && user
-    //       ? mockToken
-    //       : () => {
-    //           throw new Error('Not Ready');
-    //         },
-    // }));
-    // await userEvent.click(await screen.findByLabelText(/edit.+contact/i));
-    // await userEvent.click(screen.getByText(/save/i));
-    // await waitFor(() => expect(mockToken).toHaveBeenCalled());
+  it('refreshes auth0 id token', async () => {
+    const userProfile: UserResponse = {
+      ...createUserResponse(),
+    };
+    const mockToken = jest.fn().mockResolvedValue('token');
+    await renderUserProfile(userProfile, {}, (authClient, user) => ({
+      getTokenSilently:
+        authClient && user
+          ? mockToken
+          : () => {
+              throw new Error('Not Ready');
+            },
+    }));
+    await userEvent.click(await screen.findByLabelText(/edit.+contact/i));
+    await userEvent.click(screen.getByText(/save/i));
+    await waitFor(() => expect(mockToken).toHaveBeenCalled());
   });
 
   describe('for the avatar', () => {

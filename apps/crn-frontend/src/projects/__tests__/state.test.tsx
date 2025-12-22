@@ -82,10 +82,9 @@ describe('projects state hooks', () => {
       mockGetProjects.mockResolvedValueOnce(algoliaResponse);
       mockToListProjectResponse.mockReturnValueOnce(listResponse);
 
-      const { result } = renderHook(
-        () => useProjects(defaultOptions),
-        { wrapper: createWrapper() },
-      );
+      const { result } = renderHook(() => useProjects(defaultOptions), {
+        wrapper: createWrapper(),
+      });
 
       await waitFor(() => {
         expect(result.current).toEqual(listResponse);
@@ -98,10 +97,7 @@ describe('projects state hooks', () => {
       expect(mockToListProjectResponse).toHaveBeenCalledWith(algoliaResponse);
     });
 
-    // TODO: Fix this test - waitFor migration issue
-    // The error handling with Recoil Suspense boundaries behaves differently
-    // with the new testing library API. Need to investigate proper error boundary testing.
-    it.skip('throws when Algolia search fails', async () => {
+    it('throws when Algolia search fails', async () => {
       const rejection = new Error('Algolia failure');
       mockGetProjects.mockRejectedValueOnce(rejection);
 
@@ -111,10 +107,9 @@ describe('projects state hooks', () => {
 
       let errorCaught;
       try {
-        renderHook(
-          () => useProjects(defaultOptions),
-          { wrapper: createWrapper() },
-        );
+        renderHook(() => useProjects(defaultOptions), {
+          wrapper: createWrapper(),
+        });
         await waitFor(() => {
           // The hook should throw an error which will be caught by the wrapper
           expect(mockGetProjects).toHaveBeenCalled();
@@ -124,7 +119,7 @@ describe('projects state hooks', () => {
       }
 
       // Wait a bit for the error to propagate
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Verify the API was called and failed
       expect(mockGetProjects).toHaveBeenCalledWith(
@@ -216,10 +211,9 @@ describe('projects state hooks', () => {
         set(auth0State, { getTokenSilently } as never);
       };
 
-      const { result } = renderHook(
-        () => useProjectById('project-99'),
-        { wrapper: createWrapper(initializeState) },
-      );
+      const { result } = renderHook(() => useProjectById('project-99'), {
+        wrapper: createWrapper(initializeState),
+      });
 
       await waitFor(() => {
         expect(result.current).toEqual(project);
@@ -290,10 +284,9 @@ describe('projects state hooks', () => {
         });
       };
 
-      const { result } = renderHook(
-        () => useProjectById('project-1'),
-        { wrapper: createWrapper(initializeState) },
-      );
+      const { result } = renderHook(() => useProjectById('project-1'), {
+        wrapper: createWrapper(initializeState),
+      });
 
       await waitFor(() => {
         expect(result.current).toEqual(completeDetailProject);

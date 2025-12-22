@@ -305,7 +305,7 @@ describe('the onboarded modal', () => {
   });
 
   // TODO: Fix this test after React Router v6 migration - window.alert not implemented in jsdom
-  it.skip('redirects to homepage', async () => {
+  it('redirects to homepage', async () => {
     let user: User = {
       ...createUserResponse(),
       id,

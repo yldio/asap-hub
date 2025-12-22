@@ -281,11 +281,7 @@ describe('Duplicate Output', () => {
       `/network/working-groups/${wgResponse.id}/duplicate/${researchOutput.id}`,
     );
   });
-  it.skip('will create a new research output when saved', async () => {
-    // TODO: Fix navigation timeout issue with React Router v6
-    // The test completes form submission but navigation to /shared-research/{id}
-    // times out. This may be related to how data routers handle cross-route navigation
-    // in test environments. Needs investigation.
+  it('will create a new research output when saved', async () => {
     jest.useRealTimers();
 
     const wgResponse = createWorkingGroupResponse();
@@ -380,11 +376,7 @@ describe('Duplicate Output', () => {
 });
 
 describe('the outputs tab', () => {
-  it.skip('can be switched to', async () => {
-    // TODO: Fix content loading timeout issue with React Router v6
-    // After clicking the outputs tab, the expected content never appears within 10s.
-    // This may be related to how nested routes/tabs load content in the new router.
-    // Needs investigation.
+  it('can be switched to', async () => {
     jest.useRealTimers();
 
     await renderWorkingGroupProfile();

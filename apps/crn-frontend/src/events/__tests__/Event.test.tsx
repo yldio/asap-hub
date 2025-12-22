@@ -31,7 +31,7 @@ beforeEach(() => {
   });
 });
 
-const wrapper: React.FC = ({ children }) => (
+const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <RecoilRoot
     initializeState={({ set }) => set(refreshEventState(id), Math.random())}
   >
@@ -99,8 +99,7 @@ it('falls back to the not found page for a missing event', async () => {
   expect(await findByText(/sorry.+page/i)).toBeVisible();
 });
 
-// eslint-disable-next-line jest/no-disabled-tests
-it.skip('silently refreshes the event to fetch the meeting link', async () => {
+it('silently refreshes the event to fetch the meeting link', async () => {
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
     id,

@@ -48,8 +48,7 @@ describe('useSearch', () => {
       expect(result.current.searchQuery).toEqual('');
     });
 
-    // TODO: Skipped due to react-router v6 migration - navigate() with replace: true doesn't trigger location updates in MemoryRouter test environment
-    it.skip('resets pagination when changed', () => {
+    it('resets pagination when changed', () => {
       const { result } = renderHook(
         () => ({
           useSearch: useSearch(),
@@ -121,8 +120,7 @@ describe('useSearch', () => {
       expect(result.current.filters).toEqual(new Set());
     });
 
-    // TODO: Skipped due to react-router v6 migration - navigate() with replace: true doesn't trigger location updates in MemoryRouter test environment
-    it.skip('resets the pagination when changed', () => {
+    it('resets the pagination when changed', () => {
       const { result } = renderHook(
         () => ({
           useSearch: useSearch(),
@@ -161,8 +159,7 @@ describe('useSearch', () => {
       expect(result.current.searchQuery).not.toEqual(searchQuery);
       expect(result.current.debouncedSearchQuery).toEqual(searchQuery);
     });
-    // TODO: Skipped due to react-router v6 migration - debounced query updates are not propagating through navigate() in test environment
-    it.skip('updates to a changed search query after a while', async () => {
+    it('updates to a changed search query after a while', async () => {
       const { result } = renderHook(() => useSearch(), {
         wrapper: createWrapper(['/test']),
       });
@@ -222,8 +219,7 @@ describe('useSearch', () => {
       expect(result.current.tags).toEqual(['Tag1', 'Tag2']);
     });
 
-    // TODO: Skipped due to react-router v6 migration - navigate() with replace: true doesn't trigger location updates in MemoryRouter test environment
-    it.skip('resets the pagination when changed', () => {
+    it('resets the pagination when changed', () => {
       const { result } = renderHook(
         () => ({
           useSearch: useSearch(),

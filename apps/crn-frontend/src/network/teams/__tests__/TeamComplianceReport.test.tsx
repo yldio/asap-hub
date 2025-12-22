@@ -107,7 +107,7 @@ it('renders compliance report form page', async () => {
   expect(container).toHaveTextContent('Title of Manuscript');
 });
 
-it.skip('can publish a form when the data is valid and navigates to team workspace', async () => {
+it('can publish a form when the data is valid and navigates to team workspace', async () => {
   // TODO: Fix getBoundingClientRect error with Lexical editor in test environment
   jest.useRealTimers();
 

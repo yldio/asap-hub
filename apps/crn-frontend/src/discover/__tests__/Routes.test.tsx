@@ -7,16 +7,14 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { createListTutorialsResponse } from '@asap-hub/fixtures';
-// TutorialsResponse - unused after skipping test
-// import { TutorialsResponse } from '@asap-hub/model';
+import { TutorialsResponse } from '@asap-hub/model';
 import { discover } from '@asap-hub/routing';
 import userEvent from '@testing-library/user-event';
 
 import Routes from '../Routes';
 
 import { getTutorials } from '../tutorials/api';
-// getTutorialById - unused after skipping test
-// import { getTutorialById } from '../tutorials/api';
+import { getTutorialById } from '../tutorials/api';
 
 jest.mock('../../guides/api');
 jest.mock('../tutorials/api');
@@ -25,10 +23,9 @@ const mockGetTutorials = getTutorials as jest.MockedFunction<
   typeof getTutorials
 >;
 
-// mockGetTutorialById - unused after skipping test
-// const mockGetTutorialById = getTutorialById as jest.MockedFunction<
-//   typeof getTutorialById
-// >;
+const mockGetTutorialById = getTutorialById as jest.MockedFunction<
+  typeof getTutorialById
+>;
 
 const renderDiscoverPage = async (pathname: string, query = '') => {
   const { container } = render(
@@ -112,36 +109,35 @@ it('allows search on tutorials list', async () => {
   );
 });
 
-// TODO: React Router v6 migration - skipped due to: Navigation to tutorial detail page causes Suspense fallback to unmount the component tree. After clicking the tutorial card link, the DOM becomes empty. This may be related to how nested Routes components handle navigation in v6.
-it.skip('renders tutorial page when user clicks tutorial card title', async () => {
-  // const tutorialsResponse = createListTutorialsResponse(1);
-  // const tutorial: TutorialsResponse = {
-  //   id: 'uuid-first-tutorial',
-  //   created: '2020-09-07T17:36:54Z',
-  //   title: 'First Tutorial Title',
-  //   authors: [],
-  //   tags: [],
-  //   teams: [],
-  //   relatedEvents: [],
-  //   relatedTutorials: [],
-  // };
-  // mockGetTutorials.mockResolvedValue({
-  //   ...tutorialsResponse,
-  //   items: tutorialsResponse.items.map((tutorialItem) => ({
-  //     ...tutorialItem,
-  //     id: 'uuid-first-tutorial',
-  //     title: 'First Tutorial Title',
-  //   })),
-  // });
-  // mockGetTutorialById.mockResolvedValue(tutorial);
-  // await renderDiscoverPage(discover({}).tutorials({}).$);
-  // const tutorialCardTitle = (await screen.findByText(/First Tutorial Title/i, {
-  //   selector: 'a',
-  // })) as HTMLAnchorElement;
-  // expect(tutorialCardTitle).toBeVisible();
-  // expect(tutorialCardTitle.href).toContain('/tutorials/');
-  // await userEvent.click(tutorialCardTitle);
-  // expect(
-  //   await screen.findByText(/First Tutorial Title/i, { selector: 'h1' }),
-  // ).toBeVisible();
+it('renders tutorial page when user clicks tutorial card title', async () => {
+  const tutorialsResponse = createListTutorialsResponse(1);
+  const tutorial: TutorialsResponse = {
+    id: 'uuid-first-tutorial',
+    created: '2020-09-07T17:36:54Z',
+    title: 'First Tutorial Title',
+    authors: [],
+    tags: [],
+    teams: [],
+    relatedEvents: [],
+    relatedTutorials: [],
+  };
+  mockGetTutorials.mockResolvedValue({
+    ...tutorialsResponse,
+    items: tutorialsResponse.items.map((tutorialItem) => ({
+      ...tutorialItem,
+      id: 'uuid-first-tutorial',
+      title: 'First Tutorial Title',
+    })),
+  });
+  mockGetTutorialById.mockResolvedValue(tutorial);
+  await renderDiscoverPage(discover({}).tutorials({}).$);
+  const tutorialCardTitle = (await screen.findByText(/First Tutorial Title/i, {
+    selector: 'a',
+  })) as HTMLAnchorElement;
+  expect(tutorialCardTitle).toBeVisible();
+  expect(tutorialCardTitle.href).toContain('/tutorials/');
+  await userEvent.click(tutorialCardTitle);
+  expect(
+    await screen.findByText(/First Tutorial Title/i, { selector: 'h1' }),
+  ).toBeVisible();
 });

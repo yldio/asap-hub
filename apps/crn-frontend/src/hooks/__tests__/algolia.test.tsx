@@ -28,17 +28,12 @@ afterEach(() => {
 });
 
 describe('useAlgolia', () => {
-  // TODO: Fix this test - waitFor migration issue
-  // The error is thrown during useState initialization which may not be properly
-  // caught by React Testing Library's error boundary in the new API
-  it.skip('throws when user is not provided', () => {
+  it('throws when user is not provided', () => {
     const consoleErrorSpy = jest
       .spyOn(console, 'error')
       .mockImplementation(() => {});
 
-    const { result } = renderHook(() => useAlgolia());
-
-    expect(result.error).toEqual(
+    expect(() => renderHook(() => useAlgolia())).toThrowError(
       new Error('Algolia unavailable while not logged in'),
     );
 

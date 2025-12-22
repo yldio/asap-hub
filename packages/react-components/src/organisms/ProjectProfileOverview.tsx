@@ -10,7 +10,7 @@ import { mobileScreen, rem } from '../pixels';
 
 const tabsContainerStyles = css({
   display: 'flex',
-  borderBottom: `1px solid ${steel.rgb}}`,
+  borderBottom: `1px solid ${steel.rgb}`,
 });
 
 const tabContentStyles = css({

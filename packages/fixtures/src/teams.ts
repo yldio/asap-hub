@@ -23,20 +23,20 @@ const teamTool = (id: number): TeamTool => ({
   url: `/tool-${id}`,
 });
 
-const listTeamResponseItem: Omit<TeamResponse, 'id'> = {
+const listTeamResponseItem = {
   displayName: 'Abu-Remaileh, M',
   teamId: 'AR1',
   grantId: '000123',
-  teamType: 'Discovery Team',
-  teamStatus: 'Active',
+  teamType: 'Discovery Team' as const,
+  teamStatus: 'Active' as const,
   projectTitle:
     'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
-  tags: [],
-  members: [],
-  manuscripts: [],
+  tags: [] as [],
+  members: [] as [],
+  manuscripts: [] as [],
   lastModifiedDate: '2020-09-07T17:36:54Z',
   labCount: 0,
-  labs: [],
+  labs: [] as [],
 };
 
 type FixtureOptions = {
@@ -77,9 +77,13 @@ export const createTeamResponse = (
 export const createTeamListItemResponse = (
   itemIndex = 0,
 ): TeamListItemResponse => ({
-  ...listTeamResponseItem,
   id: `t${itemIndex}`,
   displayName: `${listTeamResponseItem.displayName} ${itemIndex + 1}`,
+  teamStatus: listTeamResponseItem.teamStatus,
+  projectTitle: listTeamResponseItem.projectTitle,
+  teamType: listTeamResponseItem.teamType,
+  tags: listTeamResponseItem.tags,
+  labCount: listTeamResponseItem.labCount,
   memberCount: 2,
 });
 

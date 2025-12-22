@@ -297,6 +297,7 @@ export {
   ProjectDetailAbout,
   ProjectDetailHeader,
   ProjectDetailPage,
+  ProjectProfileAbout,
   ProjectsPage,
   ProjectsPageHeader,
   ResearchOutputForm,

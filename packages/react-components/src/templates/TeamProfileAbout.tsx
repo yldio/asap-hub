@@ -72,7 +72,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         isTeamInactive={!!inactiveSince}
       />
     </section>
-    {teamType !== 'Resource Team' && teamStatus === 'Active' && teamGroupsCard}
+    {teamType !== 'Resource Team' && teamGroupsCard}
     {pointOfContact && teamStatus === 'Active' && (
       <CtaCard
         href={createMailTo(pointOfContact.email)}

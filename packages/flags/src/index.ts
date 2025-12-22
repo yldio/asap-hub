@@ -12,7 +12,7 @@ let overrides: Flags = {
   // can also be used to manually disable a flag in development:
   ANALYTICS_PHASE_TWO: false,
   COMPLIANCE_NOTIFICATION_LIST: '',
-  PROJECTS_MVP: true,
+  PROJECTS_MVP: false,
   OPENSEARCH_METRICS: false,
   DATA_MANAGER_ROLE_ENABLED: false,
 };

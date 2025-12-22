@@ -275,8 +275,8 @@ describe('footer', () => {
     expect(getByText('Groups Card')).toBeVisible();
   });
 
-  it('does not render team groups card when team is not active', () => {
-    const { queryByText } = render(
+  it('renders team groups card when team is not active', () => {
+    const { getByText } = render(
       <TeamProfileAbout
         {...props}
         teamStatus="Inactive"
@@ -284,6 +284,6 @@ describe('footer', () => {
       />,
     );
 
-    expect(queryByText('Groups Card')).not.toBeInTheDocument();
+    expect(getByText('Groups Card')).toBeVisible();
   });
 });

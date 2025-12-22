@@ -3,7 +3,7 @@ import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, projects } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
-import { CopyButton, Display, Link, StateTag, TabLink } from '../atoms';
+import { CopyButton, Display, Link, Pill, StateTag, TabLink } from '../atoms';
 import { lead, pine } from '../colors';
 import {
   article,
@@ -129,6 +129,12 @@ const iconStyles = css({
   paddingRight: rem(12),
 });
 
+const pillsStyles = css({
+  display: 'flex',
+  gap: rem(8),
+  marginBottom: rem(4),
+});
+
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly isStaff: boolean;
   readonly inactiveSince?: string;
@@ -160,6 +166,8 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   isAsapTeam = false,
   teamStatus,
   teamType,
+  resourceType,
+  researchTheme,
   projectTitle,
   linkedProjectId,
 }) => {
@@ -217,6 +225,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
           </TabNav>
         }
       >
+        <div css={pillsStyles}>
+          <Pill noMargin>{teamType}</Pill>
+          {researchTheme && <Pill noMargin>{researchTheme}</Pill>}
+          {resourceType && <Pill noMargin>{resourceType}</Pill>}
+        </div>
         <div css={titleStyle}>
           <Display styleAsHeading={2}>Team {displayName}</Display>
           {!isActive && (

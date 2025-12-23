@@ -1,5 +1,8 @@
-import { render } from '@testing-library/react';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
+import { fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
+import { ember } from '../../colors';
 
 import LabeledPasswordField from '../LabeledPasswordField';
 
@@ -49,29 +52,28 @@ it('does not render a button to show the password if empty', () => {
   expect(queryByRole('button')).not.toBeInTheDocument();
 });
 
-// TODO: Test skipped - component does not implement red button color on invalid state (always uses fern color)
-it.skip('changes the show password button color to red when invalid', () => {
-  //   const { getByTitle, getByLabelText, rerender } = render(
-  //     <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
-  //   );
-  //
-  //   expect(
-  //     findParentWithStyle(getByTitle(/show/i), 'fill')?.fill.replace(/ /g, ''),
-  //   ).not.toBe(ember.rgb.replace(/ /g, ''));
-  //
-  //   rerender(
-  //     <LabeledPasswordField
-  //       title="PW"
-  //       forgotPasswordHref="#"
-  //       value="val"
-  //       customValidationMessage="Wrong!"
-  //     />,
-  //   );
-  //   fireEvent.blur(getByLabelText(/^PW/));
-  //
-  //   expect(
-  //     findParentWithStyle(getByTitle(/show/i), 'fill')?.fill.replace(/ /g, ''),
-  //   ).toBe(ember.rgb.replace(/ /g, ''));
+it('changes the show password button color to red when invalid', () => {
+  const { getByTitle, getByLabelText, rerender } = render(
+    <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
+  );
+
+  expect(
+    findParentWithStyle(getByTitle(/show/i), 'fill')?.fill.replace(/ /g, ''),
+  ).not.toBe(ember.rgb.replace(/ /g, ''));
+
+  rerender(
+    <LabeledPasswordField
+      title="PW"
+      forgotPasswordHref="#"
+      value="val"
+      customValidationMessage="Wrong!"
+    />,
+  );
+  fireEvent.blur(getByLabelText(/^PW/));
+
+  expect(
+    findParentWithStyle(getByTitle(/show/i), 'fill')?.fill.replace(/ /g, ''),
+  ).toBe(ember.rgb.replace(/ /g, ''));
 });
 
 describe('when showing the password', () => {

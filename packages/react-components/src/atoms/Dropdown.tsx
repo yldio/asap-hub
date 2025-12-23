@@ -91,14 +91,19 @@ export default function Dropdown<V extends string>({
 
   const [hasBlurred, setHasBlurred] = useState(false);
   const previousValue = useRef(value);
+  const previousRequired = useRef(required);
 
-  // Only validate when value changes AFTER user has interacted (blurred)
+  // Validate when value or required changes AFTER user has interacted (blurred)
   useEffect(() => {
-    if (hasBlurred && previousValue.current !== value) {
+    if (
+      hasBlurred &&
+      (previousValue.current !== value || previousRequired.current !== required)
+    ) {
       validate();
     }
     previousValue.current = value;
-  }, [value, hasBlurred, validate]);
+    previousRequired.current = required;
+  }, [value, hasBlurred, validate, required]);
 
   const validOptions = useMemo(
     () => options.filter((option) => option.value !== ''),

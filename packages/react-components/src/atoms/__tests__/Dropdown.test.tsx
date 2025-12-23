@@ -217,7 +217,7 @@ it('when invalidated and then option selected it should not display error messag
     screen.queryByText('Please fill out this field.'),
   ).not.toBeInTheDocument();
 });
-it.skip('when invalidated and then rendered optional it should not display error message', async () => {
+it('when invalidated and then rendered optional it should not display error message', async () => {
   const { rerender } = render(
     <Dropdown
       placeholder="Select"
@@ -243,10 +243,6 @@ it.skip('when invalidated and then rendered optional it should not display error
       required={false}
     />,
   );
-
-  // Trigger re-validation by focusing and blurring (TODO: Is this cheating the test? Figure out original intentions)
-  // await userEvent.click(input);
-  // await userEvent.tab();
 
   expect(
     screen.queryByText('Please fill out this field.'),
@@ -398,7 +394,7 @@ it('can clear the value when required is false', async () => {
   );
 
   // Find and click the clear indicator (the SVG cross icon)
-  const clearButton = container.querySelector('svg') as HTMLElement;
+  const clearButton = container.querySelector('svg') as unknown as HTMLElement;
   await userEvent.click(clearButton);
   expect(handleChange).toHaveBeenCalledTimes(2);
   expect(handleChange).toHaveBeenCalledWith(undefined);

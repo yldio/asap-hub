@@ -83,12 +83,7 @@ describe('a navigation item', () => {
     ).toMatchInlineSnapshot(`"rgba(122, 210, 169, 0.18)"`);
   });
 
-  // TODO: Fix this test - NavigationLink component needs to support subsection highlighting
-  // The component currently uses exact pathname matching, but this test expects
-  // parent sections to be highlighted when viewing subsections (e.g., /network should
-  // be highlighted when at /network/interest-groups). This requires updating
-  // NavigationLink.tsx to use pathname.startsWith() instead of exact equality.
-  it.skip('is highlighted when the current page is in the section it links to', () => {
+  it('is highlighted when the current page is in the section it links to', () => {
     const { getByTitle, rerender } = render(
       <StaticRouter key={1} location="/somewhere-else">
         <MainNavigation userOnboarded={true} canViewProjects={true} />

@@ -101,7 +101,12 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
   if (useHasRouter() && internal) {
     // Determine if the link is active by comparing the pathname
     // NavHashLink handles hash matching internally, but we need to check pathname
-    const isActive = location.pathname === url.split('#')[0];
+    // Use prefix matching to highlight parent sections when viewing subsections
+    // e.g., /network should be highlighted when at /network/interest-groups
+    const linkPath = url.split('#')[0];
+    const isActive =
+      location.pathname === linkPath ||
+      location.pathname.startsWith(`${linkPath}/`);
 
     return (
       <NavHashLink

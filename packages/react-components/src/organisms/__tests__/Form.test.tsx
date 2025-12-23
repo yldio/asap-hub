@@ -1,23 +1,11 @@
 /**
- * ⚠️ ALL NAVIGATION BLOCKING TESTS SKIPPED - React Router v6 → v7 Migration
+ * ⚠️ NAVIGATION BLOCKING TESTS SKIPPED - React Router v6 → v7 Migration
  *
- * These tests rely on React Router v5's `getUserConfirmation` API for navigation blocking,
+ * Most tests in this file rely on React Router v5's `getUserConfirmation` API for navigation blocking,
  * which was removed in v6. Navigation blocking will be available in React Router v7
  * via the stable `useBlocker` hook.
  *
- * Current status:
- * - React Router v6: No stable navigation blocking API available
- * - React Router v7: Will include stable `useBlocker` hook for navigation blocking
- *
- * Migration path for React Router v7:
- * 1. Update Form component to use `useBlocker` hook
- * 2. Remove `.skip` from all tests below
- * 3. Update tests to work with `useBlocker` instead of `getUserConfirmation`
- * 4. Restore history imports if needed or adapt to v7 patterns
- *
- * Tests affected: ALL tests in this file (navigation blocking, form saving, cancel behavior)
- * Date skipped: 2024-12-12
- * Tracking: Part of React v18 + React Router v6 → v7 migration plan
+ * Only the basic render test works with React Router v6.
  */
 
 import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
@@ -36,19 +24,10 @@ const props: ComponentProps<typeof Form> = {
   children: () => null,
 };
 
-// Navigation blocking setup - SKIPPED for React Router v7
-// let getUserConfirmation!: jest.MockedFunction<
-//   (message: string, callback: (confirmed: boolean) => void) => void
-// >;
-// let history!: History;
-// beforeEach(() => {
-//   getUserConfirmation = jest.fn((_message, cb) => cb(true));
-//   history = createMemoryHistory({ getUserConfirmation });
-// });
 const renderForm = (children: ReactNode) =>
   render(<StaticRouter location="/">{children}</StaticRouter>);
 
-it.skip('renders a form with given children', () => {
+it('renders a form with given children', () => {
   const { getByText } = renderForm(<Form {...props}>{() => 'Content'}</Form>);
   expect(getByText('Content')).toBeVisible();
 });

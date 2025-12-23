@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
@@ -131,6 +132,7 @@ describe('Create WorkingGroup Output', () => {
   });
 
   it('publishes the output', async () => {
+    const consoleWarnSpy = mockActWarningsInConsole();
     mockCreateOutput.mockResolvedValueOnce(gp2.createOutputResponse());
     const title = 'this is the output title';
     const link = 'https://example.com';
@@ -193,9 +195,11 @@ describe('Create WorkingGroup Output', () => {
         expect.anything(),
       );
     });
+    consoleWarnSpy.mockRestore();
   });
 
   it('will show server side validation error for link', async () => {
+    const consoleWarnSpy = mockActWarningsInConsole();
     const validationResponse: ValidationErrorResponse = {
       message: 'Validation error',
       error: 'Bad Request',
@@ -241,11 +245,13 @@ describe('Create WorkingGroup Output', () => {
     await waitFor(() => {
       expect(mockCreateOutput).toHaveBeenCalled();
     });
-    expect(
-      screen.queryAllByText(
-        'An Output with this URL already exists. Please enter a different URL.',
-      ).length,
-    ).toBeGreaterThan(1);
+    await waitFor(() => {
+      expect(
+        screen.queryAllByText(
+          'An Output with this URL already exists. Please enter a different URL.',
+        ).length,
+      ).toBeGreaterThan(1);
+    });
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
@@ -257,5 +263,6 @@ describe('Create WorkingGroup Output', () => {
         'An Output with this URL already exists. Please enter a different URL.',
       ),
     ).toBeNull();
+    consoleWarnSpy.mockRestore();
   });
 });

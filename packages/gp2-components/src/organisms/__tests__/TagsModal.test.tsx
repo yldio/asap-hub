@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -9,7 +10,14 @@ import TagsModal from '../TagsModal';
 describe('TagsModal', () => {
   const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
 
-  beforeEach(jest.resetAllMocks);
+  let consoleWarnSpy: ReturnType<typeof mockActWarningsInConsole>;
+  beforeEach(() => {
+    jest.resetAllMocks();
+    consoleWarnSpy = mockActWarningsInConsole();
+  });
+  afterEach(() => {
+    consoleWarnSpy.mockRestore();
+  });
   type TagsModalProps = ComponentProps<typeof TagsModal>;
   const defaultProps: TagsModalProps = {
     ...gp2Fixtures.createUserResponse(),

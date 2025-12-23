@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
@@ -132,6 +133,7 @@ describe('UserDetail', () => {
   });
   describe('own profile', () => {
     it('renders edit buttons for each section', async () => {
+      const consoleMock = mockActWarningsInConsole();
       const user = gp2Fixtures.createUserResponse({
         id: 'testuserid',
         fundingStreams: 'a stream',
@@ -155,6 +157,7 @@ describe('UserDetail', () => {
         '/users/testuserid/overview/edit-funding-streams',
         '/users/testuserid/overview/edit-contributing-cohorts',
       ]);
+      consoleMock.mockRestore();
     });
 
     it('renders placeholders for each section when they are not defined', async () => {

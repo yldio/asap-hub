@@ -1,7 +1,9 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 } from '@asap-hub/model';
 import { Notification, NotificationContext } from '@asap-hub/react-context';
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -1137,6 +1139,8 @@ describe('OutputForm', () => {
 
     it('shows the custom error message for a date in the future', async () => {
       const user = userEvent.setup();
+      const consoleErrorSpy = mockActWarningsInConsole('error');
+
       renderWithRouter(<OutputForm {...defaultProps} />);
 
       const sharingStatus = screen.getByRole('group', {
@@ -1157,6 +1161,10 @@ describe('OutputForm', () => {
           screen.getByText(/publish date cannot be greater than today/i),
         ).toBeVisible();
       });
+      // Wait for any pending state updates to settle
+      await waitFor(() => {});
+
+      consoleErrorSpy.mockRestore();
     });
   });
 
@@ -1233,6 +1241,19 @@ describe('OutputForm', () => {
 
     it('shows error message because of empty required fields', async () => {
       const user = userEvent.setup();
+
+      // Suppress act warnings from async state updates in TextField
+      const originalConsoleError = console.error;
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('not wrapped in act(')) {
+            return; // Suppress act warnings
+          }
+          originalConsoleError.apply(console, args);
+        });
+
       render(
         <OutputForm
           {...defaultProps}
@@ -1274,10 +1295,27 @@ describe('OutputForm', () => {
           }),
         );
       });
+      // Wait for any pending state updates to settle
+      await waitFor(() => {});
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('does not remove notification if error remains', async () => {
       const user = userEvent.setup();
+
+      // Suppress act warnings from async state updates in TextField
+      const originalConsoleError = console.error;
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('not wrapped in act(')) {
+            return; // Suppress act warnings
+          }
+          originalConsoleError.apply(console, args);
+        });
+
       render(
         <OutputForm
           {...defaultProps}
@@ -1321,6 +1359,10 @@ describe('OutputForm', () => {
         ).not.toBeInTheDocument();
         expect(removeNotification).not.toHaveBeenCalled();
       });
+      // Wait for any pending state updates to settle
+      await waitFor(() => {});
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('shows error message because of unknown error', async () => {
@@ -1375,6 +1417,19 @@ describe('OutputForm', () => {
 
     it('changes notification if another error', async () => {
       const user = userEvent.setup();
+
+      // Suppress act warnings from async state updates in TextField
+      const originalConsoleError = console.error;
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('not wrapped in act(')) {
+            return; // Suppress act warnings
+          }
+          originalConsoleError.apply(console, args);
+        });
+
       shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
       render(
         <OutputForm
@@ -1447,12 +1502,29 @@ describe('OutputForm', () => {
           }),
         ),
       );
+      // Wait for any pending state updates to settle
+      await waitFor(() => {});
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('displays server side validation error for link and calls clears function when changed', async () => {
       const user = userEvent.setup();
       const mockClearError = jest.fn();
-      render(
+
+      // Suppress act warnings from async state updates in TextField
+      const originalConsoleError = console.error;
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('not wrapped in act(')) {
+            return; // Suppress act warnings
+          }
+          originalConsoleError.apply(console, args);
+        });
+
+      const { container } = render(
         <OutputForm
           {...defaultProps}
           link="http://example.com"
@@ -1481,16 +1553,40 @@ describe('OutputForm', () => {
         ),
       ).toBeVisible();
 
-      await user.type(screen.getByLabelText(/URL/i), 'a');
+      const linkInput = screen.getByLabelText(/URL/i);
+      await user.type(linkInput, 'a');
       await waitFor(() => {
         expect(mockClearError).toHaveBeenCalledWith('/link');
       });
+      // Wait for the input value to be updated and component to finish rendering
+      await waitFor(() => {
+        expect(linkInput).toHaveValue('http://example.coma');
+      });
+      // Flush any pending timers and state updates
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('displays server side validation error for title and calls clears function when changed', async () => {
       const user = userEvent.setup();
       const mockClearError = jest.fn();
-      render(
+
+      // Suppress act warnings from async state updates in TextField
+      const originalConsoleError = console.error;
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('not wrapped in act(')) {
+            return; // Suppress act warnings
+          }
+          originalConsoleError.apply(console, args);
+        });
+
+      const { container } = render(
         <OutputForm
           {...defaultProps}
           title="Example"
@@ -1519,10 +1615,21 @@ describe('OutputForm', () => {
         ),
       ).toBeVisible();
 
-      await user.type(screen.getByLabelText(/title/i), 'a');
+      const titleInput = screen.getByLabelText(/title/i);
+      await user.type(titleInput, 'a');
       await waitFor(() => {
         expect(mockClearError).toHaveBeenCalledWith('/title');
       });
+      // Wait for the input value to be updated and component to finish rendering
+      await waitFor(() => {
+        expect(titleInput).toHaveValue('Examplea');
+      });
+      // Flush any pending timers and state updates
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+
+      consoleErrorSpy.mockRestore();
     });
   });
 });

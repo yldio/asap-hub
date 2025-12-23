@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 } from '@asap-hub/model';
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -157,6 +158,7 @@ describe('KeyInformationModal', () => {
   }, 60000);
 
   it('calls onSave with the updated fields', async () => {
+    const consoleErrorSpy = mockActWarningsInConsole('error');
     const firstName = 'Gonçalo';
     const middleName = 'Matias';
     const lastName = 'Ramos';
@@ -239,6 +241,11 @@ describe('KeyInformationModal', () => {
     );
     const institution = await screen.findByText(positions[0]!.institution);
     await userEvent.click(institution);
+    await waitFor(() => {
+      expect(
+        screen.getByRole('textbox', { name: 'Department (required)' }),
+      ).toBeVisible();
+    });
     await userEvent.type(
       screen.getByRole('textbox', { name: 'Department (required)' }),
       positions[0]!.department,
@@ -247,41 +254,61 @@ describe('KeyInformationModal', () => {
       screen.getByRole('textbox', { name: 'Role (required)' }),
       positions[0]!.role,
     );
-    await userEvent.type(
-      screen.getByRole('textbox', {
-        name: 'ORCID (optional) Type your ORCID ID.',
-      }),
-      orcid,
-    );
-    await userEvent.type(
-      screen.getByRole('textbox', {
-        name: 'LinkedIn (optional) Type your LinkedIn profile URL.',
-      }),
-      social.linkedIn,
-    );
-    await userEvent.type(
-      screen.getByRole('textbox', {
-        name: 'Github (optional) Type your Github profile URL.',
-      }),
-      social.github,
-    );
+    const orcidField = screen.getByRole('textbox', {
+      name: 'ORCID (optional) Type your ORCID ID.',
+    });
+    await userEvent.type(orcidField, orcid);
+    await waitFor(() => {
+      expect(orcidField).toHaveValue(orcid);
+    });
+    const linkedInField = screen.getByRole('textbox', {
+      name: 'LinkedIn (optional) Type your LinkedIn profile URL.',
+    });
+    await userEvent.type(linkedInField, social.linkedIn);
+    await waitFor(() => {
+      expect(linkedInField).toHaveValue(social.linkedIn);
+    });
+    const githubField = screen.getByRole('textbox', {
+      name: 'Github (optional) Type your Github profile URL.',
+    });
+    await userEvent.type(githubField, social.github);
+    await waitFor(() => {
+      expect(githubField).toHaveValue(social.github);
+    });
+    // Blur the last field to trigger any pending validations
+    await userEvent.tab();
+    // Give extra time for async validations to complete
+    await new Promise((resolve) => setTimeout(resolve, 200));
     const saveButton = getSaveButton();
     await userEvent.click(saveButton);
-    expect(onSave).toHaveBeenCalledWith({
-      firstName,
-      middleName,
-      lastName,
-      nickname,
-      degrees,
-      positions,
-      country,
-      stateOrProvince,
-      city,
-      region,
-      orcid,
-      social,
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalledWith({
+        firstName,
+        middleName,
+        lastName,
+        nickname,
+        degrees,
+        positions,
+        country,
+        stateOrProvince,
+        city,
+        region,
+        orcid,
+        social,
+      });
     });
     await waitFor(() => expect(saveButton).toBeEnabled());
+    // Wait for any pending state updates to complete after save
+    await waitFor(
+      () => {
+        // Just wait for the next tick to ensure all pending updates are flushed
+        return Promise.resolve();
+      },
+      { timeout: 1000 },
+    );
+    // Additional wait to ensure all async operations complete
+    await new Promise((resolve) => setImmediate(resolve));
+    consoleErrorSpy.mockRestore();
   }, 180000);
 
   it('calls onSave with the updated social fields', async () => {
@@ -459,6 +486,7 @@ describe('KeyInformationModal', () => {
   });
 
   it('can save an extra position', async () => {
+    const consoleErrorSpy = mockActWarningsInConsole('error');
     const onSave = jest.fn();
     const position = {
       institution: 'Olhanense',
@@ -484,9 +512,10 @@ describe('KeyInformationModal', () => {
     });
     const tertiarySection = tertiary.closest('section') as HTMLElement;
 
-    await userEvent.click(
-      within(tertiarySection).getByRole('textbox', { name: /Institution/i }),
-    );
+    const institutionField = within(tertiarySection).getByRole('textbox', {
+      name: /Institution/i,
+    });
+    await userEvent.click(institutionField);
     const institution = await screen.findByText(position.institution);
     await userEvent.click(institution);
     await waitFor(() => {
@@ -504,9 +533,14 @@ describe('KeyInformationModal', () => {
     );
     const saveButton = getSaveButton();
     await userEvent.click(saveButton);
-    expect(onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ positions: [...positions, position] }),
-    );
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalledWith(
+        expect.objectContaining({ positions: [...positions, position] }),
+      );
+    });
     await waitFor(() => expect(saveButton).toBeEnabled());
+    // Wait for any pending state updates to complete
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    consoleErrorSpy.mockRestore();
   }, 30000);
 });

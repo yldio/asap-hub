@@ -15,15 +15,18 @@ export const mockConsoleError = () => {
 };
 
 /**
- * Mocks console.warn to suppress only React act() warnings while letting other warnings through.
+ * Mocks console.warn or console.error to suppress only React act() warnings while letting other messages through.
  * Use this for tests that trigger unavoidable act() warnings from async validation state updates.
  *
- * @returns Jest spy with `mockRestore()` method to restore original console.warn
+ * @param method - The console method to mock: 'warn' or 'error'. Defaults to 'warn'.
+ * @returns Jest spy with `mockRestore()` method to restore original console method
  */
-export const mockActWarningsInConsole = () => {
-  const originalConsoleWarn = console.warn;
+export const mockActWarningsInConsole = (
+  method: 'error' | 'warn' = 'warn',
+) => {
+  const originalMethod = console[method];
   const spy = jest
-    .spyOn(console, 'warn')
+    .spyOn(console, method)
     .mockImplementation((...args: unknown[]) => {
       const message = args[0]?.toString() || '';
       if (
@@ -32,7 +35,7 @@ export const mockActWarningsInConsole = () => {
       ) {
         return; // Suppress act() warnings
       }
-      originalConsoleWarn.apply(console, args); // Let other warnings through
+      originalMethod.apply(console, args); // Let other messages through
     });
   return spy;
 };

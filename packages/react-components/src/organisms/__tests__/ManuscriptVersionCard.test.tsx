@@ -6,26 +6,32 @@ import {
 import { ManuscriptVersion } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import ManuscriptVersionCard from '../ManuscriptVersionCard';
 
-const setScrollHeightMock = (height: number) => {
-  const ref = { current: { scrollHeight: height } };
+const originalScrollHeightDescriptor = Object.getOwnPropertyDescriptor(
+  HTMLElement.prototype,
+  'scrollHeight',
+);
 
-  Object.defineProperty(ref, 'current', {
-    set(_current) {
-      this.mockedCurrent = _current;
-    },
-    get() {
-      return { scrollHeight: height };
-    },
+const mockScrollHeight = (height: number) => {
+  Object.defineProperty(HTMLElement.prototype, 'scrollHeight', {
+    configurable: true,
+    value: height,
   });
-  jest.spyOn(React, 'useRef').mockReturnValue(ref);
 };
 
 afterEach(() => {
   jest.restoreAllMocks();
+  // Restore original scrollHeight descriptor
+  if (originalScrollHeightDescriptor) {
+    Object.defineProperty(
+      HTMLElement.prototype,
+      'scrollHeight',
+      originalScrollHeightDescriptor,
+    );
+  }
 });
 
 afterAll(jest.clearAllMocks);
@@ -429,13 +435,12 @@ it('displays compliance report when complianceReport is provided', () => {
   expect(getByRole('heading', { name: /Compliance Report/i })).toBeVisible();
 });
 
-// TODO: Fix this test - the setScrollHeightMock globally mocks React.useRef which breaks React Router's internal hooks
-it.skip('displays manuscript description', async () => {
+it('displays manuscript description', async () => {
   const shortDescription = 'A nice short description';
   const longDescription = 'A veeery long description.'.repeat(200);
 
   const user = userEvent.setup();
-  setScrollHeightMock(100);
+  mockScrollHeight(100);
   const { getByRole, rerender, getByText, queryByRole, getByLabelText } =
     render(
       <MemoryRouter>
@@ -452,7 +457,7 @@ it.skip('displays manuscript description', async () => {
   expect(getByText(shortDescription)).toBeInTheDocument();
   expect(queryByRole('button', { name: /show more/i })).not.toBeInTheDocument();
 
-  setScrollHeightMock(300);
+  mockScrollHeight(300);
   rerender(
     <MemoryRouter>
       <ManuscriptVersionCard

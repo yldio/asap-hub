@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
@@ -17,7 +17,7 @@ const props: ComponentProps<typeof ExpertiseAndResourcesModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<StaticRouter location="/">{children}</StaticRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 it('renders the title', () => {
   const { getByText } = renderModal(<ExpertiseAndResourcesModal {...props} />);
   expect(
@@ -48,11 +48,7 @@ it('renders default values into text inputs', () => {
   );
 });
 
-it.skip('triggers the save function', async () => {
-  // Suppress expected console.warn about navigate() being called outside useEffect
-  // TODO: Figure out how to remove this console mock
-  const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
-
+it('triggers the save function', async () => {
   const handleSave = jest.fn();
   const { getByLabelText, getByText } = renderModal(
     <ExpertiseAndResourcesModal
@@ -80,15 +76,9 @@ it.skip('triggers the save function', async () => {
     expertiseAndResourceDescription: 'example description',
     tagIds: ['1', '2', '3', '4', '5'],
   });
-
-  warnSpy.mockRestore();
 });
 
 it('disables the form elements while submitting', async () => {
-  // Suppress expected console.warn about navigate() being called outside useEffect
-  // TODO: Figure out how to remove this console mock
-  const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
-
   let resolveSubmit!: () => void;
   const handleSave = () =>
     new Promise<void>((resolve) => {
@@ -112,8 +102,6 @@ it('disables the form elements while submitting', async () => {
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
-
-  warnSpy.mockRestore();
 });
 
 describe('tags selection', () => {

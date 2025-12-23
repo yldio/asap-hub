@@ -82,7 +82,11 @@ export const mockActErrorsInConsole = () => {
     .spyOn(console, 'error')
     .mockImplementation((...args: unknown[]) => {
       const message = args[0]?.toString() || '';
-      if (message.includes('not wrapped in act(')) {
+      // Suppress various act() related warnings from React 18
+      if (
+        message.includes('not wrapped in act(') ||
+        message.includes('not configured to support act(')
+      ) {
         return; // Suppress act() warnings
       }
       originalConsoleError.apply(console, args); // Let other errors through

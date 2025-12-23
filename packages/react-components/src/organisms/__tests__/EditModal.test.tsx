@@ -22,14 +22,14 @@ beforeEach(jest.resetAllMocks);
 const renderModal = (children: ReactNode) =>
   render(<MemoryRouter>{children}</MemoryRouter>);
 
-it.skip('renders a dialog with given title', () => {
+it('renders a dialog with given title', () => {
   renderModal(<EditModal {...props} title="Title" />);
   expect(screen.getByRole('dialog')).toContainElement(
     screen.getByText('Title'),
   );
 });
 
-it.skip('renders a dialog with given children', () => {
+it('renders a dialog with given children', () => {
   renderModal(<EditModal {...props}>{() => 'Content'}</EditModal>);
   expect(screen.getByRole('dialog')).toContainElement(
     screen.getByText('Content'),

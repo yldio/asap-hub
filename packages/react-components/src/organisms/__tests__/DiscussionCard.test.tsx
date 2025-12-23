@@ -8,6 +8,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ManuscriptDiscussion } from '@asap-hub/model';
 import DiscussionCard from '../DiscussionCard';
+import { mockActErrorsInConsole } from '../../test-utils';
 
 const mockOnMarkDiscussionAsRead = jest.fn();
 const mockDiscussion: ManuscriptDiscussion = {
@@ -311,7 +312,10 @@ describe('DiscussionCard', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
-  it.skip('handles reply submission correctly', async () => {
+  it('handles reply submission correctly', async () => {
+    // Suppress act() warnings from react-hook-form's internal state updates
+    const consoleMock = mockActErrorsInConsole();
+
     render(
       <DiscussionCard
         manuscriptId="manuscript-1"
@@ -349,6 +353,8 @@ describe('DiscussionCard', () => {
         { text: 'test message', manuscriptId: 'manuscript-1' },
       );
     });
+
+    consoleMock.mockRestore();
   });
 
   it('renders without replies when displayReplyButton is true', async () => {

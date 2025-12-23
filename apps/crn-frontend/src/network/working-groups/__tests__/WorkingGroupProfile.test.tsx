@@ -11,6 +11,7 @@ import {
   screen,
   waitFor,
   waitForElementToBeRemoved,
+  act,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
@@ -379,17 +380,35 @@ describe('the outputs tab', () => {
   it('can be switched to', async () => {
     jest.useRealTimers();
 
-    await renderWorkingGroupProfile();
-    await userEvent.click(
-      await screen.findByText(/outputs/i, { selector: 'nav a *' }),
+    const router = await renderWorkingGroupProfile();
+    await waitFor(() => {
+      expect(
+        screen.getByText(/outputs/i, { selector: 'nav a *' }),
+      ).toBeVisible();
+    });
+
+    const outputTab = await screen.findByText(/outputs/i, {
+      selector: 'nav a *',
+    });
+    expect(outputTab).toBeVisible();
+
+    await act(async () => {
+      await userEvent.click(outputTab);
+    });
+
+    // Wait for route to change to outputs tab
+    await waitFor(() => {
+      expect(router.state.location.pathname).toContain('/outputs');
+    });
+
+    const text = await screen.findByText(
+      /This working group hasn’t shared any research yet!/i,
     );
-    expect(
-      await screen.findByText(
-        /this working group hasn't shared any research yet/i,
-        {},
-        { timeout: 10000 },
-      ),
-    ).toBeVisible();
+
+    // // Wait for the empty state message to appear
+    await waitFor(() => {
+      expect(text).toBeVisible();
+    });
 
     jest.useFakeTimers();
   });

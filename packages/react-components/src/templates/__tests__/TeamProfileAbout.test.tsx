@@ -1,22 +1,31 @@
 import { ComponentProps } from 'react';
 import { TeamRole } from '@asap-hub/model';
 import { fireEvent, render } from '@testing-library/react';
+import { isEnabled } from '@asap-hub/flags';
 
 import TeamProfileAbout from '../TeamProfileAbout';
 
+jest.mock('@asap-hub/flags', () => ({
+  isEnabled: jest.fn(() => true),
+  reset: jest.fn(),
+}));
+
 const props: ComponentProps<typeof TeamProfileAbout> = {
-  projectTitle: '',
+  teamDescription: '',
   tags: [],
   members: [],
   teamListElementId: '',
+  teamStatus: 'Active',
+  teamType: 'Discovery Team',
+  labs: [],
 };
 it('renders the overview', () => {
   const { getByText } = render(
-    <TeamProfileAbout {...props} projectTitle="Title" />,
+    <TeamProfileAbout {...props} teamDescription="Description" />,
   );
 
-  expect(getByText(/overview/i)).toBeVisible();
-  expect(getByText('Title')).toBeVisible();
+  expect(getByText(/Team Description/i)).toBeVisible();
+  expect(getByText('Description')).toBeVisible();
 });
 
 it('renders the contact banner', () => {
@@ -100,15 +109,15 @@ it('shows the lab list when present on member list', () => {
   expect(queryByText('Doe Lab')).toBeInTheDocument();
 });
 
-it('renders the expertise and resources list', () => {
-  const { getByText, queryByText } = render(
+it('renders the tags list when tags are present', () => {
+  const { getByText } = render(
     <TeamProfileAbout
       {...props}
+      teamDescription="Description"
       tags={[{ name: 'example expertise', id: '1' }]}
     />,
   );
   expect(getByText(/example expertise/i)).toBeVisible();
-  expect(queryByText(/expertise and resources/i)).toBeNull();
   expect(getByText(/tags/i)).toBeVisible();
 });
 
@@ -217,6 +226,32 @@ describe('footer', () => {
     );
   });
 
+  it('renders the lab list when team has labs and flag is enabled', () => {
+    (isEnabled as jest.Mock).mockReturnValue(true);
+    const { getByText, getByRole } = render(
+      <TeamProfileAbout
+        {...props}
+        labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
+      />,
+    );
+
+    expect(getByText('Lab 1')).toBeVisible();
+    expect(getByRole('heading', { name: /labs/i })).toBeVisible();
+  });
+
+  it('does not render the lab list when team has labs but flag is disabled', () => {
+    (isEnabled as jest.Mock).mockReturnValue(false);
+    const { queryByText, queryByRole } = render(
+      <TeamProfileAbout
+        {...props}
+        labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
+      />,
+    );
+
+    expect(queryByText('Lab 1')).not.toBeInTheDocument();
+    expect(queryByRole('heading', { name: /labs/i })).not.toBeInTheDocument();
+  });
+
   it('adds the pm email to clipboard when user clicks on copy button', () => {
     const { getByTitle } = render(
       <TeamProfileAbout {...props} pointOfContact={pointOfContact} />,
@@ -226,5 +261,29 @@ describe('footer', () => {
     expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith(
       expect.stringMatching(/pm@asap.com/i),
     );
+  });
+
+  it('renders team groups card when team is active', () => {
+    const { getByText } = render(
+      <TeamProfileAbout
+        {...props}
+        teamStatus="Active"
+        teamGroupsCard={<div>Groups Card</div>}
+      />,
+    );
+
+    expect(getByText('Groups Card')).toBeVisible();
+  });
+
+  it('renders team groups card when team is not active', () => {
+    const { getByText } = render(
+      <TeamProfileAbout
+        {...props}
+        teamStatus="Inactive"
+        teamGroupsCard={<div>Groups Card</div>}
+      />,
+    );
+
+    expect(getByText('Groups Card')).toBeVisible();
   });
 });

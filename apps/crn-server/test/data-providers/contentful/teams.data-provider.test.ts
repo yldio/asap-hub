@@ -1468,6 +1468,18 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetchById(id);
 
         expect(result?.labCount).toEqual(2);
+        expect(result?.labs).toEqual([
+          {
+            id: 'cd7be4902',
+            name: 'Brighton',
+            labPrincipalInvestigatorId: undefined,
+          },
+          {
+            id: 'cd7be4903',
+            name: 'Liverpool',
+            labPrincipalInvestigatorId: undefined,
+          },
+        ]);
       });
       test('should ignore null labs', async () => {
         const id = 'some-id';

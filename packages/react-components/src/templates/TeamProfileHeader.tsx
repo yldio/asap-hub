@@ -1,20 +1,23 @@
+import { isEnabled } from '@asap-hub/flags';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { network, projects } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
-import { CopyButton, Display, Link, StateTag, TabLink } from '../atoms';
+import { CopyButton, Display, Link, Pill, StateTag, TabLink } from '../atoms';
 import { lead, pine } from '../colors';
 import {
   article,
   bioinformatics,
   crnReportIcon,
   dataset,
+  DiscoveryProjectIcon,
   InactiveBadgeIcon,
   LabIcon,
   labMaterial,
   plusIcon,
   protocol,
+  ResourceProjectIcon,
 } from '../icons';
 import { createMailTo } from '../mail';
 import { DropdownButton, UserAvatarList, TabNav } from '../molecules';
@@ -43,12 +46,14 @@ const contactSectionStyles = css({
   grid: `
     "members" auto
     "contact" auto
-    "lab"    auto
+    "info"    auto
+    "lab"     auto
   `,
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     grid: `
       "contact members"
+      "info info"
       "lab lab"/ max-content 1fr
     `,
   },
@@ -63,13 +68,15 @@ const createSectionStyles = css({
   grid: `
     "members" auto
     "contact" auto
-    "create" auto
-    "lab"    auto
+    "create"  auto
+    "info"    auto
+    "lab"     auto
   `,
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     grid: `
       "contact members create"
+      "info info info"
       "lab lab lab"/ auto auto 1fr
     `,
   },
@@ -95,6 +102,13 @@ const labCountStyles = css({
   padding: `${rem(12)} 0`,
   color: lead.rgb,
 });
+const projectNameStyles = css({
+  gridArea: 'info',
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+  marginTop: rem(12),
+});
 const createStyles = css({
   gridArea: 'create',
   display: 'flex',
@@ -116,9 +130,13 @@ const iconStyles = css({
   paddingRight: rem(12),
 });
 
-type TeamProfileHeaderProps = Readonly<
-  Omit<TeamResponse, 'tools' | 'teamStatus'>
-> & {
+const pillsStyles = css({
+  display: 'flex',
+  gap: rem(8),
+  marginBottom: rem(4),
+});
+
+type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly isStaff: boolean;
   readonly inactiveSince?: string;
   readonly tools?: ReadonlyArray<TeamTool>;
@@ -147,8 +165,28 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   isStaff,
   manuscriptsCount,
   isAsapTeam = false,
+  teamStatus,
+  teamType,
+  resourceType,
+  researchTheme,
+  projectTitle,
+  linkedProjectId,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
+  let projectLink;
+
+  if (linkedProjectId) {
+    if (teamType === 'Discovery Team') {
+      projectLink = projects({})
+        .discoveryProjects({})
+        .discoveryProject({ projectId: linkedProjectId }).$;
+    } else if (teamType === 'Resource Team') {
+      projectLink = projects({})
+        .resourceProjects({})
+        .resourceProject({ projectId: linkedProjectId }).$;
+    }
+  }
+
   const { canShareResearchOutput } = useContext(
     ResearchOutputPermissionsContext,
   );
@@ -188,23 +226,29 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
           </TabNav>
         }
       >
+        <div css={pillsStyles}>
+          <Pill noMargin>{teamType}</Pill>
+          {researchTheme && <Pill noMargin>{researchTheme}</Pill>}
+          {resourceType && <Pill noMargin>{resourceType}</Pill>}
+        </div>
         <div css={titleStyle}>
           <Display styleAsHeading={2}>Team {displayName}</Display>
           {!isActive && (
             <StateTag icon={<InactiveBadgeIcon />} label="Inactive" />
           )}
         </div>
-
         <section
           css={
             canShareResearchOutput ? createSectionStyles : contactSectionStyles
           }
         >
-          <UserAvatarList
-            members={members}
-            fullListRoute={`${route.about({}).$}#${teamListElementId}`}
-          />
-          {pointOfContact && (
+          {teamStatus === 'Active' && (
+            <UserAvatarList
+              members={members}
+              fullListRoute={`${route.about({}).$}#${teamListElementId}`}
+            />
+          )}
+          {pointOfContact && teamStatus === 'Active' && (
             <div css={pointOfContactStyles}>
               <span css={buttonStyles}>
                 <Link
@@ -226,7 +270,21 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               />
             </div>
           )}
-          {labCount > 0 && (
+          {isEnabled('PROJECTS_MVP') && projectTitle ? (
+            <div css={projectNameStyles} data-testid="project-icon">
+              {teamType === 'Discovery Team' ? (
+                <DiscoveryProjectIcon />
+              ) : (
+                <ResourceProjectIcon />
+              )}
+              {projectLink ? (
+                <Link href={projectLink}>{projectTitle}</Link>
+              ) : (
+                projectTitle
+              )}
+            </div>
+          ) : null}
+          {labCount > 0 && teamStatus === 'Active' && (
             <div css={labCountStyles}>
               <span css={iconStyles}>
                 <LabIcon />

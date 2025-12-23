@@ -83,26 +83,6 @@ it('renders the member links', async () => {
   await waitFor(() => expect(mockedGetTeamGroups).toHaveBeenCalled());
 });
 
-describe('the proposal', () => {
-  it('is not rendered when there is no proposal', async () => {
-    await renderTeamAbout({
-      team: { ...createTeamResponse(), proposalURL: undefined },
-    });
-    expect(screen.queryByText(/proposal/i)).not.toBeInTheDocument();
-    await waitFor(() => expect(mockedGetTeamGroups).toHaveBeenCalled());
-  });
-
-  it('is rendered with a library href', async () => {
-    await renderTeamAbout({
-      team: { ...createTeamResponse(), proposalURL: 'someproposal' },
-    });
-    expect(screen.getByText(/proposal/i).closest('a')!.href).toMatch(
-      /someproposal$/,
-    );
-    await waitFor(() => expect(mockedGetTeamGroups).toHaveBeenCalled());
-  });
-});
-
 it('renders the team groups card when a group is present', async () => {
   mockedGetTeamGroups.mockResolvedValue({
     items: [

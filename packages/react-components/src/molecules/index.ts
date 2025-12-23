@@ -68,6 +68,7 @@ export { default as TabbedContent } from './TabbedContent';
 export { default as TabNav } from './TabNav';
 export { default as TagList } from './TagList';
 export { default as TeamCollaborationRow } from './TeamCollaborationRow';
+export { default as TeamProfileTags } from './TeamProfileTags';
 export { default as ToastCard } from './ToastCard';
 export { default as TooltipInfo } from './TooltipInfo';
 export { default as UserAvatarList } from './UserAvatarList';

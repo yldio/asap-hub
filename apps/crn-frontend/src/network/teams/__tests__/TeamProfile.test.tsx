@@ -196,8 +196,11 @@ it('renders the header info', async () => {
 });
 
 it('renders the about info', async () => {
-  await renderPage();
-  expect(screen.getByText(/project overview/i)).toBeVisible();
+  await renderPage({
+    ...createTeamResponse(),
+    teamDescription: 'This is the team description',
+  });
+  expect(screen.getAllByText('This is the team description')[0]).toBeVisible();
 });
 
 it('navigates to the outputs tab', async () => {

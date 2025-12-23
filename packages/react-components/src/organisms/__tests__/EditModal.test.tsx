@@ -6,11 +6,11 @@ import userEvent from '@testing-library/user-event';
 
 import EditModal from '../EditModal';
 
-// TODO: React Router v6 Migration - All tests skipped
-// These tests rely heavily on React Router v5's getUserConfirmation API for navigation blocking,
-// which was removed in v6. React Router v6 provides useBlocker (currently unstable) as a replacement.
-// The EditModal component needs to be migrated to use v6's blocking API first, then these tests
-// can be rewritten to test the new implementation. Skipping for now to unblock other migrations.
+// TODO: React Router v6 Migration
+// Tests that rely on React Router v5's getUserConfirmation API remain skipped (navigation blocking
+// was removed in v6). React Router v6 provides useBlocker (currently unstable) as a replacement.
+// The EditModal component needs to be migrated to use v6's blocking API for those tests.
+// Tests not requiring getUserConfirmation have been unskipped and work with MemoryRouter.
 
 const props: ComponentProps<typeof EditModal> = {
   title: 'Title',
@@ -61,7 +61,7 @@ it.skip('prompts when trying to leave after making edits', () => {
 
 describe('when saving', () => {
   describe('and the form is invalid', () => {
-    it.skip('does not call onSave', async () => {
+    it('does not call onSave', async () => {
       const handleSave = jest.fn();
       renderModal(
         <EditModal {...props} onSave={handleSave} dirty>
@@ -81,7 +81,7 @@ describe('when saving', () => {
       expect(handleSave).not.toHaveBeenCalled();
     });
 
-    it.skip('does not call onSave when parent validation fails', async () => {
+    it('does not call onSave when parent validation fails', async () => {
       const handleSave = jest.fn(() => Promise.resolve());
       const handleValidate = jest.fn(() => false);
       renderModal(
@@ -112,27 +112,23 @@ describe('when saving', () => {
 
   describe('and the form is valid', () => {
     const renderEditModal = ({ handleSave = jest.fn() } = {}) => {
-      // const getUserConfirmation = jest.fn((_message, cb) => cb(true));
-      // const history = createMemoryHistory({ getUserConfirmation });
-      // const { rerender } = renderModal(
-      //   <Router history={history}>
-      //     <EditModal {...props} backHref="/back" onSave={handleSave} dirty>
-      //       {({ isSaving }, asyncWrapper) => (
-      //         <button
-      //           type="button"
-      //           disabled={isSaving}
-      //           onClick={() => asyncWrapper(handleSave)}
-      //         >
-      //           Save
-      //         </button>
-      //       )}
-      //     </EditModal>
-      //   </Router>,
-      // );
-      return {} as any; // { rerender, getUserConfirmation, history, handleSave };
+      renderModal(
+        <EditModal {...props} backHref="/back" onSave={handleSave} dirty>
+          {({ isSaving }, asyncWrapper) => (
+            <button
+              type="button"
+              disabled={isSaving}
+              onClick={() => asyncWrapper(handleSave)}
+            >
+              Save
+            </button>
+          )}
+        </EditModal>,
+      );
+      return { handleSave };
     };
 
-    it.skip('calls onSave', async () => {
+    it('calls onSave', async () => {
       const handleSave = jest.fn().mockResolvedValue(null);
       renderEditModal({ handleSave });
 
@@ -143,13 +139,22 @@ describe('when saving', () => {
       await waitFor(() => expect(saveButton).toBeEnabled());
     });
 
-    it.skip('disables the save button while saving', async () => {
-      const handleSave = jest.fn().mockResolvedValue(null);
+    it('disables the save button while saving', async () => {
+      // Use a deferred promise so we can check the disabled state before resolution
+      let resolveSave!: () => void;
+      const savePromise = new Promise<void>((resolve) => {
+        resolveSave = resolve;
+      });
+      const handleSave = jest.fn().mockReturnValue(savePromise);
       renderEditModal({ handleSave });
       const saveButton = screen.getByRole('button', { name: 'Save' });
       await userEvent.click(saveButton);
-      expect(saveButton).toBeDisabled();
 
+      // While saving, button should be disabled
+      await waitFor(() => expect(saveButton).toBeDisabled());
+
+      // Now complete the save
+      resolveSave();
       await waitFor(() => expect(saveButton).toBeEnabled());
     });
 
@@ -180,7 +185,7 @@ describe('when saving', () => {
         expect(getUserConfirmation).not.toHaveBeenCalled();
       });
 
-      it.skip('re-enables the save button', async () => {
+      it('re-enables the save button', async () => {
         const handleSave = jest.fn().mockResolvedValue(null);
         renderEditModal({ handleSave });
 
@@ -254,7 +259,7 @@ describe('when saving', () => {
     });
 
     describe('and the save fails', () => {
-      it.skip('shows an error message', async () => {
+      it('shows an error message', async () => {
         const handleSave = jest.fn().mockRejectedValueOnce(new Error());
         renderEditModal({ handleSave });
 
@@ -266,7 +271,7 @@ describe('when saving', () => {
         );
       });
 
-      it.skip('re-enables the save button', async () => {
+      it('re-enables the save button', async () => {
         const handleSave = jest.fn().mockRejectedValueOnce(new Error());
         renderEditModal({ handleSave });
 
@@ -291,32 +296,33 @@ describe('when saving', () => {
         await waitFor(() => expect(saveButton).toBeEnabled());
       });
 
-      it.skip('removes the error message when attempting to save again', async () => {
-        const handleSave = jest.fn().mockRejectedValueOnce(new Error());
-        const { rerender, history } = renderEditModal({ handleSave });
+      it('removes the error message when attempting to save again', async () => {
+        // Use a deferred promise for the second save so we can check error is cleared
+        let resolveSecondSave!: () => void;
+        const secondSavePromise = new Promise<void>((resolve) => {
+          resolveSecondSave = resolve;
+        });
+        const handleSave = jest
+          .fn()
+          .mockRejectedValueOnce(new Error())
+          .mockReturnValueOnce(secondSavePromise);
+
+        renderEditModal({ handleSave });
 
         const saveButton = screen.getByRole('button', { name: 'Save' });
-        await userEvent.click(saveButton);
-        await waitFor(() => expect(saveButton).toBeEnabled());
 
-        const handleSaveAgain = jest.fn().mockRejectedValue(new Error());
-        rerender(
-          <Router history={history}>
-            <EditModal {...props} onSave={handleSaveAgain} dirty>
-              {({ isSaving }, asyncWrapper) => (
-                <button
-                  type="button"
-                  onClick={() => asyncWrapper(handleSaveAgain)}
-                >
-                  Save
-                </button>
-              )}
-            </EditModal>
-          </Router>,
+        // First save fails - error message should appear
+        await userEvent.click(saveButton);
+        await waitFor(() =>
+          expect(screen.getByTitle(/error icon/i)).toBeInTheDocument(),
         );
 
+        // Click save again - error message should be cleared while saving
         await userEvent.click(saveButton);
-        expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
+        expect(screen.queryByTitle(/error icon/i)).not.toBeInTheDocument();
+
+        // Complete the second save
+        resolveSecondSave();
         await waitFor(() => expect(saveButton).toBeEnabled());
       });
     });

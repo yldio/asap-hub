@@ -1,9 +1,8 @@
 import { createUserResponse } from '@asap-hub/fixtures';
-import { fireEvent } from '@testing-library/dom';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
@@ -14,12 +13,9 @@ const props: ComponentProps<typeof PersonalInfoModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<StaticRouter location="/">{children}</StaticRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 
-it.skip('renders the title', async () => {
-  // Suppress expected console.error for async state updates after test completion
-  // TODO: Figure out how to avoid this console mock
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation();
+it('renders the title', async () => {
   renderModal(
     <PersonalInfoModal
       {...props}
@@ -27,16 +23,12 @@ it.skip('renders the title', async () => {
       backHref="/wrong"
     />,
   );
-  await waitFor(() => {
-    expect(screen.getByText('Main details', { selector: 'h3' })).toBeVisible();
-  });
-  errorSpy.mockRestore();
+  expect(
+    await screen.findByText('Main details', { selector: 'h3' }),
+  ).toBeVisible();
 });
 
-it.skip('indicates which fields are required or optional', async () => {
-  // Suppress expected console.error for async state updates after test completion
-  // TODO: Figure out how to avoid this console mock
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation();
+it('indicates which fields are required or optional', async () => {
   renderModal(
     <PersonalInfoModal
       countrySuggestions={[]}
@@ -45,30 +37,27 @@ it.skip('indicates which fields are required or optional', async () => {
     />,
   );
 
-  await waitFor(() => {
-    [
-      { title: 'First name', subtitle: 'required' },
-      { title: 'Middle name(s)', subtitle: 'optional' },
-      { title: 'Last name(s)', subtitle: 'required' },
-      { title: 'Nickname', subtitle: 'optional' },
-      { title: 'Degree', subtitle: 'optional' },
-      { title: 'Institution', subtitle: 'required' },
-      { title: 'Position', subtitle: 'required' },
-      { title: 'Country', subtitle: 'required' },
-      { title: 'City', subtitle: 'required' },
-    ].forEach(({ title, subtitle }) =>
-      expect(screen.getByText(title).nextSibling?.textContent).toContain(
-        subtitle,
-      ),
-    );
-  });
-  errorSpy.mockRestore();
+  // Wait for the form to be fully rendered
+  await screen.findByText('First name');
+
+  [
+    { title: 'First name', subtitle: 'required' },
+    { title: 'Middle name(s)', subtitle: 'optional' },
+    { title: 'Last name(s)', subtitle: 'required' },
+    { title: 'Nickname', subtitle: 'optional' },
+    { title: 'Degree', subtitle: 'optional' },
+    { title: 'Institution', subtitle: 'required' },
+    { title: 'Position', subtitle: 'required' },
+    { title: 'Country', subtitle: 'required' },
+    { title: 'City', subtitle: 'required' },
+  ].forEach(({ title, subtitle }) =>
+    expect(screen.getByText(title).nextSibling?.textContent).toContain(
+      subtitle,
+    ),
+  );
 });
 
 it('renders default values into text inputs', async () => {
-  // Suppress expected console.error for async state updates after test completion
-  // TODO: Figure out how to avoid this console mock
-  const errorSpy = jest.spyOn(console, 'error').mockImplementation();
   renderModal(
     <PersonalInfoModal
       {...props}
@@ -84,27 +73,28 @@ it('renders default values into text inputs', async () => {
       institution="institution"
     />,
   );
-  await waitFor(() => {
-    expect(
-      screen
-        .queryAllByRole('textbox')
-        .map((input) => input.getAttribute('value')),
-    ).toMatchInlineSnapshot(`
-      [
-        "firstName",
-        "middleName",
-        "lastName",
-        "nickname",
-        "",
-        "institution",
-        "jobTitle",
-        "",
-        "New York",
-        "city",
-      ]
-    `);
-  });
-  errorSpy.mockRestore();
+
+  // Wait for the form to be fully rendered
+  await screen.findByDisplayValue('firstName');
+
+  expect(
+    screen
+      .queryAllByRole('textbox')
+      .map((input) => input.getAttribute('value')),
+  ).toMatchInlineSnapshot(`
+    [
+      "firstName",
+      "middleName",
+      "lastName",
+      "nickname",
+      "",
+      "institution",
+      "jobTitle",
+      "",
+      "New York",
+      "city",
+    ]
+  `);
 });
 
 it('renders a country selector', async () => {
@@ -146,7 +136,7 @@ it('shows validation message country when it not selected', async () => {
   );
 });
 
-it.skip.each`
+it.each`
   label                 | message
   ${/city/i}            | ${'Please add your city'}
   ${/state\/province/i} | ${'Please add your state/province'}
@@ -155,10 +145,6 @@ it.skip.each`
 `(
   'shows validation message $message when value set to $value on $label',
   async ({ label, message }) => {
-    // Suppress expected console.error for async state updates after test completion
-    // TODO: Figure out how to avoid this console mock
-    const errorSpy = jest.spyOn(console, 'error').mockImplementation();
-
     renderModal(
       <PersonalInfoModal
         {...props}
@@ -169,22 +155,23 @@ it.skip.each`
         jobTitle="Assistant Professor"
       />,
     );
-    const field = screen.getByLabelText(label);
-    const input = field.closest('input') || field;
 
-    fireEvent.change(input, { target: { value: '' } });
+    // Wait for form to be fully rendered
+    await screen.findByLabelText(label);
+
+    const field = screen.getByLabelText(label);
+    const input = (field.closest('input') || field) as HTMLInputElement;
+
+    // Use userEvent.clear instead of fireEvent.change for proper act() wrapping
+    await userEvent.clear(input);
     expect(input).toHaveValue('');
 
     await userEvent.click(screen.getByText(/save/i));
     expect(await screen.findByText(new RegExp(message, 'i'))).toBeVisible();
-    errorSpy.mockRestore();
   },
 );
 
-it.skip('disables the form elements while submitting', async () => {
-  // Suppress expected react-router warning about navigate() being called outside useEffect
-  // TODO: Figure out how to avoid this console mock
-  const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+it('disables the form elements while submitting', async () => {
   let resolveSubmit!: () => void;
   const handleSave = () =>
     new Promise<void>((resolve) => {
@@ -210,12 +197,8 @@ it.skip('disables the form elements while submitting', async () => {
   await waitFor(() =>
     expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
   );
-  warnSpy.mockRestore();
 });
-it.skip('triggers the save function', async () => {
-  // Suppress expected react-router warning about navigate() being called outside useEffect
-  // TODO: Figure out how to avoid this console mock
-  const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+it('triggers the save function', async () => {
   const jestFn = jest.fn();
   renderModal(
     <PersonalInfoModal
@@ -252,5 +235,4 @@ it.skip('triggers the save function', async () => {
   await waitFor(() =>
     expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
   );
-  warnSpy.mockRestore();
 });

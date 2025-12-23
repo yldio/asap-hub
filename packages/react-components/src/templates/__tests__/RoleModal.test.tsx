@@ -9,6 +9,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { mockActErrorsInConsole } from '../../test-utils';
 import RoleModal from '../RoleModal';
 
 const props: ComponentProps<typeof RoleModal> = {
@@ -128,9 +129,7 @@ describe('User Role', () => {
 
   it('shows validation message for invalid research interests', async () => {
     // Suppress act() warnings from TextArea's internal async validation state updates
-    const consoleSpy = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const consoleMock = mockActErrorsInConsole();
 
     const { getByLabelText, findByText } = render(
       <MemoryRouter initialEntries={['/']}>
@@ -143,14 +142,12 @@ describe('User Role', () => {
       await findByText('Please add your research interests.'),
     ).toBeVisible();
 
-    consoleSpy.mockRestore();
+    consoleMock.mockRestore();
   });
 
   it('shows validation message for invalid responsibilities', async () => {
     // Suppress act() warnings from TextArea's internal async validation state updates
-    const consoleSpy = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const consoleMock = mockActErrorsInConsole();
 
     const { getByLabelText, findByText } = render(
       <MemoryRouter initialEntries={['/']}>
@@ -163,7 +160,7 @@ describe('User Role', () => {
     fireEvent.focusOut(getByLabelText(/responsibilities/i));
     expect(await findByText('Please add your responsibilities.')).toBeVisible();
 
-    consoleSpy.mockRestore();
+    consoleMock.mockRestore();
   });
 });
 

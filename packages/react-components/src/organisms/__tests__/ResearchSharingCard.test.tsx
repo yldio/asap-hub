@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
 import { ComponentProps } from 'react';
 import { editorRef } from '../../atoms';
+import { mockActErrorsInConsole } from '../../test-utils';
 import ResearchOutputFormSharingCard, {
   getPublishDateValidationMessage,
 } from '../ResearchOutputFormSharingCard';
@@ -55,7 +56,7 @@ it.each`
   ${'Type'}  | ${/type/i}  | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
   // Suppress act() warnings from TextField's internal async validation state updates
-  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleMock = mockActErrorsInConsole();
 
   const { findByText } = render(
     <ResearchOutputFormSharingCard
@@ -69,7 +70,7 @@ it.each`
   await userEvent.tab();
   expect(await findByText(error)).toBeVisible();
 
-  consoleSpy.mockRestore();
+  consoleMock.mockRestore();
 });
 
 it('does not require an url', async () => {
@@ -128,7 +129,7 @@ it('triggers an onchange event for Description', async () => {
 
 it('triggers an onchange event for Short Description', async () => {
   // Suppress act() warnings from TextArea's internal async validation state updates
-  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleMock = mockActErrorsInConsole();
 
   const onChangeFn = jest.fn();
   render(
@@ -142,7 +143,7 @@ it('triggers an onchange event for Short Description', async () => {
     expect(onChangeFn).toHaveBeenCalledWith('test');
   });
 
-  consoleSpy.mockRestore();
+  consoleMock.mockRestore();
 });
 
 it.each`
@@ -245,7 +246,7 @@ it('triggers an on change for date published', async () => {
 
 it('shows the custom error message for a date in the future', async () => {
   // Suppress act() warnings from TextField's internal async validation state updates
-  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleMock = mockActErrorsInConsole();
 
   const { findByText } = render(
     <ResearchOutputFormSharingCard
@@ -261,12 +262,12 @@ it('shows the custom error message for a date in the future', async () => {
     await findByText(/publish date cannot be greater than today/i),
   ).toBeVisible();
 
-  consoleSpy.mockRestore();
+  consoleMock.mockRestore();
 });
 
 it('displays server side validation error for link and calls clears function when changed', async () => {
   // Suppress act() warnings from TextField's internal async validation state updates
-  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleMock = mockActErrorsInConsole();
 
   const mockClearError = jest.fn();
   render(
@@ -297,12 +298,12 @@ it('displays server side validation error for link and calls clears function whe
     expect(mockClearError).toHaveBeenCalledWith('/link');
   });
 
-  consoleSpy.mockRestore();
+  consoleMock.mockRestore();
 });
 
 it('displays server side validation error for title and calls clears function when changed', async () => {
   // Suppress act() warnings from TextField's internal async validation state updates
-  const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleMock = mockActErrorsInConsole();
 
   const mockClearError = jest.fn();
   render(
@@ -333,7 +334,7 @@ it('displays server side validation error for title and calls clears function wh
     expect(mockClearError).toHaveBeenCalledWith('/title');
   });
 
-  consoleSpy.mockRestore();
+  consoleMock.mockRestore();
 });
 
 describe('getPublishDateValidationMessage returns', () => {

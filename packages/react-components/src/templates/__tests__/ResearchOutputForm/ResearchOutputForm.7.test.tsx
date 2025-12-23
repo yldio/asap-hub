@@ -20,8 +20,11 @@ import {
   expectedRequest,
 } from '../../test-utils/research-output-form';
 import { editorRef } from '../../../atoms';
+import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
+
+let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 
 describe('on submit', () => {
   const id = '42';
@@ -40,11 +43,11 @@ describe('on submit', () => {
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
 
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 

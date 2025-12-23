@@ -13,6 +13,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { fern, paper } from '../../../colors';
 import { defaultProps } from '../../test-utils/research-output-form';
+import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
 
@@ -24,6 +25,8 @@ const LocationCapture = () => {
   }, [location]);
   return null;
 };
+
+let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 
 describe('form buttons', () => {
   const id = '42';
@@ -37,11 +40,11 @@ describe('form buttons', () => {
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
 
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 

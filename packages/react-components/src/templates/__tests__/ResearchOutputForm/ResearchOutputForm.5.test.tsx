@@ -10,6 +10,7 @@ import {
   defaultProps,
   initialResearchOutputData,
 } from '../../test-utils/research-output-form';
+import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
 
@@ -21,6 +22,7 @@ describe('on submit', () => {
   const getAuthorSuggestions = jest.fn();
   const getRelatedResearchSuggestions = jest.fn();
   const getShortDescriptionFromDescription = jest.fn();
+  let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 
   beforeEach(() => {
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
@@ -30,11 +32,11 @@ describe('on submit', () => {
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
 
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 

@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { UserResponse } from '@asap-hub/model';
 
 import ContactInfoModal from '../ContactInfoModal';
+import { mockActErrorsInConsole } from '../../test-utils';
 
 const renderModal = (children: ReactNode) =>
   render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
@@ -162,9 +163,7 @@ it.each`
   'shows validation message "$message" for $label input',
   async ({ label, value, message }) => {
     // Suppress act() warnings from TextField's internal async validation state updates
-    const consoleSpy = jest
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+    const consoleMock = mockActErrorsInConsole();
 
     const { getByLabelText, findByText } = renderModal(
       <ContactInfoModal backHref="#" fallbackEmail="fallback@example.com" />,
@@ -176,6 +175,6 @@ it.each`
     fireEvent.focusOut(input);
     expect(await findByText(new RegExp(message, 'i'))).toBeVisible();
 
-    consoleSpy.mockRestore();
+    consoleMock.mockRestore();
   },
 );

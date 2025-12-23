@@ -21,6 +21,7 @@ import {
   expectedRequest,
 } from '../../test-utils/research-output-form';
 import { editorRef } from '../../../atoms';
+import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
 
@@ -33,6 +34,8 @@ describe('on submit 2', () => {
   const getRelatedResearchSuggestions = jest.fn();
   const getShortDescriptionFromDescription = jest.fn();
 
+  let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
+
   beforeEach(() => {
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
@@ -41,11 +44,11 @@ describe('on submit 2', () => {
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
 
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 

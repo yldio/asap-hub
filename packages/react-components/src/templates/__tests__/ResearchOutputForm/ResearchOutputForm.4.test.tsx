@@ -9,6 +9,7 @@ import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
+import { mockActErrorsInConsole } from '../../../test-utils';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
   defaultProps,
@@ -25,6 +26,7 @@ describe('on submit', () => {
   const getAuthorSuggestions = jest.fn();
   const getRelatedResearchSuggestions = jest.fn();
   const getShortDescriptionFromDescription = jest.fn();
+  let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 
   beforeEach(() => {
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
@@ -34,11 +36,11 @@ describe('on submit', () => {
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
 
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 

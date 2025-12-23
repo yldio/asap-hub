@@ -19,11 +19,13 @@ import {
   expectedRequest,
 } from '../../test-utils/research-output-form';
 import { editorRef } from '../../../atoms';
+import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
 
 // Helper to capture location in tests
 let currentLocation: { pathname: string; search: string } | null = null;
+let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 const LocationCapture = () => {
   const location = useLocation();
   useEffect(() => {
@@ -50,11 +52,11 @@ describe('on submit', () => {
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
 
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 

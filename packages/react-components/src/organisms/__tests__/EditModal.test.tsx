@@ -1,5 +1,6 @@
 import { ComponentProps, ReactNode } from 'react';
-import { Router, MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
+// import { Router } from 'react-router-dom'; // Commented out - only used in skipped tests
 // import { createMemoryHistory } from 'history'; // Commented out - not needed for skipped tests
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -159,30 +160,30 @@ describe('when saving', () => {
     });
 
     it.skip('prompts when trying to leave while saving', async () => {
-      const handleSave = jest.fn().mockResolvedValue(null);
-      const { getUserConfirmation } = renderEditModal({ handleSave });
-      const saveButton = screen.getByRole('button', { name: 'Save' });
-      await userEvent.click(saveButton);
-
-      await userEvent.click(screen.getByTitle(/close/i));
-      expect(getUserConfirmation).toHaveBeenCalled();
-
-      await waitFor(() => expect(saveButton).toBeEnabled());
+      // const handleSave = jest.fn().mockResolvedValue(null);
+      // const { getUserConfirmation } = renderEditModal({ handleSave });
+      // const saveButton = screen.getByRole('button', { name: 'Save' });
+      // await userEvent.click(saveButton);
+      //
+      // await userEvent.click(screen.getByTitle(/close/i));
+      // expect(getUserConfirmation).toHaveBeenCalled();
+      //
+      // await waitFor(() => expect(saveButton).toBeEnabled());
     });
 
     describe('and the save succeeds', () => {
       it.skip('navigates to the back href without prompting', async () => {
-        const handleSave = jest.fn().mockResolvedValue(null);
-        const { history, getUserConfirmation } = renderEditModal({
-          handleSave,
-        });
-
-        const saveButton = screen.getByRole('button', { name: 'Save' });
-        await userEvent.click(saveButton);
-        await waitFor(() => {
-          expect(history.location.pathname).toBe('/back');
-        });
-        expect(getUserConfirmation).not.toHaveBeenCalled();
+        // const handleSave = jest.fn().mockResolvedValue(null);
+        // const { history, getUserConfirmation } = renderEditModal({
+        //   handleSave,
+        // });
+        //
+        // const saveButton = screen.getByRole('button', { name: 'Save' });
+        // await userEvent.click(saveButton);
+        // await waitFor(() => {
+        //   expect(history.location.pathname).toBe('/back');
+        // });
+        // expect(getUserConfirmation).not.toHaveBeenCalled();
       });
 
       it('re-enables the save button', async () => {
@@ -197,63 +198,63 @@ describe('when saving', () => {
       // hypothetical cases if navigating back has not already caused unmount
       describe('and the modal is still open', () => {
         it.skip('does not prompt when trying to leave', async () => {
-          const handleSave = jest.fn().mockResolvedValue(null);
-          const { history, getUserConfirmation, rerender } = renderEditModal({
-            handleSave,
-          });
-
-          const saveButton = screen.getByRole('button', { name: 'Save' });
-          await userEvent.click(saveButton);
-          await waitFor(() => expect(saveButton).toBeEnabled());
-
-          // not going to be dirty anymore since the values have just been saved
-          rerender(
-            <Router history={history}>
-              <EditModal {...props} backHref="/back" onSave={handleSave}>
-                {({ isSaving }, asyncWrapper) => (
-                  <button
-                    type="button"
-                    onClick={() => asyncWrapper(handleSave)}
-                  >
-                    Save
-                  </button>
-                )}
-              </EditModal>
-            </Router>,
-          );
-          await userEvent.click(screen.getByTitle(/close/i));
-          expect(getUserConfirmation).not.toHaveBeenCalled();
-
-          await waitFor(() =>
-            expect(screen.getByText(/^save/i).closest('button')).toBeEnabled(),
-          );
+          // const handleSave = jest.fn().mockResolvedValue(null);
+          // const { history, getUserConfirmation, rerender } = renderEditModal({
+          //   handleSave,
+          // });
+          //
+          // const saveButton = screen.getByRole('button', { name: 'Save' });
+          // await userEvent.click(saveButton);
+          // await waitFor(() => expect(saveButton).toBeEnabled());
+          //
+          // // not going to be dirty anymore since the values have just been saved
+          // rerender(
+          //   <Router history={history}>
+          //     <EditModal {...props} backHref="/back" onSave={handleSave}>
+          //       {({ isSaving }, asyncWrapper) => (
+          //         <button
+          //           type="button"
+          //           onClick={() => asyncWrapper(handleSave)}
+          //         >
+          //           Save
+          //         </button>
+          //       )}
+          //     </EditModal>
+          //   </Router>,
+          // );
+          // await userEvent.click(screen.getByTitle(/close/i));
+          // expect(getUserConfirmation).not.toHaveBeenCalled();
+          //
+          // await waitFor(() =>
+          //   expect(screen.getByText(/^save/i).closest('button')).toBeEnabled(),
+          // );
         });
 
         it.skip('prompts when trying to leave after making edits again', async () => {
-          const handleSave = jest.fn().mockResolvedValue(null);
-          const { history, getUserConfirmation, rerender } = renderEditModal({
-            handleSave,
-          });
-          rerender(
-            <Router history={history}>
-              <EditModal {...props} backHref="/back" onSave={handleSave} dirty>
-                {({ isSaving }, asyncWrapper) => (
-                  <button
-                    type="button"
-                    onClick={() => asyncWrapper(handleSave)}
-                  >
-                    Save
-                  </button>
-                )}
-              </EditModal>
-            </Router>,
-          );
-          await userEvent.click(screen.getByTitle(/close/i));
-          expect(getUserConfirmation).toHaveBeenCalled();
-
-          await waitFor(() =>
-            expect(screen.getByText(/^save/i).closest('button')).toBeEnabled(),
-          );
+          // const handleSave = jest.fn().mockResolvedValue(null);
+          // const { history, getUserConfirmation, rerender } = renderEditModal({
+          //   handleSave,
+          // });
+          // rerender(
+          //   <Router history={history}>
+          //     <EditModal {...props} backHref="/back" onSave={handleSave} dirty>
+          //       {({ isSaving }, asyncWrapper) => (
+          //         <button
+          //           type="button"
+          //           onClick={() => asyncWrapper(handleSave)}
+          //         >
+          //           Save
+          //         </button>
+          //       )}
+          //     </EditModal>
+          //   </Router>,
+          // );
+          // await userEvent.click(screen.getByTitle(/close/i));
+          // expect(getUserConfirmation).toHaveBeenCalled();
+          //
+          // await waitFor(() =>
+          //   expect(screen.getByText(/^save/i).closest('button')).toBeEnabled(),
+          // );
         });
       });
     });
@@ -284,16 +285,16 @@ describe('when saving', () => {
       });
 
       it.skip('prompts when trying to leave', async () => {
-        const handleSave = jest.fn().mockRejectedValueOnce(new Error());
-        const { getUserConfirmation } = renderEditModal({ handleSave });
-
-        const saveButton = screen.getByRole('button', { name: 'Save' });
-        await userEvent.click(saveButton);
-
-        await userEvent.click(screen.getByTitle(/close/i));
-        expect(getUserConfirmation).toHaveBeenCalled();
-
-        await waitFor(() => expect(saveButton).toBeEnabled());
+        // const handleSave = jest.fn().mockRejectedValueOnce(new Error());
+        // const { getUserConfirmation } = renderEditModal({ handleSave });
+        //
+        // const saveButton = screen.getByRole('button', { name: 'Save' });
+        // await userEvent.click(saveButton);
+        //
+        // await userEvent.click(screen.getByTitle(/close/i));
+        // expect(getUserConfirmation).toHaveBeenCalled();
+        //
+        // await waitFor(() => expect(saveButton).toBeEnabled());
       });
 
       it('removes the error message when attempting to save again', async () => {

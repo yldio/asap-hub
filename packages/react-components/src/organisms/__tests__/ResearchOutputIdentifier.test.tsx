@@ -1,8 +1,9 @@
 import { ResearchOutputIdentifierType } from '@asap-hub/model';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { ResearchOutputIdentifier } from '../ResearchOutputIdentifier';
+import { mockActErrorsInConsole } from '../../test-utils';
 
 const props: ComponentProps<typeof ResearchOutputIdentifier> = {
   documentType: 'Article',
@@ -102,7 +103,17 @@ describe.each`
   ${'AccessionNumber'} | ${ResearchOutputIdentifierType.AccessionNumber} | ${'NP_wrong'}   | ${false} | ${/accession/i} | ${/Please enter a valid Accession/i}
   ${'AccessionNumber'} | ${ResearchOutputIdentifierType.AccessionNumber} | ${'NP_1234567'} | ${true}  | ${/accession/i} | ${/Please enter a valid Accession/i}
 `('$description', ({ type, identifier, isValid, name, error }) => {
-  it.skip(`shows ${isValid ? 'no' : ''} error `, async () => {
+  let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
+
+  beforeEach(() => {
+    consoleMock = mockActErrorsInConsole();
+  });
+
+  afterEach(() => {
+    consoleMock.mockRestore();
+  });
+
+  it(`shows ${isValid ? 'no' : ''} error `, async () => {
     render(
       <ResearchOutputIdentifier
         {...props}
@@ -122,9 +133,5 @@ describe.each`
         expect(screen.getByText(error)).toBeVisible();
       });
     }
-    // Wait for any pending state updates to complete
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    });
   });
 });

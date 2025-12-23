@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -27,7 +27,7 @@ describe('UserPosition', () => {
       </MemoryRouter>,
     );
 
-  it('renders a dialog with the right position', () => {
+  it('renders a dialog with the right position', async () => {
     const position = {
       institution: 'FPF',
       department: "Men's Team",
@@ -36,15 +36,17 @@ describe('UserPosition', () => {
     renderUserPosition({
       position,
     });
-    expect(
-      screen.getByRole('textbox', { name: 'Institution (required)' }),
-    ).toHaveValue(position.institution);
-    expect(
-      screen.getByRole('textbox', { name: 'Department (required)' }),
-    ).toHaveValue(position.department);
-    expect(
-      screen.getByRole('textbox', { name: 'Role (required)' }),
-    ).toHaveValue(position.role);
+    await waitFor(() => {
+      expect(
+        screen.getByRole('textbox', { name: 'Institution (required)' }),
+      ).toHaveValue(position.institution);
+      expect(
+        screen.getByRole('textbox', { name: 'Department (required)' }),
+      ).toHaveValue(position.department);
+      expect(
+        screen.getByRole('textbox', { name: 'Role (required)' }),
+      ).toHaveValue(position.role);
+    });
   });
 
   it('can save a position institution', async () => {
@@ -113,26 +115,32 @@ describe('UserPosition', () => {
     ${0}  | ${'Primary'}
     ${1}  | ${'Secondary'}
     ${2}  | ${'Tertiary'}
-  `('renders with the correct prefix for $index', ({ prefix, index }) => {
+  `('renders with the correct prefix for $index', async ({ prefix, index }) => {
     renderUserPosition({
       index,
     });
 
-    expect(
-      screen.getByRole('heading', { name: `${prefix} Position` }),
-    ).toBeVisible();
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: `${prefix} Position` }),
+      ).toBeVisible();
+    });
   });
 
-  it('should not have a delete button if the index is 0', () => {
+  it('should not have a delete button if the index is 0', async () => {
     const onRemove = jest.fn();
     renderUserPosition({ onRemove, index: 0 });
-    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    });
   });
 
-  it('should have a delete button if the index is not 0', () => {
+  it('should have a delete button if the index is not 0', async () => {
     const onRemove = jest.fn();
     renderUserPosition({ onRemove, index: 1 });
-    expect(screen.queryByRole('button')).toBeVisible();
+    await waitFor(() => {
+      expect(screen.queryByRole('button')).toBeVisible();
+    });
   });
 
   it('can delete a position', async () => {
@@ -156,7 +164,7 @@ describe('UserPosition', () => {
       });
 
       await userEvent.click(
-        screen.getByRole('textbox', { name: /Institution/i }),
+        await screen.findByRole('textbox', { name: /Institution/i }),
       );
       await userEvent.tab();
       expect(screen.getByText(/Please add your institution/i)).toBeVisible();
@@ -175,7 +183,7 @@ describe('UserPosition', () => {
       });
 
       await userEvent.click(
-        screen.getByRole('textbox', { name: /department/i }),
+        await screen.findByRole('textbox', { name: /department/i }),
       );
       await userEvent.tab();
       expect(screen.getByText(/Please add your department/i)).toBeVisible();
@@ -193,7 +201,9 @@ describe('UserPosition', () => {
         index,
       });
 
-      await userEvent.click(screen.getByRole('textbox', { name: /role/i }));
+      await userEvent.click(
+        await screen.findByRole('textbox', { name: /role/i }),
+      );
       await userEvent.tab();
       expect(screen.getByText(/Please add your role/i)).toBeVisible();
     },

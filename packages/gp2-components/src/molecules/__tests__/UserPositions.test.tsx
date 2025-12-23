@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -25,24 +25,26 @@ describe('UserPositions', () => {
       </MemoryRouter>,
     );
 
-  it('renders a dialog with the right title', () => {
+  it('renders a dialog with the right title', async () => {
     renderUserPositions({
       positions: [
         { institution: 'FPF', department: "Men's Team", role: 'Striker' },
       ],
     });
-    expect(
-      screen.getByRole('heading', { name: 'Primary Position' }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: 'Institution (required)' }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: 'Department (required)' }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: 'Role (required)' }),
-    ).toBeVisible();
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: 'Primary Position' }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole('textbox', { name: 'Institution (required)' }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole('textbox', { name: 'Department (required)' }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole('textbox', { name: 'Role (required)' }),
+      ).toBeVisible();
+    });
   });
 
   it('can click add an extra position', async () => {
@@ -62,7 +64,7 @@ describe('UserPositions', () => {
     ]);
   });
 
-  it('there can be only 3 positions', () => {
+  it('there can be only 3 positions', async () => {
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
       { institution: 'Benfica', department: 'First Team', role: 'Forward' },
@@ -71,11 +73,13 @@ describe('UserPositions', () => {
     renderUserPositions({
       positions,
     });
-    expect(
-      screen.queryByRole('button', {
-        name: /add another position/i,
-      }),
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('button', {
+          name: /add another position/i,
+        }),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('can save a position institution', async () => {

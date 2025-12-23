@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import BiographyModal from '../BiographyModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<StaticRouter location="/">{children}</StaticRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 
 it('renders a form to edit the biography', () => {
   const { getByRole } = renderModal(<BiographyModal backHref="#" />);
@@ -21,10 +21,7 @@ it('renders a text field containing the biography, marked as mandatory', () => {
   expect(getByDisplayValue('My Bio')).toBeEnabled();
 });
 
-it.skip('fires onSave when submitting', async () => {
-  // Suppress expected react-router warning about navigate() being called outside useEffect
-  // TODO: Check if this should be here or if the test requires a refactor
-  const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+it('fires onSave when submitting', async () => {
   const handleSave = jest.fn();
   const { getByDisplayValue, getByText } = renderModal(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
@@ -37,8 +34,8 @@ it.skip('fires onSave when submitting', async () => {
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
-  warnSpy.mockRestore();
 });
+
 it('does not fire onSave when the bio is missing', async () => {
   const handleSave = jest.fn();
   const { getByDisplayValue, getByText } = renderModal(
@@ -50,10 +47,7 @@ it('does not fire onSave when the bio is missing', async () => {
   expect(handleSave).not.toHaveBeenCalled();
 });
 
-it.skip('disables the form elements while submitting', async () => {
-  // Suppress expected react-router warning about navigate() being called outside useEffect
-  // TODO: Check if this should be here or if the test requires a refactor
-  const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+it('disables the form elements while submitting', async () => {
   let resolveSubmit!: () => void;
   const handleSave = () =>
     new Promise<void>((resolve) => {
@@ -73,5 +67,4 @@ it.skip('disables the form elements while submitting', async () => {
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
-  warnSpy.mockRestore();
 });

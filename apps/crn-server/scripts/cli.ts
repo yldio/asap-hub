@@ -4,6 +4,7 @@ import { hideBin } from 'yargs/helpers';
 import { exportEntity } from './export-entity';
 import { exportAnalyticsData } from './export-analytics';
 import { exportComplianceData } from './export-compliance-data';
+import { exportTagsUtilisation } from './export-tags-utilisation';
 import type { Metric } from '@asap-hub/model';
 
 // eslint-disable-next-line no-unused-expressions
@@ -101,6 +102,17 @@ yargs(hideBin(process.argv))
         }),
     handler: async ({ contentfulBackupFileName, complianceDataFileName }) =>
       exportComplianceData(contentfulBackupFileName, complianceDataFileName),
+  })
+  .command<{ filename?: string }>({
+    command: 'export-tags-utilisation',
+    describe: 'export tags utilisation with frequency counts across entities',
+    builder: (cli) =>
+      cli.option('filename', {
+        alias: 'f',
+        type: 'string',
+        description: 'The output file name (without extension)',
+      }),
+    handler: async ({ filename }) => exportTagsUtilisation(filename),
   })
   .demandCommand(1)
   .help('h')

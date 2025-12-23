@@ -31,21 +31,25 @@ describe('KeyInformationModal', () => {
       </MemoryRouter>,
     );
 
-  it('renders a dialog with the right title', () => {
+  it('renders a dialog with the right title', async () => {
     renderKeyInformation();
-    expect(screen.getByRole('dialog')).toContainElement(
-      screen.getByRole('heading', { name: 'Key Information' }),
-    );
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).toContainElement(
+        screen.getByRole('heading', { name: 'Key Information' }),
+      );
+    });
   });
 
-  it('renders the firstName and lastName fields', () => {
+  it('renders the firstName and lastName fields', async () => {
     renderKeyInformation();
-    expect(
-      screen.getByRole('textbox', { name: 'First Name (required)' }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: 'Last Name (required)' }),
-    ).toBeVisible();
+    await waitFor(() => {
+      expect(
+        screen.getByRole('textbox', { name: 'First Name (required)' }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole('textbox', { name: 'Last Name (required)' }),
+      ).toBeVisible();
+    });
   });
 
   it('calls onSave with the right arguments', async () => {
@@ -407,34 +411,36 @@ describe('KeyInformationModal', () => {
     await waitFor(() => expect(saveButton).toBeEnabled());
   }, 300000);
 
-  it('can click add an extra position', () => {
+  it('can click add an extra position', async () => {
     renderKeyInformation();
     const addButton = getAddButton();
     await userEvent.click(addButton);
-    const secondary = screen
-      .getByRole('heading', {
-        name: /Secondary Position/i,
-      })
-      .closest('section') as HTMLElement;
-    expect(
-      within(secondary).getByRole('textbox', {
-        name: /Institution/i,
-      }),
-    ).toBeVisible();
+    const secondary = await screen.findByRole('heading', {
+      name: /Secondary Position/i,
+    });
+    const secondarySection = secondary.closest('section') as HTMLElement;
+    await waitFor(() => {
+      expect(
+        within(secondarySection).getByRole('textbox', {
+          name: /Institution/i,
+        }),
+      ).toBeVisible();
+    });
     await userEvent.click(addButton);
-    const tertiary = screen
-      .getByRole('heading', {
-        name: /Tertiary Position/i,
-      })
-      .closest('section') as HTMLElement;
-    expect(
-      within(tertiary).getByRole('textbox', {
-        name: /Institution/i,
-      }),
-    ).toBeVisible();
+    const tertiary = await screen.findByRole('heading', {
+      name: /Tertiary Position/i,
+    });
+    const tertiarySection = tertiary.closest('section') as HTMLElement;
+    await waitFor(() => {
+      expect(
+        within(tertiarySection).getByRole('textbox', {
+          name: /Institution/i,
+        }),
+      ).toBeVisible();
+    });
   });
 
-  it('there can be only 3 positions', () => {
+  it('there can be only 3 positions', async () => {
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
       { institution: 'Benfica', department: 'First Team', role: 'Forward' },
@@ -443,11 +449,13 @@ describe('KeyInformationModal', () => {
     renderKeyInformation({
       positions,
     });
-    expect(
-      screen.queryByRole('button', {
-        name: /add another position/i,
-      }),
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('button', {
+          name: /add another position/i,
+        }),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('can save an extra position', async () => {
@@ -471,23 +479,27 @@ describe('KeyInformationModal', () => {
     });
     await userEvent.click(getAddButton());
 
-    const tertiary = screen
-      .getByRole('heading', {
-        name: /Tertiary Position/i,
-      })
-      .closest('section') as HTMLElement;
+    const tertiary = await screen.findByRole('heading', {
+      name: /Tertiary Position/i,
+    });
+    const tertiarySection = tertiary.closest('section') as HTMLElement;
 
     await userEvent.click(
-      within(tertiary).getByRole('textbox', { name: /Institution/i }),
+      within(tertiarySection).getByRole('textbox', { name: /Institution/i }),
     );
     const institution = await screen.findByText(position.institution);
     await userEvent.click(institution);
+    await waitFor(() => {
+      expect(
+        within(tertiarySection).getByRole('textbox', { name: /Department/i }),
+      ).toBeVisible();
+    });
     await userEvent.type(
-      within(tertiary).getByRole('textbox', { name: /Department/i }),
+      within(tertiarySection).getByRole('textbox', { name: /Department/i }),
       position.department,
     );
     await userEvent.type(
-      within(tertiary).getByRole('textbox', { name: /Role/i }),
+      within(tertiarySection).getByRole('textbox', { name: /Role/i }),
       position.role,
     );
     const saveButton = getSaveButton();

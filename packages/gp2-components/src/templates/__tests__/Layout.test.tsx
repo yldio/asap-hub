@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { Layout } from '..';
+import Layout from '../Layout';
 
 describe('Layout', () => {
   const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
@@ -10,17 +10,31 @@ describe('Layout', () => {
     projects: [],
     workingGroups: [],
   };
-  it('renders the header', () => {
-    render(<Layout {...props}>Content</Layout>);
-    expect(screen.getByRole('banner')).toBeVisible();
+  it('renders the header', async () => {
+    render(
+      <MemoryRouter>
+        <Layout {...props}>Content</Layout>
+      </MemoryRouter>,
+    );
+    await waitFor(() => {
+      expect(screen.getByRole('banner')).toBeVisible();
+    });
   });
   it('renders the content', () => {
-    render(<Layout {...props}>Content</Layout>);
+    render(
+      <MemoryRouter>
+        <Layout {...props}>Content</Layout>
+      </MemoryRouter>,
+    );
     expect(screen.getByText('Content')).toBeVisible();
   });
 
-  it('renders and toggles the open and close menu button', () => {
-    render(<Layout {...props}>Content</Layout>);
+  it('renders and toggles the open and close menu button', async () => {
+    render(
+      <MemoryRouter>
+        <Layout {...props}>Content</Layout>
+      </MemoryRouter>,
+    );
     expect(screen.queryByTitle(/close/i)).not.toBeInTheDocument();
     expect(screen.getByTitle(/menu/i)).toBeInTheDocument();
 
@@ -34,7 +48,11 @@ describe('Layout', () => {
   });
 
   it('closes the drawer when clicking the overlay', async () => {
-    render(<Layout {...props}>Content</Layout>);
+    render(
+      <MemoryRouter>
+        <Layout {...props}>Content</Layout>
+      </MemoryRouter>,
+    );
     await userEvent.click(screen.getByLabelText(/toggle menu/i));
 
     await userEvent.click(screen.getByLabelText(/close/i));

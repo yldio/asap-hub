@@ -83,7 +83,7 @@ describe('UserProjects', () => {
       screen.queryByRole('button', { name: /Show more/i }),
     ).not.toBeInTheDocument();
   });
-  it('displays the hidden projects if the show more button is clicked', () => {
+  it('displays the hidden projects if the show more button is clicked', async () => {
     const projects = getProjects(4);
 
     renderUserProjects(projects);

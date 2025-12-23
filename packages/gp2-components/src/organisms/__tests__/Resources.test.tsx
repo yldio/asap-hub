@@ -133,7 +133,7 @@ describe('Resources', () => {
       screen.queryByRole('button', { name: /Show more/i }),
     ).not.toBeInTheDocument();
   });
-  it('displays the hidden milestones if the button is clicked', () => {
+  it('displays the hidden milestones if the button is clicked', async () => {
     const resources = getResources(4);
 
     render(<Resources {...defaultProps()} resources={resources} />);

@@ -53,7 +53,7 @@ describe('ContributingCohortsModal', () => {
     ).toBeVisible();
   });
 
-  it('can add an extra cohort', () => {
+  it('can add an extra cohort', async () => {
     renderContributingCohorts();
     expect(
       screen.getByRole('heading', { name: /#1 Cohort Study/i }),
@@ -98,7 +98,7 @@ describe('ContributingCohortsModal', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('can remove an cohort', () => {
+  it('can remove an cohort', async () => {
     const contributingCohorts = Array.from({ length: 2 }).map((_, i) => ({
       ...defaultProps.contributingCohorts[0]!,
       contributingCohortId: `${i}`,
@@ -127,7 +127,7 @@ describe('ContributingCohortsModal', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('removing the last', () => {
+  it('removing the last', async () => {
     const contributingCohorts = [
       {
         ...defaultProps.contributingCohorts[0]!,
@@ -231,7 +231,7 @@ describe('ContributingCohortsModal', () => {
     },
   );
 
-  it('shows the validation messages for required fields', () => {
+  it('shows the validation messages for required fields', async () => {
     const onSave = jest.fn();
     renderContributingCohorts({
       cohortOptions: [

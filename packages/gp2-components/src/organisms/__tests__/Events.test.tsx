@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Events from '../Events';
 
-it('renders the subscribe button', () => {
+it('renders the subscribe button', async () => {
   render(<Events calendarId="12w3" paragraph={'paragraph'} />);
 
   const subscribe = screen.getByRole('button', {
@@ -15,7 +15,7 @@ it('renders the subscribe button', () => {
   ).toBeVisible();
 });
 
-it('renders the paragraph', () => {
+it('renders the paragraph', async () => {
   const paragraph = 'this is the paragraph';
   render(<Events calendarId="12w3" paragraph={paragraph} />);
 

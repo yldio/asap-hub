@@ -68,7 +68,7 @@ describe('Milestones', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('displays the hidden milestones if the button is clicked', () => {
+  it('displays the hidden milestones if the button is clicked', async () => {
     const milestones = getMilestones(4);
 
     render(<Milestones milestones={milestones} {...commonProps} />);

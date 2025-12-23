@@ -45,7 +45,7 @@ describe('UserPositions', () => {
     ).toBeVisible();
   });
 
-  it('can click add an extra position', () => {
+  it('can click add an extra position', async () => {
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
     ];
@@ -167,7 +167,7 @@ describe('UserPositions', () => {
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
 
-  it('can delete a position', () => {
+  it('can delete a position', async () => {
     const onChange = jest.fn();
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },

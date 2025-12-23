@@ -46,7 +46,7 @@ describe('PageNotifications', () => {
     renderPageNotifications({ page: 'dashboard' }, { notifications: [] });
     expect(screen.getByText('Notification not visible')).toBeVisible();
   });
-  it('calls the remove notification', () => {
+  it('calls the remove notification', async () => {
     const removeNotification = jest.fn();
     renderPageNotifications(
       { page: 'dashboard' },

@@ -31,7 +31,7 @@ describe('UserMenu', () => {
     expect(logoutLink).toHaveAttribute('href', logout({}).$);
   });
 
-  it('verifies the my profile button is clickable', () => {
+  it('verifies the my profile button is clickable', async () => {
     const closeUserMenu = jest.fn();
     render(<UserMenu {...props} closeUserMenu={closeUserMenu} />);
     const profileLink = screen.getByRole('link', { name: /my profile/i });
@@ -63,7 +63,7 @@ describe('UserMenu', () => {
     ).toBeVisible();
   });
 
-  it('links to the project details', () => {
+  it('links to the project details', async () => {
     const closeUserMenu = jest.fn();
     const projects: (typeof props)['projects'] = [
       {
@@ -147,7 +147,7 @@ describe('UserMenu', () => {
     ).toBeVisible();
   });
 
-  it('links to the working group detail page', () => {
+  it('links to the working group detail page', async () => {
     const closeUserMenu = jest.fn();
     const workingGroups: (typeof props)['workingGroups'] = [
       {

@@ -23,7 +23,7 @@ describe('FilterPills', () => {
     expect(screen.getByText('Project 1')).toBeVisible();
     expect(screen.getByText('Working Group 1')).toBeVisible();
   });
-  it('calls the onRemove function for every pill with their respective id and type of filter', () => {
+  it('calls the onRemove function for every pill with their respective id and type of filter', async () => {
     render(<FilterPills {...props} />);
     const onRemoveTagButton = screen.getByText('Tag 1').nextElementSibling!;
     const onRemoveRegionButton = screen.getByText('Asia').nextElementSibling!;

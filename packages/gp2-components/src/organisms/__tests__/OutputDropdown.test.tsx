@@ -23,7 +23,7 @@ describe('OutputDropdown', () => {
     );
 
   describe('permissions', () => {
-    it('displays working groups and projects if the user is an Admin and project is not completed', () => {
+    it('displays working groups and projects if the user is an Admin and project is not completed', async () => {
       const { getByText, queryByText } = renderWithContent({
         groups: [
           {
@@ -56,7 +56,7 @@ describe('OutputDropdown', () => {
       expect(queryByText('Completed Project')).not.toBeInTheDocument();
     });
 
-    it('displays projects if the user is a PM for the project and if project is not completed', () => {
+    it('displays projects if the user is a PM for the project and if project is not completed', async () => {
       const { getByText, queryByText } = renderWithContent({
         projects: [
           {
@@ -101,7 +101,7 @@ describe('OutputDropdown', () => {
       expect(queryByText('Completed Project')).not.toBeInTheDocument();
     });
 
-    it('does not display working groups if the user is not an Admin', () => {
+    it('does not display working groups if the user is not an Admin', async () => {
       const { getByText, queryByText } = renderWithContent({
         projects: [
           {
@@ -138,7 +138,7 @@ describe('OutputDropdown', () => {
   });
 
   describe('document type options', () => {
-    it('links to create output page', () => {
+    it('links to create output page', async () => {
       const { getByText, getByTitle } = renderWithContent({
         groups: [
           {

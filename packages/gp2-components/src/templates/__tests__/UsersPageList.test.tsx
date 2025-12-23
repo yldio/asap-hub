@@ -100,7 +100,7 @@ describe('UsersPageList', () => {
       });
     },
   );
-  it('calls the updateFilters with the right arguments for removing a certain filter', () => {
+  it('calls the updateFilters with the right arguments for removing a certain filter', async () => {
     const filters: gp2Model.FetchUsersFilter = {
       regions: ['Asia'],
       tags: [],

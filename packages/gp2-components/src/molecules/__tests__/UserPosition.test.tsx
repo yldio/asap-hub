@@ -135,7 +135,7 @@ describe('UserPosition', () => {
     expect(screen.queryByRole('button')).toBeVisible();
   });
 
-  it('can delete a position', () => {
+  it('can delete a position', async () => {
     const onRemove = jest.fn();
     renderUserPosition({ onRemove, index: 2 });
     const removeButton = screen.getByRole('button');
@@ -145,7 +145,7 @@ describe('UserPosition', () => {
 
   it.each([0, 1, 2])(
     'shows validation message when no institation is selected for the index %d',
-    (index) => {
+    async (index) => {
       renderUserPosition({
         position: {
           institution: '',
@@ -164,7 +164,7 @@ describe('UserPosition', () => {
   );
   it.each([0, 1, 2])(
     'shows validation message when no department is selected for the index %d',
-    (index) => {
+    async (index) => {
       renderUserPosition({
         position: {
           institution: '',
@@ -183,7 +183,7 @@ describe('UserPosition', () => {
   );
   it.each([0, 1, 2])(
     'shows validation message when no role is selected for the index %d',
-    (index) => {
+    async (index) => {
       renderUserPosition({
         position: {
           institution: '',

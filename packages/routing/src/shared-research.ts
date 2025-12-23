@@ -19,10 +19,9 @@ const researchOutputPublished = route(
 );
 
 const researchOutput = route(
-  '/:researchOutputId&:draftCreated?',
+  '/:researchOutputId',
   {
     researchOutputId: stringParser,
-    draftCreated: booleanParser,
   },
   { editResearchOutput, researchOutputPublished, versionResearchOutput },
 );

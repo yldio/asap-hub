@@ -461,12 +461,17 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 ? onSaveDraft(currentPayload)
                 : onSave(currentPayload));
               setRemotePayload(currentPayload);
+
               if (researchOutput) {
                 const { id } = researchOutput;
-                const savePath = sharedResearch({}).researchOutput({
+                const baseUrl = sharedResearch({}).researchOutput({
                   researchOutputId: id,
-                  draftCreated: draftSave && !researchOutputData?.id,
                 }).$;
+                const savePath =
+                  draftSave && !researchOutputData?.id
+                    ? `${baseUrl}?draftCreated=true`
+                    : baseUrl;
+
                 const publishPath = sharedResearch({})
                   .researchOutput({
                     researchOutputId: id,

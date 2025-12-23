@@ -3,7 +3,6 @@ import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePushFromHere } from '../routing';
 
 const styles = css({
   boxSizing: 'border-box',
@@ -18,7 +17,7 @@ type FormStatus = 'initial' | 'isSaving' | 'hasError' | 'hasSaved';
 
 type FormProps<T> = {
   validate?: () => boolean;
-  dirty: boolean; // mandatory so that it cannot be forgotten
+  dirty: boolean;
   serverErrors?: ValidationErrorResponse['data'];
   toastType?: 'inner' | 'base';
   children: (state: {
@@ -30,6 +29,7 @@ type FormProps<T> = {
     onCancel: () => void;
   }) => ReactNode;
 };
+
 const Form = <T extends void | Record<string, unknown>>({
   dirty,
   children,
@@ -42,25 +42,26 @@ const Form = <T extends void | Record<string, unknown>>({
   );
   const navigate = useNavigate();
 
-  const pushFromHere = usePushFromHere();
-  const [redirectOnSave, setRedirectOnSave] = useState<string>();
-
+  const redirectOnSaveRef = useRef<string>();
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<FormStatus>('initial');
 
+  const handleSetRedirectOnSave = (url: string) => {
+    redirectOnSaveRef.current = url;
+  };
+
   useEffect(() => {
-    if (status === 'hasSaved' && redirectOnSave) {
-      pushFromHere(redirectOnSave);
+    if (status === 'hasSaved' && redirectOnSaveRef.current) {
+      navigate(redirectOnSaveRef.current);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, redirectOnSave, dirty]);
+  }, [status, navigate]);
+
   useEffect(() => {
     if (serverErrors.length && formRef.current) {
       formRef.current.reportValidity();
     }
   }, [serverErrors, toast]);
 
-  // Replace Prompt with beforeunload event for unsaved changes warning
   useEffect(() => {
     const shouldWarn =
       status === 'isSaving' ||
@@ -94,7 +95,7 @@ const Form = <T extends void | Record<string, unknown>>({
       try {
         const result = await onSaveFunction();
 
-        if (formRef.current && result) {
+        if (result) {
           setStatus('hasSaved');
         } else {
           throw new Error('Form saving error.');
@@ -113,7 +114,6 @@ const Form = <T extends void | Record<string, unknown>>({
 
   const onCancel = () => {
     setStatus('initial');
-    // In React Router v6, location.key is always set, so we check history.length instead
     if (window.history.length > 1) {
       navigate(-1);
     } else {
@@ -127,9 +127,10 @@ const Form = <T extends void | Record<string, unknown>>({
         onCancel,
         isSaving: status === 'isSaving',
         getWrappedOnSave,
-        setRedirectOnSave,
+        setRedirectOnSave: handleSetRedirectOnSave,
       })}
     </form>
   );
 };
+
 export default Form;

@@ -4,6 +4,7 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { network } from '@asap-hub/routing';
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -11,8 +12,8 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps, Suspense } from 'react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { ComponentProps, Suspense, useEffect } from 'react';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { createComplianceReport, getManuscript } from '../api';
@@ -31,6 +32,16 @@ const complianceReportResponse = { id: 'compliance-report-1' };
 
 const teamId = '42';
 
+// Helper to capture location in tests
+let currentLocation: { pathname: string; search: string } | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentLocation = { pathname: location.pathname, search: location.search };
+  }, [location]);
+  return null;
+};
+
 jest.mock('../api', () => ({
   createComplianceReport: jest.fn().mockResolvedValue(complianceReportResponse),
   getManuscript: jest.fn().mockResolvedValue(manuscriptResponse),
@@ -42,14 +53,46 @@ const mockGetManuscript = getManuscript as jest.MockedFunction<
 
 beforeEach(() => {
   jest.resetModules();
+  currentLocation = null;
   jest.spyOn(window, 'scrollTo').mockImplementation(() => {});
+  // Mock getBoundingClientRect for Lexical editor
+  if (typeof Range !== 'undefined') {
+    Range.prototype.getBoundingClientRect = jest.fn(() => ({
+      bottom: 0,
+      height: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+      width: 0,
+      x: 0,
+      y: 0,
+      toJSON: jest.fn(),
+    }));
+  }
+  if (typeof Selection !== 'undefined') {
+    Selection.prototype.getRangeAt = jest.fn(() => {
+      const range = new Range();
+      range.getBoundingClientRect = jest.fn(() => ({
+        bottom: 0,
+        height: 0,
+        left: 0,
+        right: 0,
+        top: 0,
+        width: 0,
+        x: 0,
+        y: 0,
+        toJSON: jest.fn(),
+      }));
+      return range;
+    });
+  }
 });
 
 const renderPage = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
   initialPath?: string,
 ) => {
-  const path =
+  const createComplianceReportPath =
     network.template +
     network({}).teams.template +
     network({}).teams({}).team.template +
@@ -57,27 +100,18 @@ const renderPage = async (
     network({}).teams({}).team({ teamId }).workspace({}).createComplianceReport
       .template;
 
+  const workspacePath =
+    network.template +
+    network({}).teams.template +
+    network({}).teams({}).team.template +
+    network({}).teams({}).team({ teamId }).workspace.template +
+    '/*';
+
   const defaultInitialPath = network({})
     .teams({})
     .team({ teamId })
     .workspace({})
     .createComplianceReport({ manuscriptId: manuscriptResponse.id }).$;
-
-  const router = createMemoryRouter(
-    [
-      {
-        path,
-        element: (
-          <ManuscriptToastProvider>
-            <TeamComplianceReport teamId={teamId} />
-          </ManuscriptToastProvider>
-        ),
-      },
-    ],
-    {
-      initialEntries: [initialPath ?? defaultInitialPath],
-    },
-  );
 
   const { container, getByTestId, getByRole } = render(
     <RecoilRoot
@@ -88,14 +122,27 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <RouterProvider router={router} />
+            <MemoryRouter initialEntries={[initialPath ?? defaultInitialPath]}>
+              <LocationCapture />
+              <Routes>
+                <Route
+                  path={createComplianceReportPath}
+                  element={
+                    <ManuscriptToastProvider>
+                      <TeamComplianceReport teamId={teamId} />
+                    </ManuscriptToastProvider>
+                  }
+                />
+                <Route path={workspacePath} element={<div>Workspace</div>} />
+              </Routes>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>
     </RecoilRoot>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-  return { container, getByTestId, getByRole, router };
+  return { container, getByTestId, getByRole };
 };
 
 it('renders compliance report form page', async () => {
@@ -108,35 +155,42 @@ it('renders compliance report form page', async () => {
 });
 
 it('can publish a form when the data is valid and navigates to team workspace', async () => {
-  // TODO: Fix getBoundingClientRect error with Lexical editor in test environment
   jest.useRealTimers();
 
   const url = 'https://compliancereport.com';
   const description = 'compliance report description';
+  const user = userEvent.setup();
 
-  const { getByTestId, getByRole, router } = await renderPage();
+  const { getByTestId, getByRole } = await renderPage();
 
-  await userEvent.type(getByRole('textbox', { name: /url/i }), url);
+  await user.type(getByRole('textbox', { name: /url/i }), url);
 
   const editor = await waitFor(() => getByTestId('editor'));
-  await userEvent.click(editor);
-  // combining these two events to trigger validation and set the value in the editor
-  await userEvent.type(editor, description); // needed to trigger validation but only types the first character
-  fireEvent.input(editor, { data: description.slice(1) }); // types all the characters but doesn't trigger validation
-  await userEvent.tab();
 
-  await userEvent.click(screen.getByLabelText(/Status/i));
-  await userEvent.click(screen.getByText(/Addendum Required/i));
+  // Use fireEvent.input for Lexical editor (required for Lexical)
+  await act(async () => {
+    await user.click(editor);
+    fireEvent.input(editor, { data: description });
+  });
+
+  // Wait for Lexical's onChange to propagate to react-hook-form
+  // then blur to trigger validation with the updated value
+  await act(async () => {
+    fireEvent.blur(editor);
+  });
+
+  await user.click(screen.getByLabelText(/Status/i));
+  await user.click(screen.getByText(/Addendum Required/i));
 
   const shareButton = getByRole('button', { name: /Share/i });
-  await waitFor(() => expect(shareButton).toBeEnabled());
+  await waitFor(() => expect(shareButton).toBeEnabled(), { timeout: 5000 });
 
-  await userEvent.click(shareButton);
+  await user.click(shareButton);
 
   const confirmButton = getByRole('button', {
     name: /Share Compliance Report/i,
   });
-  await userEvent.click(confirmButton);
+  await user.click(confirmButton);
 
   await waitFor(() => {
     expect(createComplianceReport).toHaveBeenCalledWith(
@@ -150,7 +204,11 @@ it('can publish a form when the data is valid and navigates to team workspace', 
       },
       expect.anything(),
     );
-    expect(router.state.location.pathname).toBe(
+  });
+
+  await waitFor(() => {
+    expect(currentLocation).not.toBeNull();
+    expect(currentLocation?.pathname).toBe(
       `/network/teams/${teamId}/workspace`,
     );
   });

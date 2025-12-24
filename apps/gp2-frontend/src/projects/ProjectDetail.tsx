@@ -139,7 +139,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
                 />
                 {isProjectMember && (
                   <Route
-                    path="workspace"
+                    path="workspace/*"
                     element={
                       <Frame title="Workspace">
                         <ProjectResources {...project} add={add} edit={edit} />

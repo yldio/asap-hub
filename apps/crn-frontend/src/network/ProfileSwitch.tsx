@@ -81,7 +81,7 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
       )}
       {Workspace && (
         <Route
-          path={paths.workspace}
+          path={`${paths.workspace}/*`}
           element={
             <Frame title="Workspace">
               <Workspace />

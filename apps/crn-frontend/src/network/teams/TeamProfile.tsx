@@ -182,7 +182,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               />
               {canCreateComplianceReport && (
                 <Route
-                  path="workspace/create-compliance-report"
+                  path="workspace/create-compliance-report/:manuscriptId"
                   element={
                     <Frame title="Create Compliance Report">
                       <TeamComplianceReport teamId={teamId} />

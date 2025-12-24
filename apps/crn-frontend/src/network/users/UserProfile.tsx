@@ -130,80 +130,103 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
 
     return (
       <UserProfileContext.Provider value={{ isOwnProfile }}>
+        {/* @ts-expect-error - Frame accepts children at runtime, type definition is incorrect */}
         <Frame title={user.displayName}>
           <UserProfilePage {...profilePageProps}>
             {
               <>
                 <Routes>
                   <Route
-                    path="research"
+                    path="research/*"
                     element={
+                      // @ts-expect-error - Frame accepts children at runtime, type definition is incorrect
                       <Frame title="Research">
-                        <Research user={user} />
+                        <>
+                          <Research user={user} />
+                          {isOwnProfile && tabRoute && (
+                            <Editing user={user} backHref={tabRoute({}).$} />
+                          )}
+                        </>
                       </Frame>
                     }
                   />
                   <Route
-                    path="about"
+                    path="about/*"
                     element={
+                      // @ts-expect-error - Frame accepts children at runtime, type definition is incorrect
                       <Frame title="About">
-                        <About user={user} />
+                        <>
+                          <About user={user} />
+                          {isOwnProfile && tabRoute && (
+                            <Editing user={user} backHref={tabRoute({}).$} />
+                          )}
+                        </>
                       </Frame>
                     }
                   />
                   <Route
-                    path="outputs"
+                    path="outputs/*"
                     element={
+                      // @ts-expect-error - Frame accepts children at runtime, type definition is incorrect
                       <Frame title="Outputs">
-                        <Outputs userId={user?.id} />
+                        <>
+                          <Outputs userId={user?.id} />
+                          {isOwnProfile && tabRoute && (
+                            <Editing user={user} backHref={tabRoute({}).$} />
+                          )}
+                        </>
                       </Frame>
                     }
                   />
                   <Route
-                    path="upcoming"
+                    path="upcoming/*"
                     element={
+                      // @ts-expect-error - Frame accepts children at runtime, type definition is incorrect
                       <Frame title="Upcoming Events">
-                        <EventsList
-                          constraint={{ userId: user?.id }}
-                          currentTime={currentTime}
-                          past={false}
-                          noEventsComponent={
-                            <NoEvents
-                              link={events({}).upcoming({}).$}
-                              type="member"
-                            />
-                          }
-                        />
+                        <>
+                          <EventsList
+                            constraint={{ userId: user?.id }}
+                            currentTime={currentTime}
+                            past={false}
+                            noEventsComponent={
+                              <NoEvents
+                                link={events({}).upcoming({}).$}
+                                type="member"
+                              />
+                            }
+                          />
+                          {isOwnProfile && tabRoute && (
+                            <Editing user={user} backHref={tabRoute({}).$} />
+                          )}
+                        </>
                       </Frame>
                     }
                   />
                   <Route
-                    path="past"
+                    path="past/*"
                     element={
+                      // @ts-expect-error - Frame accepts children at runtime, type definition is incorrect
                       <Frame title="Past Events">
-                        <EventsList
-                          past
-                          constraint={{ userId: user?.id }}
-                          currentTime={currentTime}
-                          noEventsComponent={
-                            <NoEvents
-                              past
-                              link={events({}).past({}).$}
-                              type="member"
-                            />
-                          }
-                        />
+                        <>
+                          <EventsList
+                            past
+                            constraint={{ userId: user?.id }}
+                            currentTime={currentTime}
+                            noEventsComponent={
+                              <NoEvents
+                                past
+                                link={events({}).past({}).$}
+                                type="member"
+                              />
+                            }
+                          />
+                          {isOwnProfile && tabRoute && (
+                            <Editing user={user} backHref={tabRoute({}).$} />
+                          )}
+                        </>
                       </Frame>
                     }
                   />
-                  {isOwnProfile && tabRoute && (
-                    <Route
-                      path="about/*"
-                      element={
-                        <Editing user={user} backHref={tabRoute({}).$} />
-                      }
-                    />
-                  )}
                   <Route index element={<Navigate to="research" replace />} />
                 </Routes>
               </>

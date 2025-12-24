@@ -304,8 +304,9 @@ describe('the onboarded modal', () => {
     });
   });
 
-  // TODO: Fix this test after React Router v6 migration - window.alert not implemented in jsdom
   it('redirects to homepage', async () => {
+    window.alert = jest.fn();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     let user: User = {
       ...createUserResponse(),
       id,

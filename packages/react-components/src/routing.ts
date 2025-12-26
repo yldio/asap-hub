@@ -2,6 +2,25 @@ import { searchQueryParam } from '@asap-hub/routing';
 import { useNavigate, useLocation, NavigateFunction } from 'react-router-dom';
 import { useRef, useEffect } from 'react';
 
+export const useScrollToHash = (): void => {
+  const { hash, pathname } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      // Delay to allow React to render the target element
+      const timeoutId = setTimeout(() => {
+        const element = document.getElementById(hash.slice(1));
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
+    }
+    return undefined;
+  }, [hash, pathname]);
+};
+
 export const queryParamString = (searchQuery: string | undefined): string => {
   let searchQueryParamString = '';
   if (searchQuery) {

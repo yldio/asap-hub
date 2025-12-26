@@ -29,15 +29,6 @@ failOnConsole({
       if (msg.includes('React Router Future Flag Warning')) {
         return true;
       }
-      // react-router-hash-link compatibility issue with React Router v6
-      // The NavHashLink component from react-router-hash-link passes an `isActive` prop
-      // to the underlying DOM element, which React doesn't recognize as a valid DOM attribute.
-      // This is a known issue: https://github.com/rafgraph/react-router-hash-link/issues/185
-      // The library needs to filter out the isActive prop before passing to the anchor element.
-      // Until the library is updated, we suppress this warning to keep test output clean.
-      if (msg.includes('isActive')) {
-        return true;
-      }
     }
     return false;
   },

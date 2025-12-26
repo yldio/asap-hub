@@ -9,6 +9,7 @@ import {
   useHasRouter,
   usePushFromHere,
   usePushFromPathname,
+  useScrollToHash,
 } from '../routing';
 
 // Helper to capture location pathname in tests
@@ -171,5 +172,69 @@ describe('usePushFromHere', () => {
     await waitFor(() => {
       expect(currentPathname).toBe('/elsewhere');
     });
+  });
+});
+
+describe('useScrollToHash', () => {
+  it('scrolls to element when hash is present in URL', async () => {
+    // Create target element with mocked scrollIntoView
+    const targetElement = document.createElement('div');
+    targetElement.id = 'section';
+    targetElement.scrollIntoView = jest.fn();
+    document.body.appendChild(targetElement);
+
+    const wrapper: React.FC = ({ children }) => (
+      <MemoryRouter initialEntries={['/page#section']}>{children}</MemoryRouter>
+    );
+
+    renderHook(() => useScrollToHash(), { wrapper });
+
+    // Wait for the setTimeout to complete (100ms delay in the hook)
+    await waitFor(
+      () => {
+        expect(targetElement.scrollIntoView).toHaveBeenCalledWith({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      },
+      { timeout: 200 },
+    );
+
+    document.body.removeChild(targetElement);
+  });
+
+  it('does not scroll when no hash is present', async () => {
+    // Create element just to verify scrollIntoView is NOT called
+    const targetElement = document.createElement('div');
+    targetElement.id = 'section';
+    targetElement.scrollIntoView = jest.fn();
+    document.body.appendChild(targetElement);
+
+    const wrapper: React.FC = ({ children }) => (
+      <MemoryRouter initialEntries={['/page']}>{children}</MemoryRouter>
+    );
+
+    renderHook(() => useScrollToHash(), { wrapper });
+
+    // Wait a bit and verify it was NOT called
+    await new Promise((resolve) => setTimeout(resolve, 150));
+
+    expect(targetElement.scrollIntoView).not.toHaveBeenCalled();
+
+    document.body.removeChild(targetElement);
+  });
+
+  it('does not throw if element does not exist', async () => {
+    const wrapper: React.FC = ({ children }) => (
+      <MemoryRouter initialEntries={['/page#nonexistent']}>
+        {children}
+      </MemoryRouter>
+    );
+
+    // This should not throw even if element doesn't exist
+    renderHook(() => useScrollToHash(), { wrapper });
+
+    // Wait for the timeout to complete
+    await new Promise((resolve) => setTimeout(resolve, 150));
   });
 });

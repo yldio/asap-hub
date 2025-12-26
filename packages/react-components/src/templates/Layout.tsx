@@ -35,6 +35,7 @@ import { tagSearchIcon } from '../icons';
 import { rem } from '../pixels';
 import { Navigation } from '../atoms/NavigationLink';
 import { LoadingUserButton, LoadingMenu } from './LoadingLayout';
+import { useScrollToHash } from '../routing';
 
 const UserMenuButton = lazy(
   () =>
@@ -238,6 +239,7 @@ const Layout: FC<LayoutProps> = ({
   try {
     location = useLocation();
     prevLocation = usePrevious(location);
+    useScrollToHash();
   } catch {
     // If there is no router, fine, never auto-close the menu
   }

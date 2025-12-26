@@ -1317,7 +1317,6 @@ __metadata:
     "@types/jest": 29.5.14
     "@types/react": 18.3.12
     "@types/react-dom": 18.3.1
-    "@types/react-router-hash-link": 2.4.9
     "@types/react-test-renderer": 18.3.0
     "@types/uuid": 8.3.4
     core-js: 3.34.0
@@ -1641,7 +1640,6 @@ __metadata:
     "@types/react": 18.3.12
     "@types/react-dom": 18.3.1
     "@types/react-lottie": ^1
-    "@types/react-router-hash-link": 2.4.9
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
     "@types/react-test-renderer": 18.3.0
     "@types/rehype-slug": "workspace:*"
@@ -1661,7 +1659,6 @@ __metadata:
     react-hook-form: ^7.51.4
     react-lottie: ^1.2.10
     react-router-dom: 6.28.0
-    react-router-hash-link: 2.4.3
     react-select: 4.3.1
     react-sortable-hoc: 2.0.0
     react-test-renderer: 18.3.1
@@ -13185,13 +13182,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/history@npm:^4.7.11":
-  version: 4.7.11
-  resolution: "@types/history@npm:4.7.11"
-  checksum: c92e2ba407dcab0581a9afdf98f533aa41b61a71133420a6d92b1ca9839f741ab1f9395b17454ba5b88cb86020b70b22d74a1950ccfbdfd9beeaa5459fdc3464
-  languageName: node
-  linkType: hard
-
 "@types/html-minifier-terser@npm:^6.0.0":
   version: 6.1.0
   resolution: "@types/html-minifier-terser@npm:6.1.0"
@@ -13702,38 +13692,6 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 53c92dfbe46aae6f4ca4d96a166fd69a4b8dc539c5e8f755086dd1471656924ca6dd0a179be746c634686a0073aef67bb9615ee8600d9536cc1521b738e48453
-  languageName: node
-  linkType: hard
-
-"@types/react-router-dom@npm:^5.3.0":
-  version: 5.3.3
-  resolution: "@types/react-router-dom@npm:5.3.3"
-  dependencies:
-    "@types/history": ^4.7.11
-    "@types/react": "*"
-    "@types/react-router": "*"
-  checksum: 28c4ea48909803c414bf5a08502acbb8ba414669b4b43bb51297c05fe5addc4df0b8fd00e0a9d1e3535ec4073ef38aaafac2c4a2b95b787167d113bc059beff3
-  languageName: node
-  linkType: hard
-
-"@types/react-router-hash-link@npm:2.4.9":
-  version: 2.4.9
-  resolution: "@types/react-router-hash-link@npm:2.4.9"
-  dependencies:
-    "@types/history": ^4.7.11
-    "@types/react": "*"
-    "@types/react-router-dom": ^5.3.0
-  checksum: 9d10fff8e95ff8270b78c79b16833307b2ccb02af25cd70f5cf137afb04c4e7df9afe3ec681e9febfefbab84aca20fe8485b3fab92d9159b95fa72a91923d8c2
-  languageName: node
-  linkType: hard
-
-"@types/react-router@npm:*":
-  version: 5.1.20
-  resolution: "@types/react-router@npm:5.1.20"
-  dependencies:
-    "@types/history": ^4.7.11
-    "@types/react": "*"
-  checksum: 128764143473a5e9457ddc715436b5d49814b1c214dde48939b9bef23f0e77f52ffcdfa97eb8d3cc27e2c229869c0cdd90f637d887b62f2c9f065a87d6425419
   languageName: node
   linkType: hard
 
@@ -33391,18 +33349,6 @@ __metadata:
     react: ">=16.8"
     react-dom: ">=16.8"
   checksum: 0cf4658a92bc66f50ec9d8518c36aa5a402bcadce71fb624ed6f900d73a29ea87ff904a4f2c42279107e75e80cc08c6192563fadcc5d4e642e6d476e38e83b21
-  languageName: node
-  linkType: hard
-
-"react-router-hash-link@npm:2.4.3":
-  version: 2.4.3
-  resolution: "react-router-hash-link@npm:2.4.3"
-  dependencies:
-    prop-types: ^15.7.2
-  peerDependencies:
-    react: ">=15"
-    react-router-dom: ">=4"
-  checksum: 7dad53ebbd726e8a1ab379f4e68bce3a6b406e55af3de8a9c128510a81ad4a681ce9a5e25c0efc3d3c283b276145729b6228d0173d1d0c6e04b9cc6fb10738d4
   languageName: node
   linkType: hard
 

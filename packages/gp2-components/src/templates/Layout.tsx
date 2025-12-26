@@ -5,6 +5,7 @@ import {
   Overlay,
   ToastStack,
   usePrevious,
+  useScrollToHash,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import {
@@ -114,6 +115,7 @@ const Layout: FC<LayoutProps> = ({
   try {
     location = useLocation();
     prevLocation = usePrevious(location);
+    useScrollToHash();
   } catch {
     // If there is no router, fine, never auto-close the menu
   }

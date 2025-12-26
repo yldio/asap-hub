@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css, Theme } from '@emotion/react';
 import { PropsWithChildren } from 'react';
-import { NavHashLink } from 'react-router-hash-link';
-import { useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { activePrimaryStyles } from '../button';
 import { charcoal, lead, silver } from '../colors';
 import {
@@ -99,14 +98,13 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
   const location = useLocation();
 
   if (useHasRouter() && internal) {
-    // Determine if the link is active by comparing the pathname
-    // NavHashLink handles hash matching internally, but we need to check pathname
     // Use prefix matching to highlight parent sections when viewing subsections
     // e.g., /network should be highlighted when at /network/interest-groups
     const linkPath = url.split('#')[0];
-    const isActive =
-      location.pathname === linkPath ||
-      location.pathname.startsWith(`${linkPath}/`);
+    const isActive = linkPath
+      ? location.pathname === linkPath ||
+        location.pathname.startsWith(`${linkPath}/`)
+      : false;
 
     return (
       <NavHashLink

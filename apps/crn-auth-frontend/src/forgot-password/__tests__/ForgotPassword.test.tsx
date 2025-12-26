@@ -1,11 +1,11 @@
 import {
   render,
   RenderResult,
-  waitForElementToBeRemoved,
+  waitFor,
   fireEvent,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { WebAuthError } from '@asap-hub/auth-frontend-utils';
 
 import ForgotPassword from '../ForgotPassword';
@@ -49,10 +49,13 @@ it('has a button to go back in browser history', async () => {
       initialEntries={['/prev', '/forgot-password']}
       initialIndex={1}
     >
-      <Route path="/prev">Previous Page</Route>
-      <Route path="/forgot-password">
-        <ForgotPassword email="" setEmail={() => {}} />
-      </Route>
+      <Routes>
+        <Route path="/prev" element={<>Previous Page</>} />
+        <Route
+          path="/forgot-password/*"
+          element={<ForgotPassword email="" setEmail={() => {}} />}
+        />
+      </Routes>
     </MemoryRouter>,
   );
 
@@ -64,8 +67,18 @@ describe('when clicking the reset button', () => {
   let result!: RenderResult;
   beforeEach(() => {
     result = render(
-      <MemoryRouter>
-        <ForgotPassword email="john.doe@example.com" setEmail={() => {}} />
+      <MemoryRouter initialEntries={['/forgot-password']}>
+        <Routes>
+          <Route
+            path="/forgot-password/*"
+            element={
+              <ForgotPassword
+                email="john.doe@example.com"
+                setEmail={() => {}}
+              />
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     );
   });
@@ -85,7 +98,7 @@ describe('when clicking the reset button', () => {
 
       const resetButton = result.getByText(/reset/i, { selector: 'button *' });
       await userEvent.click(resetButton);
-      await waitForElementToBeRemoved(resetButton);
+      await result.findByText(/email.+sent/i);
     });
 
     it('shows a success page', () => {
@@ -108,7 +121,9 @@ describe('when clicking the reset button', () => {
       await userEvent.click(
         result.getByText(/reset/i, { selector: 'button *' }),
       );
-      expect(await result.findByText('Rate limit exceeded')).toBeVisible();
+      await waitFor(() => {
+        expect(result.getByText('Rate limit exceeded')).toBeVisible();
+      });
     });
   });
 });

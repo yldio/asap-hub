@@ -6,7 +6,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import {
   createListInterestGroupResponse,
   createUserResponse,
@@ -41,17 +41,19 @@ const renderResearch = async (
                 network({}).users({}).user({ userId: user.id }).research({}).$,
               ]}
             >
-              <Route
-                path={
-                  network.template +
-                  network({}).users.template +
-                  network({}).users({}).user.template +
-                  network({}).users({}).user({ userId: user.id }).research
-                    .template
-                }
-              >
-                <Research user={user} />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    network.template +
+                    network({}).users.template +
+                    network({}).users({}).user.template +
+                    network({}).users({}).user({ userId: user.id }).research
+                      .template +
+                    '/*'
+                  }
+                  element={<Research user={user} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -166,13 +168,13 @@ describe('UserDetail', () => {
         ' 2',
       );
       expect(screen.getByDisplayValue('Expertise Description 2')).toBeVisible();
-      tags.forEach((expertise) => {
+      for (const expertise of tags) {
         await userEvent.type(
           screen.getByLabelText(/tags\s*\(required\)/i),
           expertise,
         );
         await userEvent.tab();
-      });
+      }
 
       await userEvent.click(screen.getByText(/save/i));
       await waitFor(

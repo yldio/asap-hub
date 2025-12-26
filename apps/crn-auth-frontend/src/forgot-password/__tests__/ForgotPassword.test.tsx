@@ -43,7 +43,7 @@ it('emits email change events', async () => {
   expect(handleEmailChange).toHaveBeenLastCalledWith('john.doe@example.com');
 });
 
-it('has a button to go back in browser history', () => {
+it('has a button to go back in browser history', async () => {
   const { getByText } = render(
     <MemoryRouter
       initialEntries={['/prev', '/forgot-password']}

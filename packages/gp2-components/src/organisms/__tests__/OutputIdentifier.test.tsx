@@ -1,8 +1,13 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import OutputIdentifier from '../OutputIdentifier';
+
+beforeEach(() => {
+  mockActWarningsInConsole('error');
+});
 
 const props: ComponentProps<typeof OutputIdentifier> = {
   documentType: 'Article',
@@ -48,8 +53,8 @@ it('should reset the identifier to a valid value on entering something unknown',
   render(<OutputIdentifier {...props} setIdentifierType={setIdentifierType} />);
   const textbox = screen.getByRole('textbox', { name: /identifier type/i });
   await userEvent.type(textbox, 'UNKNOWN');
-  await userEvent.type(textbox, specialChars.enter);
-  textbox.blur();
+  await userEvent.type(textbox, '{Enter}');
+  await userEvent.tab();
 
   expect(screen.getByText('Choose an identifier...')).toBeVisible();
   expect(screen.getByRole('textbox', { name: /Identifier/i })).toHaveValue('');
@@ -60,8 +65,8 @@ it('should set the identifier to the selected value', async () => {
   render(<OutputIdentifier {...props} setIdentifierType={setIdentifierType} />);
   const textbox = screen.getByRole('textbox', { name: /identifier/i });
   await userEvent.type(textbox, 'DOI');
-  await userEvent.type(textbox, specialChars.enter);
-  textbox.blur();
+  await userEvent.type(textbox, '{Enter}');
+  await userEvent.tab();
 
   expect(setIdentifierType).toHaveBeenCalledWith(gp2.OutputIdentifierType.DOI);
 });
@@ -73,8 +78,9 @@ it('should show an error when field is required but no input is provided', async
       identifierType={gp2.OutputIdentifierType.RRID}
     />,
   );
-  screen.getByRole('textbox', { name: /rrid/i }).focus();
-  screen.getByRole('textbox', { name: /rrid/i }).blur();
+  const textbox = screen.getByRole('textbox', { name: /rrid/i });
+  await userEvent.click(textbox);
+  await userEvent.tab();
   expect(screen.getByText(/Please enter a valid RRID/i)).toBeVisible();
 });
 
@@ -102,8 +108,9 @@ describe.each`
         identifier={identifier}
       />,
     );
-    screen.getByRole('textbox', { name }).focus();
-    screen.getByRole('textbox', { name }).blur();
+    const textbox = screen.getByRole('textbox', { name });
+    await userEvent.click(textbox);
+    await userEvent.tab();
     expect.assertions(1);
     assertError();
   });

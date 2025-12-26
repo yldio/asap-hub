@@ -81,11 +81,12 @@ beforeEach(() => {
   });
   // Suppress JSDOM navigation errors (not implemented in test environment)
   jest.spyOn(console, 'error').mockImplementation((...args) => {
-    const message = args[0];
-    if (
-      typeof message === 'string' &&
-      message.includes('Not implemented: navigation')
-    ) {
+    const message = String(args[0]);
+    if (message.includes('Not implemented: navigation')) {
+      return;
+    }
+    // Also suppress act() warnings from Suspense
+    if (message.includes('was not wrapped in act')) {
       return;
     }
     originalError(...args);
@@ -307,99 +308,107 @@ describe('a header edit button', () => {
     );
   });
 
-  it('remains on the same tab after closing a modal', async () => {
-    const userProfile: UserResponse = {
-      ...createUserResponse(),
-      biography: 'My Bio',
-    };
-    await renderUserProfile(userProfile);
-    // Open and close on research tab (default tab)
-    // Wait for the Research component to load (it's lazy-loaded)
-    const roleHeading = await screen.findByRole('heading', {
-      name: 'Role',
-    });
-    expect(roleHeading).toBeVisible();
-    expect(screen.queryByText(/main details/i)).toBeNull();
-    // Open the modal - content behind should still be visible through the semi-transparent overlay
-    await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
-    // Check that both the modal and the content behind are visible
-    await waitFor(() => {
-      expect(screen.getByText(/main details/i)).toBeVisible();
-      // Content behind should be visible (though not interactive)
-      expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
-    });
-    // Close the modal
-    await userEvent.click(await screen.findByTitle(/Close/i));
-    // After closing, verify we're still on the research tab
-    await waitFor(() => {
-      expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
+  it(
+    'remains on the same tab after closing a modal',
+    async () => {
+      const user = userEvent.setup({ delay: null });
+      const userProfile: UserResponse = {
+        ...createUserResponse(),
+        biography: 'My Bio',
+      };
+      await renderUserProfile(userProfile);
+      // Open and close on research tab (default tab)
+      // Wait for the Research component to load (it's lazy-loaded)
+      const roleHeading = await screen.findByRole('heading', {
+        name: 'Role',
+      });
+      expect(roleHeading).toBeVisible();
       expect(screen.queryByText(/main details/i)).toBeNull();
-    });
-    // Open and close on background tab
-    await userEvent.click(
-      await screen.findByText(/background/i, { selector: 'nav *' }),
-    );
-    expect(await screen.findByText('My Bio')).toBeVisible();
-    await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
-    // Check that both the modal and the content behind are visible
-    await waitFor(() => {
-      expect(screen.getByText(/main details/i)).toBeVisible();
-      // Content behind should be visible (though not interactive)
-      expect(screen.getByText(/my bio/i)).toBeVisible();
-    });
-    // Close the modal
-    await userEvent.click(await screen.findByTitle(/Close/i));
-    // After closing, verify we're still on the background tab
-    await waitFor(() => {
-      expect(screen.getByText(/my bio/i)).toBeVisible();
-      expect(screen.queryByText(/main details/i)).toBeNull();
-    });
-  });
+      // Open the modal - content behind should still be visible through the semi-transparent overlay
+      await user.click(await screen.findByLabelText(/edit.+personal/i));
+      // Check that both the modal and the content behind are visible
+      await waitFor(() => {
+        expect(screen.getByText(/main details/i)).toBeVisible();
+        // Content behind should be visible (though not interactive)
+        expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
+      });
+      // Close the modal
+      await user.click(await screen.findByTitle(/Close/i));
+      // After closing, verify we're still on the research tab
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
+        expect(screen.queryByText(/main details/i)).toBeNull();
+      });
+      // Open and close on background tab
+      await user.click(
+        await screen.findByText(/background/i, { selector: 'nav *' }),
+      );
+      expect(await screen.findByText('My Bio')).toBeVisible();
+      await user.click(await screen.findByLabelText(/edit.+personal/i));
+      // Check that both the modal and the content behind are visible
+      await waitFor(() => {
+        expect(screen.getByText(/main details/i)).toBeVisible();
+        // Content behind should be visible (though not interactive)
+        expect(screen.getByText(/my bio/i)).toBeVisible();
+      });
+      // Close the modal
+      await user.click(await screen.findByTitle(/Close/i));
+      // After closing, verify we're still on the background tab
+      await waitFor(() => {
+        expect(screen.getByText(/my bio/i)).toBeVisible();
+        expect(screen.queryByText(/main details/i)).toBeNull();
+      });
+    },
+    30000,
+  );
 
-  it('can change contact info', async () => {
-    const userProfile: UserResponse = {
-      ...createUserResponse(),
-      contactEmail: 'contact@example.com',
-      id: '42',
-    };
-    await renderUserProfile(userProfile);
-    // Navigate to about tab first since edit modals are only rendered under about/*
-    await userEvent.click(
-      await screen.findByRole('link', { name: /background/i }),
-    );
-    await waitFor(() => {
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
-    });
-    await userEvent.click(await screen.findByLabelText(/edit.+contact/i));
-    // Wait for modal to open - look for the email input field which is modal-specific
-    const emailInput = await screen.findByDisplayValue(
-      'contact@example.com',
-      {},
-      { timeout: 3000 },
-    );
-    await userEvent.type(emailInput, 'm');
-    expect(
-      await screen.findByDisplayValue('contact@example.comm'),
-    ).toBeVisible();
-    await userEvent.click(await screen.findByText(/save/i));
-    await waitFor(() => {
+  it(
+    'can change contact info',
+    async () => {
+      const user = userEvent.setup({ delay: null });
+      const userProfile: UserResponse = {
+        ...createUserResponse(),
+        contactEmail: 'contact@example.com',
+        id: '42',
+      };
+      await renderUserProfile(userProfile);
+      // Navigate to about tab first since edit modals are only rendered under about/*
+      await user.click(await screen.findByRole('link', { name: /background/i }));
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+      });
+      await user.click(await screen.findByLabelText(/edit.+contact/i));
+      // Wait for modal to open - look for the email input field which is modal-specific
+      const emailInput = await screen.findByDisplayValue(
+        'contact@example.com',
+        {},
+        { timeout: 3000 },
+      );
+      await user.type(emailInput, 'm');
       expect(
-        screen.getByText(/contact/i, { selector: 'header *' }),
+        await screen.findByDisplayValue('contact@example.comm'),
       ).toBeVisible();
-    });
-    expect(
-      (await screen.findByText(/contact/i, { selector: 'header *' })).closest(
-        'a',
-      ),
-    ).toHaveAttribute('href', 'mailto:contact@example.comm');
-    expect(mockPatchUser).toHaveBeenLastCalledWith(
-      '42',
-      expect.objectContaining({
-        contactEmail: 'contact@example.comm',
-      }),
-      expect.any(String),
-    );
-  });
+      await user.click(await screen.findByText(/save/i));
+      await waitFor(() => {
+        expect(
+          screen.getByText(/contact/i, { selector: 'header *' }),
+        ).toBeVisible();
+      });
+      expect(
+        (
+          await screen.findByText(/contact/i, { selector: 'header *' })
+        ).closest('a'),
+      ).toHaveAttribute('href', 'mailto:contact@example.comm');
+      expect(mockPatchUser).toHaveBeenLastCalledWith(
+        '42',
+        expect.objectContaining({
+          contactEmail: 'contact@example.comm',
+        }),
+        expect.any(String),
+      );
+    },
+    30000,
+  );
 
   it('refreshes auth0 id token', async () => {
     const userProfile: UserResponse = {

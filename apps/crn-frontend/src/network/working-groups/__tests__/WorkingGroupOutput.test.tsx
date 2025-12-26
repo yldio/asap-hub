@@ -474,7 +474,7 @@ it('can save draft when form data is valid', async () => {
     },
     { interval: 50 },
   );
-}, 120000);
+}, 60000);
 
 it('can publish a new version for an output', async () => {
   const user = userEvent.setup({ delay: null });
@@ -530,7 +530,7 @@ it('can publish a new version for an output', async () => {
     },
     { interval: 50 },
   );
-}, 120000);
+}, 60000);
 
 it('will show server side validation error for link', async () => {
   const user = userEvent.setup({ delay: null });
@@ -584,7 +584,7 @@ it('will toast server side errors for unknown errors', async () => {
     ),
   ).toBeInTheDocument();
   expect(window.scrollTo).toHaveBeenCalled();
-}, 120000);
+}, 60000);
 
 it('display a toast warning when creating a new version', async () => {
   await renderPage({

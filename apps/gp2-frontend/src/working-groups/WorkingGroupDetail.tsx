@@ -136,7 +136,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
                 />
                 {isWorkingGroupMember && (
                   <Route
-                    path="resources"
+                    path="workspace/*"
                     element={
                       <Frame title="Resources">
                         <WorkingGroupResources
@@ -165,7 +165,7 @@ const WorkingGroupDetail: FC<WorkingGroupDetailProps> = ({ currentTime }) => {
                               }
                             />
                             <Route
-                              path="edit/:resource"
+                              path="edit/:resourceIndex"
                               element={
                                 <EditResourceModal
                                   route={editRoute.resource}

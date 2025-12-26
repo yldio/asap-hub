@@ -60,8 +60,7 @@ describe('Routes', () => {
     expect(document.body).toBeInTheDocument();
   });
 
-  // TODO: Fix this test after React Router v6 migration - test has pre-existing issues with test isolation and mock setup
-  it.skip('renders the title', async () => {
+  it('renders the title', async () => {
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
     mockGetCalendars.mockResolvedValue(gp2.createListCalendarResponse());
     await renderRoutes();
@@ -76,14 +75,13 @@ describe('Routes', () => {
     ).toBeVisible();
   });
 
-  // TODO: Fix this test after React Router v6 migration - test has pre-existing issues with mock not being called
-  it.skip('renders error message when the request is not a 2XX', async () => {
+  it('renders error message when the request is not a 2XX', async () => {
     mockGetEvents.mockRejectedValue(new Error('error'));
     mockGetCalendars.mockResolvedValue(gp2.createListCalendarResponse());
 
     await renderRoutes();
     expect(mockGetEvents).toHaveBeenCalled();
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 
   it('renders the empty state for the upcoming and the past events', async () => {

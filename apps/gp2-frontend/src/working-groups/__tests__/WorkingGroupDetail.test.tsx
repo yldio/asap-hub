@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
@@ -89,6 +90,11 @@ const workingGroupMember = {
 
 describe('WorkingGroupDetail', () => {
   beforeEach(jest.resetAllMocks);
+
+  // Suppress React act() warnings from async Suspense resolution
+  beforeAll(() => {
+    mockActWarningsInConsole('error');
+  });
   const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
     typeof getWorkingGroup
   >;
@@ -169,8 +175,7 @@ describe('WorkingGroupDetail', () => {
       ).not.toBeInTheDocument();
     });
 
-    // TODO: Fix this test after React Router v6 migration - component uses path="resources" but routing uses "/workspace"
-    it.skip('does renders the resources if the user is not in the working group', async () => {
+    it('does renders the resources if the user is in the working group', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
       workingGroup.members = [workingGroupMember];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
@@ -205,8 +210,7 @@ describe('WorkingGroupDetail', () => {
     });
   });
 
-  // TODO: Fix this test after React Router v6 migration - component uses path="resources" but routing uses "/workspace"
-  it.skip('clicking on the resource tab loads the resources', async () => {
+  it('clicking on the resource tab loads the resources', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     workingGroup.members = [workingGroupMember];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
@@ -264,8 +268,7 @@ describe('WorkingGroupDetail', () => {
     },
   );
 
-  // TODO: Fix this test after React Router v6 migration - component uses path="resources" but routing uses "/workspace"
-  it.skip('renders the add modal when the user is an Administrator', async () => {
+  it('renders the add modal when the user is an Administrator', async () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     workingGroup.members = [workingGroupMember];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
@@ -288,8 +291,7 @@ describe('WorkingGroupDetail', () => {
     const workingGroup = gp2Fixtures.createWorkingGroupResponse();
     workingGroup.members = [workingGroupMember];
 
-    // TODO: Fix this test after React Router v6 migration - component uses path="resources" but routing uses "/workspace"
-    it.skip('does render the add and edit button to Administrators', async () => {
+    it('does render the add and edit button to Administrators', async () => {
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({
         id: workingGroup.id,
@@ -328,8 +330,7 @@ describe('WorkingGroupDetail', () => {
       },
     );
 
-    // TODO: Fix this test after React Router v6 migration - component uses path="resources" but routing uses "/workspace"
-    it.skip('can submit an add modal when form data is valid', async () => {
+    it('can submit an add modal when form data is valid', async () => {
       const title = 'example42 title';
       const type = 'Note';
 
@@ -362,8 +363,7 @@ describe('WorkingGroupDetail', () => {
       await waitFor(() => expect(saveButton).toBeEnabled());
     });
 
-    // TODO: Fix this test after React Router v6 migration - component uses path="resources" but routing uses "/workspace"
-    it.skip('can submit an edit modal when form data is valid', async () => {
+    it('can submit an edit modal when form data is valid', async () => {
       const resources: gp2Model.Resource[] = [
         {
           type: 'Note',
@@ -395,9 +395,13 @@ describe('WorkingGroupDetail', () => {
 
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
       await userEvent.click(editButton);
+      // Wait for modal to fully render before interacting
+      await screen.findByRole('heading', { name: /Edit Resource/i });
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      await userEvent.clear(titleBox);
-      await userEvent.type(titleBox, title);
+      // Focus, select all with Ctrl+A, then type to replace
+      await userEvent.click(titleBox);
+      await userEvent.keyboard('{Control>}a{/Control}');
+      await userEvent.keyboard(title);
       const saveButton = screen.getByRole('button', { name: /save/i });
       await userEvent.click(saveButton);
 
@@ -440,8 +444,7 @@ describe('WorkingGroupDetail', () => {
   });
 
   describe('Duplicate Output', () => {
-    // TODO: Fix this test after React Router v6 migration - component uses path="resources" but routing uses "/workspace"
-    it.skip('allows a user who is an Administrator to duplicate an output', async () => {
+    it('allows a user who is an Administrator to duplicate an output', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
 
       mockGetWorkingGroup.mockResolvedValue(workingGroup);
@@ -478,10 +481,10 @@ describe('WorkingGroupDetail', () => {
           .duplicateOutput({ outputId: output.id }).$,
       });
 
-      expect(screen.getByLabelText(/Title/i)).toHaveValue(
+      expect(await screen.findByLabelText(/Title/i)).toHaveValue(
         'Copy of Test Output',
       );
-      expect(screen.getByLabelText(/URL/i)).toHaveValue('');
+      expect(await screen.findByLabelText(/URL/i)).toHaveValue('');
     });
 
     it('will show a page not found if output does not exist', async () => {

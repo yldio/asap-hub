@@ -93,8 +93,7 @@ describe('CoreDetails', () => {
     'browser-image-compression',
   ).getDataUrlFromFile;
 
-  // TODO: Fix this test after React Router v6 migration - CoreDetails.tsx contains nested Route components that need migration
-  it.skip('renders header with title', async () => {
+  it('renders header with title', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
@@ -111,16 +110,14 @@ describe('CoreDetails', () => {
     ).toBeVisible();
   });
 
-  // TODO: Fix this test after React Router v6 migration - CoreDetails.tsx contains nested Route components that need migration
-  it.skip('renders the primary email', async () => {
+  it('renders the primary email', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
     expect(screen.getByRole('link', { name: /T@ark.io/i })).toBeVisible();
   });
 
-  // TODO: Fix this test after React Router v6 migration - CoreDetails.tsx contains nested Route components that need migration
-  it.skip('renders the alternative email', async () => {
+  it('renders the alternative email', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce({
       ...user,
@@ -132,8 +129,7 @@ describe('CoreDetails', () => {
     ).toBeVisible();
   });
 
-  // TODO: Fix this test after React Router v6 migration - CoreDetails.tsx contains nested Route components that need migration
-  it.skip('opens the key information modal', async () => {
+  it('opens the key information modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
@@ -144,8 +140,7 @@ describe('CoreDetails', () => {
     expect(screen.getByRole('dialog')).toBeVisible();
   });
 
-  // TODO: Fix this test after React Router v6 migration - CoreDetails.tsx contains nested Route components that need migration
-  it.skip('searches and displays results from organisations api', async () => {
+  it('searches and displays results from organisations api', async () => {
     mockGetInstitutions.mockResolvedValue({
       number_of_results: 1,
       time_taken: 0,
@@ -182,8 +177,7 @@ describe('CoreDetails', () => {
     });
   });
 
-  // TODO: Fix this test after React Router v6 migration - CoreDetails.tsx contains nested Route components that need migration
-  it.skip('saves the key information modal', async () => {
+  it('saves the key information modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
@@ -204,8 +198,7 @@ describe('CoreDetails', () => {
     );
   });
 
-  // TODO: Fix this test after React Router v6 migration - CoreDetails.tsx contains nested Route components that need migration
-  it.skip('saves the contact information modal', async () => {
+  it('saves the contact information modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
@@ -232,8 +225,7 @@ describe('CoreDetails', () => {
     );
   });
 
-  // TODO: Fix this test after React Router v6 migration - CoreDetails.tsx contains nested Route components that need migration
-  it.skip('updates the avatar', async () => {
+  it('updates the avatar', async () => {
     const user = {
       ...gp2Fixtures.createUserResponse(),
       avatarUrl: 'https://placekitten.com/200/300',

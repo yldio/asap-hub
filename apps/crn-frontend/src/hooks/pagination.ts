@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { viewParam, listViewValue } from '@asap-hub/routing';
 
+const CURRENT_PAGE_PARAM = 'currentPage';
+
 export const CARD_VIEW_PAGE_SIZE = 10;
 export const LIST_VIEW_PAGE_SIZE = 20;
 
@@ -9,29 +11,47 @@ export const usePaginationParams = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const currentPage = Number(searchParams.get('currentPage')) ?? 0;
-
-  const resetPaginationSearchParams = new URLSearchParams(searchParams);
-  resetPaginationSearchParams.delete('currentPage');
-
+  const currentPage = Number(searchParams.get(CURRENT_PAGE_PARAM)) ?? 0;
   const isListView = searchParams.get(viewParam) === listViewValue;
-  const listViewParams = new URLSearchParams(resetPaginationSearchParams);
-  listViewParams.set(viewParam, listViewValue);
-  const cardViewParams = new URLSearchParams(resetPaginationSearchParams);
-  cardViewParams.delete(viewParam);
 
-  const resetPagination = () => {
-    navigate({ search: resetPaginationSearchParams.toString() } as never, {
-      replace: true,
-    });
+  /**
+   * Resets pagination by removing currentPage.
+   * - If urlParams provided: modifies in-place (for chaining with other param changes)
+   * - If not provided: navigates immediately to reset pagination
+   */
+  const resetPagination = (urlParams?: URLSearchParams): void => {
+    if (urlParams) {
+      urlParams.delete(CURRENT_PAGE_PARAM);
+      return;
+    }
+    const params = new URLSearchParams(location.search);
+    params.delete(CURRENT_PAGE_PARAM);
+    navigate({ search: params.toString() } as never, { replace: true });
+  };
+
+  // Build view params only when accessed (lazy computation)
+  const buildViewParams = (forListView: boolean): string => {
+    const params = new URLSearchParams(searchParams);
+    params.delete(CURRENT_PAGE_PARAM);
+    if (forListView) {
+      params.set(viewParam, listViewValue);
+    } else {
+      params.delete(viewParam);
+    }
+    const str = params.toString();
+    return str ? `?${str}` : '';
   };
 
   return {
     currentPage,
     pageSize: isListView ? LIST_VIEW_PAGE_SIZE : CARD_VIEW_PAGE_SIZE,
     isListView,
-    listViewParams: `?${listViewParams}`,
-    cardViewParams: `${[...cardViewParams].length ? '?' : ''}${cardViewParams}`,
+    get listViewParams() {
+      return buildViewParams(true);
+    },
+    get cardViewParams() {
+      return buildViewParams(false);
+    },
     resetPagination,
   };
 };

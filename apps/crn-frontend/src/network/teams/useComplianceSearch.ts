@@ -64,9 +64,8 @@ export const useComplianceSearch = () => {
   ) as ManuscriptStatus[];
 
   const setStatus = (status: ManuscriptStatus) => {
-    resetPagination();
-
     const params = new URLSearchParams(location.search);
+    resetPagination(params);
     const currentStatuses = params.getAll('status');
 
     if (currentStatuses.includes(status)) {
@@ -84,9 +83,8 @@ export const useComplianceSearch = () => {
   };
 
   const setSearchQuery = (newSearchQuery: string) => {
-    resetPagination();
-
     const newUrlParams = new URLSearchParams(location.search);
+    resetPagination(newUrlParams);
     newSearchQuery
       ? newUrlParams.set(searchQueryParam, newSearchQuery)
       : newUrlParams.delete(searchQueryParam);

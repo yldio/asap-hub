@@ -107,9 +107,8 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
       : false;
 
     return (
-      <NavHashLink
+      <NavLink
         to={url}
-        smooth
         style={{ textDecoration: 'none', color: 'unset' }}
         className={enabled && isActive ? 'active' : undefined}
       >
@@ -124,7 +123,7 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
         >
           {children}
         </div>
-      </NavHashLink>
+      </NavLink>
     );
   }
   const active =

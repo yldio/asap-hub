@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
@@ -20,6 +21,16 @@ describe('OutputForm', () => {
   };
 
   describe('validation', () => {
+    let mockConsole: jest.SpyInstance;
+
+    beforeEach(() => {
+      mockConsole = mockActWarningsInConsole('error');
+    });
+
+    afterEach(() => {
+      mockConsole.mockRestore();
+    });
+
     it('shows error message for missing value URL', () => {
       render(
         <StaticRouter location="/">

@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -156,6 +157,7 @@ describe('ContactInformationModal', () => {
   });
 
   it('does not allow invalid telephone number', async () => {
+    const consoleErrorSpy = mockActWarningsInConsole('error');
     const onSave = jest.fn();
     const email = 'goncalo.ramos@fpf.pt';
     const number = 'invalid-number';
@@ -179,5 +181,6 @@ describe('ContactInformationModal', () => {
     ).toBeVisible();
     expect(onSave).not.toHaveBeenCalled();
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
+    consoleErrorSpy.mockRestore();
   });
 });

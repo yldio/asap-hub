@@ -97,7 +97,7 @@ const mandatoryFields = async (
   isLinkRequired: boolean = false,
   isEditMode: boolean = false,
   published: boolean = true,
-  user = userEvent.setup(),
+  user = userEvent.setup({ delay: null }),
 ) => {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
@@ -291,7 +291,7 @@ it('can publish a form when the data is valid', async () => {
 
   await renderPage({ teamId, outputDocumentType: 'lab-material' });
 
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   const { publish } = await mandatoryFields(
     {
       link,
@@ -365,7 +365,7 @@ it('can save draft when form data is valid', async () => {
 
   await renderPage({ teamId, outputDocumentType: 'lab-material' });
 
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   const { saveDraft } = await mandatoryFields(
     {
       link,
@@ -440,7 +440,7 @@ it('can edit a research output', async () => {
     researchOutputData: { ...baseResearchOutput, doi },
   });
 
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   const { publish } = await mandatoryFields(
     {
       link,
@@ -482,7 +482,7 @@ it('can edit a draft research output', async () => {
     researchOutputData: { ...researchOutput, doi, published: false },
   });
 
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   const { saveDraft } = await mandatoryFields(
     {
       link,
@@ -534,7 +534,7 @@ it('can edit and publish a draft research output', async () => {
   });
 
   const initiallyPublished = false;
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   const { publish } = await mandatoryFields(
     {
       link,
@@ -575,7 +575,7 @@ it('can publish a new version for an output', async () => {
     versionAction: 'create',
   });
 
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   await mandatoryFields(
     {
       link,
@@ -632,7 +632,7 @@ it('generates the short description based on the current description', async () 
     },
   });
 
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   await user.click(screen.getByRole('button', { name: /Generate/i }));
 
   await waitFor(() => {
@@ -660,7 +660,7 @@ it('will show server side validation error for link', async () => {
     teamId: '42',
     outputDocumentType: 'bioinformatics',
   });
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   const { publish } = await mandatoryFields(
     { type: 'Code' },
     true,
@@ -672,11 +672,13 @@ it('will show server side validation error for link', async () => {
   await publish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
-  expect(
-    screen.queryAllByText(
-      'A Research Output with this URL already exists. Please enter a different URL.',
-    ).length,
-  ).toBeGreaterThanOrEqual(1);
+  await waitFor(() => {
+    expect(
+      screen.queryAllByText(
+        'A Research Output with this URL already exists. Please enter a different URL.',
+      ).length,
+    ).toBeGreaterThanOrEqual(1);
+  });
 
   const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
   await user.clear(url);
@@ -702,7 +704,7 @@ it('will toast server side errors for unknown errors', async () => {
     teamId: '42',
     outputDocumentType: 'bioinformatics',
   });
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   const { publish } = await mandatoryFields(
     { type: 'Code' },
     true,
@@ -744,7 +746,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
     researchOutputData: { ...baseResearchOutput, doi },
   });
 
-  const user = userEvent.setup();
+  const user = userEvent.setup({ delay: null });
   const { publish } = await mandatoryFields(
     {
       link,
@@ -910,7 +912,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
         screen.getByLabelText(manuscriptImportLabelText),
       ).toBeInTheDocument();
 
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       await user.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
       await user.type(input, 'Error');
@@ -945,7 +947,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       await user.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
       await user.type(input, 'Version One');
@@ -1010,7 +1012,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-      const user = userEvent.setup();
+      const user = userEvent.setup({ delay: null });
       await user.click(screen.getByLabelText(manuscriptImportLabelText));
       const input = screen.getByRole('textbox');
       await user.type(input, 'Version One');
@@ -1130,7 +1132,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       outputDocumentType: 'article',
     });
 
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     await user.click(screen.getByLabelText('Create manually'));
 
     expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();
@@ -1144,7 +1146,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       teamId: '42',
       outputDocumentType: 'article',
     });
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     await user.click(screen.getByLabelText(manuscriptImportLabelText));
 
     expect(screen.getByRole('button', { name: /Import/i })).toBeInTheDocument();
@@ -1158,7 +1160,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       teamId: '42',
       outputDocumentType: 'article',
     });
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     await user.click(screen.getByLabelText(manuscriptImportLabelText));
 
     const input = screen.getByRole('textbox');
@@ -1229,7 +1231,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     await renderPage({ teamId: '42', outputDocumentType: 'article' });
 
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     await user.click(screen.getByLabelText(manuscriptImportLabelText));
     const input = screen.getByRole('textbox');
     await user.type(input, 'Version');
@@ -1324,7 +1326,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       latestManuscriptVersion,
     });
 
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     await user.type(
       screen.getByRole('textbox', { name: /changelog/i }),
       changelog,
@@ -1371,7 +1373,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     await renderPage({ teamId, outputDocumentType });
 
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     await user.click(screen.getByLabelText('Import from compliance'));
     const input = screen.getByRole('textbox');
     await user.type(input, 'Version');
@@ -1396,7 +1398,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       outputDocumentType: 'article',
     });
 
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     await user.click(screen.getByLabelText('Create manually'));
 
     expect(screen.getByRole('button', { name: /Create/i })).toBeInTheDocument();

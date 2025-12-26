@@ -5,7 +5,7 @@ import {
 import { DiscoverPage, TutorialsPage } from '@asap-hub/react-components';
 import { discover } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSearch } from '../hooks';
 
 const loadGuides = () =>
@@ -30,30 +30,34 @@ const Discover: FC<Record<string, never>> = () => {
     loadGuides().then(loadTutorialList).then(loadTutorialPage);
   }, []);
 
-  const { path } = useRouteMatch();
   const { searchQuery, debouncedSearchQuery, setSearchQuery } = useSearch();
 
   return (
-    <Switch>
+    <Routes>
       <Route
-        path={
-          path +
-          discover({}).tutorials.template +
+        path={`${discover({}).tutorials.template}${
           discover({}).tutorials({}).tutorial.template
+        }`}
+        element={
+          <Frame title={null}>
+            <TutorialPage />
+          </Frame>
         }
-      >
-        <Frame title={null}>
-          <TutorialPage />
-        </Frame>
-      </Route>
-      <DiscoverPage>
-        <Switch>
-          <Route exact path={path + discover({}).guides.template}>
+      />
+      <Route
+        path={discover({}).guides.template}
+        element={
+          <DiscoverPage>
             <Frame title="Guides">
               <Guides />
             </Frame>
-          </Route>
-          <Route exact path={path + discover({}).tutorials.template}>
+          </DiscoverPage>
+        }
+      />
+      <Route
+        path={discover({}).tutorials.template}
+        element={
+          <DiscoverPage>
             <TutorialsPage
               searchQuery={searchQuery}
               onSearchQueryChange={setSearchQuery}
@@ -62,11 +66,14 @@ const Discover: FC<Record<string, never>> = () => {
                 <TutorialList searchQuery={debouncedSearchQuery} />
               </SearchFrame>
             </TutorialsPage>
-          </Route>
-          <Redirect to={discover({}).guides({}).$} />
-        </Switch>
-      </DiscoverPage>
-    </Switch>
+          </DiscoverPage>
+        }
+      />
+      <Route
+        index
+        element={<Navigate to={discover({}).guides({}).$} replace />}
+      />
+    </Routes>
   );
 };
 

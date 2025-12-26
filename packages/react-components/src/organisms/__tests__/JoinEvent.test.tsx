@@ -7,6 +7,27 @@ import { silver } from '../../colors';
 
 jest.useFakeTimers();
 
+// Store interval callback for manual triggering in tests
+let intervalCallback: (() => void) | null = null;
+
+jest.mock('../../hooks', () => ({
+  ...jest.requireActual('../../hooks'),
+  useInterval: (callback: () => void) => {
+    intervalCallback = callback;
+  },
+}));
+
+beforeEach(() => {
+  intervalCallback = null;
+});
+
+// Helper to trigger the interval callback
+const triggerIntervalCallback = () => {
+  if (intervalCallback) {
+    intervalCallback();
+  }
+};
+
 it('renders a link to the meeting', () => {
   const { getByText } = render(
     <JoinEvent
@@ -76,10 +97,11 @@ it('informs you when to expect a link way before the event', () => {
   expect(getByText(/link will be available/i)).toBeVisible();
 });
 
-// A dependency update broke running the effect interval in tests, and no clue how to fix it
-// eslint-disable-next-line jest/no-disabled-tests
-it.skip('refreshes when the link should become available', () => {
+it('refreshes when the link should become available', () => {
   const handleRefresh = jest.fn();
+
+  // Start time within 24 hours of event (link should be available)
+  // This means startRefreshing will be true
   render(
     <JoinEvent
       startDate={addMinutes(new Date(), 10).toISOString()}
@@ -89,8 +111,13 @@ it.skip('refreshes when the link should become available', () => {
   );
 
   act(() => {
-    jest.advanceTimersByTime(5 * 60 * 1000);
+    // Manually trigger the interval callback
+    // The callback checks: !meetingLink && startRefreshing && !hasEnded
+    // Since there's no meeting link, start is within 24h, and event hasn't ended,
+    // onRefresh should be called
+    triggerIntervalCallback();
   });
+
   expect(handleRefresh).toHaveBeenCalled();
 });
 it("warns when the event should be available but isn't", () => {
@@ -106,7 +133,7 @@ it("warns when the event should be available but isn't", () => {
   });
   expect(getByText(/couldn’t find.+link/i)).toBeVisible();
 });
-it('does not refresh is there is already a link', () => {
+it('does not refresh if there is already a link', () => {
   const handleRefresh = jest.fn();
   render(
     <JoinEvent
@@ -117,8 +144,10 @@ it('does not refresh is there is already a link', () => {
     />,
   );
 
+  // Trigger the interval - but since meetingLink is provided,
+  // the condition (!meetingLink && ...) is false, so onRefresh should NOT be called
   act(() => {
-    jest.advanceTimersByTime(5 * 60 * 1000);
+    triggerIntervalCallback();
   });
   expect(handleRefresh).not.toHaveBeenCalled();
 });
@@ -132,8 +161,10 @@ it('does not refresh way before the event', () => {
     />,
   );
 
+  // Trigger the interval - but startRefreshing is false (event is 10,000 minutes away,
+  // which is way more than 24 hours), so onRefresh should NOT be called
   act(() => {
-    jest.advanceTimersByTime(5 * 60 * 1000);
+    triggerIntervalCallback();
   });
   expect(handleRefresh).not.toHaveBeenCalled();
 });
@@ -147,8 +178,10 @@ it('does not refresh after the event', () => {
     />,
   );
 
+  // Trigger the interval - but hasEnded is true (event ended 10,000 minutes ago),
+  // so onRefresh should NOT be called
   act(() => {
-    jest.advanceTimersByTime(5 * 60 * 1000);
+    triggerIntervalCallback();
   });
   expect(handleRefresh).not.toHaveBeenCalled();
 });

@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 import UserNavigationAssociationSection from '../UserNavigationAssociationSection';
 
@@ -22,11 +23,13 @@ const team = {
 
 it('renders an association section with all the details', () => {
   const { getByText, getByRole } = render(
-    <UserNavigationAssociationSection
-      association={[{ ...interestGroup, name: 'group 1', href: '/abc' }]}
-      userOnboarded={true}
-      title="MY INTEREST GROUPS"
-    />,
+    <MemoryRouter>
+      <UserNavigationAssociationSection
+        association={[{ ...interestGroup, name: 'group 1', href: '/abc' }]}
+        userOnboarded={true}
+        title="MY INTEREST GROUPS"
+      />
+    </MemoryRouter>,
   );
 
   expect(getByText('group 1')).toBeVisible();
@@ -39,14 +42,16 @@ it('renders an association section with all the details', () => {
 
 it('renders only active associations', () => {
   const { getByText, queryByText } = render(
-    <UserNavigationAssociationSection
-      association={[
-        { ...interestGroup, name: 'group 1', href: '/abc', active: true },
-        { ...interestGroup, active: false, name: 'group2' },
-      ]}
-      userOnboarded={true}
-      title="MY INTEREST GROUPS"
-    />,
+    <MemoryRouter>
+      <UserNavigationAssociationSection
+        association={[
+          { ...interestGroup, name: 'group 1', href: '/abc', active: true },
+          { ...interestGroup, active: false, name: 'group2' },
+        ]}
+        userOnboarded={true}
+        title="MY INTEREST GROUPS"
+      />
+    </MemoryRouter>,
   );
 
   expect(getByText('group 1')).toBeVisible();
@@ -54,47 +59,55 @@ it('renders only active associations', () => {
 });
 
 it('disables the navigation link based on user onboarded', () => {
-  const { getByRole, getByText } = render(
-    <UserNavigationAssociationSection
-      association={[
-        { ...interestGroup, name: 'group 1', href: '/abc', active: true },
-      ]}
-      userOnboarded={false}
-      title="MY INTEREST GROUPS"
-    />,
+  const { getByText } = render(
+    <MemoryRouter>
+      <UserNavigationAssociationSection
+        association={[
+          { ...interestGroup, name: 'group 1', href: '/abc', active: true },
+        ]}
+        userOnboarded={false}
+        title="MY INTEREST GROUPS"
+      />
+    </MemoryRouter>,
   );
-  expect(getByText('group 1')).toBeVisible();
-  expect(getByRole('link', { name: /interest group/i })).toHaveStyleRule(
-    'pointer-events',
-    expect.stringMatching('none'),
-  );
+  const targetElement = getByText('group 1');
+  expect(targetElement).toBeVisible();
+  // The pointer-events style is on the parent div element
+  const { parentElement } = targetElement;
+  expect(parentElement).toHaveStyle('pointer-events: none');
 });
 
 it('renders a association section with the correct icon', () => {
   const { getByTitle, rerender } = render(
-    <UserNavigationAssociationSection
-      association={[workingGroup]}
-      userOnboarded={true}
-      title="MY WORKING GROUPS"
-    />,
+    <MemoryRouter>
+      <UserNavigationAssociationSection
+        association={[workingGroup]}
+        userOnboarded={true}
+        title="MY WORKING GROUPS"
+      />
+    </MemoryRouter>,
   );
   expect(getByTitle('Working Groups')).toBeInTheDocument();
 
   rerender(
-    <UserNavigationAssociationSection
-      association={[team]}
-      userOnboarded={true}
-      title="MY TEAMS"
-    />,
+    <MemoryRouter>
+      <UserNavigationAssociationSection
+        association={[team]}
+        userOnboarded={true}
+        title="MY TEAMS"
+      />
+    </MemoryRouter>,
   );
   expect(getByTitle('Team')).toBeInTheDocument();
 
   rerender(
-    <UserNavigationAssociationSection
-      association={[team]}
-      userOnboarded={true}
-      title="MY INTEREST GROUPS"
-    />,
+    <MemoryRouter>
+      <UserNavigationAssociationSection
+        association={[team]}
+        userOnboarded={true}
+        title="MY INTEREST GROUPS"
+      />
+    </MemoryRouter>,
   );
   expect(getByTitle('Interest Group')).toBeInTheDocument();
 });

@@ -19,7 +19,7 @@ const props: ComplianceReportCardProps = {
   manuscriptId: 'manuscript-1',
 };
 
-it('displays compliance report description and url when expanded', () => {
+it('displays compliance report description and url when expanded', async () => {
   jest.spyOn(console, 'error').mockImplementation();
   const { getByText, queryByText, getByRole, rerender } = render(
     <ComplianceReportCard {...props} />,
@@ -29,7 +29,7 @@ it('displays compliance report description and url when expanded', () => {
   expect(queryByText(/View Report/i)).not.toBeInTheDocument();
   expect(queryByText(/example.com/i)).not.toBeInTheDocument();
 
-  userEvent.click(getByRole('button'));
+  await userEvent.click(getByRole('button'));
 
   rerender(<ComplianceReportCard {...props} />);
 

@@ -1,8 +1,15 @@
 import { createUserResponse } from '@asap-hub/fixtures';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
+import { mockActErrorsInConsole } from '../../test-utils';
 import RoleModal from '../RoleModal';
 
 const props: ComponentProps<typeof RoleModal> = {
@@ -13,16 +20,16 @@ const props: ComponentProps<typeof RoleModal> = {
 
 it('renders the title', () => {
   const { getByText } = render(
-    <StaticRouter>
+    <MemoryRouter initialEntries={['/']}>
       <RoleModal {...props} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(getByText('Roles', { selector: 'h3' })).toBeVisible();
 });
 
 it('renders teams and lan names into inputs', async () => {
   const { getByLabelText, getAllByLabelText } = render(
-    <StaticRouter>
+    <MemoryRouter initialEntries={['/']}>
       <RoleModal
         {...props}
         researchInterests={undefined}
@@ -36,7 +43,7 @@ it('renders teams and lan names into inputs', async () => {
           { displayName: 'Team 2', id: 'team-2', role: 'Collaborating PI' },
         ]}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(getByLabelText(/main.+interests/i)).toHaveValue('');
   expect(getByLabelText(/responsibilities/i)).toHaveValue('');
@@ -52,9 +59,9 @@ it('renders teams and lan names into inputs', async () => {
 describe('User Role', () => {
   it('indicates which fields are required or optional', () => {
     const { getByText } = render(
-      <StaticRouter>
+      <MemoryRouter initialEntries={['/']}>
         <RoleModal {...props} />
-      </StaticRouter>,
+      </MemoryRouter>,
     );
     expect(getByText(/research interests/i).nextSibling).toHaveTextContent(
       'required',
@@ -67,7 +74,7 @@ describe('User Role', () => {
   it('triggers the save function', async () => {
     const mockSaveFn = jest.fn();
     const { getByText, getByDisplayValue } = render(
-      <StaticRouter>
+      <MemoryRouter initialEntries={['/']}>
         <RoleModal
           {...props}
           reachOut={undefined}
@@ -75,11 +82,11 @@ describe('User Role', () => {
           responsibilities="responsibilities"
           onSave={mockSaveFn}
         />
-      </StaticRouter>,
+      </MemoryRouter>,
     );
 
-    userEvent.type(getByDisplayValue('interests'), ' 1');
-    userEvent.click(getByText('Save'));
+    await userEvent.type(getByDisplayValue('interests'), ' 1');
+    await userEvent.click(getByText('Save'));
     expect(mockSaveFn).toHaveBeenCalledWith({
       reachOut: '',
       researchInterests: 'interests 1',
@@ -92,51 +99,68 @@ describe('User Role', () => {
   });
 
   it('disables the form elements while submitting', async () => {
+    let resolveSubmit!: () => void;
+    const handleSave = () =>
+      new Promise<void>((resolve) => {
+        resolveSubmit = resolve;
+      });
+
     render(
-      <StaticRouter>
+      <MemoryRouter initialEntries={['/']}>
         <RoleModal
           {...props}
           researchInterests="researchInterests"
           responsibilities="responsibilities"
-          onSave={() => Promise.resolve()}
+          onSave={handleSave}
         />
-      </StaticRouter>,
+      </MemoryRouter>,
     );
 
     const saveButton = screen.getByRole('button', { name: /save/i });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     const form = saveButton.closest('form')!;
     expect(form.elements.length).toBeGreaterThan(1);
     [...form.elements].forEach((element) => expect(element).toBeDisabled());
 
+    act(resolveSubmit);
     await waitFor(() => expect(saveButton).toBeEnabled());
   });
 
   it('shows validation message for invalid research interests', async () => {
+    // Suppress act() warnings from TextArea's internal async validation state updates
+    const consoleMock = mockActErrorsInConsole();
+
     const { getByLabelText, findByText } = render(
-      <StaticRouter>
+      <MemoryRouter initialEntries={['/']}>
         <RoleModal {...props} researchInterests="" />
-      </StaticRouter>,
+      </MemoryRouter>,
     );
     fireEvent.focusOut(getByLabelText(/main.+interests/i));
 
     expect(
       await findByText('Please add your research interests.'),
     ).toBeVisible();
+
+    consoleMock.mockRestore();
   });
 
   it('shows validation message for invalid responsibilities', async () => {
+    // Suppress act() warnings from TextArea's internal async validation state updates
+    const consoleMock = mockActErrorsInConsole();
+
     const { getByLabelText, findByText } = render(
-      <StaticRouter>
+      <MemoryRouter initialEntries={['/']}>
         <RoleModal {...props} responsibilities="abc" researchInterests="123" />
-      </StaticRouter>,
+      </MemoryRouter>,
     );
     fireEvent.change(getByLabelText(/responsibilities/i), {
       target: { value: '' },
     });
     fireEvent.focusOut(getByLabelText(/responsibilities/i));
     expect(await findByText('Please add your responsibilities.')).toBeVisible();
+
+    consoleMock.mockRestore();
   });
 });
 
@@ -144,7 +168,7 @@ describe('Staff Role', () => {
   it('triggers the save function', async () => {
     const mockSaveFn = jest.fn();
     const { getByText, getByLabelText } = render(
-      <StaticRouter>
+      <MemoryRouter initialEntries={['/']}>
         <RoleModal
           {...props}
           role="Staff"
@@ -153,12 +177,12 @@ describe('Staff Role', () => {
           responsibilities={'e'}
           onSave={mockSaveFn}
         />
-      </StaticRouter>,
+      </MemoryRouter>,
     );
 
-    userEvent.type(getByLabelText(/responsibilities/i), 'xample');
-    userEvent.type(getByLabelText(/reach out/i), '23');
-    userEvent.click(getByText('Save'));
+    await userEvent.type(getByLabelText(/responsibilities/i), 'xample');
+    await userEvent.type(getByLabelText(/reach out/i), '23');
+    await userEvent.click(getByText('Save'));
 
     await waitFor(() =>
       expect(getByText(/save/i).closest('button')).toBeEnabled(),
@@ -171,24 +195,31 @@ describe('Staff Role', () => {
   });
 
   it('disables the form elements while submitting', async () => {
+    let resolveSubmit!: () => void;
+    const handleSave = () =>
+      new Promise<void>((resolve) => {
+        resolveSubmit = resolve;
+      });
+
     const { getByText } = render(
-      <StaticRouter>
+      <MemoryRouter initialEntries={['/']}>
         <RoleModal
           {...props}
           role="Staff"
           responsibilities="responsibilities"
           reachOut="reachOut"
-          onSave={() => Promise.resolve()}
+          onSave={handleSave}
         />
-      </StaticRouter>,
+      </MemoryRouter>,
     );
 
-    userEvent.click(getByText(/save/i));
+    await userEvent.click(getByText(/save/i));
 
     const form = getByText(/save/i).closest('form')!;
     expect(form.elements.length).toBeGreaterThan(1);
     [...form.elements].forEach((element) => expect(element).toBeDisabled());
 
+    act(resolveSubmit);
     await waitFor(() =>
       expect(getByText(/save/i).closest('button')).toBeEnabled(),
     );

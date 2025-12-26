@@ -1,11 +1,12 @@
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { searchQueryParam } from '@asap-hub/routing';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from './pagination';
 
 export const useSearch = () => {
-  const currentUrlParams = new URLSearchParams(useLocation().search);
-  const history = useHistory();
+  const location = useLocation();
+  const currentUrlParams = new URLSearchParams(location.search);
+  const navigate = useNavigate();
 
   const { resetPagination } = usePaginationParams();
 
@@ -13,8 +14,15 @@ export const useSearch = () => {
   const tags = currentUrlParams.getAll('tag');
   const searchQuery = currentUrlParams.get(searchQueryParam) || '';
 
+  const replaceArrayParams = (paramName: string, values: string[]) => {
+    const newUrlParams = new URLSearchParams(location.search);
+    resetPagination(newUrlParams);
+    newUrlParams.delete(paramName);
+    values.forEach((v) => newUrlParams.append(paramName, v));
+    navigate({ search: newUrlParams.toString() } as never, { replace: true });
+  };
+
   const toggleFilter = (filter: string) => {
-    resetPagination();
     const currentFilters = currentUrlParams.getAll('filter');
     const filterIndex = currentFilters.indexOf(filter);
     filterIndex > -1
@@ -24,26 +32,17 @@ export const useSearch = () => {
   };
 
   const setTags = (newTags: string[]) => {
-    resetPagination();
     replaceArrayParams('tag', newTags);
   };
 
-  const replaceArrayParams = (paramName: string, values: string[]) => {
-    const newUrlParams = new URLSearchParams(history.location.search);
-    newUrlParams.delete(paramName);
-    values.forEach((v) => newUrlParams.append(paramName, v));
-    history.replace({ search: newUrlParams.toString() });
-  };
-
   const setSearchQuery = (newSearchQuery: string) => {
-    resetPagination();
-
-    const newUrlParams = new URLSearchParams(history.location.search);
+    const newUrlParams = new URLSearchParams(location.search);
+    resetPagination(newUrlParams);
     newSearchQuery
       ? newUrlParams.set(searchQueryParam, newSearchQuery)
       : newUrlParams.delete(searchQueryParam);
 
-    history.replace({ search: newUrlParams.toString() });
+    navigate({ search: newUrlParams.toString() } as never, { replace: true });
   };
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 400);

@@ -33,6 +33,9 @@ const Welcome: React.FC<Record<string, never>> = () => {
         `Failed to fetch invitation. Expected status 2xx or 404. Received status ${status}.`,
       );
     });
+    // Prevent unhandled rejection warnings - errors will be handled on click
+    // istanbul ignore next
+    invitationValidityCheck.current.catch(() => undefined);
     return () => requestController.abort();
   }, [code]);
 

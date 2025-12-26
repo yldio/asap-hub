@@ -4,9 +4,9 @@ import {
   manuscriptTypeLifecycles,
 } from '@asap-hub/model';
 import { cleanup, render, screen, waitFor, act } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import ManuscriptForm from '../ManuscriptForm';
 
 jest.setTimeout(30_000);
@@ -92,7 +92,7 @@ const renderManuscriptForm = async (
   props: ComponentProps<typeof ManuscriptForm>,
 ) => {
   const container = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm {...props} />
       </Suspense>
@@ -115,8 +115,8 @@ it('does not display the lifecycle select box until type is selected', async () 
   });
   await act(async () => {
     await userEvent.type(textbox, 'Original');
-    await userEvent.type(textbox, specialChars.enter);
-    userEvent.click(textbox);
+    await userEvent.type(textbox, '{Enter}');
+    await userEvent.click(textbox);
   });
 
   expect(
@@ -142,7 +142,7 @@ it.each(manuscriptTypeLifecyclesFlat)(
     const lifecycleTextbox = await screen.findByRole('textbox', {
       name: /Where is the manuscript in the life cycle/i,
     });
-    userEvent.click(lifecycleTextbox);
+    await userEvent.click(lifecycleTextbox);
 
     const hiddenInput = screen.getByDisplayValue(lifecycle);
     expect(hiddenInput).toHaveValue(lifecycle);
@@ -155,14 +155,14 @@ it('displays error message when no lifecycle was found', async () => {
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
+  await userEvent.type(typeTextbox, 'Original');
+  await userEvent.type(typeTextbox, '{Enter}');
   typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'invalid lifecycle');
+  await userEvent.type(lifecycleTextbox, 'invalid lifecycle');
 
   expect(screen.getByText(/Sorry, no options match/i)).toBeVisible();
 });
@@ -173,15 +173,18 @@ it('maintains values provided when lifecycle changes but field is still visible'
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
-  userEvent.type(typeTextbox, 'Original');
-  userEvent.type(typeTextbox, specialChars.enter);
+  await userEvent.type(typeTextbox, 'Original');
+  await userEvent.type(typeTextbox, '{Enter}');
   typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  userEvent.type(lifecycleTextbox, 'Publication with addendum or corrigendum');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  await userEvent.type(
+    lifecycleTextbox,
+    'Publication with addendum or corrigendum',
+  );
+  await userEvent.type(lifecycleTextbox, '{Enter}');
   lifecycleTextbox.blur();
 
   const preprintDoi = '10.4444/test';
@@ -190,18 +193,18 @@ it('maintains values provided when lifecycle changes but field is still visible'
   const preprintDoiTextbox = screen.getByRole('textbox', {
     name: /Preprint DOI/i,
   });
-  userEvent.type(preprintDoiTextbox, preprintDoi);
+  await userEvent.type(preprintDoiTextbox, preprintDoi);
 
   const publicationDoiTextbox = screen.getByRole('textbox', {
     name: /Publication DOI/i,
   });
-  userEvent.type(publicationDoiTextbox, publicationDoi);
+  await userEvent.type(publicationDoiTextbox, publicationDoi);
 
   expect(preprintDoiTextbox).toHaveValue(preprintDoi);
   expect(publicationDoiTextbox).toHaveValue(publicationDoi);
 
-  userEvent.type(lifecycleTextbox, 'Preprint');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  await userEvent.type(lifecycleTextbox, 'Preprint');
+  await userEvent.type(lifecycleTextbox, '{Enter}');
   lifecycleTextbox.blur();
 
   expect(

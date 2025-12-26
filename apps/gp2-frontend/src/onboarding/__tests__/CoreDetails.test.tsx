@@ -15,7 +15,7 @@ import imageCompression from 'browser-image-compression';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
@@ -54,9 +54,12 @@ const renderCoreDetails = async (
               <MemoryRouter
                 initialEntries={[gp2Routing.onboarding({}).coreDetails({}).$]}
               >
-                <Route path={gp2Routing.onboarding({}).coreDetails.template}>
-                  <CoreDetails />
-                </Route>
+                <Routes>
+                  <Route
+                    path={`${gp2Routing.onboarding({}).coreDetails.template}/*`}
+                    element={<CoreDetails />}
+                  />
+                </Routes>
               </MemoryRouter>
             </WhenReady>
           </Auth0Provider>
@@ -133,7 +136,7 @@ describe('CoreDetails', () => {
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keyInformationEditButton!);
+    await userEvent.click(keyInformationEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
   });
 
@@ -162,9 +165,12 @@ describe('CoreDetails', () => {
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keyInformationEditButton!);
+    await userEvent.click(keyInformationEditButton!);
 
-    userEvent.type(await screen.findByDisplayValue('Stark Industries'), ' 1');
+    await userEvent.type(
+      await screen.findByDisplayValue('Stark Industries'),
+      ' 1',
+    );
     expect(await screen.findByText('ExampleInst')).toBeVisible();
     expect(mockGetInstitutions).toHaveBeenCalledWith({
       searchQuery: 'Stark Industries 1',
@@ -179,9 +185,9 @@ describe('CoreDetails', () => {
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keyInformationEditButton!);
+    await userEvent.click(keyInformationEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -200,9 +206,9 @@ describe('CoreDetails', () => {
     const [, contactInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(contactInformationEditButton!);
+    await userEvent.click(contactInformationEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -231,7 +237,10 @@ describe('CoreDetails', () => {
     );
     await renderCoreDetails(user.id);
 
-    userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
+    await userEvent.upload(
+      await screen.findByLabelText(/upload.+avatar/i),
+      file,
+    );
     await waitFor(() =>
       expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
         '42',

@@ -80,7 +80,13 @@ describe('RepresentationOfPresentersTable', () => {
     ${'members_desc'} | ${{ ...engagementInitialSortingDirection, members: 'desc' }} | ${'Inactive Alphabetical Ascending Sort Icon'}       | ${'team_asc'}     | ${{ ...engagementInitialSortingDirection, team: 'asc' }}
   `(
     'when sort is $sort and user clicks on $iconTitle, the new sort becomes $newSort and the sorting direction $newSortingDirection',
-    ({ sort, sortingDirection, iconTitle, newSort, newSortingDirection }) => {
+    async ({
+      sort,
+      sortingDirection,
+      iconTitle,
+      newSort,
+      newSortingDirection,
+    }) => {
       const setSort = jest.fn();
       const setSortingDirection = jest.fn();
       const { getByTitle } = render(
@@ -97,7 +103,7 @@ describe('RepresentationOfPresentersTable', () => {
       const sortIcon = getByTitle(iconTitle);
       expect(sortIcon).toBeInTheDocument();
 
-      userEvent.click(sortIcon);
+      await userEvent.click(sortIcon);
       expect(setSort).toHaveBeenCalledWith(newSort);
       expect(setSortingDirection).toHaveBeenCalledWith(newSortingDirection);
     },
@@ -125,7 +131,7 @@ describe('RepresentationOfPresentersTable', () => {
     ${'unique_speakers_key_personnel_percentage_desc'} | ${{ ...engagementInitialSortingDirection, uniqueSpeakersKeyPersonnelPercentage: 'desc' }} | ${'Unique Speakers Key Personnel Active General Sort Icon'}   | ${'Unique Speakers Key Personnel Percentage Numerical Ascending Sort Icon'}  | ${'unique_speakers_key_personnel_percentage_asc'}  | ${{ ...engagementInitialSortingDirection, uniqueSpeakersKeyPersonnelPercentage: 'asc' }}
   `(
     'when sort is $sort and user clicks on $iconTitle, the new sort becomes $newSort and the sorting direction $newSortingDirection',
-    ({
+    async ({
       sort,
       sortingDirection,
       iconTitle,
@@ -148,11 +154,11 @@ describe('RepresentationOfPresentersTable', () => {
 
       const genericSortIcon = getByTitle(genericSortIconTitle);
       expect(genericSortIcon).toBeInTheDocument();
-      userEvent.click(genericSortIcon);
+      await userEvent.click(genericSortIcon);
 
       const sortIcon = getByTitle(iconTitle);
       expect(sortIcon).toBeInTheDocument();
-      userEvent.click(sortIcon);
+      await userEvent.click(sortIcon);
 
       expect(setSort).toHaveBeenCalledWith(newSort);
       expect(setSortingDirection).toHaveBeenCalledWith(newSortingDirection);

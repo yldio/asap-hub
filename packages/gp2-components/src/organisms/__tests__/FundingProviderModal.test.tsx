@@ -48,7 +48,7 @@ describe('FundingProviderModal', () => {
       fundingStreams,
       onSave,
     });
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       fundingStreams,
     });
@@ -63,14 +63,14 @@ describe('FundingProviderModal', () => {
       onSave,
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Funding Names (optional)',
       }),
       fundingStreams,
     );
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       fundingStreams,
     });

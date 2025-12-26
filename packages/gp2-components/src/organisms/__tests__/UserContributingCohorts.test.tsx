@@ -58,7 +58,7 @@ describe('UserContributingCohorts', () => {
     renderUserCohorts(getCohorts(4));
 
     const button = screen.getByRole('button', { name: /Show more/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
   });
   it('does not show a more button for less than 3 cohorts', async () => {
@@ -68,12 +68,12 @@ describe('UserContributingCohorts', () => {
       screen.queryByRole('button', { name: /Show more/i }),
     ).not.toBeInTheDocument();
   });
-  it('displays the hidden cohorts if the show more button is clicked', () => {
+  it('displays the hidden cohorts if the show more button is clicked', async () => {
     renderUserCohorts(getCohorts(4));
 
     expect(screen.getByText('a name 3')).not.toBeVisible();
     const button = screen.getByRole('button', { name: /Show more/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(screen.getByText('a name 3')).toBeVisible();
   });
 

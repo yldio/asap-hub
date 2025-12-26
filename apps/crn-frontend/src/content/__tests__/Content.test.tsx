@@ -40,6 +40,22 @@ const renderPage = async (pageId: string = 'privacy-notice') => {
 };
 
 it('renders a page title', async () => {
+  // Suppress React 18 warning about state update during render from react-titled
+  const consoleErrorSpy = jest
+    .spyOn(console, 'error')
+    .mockImplementation((message) => {
+      if (
+        typeof message === 'string' &&
+        message.includes(
+          "Can't perform a React state update on a component that hasn't mounted yet",
+        )
+      ) {
+        return;
+      }
+      // eslint-disable-next-line no-console
+      console.error(message);
+    });
+
   mockGetPageByPath.mockResolvedValue({
     ...createPageResponse('1'),
     title: 'Example Title',
@@ -47,9 +63,15 @@ it('renders a page title', async () => {
   });
   await renderPage();
 
-  expect(screen.getByRole('heading', { name: /Example Title/ })).toBeVisible();
+  await waitFor(() => {
+    expect(
+      screen.getByRole('heading', { name: /Example Title/ }),
+    ).toBeVisible();
+  });
   expect(screen.getByText(/Example Description/)).toBeVisible();
   expect(mockGetPageByPath).toHaveBeenCalled();
+
+  consoleErrorSpy.mockRestore();
 });
 
 it('renders the 404 page for missing content', async () => {

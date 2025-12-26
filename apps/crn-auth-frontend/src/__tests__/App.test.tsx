@@ -7,10 +7,19 @@ describe('Auth Frontend App', () => {
   beforeAll(() => {
     currentLocation = window.location;
     delete (window as Partial<Window>).location;
-    window.location = new URL(
-      'https://www.example.com?redirect_uri=https://hub.asap.science',
-    ) as unknown as Location;
-    window.location.replace = jest.fn();
+    // Create URL with query params and hash - both are needed
+    const testUrl = new URL(
+      'https://www.example.com?redirect_uri=https://hub.asap.science#/login',
+    );
+    // Ensure all properties HashRouter needs are accessible
+    window.location = {
+      ...testUrl,
+      origin: testUrl.origin,
+      href: testUrl.href,
+      search: testUrl.search,
+      hash: '#/login',
+      replace: jest.fn(),
+    } as unknown as Location;
   });
 
   afterAll(() => {
@@ -21,8 +30,10 @@ describe('Auth Frontend App', () => {
     render(<App />);
 
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    // HashRouter's Navigate component runs asynchronously in React Router 6
+    // Use findByRole to wait for navigation to complete
     expect(
-      screen.getByRole('heading', { name: /Sign in to the ASAP Hub/i }),
+      await screen.findByRole('heading', { name: /Sign in to the ASAP Hub/i }),
     ).toBeInTheDocument();
   });
 });

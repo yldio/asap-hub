@@ -64,7 +64,7 @@ describe('AssignedUsersAvatarList', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows tooltip with remaining members on hover', () => {
+  it('shows tooltip with remaining members on hover', async () => {
     render(<AssignedUsersAvatarList members={mockMembers} />);
 
     const tooltipText = /Billie Eilish and/i;
@@ -73,7 +73,7 @@ describe('AssignedUsersAvatarList', () => {
     const plusAvatar = screen.getByLabelText(
       /Profile picture placeholder: \+2/,
     );
-    userEvent.hover(plusAvatar.parentElement!);
+    await userEvent.hover(plusAvatar.parentElement!);
 
     expect(screen.getByText(tooltipText)).toBeVisible();
 

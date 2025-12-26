@@ -54,7 +54,7 @@ it('does not render CTA when pointOfContact is provided but working group is com
   expect(queryAllByText('Contact')).toHaveLength(0);
 });
 
-it('copy button copies pointOfContact email', () => {
+it('copy button copies pointOfContact email', async () => {
   Object.assign(navigator, {
     clipboard: {
       writeText: jest.fn(),
@@ -68,7 +68,7 @@ it('copy button copies pointOfContact email', () => {
 
   const copyButton = getByRole('button', { name: 'Copy' });
   expect(copyButton).toBeVisible();
-  userEvent.click(copyButton);
+  await userEvent.click(copyButton);
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
     pointOfContact?.user.email,
   );

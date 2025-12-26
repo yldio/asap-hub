@@ -1,5 +1,5 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import { ListPreprintComplianceOpensearchResponse } from '@asap-hub/model';
@@ -51,7 +51,7 @@ describe('PreprintCompliance', () => {
     });
   });
 
-  it('resets preprint compliance state to undefined when reset is triggered', () => {
+  it('resets preprint compliance state to undefined when reset is triggered', async () => {
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -103,14 +103,22 @@ describe('PreprintCompliance', () => {
         },
       ],
     };
-    setState(fakeData);
-    expect(capturedValue).toEqual(fakeData);
+    act(() => {
+      setState(fakeData);
+    });
+    await waitFor(() => {
+      expect(capturedValue).toEqual(fakeData);
+    });
 
     // Act: reset by setting undefined
-    setState(undefined);
+    act(() => {
+      setState(undefined);
+    });
 
     // Assert: after reset, state is undefined again
-    expect(capturedValue).toBeUndefined();
+    await waitFor(() => {
+      expect(capturedValue).toBeUndefined();
+    });
   });
 
   it('throws when preprintCompliance is an Error', () => {

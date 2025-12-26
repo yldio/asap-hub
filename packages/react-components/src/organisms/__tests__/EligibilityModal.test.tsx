@@ -27,7 +27,7 @@ describe('EligibilityModal', () => {
     );
   });
 
-  it('renders funding reason question when user selects Yes in the asap funded question', () => {
+  it('renders funding reason question when user selects Yes in the asap funded question', async () => {
     const { container } = renderModal(<EligibilityModal {...defaultProps} />);
 
     const fundingReasonQuestionText =
@@ -35,55 +35,55 @@ describe('EligibilityModal', () => {
 
     expect(container).not.toHaveTextContent(fundingReasonQuestionText);
 
-    userEvent.click(screen.getByText('Yes'));
+    await userEvent.click(screen.getByText('Yes'));
 
     expect(container).toHaveTextContent(fundingReasonQuestionText);
   });
 
-  it('calls onDismiss when user clicks on "Cancel" button', () => {
+  it('calls onDismiss when user clicks on "Cancel" button', async () => {
     const onDismiss = jest.fn();
     renderModal(<EligibilityModal {...defaultProps} onDismiss={onDismiss} />);
 
-    userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+    await userEvent.click(screen.getByRole('button', { name: /cancel/i }));
 
     expect(onDismiss).toHaveBeenCalled();
   });
 
-  it('calls onDismiss when user clicks on "Close" button', () => {
+  it('calls onDismiss when user clicks on "Close" button', async () => {
     const onDismiss = jest.fn();
     renderModal(<EligibilityModal {...defaultProps} onDismiss={onDismiss} />);
 
-    userEvent.click(screen.getByTitle(/close/i));
+    await userEvent.click(screen.getByTitle(/close/i));
 
     expect(onDismiss).toHaveBeenCalled();
   });
 
   describe('Continue button', () => {
-    it('becomes enabled when user selects "No" in the asap funded question', () => {
+    it('becomes enabled when user selects "No" in the asap funded question', async () => {
       renderModal(<EligibilityModal {...defaultProps} />);
 
       const continueButton = screen.getByRole('button', { name: /continue/i });
       expect(continueButton).toBeDisabled();
-      userEvent.click(screen.getByText('No'));
+      await userEvent.click(screen.getByText('No'));
       expect(continueButton).toBeEnabled();
     });
 
-    it('remains disabled when user selects "Yes" in the asap funded question but have not select a funding reason yet', () => {
+    it('remains disabled when user selects "Yes" in the asap funded question but have not select a funding reason yet', async () => {
       renderModal(<EligibilityModal {...defaultProps} />);
 
       const continueButton = screen.getByRole('button', { name: /continue/i });
       expect(continueButton).toBeDisabled();
-      userEvent.click(screen.getByText('Yes'));
+      await userEvent.click(screen.getByText('Yes'));
       expect(continueButton).toBeDisabled();
     });
 
-    it('becomes enabled when user selects "Yes" in the asap funded question and selects a funding reason yet', () => {
+    it('becomes enabled when user selects "Yes" in the asap funded question and selects a funding reason yet', async () => {
       renderModal(<EligibilityModal {...defaultProps} />);
 
       const continueButton = screen.getByRole('button', { name: /continue/i });
       expect(continueButton).toBeDisabled();
-      userEvent.click(screen.getByText('Yes'));
-      userEvent.click(
+      await userEvent.click(screen.getByText('Yes'));
+      await userEvent.click(
         screen.getByText(
           'The manuscript reports findings from your team’s ASAP-funded proposal.',
         ),
@@ -93,7 +93,7 @@ describe('EligibilityModal', () => {
   });
 
   describe('Not ASAP funded flow', () => {
-    it('changes title, description and buttons when not asap funded', () => {
+    it('changes title, description and buttons when not asap funded', async () => {
       const { container } = renderModal(<EligibilityModal {...defaultProps} />);
 
       expect(container).not.toHaveTextContent(
@@ -109,9 +109,9 @@ describe('EligibilityModal', () => {
         screen.queryByRole('button', { name: /go to team page/i }),
       ).not.toBeInTheDocument();
 
-      userEvent.click(screen.getByText('No'));
+      await userEvent.click(screen.getByText('No'));
 
-      userEvent.click(screen.getByRole('button', { name: /continue/i }));
+      await userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
       expect(container).toHaveTextContent(
         /Manuscript cannot be submitted for ASAP Compliance Review/i,
@@ -127,11 +127,11 @@ describe('EligibilityModal', () => {
       ).toBeInTheDocument();
     });
 
-    it('goes back to first message when user clicks go back', () => {
+    it('goes back to first message when user clicks go back', async () => {
       const { container } = renderModal(<EligibilityModal {...defaultProps} />);
-      userEvent.click(screen.getByText('No'));
-      userEvent.click(screen.getByRole('button', { name: /continue/i }));
-      userEvent.click(screen.getByRole('button', { name: /go back/i }));
+      await userEvent.click(screen.getByText('No'));
+      await userEvent.click(screen.getByRole('button', { name: /continue/i }));
+      await userEvent.click(screen.getByRole('button', { name: /go back/i }));
 
       expect(container).toHaveTextContent(
         /Do you need to submit a manuscript?/i,
@@ -141,19 +141,21 @@ describe('EligibilityModal', () => {
       );
     });
 
-    it('calls onDismiss when user clicks go to team page', () => {
+    it('calls onDismiss when user clicks go to team page', async () => {
       const onDismiss = jest.fn();
       renderModal(<EligibilityModal {...defaultProps} onDismiss={onDismiss} />);
-      userEvent.click(screen.getByText('No'));
-      userEvent.click(screen.getByRole('button', { name: /continue/i }));
-      userEvent.click(screen.getByRole('button', { name: /go to team page/i }));
+      await userEvent.click(screen.getByText('No'));
+      await userEvent.click(screen.getByRole('button', { name: /continue/i }));
+      await userEvent.click(
+        screen.getByRole('button', { name: /go to team page/i }),
+      );
 
       expect(onDismiss).toHaveBeenCalled();
     });
   });
 
   describe('ASAP funded flow', () => {
-    it('calls onGoToManuscriptForm when user clicks Continue after selecting asap funded and funding reason', () => {
+    it('calls onGoToManuscriptForm when user clicks Continue after selecting asap funded and funding reason', async () => {
       const onGoToManuscriptForm = jest.fn();
       renderModal(
         <EligibilityModal
@@ -162,19 +164,19 @@ describe('EligibilityModal', () => {
         />,
       );
 
-      userEvent.click(screen.getByText('Yes'));
-      userEvent.click(
+      await userEvent.click(screen.getByText('Yes'));
+      await userEvent.click(
         screen.getByText(
           'The manuscript reports findings from your team’s ASAP-funded proposal.',
         ),
       );
 
-      userEvent.click(screen.getByRole('button', { name: /continue/i }));
+      await userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
       expect(onGoToManuscriptForm).toHaveBeenCalled();
     });
 
-    it('calls setEligibilityReasons with funding reasons when user clicks Continue after selecting asap funded and funding reason', () => {
+    it('calls setEligibilityReasons with funding reasons when user clicks Continue after selecting asap funded and funding reason', async () => {
       const setEligibilityReasons = jest.fn();
       renderModal(
         <EligibilityModal
@@ -183,27 +185,27 @@ describe('EligibilityModal', () => {
         />,
       );
 
-      userEvent.click(screen.getByText('Yes'));
-      userEvent.click(
+      await userEvent.click(screen.getByText('Yes'));
+      await userEvent.click(
         screen.getByText(
           'The manuscript reports findings from your team’s ASAP-funded proposal.',
         ),
       );
 
-      userEvent.click(
+      await userEvent.click(
         screen.getByText(
           'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
         ),
       );
 
-      userEvent.click(screen.getByRole('button', { name: /continue/i }));
+      await userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
       expect(setEligibilityReasons).toHaveBeenCalledWith(
         new Set(['projects', 'pivot']),
       );
     });
 
-    it('removes a funding reason when user clicks on it twice', () => {
+    it('removes a funding reason when user clicks on it twice', async () => {
       const setEligibilityReasons = jest.fn();
       renderModal(
         <EligibilityModal
@@ -212,26 +214,26 @@ describe('EligibilityModal', () => {
         />,
       );
 
-      userEvent.click(screen.getByText('Yes'));
-      userEvent.click(
+      await userEvent.click(screen.getByText('Yes'));
+      await userEvent.click(
         screen.getByText(
           'The manuscript reports findings from your team’s ASAP-funded proposal.',
         ),
       );
 
-      userEvent.click(
+      await userEvent.click(
         screen.getByText(
           'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
         ),
       );
 
-      userEvent.click(
+      await userEvent.click(
         screen.getByText(
           'The manuscript reports findings from your team’s ASAP-funded proposal.',
         ),
       );
 
-      userEvent.click(screen.getByRole('button', { name: /continue/i }));
+      await userEvent.click(screen.getByRole('button', { name: /continue/i }));
 
       expect(setEligibilityReasons).toHaveBeenCalledWith(new Set(['pivot']));
     });

@@ -84,7 +84,7 @@ it('assigns all radio buttons a unique group name', () => {
   );
 });
 
-it('emits value changes', () => {
+it('emits value changes', async () => {
   const handleChange = jest.fn();
   const { getByLabelText } = render(
     <LabeledRadioButtonGroup
@@ -96,7 +96,7 @@ it('emits value changes', () => {
       onChange={handleChange}
     />,
   );
-  userEvent.click(getByLabelText('Gatwick'));
+  await userEvent.click(getByLabelText('Gatwick'));
   expect(handleChange).toHaveBeenLastCalledWith('LGW');
 });
 

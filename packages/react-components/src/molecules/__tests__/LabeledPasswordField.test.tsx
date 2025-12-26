@@ -1,9 +1,10 @@
-import { render, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
+import { fireEvent, render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { ember } from '../../colors';
 
 import LabeledPasswordField from '../LabeledPasswordField';
-import { ember } from '../../colors';
 
 it('renderes a labeled password field', () => {
   const { getByLabelText } = render(
@@ -76,29 +77,29 @@ it('changes the show password button color to red when invalid', () => {
 });
 
 describe('when showing the password', () => {
-  it('renders a labeled text field', () => {
+  it('renders a labeled text field', async () => {
     const { getByRole, getByLabelText } = render(
       <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
     );
-    userEvent.click(getByRole('button'));
+    await userEvent.click(getByRole('button'));
     expect(getByLabelText(/^PW/)).toHaveAttribute('type', 'text');
   });
 
-  it('renders a button to hide the password', () => {
+  it('renders a button to hide the password', async () => {
     const { getByTitle, getByRole } = render(
       <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
     );
-    userEvent.click(getByRole('button'));
+    await userEvent.click(getByRole('button'));
     expect(getByRole('button')).toContainElement(getByTitle(/hide/i));
   });
 
   describe('and hiding it again', () => {
-    it('renders a labeled password field', () => {
+    it('renders a labeled password field', async () => {
       const { getByRole, getByLabelText } = render(
         <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
       );
-      userEvent.click(getByRole('button'));
-      userEvent.click(getByRole('button'));
+      await userEvent.click(getByRole('button'));
+      await userEvent.click(getByRole('button'));
       expect(getByLabelText(/^PW/)).toHaveAttribute('type', 'password');
     });
   });

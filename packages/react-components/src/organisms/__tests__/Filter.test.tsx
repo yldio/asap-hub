@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import Filter from '../Filter';
 import { FILTERS_KEY, FILTER_EVENT } from '../../analytics';
 
-it('shows and hides the dropdown menu', () => {
+it('shows and hides the dropdown menu', async () => {
   const { getByRole, getByText } = render(
     <Filter
       filterOptions={[
@@ -15,18 +15,18 @@ it('shows and hides the dropdown menu', () => {
   );
   const filterButton = getByRole('button');
 
-  userEvent.click(filterButton);
+  await userEvent.click(filterButton);
   expect(getByText('Filter by Stuff')).toBeVisible();
 
-  userEvent.click(filterButton);
+  await userEvent.click(filterButton);
   expect(getByText('Filter by Stuff')).not.toBeVisible();
 });
 
-it('hides the dropdown menu when the options changes', () => {
+it('hides the dropdown menu when the options changes', async () => {
   const { rerender, getByRole, getByText } = render(
     <Filter filterOptions={[{ label: 'F1', value: 'f1' }]} />,
   );
-  userEvent.click(getByRole('button'));
+  await userEvent.click(getByRole('button'));
   expect(getByText('F1')).toBeVisible();
 
   rerender(<Filter filterOptions={[{ label: 'F2', value: 'f2' }]} />);

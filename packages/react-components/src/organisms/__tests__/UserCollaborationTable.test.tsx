@@ -203,7 +203,7 @@ describe('UserCollaborationTable', () => {
     ${'across-teams'} | ${'outputs_coauthored_within_desc'} | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'desc' }} | ${'Outputs Co-Authored Active Numerical Descending Sort Icon'}   | ${'outputs_coauthored_across_asc'}  | ${{ ...userCollaborationInitialSortingDirection, outputsCoAuthored: 'asc' }}
   `(
     'when sort is $sort and user clicks on $iconTitle, the new sort becomes $newSort and the sorting direction $newSortingDirection',
-    ({
+    async ({
       collaborationType,
       sort,
       sortingDirection,
@@ -227,7 +227,7 @@ describe('UserCollaborationTable', () => {
       const sortIcon = getByTitle(iconTitle);
       expect(sortIcon).toBeInTheDocument();
 
-      userEvent.click(sortIcon);
+      await userEvent.click(sortIcon);
       expect(setSort).toHaveBeenCalledWith(newSort);
       expect(setSortingDirection).toHaveBeenCalledWith(newSortingDirection);
     },

@@ -60,10 +60,10 @@ describe('ComplianceTable', () => {
       const statusButton = getByRole('button', {
         name: /Addendum Required/i,
       });
-      userEvent.click(statusButton);
+      await userEvent.click(statusButton);
 
       const newStatus = getByRole('button', { name: /Compliant/i });
-      userEvent.click(newStatus);
+      await userEvent.click(newStatus);
 
       expect(getByText(/Set status to compliant\?/i)).toBeInTheDocument();
     });
@@ -74,17 +74,17 @@ describe('ComplianceTable', () => {
       const statusButton = getByRole('button', {
         name: /Addendum Required/i,
       });
-      userEvent.click(statusButton);
+      await userEvent.click(statusButton);
 
       const newStatus = getByRole('button', { name: /Compliant/i });
-      userEvent.click(newStatus);
+      await userEvent.click(newStatus);
 
       const confirmButton = getByRole('button', {
         name: /Set to Compliant and Notify/i,
       });
 
-      await waitFor(() => {
-        userEvent.click(confirmButton);
+      await waitFor(async () => {
+        await userEvent.click(confirmButton);
       });
 
       await waitFor(() => {
@@ -94,7 +94,7 @@ describe('ComplianceTable', () => {
       });
     });
 
-    it('opens modal when clicking in a different status than the current one', () => {
+    it('opens modal when clicking in a different status than the current one', async () => {
       const { getByRole, getByText } = render(
         <ComplianceTable {...defaultProps} />,
       );
@@ -102,17 +102,17 @@ describe('ComplianceTable', () => {
       const statusButton = getByRole('button', {
         name: /Addendum Required/i,
       });
-      userEvent.click(statusButton);
+      await userEvent.click(statusButton);
 
       const differentStatus = getByRole('button', {
         name: /Submit Final Publication/i,
       });
-      userEvent.click(differentStatus);
+      await userEvent.click(differentStatus);
 
       expect(getByText(/Update status and notify\?/i)).toBeInTheDocument();
     });
 
-    it('does not open modal when clicking the current status', () => {
+    it('does not open modal when clicking the current status', async () => {
       const data = [
         {
           ...complianceData,
@@ -126,13 +126,13 @@ describe('ComplianceTable', () => {
       const statusButton = getByRole('button', {
         name: /Addendum Required/i,
       });
-      userEvent.click(statusButton);
+      await userEvent.click(statusButton);
 
       const menu = getByRole('list');
       const sameStatus = within(menu).getByRole('button', {
         name: /Addendum Required/i,
       });
-      userEvent.click(sameStatus);
+      await userEvent.click(sameStatus);
 
       expect(
         queryByText(/Update status and notify\?/i),
@@ -147,14 +147,14 @@ describe('ComplianceTable', () => {
         assignedUsers: [],
       },
     ];
-    it('opens when clicking the assign button', () => {
+    it('opens when clicking the assign button', async () => {
       const { getByLabelText, getByRole, queryByRole } = render(
         <ComplianceTable {...defaultProps} data={data} />,
       );
 
       expect(queryByRole('dialog')).not.toBeInTheDocument();
 
-      userEvent.click(getByLabelText(/Assign Users/i));
+      await userEvent.click(getByLabelText(/Assign Users/i));
       expect(
         within(getByRole('dialog')).getByText(/Assign User/i, {
           selector: 'h3',
@@ -162,13 +162,13 @@ describe('ComplianceTable', () => {
       ).toBeInTheDocument();
     });
 
-    it('closes modal when clicking the close button', () => {
+    it('closes modal when clicking the close button', async () => {
       const { getByLabelText, getByRole, queryByText } = render(
         <ComplianceTable {...defaultProps} data={data} />,
       );
-      userEvent.click(getByLabelText(/Assign Users/i));
+      await userEvent.click(getByLabelText(/Assign Users/i));
 
-      userEvent.click(within(getByRole('dialog')).getByTitle(/close/i));
+      await userEvent.click(within(getByRole('dialog')).getByTitle(/close/i));
 
       expect(
         queryByText(/Assign User/i, {
@@ -181,8 +181,8 @@ describe('ComplianceTable', () => {
       const { getByLabelText, getByRole, queryByText } = render(
         <ComplianceTable {...defaultProps} />,
       );
-      userEvent.click(getByLabelText(/Edit Assigned Users/i));
-      userEvent.click(getByRole('button', { name: 'Update' }));
+      await userEvent.click(getByLabelText(/Edit Assigned Users/i));
+      await userEvent.click(getByRole('button', { name: 'Update' }));
       await waitFor(() => {
         expect(mockOnUpdateManuscript).toHaveBeenCalledWith('manuscript-id-1', {
           assignedUsers: [assignedUser.id],
@@ -205,14 +205,14 @@ describe('ComplianceTable', () => {
         apcRequested: false,
       },
     ];
-    it('opens when clicking the Edit APC Coverage Details button', () => {
+    it('opens when clicking the Edit APC Coverage Details button', async () => {
       const { getByRole, queryByRole } = render(
         <ComplianceTable {...defaultProps} data={data} />,
       );
 
       expect(queryByRole('dialog')).not.toBeInTheDocument();
 
-      userEvent.click(
+      await userEvent.click(
         getByRole('button', { name: 'Edit APC Coverage Details' }),
       );
 
@@ -227,7 +227,7 @@ describe('ComplianceTable', () => {
       const { findByRole, getByRole, queryByText } = render(
         <ComplianceTable {...defaultProps} data={data} />,
       );
-      userEvent.click(
+      await userEvent.click(
         getByRole('button', { name: 'Edit APC Coverage Details' }),
       );
 
@@ -235,7 +235,7 @@ describe('ComplianceTable', () => {
         await findByRole('heading', { name: 'APC Coverage' }),
       ).toBeInTheDocument();
 
-      userEvent.click(within(getByRole('dialog')).getByTitle(/close/i));
+      await userEvent.click(within(getByRole('dialog')).getByTitle(/close/i));
 
       expect(
         queryByText(/APC Coverage/i, {
@@ -262,7 +262,7 @@ describe('ComplianceTable', () => {
         <ComplianceTable {...defaultProps} data={manuscriptsResponse} />,
       );
 
-      userEvent.click(
+      await userEvent.click(
         getByRole('button', { name: 'Edit APC Coverage Details' }),
       );
 
@@ -270,7 +270,7 @@ describe('ComplianceTable', () => {
         await findByRole('heading', { name: 'APC Coverage' }),
       ).toBeInTheDocument();
 
-      userEvent.click(getByRole('button', { name: 'Update' }));
+      await userEvent.click(getByRole('button', { name: 'Update' }));
       await waitFor(() => {
         expect(mockOnUpdateManuscript).toHaveBeenCalledWith('manuscript-id-1', {
           ...apcDetails,
@@ -289,7 +289,7 @@ describe('ComplianceTable', () => {
         <ComplianceTable {...defaultProps} data={data} />,
       );
 
-      userEvent.click(
+      await userEvent.click(
         getByRole('button', { name: 'Edit APC Coverage Details' }),
       );
 
@@ -297,7 +297,7 @@ describe('ComplianceTable', () => {
         await findByRole('heading', { name: 'APC Coverage' }),
       ).toBeInTheDocument();
 
-      userEvent.click(getByRole('button', { name: 'Update' }));
+      await userEvent.click(getByRole('button', { name: 'Update' }));
       await waitFor(() => {
         expect(mockOnUpdateManuscript).toHaveBeenCalledWith('manuscript-id-1', {
           apcRequested: false,

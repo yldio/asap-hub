@@ -1,15 +1,30 @@
+import {
+  mockActWarningsInConsole,
+  mockNavigateWarningsInConsole,
+} from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import TagsModal from '../TagsModal';
 
 describe('TagsModal', () => {
   const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
 
-  beforeEach(jest.resetAllMocks);
+  let consoleWarnSpy: ReturnType<typeof mockActWarningsInConsole>;
+  let navigateWarnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+    consoleWarnSpy = mockActWarningsInConsole();
+    navigateWarnSpy = mockNavigateWarningsInConsole();
+  });
+  afterEach(() => {
+    consoleWarnSpy.mockRestore();
+    navigateWarnSpy.mockRestore();
+  });
   type TagsModalProps = ComponentProps<typeof TagsModal>;
   const defaultProps: TagsModalProps = {
     ...gp2Fixtures.createUserResponse(),
@@ -20,7 +35,7 @@ describe('TagsModal', () => {
 
   const renderModal = (overrides: Partial<TagsModalProps> = {}) =>
     render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <TagsModal {...defaultProps} {...overrides} />
       </StaticRouter>,
     );
@@ -52,7 +67,7 @@ describe('TagsModal', () => {
       tags,
       onSave,
     });
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       tags: tags.map((t) => ({
         id: t.id,
@@ -68,14 +83,14 @@ describe('TagsModal', () => {
       onSave,
     });
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('textbox', {
         name: /Tags/i,
       }),
     );
-    userEvent.click(screen.getByText('Tag-2'));
+    await userEvent.click(screen.getByText('Tag-2'));
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       tags: [{ id: 'id-2' }],
     });
@@ -89,7 +104,7 @@ describe('TagsModal', () => {
       onSave,
     });
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).not.toHaveBeenCalled();
     expect(screen.getByText('Please add your tags')).toBeVisible();
     await waitFor(() => expect(getSaveButton()).toBeEnabled());

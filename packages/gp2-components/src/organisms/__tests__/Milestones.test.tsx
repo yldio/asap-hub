@@ -54,7 +54,7 @@ describe('Milestones', () => {
     render(<Milestones milestones={milestones} {...commonProps} />);
 
     const button = screen.getByRole('button', { name: /Show more/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(screen.getByRole('button', { name: /Show less/i })).toBeVisible();
   });
 
@@ -68,7 +68,7 @@ describe('Milestones', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('displays the hidden milestones if the button is clicked', () => {
+  it('displays the hidden milestones if the button is clicked', async () => {
     const milestones = getMilestones(4);
 
     render(<Milestones milestones={milestones} {...commonProps} />);
@@ -77,7 +77,7 @@ describe('Milestones', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('a title 3')).not.toBeVisible();
     const button = screen.getByRole('button', { name: /Show more/i });
-    userEvent.click(button);
+    await userEvent.click(button);
     expect(screen.getByText('a title 3')).toBeVisible();
   });
 });

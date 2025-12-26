@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { StaticRouter, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import {
   render,
   screen,
@@ -27,9 +28,12 @@ const renderEvent = async () => {
         <WhenReady>
           <Suspense fallback="Loading...">
             <StaticRouter location={events({}).event({ eventId: id }).$}>
-              <Route path={events.template + events({}).event.template}>
-                <Event />
-              </Route>
+              <Routes>
+                <Route
+                  path={events.template + events({}).event.template}
+                  element={<Event />}
+                />
+              </Routes>
             </StaticRouter>
           </Suspense>
         </WhenReady>

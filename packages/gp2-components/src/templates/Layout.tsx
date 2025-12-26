@@ -5,9 +5,9 @@ import {
   Overlay,
   ToastStack,
   usePrevious,
+  useScrollToHash,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { Location } from 'history';
 import {
   ComponentProps,
   createRef,
@@ -106,8 +106,8 @@ const Layout: FC<LayoutProps> = ({
 }) => {
   const [menuShown, setMenuShown] = useState(false);
 
-  let location: Location | undefined;
-  let prevLocation: Location | undefined;
+  let location: ReturnType<typeof useLocation> | undefined;
+  let prevLocation: ReturnType<typeof useLocation> | undefined;
   const mainRef = createRef<HTMLDivElement>();
 
   // This hook *is* called unconditionally despite what rules-of-hooks says
@@ -115,6 +115,7 @@ const Layout: FC<LayoutProps> = ({
   try {
     location = useLocation();
     prevLocation = usePrevious(location);
+    useScrollToHash();
   } catch {
     // If there is no router, fine, never auto-close the menu
   }

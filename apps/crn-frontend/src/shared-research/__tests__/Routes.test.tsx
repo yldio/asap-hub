@@ -6,15 +6,16 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   render,
   screen,
+  waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { getResearchOutputs } from '../api';
-import Routes from '../Routes';
+import SharedResearchRoutes from '../Routes';
 
 jest.mock('../api');
 
@@ -31,9 +32,12 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={'/shared-research'}>
-                <Routes />
-              </Route>
+              <Routes>
+                <Route
+                  path="/shared-research/*"
+                  element={<SharedResearchRoutes />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -48,18 +52,18 @@ describe('the shared research listing page', () => {
     await renderSharedResearchPage('/shared-research');
     const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
-    userEvent.type(searchBox, 'test123');
+    await userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
   });
 
   it('allows selection of filters', async () => {
     await renderSharedResearchPage('/shared-research');
 
-    userEvent.click(screen.getByText('Filters'));
+    await userEvent.click(screen.getByText('Filters'));
     const checkbox = screen.getByLabelText('Grant Document');
     expect(checkbox).not.toBeChecked();
 
-    userEvent.click(checkbox);
+    await userEvent.click(checkbox);
     expect(checkbox).toBeChecked();
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),
@@ -73,7 +77,7 @@ describe('the shared research listing page', () => {
       '?filter=Grant+Document',
     );
 
-    userEvent.click(screen.getByText('Filters'));
+    await userEvent.click(screen.getByText('Filters'));
     const checkbox = screen.getByLabelText('Grant Document');
     expect(checkbox).toBeChecked();
 
@@ -86,7 +90,9 @@ describe('the shared research listing page', () => {
     mockGetResearchOutputs.mockRejectedValue(new Error('error'));
 
     await renderSharedResearchPage('/shared-research');
-    expect(mockGetResearchOutputs).toHaveBeenCalled();
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    await waitFor(() => expect(mockGetResearchOutputs).toHaveBeenCalled());
+    await waitFor(() =>
+      expect(screen.getByText(/Something went wrong/i)).toBeVisible(),
+    );
   });
 });

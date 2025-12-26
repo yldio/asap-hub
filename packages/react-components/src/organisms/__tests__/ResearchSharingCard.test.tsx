@@ -1,10 +1,11 @@
 import { researchTagSubtypeResponse } from '@asap-hub/fixtures';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, within, waitFor } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
 import { ComponentProps } from 'react';
 import { editorRef } from '../../atoms';
+import { mockActErrorsInConsole } from '../../test-utils';
 import ResearchOutputFormSharingCard, {
   getPublishDateValidationMessage,
 } from '../ResearchOutputFormSharingCard';
@@ -32,8 +33,6 @@ const props: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   isCreatingNewVersion: false,
 };
 it('renders the card with provided values', () => {
-  // TODO: fix act error
-  jest.spyOn(console, 'error').mockImplementation();
   render(
     <ResearchOutputFormSharingCard
       {...props}
@@ -56,7 +55,10 @@ it.each`
   ${'Title'} | ${/title/i} | ${'Please enter a title'}
   ${'Type'}  | ${/type/i}  | ${'Please choose a type'}
 `('shows error message for missing value $title', async ({ label, error }) => {
-  render(
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
+  const { findByText } = render(
     <ResearchOutputFormSharingCard
       {...props}
       urlRequired
@@ -64,8 +66,11 @@ it.each`
     />,
   );
   const input = screen.getByLabelText(label);
-  fireEvent.focusOut(input);
-  expect(await screen.findByText(error)).toBeVisible();
+  await userEvent.click(input);
+  await userEvent.tab();
+  expect(await findByText(error)).toBeVisible();
+
+  consoleMock.mockRestore();
 });
 
 it('does not require an url', async () => {
@@ -113,8 +118,8 @@ it('triggers an onchange event for Description', async () => {
   editorRef.current?.focus();
   const input = screen.getByTestId('editor');
 
-  userEvent.click(input);
-  userEvent.tab();
+  await userEvent.click(input);
+  await userEvent.tab();
   fireEvent.input(input, { data: 'test' });
 
   await waitFor(() => {
@@ -123,6 +128,9 @@ it('triggers an onchange event for Description', async () => {
 });
 
 it('triggers an onchange event for Short Description', async () => {
+  // Suppress act() warnings from TextArea's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
   const onChangeFn = jest.fn();
   render(
     <ResearchOutputFormSharingCard
@@ -131,7 +139,11 @@ it('triggers an onchange event for Short Description', async () => {
   );
   const input = screen.getByRole('textbox', { name: /short description/i });
   fireEvent.change(input, { target: { value: 'test' } });
-  expect(onChangeFn).toHaveBeenLastCalledWith('test');
+  await waitFor(() => {
+    expect(onChangeFn).toHaveBeenCalledWith('test');
+  });
+
+  consoleMock.mockRestore();
 });
 
 it.each`
@@ -149,7 +161,7 @@ it.each`
     screen.getByRole('group', { name: group }),
   ).getAllByRole('radio')[1];
 
-  userEvent.click(groupInput!);
+  await userEvent.click(groupInput!);
 
   expect(onChangeFn).toHaveBeenCalled();
 });
@@ -166,8 +178,8 @@ it('triggers an on change for type', async () => {
   );
 
   const type = screen.getByLabelText(/type/i);
-  userEvent.type(type, 'Preprint');
-  userEvent.type(type, specialChars.enter);
+  await userEvent.type(type, 'Preprint');
+  await userEvent.type(type, '{Enter}');
 
   expect(onChangeFn).toHaveBeenCalledWith('Preprint');
 });
@@ -184,8 +196,8 @@ it('triggers an on change for subtype', async () => {
   );
 
   const type = screen.getByLabelText(/subtype/i);
-  userEvent.type(type, 'Metabolite');
-  userEvent.type(type, specialChars.enter);
+  await userEvent.type(type, 'Metabolite');
+  await userEvent.type(type, '{Enter}');
 
   expect(onChangeFn).toHaveBeenCalledWith('Metabolite');
 });
@@ -198,7 +210,7 @@ it('shows the custom no options message for type', async () => {
     />,
   );
 
-  userEvent.type(screen.getByLabelText(/type/i), 'asdflkjasdflkj');
+  await userEvent.type(screen.getByLabelText(/type/i), 'asdflkjasdflkj');
 
   expect(
     screen.getByText('Sorry, no types match asdflkjasdflkj'),
@@ -228,27 +240,35 @@ it('triggers an on change for date published', async () => {
     />,
   );
 
-  userEvent.type(screen.getByLabelText(/Date Published/i), '2020-12-02');
+  await userEvent.type(screen.getByLabelText(/Date Published/i), '2020-12-02');
   expect(onChangeFn).toHaveBeenCalledWith(new Date('2020-12-02'));
 });
 
 it('shows the custom error message for a date in the future', async () => {
-  render(
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
+  const { findByText } = render(
     <ResearchOutputFormSharingCard
       {...props}
       sharingStatus={'Public'}
       publishDate={startOfTomorrow()}
     />,
   );
-  screen.getByLabelText(/Date Published/i).click();
-  userEvent.tab();
-
+  const dateInput = screen.getByLabelText(/Date Published/i);
+  await userEvent.click(dateInput);
+  await userEvent.tab();
   expect(
-    screen.getByText(/publish date cannot be greater than today/i),
+    await findByText(/publish date cannot be greater than today/i),
   ).toBeVisible();
+
+  consoleMock.mockRestore();
 });
 
 it('displays server side validation error for link and calls clears function when changed', async () => {
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
   const mockClearError = jest.fn();
   render(
     <ResearchOutputFormSharingCard
@@ -271,11 +291,20 @@ it('displays server side validation error for link and calls clears function whe
     ),
   ).toBeVisible();
 
-  userEvent.type(screen.getByLabelText(/URL/i), 'a');
-  expect(mockClearError).toHaveBeenCalledWith('/link');
+  const input = screen.getByLabelText(/URL/i);
+  await userEvent.type(input, 'a');
+
+  await waitFor(() => {
+    expect(mockClearError).toHaveBeenCalledWith('/link');
+  });
+
+  consoleMock.mockRestore();
 });
 
 it('displays server side validation error for title and calls clears function when changed', async () => {
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
   const mockClearError = jest.fn();
   render(
     <ResearchOutputFormSharingCard
@@ -298,8 +327,14 @@ it('displays server side validation error for title and calls clears function wh
     ),
   ).toBeVisible();
 
-  userEvent.type(screen.getByLabelText(/title/i), 'a');
-  expect(mockClearError).toHaveBeenCalledWith('/title');
+  const input = screen.getByLabelText(/title/i);
+  await userEvent.type(input, 'a');
+
+  await waitFor(() => {
+    expect(mockClearError).toHaveBeenCalledWith('/title');
+  });
+
+  consoleMock.mockRestore();
 });
 
 describe('getPublishDateValidationMessage returns', () => {

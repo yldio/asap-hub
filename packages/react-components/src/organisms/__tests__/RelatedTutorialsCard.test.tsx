@@ -39,7 +39,7 @@ it('truncates the related tutorials card', () => {
   expect(screen.getAllByText(/Example/i)).toHaveLength(3);
 });
 
-it('can show hidden tutorials', () => {
+it('can show hidden tutorials', async () => {
   render(
     <RelatedTutorialsCard
       relatedTutorials={createListTutorialsResponse(5).items.map(
@@ -52,8 +52,12 @@ it('can show hidden tutorials', () => {
     />,
   );
   expect(screen.getAllByText(/Example/i)).toHaveLength(3);
-  userEvent.click(screen.getByRole('button', { name: /View More Tutorials/i }));
+  await userEvent.click(
+    screen.getByRole('button', { name: /View More Tutorials/i }),
+  );
   expect(screen.getAllByText(/Example/i)).toHaveLength(5);
-  userEvent.click(screen.getByRole('button', { name: /View Less Tutorials/i }));
+  await userEvent.click(
+    screen.getByRole('button', { name: /View Less Tutorials/i }),
+  );
   expect(screen.getAllByText(/Example/i)).toHaveLength(3);
 });

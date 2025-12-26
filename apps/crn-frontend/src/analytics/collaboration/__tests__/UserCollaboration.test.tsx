@@ -121,9 +121,11 @@ it('renders the user collaboration data', async () => {
   mockGetUserCollaboration.mockResolvedValue(data);
 
   const { container, getAllByText } = await renderPage();
-  expect(container).toHaveTextContent('Ted Mosby');
-  expect(container).toHaveTextContent('Collaborating PI');
-  expect(container).toHaveTextContent('Robin Scherbatsky');
-  expect(container).toHaveTextContent('Key Personnel');
-  expect(getAllByText('1')).toHaveLength(3); // one of the 1s is pagination
+  await waitFor(() => {
+    expect(container).toHaveTextContent('Ted Mosby');
+    expect(container).toHaveTextContent('Collaborating PI');
+    expect(container).toHaveTextContent('Robin Scherbatsky');
+    expect(container).toHaveTextContent('Key Personnel');
+    expect(getAllByText('1')).toHaveLength(3); // one of the 1s is pagination
+  });
 });

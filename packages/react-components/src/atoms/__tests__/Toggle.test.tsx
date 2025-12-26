@@ -64,6 +64,6 @@ it('fires the change event', async () => {
   const { getByText } = render(<Toggle {...props} onChange={handleChange} />);
   expect(handleChange.mock.calls.length).toBe(0);
 
-  userEvent.click(getByText('Right Text'));
+  await userEvent.click(getByText('Right Text'));
   expect(handleChange.mock.calls.length).toBe(1);
 });

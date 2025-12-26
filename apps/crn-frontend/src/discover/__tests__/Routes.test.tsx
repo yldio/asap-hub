@@ -1,11 +1,6 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import {
-  render,
-  waitFor,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router-dom';
+import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
@@ -38,9 +33,9 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={discover.template}>
-                <Routes />
-              </Route>
+              <RouterRoutes>
+                <Route path={`${discover.template}/*`} element={<Routes />} />
+              </RouterRoutes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -73,7 +68,7 @@ it('renders tutorials list page when the tutorials tab is selected', async () =>
   expect(tutorialsAnchorTab).toBeVisible();
   expect(screen.queryByText(/Explore our tutorials/i)).not.toBeInTheDocument();
 
-  userEvent.click(tutorialsAnchorTab);
+  await userEvent.click(tutorialsAnchorTab);
   await waitFor(() =>
     expect(screen.queryByText(/Loading/i)).not.toBeInTheDocument(),
   );
@@ -93,9 +88,9 @@ it('allows search on tutorials list', async () => {
     })),
   });
 
-  const container = await renderDiscoverPage(discover({}).tutorials({}).$);
+  await renderDiscoverPage(discover({}).tutorials({}).$);
 
-  userEvent.type(screen.getByRole('searchbox'), 'Tutorial 1');
+  await userEvent.type(screen.getByRole('searchbox'), 'Tutorial 1');
 
   await waitFor(() =>
     expect(mockGetTutorials).toHaveBeenCalledWith(
@@ -105,12 +100,11 @@ it('allows search on tutorials list', async () => {
       expect.anything(),
     ),
   );
-  await waitForElementToBeRemoved(
-    container.querySelectorAll('div[class*="animation"]')[0],
-  );
 
-  expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
-    /Tutorial 1/i,
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { level: 4 })).toHaveTextContent(
+      /Tutorial 1/i,
+    ),
   );
 });
 
@@ -126,7 +120,6 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
     relatedEvents: [],
     relatedTutorials: [],
   };
-
   mockGetTutorials.mockResolvedValue({
     ...tutorialsResponse,
     items: tutorialsResponse.items.map((tutorialItem) => ({
@@ -136,17 +129,21 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
     })),
   });
   mockGetTutorialById.mockResolvedValue(tutorial);
-
   await renderDiscoverPage(discover({}).tutorials({}).$);
-
-  const tutorialCardTitle = screen.getByText(/First Tutorial Title/i, {
+  const tutorialCardTitle = (await screen.findByText(/First Tutorial Title/i, {
     selector: 'a',
-  }) as HTMLAnchorElement;
-
+  })) as HTMLAnchorElement;
   expect(tutorialCardTitle).toBeVisible();
   expect(tutorialCardTitle.href).toContain('/tutorials/');
+  await userEvent.click(tutorialCardTitle);
 
-  userEvent.click(tutorialCardTitle);
+  // Wait for loading states to clear
+  await waitFor(
+    () => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    },
+    { timeout: 5000 },
+  );
 
   expect(
     await screen.findByText(/First Tutorial Title/i, { selector: 'h1' }),

@@ -1,7 +1,7 @@
 import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { NewsResponse } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 
@@ -37,9 +37,12 @@ const renderPage = async () => {
                 news({}).article({ articleId: newsOrEvent.id }).$,
               ]}
             >
-              <Route path={news.template + news({}).article.template}>
-                <News />
-              </Route>
+              <Routes>
+                <Route
+                  path={news.template + news({}).article.template}
+                  element={<News />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

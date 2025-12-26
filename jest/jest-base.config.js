@@ -13,7 +13,10 @@ const testPathIgnorePatterns = [
 
 module.exports = {
   testEnvironment: 'node',
-  setupFilesAfterEnv: [require.resolve('./flags-setup-after-env.js')],
+  setupFilesAfterEnv: [
+    require.resolve('./emotion-jsdom-setup.js'),
+    require.resolve('./flags-setup-after-env.js'),
+  ],
 
   cacheDirectory: join(root, '.jest-cache'),
 
@@ -42,13 +45,4 @@ module.exports = {
 
   collectCoverageFrom: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}'],
   coveragePathIgnorePatterns: testPathIgnorePatterns,
-
-  watchPlugins: [
-    require.resolve('jest-watch-select-projects'),
-    require.resolve('jest-watch-typeahead/filename'),
-    require.resolve('jest-watch-typeahead/testname'),
-
-    require.resolve('jest-watch-suspend'),
-    require.resolve('jest-runner-eslint/watch-fix'),
-  ],
 };

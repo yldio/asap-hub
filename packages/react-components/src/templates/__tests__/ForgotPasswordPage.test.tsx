@@ -27,22 +27,22 @@ it('emits email change events', () => {
   expect(handleChangeEmail).toHaveBeenLastCalledWith('batman@example.com');
 });
 
-it('emits submit events', () => {
+it('emits submit events', async () => {
   const handleSubmit = jest.fn();
   const { getByText } = render(
     <ForgotPasswordPage email="" onSubmit={handleSubmit} />,
   );
 
-  userEvent.click(getByText(/reset/i, { selector: 'button *' }));
+  await userEvent.click(getByText(/reset/i, { selector: 'button *' }));
   expect(handleSubmit).toHaveBeenCalled();
 });
 
-it('emits go back events', () => {
+it('emits go back events', async () => {
   const handleGoBack = jest.fn();
   const { getByText } = render(
     <ForgotPasswordPage email="" onGoBack={handleGoBack} />,
   );
 
-  userEvent.click(getByText(/back/i, { selector: 'button *' }));
+  await userEvent.click(getByText(/back/i, { selector: 'button *' }));
   expect(handleGoBack).toHaveBeenCalled();
 });

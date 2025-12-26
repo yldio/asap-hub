@@ -2,8 +2,9 @@ import { ValidationErrorResponse } from '@asap-hub/model';
 import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { Prompt, useHistory } from 'react-router-dom';
-import { usePushFromHere } from '../routing';
+import { useNavigate } from 'react-router-dom';
+
+import { useNavigationWarning } from '../navigation';
 
 const styles = css({
   boxSizing: 'border-box',
@@ -18,7 +19,7 @@ type FormStatus = 'initial' | 'isSaving' | 'hasError' | 'hasSaved';
 
 type FormProps<T> = {
   validate?: () => boolean;
-  dirty: boolean; // mandatory so that it cannot be forgotten
+  dirty: boolean;
   serverErrors?: ValidationErrorResponse['data'];
   toastType?: 'inner' | 'base';
   children: (state: {
@@ -30,6 +31,7 @@ type FormProps<T> = {
     onCancel: () => void;
   }) => ReactNode;
 };
+
 const Form = <T extends void | Record<string, unknown>>({
   dirty,
   children,
@@ -40,25 +42,36 @@ const Form = <T extends void | Record<string, unknown>>({
   const toast = useContext(
     toastType === 'inner' ? InnerToastContext : ToastContext,
   );
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const pushFromHere = usePushFromHere();
-  const [redirectOnSave, setRedirectOnSave] = useState<string>();
-
+  const redirectOnSaveRef = useRef<string>();
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<FormStatus>('initial');
 
+  const handleSetRedirectOnSave = (url: string) => {
+    redirectOnSaveRef.current = url;
+  };
+
   useEffect(() => {
-    if (status === 'hasSaved' && redirectOnSave) {
-      pushFromHere(redirectOnSave);
+    if (status === 'hasSaved' && redirectOnSaveRef.current) {
+      navigate(redirectOnSaveRef.current);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, redirectOnSave, dirty]);
+  }, [status, navigate]);
+
   useEffect(() => {
     if (serverErrors.length && formRef.current) {
       formRef.current.reportValidity();
     }
   }, [serverErrors, toast]);
+
+  const shouldWarn =
+    status === 'isSaving' ||
+    status === 'hasError' ||
+    (status === 'initial' && dirty);
+
+  const { blockedNavigate } = useNavigationWarning({
+    shouldBlock: shouldWarn,
+  });
 
   const getWrappedOnSave =
     (onSaveFunction: () => Promise<T | void>) => async () => {
@@ -73,7 +86,7 @@ const Form = <T extends void | Record<string, unknown>>({
       try {
         const result = await onSaveFunction();
 
-        if (formRef.current && result) {
+        if (result) {
           setStatus('hasSaved');
         } else {
           throw new Error('Form saving error.');
@@ -92,31 +105,23 @@ const Form = <T extends void | Record<string, unknown>>({
 
   const onCancel = () => {
     setStatus('initial');
-    history.location.key ? history.goBack() : history.push('/');
+    if (window.history.length > 1) {
+      blockedNavigate(-1);
+    } else {
+      blockedNavigate('/');
+    }
   };
 
   return (
-    <>
-      <Prompt
-        when={
-          status === 'isSaving' ||
-          status === 'hasError' ||
-          (status === 'initial' && dirty)
-        }
-        message={() => {
-          toast(null);
-          return 'Are you sure you want to leave? Unsaved changes will be lost.';
-        }}
-      />
-      <form ref={formRef} css={styles}>
-        {children({
-          onCancel,
-          isSaving: status === 'isSaving',
-          getWrappedOnSave,
-          setRedirectOnSave,
-        })}
-      </form>
-    </>
+    <form ref={formRef} css={styles}>
+      {children({
+        onCancel,
+        isSaving: status === 'isSaving',
+        getWrappedOnSave,
+        setRedirectOnSave: handleSetRedirectOnSave,
+      })}
+    </form>
   );
 };
+
 export default Form;

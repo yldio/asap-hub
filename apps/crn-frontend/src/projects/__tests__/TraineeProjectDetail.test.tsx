@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
@@ -73,9 +73,12 @@ const renderTraineeProjectDetail = async (projectId: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
-              <Route path={`${projects.template}/trainee/:projectId/about`}>
-                <TraineeProjectDetail />
-              </Route>
+              <Routes>
+                <Route
+                  path={`${projects.template}/trainee/:projectId/about`}
+                  element={<TraineeProjectDetail />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

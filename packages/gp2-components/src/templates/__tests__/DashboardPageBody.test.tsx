@@ -1,31 +1,45 @@
 import { gp2 } from '@asap-hub/fixtures';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { MemoryRouter, useNavigate } from 'react-router-dom';
 import DashboardPageBody from '../DashboardPageBody';
+
+// Mock react-router-dom's useNavigate
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
+}));
 
 const mockStats = {
   sampleCount: 0,
   cohortCount: 0,
   articleCount: 0,
 };
+
+let navigateSpy: jest.Mock;
+
 describe('DashboardPageBody', () => {
+  beforeEach(() => {
+    navigateSpy = jest.fn();
+    (useNavigate as jest.Mock).mockReturnValue(navigateSpy);
+  });
   it('should render GP2 Hub Stats', () => {
     render(
-      <DashboardPageBody
-        canPublish={true}
-        reminders={[]}
-        news={{ total: 0, items: [] }}
-        latestStats={mockStats}
-        upcomingEvents={[]}
-        totalOfUpcomingEvents={0}
-        latestUsers={[]}
-        pastEvents={[]}
-        totalOfPastEvents={0}
-        recentOutputs={[]}
-        totalOutputs={0}
-        announcements={[]}
-      />,
+      <MemoryRouter>
+        <DashboardPageBody
+          canPublish={true}
+          reminders={[]}
+          news={{ total: 0, items: [] }}
+          latestStats={mockStats}
+          upcomingEvents={[]}
+          totalOfUpcomingEvents={0}
+          latestUsers={[]}
+          pastEvents={[]}
+          totalOfPastEvents={0}
+          recentOutputs={[]}
+          totalOutputs={0}
+          announcements={[]}
+        />
+      </MemoryRouter>,
     );
     expect(
       screen.getByRole('heading', { name: 'GP2 Hub Stats' }),
@@ -34,26 +48,7 @@ describe('DashboardPageBody', () => {
 
   it('should render Latest News if there is a news item', () => {
     render(
-      <DashboardPageBody
-        canPublish={true}
-        reminders={[]}
-        news={gp2.createNewsResponse()}
-        latestStats={mockStats}
-        upcomingEvents={[]}
-        totalOfUpcomingEvents={0}
-        latestUsers={[]}
-        pastEvents={[]}
-        totalOfPastEvents={0}
-        recentOutputs={[]}
-        totalOutputs={0}
-        announcements={[]}
-      />,
-    );
-    expect(screen.getByRole('heading', { name: 'Latest News' })).toBeVisible();
-  });
-  describe('Announcements', () => {
-    it('hides the card if there are no announcements', () => {
-      render(
+      <MemoryRouter>
         <DashboardPageBody
           canPublish={true}
           reminders={[]}
@@ -67,32 +62,57 @@ describe('DashboardPageBody', () => {
           recentOutputs={[]}
           totalOutputs={0}
           announcements={[]}
-        />,
+        />
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole('heading', { name: 'Latest News' })).toBeVisible();
+  });
+  describe('Announcements', () => {
+    it('hides the card if there are no announcements', () => {
+      render(
+        <MemoryRouter>
+          <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
+            news={gp2.createNewsResponse()}
+            latestStats={mockStats}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            latestUsers={[]}
+            pastEvents={[]}
+            totalOfPastEvents={0}
+            recentOutputs={[]}
+            totalOutputs={0}
+            announcements={[]}
+          />
+        </MemoryRouter>,
       );
       expect(screen.queryByText('Announcements')).not.toBeInTheDocument();
     });
 
     it('should render announcements if there is an announcement', () => {
       render(
-        <DashboardPageBody
-          canPublish={true}
-          reminders={[]}
-          news={{ total: 0, items: [] }}
-          latestStats={mockStats}
-          upcomingEvents={[]}
-          totalOfUpcomingEvents={0}
-          announcements={[
-            {
-              id: '123',
-              description: 'This is an announcement',
-            },
-          ]}
-          latestUsers={[]}
-          pastEvents={[]}
-          totalOfPastEvents={0}
-          recentOutputs={[]}
-          totalOutputs={0}
-        />,
+        <MemoryRouter>
+          <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            announcements={[
+              {
+                id: '123',
+                description: 'This is an announcement',
+              },
+            ]}
+            latestUsers={[]}
+            pastEvents={[]}
+            totalOfPastEvents={0}
+            recentOutputs={[]}
+            totalOutputs={0}
+          />
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Announcements' }),
@@ -111,20 +131,22 @@ describe('DashboardPageBody', () => {
       `$description when canPublish is $canPublish`,
       ({ canPublish, selector }) => {
         render(
-          <DashboardPageBody
-            canPublish={canPublish}
-            reminders={[]}
-            news={{ total: 0, items: [] }}
-            latestStats={mockStats}
-            upcomingEvents={[]}
-            totalOfUpcomingEvents={0}
-            announcements={[]}
-            latestUsers={[]}
-            pastEvents={[]}
-            totalOfPastEvents={0}
-            recentOutputs={[]}
-            totalOutputs={0}
-          />,
+          <MemoryRouter>
+            <DashboardPageBody
+              canPublish={canPublish}
+              reminders={[]}
+              news={{ total: 0, items: [] }}
+              latestStats={mockStats}
+              upcomingEvents={[]}
+              totalOfUpcomingEvents={0}
+              announcements={[]}
+              latestUsers={[]}
+              pastEvents={[]}
+              totalOfPastEvents={0}
+              recentOutputs={[]}
+              totalOutputs={0}
+            />
+          </MemoryRouter>,
         );
         expect(screen.getByText(selector)).toBeVisible();
       },
@@ -134,20 +156,22 @@ describe('DashboardPageBody', () => {
   describe('Tools and tutorials', () => {
     it('should not render tools and tutorials if there is no guide', () => {
       render(
-        <DashboardPageBody
-          canPublish={true}
-          reminders={[]}
-          news={{ total: 0, items: [] }}
-          latestStats={mockStats}
-          upcomingEvents={[]}
-          totalOfUpcomingEvents={0}
-          latestUsers={[]}
-          pastEvents={[]}
-          totalOfPastEvents={0}
-          recentOutputs={[]}
-          totalOutputs={0}
-          announcements={[]}
-        />,
+        <MemoryRouter>
+          <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            latestUsers={[]}
+            pastEvents={[]}
+            totalOfPastEvents={0}
+            recentOutputs={[]}
+            totalOutputs={0}
+            announcements={[]}
+          />
+        </MemoryRouter>,
       );
       expect(
         screen.queryByRole('heading', { name: 'Tools and Tutorials' }),
@@ -156,34 +180,36 @@ describe('DashboardPageBody', () => {
 
     it('should render tools and tutorials if there is a guide', () => {
       render(
-        <DashboardPageBody
-          canPublish={true}
-          reminders={[]}
-          news={{ total: 0, items: [] }}
-          latestStats={mockStats}
-          upcomingEvents={[]}
-          totalOfUpcomingEvents={0}
-          latestUsers={[]}
-          recentOutputs={[]}
-          totalOutputs={0}
-          guides={[
-            {
-              id: '123',
-              title: 'Learn Header',
-              icon: '://icon.url',
-              description: [
-                {
-                  id: '2',
-                  title: 'Description title',
-                  bodyText: 'Learn how to use gp2.',
-                },
-              ],
-            },
-          ]}
-          pastEvents={[]}
-          totalOfPastEvents={0}
-          announcements={[]}
-        />,
+        <MemoryRouter>
+          <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            latestUsers={[]}
+            recentOutputs={[]}
+            totalOutputs={0}
+            guides={[
+              {
+                id: '123',
+                title: 'Learn Header',
+                icon: '://icon.url',
+                description: [
+                  {
+                    id: '2',
+                    title: 'Description title',
+                    bodyText: 'Learn how to use gp2.',
+                  },
+                ],
+              },
+            ]}
+            pastEvents={[]}
+            totalOfPastEvents={0}
+            announcements={[]}
+          />
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Tools and Tutorials' }),
@@ -196,20 +222,22 @@ describe('DashboardPageBody', () => {
   describe('Upcoming Events', () => {
     it('should render no events if there is no upcoming event items', () => {
       render(
-        <DashboardPageBody
-          canPublish={true}
-          reminders={[]}
-          news={{ total: 0, items: [] }}
-          latestStats={mockStats}
-          upcomingEvents={[]}
-          totalOfUpcomingEvents={0}
-          latestUsers={[]}
-          pastEvents={[]}
-          totalOfPastEvents={0}
-          recentOutputs={[]}
-          totalOutputs={0}
-          announcements={[]}
-        />,
+        <MemoryRouter>
+          <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            latestUsers={[]}
+            pastEvents={[]}
+            totalOfPastEvents={0}
+            recentOutputs={[]}
+            totalOutputs={0}
+            announcements={[]}
+          />
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Upcoming Events' }),
@@ -219,27 +247,29 @@ describe('DashboardPageBody', () => {
 
     it('should render with events if there is an upcoming event item', async () => {
       render(
-        <DashboardPageBody
-          canPublish={true}
-          reminders={[]}
-          news={{ total: 0, items: [] }}
-          latestStats={mockStats}
-          upcomingEvents={gp2
-            .createListEventResponse(1)
-            .items.map(({ speakers, ...event }) => ({
-              ...event,
-              hasSpeakersToBeAnnounced: speakers.length === 0,
-              eventOwner: <div>GP2 Team</div>,
-              tags: event.tags.map((k) => k.name),
-            }))}
-          totalOfUpcomingEvents={1}
-          latestUsers={[]}
-          pastEvents={[]}
-          totalOfPastEvents={0}
-          recentOutputs={[]}
-          totalOutputs={0}
-          announcements={[]}
-        />,
+        <MemoryRouter>
+          <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            upcomingEvents={gp2
+              .createListEventResponse(1)
+              .items.map(({ speakers, ...event }) => ({
+                ...event,
+                hasSpeakersToBeAnnounced: speakers.length === 0,
+                eventOwner: <div>GP2 Team</div>,
+                tags: event.tags.map((k) => k.name),
+              }))}
+            totalOfUpcomingEvents={1}
+            latestUsers={[]}
+            pastEvents={[]}
+            totalOfPastEvents={0}
+            recentOutputs={[]}
+            totalOutputs={0}
+            announcements={[]}
+          />
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Upcoming Events' }),
@@ -250,10 +280,8 @@ describe('DashboardPageBody', () => {
     });
 
     it('should render View All if there are more than 3 upcoming event items', () => {
-      const history = createMemoryHistory();
-      const pushSpy = jest.spyOn(history, 'push');
       render(
-        <Router history={history}>
+        <MemoryRouter>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -275,7 +303,7 @@ describe('DashboardPageBody', () => {
             totalOutputs={0}
             announcements={[]}
           />
-        </Router>,
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Upcoming Events' }),
@@ -285,40 +313,42 @@ describe('DashboardPageBody', () => {
 
       fireEvent.click(viewAllButton);
 
-      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/events/upcoming' });
+      expect(navigateSpy).toHaveBeenCalledWith('/events/upcoming');
     });
   });
 
   describe('Latest Users', () => {
     it('should render users if there is a latest user item', async () => {
       render(
-        <DashboardPageBody
-          canPublish={true}
-          reminders={[]}
-          news={{ total: 0, items: [] }}
-          latestStats={mockStats}
-          latestUsers={[
-            {
-              ...gp2.createUserResponse(),
-              displayName: 'John Doe',
-            },
-            {
-              ...gp2.createUserResponse(),
-              displayName: 'Octavian Ratiu',
-            },
-            {
-              ...gp2.createUserResponse(),
-              displayName: 'User 3',
-            },
-          ]}
-          upcomingEvents={[]}
-          totalOfUpcomingEvents={0}
-          pastEvents={[]}
-          totalOfPastEvents={0}
-          recentOutputs={[]}
-          totalOutputs={0}
-          announcements={[]}
-        />,
+        <MemoryRouter>
+          <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            latestUsers={[
+              {
+                ...gp2.createUserResponse(),
+                displayName: 'John Doe',
+              },
+              {
+                ...gp2.createUserResponse(),
+                displayName: 'Octavian Ratiu',
+              },
+              {
+                ...gp2.createUserResponse(),
+                displayName: 'User 3',
+              },
+            ]}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            pastEvents={[]}
+            totalOfPastEvents={0}
+            recentOutputs={[]}
+            totalOutputs={0}
+            announcements={[]}
+          />
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Latest Users' }),
@@ -329,10 +359,8 @@ describe('DashboardPageBody', () => {
     });
 
     it('should render View All', () => {
-      const history = createMemoryHistory();
-      const pushSpy = jest.spyOn(history, 'push');
       render(
-        <Router history={history}>
+        <MemoryRouter>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -347,7 +375,7 @@ describe('DashboardPageBody', () => {
             totalOutputs={0}
             announcements={[]}
           />
-        </Router>,
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Latest Users' }),
@@ -357,7 +385,7 @@ describe('DashboardPageBody', () => {
 
       fireEvent.click(viewAllButton);
 
-      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/users' });
+      expect(navigateSpy).toHaveBeenCalledWith('/users');
     });
   });
 
@@ -367,20 +395,22 @@ describe('DashboardPageBody', () => {
         customTitle: 'TestEvent',
       }).items;
       render(
-        <DashboardPageBody
-          canPublish={true}
-          reminders={[]}
-          news={{ total: 0, items: [] }}
-          latestStats={mockStats}
-          upcomingEvents={[]}
-          totalOfUpcomingEvents={0}
-          latestUsers={[]}
-          pastEvents={pastEvents}
-          totalOfPastEvents={1}
-          recentOutputs={[]}
-          totalOutputs={0}
-          announcements={[]}
-        />,
+        <MemoryRouter>
+          <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            latestUsers={[]}
+            pastEvents={pastEvents}
+            totalOfPastEvents={1}
+            recentOutputs={[]}
+            totalOutputs={0}
+            announcements={[]}
+          />
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Past Events' }),
@@ -392,10 +422,8 @@ describe('DashboardPageBody', () => {
     });
 
     it('should render View All if there are more than 3 past event items', () => {
-      const history = createMemoryHistory();
-      const pushSpy = jest.spyOn(history, 'push');
       render(
-        <Router history={history}>
+        <MemoryRouter>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -410,7 +438,7 @@ describe('DashboardPageBody', () => {
             totalOutputs={0}
             announcements={[]}
           />
-        </Router>,
+        </MemoryRouter>,
       );
 
       expect(
@@ -421,42 +449,44 @@ describe('DashboardPageBody', () => {
 
       fireEvent.click(viewAllButton);
 
-      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/events/past' });
+      expect(navigateSpy).toHaveBeenCalledWith('/events/past');
     });
   });
 
   describe('Recent Outputs', () => {
     it('should render outputs if there is any', async () => {
       render(
-        <DashboardPageBody
-          canPublish={true}
-          reminders={[]}
-          news={{ total: 0, items: [] }}
-          latestStats={mockStats}
-          latestUsers={[]}
-          upcomingEvents={[]}
-          totalOfUpcomingEvents={0}
-          pastEvents={[]}
-          totalOfPastEvents={0}
-          recentOutputs={[
-            {
-              ...gp2.createOutputResponse(),
-              id: 'output-1',
-              title: 'Output 1',
-              documentType: 'GP2 Reports',
-              addedDate: '2023-10-11T09:00:00Z',
-            },
-            {
-              ...gp2.createOutputResponse(),
-              id: 'output-2',
-              title: 'Output 2',
-              documentType: 'Training Materials',
-              addedDate: '2023-10-09T09:00:00Z',
-            },
-          ]}
-          totalOutputs={2}
-          announcements={[]}
-        />,
+        <MemoryRouter>
+          <DashboardPageBody
+            canPublish={true}
+            reminders={[]}
+            news={{ total: 0, items: [] }}
+            latestStats={mockStats}
+            latestUsers={[]}
+            upcomingEvents={[]}
+            totalOfUpcomingEvents={0}
+            pastEvents={[]}
+            totalOfPastEvents={0}
+            recentOutputs={[
+              {
+                ...gp2.createOutputResponse(),
+                id: 'output-1',
+                title: 'Output 1',
+                documentType: 'GP2 Reports',
+                addedDate: '2023-10-11T09:00:00Z',
+              },
+              {
+                ...gp2.createOutputResponse(),
+                id: 'output-2',
+                title: 'Output 2',
+                documentType: 'Training Materials',
+                addedDate: '2023-10-09T09:00:00Z',
+              },
+            ]}
+            totalOutputs={2}
+            announcements={[]}
+          />
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Recent Outputs' }),
@@ -473,10 +503,8 @@ describe('DashboardPageBody', () => {
     });
 
     it('should render View All', () => {
-      const history = createMemoryHistory();
-      const pushSpy = jest.spyOn(history, 'push');
       render(
-        <Router history={history}>
+        <MemoryRouter>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -491,7 +519,7 @@ describe('DashboardPageBody', () => {
             totalOutputs={9}
             announcements={[]}
           />
-        </Router>,
+        </MemoryRouter>,
       );
       expect(
         screen.getByRole('heading', { name: 'Recent Outputs' }),
@@ -501,7 +529,7 @@ describe('DashboardPageBody', () => {
 
       fireEvent.click(viewAllButton);
 
-      expect(pushSpy).toHaveBeenCalledWith({ pathname: '/outputs' });
+      expect(navigateSpy).toHaveBeenCalledWith('/outputs');
     });
   });
 });

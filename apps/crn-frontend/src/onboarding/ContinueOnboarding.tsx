@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useAuth0CRN } from '@asap-hub/react-context';
 
 const ContinueOnboarding: React.FC<{
@@ -10,7 +9,6 @@ const ContinueOnboarding: React.FC<{
     loading: auth0Loading,
     getTokenSilently,
   } = useAuth0CRN();
-  const history = useHistory();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +19,7 @@ const ContinueOnboarding: React.FC<{
 
     setLoading(false);
     return () => requestController.abort();
-  }, [auth0Loading, isAuthenticated, history, getTokenSilently]);
+  }, [auth0Loading, isAuthenticated, getTokenSilently]);
 
   return loading ? null : <>{children}</>;
 };

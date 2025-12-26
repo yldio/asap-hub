@@ -59,10 +59,10 @@ describe('CookiesModal', () => {
 
     expect(switchElement).not.toBeChecked();
 
-    userEvent.click(switchElement);
+    await userEvent.click(switchElement);
     expect(switchElement).toBeChecked();
 
-    userEvent.click(switchElement);
+    await userEvent.click(switchElement);
     expect(switchElement).not.toBeChecked();
   });
 
@@ -72,11 +72,11 @@ describe('CookiesModal', () => {
     const switchElement = screen.getByLabelText('Toggle switch');
     const saveButton = screen.getByRole('button', { name: /save and close/i });
 
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
     expect(mockOnSaveCookiePreferences).toHaveBeenCalledWith(false);
 
-    userEvent.click(switchElement);
-    userEvent.click(saveButton);
+    await userEvent.click(switchElement);
+    await userEvent.click(saveButton);
     expect(mockOnSaveCookiePreferences).toHaveBeenCalledWith(true);
   });
 

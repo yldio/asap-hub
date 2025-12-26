@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 
 import TextArea from '../TextArea';
 import { ember, fern, silver } from '../../colors';
@@ -39,18 +39,25 @@ describe('when invalid', () => {
     );
     expect(queryByText(/fill/i)).not.toBeInTheDocument();
 
-    fireEvent.focusOut(getByRole('textbox'));
-    expect(await findByText(/fill/i)).toBeVisible();
-    expect(getComputedStyle(await findByText(/fill/i)).color).toBe(ember.rgb);
+    await waitFor(async () => {
+      fireEvent.focusOut(getByRole('textbox'));
+      const errorElement = await findByText(/fill/i);
+      expect(errorElement).toBeVisible();
+    });
+
+    const errorElement = await findByText(/fill/i);
+    expect(getComputedStyle(errorElement).color).toBe(ember.rgb);
   });
 
-  it('shows a custom validation message', () => {
-    const { getByRole, getByText } = render(
+  it('shows a custom validation message', async () => {
+    const { getByRole, findByText } = render(
       <TextArea value="wrong" customValidationMessage="Wrong!" />,
     );
-    fireEvent.blur(getByRole('textbox'));
-    expect(getByText('Wrong!')).toBeVisible();
-    expect(getComputedStyle(getByText('Wrong!')).color).toBe(ember.rgb);
+    await waitFor(() => {
+      fireEvent.blur(getByRole('textbox'));
+    });
+    expect(await findByText('Wrong!')).toBeVisible();
+    expect(getComputedStyle(await findByText('Wrong!')).color).toBe(ember.rgb);
   });
 });
 

@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
@@ -91,11 +91,12 @@ const renderOutputs = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[initialEntry]}>
-              <Route
-                path={network({}).users({}).user({ userId }).outputs({}).$}
-              >
-                <Outputs userId={userId} />
-              </Route>
+              <Routes>
+                <Route
+                  path={network({}).users({}).user({ userId }).outputs({}).$}
+                  element={<Outputs userId={userId} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -137,19 +138,19 @@ it('calls getResearchOutputs with the right arguments', async () => {
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(2),
   });
-  // Start with empty filters, then add them via UI interaction
-  const { getByRole, getByText, getByLabelText } = await renderOutputs(
+  // Start with searchQuery via URL and empty filters, then add filters via UI interaction
+  const { getByText, getByLabelText } = await renderOutputs(
     searchQuery,
     new Set(),
     userId,
   );
-  userEvent.type(getByRole('searchbox'), searchQuery);
+  // searchQuery is already set via URL, so no need to type it again
 
-  userEvent.click(getByText('Filters'));
+  await userEvent.click(getByText('Filters'));
   const checkbox = getByLabelText('Grant Document');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
 
   await waitFor(() =>
@@ -181,7 +182,7 @@ it('triggers export with the same parameters and custom filename', async () => {
     userId,
   );
   // Filter is already set in URL, so verify it's checked and don't toggle it
-  userEvent.click(getByText('Filters'));
+  await userEvent.click(getByText('Filters'));
   const checkbox = getByLabelText('Grant Document');
   expect(checkbox).toBeChecked();
 

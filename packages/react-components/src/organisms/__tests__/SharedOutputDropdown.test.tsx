@@ -74,7 +74,7 @@ describe('ShareOutputDropdown', () => {
   };
 
   describe('permissions', () => {
-    it('only displays working groups the user can share outputs with', () => {
+    it('only displays working groups the user can share outputs with', async () => {
       const { getByText, queryByText } = renderWithContent({
         groups: [
           {
@@ -87,11 +87,11 @@ describe('ShareOutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Share an output'));
+      await userEvent.click(getByText('Share an output'));
       expect(getByText('Correct group')).toBeInTheDocument();
       expect(queryByText('Wrong group')).not.toBeInTheDocument();
     });
-    it('only displays teams the user can share outputs with', () => {
+    it('only displays teams the user can share outputs with', async () => {
       const { getByText, queryByText } = renderWithContent({
         teams: [
           {
@@ -108,7 +108,7 @@ describe('ShareOutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Share an output'));
+      await userEvent.click(getByText('Share an output'));
       expect(getByText('Correct team')).toBeInTheDocument();
       expect(queryByText('Wrong team')).not.toBeInTheDocument();
     });
@@ -136,7 +136,7 @@ describe('ShareOutputDropdown', () => {
     });
   });
   describe('list view', () => {
-    it('let you select a team', () => {
+    it('let you select a team', async () => {
       const { getByText, getByTitle } = renderWithContent({
         teams: [
           { displayName: 'Team One', id: '1', role: 'Project Manager' },
@@ -144,10 +144,10 @@ describe('ShareOutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Team One'));
+      await userEvent.click(getByText('Team One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
     });
-    it('let you select a working group', () => {
+    it('let you select a working group', async () => {
       const { getByText, getByTitle } = renderWithContent({
         groups: [
           {
@@ -159,7 +159,7 @@ describe('ShareOutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Group One'));
+      await userEvent.click(getByText('Group One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
     });
   });
@@ -169,7 +169,7 @@ describe('ShareOutputDropdown', () => {
       { displayName: 'Team Two', id: '2', role: 'Project Manager' },
     ];
 
-    it('let you create an output', () => {
+    it('let you create an output', async () => {
       const { getByText, getByTitle } = renderWithContent({
         teams,
         groups: [
@@ -188,32 +188,32 @@ describe('ShareOutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Team One'));
+      await userEvent.click(getByText('Team One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
       expect(getByTitle('Bioinformatics').closest('a')).toHaveAttribute(
         'href',
         '/network/teams/1/create-output/bioinformatics',
       );
 
-      userEvent.click(getByText('Team One'));
+      await userEvent.click(getByText('Team One'));
 
-      userEvent.click(getByText('Group One'));
+      await userEvent.click(getByText('Group One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
       expect(getByTitle('Bioinformatics').closest('a')).toHaveAttribute(
         'href',
         '/network/working-groups/1/create-output/bioinformatics',
       );
     });
-    it('let you go back to the list view', () => {
+    it('let you go back to the list view', async () => {
       const { getByText, queryByText, getByTitle } = renderWithContent({
         teams,
       });
 
-      userEvent.click(getByText('Team One'));
+      await userEvent.click(getByText('Team One'));
       expect(getByTitle('Bioinformatics')).toBeInTheDocument();
       expect(queryByText('Team Two')).not.toBeInTheDocument();
 
-      userEvent.click(getByText('Team One'));
+      await userEvent.click(getByText('Team One'));
       expect(getByText('Team Two')).toBeInTheDocument();
     });
   });

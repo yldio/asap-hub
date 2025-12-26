@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import ToolModal from '../ToolModal';
 
@@ -14,18 +14,18 @@ const props: ComponentProps<typeof ToolModal> = {
 };
 it('renders the title', () => {
   const { getByText } = render(
-    <StaticRouter>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} title="ModalTitle" />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(getByText('ModalTitle', { selector: 'h3' })).toBeVisible();
 });
 
 it('indicates which fields are required or optional', () => {
   const { getByText } = render(
-    <StaticRouter>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} title="ModalTitle" />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
   [
@@ -39,14 +39,14 @@ it('indicates which fields are required or optional', () => {
 
 it('renders default values into inputs', () => {
   const { queryAllByRole } = render(
-    <StaticRouter>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal
         {...props}
         name="LinkName"
         description="LinkDescription"
         url="http://example.com"
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   expect(queryAllByRole('textbox').map((input) => input.getAttribute('value')))
     .toMatchInlineSnapshot(`
@@ -60,9 +60,9 @@ it('renders default values into inputs', () => {
 
 it('allows url with https protocol', () => {
   const { getByLabelText, queryByText } = render(
-    <StaticRouter>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} />
-    </StaticRouter>,
+    </MemoryRouter>,
     {},
   );
   const inputUrl = getByLabelText(/Add URL/i);
@@ -74,9 +74,9 @@ it('allows url with https protocol', () => {
 });
 it('allows url with http protocol', () => {
   const { getByLabelText, queryByText } = render(
-    <StaticRouter>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} />
-    </StaticRouter>,
+    </MemoryRouter>,
     {},
   );
 
@@ -93,28 +93,33 @@ it('allows url with http protocol', () => {
   ).toBeNull();
 });
 
-it('does not allow any other uri scheme', () => {
-  const { getByLabelText, queryByText } = render(
-    <StaticRouter>
+it('does not allow any other uri scheme', async () => {
+  const { getByLabelText, findByText } = render(
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
   const inputUrl = getByLabelText(/Add URL/i);
-  fireEvent.change(inputUrl, {
-    target: { value: 'slack://tool' },
+
+  await userEvent.clear(inputUrl);
+  await userEvent.type(inputUrl, 'slack://tool');
+  await userEvent.tab(); // Trigger blur event
+
+  // Wait for validation error message to appear (this ensures state update completes)
+  await waitFor(async () => {
+    const errorMessage = await findByText(
+      'Please enter a valid URL, starting with http:// or https://',
+    );
+    expect(errorMessage).toBeVisible();
   });
-  fireEvent.focusOut(inputUrl);
 
   expect(inputUrl).toBeInvalid();
-  expect(
-    queryByText('Please enter a valid URL, starting with http:// or https://'),
-  ).toBeVisible();
 });
 
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
   const { getByText } = render(
-    <StaticRouter>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal
         {...props}
         name="toolName"
@@ -122,10 +127,10 @@ it('triggers the save function', async () => {
         description="toolDescription"
         onSave={jestFn}
       />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
   expect(jestFn).toHaveBeenCalledWith({
     name: 'toolName',
     url: 'http://example.com',
@@ -144,12 +149,12 @@ it('disables the form elements while submitting', async () => {
       resolveSubmit = resolve;
     });
   const { getByText } = render(
-    <StaticRouter>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} onSave={handleSave} />
-    </StaticRouter>,
+    </MemoryRouter>,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
 
   const form = getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);

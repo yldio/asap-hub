@@ -1,6 +1,6 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { ListPublicationComplianceOpensearchResponse } from '@asap-hub/model';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import {
   DefaultValue,
@@ -56,7 +56,7 @@ describe('PublicationCompliance', () => {
     });
   });
 
-  it('resets publication compliance state to undefined when reset is triggered', () => {
+  it('resets publication compliance state to undefined when reset is triggered', async () => {
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -120,14 +120,22 @@ describe('PublicationCompliance', () => {
         },
       ],
     };
-    setState(fakeData);
-    expect(capturedValue).toEqual(fakeData);
+    act(() => {
+      setState(fakeData);
+    });
+    await waitFor(() => {
+      expect(capturedValue).toEqual(fakeData);
+    });
 
     // Reset by setting undefined
-    setState(undefined);
+    act(() => {
+      setState(undefined);
+    });
 
     // After reset, state is undefined again
-    expect(capturedValue).toBeUndefined();
+    await waitFor(() => {
+      expect(capturedValue).toBeUndefined();
+    });
   });
 
   it('throws when publicationCompliance is an Error', () => {
@@ -147,7 +155,7 @@ describe('PublicationCompliance', () => {
     ).toThrow('test error');
   });
 
-  it('handles undefined timeRange by normalizing to all', () => {
+  it('handles undefined timeRange by normalizing to all', async () => {
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -208,11 +216,15 @@ describe('PublicationCompliance', () => {
         },
       ],
     };
-    setState(fakeData);
-    expect(capturedValue).toEqual(fakeData);
+    act(() => {
+      setState(fakeData);
+    });
+    await waitFor(() => {
+      expect(capturedValue).toEqual(fakeData);
+    });
   });
 
-  it('handles DefaultValue in set function', () => {
+  it('handles DefaultValue in set function', async () => {
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -245,16 +257,20 @@ describe('PublicationCompliance', () => {
     );
 
     // Test DefaultValue handling
-    setState(
-      new DefaultValue() as unknown as
-        | ListPublicationComplianceOpensearchResponse
-        | Error
-        | undefined,
-    );
-    expect(capturedValue).toBeUndefined();
+    act(() => {
+      setState(
+        new DefaultValue() as unknown as
+          | ListPublicationComplianceOpensearchResponse
+          | Error
+          | undefined,
+      );
+    });
+    await waitFor(() => {
+      expect(capturedValue).toBeUndefined();
+    });
   });
 
-  it('handles Error in set function', () => {
+  it('handles Error in set function', async () => {
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -288,11 +304,15 @@ describe('PublicationCompliance', () => {
 
     // Test Error handling in set function
     const testError = new Error('API Error');
-    setState(testError);
-    expect(capturedValue).toBe(testError);
+    act(() => {
+      setState(testError);
+    });
+    await waitFor(() => {
+      expect(capturedValue).toBe(testError);
+    });
   });
 
-  it('handles successful data setting with forEach loop', () => {
+  it('handles successful data setting with forEach loop', async () => {
     const stateOptions = {
       currentPage: 0,
       pageSize: 10,
@@ -376,7 +396,11 @@ describe('PublicationCompliance', () => {
         },
       ],
     };
-    setState(fakeData);
-    expect(capturedValue).toEqual(fakeData);
+    act(() => {
+      setState(fakeData);
+    });
+    await waitFor(() => {
+      expect(capturedValue).toEqual(fakeData);
+    });
   });
 });

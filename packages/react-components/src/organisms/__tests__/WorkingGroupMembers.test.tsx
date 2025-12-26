@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, act } from '@testing-library/react';
 import {
   createUserListItemResponse,
   createUserResponse,
@@ -58,11 +58,15 @@ describe('leaders section', () => {
     expect(activeTabButton).toBeVisible();
     expect(queryByText('Test User 1')).toBeNull();
 
-    pastTabButton.click();
+    act(() => {
+      pastTabButton.click();
+    });
     expect(getByText('Test User 1')).toBeVisible();
     expect(getByText('A test role')).toBeVisible();
 
-    activeTabButton.click();
+    act(() => {
+      activeTabButton.click();
+    });
     expect(queryByText('Test User 1')).toBeNull();
   });
 });
@@ -108,10 +112,14 @@ describe('member section', () => {
     expect(activeTabButton).toBeVisible();
     expect(queryByText('Test User 1')).toBeNull();
 
-    pastTabButton.click();
+    act(() => {
+      pastTabButton.click();
+    });
     expect(getByText('Test User 1')).toBeVisible();
 
-    activeTabButton.click();
+    act(() => {
+      activeTabButton.click();
+    });
     expect(queryByText('Test User 1')).toBeNull();
   });
 

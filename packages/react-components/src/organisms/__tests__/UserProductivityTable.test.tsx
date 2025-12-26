@@ -186,7 +186,13 @@ describe('UserProductivityTable', () => {
     ${'ratio_desc'}              | ${{ ...userProductivityInitialSortingDirection, ratio: 'desc' }}            | ${'Ratio Active Numerical Descending Sort Icon'}                | ${'ratio_asc'}               | ${{ ...userProductivityInitialSortingDirection, ratio: 'asc' }}
   `(
     'when sort is $sort and user clicks on $iconTitle, the new sort becomes $newSort and the sorting direction $newSortingDirection',
-    ({ sort, sortingDirection, iconTitle, newSort, newSortingDirection }) => {
+    async ({
+      sort,
+      sortingDirection,
+      iconTitle,
+      newSort,
+      newSortingDirection,
+    }) => {
       const setSort = jest.fn();
       const setSortingDirection = jest.fn();
       const { getByTitle } = render(
@@ -204,7 +210,7 @@ describe('UserProductivityTable', () => {
       const sortIcon = getByTitle(iconTitle);
       expect(sortIcon).toBeInTheDocument();
 
-      userEvent.click(sortIcon);
+      await userEvent.click(sortIcon);
       expect(setSort).toHaveBeenCalledWith(newSort);
       expect(setSortingDirection).toHaveBeenCalledWith(newSortingDirection);
     },

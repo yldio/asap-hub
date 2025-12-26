@@ -1,5 +1,5 @@
 import { formatISO, startOfTomorrow } from 'date-fns';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 
 import LabeledDateField, { parseDateToString } from '../LabeledDateField';
 
@@ -29,7 +29,7 @@ it('renders a labeled date field, passing through props', () => {
   expect(screen.getByText(/please enter a date before today/i)).toBeVisible();
 });
 
-it('supports max date attribute', () => {
+it('supports max date attribute', async () => {
   render(
     <LabeledDateField
       title="Date"
@@ -39,7 +39,9 @@ it('supports max date attribute', () => {
     />,
   );
 
-  expect(screen.getByText(/ups/i)).toBeVisible();
+  await waitFor(() => {
+    expect(screen.getByText(/ups/i)).toBeVisible();
+  });
 });
 
 it('reports changes as date objects', async () => {

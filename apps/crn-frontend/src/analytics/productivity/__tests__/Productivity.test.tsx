@@ -20,7 +20,7 @@ import { render, screen, waitFor, within, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -214,9 +214,12 @@ const renderPage = async (path: string) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
-              <Route path="/analytics/productivity/:metric">
-                <Productivity />
-              </Route>
+              <Routes>
+                <Route
+                  path="/analytics/productivity/:metric"
+                  element={<Productivity />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -270,8 +273,8 @@ describe('user productivity', () => {
 
     // Change to "Last 30 days" time range
     await act(async () => {
-      userEvent.click(rangeButton);
-      userEvent.click(screen.getByText(/Last 30 days/i));
+      await userEvent.click(rangeButton);
+      await userEvent.click(screen.getByText(/Last 30 days/i));
     });
 
     // Wait for the new data to load with asapOutput: 300
@@ -281,8 +284,8 @@ describe('user productivity', () => {
 
     // Change to "Last 90 days"
     await act(async () => {
-      userEvent.click(rangeButton);
-      userEvent.click(screen.getByText(/Last 90 days/i));
+      await userEvent.click(rangeButton);
+      await userEvent.click(screen.getByText(/Last 90 days/i));
     });
 
     // Data should change back to default (timeRange='90d' returns default response)
@@ -321,8 +324,8 @@ describe('user productivity', () => {
 
     // Change to "Protocol" document category
     await act(async () => {
-      userEvent.click(categoryButton);
-      userEvent.click(screen.getByText(/Protocol/));
+      await userEvent.click(categoryButton);
+      await userEvent.click(screen.getByText(/Protocol/));
     });
 
     // Wait for the new data to load with asapOutput: 75
@@ -332,8 +335,8 @@ describe('user productivity', () => {
 
     // Change to "Article"
     await act(async () => {
-      userEvent.click(categoryButton);
-      userEvent.click(screen.getByText(/^Article$/));
+      await userEvent.click(categoryButton);
+      await userEvent.click(screen.getByText(/^Article$/));
     });
 
     // Data should change to default (documentCategory='article' returns default response)
@@ -354,7 +357,7 @@ describe('user productivity', () => {
       );
     });
     await act(async () => {
-      userEvent.click(
+      await userEvent.click(
         getByTitle('User Active Alphabetical Ascending Sort Icon'),
       );
     });
@@ -410,8 +413,8 @@ describe('team productivity', () => {
       name: /Since Hub Launch \(2020\) Chevron Down/i,
     });
     await act(async () => {
-      userEvent.click(rangeButton);
-      userEvent.click(screen.getByText(/Last 90 days/));
+      await userEvent.click(rangeButton);
+      await userEvent.click(screen.getByText(/Last 90 days/));
     });
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
@@ -421,8 +424,8 @@ describe('team productivity', () => {
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
     await act(async () => {
-      userEvent.click(rangeButton);
-      userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/i));
+      await userEvent.click(rangeButton);
+      await userEvent.click(screen.getByText(/Since Hub Launch \(2020\)/i));
     });
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
@@ -464,8 +467,8 @@ describe('team productivity', () => {
       name: /ASAP Output chevron down/i,
     });
     await act(async () => {
-      userEvent.click(outputTypeButton);
-      userEvent.click(screen.getByText(/ASAP Public Output/i));
+      await userEvent.click(outputTypeButton);
+      await userEvent.click(screen.getByText(/ASAP Public Output/i));
     });
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
@@ -475,8 +478,8 @@ describe('team productivity', () => {
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
     await act(async () => {
-      userEvent.click(outputTypeButton);
-      userEvent.click(screen.getByText(/ASAP Output/));
+      await userEvent.click(outputTypeButton);
+      await userEvent.click(screen.getByText(/ASAP Output/));
     });
     await waitFor(() =>
       expect(screen.getAllByText('Team Productivity')).toHaveLength(2),
@@ -497,7 +500,9 @@ describe('team productivity', () => {
       );
     });
     await act(async () => {
-      userEvent.click(getByTitle('Active Alphabetical Ascending Sort Icon'));
+      await userEvent.click(
+        getByTitle('Active Alphabetical Ascending Sort Icon'),
+      );
     });
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenCalledWith(
@@ -517,14 +522,13 @@ describe('search', () => {
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );
     const searchBox = getSearchBox();
-
     await act(async () => {
-      userEvent.type(searchBox, 'test123');
+      await userEvent.type(searchBox, 'test123');
     });
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenCalledWith(
         ['team-productivity'],
-        '3',
+        'test123',
         {},
       ),
     );
@@ -537,7 +541,7 @@ describe('csv export', () => {
       analytics({}).productivity({}).metric({ metric: 'user' }).$,
     );
     await act(async () => {
-      userEvent.click(screen.getByText(/csv/i));
+      await userEvent.click(screen.getByText(/csv/i));
     });
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/productivity_user_\d+\.csv/),
@@ -552,8 +556,8 @@ describe('csv export', () => {
     const input = screen.getAllByRole('textbox', { hidden: false })[0];
 
     await act(async () => {
-      input && userEvent.click(input);
-      userEvent.click(screen.getByText(/csv/i));
+      input && (await userEvent.click(input));
+      await userEvent.click(screen.getByText(/csv/i));
     });
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/productivity_team_\d+\.csv/),
@@ -664,7 +668,7 @@ describe('csv export', () => {
 
     // Click CSV export button
     await act(async () => {
-      userEvent.click(screen.getByText(/csv/i));
+      await userEvent.click(screen.getByText(/csv/i));
     });
 
     // Verify createCsvFileStream was called with correct filename
@@ -799,14 +803,16 @@ describe('csv export', () => {
 
     // Click CSV export button
     await act(async () => {
-      userEvent.click(screen.getByText(/csv/i));
+      await userEvent.click(screen.getByText(/csv/i));
     });
 
     // Verify createCsvFileStream was called with correct filename
-    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
-      expect.stringMatching(/productivity_team_\d+\.csv/),
-      expect.anything(),
-    );
+    await waitFor(() => {
+      expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+        expect.stringMatching(/productivity_team_\d+\.csv/),
+        expect.anything(),
+      );
+    });
 
     // Verify OpenSearch getTeamProductivity was called for CSV export
     // Note: Team CSV export currently uses default pageSize (10) - unlike user export which uses 200
@@ -963,16 +969,15 @@ describe('tag suggestions', () => {
 
     const searchBox = getSearchBox();
     await act(async () => {
-      // Type multiple characters like the existing test does
-      userEvent.type(searchBox, 'test123');
+      // Type characters - the search is called with the full input value
+      await userEvent.type(searchBox, 'test123');
     });
 
     await waitFor(() => {
-      // The loadTags is called with each character typed
-      // Check for the last character like the existing test
+      // Algolia searchForTagValues is called with the search input value
       expect(mockSearchForTagValues).toHaveBeenCalledWith(
         ['team-productivity'],
-        '3',
+        'test123',
         {},
       );
     });

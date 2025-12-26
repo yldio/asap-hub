@@ -84,7 +84,7 @@ describe('open close behaviour', () => {
     findParentWithStyle(screen.getByText(description), 'maxHeight')
       ?.maxHeight === '0';
 
-  it('opens an item', () => {
+  it('opens an item', async () => {
     render(
       <Accordion
         items={[
@@ -95,11 +95,11 @@ describe('open close behaviour', () => {
     );
 
     expect(isContentHidden('description 1')).toBe(true);
-    userEvent.click(screen.getByText('title 1'));
+    await userEvent.click(screen.getByText('title 1'));
     expect(isContentHidden('description 1')).toBe(false);
   });
 
-  it('closes the previous item when a new item is opened', () => {
+  it('closes the previous item when a new item is opened', async () => {
     render(
       <Accordion
         items={[
@@ -111,21 +111,21 @@ describe('open close behaviour', () => {
 
     expect(isContentHidden('description 1')).toBe(true);
     expect(isContentHidden('description 2')).toBe(true);
-    userEvent.click(screen.getByText('title 1'));
+    await userEvent.click(screen.getByText('title 1'));
     expect(isContentHidden('description 1')).toBe(false);
     expect(isContentHidden('description 2')).toBe(true);
-    userEvent.click(screen.getByText('title 2'));
+    await userEvent.click(screen.getByText('title 2'));
     expect(isContentHidden('description 1')).toBe(true);
     expect(isContentHidden('description 2')).toBe(false);
   });
-  it('allows description to be an ReactNode', () => {
+  it('allows description to be an ReactNode', async () => {
     const node = <div id="id1">description 1</div>;
     render(
       <Accordion items={[{ ...item, title: 'title 1', description: node }]} />,
     );
 
     expect(isContentHidden('description 1')).toBe(true);
-    userEvent.click(screen.getByText('title 1'));
+    await userEvent.click(screen.getByText('title 1'));
     expect(isContentHidden('description 1')).toBe(false);
     expect(screen.getByText('description 1')).toHaveAttribute('id', 'id1');
   });

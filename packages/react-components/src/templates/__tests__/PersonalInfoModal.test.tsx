@@ -1,9 +1,8 @@
 import { createUserResponse } from '@asap-hub/fixtures';
-import { fireEvent } from '@testing-library/dom';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
@@ -14,9 +13,9 @@ const props: ComponentProps<typeof PersonalInfoModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 
-it('renders the title', () => {
+it('renders the title', async () => {
   renderModal(
     <PersonalInfoModal
       {...props}
@@ -24,10 +23,12 @@ it('renders the title', () => {
       backHref="/wrong"
     />,
   );
-  expect(screen.getByText('Main details', { selector: 'h3' })).toBeVisible();
+  expect(
+    await screen.findByText('Main details', { selector: 'h3' }),
+  ).toBeVisible();
 });
 
-it('indicates which fields are required or optional', () => {
+it('indicates which fields are required or optional', async () => {
   renderModal(
     <PersonalInfoModal
       countrySuggestions={[]}
@@ -35,6 +36,9 @@ it('indicates which fields are required or optional', () => {
       backHref="/wrong"
     />,
   );
+
+  // Wait for the form to be fully rendered
+  await screen.findByText('First name');
 
   [
     { title: 'First name', subtitle: 'required' },
@@ -53,7 +57,7 @@ it('indicates which fields are required or optional', () => {
   );
 });
 
-it('renders default values into text inputs', () => {
+it('renders default values into text inputs', async () => {
   renderModal(
     <PersonalInfoModal
       {...props}
@@ -69,6 +73,10 @@ it('renders default values into text inputs', () => {
       institution="institution"
     />,
   );
+
+  // Wait for the form to be fully rendered
+  await screen.findByDisplayValue('firstName');
+
   expect(
     screen
       .queryAllByRole('textbox')
@@ -89,7 +97,7 @@ it('renders default values into text inputs', () => {
   `);
 });
 
-it('renders a country selector', () => {
+it('renders a country selector', async () => {
   renderModal(
     <PersonalInfoModal
       {...props}
@@ -98,12 +106,12 @@ it('renders a country selector', () => {
     />,
   );
 
-  userEvent.click(screen.getByText('Start Typing...'));
+  await userEvent.click(screen.getByText('Start Typing...'));
   expect(screen.queryByText('United States')).toBeVisible();
   expect(screen.queryByText('Mexico')).toBeVisible();
 
-  userEvent.click(screen.getByText('Start Typing...'));
-  userEvent.type(screen.getByText('Start Typing...'), 'xx');
+  await userEvent.click(screen.getByText('Start Typing...'));
+  await userEvent.type(screen.getByText('Start Typing...'), 'xx');
   expect(screen.queryByText(/no+countries/i)).toBeDefined();
 });
 it('shows validation message country when it not selected', async () => {
@@ -118,10 +126,10 @@ it('shows validation message country when it not selected', async () => {
     />,
   );
   const field = screen.getByRole('textbox', { name: /country/i });
-  userEvent.click(field);
-  userEvent.tab();
+  await userEvent.click(field);
+  await userEvent.tab();
 
-  userEvent.click(screen.getByRole('button', { name: /save/i }));
+  await userEvent.click(screen.getByRole('button', { name: /save/i }));
   expect(await screen.findByText(/Please add your country/i)).toBeVisible();
   await waitFor(() =>
     expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
@@ -147,13 +155,18 @@ it.each`
         jobTitle="Assistant Professor"
       />,
     );
-    const field = screen.getByLabelText(label);
-    const input = field.closest('input') || field;
 
-    fireEvent.change(input, { target: { value: '' } });
+    // Wait for form to be fully rendered
+    await screen.findByLabelText(label);
+
+    const field = screen.getByLabelText(label);
+    const input = (field.closest('input') || field) as HTMLInputElement;
+
+    // Use userEvent.clear instead of fireEvent.change for proper act() wrapping
+    await userEvent.clear(input);
     expect(input).toHaveValue('');
 
-    userEvent.click(screen.getByText(/save/i));
+    await userEvent.click(screen.getByText(/save/i));
     expect(await screen.findByText(new RegExp(message, 'i'))).toBeVisible();
   },
 );
@@ -174,7 +187,7 @@ it('disables the form elements while submitting', async () => {
     />,
   );
 
-  userEvent.click(screen.getByText(/save/i));
+  await userEvent.click(screen.getByText(/save/i));
 
   const form = screen.getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);
@@ -205,7 +218,7 @@ it('triggers the save function', async () => {
     />,
   );
 
-  userEvent.click(screen.getByText('Save'));
+  await userEvent.click(screen.getByText('Save'));
   expect(jestFn).toHaveBeenCalledWith({
     firstName: 'firstName',
     middleName: 'middleName',

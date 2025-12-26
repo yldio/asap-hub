@@ -16,19 +16,19 @@ it('renders the search box and filters button', () => {
   expect(getByText('Filters').closest('button')).toBeVisible();
 });
 
-it('calls the onChangeQuery when search input changes', () => {
+it('calls the onChangeQuery when search input changes', async () => {
   const { getByRole } = render(<ResearchOutputsSearch {...props} />);
-  userEvent.type(getByRole('searchbox'), 'searchterm');
+  await userEvent.type(getByRole('searchbox'), 'searchterm');
   [...'searchterm'].forEach((letter, index) =>
     expect(props.onChangeSearch).toHaveBeenNthCalledWith(index + 1, letter),
   );
 });
-it('calls the onChangeFilter when filter is selected', () => {
+it('calls the onChangeFilter when filter is selected', async () => {
   const { getByText, getByLabelText } = render(
     <ResearchOutputsSearch {...props} />,
   );
-  userEvent.click(getByText('Filters'));
-  userEvent.click(getByLabelText('Grant Document'));
+  await userEvent.click(getByText('Filters'));
+  await userEvent.click(getByLabelText('Grant Document'));
 
   expect(props.onChangeFilter).toHaveBeenCalledWith('Grant Document');
 });

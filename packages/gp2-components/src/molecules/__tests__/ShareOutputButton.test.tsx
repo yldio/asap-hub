@@ -9,9 +9,11 @@ describe('ShareOutputButton', () => {
       screen.getByRole('button', { name: /share an output/i }),
     ).toBeVisible();
   });
-  it('renders the right links', () => {
+  it('renders the right links', async () => {
     render(<ShareOutputButton entityType={'workingGroup'} id={'123'} />);
-    userEvent.click(screen.getByRole('button', { name: /share an output/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /share an output/i }),
+    );
     expect(
       screen
         .getAllByRole('link')
@@ -25,9 +27,11 @@ describe('ShareOutputButton', () => {
       expect.stringContaining('training-materials'),
     ]);
   });
-  it('renders links for working groups', () => {
+  it('renders links for working groups', async () => {
     render(<ShareOutputButton entityType={'workingGroup'} id={'123'} />);
-    userEvent.click(screen.getByRole('button', { name: /share an output/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /share an output/i }),
+    );
     expect(
       screen
         .getAllByRole('link')
@@ -36,9 +40,11 @@ describe('ShareOutputButton', () => {
       expect.arrayContaining([expect.stringContaining('working-groups')]),
     );
   });
-  it('renders links for projects', () => {
+  it('renders links for projects', async () => {
     render(<ShareOutputButton entityType={'project'} id={'123'} />);
-    userEvent.click(screen.getByRole('button', { name: /share an output/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /share an output/i }),
+    );
     expect(
       screen
         .getAllByRole('link')

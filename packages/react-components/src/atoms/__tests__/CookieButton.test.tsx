@@ -14,7 +14,7 @@ it('should call toggleCookieModal when clicked', async () => {
   const { getByTestId } = render(
     <CookieButton toggleCookieModal={toggleCookieModal} />,
   );
-  userEvent.click(getByTestId('cookie-button'));
+  await userEvent.click(getByTestId('cookie-button'));
 
   await waitFor(() => {
     expect(toggleCookieModal).toHaveBeenCalled();

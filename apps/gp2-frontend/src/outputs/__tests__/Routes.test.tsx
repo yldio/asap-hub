@@ -7,14 +7,14 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { gp2 } from '@asap-hub/model';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { createOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getOutputs } from '../api';
-import Routes from '../Routes';
+import OutputRoutes from '../Routes';
 
 jest.mock('../api');
 const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
@@ -29,9 +29,9 @@ const renderRoutes = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/outputs']}>
-              <Route path="/outputs">
-                <Routes />
-              </Route>
+              <Routes>
+                <Route path="/outputs/*" element={<OutputRoutes />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -121,7 +121,7 @@ describe('Routes', () => {
   it('can perform a search', async () => {
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(pageSize));
     await renderRoutes();
-    userEvent.type(screen.getByPlaceholderText(/Enter name/i), 'example');
+    await userEvent.type(screen.getByPlaceholderText(/Enter name/i), 'example');
     await waitFor(() =>
       expect(mockGetOutputs).toHaveBeenLastCalledWith(
         expect.anything(),
@@ -137,8 +137,8 @@ describe('Routes', () => {
         createOutputListAlgoliaResponse(pageSize),
       );
       await renderRoutes();
-      userEvent.click(screen.getByTitle('Filter'));
-      userEvent.click(screen.getByRole('checkbox', { name }));
+      await userEvent.click(screen.getByTitle('Filter'));
+      await userEvent.click(screen.getByRole('checkbox', { name }));
 
       await waitFor(() =>
         expect(mockGetOutputs).toHaveBeenLastCalledWith(

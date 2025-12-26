@@ -1,6 +1,6 @@
 import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import {
   render,
   waitFor,
@@ -80,16 +80,19 @@ const renderWithWrapper = (
                 network({}).teams({}).team({ teamId: id }).workspace({}).$,
               ]}
             >
-              <Route
-                path={
-                  network.template +
-                  network({}).teams.template +
-                  network({}).teams({}).team.template +
-                  network({}).teams({}).team({ teamId: id }).workspace.template
-                }
-              >
-                {children}
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    network.template +
+                    network({}).teams.template +
+                    network({}).teams({}).team.template +
+                    network({}).teams({}).team({ teamId: id }).workspace
+                      .template +
+                    '/*'
+                  }
+                  element={children}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -149,6 +152,10 @@ beforeEach(() => {
 afterEach(jest.resetAllMocks);
 
 describe('Manuscript', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation();
+  });
+
   it('status can be changed', async () => {
     const screen = renderWithWrapper(
       <Workspace
@@ -161,9 +168,9 @@ describe('Manuscript', () => {
       />,
     );
 
-    userEvent.click(await screen.findByTestId('status-button'));
-    userEvent.click(screen.getByText('Addendum Required'));
-    userEvent.click(
+    await userEvent.click(await screen.findByTestId('status-button'));
+    await userEvent.click(screen.getByText('Addendum Required'));
+    await userEvent.click(
       screen.getByRole('button', { name: 'Update Status and Notify' }),
     );
     await waitFor(() => {
@@ -189,22 +196,25 @@ describe('Manuscript', () => {
         }}
       />,
     );
-
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(screen.getByRole('button', { name: /Start Discussion/i }));
-    userEvent.type(screen.getByRole('textbox', { name: /Title/i }), 'Test');
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(
+      screen.getByRole('button', { name: /Start Discussion/i }),
+    );
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Title/i }),
+      'Test',
+    );
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
-
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(createDiscussion).toHaveBeenCalledWith(
         {
@@ -250,7 +260,6 @@ describe('Manuscript', () => {
       },
       jest.fn(),
     ]);
-
     const screen = renderWithWrapper(
       <Workspace
         team={{
@@ -261,41 +270,35 @@ describe('Manuscript', () => {
         }}
       />,
     );
-
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
     await act(async () => {
-      userEvent.click(
+      await userEvent.click(
         await screen.findByTestId(
           'discussion-collapsible-button-discussion-id-1',
         ),
       );
     });
-
     await waitFor(() => {
       expect(mockMarkDiscussionAsRead).toHaveBeenCalledWith(
         'manuscript_0',
         'discussion-id-1',
       );
     });
-
-    userEvent.click(
+    await userEvent.click(
       await screen.findByTestId('discussion-reply-button-discussion-id-1'),
     );
-
-    userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
-
+    await userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
-
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(mockReplyToDiscussion).toHaveBeenCalledWith(
         'manuscript_0',
@@ -361,31 +364,31 @@ describe('Manuscript', () => {
       />,
     );
 
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(
       await screen.findByTestId(
         'discussion-collapsible-button-discussion-id-1',
       ),
     );
 
-    userEvent.click(
+    await userEvent.click(
       await screen.findByTestId('discussion-reply-button-discussion-id-1'),
     );
 
-    userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
+    await userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
 
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
 
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(mockSetFormType).toHaveBeenCalledWith({
         type: 'default-error',
@@ -401,6 +404,14 @@ describe('a tool', () => {
   const { mockConfirm } = mockAlert();
 
   it('can be deleted', async () => {
+    mockConfirm.mockReturnValue(true);
+    // Use a deferred promise to control when the delete completes
+    let resolveDelete: (value: TeamResponse) => void;
+    const deletePromise = new Promise<TeamResponse>((resolve) => {
+      resolveDelete = resolve;
+    });
+    mockPatchTeam.mockReturnValue(deletePromise);
+
     const { findByText } = renderWithWrapper(
       <Workspace
         team={{
@@ -417,14 +428,18 @@ describe('a tool', () => {
       />,
       user,
     );
-
-    userEvent.click(await findByText(/delete/i));
+    await userEvent.click(await findByText(/delete/i));
+    // Now we should see "Deleting..." while the promise is pending
     await findByText(/deleting/i);
     expect(mockPatchTeam).toHaveBeenLastCalledWith(
       id,
       { tools: [] },
       expect.anything(),
     );
+    // Resolve the promise to complete the delete
+    await act(async () => {
+      resolveDelete!(createTeamResponse());
+    });
   });
 
   it('is not deleted when rejecting the confirm prompt', async () => {
@@ -446,7 +461,7 @@ describe('a tool', () => {
     );
 
     mockConfirm.mockReturnValue(false);
-    userEvent.click(await findByText(/delete/i));
+    await userEvent.click(await findByText(/delete/i));
     await findByText(/delete/i);
 
     expect(mockPatchTeam).not.toHaveBeenCalled();
@@ -474,7 +489,7 @@ describe('a tool', () => {
     );
 
     mockPatchTeam.mockRejectedValue(new Error('Nope'));
-    userEvent.click(await findByText(/delete/i));
+    await userEvent.click(await findByText(/delete/i));
 
     await waitFor(() => expect(mockToast).toHaveBeenCalled());
   });
@@ -509,11 +524,11 @@ describe('a tool', () => {
         }),
     );
 
-    userEvent.click((await findAllByText(/delete/i))[0]!);
+    await userEvent.click((await findAllByText(/delete/i))[0]!);
     await findByText(/deleting/i);
     mockPatchTeam.mockClear();
 
-    userEvent.click(await findByText(/delete/i));
+    await userEvent.click(await findByText(/delete/i));
     expect(mockPatchTeam).not.toHaveBeenCalled();
 
     resolvePatchTeam(createTeamResponse());
@@ -530,9 +545,9 @@ describe('the add tool dialog', () => {
         <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
         user,
       );
-    userEvent.click(await findByText(/add/i));
+    await userEvent.click(await findByText(/add/i));
 
-    userEvent.click(await findByTitle(/close/i));
+    await userEvent.click(await findByTitle(/close/i));
     expect(queryByTitle(/close/i)).not.toBeInTheDocument();
     expect(getByText(/add/i)).toBeVisible();
   });
@@ -543,11 +558,14 @@ describe('the add tool dialog', () => {
         <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
         user,
       );
-    userEvent.click(await findByText(/add/i));
-    userEvent.type(await findByLabelText(/tool.+name/i), 'tool');
-    userEvent.type(await findByLabelText(/description/i), 'description');
-    userEvent.type(await findByLabelText(/url/i), 'http://example.com/tool');
-    userEvent.click(await findByText(/save/i));
+    await userEvent.click(await findByText(/add/i));
+    await userEvent.type(await findByLabelText(/tool.+name/i), 'tool');
+    await userEvent.type(await findByLabelText(/description/i), 'description');
+    await userEvent.type(
+      await findByLabelText(/url/i),
+      'http://example.com/tool',
+    );
+    await userEvent.click(await findByText(/save/i));
 
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
@@ -570,6 +588,7 @@ describe('the add tool dialog', () => {
 });
 
 describe('the edit tool dialog', () => {
+  // TODO: React Router v6 migration - skipped due to: timing issues with finding close button title
   it('goes back when closed', async () => {
     const { getByText, queryByTitle, findByText, findByTitle } =
       renderWithWrapper(
@@ -588,9 +607,8 @@ describe('the edit tool dialog', () => {
         />,
         user,
       );
-    userEvent.click(await findByText(/edit/i, { selector: 'li *' }));
-
-    userEvent.click(await findByTitle(/close/i));
+    await userEvent.click(await findByText(/edit/i, { selector: 'li *' }));
+    await userEvent.click(await findByTitle(/close/i));
     expect(queryByTitle(/close/i)).not.toBeInTheDocument();
     expect(getByText(/edit/i, { selector: 'li *' })).toBeVisible();
   });
@@ -618,14 +636,13 @@ describe('the edit tool dialog', () => {
         />,
         user,
       );
-    userEvent.click(
+    await userEvent.click(
       getChildByText((await findByText('tool 2')).closest('li')!, /edit/i),
     );
-    userEvent.type(await findByLabelText(/tool.+name/i), ' new');
-    userEvent.type(await findByLabelText(/description/i), ' new');
-    userEvent.type(await findByLabelText(/url/i), '-new');
-    userEvent.click(await findByText(/save/i));
-
+    await userEvent.type(await findByLabelText(/tool.+name/i), ' new');
+    await userEvent.type(await findByLabelText(/description/i), ' new');
+    await userEvent.type(await findByLabelText(/url/i), '-new');
+    await userEvent.click(await findByText(/save/i));
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('tool 2 new')).not.toBeInTheDocument();
@@ -648,6 +665,32 @@ describe('the edit tool dialog', () => {
 });
 
 describe('error handling for 403 BackendError', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation();
+    // Mock DOM APIs required by Lexical editor
+    Range.prototype.getBoundingClientRect = jest.fn(() => ({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 20,
+      top: 0,
+      right: 100,
+      bottom: 20,
+      left: 0,
+      toJSON: jest.fn(),
+    }));
+    Range.prototype.getClientRects = jest.fn(
+      () =>
+        ({
+          length: 1,
+          item: () => null,
+          [Symbol.iterator]: function* () {
+            yield new DOMRect(0, 0, 100, 20);
+          },
+        }) as unknown as DOMRectList,
+    );
+  });
+
   it('shows manuscript-status-error when reply to discussion fails with 403', async () => {
     (useManuscriptById as jest.Mock).mockImplementation(() => [
       {
@@ -689,7 +732,6 @@ describe('error handling for 403 BackendError', () => {
         ),
       ),
     );
-
     const screen = renderWithWrapper(
       <Workspace
         team={{
@@ -700,28 +742,27 @@ describe('error handling for 403 BackendError', () => {
         }}
       />,
     );
-
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(
       await screen.findByTestId(
         'discussion-collapsible-button-discussion-id-1',
       ),
     );
-    userEvent.click(
+    await userEvent.click(
       await screen.findByTestId('discussion-reply-button-discussion-id-1'),
     );
-    userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
+    await userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(mockSetFormType).toHaveBeenCalledWith({
         type: 'manuscript-status-error',
@@ -750,20 +791,25 @@ describe('error handling for 403 BackendError', () => {
         }}
       />,
     );
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(screen.getByRole('button', { name: /Start Discussion/i }));
-    userEvent.type(screen.getByRole('textbox', { name: /Title/i }), 'Test');
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(
+      screen.getByRole('button', { name: /Start Discussion/i }),
+    );
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Title/i }),
+      'Test',
+    );
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(mockSetFormType).toHaveBeenCalledWith({
         type: 'manuscript-status-error',
@@ -782,7 +828,6 @@ describe('error handling for 403 BackendError', () => {
         ),
       ),
     );
-
     const screen = renderWithWrapper(
       <Workspace
         team={{
@@ -793,24 +838,25 @@ describe('error handling for 403 BackendError', () => {
         }}
       />,
     );
-
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(screen.getByRole('button', { name: /Start Discussion/i }));
-    userEvent.type(screen.getByRole('textbox', { name: /Title/i }), 'Test');
-
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(
+      screen.getByRole('button', { name: /Start Discussion/i }),
+    );
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Title/i }),
+      'Test',
+    );
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
-
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
-
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(mockSetFormType).toHaveBeenCalledWith({
         type: 'default-error',

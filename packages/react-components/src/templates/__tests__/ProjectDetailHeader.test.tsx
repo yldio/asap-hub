@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ProjectDetail, ProjectType } from '@asap-hub/model';
 import ProjectDetailHeader, { getTeamIcon } from '../ProjectDetailHeader';
 
@@ -291,8 +291,14 @@ describe('ProjectDetailHeader', () => {
       expect(copyButton).toBeInTheDocument();
 
       // Click the button to trigger clipboard write
-      copyButton?.click();
-      expect(writeTextMock).toHaveBeenCalledWith('test@example.com');
+      if (copyButton) {
+        fireEvent.click(copyButton);
+      }
+
+      // Wait for state updates to complete
+      await waitFor(() => {
+        expect(writeTextMock).toHaveBeenCalledWith('test@example.com');
+      });
     });
 
     it('renders Closed Project banner when status is Closed', () => {

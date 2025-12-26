@@ -20,7 +20,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import Network from '../Network';
 import { getAlgoliaTeams } from '../teams/api';
@@ -104,9 +104,9 @@ const renderNetworkPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={network.template}>
-                <Network />
-              </Route>
+              <Routes>
+                <Route path={`${network.template}/*`} element={<Network />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -134,7 +134,7 @@ describe.each([
     ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
     const peopleLink = screen.getByText(/people/i, { selector: 'nav a *' });
-    userEvent.click(peopleLink);
+    await userEvent.click(peopleLink);
     const animations = container.querySelectorAll('div[class*="animation"]');
     if (animations.length > 0) {
       await waitForElementToBeRemoved(animations[0]);
@@ -217,18 +217,18 @@ it('allows typing in search queries', async () => {
   await renderNetworkPage(network({}).users({}).$);
   const searchBox = screen.getByRole('searchbox') as HTMLInputElement;
 
-  userEvent.type(searchBox, 'test123');
+  await userEvent.type(searchBox, 'test123');
   expect(searchBox.value).toEqual('test123');
 });
 
 it('allows selection of user filters', async () => {
   await renderNetworkPage(network({}).users({}).$);
 
-  userEvent.click(screen.getByText('Filters'));
+  await userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Lead PI');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockUseUsers).toHaveBeenLastCalledWith(
@@ -242,11 +242,11 @@ it('allows selection of user filters', async () => {
 it('allows selection of group filters', async () => {
   await renderNetworkPage(network({}).interestGroups({}).$);
 
-  userEvent.click(screen.getByText('Filters'));
+  await userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Active');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockGetGroups).toHaveBeenLastCalledWith(
@@ -261,11 +261,11 @@ it('allows selection of group filters', async () => {
 it('allows selection of working group filters', async () => {
   await renderNetworkPage(network({}).workingGroups({}).$);
 
-  userEvent.click(screen.getByText('Filters'));
+  await userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Complete');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
   await waitFor(() =>
     expect(mockGetWorkingGroups).toHaveBeenLastCalledWith(
@@ -284,11 +284,11 @@ describe.each([
   it(`allows selection of ${teamTypeName} filters`, async () => {
     await renderNetworkPage(teamPath);
 
-    userEvent.click(screen.getByText('Filters'));
+    await userEvent.click(screen.getByText('Filters'));
     const checkbox = screen.getByLabelText('Active');
     expect(checkbox).not.toBeChecked();
 
-    userEvent.click(checkbox);
+    await userEvent.click(checkbox);
     expect(checkbox).toBeChecked();
     await waitFor(() =>
       expect(mockGetAlgoliaTeams).toHaveBeenLastCalledWith(
@@ -332,7 +332,7 @@ it('reads filters from url', async () => {
     '?filter=Lead+PI+(Core Leadership)',
   );
 
-  userEvent.click(screen.getByText('Filters'));
+  await userEvent.click(screen.getByText('Filters'));
   const checkbox = screen.getByLabelText('Lead PI');
   expect(checkbox).toBeChecked();
   await waitFor(() =>

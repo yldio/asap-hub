@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 } from '@asap-hub/model';
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -31,21 +32,25 @@ describe('KeyInformationModal', () => {
       </MemoryRouter>,
     );
 
-  it('renders a dialog with the right title', () => {
+  it('renders a dialog with the right title', async () => {
     renderKeyInformation();
-    expect(screen.getByRole('dialog')).toContainElement(
-      screen.getByRole('heading', { name: 'Key Information' }),
-    );
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).toContainElement(
+        screen.getByRole('heading', { name: 'Key Information' }),
+      );
+    });
   });
 
-  it('renders the firstName and lastName fields', () => {
+  it('renders the firstName and lastName fields', async () => {
     renderKeyInformation();
-    expect(
-      screen.getByRole('textbox', { name: 'First Name (required)' }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: 'Last Name (required)' }),
-    ).toBeVisible();
+    await waitFor(() => {
+      expect(
+        screen.getByRole('textbox', { name: 'First Name (required)' }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole('textbox', { name: 'Last Name (required)' }),
+      ).toBeVisible();
+    });
   });
 
   it('calls onSave with the right arguments', async () => {
@@ -84,7 +89,7 @@ describe('KeyInformationModal', () => {
       social: { ...social, orcid },
       onSave,
     });
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       firstName,
       middleName,
@@ -108,8 +113,8 @@ describe('KeyInformationModal', () => {
       city: '',
       onSave,
     });
-    userEvent.click(screen.getByRole('textbox', { name: /city/i }));
-    userEvent.tab();
+    await userEvent.click(screen.getByRole('textbox', { name: /city/i }));
+    await userEvent.tab();
     expect(screen.getByText(/Please add your city/i)).toBeVisible();
   });
 
@@ -123,7 +128,7 @@ describe('KeyInformationModal', () => {
       },
     });
     const saveButton = getSaveButton();
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
     const {
       firstName,
       lastName,
@@ -153,6 +158,7 @@ describe('KeyInformationModal', () => {
   }, 60000);
 
   it('calls onSave with the updated fields', async () => {
+    const consoleErrorSpy = mockActWarningsInConsole('error');
     const firstName = 'Gonçalo';
     const middleName = 'Matias';
     const lastName = 'Ramos';
@@ -190,92 +196,119 @@ describe('KeyInformationModal', () => {
         .mockResolvedValue([positions[0]!.institution]),
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'First Name (required)' }),
       firstName,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'Middle Name(s) (optional)' }),
       middleName,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'Last Name (required)' }),
       lastName,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'Nickname (optional)' }),
       nickname,
     );
-    userEvent.click(screen.getByRole('textbox', { name: 'Degree (required)' }));
-    userEvent.click(screen.getByText(degrees[0]!));
-    userEvent.click(
+    await userEvent.click(
+      screen.getByRole('textbox', { name: 'Degree (required)' }),
+    );
+    await userEvent.click(screen.getByText(degrees[0]!));
+    await userEvent.click(
       screen.getByRole('textbox', {
         name: 'Region (required) Select the region you are based in.',
       }),
     );
-    userEvent.click(screen.getByText(region));
-    userEvent.click(
+    await userEvent.click(screen.getByText(region));
+    await userEvent.click(
       screen.getByRole('textbox', {
         name: 'Location (required) Select the location you are based in.',
       }),
     );
-    userEvent.click(screen.getByText(country));
-    userEvent.type(
+    await userEvent.click(screen.getByText(country));
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'City (required)' }),
       city,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'State/Province (required)' }),
       stateOrProvince,
     );
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('textbox', { name: 'Institution (required)' }),
     );
     const institution = await screen.findByText(positions[0]!.institution);
-    userEvent.click(institution);
-    userEvent.type(
+    await userEvent.click(institution);
+    await waitFor(() => {
+      expect(
+        screen.getByRole('textbox', { name: 'Department (required)' }),
+      ).toBeVisible();
+    });
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'Department (required)' }),
       positions[0]!.department,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: 'Role (required)' }),
       positions[0]!.role,
     );
-    userEvent.type(
-      screen.getByRole('textbox', {
-        name: 'ORCID (optional) Type your ORCID ID.',
-      }),
-      orcid,
-    );
-    userEvent.type(
-      screen.getByRole('textbox', {
-        name: 'LinkedIn (optional) Type your LinkedIn profile URL.',
-      }),
-      social.linkedIn,
-    );
-    userEvent.type(
-      screen.getByRole('textbox', {
-        name: 'Github (optional) Type your Github profile URL.',
-      }),
-      social.github,
-    );
+    const orcidField = screen.getByRole('textbox', {
+      name: 'ORCID (optional) Type your ORCID ID.',
+    });
+    await userEvent.type(orcidField, orcid);
+    await waitFor(() => {
+      expect(orcidField).toHaveValue(orcid);
+    });
+    const linkedInField = screen.getByRole('textbox', {
+      name: 'LinkedIn (optional) Type your LinkedIn profile URL.',
+    });
+    await userEvent.type(linkedInField, social.linkedIn);
+    await waitFor(() => {
+      expect(linkedInField).toHaveValue(social.linkedIn);
+    });
+    const githubField = screen.getByRole('textbox', {
+      name: 'Github (optional) Type your Github profile URL.',
+    });
+    await userEvent.type(githubField, social.github);
+    await waitFor(() => {
+      expect(githubField).toHaveValue(social.github);
+    });
+    // Blur the last field to trigger any pending validations
+    await userEvent.tab();
+    // Give extra time for async validations to complete
+    await new Promise((resolve) => setTimeout(resolve, 200));
     const saveButton = getSaveButton();
-    userEvent.click(saveButton);
-    expect(onSave).toHaveBeenCalledWith({
-      firstName,
-      middleName,
-      lastName,
-      nickname,
-      degrees,
-      positions,
-      country,
-      stateOrProvince,
-      city,
-      region,
-      orcid,
-      social,
+    await userEvent.click(saveButton);
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalledWith({
+        firstName,
+        middleName,
+        lastName,
+        nickname,
+        degrees,
+        positions,
+        country,
+        stateOrProvince,
+        city,
+        region,
+        orcid,
+        social,
+      });
     });
     await waitFor(() => expect(saveButton).toBeEnabled());
+    // Wait for any pending state updates to complete after save
+    await waitFor(
+      () => {
+        // Just wait for the next tick to ensure all pending updates are flushed
+        return Promise.resolve();
+      },
+      { timeout: 1000 },
+    );
+    // Additional wait to ensure all async operations complete
+    await new Promise((resolve) => setImmediate(resolve));
+    consoleErrorSpy.mockRestore();
   }, 180000);
 
   it('calls onSave with the updated social fields', async () => {
@@ -323,68 +356,68 @@ describe('KeyInformationModal', () => {
         .mockResolvedValue([positions[0]!.institution]),
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Google Scholar (optional) Type your Google Scholar profile URL.',
       }),
       social.googleScholar,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'ORCID (optional) Type your ORCID ID.',
       }),
       orcid,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Research Gate (optional) Type your Research Gate profile URL.',
       }),
       social.researchGate,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'ResearcherID (optional) Type your Researcher ID.',
       }),
       social.researcherId,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Blog (optional)',
       }),
       social.blog,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'BlueSky (optional) Type your BlueSky profile URL.',
       }),
       social.blueSky,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Threads (optional) Type your Threads profile URL.',
       }),
       social.threads,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'X (optional) Type your X (formerly twitter) profile URL.',
       }),
       social.twitter,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'LinkedIn (optional) Type your LinkedIn profile URL.',
       }),
       social.linkedIn,
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: 'Github (optional) Type your Github profile URL.',
       }),
       social.github,
     );
     const saveButton = getSaveButton();
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
     expect(onSave).toHaveBeenCalledWith({
       city,
       country,
@@ -405,34 +438,36 @@ describe('KeyInformationModal', () => {
     await waitFor(() => expect(saveButton).toBeEnabled());
   }, 300000);
 
-  it('can click add an extra position', () => {
+  it('can click add an extra position', async () => {
     renderKeyInformation();
     const addButton = getAddButton();
-    userEvent.click(addButton);
-    const secondary = screen
-      .getByRole('heading', {
-        name: /Secondary Position/i,
-      })
-      .closest('section') as HTMLElement;
-    expect(
-      within(secondary).getByRole('textbox', {
-        name: /Institution/i,
-      }),
-    ).toBeVisible();
-    userEvent.click(addButton);
-    const tertiary = screen
-      .getByRole('heading', {
-        name: /Tertiary Position/i,
-      })
-      .closest('section') as HTMLElement;
-    expect(
-      within(tertiary).getByRole('textbox', {
-        name: /Institution/i,
-      }),
-    ).toBeVisible();
+    await userEvent.click(addButton);
+    const secondary = await screen.findByRole('heading', {
+      name: /Secondary Position/i,
+    });
+    const secondarySection = secondary.closest('section') as HTMLElement;
+    await waitFor(() => {
+      expect(
+        within(secondarySection).getByRole('textbox', {
+          name: /Institution/i,
+        }),
+      ).toBeVisible();
+    });
+    await userEvent.click(addButton);
+    const tertiary = await screen.findByRole('heading', {
+      name: /Tertiary Position/i,
+    });
+    const tertiarySection = tertiary.closest('section') as HTMLElement;
+    await waitFor(() => {
+      expect(
+        within(tertiarySection).getByRole('textbox', {
+          name: /Institution/i,
+        }),
+      ).toBeVisible();
+    });
   });
 
-  it('there can be only 3 positions', () => {
+  it('there can be only 3 positions', async () => {
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
       { institution: 'Benfica', department: 'First Team', role: 'Forward' },
@@ -441,14 +476,17 @@ describe('KeyInformationModal', () => {
     renderKeyInformation({
       positions,
     });
-    expect(
-      screen.queryByRole('button', {
-        name: /add another position/i,
-      }),
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('button', {
+          name: /add another position/i,
+        }),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('can save an extra position', async () => {
+    const consoleErrorSpy = mockActWarningsInConsole('error');
     const onSave = jest.fn();
     const position = {
       institution: 'Olhanense',
@@ -467,32 +505,42 @@ describe('KeyInformationModal', () => {
         .fn()
         .mockResolvedValue([position.institution]),
     });
-    userEvent.click(getAddButton());
+    await userEvent.click(getAddButton());
 
-    const tertiary = screen
-      .getByRole('heading', {
-        name: /Tertiary Position/i,
-      })
-      .closest('section') as HTMLElement;
+    const tertiary = await screen.findByRole('heading', {
+      name: /Tertiary Position/i,
+    });
+    const tertiarySection = tertiary.closest('section') as HTMLElement;
 
-    userEvent.click(
-      within(tertiary).getByRole('textbox', { name: /Institution/i }),
-    );
+    const institutionField = within(tertiarySection).getByRole('textbox', {
+      name: /Institution/i,
+    });
+    await userEvent.click(institutionField);
     const institution = await screen.findByText(position.institution);
-    userEvent.click(institution);
-    userEvent.type(
-      within(tertiary).getByRole('textbox', { name: /Department/i }),
+    await userEvent.click(institution);
+    await waitFor(() => {
+      expect(
+        within(tertiarySection).getByRole('textbox', { name: /Department/i }),
+      ).toBeVisible();
+    });
+    await userEvent.type(
+      within(tertiarySection).getByRole('textbox', { name: /Department/i }),
       position.department,
     );
-    userEvent.type(
-      within(tertiary).getByRole('textbox', { name: /Role/i }),
+    await userEvent.type(
+      within(tertiarySection).getByRole('textbox', { name: /Role/i }),
       position.role,
     );
     const saveButton = getSaveButton();
-    userEvent.click(saveButton);
-    expect(onSave).toHaveBeenCalledWith(
-      expect.objectContaining({ positions: [...positions, position] }),
-    );
+    await userEvent.click(saveButton);
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalledWith(
+        expect.objectContaining({ positions: [...positions, position] }),
+      );
+    });
     await waitFor(() => expect(saveButton).toBeEnabled());
+    // Wait for any pending state updates to complete
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    consoleErrorSpy.mockRestore();
   }, 30000);
 });

@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentType, ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { css, Theme } from '@emotion/react';
 
 import { layoutStyles } from '../text';
+import { useBlockedClick } from '../navigation';
 import { rem } from '../pixels';
 import { fern, neutral900, neutral1000 } from '../colors';
 import { useHasRouter } from '../routing';
@@ -11,7 +12,6 @@ import IconProps from '../icons/props';
 
 const borderBottomWidth = 4;
 
-const activeClassName = 'active-link';
 const styles = css({
   display: 'inline-block',
   paddingBottom: rem(16 + borderBottomWidth),
@@ -35,19 +35,38 @@ const iconStyles = css({
   paddingRight: rem(6),
 });
 
+/**
+ * Check if the current path matches the link path using prefix matching.
+ * e.g., /analytics/productivity matches /analytics/productivity/user
+ */
+const useIsActivePrefix = (href: string): boolean => {
+  const location = useLocation();
+  const linkPath = new URL(href, window.location.href).pathname;
+  return (
+    location.pathname === linkPath ||
+    location.pathname.startsWith(`${linkPath}/`)
+  );
+};
+
 interface TabLinkProps {
   readonly href: string;
   readonly Icon?: ComponentType<IconProps>;
   readonly children: ReactNode;
 }
 const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
-  const active =
-    new URL(href, window.location.href).pathname === window.location.pathname;
+  const blockedClick = useBlockedClick();
+  const hasRouter = useHasRouter();
+  const isActivePrefix = hasRouter ? useIsActivePrefix(href) : false;
+
+  // Fallback for non-router context: exact match only
+  const active = hasRouter
+    ? isActivePrefix
+    : new URL(href, window.location.href).pathname === window.location.pathname;
 
   // Create inner content with properly colored icon
   const createInner = (isActive: boolean) => (
     <p
-      css={({ components }) => [
+      css={({ components }: Theme) => [
         layoutStyles,
         css({ margin: 0 }),
         components?.TabLink?.layoutStyles,
@@ -62,27 +81,33 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
     </p>
   );
 
-  if (useHasRouter()) {
-    // For React Router v5, use isActive to determine match
+  if (hasRouter) {
+    // Use Link instead of NavLink to have full control over active state with prefix matching
     return (
-      <NavLink
+      <Link
         to={href}
-        activeClassName={activeClassName}
-        css={(theme) => [
-          styles,
-          theme.components?.TabLink?.styles,
-          { [`&.${activeClassName}`]: activeStyles(theme) },
-        ]}
+        style={{ textDecoration: 'none', color: 'unset' }}
+        className={active ? 'active' : undefined}
+        onClick={blockedClick}
       >
-        {createInner(active)}
-      </NavLink>
+        <div
+          css={(theme: Theme) => [
+            styles,
+            theme.components?.TabLink?.styles,
+            active && activeStyles(theme),
+          ]}
+        >
+          {createInner(active)}
+        </div>
+      </Link>
     );
   }
 
   return (
     <a
       href={href}
-      css={(theme) => [
+      className={active ? 'active' : undefined}
+      css={(theme: Theme) => [
         styles,
         theme.components?.TabLink?.styles,
         active && activeStyles(theme),

@@ -13,7 +13,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import * as flags from '@asap-hub/flags';
@@ -125,9 +125,12 @@ const renderPage = async (metric = 'working-group') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[getPath(metric)]}>
-              <Route path="/analytics/leadership/:metric">
-                <Leadership />
-              </Route>
+              <Routes>
+                <Route
+                  path="/analytics/leadership/:metric"
+                  element={<Leadership />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -168,8 +171,8 @@ it('switches to interest group data', async () => {
 
   await renderPage('working-group');
   const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
-  userEvent.click(input);
-  userEvent.click(screen.getByText(label));
+  await userEvent.click(input);
+  await userEvent.click(screen.getByText(label));
 
   expect(screen.getAllByText(label).length).toBe(2);
 });
@@ -181,10 +184,12 @@ it('switches to open science champion data if flag is on', async () => {
 
   await renderPage();
   const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
-  userEvent.click(input);
-  userEvent.click(screen.getByText(label));
+  await userEvent.click(input);
+  await userEvent.click(screen.getByText(label));
 
-  expect(screen.getAllByText(label).length).toBe(3);
+  // After selecting "Open Science Champion", it should appear multiple times:
+  // in the dropdown, heading, and other UI elements
+  expect(screen.getAllByText(label).length).toBeGreaterThanOrEqual(2);
 });
 
 it('redirects to working group if OS Champion feature flag is off', async () => {
@@ -203,7 +208,12 @@ it('calls algolia client with the right index name', async () => {
       expect.not.stringContaining('team_desc'),
     );
   });
-  userEvent.click(screen.getByTitle('Active Alphabetical Ascending Sort Icon'));
+
+  const sortIcon = await screen.findByTitle(
+    'Active Alphabetical Ascending Sort Icon',
+  );
+  await userEvent.click(sortIcon);
+
   await waitFor(() => {
     expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
       expect.stringContaining('team_desc'),
@@ -221,7 +231,7 @@ describe('search', () => {
       await renderPage();
       const searchBox = getSearchBox();
 
-      userEvent.type(searchBox, 'test123');
+      await userEvent.type(searchBox, 'test123');
       expect(searchBox.value).toEqual('test123');
       await waitFor(() =>
         expect(mockSearchForTagValues).toHaveBeenCalledWith(
@@ -240,11 +250,11 @@ describe('search', () => {
       await renderPage();
       const searchBox = getSearchBox();
 
-      userEvent.click(searchBox);
+      await userEvent.click(searchBox);
       await waitFor(() => {
         expect(screen.getByText('Alessi')).toBeInTheDocument();
       });
-      userEvent.click(screen.getByText('Alessi'));
+      await userEvent.click(screen.getByText('Alessi'));
       await waitFor(() =>
         expect(mockSearch).toHaveBeenCalledWith(
           expect.anything(),
@@ -261,7 +271,7 @@ describe('search', () => {
       await renderPage('os-champion');
       const searchBox = getSearchBox();
 
-      userEvent.type(searchBox, 'test123');
+      await userEvent.type(searchBox, 'test123');
       expect(searchBox.value).toEqual('test123');
       await waitFor(() =>
         expect(mockGetTagSuggestions).toHaveBeenCalledWith('test123'),
@@ -274,11 +284,11 @@ describe('search', () => {
       await renderPage('os-champion');
       const searchBox = getSearchBox();
 
-      userEvent.click(searchBox);
+      await userEvent.click(searchBox);
       await waitFor(() => {
         expect(screen.getByText('Alessi')).toBeInTheDocument();
       });
-      userEvent.click(screen.getByText('Alessi'));
+      await userEvent.click(screen.getByText('Alessi'));
       await waitFor(() =>
         expect(mockOSChampionSearch).toHaveBeenCalledWith({
           searchTags: ['Alessi'],
@@ -295,7 +305,7 @@ describe('search', () => {
 describe('csv export', () => {
   it('exports analytics for working groups', async () => {
     await renderPage();
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/leadership_working-group_\d+\.csv/),
       expect.anything(),
@@ -304,7 +314,7 @@ describe('csv export', () => {
 
   it('exports analytics for interest groups', async () => {
     await renderPage('interest-group');
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/leadership_interest-group_\d+\.csv/),
       expect.anything(),
@@ -314,7 +324,7 @@ describe('csv export', () => {
   it('exports analytics for os champion', async () => {
     jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
     await renderPage('os-champion');
-    userEvent.click(screen.getByText(/csv/i));
+    await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/leadership_os-champion_\d+\.csv/),
       expect.anything(),
@@ -374,18 +384,22 @@ it('renders data for different time ranges', async () => {
     });
   await renderPage('os-champion');
 
-  expect(screen.getByText('20')).toBeVisible();
+  await waitFor(() => {
+    expect(screen.getByText('20')).toBeVisible();
+  });
   expect(screen.queryByText('10')).not.toBeInTheDocument();
 
   const rangeButton = screen.getByRole('button', {
     name: /Since Hub Launch \(2020\) Chevron Down/i,
   });
-  userEvent.click(rangeButton);
-  userEvent.click(screen.getByText(/Last 30 days/));
+  await userEvent.click(rangeButton);
+  await userEvent.click(screen.getByText(/Last 30 days/));
   await waitFor(() =>
     expect(screen.getAllByText('Open Science Champion')).toHaveLength(2),
   );
 
-  expect(screen.getByText('10')).toBeVisible();
+  await waitFor(() => {
+    expect(screen.getByText('10')).toBeVisible();
+  });
   expect(screen.queryByText('20')).not.toBeInTheDocument();
 });

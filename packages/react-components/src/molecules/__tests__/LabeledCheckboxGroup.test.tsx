@@ -67,7 +67,7 @@ it('checks the checkbox button with more than one value selected', () => {
   expect(getByLabelText('Gatwick')).toBeChecked();
 });
 
-it('emits value changes', () => {
+it('emits value changes', async () => {
   const handleChange = jest.fn();
   const { getByLabelText } = render(
     <LabeledCheckboxGroup
@@ -79,7 +79,7 @@ it('emits value changes', () => {
       onChange={handleChange}
     />,
   );
-  userEvent.click(getByLabelText('Gatwick'));
+  await userEvent.click(getByLabelText('Gatwick'));
   expect(handleChange).toHaveBeenLastCalledWith('LGW');
 });
 

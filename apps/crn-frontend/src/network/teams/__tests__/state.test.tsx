@@ -8,7 +8,8 @@ import {
 } from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
 import { waitFor } from '@testing-library/dom';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
+import { startTransition, Suspense } from 'react';
 import * as recoilModule from 'recoil';
 import {
   MutableSnapshot,
@@ -16,7 +17,7 @@ import {
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
-import { authorizationState } from '../../../auth/state';
+import { authorizationState, auth0State } from '../../../auth/state';
 import {
   getManuscript,
   updateDiscussion,
@@ -44,6 +45,7 @@ jest.mock('../api', () => ({
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
   createDiscussion: jest.fn(),
   createPreprintResearchOutput: jest.fn(),
+  getTeam: jest.fn().mockResolvedValue(undefined),
 }));
 
 jest.mock('../../../shared-api/files');
@@ -91,7 +93,12 @@ describe('team selectors', () => {
     expect(result.current?.tags.length).toBe(1);
   });
 
-  test('resets team state when newValue is undefined', () => {
+  test('resets team state when newValue is undefined', async () => {
+    // Suppress React 18 suspend warning - it's expected when resetting
+    // to undefined triggers async selector evaluation.
+    // React 18 introduced stricter warnings about suspending during synchronous input.
+    // We use startTransition to mark the update as non-urgent, but the warning
+    // may still appear. This is expected behavior and handled correctly by React.
     jest.spyOn(console, 'error').mockImplementation();
     const mockTeam = {
       id: 'id-0',
@@ -107,11 +114,17 @@ describe('team selectors', () => {
       manuscripts: [],
     };
     const initialState = ({ set }: MutableSnapshot) => {
+      // Mock auth0State to prevent "Auth0 not available" error
+      set(auth0State, {
+        getTokenSilently: jest.fn().mockResolvedValue('mock-token'),
+      } as never);
       set(patchedTeamState(teamId), mockTeam);
     };
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+      <RecoilRoot initializeState={initialState}>
+        <Suspense fallback="loading">{children}</Suspense>
+      </RecoilRoot>
     );
 
     const { result } = renderHook(
@@ -122,13 +135,23 @@ describe('team selectors', () => {
       { wrapper },
     );
 
-    expect(result.current.getTeamState).toEqual(mockTeam);
-
-    act(() => {
-      result.current.setTeamState(undefined);
+    // Wait for initial render to complete
+    await waitFor(() => {
+      expect(result.current.getTeamState).toEqual(mockTeam);
     });
 
-    expect(result.current.getTeamState).toEqual(mockTeam);
+    // Reset the state - this will cause teamState to fall back to initialTeamState
+    // which is async. We use startTransition to mark this as non-urgent.
+    act(() => {
+      startTransition(() => {
+        result.current.setTeamState(undefined);
+      });
+    });
+
+    // Wait for async selector to resolve
+    await waitFor(() => {
+      expect(result.current.getTeamState).toEqual(mockTeam);
+    });
   });
 });
 

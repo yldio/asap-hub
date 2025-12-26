@@ -1,16 +1,27 @@
+import { useEffect } from 'react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { ThemeProvider } from '@emotion/react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
-import { Router, StaticRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { activePrimaryBackgroundColorDefault } from '../../button';
 import { color, pine } from '../../colors';
 import NavigationLink from '../NavigationLink';
 
+// Helper to capture location in tests
+let currentPathname: string | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentPathname = location.pathname;
+  }, [location]);
+  return null;
+};
+
 describe.each`
   description           | wrapper
   ${'with a router'}    | ${StaticRouter}
-  ${'without a router'} | ${undefined}
+  ${'without a router'} | ${MemoryRouter}
 `('$description', ({ wrapper }) => {
   it('renders a link with the given text', () => {
     render(
@@ -65,45 +76,53 @@ describe.each`
   });
 
   it('disables the current link when not enabled', () => {
+    const Wrapper = wrapper;
     render(
-      <NavigationLink href="/location" icon={<svg />} enabled={false}>
-        Target
-      </NavigationLink>,
+      <Wrapper>
+        <NavigationLink href="/location" icon={<svg />} enabled={false}>
+          Target
+        </NavigationLink>
+      </Wrapper>,
     );
-    expect(screen.getByText('Target')).toHaveStyle('opacity:0,3');
-    expect(screen.getByText('Target').closest('a')).toHaveStyle(
-      'pointer-events:none',
-    );
+    const targetElement = screen.getByText('Target');
+    // The text is inside a <p>, which is inside a styled div
+    const styledDiv = targetElement.parentElement;
+    expect(styledDiv).toHaveStyle('opacity: 0.3');
+    expect(styledDiv).toHaveStyle('pointer-events: none');
   });
 });
 
 describe('with a router', () => {
   it('does not trigger a full page navigation on click', () => {
-    const history = createMemoryHistory({ initialEntries: ['/'] });
+    currentPathname = null;
     render(
-      <Router history={history}>
+      <MemoryRouter initialEntries={['/']}>
+        <LocationCapture />
         <NavigationLink href="/location" icon={<svg />}>
           Text
         </NavigationLink>
-      </Router>,
+      </MemoryRouter>,
     );
     expect(fireEvent.click(screen.getByRole('link'))).toBe(false);
-    expect(history.location.pathname).toEqual('/location');
+    expect(currentPathname).toEqual('/location');
   });
 
   it('triggers a full page navigation on click of an external link', () => {
     render(
-      <NavigationLink href="http://example.com/" icon={<svg />}>
-        Text
-      </NavigationLink>,
+      <MemoryRouter>
+        <NavigationLink href="http://example.com/" icon={<svg />}>
+          Text
+        </NavigationLink>
+      </MemoryRouter>,
     );
     expect(fireEvent.click(screen.getByRole('link'))).toBe(true);
   });
 
   it('default route is not always highlighted as selected', () => {
-    const history = createMemoryHistory({ initialEntries: ['/location'] });
+    currentPathname = null;
     render(
-      <Router history={history}>
+      <MemoryRouter initialEntries={['/location']}>
+        <LocationCapture />
         <NavigationLink href="/" icon={<svg />}>
           Default
         </NavigationLink>
@@ -113,9 +132,9 @@ describe('with a router', () => {
         <NavigationLink href="/location" icon={<svg />}>
           Target
         </NavigationLink>
-      </Router>,
+      </MemoryRouter>,
     );
-    expect(history.location.pathname).toEqual('/location');
+    expect(currentPathname).toEqual('/location');
     expect(
       findParentWithStyle(screen.getByText('Target'), 'backgroundColor')
         ?.backgroundColor,
@@ -134,9 +153,11 @@ describe('with a router', () => {
 describe('with ThemeProvider', () => {
   it('uses default colors when no theme whas provided', () => {
     render(
-      <NavigationLink href="http://example.com/" icon={<svg />}>
-        Text
-      </NavigationLink>,
+      <MemoryRouter>
+        <NavigationLink href="http://example.com/" icon={<svg />}>
+          Text
+        </NavigationLink>
+      </MemoryRouter>,
     );
     const { color: primaryColor, backgroundColor } = getComputedStyle(
       screen.getByRole('link'),
@@ -154,11 +175,13 @@ describe('with ThemeProvider', () => {
       },
     };
     render(
-      <ThemeProvider theme={theme}>
-        <NavigationLink href="http://example.com/" icon={<svg />}>
-          Text
-        </NavigationLink>
-      </ThemeProvider>,
+      <MemoryRouter>
+        <ThemeProvider theme={theme}>
+          <NavigationLink href="http://example.com/" icon={<svg />}>
+            Text
+          </NavigationLink>
+        </ThemeProvider>
+      </MemoryRouter>,
     );
     const { color: primaryColor, backgroundColor } = getComputedStyle(
       screen.getByRole('link'),

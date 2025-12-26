@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import OnboardedTabLink from '../OnboardedTabLink';
 
 describe('OnboardedTabLink', () => {
   it('should display the link when enabled', () => {
     render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <OnboardedTabLink index={1} href={'/test'}>
           Link Test
         </OnboardedTabLink>
@@ -18,7 +18,7 @@ describe('OnboardedTabLink', () => {
 
   it('should not display the link when disabled', () => {
     render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <OnboardedTabLink index={1} disabled href={'/test'}>
           Link Test
         </OnboardedTabLink>

@@ -2,7 +2,7 @@ import { createListEventResponse } from '@asap-hub/fixtures';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import { refreshCalendarsState } from '../calendar/state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -37,13 +37,18 @@ const renderEventsListPage = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: '/' }]}>
-              <Route path="/">
-                <EventList
-                  searchQuery={searchQuery}
-                  currentTime={currentTime}
-                  past={past}
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <EventList
+                      searchQuery={searchQuery}
+                      currentTime={currentTime}
+                      past={past}
+                    />
+                  }
                 />
-              </Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

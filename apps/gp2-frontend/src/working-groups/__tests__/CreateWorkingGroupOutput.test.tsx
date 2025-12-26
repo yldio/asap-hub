@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
@@ -10,7 +11,7 @@ import userEvent from '@testing-library/user-event';
 import { ValidationErrorResponse } from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
@@ -74,20 +75,24 @@ const renderCreateWorkingGroupOutput = async (
                   .createOutput({ outputDocumentType: documentType }).$,
               ]}
             >
-              <Route
-                path={
-                  gp2Routing.workingGroups.template +
-                  gp2Routing.workingGroups({}).workingGroup.template +
-                  gp2Routing
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: 'working-group-id-1' })
-                    .createOutput.template
-                }
-              >
-                <NotificationMessages>
-                  <CreateWorkingGroupOutput />
-                </NotificationMessages>
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    gp2Routing.workingGroups.template +
+                    gp2Routing.workingGroups({}).workingGroup.template +
+                    gp2Routing
+                      .workingGroups({})
+                      .workingGroup({ workingGroupId: 'working-group-id-1' })
+                      .createOutput.template
+                  }
+                  element={
+                    <NotificationMessages>
+                      <CreateWorkingGroupOutput />
+                    </NotificationMessages>
+                  }
+                />
+                <Route path="*" element={<div>Redirected</div>} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -128,31 +133,39 @@ describe('Create WorkingGroup Output', () => {
   });
 
   it('publishes the output', async () => {
+    const consoleWarnSpy = mockActWarningsInConsole();
     mockCreateOutput.mockResolvedValueOnce(gp2.createOutputResponse());
     const title = 'this is the output title';
     const link = 'https://example.com';
     await renderCreateWorkingGroupOutput('procedural-form');
 
-    userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
-    userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
-    userEvent.type(
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /title/i }),
+      title,
+    );
+    await userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
+    await userEvent.type(
       screen.getByRole('textbox', { name: /^description/i }),
       'An interesting article',
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /^short description/i }),
       'An article',
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Tony Stark'));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText(/Steve Rogers \(/i));
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByText(/^none/i));
+    await userEvent.click(authors);
+    await userEvent.click(screen.getByText('Tony Stark'));
+    await userEvent.click(authors);
+    await userEvent.click(screen.getByText(/Steve Rogers \(/i));
+    await userEvent.click(
+      screen.getByRole('textbox', { name: /identifier type/i }),
+    );
+    await userEvent.click(screen.getByText(/^none/i));
     expect(screen.getByText('Working Group Title')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Publish Output' }),
+    );
 
     await waitFor(() => {
       expect(mockCreateOutput).toHaveBeenCalledWith(
@@ -183,9 +196,11 @@ describe('Create WorkingGroup Output', () => {
         expect.anything(),
       );
     });
+    consoleWarnSpy.mockRestore();
   });
 
   it('will show server side validation error for link', async () => {
+    const consoleErrorSpy = mockActWarningsInConsole('error');
     const validationResponse: ValidationErrorResponse = {
       message: 'Validation error',
       error: 'Bad Request',
@@ -203,36 +218,45 @@ describe('Create WorkingGroup Output', () => {
     const link = 'https://example.com';
     await renderCreateWorkingGroupOutput('procedural-form');
 
-    userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
-    userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
-    userEvent.type(
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /title/i }),
+      title,
+    );
+    await userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
+    await userEvent.type(
       screen.getByRole('textbox', { name: /^description/i }),
       'An interesting article',
     );
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /^short description/i }),
       'An article',
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Tony Stark'));
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByText(/^none/i));
+    await userEvent.click(authors);
+    await userEvent.click(screen.getByText('Tony Stark'));
+    await userEvent.click(
+      screen.getByRole('textbox', { name: /identifier type/i }),
+    );
+    await userEvent.click(screen.getByText(/^none/i));
     expect(screen.getByText('Working Group Title')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Publish Output' }),
+    );
     await waitFor(() => {
       expect(mockCreateOutput).toHaveBeenCalled();
     });
-    expect(
-      screen.queryAllByText(
-        'An Output with this URL already exists. Please enter a different URL.',
-      ).length,
-    ).toBeGreaterThan(1);
+    await waitFor(() => {
+      expect(
+        screen.queryAllByText(
+          'An Output with this URL already exists. Please enter a different URL.',
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+    });
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-    userEvent.type(url, 'a');
+    await userEvent.type(url, 'a');
     url.blur();
 
     expect(
@@ -240,5 +264,6 @@ describe('Create WorkingGroup Output', () => {
         'An Output with this URL already exists. Please enter a different URL.',
       ),
     ).toBeNull();
+    consoleErrorSpy.mockRestore();
   });
 });

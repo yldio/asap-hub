@@ -51,10 +51,10 @@ it('changes the chevron direction based on open state', () => {
   );
 });
 
-it('triggers the click event', () => {
+it('triggers the click event', async () => {
   const handleClick = jest.fn();
   render(<UserMenuButton onClick={handleClick} />);
 
-  userEvent.click(screen.getByLabelText(/toggle.+user menu/i));
+  await userEvent.click(screen.getByLabelText(/toggle.+user menu/i));
   expect(handleClick).toHaveBeenCalledTimes(1);
 });

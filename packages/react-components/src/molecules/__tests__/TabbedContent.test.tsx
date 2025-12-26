@@ -158,7 +158,7 @@ describe('tabs', () => {
     expect(screen.getByRole('button', { name: 'Second Tab' })).toBeDisabled();
   });
 
-  it('displays the empty tab state when there are no items on a tab', () => {
+  it('displays the empty tab state when there are no items on a tab', async () => {
     render(
       <TabbedContent
         {...props}
@@ -170,7 +170,7 @@ describe('tabs', () => {
       />,
     );
     expect(screen.getByText('Empty First Tab')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Second Tab' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Second Tab' }));
     expect(screen.getByText('Empty Second Tab')).toBeVisible();
   });
 });

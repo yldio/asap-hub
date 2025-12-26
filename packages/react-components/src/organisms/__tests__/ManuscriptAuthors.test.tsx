@@ -94,7 +94,7 @@ it.each([true, false])(
   async (isMultiSelect) => {
     render(<ManuscriptAuthorsComponent isMultiSelect={isMultiSelect} />);
 
-    userEvent.type(screen.getByRole('textbox'), 'Jane Doe');
+    await userEvent.type(screen.getByRole('textbox'), 'Jane Doe');
 
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -103,7 +103,7 @@ it.each([true, false])(
     expect(screen.getByText(/Jane Doe/i, { selector: 'strong' })).toBeVisible();
     expect(screen.getByText(/(Non CRN)/i, { selector: 'span' })).toBeVisible();
 
-    userEvent.click(screen.getByText(/Non CRN/i));
+    await userEvent.click(screen.getByText(/Non CRN/i));
 
     expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
   },
@@ -132,12 +132,12 @@ it.each([true, false])(
       />,
     );
 
-    userEvent.click(screen.getByLabelText(/Authors/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.click(screen.getByText(/External Author/i));
+    await userEvent.click(screen.getByText(/External Author/i));
 
     expect(screen.getByText(/External Author Email/i)).toBeInTheDocument();
   },
@@ -148,20 +148,20 @@ it.each([true, false])(
   async (isMultiSelect) => {
     render(<ManuscriptAuthorsComponent isMultiSelect={isMultiSelect} />);
 
-    userEvent.type(screen.getByRole('textbox'), 'Jane Doe');
+    await userEvent.type(screen.getByRole('textbox'), 'Jane Doe');
 
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByText(/Non CRN/i));
+    await userEvent.click(screen.getByText(/Non CRN/i));
 
     expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
 
     const authorElement = screen.getByText(/Non CRN/i);
     const container = authorElement.parentElement?.parentElement?.parentElement;
     const closeButton = within(container!).getByTitle('Close');
-    userEvent.click(closeButton);
+    await userEvent.click(closeButton);
 
     expect(screen.queryByText(/Jane Doe Email/i)).not.toBeInTheDocument();
   },
@@ -177,7 +177,7 @@ it.each([true, false])(
       />,
     );
 
-    userEvent.click(screen.getByLabelText(/Authors/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -190,22 +190,22 @@ describe('Multiple Option Selection', () => {
   it('should allow more than one author when is isMultiSelect is true', async () => {
     render(<ManuscriptAuthorsComponent />);
 
-    userEvent.click(screen.getByLabelText(/Authors/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.click(screen.getByText('Author Two'));
+    await userEvent.click(screen.getByText('Author Two'));
 
     expect(screen.getByText(/Author Two/i)).toBeInTheDocument();
     expect(screen.queryByText(/Author One/i)).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByLabelText(/Authors/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.click(screen.getByText('Author One'));
+    await userEvent.click(screen.getByText('Author One'));
 
     expect(screen.getByText(/Author One/i)).toBeInTheDocument();
     expect(screen.getByText(/Author Two/i)).toBeInTheDocument();
@@ -214,27 +214,27 @@ describe('Multiple Option Selection', () => {
   it('when user removes internal author, the external author email input field does not disappear', async () => {
     render(<ManuscriptAuthorsComponent />);
 
-    userEvent.click(screen.getByLabelText(/Authors/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.click(screen.getByText('Author Two'));
+    await userEvent.click(screen.getByText('Author Two'));
 
-    userEvent.type(screen.getByRole('textbox'), 'Jane Doe');
+    await userEvent.type(screen.getByRole('textbox'), 'Jane Doe');
 
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByText(/Non CRN/i));
+    await userEvent.click(screen.getByText(/Non CRN/i));
 
     expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
 
     const authorElement = screen.getByText(/Author Two/i);
     const container = authorElement.parentElement?.parentElement?.parentElement;
     const closeButton = within(container!).getByTitle('Close');
-    userEvent.click(closeButton);
+    await userEvent.click(closeButton);
 
     expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
   });
@@ -244,22 +244,22 @@ describe('Single Option Selection', () => {
   it('should allow only one author when is isMultiSelect is false', async () => {
     render(<ManuscriptAuthorsComponent isMultiSelect={false} />);
 
-    userEvent.click(screen.getByLabelText(/Authors/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.click(screen.getByText('Author Two'));
+    await userEvent.click(screen.getByText('Author Two'));
 
     expect(screen.getByText(/Author Two/i)).toBeInTheDocument();
     expect(screen.queryByText(/Author One/i)).not.toBeInTheDocument();
 
-    userEvent.click(screen.getByLabelText(/Authors/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    userEvent.click(screen.getByText('Author One'));
+    await userEvent.click(screen.getByText('Author One'));
 
     expect(screen.getByText(/Author One/i)).toBeInTheDocument();
     expect(screen.queryByText(/Author Two/i)).not.toBeInTheDocument();

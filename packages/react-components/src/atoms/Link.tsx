@@ -5,7 +5,7 @@ import { getButtonChildren, getButtonStyles } from '../button';
 import { fern, paper, pine } from '../colors';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
 import Ellipsis from './Ellipsis';
-import { Anchor } from '.';
+import Anchor from './Anchor';
 
 export const styles = css({
   textDecoration: 'underline solid transparent',

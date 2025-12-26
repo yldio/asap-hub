@@ -23,8 +23,8 @@ const SocialSubGroup = ({ list, title }: SocialSubGroupProps) => (
       {title}
     </Subtitle>
     <div css={buttonsContainerStyles}>
-      {list.map((link) => (
-        <SocialLink {...link} />
+      {list.map(({ key, ...linkProps }) => (
+        <SocialLink key={key} {...linkProps} />
       ))}
     </div>
   </div>

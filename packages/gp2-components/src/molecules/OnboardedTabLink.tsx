@@ -1,4 +1,4 @@
-import { pixels } from '@asap-hub/react-components';
+import { pixels, useBlockedClick } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
@@ -54,38 +54,50 @@ const OnboardedTabLink: React.FC<OnboardedTabLinkProps> = ({
   children,
   disabled = false,
   index,
-}) =>
-  disabled ? (
-    <div css={[styles, mobileStyle, disabledStyles]}>
-      <p css={textStyles}>
-        {onboardingDisabledIcon}
-        {children}
-      </p>
-    </div>
-  ) : (
+}) => {
+  const blockedClick = useBlockedClick();
+
+  if (disabled) {
+    return (
+      <div css={[styles, mobileStyle, disabledStyles]}>
+        <p css={textStyles}>
+          {onboardingDisabledIcon}
+          {children}
+        </p>
+      </div>
+    );
+  }
+
+  return (
     <NavLink
       to={href}
-      activeClassName={'active-link'}
-      css={[styles, mobileStyle, { [`&.active-link`]: activeStyles }]}
+      end
+      style={{ textDecoration: 'none', color: 'unset' }}
+      onClick={blockedClick}
     >
-      <p css={textStyles}>
-        <span
-          css={css({
-            display: 'none',
-            width: rem(24),
-            height: rem(24),
-            borderRadius: rem(12),
-            backgroundColor: colors.info500.rgb,
-            color: colors.neutral000.rgb,
-            textAlign: 'center',
-          })}
-        >
-          {index}
-        </span>
-        {onboardingCompletedIcon}
-        {children}
-      </p>
+      {({ isActive }) => (
+        <div css={[styles, mobileStyle, isActive && activeStyles]}>
+          <p css={textStyles}>
+            <span
+              css={css({
+                display: 'none',
+                width: rem(24),
+                height: rem(24),
+                borderRadius: rem(12),
+                backgroundColor: colors.info500.rgb,
+                color: colors.neutral000.rgb,
+                textAlign: 'center',
+              })}
+            >
+              {index}
+            </span>
+            {onboardingCompletedIcon}
+            {children}
+          </p>
+        </div>
+      )}
     </NavLink>
   );
+};
 
 export default OnboardedTabLink;

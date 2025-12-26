@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -76,7 +77,7 @@ describe('ContactInformationModal', () => {
       telephone,
       onSave,
     });
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       alternativeEmail,
       telephone,
@@ -98,28 +99,28 @@ describe('ContactInformationModal', () => {
       countryCodeSuggestions: [{ dialCode: '+351', name: 'Portugal' }],
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: /alternative email \(optional\)/i,
       }),
       alternativeEmail,
     );
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('textbox', {
         name: /country code \(optional\)/i,
       }),
     );
-    userEvent.click(screen.getByText('Portugal (+351)'));
+    await userEvent.click(screen.getByText('Portugal (+351)'));
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: /telephone number \(optional\)/i,
       }),
       number,
     );
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(onSave).toHaveBeenCalledWith({
       alternativeEmail,
       telephone: {
@@ -140,14 +141,14 @@ describe('ContactInformationModal', () => {
       onSave,
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: /alternative email \(optional\)/i,
       }),
       alternativeEmail,
     );
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(
       screen.getByText(/please enter a valid email address/i),
     ).toBeVisible();
@@ -156,6 +157,7 @@ describe('ContactInformationModal', () => {
   });
 
   it('does not allow invalid telephone number', async () => {
+    const consoleErrorSpy = mockActWarningsInConsole('error');
     const onSave = jest.fn();
     const email = 'goncalo.ramos@fpf.pt';
     const number = 'invalid-number';
@@ -166,18 +168,19 @@ describe('ContactInformationModal', () => {
       onSave,
     });
 
-    userEvent.type(
+    await userEvent.type(
       screen.getByRole('textbox', {
         name: /telephone number \(optional\)/i,
       }),
       number,
     );
 
-    userEvent.click(getSaveButton());
+    await userEvent.click(getSaveButton());
     expect(
       screen.getByText(/please enter a valid telephone number/i),
     ).toBeVisible();
     expect(onSave).not.toHaveBeenCalled();
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
+    consoleErrorSpy.mockRestore();
   });
 });

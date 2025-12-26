@@ -6,7 +6,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getProjects } from '../../projects/api';
@@ -17,7 +17,7 @@ import {
   createUserListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
 import { getAlgoliaUsers } from '../api';
-import Routes from '../Routes';
+import UserRoutes from '../Routes';
 
 mockConsoleError();
 
@@ -28,9 +28,9 @@ const renderRoutes = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/users']}>
-              <Route path="/users">
-                <Routes />
-              </Route>
+              <Routes>
+                <Route path="/users/*" element={<UserRoutes />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

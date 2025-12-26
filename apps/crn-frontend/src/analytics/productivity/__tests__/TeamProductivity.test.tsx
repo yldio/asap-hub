@@ -109,9 +109,15 @@ it('renders the team productivity data', async () => {
   );
 
   const { container, getAllByText, getAllByTitle } = await renderPage();
-  expect(container).toHaveTextContent('Team Alessi');
+
+  await waitFor(() => {
+    expect(container).toHaveTextContent('Team Alessi');
+  });
   expect(container).toHaveTextContent('Team De Camilli');
-  expect(getAllByText('0')).toHaveLength(3);
+
+  await waitFor(() => {
+    expect(getAllByText('0')).toHaveLength(3);
+  });
   expect(getAllByText('1')).toHaveLength(3); // one of the 1s is pagination
   expect(getAllByText('2')).toHaveLength(2);
   expect(getAllByText('3')).toHaveLength(1);

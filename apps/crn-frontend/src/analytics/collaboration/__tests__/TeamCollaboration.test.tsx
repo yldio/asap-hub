@@ -139,8 +139,15 @@ it('renders team collaboration data', async () => {
   mockGetTeamCollaboration.mockResolvedValue(data);
 
   const { container, getAllByText } = await renderPage();
-  expect(container).toHaveTextContent('Team One');
-  expect(container).toHaveTextContent('Team Two');
+
+  await waitFor(() => {
+    expect(mockGetTeamCollaboration).toHaveBeenCalled();
+  });
+
+  await waitFor(() => {
+    expect(container).toHaveTextContent('Team One');
+    expect(container).toHaveTextContent('Team Two');
+  });
 
   expect(getAllByText('0')).toHaveLength(6);
   expect(getAllByText('4')).toHaveLength(1);

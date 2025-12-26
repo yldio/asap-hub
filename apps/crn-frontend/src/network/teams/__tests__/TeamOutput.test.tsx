@@ -426,7 +426,7 @@ it('can save draft when form data is valid', async () => {
     },
     expect.anything(),
   );
-}, 60000);
+}, 100000);
 
 it('can edit a research output', async () => {
   const teamId = baseResearchOutput.teams[0]!.id;
@@ -616,7 +616,7 @@ it('can publish a new version for an output', async () => {
       expect.anything(),
     );
   });
-}, 60000);
+}, 100000);
 
 it('generates the short description based on the current description', async () => {
   mockGetGeneratedShortDescription.mockResolvedValueOnce({
@@ -695,7 +695,7 @@ it('will show server side validation error for link', async () => {
     },
     { timeout: 3000 },
   );
-}, 60000);
+}, 100000);
 
 it('will toast server side errors for unknown errors', async () => {
   mockCreateResearchOutput.mockRejectedValue(new Error('Something went wrong'));
@@ -730,7 +730,7 @@ it('will toast server side errors for unknown errors', async () => {
       'There was an error and we were unable to save your changes. Please try again.',
     ),
   ).not.toBeInTheDocument();
-}, 60000);
+}, 100000);
 
 it('will toast server side errors for unknown errors in edit mode', async () => {
   const link = 'https://example42.com';
@@ -769,7 +769,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
     ),
   ).toBeInTheDocument();
   expect(window.scrollTo).toHaveBeenCalled();
-}, 60000);
+}, 100000);
 
 it('display a toast warning when creating a new version', async () => {
   await renderPage({

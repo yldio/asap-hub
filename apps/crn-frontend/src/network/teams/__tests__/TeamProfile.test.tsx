@@ -550,61 +550,55 @@ describe('Duplicate Output', () => {
       `/network/teams/${teamResponse.id}/duplicate/${researchOutput.id}`,
     );
   });
-  it(
-    'will create a new research output when saved',
-    async () => {
-      jest.useRealTimers();
-      const user = userEvent.setup({ delay: null });
-      const teamResponse = createTeamResponse();
-      const userResponse = createUserResponse({}, 1);
-      const researchOutput: ResearchOutputTeamResponse = {
-        ...createResearchOutputResponse(),
-        id: '123',
-        workingGroups: undefined,
-        teams: [
-          { displayName: teamResponse.displayName, id: teamResponse.id },
-        ],
-        title: 'Example',
-        link: 'http://example.com',
-      };
-      mockGetResearchOutput.mockResolvedValue(researchOutput);
-      mockCreateResearchOutput.mockResolvedValue(researchOutput);
+  it('will create a new research output when saved', async () => {
+    jest.useRealTimers();
+    const user = userEvent.setup({ delay: null });
+    const teamResponse = createTeamResponse();
+    const userResponse = createUserResponse({}, 1);
+    const researchOutput: ResearchOutputTeamResponse = {
+      ...createResearchOutputResponse(),
+      id: '123',
+      workingGroups: undefined,
+      teams: [{ displayName: teamResponse.displayName, id: teamResponse.id }],
+      title: 'Example',
+      link: 'http://example.com',
+    };
+    mockGetResearchOutput.mockResolvedValue(researchOutput);
+    mockCreateResearchOutput.mockResolvedValue(researchOutput);
 
-      await renderPage(
-        teamResponse,
-        { teamId: teamResponse.id, currentTime: new Date() },
-        {
-          ...userResponse,
-          teams: [
-            {
-              ...userResponse.teams[0],
-              id: teamResponse.id,
-              role: 'Key Personnel',
-            },
-          ],
-        },
-        network({})
-          .teams({})
-          .team({ teamId: teamResponse.id })
-          .duplicateOutput({ id: researchOutput.id }).$,
-      );
-      expect(await screen.findByLabelText(/Title/i)).toHaveValue(
-        'Copy of Example',
-      );
-      await user.type(screen.getByLabelText(/URL/i), 'http://example.com');
-      await user.click(screen.getByText(/save draft/i));
-      await user.click(screen.getByText(/keep and/i));
-      expect(mockCreateResearchOutput).toHaveBeenCalledWith(
-        expect.objectContaining({
-          title: 'Copy of Example',
-          link: 'http://example.com',
-        }),
-        expect.anything(),
-      );
-      jest.useFakeTimers();
-    },
-    30000,
-  );
+    await renderPage(
+      teamResponse,
+      { teamId: teamResponse.id, currentTime: new Date() },
+      {
+        ...userResponse,
+        teams: [
+          {
+            ...userResponse.teams[0],
+            id: teamResponse.id,
+            role: 'Key Personnel',
+          },
+        ],
+      },
+      network({})
+        .teams({})
+        .team({ teamId: teamResponse.id })
+        .duplicateOutput({ id: researchOutput.id }).$,
+    );
+    expect(await screen.findByLabelText(/Title/i)).toHaveValue(
+      'Copy of Example',
+    );
+    await user.type(screen.getByLabelText(/URL/i), 'http://example.com');
+    await user.click(screen.getByText(/save draft/i));
+    await user.click(screen.getByText(/keep and/i));
+    expect(mockCreateResearchOutput).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Copy of Example',
+        link: 'http://example.com',
+      }),
+      expect.anything(),
+    );
+    jest.useFakeTimers();
+  }, 30000);
 
   it('will show a page not found if research output does not exist', async () => {
     const teamResponse = createTeamResponse();

@@ -60,7 +60,11 @@ describe('useSearch', () => {
         },
       );
       expect(result.current.usePaginationParams.currentPage).toBe(2);
-      result.current.useSearch.setSearchQuery('test123');
+      act(() => {
+        result.current.useSearch.setSearchQuery('test123');
+      });
+      // After setSearchQuery, the URL is updated and currentPage should be reset
+      // The pagination reset happens via navigate() which updates the URL
       expect(result.current.usePaginationParams.currentPage).toBe(0);
     });
   });
@@ -132,7 +136,9 @@ describe('useSearch', () => {
         },
       );
       expect(result.current.usePaginationParams.currentPage).toBe(2);
-      result.current.useSearch.toggleFilter('test123');
+      act(() => {
+        result.current.useSearch.toggleFilter('test123');
+      });
       expect(result.current.usePaginationParams.currentPage).toBe(0);
     });
   });
@@ -160,6 +166,7 @@ describe('useSearch', () => {
       expect(result.current.debouncedSearchQuery).toEqual(searchQuery);
     });
     it('updates to a changed search query after a while', async () => {
+      jest.useFakeTimers();
       const { result } = renderHook(() => useSearch(), {
         wrapper: createWrapper(['/test']),
       });
@@ -167,13 +174,22 @@ describe('useSearch', () => {
       act(() => {
         result.current.setSearchQuery('searchterm');
       });
-      await act(() =>
-        waitFor(() =>
-          expect(result.current.debouncedSearchQuery).toEqual(
-            result.current.searchQuery,
-          ),
-        ),
-      );
+
+      // Verify the search query was set
+      expect(result.current.searchQuery).toEqual('searchterm');
+
+      // Advance timers to trigger the debounce (400ms per the hook)
+      act(() => {
+        jest.advanceTimersByTime(500);
+      });
+
+      // Run all pending timers and microtasks
+      await act(async () => {
+        jest.runAllTimers();
+      });
+
+      expect(result.current.debouncedSearchQuery).toEqual('searchterm');
+      jest.useRealTimers();
     });
   });
 
@@ -231,7 +247,9 @@ describe('useSearch', () => {
         },
       );
       expect(result.current.usePaginationParams.currentPage).toBe(2);
-      result.current.useSearch.setTags([]);
+      act(() => {
+        result.current.useSearch.setTags([]);
+      });
       expect(result.current.usePaginationParams.currentPage).toBe(0);
     });
   });

@@ -152,6 +152,10 @@ beforeEach(() => {
 afterEach(jest.resetAllMocks);
 
 describe('Manuscript', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation();
+  });
+
   it('status can be changed', async () => {
     const screen = renderWithWrapper(
       <Workspace
@@ -400,6 +404,14 @@ describe('a tool', () => {
   const { mockConfirm } = mockAlert();
 
   it('can be deleted', async () => {
+    mockConfirm.mockReturnValue(true);
+    // Use a deferred promise to control when the delete completes
+    let resolveDelete: (value: TeamResponse) => void;
+    const deletePromise = new Promise<TeamResponse>((resolve) => {
+      resolveDelete = resolve;
+    });
+    mockPatchTeam.mockReturnValue(deletePromise);
+
     const { findByText } = renderWithWrapper(
       <Workspace
         team={{
@@ -417,12 +429,17 @@ describe('a tool', () => {
       user,
     );
     await userEvent.click(await findByText(/delete/i));
+    // Now we should see "Deleting..." while the promise is pending
     await findByText(/deleting/i);
     expect(mockPatchTeam).toHaveBeenLastCalledWith(
       id,
       { tools: [] },
       expect.anything(),
     );
+    // Resolve the promise to complete the delete
+    await act(async () => {
+      resolveDelete!(createTeamResponse());
+    });
   });
 
   it('is not deleted when rejecting the confirm prompt', async () => {
@@ -648,6 +665,32 @@ describe('the edit tool dialog', () => {
 });
 
 describe('error handling for 403 BackendError', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation();
+    // Mock DOM APIs required by Lexical editor
+    Range.prototype.getBoundingClientRect = jest.fn(() => ({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 20,
+      top: 0,
+      right: 100,
+      bottom: 20,
+      left: 0,
+      toJSON: jest.fn(),
+    }));
+    Range.prototype.getClientRects = jest.fn(
+      () =>
+        ({
+          length: 1,
+          item: () => null,
+          [Symbol.iterator]: function* () {
+            yield new DOMRect(0, 0, 100, 20);
+          },
+        }) as unknown as DOMRectList,
+    );
+  });
+
   it('shows manuscript-status-error when reply to discussion fails with 403', async () => {
     (useManuscriptById as jest.Mock).mockImplementation(() => [
       {

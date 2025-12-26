@@ -1,9 +1,10 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import { gp2 } from '@asap-hub/routing';
+import React, { Suspense } from 'react';
 
 import { getUser } from '../../users/api';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -26,14 +27,16 @@ const wrapper =
   (
     { user }: { user?: gp2Model.UserResponse },
     step: string = gp2.onboarding({}).coreDetails({}).$,
-  ): React.FC =>
-  ({ children }) => (
+  ): React.FC<{ children: React.ReactNode }> =>
+  ({ children }: { children: React.ReactNode }) => (
     <RecoilRoot>
-      <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
-        <WhenReady>
-          <MemoryRouter initialEntries={[step]}>{children}</MemoryRouter>
-        </WhenReady>
-      </Auth0Provider>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[step]}>{children}</MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
     </RecoilRoot>
   );
 
@@ -41,34 +44,40 @@ describe('useOnboarding', () => {
   beforeEach(() => mockGetUser.mockClear());
 
   it('handles when a user is not logged in', async () => {
-    mockGetUser.mockResolvedValueOnce(undefined);
+    mockGetUser.mockResolvedValue(undefined);
 
-    const { result, waitForNextUpdate } = renderHook(() => useOnboarding(''), {
+    const { result } = renderHook(() => useOnboarding(''), {
       wrapper: wrapper({ user: undefined }),
     });
 
-    await waitForNextUpdate();
-    expect(result.current).toEqual(undefined);
+    await waitFor(
+      () => {
+        expect(result.current).toBeUndefined();
+      },
+      { timeout: 10000 },
+    );
   });
 
   it('returns all steps required to complete the profile', async () => {
     const user = { ...emptyUser };
-    mockGetUser.mockResolvedValueOnce(user);
+    mockGetUser.mockResolvedValue(user);
 
-    const { result, waitForNextUpdate } = renderHook(
-      () => useOnboarding(user.id),
-      {
-        wrapper: wrapper({ user }),
+    const { result } = renderHook(() => useOnboarding(user.id), {
+      wrapper: wrapper({ user }),
+    });
+
+    await waitFor(
+      () => {
+        expect((result.current?.steps ?? []).map(({ name }) => name)).toEqual([
+          'Core Details',
+          'Background',
+          'GP2 Groups',
+          'Additional Details',
+          'Preview',
+        ]);
       },
+      { timeout: 10000 },
     );
-    await waitForNextUpdate();
-    expect((result.current?.steps ?? []).map(({ name }) => name)).toEqual([
-      'Core Details',
-      'Background',
-      'GP2 Groups',
-      'Additional Details',
-      'Preview',
-    ]);
   });
   it('returns the steps as completed and isOnboardable as true when the required fields are filled', async () => {
     const user: gp2Model.UserResponse = {
@@ -80,31 +89,37 @@ describe('useOnboarding', () => {
       city: 'home',
       degrees: ['AA'],
     };
-    mockGetUser.mockResolvedValueOnce(user);
-    const { result, waitForNextUpdate } = renderHook(
-      () => useOnboarding(user.id),
-      {
-        wrapper: wrapper({ user }),
+    mockGetUser.mockResolvedValue(user);
+
+    const { result } = renderHook(() => useOnboarding(user.id), {
+      wrapper: wrapper({ user }),
+    });
+
+    await waitFor(
+      () => {
+        expect(
+          (result.current?.steps ?? []).map(({ completed }) => completed),
+        ).toEqual([true, true, true, true, true]);
+        expect(result.current?.isOnboardable).toBeTruthy();
       },
+      { timeout: 10000 },
     );
-    await waitForNextUpdate();
-    expect(
-      (result.current?.steps ?? []).map(({ completed }) => completed),
-    ).toEqual([true, true, true, true, true]);
-    expect(result.current?.isOnboardable).toBeTruthy();
   });
   it('returns the steps that are not completed with completed as false', async () => {
-    mockGetUser.mockResolvedValueOnce(emptyUser);
-    const { result, waitForNextUpdate } = renderHook(
-      () => useOnboarding(emptyUser.id),
-      {
-        wrapper: wrapper({ user: emptyUser }),
+    mockGetUser.mockResolvedValue(emptyUser);
+
+    const { result } = renderHook(() => useOnboarding(emptyUser.id), {
+      wrapper: wrapper({ user: emptyUser }),
+    });
+
+    await waitFor(
+      () => {
+        expect(
+          (result.current?.steps ?? []).map(({ completed }) => completed),
+        ).toEqual([false, false, true, true, true]);
       },
+      { timeout: 10000 },
     );
-    await waitForNextUpdate();
-    expect(
-      (result.current?.steps ?? []).map(({ completed }) => completed),
-    ).toEqual([false, false, true, true, true]);
   });
   describe('if on the first step', () => {
     it('should return no previous step href and the next step href', async () => {
@@ -117,16 +132,19 @@ describe('useOnboarding', () => {
         city: 'home',
         degrees: ['AA'],
       };
-      mockGetUser.mockResolvedValueOnce(user);
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOnboarding(user.id),
-        {
-          wrapper: wrapper({ user }, stepToHref['Core Details']),
+      mockGetUser.mockResolvedValue(user);
+
+      const { result } = renderHook(() => useOnboarding(user.id), {
+        wrapper: wrapper({ user }, stepToHref['Core Details']),
+      });
+
+      await waitFor(
+        () => {
+          expect(result.current?.previousStep).toBeFalsy();
+          expect(result.current?.nextStep).toBe(stepToHref.Background);
         },
+        { timeout: 10000 },
       );
-      await waitForNextUpdate();
-      expect(result.current?.previousStep).toBeFalsy();
-      expect(result.current?.nextStep).toBe(stepToHref.Background);
     });
   });
 });
@@ -141,15 +159,20 @@ describe('if on the last step', () => {
       city: 'home',
       degrees: ['AA'],
     };
-    mockGetUser.mockResolvedValueOnce(user);
-    const { result, waitForNextUpdate } = renderHook(
-      () => useOnboarding(user.id),
-      {
-        wrapper: wrapper({ user }, stepToHref.Preview),
+    mockGetUser.mockResolvedValue(user);
+
+    const { result } = renderHook(() => useOnboarding(user.id), {
+      wrapper: wrapper({ user }, stepToHref.Preview),
+    });
+
+    await waitFor(
+      () => {
+        expect(result.current?.previousStep).toBe(
+          stepToHref['Additional Details'],
+        );
+        expect(result.current?.nextStep).toBeFalsy();
       },
+      { timeout: 10000 },
     );
-    await waitForNextUpdate();
-    expect(result.current?.previousStep).toBe(stepToHref['Additional Details']);
-    expect(result.current?.nextStep).toBeFalsy();
   });
 });

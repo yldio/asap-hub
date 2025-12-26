@@ -21,9 +21,7 @@ export const mockConsoleError = () => {
  * @param method - The console method to mock: 'warn' or 'error'. Defaults to 'warn'.
  * @returns Jest spy with `mockRestore()` method to restore original console method
  */
-export const mockActWarningsInConsole = (
-  method: 'error' | 'warn' = 'warn',
-) => {
+export const mockActWarningsInConsole = (method: 'error' | 'warn' = 'warn') => {
   const originalMethod = console[method];
   const spy = jest
     .spyOn(console, method)

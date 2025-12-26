@@ -99,7 +99,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
       >
         <Routes>
           <Route
-            path="overview"
+            path="overview/*"
             element={
               <Frame title="Overview">
                 <UserOverview {...user} {...(isOwnProfile ? editHrefs : {})} />

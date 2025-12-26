@@ -35,7 +35,7 @@ const Discover: FC<Record<string, never>> = () => {
   return (
     <Routes>
       <Route
-        path={`${discover({}).tutorials.template}/${
+        path={`${discover({}).tutorials.template}${
           discover({}).tutorials({}).tutorial.template
         }`}
         element={

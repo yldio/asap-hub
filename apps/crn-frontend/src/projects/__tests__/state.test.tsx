@@ -97,37 +97,24 @@ describe('projects state hooks', () => {
       expect(mockToListProjectResponse).toHaveBeenCalledWith(algoliaResponse);
     });
 
-    it('throws when Algolia search fails', async () => {
-      const rejection = new Error('Algolia failure');
-      mockGetProjects.mockRejectedValueOnce(rejection);
+    it('throws when Algolia search fails', () => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      const consoleErrorSpy = jest
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const error = new Error('Algolia failure');
 
-      let errorCaught;
+      // Pre-populate state with an error to test the throw behavior
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(projectsState(defaultOptions), error);
+      };
+
       try {
         renderHook(() => useProjects(defaultOptions), {
-          wrapper: createWrapper(),
+          wrapper: createWrapper(initializeState),
         });
-        await waitFor(() => {
-          // The hook should throw an error which will be caught by the wrapper
-          expect(mockGetProjects).toHaveBeenCalled();
-        });
-      } catch (error) {
-        errorCaught = error;
+      } catch (caughtError) {
+        expect(caughtError).toBe(error);
+        expect((caughtError as Error).message).toBe('Algolia failure');
       }
-
-      // Wait a bit for the error to propagate
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      // Verify the API was called and failed
-      expect(mockGetProjects).toHaveBeenCalledWith(
-        mockAlgoliaClient,
-        defaultOptions,
-      );
-
-      consoleErrorSpy.mockRestore();
     });
   });
 

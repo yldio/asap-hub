@@ -47,14 +47,11 @@ const JoinEvent: React.FC<JoinEventProps> = ({
 
   // Use interval to periodically refresh when conditions are met
   // The callback always has access to the latest values via React's closure
-  useInterval(
-    () => {
-      if (!meetingLink && startRefreshing && !hasEnded) {
-        onRefresh();
-      }
-    },
-    REFRESH_INTERVAL_SECONDS * 1000,
-  );
+  useInterval(() => {
+    if (!meetingLink && startRefreshing && !hasEnded) {
+      onRefresh();
+    }
+  }, REFRESH_INTERVAL_SECONDS * 1000);
 
   if (hasEnded) {
     return null;

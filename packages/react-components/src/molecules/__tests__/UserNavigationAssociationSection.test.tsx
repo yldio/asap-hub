@@ -73,7 +73,7 @@ it('disables the navigation link based on user onboarded', () => {
   const targetElement = getByText('group 1');
   expect(targetElement).toBeVisible();
   // The pointer-events style is on the parent div element
-  const parentElement = targetElement.parentElement;
+  const { parentElement } = targetElement;
   expect(parentElement).toHaveStyle('pointer-events: none');
 });
 

@@ -1,4 +1,4 @@
-import { booleanParser, route, stringParser } from 'typesafe-routes';
+import { route, stringParser } from 'typesafe-routes';
 
 const editResearchOutput = route(
   '/edit',

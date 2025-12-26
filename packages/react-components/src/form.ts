@@ -86,6 +86,7 @@ export function useValidation<T extends ValidationTarget>(
     // This handles both setting errors and clearing them when the field becomes valid
     setValidationMessage(normalizedMessage);
 
+    // eslint-disable-next-line consistent-return
     return () => {
       if (!skipValidation) {
         input.setCustomValidity('');

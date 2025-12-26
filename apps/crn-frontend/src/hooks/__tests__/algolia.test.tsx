@@ -33,7 +33,7 @@ describe('useAlgolia', () => {
       .spyOn(console, 'error')
       .mockImplementation(() => {});
 
-    expect(() => renderHook(() => useAlgolia())).toThrowError(
+    expect(() => renderHook(() => useAlgolia())).toThrow(
       new Error('Algolia unavailable while not logged in'),
     );
 

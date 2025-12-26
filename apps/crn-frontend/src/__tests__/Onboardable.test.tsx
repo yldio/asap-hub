@@ -14,6 +14,7 @@ jest.mock('../network/users/api');
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 
 // Suppress act() warnings from Recoil state updates
+// eslint-disable-next-line no-console
 const originalError = console.error;
 beforeAll(() => {
   console.error = jest.fn((...args: unknown[]) => {
@@ -30,6 +31,7 @@ beforeAll(() => {
 });
 
 afterAll(() => {
+  // eslint-disable-next-line no-console
   console.error = originalError;
 });
 

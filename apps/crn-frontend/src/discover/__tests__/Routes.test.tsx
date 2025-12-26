@@ -13,8 +13,7 @@ import userEvent from '@testing-library/user-event';
 
 import Routes from '../Routes';
 
-import { getTutorials } from '../tutorials/api';
-import { getTutorialById } from '../tutorials/api';
+import { getTutorials, getTutorialById } from '../tutorials/api';
 
 jest.mock('../../guides/api');
 jest.mock('../tutorials/api');

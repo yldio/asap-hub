@@ -52,7 +52,7 @@ describe('triggers the save function', () => {
     );
 
     const answerQuestion = async (index: number) =>
-      await userEvent.type(
+      userEvent.type(
         getByLabelText(
           `Open Question ${index}${
             index === 1 || index === 2 ? '(required)' : '(optional)'

@@ -77,6 +77,7 @@ export const textContentWithPseudo = (element: HTMLElement): string[] => {
  * });
  */
 export const mockActErrorsInConsole = () => {
+  // eslint-disable-next-line no-console
   const originalConsoleError = console.error;
   const spy = jest
     .spyOn(console, 'error')

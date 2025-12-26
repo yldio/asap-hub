@@ -32,13 +32,13 @@ const renderWithWrapper =
               >
                 <Routes>
                   <Route
-                    path={
-                      network.template +
-                      network({}).users.template +
-                      network({}).users({}).user.template +
-                      network({}).users({}).user({ userId }).about.template +
-                      '/*'
-                    }
+                    path={[
+                      network.template,
+                      network({}).users.template,
+                      network({}).users({}).user.template,
+                      network({}).users({}).user({ userId }).about.template,
+                      '/*',
+                    ].join('')}
                     element={children}
                   />
                 </Routes>

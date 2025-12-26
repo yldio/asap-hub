@@ -46,11 +46,9 @@ const renderOutputDetail = async () => {
             >
               <Routes>
                 <Route
-                  path={
-                    gp2Routing.outputs.template +
-                    gp2Routing.outputs({}).output.template +
-                    '/*'
-                  }
+                  path={`${gp2Routing.outputs.template}${
+                    gp2Routing.outputs({}).output.template
+                  }/*`}
                   element={<OutputDetail />}
                 />
               </Routes>

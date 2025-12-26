@@ -13,7 +13,6 @@ const resetStyles = css({
 
 // Lint rules don't understand abstractions ...
 /* eslint-disable jsx-a11y/anchor-has-content */
-/* eslint-disable react/jsx-no-target-blank */
 
 type AnchorProps = {
   // hrefs may conditionally be undefined, but the prop is mandatory so it cannot be forgotten

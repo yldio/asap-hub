@@ -65,6 +65,7 @@ const mockToast = jest.fn() as jest.MockedFunction<
 // Suppress React Router v6 nested routes warnings from UserProfile component
 // TODO: Remove this once UserProfile component is migrated to React Router v6
 const originalWarn = console.warn;
+const originalError = console.error;
 beforeEach(() => {
   jest.clearAllMocks();
   jest.spyOn(console, 'warn').mockImplementation((...args) => {
@@ -77,6 +78,17 @@ beforeEach(() => {
       return;
     }
     originalWarn(...args);
+  });
+  // Suppress JSDOM navigation errors (not implemented in test environment)
+  jest.spyOn(console, 'error').mockImplementation((...args) => {
+    const message = args[0];
+    if (
+      typeof message === 'string' &&
+      message.includes('Not implemented: navigation')
+    ) {
+      return;
+    }
+    originalError(...args);
   });
 });
 

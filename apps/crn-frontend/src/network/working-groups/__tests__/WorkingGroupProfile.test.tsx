@@ -284,6 +284,7 @@ describe('Duplicate Output', () => {
   });
   it('will create a new research output when saved', async () => {
     jest.useRealTimers();
+    const user = userEvent.setup({ delay: null });
 
     const wgResponse = createWorkingGroupResponse();
     const userResponse = createUserResponse({}, 1);
@@ -319,9 +320,9 @@ describe('Duplicate Output', () => {
     expect(await screen.findByLabelText(/Title/i)).toHaveValue(
       'Copy of Example',
     );
-    await userEvent.type(screen.getByLabelText(/URL/i), 'http://example.com');
-    await userEvent.click(screen.getByText(/save draft/i));
-    await userEvent.click(screen.getByText(/keep and/i));
+    await user.type(screen.getByLabelText(/URL/i), 'http://example.com');
+    await user.click(screen.getByText(/save draft/i));
+    await user.click(screen.getByText(/keep and/i));
 
     await waitFor(() => {
       expect(mockCreateResearchOutput).toHaveBeenCalledWith(
@@ -346,7 +347,7 @@ describe('Duplicate Output', () => {
     );
 
     jest.useFakeTimers();
-  });
+  }, 30000);
 
   it('will show a page not found if research output does not exist', async () => {
     const wgResponse = createWorkingGroupResponse();

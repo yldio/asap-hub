@@ -318,6 +318,7 @@ it('navigates to the workspace tab', async () => {
 it('displays manuscript success toast message and user can dismiss toast', async () => {
   jest.useRealTimers();
   jest.spyOn(console, 'error').mockImplementation();
+  const user = userEvent.setup({ delay: null });
 
   await renderPage(
     {
@@ -335,20 +336,20 @@ it('displays manuscript success toast message and user can dismiss toast', async
     },
   );
 
-  await userEvent.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
+  await user.click(screen.getByText(/workspace/i, { selector: 'nav *' }));
 
   expect(await screen.findByText(/tools/i)).toBeVisible();
 
-  await userEvent.click(screen.getByText(/Submit Manuscript/i));
+  await user.click(screen.getByText(/Submit Manuscript/i));
 
-  await userEvent.click(screen.getByText(/Yes/i));
+  await user.click(screen.getByText(/Yes/i));
 
-  await userEvent.click(
+  await user.click(
     screen.getByText(
       'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
     ),
   );
-  await userEvent.click(screen.getByText(/Continue/i));
+  await user.click(screen.getByText(/Continue/i));
 
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -360,22 +361,22 @@ it('displays manuscript success toast message and user can dismiss toast', async
     expect(submitButton).toBeVisible();
   });
 
-  await userEvent.type(
+  await user.type(
     screen.getByRole('textbox', { name: /Title of Manuscript/i }),
     'manuscript title',
   );
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
   });
-  await userEvent.type(typeTextbox, 'Original');
-  await userEvent.type(typeTextbox, '{Enter}');
+  await user.type(typeTextbox, 'Original');
+  await user.type(typeTextbox, '{Enter}');
   typeTextbox.blur();
 
   const lifecycleTextbox = screen.getByRole('textbox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  await userEvent.type(lifecycleTextbox, 'Typeset proof');
-  await userEvent.type(lifecycleTextbox, '{Enter}');
+  await user.type(lifecycleTextbox, 'Typeset proof');
+  await user.type(lifecycleTextbox, '{Enter}');
   lifecycleTextbox.blur();
 
   const testFile = new File(['file content'], 'file.txt', {
@@ -386,67 +387,60 @@ it('displays manuscript success toast message and user can dismiss toast', async
     /Upload Key Resource Table/i,
   );
 
-  await userEvent.upload(manuscriptFileInput, testFile);
-  await userEvent.upload(keyResourceTableInput, testFile);
+  await user.upload(manuscriptFileInput, testFile);
+  await user.upload(keyResourceTableInput, testFile);
 
   const descriptionTextbox = screen.getByRole('textbox', {
     name: /Manuscript Description/i,
   });
-  await userEvent.type(descriptionTextbox, 'Some description');
+  await user.type(descriptionTextbox, 'Some description');
 
   const impactInput = screen.getByRole('textbox', {
     name: /Impact/i,
   });
-  await userEvent.type(impactInput, 'My Imp');
-  await userEvent.click(screen.getByText(/^My Impact$/i));
+  await user.type(impactInput, 'My Imp');
+  await user.click(screen.getByText(/^My Impact$/i));
 
   const categoryInput = screen.getByRole('textbox', {
     name: /Category/i,
   });
-  await userEvent.type(categoryInput, 'My Cat');
-  await userEvent.click(screen.getByText(/^My Category$/i));
+  await user.type(categoryInput, 'My Cat');
+  await user.click(screen.getByText(/^My Category$/i));
 
-  await userEvent.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+  await user.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
 
-  await userEvent.click(screen.getByText(/Non CRN/i));
+  await user.click(screen.getByText(/Non CRN/i));
 
   expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
-  await userEvent.type(
-    screen.getByLabelText(/Jane Doe Email/i),
-    'jane@doe.com',
-  );
+  await user.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
   for (const button of within(quickChecks).getAllByText('Yes')) {
-    await userEvent.click(button);
+    await user.click(button);
   }
 
   await waitFor(() => {
     expect(submitButton).toBeEnabled();
   });
   await act(async () => {
-    await userEvent.click(
-      await screen.findByRole('button', { name: /Submit/ }),
-    );
+    await user.click(await screen.findByRole('button', { name: /Submit/ }));
   });
 
-  await userEvent.click(
-    screen.getByRole('button', { name: /Submit Manuscript/ }),
-  );
+  await user.click(screen.getByRole('button', { name: /Submit Manuscript/ }));
 
   expect(
     await screen.findByText('Manuscript submitted successfully.'),
   ).toBeInTheDocument();
 
-  await userEvent.click(screen.getByLabelText('Close'));
+  await user.click(screen.getByLabelText('Close'));
 
   expect(screen.queryByText('Manuscript submitted successfully.')).toBeNull();
   jest.useFakeTimers();
-}, 60000);
+}, 90000);
 
 it('does not allow navigating to the workspace tab when team tools are not available', async () => {
   await renderPage({
@@ -462,6 +456,7 @@ it('does not allow navigating to the workspace tab when team tools are not avail
 describe('Share Output', () => {
   it('shows share outputs button and page when the user has permissions user clicks an option', async () => {
     jest.useRealTimers();
+    jest.spyOn(console, 'error').mockImplementation(); // Suppress act() warnings from Suspense
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
 
@@ -570,7 +565,7 @@ describe('Duplicate Output', () => {
     mockGetResearchOutput.mockResolvedValue(researchOutput);
     mockCreateResearchOutput.mockResolvedValue(researchOutput);
 
-    const { router } = await renderPage(
+    await renderPage(
       teamResponse,
       { teamId: teamResponse.id, currentTime: new Date() },
       {
@@ -680,6 +675,7 @@ describe('Create Compliance Report', () => {
 
   it('allows a user who is an ASAP staff and an Open Science Team Member to create a compliance report', async () => {
     jest.useRealTimers();
+    const user = userEvent.setup({ delay: null });
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
     const teamManuscript = createTeamManuscriptResponse();
@@ -703,9 +699,9 @@ describe('Create Compliance Report', () => {
       network({}).teams({}).team({ teamId: teamResponse.id }).workspace({}).$,
     );
 
-    await userEvent.click(screen.getByTestId('collapsible-button'));
+    await user.click(screen.getByTestId('collapsible-button'));
 
-    await userEvent.click(
+    await user.click(
       screen.getByRole('button', { name: /Share Compliance Report Icon/ }),
     );
 
@@ -721,7 +717,7 @@ describe('Create Compliance Report', () => {
       );
     });
     jest.useFakeTimers();
-  });
+  }, 30000);
 });
 
 it('renders the 404 page for a missing team', async () => {

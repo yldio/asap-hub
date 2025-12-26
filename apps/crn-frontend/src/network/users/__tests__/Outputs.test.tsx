@@ -138,13 +138,13 @@ it('calls getResearchOutputs with the right arguments', async () => {
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(2),
   });
-  // Start with empty filters, then add them via UI interaction
-  const { getByRole, getByText, getByLabelText } = await renderOutputs(
+  // Start with searchQuery via URL and empty filters, then add filters via UI interaction
+  const { getByText, getByLabelText } = await renderOutputs(
     searchQuery,
     new Set(),
     userId,
   );
-  await userEvent.type(getByRole('searchbox'), searchQuery);
+  // searchQuery is already set via URL, so no need to type it again
 
   await userEvent.click(getByText('Filters'));
   const checkbox = getByLabelText('Grant Document');

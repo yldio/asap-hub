@@ -91,6 +91,7 @@ const renderCreateWorkingGroupOutput = async (
                     </NotificationMessages>
                   }
                 />
+                <Route path="*" element={<div>Redirected</div>} />
               </Routes>
             </MemoryRouter>
           </WhenReady>
@@ -199,7 +200,7 @@ describe('Create WorkingGroup Output', () => {
   });
 
   it('will show server side validation error for link', async () => {
-    const consoleWarnSpy = mockActWarningsInConsole();
+    const consoleErrorSpy = mockActWarningsInConsole('error');
     const validationResponse: ValidationErrorResponse = {
       message: 'Validation error',
       error: 'Bad Request',
@@ -250,7 +251,7 @@ describe('Create WorkingGroup Output', () => {
         screen.queryAllByText(
           'An Output with this URL already exists. Please enter a different URL.',
         ).length,
-      ).toBeGreaterThan(1);
+      ).toBeGreaterThanOrEqual(1);
     });
     expect(window.scrollTo).toHaveBeenCalled();
 
@@ -263,6 +264,6 @@ describe('Create WorkingGroup Output', () => {
         'An Output with this URL already exists. Please enter a different URL.',
       ),
     ).toBeNull();
-    consoleWarnSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
   });
 });

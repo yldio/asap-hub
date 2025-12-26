@@ -100,33 +100,54 @@ it('falls back to the not found page for a missing event', async () => {
 });
 
 it('silently refreshes the event to fetch the meeting link', async () => {
+  jest.useFakeTimers();
+  // Set start date to be within 24 hours so that startRefreshing is true
+  const startDate = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes from now
+  const endDate = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour from now
+
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
     id,
     meetingLink: undefined,
-    startDate: new Date().toISOString(),
+    startDate,
+    endDate,
     title: 'Kool Event',
   });
   const { getByText, findByText, queryByText } = render(<Event />, { wrapper });
   expect(await findByText('Kool Event', { exact: false })).toBeVisible();
 
+  // Mock the refreshed event data
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
     id,
     meetingLink: 'https://example.com/meeting',
-    startDate: new Date().toISOString(),
+    startDate,
+    endDate,
     title: 'New Title',
   });
+
+  // Advance timers to trigger the interval (runs every 60 seconds)
+  // Advance by 61 seconds to ensure at least one interval fires
   act(() => {
-    jest.advanceTimersByTime(5 * 60 * 1000);
+    jest.advanceTimersByTime(61 * 1000);
   });
 
-  let hasShownLoading = false;
+  // Wait for the refresh API call to be made
   await waitFor(() => {
-    if (queryByText(/loading/i)) hasShownLoading = true;
-    expect(getByText('New Title')).toBeVisible();
+    expect(mockGetEvent).toHaveBeenCalledTimes(2); // Initial load + refresh
   });
+
+  // Wait for the async refresh to complete and the new title to appear
+  let hasShownLoading = false;
+  await waitFor(
+    () => {
+      if (queryByText(/loading/i)) hasShownLoading = true;
+      expect(getByText('New Title')).toBeVisible();
+    },
+    { timeout: 5000 },
+  );
   expect(hasShownLoading).toBe(false);
+  jest.useRealTimers();
 });
 
 it('renders calendar list for active groups', async () => {

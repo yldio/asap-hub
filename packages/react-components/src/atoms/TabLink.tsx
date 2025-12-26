@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentType, ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { css, Theme } from '@emotion/react';
 
 import { layoutStyles } from '../text';
@@ -34,14 +34,32 @@ const iconStyles = css({
   paddingRight: rem(6),
 });
 
+/**
+ * Check if the current path matches the link path using prefix matching.
+ * e.g., /analytics/productivity matches /analytics/productivity/user
+ */
+const useIsActivePrefix = (href: string): boolean => {
+  const location = useLocation();
+  const linkPath = new URL(href, window.location.href).pathname;
+  return (
+    location.pathname === linkPath ||
+    location.pathname.startsWith(`${linkPath}/`)
+  );
+};
+
 interface TabLinkProps {
   readonly href: string;
   readonly Icon?: ComponentType<IconProps>;
   readonly children: ReactNode;
 }
 const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
-  const active =
-    new URL(href, window.location.href).pathname === window.location.pathname;
+  const hasRouter = useHasRouter();
+  const isActivePrefix = hasRouter ? useIsActivePrefix(href) : false;
+
+  // Fallback for non-router context: exact match only
+  const active = hasRouter
+    ? isActivePrefix
+    : new URL(href, window.location.href).pathname === window.location.pathname;
 
   // Create inner content with properly colored icon
   const createInner = (isActive: boolean) => (
@@ -61,28 +79,31 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
     </p>
   );
 
-  if (useHasRouter()) {
-    // For React Router v6, apply styles to NavLink itself to avoid default anchor styles
+  if (hasRouter) {
+    // Use Link instead of NavLink to have full control over active state with prefix matching
     return (
-      <NavLink to={href} end style={{ textDecoration: 'none', color: 'unset' }}>
-        {({ isActive }) => (
-          <div
-            css={(theme: Theme) => [
-              styles,
-              theme.components?.TabLink?.styles,
-              isActive && activeStyles(theme),
-            ]}
-          >
-            {createInner(isActive)}
-          </div>
-        )}
-      </NavLink>
+      <Link
+        to={href}
+        style={{ textDecoration: 'none', color: 'unset' }}
+        className={active ? 'active' : undefined}
+      >
+        <div
+          css={(theme: Theme) => [
+            styles,
+            theme.components?.TabLink?.styles,
+            active && activeStyles(theme),
+          ]}
+        >
+          {createInner(active)}
+        </div>
+      </Link>
     );
   }
 
   return (
     <a
       href={href}
+      className={active ? 'active' : undefined}
       css={(theme: Theme) => [
         styles,
         theme.components?.TabLink?.styles,

@@ -113,6 +113,7 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
         to={url}
         smooth
         style={{ textDecoration: 'none', color: 'unset' }}
+        className={enabled && isActive ? 'active' : undefined}
       >
         <div
           css={({ colors, components }: Theme) => [
@@ -134,6 +135,7 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
   return (
     <a
       href={url}
+      className={active ? 'active' : undefined}
       css={({ colors, components }: Theme) => [
         styles,
         squareBorder && squareBorderStyles,

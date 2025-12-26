@@ -144,7 +144,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
       />
       <Routes>
         <Route
-          path={route.tools.template}
+          path={route.tools.template.replace(/^\//, '')}
           element={
             <ToolModal
               title="Add Link"
@@ -158,7 +158,9 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           }
         />
         <Route
-          path={`${route.tools.template}/${route.tools({}).tool.template}`}
+          path={`${route.tools.template}${
+            route.tools({}).tool.template
+          }`.replace(/^\//, '')}
           element={<EditTool teamId={team.id} tools={team.tools} />}
         />
       </Routes>

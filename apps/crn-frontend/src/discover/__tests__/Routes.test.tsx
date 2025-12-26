@@ -136,6 +136,15 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
   expect(tutorialCardTitle).toBeVisible();
   expect(tutorialCardTitle.href).toContain('/tutorials/');
   await userEvent.click(tutorialCardTitle);
+
+  // Wait for loading states to clear
+  await waitFor(
+    () => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    },
+    { timeout: 5000 },
+  );
+
   expect(
     await screen.findByText(/First Tutorial Title/i, { selector: 'h1' }),
   ).toBeVisible();

@@ -18,6 +18,7 @@ import {
   GoogleTagManager,
   LoadingLayout,
   LogoProvider,
+  NavigationBlockerProvider,
   ToastStack,
   UtilityBar,
 } from '@asap-hub/react-components';
@@ -122,68 +123,70 @@ const App: FC<Record<string, never>> = () => {
         <AuthProvider>
           <SentryAuth0 />
           <BrowserRouter>
-            <Frame title={null}>
-              <SentryRoutes>
-                <Route
-                  path={`${welcome.template}/*`}
-                  element={
-                    <UtilityBar>
-                      <ToastStack>
-                        <Welcome />
-                      </ToastStack>
-                    </UtilityBar>
-                  }
-                />
-                <Route
-                  path={logout.template}
-                  element={
-                    <Frame title="Logout">
-                      <Logout />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path={staticPages({}).terms.template}
-                  element={
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="terms-and-conditions" />
+            <NavigationBlockerProvider>
+              <Frame title={null}>
+                <SentryRoutes>
+                  <Route
+                    path={`${welcome.template}/*`}
+                    element={
+                      <UtilityBar>
+                        <ToastStack>
+                          <Welcome />
+                        </ToastStack>
+                      </UtilityBar>
+                    }
+                  />
+                  <Route
+                    path={logout.template}
+                    element={
+                      <Frame title="Logout">
+                        <Logout />
                       </Frame>
-                    </BasicLayout>
-                  }
-                />
-                <Route
-                  path={staticPages({}).privacyPolicy.template}
-                  element={
-                    <BasicLayout>
-                      <Frame title={null}>
-                        <Content pageId="privacy-notice" />
-                      </Frame>
-                    </BasicLayout>
-                  }
-                />
-                <Route
-                  path="*"
-                  element={
-                    <CheckAuth>
-                      {({ isAuthenticated }) =>
-                        !isAuthenticated ? (
-                          <Frame title={null}>
-                            <Signin />
-                          </Frame>
-                        ) : (
-                          <Frame title={null} fallback={<LoadingLayout />}>
-                            <AuthenticatedApp
-                              setIsOnboardable={setIsOnboardable}
-                            />
-                          </Frame>
-                        )
-                      }
-                    </CheckAuth>
-                  }
-                />
-              </SentryRoutes>
-            </Frame>
+                    }
+                  />
+                  <Route
+                    path={staticPages({}).terms.template}
+                    element={
+                      <BasicLayout>
+                        <Frame title={null}>
+                          <Content pageId="terms-and-conditions" />
+                        </Frame>
+                      </BasicLayout>
+                    }
+                  />
+                  <Route
+                    path={staticPages({}).privacyPolicy.template}
+                    element={
+                      <BasicLayout>
+                        <Frame title={null}>
+                          <Content pageId="privacy-notice" />
+                        </Frame>
+                      </BasicLayout>
+                    }
+                  />
+                  <Route
+                    path="*"
+                    element={
+                      <CheckAuth>
+                        {({ isAuthenticated }) =>
+                          !isAuthenticated ? (
+                            <Frame title={null}>
+                              <Signin />
+                            </Frame>
+                          ) : (
+                            <Frame title={null} fallback={<LoadingLayout />}>
+                              <AuthenticatedApp
+                                setIsOnboardable={setIsOnboardable}
+                              />
+                            </Frame>
+                          )
+                        }
+                      </CheckAuth>
+                    }
+                  />
+                </SentryRoutes>
+              </Frame>
+            </NavigationBlockerProvider>
           </BrowserRouter>
         </AuthProvider>
       </Frame>

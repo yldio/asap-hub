@@ -4,6 +4,8 @@ import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useNavigationWarning } from '../navigation';
+
 const styles = css({
   boxSizing: 'border-box',
   height: '100%',
@@ -62,25 +64,14 @@ const Form = <T extends void | Record<string, unknown>>({
     }
   }, [serverErrors, toast]);
 
-  useEffect(() => {
-    const shouldWarn =
-      status === 'isSaving' ||
-      status === 'hasError' ||
-      (status === 'initial' && dirty);
+  const shouldWarn =
+    status === 'isSaving' ||
+    status === 'hasError' ||
+    (status === 'initial' && dirty);
 
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (shouldWarn) {
-        e.preventDefault();
-        e.returnValue =
-          'Are you sure you want to leave? Unsaved changes will be lost.';
-        return e.returnValue;
-      }
-      return undefined;
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [status, dirty]);
+  const { blockedNavigate } = useNavigationWarning({
+    shouldBlock: shouldWarn,
+  });
 
   const getWrappedOnSave =
     (onSaveFunction: () => Promise<T | void>) => async () => {
@@ -115,9 +106,9 @@ const Form = <T extends void | Record<string, unknown>>({
   const onCancel = () => {
     setStatus('initial');
     if (window.history.length > 1) {
-      navigate(-1);
+      blockedNavigate(-1);
     } else {
-      navigate('/');
+      blockedNavigate('/');
     }
   };
 

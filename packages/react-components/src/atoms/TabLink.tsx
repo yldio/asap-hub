@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { css, Theme } from '@emotion/react';
 
 import { layoutStyles } from '../text';
+import { useBlockedClick } from '../navigation';
 import { rem } from '../pixels';
 import { fern, neutral900, neutral1000 } from '../colors';
 import { useHasRouter } from '../routing';
@@ -53,6 +54,7 @@ interface TabLinkProps {
   readonly children: ReactNode;
 }
 const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
+  const blockedClick = useBlockedClick();
   const hasRouter = useHasRouter();
   const isActivePrefix = hasRouter ? useIsActivePrefix(href) : false;
 
@@ -86,6 +88,7 @@ const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
         to={href}
         style={{ textDecoration: 'none', color: 'unset' }}
         className={active ? 'active' : undefined}
+        onClick={blockedClick}
       >
         <div
           css={(theme: Theme) => [

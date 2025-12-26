@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 
 import { isInternalLink } from '../utils';
 import { useHasRouter } from '../routing';
+import { useBlockedClick } from '../navigation';
 
 const resetStyles = css({
   outline: 'none',
@@ -20,11 +21,19 @@ type AnchorProps = {
   enabled?: boolean;
 } & Omit<LinkProps, 'to'> &
   Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target' | 'rel'>;
-const Anchor: React.FC<AnchorProps> = ({ href, enabled = true, ...props }) => {
+const Anchor: React.FC<AnchorProps> = ({
+  href,
+  enabled = true,
+  onClick,
+  ...props
+}) => {
+  const blockedClick = useBlockedClick(onClick);
   const [internal, url] =
     enabled && href ? isInternalLink(href) : [false, undefined];
   if (useHasRouter() && url && internal) {
-    return <Link {...props} to={url} css={resetStyles} />;
+    return (
+      <Link {...props} to={url} css={resetStyles} onClick={blockedClick} />
+    );
   }
   return (
     <a
@@ -33,6 +42,7 @@ const Anchor: React.FC<AnchorProps> = ({ href, enabled = true, ...props }) => {
       target={internal ? undefined : '_blank'}
       rel={internal ? undefined : 'noreferrer noopener'}
       css={resetStyles}
+      onClick={onClick}
     />
   );
 };

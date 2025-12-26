@@ -1,8 +1,11 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
+import {
+  useNavigationWarning,
+  usePushFromHere,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePushFromHere } from '@asap-hub/react-components';
 
 const styles = css({
   boxSizing: 'border-box',
@@ -57,26 +60,14 @@ const Form = <T extends void | Record<string, unknown>>({
     }
   }, [serverErrors]);
 
-  // Replace Prompt with beforeunload event for unsaved changes warning
-  useEffect(() => {
-    const shouldWarn =
-      status === 'isSaving' ||
-      status === 'hasError' ||
-      (status === 'initial' && dirty);
+  const shouldWarn =
+    status === 'isSaving' ||
+    status === 'hasError' ||
+    (status === 'initial' && dirty);
 
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (shouldWarn) {
-        e.preventDefault();
-        e.returnValue =
-          'Are you sure you want to leave? Unsaved changes will be lost.';
-        return e.returnValue;
-      }
-      return undefined;
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [status, dirty]);
+  const { blockedNavigate } = useNavigationWarning({
+    shouldBlock: shouldWarn,
+  });
 
   const getWrappedOnSave =
     (
@@ -123,9 +114,9 @@ const Form = <T extends void | Record<string, unknown>>({
     setStatus('initial');
     // In React Router v6, location.key is always set, so we check history.length instead
     if (window.history.length > 1) {
-      navigate(-1);
+      blockedNavigate(-1);
     } else {
-      navigate('/');
+      blockedNavigate('/');
     }
   };
 

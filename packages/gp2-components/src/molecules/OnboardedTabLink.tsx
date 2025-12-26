@@ -1,4 +1,4 @@
-import { pixels } from '@asap-hub/react-components';
+import { pixels, useBlockedClick } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
@@ -54,16 +54,27 @@ const OnboardedTabLink: React.FC<OnboardedTabLinkProps> = ({
   children,
   disabled = false,
   index,
-}) =>
-  disabled ? (
-    <div css={[styles, mobileStyle, disabledStyles]}>
-      <p css={textStyles}>
-        {onboardingDisabledIcon}
-        {children}
-      </p>
-    </div>
-  ) : (
-    <NavLink to={href} end style={{ textDecoration: 'none', color: 'unset' }}>
+}) => {
+  const blockedClick = useBlockedClick();
+
+  if (disabled) {
+    return (
+      <div css={[styles, mobileStyle, disabledStyles]}>
+        <p css={textStyles}>
+          {onboardingDisabledIcon}
+          {children}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <NavLink
+      to={href}
+      end
+      style={{ textDecoration: 'none', color: 'unset' }}
+      onClick={blockedClick}
+    >
       {({ isActive }) => (
         <div css={[styles, mobileStyle, isActive && activeStyles]}>
           <p css={textStyles}>
@@ -87,5 +98,6 @@ const OnboardedTabLink: React.FC<OnboardedTabLinkProps> = ({
       )}
     </NavLink>
   );
+};
 
 export default OnboardedTabLink;

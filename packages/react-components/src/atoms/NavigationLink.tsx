@@ -4,6 +4,7 @@ import { PropsWithChildren } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { activePrimaryStyles } from '../button';
 import { charcoal, lead, silver } from '../colors';
+import { useBlockedClick } from '../navigation';
 import {
   largeDesktopScreen,
   lineHeight,
@@ -94,6 +95,7 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
   enabled = true,
   squareBorder,
 }) => {
+  const blockedClick = useBlockedClick();
   const [internal, url] = isInternalLink(href);
   const location = useLocation();
 
@@ -111,6 +113,7 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
         to={url}
         style={{ textDecoration: 'none', color: 'unset' }}
         className={enabled && isActive ? 'active' : undefined}
+        onClick={blockedClick}
       >
         <div
           css={({ colors, components }: Theme) => [

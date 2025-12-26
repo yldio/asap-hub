@@ -1,8 +1,13 @@
+import {
+  mockActWarningsInConsole,
+  mockNavigateWarningsInConsole,
+} from '@asap-hub/dom-test-utils';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
+import { NavigationBlockerProvider } from '@asap-hub/react-components';
 import ResourceModal from '../ResourceModal';
 
 const defaultProps: ComponentProps<typeof ResourceModal> = {
@@ -45,10 +50,16 @@ const enterLink = async (link: string) => {
 describe('ResourceModal', () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    jest.spyOn(console, 'warn').mockImplementation();
-    jest.spyOn(console, 'error').mockImplementation();
+    // jest.spyOn(console, 'warn').mockImplementation();
+    // jest.spyOn(console, 'error').mockImplementation();
+    jest.spyOn(window, 'confirm').mockImplementation(() => true);
   });
-  const renderResourseModal = (
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  const renderResourceModal = (
     props: Partial<ComponentProps<typeof ResourceModal>> = {},
   ) => {
     render(
@@ -57,95 +68,106 @@ describe('ResourceModal', () => {
       </StaticRouter>,
     );
   };
-  // TODO: React Router v6 Migration - Navigation blocking tests skipped
-  // These tests rely on React Router v5's getUserConfirmation API for navigation blocking,
-  // which was removed in v6. The EditModal component (used by ResourceModal) currently only
-  // handles beforeunload events for browser navigation, not React Router navigation blocking.
-  // These tests can be re-enabled once navigation blocking is properly implemented for React Router v6.
-  describe.skip('dialog', () => {
-    beforeEach(jest.resetAllMocks);
-    const renderResourseModalWithDialog = (
-      props: Partial<ComponentProps<typeof ResourceModal>> = {
+
+  const renderResourceModalWithNavigation = (
+    props: Partial<ComponentProps<typeof ResourceModal>> = {},
+  ) => {
+    render(
+      <MemoryRouter>
+        <NavigationBlockerProvider>
+          <ResourceModal {...defaultProps} {...props} />
+        </NavigationBlockerProvider>
+      </MemoryRouter>,
+    );
+  };
+
+  describe('navigation blocking', () => {
+    it('shows the confirm dialog when the user adds a new type and clicks cancel', async () => {
+      renderResourceModalWithNavigation({
         type: 'Note',
         title: 'a title',
         description: 'a description',
-      },
-    ) => {
-      // const getUserConfirmation = jest.fn((_message, cb) => cb(true));
-      const {
-        /* getUserConfirmation */
-      } = render(
-        <MemoryRouter>
-          <ResourceModal {...defaultProps} {...props} />
-        </MemoryRouter>,
-      );
+      });
 
-      return {
-        getUserConfirmation: null,
-      };
-    };
-    it('shows the dialog when the user adds a new type', async () => {
-      const { getUserConfirmation } = renderResourseModalWithDialog();
       await enterType('Link');
       const cancelButton = screen.getByRole('link', { name: /cancel/i });
       await userEvent.click(cancelButton);
-      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+      expect(window.confirm).toHaveBeenCalledTimes(1);
     });
 
-    it('the dialog shows when the user changes the resource information and cancels the action', async () => {
-      const { getUserConfirmation } = renderResourseModalWithDialog();
+    it('shows the confirm dialog when the user changes resource information and cancels', async () => {
+      renderResourceModalWithNavigation({
+        type: 'Note',
+        title: 'a title',
+        description: 'a description',
+      });
+
       await enterType('Link');
       await enterLink('http://example.com');
       await enterTitle('A new title');
       await enterDescription('A new description');
       const cancelButton = screen.getByRole('link', { name: /cancel/i });
       await userEvent.click(cancelButton);
-      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+      expect(window.confirm).toHaveBeenCalledTimes(1);
     });
 
-    it(`the dialog doesn't show when the user doesn't add new changes`, async () => {
-      const { getUserConfirmation } = renderResourseModalWithDialog();
+    it('does not show the confirm dialog when the user does not make changes', async () => {
+      renderResourceModalWithNavigation({
+        type: 'Note',
+        title: 'a title',
+        description: 'a description',
+      });
+
       const cancelButton = screen.getByRole('link', { name: /cancel/i });
       await userEvent.click(cancelButton);
-      expect(getUserConfirmation).not.toHaveBeenCalled();
+      expect(window.confirm).not.toHaveBeenCalled();
     });
 
-    it('the dialog shows when the user changes type of resource', async () => {
-      const { getUserConfirmation } = renderResourseModalWithDialog();
+    it('shows the confirm dialog when the user changes type of resource', async () => {
+      renderResourceModalWithNavigation({
+        type: 'Note',
+        title: 'a title',
+        description: 'a description',
+      });
+
       await enterType('Link');
       const cancelButton = screen.getByRole('link', { name: /cancel/i });
       await userEvent.click(cancelButton);
-      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+      expect(window.confirm).toHaveBeenCalledTimes(1);
     });
-    it('the dialog shows when the user changes the link', async () => {
-      const { getUserConfirmation } = renderResourseModalWithDialog({
+
+    it('shows the confirm dialog when the user changes the link', async () => {
+      renderResourceModalWithNavigation({
         type: 'Link',
+        title: 'a title',
+        externalLink: 'http://example.com',
       });
 
       await enterLink('http://example2.com');
       const cancelButton = screen.getByRole('link', { name: /cancel/i });
       await userEvent.click(cancelButton);
-      expect(getUserConfirmation).toHaveBeenCalledTimes(1);
+      expect(window.confirm).toHaveBeenCalledTimes(1);
     });
   });
+
   describe('edit modal', () => {
     it('renders the type of the resource', async () => {
-      renderResourseModal({ type: 'Link', title: 'test' });
+      renderResourceModal({ type: 'Link', title: 'test' });
       await waitFor(() => expect(titleBox()).toBeEnabled());
       expect(await screen.findByText('Link')).toBeVisible();
     });
     it('renders the title of the resource', () => {
-      renderResourseModal({ title: 'This is the new test' });
+      renderResourceModal({ title: 'This is the new test' });
       expect(screen.getByRole('textbox', { name: /Title/i })).toHaveValue(
         'This is the new test',
       );
     });
     it('renders the description of the resource', () => {
-      renderResourseModal({ description: 'This is the new description' });
+      renderResourceModal({ description: 'This is the new description' });
       expect(screen.getByText('This is the new description')).toBeVisible();
     });
     it('renders the link of the resource', () => {
-      renderResourseModal({
+      renderResourceModal({
         type: 'Link',
         externalLink: 'https://www.google.com/',
       });
@@ -154,7 +176,7 @@ describe('ResourceModal', () => {
       );
     });
     it('renders the delete button if onDelete function is provided', () => {
-      renderResourseModal({
+      renderResourceModal({
         type: 'Link',
         externalLink: 'https://www.google.com/',
         onDelete: jest.fn(),
@@ -162,8 +184,9 @@ describe('ResourceModal', () => {
       expect(screen.getByRole('button', { name: /delete/i })).toBeVisible();
     });
     it('allows a resource to be deleted', async () => {
+      mockNavigateWarningsInConsole();
       const onDelete = jest.fn();
-      renderResourseModal({ onDelete });
+      renderResourceModal({ onDelete });
       await enterType('Link');
       await enterTitle('a title');
       await enterLink('http://example.com');
@@ -172,16 +195,18 @@ describe('ResourceModal', () => {
       expect(onDelete).toHaveBeenCalledWith();
     });
   });
+
   it('title and description should be disabled and url is hidden', () => {
-    renderResourseModal();
+    renderResourceModal();
     expect(descriptionBox()).toBeDisabled();
     expect(titleBox()).toBeDisabled();
     expect(
       screen.queryByRole('textbox', { name: /url/i }),
     ).not.toBeInTheDocument();
   });
+
   it('shows the title and the description', () => {
-    renderResourseModal({
+    renderResourceModal({
       modalTitle: 'This is the modal title',
       modalDescription: 'This is the modal description',
     });
@@ -190,8 +215,9 @@ describe('ResourceModal', () => {
     ).toBeVisible();
     expect(screen.getByText('This is the modal description')).toBeVisible();
   });
+
   it('a note should not display a Url', async () => {
-    renderResourseModal();
+    renderResourceModal();
     await enterType('Note');
     expect(descriptionBox()).toBeEnabled();
     expect(titleBox()).toBeEnabled();
@@ -199,8 +225,9 @@ describe('ResourceModal', () => {
       screen.queryByRole('textbox', { name: /url/i }),
     ).not.toBeInTheDocument();
   });
+
   it('a link should display a Url', async () => {
-    renderResourseModal();
+    renderResourceModal();
     await enterType('Link');
     expect(descriptionBox()).toBeEnabled();
     expect(titleBox()).toBeEnabled();
@@ -208,8 +235,9 @@ describe('ResourceModal', () => {
   });
 
   it('allows a note to be saved', async () => {
+    mockNavigateWarningsInConsole();
     const onSave = jest.fn();
-    renderResourseModal({ onSave });
+    renderResourceModal({ onSave });
     await enterType('Note');
     await enterTitle('a title');
     const saveButton = await save();
@@ -219,9 +247,11 @@ describe('ResourceModal', () => {
       title: 'a title',
     });
   });
+
   it('allows a note with a description to be saved', async () => {
+    mockNavigateWarningsInConsole();
     const onSave = jest.fn();
-    renderResourseModal({ onSave });
+    renderResourceModal({ onSave });
     await enterType('Note');
     await enterTitle('a title');
     await enterDescription('a description');
@@ -233,9 +263,11 @@ describe('ResourceModal', () => {
       description: 'a description',
     });
   });
+
   it('allows a link to be saved', async () => {
+    mockNavigateWarningsInConsole();
     const onSave = jest.fn();
-    renderResourseModal({ onSave });
+    renderResourceModal({ onSave });
     await enterType('Link');
     await enterTitle('a title');
     await enterLink('http://example.com');
@@ -247,9 +279,11 @@ describe('ResourceModal', () => {
       externalLink: 'http://example.com',
     });
   });
+
   it('allows a link to be saved with a description', async () => {
+    mockNavigateWarningsInConsole();
     const onSave = jest.fn();
-    renderResourseModal({ onSave });
+    renderResourceModal({ onSave });
     await enterType('Link');
     await enterTitle('a title');
     await enterLink('http://example.com');
@@ -263,17 +297,20 @@ describe('ResourceModal', () => {
       description: 'a description',
     });
   });
+
   it('cancel button takes you back', () => {
-    renderResourseModal();
+    renderResourceModal();
     const cancelButton = screen.getByRole('link', { name: /Cancel/i });
     expect(cancelButton.closest('a')).toHaveAttribute('href', '/back');
   });
+
   it('disables on save', async () => {
+    mockNavigateWarningsInConsole();
     let resolveSave: () => void;
     const onSave = jest.fn(
       () => new Promise<void>((resolve) => (resolveSave = resolve)),
     );
-    renderResourseModal({ onSave });
+    renderResourceModal({ onSave });
     await enterType('Note');
     await enterTitle('a title');
     await enterDescription('a description');
@@ -303,14 +340,16 @@ describe('ResourceModal', () => {
     resolveSave!();
     await waitFor(() => expect(saveButton).toBeEnabled());
   });
+
   it('selecting a type is required', async () => {
-    renderResourseModal();
+    renderResourceModal();
     await save();
     expect(screen.getByText(/please enter a valid type/i)).toBeVisible();
   });
 
   it('a title and link is required', async () => {
-    renderResourseModal();
+    mockActWarningsInConsole('error');
+    renderResourceModal();
     await enterType('Link');
     await save();
     expect(screen.getByText(/please enter a title/i)).toBeVisible();

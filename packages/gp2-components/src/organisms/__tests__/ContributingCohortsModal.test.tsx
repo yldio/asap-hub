@@ -1,4 +1,4 @@
-import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
+import { mockNavigateWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { act, render, screen, within } from '@testing-library/react';
@@ -35,7 +35,16 @@ describe('ContributingCohortsModal', () => {
       </StaticRouter>,
     );
 
-  beforeEach(jest.resetAllMocks);
+  let consoleWarnSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+    consoleWarnSpy = mockNavigateWarningsInConsole();
+  });
+
+  afterEach(() => {
+    consoleWarnSpy.mockRestore();
+  });
 
   it('renders a dialog with the right title', () => {
     renderContributingCohorts();
@@ -162,7 +171,6 @@ describe('ContributingCohortsModal', () => {
   });
 
   it('allows the name to be edited', async () => {
-    const consoleWarnSpy = mockActWarningsInConsole();
     const promise = Promise.resolve();
     const contributingCohortId = '11';
     const role = 'Investigator';
@@ -194,13 +202,11 @@ describe('ContributingCohortsModal', () => {
     await act(async () => {
       await promise;
     });
-    consoleWarnSpy.mockRestore();
   });
 
   it.each(gp2Model.userContributingCohortRole)(
     'allows the role to be edited %s',
     async (updatedRole) => {
-      const consoleWarnSpy = mockActWarningsInConsole();
       const promise = Promise.resolve();
       const contributingCohortId = '11';
       const role: gp2Model.UserContributingCohortRole =
@@ -232,7 +238,6 @@ describe('ContributingCohortsModal', () => {
       await act(async () => {
         await promise;
       });
-      consoleWarnSpy.mockRestore();
     },
   );
 

@@ -39,3 +39,23 @@ export const mockActWarningsInConsole = (
     });
   return spy;
 };
+
+/**
+ * Mocks console.warn to suppress React Router 6 navigate() timing warnings.
+ * Use this for tests with EditModal or components that trigger navigation on mount.
+ *
+ * @returns Jest spy with `mockRestore()` method to restore original console.warn
+ */
+export const mockNavigateWarningsInConsole = () => {
+  const originalConsoleWarn = console.warn;
+  const spy = jest
+    .spyOn(console, 'warn')
+    .mockImplementation((...args: unknown[]) => {
+      const message = args[0]?.toString() || '';
+      if (message.includes('call navigate() in a React.useEffect()')) {
+        return; // Suppress React Router navigate warning
+      }
+      originalConsoleWarn.apply(console, args);
+    });
+  return spy;
+};

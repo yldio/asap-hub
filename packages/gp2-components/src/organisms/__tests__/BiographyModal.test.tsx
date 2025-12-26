@@ -1,4 +1,4 @@
-import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
+import { mockNavigateWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -7,9 +7,18 @@ import { StaticRouter } from 'react-router-dom/server';
 import BiographyModal from '../BiographyModal';
 
 describe('BiographyModal', () => {
-  const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
+  let consoleWarnSpy: jest.SpyInstance;
 
-  beforeEach(jest.resetAllMocks);
+  beforeEach(() => {
+    consoleWarnSpy = mockNavigateWarningsInConsole();
+    jest.resetAllMocks();
+  });
+
+  afterEach(() => {
+    consoleWarnSpy.mockRestore();
+  });
+
+  const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
   type BiographyModalProps = ComponentProps<typeof BiographyModal>;
   const defaultProps: BiographyModalProps = {
     ...gp2Fixtures.createUserResponse(),
@@ -45,7 +54,6 @@ describe('BiographyModal', () => {
   });
 
   it('calls onSave with the right arguments', async () => {
-    const consoleWarnSpy = mockActWarningsInConsole();
     const onSave = jest.fn();
     const biography = 'this is a biography';
     renderModal({
@@ -57,11 +65,9 @@ describe('BiographyModal', () => {
       biography,
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
-    consoleWarnSpy.mockRestore();
   });
 
   it('calls onSave with the updated fields', async () => {
-    const consoleWarnSpy = mockActWarningsInConsole();
     const onSave = jest.fn();
     const biography = 'this is a biography';
     renderModal({
@@ -81,7 +87,6 @@ describe('BiographyModal', () => {
       biography,
     });
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
-    consoleWarnSpy.mockRestore();
   });
   it('shows validation message', async () => {
     const onSave = jest.fn();

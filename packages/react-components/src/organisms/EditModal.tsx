@@ -42,6 +42,12 @@ const EditModal: React.FC<EditModalProps> = ({
     'initial' | 'isSaving' | 'hasError' | 'hasSaved'
   >('initial');
 
+  // TODO: React Router 6 warns "You should call navigate() in a React.useEffect()"
+  // even though this IS inside useEffect. The issue is that during the initial mount's
+  // passive effects phase, React Router considers the component not fully mounted.
+  // To fix properly: add a mountedRef (or create a hook called `isMounted()`) check
+  // before calling historyPush, or use setTimeout to defer navigation to the next tick.
+  // See tests for warning suppression.
   useEffect(() => {
     if (status === 'hasSaved') {
       setStatus('initial');

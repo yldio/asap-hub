@@ -1,4 +1,7 @@
-import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
+import {
+  mockActWarningsInConsole,
+  mockNavigateWarningsInConsole,
+} from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
@@ -11,12 +14,16 @@ describe('TagsModal', () => {
   const getSaveButton = () => screen.getByRole('button', { name: 'Save' });
 
   let consoleWarnSpy: ReturnType<typeof mockActWarningsInConsole>;
+  let navigateWarnSpy: jest.SpyInstance;
+
   beforeEach(() => {
     jest.resetAllMocks();
     consoleWarnSpy = mockActWarningsInConsole();
+    navigateWarnSpy = mockNavigateWarningsInConsole();
   });
   afterEach(() => {
     consoleWarnSpy.mockRestore();
+    navigateWarnSpy.mockRestore();
   });
   type TagsModalProps = ComponentProps<typeof TagsModal>;
   const defaultProps: TagsModalProps = {

@@ -133,12 +133,15 @@ describe('ManuscriptForm team validation', () => {
     userEvent.click(screen.getByText('Lab One'));
     userEvent.tab();
 
-    // Error message for the team input
-    expect(
-      screen.getByText(
-        /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
-      ),
-    ).toBeVisible();
+    // Wait for async lab validation to complete
+    await waitFor(() => {
+      // Error message for the team input
+      expect(
+        screen.getByText(
+          /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
+        ),
+      ).toBeVisible();
+    });
 
     // Error message for the lab input
     expect(
@@ -460,9 +463,12 @@ describe('ManuscriptForm team validation', () => {
     userEvent.click(screen.getByText('Lab One'));
     userEvent.tab();
 
-    expect(container).toHaveTextContent(
-      "The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added. • Author A • Author B The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added. • Lab One",
-    );
+    // Wait for async lab validation to complete
+    await waitFor(() => {
+      expect(container).toHaveTextContent(
+        "The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added. • Author A • Author B The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added. • Lab One",
+      );
+    });
 
     expect(container).toHaveTextContent(
       'The following first author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Author A • Author B',

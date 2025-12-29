@@ -574,9 +574,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     [setValue, selectedTeams, selectedLabs],
   );
 
-  const validateLabPiTeams = () => {
-    // Use getValues() instead of watch() to ensure we get the latest form state
-    const labs = getValues('versions.0.labs');
+  const validateLabPiTeams = (labsOverride?: MultiSelectOptionsType[]) => {
+    // Use labsOverride if provided (for immediate validation after onChange),
+    // otherwise use getValues() to get the current form state
+    const labs = labsOverride ?? getValues('versions.0.labs');
     const teams = getValues('versions.0.teams');
 
     const teamFormIds = teams.map((team) => team.value);
@@ -720,12 +721,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     }
   };
 
-  const validateTeams = () => {
+  const validateTeams = (labsOverride?: MultiSelectOptionsType[]) => {
     usersWithoutTeamAdded.clear();
     validateFirstAuthors();
     validateCorrespondingAuthor();
     validateAdditionalAuthors();
-    validateLabPiTeams();
+    validateLabPiTeams(labsOverride);
 
     const contributorsErrorMessage = `The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added.\n${Array.from(
       usersWithoutTeamAdded,
@@ -1695,7 +1696,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       selectedOptions: OptionsType<MultiSelectOptionsType>,
                     ) => {
                       onChange(selectedOptions);
-                      validateTeams();
+                      // Defer validation to next event loop tick to ensure form state has fully settled
+                      // This prevents React Hook Form's internal state update from overwriting the error
+                      setTimeout(() => validateTeams([...selectedOptions]), 0);
                     }}
                     values={value}
                     noOptionsMessage={({

@@ -21,7 +21,6 @@ beforeEach(() => {
     configurable: true,
     value: [],
   });
-  jest.spyOn(console, 'error').mockImplementation();
 });
 afterEach(() => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,12 +29,16 @@ afterEach(() => {
 });
 
 describe('useAlgolia', () => {
-  // TODO: Fix this test - console.error mocking issue with React Testing Library
-  it.skip('throws when user is not provided', () => {
-    const { result } = renderHook(() => useAlgolia());
-    expect(result.error).toEqual(
+  it('throws when user is not provided', () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    expect(() => renderHook(() => useAlgolia())).toThrow(
       new Error('Algolia unavailable while not logged in'),
     );
+
+    consoleErrorSpy.mockRestore();
   });
   it('constructs algolia client linking GTM and Algolia with Auth0 user id', async () => {
     const mockAlgoliaSearchClientFactory =

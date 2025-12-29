@@ -60,8 +60,7 @@ describe('AdditionalDetails', () => {
       typeof getContributingCohorts
     >;
 
-  // TODO: Fix this test after React Router v6 migration - AdditionalDetails.tsx component needs v6 migration
-  it.skip('renders questions, funding providers and contributing cohorts', async () => {
+  it('renders questions, funding providers and contributing cohorts', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     mockGetContributingCohorts.mockResolvedValueOnce(
@@ -92,8 +91,7 @@ describe('AdditionalDetails', () => {
     ).toBeVisible();
   });
 
-  // TODO: Fix this test after React Router v6 migration - AdditionalDetails.tsx component needs v6 migration
-  it.skip('saves the open questions modal', async () => {
+  it('saves the open questions modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderAdditionalDetails(user.id);
@@ -116,8 +114,7 @@ describe('AdditionalDetails', () => {
     );
   });
 
-  // TODO: Fix this test after React Router v6 migration - AdditionalDetails.tsx component needs v6 migration
-  it.skip('saves the funding providers modal', async () => {
+  it('saves the funding providers modal', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderAdditionalDetails(user.id);
@@ -140,8 +137,7 @@ describe('AdditionalDetails', () => {
     );
   });
 
-  // TODO: Fix this test after React Router v6 migration - AdditionalDetails.tsx component needs v6 migration
-  it.skip('opens the contributing cohorts modal', async () => {
+  it('opens the contributing cohorts modal', async () => {
     const contributingCohorts: gp2Model.UserContributingCohort[] = [
       {
         contributingCohortId: '11',

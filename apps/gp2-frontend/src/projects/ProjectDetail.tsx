@@ -164,7 +164,7 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
                               }
                             />
                             <Route
-                              path="edit/:resource"
+                              path="edit/:resourceIndex"
                               element={
                                 <EditResourceModal
                                   route={editRoute.resource}

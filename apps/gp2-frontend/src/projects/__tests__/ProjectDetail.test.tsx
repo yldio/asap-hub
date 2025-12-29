@@ -248,8 +248,7 @@ describe('ProjectDetail', () => {
     },
   );
 
-  // TODO: Fix this test after React Router v6 migration - ProjectDetail.tsx needs path="workspace/*" for nested routes
-  it.skip('renders the add modal when the user is an Administrator', async () => {
+  it('renders the add modal when the user is an Administrator', async () => {
     const project = gp2Fixtures.createProjectResponse();
     project.members = [projectMember];
     mockGetProject.mockResolvedValueOnce(project);
@@ -268,8 +267,7 @@ describe('ProjectDetail', () => {
     ).toBeInTheDocument();
   });
 
-  // TODO: Fix this test after React Router v6 migration - ProjectDetail.tsx needs path="workspace/*" for nested routes
-  it.skip('renders the add modal when the user is not Administrator but is a Project manager', async () => {
+  it('renders the add modal when the user is not Administrator but is a Project manager', async () => {
     const project = gp2Fixtures.createProjectResponse();
     project.members = [
       {
@@ -298,8 +296,7 @@ describe('ProjectDetail', () => {
     const project = gp2Fixtures.createProjectResponse();
     project.members = [projectMember];
 
-    // TODO: Fix this test after React Router v6 migration - ProjectDetail.tsx needs path="workspace/*" for nested routes
-    it.skip('does render the add and edit button to Administrators', async () => {
+    it('does render the add and edit button to Administrators', async () => {
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({
         id: project.id,
@@ -338,8 +335,7 @@ describe('ProjectDetail', () => {
       },
     );
 
-    // TODO: Fix this test after React Router v6 migration - ProjectDetail.tsx needs path="workspace/*" for nested routes
-    it.skip('can submit an add modal when form data is valid', async () => {
+    it('can submit an add modal when form data is valid', async () => {
       const title = 'example42 title';
       const type = 'Note';
 
@@ -372,8 +368,7 @@ describe('ProjectDetail', () => {
       await waitFor(() => expect(saveButton).toBeEnabled());
     });
 
-    // TODO: Fix this test after React Router v6 migration - ProjectDetail.tsx needs path="workspace/*" for nested routes
-    it.skip('can submit an edit modal when form data is valid', async () => {
+    it('can submit an edit modal when form data is valid', async () => {
       const resources: gp2Model.Resource[] = [
         {
           type: 'Note',
@@ -405,9 +400,10 @@ describe('ProjectDetail', () => {
 
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
       await userEvent.click(editButton);
+      await screen.findByRole('heading', { name: /Edit Resource/i });
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      await userEvent.clear(titleBox);
-      await userEvent.type(titleBox, title);
+      await userEvent.tripleClick(titleBox);
+      await userEvent.keyboard(title);
       const saveButton = screen.getByRole('button', { name: /save/i });
       await userEvent.click(saveButton);
 
@@ -450,8 +446,7 @@ describe('ProjectDetail', () => {
   });
 
   describe('Duplicate Output', () => {
-    // TODO: Fix this test after React Router v6 migration - ProjectDetail.tsx needs path="duplicate/*" for nested routes
-    it.skip('allows a user who is an Administrator or Project Manager to duplicate an output', async () => {
+    it('allows a user who is an Administrator or Project Manager to duplicate an output', async () => {
       const project = {
         ...gp2Fixtures.createProjectResponse(),
         members: [
@@ -497,7 +492,7 @@ describe('ProjectDetail', () => {
         projects: [project],
       });
 
-      expect(screen.getByLabelText(/Title/i)).toHaveValue(
+      expect(await screen.findByLabelText(/Title/i)).toHaveValue(
         'Copy of Test Output',
       );
       expect(screen.getByLabelText(/URL/i)).toHaveValue('');

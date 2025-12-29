@@ -18,10 +18,9 @@ import {
   waitFor,
   within,
   renderHook,
-  act,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { OpensearchClient } from '../../utils/opensearch';
@@ -43,6 +42,28 @@ import {
 
 jest.mock('../api');
 mockConsoleError();
+
+// Reusable ErrorBoundary for testing error handling in Suspense-based hooks
+let errorCallback: ((error: Error) => void) | null = null;
+
+class TestErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError(err: Error) {
+    errorCallback?.(err);
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div>Error caught</div>;
+    }
+    return this.props.children;
+  }
+}
 
 jest.mock('@asap-hub/algolia', () => ({
   ...jest.requireActual('@asap-hub/algolia'),
@@ -396,56 +417,76 @@ describe('Engagement', () => {
     it('throws error when fails to fetch attendance data', async () => {
       const error = new Error('Failed to fetch engagement data');
       mockGetMeetingRepAttendance.mockRejectedValue(error);
+      jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      try {
-        renderHook(
-          () =>
-            useAnalyticsMeetingRepAttendance({
-              currentPage: 0,
-              pageSize: 10,
-              sort: 'team_asc',
-              timeRange: 'all',
-              tags: [],
-            }),
-          {
-            wrapper: ({ children }) => (
-              <RecoilRoot>
-                <Suspense fallback="loading">{children}</Suspense>
-              </RecoilRoot>
-            ),
-          },
-        );
-      } catch (e) {
-        expect(() => e).toThrow('Failed to fetch engagement data');
-      }
+      let caughtError: Error | null = null;
+      errorCallback = (err) => {
+        caughtError = err;
+      };
+
+      const wrapper = ({ children }: { children: React.ReactNode }) => (
+        <RecoilRoot>
+          <TestErrorBoundary>
+            <Suspense fallback="loading">{children}</Suspense>
+          </TestErrorBoundary>
+        </RecoilRoot>
+      );
+
+      renderHook(
+        () =>
+          useAnalyticsMeetingRepAttendance({
+            currentPage: 0,
+            pageSize: 10,
+            sort: 'team_asc',
+            timeRange: 'all',
+            tags: [],
+          }),
+        { wrapper },
+      );
+
+      await waitFor(() => {
+        expect(caughtError?.message).toBe('Failed to fetch engagement data');
+      });
+
+      errorCallback = null;
     });
   });
 
   it('throws error when engagement state is an Error', async () => {
     const error = new Error('Failed to fetch engagement data');
     mockGetEngagement.mockRejectedValue(error);
+    jest.spyOn(console, 'error').mockImplementation(() => {});
 
-    try {
-      renderHook(
-        () =>
-          useAnalyticsEngagement({
-            currentPage: 0,
-            pageSize: 10,
-            sort: 'team_asc',
-            timeRange: 'all',
-            tags: ['engagement'],
-          }),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
-              <Suspense fallback="loading">{children}</Suspense>
-            </RecoilRoot>
-          ),
-        },
-      );
-    } catch (e) {
-      expect(() => e).toThrow('Failed to fetch engagement data');
-    }
+    let caughtError: Error | null = null;
+    errorCallback = (err) => {
+      caughtError = err;
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot>
+        <TestErrorBoundary>
+          <Suspense fallback="loading">{children}</Suspense>
+        </TestErrorBoundary>
+      </RecoilRoot>
+    );
+
+    renderHook(
+      () =>
+        useAnalyticsEngagement({
+          currentPage: 0,
+          pageSize: 10,
+          sort: 'team_asc',
+          timeRange: 'all',
+          tags: ['engagement'],
+        }),
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      expect(caughtError?.message).toBe('Failed to fetch engagement data');
+    });
+
+    errorCallback = null;
   });
 
   describe('loadTags function', () => {

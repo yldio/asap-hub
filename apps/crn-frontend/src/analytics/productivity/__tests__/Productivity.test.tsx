@@ -884,7 +884,7 @@ describe('tag suggestions', () => {
 
     const searchBox = getSearchBox();
     await act(async () => {
-      userEvent.type(searchBox, 'test123');
+      await userEvent.type(searchBox, 'test123');
     });
 
     await waitFor(() => {
@@ -940,7 +940,7 @@ describe('tag suggestions', () => {
 
     const searchBox = getSearchBox();
     await act(async () => {
-      userEvent.type(searchBox, 'test123');
+      await userEvent.type(searchBox, 'test123');
     });
 
     await waitFor(() => {

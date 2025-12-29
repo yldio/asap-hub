@@ -1,7 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { searchQueryParam } from '@asap-hub/routing';
-import { waitFor } from '@testing-library/dom';
 import React, { ComponentProps } from 'react';
 
 import { useSearch } from '../search';

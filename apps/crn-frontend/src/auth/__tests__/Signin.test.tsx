@@ -181,7 +181,7 @@ describe('after a failed flow', () => {
           return;
         }
         // Call through to jest-fail-on-console for other warnings
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line no-console
         (console.warn as jest.Mock).mockRestore?.();
         // eslint-disable-next-line no-console
         console.warn(message, ...args);

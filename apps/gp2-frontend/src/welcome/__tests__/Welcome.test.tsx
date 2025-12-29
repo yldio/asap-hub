@@ -126,15 +126,14 @@ describe('the welcome page', () => {
         nock(API_BASE_URL).get('/users/invites/42').reply(500, {});
       });
 
-      // TODO: React Router v6 migration - skipped due to: pre-existing failure (same test fails in crn-frontend), unhandled promise rejection
-      it.skip('shows an error message toast', async () => {
-        // await renderWelcome();
-        // await userEvent.click(await screen.findByRole('button'));
-        // await waitFor(() => {
-        //   expect(mockToast).toHaveBeenCalledWith(
-        //     expect.stringMatching(/error/i),
-        //   );
-        // });
+      it('shows an error message toast', async () => {
+        await renderWelcome();
+        await userEvent.click(await screen.findByRole('button'));
+        await waitFor(() => {
+          expect(mockToast).toHaveBeenCalledWith(
+            expect.stringMatching(/error/i),
+          );
+        });
       });
     });
 
@@ -146,15 +145,14 @@ describe('the welcome page', () => {
           .replyWithError(new Error('Network Error'));
       });
 
-      // TODO: React Router v6 migration - skipped due to: pre-existing failure (same test fails in crn-frontend), unhandled promise rejection
-      it.skip('shows an error message toast', async () => {
-        // await renderWelcome();
-        // await userEvent.click(await screen.findByRole('button'));
-        // await waitFor(() => {
-        //   expect(mockToast).toHaveBeenCalledWith(
-        //     expect.stringContaining('Network Error'),
-        //   );
-        // });
+      it('shows an error message toast', async () => {
+        await renderWelcome();
+        await userEvent.click(await screen.findByRole('button'));
+        await waitFor(() => {
+          expect(mockToast).toHaveBeenCalledWith(
+            expect.stringContaining('Network Error'),
+          );
+        });
       });
     });
   });

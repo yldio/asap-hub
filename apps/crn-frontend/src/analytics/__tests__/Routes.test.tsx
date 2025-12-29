@@ -327,7 +327,7 @@ describe('Leadership & Membership', () => {
       expect(mockGetAnalyticsLeadership).toHaveBeenCalled();
     });
 
-    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
+    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 
   it('renders error message when os champion response is not a 2XX', async () => {

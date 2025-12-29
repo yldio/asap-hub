@@ -14,6 +14,7 @@ import { ResearchOutputTeamResponse, TeamResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import {
   act,
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -359,9 +360,9 @@ it('displays manuscript success toast message and user can dismiss toast', async
     expect(submitButton).toBeVisible();
   });
 
-  await user.type(
+  fireEvent.change(
     screen.getByRole('textbox', { name: /Title of Manuscript/i }),
-    'manuscript title',
+    { target: { value: 'manuscript title' } },
   );
   const typeTextbox = screen.getByRole('textbox', {
     name: /Type of Manuscript/i,
@@ -391,7 +392,9 @@ it('displays manuscript success toast message and user can dismiss toast', async
   const descriptionTextbox = screen.getByRole('textbox', {
     name: /Manuscript Description/i,
   });
-  await user.type(descriptionTextbox, 'Some description');
+  fireEvent.change(descriptionTextbox, {
+    target: { value: 'Some description' },
+  });
 
   const impactInput = screen.getByRole('textbox', {
     name: /Impact/i,
@@ -405,7 +408,9 @@ it('displays manuscript success toast message and user can dismiss toast', async
   await user.type(categoryInput, 'My Cat');
   await user.click(screen.getByText(/^My Category$/i));
 
-  await user.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+  fireEvent.change(screen.getByLabelText(/First Authors/i), {
+    target: { value: 'Jane Doe' },
+  });
 
   await waitFor(() =>
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -414,7 +419,9 @@ it('displays manuscript success toast message and user can dismiss toast', async
   await user.click(screen.getByText(/Non CRN/i));
 
   expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
-  await user.type(screen.getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+  fireEvent.change(screen.getByLabelText(/Jane Doe Email/i), {
+    target: { value: 'jane@doe.com' },
+  });
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
   for (const button of within(quickChecks).getAllByText('Yes')) {

@@ -157,7 +157,7 @@ describe('QuickCheck logic', () => {
         [fieldDetails]: 'Explanation',
         getDiscussion,
       };
-      const { findByRole, queryByText } = render(
+      const { findByRole, queryAllByText } = render(
         <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
@@ -183,7 +183,7 @@ describe('QuickCheck logic', () => {
       );
 
       await waitFor(() => {
-        expect(queryByText(/Loading.../i)).not.toBeInTheDocument();
+        expect(queryAllByText(/Loading.../i)).toHaveLength(0);
       });
 
       await submitForm({ findByRole });

@@ -526,7 +526,7 @@ it.each`
 `(
   'shows correct modal when updating to $newStatus and calls onUpdateManuscript with correct status',
   async ({ newStatus, submissionButtonText }) => {
-    const userActions = userEvent.setup();
+    const userActions = userEvent.setup({ delay: null });
     const onUpdateManuscript = jest.fn().mockResolvedValue({
       id: 'manuscript_0',
       title: 'Mock Manuscript Title',

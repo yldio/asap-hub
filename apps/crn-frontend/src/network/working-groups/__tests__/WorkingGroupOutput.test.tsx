@@ -100,8 +100,12 @@ const mandatoryFields = async (
 ) => {
   const url = isLinkRequired ? /url \(required\)/i : /url \(optional\)/i;
 
-  await user.type(screen.getByRole('textbox', { name: url }), link);
-  await user.type(screen.getByRole('textbox', { name: /title/i }), title);
+  fireEvent.change(screen.getByRole('textbox', { name: url }), {
+    target: { value: link },
+  });
+  fireEvent.change(screen.getByRole('textbox', { name: /title/i }), {
+    target: { value: title },
+  });
 
   await waitFor(() => expect(editorRef.current).not.toBeNull());
   editorRef.current?.focus();
@@ -112,9 +116,9 @@ const mandatoryFields = async (
   fireEvent.input(descriptionEditor, { data: descriptionMD });
   await user.keyboard('{Tab}');
 
-  await user.type(
+  fireEvent.change(
     screen.getByRole('textbox', { name: /short description/i }),
-    shortDescription,
+    { target: { value: shortDescription } },
   );
 
   const typeInput = screen.getByRole('textbox', {
@@ -126,7 +130,9 @@ const mandatoryFields = async (
   const identifier = screen.getByRole('textbox', { name: /identifier/i });
   await user.type(identifier, 'DOI');
   await user.type(identifier, '{Enter}');
-  await user.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
+  fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
+    target: { value: doi },
+  });
   await user.click(screen.getByRole('textbox', { name: /Authors/i }));
   await user.click(screen.getByText('Person A 3'));
 

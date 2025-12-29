@@ -527,9 +527,14 @@ it.each`
   'shows correct modal when updating to $newStatus and calls onUpdateManuscript with correct status',
   async ({ newStatus, submissionButtonText }) => {
     const userActions = userEvent.setup();
-    const onUpdateManuscript = jest.fn();
+    const onUpdateManuscript = jest.fn().mockResolvedValue({
+      id: 'manuscript_0',
+      title: 'Mock Manuscript Title',
+      status: newStatus,
+      versions: [],
+    });
     cleanup();
-    const { getByRole, getByTestId, queryByRole, getByText } = render(
+    const { getByTestId, queryByRole, findByRole, findByText } = render(
       <MemoryRouter>
         <ManuscriptCard
           {...props}
@@ -551,24 +556,14 @@ it.each`
 
     const statusButton = getByTestId('status-button');
     await userActions.click(statusButton);
-    await waitFor(() => {
-      getByRole('button', { name: newStatus });
-    });
-    await userActions.click(getByRole('button', { name: newStatus }));
 
-    await waitFor(() => {
-      expect(
-        getByRole('button', {
-          name: submissionButtonText,
-        }),
-      ).toBeInTheDocument();
-    });
+    const statusOptionButton = await findByRole('button', { name: newStatus });
+    await userActions.click(statusOptionButton);
 
-    await userActions.click(
-      getByRole('button', {
-        name: submissionButtonText,
-      }),
-    );
+    const submitButton = await findByRole('button', {
+      name: submissionButtonText,
+    });
+    await userActions.click(submitButton);
 
     await waitFor(() => {
       expect(
@@ -576,11 +571,12 @@ it.each`
           name: submissionButtonText,
         }),
       ).not.toBeInTheDocument();
-      expect(onUpdateManuscript).toHaveBeenCalledWith('manuscript-1', {
-        status: newStatus,
-      });
-      expect(getByText(newStatus)).toBeInTheDocument();
     });
+
+    expect(onUpdateManuscript).toHaveBeenCalledWith('manuscript-1', {
+      status: newStatus,
+    });
+    expect(await findByText(newStatus)).toBeInTheDocument();
   },
 );
 

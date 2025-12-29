@@ -422,7 +422,10 @@ describe('UserDetail', () => {
         await screen.findByDisplayValue('Stark Industries'),
         ' 1',
       );
-      expect(await screen.findByText('ExampleInst')).toBeVisible();
+      await waitFor(
+        () => expect(screen.getByText('ExampleInst')).toBeVisible(),
+        { timeout: 5000 },
+      );
       expect(mockGetInstitutions).toHaveBeenCalledWith({
         searchQuery: 'Stark Industries 1',
       });

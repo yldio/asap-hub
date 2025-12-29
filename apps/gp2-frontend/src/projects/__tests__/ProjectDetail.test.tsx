@@ -364,7 +364,11 @@ describe('ProjectDetail', () => {
         [...project.resources!, { title, type }],
         expect.anything(),
       );
-      await waitFor(() => expect(saveButton).toBeEnabled());
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('heading', { name: /Add Resource/i }),
+        ).not.toBeInTheDocument(),
+      );
     });
 
     it('can submit an edit modal when form data is valid', async () => {
@@ -412,7 +416,11 @@ describe('ProjectDetail', () => {
         [resources[0], { ...resources[1], title }, resources[2]],
         expect.anything(),
       );
-      await waitFor(() => expect(saveButton).toBeEnabled());
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('heading', { name: /Edit Resource/i }),
+        ).not.toBeInTheDocument(),
+      );
     });
   });
   describe('the upcoming events tab', () => {

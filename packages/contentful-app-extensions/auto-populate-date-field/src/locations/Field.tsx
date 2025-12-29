@@ -10,7 +10,7 @@ import {
 const Field = () => {
   useAutoResizer();
   const sdk = useSDK<FieldAppSDK>();
-  const [value, setValue] = useFieldValue();
+  const [value, setValue] = useFieldValue<string | undefined>();
 
   if (!value) {
     setValue(sdk.entry.getSys().createdAt);

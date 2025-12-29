@@ -10,9 +10,7 @@ import {
   render,
   screen,
   waitFor,
-  waitForElementToBeRemoved,
   within,
-  act,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense, useEffect } from 'react';

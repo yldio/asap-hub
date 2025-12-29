@@ -145,11 +145,9 @@ const renderPage = async (
   const router = createMemoryRouter(
     [
       {
-        path:
-          network.template +
-          network({}).teams.template +
-          network({}).teams({}).team.template +
-          '/*',
+        path: `${network.template}${network({}).teams.template}${
+          network({}).teams({}).team.template
+        }/*`,
         element: (
           <ManuscriptToastProvider>
             <EligibilityReasonProvider>
@@ -420,6 +418,7 @@ it('displays manuscript success toast message and user can dismiss toast', async
 
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
   for (const button of within(quickChecks).getAllByText('Yes')) {
+    // eslint-disable-next-line no-await-in-loop -- Sequential clicks are intentional for simulating user interaction
     await user.click(button);
   }
 

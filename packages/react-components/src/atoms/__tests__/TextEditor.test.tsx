@@ -20,6 +20,7 @@ beforeEach(() => {
       return;
     }
     // Allow other console.error calls to pass through
+    // eslint-disable-next-line no-console
     console.warn(msg);
   });
 });

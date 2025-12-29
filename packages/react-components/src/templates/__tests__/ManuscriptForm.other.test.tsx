@@ -1340,6 +1340,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
   for (const button of within(quickChecks).getAllByRole('radio', {
     name: 'Yes',
   })) {
+    // eslint-disable-next-line no-await-in-loop -- Sequential clicks are intentional to simulate real user interaction
     await userEvent.click(button);
   }
 

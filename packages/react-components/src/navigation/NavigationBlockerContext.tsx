@@ -20,7 +20,9 @@ const defaultMessage =
  * Default context that's safe to use without provider (passthrough behavior)
  */
 const defaultContext: NavigationBlockerContextType = {
-  register: () => () => {},
+  register: () => () => {
+    /* noop - default cleanup function */
+  },
   isBlocked: false,
   message: defaultMessage,
   requestNavigation: () => true,

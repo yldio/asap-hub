@@ -1243,7 +1243,6 @@ describe('OutputForm', () => {
       const user = userEvent.setup();
 
       // Suppress act warnings from async state updates in TextField
-      const originalConsoleError = console.error;
       const consoleErrorSpy = jest
         .spyOn(console, 'error')
         .mockImplementation((...args) => {
@@ -1251,7 +1250,8 @@ describe('OutputForm', () => {
           if (message.includes('not wrapped in act(')) {
             return; // Suppress act warnings
           }
-          originalConsoleError.apply(console, args);
+          // eslint-disable-next-line no-console
+          console.error(...args);
         });
 
       render(
@@ -1305,7 +1305,6 @@ describe('OutputForm', () => {
       const user = userEvent.setup();
 
       // Suppress act warnings from async state updates in TextField
-      const originalConsoleError = console.error;
       const consoleErrorSpy = jest
         .spyOn(console, 'error')
         .mockImplementation((...args) => {
@@ -1313,7 +1312,8 @@ describe('OutputForm', () => {
           if (message.includes('not wrapped in act(')) {
             return; // Suppress act warnings
           }
-          originalConsoleError.apply(console, args);
+          // eslint-disable-next-line no-console
+          console.error(...args);
         });
 
       render(
@@ -1419,7 +1419,6 @@ describe('OutputForm', () => {
       const user = userEvent.setup();
 
       // Suppress act warnings from async state updates in TextField
-      const originalConsoleError = console.error;
       const consoleErrorSpy = jest
         .spyOn(console, 'error')
         .mockImplementation((...args) => {
@@ -1427,7 +1426,8 @@ describe('OutputForm', () => {
           if (message.includes('not wrapped in act(')) {
             return; // Suppress act warnings
           }
-          originalConsoleError.apply(console, args);
+          // eslint-disable-next-line no-console
+          console.error(...args);
         });
 
       shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
@@ -1513,7 +1513,6 @@ describe('OutputForm', () => {
       const mockClearError = jest.fn();
 
       // Suppress act warnings from async state updates in TextField
-      const originalConsoleError = console.error;
       const consoleErrorSpy = jest
         .spyOn(console, 'error')
         .mockImplementation((...args) => {
@@ -1521,10 +1520,11 @@ describe('OutputForm', () => {
           if (message.includes('not wrapped in act(')) {
             return; // Suppress act warnings
           }
-          originalConsoleError.apply(console, args);
+          // eslint-disable-next-line no-console
+          console.error(...args);
         });
 
-      const { container } = render(
+      render(
         <OutputForm
           {...defaultProps}
           link="http://example.com"
@@ -1564,7 +1564,9 @@ describe('OutputForm', () => {
       });
       // Flush any pending timers and state updates
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise<void>((resolve) => {
+          setTimeout(resolve, 0);
+        });
       });
 
       consoleErrorSpy.mockRestore();
@@ -1575,7 +1577,6 @@ describe('OutputForm', () => {
       const mockClearError = jest.fn();
 
       // Suppress act warnings from async state updates in TextField
-      const originalConsoleError = console.error;
       const consoleErrorSpy = jest
         .spyOn(console, 'error')
         .mockImplementation((...args) => {
@@ -1583,10 +1584,11 @@ describe('OutputForm', () => {
           if (message.includes('not wrapped in act(')) {
             return; // Suppress act warnings
           }
-          originalConsoleError.apply(console, args);
+          // eslint-disable-next-line no-console
+          console.error(...args);
         });
 
-      const { container } = render(
+      render(
         <OutputForm
           {...defaultProps}
           title="Example"
@@ -1626,7 +1628,9 @@ describe('OutputForm', () => {
       });
       // Flush any pending timers and state updates
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise<void>((resolve) => {
+          setTimeout(resolve, 0);
+        });
       });
 
       consoleErrorSpy.mockRestore();

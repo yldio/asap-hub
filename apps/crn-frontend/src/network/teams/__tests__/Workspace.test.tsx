@@ -82,14 +82,12 @@ const renderWithWrapper = (
             >
               <Routes>
                 <Route
-                  path={
-                    network.template +
-                    network({}).teams.template +
-                    network({}).teams({}).team.template +
+                  path={`${network.template}${network({}).teams.template}${
+                    network({}).teams({}).team.template
+                  }${
                     network({}).teams({}).team({ teamId: id }).workspace
-                      .template +
-                    '/*'
-                  }
+                      .template
+                  }/*`}
                   element={children}
                 />
               </Routes>
@@ -684,7 +682,7 @@ describe('error handling for 403 BackendError', () => {
         ({
           length: 1,
           item: () => null,
-          [Symbol.iterator]: function* () {
+          *[Symbol.iterator]() {
             yield new DOMRect(0, 0, 100, 20);
           },
         }) as unknown as DOMRectList,

@@ -53,12 +53,9 @@ const renderGroupProfile = async (
             >
               <Routes>
                 <Route
-                  path={
-                    network.template +
-                    network({}).interestGroups.template +
-                    network({}).interestGroups({}).interestGroup.template +
-                    '/*'
-                  }
+                  path={`${network.template}${
+                    network({}).interestGroups.template
+                  }${network({}).interestGroups({}).interestGroup.template}/*`}
                   element={<InterestGroupProfile currentTime={new Date()} />}
                 />
               </Routes>

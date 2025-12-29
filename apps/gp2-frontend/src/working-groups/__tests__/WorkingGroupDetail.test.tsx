@@ -62,11 +62,9 @@ const renderWorkingGroupDetail = async ({
             >
               <Routes>
                 <Route
-                  path={
-                    gp2Routing.workingGroups.template +
-                    gp2Routing.workingGroups({}).workingGroup.template +
-                    '/*'
-                  }
+                  path={`${gp2Routing.workingGroups.template}${
+                    gp2Routing.workingGroups({}).workingGroup.template
+                  }/*`}
                   element={<WorkingGroupDetail currentTime={new Date()} />}
                 />
               </Routes>

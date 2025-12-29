@@ -89,11 +89,9 @@ const renderWorkingGroupProfile = async (
   const router = createMemoryRouter(
     [
       {
-        path:
-          network.template +
-          network({}).workingGroups.template +
-          network({}).workingGroups({}).workingGroup.template +
-          '/*',
+        path: `${network.template}${network({}).workingGroups.template}${
+          network({}).workingGroups({}).workingGroup.template
+        }/*`,
         element: <WorkingGroupProfile currentTime={new Date()} />,
       },
       {

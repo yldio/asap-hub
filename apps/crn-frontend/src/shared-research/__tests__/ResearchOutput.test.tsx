@@ -42,7 +42,7 @@ beforeEach(() => {
       (message.includes('rendered descendant <Routes>') ||
         message.includes('No routes matched location'))
     ) {
-      return;
+      // Suppress React Router 6 warnings - do nothing
     }
   });
 });
@@ -119,11 +119,9 @@ const renderComponent = async (path: string, user = defaultUser) => {
               <Routes>
                 <Route path="/prev" element={<div>Previous Page</div>} />
                 <Route
-                  path={
-                    sharedResearch.template +
-                    sharedResearch({}).researchOutput.template +
-                    '/*'
-                  }
+                  path={`${sharedResearch.template}${
+                    sharedResearch({}).researchOutput.template
+                  }/*`}
                   element={<ResearchOutput />}
                 />
               </Routes>

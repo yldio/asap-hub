@@ -7,12 +7,7 @@ import {
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {

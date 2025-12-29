@@ -76,15 +76,14 @@ const renderCreateProjectOutput = async (
             >
               <Routes>
                 <Route
-                  path={
-                    gp2Routing.projects.template +
-                    gp2Routing.projects({}).project.template +
+                  path={`${gp2Routing.projects.template}${
+                    gp2Routing.projects({}).project.template
+                  }${
                     gp2Routing
                       .projects({})
                       .project({ projectId: 'project-id-1' }).createOutput
-                      .template +
-                    '/*'
-                  }
+                      .template
+                  }/*`}
                   element={
                     <NotificationMessages>
                       <CreateProjectOutput />

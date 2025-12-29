@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
-import { ComponentProps, useEffect } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { ComponentProps } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { InnerToastContext } from '@asap-hub/react-context';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
@@ -17,15 +17,6 @@ import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
 
-let currentLocation: { pathname: string; search: string } | null = null;
-const LocationCapture = () => {
-  const location = useLocation();
-  useEffect(() => {
-    currentLocation = { pathname: location.pathname, search: location.search };
-  }, [location]);
-  return null;
-};
-
 let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 
 describe('form buttons', () => {
@@ -35,7 +26,6 @@ describe('form buttons', () => {
   const getAuthorSuggestions = jest.fn();
 
   beforeEach(() => {
-    currentLocation = null;
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
@@ -86,7 +76,6 @@ describe('form buttons', () => {
     render(
       <InnerToastContext.Provider value={jest.fn()}>
         <MemoryRouter>
-          <LocationCapture />
           <ResearchOutputForm
             {...defaultProps}
             versionAction={versionAction}

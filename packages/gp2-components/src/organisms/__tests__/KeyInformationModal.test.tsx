@@ -278,7 +278,9 @@ describe('KeyInformationModal', () => {
     // Blur the last field to trigger any pending validations
     await userEvent.tab();
     // Give extra time for async validations to complete
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 200);
+    });
     const saveButton = getSaveButton();
     await userEvent.click(saveButton);
     await waitFor(() => {
@@ -300,14 +302,14 @@ describe('KeyInformationModal', () => {
     await waitFor(() => expect(saveButton).toBeEnabled());
     // Wait for any pending state updates to complete after save
     await waitFor(
-      () => {
-        // Just wait for the next tick to ensure all pending updates are flushed
-        return Promise.resolve();
-      },
+      // Just wait for the next tick to ensure all pending updates are flushed
+      () => Promise.resolve(),
       { timeout: 1000 },
     );
     // Additional wait to ensure all async operations complete
-    await new Promise((resolve) => setImmediate(resolve));
+    await new Promise((resolve) => {
+      setImmediate(resolve);
+    });
     consoleErrorSpy.mockRestore();
   }, 180000);
 
@@ -540,7 +542,9 @@ describe('KeyInformationModal', () => {
     });
     await waitFor(() => expect(saveButton).toBeEnabled());
     // Wait for any pending state updates to complete
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 100);
+    });
     consoleErrorSpy.mockRestore();
   }, 30000);
 });

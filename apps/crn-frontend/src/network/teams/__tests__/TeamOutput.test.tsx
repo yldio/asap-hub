@@ -969,7 +969,6 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       );
 
       const doi = '10.1234/5678';
-      const identifier = screen.getByRole('textbox', { name: /identifier/i });
       await user.keyboard('{Enter}');
       await user.type(
         screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'),
@@ -1244,7 +1243,6 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       screen.getByRole('heading', { name: /Imported Manuscript Version/i }),
     ).toBeInTheDocument();
 
-    const identifier = screen.getByRole('textbox', { name: /identifier/i });
     await user.keyboard('{Enter}');
     await user.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
 

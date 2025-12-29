@@ -42,14 +42,12 @@ const renderWithWrapper = (
             >
               <Routes>
                 <Route
-                  path={
-                    network.template +
-                    network({}).teams.template +
-                    network({}).teams({}).team.template +
+                  path={`${network.template}${network({}).teams.template}${
+                    network({}).teams({}).team.template
+                  }${
                     network({}).teams({}).team({ teamId: id }).workspace
-                      .template +
-                    '/*'
-                  }
+                      .template
+                  }/*`}
                   element={children}
                 />
               </Routes>

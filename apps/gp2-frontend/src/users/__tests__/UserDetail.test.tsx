@@ -39,11 +39,9 @@ const renderUserDetail = async (id: string) => {
             >
               <Routes>
                 <Route
-                  path={
-                    gp2Routing.users.template +
-                    gp2Routing.users({}).user.template +
-                    '/*'
-                  }
+                  path={`${gp2Routing.users.template}${
+                    gp2Routing.users({}).user.template
+                  }/*`}
                   element={<UserDetail currentTime={new Date()} />}
                 />
               </Routes>

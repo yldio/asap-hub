@@ -9,9 +9,8 @@ import {
   waitFor,
   waitForElementToBeRemoved,
   within,
-  act,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';

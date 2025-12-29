@@ -56,11 +56,9 @@ const renderProjectDetail = async ({
             >
               <Routes>
                 <Route
-                  path={
-                    gp2Routing.projects.template +
-                    gp2Routing.projects({}).project.template +
-                    '/*'
-                  }
+                  path={`${gp2Routing.projects.template}${
+                    gp2Routing.projects({}).project.template
+                  }/*`}
                   element={<ProjectDetail currentTime={new Date()} />}
                 />
               </Routes>

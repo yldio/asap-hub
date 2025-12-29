@@ -43,14 +43,12 @@ const renderResearch = async (
             >
               <Routes>
                 <Route
-                  path={
-                    network.template +
-                    network({}).users.template +
-                    network({}).users({}).user.template +
+                  path={`${network.template}${network({}).users.template}${
+                    network({}).users({}).user.template
+                  }${
                     network({}).users({}).user({ userId: user.id }).research
-                      .template +
-                    '/*'
-                  }
+                      .template
+                  }/*`}
                   element={<Research user={user} />}
                 />
               </Routes>
@@ -169,10 +167,12 @@ describe('UserDetail', () => {
       );
       expect(screen.getByDisplayValue('Expertise Description 2')).toBeVisible();
       for (const expertise of tags) {
+        // eslint-disable-next-line no-await-in-loop -- Sequential UI interactions must be awaited in order
         await userEvent.type(
           screen.getByLabelText(/tags\s*\(required\)/i),
           expertise,
         );
+        // eslint-disable-next-line no-await-in-loop
         await userEvent.tab();
       }
 

@@ -102,8 +102,9 @@ describe('useBlockedClick', () => {
       </NavigationBlockerProvider>,
     );
 
-    // Should not throw
+    // Should not throw and should not trigger confirm since no blocker is registered
     fireEvent.click(screen.getByText('Click me'));
+    expect(window.confirm).not.toHaveBeenCalled();
   });
 
   it('works without provider (passthrough behavior)', () => {

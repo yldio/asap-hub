@@ -217,7 +217,9 @@ describe('useScrollToHash', () => {
     renderHook(() => useScrollToHash(), { wrapper });
 
     // Wait a bit and verify it was NOT called
-    await new Promise((resolve) => setTimeout(resolve, 150));
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 150);
+    });
 
     expect(targetElement.scrollIntoView).not.toHaveBeenCalled();
 
@@ -232,9 +234,14 @@ describe('useScrollToHash', () => {
     );
 
     // This should not throw even if element doesn't exist
-    renderHook(() => useScrollToHash(), { wrapper });
+    const { result } = renderHook(() => useScrollToHash(), { wrapper });
 
     // Wait for the timeout to complete
-    await new Promise((resolve) => setTimeout(resolve, 150));
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 150);
+    });
+
+    // Verify hook completed without throwing (result should be undefined as hook returns void)
+    expect(result.current).toBeUndefined();
   });
 });

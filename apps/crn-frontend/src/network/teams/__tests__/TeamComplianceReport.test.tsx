@@ -100,12 +100,9 @@ const renderPage = async (
     network({}).teams({}).team({ teamId }).workspace({}).createComplianceReport
       .template;
 
-  const workspacePath =
-    network.template +
-    network({}).teams.template +
-    network({}).teams({}).team.template +
-    network({}).teams({}).team({ teamId }).workspace.template +
-    '/*';
+  const workspacePath = `${network.template}${network({}).teams.template}${
+    network({}).teams({}).team.template
+  }${network({}).teams({}).team({ teamId }).workspace.template}/*`;
 
   const defaultInitialPath = network({})
     .teams({})

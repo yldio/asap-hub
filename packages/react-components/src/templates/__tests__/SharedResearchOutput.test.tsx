@@ -18,9 +18,8 @@ const LocationCapture = () => {
   return null;
 };
 
-const renderWithRouter = (component: React.ReactElement) => {
-  return render(<MemoryRouter>{component}</MemoryRouter>);
-};
+const renderWithRouter = (component: React.ReactElement) =>
+  render(<MemoryRouter>{component}</MemoryRouter>);
 
 const props: ComponentProps<typeof SharedResearchOutput> = {
   ...createResearchOutputResponse(),

@@ -39,7 +39,7 @@ const enterTitle = async (title: string) => {
 const descriptionBox = () =>
   screen.getByRole('textbox', { name: /description/i });
 const enterDescription = async (description: string) =>
-  await userEvent.type(descriptionBox(), description);
+  userEvent.type(descriptionBox(), description);
 
 const linkBox = () => screen.getByRole('textbox', { name: /url/i });
 const enterLink = async (link: string) => {
@@ -308,7 +308,10 @@ describe('ResourceModal', () => {
     mockNavigateWarningsInConsole();
     let resolveSave: () => void;
     const onSave = jest.fn(
-      () => new Promise<void>((resolve) => (resolveSave = resolve)),
+      () =>
+        new Promise<void>((resolve) => {
+          resolveSave = resolve;
+        }),
     );
     renderResourceModal({ onSave });
     await enterType('Note');
@@ -333,6 +336,7 @@ describe('ResourceModal', () => {
           inlineStyle.includes('opacity: 0') ||
           inlineStyle.includes('opacity:0');
         if (!isHidden) {
+          // eslint-disable-next-line jest/no-conditional-expect -- Intentionally checking only visible inputs; hidden inputs are part of combobox/autocomplete internals
           expect(element).toBeDisabled();
         }
       }

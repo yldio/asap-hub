@@ -64,7 +64,9 @@ const mockToast = jest.fn() as jest.MockedFunction<
 
 // Suppress React Router v6 nested routes warnings from UserProfile component
 // TODO: Remove this once UserProfile component is migrated to React Router v6
+// eslint-disable-next-line no-console -- storing original console methods to restore after filtering warnings
 const originalWarn = console.warn;
+// eslint-disable-next-line no-console -- storing original console methods to restore after filtering errors
 const originalError = console.error;
 beforeEach(() => {
   jest.clearAllMocks();
@@ -144,12 +146,9 @@ const renderUserProfile = async (
               >
                 <Routes>
                   <Route
-                    path={
-                      network.template +
-                      network({}).users.template +
-                      network({}).users({}).user.template +
-                      '/*'
-                    }
+                    path={`${network.template}${network({}).users.template}${
+                      network({}).users({}).user.template
+                    }/*`}
                     element={<UserProfile currentTime={currentTime} />}
                   />
                 </Routes>

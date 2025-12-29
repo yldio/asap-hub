@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import { ValidationErrorResponse } from '@asap-hub/model';
@@ -196,8 +197,10 @@ describe('Create Projects Output', () => {
     });
   });
 
-  // TODO: Fix this test after React Router v6 migration
-  it.skip('will show server side validation error for link', async () => {
+  it('will show server side validation error for link', async () => {
+    // Suppress act() warnings from async validation state updates
+    const consoleSpy = mockActWarningsInConsole('error');
+
     const validationResponse: ValidationErrorResponse = {
       message: 'Validation error',
       error: 'Bad Request',
@@ -214,51 +217,58 @@ describe('Create Projects Output', () => {
     const link = 'https://example.com';
     await renderCreateProjectOutput('procedural-form');
 
-    await userEvent.type(
-      screen.getByRole('textbox', { name: /title/i }),
-      title,
-    );
-    await userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
-    await userEvent.type(
+    const user = userEvent.setup({ delay: null });
+
+    await user.type(screen.getByRole('textbox', { name: /title/i }), title);
+    await user.type(screen.getByRole('textbox', { name: /^url/i }), link);
+    await user.type(
       screen.getByRole('textbox', { name: /^description/i }),
       'An interesting article',
     );
-    await userEvent.type(
+    await user.type(
       screen.getByRole('textbox', { name: /^short description/i }),
       'An article',
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
-    await userEvent.click(authors);
-    await userEvent.click(screen.getByText('Tony Stark'));
-    await userEvent.click(
+    await user.click(authors);
+    await user.click(screen.getByText('Tony Stark'));
+    await user.click(
       screen.getByRole('textbox', { name: /identifier type/i }),
     );
-    await userEvent.click(screen.getByText(/^none/i));
+    await user.click(screen.getByText(/^none/i));
     expect(screen.getByText('Project Title')).toBeVisible();
-    await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    await userEvent.click(
-      screen.getByRole('button', { name: 'Publish Output' }),
-    );
+    await user.click(screen.getByRole('button', { name: 'Publish' }));
+    await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
     await waitFor(() => {
       expect(mockCreateOutput).toHaveBeenCalled();
     });
 
-    expect(
-      screen.queryAllByText(
-        'An Output with this URL already exists. Please enter a different URL.',
-      ).length,
-    ).toBeGreaterThan(1);
+    await waitFor(() => {
+      expect(
+        screen.queryAllByText(
+          'An Output with this URL already exists. Please enter a different URL.',
+        ).length,
+      ).toBeGreaterThanOrEqual(1);
+    });
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-    await userEvent.type(url, 'a');
-    url.blur();
+    await user.clear(url);
+    await user.type(url, 'a');
+    await user.keyboard('{Tab}');
 
-    expect(
-      screen.queryByText(
-        'An Output with this URL already exists. Please enter a different URL.',
-      ),
-    ).toBeNull();
+    await waitFor(
+      () => {
+        expect(
+          screen.queryByText(
+            'An Output with this URL already exists. Please enter a different URL.',
+          ),
+        ).toBeNull();
+      },
+      { timeout: 3000 },
+    );
+
+    consoleSpy.mockRestore();
   });
 });

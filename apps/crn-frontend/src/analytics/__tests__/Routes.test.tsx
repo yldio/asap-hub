@@ -145,7 +145,7 @@ const renderPage = async (path: string) => {
             <MemoryRouter initialEntries={[{ pathname: path }]}>
               <Routes>
                 <Route
-                  path={analytics.template + '/*'}
+                  path={`${analytics.template}/*`}
                   element={<Analytics />}
                 />
               </Routes>
@@ -253,20 +253,20 @@ describe('Productivity', () => {
   });
 
   it('renders error message when the team performance response is not a 2XX', async () => {
+    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
     mockGetTeamProductivityPerformance.mockImplementation(() =>
       Promise.reject(new Error('Failed to fetch')),
     );
-    try {
-      await renderPage(
-        analytics({}).productivity({}).metric({ metric: 'team' }).$,
-      );
-    } catch {
-      await waitFor(() => {
-        expect(mockGetTeamProductivityPerformance).toHaveBeenCalled();
-      });
 
-      expect(screen.getByText(/Something went wrong/i)).toBeVisible();
-    }
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    await waitFor(() => {
+      expect(mockGetTeamProductivityPerformance).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 
   it('renders error message when user response is not a 2XX', async () => {
@@ -315,20 +315,19 @@ describe('Leadership & Membership', () => {
   });
 
   it('renders error message when team leadership response is not a 2XX', async () => {
-    // Use mockImplementation to override the default mock for this test
-    mockGetAnalyticsLeadership.mockImplementation(() =>
-      Promise.reject(new Error('Failed to fetch')),
+    mockGetAnalyticsLeadership.mockRejectedValueOnce(
+      new Error('Failed to fetch'),
     );
-    try {
-      await renderPage(
-        analytics({}).leadership({}).metric({ metric: 'interest-group' }).$,
-      );
-    } catch {
-      await waitFor(() => {
-        expect(mockGetAnalyticsLeadership).toHaveBeenCalled();
-      });
-      expect(screen.getByText(/Something went wrong/i)).toBeVisible();
-    }
+
+    await renderPage(
+      analytics({}).leadership({}).metric({ metric: 'interest-group' }).$,
+    );
+
+    await waitFor(() => {
+      expect(mockGetAnalyticsLeadership).toHaveBeenCalled();
+    });
+
+    expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
 
   it('renders error message when os champion response is not a 2XX', async () => {

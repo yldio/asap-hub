@@ -58,7 +58,9 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
             }
           />
           <Route
-            path={additionalDetailsRoute.editContributingCohorts.template.slice(1)}
+            path={additionalDetailsRoute.editContributingCohorts.template.slice(
+              1,
+            )}
             element={
               <ContributingCohortsModal
                 {...userData}

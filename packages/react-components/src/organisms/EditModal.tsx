@@ -80,7 +80,8 @@ const EditModal: React.FC<EditModalProps> = ({
 
   useNavigationWarning({
     shouldBlock: shouldWarn,
-    message: 'Are you sure you want to leave the dialog? Unsaved changes will be lost.',
+    message:
+      'Are you sure you want to leave the dialog? Unsaved changes will be lost.',
   });
 
   return (

@@ -71,7 +71,10 @@ describe('when clicking the reset button', () => {
           <Route
             path="/forgot-password/*"
             element={
-              <ForgotPassword email="john.doe@example.com" setEmail={() => {}} />
+              <ForgotPassword
+                email="john.doe@example.com"
+                setEmail={() => {}}
+              />
             }
           />
         </Routes>

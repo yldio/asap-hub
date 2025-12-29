@@ -154,9 +154,12 @@ describe('useInterval', () => {
   it('resets the interval when delay changes', async () => {
     const callback = jest.fn();
 
-    const { rerender } = renderHook(({ delay }) => useInterval(callback, delay), {
-      initialProps: { delay: 200 },
-    });
+    const { rerender } = renderHook(
+      ({ delay }) => useInterval(callback, delay),
+      {
+        initialProps: { delay: 200 },
+      },
+    );
 
     // Wait less than 200ms
     await act(async () => {

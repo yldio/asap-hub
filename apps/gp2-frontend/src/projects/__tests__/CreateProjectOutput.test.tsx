@@ -232,9 +232,7 @@ describe('Create Projects Output', () => {
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     await user.click(authors);
     await user.click(screen.getByText('Tony Stark'));
-    await user.click(
-      screen.getByRole('textbox', { name: /identifier type/i }),
-    );
+    await user.click(screen.getByRole('textbox', { name: /identifier type/i }));
     await user.click(screen.getByText(/^none/i));
     expect(screen.getByText('Project Title')).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Publish' }));

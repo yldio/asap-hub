@@ -5,7 +5,7 @@ import { useFieldValue, useSDK } from '@contentful/react-apps-toolkit';
 
 const Field = () => {
   const sdk = useSDK<FieldAppSDK>();
-  const [value, setValue] = useFieldValue();
+  const [value, setValue] = useFieldValue<string | undefined>();
 
   useEffect(() => {
     if (!sdk.entry.getSys().firstPublishedAt) {

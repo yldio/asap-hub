@@ -107,14 +107,11 @@ describe('projects state hooks', () => {
         set(projectsState(defaultOptions), error);
       };
 
-      try {
+      expect(() =>
         renderHook(() => useProjects(defaultOptions), {
           wrapper: createWrapper(initializeState),
-        });
-      } catch (caughtError) {
-        expect(caughtError).toBe(error);
-        expect((caughtError as Error).message).toBe('Algolia failure');
-      }
+        }),
+      ).toThrow(error);
     });
   });
 

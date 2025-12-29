@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom/server';
@@ -311,6 +312,7 @@ describe('ManuscriptForm team validation', () => {
   );
 
   it('when there are missing teams for both lab and author, the error is displayed and hidden accordingly', async () => {
+    const consoleErrorSpy = mockActWarningsInConsole('error');
     const { container } = render(
       <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
@@ -382,6 +384,8 @@ describe('ManuscriptForm team validation', () => {
     expect(container).not.toHaveTextContent(firstAuthorErrorMessage);
 
     expect(container).not.toHaveTextContent(labErrorMessage);
+
+    consoleErrorSpy.mockRestore();
   });
 
   it('when two authors without team selected and a lab without team selected are added, when one of the authors is removed, the authors error still flags the remainingauthor', async () => {

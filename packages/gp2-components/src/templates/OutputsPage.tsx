@@ -17,7 +17,9 @@ const buttonStyles = css({
   maxWidth: rem(181),
 });
 
-const OutputsPage: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
+const OutputsPage: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => (
   <article>
     <div css={layoutContentStyles}>
       <PageBanner {...bannerProps}>

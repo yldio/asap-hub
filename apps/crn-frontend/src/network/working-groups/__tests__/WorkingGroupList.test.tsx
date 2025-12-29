@@ -45,7 +45,10 @@ const renderWorkingGroupList = async (
           <WhenReady>
             <MemoryRouter initialEntries={['/working-groups/']}>
               <Routes>
-                <Route path="/working-groups" element={<WorkingGroupList filters={new Set()} />} />
+                <Route
+                  path="/working-groups"
+                  element={<WorkingGroupList filters={new Set()} />}
+                />
               </Routes>
             </MemoryRouter>
           </WhenReady>

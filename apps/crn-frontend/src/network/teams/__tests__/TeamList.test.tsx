@@ -163,7 +163,10 @@ it('throws error when route is invalid', async () => {
             <WhenReady>
               <MemoryRouter initialEntries={['/network/invalid-teams']}>
                 <Routes>
-                  <Route path="/network/invalid-teams" element={<Teams filters={new Set()} />} />
+                  <Route
+                    path="/network/invalid-teams"
+                    element={<Teams filters={new Set()} />}
+                  />
                 </Routes>
               </MemoryRouter>
             </WhenReady>

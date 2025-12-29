@@ -64,7 +64,9 @@ const Leadership: FC<Record<string, never>> = () => {
           tags,
           ...paginationParams,
         }),
-      leadershipToCSV(metric as 'working-group' | 'interest-group' | 'os-champion'),
+      leadershipToCSV(
+        metric as 'working-group' | 'interest-group' | 'os-champion',
+      ),
     );
 
   const exportOSChampion = () =>

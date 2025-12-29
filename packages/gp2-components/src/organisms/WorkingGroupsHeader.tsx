@@ -11,8 +11,6 @@ const props = {
 
 const WorkingGroupsHeader: React.FC<{ children?: React.ReactNode }> = ({
   children,
-}) => (
-  <PageBanner {...props} children={children} noMarginBottom={true} />
-);
+}) => <PageBanner {...props} children={children} noMarginBottom={true} />;
 
 export default WorkingGroupsHeader;

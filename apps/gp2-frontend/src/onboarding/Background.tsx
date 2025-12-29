@@ -34,7 +34,7 @@ const Background: React.FC<Record<string, never>> = () => {
         />
         <Routes>
           <Route
-            path="edit-biography"
+            path={backgroundRoute.editBiography.template.slice(1)}
             element={
               <BiographyModal
                 {...userData}
@@ -44,7 +44,7 @@ const Background: React.FC<Record<string, never>> = () => {
             }
           />
           <Route
-            path="edit-tags"
+            path={backgroundRoute.editTags.template.slice(1)}
             element={
               <TagsModal
                 {...userData}

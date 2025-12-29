@@ -79,10 +79,7 @@ const renderPreview = async (
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };
 
-// TODO: Fix this test after React Router v6 migration - Preview.tsx component needs migration
-// The Preview component uses <Route> elements without wrapping them in <Routes>
-// See: apps/gp2-frontend/src/onboarding/Preview.tsx lines 68-114
-describe.skip('Preview', () => {
+describe('Preview', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetTags.mockResolvedValue(gp2Fixtures.createTagsResponse());

@@ -38,7 +38,7 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
         />
         <Routes>
           <Route
-            path="edit-questions"
+            path={additionalDetailsRoute.editQuestions.template.slice(1)}
             element={
               <OpenQuestionsModal
                 {...userData}
@@ -48,7 +48,7 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
             }
           />
           <Route
-            path="edit-funding-streams"
+            path={additionalDetailsRoute.editFundingStreams.template.slice(1)}
             element={
               <FundingProviderModal
                 {...userData}
@@ -58,7 +58,7 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
             }
           />
           <Route
-            path="edit-contributing-cohorts"
+            path={additionalDetailsRoute.editContributingCohorts.template.slice(1)}
             element={
               <ContributingCohortsModal
                 {...userData}

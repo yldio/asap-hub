@@ -6,7 +6,7 @@ import PageNotifications from './PageNotifications';
 
 const { rem } = pixels;
 
-const Dashboard: React.FC = ({ children }) => (
+const Dashboard: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
   <PageNotifications page="dashboard">
     {(notification) => (
       <article

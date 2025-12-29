@@ -20,7 +20,7 @@ const navStyles = css({
   marginTop: rem(32),
 });
 
-const EventsPage: React.FC = ({ children }) => (
+const EventsPage: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
   <article css={layoutContentStyles}>
     <PageBanner {...bannerProps} noMarginBottom>
       <div css={navStyles}>

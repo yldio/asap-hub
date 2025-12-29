@@ -16,7 +16,9 @@ describe('ConfirmAndSaveOutput', () => {
   const addNotification = jest.fn();
   const shareOutput = jest.fn();
 
-  const wrapper: React.ComponentType = ({ children }) => {
+  const wrapper: React.ComponentType<{ children?: React.ReactNode }> = ({
+    children,
+  }) => {
     const router = createMemoryRouter(
       [
         {

@@ -38,7 +38,7 @@ const WorkingGroupOutput = lazy(loadWorkingGroupOutput);
 
 const DuplicateOutput: FC = () => {
   const { id } = useParams<{ id: string }>();
-  const output = useResearchOutputById(id);
+  const output = useResearchOutputById(id ?? '');
   if (output && output.workingGroups?.[0]?.id) {
     return (
       <WorkingGroupOutput

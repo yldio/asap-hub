@@ -15,7 +15,7 @@ type TraineeProjectDetailParams = {
 
 const TraineeProjectDetail: FC<Record<string, never>> = () => {
   const { projectId } = useParams<TraineeProjectDetailParams>();
-  const projectDetail = useProjectById(projectId);
+  const projectDetail = useProjectById(projectId ?? '');
 
   if (!projectDetail) {
     return <NotFoundPage />;
@@ -26,7 +26,9 @@ const TraineeProjectDetail: FC<Record<string, never>> = () => {
     return <NotFoundPage />;
   }
 
-  const route = projects({}).traineeProjects({}).traineeProject({ projectId });
+  const route = projects({})
+    .traineeProjects({})
+    .traineeProject({ projectId: projectId ?? '' });
 
   return (
     <Frame title={projectDetail?.title || ''}>

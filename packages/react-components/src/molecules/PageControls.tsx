@@ -101,15 +101,17 @@ interface PageNumber {
   wideScreenOnly?: boolean;
   followsGap?: boolean;
 }
-function* optimizeGaps(pageNumbers: PageNumber[]) {
+function* optimizeGaps(pageNumbers: PageNumber[]): Generator<PageNumber> {
   if (pageNumbers.length < 2) {
-    yield* pageNumbers;
+    for (const p of pageNumbers) yield p;
     return;
   }
 
   yield pageNumbers[0]!;
 
-  for (const [prev, curr] of aperture(2, pageNumbers)) {
+  for (const pair of aperture(2, pageNumbers)) {
+    const prev = pair[0]!;
+    const curr = pair[1]!;
     // No point in leaving a gap of 1 if we can just render the number instead of the ellipsis
     if (prev.index + 1 === curr.index - 1) {
       yield {
@@ -125,14 +127,19 @@ function* optimizeGaps(pageNumbers: PageNumber[]) {
     };
   }
 }
-function* makeFillersMandatory(pageNumbers: PageNumber[]) {
+function* makeFillersMandatory(
+  pageNumbers: PageNumber[],
+): Generator<PageNumber> {
   if (pageNumbers.length < 3) {
-    yield* pageNumbers;
+    for (const p of pageNumbers) yield p;
     return;
   }
 
   yield pageNumbers[0]!;
-  for (const [prev, curr, next] of aperture(3, pageNumbers)) {
+  for (const triple of aperture(3, pageNumbers)) {
+    const prev = triple[0]!;
+    const curr = triple[1]!;
+    const next = triple[2]!;
     if (
       prev.index + 1 === curr.index &&
       curr.index === next.index - 1 &&

@@ -57,7 +57,7 @@ type TeamProfileProps = {
 
 const DuplicateOutput: FC = () => {
   const { id } = useParams<{ id: string }>();
-  const output = useResearchOutputById(id);
+  const output = useResearchOutputById(id ?? '');
   if (output && output.teams[0]?.id) {
     return (
       <TeamOutput

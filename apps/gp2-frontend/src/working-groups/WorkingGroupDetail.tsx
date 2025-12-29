@@ -37,7 +37,7 @@ const OutputDirectory = lazy(loadOutputDirectory);
 
 const DuplicateOutput: FC = () => {
   const { outputId } = useParams<{ outputId: string }>();
-  const output = useOutputById(outputId);
+  const output = useOutputById(outputId ?? '');
   if (output && output.workingGroups?.[0]?.id) {
     return (
       <OutputFormPage>

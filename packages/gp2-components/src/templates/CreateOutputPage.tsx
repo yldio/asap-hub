@@ -15,6 +15,7 @@ const props = (
 type CreateOutputPageProps = {
   entityType: 'workingGroup' | 'project';
   documentType: gp2.OutputDocumentType;
+  children?: React.ReactNode;
 };
 
 export const EntityMappper: Record<

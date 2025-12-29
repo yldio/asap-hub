@@ -47,7 +47,7 @@ describe.each([
             <WhenReady>
               <MemoryRouter initialEntries={[route]}>
                 <Routes>
-                  <Route path={route} element={<Teams />} />
+                  <Route path={route} element={<Teams filters={new Set()} />} />
                 </Routes>
               </MemoryRouter>
             </WhenReady>
@@ -163,7 +163,7 @@ it('throws error when route is invalid', async () => {
             <WhenReady>
               <MemoryRouter initialEntries={['/network/invalid-teams']}>
                 <Routes>
-                  <Route path="/network/invalid-teams" element={<Teams />} />
+                  <Route path="/network/invalid-teams" element={<Teams filters={new Set()} />} />
                 </Routes>
               </MemoryRouter>
             </WhenReady>

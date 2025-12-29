@@ -32,6 +32,7 @@ type UserOverviewProps = Pick<
     editFundingStreamsHref?: string;
     editTagsHref?: string;
     editQuestionsHref?: string;
+    children?: React.ReactNode;
   };
 
 const { rem } = pixels;

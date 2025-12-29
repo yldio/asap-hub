@@ -26,9 +26,10 @@ type MetricOption = 'preprint-compliance' | 'publication-compliance';
 
 const OpenScience: FC<Record<string, never>> = () => {
   const navigate = useNavigate();
-  const { metric } = useParams<{
+  const { metric: metricParam } = useParams<{
     metric: MetricOption;
   }>();
+  const metric = (metricParam ?? 'preprint-compliance') as MetricOption;
 
   const { currentPage } = usePaginationParams();
   const isPreprintCompliancePage = metric === 'preprint-compliance';

@@ -932,7 +932,7 @@ __metadata:
     react-app-polyfill: 3.0.0
     react-dom: 18.3.1
     react-error-boundary: 4.1.2
-    react-hook-form: ^7.51.4
+    react-hook-form: 7.53.2
     react-lottie: ^1.2.10
     react-router-dom: 6.28.0
     react-test-renderer: 18.3.1
@@ -1220,6 +1220,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.28.4
     "@sentry/react": ^8.0.0
     "@testing-library/dom": 10.4.0
+    "@testing-library/jest-dom": ^6.9.0
     "@testing-library/react": 16.3.0
     "@types/jest": 29.5.14
     "@types/js-cookie": ^3
@@ -1656,7 +1657,7 @@ __metadata:
     lexical: 0.18.0
     react: 18.3.1
     react-dom: 18.3.1
-    react-hook-form: ^7.51.4
+    react-hook-form: 7.53.2
     react-lottie: ^1.2.10
     react-router-dom: 6.28.0
     react-select: 4.3.1
@@ -13727,6 +13728,12 @@ __metadata:
   checksum: c53683990bd194cb68e3987bda79c78eff41517f7a747e92f3e54217c2ce3addd031b8a45bf631982c909cc2caeeb905372f322758e05bb76c03754a3f24426e
   languageName: node
   linkType: hard
+
+"@types/react-titled@workspace:@types/react-titled":
+  version: 0.0.0-use.local
+  resolution: "@types/react-titled@workspace:@types/react-titled"
+  languageName: unknown
+  linkType: soft
 
 "@types/react-transition-group@npm:*":
   version: 4.4.12
@@ -33226,12 +33233,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.51.4":
-  version: 7.66.0
-  resolution: "react-hook-form@npm:7.66.0"
+"react-hook-form@npm:7.53.2":
+  version: 7.53.2
+  resolution: "react-hook-form@npm:7.53.2"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18 || ^19
-  checksum: 10796a0c45fd94012fe0feb0b7186c5785c259b1bb6ca96f841e394f528b26442de7e2e5dbbe1a1d94429f2dd6f78c600cdadc2d6c78294e0d33d28ca3ad93f5
+  checksum: 37e2dd0e79cd8d3376a7a2cb72ad7b59f0594be499daa898d2c6bec896fc30c2f86e62e8b41bc9d325f77220bd8d76cb31e917f77f1c92ad5740adb1a4cc69e2
   languageName: node
   linkType: hard
 

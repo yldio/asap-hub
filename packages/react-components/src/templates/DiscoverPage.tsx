@@ -3,7 +3,9 @@ import { ComponentProps } from 'react';
 import DiscoverPageHeader from './DiscoverPageHeader';
 import PageConstraints from './PageConstraints';
 
-type DashboardPageProps = ComponentProps<typeof DiscoverPageHeader>;
+type DashboardPageProps = ComponentProps<typeof DiscoverPageHeader> & {
+  children?: React.ReactNode;
+};
 
 const Dashboard: React.FC<DashboardPageProps> = ({ children }) => (
   <article>

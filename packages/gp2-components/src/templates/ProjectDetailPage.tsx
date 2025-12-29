@@ -4,7 +4,9 @@ import { layoutContentStyles, mainStyles } from '../layout';
 
 import ProjectDetailHeader from '../organisms/ProjectDetailHeader';
 
-type ProjectDetailPageProps = ComponentProps<typeof ProjectDetailHeader>;
+type ProjectDetailPageProps = ComponentProps<typeof ProjectDetailHeader> & {
+  children?: React.ReactNode;
+};
 
 const { rem } = pixels;
 

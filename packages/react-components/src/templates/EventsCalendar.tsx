@@ -11,6 +11,7 @@ const containerStyles = css({
 
 type EventsCalendarPageProps = {
   calendars: ReadonlyArray<BasicCalendarResponse>;
+  children?: React.ReactNode;
 };
 
 const EventsCalendarPage: React.FC<EventsCalendarPageProps> = ({

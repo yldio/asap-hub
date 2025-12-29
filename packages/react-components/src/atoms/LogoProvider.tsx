@@ -14,10 +14,10 @@ const LogoContext = createContext<EmotionJSX.Element | null>(null);
 const LazyCRNLogo = lazy(loadCRNLogo);
 const LazyGP2Logo = lazy(loadGP2Logo);
 
-export const LogoProvider: React.FC<{ appName: 'CRN' | 'GP2' }> = ({
-  appName,
-  children,
-}) => {
+export const LogoProvider: React.FC<{
+  appName: 'CRN' | 'GP2';
+  children?: React.ReactNode;
+}> = ({ appName, children }) => {
   const logo = appName === 'CRN' ? <LazyCRNLogo /> : <LazyGP2Logo />;
   return (
     <Suspense fallback={<div>Loading...</div>}>

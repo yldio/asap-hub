@@ -14,6 +14,7 @@ export type TagSearchPageListProps = {
   tags?: string[];
   setTags?: (tags: string[]) => void;
   loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
+  children?: React.ReactNode;
 } & Pick<
   ComponentProps<typeof SearchAndFilter>,
   'filters' | 'onChangeFilter' | 'onChangeSearch' | 'searchQuery'

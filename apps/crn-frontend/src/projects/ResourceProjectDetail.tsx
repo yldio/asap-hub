@@ -15,7 +15,7 @@ type ResourceProjectDetailParams = {
 
 const ResourceProjectDetail: FC<Record<string, never>> = () => {
   const { projectId } = useParams<ResourceProjectDetailParams>();
-  const projectDetail = useProjectById(projectId);
+  const projectDetail = useProjectById(projectId ?? '');
 
   if (!projectDetail) {
     return <NotFoundPage />;
@@ -28,7 +28,7 @@ const ResourceProjectDetail: FC<Record<string, never>> = () => {
 
   const route = projects({})
     .resourceProjects({})
-    .resourceProject({ projectId });
+    .resourceProject({ projectId: projectId ?? '' });
 
   return (
     <Frame title={projectDetail?.title || ''}>

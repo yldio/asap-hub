@@ -40,7 +40,7 @@
     "react-app-polyfill": "3.0.0",
     "react-dom": "18.3.1",
     "react-error-boundary": "4.1.2",
-    "react-hook-form": "^7.51.4",
+    "react-hook-form": "7.53.2",
     "react-lottie": "^1.2.10",
     "react-router-dom": "6.28.0",
     "recoil": "0.7.7",

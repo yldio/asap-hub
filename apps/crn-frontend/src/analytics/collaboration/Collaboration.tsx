@@ -53,10 +53,15 @@ type CollaborationType = 'within-team' | 'across-teams' | undefined;
 const Collaboration = () => {
   const navigate = useNavigate();
 
-  const { metric, type } = useParams<{
+  const { metric: metricParam, type: typeParam } = useParams<{
     metric: 'user' | 'team' | 'sharing-prelim-findings';
     type: CollaborationType;
   }>();
+  const metric = (metricParam ?? 'user') as
+    | 'user'
+    | 'team'
+    | 'sharing-prelim-findings';
+  const type = typeParam as CollaborationType;
 
   const { timeRange, documentCategory, outputType } = useAnalytics();
   const { tags, setTags } = useSearch();

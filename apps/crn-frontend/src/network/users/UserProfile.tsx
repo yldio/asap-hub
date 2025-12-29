@@ -130,7 +130,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
 
     return (
       <UserProfileContext.Provider value={{ isOwnProfile }}>
-        {/* @ts-expect-error - Frame accepts children at runtime, type definition is incorrect */}
         <Frame title={user.displayName}>
           <UserProfilePage {...profilePageProps}>
             {
@@ -139,7 +138,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   <Route
                     path="research/*"
                     element={
-                      // @ts-expect-error - Frame accepts children at runtime, type definition is incorrect
                       <Frame title="Research">
                         <>
                           <Research user={user} />
@@ -153,7 +151,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   <Route
                     path="about/*"
                     element={
-                      // @ts-expect-error - Frame accepts children at runtime, type definition is incorrect
                       <Frame title="About">
                         <>
                           <About user={user} />
@@ -167,7 +164,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   <Route
                     path="outputs/*"
                     element={
-                      // @ts-expect-error - Frame accepts children at runtime, type definition is incorrect
                       <Frame title="Outputs">
                         <>
                           <Outputs userId={user?.id} />
@@ -181,7 +177,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   <Route
                     path="upcoming/*"
                     element={
-                      // @ts-expect-error - Frame accepts children at runtime, type definition is incorrect
                       <Frame title="Upcoming Events">
                         <>
                           <EventsList
@@ -205,7 +200,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                   <Route
                     path="past/*"
                     element={
-                      // @ts-expect-error - Frame accepts children at runtime, type definition is incorrect
                       <Frame title="Past Events">
                         <>
                           <EventsList

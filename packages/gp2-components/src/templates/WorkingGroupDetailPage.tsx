@@ -6,7 +6,9 @@ import WorkingGroupDetailHeader from '../organisms/WorkingGroupDetailHeader';
 
 type WorkingGroupDetailPageProps = ComponentProps<
   typeof WorkingGroupDetailHeader
->;
+> & {
+  children?: React.ReactNode;
+};
 
 const { rem } = pixels;
 

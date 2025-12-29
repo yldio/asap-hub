@@ -36,7 +36,8 @@ const Productivity = () => {
   const { currentPage } = usePaginationParams();
   const { isEnabled } = useFlags();
 
-  const { metric } = useParams<{ metric: 'user' | 'team' }>();
+  const { metric: metricParam } = useParams<{ metric: 'user' | 'team' }>();
+  const metric = (metricParam ?? 'user') as 'user' | 'team';
   const setMetric = (newMetric: 'user' | 'team') =>
     navigate(analytics({}).productivity({}).metric({ metric: newMetric }).$);
 

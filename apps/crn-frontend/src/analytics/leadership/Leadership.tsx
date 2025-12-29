@@ -29,9 +29,10 @@ import TeamLeadership from './TeamLeadership';
 
 const Leadership: FC<Record<string, never>> = () => {
   const navigate = useNavigate();
-  const { metric } = useParams<{
+  const { metric: metricParam } = useParams<{
     metric: MetricOption;
   }>();
+  const metric = (metricParam ?? 'working-group') as MetricOption;
   const { currentPage } = usePaginationParams();
 
   const [osChampionSort, setOsChampionSort] =
@@ -63,7 +64,7 @@ const Leadership: FC<Record<string, never>> = () => {
           tags,
           ...paginationParams,
         }),
-      leadershipToCSV(metric),
+      leadershipToCSV(metric as 'working-group' | 'interest-group' | 'os-champion'),
     );
 
   const exportOSChampion = () =>
@@ -138,7 +139,7 @@ const Leadership: FC<Record<string, never>> = () => {
           tags={tags}
           sort={teamSort}
           setSort={setTeamSort}
-          metric={metric}
+          metric={metric as 'working-group' | 'interest-group'}
         />
       )}
     </AnalyticsLeadershipPageBody>

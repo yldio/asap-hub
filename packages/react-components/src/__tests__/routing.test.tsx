@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { MemoryRouter, useNavigate, useLocation } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 import { renderHook, waitFor } from '@testing-library/react';
@@ -56,9 +57,12 @@ describe('useHasRouter', () => {
   });
 
   it('returns true if there is a Router context', () => {
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <StaticRouter location="/">{children}</StaticRouter>
+    );
     const {
       result: { current },
-    } = renderHook(useHasRouter, { wrapper: StaticRouter });
+    } = renderHook(useHasRouter, { wrapper });
     expect(current).toBe(true);
   });
 });
@@ -66,7 +70,7 @@ describe('useHasRouter', () => {
 describe('usePushFromPathname', () => {
   it('pushes a history entry if currently on given page', async () => {
     currentPathname = null;
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper = ({ children }: { children: ReactNode }) => (
       <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
@@ -89,7 +93,7 @@ describe('usePushFromPathname', () => {
 
   it('does not push a history entry if currently on a different page', async () => {
     currentPathname = null;
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper = ({ children }: { children: ReactNode }) => (
       <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
@@ -115,7 +119,7 @@ describe('usePushFromPathname', () => {
 describe('usePushFromHere', () => {
   it('pushes a history entry if still on the same page', async () => {
     currentPathname = null;
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper = ({ children }: { children: ReactNode }) => (
       <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
@@ -139,7 +143,7 @@ describe('usePushFromHere', () => {
   it('does not push a history entry if no longer on the same page', async () => {
     currentPathname = null;
     navigateToPath = null;
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper = ({ children }: { children: ReactNode }) => (
       <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         <NavigationHelper />
@@ -183,7 +187,7 @@ describe('useScrollToHash', () => {
     targetElement.scrollIntoView = jest.fn();
     document.body.appendChild(targetElement);
 
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper = ({ children }: { children: ReactNode }) => (
       <MemoryRouter initialEntries={['/page#section']}>{children}</MemoryRouter>
     );
 
@@ -210,7 +214,7 @@ describe('useScrollToHash', () => {
     targetElement.scrollIntoView = jest.fn();
     document.body.appendChild(targetElement);
 
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper = ({ children }: { children: ReactNode }) => (
       <MemoryRouter initialEntries={['/page']}>{children}</MemoryRouter>
     );
 
@@ -227,7 +231,7 @@ describe('useScrollToHash', () => {
   });
 
   it('does not throw if element does not exist', async () => {
-    const wrapper: React.FC = ({ children }) => (
+    const wrapper = ({ children }: { children: ReactNode }) => (
       <MemoryRouter initialEntries={['/page#nonexistent']}>
         {children}
       </MemoryRouter>

@@ -25,7 +25,9 @@ type ProjectOverviewProps = Pick<
   | 'members'
   | 'calendar'
   | 'tags'
->;
+> & {
+  children?: React.ReactNode;
+};
 
 const { rem } = pixels;
 

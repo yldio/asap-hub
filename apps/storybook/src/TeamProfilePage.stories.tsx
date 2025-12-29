@@ -113,7 +113,7 @@ export const Normal = () => {
     route.about({}).$,
   );
   return (
-    <StaticRouter key={tab} location={route}>
+    <StaticRouter key={tab} location={route.$}>
       <TeamProfilePage {...props()}>Page Content</TeamProfilePage>
     </StaticRouter>
   );

@@ -1,5 +1,5 @@
 import { render, renderHook, screen, waitFor } from '@testing-library/react';
-import React, { Component, ReactNode, Suspense } from 'react';
+import { Component, ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -15,7 +15,7 @@ class ErrorBoundary extends Component<
   { children: ReactNode },
   { error: Error | null }
 > {
-  state = { error: null };
+  state: { error: Error | null } = { error: null };
   static getDerivedStateFromError(error: Error) {
     return { error };
   }

@@ -15,7 +15,7 @@ type DiscoveryProjectDetailParams = {
 
 const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
   const { projectId } = useParams<DiscoveryProjectDetailParams>();
-  const projectDetail = useProjectById(projectId);
+  const projectDetail = useProjectById(projectId ?? '');
 
   if (!projectDetail) {
     return <NotFoundPage />;
@@ -28,7 +28,7 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
 
   const route = projects({})
     .discoveryProjects({})
-    .discoveryProject({ projectId });
+    .discoveryProject({ projectId: projectId ?? '' });
 
   return (
     <Frame title={projectDetail?.title || ''}>

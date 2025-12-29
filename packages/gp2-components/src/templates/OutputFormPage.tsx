@@ -1,13 +1,13 @@
 import { pixels, Toast } from '@asap-hub/react-components';
-import { ComponentProps } from 'react';
 import { layoutContentStyles, mainStyles } from '../layout';
 
 import PageNotifications from './PageNotifications';
 
 const { rem } = pixels;
 
-export type OutputFormPageProps = ComponentProps<React.FC> & {
+export type OutputFormPageProps = {
   message?: string;
+  children?: React.ReactNode;
 };
 
 const OutputFormPage = ({ children, message = '' }: OutputFormPageProps) => (

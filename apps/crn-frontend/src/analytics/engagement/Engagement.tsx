@@ -29,9 +29,10 @@ const Engagement = () => {
   const navigate = useNavigate();
   const { timeRange } = useAnalytics();
 
-  const { metric } = useParams<{
+  const { metric: metricParam } = useParams<{
     metric: EngagementType;
   }>();
+  const metric = (metricParam ?? 'presenters') as EngagementType;
 
   const setMetric = (newMetric: EngagementType) => {
     navigate(

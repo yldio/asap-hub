@@ -45,7 +45,7 @@ const renderInterestGroupList = async (
               <Routes>
                 <Route
                   path="/interest-groups"
-                  element={<InterestGroupList />}
+                  element={<InterestGroupList filters={new Set()} />}
                 />
               </Routes>
             </MemoryRouter>

@@ -8,3 +8,4 @@ declare module 'react-titled' {
 
   export const Titled: FC<TitledProps>;
 }
+

@@ -8,7 +8,9 @@ import { OnboardingPageHeader, OnboardingPageFooter } from '../organisms';
 const { vminLinearCalcClamped, mobileScreen, tabletScreen } = pixels;
 
 type OnboardingPageProps = ComponentProps<typeof OnboardingPageHeader> &
-  ComponentProps<typeof OnboardingPageFooter>;
+  ComponentProps<typeof OnboardingPageFooter> & {
+    children?: React.ReactNode;
+  };
 
 const containerStyles = css({
   display: 'flex',

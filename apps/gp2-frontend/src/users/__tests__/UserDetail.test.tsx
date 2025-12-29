@@ -389,6 +389,7 @@ describe('UserDetail', () => {
     });
 
     it('searches and displays results from organisations api', async () => {
+      const user$ = userEvent.setup({ delay: null });
       mockGetInstitutions.mockResolvedValue({
         number_of_results: 1,
         time_taken: 0,
@@ -415,9 +416,9 @@ describe('UserDetail', () => {
       const [keyInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      await userEvent.click(keyInformationEditButton!);
+      await user$.click(keyInformationEditButton!);
 
-      await userEvent.type(
+      await user$.type(
         await screen.findByDisplayValue('Stark Industries'),
         ' 1',
       );

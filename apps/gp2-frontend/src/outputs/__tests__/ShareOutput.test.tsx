@@ -165,6 +165,7 @@ describe('ShareOutput', () => {
   });
 
   it('will show server side validation error for link', async () => {
+    const user = userEvent.setup({ delay: null });
     const title = 'Output title';
     const link = 'https://example.com';
     const id = 'output-id';
@@ -189,26 +190,28 @@ describe('ShareOutput', () => {
       projects: [{ id: '42', title: 'a title' }],
     });
 
-    await userEvent.click(screen.getByRole('button', { name: /save/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
     expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
 
     expect(mockUpdateOutput).toHaveBeenCalled();
     expect(
-      screen.getByText(
+      await screen.findByText(
         'An Output with this URL already exists. Please enter a different URL.',
       ),
     ).toBeInTheDocument();
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-    await userEvent.type(url, 'a');
-    url.blur();
+    await user.type(url, 'a');
+    await user.tab();
 
-    expect(
-      screen.queryByText(
-        'An Output with this URL already exists. Please enter a different URL.',
-      ),
-    ).toBeNull();
+    await waitFor(() => {
+      expect(
+        screen.queryByText(
+          'An Output with this URL already exists. Please enter a different URL.',
+        ),
+      ).toBeNull();
+    });
   });
 
   it('will toast server side errors for unknown errors', async () => {

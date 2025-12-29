@@ -329,6 +329,7 @@ describe('WorkingGroupDetail', () => {
     );
 
     it('can submit an add modal when form data is valid', async () => {
+      const user = userEvent.setup({ delay: null });
       const title = 'example42 title';
       const type = 'Note';
 
@@ -345,13 +346,13 @@ describe('WorkingGroupDetail', () => {
       });
 
       const addButton = screen.getByRole('link', { name: /add/i });
-      await userEvent.click(addButton);
+      await user.click(addButton);
       const typeBox = await screen.findByRole('textbox', { name: /type/i });
-      await userEvent.type(typeBox, `${type}{enter}`);
+      await user.type(typeBox, `${type}{enter}`);
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      await userEvent.type(titleBox, title);
+      await user.type(titleBox, title);
       const saveButton = screen.getByRole('button', { name: /save/i });
-      await userEvent.click(saveButton);
+      await user.click(saveButton);
 
       expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
         workingGroup.id,
@@ -362,6 +363,7 @@ describe('WorkingGroupDetail', () => {
     });
 
     it('can submit an edit modal when form data is valid', async () => {
+      const user = userEvent.setup({ delay: null });
       const resources: gp2Model.Resource[] = [
         {
           type: 'Note',
@@ -392,16 +394,14 @@ describe('WorkingGroupDetail', () => {
       });
 
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
-      await userEvent.click(editButton);
+      await user.click(editButton);
       // Wait for modal to fully render before interacting
       await screen.findByRole('heading', { name: /Edit Resource/i });
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      // Focus, select all with Ctrl+A, then type to replace
-      await userEvent.click(titleBox);
-      await userEvent.keyboard('{Control>}a{/Control}');
-      await userEvent.keyboard(title);
+      await user.clear(titleBox);
+      await user.type(titleBox, title);
       const saveButton = screen.getByRole('button', { name: /save/i });
-      await userEvent.click(saveButton);
+      await user.click(saveButton);
 
       expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
         workingGroup.id,

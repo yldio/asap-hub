@@ -237,34 +237,26 @@ describe('Create Projects Output', () => {
     await user.click(screen.getByRole('button', { name: 'Publish' }));
     await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
-    await waitFor(() => {
-      expect(mockCreateOutput).toHaveBeenCalled();
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.queryAllByText(
-          'An Output with this URL already exists. Please enter a different URL.',
-        ).length,
-      ).toBeGreaterThanOrEqual(1);
-    });
+    expect(
+      await screen.findByText(
+        'An Output with this URL already exists. Please enter a different URL.',
+      ),
+    ).toBeInTheDocument();
+    expect(mockCreateOutput).toHaveBeenCalled();
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
     await user.clear(url);
     await user.type(url, 'a');
-    await user.keyboard('{Tab}');
+    await user.tab();
 
-    await waitFor(
-      () => {
-        expect(
-          screen.queryByText(
-            'An Output with this URL already exists. Please enter a different URL.',
-          ),
-        ).toBeNull();
-      },
-      { timeout: 3000 },
-    );
+    await waitFor(() => {
+      expect(
+        screen.queryByText(
+          'An Output with this URL already exists. Please enter a different URL.',
+        ),
+      ).toBeNull();
+    });
 
     consoleSpy.mockRestore();
   });

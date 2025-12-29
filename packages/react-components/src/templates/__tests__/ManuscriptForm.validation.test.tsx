@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
@@ -133,12 +133,15 @@ describe('ManuscriptForm team validation', () => {
     userEvent.click(screen.getByText('Lab One'));
     userEvent.tab();
 
-    // Error message for the team input
-    expect(
-      screen.getByText(
-        /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
-      ),
-    ).toBeVisible();
+    // Wait for async lab validation to complete
+    await waitFor(() => {
+      // Error message for the team input
+      expect(
+        screen.getByText(
+          /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
+        ),
+      ).toBeVisible();
+    });
 
     // Error message for the lab input
     expect(
@@ -149,18 +152,26 @@ describe('ManuscriptForm team validation', () => {
 
     expect(screen.getAllByText(/•.*Lab One/i).length).toBe(2);
 
-    userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
-    await waitFor(() => {
-      expect(screen.getByText('Team A')).toBeVisible();
+    await act(async () => {
+      userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+      await waitFor(() => {
+        expect(screen.getByText('Team A')).toBeVisible();
+      });
+      userEvent.click(screen.getByText('Team A'));
+      userEvent.tab();
     });
-    userEvent.click(screen.getByText('Team A'));
-    userEvent.tab();
 
-    expect(
-      screen.queryByText(
-        /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
-      ),
-    ).not.toBeInTheDocument();
+    // Wait for async validation to complete after team selection
+    await waitFor(
+      () => {
+        expect(
+          screen.queryByText(
+            /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
+          ),
+        ).not.toBeInTheDocument();
+      },
+      { timeout: 2000 },
+    );
     expect(
       screen.queryByText(
         /The following lab\(s\) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above./,
@@ -215,18 +226,26 @@ describe('ManuscriptForm team validation', () => {
 
       expect(screen.getAllByText(/•.*Author A/i).length).toBe(2);
 
-      userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
-      await waitFor(() => {
-        expect(screen.getByText('Team A')).toBeVisible();
+      await act(async () => {
+        userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+        await waitFor(() => {
+          expect(screen.getByText('Team A')).toBeVisible();
+        });
+        userEvent.click(screen.getByText('Team A'));
+        userEvent.tab();
       });
-      userEvent.click(screen.getByText('Team A'));
-      userEvent.tab();
 
-      expect(
-        screen.queryByText(
-          /The following contributor\(s\) do not have a team listed above/i,
-        ),
-      ).not.toBeInTheDocument();
+      // Wait for async validation to complete after team selection
+      await waitFor(
+        () => {
+          expect(
+            screen.queryByText(
+              /The following contributor\(s\) do not have a team listed above/i,
+            ),
+          ).not.toBeInTheDocument();
+        },
+        { timeout: 2000 },
+      );
       expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
       expect(screen.queryByText(/•.*Author A/i)).not.toBeInTheDocument();
     },
@@ -356,31 +375,44 @@ describe('ManuscriptForm team validation', () => {
 
     expect(container).toHaveTextContent(labErrorMessage);
 
-    userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
-    await waitFor(() => {
-      expect(screen.getByText('Team B')).toBeVisible();
+    await act(async () => {
+      userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+      await waitFor(() => {
+        expect(screen.getByText('Team B')).toBeVisible();
+      });
+      userEvent.click(screen.getByText('Team B'));
+      userEvent.tab();
     });
-    userEvent.click(screen.getByText('Team B'));
-    userEvent.tab();
 
-    expect(container).toHaveTextContent(
-      "The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added. • Lab One",
+    // Wait for async validation to complete after team selection
+    await waitFor(
+      () => {
+        expect(container).toHaveTextContent(
+          "The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added. • Lab One",
+        );
+        expect(container).not.toHaveTextContent(firstAuthorErrorMessage);
+        expect(container).toHaveTextContent(labErrorMessage);
+      },
+      { timeout: 2000 },
     );
 
-    expect(container).not.toHaveTextContent(firstAuthorErrorMessage);
-
-    expect(container).toHaveTextContent(labErrorMessage);
-
-    userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
-    await waitFor(() => {
-      expect(screen.getByText('Team A')).toBeVisible();
+    await act(async () => {
+      userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+      await waitFor(() => {
+        expect(screen.getByText('Team A')).toBeVisible();
+      });
+      userEvent.click(screen.getByText('Team A'));
+      userEvent.tab();
     });
-    userEvent.click(screen.getByText('Team A'));
-    userEvent.tab();
 
-    expect(container).not.toHaveTextContent(firstAuthorErrorMessage);
-
-    expect(container).not.toHaveTextContent(labErrorMessage);
+    // Wait for async validation to complete after team selection
+    await waitFor(
+      () => {
+        expect(container).not.toHaveTextContent(firstAuthorErrorMessage);
+        expect(container).not.toHaveTextContent(labErrorMessage);
+      },
+      { timeout: 2000 },
+    );
   });
 
   it('when two authors without team selected and a lab without team selected are added, when one of the authors is removed, the authors error still flags the remainingauthor', async () => {
@@ -431,9 +463,12 @@ describe('ManuscriptForm team validation', () => {
     userEvent.click(screen.getByText('Lab One'));
     userEvent.tab();
 
-    expect(container).toHaveTextContent(
-      "The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added. • Author A • Author B The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added. • Lab One",
-    );
+    // Wait for async lab validation to complete
+    await waitFor(() => {
+      expect(container).toHaveTextContent(
+        "The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added. • Author A • Author B The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added. • Lab One",
+      );
+    });
 
     expect(container).toHaveTextContent(
       'The following first author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Author A • Author B',

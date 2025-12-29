@@ -34,6 +34,7 @@ import {
   Suspense,
 } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { OptionsType } from 'react-select';
 import { colors } from '..';
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
@@ -573,46 +574,37 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     [setValue, selectedTeams, selectedLabs],
   );
 
-  const validateLabPiTeams = () => {
-    const labs = watch('versions.0.labs');
-    const teams = watch('versions.0.teams');
+  const validateLabPiTeams = (labsOverride?: MultiSelectOptionsType[]) => {
+    // Use labsOverride if provided (for immediate validation after onChange),
+    // otherwise use getValues() to get the current form state
+    const labs = labsOverride ?? getValues('versions.0.labs');
+    const teams = getValues('versions.0.teams');
 
     const teamFormIds = teams.map((team) => team.value);
 
     labsWithoutTeamAdded.clear();
 
-    labs
-      .filter((lab) => {
-        const { labPITeamIds } = lab as LabOption;
-        return (
-          labPITeamIds?.length > 0 &&
-          labPITeamIds.every(
-            (labPITeamId) => !teamFormIds.includes(labPITeamId),
-          )
-        );
-      })
-      .forEach((lab) => {
+    labs.forEach((lab) => {
+      const { labPITeamIds } = lab as LabOption;
+
+      if (!labPITeamIds || labPITeamIds.length === 0) {
+        return;
+      }
+
+      const shouldFlagAsError = labPITeamIds.every(
+        (labPITeamId) => !teamFormIds.includes(labPITeamId),
+      );
+
+      if (shouldFlagAsError) {
         labsWithoutTeamAdded.add(lab.label);
-      });
-
-    if (labsWithoutTeamAdded.size > 0) {
-      const labErrorMessage = `The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
-        labsWithoutTeamAdded,
-      )
-        .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
-        .join('\n')}`;
-
-      setError('versions.0.labs', {
-        message: labErrorMessage,
-      });
-    } else {
-      clearErrors('versions.0.labs');
-    }
+      }
+    });
   };
 
   const validateFirstAuthors = () => {
-    const firstAuthorsValues = watch('versions.0.firstAuthors');
-    const teamsValues = watch('versions.0.teams');
+    // Use getValues() instead of watch() to ensure we get the latest form state
+    const firstAuthorsValues = getValues('versions.0.firstAuthors');
+    const teamsValues = getValues('versions.0.teams');
     const teamFormIds = teamsValues.map((team) => team.value);
 
     firstAuthorsWithoutTeamAdded.clear();
@@ -652,10 +644,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const validateCorrespondingAuthor = () => {
-    const correspondingAuthorValue = watch(
+    // Use getValues() instead of watch() to ensure we get the latest form state
+    const correspondingAuthorValue = getValues(
       'versions.0.correspondingAuthor',
     ) as unknown as AuthorSelectOption;
-    const teams = watch('versions.0.teams');
+    const teams = getValues('versions.0.teams');
     const teamFormIds = teams.map((team) => team.value);
 
     correspondingAuthorWithoutTeamAdded.clear();
@@ -688,8 +681,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const validateAdditionalAuthors = () => {
-    const additionalAuthorsValues = watch('versions.0.additionalAuthors');
-    const teams = watch('versions.0.teams');
+    // Use getValues() instead of watch() to ensure we get the latest form state
+    const additionalAuthorsValues = getValues('versions.0.additionalAuthors');
+    const teams = getValues('versions.0.teams');
     const teamFormIds = teams.map((team) => team.value);
 
     additionalAuthorsWithoutTeamAdded.clear();
@@ -727,12 +721,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     }
   };
 
-  const validateTeams = () => {
+  const validateTeams = (labsOverride?: MultiSelectOptionsType[]) => {
     usersWithoutTeamAdded.clear();
     validateFirstAuthors();
     validateCorrespondingAuthor();
     validateAdditionalAuthors();
-    validateLabPiTeams();
+    validateLabPiTeams(labsOverride);
 
     const contributorsErrorMessage = `The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added.\n${Array.from(
       usersWithoutTeamAdded,
@@ -740,12 +734,19 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
       .join('\n')}`;
 
-    const labErrorMessage = `The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added.\n${Array.from(
+    const labErrorMessageForTeams = `The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added.\n${Array.from(
       labsWithoutTeamAdded,
     )
       .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
       .join('\n')}`;
 
+    const labErrorMessageForLabs = `The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
+      labsWithoutTeamAdded,
+    )
+      .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
+      .join('\n')}`;
+
+    // Set errors on teams field - always ensure error is set if labs have issues
     if (usersWithoutTeamAdded.size === 0 && labsWithoutTeamAdded.size === 0) {
       clearErrors('versions.0.teams');
     } else if (
@@ -753,14 +754,29 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       labsWithoutTeamAdded.size > 0
     ) {
       setError('versions.0.teams', {
-        message: `${contributorsErrorMessage}\n\n${labErrorMessage}`,
+        type: 'manual',
+        message: `${contributorsErrorMessage}\n\n${labErrorMessageForTeams}`,
       });
     } else if (usersWithoutTeamAdded.size > 0) {
       setError('versions.0.teams', {
+        type: 'manual',
         message: contributorsErrorMessage,
       });
     } else if (labsWithoutTeamAdded.size > 0) {
-      setError('versions.0.teams', { message: labErrorMessage });
+      setError('versions.0.teams', {
+        type: 'manual',
+        message: labErrorMessageForTeams,
+      });
+    }
+
+    // Set errors on labs field - always consistent with teams field
+    if (labsWithoutTeamAdded.size > 0) {
+      setError('versions.0.labs', {
+        type: 'manual',
+        message: labErrorMessageForLabs,
+      });
+    } else {
+      clearErrors('versions.0.labs');
     }
   };
 
@@ -1630,9 +1646,15 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     placeholder="Start typing..."
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     loadOptions={getTeamSuggestions!}
-                    onChange={(selectedOptions: MultiSelectOptionsType) => {
+                    onChange={(
+                      selectedOptions: OptionsType<MultiSelectOptionsType>,
+                    ) => {
                       onChange(selectedOptions);
-                      validateTeams();
+                      // Use setTimeout to ensure validation runs after React Hook Form
+                      // has updated the state and potentially cleared errors
+                      setTimeout(() => {
+                        validateTeams();
+                      }, 0);
                     }}
                     customValidationMessage={error?.message}
                     values={value}
@@ -1670,9 +1692,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     placeholder="Start typing..."
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     loadOptions={getLabSuggestions!}
-                    onChange={(selectedOptions: MultiSelectOptionsType) => {
+                    onChange={(
+                      selectedOptions: OptionsType<MultiSelectOptionsType>,
+                    ) => {
                       onChange(selectedOptions);
-                      validateTeams();
+                      // Defer validation to next event loop tick to ensure form state has fully settled
+                      // This prevents React Hook Form's internal state update from overwriting the error
+                      setTimeout(() => validateTeams([...selectedOptions]), 0);
                     }}
                     values={value}
                     noOptionsMessage={({

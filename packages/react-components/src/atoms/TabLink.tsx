@@ -38,13 +38,29 @@ const iconStyles = css({
 /**
  * Check if the current path matches the link path using prefix matching.
  * e.g., /analytics/productivity matches /analytics/productivity/user
+ * Returns null when there's no router context.
  */
-const useIsActivePrefix = (href: string): boolean => {
-  const location = useLocation();
+const useIsActivePrefix = (href: string): boolean | null => {
+  const hasRouter = useHasRouter();
+
+  // useLocation is called unconditionally to satisfy rules of hooks.
+  // When there's no router context, it throws an error which we catch.
+  // This pattern is safe because hooks are always called in the same order.
+  let locationPathname: string | null = null;
+  try {
+    const location = useLocation();
+    locationPathname = location.pathname;
+  } catch {
+    // No router context available - fallback handled below
+  }
+
+  if (!hasRouter || locationPathname === null) {
+    return null;
+  }
+
   const linkPath = new URL(href, window.location.href).pathname;
   return (
-    location.pathname === linkPath ||
-    location.pathname.startsWith(`${linkPath}/`)
+    locationPathname === linkPath || locationPathname.startsWith(`${linkPath}/`)
   );
 };
 
@@ -55,8 +71,10 @@ interface TabLinkProps {
 }
 const TabLink: React.FC<TabLinkProps> = ({ href, children, Icon }) => {
   const blockedClick = useBlockedClick();
-  const hasRouter = useHasRouter();
-  const isActivePrefix = hasRouter ? useIsActivePrefix(href) : false;
+  const isActivePrefix = useIsActivePrefix(href);
+
+  // Determine if we have a router context based on whether the hook returned a result
+  const hasRouter = isActivePrefix !== null;
 
   // Fallback for non-router context: exact match only
   const active = hasRouter

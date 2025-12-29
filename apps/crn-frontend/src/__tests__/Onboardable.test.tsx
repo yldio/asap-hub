@@ -17,6 +17,7 @@ const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 // eslint-disable-next-line no-console
 const originalError = console.error;
 beforeAll(() => {
+  // eslint-disable-next-line no-console
   console.error = jest.fn((...args: unknown[]) => {
     if (
       typeof args[0] === 'string' &&

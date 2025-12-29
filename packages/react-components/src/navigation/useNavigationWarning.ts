@@ -64,7 +64,6 @@ export const useNavigationWarning = ({
       // Push a new entry to "undo" the back/forward navigation
       window.history.pushState(null, '', window.location.href);
 
-      // eslint-disable-next-line no-alert
       if (!window.confirm(message)) {
         // User canceled - navigation was already undone by pushState above
         return;

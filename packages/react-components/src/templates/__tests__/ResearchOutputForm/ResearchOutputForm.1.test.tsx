@@ -1,7 +1,6 @@
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
+import { useEffect, ComponentProps } from 'react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {

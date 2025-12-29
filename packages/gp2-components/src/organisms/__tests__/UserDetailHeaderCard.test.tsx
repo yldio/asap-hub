@@ -1,6 +1,5 @@
 import { gp2 } from '@asap-hub/model';
 import { fireEvent, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import UserDetailHeaderCard from '../UserDetailHeaderCard';
 
 describe('UserDetailHeaderCard', () => {

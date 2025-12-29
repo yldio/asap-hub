@@ -5,7 +5,6 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const styles = css({
   boxSizing: 'border-box',
@@ -40,8 +39,6 @@ const Form = <T extends void | Record<string, unknown>>({
   validate = () => true,
   serverErrors = [],
 }: FormProps<T>): React.ReactElement => {
-  const navigate = useNavigate();
-
   const pushFromHere = usePushFromHere();
   const [redirectOnSave, setRedirectOnSave] = useState<string>();
 

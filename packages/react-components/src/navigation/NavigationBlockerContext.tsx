@@ -49,7 +49,6 @@ export const NavigationBlockerProvider: React.FC<
     if (!blockerMessage) {
       return true;
     }
-    // eslint-disable-next-line no-alert
     return window.confirm(blockerMessage);
   }, [blockerMessage]);
 

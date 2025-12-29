@@ -12,10 +12,10 @@ import {
 const urlSearchParamsToObject = (queryString: string) =>
   Object.fromEntries(new URLSearchParams(queryString));
 
-const createWrapper = (initialEntries: string[]) => {
-  return ({ children }: { children: ReactNode }) =>
+const createWrapper =
+  (initialEntries: string[]) =>
+  ({ children }: { children: ReactNode }) =>
     createElement(MemoryRouter, { initialEntries }, children);
-};
 
 describe('usePaginationParams', () => {
   it('returns default page, page size and view', () => {

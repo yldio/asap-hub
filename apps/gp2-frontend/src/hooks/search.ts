@@ -2,7 +2,6 @@ import { gp2 } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
-import { usePaginationParams } from './pagination';
 
 type Filter = {
   filter?: string[];
@@ -18,9 +17,6 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
   const currentUrlParams = new URLSearchParams(location.search);
   const navigate = useNavigate();
 
-  // not used
-  // const { resetPagination } = usePaginationParams();
-
   const filters = filterNames.reduce(
     (filterObject, filterName) => ({
       ...filterObject,
@@ -28,14 +24,6 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
     }),
     {} as Filter,
   );
-
-  // not used
-  // const replaceArrayParams = (paramName: string, values: string[]) => {
-  //   const newUrlParams = new URLSearchParams(location.search);
-  //   newUrlParams.delete(paramName);
-  //   values.forEach((v) => newUrlParams.append(paramName, v));
-  //   navigate({ search: newUrlParams.toString() } as never, { replace: true });
-  // };
 
   const tags = currentUrlParams.getAll('tag');
   const setTags = (newTags: string[]) => {

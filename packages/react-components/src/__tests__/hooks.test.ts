@@ -73,8 +73,9 @@ describe('useIsMounted', () => {
 
 describe('useInterval', () => {
   // Helper to wait for a specified time using real timers
-  const wait = (ms: number) =>
+  const wait = (ms: number) => {
     new Promise((resolve) => setTimeout(resolve, ms));
+  };
 
   it('calls the callback after the specified delay', async () => {
     const callback = jest.fn();

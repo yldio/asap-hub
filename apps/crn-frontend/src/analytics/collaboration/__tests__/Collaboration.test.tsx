@@ -28,7 +28,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
@@ -495,31 +495,55 @@ describe('sharing prelim findings', () => {
     );
   });
 
-  it('throws error when preliminary data sharing fails', () => {
+  it('throws error when preliminary data sharing fails', async () => {
     const error = new Error('API Error');
     mockGetPreliminaryDataSharing.mockRejectedValue(error);
     jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    let caughtError: Error | null = null;
+
+    class ErrorBoundary extends React.Component<
+      { children: React.ReactNode },
+      { hasError: boolean }
+    > {
+      state = { hasError: false };
+
+      static getDerivedStateFromError(err: Error) {
+        caughtError = err;
+        return { hasError: true };
+      }
+
+      render() {
+        if (this.state.hasError) {
+          return <div>Error caught</div>;
+        }
+        return this.props.children;
+      }
+    }
+
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <RecoilRoot>
-        <Suspense fallback="loading">{children}</Suspense>
+        <ErrorBoundary>
+          <Suspense fallback="loading">{children}</Suspense>
+        </ErrorBoundary>
       </RecoilRoot>
     );
 
-    try {
-      renderHook(
-        () =>
-          useAnalyticsSharingPrelimFindings({
-            currentPage: 0,
-            pageSize: 10,
-            sort: 'team_asc',
-            tags: [],
-            timeRange: 'all',
-          }),
-        { wrapper },
-      );
-    } catch (error) {
-      expect((error as Error).message).toBe('API Error');
-    }
+    renderHook(
+      () =>
+        useAnalyticsSharingPrelimFindings({
+          currentPage: 0,
+          pageSize: 10,
+          sort: 'team_asc',
+          tags: [],
+          timeRange: 'all',
+        }),
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      expect(caughtError?.message).toBe('API Error');
+    });
   });
 });
 

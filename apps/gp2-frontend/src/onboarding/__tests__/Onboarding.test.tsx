@@ -44,12 +44,12 @@ describe('Onboarding', () => {
   beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 
-  it.skip('has core details activated', async () => {
+  it('has core details activated', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderOnboarding(user.id);
     expect(screen.getByRole('link', { name: /core details/i })).toHaveClass(
-      'active-link',
+      'active',
     );
   });
   it('reaches publish link if user profile is completed', async () => {

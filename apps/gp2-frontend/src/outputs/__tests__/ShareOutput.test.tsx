@@ -117,8 +117,7 @@ describe('ShareOutput', () => {
     await renderShareOutput(getEditPath());
     expect(screen.getByRole('heading', { name: /share/i })).toBeVisible();
   });
-  // TODO: Fix this test after React Router v6 migration
-  it.skip('saves the output in edit page', async () => {
+  it('saves the output in edit page', async () => {
     const title = 'Output title';
     const link = 'https://example.com';
     const id = 'output-id';
@@ -134,12 +133,14 @@ describe('ShareOutput', () => {
     });
 
     await userEvent.click(screen.getByRole('button', { name: /save/i }));
-    expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
-    expect(mockUpdateOutput).toHaveBeenCalledWith(
-      id,
-      expect.objectContaining({ title, link }),
-      expect.anything(),
-    );
+    await waitFor(() => {
+      expect(mockUpdateOutput).toHaveBeenCalledWith(
+        id,
+        expect.objectContaining({ title, link }),
+        expect.anything(),
+      );
+    });
+    expect(await screen.findByText('Redirect target')).toBeInTheDocument();
   });
 
   it('generates the short description based on the current description', async () => {
@@ -163,8 +164,7 @@ describe('ShareOutput', () => {
     });
   });
 
-  // TODO: Fix this test after React Router v6 migration
-  it.skip('will show server side validation error for link', async () => {
+  it('will show server side validation error for link', async () => {
     const title = 'Output title';
     const link = 'https://example.com';
     const id = 'output-id';
@@ -194,10 +194,10 @@ describe('ShareOutput', () => {
 
     expect(mockUpdateOutput).toHaveBeenCalled();
     expect(
-      screen.queryAllByText(
+      screen.getByText(
         'An Output with this URL already exists. Please enter a different URL.',
-      ).length,
-    ).toBeGreaterThan(1);
+      ),
+    ).toBeInTheDocument();
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });

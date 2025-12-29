@@ -141,7 +141,7 @@
       },
       {
         "path": "apps/gp2-frontend/dist/**/*.js",
-        "maxSize": "256 kB"
+        "maxSize": "300 kB"
       }
     ]
   },

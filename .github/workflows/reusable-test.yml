@@ -58,6 +58,11 @@ jobs:
         run: yarn workspaces foreach --include "*/contentful-app-*" -v run test:no-watch
   setup-turbo:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     environment: Branch
     outputs:
       matrix: ${{ steps.setup.outputs.matrix }}
@@ -76,36 +81,64 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      max-parallel: 25 # Balance between speed and resource availability
       matrix: ${{ fromJson(needs.setup-turbo.outputs.matrix) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
       - name: Re-Build
         uses: ./.github/actions/build-rebuild
+      - name: Set cache key suffix
+        id: cache-suffix
+        run: |
+          if [ -n "${{ matrix.shard }}" ]; then
+            SHARD_SUFFIX=$(echo "${{ matrix.shard }}" | sed 's/\//-/g')
+            echo "suffix=-shard-${SHARD_SUFFIX}" >> $GITHUB_OUTPUT
+          else
+            echo "suffix=" >> $GITHUB_OUTPUT
+          fi
       - name: Cache .turbo and jest cache
         uses: actions/cache@v3
         with:
           path: |
             .turbo
             .jest-cache
-          key: ${{ runner.os }}-turbo-and-jest-cache-${{ matrix.package }}-${{ github.sha }}
+          key: ${{ runner.os }}-turbo-and-jest-cache-${{ matrix.package }}${{ steps.cache-suffix.outputs.suffix }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-turbo-and-jest-cache-${{ matrix.package }}-
-      - name: Get number of CPU cores
-        id: cpu-cores
-        uses: SimenB/github-actions-cpu-cores@v1
-      - name: Test ${{ matrix.package }}
-        run: yarn turbo test:coverage --filter="${{ matrix.package }}" --cache-dir=.turbo -- --maxWorkers=${{ steps.cpu-cores.outputs.count }} --ci
+            ${{ runner.os }}-turbo-and-jest-cache-${{ matrix.package }}${{ steps.cache-suffix.outputs.suffix }}-
+      - name: Test ${{ matrix.package }}${{ matrix.shard && ' (shard ' || '' }}${{ matrix.shard || '' }}${{ matrix.shard && ')' || '' }}
+        run: |
+          SHARD_ARGS=""
+          if [ -n "${{ matrix.shard }}" ]; then
+            SHARD_ARGS="--shard=${{ matrix.shard }}"
+          fi
+          yarn turbo test:coverage --filter="${{ matrix.package }}" --cache-dir=.turbo -- --ci $SHARD_ARGS
       - name: move coverage
         shell: bash
         run: |
           PACKAGE_NAME="$(echo ${{ matrix.package }} | cut -c 11-)"
-          ## get package directory
+          ## get package directory - ensure coverage directory exists at repo root
           mkdir -p coverage
-          yarn workspace ${{ matrix.package }} exec mv coverage/coverage-final.json ../../coverage/$PACKAGE_NAME.json
+          if [ -n "${{ matrix.shard }}" ]; then
+            SHARD_SUFFIX=$(echo "${{ matrix.shard }}" | sed 's/\//-/g')
+            COVERAGE_FILE="coverage/${PACKAGE_NAME}-shard-${SHARD_SUFFIX}.json"
+          else
+            COVERAGE_FILE="coverage/${PACKAGE_NAME}.json"
+          fi
+          # Move coverage file from workspace to repo root coverage directory
+          yarn workspace ${{ matrix.package }} exec sh -c "mv coverage/coverage-final.json ../../${COVERAGE_FILE}"
       - name: Sanitize package name
         id: sanitize
-        run: echo "MATRIX_PACKAGE_NAME=${{ matrix.package }}" | sed 's/\//-/g' >> $GITHUB_ENV
+        run: |
+          PACKAGE_NAME=$(echo "${{ matrix.package }}" | sed 's/\//-/g')
+          if [ -n "${{ matrix.shard }}" ]; then
+            SHARD_SUFFIX=$(echo "${{ matrix.shard }}" | sed 's/\//-/g')
+            echo "MATRIX_PACKAGE_NAME=${PACKAGE_NAME}-shard-${SHARD_SUFFIX}" >> $GITHUB_ENV
+          else
+            echo "MATRIX_PACKAGE_NAME=${PACKAGE_NAME}" >> $GITHUB_ENV
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: coverage-artifacts-${{ env.MATRIX_PACKAGE_NAME }}

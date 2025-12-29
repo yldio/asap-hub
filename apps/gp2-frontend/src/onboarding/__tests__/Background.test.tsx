@@ -57,8 +57,7 @@ describe('Background', () => {
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
   const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 
-  // TODO: Fix this test after React Router v6 migration - Background.tsx component still uses v5 Route syntax
-  it.skip('renders biography and tags', async () => {
+  it('renders biography and tags', async () => {
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderBackground(user.id);
@@ -76,8 +75,7 @@ describe('Background', () => {
     ).toBeVisible();
   });
 
-  // TODO: Fix this test after React Router v6 migration - Background.tsx component still uses v5 Route syntax
-  it.skip('saves the biography modal', async () => {
+  it('saves the biography modal', async () => {
     const biography = 'this is some biography';
     const user = { ...gp2Fixtures.createUserResponse(), biography };
     mockGetUser.mockResolvedValueOnce(user);
@@ -99,8 +97,7 @@ describe('Background', () => {
     );
   });
 
-  // TODO: Fix this test after React Router v6 migration - Background.tsx component still uses v5 Route syntax
-  it.skip('saves the tags modal', async () => {
+  it('saves the tags modal', async () => {
     const tags = [{ id: '1', name: 'Genetics' }] as gp2Model.TagDataObject[];
     const user = { ...gp2Fixtures.createUserResponse(), tags };
     mockGetUser.mockResolvedValueOnce(user);

@@ -107,12 +107,25 @@ export function useValidation<T extends ValidationTarget>(
       );
     }
   };
+
+  const handleBlur = (e: React.FocusEvent<ValidationTarget>) => {
+    // Don't validate if blur is caused by clicking a button
+    // This prevents validation errors when clicking cancel/action buttons
+    if (e?.relatedTarget) {
+      const relatedTarget = e.relatedTarget as HTMLElement | null;
+      if (relatedTarget && relatedTarget.tagName === 'BUTTON') {
+        return;
+      }
+    }
+    validate();
+  };
+
   return {
     validate,
     validationMessage,
     validationTargetProps: {
       ref: inputRef,
-      onBlur: validate,
+      onBlur: handleBlur,
       onInvalid: (event: FormEvent<ValidationTarget>) => {
         validate();
         event.preventDefault();

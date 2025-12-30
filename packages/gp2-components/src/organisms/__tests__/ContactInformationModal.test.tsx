@@ -131,6 +131,7 @@ describe('ContactInformationModal', () => {
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
   });
   it('does not allow invalid secondary email', async () => {
+    const consoleErrorSpy = mockActWarningsInConsole('error');
     const onSave = jest.fn();
     const email = 'goncalo.ramos@fpf.pt';
     const alternativeEmail = 'not-an-email-address';
@@ -154,6 +155,7 @@ describe('ContactInformationModal', () => {
     ).toBeVisible();
     expect(onSave).not.toHaveBeenCalled();
     await waitFor(() => expect(getSaveButton()).toBeEnabled());
+    consoleErrorSpy.mockRestore();
   });
 
   it('does not allow invalid telephone number', async () => {

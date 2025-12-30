@@ -3,6 +3,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { mockActErrorsInConsole } from '../../test-utils';
 import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
@@ -145,6 +146,9 @@ it.each`
 `(
   'shows validation message $message when value set to $value on $label',
   async ({ label, message }) => {
+    // Suppress act() warnings from async validation state updates triggered by blur
+    const consoleMock = mockActErrorsInConsole();
+
     renderModal(
       <PersonalInfoModal
         {...props}
@@ -168,6 +172,8 @@ it.each`
 
     await userEvent.click(screen.getByText(/save/i));
     expect(await screen.findByText(new RegExp(message, 'i'))).toBeVisible();
+
+    consoleMock.mockRestore();
   },
 );
 

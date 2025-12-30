@@ -58,20 +58,23 @@ const DuplicateOutput: FC = () => {
   return <NotFoundPage />;
 };
 
-const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
-  const { projectId } = useRouteParams(projects({}).project);
-  const project = useProjectById(projectId);
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    loadOutputDirectory().then(loadCreateProjectOutput);
-  }, [project]);
-
+// Separate component for the main project page that needs outputs and events data
+// This prevents fetching outputs/events data when navigating to create-output routes
+const ProjectMainPage: FC<{
+  project: gp2Model.ProjectResponse;
+  currentTime: Date;
+  projectId: string;
+}> = ({ project, currentTime, projectId }) => {
   const { pageSize } = usePaginationParams();
   const { total } = useOutputs({
     currentPage: 0,
     filters: new Set(),
     pageSize,
     searchQuery: '',
+    projectId,
+  });
+
+  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
     projectId,
   });
 
@@ -90,9 +93,118 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
 
   const updateProjectResources = usePutProjectResources(projectId);
 
-  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
-    projectId,
-  });
+  return (
+    <ProjectDetailPage
+      isProjectMember={isProjectMember}
+      isAdministrator={isAdministrator}
+      outputsTotal={total}
+      upcomingTotal={upcomingEvents?.total || 0}
+      pastTotal={pastEvents?.total || 0}
+      {...project}
+    >
+      <Routes>
+        <Route
+          path="overview"
+          element={
+            <Frame title="Overview">
+              <ProjectOverview {...project} />
+            </Frame>
+          }
+        />
+        {isProjectMember && (
+          <Route
+            path="workspace/*"
+            element={
+              <Frame title="Workspace">
+                <ProjectResources {...project} add={add} edit={edit} />
+                {isAdministrator && (
+                  <Routes>
+                    <Route
+                      path="add"
+                      element={
+                        <ResourceModal
+                          modalTitle={'Add Resource'}
+                          modalDescription={
+                            'Select a resource type and provide the neccessary information required to share a resource privately with your group.'
+                          }
+                          backHref={workspace}
+                          onSave={(resource: gp2Model.Resource) =>
+                            updateProjectResources([
+                              ...(project.resources || []),
+                              resource,
+                            ])
+                          }
+                        />
+                      }
+                    />
+                    <Route
+                      path="edit/:resourceIndex"
+                      element={
+                        <EditResourceModal
+                          route={editRoute.resource}
+                          resources={project.resources || []}
+                          backHref={workspace}
+                          updateResources={updateProjectResources}
+                        />
+                      }
+                    />
+                  </Routes>
+                )}
+              </Frame>
+            }
+          />
+        )}
+        <Route
+          path="outputs"
+          element={
+            <Frame title="Shared Outputs">
+              <OutputDirectory projectId={projectId} />
+            </Frame>
+          }
+        />
+        <Route
+          path="upcoming"
+          element={
+            <Frame title="Upcoming Events">
+              <EventsList
+                constraint={{ projectId }}
+                currentTime={currentTime}
+                past={false}
+              />
+            </Frame>
+          }
+        />
+        <Route
+          path="past"
+          element={
+            <Frame title="Past Events">
+              <EventsList
+                currentTime={currentTime}
+                past={true}
+                constraint={{ projectId }}
+              />
+            </Frame>
+          }
+        />
+        <Route index element={<Navigate to="overview" replace />} />
+      </Routes>
+    </ProjectDetailPage>
+  );
+};
+
+const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
+  const { projectId } = useRouteParams(projects({}).project);
+  const project = useProjectById(projectId);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    loadOutputDirectory().then(loadCreateProjectOutput);
+  }, [project]);
+
+  const currentUser = useCurrentUserGP2();
+  const userRole = getUserRole(currentUser, 'Projects', projectId);
+  const isAdministrator =
+    currentUser?.role === 'Administrator' || userRole === 'Project manager';
 
   if (project) {
     return (
@@ -108,113 +220,16 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
           }
         />
         {isAdministrator && (
-          <Route
-            path="duplicate/:outputId"
-            element={
-              <Frame title="Duplicate Output">
-                <DuplicateOutput />
-              </Frame>
-            }
-          />
+          <Route path="duplicate/:outputId" element={<DuplicateOutput />} />
         )}
         <Route
           path="*"
           element={
-            <ProjectDetailPage
-              isProjectMember={isProjectMember}
-              isAdministrator={isAdministrator}
-              outputsTotal={total}
-              upcomingTotal={upcomingEvents?.total || 0}
-              pastTotal={pastEvents?.total || 0}
-              {...project}
-            >
-              <Routes>
-                <Route
-                  path="overview"
-                  element={
-                    <Frame title="Overview">
-                      <ProjectOverview {...project} />
-                    </Frame>
-                  }
-                />
-                {isProjectMember && (
-                  <Route
-                    path="workspace/*"
-                    element={
-                      <Frame title="Workspace">
-                        <ProjectResources {...project} add={add} edit={edit} />
-                        {isAdministrator && (
-                          <Routes>
-                            <Route
-                              path="add"
-                              element={
-                                <ResourceModal
-                                  modalTitle={'Add Resource'}
-                                  modalDescription={
-                                    'Select a resource type and provide the neccessary information required to share a resource privately with your group.'
-                                  }
-                                  backHref={workspace}
-                                  onSave={(resource: gp2Model.Resource) =>
-                                    updateProjectResources([
-                                      ...(project.resources || []),
-                                      resource,
-                                    ])
-                                  }
-                                />
-                              }
-                            />
-                            <Route
-                              path="edit/:resourceIndex"
-                              element={
-                                <EditResourceModal
-                                  route={editRoute.resource}
-                                  resources={project.resources || []}
-                                  backHref={workspace}
-                                  updateResources={updateProjectResources}
-                                />
-                              }
-                            />
-                          </Routes>
-                        )}
-                      </Frame>
-                    }
-                  />
-                )}
-                <Route
-                  path="outputs"
-                  element={
-                    <Frame title="Shared Outputs">
-                      <OutputDirectory projectId={projectId} />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path="upcoming"
-                  element={
-                    <Frame title="Upcoming Events">
-                      <EventsList
-                        constraint={{ projectId }}
-                        currentTime={currentTime}
-                        past={false}
-                      />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path="past"
-                  element={
-                    <Frame title="Past Events">
-                      <EventsList
-                        currentTime={currentTime}
-                        past={true}
-                        constraint={{ projectId }}
-                      />
-                    </Frame>
-                  }
-                />
-                <Route index element={<Navigate to="overview" replace />} />
-              </Routes>
-            </ProjectDetailPage>
+            <ProjectMainPage
+              project={project}
+              currentTime={currentTime}
+              projectId={projectId}
+            />
           }
         />
       </Routes>

@@ -536,7 +536,9 @@ describe('ProjectDetail', () => {
           .duplicateOutput({ outputId: 'test-id' }).$,
         projects: [project],
       });
-      expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+      });
     });
   });
 });

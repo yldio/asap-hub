@@ -507,7 +507,9 @@ describe('WorkingGroupDetail', () => {
           .workingGroup({ workingGroupId: workingGroup.id })
           .duplicateOutput({ outputId: 'test-id' }).$,
       });
-      expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+      });
     });
   });
 });

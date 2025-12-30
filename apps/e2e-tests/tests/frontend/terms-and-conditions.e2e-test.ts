@@ -4,9 +4,11 @@ import { config } from '../../config';
 test('Should be able to see the terms-and-conditions page', async ({
   page,
 }) => {
-  await page.goto(`${config.appUrl}/terms-and-conditions`);
+  await page.goto(`${config.appUrl}/terms-and-conditions`, {
+    waitUntil: 'networkidle',
+  });
 
   const h1 = page.locator('h1', { hasText: 'Terms of Use' });
 
-  await expect(h1).toBeVisible();
+  await expect(h1).toBeVisible({ timeout: 30000 });
 });

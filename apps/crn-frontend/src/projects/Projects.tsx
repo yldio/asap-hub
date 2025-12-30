@@ -43,7 +43,10 @@ const Projects: FC<Record<string, never>> = () => {
   return (
     <Routes>
       {/* Project Detail Routes - must come before list routes */}
-      <Route path="discovery/:projectId/*" element={<DiscoveryProjectDetail />} />
+      <Route
+        path="discovery/:projectId/*"
+        element={<DiscoveryProjectDetail />}
+      />
       <Route path="resource/:projectId/*" element={<ResourceProjectDetail />} />
       <Route path="trainee/:projectId/*" element={<TraineeProjectDetail />} />
 

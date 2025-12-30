@@ -139,14 +139,23 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   });
 
   if (team) {
+    const {
+      about,
+      compliance,
+      outputs,
+      past,
+      upcoming,
+      workspace,
+      draftOutputs,
+    } = route({ teamId });
     const paths = {
-      about: 'about',
-      compliance: 'compliance',
-      outputs: 'outputs',
-      past: 'past',
-      upcoming: 'upcoming',
-      workspace: 'workspace',
-      draftOutputs: 'draft-outputs',
+      about: about.template.replace(/^\//, ''),
+      compliance: compliance.template.replace(/^\//, ''),
+      outputs: outputs.template.replace(/^\//, ''),
+      past: past.template.replace(/^\//, ''),
+      upcoming: upcoming.template.replace(/^\//, ''),
+      workspace: workspace.template.replace(/^\//, ''),
+      draftOutputs: draftOutputs.template.replace(/^\//, ''),
     };
 
     return (
@@ -157,7 +166,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
           <EligibilityReasonProvider>
             <Routes>
               <Route
-                path="workspace/create-manuscript"
+                path={`${workspace.template.replace(/^\//, '')}${
+                  workspace({}).createManuscript.template
+                }`}
                 element={
                   <Frame title="Create Manuscript">
                     <TeamManuscript teamId={teamId} />
@@ -165,7 +176,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                 }
               />
               <Route
-                path="workspace/edit-manuscript/:manuscriptId"
+                path={`${workspace.template.replace(/^\//, '')}${
+                  workspace({}).editManuscript.template
+                }`}
                 element={
                   <Frame title="Edit Manuscript">
                     <TeamManuscript teamId={teamId} />
@@ -173,7 +186,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                 }
               />
               <Route
-                path="workspace/resubmit-manuscript/:manuscriptVersionId"
+                path={`${workspace.template.replace(/^\//, '')}${
+                  workspace({}).resubmitManuscript.template
+                }`}
                 element={
                   <Frame title="Resubmit Manuscript">
                     <TeamManuscript teamId={teamId} resubmitManuscript />
@@ -182,7 +197,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
               />
               {canCreateComplianceReport && (
                 <Route
-                  path="workspace/create-compliance-report/:manuscriptId"
+                  path={`${workspace.template.replace(/^\//, '')}${
+                    workspace({}).createComplianceReport.template
+                  }`}
                   element={
                     <Frame title="Create Compliance Report">
                       <TeamComplianceReport teamId={teamId} />

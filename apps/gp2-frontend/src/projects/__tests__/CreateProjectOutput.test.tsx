@@ -4,6 +4,7 @@ import { BackendError } from '@asap-hub/frontend-utils';
 import { ValidationErrorResponse } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -35,7 +36,7 @@ jest.mock('../../users/api');
 jest.mock('../../working-groups/api');
 jest.mock('../api');
 
-jest.setTimeout(60000);
+jest.setTimeout(30000);
 
 const mockCreateOutput = createOutput as jest.MockedFunction<
   typeof createOutput
@@ -132,38 +133,35 @@ describe('Create Projects Output', () => {
   });
 
   it('publishes the output', async () => {
+    const user = userEvent.setup({ delay: null });
     mockCreateOutput.mockResolvedValueOnce(gp2.createOutputResponse());
     const title = 'this is the output title';
     const link = 'https://example.com';
     await renderCreateProjectOutput('procedural-form');
 
-    await userEvent.type(
-      screen.getByRole('textbox', { name: /title/i }),
-      title,
-    );
-    await userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
-    await userEvent.type(
-      screen.getByRole('textbox', { name: /^description/i }),
-      'An interesting article',
-    );
-    await userEvent.type(
+    fireEvent.change(screen.getByRole('textbox', { name: /title/i }), {
+      target: { value: title },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /^url/i }), {
+      target: { value: link },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /^description/i }), {
+      target: { value: 'An interesting article' },
+    });
+    fireEvent.change(
       screen.getByRole('textbox', { name: /^short description/i }),
-      'An article',
+      { target: { value: 'An article' } },
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
-    await userEvent.click(authors);
-    await userEvent.click(screen.getByText('Tony Stark'));
-    await userEvent.click(authors);
-    await userEvent.click(screen.getByText(/Steve Rogers \(/i));
-    await userEvent.click(
-      screen.getByRole('textbox', { name: /identifier type/i }),
-    );
-    await userEvent.click(screen.getByText(/^none/i));
+    await user.click(authors);
+    await user.click(screen.getByText('Tony Stark'));
+    await user.click(authors);
+    await user.click(screen.getByText(/Steve Rogers \(/i));
+    await user.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    await user.click(screen.getByText(/^none/i));
     expect(screen.getByText('Project Title')).toBeVisible();
-    await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    await userEvent.click(
-      screen.getByRole('button', { name: 'Publish Output' }),
-    );
+    await user.click(screen.getByRole('button', { name: 'Publish' }));
+    await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
     await waitFor(() => {
       expect(mockCreateOutput).toHaveBeenCalledWith(
@@ -218,15 +216,18 @@ describe('Create Projects Output', () => {
 
     const user = userEvent.setup({ delay: null });
 
-    await user.type(screen.getByRole('textbox', { name: /title/i }), title);
-    await user.type(screen.getByRole('textbox', { name: /^url/i }), link);
-    await user.type(
-      screen.getByRole('textbox', { name: /^description/i }),
-      'An interesting article',
-    );
-    await user.type(
+    fireEvent.change(screen.getByRole('textbox', { name: /title/i }), {
+      target: { value: title },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /^url/i }), {
+      target: { value: link },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /^description/i }), {
+      target: { value: 'An interesting article' },
+    });
+    fireEvent.change(
       screen.getByRole('textbox', { name: /^short description/i }),
-      'An article',
+      { target: { value: 'An article' } },
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
     await user.click(authors);
@@ -246,8 +247,7 @@ describe('Create Projects Output', () => {
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-    await user.clear(url);
-    await user.type(url, 'a');
+    fireEvent.change(url, { target: { value: 'a' } });
     await user.tab();
 
     await waitFor(() => {

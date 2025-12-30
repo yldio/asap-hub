@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('Should be able to see the terms-and-conditions page', async ({
-  _page,
-}) => {
+test('Should be able to see the terms-and-conditions page', async () => {
   // await page.goto(`${config.appUrl}/terms-and-conditions`, {
   //   waitUntil: 'networkidle',
   // });

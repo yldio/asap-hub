@@ -2,6 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -104,6 +105,9 @@ describe('ProjectDetail', () => {
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
   });
+  afterEach(() => {
+    jest.clearAllTimers();
+  });
   it('renders header with title', async () => {
     const project = gp2Fixtures.createProjectResponse();
     mockGetProject.mockResolvedValueOnce(project);
@@ -189,6 +193,7 @@ describe('ProjectDetail', () => {
   });
 
   it('clicking on the resource tab loads the resources', async () => {
+    const user = userEvent.setup({ delay: null });
     const project = gp2Fixtures.createProjectResponse();
     project.members = [projectMember];
     mockGetProject.mockResolvedValueOnce(project);
@@ -196,13 +201,14 @@ describe('ProjectDetail', () => {
       id: project.id,
       userId: '23',
     });
-    await userEvent.click(screen.getByRole('link', { name: /workspace/i }));
+    await user.click(screen.getByRole('link', { name: /workspace/i }));
     expect(
       screen.getByRole('heading', { name: /Workspace Resources/i }),
     ).toBeInTheDocument();
   });
 
   it('clicking on the overview tab loads the resources', async () => {
+    const user = userEvent.setup({ delay: null });
     const project = gp2Fixtures.createProjectResponse();
     project.members = [projectMember];
     mockGetProject.mockResolvedValueOnce(project);
@@ -217,7 +223,7 @@ describe('ProjectDetail', () => {
     expect(
       screen.queryByRole('heading', { name: /Contact/i }),
     ).not.toBeInTheDocument();
-    await userEvent.click(screen.getByRole('link', { name: /overview/i }));
+    await user.click(screen.getByRole('link', { name: /overview/i }));
 
     expect(
       screen.getByRole('heading', { name: /Contact/i }),
@@ -355,7 +361,7 @@ describe('ProjectDetail', () => {
       const typeBox = await screen.findByRole('textbox', { name: /type/i });
       await user.type(typeBox, `${type}{enter}`);
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      await user.type(titleBox, title);
+      fireEvent.change(titleBox, { target: { value: title } });
       const saveButton = screen.getByRole('button', { name: /save/i });
       await user.click(saveButton);
 
@@ -406,8 +412,7 @@ describe('ProjectDetail', () => {
       await user.click(editButton);
       await screen.findByRole('heading', { name: /Edit Resource/i });
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      await user.clear(titleBox);
-      await user.type(titleBox, title);
+      fireEvent.change(titleBox, { target: { value: title } });
       const saveButton = screen.getByRole('button', { name: /save/i });
       await user.click(saveButton);
 
@@ -425,20 +430,22 @@ describe('ProjectDetail', () => {
   });
   describe('the upcoming events tab', () => {
     it('can be switched to', async () => {
+      const user = userEvent.setup({ delay: null });
       const project = gp2Fixtures.createProjectResponse();
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id });
-      await userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
+      await user.click(await screen.findByText(/upcoming events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });
 
   describe('the past events tab', () => {
     it('can be switched to', async () => {
+      const user = userEvent.setup({ delay: null });
       const project = gp2Fixtures.createProjectResponse();
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id });
-      await userEvent.click(await screen.findByText(/past events \(1\)/i));
+      await user.click(await screen.findByText(/past events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });

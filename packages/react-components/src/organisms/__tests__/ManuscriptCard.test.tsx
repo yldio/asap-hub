@@ -125,7 +125,7 @@ beforeEach(() => {
 });
 
 it('displays manuscript version card when expanded', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const { getByText, queryByText, getByTestId } = render(
     <MemoryRouter>
       <ManuscriptCard {...props} />
@@ -143,7 +143,7 @@ it('displays manuscript version card when expanded', async () => {
 });
 
 it('displays share compliance report button if user has permission', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const { queryByRole, getByRole, rerender, getByTestId } = render(
     <MemoryRouter>
       <ManuscriptCard {...props} />
@@ -167,7 +167,7 @@ it('displays share compliance report button if user has permission', async () =>
 });
 
 it('displays submit revised manuscript button if user is an author', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const manuscriptVersions = [
     {
       ...mockVersionWithReport,
@@ -199,7 +199,7 @@ it('displays submit revised manuscript button if user is an author', async () =>
 });
 
 it('shows tooltip on hover over disabled Submit Revised Manuscript button when no compliance report exists', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const manuscriptVersions = [
     {
       ...mockVersion,
@@ -244,7 +244,7 @@ it('shows tooltip on hover over disabled Submit Revised Manuscript button when n
 });
 
 it('displays submit revised manuscript button if user is team Lead PI', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const piUser = {
     ...user,
     teams: [
@@ -271,7 +271,7 @@ it('displays submit revised manuscript button if user is team Lead PI', async ()
 });
 
 it('displays submit revised manuscript button if user is team project manager', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId } = render(
     <MemoryRouter>
       <ManuscriptCard
@@ -289,7 +289,7 @@ it('displays submit revised manuscript button if user is team project manager', 
 });
 
 it('displays submit revised manuscript button if user is a PI on a manuscript lab', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const manuscriptVersions = [
     {
       ...mockVersionWithReport,
@@ -321,7 +321,7 @@ it('displays submit revised manuscript button if user is a PI on a manuscript la
 });
 
 it('redirects to compliance report form when user clicks on share compliance report button', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId } = render(
     <MemoryRouter>
       <Routes>
@@ -349,7 +349,7 @@ it('redirects to compliance report form when user clicks on share compliance rep
 });
 
 it('redirects to resubmit manuscript form when user clicks on Submit Revised Manuscript button', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const manuscriptVersions = [
     {
       ...mockVersionWithReport,
@@ -396,7 +396,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
 });
 
 it('displays the confirmation modal when isComplianceReviewer is true and the user tries to change the manuscript status to a different one than it has started', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId, getByText } = render(
     <MemoryRouter>
       <ManuscriptCard {...props} isComplianceReviewer />
@@ -411,7 +411,7 @@ it('displays the confirmation modal when isComplianceReviewer is true and the us
 });
 
 it('does not display confirmation modal when isComplianceReviewer is true but the user tries to select the same manuscript status it is currently', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId, queryByText } = render(
     <MemoryRouter>
       <ManuscriptCard
@@ -450,7 +450,7 @@ it('does not allow to change the manuscript status if isComplianceReviewer is fa
 });
 
 it('calls onUpdateManuscript when user confirms status change', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const onUpdateManuscript = jest.fn();
 
   const { getByRole, getByTestId, queryByRole } = render(
@@ -581,7 +581,7 @@ it.each`
 );
 
 it('disables submit compliance report button when there is an existing compliance report', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId } = render(
     <MemoryRouter>
       <ManuscriptCard
@@ -602,7 +602,7 @@ it('disables submit compliance report button when there is an existing complianc
 });
 
 it('displays show more/show less when there are more than three manuscript versions', async () => {
-  const userActions = userEvent.setup();
+  const userActions = userEvent.setup({ delay: null });
   const manuscriptVersions = [
     {
       ...mockVersionWithReport,
@@ -687,7 +687,7 @@ it.each`
 
 describe('Tabs', () => {
   it('displays the manuscript and reports tab as active by default', async () => {
-    const userActions = userEvent.setup();
+    const userActions = userEvent.setup({ delay: null });
     const { getByRole, getByTestId } = render(
       <MemoryRouter>
         <ManuscriptCard {...props} />
@@ -702,7 +702,7 @@ describe('Tabs', () => {
   });
 
   it('displays the tab as active when the user clicks on the tab', async () => {
-    const userActions = userEvent.setup();
+    const userActions = userEvent.setup({ delay: null });
     const { getByRole, getByTestId } = render(
       <MemoryRouter>
         <ManuscriptCard {...props} />
@@ -731,7 +731,7 @@ describe('Tabs', () => {
   });
 
   it('opens the discussions tab when user clicks on Open Discussion Tab', async () => {
-    const userActions = userEvent.setup();
+    const userActions = userEvent.setup({ delay: null });
     const manuscriptVersion = {
       ...mockVersion,
       asapAffiliationIncluded: 'No',
@@ -800,7 +800,7 @@ describe('Discussion Notification', () => {
   };
 
   it('displays the notification dot when there is at least one unread discussion', async () => {
-    const userActions = userEvent.setup();
+    const userActions = userEvent.setup({ delay: null });
     const { getByLabelText, getByTitle, getByTestId } = render(
       <MemoryRouter>
         <ManuscriptCard

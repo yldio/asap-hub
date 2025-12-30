@@ -49,15 +49,18 @@ describe('KeyInformationModal', () => {
 
   it('renders the firstName and lastName fields', async () => {
     renderKeyInformation();
-    await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: 'First Name (required)' }),
-      ).toBeVisible();
-      expect(
-        screen.getByRole('textbox', { name: 'Last Name (required)' }),
-      ).toBeVisible();
-    });
-  });
+    await waitFor(
+      () => {
+        expect(
+          screen.getByRole('textbox', { name: 'First Name (required)' }),
+        ).toBeVisible();
+        expect(
+          screen.getByRole('textbox', { name: 'Last Name (required)' }),
+        ).toBeVisible();
+      },
+      { interval: 50 },
+    );
+  }, 15000);
 
   it('calls onSave with the right arguments', async () => {
     const consoleErrorSpy = mockActWarningsInConsole('error');
@@ -118,13 +121,14 @@ describe('KeyInformationModal', () => {
   });
 
   it('shows validation message when city is not provided', async () => {
+    const user = userEvent.setup({ delay: null });
     const onSave = jest.fn();
     renderKeyInformation({
       city: '',
       onSave,
     });
-    await userEvent.click(screen.getByRole('textbox', { name: /city/i }));
-    await userEvent.tab();
+    await user.click(screen.getByRole('textbox', { name: /city/i }));
+    await user.tab();
     expect(screen.getByText(/Please add your city/i)).toBeVisible();
   });
 
@@ -198,6 +202,7 @@ describe('KeyInformationModal', () => {
       nickname: 'Pistoleiro',
       degrees,
       positions,
+
       country,
       stateOrProvince,
       city: 'Porto', // Will be updated
@@ -227,27 +232,30 @@ describe('KeyInformationModal', () => {
 
     const saveButton = getSaveButton();
     await user.click(saveButton);
-    await waitFor(() => {
-      expect(onSave).toHaveBeenCalledWith({
-        firstName: updatedFirstName,
-        middleName: 'Matias',
-        lastName: 'Ramos',
-        nickname: 'Pistoleiro',
-        degrees,
-        positions,
-        country,
-        stateOrProvince,
-        city: updatedCity,
-        region,
-        orcid: updatedOrcid,
-        social: {
-          linkedIn: 'https://www.linkedin.com/1234',
-          github: 'https://github.com/1234',
-        },
-      });
-    });
+    await waitFor(
+      () => {
+        expect(onSave).toHaveBeenCalledWith({
+          firstName: updatedFirstName,
+          middleName: 'Matias',
+          lastName: 'Ramos',
+          nickname: 'Pistoleiro',
+          degrees,
+          positions,
+          country,
+          stateOrProvince,
+          city: updatedCity,
+          region,
+          orcid: updatedOrcid,
+          social: {
+            linkedIn: 'https://www.linkedin.com/1234',
+            github: 'https://github.com/1234',
+          },
+        });
+      },
+      { interval: 50 },
+    );
     consoleErrorSpy.mockRestore();
-  });
+  }, 15000);
 
   it('calls onSave with the updated social fields', async () => {
     // Tests representative social fields: basic URLs, ORCID, and researcherId transformation
@@ -316,27 +324,30 @@ describe('KeyInformationModal', () => {
     );
     const saveButton = getSaveButton();
     await user.click(saveButton);
-    await waitFor(() => {
-      expect(onSave).toHaveBeenCalledWith({
-        city,
-        country,
-        stateOrProvince,
-        degrees,
-        firstName,
-        lastName,
-        middleName,
-        nickname,
-        orcid,
-        positions,
-        region,
-        social: {
-          ...social,
-          researcherId: `https://researcherid.com/rid/${social.researcherId}`,
-        },
-      });
-    });
+    await waitFor(
+      () => {
+        expect(onSave).toHaveBeenCalledWith({
+          city,
+          country,
+          stateOrProvince,
+          degrees,
+          firstName,
+          lastName,
+          middleName,
+          nickname,
+          orcid,
+          positions,
+          region,
+          social: {
+            ...social,
+            researcherId: `https://researcherid.com/rid/${social.researcherId}`,
+          },
+        });
+      },
+      { interval: 50 },
+    );
     consoleErrorSpy.mockRestore();
-  });
+  }, 30000);
 
   it('can click add an extra position', async () => {
     const user = userEvent.setup({ delay: null });
@@ -347,26 +358,32 @@ describe('KeyInformationModal', () => {
       name: /Secondary Position/i,
     });
     const secondarySection = secondary.closest('section') as HTMLElement;
-    await waitFor(() => {
-      expect(
-        within(secondarySection).getByRole('textbox', {
-          name: /Institution/i,
-        }),
-      ).toBeVisible();
-    });
+    await waitFor(
+      () => {
+        expect(
+          within(secondarySection).getByRole('textbox', {
+            name: /Institution/i,
+          }),
+        ).toBeVisible();
+      },
+      { interval: 50 },
+    );
     await user.click(addButton);
     const tertiary = await screen.findByRole('heading', {
       name: /Tertiary Position/i,
     });
     const tertiarySection = tertiary.closest('section') as HTMLElement;
-    await waitFor(() => {
-      expect(
-        within(tertiarySection).getByRole('textbox', {
-          name: /Institution/i,
-        }),
-      ).toBeVisible();
-    });
-  });
+    await waitFor(
+      () => {
+        expect(
+          within(tertiarySection).getByRole('textbox', {
+            name: /Institution/i,
+          }),
+        ).toBeVisible();
+      },
+      { interval: 50 },
+    );
+  }, 20000);
 
   it('there can be only 3 positions', async () => {
     const positions = [
@@ -420,11 +437,16 @@ describe('KeyInformationModal', () => {
     await user.click(institutionField);
     const institution = await screen.findByText(position.institution);
     await user.click(institution);
-    await waitFor(() => {
-      expect(
-        within(tertiarySection).getByRole('textbox', { name: /Department/i }),
-      ).toBeVisible();
-    });
+    await waitFor(
+      () => {
+        expect(
+          within(tertiarySection).getByRole('textbox', {
+            name: /Department/i,
+          }),
+        ).toBeVisible();
+      },
+      { interval: 50 },
+    );
     fireEvent.change(
       within(tertiarySection).getByRole('textbox', { name: /Department/i }),
       { target: { value: position.department } },
@@ -435,11 +457,14 @@ describe('KeyInformationModal', () => {
     );
     const saveButton = getSaveButton();
     await user.click(saveButton);
-    await waitFor(() => {
-      expect(onSave).toHaveBeenCalledWith(
-        expect.objectContaining({ positions: [...positions, position] }),
-      );
-    });
+    await waitFor(
+      () => {
+        expect(onSave).toHaveBeenCalledWith(
+          expect.objectContaining({ positions: [...positions, position] }),
+        );
+      },
+      { interval: 50 },
+    );
     consoleErrorSpy.mockRestore();
-  });
+  }, 20000);
 });

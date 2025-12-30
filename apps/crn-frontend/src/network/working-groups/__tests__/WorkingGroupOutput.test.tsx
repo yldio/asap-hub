@@ -34,7 +34,7 @@ import { getImpacts } from '../../../shared-api/impact';
 import { refreshWorkingGroupState } from '../state';
 import WorkingGroupOutput from '../WorkingGroupOutput';
 
-jest.setTimeout(95000);
+jest.setTimeout(30000);
 jest.mock('../api');
 jest.mock('../../teams/api');
 jest.mock('../../users/api');
@@ -124,12 +124,12 @@ const mandatoryFields = async (
   const typeInput = screen.getByRole('textbox', {
     name: /Select the type/i,
   });
-  await user.type(typeInput, type);
-  await user.type(typeInput, '{Enter}');
+  await user.click(typeInput);
+  await user.click(screen.getByText(type));
 
   const identifier = screen.getByRole('textbox', { name: /identifier/i });
-  await user.type(identifier, 'DOI');
-  await user.type(identifier, '{Enter}');
+  await user.click(identifier);
+  await user.click(screen.getByText('DOI'));
   fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
     target: { value: doi },
   });
@@ -480,7 +480,7 @@ it('can save draft when form data is valid', async () => {
     },
     { interval: 50 },
   );
-}, 100000);
+}, 30000);
 
 it('can publish a new version for an output', async () => {
   const user = userEvent.setup({ delay: null });
@@ -508,10 +508,9 @@ it('can publish a new version for an output', async () => {
     user,
   );
 
-  await user.type(
-    screen.getByRole('textbox', { name: /changelog/i }),
-    changelog,
-  );
+  fireEvent.change(screen.getByRole('textbox', { name: /changelog/i }), {
+    target: { value: changelog },
+  });
 
   await user.click(screen.getByRole('button', { name: /Save/i }));
   const button = screen.getByRole('button', { name: /Publish new version/i });
@@ -536,7 +535,7 @@ it('can publish a new version for an output', async () => {
     },
     { interval: 50 },
   );
-}, 100000);
+}, 30000);
 
 it('will show server side validation error for link', async () => {
   const user = userEvent.setup({ delay: null });
@@ -590,7 +589,7 @@ it('will toast server side errors for unknown errors', async () => {
     ),
   ).toBeInTheDocument();
   expect(window.scrollTo).toHaveBeenCalled();
-}, 100000);
+}, 30000);
 
 it('display a toast warning when creating a new version', async () => {
   await renderPage({

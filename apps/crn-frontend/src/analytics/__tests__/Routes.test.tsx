@@ -1,3 +1,8 @@
+import {
+  AlgoliaSearchClient,
+  EMPTY_ALGOLIA_FACET_HITS,
+  EMPTY_ALGOLIA_RESPONSE,
+} from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   performanceByDocumentType,
@@ -20,6 +25,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import {
   getTeamCollaboration,
   getTeamCollaborationPerformance,
@@ -49,8 +55,27 @@ jest.mock('../open-science/api', () => ({
     .fn()
     .mockResolvedValue({ items: [], total: 0 }),
 }));
+jest.mock('../../hooks/algolia', () => ({
+  useAnalyticsAlgolia: jest.fn(),
+}));
+
+const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
+  typeof useAnalyticsAlgolia
+>;
 
 mockConsoleError();
+
+beforeEach(() => {
+  const mockAlgoliaClient = {
+    searchForTagValues: jest.fn().mockResolvedValue(EMPTY_ALGOLIA_FACET_HITS),
+    search: jest.fn().mockResolvedValue(EMPTY_ALGOLIA_RESPONSE),
+  };
+
+  mockUseAnalyticsAlgolia.mockReturnValue({
+    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
+  });
+});
+
 afterEach(() => {
   jest.clearAllMocks();
 });

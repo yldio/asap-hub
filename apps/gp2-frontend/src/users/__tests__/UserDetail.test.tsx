@@ -3,6 +3,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -418,10 +419,11 @@ describe('UserDetail', () => {
       });
       await user$.click(keyInformationEditButton!);
 
-      await user$.type(
-        await screen.findByDisplayValue('Stark Industries'),
-        ' 1',
-      );
+      const institutionField =
+        await screen.findByDisplayValue('Stark Industries');
+      fireEvent.change(institutionField, {
+        target: { value: 'Stark Industries 1' },
+      });
       await waitFor(
         () => expect(screen.getByText('ExampleInst')).toBeVisible(),
         { timeout: 5000 },

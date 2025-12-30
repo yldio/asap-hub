@@ -597,10 +597,9 @@ it('can publish a new version for an output', async () => {
     user,
   );
 
-  await user.type(
-    screen.getByRole('textbox', { name: /changelog/i }),
-    changelog,
-  );
+  fireEvent.change(screen.getByRole('textbox', { name: /changelog/i }), {
+    target: { value: changelog },
+  });
 
   await user.click(screen.getByRole('button', { name: /Save/i }));
   const button = screen.getByRole('button', { name: /Publish new version/i });
@@ -969,17 +968,15 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
       });
       const changelog = 'creating new version with manuscript';
 
-      await user.type(
-        screen.getByRole('textbox', { name: /changelog/i }),
-        changelog,
-      );
+      fireEvent.change(screen.getByRole('textbox', { name: /changelog/i }), {
+        target: { value: changelog },
+      });
 
       const doi = '10.1234/5678';
       await user.keyboard('{Enter}');
-      await user.type(
-        screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'),
-        doi,
-      );
+      fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
+        target: { value: doi },
+      });
 
       await user.click(screen.getByRole('button', { name: /Publish/i }));
 
@@ -1250,7 +1247,9 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
     ).toBeInTheDocument();
 
     await user.keyboard('{Enter}');
-    await user.type(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), doi);
+    fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
+      target: { value: doi },
+    });
 
     await user.click(screen.getByRole('button', { name: /Publish/i }));
     const button = screen.getByRole('button', { name: /Publish Output/i });
@@ -1331,10 +1330,9 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
     });
 
     const user = userEvent.setup({ delay: null });
-    await user.type(
-      screen.getByRole('textbox', { name: /changelog/i }),
-      changelog,
-    );
+    fireEvent.change(screen.getByRole('textbox', { name: /changelog/i }), {
+      target: { value: changelog },
+    });
 
     await user.click(screen.getByRole('button', { name: /Save/i }));
     const button = screen.getByRole('button', { name: /Publish new version/i });

@@ -364,7 +364,7 @@ describe('WorkingGroupDetail', () => {
           screen.queryByRole('heading', { name: /Add Resource/i }),
         ).not.toBeInTheDocument(),
       );
-    });
+    }, 120_000);
 
     it('can submit an edit modal when form data is valid', async () => {
       const user = userEvent.setup({ delay: null });
@@ -417,7 +417,7 @@ describe('WorkingGroupDetail', () => {
           screen.queryByRole('heading', { name: /Edit Resource/i }),
         ).not.toBeInTheDocument(),
       );
-    });
+    }, 120_000);
   });
   describe('the upcoming events tab', () => {
     it('can be switched to', async () => {

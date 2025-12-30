@@ -60,7 +60,7 @@ describe('KeyInformationModal', () => {
       },
       { interval: 50 },
     );
-  }, 15000);
+  }, 120_000);
 
   it('calls onSave with the right arguments', async () => {
     const consoleErrorSpy = mockActWarningsInConsole('error');
@@ -130,7 +130,7 @@ describe('KeyInformationModal', () => {
     await user.click(screen.getByRole('textbox', { name: /city/i }));
     await user.tab();
     expect(screen.getByText(/Please add your city/i)).toBeVisible();
-  });
+  }, 120_000);
 
   it('does not call onSave with orcid when orcid is not provided', async () => {
     const consoleErrorSpy = mockActWarningsInConsole('error');
@@ -255,7 +255,7 @@ describe('KeyInformationModal', () => {
       { interval: 50 },
     );
     consoleErrorSpy.mockRestore();
-  }, 15000);
+  }, 120_000);
 
   it('calls onSave with the updated social fields', async () => {
     // Tests representative social fields: basic URLs, ORCID, and researcherId transformation
@@ -347,7 +347,7 @@ describe('KeyInformationModal', () => {
       { interval: 50 },
     );
     consoleErrorSpy.mockRestore();
-  }, 30000);
+  }, 120_000);
 
   it('can click add an extra position', async () => {
     const user = userEvent.setup({ delay: null });

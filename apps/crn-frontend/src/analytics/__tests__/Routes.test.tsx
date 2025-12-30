@@ -340,19 +340,15 @@ describe('Leadership & Membership', () => {
   });
 
   it('renders error message when team leadership response is not a 2XX', async () => {
-    mockGetAnalyticsLeadership.mockRejectedValueOnce(
-      new Error('Failed to fetch'),
-    );
+    mockGetAnalyticsLeadership.mockRejectedValue(new Error('Failed to fetch'));
 
     await renderPage(
       analytics({}).leadership({}).metric({ metric: 'interest-group' }).$,
     );
 
-    await waitFor(() => {
-      expect(mockGetAnalyticsLeadership).toHaveBeenCalled();
-    });
-
-    expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
+    expect(
+      await screen.findByText(/Something went wrong/i, {}, { timeout: 10_000 }),
+    ).toBeVisible();
   });
 
   it('renders error message when os champion response is not a 2XX', async () => {

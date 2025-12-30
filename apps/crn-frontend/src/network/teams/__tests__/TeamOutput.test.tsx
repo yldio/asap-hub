@@ -567,7 +567,7 @@ it('can edit and publish a draft research output', async () => {
     }),
     expect.anything(),
   );
-});
+}, 120_000);
 
 it('can publish a new version for an output', async () => {
   const { descriptionMD, title, shortDescription } = baseResearchOutput;

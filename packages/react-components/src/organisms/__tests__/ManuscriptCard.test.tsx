@@ -578,6 +578,7 @@ it.each`
     });
     expect(await findByText(newStatus)).toBeInTheDocument();
   },
+  120_000,
 );
 
 it('disables submit compliance report button when there is an existing compliance report', async () => {

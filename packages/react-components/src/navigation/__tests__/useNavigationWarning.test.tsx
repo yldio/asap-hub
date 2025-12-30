@@ -16,6 +16,7 @@ describe('useNavigationWarning', () => {
     jest.spyOn(window, 'confirm').mockImplementation(() => true);
     jest.spyOn(window.history, 'pushState').mockImplementation(() => {});
     jest.spyOn(window.history, 'go').mockImplementation(() => {});
+    jest.spyOn(window.history, 'back').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -178,13 +179,16 @@ describe('useNavigationWarning', () => {
 
     it('navigates when blocked and user confirms', async () => {
       jest.spyOn(window, 'confirm').mockReturnValue(true);
+      const goSpy = jest.spyOn(window.history, 'go');
       renderWithProviders(<TestComponent shouldBlock={true} />);
 
       await userEvent.click(screen.getByText('Go Back'));
 
-      await waitFor(() => {
-        expect(screen.getByTestId('location')).toHaveTextContent('/first');
-      });
+      // Verify confirmation was shown and navigation was triggered
+      // Note: window.history.go doesn't affect MemoryRouter in tests,
+      // so we verify the call was made with correct offset (-2 to skip dummy entry)
+      expect(window.confirm).toHaveBeenCalled();
+      expect(goSpy).toHaveBeenCalledWith(-2);
     });
 
     it('does not navigate when blocked and user cancels', async () => {
@@ -205,6 +209,21 @@ describe('useNavigationWarning', () => {
       await userEvent.click(screen.getByText('Go Back'));
 
       expect(window.confirm).toHaveBeenCalledWith('Custom warning');
+    });
+
+    it('shows confirm only once when using blockedNavigate with history navigation', async () => {
+      jest.spyOn(window, 'confirm').mockReturnValue(true);
+      renderWithProviders(<TestComponent shouldBlock={true} />);
+
+      await userEvent.click(screen.getByText('Go Back'));
+
+      // Simulate real browser behavior: history.go() triggers popstate
+      // (MemoryRouter doesn't use window.history, so we dispatch manually)
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      // Should only show one confirmation, not two
+      // (blockedNavigate shows one, popstate handler should NOT show another)
+      expect(window.confirm).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -244,6 +263,127 @@ describe('useNavigationWarning', () => {
       // Should navigate without confirm
       await userEvent.click(screen.getByText('Navigate'));
       expect(window.confirm).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('dummy history entry cleanup', () => {
+    it('removes dummy history entry when shouldBlock becomes false', async () => {
+      const backSpy = jest.spyOn(window.history, 'back');
+      const pushStateSpy = jest.spyOn(window.history, 'pushState');
+
+      const ToggleComponent = () => {
+        const [shouldBlock, setShouldBlock] = useState(true);
+        useNavigationWarning({ shouldBlock });
+        return <button onClick={() => setShouldBlock(false)}>Disable</button>;
+      };
+
+      renderWithProviders(<ToggleComponent />);
+
+      // Initial push should have happened (dummy entry created)
+      expect(pushStateSpy).toHaveBeenCalled();
+
+      // Clear to track new calls
+      backSpy.mockClear();
+
+      // Disable blocking
+      await userEvent.click(screen.getByText('Disable'));
+
+      // Should pop the dummy entry
+      await waitFor(() => {
+        expect(backSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it('navigates correctly after shouldBlock changes from true to false', async () => {
+      const goSpy = jest.spyOn(window.history, 'go');
+
+      const ToggleComponent = () => {
+        const [shouldBlock, setShouldBlock] = useState(true);
+        const { blockedNavigate } = useNavigationWarning({ shouldBlock });
+        return (
+          <div>
+            <button onClick={() => setShouldBlock(false)}>Disable</button>
+            <button onClick={() => blockedNavigate(-1)}>Navigate</button>
+            <LocationDisplay />
+          </div>
+        );
+      };
+
+      renderWithProviders(<ToggleComponent />);
+
+      // Disable blocking (this should clean up history)
+      await userEvent.click(screen.getByText('Disable'));
+
+      // Clear spies to track navigation call
+      goSpy.mockClear();
+
+      // Navigate - should use React Router's navigate(), not window.history.go()
+      await userEvent.click(screen.getByText('Navigate'));
+
+      // Should navigate to /first (previous entry) without offset adjustment
+      // If using history.go, it would be called with -2, but we want navigate(-1)
+      await waitFor(() => {
+        expect(screen.getByTestId('location')).toHaveTextContent('/first');
+      });
+
+      // Should NOT have used history.go (which would indicate dummy entry still exists)
+      expect(goSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not call history.back on unmount when shouldBlock is still true', () => {
+      const backSpy = jest.spyOn(window.history, 'back');
+
+      const { unmount } = renderWithProviders(
+        <TestComponent shouldBlock={true} />,
+      );
+
+      backSpy.mockClear();
+
+      unmount();
+
+      // Should NOT have called back - we only clean up on shouldBlock change
+      expect(backSpy).not.toHaveBeenCalled();
+    });
+
+    it('handles shouldBlock toggling correctly', async () => {
+      const backSpy = jest.spyOn(window.history, 'back');
+      const pushStateSpy = jest.spyOn(window.history, 'pushState');
+
+      const ToggleComponent = () => {
+        const [shouldBlock, setShouldBlock] = useState(false);
+        useNavigationWarning({ shouldBlock });
+        return (
+          <div>
+            <button onClick={() => setShouldBlock(true)}>Enable</button>
+            <button onClick={() => setShouldBlock(false)}>Disable</button>
+          </div>
+        );
+      };
+
+      renderWithProviders(<ToggleComponent />);
+
+      // Initially not blocking - no pushState
+      expect(pushStateSpy).not.toHaveBeenCalled();
+
+      // Enable blocking - should push
+      pushStateSpy.mockClear();
+      await userEvent.click(screen.getByText('Enable'));
+      expect(pushStateSpy).toHaveBeenCalledTimes(1);
+
+      // Disable blocking - should pop
+      backSpy.mockClear();
+      await userEvent.click(screen.getByText('Disable'));
+      expect(backSpy).toHaveBeenCalledTimes(1);
+
+      // Enable again - should push again
+      pushStateSpy.mockClear();
+      await userEvent.click(screen.getByText('Enable'));
+      expect(pushStateSpy).toHaveBeenCalledTimes(1);
+
+      // Disable again - should pop again
+      backSpy.mockClear();
+      await userEvent.click(screen.getByText('Disable'));
+      expect(backSpy).toHaveBeenCalledTimes(1);
     });
   });
 });

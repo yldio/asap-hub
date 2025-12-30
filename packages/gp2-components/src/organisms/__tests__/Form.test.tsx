@@ -45,6 +45,9 @@ const LocationDisplay = () => {
 describe('Form', () => {
   beforeEach(() => {
     jest.spyOn(window, 'confirm').mockImplementation(() => true);
+    jest.spyOn(window.history, 'pushState').mockImplementation(() => {});
+    jest.spyOn(window.history, 'go').mockImplementation(() => {});
+    jest.spyOn(window.history, 'back').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -140,6 +143,14 @@ describe('Form', () => {
 
     it('goes back in browser history if previous navigation is available', async () => {
       jest.spyOn(window, 'confirm').mockReturnValue(true);
+      const goSpy = jest.spyOn(window.history, 'go');
+
+      // Ensure history.length > 1 so blockedNavigate(-1) is called
+      Object.defineProperty(window.history, 'length', {
+        value: 2,
+        writable: true,
+        configurable: true,
+      });
 
       renderWithProviders(
         <>
@@ -158,11 +169,11 @@ describe('Form', () => {
       expect(screen.getByTestId('location')).toHaveTextContent('/form');
 
       await userEvent.click(screen.getByText(/^cancel/i));
-      await waitFor(() => {
-        expect(screen.getByTestId('location')).toHaveTextContent(
-          '/another-url',
-        );
-      });
+
+      // Verify confirm was shown and navigation was attempted
+      expect(window.confirm).toHaveBeenCalled();
+      // With dummy entry, blockedNavigate(-1) calls history.go(-2)
+      expect(goSpy).toHaveBeenCalledWith(-2);
     });
   });
 

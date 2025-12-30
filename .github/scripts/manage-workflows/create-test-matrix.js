@@ -4,6 +4,7 @@ const { execSync } = require('child_process');
 const SHARDED_PACKAGES = {
   '@asap-hub/crn-frontend': 8, // Update as needed based on the number of tests in the package
   '@asap-hub/react-components': 6, // Update as needed based on the number of tests in the package
+  '@asap-hub/gp2-frontend': 4,
 };
 
 // run turborepo dry run to get the list of tasks

@@ -226,14 +226,16 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             description="To import a manuscript version, please submit a new manuscript version in the Compliance area first. Once submitted, you'll be able to import the new version here."
             cancelText="Cancel"
             confirmText="Go to Compliance Area"
-            onSave={() => setDisplayNoNewManuscriptVersionModal(false)}
-            successHref={
-              network({})
-                .teams({})
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                .team({ teamId: props.teams[0]!.id })
-                .workspace({}).$
-            }
+            onSave={() => {
+              setDisplayNoNewManuscriptVersionModal(false);
+              navigate(
+                network({})
+                  .teams({})
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  .team({ teamId: props.teams[0]!.id })
+                  .workspace({}).$,
+              );
+            }}
             onCancel={() => {
               setDisplayNoNewManuscriptVersionModal(false);
             }}

@@ -141,7 +141,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           city: newCity,
           positions: newPositions,
           social: Object.entries(newSocialRest).reduce(
-            (payload, [key, value]) => {
+            (payload, [key, value]: [string, string | undefined]) => {
               if (key === 'researcherId') {
                 return {
                   ...payload,
@@ -152,7 +152,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
               }
               return {
                 ...payload,
-                [key]: value.trim().length ? value : undefined,
+                [key]: value?.trim().length ? value : undefined,
               };
             },
             {},

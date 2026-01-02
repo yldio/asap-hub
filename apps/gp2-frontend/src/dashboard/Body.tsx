@@ -34,7 +34,7 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
         past: false,
         pageSize,
       }),
-    [stableTimestamp],
+    [stableTimestamp, pageSize],
   );
 
   const pastOptions = useMemo(
@@ -43,7 +43,7 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
         past: true,
         pageSize,
       }),
-    [stableTimestamp],
+    [stableTimestamp, pageSize],
   );
 
   const { items: upcomingEvents, total: totalOfUpcomingEvents } =
@@ -52,19 +52,31 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
   const { items: pastEvents, total: totalOfPastEvents } =
     useEvents(pastOptions);
 
-  const { items: latestUsers } = useUsers({
-    searchQuery: '',
-    filters: new Set(),
-    currentPage: 0,
-    pageSize: 3,
-  });
+  // Memoize options objects to ensure stable references for promise caching
+  const usersOptions = useMemo(
+    () => ({
+      searchQuery: '',
+      filters: new Set<string>(),
+      currentPage: 0,
+      pageSize: 3,
+    }),
+    [],
+  );
 
-  const { items: recentOutputs, total: totalOutputs } = useOutputs({
-    searchQuery: '',
-    filters: new Set(),
-    currentPage: 0,
-    pageSize: 5,
-  });
+  const outputsOptions = useMemo(
+    () => ({
+      searchQuery: '',
+      filters: new Set<string>(),
+      currentPage: 0,
+      pageSize: 5,
+    }),
+    [],
+  );
+
+  const { items: latestUsers } = useUsers(usersOptions);
+
+  const { items: recentOutputs, total: totalOutputs } =
+    useOutputs(outputsOptions);
 
   const stats = dashboard.items[0]?.latestStats || {
     sampleCount: 0,

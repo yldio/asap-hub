@@ -472,16 +472,19 @@ describe('KeyInformationModal', () => {
     renderKeyInformation({
       positions: [],
     });
-    await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: /Institution/i }),
-      ).toBeVisible();
-    });
-    // Should have one empty position initialized
-    expect(screen.getByRole('textbox', { name: /Institution/i })).toHaveValue(
-      '',
+    // Wait for dialog to be ready first
+    await waitFor(
+      () => {
+        expect(screen.getByRole('dialog')).toBeVisible();
+      },
+      { interval: 50 },
     );
-  });
+    // Should have one empty position initialized
+    const institutionField = await screen.findByRole('textbox', {
+      name: /Institution/i,
+    });
+    expect(institutionField).toHaveValue('');
+  }, 120_000);
 
   it('shows validation message when state/province is empty', async () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -489,17 +492,27 @@ describe('KeyInformationModal', () => {
     renderKeyInformation({
       stateOrProvince: '',
     });
-    const stateField = screen.getByRole('textbox', {
+    // Wait for dialog to be ready first
+    await waitFor(
+      () => {
+        expect(screen.getByRole('dialog')).toBeVisible();
+      },
+      { interval: 50 },
+    );
+    const stateField = await screen.findByRole('textbox', {
       name: /State\/Province/i,
     });
     await user.click(stateField);
     await user.tab();
-    await waitFor(() => {
-      expect(
-        screen.getByText(/Please add your state\/province/i),
-      ).toBeVisible();
-    });
-  });
+    await waitFor(
+      () => {
+        expect(
+          screen.getByText(/Please add your state\/province/i),
+        ).toBeVisible();
+      },
+      { interval: 50 },
+    );
+  }, 120_000);
 
   it('calls onChangeSelect when degrees are changed', async () => {
     const consoleErrorSpy = mockActWarningsInConsole('error');

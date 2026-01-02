@@ -23,8 +23,8 @@ const pendingEventPromises = new Map<string, Promise<void>>();
 const MINUTE_MS = 60000;
 
 // Helper to create a stable key from options
-const serializeOptions = (options: EventListOptions): string => {
-  return JSON.stringify({
+const serializeOptions = (options: EventListOptions): string =>
+  JSON.stringify({
     currentPage: options.currentPage,
     pageSize: options.pageSize,
     searchQuery: options.searchQuery,
@@ -34,7 +34,6 @@ const serializeOptions = (options: EventListOptions): string => {
     constraint: options.constraint,
     eventType: options.eventType,
   });
-};
 
 const eventIndexState = atomFamily<
   | {

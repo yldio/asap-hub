@@ -476,7 +476,7 @@ describe('getInstitutions', () => {
   };
   it('returns successfully fetched users', async () => {
     nock('https://api.ror.org')
-      .get('/v1/organizations')
+      .get('/v2/organizations')
       .query({})
       .reply(200, validResponse);
     expect(await getInstitutions()).toEqual(validResponse);
@@ -485,7 +485,7 @@ describe('getInstitutions', () => {
 
   it('returns queried users', async () => {
     nock('https://api.ror.org')
-      .get('/v1/organizations')
+      .get('/v2/organizations')
       .query({ query: 'abc' })
       .reply(200, validResponse);
     expect(await getInstitutions({ searchQuery: 'abc' })).toEqual(
@@ -494,7 +494,7 @@ describe('getInstitutions', () => {
     expect(nock.isDone()).toBe(true);
   });
   it('errors for an error status', async () => {
-    nock('https://api.ror.org').get('/v1/organizations').reply(500, {});
+    nock('https://api.ror.org').get('/v2/organizations').reply(500, {});
 
     await expect(getInstitutions()).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch institutions. Expected status 2xx. Received status 500."`,

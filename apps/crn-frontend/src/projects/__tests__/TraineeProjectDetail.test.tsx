@@ -75,7 +75,7 @@ const renderTraineeProjectDetail = async (projectId: string) => {
             <MemoryRouter initialEntries={[path]}>
               <Routes>
                 <Route
-                  path={`${projects.template}/trainee/:projectId/about`}
+                  path={`${projects.template}/trainee/:projectId/*`}
                   element={<TraineeProjectDetail />}
                 />
               </Routes>

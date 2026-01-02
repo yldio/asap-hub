@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { Frame } from '@asap-hub/frontend-utils';
 import {
   ProjectDetailPage,
@@ -37,10 +37,18 @@ const TraineeProjectDetail: FC<Record<string, never>> = () => {
         pointOfContactEmail={projectDetail.contactEmail}
         aboutHref={route.about({}).$}
       >
-        <ProjectDetailAbout
-          {...projectDetail}
-          pointOfContactEmail={projectDetail.contactEmail}
-        />
+        <Routes>
+          <Route
+            path="about"
+            element={
+              <ProjectDetailAbout
+                {...projectDetail}
+                pointOfContactEmail={projectDetail.contactEmail}
+              />
+            }
+          />
+          <Route index element={<Navigate to="about" replace />} />
+        </Routes>
       </ProjectDetailPage>
     </Frame>
   );

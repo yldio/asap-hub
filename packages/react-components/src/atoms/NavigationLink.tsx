@@ -103,10 +103,10 @@ export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
     // Use prefix matching to highlight parent sections when viewing subsections
     // e.g., /network should be highlighted when at /network/interest-groups
     const linkPath = url.split('#')[0];
-    const isActive = linkPath
-      ? location.pathname === linkPath ||
-        location.pathname.startsWith(`${linkPath}/`)
-      : false;
+    const isActive =
+      linkPath &&
+      (location.pathname === linkPath ||
+        location.pathname.startsWith(`${linkPath}/`));
 
     return (
       <NavLink

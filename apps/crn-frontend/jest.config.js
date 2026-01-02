@@ -13,10 +13,6 @@ module.exports = {
 
   // Performance optimizations
   maxWorkers: process.env.CI ? '100%' : '75%',
-  // Run tests in parallel (default, but explicit for clarity)
-  runInBand: false,
-  // Increase default timeout slightly for complex React tests
-  testTimeout: 15000,
 
   setupFiles: [require.resolve('react-app-polyfill/jsdom')],
   setupFilesAfterEnv: [

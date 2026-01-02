@@ -10,7 +10,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
-import { FC, lazy, useEffect } from 'react';
+import { FC, lazy, useEffect, useMemo } from 'react';
 import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
@@ -71,9 +71,13 @@ const WorkingGroupMainPage: FC<{
     workingGroupId,
   });
 
-  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
-    workingGroupId,
-  });
+  // Memoize constraint to prevent new object reference on every render
+  const constraint = useMemo(() => ({ workingGroupId }), [workingGroupId]);
+
+  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(
+    currentTime,
+    constraint,
+  );
 
   const currentUser = useCurrentUserGP2();
   const isWorkingGroupMember =

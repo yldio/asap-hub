@@ -10,7 +10,7 @@ import { useOutputs } from '../outputs/state';
 import { useUsers } from '../users/state';
 import { useDashboard, useNews, useReminderState } from './state';
 
-const pageSize = 3;
+const PAGE_SIZE = 3;
 const MINUTE_MS = 60000;
 
 type DashboardBodyProps = { currentTime: Date };
@@ -32,18 +32,18 @@ const Body: React.FC<DashboardBodyProps> = ({ currentTime }) => {
     () =>
       getEventListOptions<gp2.EventConstraint>(new Date(stableTimestamp), {
         past: false,
-        pageSize,
+        pageSize: PAGE_SIZE,
       }),
-    [stableTimestamp, pageSize],
+    [stableTimestamp],
   );
 
   const pastOptions = useMemo(
     () =>
       getEventListOptions<gp2.EventConstraint>(new Date(stableTimestamp), {
         past: true,
-        pageSize,
+        pageSize: PAGE_SIZE,
       }),
-    [stableTimestamp, pageSize],
+    [stableTimestamp],
   );
 
   const { items: upcomingEvents, total: totalOfUpcomingEvents } =

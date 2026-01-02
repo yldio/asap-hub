@@ -413,11 +413,18 @@ describe('UserDetail', () => {
         id: 'testuserid',
       });
       mockGetUser.mockResolvedValueOnce(user);
+      // Mock both upcoming and past events calls
+      mockGetEvents
+        .mockResolvedValueOnce(createEventListAlgoliaResponse(1))
+        .mockResolvedValueOnce(createEventListAlgoliaResponse(1));
       await renderUserDetail(user.id);
       const [keyInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
       await user$.click(keyInformationEditButton!);
+
+      // Wait for dialog to be visible first
+      await screen.findByRole('dialog');
 
       const institutionField =
         await screen.findByDisplayValue('Stark Industries');

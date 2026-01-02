@@ -13,7 +13,7 @@ import { UserPatchRequest } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2, useRouteParams } from '@asap-hub/routing';
-import { FC, lazy, useEffect } from 'react';
+import { FC, lazy, useEffect, useMemo } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
@@ -80,9 +80,14 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
     backHref: backToUserDetails,
     onSave: (patchedUser: UserPatchRequest) => patchUser(patchedUser),
   };
-  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
-    userId,
-  });
+
+  // Memoize constraint to prevent new object reference on every render
+  const constraint = useMemo(() => ({ userId }), [userId]);
+
+  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(
+    currentTime,
+    constraint,
+  );
 
   if (user) {
     return (

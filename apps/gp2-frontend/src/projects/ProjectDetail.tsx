@@ -66,13 +66,19 @@ const ProjectMainPage: FC<{
   projectId: string;
 }> = ({ project, currentTime, projectId }) => {
   const { pageSize } = usePaginationParams();
-  const { total } = useOutputs({
-    currentPage: 0,
-    filters: new Set(),
-    pageSize,
-    searchQuery: '',
-    projectId,
-  });
+  // Memoize options object to ensure stable reference for promise caching
+  const outputsOptions = useMemo(
+    () => ({
+      currentPage: 0,
+      filters: new Set<string>(),
+      pageSize,
+      searchQuery: '',
+      projectId,
+    }),
+    [pageSize, projectId],
+  );
+
+  const { total } = useOutputs(outputsOptions);
 
   // Memoize constraint to prevent new object reference on every render
   const constraint = useMemo(() => ({ projectId }), [projectId]);

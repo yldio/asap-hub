@@ -63,13 +63,19 @@ const WorkingGroupMainPage: FC<{
   workingGroupId: string;
 }> = ({ workingGroup, currentTime, workingGroupId }) => {
   const { pageSize } = usePaginationParams();
-  const { total: outputsTotal } = useOutputs({
-    currentPage: 0,
-    filters: new Set(),
-    pageSize,
-    searchQuery: '',
-    workingGroupId,
-  });
+  // Memoize options object to ensure stable reference for promise caching
+  const outputsOptions = useMemo(
+    () => ({
+      currentPage: 0,
+      filters: new Set<string>(),
+      pageSize,
+      searchQuery: '',
+      workingGroupId,
+    }),
+    [pageSize, workingGroupId],
+  );
+
+  const { total: outputsTotal } = useOutputs(outputsOptions);
 
   // Memoize constraint to prevent new object reference on every render
   const constraint = useMemo(() => ({ workingGroupId }), [workingGroupId]);

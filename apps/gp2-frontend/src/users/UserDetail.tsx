@@ -14,7 +14,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useMemo } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -75,10 +75,19 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   const { avatarSaving, onImageSelect } = useSelectAvatar(currentUser!.id);
 
   const { items: allTags } = useTags();
+  const navigate = useNavigate();
 
   const commonModalProps = {
     backHref: backToUserDetails,
-    onSave: (patchedUser: UserPatchRequest) => patchUser(patchedUser),
+    onSave: async (patchedUser: UserPatchRequest) => {
+      await patchUser(patchedUser);
+      // TODO: This is a quickfix implemented to prevent https://asaphub.atlassian.net/browse/ASAP-1318
+      // Ideally, the EditModal component in react-component should be able to navigate to `backHref`
+      // but GP2 unmounts the whole app when the user's data is refreshed, causing the form to be unmounted
+      // when it needs to perform the navigation.
+      // So, this is a workaround that forces the navigation immediately after saving.
+      navigate(backToUserDetails);
+    },
   };
 
   // Memoize constraint to prevent new object reference on every render

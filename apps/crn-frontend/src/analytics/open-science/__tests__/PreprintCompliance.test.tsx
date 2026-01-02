@@ -13,14 +13,35 @@ import {
   preprintComplianceState,
   useAnalyticsPreprintCompliance,
 } from '../state';
-import { getPreprintCompliance } from '../api';
-import { useAnalyticsOpensearch } from '../../../hooks';
 
 const mockGetPreprintCompliance = jest.fn();
 jest.mock('../api', () => ({
   getPreprintCompliance: (...args: unknown[]) =>
     mockGetPreprintCompliance(...args),
 }));
+
+// Shared ErrorBoundary component for tests
+const createErrorBoundary = (onError: (error: Error) => void) => {
+  class TestErrorBoundary extends React.Component<
+    { children: React.ReactNode },
+    { hasError: boolean }
+  > {
+    state = { hasError: false };
+
+    static getDerivedStateFromError(err: Error) {
+      onError(err);
+      return { hasError: true };
+    }
+
+    render() {
+      if (this.state.hasError) {
+        return <div data-testid="error">Error caught</div>;
+      }
+      return this.props.children;
+    }
+  }
+  return TestErrorBoundary;
+};
 
 const mockSearch = jest.fn();
 jest.mock('../../../hooks', () => ({
@@ -165,25 +186,9 @@ describe('error handling', () => {
     mockGetPreprintCompliance.mockRejectedValueOnce(error);
 
     let caughtError: Error | null = null;
-
-    class TestErrorBoundary extends React.Component<
-      { children: React.ReactNode },
-      { hasError: boolean }
-    > {
-      state = { hasError: false };
-
-      static getDerivedStateFromError(err: Error) {
-        caughtError = err;
-        return { hasError: true };
-      }
-
-      render() {
-        if (this.state.hasError) {
-          return <div data-testid="error">Error caught</div>;
-        }
-        return this.props.children;
-      }
-    }
+    const ErrorBoundary = createErrorBoundary((err) => {
+      caughtError = err;
+    });
 
     const TestComponent = () => {
       useAnalyticsPreprintCompliance({
@@ -210,7 +215,7 @@ describe('error handling', () => {
           );
         }}
       >
-        <TestErrorBoundary>
+        <ErrorBoundary>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
@@ -218,7 +223,7 @@ describe('error handling', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </TestErrorBoundary>
+        </ErrorBoundary>
       </RecoilRoot>,
     );
 
@@ -237,25 +242,9 @@ describe('error handling', () => {
     const error = new Error('Test error');
 
     let caughtError: Error | null = null;
-
-    class TestErrorBoundary extends React.Component<
-      { children: React.ReactNode },
-      { hasError: boolean }
-    > {
-      state = { hasError: false };
-
-      static getDerivedStateFromError(err: Error) {
-        caughtError = err;
-        return { hasError: true };
-      }
-
-      render() {
-        if (this.state.hasError) {
-          return <div data-testid="error">Error caught</div>;
-        }
-        return this.props.children;
-      }
-    }
+    const ErrorBoundary = createErrorBoundary((err) => {
+      caughtError = err;
+    });
 
     const TestComponent = () => {
       const [value, setValue] = useRecoilState(
@@ -294,7 +283,7 @@ describe('error handling', () => {
           );
         }}
       >
-        <TestErrorBoundary>
+        <ErrorBoundary>
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
@@ -302,7 +291,7 @@ describe('error handling', () => {
               </WhenReady>
             </Auth0Provider>
           </Suspense>
-        </TestErrorBoundary>
+        </ErrorBoundary>
       </RecoilRoot>,
     );
 

@@ -158,7 +158,7 @@ describe('Manuscript', () => {
   });
 
   it('status can be changed', async () => {
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -187,7 +187,7 @@ describe('Manuscript', () => {
   });
 
   it('should create discussion', async () => {
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -261,7 +261,7 @@ describe('Manuscript', () => {
       },
       jest.fn(),
     ]);
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -354,7 +354,7 @@ describe('Manuscript', () => {
       Promise.reject(new Error('Reply failed')),
     );
 
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -790,7 +790,7 @@ describe('error handling for 403 BackendError', () => {
         ),
       ),
     );
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -839,7 +839,7 @@ describe('error handling for 403 BackendError', () => {
         ),
       ),
     );
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -886,7 +886,7 @@ describe('error handling for 403 BackendError', () => {
         ),
       ),
     );
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),

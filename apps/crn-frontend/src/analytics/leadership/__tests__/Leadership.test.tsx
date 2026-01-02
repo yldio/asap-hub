@@ -18,6 +18,7 @@ import { RecoilRoot } from 'recoil';
 
 import * as flags from '@asap-hub/flags';
 import { OSChampionOpensearchResponse } from '@asap-hub/model';
+import { teamLeadershipResponse } from '@asap-hub/fixtures';
 import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
@@ -25,6 +26,30 @@ import { useAnalyticsOpensearch } from '../../../hooks';
 import { OpensearchClient } from '../../utils/opensearch';
 
 jest.spyOn(console, 'error').mockImplementation();
+
+// Shared ErrorBoundary component for tests
+const createErrorBoundary = (onError: (error: Error) => void) => {
+  class TestErrorBoundary extends React.Component<
+    { children: React.ReactNode },
+    { hasError: boolean }
+  > {
+    state = { hasError: false };
+
+    static getDerivedStateFromError(err: Error) {
+      onError(err);
+      return { hasError: true };
+    }
+
+    render() {
+      if (this.state.hasError) {
+        return <div data-testid="error">Error caught</div>;
+      }
+      return this.props.children;
+    }
+  }
+  return TestErrorBoundary;
+};
+
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
   return {
@@ -411,25 +436,9 @@ describe('error handling', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     let caughtError: Error | null = null;
-
-    class ErrorBoundary extends React.Component<
-      { children: React.ReactNode },
-      { hasError: boolean }
-    > {
-      state = { hasError: false };
-
-      static getDerivedStateFromError(err: Error) {
-        caughtError = err;
-        return { hasError: true };
-      }
-
-      render() {
-        if (this.state.hasError) {
-          return <div data-testid="error">Error caught</div>;
-        }
-        return this.props.children;
-      }
-    }
+    const ErrorBoundary = createErrorBoundary((err) => {
+      caughtError = err;
+    });
 
     const result = render(
       <RecoilRoot
@@ -479,25 +488,9 @@ describe('error handling', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     let caughtError: Error | null = null;
-
-    class ErrorBoundary extends React.Component<
-      { children: React.ReactNode },
-      { hasError: boolean }
-    > {
-      state = { hasError: false };
-
-      static getDerivedStateFromError(err: Error) {
-        caughtError = err;
-        return { hasError: true };
-      }
-
-      render() {
-        if (this.state.hasError) {
-          return <div data-testid="error">Error caught</div>;
-        }
-        return this.props.children;
-      }
-    }
+    const ErrorBoundary = createErrorBoundary((err) => {
+      caughtError = err;
+    });
 
     const result = render(
       <RecoilRoot
@@ -547,7 +540,6 @@ describe('error handling', () => {
   it('sets team list states when setting valid leadership data', async () => {
     // This test covers the selector set method when newTeams is valid
     // Specifically line 83: set(analyticsLeadershipListState(team.id), team)
-    const { teamLeadershipResponse } = require('@asap-hub/fixtures');
     const mockTeam1 = {
       ...teamLeadershipResponse,
       id: 'team-1',

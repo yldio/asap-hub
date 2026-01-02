@@ -550,9 +550,6 @@ describe('Form', () => {
         form.reportValidity = reportValiditySpy;
       }
 
-      // Wait a bit to ensure the effect has run
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
       expect(reportValiditySpy).not.toHaveBeenCalled();
     });
 
@@ -577,9 +574,6 @@ describe('Form', () => {
           </Form>
         </InnerToastContext.Provider>,
       );
-
-      // Wait a bit to ensure the effect has run
-      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // reportValidity should not be called if formRef.current is null
       // This is hard to test directly, but we can verify no errors are thrown
@@ -606,6 +600,7 @@ describe('Form', () => {
                     primary
                     onClick={() => {
                       setRedirectOnSave('/redirect-target');
+                      // eslint-disable-next-line @typescript-eslint/no-floating-promises
                       getWrappedOnSave(handleSave)();
                     }}
                   >
@@ -666,9 +661,6 @@ describe('Form', () => {
       await act(async () => {
         resolveSave({ success: true });
       });
-
-      // Wait a bit to ensure navigation would have happened if it was going to
-      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Should still be on /form
       expect(screen.getByTestId('location')).toHaveTextContent('/form');

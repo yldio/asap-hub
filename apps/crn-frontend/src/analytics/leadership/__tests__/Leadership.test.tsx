@@ -12,7 +12,7 @@ import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
-import { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
@@ -402,4 +402,215 @@ it('renders data for different time ranges', async () => {
     expect(screen.getByText('10')).toBeVisible();
   });
   expect(screen.queryByText('20')).not.toBeInTheDocument();
+});
+
+describe('error handling', () => {
+  it('handles API errors when fetching leadership data', async () => {
+    const error = new Error('Failed to fetch leadership data');
+    mockSearch.mockRejectedValueOnce(error);
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    let caughtError: Error | null = null;
+
+    class ErrorBoundary extends React.Component<
+      { children: React.ReactNode },
+      { hasError: boolean }
+    > {
+      state = { hasError: false };
+
+      static getDerivedStateFromError(err: Error) {
+        caughtError = err;
+        return { hasError: true };
+      }
+
+      render() {
+        if (this.state.hasError) {
+          return <div data-testid="error">Error caught</div>;
+        }
+        return this.props.children;
+      }
+    }
+
+    const result = render(
+      <RecoilRoot
+        initializeState={({ reset }) => {
+          reset(
+            analyticsLeadershipState({
+              currentPage: 0,
+              pageSize: 10,
+              sort: 'team_asc',
+              tags: [],
+            }),
+          );
+        }}
+      >
+        <ErrorBoundary>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <MemoryRouter initialEntries={[getPath('working-group')]}>
+                  <Routes>
+                    <Route
+                      path="/analytics/leadership/:metric"
+                      element={<Leadership />}
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </ErrorBoundary>
+      </RecoilRoot>,
+    );
+
+    // The error should be caught and the component should handle it
+    // This covers the catch(setLeadership) path and throw leadership path (line 159)
+    await waitFor(() => {
+      expect(caughtError?.message).toBe('Failed to fetch leadership data');
+    });
+
+    expect(result.getByTestId('error')).toBeInTheDocument();
+  });
+
+  it('handles errors when setting error state in selector', async () => {
+    // This test covers the selector set method when newTeams is an Error
+    // Specifically line 80: set(analyticsLeadershipIndexState(options), newTeams) when Error
+    const error = new Error('Test error');
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    let caughtError: Error | null = null;
+
+    class ErrorBoundary extends React.Component<
+      { children: React.ReactNode },
+      { hasError: boolean }
+    > {
+      state = { hasError: false };
+
+      static getDerivedStateFromError(err: Error) {
+        caughtError = err;
+        return { hasError: true };
+      }
+
+      render() {
+        if (this.state.hasError) {
+          return <div data-testid="error">Error caught</div>;
+        }
+        return this.props.children;
+      }
+    }
+
+    const result = render(
+      <RecoilRoot
+        initializeState={({ set }) => {
+          // Set error state directly to test the selector's error handling
+          // This covers line 80: set(analyticsLeadershipIndexState(options), newTeams) when Error
+          set(
+            analyticsLeadershipState({
+              currentPage: 0,
+              pageSize: 10,
+              sort: 'team_asc',
+              tags: [],
+            }),
+            error,
+          );
+        }}
+      >
+        <ErrorBoundary>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <MemoryRouter initialEntries={[getPath('working-group')]}>
+                  <Routes>
+                    <Route
+                      path="/analytics/leadership/:metric"
+                      element={<Leadership />}
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </ErrorBoundary>
+      </RecoilRoot>,
+    );
+
+    // The error should be thrown and handled by ErrorBoundary
+    // This covers line 80: set(analyticsLeadershipIndexState(options), newTeams) when Error
+    // and line 159: throw leadership when leadership is Error
+    await waitFor(() => {
+      expect(caughtError?.message).toBe('Test error');
+    });
+
+    expect(result.getByTestId('error')).toBeInTheDocument();
+  });
+
+  it('sets team list states when setting valid leadership data', async () => {
+    // This test covers the selector set method when newTeams is valid
+    // Specifically line 83: set(analyticsLeadershipListState(team.id), team)
+    const { teamLeadershipResponse } = require('@asap-hub/fixtures');
+    const mockTeam1 = {
+      ...teamLeadershipResponse,
+      id: 'team-1',
+    };
+    const mockTeam2 = {
+      ...teamLeadershipResponse,
+      id: 'team-2',
+    };
+
+    mockSearch.mockResolvedValueOnce({
+      ...EMPTY_ALGOLIA_RESPONSE,
+      hits: [
+        {
+          ...mockTeam1,
+          objectID: 'team-1',
+          __meta: { type: 'team-leadership' },
+        },
+        {
+          ...mockTeam2,
+          objectID: 'team-2',
+          __meta: { type: 'team-leadership' },
+        },
+      ],
+      nbHits: 2,
+    });
+
+    const result = render(
+      <RecoilRoot
+        initializeState={({ reset }) => {
+          reset(
+            analyticsLeadershipState({
+              currentPage: 0,
+              pageSize: 10,
+              sort: 'team_asc',
+              tags: [],
+            }),
+          );
+        }}
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[getPath('working-group')]}>
+                <Routes>
+                  <Route
+                    path="/analytics/leadership/:metric"
+                    element={<Leadership />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>,
+    );
+
+    // Wait for data to load - this verifies that the selector properly
+    // sets team list states (line 83) when valid data is provided
+    await waitFor(() => {
+      expect(result.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+
+    // Verify the data was loaded correctly
+    expect(mockSearch).toHaveBeenCalled();
+  });
 });

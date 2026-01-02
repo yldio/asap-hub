@@ -467,4 +467,70 @@ describe('KeyInformationModal', () => {
     );
     consoleErrorSpy.mockRestore();
   }, 20000);
+
+  it('initializes with empty position when positions array is empty', async () => {
+    renderKeyInformation({
+      positions: [],
+    });
+    await waitFor(() => {
+      expect(
+        screen.getByRole('textbox', { name: /Institution/i }),
+      ).toBeVisible();
+    });
+    // Should have one empty position initialized
+    expect(screen.getByRole('textbox', { name: /Institution/i })).toHaveValue(
+      '',
+    );
+  });
+
+  it('shows validation message when state/province is empty', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    const user = userEvent.setup({ delay: null });
+    renderKeyInformation({
+      stateOrProvince: '',
+    });
+    const stateField = screen.getByRole('textbox', {
+      name: /State\/Province/i,
+    });
+    await user.click(stateField);
+    await user.tab();
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Please add your state\/province/i),
+      ).toBeVisible();
+    });
+  });
+
+  it('calls onChangeSelect when degrees are changed', async () => {
+    const consoleErrorSpy = mockActWarningsInConsole('error');
+    const user = userEvent.setup({ delay: null });
+    const onSave = jest.fn();
+    const initialDegrees: KeyInformationModalProps['degrees'] = ['PhD'];
+    const newDegrees = ['PhD', 'MD'];
+
+    renderKeyInformation({
+      degrees: initialDegrees,
+      onSave,
+    });
+
+    // Find the degrees MultiSelect and change it
+    const degreesField = screen.getByRole('textbox', {
+      name: /Degree/i,
+    });
+    await user.click(degreesField);
+    // Select another degree option
+    const mdOption = await screen.findByText('MD');
+    await user.click(mdOption);
+
+    // Save to verify the change was captured
+    await user.click(getSaveButton());
+    await waitFor(() => {
+      expect(onSave).toHaveBeenCalledWith(
+        expect.objectContaining({
+          degrees: expect.arrayContaining(newDegrees),
+        }),
+      );
+    });
+    consoleErrorSpy.mockRestore();
+  }, 120_000);
 });

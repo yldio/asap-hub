@@ -7,6 +7,8 @@ import {
   getByText as getChildByText,
   fireEvent,
   act,
+  screen,
+  renderHook,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ManuscriptVersion, TeamResponse } from '@asap-hub/model';
@@ -39,6 +41,7 @@ import {
   useMarkDiscussionAsRead,
 } from '../state';
 import { useManuscriptToast } from '../useManuscriptToast';
+import { ManuscriptToastContext } from '../ManuscriptToastProvider';
 
 jest.setTimeout(60000);
 jest.mock('../api', () => ({
@@ -586,6 +589,63 @@ describe('the add tool dialog', () => {
 });
 
 describe('the edit tool dialog', () => {
+  it('renders not found page when tool index is invalid', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+
+    const teamWithTools = {
+      ...createTeamResponse(),
+      id,
+      tools: [
+        {
+          name: 'tool',
+          description: 'desc',
+          url: 'http://example.com/tool',
+        },
+      ],
+    };
+
+    render(
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user as never}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  network({})
+                    .teams({})
+                    .team({ teamId: id })
+                    .workspace({})
+                    .tools({})
+                    .tool({ toolIndex: '99' }).$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={`${network.template}${network({}).teams.template}${
+                      network({}).teams({}).team.template
+                    }${
+                      network({}).teams({}).team({ teamId: id }).workspace
+                        .template
+                    }/*`}
+                    element={<Workspace team={teamWithTools} />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Sorry! We can’t seem to find that page./i),
+      ).toBeVisible();
+    });
+
+    jest.restoreAllMocks();
+  });
+
   // TODO: React Router v6 migration - skipped due to: timing issues with finding close button title
   it('goes back when closed', async () => {
     const { getByText, queryByTitle, findByText, findByTitle } =
@@ -862,5 +922,43 @@ describe('error handling for 403 BackendError', () => {
       });
       expect(window.scrollTo).toHaveBeenCalled();
     });
+  });
+});
+
+describe('useManuscriptToast error handling', () => {
+  it('logs error when context.setFormType is missing (covers lines 7-12)', () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    // Get the actual implementation (bypassing the mock)
+    // This works because jest.requireActual gets the real module before mocks
+    const actualUseManuscriptToast = jest.requireActual(
+      '../useManuscriptToast',
+    ).useManuscriptToast;
+
+    // Create a context value without setFormType to trigger the error path
+    // This covers line 7: if (!context.setFormType)
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <ManuscriptToastContext.Provider
+        value={{ setFormType: undefined as never }}
+      >
+        {children}
+      </ManuscriptToastContext.Provider>
+    );
+
+    const { result } = renderHook(() => actualUseManuscriptToast(), {
+      wrapper,
+    });
+
+    // Should log error
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'useManuscriptToast must be used within a ManuscriptToastProvider',
+    );
+
+    // Should still return the context even if setFormType is missing
+    expect(result.current.setFormType).toBeUndefined();
+
+    consoleErrorSpy.mockRestore();
   });
 });

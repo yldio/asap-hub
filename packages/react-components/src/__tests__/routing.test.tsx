@@ -14,10 +14,12 @@ import {
 
 // Helper to capture location pathname in tests
 let currentPathname: string | null = null;
+let currentLocation: ReturnType<typeof useLocation> | null = null;
 const LocationCapture = () => {
   const location = useLocation();
   useEffect(() => {
     currentPathname = location.pathname;
+    currentLocation = location;
   }, [location]);
   return null;
 };
@@ -106,6 +108,160 @@ describe('usePushFromPathname', () => {
 
     act(() => {
       current('/new');
+    });
+
+    // Should not navigate, so location should still be /current
+    await waitFor(() => {
+      expect(currentPathname).toBe('/current');
+    });
+  });
+
+  it('navigates with a number (go back/forward)', async () => {
+    currentPathname = null;
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/page1', '/page2', '/current']}>
+        <LocationCapture />
+        {children}
+      </MemoryRouter>
+    );
+    const {
+      result: { current },
+    } = renderHook(() => usePushFromPathname('/current'), {
+      wrapper,
+    });
+
+    act(() => {
+      current(-1); // Go back
+    });
+
+    await waitFor(() => {
+      expect(currentPathname).toBe('/page2');
+    });
+  });
+
+  it('navigates with an object containing pathname, search, and hash', async () => {
+    currentPathname = null;
+    currentLocation = null;
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/current']}>
+        <LocationCapture />
+        {children}
+      </MemoryRouter>
+    );
+    const {
+      result: { current },
+    } = renderHook(() => usePushFromPathname('/current'), {
+      wrapper,
+    });
+
+    act(() => {
+      current({ pathname: '/new', search: '?query=test', hash: '#section' });
+    });
+
+    await waitFor(() => {
+      expect(currentPathname).toBe('/new');
+      expect(currentLocation?.search).toBe('?query=test');
+      expect(currentLocation?.hash).toBe('#section');
+    });
+  });
+
+  it('navigates with an object containing only pathname', async () => {
+    currentPathname = null;
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/current']}>
+        <LocationCapture />
+        {children}
+      </MemoryRouter>
+    );
+    const {
+      result: { current },
+    } = renderHook(() => usePushFromPathname('/current'), {
+      wrapper,
+    });
+
+    act(() => {
+      current({ pathname: '/new' });
+    });
+
+    await waitFor(() => {
+      expect(currentPathname).toBe('/new');
+    });
+  });
+
+  it('navigates with options parameter (replace)', async () => {
+    currentPathname = null;
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/current']}>
+        <LocationCapture />
+        {children}
+      </MemoryRouter>
+    );
+    const {
+      result: { current },
+    } = renderHook(() => usePushFromPathname('/current'), {
+      wrapper,
+    });
+
+    // Wait for initial location to be set
+    await waitFor(() => {
+      expect(currentPathname).toBe('/current');
+    });
+
+    act(() => {
+      current('/new', { replace: true });
+    });
+
+    await waitFor(() => {
+      expect(currentPathname).toBe('/new');
+    });
+  });
+
+  it('does not navigate with number if currently on a different page', async () => {
+    currentPathname = null;
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/current']}>
+        <LocationCapture />
+        {children}
+      </MemoryRouter>
+    );
+    const {
+      result: { current },
+    } = renderHook(() => usePushFromPathname('/wrong'), {
+      wrapper,
+    });
+
+    // Wait for initial location to be set
+    await waitFor(() => {
+      expect(currentPathname).toBe('/current');
+    });
+
+    act(() => {
+      current(-1);
+    });
+
+    // Should not navigate because we're on /current, not /wrong
+    // So location should still be /current
+    await waitFor(() => {
+      expect(currentPathname).toBe('/current');
+    });
+  });
+
+  it('does not navigate with object if currently on a different page', async () => {
+    currentPathname = null;
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/current']}>
+        <LocationCapture />
+        {children}
+      </MemoryRouter>
+    );
+    const {
+      result: { current },
+    } = renderHook(() => usePushFromPathname('/wrong'), {
+      wrapper,
+    });
+
+    act(() => {
+      current({ pathname: '/new', search: '?query=test' });
     });
 
     // Should not navigate, so location should still be /current

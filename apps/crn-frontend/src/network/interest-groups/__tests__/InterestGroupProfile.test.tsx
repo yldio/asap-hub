@@ -194,3 +194,46 @@ describe('the event tabs', () => {
     expect(await screen.findByText(/Past Events \(7\)/i)).toBeVisible();
   });
 });
+
+it('renders the not-found page when the interest group is not found', async () => {
+  const nonExistentId = 'non-existent-id';
+  mockGetInterestGroup.mockResolvedValueOnce(undefined);
+
+  render(
+    <RecoilRoot
+      initializeState={({ set }) =>
+        set(refreshInterestGroupState(nonExistentId), Math.random())
+      }
+    >
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter
+              initialEntries={[
+                network({})
+                  .interestGroups({})
+                  .interestGroup({ interestGroupId: nonExistentId }).$,
+              ]}
+            >
+              <Routes>
+                <Route
+                  path={`${network.template}${
+                    network({}).interestGroups.template
+                  }${network({}).interestGroups({}).interestGroup.template}/*`}
+                  element={<InterestGroupProfile currentTime={new Date()} />}
+                />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
+
+  await waitFor(() => {
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+  });
+
+  // This covers line 94: return <NotFoundPage />;
+  expect(await screen.findByText(/sorry.+page/i)).toBeVisible();
+});

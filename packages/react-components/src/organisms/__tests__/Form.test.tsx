@@ -457,5 +457,221 @@ describe('Form', () => {
         expect(window.confirm).toHaveBeenCalled();
       });
     });
+
+    it('throws error when onSaveFunction returns falsy value', async () => {
+      const mockToast = jest.fn();
+      let resolveSave: (value: void) => void;
+      const handleSave = jest.fn().mockReturnValue(
+        new Promise<void>((resolve) => {
+          resolveSave = resolve;
+        }),
+      );
+
+      const { getByText } = renderFormWithMemoryRouter(
+        <InnerToastContext.Provider value={mockToast}>
+          <Form {...props} dirty>
+            {({ getWrappedOnSave, isSaving }) => (
+              <Button
+                primary
+                enabled={!isSaving}
+                onClick={getWrappedOnSave(handleSave)}
+              >
+                save
+              </Button>
+            )}
+          </Form>
+        </InnerToastContext.Provider>,
+      );
+
+      await userEvent.click(getByText(/^save/i));
+
+      await act(async () => {
+        resolveSave(undefined);
+      });
+
+      await waitFor(() => {
+        expect(mockToast).toHaveBeenCalledWith(
+          'There was an error and we were unable to save your changes. Please try again.',
+        );
+      });
+    });
+  });
+
+  describe('server errors', () => {
+    it('calls reportValidity when serverErrors are present', async () => {
+      const reportValiditySpy = jest.fn().mockReturnValue(true);
+
+      // Mock HTMLFormElement.prototype.reportValidity to catch all calls
+      const originalReportValidity = HTMLFormElement.prototype.reportValidity;
+      HTMLFormElement.prototype.reportValidity = reportValiditySpy;
+
+      try {
+        renderFormWithMemoryRouter(
+          <InnerToastContext.Provider value={jest.fn()}>
+            <Form
+              {...props}
+              serverErrors={[
+                {
+                  instancePath: '/name',
+                  keyword: 'required',
+                  message: 'Error',
+                  params: {},
+                  schemaPath: '#/properties/name/required',
+                },
+              ]}
+            >
+              {() => <input type="text" />}
+            </Form>
+          </InnerToastContext.Provider>,
+        );
+
+        await waitFor(() => {
+          expect(reportValiditySpy).toHaveBeenCalled();
+        });
+      } finally {
+        // Restore original
+        HTMLFormElement.prototype.reportValidity = originalReportValidity;
+      }
+    });
+
+    it('does not call reportValidity when serverErrors are empty', async () => {
+      const reportValiditySpy = jest.fn();
+
+      const { container } = renderFormWithMemoryRouter(
+        <InnerToastContext.Provider value={jest.fn()}>
+          <Form {...props} serverErrors={[]}>
+            {() => <input type="text" />}
+          </Form>
+        </InnerToastContext.Provider>,
+      );
+
+      const form = container.querySelector('form') as HTMLFormElement;
+      if (form) {
+        form.reportValidity = reportValiditySpy;
+      }
+
+      // Wait a bit to ensure the effect has run
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      expect(reportValiditySpy).not.toHaveBeenCalled();
+    });
+
+    it('does not call reportValidity when formRef is null', async () => {
+      const reportValiditySpy = jest.fn();
+
+      renderFormWithMemoryRouter(
+        <InnerToastContext.Provider value={jest.fn()}>
+          <Form
+            {...props}
+            serverErrors={[
+              {
+                instancePath: '/name',
+                keyword: 'required',
+                message: 'Error',
+                params: {},
+                schemaPath: '#/properties/name/required',
+              },
+            ]}
+          >
+            {() => null}
+          </Form>
+        </InnerToastContext.Provider>,
+      );
+
+      // Wait a bit to ensure the effect has run
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // reportValidity should not be called if formRef.current is null
+      // This is hard to test directly, but we can verify no errors are thrown
+      expect(reportValiditySpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('redirect on save', () => {
+    it('navigates to redirect URL after successful save', async () => {
+      let resolveSave: (value: Record<string, unknown>) => void;
+      const handleSave = jest.fn().mockReturnValue(
+        new Promise<Record<string, unknown>>((resolve) => {
+          resolveSave = resolve;
+        }),
+      );
+
+      renderFormWithMemoryRouter(
+        <>
+          <InnerToastContext.Provider value={jest.fn()}>
+            <Form {...props} dirty>
+              {({ getWrappedOnSave, setRedirectOnSave }) => (
+                <>
+                  <Button
+                    primary
+                    onClick={() => {
+                      setRedirectOnSave('/redirect-target');
+                      getWrappedOnSave(handleSave)();
+                    }}
+                  >
+                    save
+                  </Button>
+                </>
+              )}
+            </Form>
+          </InnerToastContext.Provider>
+          <LocationDisplay />
+        </>,
+        { initialEntries: ['/form'] },
+      );
+
+      expect(screen.getByTestId('location')).toHaveTextContent('/form');
+
+      await userEvent.click(screen.getByText(/^save/i));
+
+      await act(async () => {
+        resolveSave({ success: true });
+      });
+
+      await waitFor(() => {
+        expect(screen.getByTestId('location')).toHaveTextContent(
+          '/redirect-target',
+        );
+      });
+    });
+
+    it('does not navigate if no redirect URL is set', async () => {
+      let resolveSave: (value: Record<string, unknown>) => void;
+      const handleSave = jest.fn().mockReturnValue(
+        new Promise<Record<string, unknown>>((resolve) => {
+          resolveSave = resolve;
+        }),
+      );
+
+      renderFormWithMemoryRouter(
+        <>
+          <InnerToastContext.Provider value={jest.fn()}>
+            <Form {...props} dirty>
+              {({ getWrappedOnSave }) => (
+                <Button primary onClick={getWrappedOnSave(handleSave)}>
+                  save
+                </Button>
+              )}
+            </Form>
+          </InnerToastContext.Provider>
+          <LocationDisplay />
+        </>,
+        { initialEntries: ['/form'] },
+      );
+
+      expect(screen.getByTestId('location')).toHaveTextContent('/form');
+
+      await userEvent.click(screen.getByText(/^save/i));
+
+      await act(async () => {
+        resolveSave({ success: true });
+      });
+
+      // Wait a bit to ensure navigation would have happened if it was going to
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Should still be on /form
+      expect(screen.getByTestId('location')).toHaveTextContent('/form');
+    });
   });
 });

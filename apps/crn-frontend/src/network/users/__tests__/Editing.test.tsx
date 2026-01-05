@@ -346,7 +346,9 @@ describe('the onboarded modal', () => {
         }));
         // Wait for React to process the state update and for Auth0Provider's useEffect to run
         // This ensures the auth0 object is recreated with the updated user before navigation
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await new Promise((resolve) => {
+          setTimeout(resolve, 50);
+        });
       }, []);
 
       // Stable auth0Overrides function - only override refreshUser, let Auth0Provider handle user updates

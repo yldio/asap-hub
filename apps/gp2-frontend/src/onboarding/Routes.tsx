@@ -44,7 +44,7 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
     <Routes>
       <Route index element={<Welcome />} />
       <Route
-        path={onboarding({}).coreDetails.template}
+        path={`${onboarding({}).coreDetails.template}/*`}
         element={
           <Frame title={null}>
             <Onboarding>
@@ -56,7 +56,7 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={onboarding({}).background.template}
+        path={`${onboarding({}).background.template}/*`}
         element={
           <Frame title={null}>
             <Onboarding>
@@ -80,7 +80,7 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={onboarding({}).additionalDetails.template}
+        path={`${onboarding({}).additionalDetails.template}/*`}
         element={
           <Frame title={null}>
             <Onboarding>
@@ -92,7 +92,7 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
         }
       />
       <Route
-        path={onboarding({}).preview.template}
+        path={`${onboarding({}).preview.template}/*`}
         element={
           <Frame title={null}>
             <Onboarding>

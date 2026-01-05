@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps, useState, Fragment } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { addIcon, binIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import EditUserModal from './EditUserModal';
@@ -54,6 +55,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
     role: undefined,
     contributingCohortId: undefined,
   };
+  const navigate = useNavigate();
   const [newCohorts, setCohorts] = useState<
     Partial<gp2.UserContributingCohort>[]
   >(contributingCohorts.length ? contributingCohorts : [emptyCohort]);
@@ -83,7 +85,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
     <EditUserModal
       title="Contributing Cohort Studies"
       description="List out the cohort studies that you have been involved in (up to ten)."
-      onSave={() => {
+      onSave={async () => {
         const isCohort = (
           cohort: Partial<gp2.UserContributingCohort>,
         ): cohort is gp2.UserContributingCohort =>
@@ -96,9 +98,10 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
             isCohort(cohort) ? [...acc, cohort] : acc,
           [],
         );
-        return onSave({
+        await onSave({
           contributingCohorts: cleanCohorts,
         });
+        navigate(backHref);
       }}
       backHref={backHref}
       dirty={checkDirty()}

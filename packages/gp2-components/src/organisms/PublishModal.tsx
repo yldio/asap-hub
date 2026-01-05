@@ -1,6 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { usePushFromHere } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
+import { useNavigate } from 'react-router-dom';
 import EditUserModal from './EditUserModal';
 
 type PublishModalProps = Pick<
@@ -11,8 +12,7 @@ type PublishModalProps = Pick<
 };
 
 const PublishModal: React.FC<PublishModalProps> = ({ onSave, backHref }) => {
-  const historyPush = usePushFromHere();
-
+  const navigate = useNavigate();
   return (
     <EditUserModal
       title="Publish profile for the whole hub?"
@@ -21,7 +21,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ onSave, backHref }) => {
         await onSave({
           onboarded: true,
         });
-        historyPush('/');
+        navigate('/');
       }}
       backHref={backHref}
       dirty={false}

@@ -6,6 +6,7 @@ import {
   FormSection,
 } from '@asap-hub/react-components';
 import { ComponentProps, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ContactSupport, UserPositions } from '../molecules';
 import EditUserModal from './EditUserModal';
 import UserExternalProfilesForm, { baseUrls } from './UserExternalProfilesForm';
@@ -63,6 +64,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
   loadInstitutionOptions,
   social,
 }) => {
+  const navigate = useNavigate();
   const [newFirstName, setNewFirstName] = useState(firstName);
   const [newMiddleName, setNewMiddleName] = useState(middleName);
   const [newLastName, setNewLastName] = useState(lastName);
@@ -125,11 +127,11 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
       stickyTitle={false}
       title="Key Information"
       description="Tell us a little more about yourself. This will help others to be able to connect with you or credit you in the right way."
-      onSave={() => {
+      onSave={async () => {
         const { orcid: newOrcid, ...newSocialRest } =
           newSocial as gp2.UserSocial;
 
-        return onSave({
+        await onSave({
           firstName: newFirstName,
           middleName: newMiddleName,
           lastName: newLastName,
@@ -159,6 +161,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           ),
           ...(newOrcid ? { orcid: newOrcid } : {}),
         });
+        navigate(backHref);
       }}
       backHref={backHref}
       dirty={isDirty}

@@ -6,7 +6,7 @@ import {
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { getInstitutions } from '../users/api';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
@@ -15,6 +15,7 @@ import { usePatchUserById, useUserById } from '../users/state';
 
 const CoreDetails: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
+  const navigate = useNavigate();
 
   const { onboarding } = gp2;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -47,7 +48,10 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
                   )
                 }
                 backHref={onboarding({}).coreDetails({}).$}
-                onSave={(patchedUser) => patchUser(patchedUser)}
+                onSave={async (patchedUser) => {
+                  await patchUser(patchedUser);
+                  navigate(onboarding({}).coreDetails({}).$);
+                }}
               />
             }
           />
@@ -58,7 +62,10 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
                 {...userData}
                 countryCodeSuggestions={countryCodesSuggestions}
                 backHref={onboarding({}).coreDetails({}).$}
-                onSave={(patchedUser) => patchUser(patchedUser)}
+                onSave={async (patchedUser) => {
+                  await patchUser(patchedUser);
+                  navigate(onboarding({}).coreDetails({}).$);
+                }}
               />
             }
           />

@@ -1,6 +1,7 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { FormSection, LabeledTextArea } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import EditUserModal from './EditUserModal';
 
 type FundingProviderModalProps = Pick<gp2Model.UserResponse, 'fundingStreams'> &
@@ -13,6 +14,7 @@ const FundingProviderModal: React.FC<FundingProviderModalProps> = ({
   backHref,
   onSave,
 }) => {
+  const navigate = useNavigate();
   const [newFundingProvider, setNewFundingProvider] = useState(
     fundingStreams || '',
   );
@@ -25,11 +27,12 @@ const FundingProviderModal: React.FC<FundingProviderModalProps> = ({
       description={
         'This information will be pulled for when GP2 publications arise to share financial conflicts of interests for publications. Please make sure this is up to date!'
       }
-      onSave={() =>
-        onSave({
+      onSave={async () => {
+        await onSave({
           fundingStreams: newFundingProvider,
-        })
-      }
+        });
+        navigate(backHref);
+      }}
       backHref={backHref}
       dirty={checkDirty()}
     >

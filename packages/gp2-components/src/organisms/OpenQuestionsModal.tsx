@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps, useState, Fragment } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { addIcon, binIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import EditUserModal from './EditUserModal';
@@ -41,6 +42,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
   backHref,
   onSave,
 }) => {
+  const navigate = useNavigate();
   const [newQuestions, setQuestions] = useState(
     !questions.length ? [''] : questions,
   );
@@ -71,7 +73,10 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
     <EditUserModal
       title="Open Questions"
       description="Share the research questions that interest you and drive your work (up to five). This will give other members a good sense of the kinds of problems that you’re interested in solving."
-      onSave={() => onSave({ questions: newQuestions.filter(Boolean) })}
+      onSave={async () => {
+        await onSave({ questions: newQuestions.filter(Boolean) });
+        navigate(backHref);
+      }}
       backHref={backHref}
       dirty={checkDirty()}
     >

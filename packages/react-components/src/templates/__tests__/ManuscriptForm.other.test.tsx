@@ -169,9 +169,7 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      await waitFor(() =>
-        expect(queryAllByText(/loading/i)).toHaveLength(0),
-      );
+      await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
 
       await userEvent.click(getByLabelText(section));
       await userEvent.click(getByText('Author One'));
@@ -239,9 +237,7 @@ describe('authors', () => {
       );
 
       await userEvent.click(getByLabelText(section));
-      await waitFor(() =>
-        expect(queryAllByText(/loading/i)).toHaveLength(0),
-      );
+      await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
       await userEvent.click(getByText(/External Author One \(Non CRN\)/));
       await userEvent.type(
         getByLabelText(/External Author One Email/i),
@@ -316,9 +312,7 @@ describe('authors', () => {
 
       await userEvent.type(getByLabelText(section), 'Jane Doe');
 
-      await waitFor(() =>
-        expect(queryAllByText(/loading/i)).toHaveLength(0),
-      );
+      await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
 
       await userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
       await userEvent.type(getByLabelText(/Jane Doe Email/i), 'jane@doe.com');

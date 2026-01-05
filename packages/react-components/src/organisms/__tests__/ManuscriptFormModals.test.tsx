@@ -135,24 +135,9 @@ describe('ManuscriptFormModals', () => {
       const headerElement = screen
         .getByRole('heading', { name: /Submit manuscript\?/i })
         .closest('header');
-      if (headerElement) {
-        const closeButton = within(headerElement).getByRole('button');
-        await user.click(closeButton);
-        expect(setModal).toHaveBeenCalledWith(null);
-      } else {
-        // Fallback: find button that's not one of the named buttons
-        const allButtons = screen.getAllByRole('button');
-        const knownButtonNames = [/Keep Editing/i, /Submit Manuscript/i];
-        const closeButton = allButtons.find(
-          (button) =>
-            !knownButtonNames.some((name) =>
-              name.test(button.textContent || ''),
-            ),
-        );
-        expect(closeButton).toBeDefined();
-        await user.click(closeButton!);
-        expect(setModal).toHaveBeenCalledWith(null);
-      }
+      const closeButton = within(headerElement!).getByRole('button');
+      await user.click(closeButton);
+      expect(setModal).toHaveBeenCalledWith(null);
     });
 
     it('calls setModal with null when Keep Editing button is clicked', async () => {
@@ -271,24 +256,9 @@ describe('ManuscriptFormModals', () => {
       const headerElement = screen
         .getByRole('heading', { name: /Cancel manuscript/i })
         .closest('header');
-      if (headerElement) {
-        const closeButton = within(headerElement).getByRole('button');
-        await user.click(closeButton);
-        expect(setModal).toHaveBeenCalledWith(null);
-      } else {
-        // Fallback: find button that's not one of the named buttons
-        const allButtons = screen.getAllByRole('button');
-        const knownButtonNames = [/Keep Editing/i, /Cancel Manuscript/i];
-        const closeButton = allButtons.find(
-          (button) =>
-            !knownButtonNames.some((name) =>
-              name.test(button.textContent || ''),
-            ),
-        );
-        expect(closeButton).toBeDefined();
-        await user.click(closeButton!);
-        expect(setModal).toHaveBeenCalledWith(null);
-      }
+      const closeButton = within(headerElement!).getByRole('button');
+      await user.click(closeButton);
+      expect(setModal).toHaveBeenCalledWith(null);
     });
 
     it('calls setModal with null when Keep Editing button is clicked in cancel modal', async () => {

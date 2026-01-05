@@ -119,6 +119,58 @@ describe('useNavigationWarning', () => {
         expect(removeBeforeunloadCalls.length).toBeGreaterThan(0);
       });
     });
+
+    it('sets returnValue and prevents default when beforeunload event is triggered', () => {
+      renderWithProviders(<TestComponent shouldBlock={true} />);
+
+      // Get the registered beforeunload handler
+      const beforeunloadCall = addEventListenerSpy.mock.calls.find(
+        (call) => call[0] === 'beforeunload',
+      );
+      expect(beforeunloadCall).toBeDefined();
+
+      const handler = beforeunloadCall![1];
+
+      // Create a mock BeforeUnloadEvent
+      const mockEvent = {
+        preventDefault: jest.fn(),
+        returnValue: '',
+      };
+
+      // Call the handler and capture return value
+      const returnValue = handler(mockEvent);
+
+      // Verify the handler behavior
+      expect(mockEvent.preventDefault).toHaveBeenCalled();
+      expect(mockEvent.returnValue).toBe(
+        'Are you sure you want to leave? Unsaved changes will be lost.',
+      );
+      expect(returnValue).toBe(
+        'Are you sure you want to leave? Unsaved changes will be lost.',
+      );
+    });
+
+    it('uses custom message when beforeunload event is triggered', () => {
+      const customMessage = 'Custom warning message';
+      renderWithProviders(
+        <TestComponent shouldBlock={true} message={customMessage} />,
+      );
+
+      const beforeunloadCall = addEventListenerSpy.mock.calls.find(
+        (call) => call[0] === 'beforeunload',
+      );
+      const handler = beforeunloadCall![1];
+
+      const mockEvent = {
+        preventDefault: jest.fn(),
+        returnValue: '',
+      };
+
+      const returnValue = handler(mockEvent);
+
+      expect(mockEvent.returnValue).toBe(customMessage);
+      expect(returnValue).toBe(customMessage);
+    });
   });
 
   describe('popstate handler', () => {
@@ -142,6 +194,70 @@ describe('useNavigationWarning', () => {
         (call) => call[0] === 'popstate',
       );
       expect(removePopstateCalls.length).toBeGreaterThan(0);
+    });
+
+    it('shows confirm and undoes navigation when user cancels via browser back button', () => {
+      const pushStateSpy = jest.spyOn(window.history, 'pushState');
+      const goSpy = jest.spyOn(window.history, 'go');
+      jest.spyOn(window, 'confirm').mockReturnValue(false);
+
+      renderWithProviders(<TestComponent shouldBlock={true} />);
+
+      // Clear spies after initial render (which pushes a dummy entry)
+      pushStateSpy.mockClear();
+      goSpy.mockClear();
+
+      // Simulate browser back button triggering popstate
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      // Confirm dialog should be shown
+      expect(window.confirm).toHaveBeenCalledWith(
+        'Are you sure you want to leave? Unsaved changes will be lost.',
+      );
+
+      // Should push a dummy entry to undo the navigation
+      expect(pushStateSpy).toHaveBeenCalledWith(null, '', window.location.href);
+
+      // Should NOT navigate further since user canceled
+      expect(goSpy).not.toHaveBeenCalled();
+    });
+
+    it('navigates back when user confirms via browser back button', () => {
+      const pushStateSpy = jest.spyOn(window.history, 'pushState');
+      const goSpy = jest.spyOn(window.history, 'go');
+      jest.spyOn(window, 'confirm').mockReturnValue(true);
+
+      renderWithProviders(<TestComponent shouldBlock={true} />);
+
+      // Clear spies after initial render
+      pushStateSpy.mockClear();
+      goSpy.mockClear();
+
+      // Simulate browser back button triggering popstate
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      // Confirm dialog should be shown
+      expect(window.confirm).toHaveBeenCalled();
+
+      // Should push dummy entry first (to undo the navigation)
+      expect(pushStateSpy).toHaveBeenCalledWith(null, '', window.location.href);
+
+      // User confirmed, so should go back -2 (skip the dummy entry plus navigate back)
+      expect(goSpy).toHaveBeenCalledWith(-2);
+    });
+
+    it('uses custom message in popstate confirm dialog', () => {
+      const customMessage = 'Custom popstate warning';
+      jest.spyOn(window, 'confirm').mockReturnValue(false);
+
+      renderWithProviders(
+        <TestComponent shouldBlock={true} message={customMessage} />,
+      );
+
+      // Simulate browser back button
+      window.dispatchEvent(new PopStateEvent('popstate'));
+
+      expect(window.confirm).toHaveBeenCalledWith(customMessage);
     });
   });
 

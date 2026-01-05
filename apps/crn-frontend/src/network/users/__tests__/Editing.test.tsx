@@ -1,6 +1,6 @@
-import { ReactNode, Suspense } from 'react';
+import { ReactNode, Suspense, useState, useCallback } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
@@ -10,7 +10,6 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { getUserClaimKey } from '@asap-hub/react-context';
 
 import Editing from '../Editing';
 import { patchUser, getInstitutions } from '../api';
@@ -307,59 +306,99 @@ describe('the onboarded modal', () => {
   it('redirects to homepage', async () => {
     window.alert = jest.fn();
     jest.spyOn(console, 'error').mockImplementation(() => {});
-    let user: User = {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const initialUser: User = {
       ...createUserResponse(),
       id,
       onboarded: false,
     };
     const ownProfileRoute = network({})
       .users({})
-      .user({ userId: user.id })
+      .user({ userId: initialUser.id })
       .about({});
+    const ownProfileBasePath = network({})
+      .users({})
+      .user({ userId: initialUser.id }).$;
 
-    const { findByText } = render(
-      <RecoilRoot>
-        <Suspense fallback="loading">
-          <Auth0Provider
-            user={user}
-            auth0Overrides={() => ({
-              user: {
-                sub: 'testuser',
-                name: user.displayName,
-                given_name: user.firstName,
-                family_name: user.lastName,
-                aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
-                [getUserClaimKey()]: user,
-              },
-            })}
-          >
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[ownProfileRoute.editOnboarded({}).$]}
-              >
-                <CheckOnboarded>
-                  <Routes>
-                    <Route
-                      path="about/*"
-                      element={
-                        <Editing
-                          user={{
-                            ...createUserResponse(),
-                            ...user,
-                          }}
-                          backHref={ownProfileRoute.$}
-                        />
-                      }
-                    />
-                    <Route path="/" element={<>Homepage!</>} />
-                  </Routes>
-                </CheckOnboarded>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </RecoilRoot>,
-    );
+    // Mock patchUser to return updated user
+    mockPatchUser.mockResolvedValue({
+      ...createUserResponse(),
+      id,
+      onboarded: true,
+    });
+
+    // Location display helper
+    const LocationDisplay = () => {
+      const location = useLocation();
+      return <div data-testid="location">{location.pathname}</div>;
+    };
+
+    // Component to manage user state
+    const TestComponent = () => {
+      const [currentUser, setCurrentUser] = useState(initialUser);
+
+      // Stable refreshUser callback that updates the user state
+      const handleRefreshUser = useCallback(async () => {
+        // Use a new object to ensure React detects the change
+        setCurrentUser((prev) => ({
+          ...prev,
+          onboarded: true,
+        }));
+        // Wait for React to process the state update and for Auth0Provider's useEffect to run
+        // This ensures the auth0 object is recreated with the updated user before navigation
+        await new Promise((resolve) => setTimeout(resolve, 50));
+      }, []);
+
+      // Stable auth0Overrides function - only override refreshUser, let Auth0Provider handle user updates
+      const auth0Overrides = useCallback(
+        () => ({
+          refreshUser: handleRefreshUser,
+        }),
+        [handleRefreshUser],
+      );
+
+      return (
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={currentUser} auth0Overrides={auth0Overrides}>
+              <WhenReady>
+                <MemoryRouter
+                  initialEntries={[ownProfileRoute.editOnboarded({}).$]}
+                >
+                  <LocationDisplay />
+                  <CheckOnboarded>
+                    <Routes>
+                      <Route
+                        path={`${ownProfileBasePath}/*`}
+                        element={
+                          <Routes>
+                            <Route
+                              path="about/*"
+                              element={
+                                <Editing
+                                  user={{
+                                    ...createUserResponse(),
+                                    ...currentUser,
+                                  }}
+                                  backHref={ownProfileRoute.$}
+                                />
+                              }
+                            />
+                          </Routes>
+                        }
+                      />
+                      <Route path="/" element={<>Homepage!</>} />
+                    </Routes>
+                  </CheckOnboarded>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      );
+    };
+
+    const { findByText, findByTestId } = render(<TestComponent />);
 
     await userEvent.click(await findByText(/publish profile/i));
     await waitFor(() => {
@@ -369,10 +408,16 @@ describe('the onboarded modal', () => {
         expect.any(String),
       );
     });
-    user = {
-      ...user,
-      onboarded: true,
-    };
+
+    await waitFor(
+      async () => {
+        const locationElement = await findByTestId('location');
+        expect(locationElement.textContent).toBe('/');
+      },
+      { timeout: 5000 },
+    );
+
+    // Verify homepage is rendered after successful navigation
     expect(await findByText('Homepage!')).toBeVisible();
   });
 });

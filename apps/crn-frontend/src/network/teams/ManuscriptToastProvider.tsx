@@ -24,7 +24,6 @@ type ManuscriptToastContextData = {
 export type ToastAccents = 'error' | 'successLarge';
 
 const defaultContextValue: ManuscriptToastContextData = {
-  // istanbul ignore next
   setFormType: () => {
     // No-op default function to prevent errors if used outside provider
   },

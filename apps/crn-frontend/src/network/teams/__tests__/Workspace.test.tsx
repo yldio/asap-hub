@@ -961,4 +961,26 @@ describe('useManuscriptToast error handling', () => {
 
     consoleErrorSpy.mockRestore();
   });
+
+  it('provides default context value with no-op setFormType when used without provider', () => {
+    // Get the actual implementation
+    const actualUseManuscriptToast = jest.requireActual(
+      '../useManuscriptToast',
+    ).useManuscriptToast;
+
+    // Use the hook without a provider wrapper - it will use the default context value
+    const { result } = renderHook(() => actualUseManuscriptToast());
+
+    // Should have setFormType from default context value
+    expect(result.current.setFormType).toBeDefined();
+    expect(typeof result.current.setFormType).toBe('function');
+
+    // Should be able to call it without errors (it's a no-op)
+    expect(() => {
+      result.current.setFormType({
+        type: 'manuscript',
+        accent: 'successLarge',
+      });
+    }).not.toThrow();
+  });
 });

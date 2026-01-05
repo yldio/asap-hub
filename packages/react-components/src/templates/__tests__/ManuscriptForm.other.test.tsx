@@ -236,8 +236,8 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      await userEvent.click(getByLabelText(section));
       await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
+      await userEvent.click(getByLabelText(section));
       await userEvent.click(getByText(/External Author One \(Non CRN\)/));
       await userEvent.type(
         getByLabelText(/External Author One Email/i),

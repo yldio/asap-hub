@@ -1,5 +1,4 @@
 import { gp2 } from '@asap-hub/model';
-import { usePushFromHere } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EditUserModal from './EditUserModal';

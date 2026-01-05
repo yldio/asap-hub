@@ -250,17 +250,19 @@ describe('Engagement', () => {
       analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
     );
 
-    expect(
-      screen.getByRole('heading', {
-        name: /Representation of Presenters/i,
-      }),
-    ).toBeVisible();
-    expect(screen.getByText('Test Team')).toBeInTheDocument();
-    expect(screen.getAllByText('1')).toHaveLength(2); // one of the 1s is pagination
-    expect(screen.getAllByText('2 (67%)')).toHaveLength(1);
-    expect(screen.getAllByText('3')).toHaveLength(1);
-    expect(screen.getAllByText('3 (100%)')).toHaveLength(1);
-    expect(screen.getAllByText('4')).toHaveLength(1);
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', {
+          name: /Representation of Presenters/i,
+        }),
+      ).toBeVisible();
+      expect(screen.getByText('Test Team')).toBeInTheDocument();
+      expect(screen.getAllByText('1')).toHaveLength(2); // one of the 1s is pagination
+      expect(screen.getAllByText('2 (67%)')).toHaveLength(1);
+      expect(screen.getAllByText('3')).toHaveLength(1);
+      expect(screen.getAllByText('3 (100%)')).toHaveLength(1);
+      expect(screen.getAllByText('4')).toHaveLength(1);
+    });
   });
 
   it('calls algolia client with the right index name', async () => {

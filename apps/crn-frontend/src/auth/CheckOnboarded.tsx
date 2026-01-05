@@ -2,7 +2,7 @@ import { User } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { logout, network, staticPages } from '@asap-hub/routing';
 import { ReactNode, useEffect } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 interface CheckOnboardedProps {
   children: ReactNode;
@@ -52,12 +52,13 @@ const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
     return <>{children}</>;
   }
 
-  return (
-    <Routes>
-      <Route path={`${ownProfilePath}/*`} element={<>{children}</>} />
-      <Route path="*" element={<Navigate to={ownProfilePath} replace />} />
-    </Routes>
-  );
+  // For non-onboarded users, redirect to profile if not already there
+  // Use Navigate component synchronously during render for immediate redirect
+  if (!location.pathname.startsWith(ownProfilePath)) {
+    return <Navigate to={ownProfilePath} replace />;
+  }
+
+  return <>{children}</>;
 };
 
 export default CheckOnboarded;

@@ -1,10 +1,21 @@
 import { useEffect, act } from 'react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { network, sharedResearch, staticPages } from '@asap-hub/routing';
+import {
+  dashboard,
+  network,
+  sharedResearch,
+  staticPages,
+} from '@asap-hub/routing';
 import { render, waitFor } from '@testing-library/react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { MemoryRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import {
+  MemoryRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import CheckOnboarded, { navigationPromptHandler } from '../CheckOnboarded';
 import { Auth0Provider, WhenReady } from '../test-utils';
@@ -20,6 +31,12 @@ const NavigationHelper = () => {
     };
   }, [navigate]);
   return null;
+};
+
+// Helper component to display current location for redirect tests
+const LocationDisplay = () => {
+  const location = useLocation();
+  return <div data-testid="location">{location.pathname}</div>;
 };
 
 const user = {
@@ -114,13 +131,16 @@ describe('an authenticated and onboarded user', () => {
 });
 
 describe('an authenticated user in onboarding', () => {
+  const ownProfileBasePath = network({}).users({}).user({ userId: user.id }).$;
+
   it('is let through to their own profile', async () => {
-    const { findByText } = render(
+    const { findByText, findByTestId } = render(
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
             <MemoryRouter initialEntries={[ownProfilePath]}>
               <NavigationHelper />
+              <LocationDisplay />
               <CheckOnboarded>profile</CheckOnboarded>
             </MemoryRouter>
           </WhenReady>
@@ -129,44 +149,100 @@ describe('an authenticated user in onboarding', () => {
     );
 
     expect(await findByText('profile')).toBeVisible();
+    const locationElement = await findByTestId('location');
+    expect(locationElement.textContent).toContain(ownProfileBasePath);
   });
 
-  it("is not let through to someone else's profile", async () => {
+  it('redirects from dashboard to profile', async () => {
+    // mock console.error
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    const dashboardPath = dashboard({}).$;
+    const { findByTestId } = render(
+      <RecoilRoot>
+        <Auth0Provider user={{ ...user, onboarded: false }}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[dashboardPath]}>
+              <LocationDisplay />
+              <CheckOnboarded>
+                <Routes>
+                  <Route
+                    path={`${ownProfileBasePath}/*`}
+                    element={<>profile</>}
+                  />
+                  <Route path={dashboardPath} element={<>dashboard</>} />
+                </Routes>
+              </CheckOnboarded>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>,
+    );
+
+    // Should redirect to profile
+    const locationElement = await findByTestId('location');
+    await waitFor(() => {
+      expect(locationElement.textContent).toContain(ownProfileBasePath);
+    });
+  });
+
+  it("redirects from someone else's profile to own profile", async () => {
     window.alert = jest.fn();
     const foreignProfilePath = network({}).users({}).user({ userId: '1337' }).$;
-    const { findByText } = render(
+    const { findByTestId } = render(
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
             <MemoryRouter initialEntries={[foreignProfilePath]}>
-              <NavigationHelper />
-              <CheckOnboarded>own profile</CheckOnboarded>
+              <LocationDisplay />
+              <CheckOnboarded>
+                <Routes>
+                  <Route
+                    path={`${ownProfileBasePath}/*`}
+                    element={<>own profile</>}
+                  />
+                </Routes>
+              </CheckOnboarded>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>,
     );
 
-    expect(await findByText('own profile')).toBeVisible();
+    // Should redirect to own profile
+    const locationElement = await findByTestId('location');
+    await waitFor(() => {
+      expect(locationElement.textContent).toContain(ownProfileBasePath);
+    });
   });
 
-  it('is not let through to another page', async () => {
+  it('redirects from another page to profile', async () => {
     window.alert = jest.fn();
     const anotherPagePath = sharedResearch({}).$;
-    const { findByText } = render(
+    const { findByTestId } = render(
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
             <MemoryRouter initialEntries={[anotherPagePath]}>
-              <NavigationHelper />
-              <CheckOnboarded>own profile</CheckOnboarded>
+              <LocationDisplay />
+              <CheckOnboarded>
+                <Routes>
+                  <Route
+                    path={`${ownProfileBasePath}/*`}
+                    element={<>own profile</>}
+                  />
+                </Routes>
+              </CheckOnboarded>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>,
     );
 
-    expect(await findByText('own profile')).toBeVisible();
+    // Should redirect to own profile
+    const locationElement = await findByTestId('location');
+    await waitFor(() => {
+      expect(locationElement.textContent).toContain(ownProfileBasePath);
+    });
   });
 
   it('should trigger an alert when accessing protected routes', async () => {

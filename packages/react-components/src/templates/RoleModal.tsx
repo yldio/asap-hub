@@ -1,6 +1,7 @@
 import { useState, Fragment } from 'react';
 import { css } from '@emotion/react';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
+import { useNavigate } from 'react-router-dom';
 import { noop } from '../utils';
 import {
   LabeledTextField,
@@ -10,7 +11,6 @@ import {
 import { EditUserModal } from '../organisms';
 import { rem } from '../pixels';
 import { colors } from '..';
-import { useNavigate } from 'react-router-dom';
 
 type RoleModalProps = Pick<
   UserResponse,

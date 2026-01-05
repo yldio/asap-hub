@@ -4,6 +4,7 @@ import {
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
+import { useNavigate } from 'react-router-dom';
 
 import { FormSection, LabeledMultiSelect, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
@@ -11,7 +12,6 @@ import { Link } from '../atoms';
 import { EditUserModal } from '../organisms';
 import { mailToSupport } from '../mail';
 import { rem } from '../pixels';
-import { useNavigate } from 'react-router-dom';
 
 type ExpertiseAndResourcesModalProps = Pick<
   UserResponse,

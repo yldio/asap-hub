@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { FormSection, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
 import { EditUserModal } from '../organisms';
-import { useNavigate } from 'react-router-dom';
 
 interface BiographyModalProps {
   biography?: string;

@@ -20,7 +20,7 @@ import { render, screen, waitFor, within, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -62,6 +62,11 @@ jest.mock('../../../hooks/opensearch', () => ({
 jest.mock('@asap-hub/react-context', () => ({
   ...jest.requireActual('@asap-hub/react-context'),
   useFlags: jest.fn(),
+}));
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: jest.fn(),
 }));
 
 // Don't mock ../../../hooks at all - let it use the real implementations
@@ -117,6 +122,9 @@ const mockUseAnalyticsOpensearch =
 
 const mockUseFlags = useFlags as jest.MockedFunction<typeof useFlags>;
 
+const mockNavigate = jest.fn();
+const mockUseNavigate = useNavigate as jest.MockedFunction<typeof useNavigate>;
+
 beforeEach(() => {
   const mockAlgoliaClient = {
     searchForTagValues: mockSearchForTagValues,
@@ -167,6 +175,8 @@ beforeEach(() => {
   });
   mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
   mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
+  mockNavigate.mockClear();
+  mockUseNavigate.mockReturnValue(mockNavigate);
 });
 
 const defaultTeamOptions: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity> =
@@ -507,6 +517,86 @@ describe('team productivity', () => {
     await waitFor(() => {
       expect(mockUseAnalyticsAlgolia).toHaveBeenCalledWith(
         expect.stringContaining('team_desc'),
+      );
+    });
+  });
+});
+
+describe('metric switching', () => {
+  it('navigates to team metric when metric dropdown is changed from user to team', async () => {
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'user' }).$,
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText('User Productivity')).toHaveLength(2);
+    });
+
+    // Find the metric dropdown textbox by looking for it near the "Metric" label
+    const metricSubtitle = screen.getByText('Metric');
+    const metricContainer = metricSubtitle.parentElement;
+    const metricDropdown = within(metricContainer!).getByRole('textbox', {
+      hidden: false,
+    });
+    expect(metricDropdown).toBeInTheDocument();
+
+    // Click the dropdown to open it
+    await act(async () => {
+      await userEvent.click(metricDropdown);
+    });
+
+    // Wait for the dropdown options to appear and click "Team Productivity"
+    await waitFor(() => {
+      expect(screen.getByText('Team Productivity')).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      await userEvent.click(screen.getByText('Team Productivity'));
+    });
+
+    // Verify that navigate was called with the correct route
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith(
+        analytics({}).productivity({}).metric({ metric: 'team' }).$,
+      );
+    });
+  });
+
+  it('navigates to user metric when metric dropdown is changed from team to user', async () => {
+    await renderPage(
+      analytics({}).productivity({}).metric({ metric: 'team' }).$,
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText('Team Productivity')).toHaveLength(2);
+    });
+
+    // Find the metric dropdown textbox by looking for it near the "Metric" label
+    const metricSubtitle = screen.getByText('Metric');
+    const metricContainer = metricSubtitle.parentElement;
+    const metricDropdown = within(metricContainer!).getByRole('textbox', {
+      hidden: false,
+    });
+    expect(metricDropdown).toBeInTheDocument();
+
+    // Click the dropdown to open it
+    await act(async () => {
+      await userEvent.click(metricDropdown);
+    });
+
+    // Wait for the dropdown options to appear and click "User Productivity"
+    await waitFor(() => {
+      expect(screen.getByText('User Productivity')).toBeInTheDocument();
+    });
+
+    await act(async () => {
+      await userEvent.click(screen.getByText('User Productivity'));
+    });
+
+    // Verify that navigate was called with the correct route
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith(
+        analytics({}).productivity({}).metric({ metric: 'user' }).$,
       );
     });
   });

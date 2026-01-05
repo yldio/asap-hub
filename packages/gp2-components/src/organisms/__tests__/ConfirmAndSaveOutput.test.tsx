@@ -162,4 +162,94 @@ describe('ConfirmAndSaveOutput', () => {
       });
     });
   });
+
+  describe('successful save', () => {
+    const renderWithRouter = (props?: Partial<ConfirmAndSaveOutputProps>) => {
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/*',
+            element: (
+              <NotificationContext.Provider
+                value={{
+                  notifications: [],
+                  addNotification,
+                  removeNotification: jest.fn(),
+                }}
+              >
+                <Form dirty={false}>
+                  {({ getWrappedOnSave }) => (
+                    <ConfirmAndSaveOutput
+                      path={(id: string) => `/outputs/${id}`}
+                      documentType="Article"
+                      title="title"
+                      currentPayload={{
+                        ...createOutputResponse(),
+                        tagIds: [],
+                        contributingCohortIds: [],
+                        mainEntityId: '',
+                        relatedOutputIds: [],
+                        relatedEventIds: [],
+                        authors: [],
+                      }}
+                      shareOutput={shareOutput}
+                      setRedirectOnSave={jest.fn()}
+                      entityType="project"
+                      isEditing={false}
+                      createVersion={false}
+                      getWrappedOnSave={
+                        getWrappedOnSave as unknown as GetWrappedOnSave<OutputResponse>
+                      }
+                      {...props}
+                    >
+                      {({ save }) => <Button onClick={save}>Publish</Button>}
+                    </ConfirmAndSaveOutput>
+                  )}
+                </Form>
+              </NotificationContext.Provider>
+            ),
+          },
+        ],
+        { initialEntries: ['/outputs/new'] },
+      );
+
+      render(<RouterProvider router={router} />);
+      return { router };
+    };
+
+    it('navigates to output page after successful publish', async () => {
+      const outputId = 'output-123';
+      shareOutput.mockResolvedValueOnce({ id: outputId });
+
+      const { router } = renderWithRouter();
+
+      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await userEvent.click(
+        screen.getByRole('button', { name: /Publish output/i }),
+      );
+
+      await waitFor(() => {
+        expect(router.state.location.pathname).toBe(`/outputs/${outputId}`);
+      });
+    });
+
+    it('navigates to output page after successful version publish', async () => {
+      const outputId = 'output-456';
+      shareOutput.mockResolvedValueOnce({ id: outputId });
+
+      const { router } = renderWithRouter({
+        isEditing: true,
+        createVersion: true,
+      });
+
+      await userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await userEvent.click(
+        screen.getByRole('button', { name: /Publish new version/i }),
+      );
+
+      await waitFor(() => {
+        expect(router.state.location.pathname).toBe(`/outputs/${outputId}`);
+      });
+    });
+  });
 });

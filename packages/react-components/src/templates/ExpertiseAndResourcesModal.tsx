@@ -11,6 +11,7 @@ import { Link } from '../atoms';
 import { EditUserModal } from '../organisms';
 import { mailToSupport } from '../mail';
 import { rem } from '../pixels';
+import { useNavigate } from 'react-router-dom';
 
 type ExpertiseAndResourcesModalProps = Pick<
   UserResponse,
@@ -32,6 +33,7 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
   tags = [],
   suggestions,
 }) => {
+  const navigate = useNavigate();
   const [
     newExpertiseAndResourceDescription,
     setExpertiseAndResourceDescription,
@@ -55,13 +57,14 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
           newExpertiseAndResourceDescription || tags !== newTags
       }
       validate={() => validateExpertiseAndResources(newTags)}
-      onSave={() =>
-        onSave({
+      onSave={async () => {
+        await onSave({
           expertiseAndResourceDescription:
             newExpertiseAndResourceDescription || undefined,
           tagIds: newTags.map(({ id }) => id),
-        })
-      }
+        });
+        navigate(backHref);
+      }}
     >
       {({ isSaving }) => (
         <FormSection>

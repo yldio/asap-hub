@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import {
   PersonalInfoModal,
   ContactInfoModal,
@@ -18,6 +18,7 @@ interface EditingProps {
 }
 
 const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
+  const navigate = useNavigate();
   const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);
@@ -70,7 +71,10 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
               error="There was an error and we were unable to publish your profile"
               cancelText="Cancel"
               confirmText="Publish Profile"
-              onSave={() => patchUser({ onboarded: true })}
+              onSave={async () => {
+                await patchUser({ onboarded: true });
+                navigate(backHref);
+              }}
             />
           </Frame>
         }

@@ -10,6 +10,7 @@ import {
 import { EditUserModal } from '../organisms';
 import { rem } from '../pixels';
 import { colors } from '..';
+import { useNavigate } from 'react-router-dom';
 
 type RoleModalProps = Pick<
   UserResponse,
@@ -42,6 +43,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
   onSave = noop,
   backHref,
 }) => {
+  const navigate = useNavigate();
   const [newResearchInterests, setNewResearchInterests] =
     useState(researchInterests);
   const [newResponsibilities, setNewResponsibilities] =
@@ -55,13 +57,14 @@ const RoleModal: React.FC<RoleModalProps> = ({
         newResponsibilities !== responsibilities
       }
       backHref={backHref}
-      onSave={() =>
-        onSave({
+      onSave={async () => {
+        await onSave({
           researchInterests: newResearchInterests.trim(),
           responsibilities: newResponsibilities.trim(),
           reachOut: newReachOut.trim(),
-        })
-      }
+        });
+        navigate(backHref);
+      }}
       description={`Tell the network what role you play in your team and your main research goals by completing this part of your profile. (Note: if you need to change any locked fields, please contact ASAP)`}
     >
       {({ isSaving }) => (

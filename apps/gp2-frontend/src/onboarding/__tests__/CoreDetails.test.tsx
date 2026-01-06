@@ -146,7 +146,13 @@ describe('CoreDetails', () => {
       time_taken: 0,
       items: [
         {
-          name: 'ExampleInst',
+          names: [
+            {
+              value: 'ExampleInst',
+              types: ['ror_display', 'label'],
+              lang: 'en',
+            },
+          ],
           id: 'id-1',
           email_address: 'example@example.com',
           status: '',

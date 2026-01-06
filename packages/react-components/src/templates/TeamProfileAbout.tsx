@@ -1,10 +1,12 @@
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
+import { isEnabled } from '@asap-hub/flags';
 
 import { rem } from '../pixels';
 import {
   ProfileExpertiseAndResources,
+  TeamLabsCard,
   TeamMembersTabbedCard,
   TeamProfileOverview,
 } from '../organisms';
@@ -24,7 +26,13 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<
     TeamResponse,
-    'pointOfContact' | 'members' | 'inactiveSince' | 'supplementGrant'
+    | 'pointOfContact'
+    | 'members'
+    | 'inactiveSince'
+    | 'supplementGrant'
+    | 'teamStatus'
+    | 'teamType'
+    | 'labs'
   > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
@@ -32,27 +40,30 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
 
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   inactiveSince,
-  projectTitle,
-  projectSummary,
   tags,
   pointOfContact,
   members,
-  proposalURL,
   teamGroupsCard,
   teamListElementId,
-  supplementGrant,
+  teamStatus,
+  teamType,
+  teamDescription,
+  researchTheme,
+  resourceType,
+  labs,
 }) => (
   <div css={styles}>
-    {projectTitle ? (
+    {teamDescription ? (
       <TeamProfileOverview
-        supplementGrant={supplementGrant}
-        projectTitle={projectTitle}
-        projectSummary={projectSummary}
-        proposalURL={proposalURL}
+        tags={tags}
+        teamDescription={teamDescription}
+        teamType={teamType}
+        researchTheme={researchTheme}
+        resourceType={resourceType}
       />
     ) : null}
-    {tags && tags.length ? (
-      <ProfileExpertiseAndResources hideExpertiseAndResources tags={tags} />
+    {isEnabled('PROJECTS_MVP') && labs && labs.length ? (
+      <TeamLabsCard labs={labs} isTeamActive={teamStatus === 'Active'} />
     ) : null}
     <section id={teamListElementId} css={membersCardStyles}>
       <TeamMembersTabbedCard
@@ -61,8 +72,8 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         isTeamInactive={!!inactiveSince}
       />
     </section>
-    {teamGroupsCard}
-    {pointOfContact && (
+    {teamType !== 'Resource Team' && teamGroupsCard}
+    {pointOfContact && teamStatus === 'Active' && (
       <CtaCard
         href={createMailTo(pointOfContact.email)}
         buttonText="Contact"

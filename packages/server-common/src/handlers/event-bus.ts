@@ -13,7 +13,10 @@ export type CalendarContentfulPayload = WebhookDetail<
   ContentfulWebhookPayload<'calendars'>
 >;
 
-export type CalendarPayload = CalendarContentfulPayload;
+export type CalendarPayload = {
+  type: string;
+  payload: CalendarContentfulPayload;
+};
 
 export type WorkingGroupPayload = WebhookDetail<
   ContentfulWebhookPayload<'workingGroups'>

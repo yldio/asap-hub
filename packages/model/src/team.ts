@@ -91,6 +91,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   manuscripts: TeamManuscript[];
   collaborationManuscripts?: TeamManuscript[];
   labCount: number;
+  labs: LabResponse[];
   inactiveSince?: string;
   teamStatus: TeamStatus;
   linkedProjectId?: string;
@@ -132,6 +133,7 @@ export type TeamListItemDataObject = Pick<
   | 'tags'
   | 'labCount'
   | 'researchTheme'
+  | 'teamDescription'
 > & { memberCount: number; resourceType?: string };
 
 export type ListTeamDataObject = ListResponse<TeamListItemDataObject>;

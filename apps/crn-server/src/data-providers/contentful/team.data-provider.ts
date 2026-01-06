@@ -538,6 +538,7 @@ export const parseContentfulGraphQlTeam = (
             {
               id: lab.sys.id,
               name: lab.name || '',
+              labPrincipalInvestigatorId: lab.labPi?.sys.id,
             },
           ];
         },
@@ -656,6 +657,12 @@ export const parseContentfulGraphQlTeam = (
       : undefined,
     researchTheme: item.researchTheme?.name ?? undefined,
     resourceType: linkedProject?.resourceType?.name ?? undefined,
+    teamDescription: item.teamDescription ?? undefined,
+    labs: members
+      .flatMap((member) => member.labs || [])
+      .filter(
+        (lab, index, labs) => labs.findIndex((l) => l.id === lab.id) === index,
+      ),
   };
 };
 

@@ -87,12 +87,16 @@ export const useNavigationWarning = ({
       window.history.go(-2); // User confirmed, go back the dummy entry plus a additional one.
     };
 
-    // For future travelers: popstate triggers once the navigation has happened, which would
-    // be too late to prevent the navigation from happening.
-    // So, we create a dummy entry to the same URL the user is seeing so that we can catch
-    // the navigation event when they click "Back" or navigate away.
-    window.history.pushState(null, '', window.location.href);
-    hasDummyEntryRef.current = true;
+    // Guard against double push in StrictMode (effect runs twice: mount -> cleanup -> mount,
+    // but the ref persists, preventing duplicate history entries)
+    if (!hasDummyEntryRef.current) {
+      // For future travelers: popstate triggers once the navigation has happened, which would
+      // be too late to prevent the navigation from happening.
+      // So, we create a dummy entry to the same URL the user is seeing so that we can catch
+      // the navigation event when they click "Back" or navigate away.
+      window.history.pushState(null, '', window.location.href);
+      hasDummyEntryRef.current = true;
+    }
 
     window.addEventListener('popstate', handlePopstate);
     return () => window.removeEventListener('popstate', handlePopstate);
@@ -113,9 +117,11 @@ export const useNavigationWarning = ({
         return;
       }
       if (typeof to === 'number') {
+        // Mark as intentional so popstate handler skips confirmation.
+        // Must be set BEFORE any navigation to prevent double confirm dialog.
+        intentionalNavigationRef.current = true;
+
         if (hasDummyEntryRef.current) {
-          // Mark as intentional so popstate handler skips confirmation.
-          intentionalNavigationRef.current = true;
           // Navigate with offset to account for dummy history entry pushed
           // by the popstate blocking effect. Since `to` is
           // usually -1 ("Go back"), this translates to -2 most of the time.

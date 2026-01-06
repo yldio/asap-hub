@@ -105,7 +105,7 @@ describe('the personal info modal', () => {
           status: 'active',
         },
       ],
-    });
+    } as unknown as Awaited<ReturnType<typeof getInstitutions>>);
     const { findByDisplayValue, findByText } = renderWithRoot(
       <Auth0Provider user={{ id }}>
         <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>

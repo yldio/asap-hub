@@ -203,7 +203,7 @@ describe('Preview', () => {
           types: [],
         },
       ],
-    });
+    } as unknown as Awaited<ReturnType<typeof getInstitutions>>);
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderPreview(user.id);

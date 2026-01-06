@@ -1,16 +1,16 @@
 import { getInstitutions } from './api';
 
-type RorInstitutionName = {
+export type RorInstitutionName = {
   readonly value: string;
   readonly types?: ReadonlyArray<string>;
   readonly lang: string | null;
 };
 
-type RorInstitution = {
+export type RorInstitution = {
   readonly names?: ReadonlyArray<RorInstitutionName>;
 };
 
-type RorApiResponse = {
+export type RorApiResponse = {
   readonly items?: ReadonlyArray<RorInstitution>;
 };
 

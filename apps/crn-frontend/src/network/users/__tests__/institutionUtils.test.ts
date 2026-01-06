@@ -2,22 +2,10 @@ import {
   extractInstitutionDisplayName,
   transformRorInstitutionsToNames,
   loadInstitutionOptions,
+  type RorInstitutionName,
+  type RorApiResponse,
 } from '../Editing';
 import { getInstitutions } from '../api';
-
-type RorInstitutionName = {
-  readonly value?: string;
-  readonly types?: ReadonlyArray<string>;
-  readonly lang: string | null;
-};
-
-type RorInstitution = {
-  readonly names?: ReadonlyArray<RorInstitutionName>;
-};
-
-type RorApiResponse = {
-  readonly items?: ReadonlyArray<RorInstitution> | string;
-};
 
 jest.mock('../api');
 const mockGetInstitutions = getInstitutions as jest.MockedFunction<
@@ -88,7 +76,7 @@ describe('extractInstitutionDisplayName', () => {
         {
           types: ['ror_display'],
           lang: 'en',
-        } as RorInstitutionName,
+        } as unknown as RorInstitutionName,
       ],
     };
 
@@ -198,9 +186,9 @@ describe('transformRorInstitutionsToNames', () => {
   });
 
   it('returns empty array when items is not an array', () => {
-    const response: RorApiResponse = {
+    const response = {
       items: 'not an array',
-    };
+    } as unknown as RorApiResponse;
 
     expect(transformRorInstitutionsToNames(response)).toEqual([]);
   });
@@ -257,7 +245,7 @@ describe('loadInstitutionOptions', () => {
     };
 
     mockGetInstitutions.mockResolvedValue(
-      mockResponse as Awaited<ReturnType<typeof getInstitutions>>,
+      mockResponse as unknown as Awaited<ReturnType<typeof getInstitutions>>,
     );
 
     const result = await loadInstitutionOptions('test');
@@ -282,7 +270,7 @@ describe('loadInstitutionOptions', () => {
     };
 
     mockGetInstitutions.mockResolvedValue(
-      mockResponse as Awaited<ReturnType<typeof getInstitutions>>,
+      mockResponse as unknown as Awaited<ReturnType<typeof getInstitutions>>,
     );
 
     const result = await loadInstitutionOptions();
@@ -296,7 +284,7 @@ describe('loadInstitutionOptions', () => {
   it('returns empty array when API returns empty items', async () => {
     mockGetInstitutions.mockResolvedValue({
       items: [],
-    } as Awaited<ReturnType<typeof getInstitutions>>);
+    } as unknown as Awaited<ReturnType<typeof getInstitutions>>);
 
     const result = await loadInstitutionOptions('query');
 
@@ -305,7 +293,7 @@ describe('loadInstitutionOptions', () => {
 
   it('returns empty array when API returns no items property', async () => {
     mockGetInstitutions.mockResolvedValue(
-      {} as Awaited<ReturnType<typeof getInstitutions>>,
+      {} as unknown as Awaited<ReturnType<typeof getInstitutions>>,
     );
 
     const result = await loadInstitutionOptions('query');
@@ -355,7 +343,7 @@ describe('loadInstitutionOptions', () => {
     };
 
     mockGetInstitutions.mockResolvedValue(
-      mockResponse as Awaited<ReturnType<typeof getInstitutions>>,
+      mockResponse as unknown as Awaited<ReturnType<typeof getInstitutions>>,
     );
 
     const result = await loadInstitutionOptions('test');
@@ -397,7 +385,7 @@ describe('loadInstitutionOptions', () => {
     };
 
     mockGetInstitutions.mockResolvedValue(
-      mockResponse as Awaited<ReturnType<typeof getInstitutions>>,
+      mockResponse as unknown as Awaited<ReturnType<typeof getInstitutions>>,
     );
 
     const result = await loadInstitutionOptions('universities');

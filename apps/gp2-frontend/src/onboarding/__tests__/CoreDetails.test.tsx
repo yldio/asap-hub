@@ -164,7 +164,7 @@ describe('CoreDetails', () => {
           types: [],
         },
       ],
-    });
+    } as unknown as Awaited<ReturnType<typeof getInstitutions>>);
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);

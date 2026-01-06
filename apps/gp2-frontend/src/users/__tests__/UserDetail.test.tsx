@@ -414,7 +414,7 @@ describe('UserDetail', () => {
             types: [],
           },
         ],
-      });
+      } as unknown as Awaited<ReturnType<typeof getInstitutions>>);
       const user = gp2Fixtures.createUserResponse({
         id: 'testuserid',
       });

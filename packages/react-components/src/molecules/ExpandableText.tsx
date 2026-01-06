@@ -72,10 +72,10 @@ const arrowIconStyles = css({
   alignSelf: 'start',
 });
 
-const ExpandableText: React.FC<{ variant?: 'chevron' | 'arrow' }> = ({
-  variant = 'chevron',
-  children,
-}) => {
+const ExpandableText: React.FC<{
+  variant?: 'chevron' | 'arrow';
+  children?: React.ReactNode;
+}> = ({ variant = 'chevron', children }) => {
   const [expanded, setExpanded] = useState(false);
   const [showToggle, setShowToggle] = useState(false);
   const textElement = React.useRef<HTMLParagraphElement>(null);

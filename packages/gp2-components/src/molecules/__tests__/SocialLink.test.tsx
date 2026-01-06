@@ -4,7 +4,6 @@ import SocialLink from '../SocialLink';
 describe('SocialLink', () => {
   it('renders a Link with an icon and a label', () => {
     const props = {
-      key: 'test',
       link: 'https://www.test.com',
       icon: <svg />,
       displayName: 'Test',

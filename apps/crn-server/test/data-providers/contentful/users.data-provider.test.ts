@@ -6,6 +6,7 @@ import {
   FETCH_USERS_BY_LAB_ID,
   FETCH_USERS_BY_TEAM_ID,
   FETCH_USERS_BY_TEAM_MEMBERSHIP_ID,
+  FETCH_USER_BY_ID_FOR_ALGOLIA_LIST,
   patchAndPublish,
   patchAndPublishConflict,
 } from '@asap-hub/contentful';
@@ -430,6 +431,43 @@ describe('User data provider', () => {
 
       const response = await userDataProvider.fetchById(id);
       expect(response!.researchTheme).toEqual([]);
+    });
+  });
+
+  describe('FetchByIdForAlgoliaList', () => {
+    test('fetches the user by id for Algolia list', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUserListItem(),
+      });
+
+      const result = await userDataProvider.fetchByIdForAlgoliaList('123');
+
+      expect(result).toEqual(getUserListItemDataObject());
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_USER_BY_ID_FOR_ALGOLIA_LIST,
+        { id: '123', publicUser: false },
+      );
+    });
+
+    test('returns null if user does not exist', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: null,
+      });
+      const result = await userDataProvider.fetchByIdForAlgoliaList('abc');
+      expect(result).toEqual(null);
+    });
+
+    test('should use the correct GraphQL query', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUserListItem(),
+      });
+
+      await userDataProvider.fetchByIdForAlgoliaList('user-id');
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_USER_BY_ID_FOR_ALGOLIA_LIST,
+        { id: 'user-id', publicUser: false },
+      );
     });
   });
 

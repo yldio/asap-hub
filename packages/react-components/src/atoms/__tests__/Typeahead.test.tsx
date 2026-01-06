@@ -18,18 +18,18 @@ it('when empty shows a placeholder message', () => {
   expect(container).toHaveTextContent(/start typing/i);
 });
 
-it('opens a menu to select from on click', () => {
+it('opens a menu to select from on click', async () => {
   const handleChange = jest.fn();
   const { getByText, getByDisplayValue } = render(
     <Typeahead suggestions={['LHR', 'LGW']} value="" onChange={handleChange} />,
   );
 
-  userEvent.click(getByDisplayValue(''));
-  userEvent.click(getByText('LGW'));
+  await userEvent.click(getByDisplayValue(''));
+  await userEvent.click(getByText('LGW'));
   expect(handleChange).toHaveBeenLastCalledWith('LGW');
 });
 
-it('opens a filtered menu to select from when typing', () => {
+it('opens a filtered menu to select from when typing', async () => {
   const handleChange = jest.fn();
   const { getByText, queryByText, getByDisplayValue } = render(
     <Typeahead
@@ -39,27 +39,27 @@ it('opens a filtered menu to select from when typing', () => {
     />,
   );
 
-  userEvent.type(getByDisplayValue(''), 'LT');
+  await userEvent.type(getByDisplayValue(''), 'LT');
   expect(queryByText('LGW')).not.toBeInTheDocument();
 
-  userEvent.click(getByText('LTN'));
+  await userEvent.click(getByText('LTN'));
   expect(handleChange).toHaveBeenLastCalledWith('LTN');
 });
 
-it('allows non-suggested input', () => {
+it('allows non-suggested input', async () => {
   const handleChange = jest.fn();
   const { getByDisplayValue } = render(
     <Typeahead suggestions={['LHR', 'LGW']} value="" onChange={handleChange} />,
   );
-  userEvent.type(getByDisplayValue(''), 'LTN');
+  await userEvent.type(getByDisplayValue(''), 'LTN');
   expect(handleChange).toHaveBeenLastCalledWith('LTN');
 });
 
-it('shows the focused suggestion in green', () => {
+it('shows the focused suggestion in green', async () => {
   const { getByText, getByDisplayValue } = render(
     <Typeahead suggestions={['LHR', 'LGW']} value="" />,
   );
-  userEvent.click(getByDisplayValue(''));
+  await userEvent.click(getByDisplayValue(''));
   expect(
     findParentWithStyle(getByText('LGW'), 'color')?.color.replace(/ /g, ''),
   ).not.toBe(pine.rgb.replace(/ /g, ''));
@@ -111,12 +111,12 @@ describe('invalidity', () => {
     );
   });
 
-  it('is caused by being empty when required', () => {
+  it('is caused by being empty when required', async () => {
     const { getByDisplayValue } = render(
       <Typeahead suggestions={['LHR', 'LGW']} value="LHR" required />,
     );
-    userEvent.clear(getByDisplayValue('LHR'));
-    userEvent.tab();
+    await userEvent.clear(getByDisplayValue('LHR'));
+    await userEvent.tab();
     expect(findParentWithStyle(getByDisplayValue(''), 'color')?.color).toBe(
       ember.rgb,
     );
@@ -124,12 +124,14 @@ describe('invalidity', () => {
 });
 
 describe('async', () => {
-  it('displays value', () => {
+  it('displays value', async () => {
     const loadOptions = jest.fn().mockResolvedValue(['example']);
     const { getByDisplayValue } = render(
       <Typeahead loadOptions={loadOptions} value="example" required />,
     );
-    expect(getByDisplayValue('example')).toBeVisible();
+    await waitFor(() => {
+      expect(getByDisplayValue('example')).toBeVisible();
+    });
   });
   it('displays and able to select suggestions', async () => {
     const loadOptions = jest.fn().mockResolvedValue(['test']);
@@ -143,7 +145,7 @@ describe('async', () => {
       />,
     );
     const input = getByDisplayValue('');
-    userEvent.type(input, 't');
+    await userEvent.type(input, 't');
 
     await waitFor(() => {
       const menuItem = getByText('test');
@@ -165,7 +167,7 @@ describe('async', () => {
       />,
     );
     const input = getByDisplayValue('');
-    userEvent.type(input, 'example');
+    await userEvent.type(input, 'example');
 
     await waitFor(() => expect(onChange).toHaveBeenCalledWith('example'));
   });

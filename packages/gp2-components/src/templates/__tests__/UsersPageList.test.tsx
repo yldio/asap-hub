@@ -90,7 +90,7 @@ describe('UsersPageList', () => {
         />,
       );
 
-      userEvent.click(screen.getByRole('button', { name: 'Apply' }));
+      await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
       expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
         regions: [],
         tags: [],
@@ -100,7 +100,7 @@ describe('UsersPageList', () => {
       });
     },
   );
-  it('calls the updateFilters with the right arguments for removing a certain filter', () => {
+  it('calls the updateFilters with the right arguments for removing a certain filter', async () => {
     const filters: gp2Model.FetchUsersFilter = {
       regions: ['Asia'],
       tags: [],
@@ -123,7 +123,7 @@ describe('UsersPageList', () => {
 
     const onRemoveButton = screen.getByRole('button', { name: /cross/i });
 
-    userEvent.click(onRemoveButton);
+    await userEvent.click(onRemoveButton);
 
     expect(updateFilterSpy).toHaveBeenCalledWith('/users', {
       regions: [],

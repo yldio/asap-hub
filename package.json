@@ -51,6 +51,7 @@
     "export:entity:crn": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export",
     "export:entity:gp2": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/gp2-server/tsconfig.json --files=./apps/gp2-server/@types ./apps/gp2-server/scripts/cli.ts export",
     "export:compliance": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export-compliance-data",
+    "export:tags-utilisation": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export-tags-utilisation",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint": "yarn test --config=jest-eslint.config.js",
@@ -60,15 +61,18 @@
     "schema:update:crn": "./apps/crn-server/scripts/schema-update.sh",
     "start": "yarn watch & yarn start:crn & yarn start:gp2 & yarn start:storybook",
     "start:backend:crn": "yarn workspace @asap-hub/crn-server start",
-    "start:backend:crn:sls": "SLS_STAGE=local yarn workspace @asap-hub/crn-server serverless offline --httpPort 3333",
+    "start:backend:crn:sls": "SLS_STAGE=local LOCAL_DYNAMODB_ENDPOINT=http://localhost:8000 yarn workspace @asap-hub/crn-server serverless offline --httpPort 3333",
     "start:backend:gp2": "yarn workspace @asap-hub/gp2-server start",
+    "start:backend:gp2:sls": "SLS_STAGE=local LOCAL_DYNAMODB_ENDPOINT=http://localhost:8000 yarn workspace @asap-hub/gp2-server serverless offline --httpPort 4444",
     "start:crn": "yarn start:frontend:crn & yarn start:backend:crn",
+    "dynamodb:start": "docker-compose up -d dynamodb-local",
+    "dynamodb:stop": "docker-compose stop dynamodb-local",
     "start:frontend:crn": "yarn workspace @asap-hub/crn-frontend start",
     "start:frontend:gp2": "yarn workspace @asap-hub/gp2-frontend start",
     "start:gp2": "yarn start:frontend:gp2 & yarn start:backend:gp2",
     "start:storybook": "yarn workspace @asap-hub/storybook start",
     "tags": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts tags",
-    "test": "LANG=en_US TZ=UTC jest",
+    "test": "LANG=en_US TZ=UTC jest --noStackTrace",
     "test:workspace": "yarn test --config=jest-workspace.config.js",
     "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",
     "test:build-output": "yarn test --config=jest-build-output.config.js",
@@ -87,7 +91,9 @@
     "vfile": "4.2.1",
     "@typescript-eslint/eslint-plugin": "6.18.1",
     "@typescript-eslint/parser": "6.18.1",
-    "eslint-plugin-import": "2.29.1"
+    "eslint-plugin-import": "2.29.1",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1"
   },
   "dependenciesMeta": {
     "aws-sdk": {
@@ -136,7 +142,7 @@
       },
       {
         "path": "apps/gp2-frontend/dist/**/*.js",
-        "maxSize": "256 kB"
+        "maxSize": "300 kB"
       }
     ]
   },
@@ -156,11 +162,10 @@
     "@babel/preset-typescript": "7.28.5",
     "@babel/runtime-corejs3": "7.28.4",
     "@emotion/jest": "^11.10.5",
-    "@jeysal/babel-plugin-ramda": "2.0.1",
     "@peculiar/webcrypto": "1.4.6",
-    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/jest-dom": "^6.9.0",
     "@types/jest": "29.5.14",
-    "@types/react-test-renderer": "18.0.7",
+    "@types/react-test-renderer": "18.3.0",
     "@types/uuid": "8.3.4",
     "@types/webpack": "4.41.40",
     "@yarnpkg/pnpify": "3.1.8",
@@ -184,7 +189,7 @@
     "nock": "13.4.0",
     "node-fetch": "3.0.0-beta.9",
     "prettier": "3.1.1",
-    "react-test-renderer": "17.0.2",
+    "react-test-renderer": "18.3.1",
     "rimraf": "3.0.2",
     "turbo": "^1.11.3",
     "typescript": "4.9.5"

@@ -16,6 +16,7 @@ type UsersPageListProps = ComponentProps<typeof FilterSearchExport> & {
     path: string,
     filter: gp2Model.FetchUsersSearchFilter,
   ) => void;
+  children?: React.ReactNode;
 } & Pick<
     ComponentProps<typeof FiltersModal>,
     'filters' | 'projects' | 'workingGroups' | 'tags'

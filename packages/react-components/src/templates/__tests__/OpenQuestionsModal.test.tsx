@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 
 import OpenQuestionsModal from '../OpenQuestionsModal';
@@ -12,7 +12,7 @@ const props: ComponentProps<typeof OpenQuestionsModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 it('renders the title', () => {
   const { getByText } = renderModal(<OpenQuestionsModal {...props} />);
   expect(getByText('Open Questions', { selector: 'h3' })).toBeVisible();
@@ -51,7 +51,7 @@ describe('triggers the save function', () => {
       <OpenQuestionsModal {...props} onSave={jestFn} />,
     );
 
-    const answerQuestion = (index: number) =>
+    const answerQuestion = async (index: number) =>
       userEvent.type(
         getByLabelText(
           `Open Question ${index}${
@@ -61,11 +61,11 @@ describe('triggers the save function', () => {
         questions[index]!,
       );
 
-    questions[1] && answerQuestion(1);
-    questions[2] && answerQuestion(2);
-    questions[3] && answerQuestion(3);
-    questions[4] && answerQuestion(4);
-    userEvent.click(getByText('Save'));
+    questions[1] && (await answerQuestion(1));
+    questions[2] && (await answerQuestion(2));
+    questions[3] && (await answerQuestion(3));
+    questions[4] && (await answerQuestion(4));
+    await userEvent.click(getByText('Save'));
 
     await waitFor(() =>
       expect(getByText(/save/i).closest('button')).toBeEnabled(),
@@ -107,7 +107,7 @@ it('disables the form elements while submitting', async () => {
     />,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
 
   const form = getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);

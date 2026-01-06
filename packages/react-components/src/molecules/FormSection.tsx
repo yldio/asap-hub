@@ -8,6 +8,7 @@ export type FormSectionProps = {
   secondaryTitle?: string;
   description?: string | React.ReactNode;
   headerDecorator?: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 const titleStyles = css({

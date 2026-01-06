@@ -1,13 +1,9 @@
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import Routes from '../Routes';
+import OnboardingRoutes from '../Routes';
 
 const renderRoutes = async () => {
   render(
@@ -16,16 +12,18 @@ const renderRoutes = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/']}>
-              <Route path="/">
-                <Routes />
-              </Route>
+              <Routes>
+                <Route path="/*" element={<OnboardingRoutes />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>
     </RecoilRoot>,
   );
-  return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 beforeEach(() => {
   jest.resetAllMocks();

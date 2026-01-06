@@ -8,16 +8,10 @@ import {
   QuickCheck,
   quickCheckQuestions,
 } from '@asap-hub/model';
-import {
-  cleanup,
-  render,
-  waitFor,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
+import { cleanup, render, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import type {
   ByRoleOptions,
   waitForOptions,
@@ -147,8 +141,8 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByLabelText, queryByText, getByText, findByRole } = render(
-        <StaticRouter>
+      const { getByLabelText, queryAllByText, getByText, findByRole } = render(
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...defaultProps}
@@ -175,12 +169,10 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      await waitFor(() =>
-        expect(queryByText(/loading/i)).not.toBeInTheDocument(),
-      );
+      await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
 
-      userEvent.click(getByLabelText(section));
-      userEvent.click(getByText('Author One'));
+      await userEvent.click(getByLabelText(section));
+      await userEvent.click(getByText('Author One'));
 
       await submitForm({ findByRole });
       await waitFor(() => {
@@ -216,8 +208,8 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByLabelText, queryByText, getByText, findByRole } = render(
-        <StaticRouter>
+      const { getByLabelText, queryAllByText, getByText, findByRole } = render(
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...defaultProps}
@@ -244,12 +236,10 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      userEvent.click(getByLabelText(section));
-      await waitFor(() =>
-        expect(queryByText(/loading/i)).not.toBeInTheDocument(),
-      );
-      userEvent.click(getByText(/External Author One \(Non CRN\)/));
-      userEvent.type(
+      await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
+      await userEvent.click(getByLabelText(section));
+      await userEvent.click(getByText(/External Author One \(Non CRN\)/));
+      await userEvent.type(
         getByLabelText(/External Author One Email/i),
         'external@author.com',
       );
@@ -292,8 +282,8 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByLabelText, queryByText, getByText, findByRole } = render(
-        <StaticRouter>
+      const { getByLabelText, queryAllByText, getByText, findByRole } = render(
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...defaultProps}
@@ -320,13 +310,11 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      userEvent.type(getByLabelText(section), 'Jane Doe');
+      await userEvent.type(getByLabelText(section), 'Jane Doe');
 
-      await waitFor(() =>
-        expect(queryByText(/loading/i)).not.toBeInTheDocument(),
-      );
+      await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
 
-      userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
+      await userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
       await userEvent.type(getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
 
       await submitForm({ findByRole });
@@ -357,7 +345,7 @@ describe('preprintDoi', () => {
     'preprintDoi is $status when lifecycle is $lifecycle',
     async ({ lifecycle, status }) => {
       const { getByRole } = render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...defaultProps}
@@ -426,7 +414,7 @@ describe('renders the necessary fields', () => {
         (lifecycle) => {
           const manuscriptLifecycle = lifecycle as ManuscriptLifecycle;
           const { getByText } = render(
-            <StaticRouter>
+            <StaticRouter location="/">
               <Suspense fallback={<div>Loading...</div>}>
                 <ManuscriptForm
                   {...defaultProps}
@@ -454,30 +442,21 @@ describe('manuscript file', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+    const mockFile = new File([''], 'test.pdf', { type: 'application/pdf' });
     const mockError = 'No file provided or file is not a PDF.';
 
     handleFileUpload.mockImplementation(
       (
-        file: File,
-        fileType: ManuscriptFileType,
+        _file: File,
+        _fileType: ManuscriptFileType,
         handleError: (errorMessage: string) => void,
       ) => {
-        if (file === mockFile) {
-          return Promise.reject(new Error(mockError)).catch((error) => {
-            handleError(error.message);
-            return undefined;
-          });
-        }
-        return Promise.resolve({
-          id: '123',
-          filename: 'test.pdf',
-          url: 'http://example.com/test.pdf',
-        });
+        handleError(mockError);
+        return Promise.resolve(undefined);
       },
     );
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -494,11 +473,11 @@ describe('manuscript file', () => {
 
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
-    await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
-    });
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(getByText(mockError)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(mockError)).toBeInTheDocument();
+    });
   });
 
   it('should show error when file size is greater than 100MB', async () => {
@@ -506,12 +485,14 @@ describe('manuscript file', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 100)], 'test.txt', {
-      type: 'text/plain',
+    const mockFileContent = new Array(1024).fill('x').join('');
+    const mockFile = new File([mockFileContent], 'test.pdf', {
+      type: 'application/pdf',
     });
+    Object.defineProperty(mockFile, 'size', { value: 101 * 1024 * 1024 });
 
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -528,20 +509,20 @@ describe('manuscript file', () => {
 
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
-    await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
-    });
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
   });
 
   it('should upload and remove file when user clicks on upload manuscript file and remove button', async () => {
     const { getByLabelText, queryByText, getByText, getByRole } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -562,25 +543,25 @@ describe('manuscript file', () => {
     });
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
 
-    await waitFor(() => {
-      userEvent.upload(uploadInput, testFile);
-    });
+    await userEvent.upload(uploadInput, testFile);
 
-    expect(getByText(/test.pdf/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(/test.pdf/i)).toBeInTheDocument();
+    });
 
     const removeFileButton = getByRole('button', { name: /cross/i });
     expect(removeFileButton).toBeInTheDocument();
 
-    await waitFor(() => {
-      userEvent.click(removeFileButton);
-    });
+    await userEvent.click(removeFileButton);
 
-    expect(queryByText(/test.pdf/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText(/test.pdf/i)).not.toBeInTheDocument();
+    });
   });
 
   it('clears error when a valid manuscript file is uploaded after an error', async () => {
     const { getByLabelText, queryByText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -594,41 +575,42 @@ describe('manuscript file', () => {
       </StaticRouter>,
     );
 
-    const tooLargeFile = new File(
-      ['1'.repeat(101 * 1024 * 1024)],
-      'too-big.pdf',
-      {
-        type: 'application/pdf',
-      },
-    );
+    const tooLargeFile = new File(['x'], 'too-big.pdf', {
+      type: 'application/pdf',
+    });
+    Object.defineProperty(tooLargeFile, 'size', { value: 101 * 1024 * 1024 });
 
     const uploadInput = getByLabelText(/Upload Manuscript File/i);
-    await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
+    await userEvent.upload(uploadInput, tooLargeFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
 
     // Uploads a valid file
     const validFile = new File(['valid content'], 'valid.pdf', {
       type: 'application/pdf',
     });
 
-    await waitFor(() => userEvent.upload(uploadInput, validFile));
+    await userEvent.upload(uploadInput, validFile);
 
     // Error message should disappear
-    expect(
-      queryByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        queryByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('clears error when a valid key resource table is uploaded after an error', async () => {
     const { getByLabelText, queryByText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -640,40 +622,41 @@ describe('manuscript file', () => {
       </StaticRouter>,
     );
 
-    const tooLargeFile = new File(
-      ['1'.repeat(101 * 1024 * 1024)],
-      'too-big.csv',
-      {
-        type: 'text/csv',
-      },
-    );
+    const tooLargeFile = new File(['x'], 'too-big.csv', {
+      type: 'text/csv',
+    });
+    Object.defineProperty(tooLargeFile, 'size', { value: 101 * 1024 * 1024 });
 
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
-    await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
+    await userEvent.upload(uploadInput, tooLargeFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
 
     // Uploads a valid file
     const validFile = new File(['valid content'], 'valid.csv', {
       type: 'text/csv',
     });
-    await waitFor(() => userEvent.upload(uploadInput, validFile));
+    await userEvent.upload(uploadInput, validFile);
 
     // Error message should disappear
-    expect(
-      queryByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        queryByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('clears error when a valid additional file is uploaded after an error', async () => {
     const { getByLabelText, queryByText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -685,34 +668,35 @@ describe('manuscript file', () => {
       </StaticRouter>,
     );
 
-    const tooLargeFile = new File(
-      ['1'.repeat(101 * 1024 * 1024)],
-      'too-big.pdf',
-      {
-        type: 'application/pdf',
-      },
-    );
+    const tooLargeFile = new File(['x'], 'too-big.pdf', {
+      type: 'application/pdf',
+    });
+    Object.defineProperty(tooLargeFile, 'size', { value: 101 * 1024 * 1024 });
 
     const uploadInput = getByLabelText(/Upload Additional Files/i);
-    await waitFor(() => userEvent.upload(uploadInput, tooLargeFile));
+    await userEvent.upload(uploadInput, tooLargeFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
 
     // Upload a valid file
     const validFile = new File(['valid content'], 'valid.pdf', {
       type: 'application/pdf',
     });
-    await waitFor(() => userEvent.upload(uploadInput, validFile));
+    await userEvent.upload(uploadInput, validFile);
 
-    expect(
-      queryByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        queryByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).not.toBeInTheDocument();
+    });
   });
 });
 
@@ -722,22 +706,21 @@ describe('key resource table', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+    const mockFile = new File([''], 'test.csv', { type: 'text/csv' });
     const mockError = 'No file provided or file is not a CSV.';
 
     handleFileUpload.mockImplementation(
       (
-        file: File,
-        fileType: ManuscriptFileType,
+        _file: File,
+        _fileType: ManuscriptFileType,
         handleError: (errorMessage: string) => void,
-      ) =>
-        Promise.reject(new Error(mockError)).catch((error) => {
-          handleError(error.message);
-          return undefined;
-        }),
+      ) => {
+        handleError(mockError);
+        return Promise.resolve(undefined);
+      },
     );
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -754,11 +737,11 @@ describe('key resource table', () => {
 
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
-    await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
-    });
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(getByText(mockError)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(mockError)).toBeInTheDocument();
+    });
   });
 
   it('should show error when file size is greater than 100MB', async () => {
@@ -766,12 +749,14 @@ describe('key resource table', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 100)], 'test.txt', {
-      type: 'text/plain',
+    const mockFileContent = new Array(1024).fill('x').join('');
+    const mockFile = new File([mockFileContent], 'test.csv', {
+      type: 'text/csv',
     });
+    Object.defineProperty(mockFile, 'size', { value: 101 * 1024 * 1024 });
 
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -788,15 +773,15 @@ describe('key resource table', () => {
 
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
-    await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
-    });
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
   });
 
   it('should upload and remove file when user clicks on upload key resource table and remove button', async () => {
@@ -808,7 +793,7 @@ describe('key resource table', () => {
       }),
     );
     const { getByLabelText, queryByText, getByText, getByRole } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -830,20 +815,20 @@ describe('key resource table', () => {
     });
     const uploadInput = getByLabelText(/Upload Key Resource Table/i);
 
-    await waitFor(() => {
-      userEvent.upload(uploadInput, testFile);
-    });
+    await userEvent.upload(uploadInput, testFile);
 
-    expect(getByText(/test.csv/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(/test.csv/i)).toBeInTheDocument();
+    });
 
     const removeFileButton = getByRole('button', { name: /cross/i });
     expect(removeFileButton).toBeInTheDocument();
 
-    await waitFor(() => {
-      userEvent.click(removeFileButton);
-    });
+    await userEvent.click(removeFileButton);
 
-    expect(queryByText(/test.csv/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText(/test.csv/i)).not.toBeInTheDocument();
+    });
   });
 });
 
@@ -851,7 +836,7 @@ describe('additional files', () => {
   it('user can upload additional files', async () => {
     const onCreate = jest.fn();
     const { getByLabelText, queryByText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -873,33 +858,32 @@ describe('additional files', () => {
     });
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(() => {
-      userEvent.upload(uploadInput, testFile);
-    });
+    await userEvent.upload(uploadInput, testFile);
 
-    expect(getByText(/test.pdf/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(/test.pdf/i)).toBeInTheDocument();
+    });
   });
   it('should show error when file upload fails', async () => {
     const handleFileUpload: jest.MockedFunction<
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File([''], 'test.txt', { type: 'text/plain' });
+    const mockFile = new File([''], 'test.pdf', { type: 'application/pdf' });
     const mockError = 'No file provided or file is not a CSV or PDF.';
 
     handleFileUpload.mockImplementation(
       (
-        file: File,
-        fileType: ManuscriptFileType,
+        _file: File,
+        _fileType: ManuscriptFileType,
         handleError: (errorMessage: string) => void,
-      ) =>
-        Promise.reject(new Error(mockError)).catch((error) => {
-          handleError(error.message);
-          return undefined;
-        }),
+      ) => {
+        handleError(mockError);
+        return Promise.resolve(undefined);
+      },
     );
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -916,17 +900,17 @@ describe('additional files', () => {
 
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
-    });
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(getByText(mockError)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(mockError)).toBeInTheDocument();
+    });
   });
 
   it('user cannot upload the same file multiple times', async () => {
     const onCreate = jest.fn();
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -955,11 +939,11 @@ describe('additional files', () => {
     });
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(() => {
-      userEvent.upload(uploadInput, testFile);
-    });
+    await userEvent.upload(uploadInput, testFile);
 
-    expect(getByText(/File uploaded already exists./i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByText(/File uploaded already exists./i)).toBeInTheDocument();
+    });
   });
 
   it('should show error when file size is greater than 100MB', async () => {
@@ -967,12 +951,14 @@ describe('additional files', () => {
       ComponentProps<typeof ManuscriptForm>['handleFileUpload']
     > = jest.fn();
 
-    const mockFile = new File(['1'.repeat(1024 * 1024 * 100)], 'test.txt', {
-      type: 'text/plain',
+    const mockFileContent = new Array(1024).fill('x').join('');
+    const mockFile = new File([mockFileContent], 'test.pdf', {
+      type: 'application/pdf',
     });
+    Object.defineProperty(mockFile, 'size', { value: 101 * 1024 * 1024 });
 
     const { getByLabelText, getByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -989,20 +975,20 @@ describe('additional files', () => {
 
     const uploadInput = getByLabelText(/Upload Additional Files/i);
 
-    await waitFor(async () => {
-      userEvent.upload(uploadInput, mockFile);
-    });
+    await userEvent.upload(uploadInput, mockFile);
 
-    expect(
-      getByText(
-        'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
-      ),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
   });
 
   it('should remove one of the additional files without removing the others', async () => {
     const { queryByText, getByText, getAllByRole } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -1036,11 +1022,11 @@ describe('additional files', () => {
     })[0]!;
     expect(removeFileOneButton).toBeInTheDocument();
 
-    await waitFor(() => {
-      userEvent.click(removeFileOneButton);
-    });
+    await userEvent.click(removeFileOneButton);
 
-    expect(queryByText(/file_one.csv/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText(/file_one.csv/i)).not.toBeInTheDocument();
+    });
     expect(getByText(/file_two.pdf/i)).toBeInTheDocument();
   });
 });
@@ -1052,7 +1038,7 @@ it('user can add teams', async () => {
     { label: 'Team B', value: 'team-b' },
   ]);
   const { getByText, findByRole, getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1079,17 +1065,17 @@ it('user can add teams', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(getByRole('textbox', { name: /Teams/i }));
+  await userEvent.click(getByRole('textbox', { name: /Teams/i }));
   await waitFor(() => {
     expect(getByText('Team A')).toBeVisible();
   });
-  userEvent.click(getByText('Team A'));
+  await userEvent.click(getByText('Team A'));
 
-  userEvent.click(getByRole('textbox', { name: /Teams/i }));
+  await userEvent.click(getByRole('textbox', { name: /Teams/i }));
   await waitFor(() => {
     expect(getByText('Team B')).toBeVisible();
   });
-  userEvent.click(getByText('Team B'));
+  await userEvent.click(getByText('Team B'));
 
   await submitForm({ findByRole });
 
@@ -1113,7 +1099,7 @@ it('user can add labs', async () => {
     { label: 'Lab Two', value: 'lab-2' },
   ]);
   const { getByText, findByRole, getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1139,15 +1125,15 @@ it('user can add labs', async () => {
       </Suspense>
     </StaticRouter>,
   );
-  userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(getByRole('textbox', { name: /Labs/i }));
   await waitFor(() => {
     expect(getByText('Lab One')).toBeVisible();
   });
-  userEvent.click(getByText('Lab One'));
+  await userEvent.click(getByText('Lab One'));
 
-  userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(getByRole('textbox', { name: /Labs/i }));
   expect(getByText('Lab Two')).toBeVisible();
-  userEvent.click(getByText('Lab Two'));
+  await userEvent.click(getByText('Lab Two'));
 
   await submitForm({ findByRole });
 
@@ -1166,8 +1152,8 @@ it('user can add labs', async () => {
 
 it('displays error message when no team is found', async () => {
   const getTeamSuggestionsMock = jest.fn().mockResolvedValue([]);
-  const { queryByText, getByText, getByRole } = render(
-    <StaticRouter>
+  const { getByText, getByRole } = render(
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1176,15 +1162,16 @@ it('displays error message when no team is found', async () => {
       </Suspense>
     </StaticRouter>,
   );
-  userEvent.click(getByRole('textbox', { name: /Teams/i }));
-  await waitForElementToBeRemoved(() => queryByText(/loading/i));
-  expect(getByText(/Sorry, no teams match/i)).toBeVisible();
+  await userEvent.click(getByRole('textbox', { name: /Teams/i }));
+  await waitFor(() => {
+    expect(getByText(/Sorry, no teams match/i)).toBeVisible();
+  });
 });
 
 it('displays error message when no lab is found', async () => {
   const getLabSuggestions = jest.fn().mockResolvedValue([]);
-  const { queryByText, getByText, getByRole } = render(
-    <StaticRouter>
+  const { getByText, getByRole } = render(
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1193,15 +1180,16 @@ it('displays error message when no lab is found', async () => {
       </Suspense>
     </StaticRouter>,
   );
-  userEvent.click(getByRole('textbox', { name: /Labs/i }));
-  await waitForElementToBeRemoved(() => queryByText(/loading/i));
-  expect(getByText(/Sorry, no labs match/i)).toBeVisible();
+  await userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  await waitFor(() => {
+    expect(getByText(/Sorry, no labs match/i)).toBeVisible();
+  });
 });
 
 it('calls onUpdate when form is updated', async () => {
   const onUpdate = jest.fn();
   const { findByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1284,7 +1272,7 @@ it('calls onUpdate when form is updated', async () => {
 it('calls onResubmit when form details are saved and resubmitManuscript prop is true', async () => {
   const onResubmit = jest.fn();
   const { findByLabelText, findByRole, getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1318,8 +1306,11 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     name: /Where is the manuscript in the life cycle/i,
   });
 
-  userEvent.type(lifecycleTextbox, 'Draft Manuscript (prior to Publication)');
-  userEvent.type(lifecycleTextbox, specialChars.enter);
+  await userEvent.type(
+    lifecycleTextbox,
+    'Draft Manuscript (prior to Publication)',
+  );
+  await userEvent.type(lifecycleTextbox, '{Enter}');
   lifecycleTextbox.blur();
 
   const testManuscriptFile = new File(['file content'], 'manuscript.pdf', {
@@ -1329,22 +1320,23 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     type: 'text/csv',
   });
 
-  userEvent.upload(
+  await userEvent.upload(
     await findByLabelText(/Upload Manuscript File/i),
     testManuscriptFile,
   );
-  userEvent.upload(
+  await userEvent.upload(
     await findByLabelText(/Upload Key Resource Table/i),
     testKeyResourceFile,
   );
 
   const quickChecks = getByRole('region', { name: /quick checks/i });
 
-  within(quickChecks)
-    .getAllByRole('radio', { name: 'Yes' })
-    .forEach((button) => {
-      userEvent.click(button);
-    });
+  for (const button of within(quickChecks).getAllByRole('radio', {
+    name: 'Yes',
+  })) {
+    // eslint-disable-next-line no-await-in-loop -- Sequential clicks are intentional to simulate real user interaction
+    await userEvent.click(button);
+  }
 
   await submitForm({ findByRole });
 
@@ -1408,7 +1400,7 @@ it('can generate short description when description is present', async () => {
     .mockResolvedValue('A tiny description');
 
   const { getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm
           {...defaultProps}
@@ -1427,7 +1419,7 @@ it('can generate short description when description is present', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(getByRole('button', { name: 'Generate' }));
+  await userEvent.click(getByRole('button', { name: 'Generate' }));
 
   await waitFor(() => {
     expect(getShortDescriptionFromDescription).toHaveBeenCalledWith(

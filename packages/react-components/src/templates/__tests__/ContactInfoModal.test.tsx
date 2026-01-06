@@ -1,13 +1,14 @@
 import { ReactNode } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UserResponse } from '@asap-hub/model';
 
 import ContactInfoModal from '../ContactInfoModal';
+import { mockActErrorsInConsole } from '../../test-utils';
 
 const renderModal = (children: ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 it('renders a form to edit the contact info', () => {
   const { getByText } = renderModal(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
@@ -65,9 +66,9 @@ it('fires onSave when submitting', async () => {
     />,
   );
 
-  userEvent.clear(getByLabelText(/email/i));
+  await userEvent.clear(getByLabelText(/email/i));
   await userEvent.type(getByLabelText(/email/i), 'new-contact@example.com');
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
   expect(handleSave).toHaveBeenLastCalledWith(
     expect.objectContaining({ contactEmail: 'new-contact@example.com' }),
   );
@@ -86,9 +87,9 @@ it('does not fire onSave when the email is invalid', async () => {
     />,
   );
 
-  userEvent.clear(getByLabelText(/email/i));
+  await userEvent.clear(getByLabelText(/email/i));
   await userEvent.type(getByLabelText(/email/i), '.');
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
   expect(handleSave).not.toHaveBeenCalled();
 });
 
@@ -107,7 +108,7 @@ it('disables the form elements while submitting', async () => {
     />,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
 
   const form = getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);
@@ -161,6 +162,9 @@ it.each`
 `(
   'shows validation message "$message" for $label input',
   async ({ label, value, message }) => {
+    // Suppress act() warnings from TextField's internal async validation state updates
+    const consoleMock = mockActErrorsInConsole();
+
     const { getByLabelText, findByText } = renderModal(
       <ContactInfoModal backHref="#" fallbackEmail="fallback@example.com" />,
     );
@@ -170,5 +174,7 @@ it.each`
     });
     fireEvent.focusOut(input);
     expect(await findByText(new RegExp(message, 'i'))).toBeVisible();
+
+    consoleMock.mockRestore();
   },
 );

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
@@ -17,7 +17,7 @@ const props: ComponentProps<typeof ExpertiseAndResourcesModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 it('renders the title', () => {
   const { getByText } = renderModal(<ExpertiseAndResourcesModal {...props} />);
   expect(
@@ -59,15 +59,15 @@ it('triggers the save function', async () => {
     />,
   );
 
-  userEvent.type(
+  await userEvent.type(
     getByLabelText(/expertise and resources/i),
     'example description',
   );
 
-  userEvent.type(getByLabelText(/tags\s*\(required\)/i), '5');
-  userEvent.tab();
+  await userEvent.type(getByLabelText(/tags\s*\(required\)/i), '5');
+  await userEvent.tab();
 
-  userEvent.click(getByText('Save'));
+  await userEvent.click(getByText('Save'));
 
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
@@ -92,7 +92,7 @@ it('disables the form elements while submitting', async () => {
     />,
   );
 
-  userEvent.click(getByText(/save/i));
+  await userEvent.click(getByText(/save/i));
 
   const form = getByText(/save/i).closest('form')!;
   expect(form.elements.length).toBeGreaterThan(1);
@@ -110,11 +110,11 @@ describe('tags selection', () => {
       <ExpertiseAndResourcesModal {...props} suggestions={mapTags(['abc'])} />,
     );
 
-    userEvent.type(getByLabelText(/tags\s*\(required\)/i), 'def');
+    await userEvent.type(getByLabelText(/tags\s*\(required\)/i), 'def');
     expect(getByText('Sorry, No current tags match "def"')).toBeVisible();
   });
 
-  it('displays an error message when not enough tags have been selected on save', () => {
+  it('displays an error message when not enough tags have been selected on save', async () => {
     const handleSave = jest.fn();
     const { getByText, getByLabelText } = renderModal(
       <ExpertiseAndResourcesModal
@@ -127,14 +127,14 @@ describe('tags selection', () => {
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).not.toEqual(
       ember.rgb,
     );
-    userEvent.click(getByText(/save/i));
+    await userEvent.click(getByText(/save/i));
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(
       steel.rgb,
     );
     expect(handleSave).not.toHaveBeenCalled();
   });
 
-  it('removes error message when enough tags are selected', () => {
+  it('removes error message when enough tags are selected', async () => {
     const handleSave = jest.fn();
     const { getByLabelText, getByText, queryByText } = renderModal(
       <ExpertiseAndResourcesModal
@@ -146,9 +146,9 @@ describe('tags selection', () => {
     );
 
     const input = getByLabelText(/tags\s*\(required\)/i);
-    userEvent.click(input);
-    userEvent.type(input, '4');
-    userEvent.type(input, `{enter}`);
+    await userEvent.click(input);
+    await userEvent.type(input, '4');
+    await userEvent.type(input, `{enter}`);
     fireEvent.blur(input);
 
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(
@@ -156,9 +156,9 @@ describe('tags selection', () => {
     );
     expect(getByText('Please add a minimum of 5 tags')).toBeVisible();
 
-    userEvent.click(input);
-    userEvent.type(input, '5');
-    userEvent.type(input, `{enter}`);
+    await userEvent.click(input);
+    await userEvent.type(input, '5');
+    await userEvent.type(input, `{enter}`);
     fireEvent.blur(input);
 
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(

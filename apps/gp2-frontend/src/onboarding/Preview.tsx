@@ -13,7 +13,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { getInstitutions } from '../users/api';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
@@ -65,53 +65,73 @@ const Preview: React.FC<Record<string, never>> = () => {
           editFundingStreamsHref={editFundingStreams({}).$}
           editContributingCohortsHref={editContributingCohorts({}).$}
         />
-        <Route path={editKeyInfo({}).$}>
-          <KeyInformationModal
-            {...userData}
-            {...commonModalProps}
-            locationSuggestions={locationSuggestions.map(
-              ({ shortName }) => shortName,
-            )}
-            loadInstitutionOptions={(searchQuery) =>
-              getInstitutions({ searchQuery }).then((data) =>
-                data.items.map(({ name }) => name),
-              )
+        <Routes>
+          <Route
+            path={editKeyInfo.template.slice(1)}
+            element={
+              <KeyInformationModal
+                {...userData}
+                {...commonModalProps}
+                locationSuggestions={locationSuggestions.map(
+                  ({ shortName }) => shortName,
+                )}
+                loadInstitutionOptions={(searchQuery) =>
+                  getInstitutions({ searchQuery }).then((data) =>
+                    data.items.map(({ name }) => name),
+                  )
+                }
+              />
             }
           />
-        </Route>
-        <Route path={editContactInfo({}).$}>
-          <ContactInformationModal
-            {...userData}
-            {...commonModalProps}
-            countryCodeSuggestions={countryCodesSuggestions}
+          <Route
+            path={editContactInfo.template.slice(1)}
+            element={
+              <ContactInformationModal
+                {...userData}
+                {...commonModalProps}
+                countryCodeSuggestions={countryCodesSuggestions}
+              />
+            }
           />
-        </Route>
-        <Route path={editBiography({}).$}>
-          <BiographyModal {...userData} {...commonModalProps} />
-        </Route>
-        <Route path={editTags({}).$}>
-          <TagsModal
-            {...userData}
-            {...commonModalProps}
-            suggestions={allTags}
+          <Route
+            path={editBiography.template.slice(1)}
+            element={<BiographyModal {...userData} {...commonModalProps} />}
           />
-        </Route>
-        <Route path={editQuestions({}).$}>
-          <OpenQuestionsModal {...userData} {...commonModalProps} />
-        </Route>
-        <Route path={editFundingStreams({}).$}>
-          <FundingProviderModal {...userData} {...commonModalProps} />
-        </Route>
-        <Route path={editContributingCohorts({}).$}>
-          <ContributingCohortsModal
-            {...userData}
-            {...commonModalProps}
-            cohortOptions={cohortOptions}
+          <Route
+            path={editTags.template.slice(1)}
+            element={
+              <TagsModal
+                {...userData}
+                {...commonModalProps}
+                suggestions={allTags}
+              />
+            }
           />
-        </Route>
-        <Route path={publish({}).$}>
-          <PublishModal {...commonModalProps} />
-        </Route>
+          <Route
+            path={editQuestions.template.slice(1)}
+            element={<OpenQuestionsModal {...userData} {...commonModalProps} />}
+          />
+          <Route
+            path={editFundingStreams.template.slice(1)}
+            element={
+              <FundingProviderModal {...userData} {...commonModalProps} />
+            }
+          />
+          <Route
+            path={editContributingCohorts.template.slice(1)}
+            element={
+              <ContributingCohortsModal
+                {...userData}
+                {...commonModalProps}
+                cohortOptions={cohortOptions}
+              />
+            }
+          />
+          <Route
+            path={publish.template.slice(1)}
+            element={<PublishModal {...commonModalProps} />}
+          />
+        </Routes>
       </>
     );
   }

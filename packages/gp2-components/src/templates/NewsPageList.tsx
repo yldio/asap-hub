@@ -4,7 +4,9 @@ import { ComponentProps } from 'react';
 type NewsPageListProps = Pick<
   ComponentProps<typeof SearchAndFilter>,
   'filters' | 'onChangeFilter' | 'onChangeSearch' | 'searchQuery'
->;
+> & {
+  children?: React.ReactNode;
+};
 
 interface Option<V extends string> {
   value: V;

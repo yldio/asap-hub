@@ -1,5 +1,5 @@
 import { render, waitFor } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import ScrollToTop from '../ScrollToTop';
 
 beforeEach(() => {
@@ -8,7 +8,7 @@ beforeEach(() => {
 
 it('should call scroll to top on mount', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ScrollToTop />
     </StaticRouter>,
   );

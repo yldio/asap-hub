@@ -20,7 +20,7 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArticleIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import GuideDescription from '../molecules/GuideDescription';
@@ -102,7 +102,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   recentOutputs,
   totalOutputs,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const latestNews = news.items[0];
   return (
     <>
@@ -193,11 +193,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <p css={viewAllStyles}>
             <Button
               data-testid="view-upcoming-events"
-              onClick={() =>
-                history.push({
-                  pathname: gp2Routes.events({}).upcoming({}).$,
-                })
-              }
+              onClick={() => navigate(gp2Routes.events({}).upcoming({}).$)}
             >
               View All
             </Button>
@@ -214,11 +210,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <p css={viewAllStyles}>
             <Button
               data-testid="view-past-events"
-              onClick={() =>
-                history.push({
-                  pathname: gp2Routes.events({}).past({}).$,
-                })
-              }
+              onClick={() => navigate(gp2Routes.events({}).past({}).$)}
             >
               View All
             </Button>
@@ -242,11 +234,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <p css={viewAllStyles}>
             <Button
               data-testid="view-outputs"
-              onClick={() =>
-                history.push({
-                  pathname: gp2Routes.outputs({}).$,
-                })
-              }
+              onClick={() => navigate(gp2Routes.outputs({}).$)}
             >
               View All
             </Button>
@@ -270,11 +258,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <p css={viewAllStyles}>
           <Button
             data-testid="view-users"
-            onClick={() =>
-              history.push({
-                pathname: gp2Routes.users({}).$,
-              })
-            }
+            onClick={() => navigate(gp2Routes.users({}).$)}
           >
             View All
           </Button>

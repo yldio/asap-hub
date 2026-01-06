@@ -47,7 +47,7 @@ const SocialIconLink: React.FC<{
     </Link>
   ) : null;
 
-type SocialIconsProps = UserResponse['social'];
+type SocialIconsProps = NonNullable<UserResponse['social']>;
 
 const SocialIcons: React.FC<SocialIconsProps> = ({
   github,

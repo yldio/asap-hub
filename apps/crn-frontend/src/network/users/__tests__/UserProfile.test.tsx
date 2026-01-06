@@ -18,7 +18,7 @@ import imageCompression from 'browser-image-compression';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getEvents } from '../../../events/api';
 import { getResearchOutputs } from '../../../shared-research/api';
@@ -61,7 +61,43 @@ const standardMockPostUserAvatar =
 const mockToast = jest.fn() as jest.MockedFunction<
   ContextType<typeof ToastContext>
 >;
-beforeEach(jest.clearAllMocks);
+
+// Suppress React Router v6 nested routes warnings from UserProfile component
+// TODO: Remove this once UserProfile component is migrated to React Router v6
+// eslint-disable-next-line no-console -- storing original console methods to restore after filtering warnings
+const originalWarn = console.warn;
+// eslint-disable-next-line no-console -- storing original console methods to restore after filtering errors
+const originalError = console.error;
+beforeEach(() => {
+  jest.clearAllMocks();
+  jest.spyOn(console, 'warn').mockImplementation((...args) => {
+    const message = args[0];
+    if (
+      typeof message === 'string' &&
+      (message.includes('rendered descendant <Routes>') ||
+        message.includes('No routes matched location'))
+    ) {
+      return;
+    }
+    originalWarn(...args);
+  });
+  // Suppress JSDOM navigation errors (not implemented in test environment)
+  jest.spyOn(console, 'error').mockImplementation((...args) => {
+    const message = String(args[0]);
+    if (message.includes('Not implemented: navigation')) {
+      return;
+    }
+    // Also suppress act() warnings from Suspense
+    if (message.includes('was not wrapped in act')) {
+      return;
+    }
+    originalError(...args);
+  });
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
 const renderUserProfile = async (
   userResponse = createUserResponse(),
@@ -108,15 +144,14 @@ const renderUserProfile = async (
                   network({}).users({}).user({ userId: routeProfileId }).$,
                 ]}
               >
-                <Route
-                  path={
-                    network.template +
-                    network({}).users.template +
-                    network({}).users({}).user.template
-                  }
-                >
-                  <UserProfile currentTime={currentTime} />
-                </Route>
+                <Routes>
+                  <Route
+                    path={`${network.template}${network({}).users.template}${
+                      network({}).users({}).user.template
+                    }/*`}
+                    element={<UserProfile currentTime={currentTime} />}
+                  />
+                </Routes>
               </MemoryRouter>
             </WhenReady>
           </Auth0Provider>
@@ -153,7 +188,7 @@ it('navigates to the background tab', async () => {
   });
 
   const tab = screen.getByRole('link', { name: /background/i });
-  userEvent.click(tab);
+  await userEvent.click(tab);
   expect(await screen.findByText('My Bio')).toBeVisible();
 });
 
@@ -168,7 +203,7 @@ it('navigates to the outputs tab', async () => {
   await renderUserProfile(createUserResponse());
 
   const tab = screen.getByRole('link', { name: /output/i });
-  userEvent.click(tab);
+  await userEvent.click(tab);
   expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Enter a keyword, method, resource…',
@@ -244,15 +279,27 @@ describe('a header edit button', () => {
       country: 'United Kingdom of Great Britain and Northern Ireland',
       id: '42',
     };
-
     await renderUserProfile(userProfile);
-
-    userEvent.click(await screen.findByLabelText(/edit.+personal/i));
-    userEvent.type(await screen.findByDisplayValue('Lon'), 'don');
+    // Navigate to about tab first since edit modals are only rendered under about/*
+    await userEvent.click(
+      await screen.findByRole('link', { name: /background/i }),
+    );
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+    await userEvent.click(await screen.findByLabelText(/edit.+personal/i));
+    // Wait for modal to open - look for the city input field which is modal-specific
+    const cityInput = await screen.findByDisplayValue(
+      'Lon',
+      {},
+      { timeout: 3000 },
+    );
+    await userEvent.type(cityInput, 'don');
     expect(await screen.findByDisplayValue('London')).toBeVisible();
-
-    userEvent.click(screen.getByText(/save/i));
-    expect(await screen.findByText(/London/i)).toBeVisible();
+    await userEvent.click(await screen.findByText(/save/i));
+    await waitFor(() => {
+      expect(screen.getByText(/London/i)).toBeVisible();
+    });
     expect(mockPatchUser).toHaveBeenLastCalledWith(
       '42',
       expect.objectContaining({ city: 'London' }),
@@ -261,55 +308,85 @@ describe('a header edit button', () => {
   });
 
   it('remains on the same tab after closing a modal', async () => {
+    const user = userEvent.setup({ delay: null });
     const userProfile: UserResponse = {
       ...createUserResponse(),
       biography: 'My Bio',
     };
-
     await renderUserProfile(userProfile);
-
-    // Open and close on research tab
-    userEvent.click(
-      await screen.findByText(/research/i, { selector: 'nav *' }),
-    );
-    expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
+    // Open and close on research tab (default tab)
+    // Wait for the Research component to load (it's lazy-loaded)
+    const roleHeading = await screen.findByRole('heading', {
+      name: 'Role',
+    });
+    expect(roleHeading).toBeVisible();
     expect(screen.queryByText(/main details/i)).toBeNull();
-    userEvent.click(await screen.findByLabelText(/edit.+personal/i));
-    expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
-    expect(screen.getByText(/main details/i)).toBeVisible();
-    userEvent.click(screen.getByTitle(/Close/i));
-    expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
-    expect(screen.queryByText(/main details/i)).toBeNull();
-
+    // Open the modal - content behind should still be visible through the semi-transparent overlay
+    await user.click(await screen.findByLabelText(/edit.+personal/i));
+    // Check that both the modal and the content behind are visible
+    await waitFor(() => {
+      expect(screen.getByText(/main details/i)).toBeVisible();
+      // Content behind should be visible (though not interactive)
+      expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
+    });
+    // Close the modal
+    await user.click(await screen.findByTitle(/Close/i));
+    // After closing, verify we're still on the research tab
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'Role' })).toBeVisible();
+      expect(screen.queryByText(/main details/i)).toBeNull();
+    });
     // Open and close on background tab
-    userEvent.click(
+    await user.click(
       await screen.findByText(/background/i, { selector: 'nav *' }),
     );
     expect(await screen.findByText('My Bio')).toBeVisible();
-    userEvent.click(await screen.findByLabelText(/edit.+personal/i));
-    expect(screen.getByText(/my bio/i)).toBeVisible();
-    expect(screen.getByText(/main details/i)).toBeVisible();
-    userEvent.click(screen.getByTitle(/Close/i));
-    expect(screen.getByText(/my bio/i)).toBeVisible();
-    expect(screen.queryByText(/main details/i)).toBeNull();
-  });
+    await user.click(await screen.findByLabelText(/edit.+personal/i));
+    // Check that both the modal and the content behind are visible
+    await waitFor(() => {
+      expect(screen.getByText(/main details/i)).toBeVisible();
+      // Content behind should be visible (though not interactive)
+      expect(screen.getByText(/my bio/i)).toBeVisible();
+    });
+    // Close the modal
+    await user.click(await screen.findByTitle(/Close/i));
+    // After closing, verify we're still on the background tab
+    await waitFor(() => {
+      expect(screen.getByText(/my bio/i)).toBeVisible();
+      expect(screen.queryByText(/main details/i)).toBeNull();
+    });
+  }, 30000);
 
   it('can change contact info', async () => {
+    const user = userEvent.setup({ delay: null });
     const userProfile: UserResponse = {
       ...createUserResponse(),
       contactEmail: 'contact@example.com',
       id: '42',
     };
-
     await renderUserProfile(userProfile);
-
-    userEvent.click(await screen.findByLabelText(/edit.+contact/i));
-    userEvent.type(await screen.findByDisplayValue('contact@example.com'), 'm');
+    // Navigate to about tab first since edit modals are only rendered under about/*
+    await user.click(await screen.findByRole('link', { name: /background/i }));
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+    await user.click(await screen.findByLabelText(/edit.+contact/i));
+    // Wait for modal to open - look for the email input field which is modal-specific
+    const emailInput = await screen.findByDisplayValue(
+      'contact@example.com',
+      {},
+      { timeout: 3000 },
+    );
+    await user.type(emailInput, 'm');
     expect(
       await screen.findByDisplayValue('contact@example.comm'),
     ).toBeVisible();
-
-    userEvent.click(screen.getByText(/save/i));
+    await user.click(await screen.findByText(/save/i));
+    await waitFor(() => {
+      expect(
+        screen.getByText(/contact/i, { selector: 'header *' }),
+      ).toBeVisible();
+    });
     expect(
       (await screen.findByText(/contact/i, { selector: 'header *' })).closest(
         'a',
@@ -322,7 +399,7 @@ describe('a header edit button', () => {
       }),
       expect.any(String),
     );
-  });
+  }, 30000);
 
   it('refreshes auth0 id token', async () => {
     const userProfile: UserResponse = {
@@ -337,9 +414,17 @@ describe('a header edit button', () => {
               throw new Error('Not Ready');
             },
     }));
-    userEvent.click(await screen.findByLabelText(/edit.+contact/i));
-
-    userEvent.click(screen.getByText(/save/i));
+    // Navigate to about tab first since edit modals are only rendered under about/*
+    await userEvent.click(
+      await screen.findByRole('link', { name: /background/i }),
+    );
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+    await userEvent.click(await screen.findByLabelText(/edit.+contact/i));
+    // Wait for modal to open - look for save button
+    const saveButton = await screen.findByText(/save/i, {}, { timeout: 3000 });
+    await userEvent.click(saveButton);
     await waitFor(() => expect(mockToken).toHaveBeenCalled());
   });
 
@@ -362,7 +447,10 @@ describe('a header edit button', () => {
       };
       await renderUserProfile(userProfile);
 
-      userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
+      await userEvent.upload(
+        await screen.findByLabelText(/upload.+avatar/i),
+        file,
+      );
       await waitFor(() =>
         expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
           '42',
@@ -391,7 +479,7 @@ describe('a header edit button', () => {
       }));
 
       const upload = await screen.findByLabelText(/upload.+avatar/i);
-      userEvent.upload(upload, file);
+      await userEvent.upload(upload, file);
       await waitFor(() => expect(mockToken).toHaveBeenCalled());
       await waitFor(() => expect(mockPostUserAvatar).toHaveBeenCalled());
     });
@@ -406,7 +494,7 @@ describe('a header edit button', () => {
 
       mockPostUserAvatar.mockRejectedValue(new Error('500'));
       const upload = await screen.findByLabelText(/upload.+avatar/i);
-      userEvent.upload(upload, file);
+      await userEvent.upload(upload, file);
       await waitFor(() => {
         expect(mockToast).toHaveBeenCalledWith(
           expect.stringMatching(/error.+picture/i),
@@ -450,7 +538,7 @@ it('navigates to the upcoming events tab', async () => {
   await renderUserProfile(userResponse, { currentTime });
 
   const tab = screen.getByRole('link', { name: /upcoming/i });
-  userEvent.click(tab);
+  await userEvent.click(tab);
   expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Search by topic, presenting team, …',
@@ -478,7 +566,7 @@ it('navigates to the past events tab', async () => {
   await renderUserProfile(userResponse, { currentTime });
 
   const tab = screen.getByRole('link', { name: /past/i });
-  userEvent.click(tab);
+  await userEvent.click(tab);
   expect(await screen.findByRole('searchbox')).toHaveAttribute(
     'placeholder',
     'Search by topic, presenting team, …',

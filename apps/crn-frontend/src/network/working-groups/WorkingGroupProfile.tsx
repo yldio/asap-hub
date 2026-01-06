@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useParams } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -38,7 +38,7 @@ const WorkingGroupOutput = lazy(loadWorkingGroupOutput);
 
 const DuplicateOutput: FC = () => {
   const { id } = useParams<{ id: string }>();
-  const output = useResearchOutputById(id);
+  const output = useResearchOutputById(id ?? '');
   if (output && output.workingGroups?.[0]?.id) {
     return (
       <WorkingGroupOutput
@@ -61,7 +61,6 @@ type WorkingGroupProfileProps = {
   currentTime: Date;
 };
 const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
   const route = network({}).workingGroups({}).workingGroup;
   const [membersListElementId] = useState(`wg-members-${uuid()}`);
 
@@ -110,93 +109,92 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   });
 
   if (workingGroup) {
-    const {
-      about,
-      calendar,
-      createOutput,
-      outputs,
-      draftOutputs,
-      past,
-      upcoming,
-      duplicateOutput,
-    } = route({
-      workingGroupId,
-    });
     const paths = {
-      about: path + about.template,
-      calendar: path + calendar.template,
-      outputs: path + outputs.template,
-      past: path + past.template,
-      upcoming: path + upcoming.template,
-      draftOutputs: path + draftOutputs.template,
+      about: 'about',
+      calendar: 'calendar',
+      outputs: 'outputs',
+      past: 'past',
+      upcoming: 'upcoming',
+      draftOutputs: 'draft-outputs',
     };
     return (
       <ResearchOutputPermissionsContext.Provider
         value={{ canShareResearchOutput, canDuplicateResearchOutput }}
       >
-        <Switch>
+        <Routes>
           {canShareResearchOutput && (
-            <Route path={path + createOutput.template}>
-              <Frame title="Share Output">
-                <WorkingGroupOutput workingGroupId={workingGroupId} />
-              </Frame>
-            </Route>
+            <Route
+              path="create-output/:outputDocumentType"
+              element={
+                <Frame title="Share Output">
+                  <WorkingGroupOutput workingGroupId={workingGroupId} />
+                </Frame>
+              }
+            />
           )}
           {canDuplicateResearchOutput && (
-            <Route path={path + duplicateOutput.template}>
-              <Frame title="Duplicate Output">
-                <DuplicateOutput />
-              </Frame>
-            </Route>
-          )}
-          <WorkingGroupPage
-            upcomingEventsCount={upcomingEventsResult?.total || 0}
-            pastEventsCount={pastEventsResult?.total || 0}
-            membersListElementId={membersListElementId}
-            workingGroupsDraftOutputsCount={
-              canShareResearchOutput ? outputDraftResults.total : undefined
-            }
-            workingGroupsOutputsCount={outputResults.total}
-            {...workingGroup}
-          >
-            <ProfileSwitch
-              About={() => (
-                <About
-                  showCollaborationCard={
-                    !canShareResearchOutput && !workingGroup.complete
-                  }
-                  membersListElementId={membersListElementId}
-                  workingGroup={workingGroup}
-                />
-              )}
-              Calendar={() => (
-                <Calendar
-                  calendars={workingGroup.calendars}
-                  groupType="working"
-                />
-              )}
-              DraftOutputs={
-                <Outputs
-                  workingGroup={workingGroup}
-                  draftOutputs
-                  userAssociationMember={canShareResearchOutput}
-                />
+            <Route
+              path="duplicate/:id"
+              element={
+                <Frame title="Duplicate Output">
+                  <DuplicateOutput />
+                </Frame>
               }
-              currentTime={currentTime}
-              displayName={workingGroup.title}
-              eventConstraint={{ workingGroupId }}
-              isActive={!workingGroup.complete}
-              Outputs={
-                <Outputs
-                  userAssociationMember={canShareResearchOutput}
-                  workingGroup={workingGroup}
-                />
-              }
-              paths={paths}
-              type="working group"
             />
-          </WorkingGroupPage>
-        </Switch>
+          )}
+          <Route
+            path="*"
+            element={
+              <WorkingGroupPage
+                upcomingEventsCount={upcomingEventsResult?.total || 0}
+                pastEventsCount={pastEventsResult?.total || 0}
+                membersListElementId={membersListElementId}
+                workingGroupsDraftOutputsCount={
+                  canShareResearchOutput ? outputDraftResults.total : undefined
+                }
+                workingGroupsOutputsCount={outputResults.total}
+                {...workingGroup}
+              >
+                <ProfileSwitch
+                  About={() => (
+                    <About
+                      showCollaborationCard={
+                        !canShareResearchOutput && !workingGroup.complete
+                      }
+                      membersListElementId={membersListElementId}
+                      workingGroup={workingGroup}
+                    />
+                  )}
+                  Calendar={() => (
+                    <Calendar
+                      calendars={workingGroup.calendars}
+                      groupType="working"
+                    />
+                  )}
+                  DraftOutputs={
+                    <Outputs
+                      workingGroup={workingGroup}
+                      draftOutputs
+                      userAssociationMember={canShareResearchOutput}
+                    />
+                  }
+                  currentTime={currentTime}
+                  displayName={workingGroup.title}
+                  eventConstraint={{ workingGroupId }}
+                  isActive={!workingGroup.complete}
+                  Outputs={
+                    <Outputs
+                      userAssociationMember={canShareResearchOutput}
+                      workingGroup={workingGroup}
+                    />
+                  }
+                  paths={paths}
+                  type="working group"
+                />
+              </WorkingGroupPage>
+            }
+          />
+        </Routes>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

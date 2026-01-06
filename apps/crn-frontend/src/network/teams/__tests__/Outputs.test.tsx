@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -95,17 +95,21 @@ const renderOutputs = async (
                 },
               ]}
             >
-              <Route
-                path={
-                  network({}).teams({}).team({ teamId: team.id }).outputs({}).$
-                }
-              >
-                <Outputs
-                  userAssociationMember={userAssociationMember}
-                  draftOutputs={draftOutputs}
-                  team={team}
+              <Routes>
+                <Route
+                  path={
+                    network({}).teams({}).team({ teamId: team.id }).outputs({})
+                      .$
+                  }
+                  element={
+                    <Outputs
+                      userAssociationMember={userAssociationMember}
+                      draftOutputs={draftOutputs}
+                      team={team}
+                    />
+                  }
                 />
-              </Route>
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -151,13 +155,13 @@ it('calls getResearchOutputs with the right arguments', async () => {
     filters,
     { ...createTeamResponse(), id: teamId },
   );
-  userEvent.type(getByRole('searchbox'), searchQuery);
+  await userEvent.type(getByRole('searchbox'), searchQuery);
 
-  userEvent.click(getByText('Filters'));
+  await userEvent.click(getByText('Filters'));
   const checkbox = getByLabelText('Grant Document');
   expect(checkbox).not.toBeChecked();
 
-  userEvent.click(checkbox);
+  await userEvent.click(checkbox);
   expect(checkbox).toBeChecked();
 
   await waitFor(() =>
@@ -184,9 +188,9 @@ it('triggers export with the same parameters and custom file name', async () => 
     filters,
     { ...createTeamResponse(), id: teamId, displayName: 'example team 123' },
   );
-  userEvent.type(getByRole('searchbox'), searchQuery);
-  userEvent.click(getByText('Filters'));
-  userEvent.click(getByLabelText('Grant Document'));
+  await userEvent.type(getByRole('searchbox'), searchQuery);
+  await userEvent.click(getByText('Filters'));
+  await userEvent.click(getByLabelText('Grant Document'));
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
       searchQuery,
@@ -205,14 +209,16 @@ it('triggers export with the same parameters and custom file name', async () => 
       expect.stringMatching(/SharedOutputs_Team_ExampleTeam123_\d+\.csv/),
       expect.anything(),
     );
+  });
+  await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
       searchQuery,
       filters,
       teamId,
       currentPage: 0,
       pageSize: CARD_VIEW_PAGE_SIZE,
-    });
-  });
+    }),
+  );
 });
 
 it('triggers draft research output export with custom file name', async () => {
@@ -234,7 +240,7 @@ it('triggers draft research output export with custom file name', async () => {
     true,
   );
 
-  userEvent.click(getByText(/csv/i));
+  await userEvent.click(getByText(/csv/i));
   await waitFor(() =>
     expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
       {

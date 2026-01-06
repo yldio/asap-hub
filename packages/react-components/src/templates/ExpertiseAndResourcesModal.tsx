@@ -4,6 +4,7 @@ import {
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
+import { useNavigate } from 'react-router-dom';
 
 import { FormSection, LabeledMultiSelect, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
@@ -32,6 +33,7 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
   tags = [],
   suggestions,
 }) => {
+  const navigate = useNavigate();
   const [
     newExpertiseAndResourceDescription,
     setExpertiseAndResourceDescription,
@@ -55,13 +57,14 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
           newExpertiseAndResourceDescription || tags !== newTags
       }
       validate={() => validateExpertiseAndResources(newTags)}
-      onSave={() =>
-        onSave({
+      onSave={async () => {
+        await onSave({
           expertiseAndResourceDescription:
             newExpertiseAndResourceDescription || undefined,
           tagIds: newTags.map(({ id }) => id),
-        })
-      }
+        });
+        navigate(backHref);
+      }}
     >
       {({ isSaving }) => (
         <FormSection>

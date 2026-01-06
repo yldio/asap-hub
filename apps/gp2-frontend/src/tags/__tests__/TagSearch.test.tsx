@@ -98,7 +98,7 @@ describe('TagSearch', () => {
     mockGetTags.mockResolvedValue(createEventListAlgoliaResponse(1));
 
     await renderPage();
-    userEvent.click(screen.getByLabelText('Outputs'));
+    await userEvent.click(screen.getByLabelText('Outputs'));
     expect(mockToggleFilter).toHaveBeenLastCalledWith('output', 'entityType');
   });
 
@@ -109,8 +109,8 @@ describe('TagSearch', () => {
     });
 
     await renderPage();
-    userEvent.click(screen.getByRole('textbox'));
-    userEvent.click(screen.getByText('LGW'));
+    await userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByText('LGW'));
     expect(mockSetTags).toHaveBeenCalledWith(['LGW']);
   });
 });

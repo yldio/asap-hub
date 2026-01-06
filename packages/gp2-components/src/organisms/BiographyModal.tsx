@@ -1,6 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { LabeledTextArea } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import EditUserModal from './EditUserModal';
 
 type BiographyModalProps = Pick<gp2.UserResponse, 'biography'> &
@@ -13,17 +14,19 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
   backHref,
   biography = '',
 }) => {
+  const navigate = useNavigate();
   const [newBiography, setNewBiography] = useState(biography);
 
   return (
     <EditUserModal
       title="Biography"
       description="Summarize your background and highlight any past achievements to give members of the platform a better understanding of who you are."
-      onSave={() =>
-        onSave({
+      onSave={async () => {
+        await onSave({
           biography: newBiography,
-        })
-      }
+        });
+        navigate(backHref);
+      }}
       backHref={backHref}
       dirty={newBiography !== biography}
     >

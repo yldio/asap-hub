@@ -496,3 +496,60 @@ export const FETCH_USERS_BY_LAB_ID = gql`
   }
   ${userListItemContentQueryFragment}
 `;
+
+export const FETCH_USER_BY_ID_FOR_ALGOLIA_LIST = gql`
+  query FetchUserByIdForAlgoliaList($id: String!) {
+    users(id: $id) {
+      sys {
+        id
+      }
+      firstName
+      middleName
+      lastName
+      nickname
+      email
+      alumniSinceDate
+      createdDate
+      openScienceTeamMember
+      avatar {
+        url
+      }
+      country
+      city
+      stateOrProvince
+      degree
+      jobTitle
+      institution
+      dismissedGettingStarted
+      role
+      onboarded
+      teamsCollection(limit: 10) {
+        items {
+          team {
+            sys {
+              id
+            }
+            displayName
+          }
+          role
+        }
+      }
+      researchTagsCollection(limit: 20) {
+        items {
+          sys {
+            id
+          }
+          name
+        }
+      }
+      labsCollection(limit: 10) {
+        items {
+          sys {
+            id
+          }
+          name
+        }
+      }
+    }
+  }
+`;

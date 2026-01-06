@@ -11,14 +11,8 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { gp2 as gp2Validation } from '@asap-hub/validation';
-import { FC, lazy, useEffect } from 'react';
-import {
-  Redirect,
-  Route,
-  Switch,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
+import { FC, lazy, useEffect, useMemo } from 'react';
+import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -46,7 +40,7 @@ const OutputDirectory = lazy(loadOutputDirectory);
 
 const DuplicateOutput: FC = () => {
   const { outputId } = useParams<{ outputId: string }>();
-  const output = useOutputById(outputId);
+  const output = useOutputById(outputId ?? '');
   if (output && output.projects?.[0]?.id) {
     return (
       <OutputFormPage>
@@ -64,23 +58,35 @@ const DuplicateOutput: FC = () => {
   return <NotFoundPage />;
 };
 
-const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
-  const { projectId } = useRouteParams(projects({}).project);
-  const project = useProjectById(projectId);
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    loadOutputDirectory().then(loadCreateProjectOutput);
-  }, [project]);
-
+// Separate component for the main project page that needs outputs and events data
+// This prevents fetching outputs/events data when navigating to create-output routes
+const ProjectMainPage: FC<{
+  project: gp2Model.ProjectResponse;
+  currentTime: Date;
+  projectId: string;
+}> = ({ project, currentTime, projectId }) => {
   const { pageSize } = usePaginationParams();
-  const { total } = useOutputs({
-    currentPage: 0,
-    filters: new Set(),
-    pageSize,
-    searchQuery: '',
-    projectId,
-  });
+  // Memoize options object to ensure stable reference for promise caching
+  const outputsOptions = useMemo(
+    () => ({
+      currentPage: 0,
+      filters: new Set<string>(),
+      pageSize,
+      searchQuery: '',
+      projectId,
+    }),
+    [pageSize, projectId],
+  );
+
+  const { total } = useOutputs(outputsOptions);
+
+  // Memoize constraint to prevent new object reference on every render
+  const constraint = useMemo(() => ({ projectId }), [projectId]);
+
+  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(
+    currentTime,
+    constraint,
+  );
 
   const currentUser = useCurrentUserGP2();
   const isProjectMember =
@@ -89,62 +95,43 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
   const isAdministrator =
     currentUser?.role === 'Administrator' || userRole === 'Project manager';
   const projectRoute = projects({}).project({ projectId });
-  const createOutputRoute = projectRoute.createOutput;
-  const duplicateOutputRoute = projectRoute.duplicateOutput;
   const workspaceRoute = projectRoute.workspace({});
   const editRoute = workspaceRoute.edit({});
   const add = isAdministrator ? workspaceRoute.add({}).$ : undefined;
   const edit = isAdministrator ? editRoute.$ : undefined;
-  const overview = projectRoute.overview({}).$;
-  const outputs = projectRoute.outputs({}).$;
   const workspace = workspaceRoute.$;
-  const upcoming = projectRoute.upcoming({}).$;
-  const past = projectRoute.past({}).$;
 
   const updateProjectResources = usePutProjectResources(projectId);
 
-  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
-    projectId,
-  });
-
-  if (project) {
-    return (
-      <Switch>
-        <Route exact path={path + createOutputRoute.template}>
-          <Frame title="Create Output">
-            <OutputFormPage>
-              <CreateProjectOutput />
-            </OutputFormPage>
-          </Frame>
-        </Route>
-        {isAdministrator && (
-          <Route exact path={path + duplicateOutputRoute.template}>
-            <Frame title="Duplicate Output">
-              <DuplicateOutput />
+  return (
+    <ProjectDetailPage
+      isProjectMember={isProjectMember}
+      isAdministrator={isAdministrator}
+      outputsTotal={total}
+      upcomingTotal={upcomingEvents?.total || 0}
+      pastTotal={pastEvents?.total || 0}
+      {...project}
+    >
+      <Routes>
+        <Route
+          path="overview"
+          element={
+            <Frame title="Overview">
+              <ProjectOverview {...project} />
             </Frame>
-          </Route>
-        )}
-        <ProjectDetailPage
-          isProjectMember={isProjectMember}
-          isAdministrator={isAdministrator}
-          outputsTotal={total}
-          upcomingTotal={upcomingEvents?.total || 0}
-          pastTotal={pastEvents?.total || 0}
-          {...project}
-        >
-          <Switch>
-            <Route path={overview}>
-              <Frame title="Overview">
-                <ProjectOverview {...project} />
-              </Frame>
-            </Route>
-            {isProjectMember && (
-              <Route path={workspace}>
-                <Frame title="Workspace">
-                  <ProjectResources {...project} add={add} edit={edit} />
-                  {isAdministrator && (
-                    <>
-                      <Route path={add}>
+          }
+        />
+        {isProjectMember && (
+          <Route
+            path="workspace/*"
+            element={
+              <Frame title="Workspace">
+                <ProjectResources {...project} add={add} edit={edit} />
+                {isAdministrator && (
+                  <Routes>
+                    <Route
+                      path="add"
+                      element={
                         <ResourceModal
                           modalTitle={'Add Resource'}
                           modalDescription={
@@ -158,47 +145,104 @@ const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
                             ])
                           }
                         />
-                      </Route>
-                      <Route exact path={edit + editRoute.resource.template}>
+                      }
+                    />
+                    <Route
+                      path="edit/:resourceIndex"
+                      element={
                         <EditResourceModal
                           route={editRoute.resource}
                           resources={project.resources || []}
                           backHref={workspace}
                           updateResources={updateProjectResources}
                         />
-                      </Route>
-                    </>
-                  )}
-                </Frame>
-              </Route>
-            )}
-            <Route path={outputs}>
-              <Frame title="Shared Outputs">
-                <OutputDirectory projectId={projectId} />
+                      }
+                    />
+                  </Routes>
+                )}
               </Frame>
-            </Route>
-            <Route path={upcoming}>
-              <Frame title="Upcoming Events">
-                <EventsList
-                  constraint={{ projectId }}
-                  currentTime={currentTime}
-                  past={false}
-                />
-              </Frame>
-            </Route>
-            <Route path={past}>
-              <Frame title="Past Events">
-                <EventsList
-                  currentTime={currentTime}
-                  past={true}
-                  constraint={{ projectId }}
-                />
-              </Frame>
-            </Route>
-            <Redirect to={overview} />
-          </Switch>
-        </ProjectDetailPage>
-      </Switch>
+            }
+          />
+        )}
+        <Route
+          path="outputs"
+          element={
+            <Frame title="Shared Outputs">
+              <OutputDirectory projectId={projectId} />
+            </Frame>
+          }
+        />
+        <Route
+          path="upcoming"
+          element={
+            <Frame title="Upcoming Events">
+              <EventsList
+                constraint={{ projectId }}
+                currentTime={currentTime}
+                past={false}
+              />
+            </Frame>
+          }
+        />
+        <Route
+          path="past"
+          element={
+            <Frame title="Past Events">
+              <EventsList
+                currentTime={currentTime}
+                past={true}
+                constraint={{ projectId }}
+              />
+            </Frame>
+          }
+        />
+        <Route index element={<Navigate to="overview" replace />} />
+      </Routes>
+    </ProjectDetailPage>
+  );
+};
+
+const ProjectDetail: FC<ProjectDetailProps> = ({ currentTime }) => {
+  const { projectId } = useRouteParams(projects({}).project);
+  const project = useProjectById(projectId);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    loadOutputDirectory().then(loadCreateProjectOutput);
+  }, [project]);
+
+  const currentUser = useCurrentUserGP2();
+  const userRole = getUserRole(currentUser, 'Projects', projectId);
+  const isAdministrator =
+    currentUser?.role === 'Administrator' || userRole === 'Project manager';
+
+  if (project) {
+    return (
+      <Routes>
+        <Route
+          path="create-output/:outputDocumentType"
+          element={
+            <Frame title="Create Output">
+              <OutputFormPage>
+                <CreateProjectOutput />
+              </OutputFormPage>
+            </Frame>
+          }
+        />
+        {isAdministrator && (
+          <Route path="duplicate/:outputId" element={<DuplicateOutput />} />
+        )}
+        <Route
+          path="*"
+          element={
+            <ProjectMainPage
+              project={project}
+              currentTime={currentTime}
+              projectId={projectId}
+            />
+          }
+        />
+      </Routes>
     );
   }
   return <NotFoundPage />;

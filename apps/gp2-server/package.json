@@ -57,7 +57,7 @@
     "openai": "^4.49.0",
     "p-throttle": "4.1.1",
     "parse-data-url": "3.0.0",
-    "react-router-dom": "5.3.4",
+    "react-router-dom": "6.28.0",
     "serverless-http": "2.7.0",
     "source-map-support": "0.5.21",
     "uuid": "8.3.2"
@@ -105,6 +105,8 @@
     "node-dev": "6.7.0",
     "serverless": "3.38.0",
     "serverless-esbuild": "^1.50.1",
+    "serverless-offline": "8.8.1",
+    "serverless-offline-ssm": "^6.2.0",
     "serverless-s3-sync": "3.2.0",
     "serverless-webpack": "5.13.0",
     "supertest": "6.3.3",

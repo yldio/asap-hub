@@ -48,7 +48,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
 }) => {
   const setRefreshTeamState = useSetRecoilState(refreshTeamState(teamId));
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
-  const [manuscript] = useManuscriptById(manuscriptId);
+  const [manuscript] = useManuscriptById(manuscriptId ?? '');
 
   const team = useTeamById(teamId);
   const user = useCurrentUserCRN();

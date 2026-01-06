@@ -95,7 +95,13 @@ describe('TeamProductivityTable', () => {
     ${'protocol_desc'}       | ${{ ...teamProductivityInitialSortingDirection, protocol: 'desc' }}       | ${'Protocol Active Numerical Descending Sort Icon'}         | ${'protocol_asc'}        | ${{ ...teamProductivityInitialSortingDirection, protocol: 'asc' }}
   `(
     'when sort is $sort and user clicks on $iconTitle, the new sort becomes $newSort and the sorting direction $newSortingDirection',
-    ({ sort, sortingDirection, iconTitle, newSort, newSortingDirection }) => {
+    async ({
+      sort,
+      sortingDirection,
+      iconTitle,
+      newSort,
+      newSortingDirection,
+    }) => {
       const setSort = jest.fn();
 
       const setSortingDirection = jest.fn();
@@ -114,7 +120,7 @@ describe('TeamProductivityTable', () => {
       const sortIcon = getByTitle(iconTitle);
       expect(sortIcon).toBeInTheDocument();
 
-      userEvent.click(sortIcon);
+      await userEvent.click(sortIcon);
       expect(setSort).toHaveBeenCalledWith(newSort);
       expect(setSortingDirection).toHaveBeenCalledWith(newSortingDirection);
     },

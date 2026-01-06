@@ -48,7 +48,7 @@ describe('AnalyticsControls', () => {
       />,
     );
 
-    userEvent.type(getByRole('textbox'), 'te');
+    await userEvent.type(getByRole('textbox'), 'te');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -63,8 +63,8 @@ describe('AnalyticsControls', () => {
       />,
     );
 
-    userEvent.clear(getByRole('textbox'));
-    userEvent.type(getByRole('textbox'), 'te');
+    await userEvent.clear(getByRole('textbox'));
+    await userEvent.type(getByRole('textbox'), 'te');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -147,12 +147,12 @@ describe('AnalyticsControls', () => {
         />,
       );
 
-      userEvent.type(getByRole('textbox'), 'test');
+      await userEvent.type(getByRole('textbox'), 'test');
       await waitFor(() => {
         expect(loadTags).toHaveBeenCalledWith('test');
       });
 
-      userEvent.click(getByRole('textbox'));
+      await userEvent.click(getByRole('textbox'));
 
       // shouls show test-user
       await waitFor(() => {
@@ -170,12 +170,12 @@ describe('AnalyticsControls', () => {
         />,
       );
 
-      userEvent.type(getByRole('textbox'), 'test');
+      await userEvent.type(getByRole('textbox'), 'test');
       await waitFor(() => {
         expect(loadTags).toHaveBeenCalledWith('test');
       });
 
-      userEvent.click(getByRole('textbox'));
+      await userEvent.click(getByRole('textbox'));
 
       // should show no results found
       await waitFor(() => {
@@ -199,12 +199,12 @@ describe('AnalyticsControls', () => {
         />,
       );
 
-      userEvent.type(getByRole('textbox'), 'test');
+      await userEvent.type(getByRole('textbox'), 'test');
       await waitFor(() => {
         expect(loadTags).toHaveBeenCalledWith('test');
       });
 
-      userEvent.click(getByText('Test User'));
+      await userEvent.click(getByText('Test User'));
       await waitFor(() => {
         expect(setTags).toHaveBeenCalledWith(['test-user']);
       });
@@ -220,12 +220,12 @@ describe('AnalyticsControls', () => {
         />,
       );
 
-      userEvent.type(getByRole('textbox'), 'test');
+      await userEvent.type(getByRole('textbox'), 'test');
       await waitFor(() => {
         expect(loadTags).toHaveBeenCalledWith('test');
       });
 
-      userEvent.click(getByRole('textbox'));
+      await userEvent.click(getByRole('textbox'));
 
       await waitFor(() => {
         expect(getByText('No results found')).toBeVisible();

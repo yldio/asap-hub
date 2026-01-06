@@ -30,6 +30,7 @@ const buttonsStyles = css({
 
 type AnalyticsPageHeaderProps = {
   onExportAnalytics: () => void;
+  children?: React.ReactNode;
 };
 
 const AnalyticsPageHeader: React.FC<AnalyticsPageHeaderProps> = ({

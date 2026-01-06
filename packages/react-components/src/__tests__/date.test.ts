@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import { addSeconds, subSeconds } from 'date-fns';
 import {
   formatDateToTimezone,
@@ -13,8 +13,25 @@ jest.mock('../localization');
 const mockGetLocalTimezone = getLocalTimezone as jest.MockedFunction<
   typeof getLocalTimezone
 >;
+
+// Store interval callbacks for manual triggering in tests
+let intervalCallback: (() => void) | null = null;
+
+jest.mock('../hooks', () => ({
+  ...jest.requireActual('../hooks'),
+  useInterval: (callback: () => void, delay: number | null) => {
+    // Store the callback so tests can manually trigger it
+    intervalCallback = delay !== null ? callback : null;
+  },
+}));
+
 beforeEach(() => {
   mockGetLocalTimezone.mockReturnValue('UTC');
+  intervalCallback = null;
+});
+
+afterEach(() => {
+  jest.clearAllTimers();
 });
 
 describe('formatDateAndWeekday', () => {
@@ -64,15 +81,28 @@ describe('useDateHasPassed', () => {
     expect(result.current).toBe(true);
   });
 
-  // A dependency update broke running the effect interval in tests, and no clue how to fix it
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('changes to true when given date elapses', async () => {
-    const { result } = renderHook(() =>
-      useDateHasPassed(addSeconds(new Date(), 5)),
-    );
+  it('changes to true when given date elapses', () => {
+    // Set a fixed initial time
+    const startTime = new Date('2024-01-01T12:00:00Z');
+    jest.setSystemTime(startTime);
+
+    // The target date is 5 seconds in the future
+    const targetDate = addSeconds(startTime, 5);
+
+    const { result } = renderHook(() => useDateHasPassed(targetDate));
+
+    // Initially should be false (target is in the future)
+    expect(result.current).toBe(false);
+
+    // Simulate time passing - update the system time and trigger the interval callback
     act(() => {
-      jest.advanceTimersByTime(30 * 1000);
+      jest.setSystemTime(addSeconds(startTime, 15));
+      // Manually trigger the interval callback (mocked useInterval stores it)
+      if (intervalCallback) {
+        intervalCallback();
+      }
     });
+
     expect(result.current).toBe(true);
   });
 });

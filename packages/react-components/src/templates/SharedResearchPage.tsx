@@ -3,7 +3,11 @@ import { ComponentProps } from 'react';
 import SharedResearchPageHeader from './SharedResearchPageHeader';
 import PageConstraints from './PageConstraints';
 
-type SharedResearchPageProps = ComponentProps<typeof SharedResearchPageHeader>;
+type SharedResearchPageProps = ComponentProps<
+  typeof SharedResearchPageHeader
+> & {
+  children?: React.ReactNode;
+};
 const SharedResearchPage: React.FC<SharedResearchPageProps> = ({
   onChangeSearch,
   searchQuery,

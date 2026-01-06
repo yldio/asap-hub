@@ -1,15 +1,43 @@
+import { useEffect, act } from 'react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { network, sharedResearch, staticPages } from '@asap-hub/routing';
-import { render } from '@testing-library/react';
-import { createBrowserHistory, History } from 'history';
+import {
+  dashboard,
+  network,
+  sharedResearch,
+  staticPages,
+} from '@asap-hub/routing';
+import { render, waitFor } from '@testing-library/react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Route, Router } from 'react-router-dom';
+import {
+  MemoryRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import CheckOnboarded, { navigationPromptHandler } from '../CheckOnboarded';
 import { Auth0Provider, WhenReady } from '../test-utils';
 
-let history: History;
+// Helper component to trigger navigation in tests
+let navigateToPath: ((path: string) => void) | null = null;
+const NavigationHelper = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigateToPath = navigate;
+    return () => {
+      navigateToPath = null;
+    };
+  }, [navigate]);
+  return null;
+};
+
+// Helper component to display current location for redirect tests
+const LocationDisplay = () => {
+  const location = useLocation();
+  return <div data-testid="location">{location.pathname}</div>;
+};
 
 const user = {
   ...createUserResponse({}, 1),
@@ -31,10 +59,6 @@ const outputs = network({}).users({}).user({ userId: user.id }).outputs({}).$;
 const privacy = staticPages({}).privacyPolicy({}).$;
 const tos = staticPages({}).terms({}).$;
 
-beforeEach(() => {
-  history = createBrowserHistory();
-});
-
 describe('an unauthenticated user', () => {
   mockConsoleError();
 
@@ -44,7 +68,9 @@ describe('an unauthenticated user', () => {
         <ErrorBoundary fallbackRender={({ error }) => <>{error.toString()}</>}>
           <Auth0Provider user={undefined}>
             <WhenReady>
-              <CheckOnboarded>text</CheckOnboarded>
+              <MemoryRouter>
+                <CheckOnboarded>text</CheckOnboarded>
+              </MemoryRouter>
             </WhenReady>
           </Auth0Provider>
         </ErrorBoundary>
@@ -60,9 +86,9 @@ describe('an authenticated and onboarded user', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: true }}>
           <WhenReady>
-            <Router history={history}>
+            <MemoryRouter>
               <CheckOnboarded>text</CheckOnboarded>
-            </Router>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>,
@@ -75,92 +101,148 @@ describe('an authenticated and onboarded user', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: true }}>
           <WhenReady>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[ownProfilePath]}>
+              <NavigationHelper />
               <CheckOnboarded>
-                <Route path={ownProfilePath}>profile page</Route>
-                <Route path={teamPage}>team page</Route>
-                <Route path={outputs}>outputs page</Route>
+                <Routes>
+                  <Route path={ownProfilePath} element={<>profile page</>} />
+                  <Route path={teamPage} element={<>team page</>} />
+                  <Route path={outputs} element={<>outputs page</>} />
+                </Routes>
               </CheckOnboarded>
-            </Router>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>,
     );
 
-    history.push(ownProfilePath);
     expect(await findByText('profile page')).toBeVisible();
 
-    history.push(teamPage);
+    act(() => {
+      navigateToPath?.(teamPage);
+    });
     expect(await findByText('team page')).toBeVisible();
 
-    history.push(outputs);
+    act(() => {
+      navigateToPath?.(outputs);
+    });
     expect(await findByText('outputs page')).toBeVisible();
   });
 });
 
 describe('an authenticated user in onboarding', () => {
+  const ownProfileBasePath = network({}).users({}).user({ userId: user.id }).$;
+
   it('is let through to their own profile', async () => {
-    const { findByText } = render(
+    const { findByText, findByTestId } = render(
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router history={history}>
-              <CheckOnboarded>
-                <Route path={ownProfilePath}>profile</Route>
-              </CheckOnboarded>
-            </Router>
+            <MemoryRouter initialEntries={[ownProfilePath]}>
+              <NavigationHelper />
+              <LocationDisplay />
+              <CheckOnboarded>profile</CheckOnboarded>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>,
     );
 
-    history.push(ownProfilePath);
     expect(await findByText('profile')).toBeVisible();
+    const locationElement = await findByTestId('location');
+    expect(locationElement.textContent).toContain(ownProfileBasePath);
   });
 
-  it("is not let through to someone else's profile", async () => {
+  it('redirects from dashboard to profile', async () => {
+    // mock console.error
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    const dashboardPath = dashboard({}).$;
+    const { findByTestId } = render(
+      <RecoilRoot>
+        <Auth0Provider user={{ ...user, onboarded: false }}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[dashboardPath]}>
+              <LocationDisplay />
+              <CheckOnboarded>
+                <Routes>
+                  <Route
+                    path={`${ownProfileBasePath}/*`}
+                    element={<>profile</>}
+                  />
+                  <Route path={dashboardPath} element={<>dashboard</>} />
+                </Routes>
+              </CheckOnboarded>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>,
+    );
+
+    // Should redirect to profile
+    const locationElement = await findByTestId('location');
+    await waitFor(() => {
+      expect(locationElement.textContent).toContain(ownProfileBasePath);
+    });
+  });
+
+  it("redirects from someone else's profile to own profile", async () => {
+    window.alert = jest.fn();
     const foreignProfilePath = network({}).users({}).user({ userId: '1337' }).$;
-    const { findByText } = render(
+    const { findByTestId } = render(
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[foreignProfilePath]}>
+              <LocationDisplay />
               <CheckOnboarded>
-                <Route path={foreignProfilePath}>foreign profile</Route>
-                <Route path={network({}).users({}).user({ userId: user.id }).$}>
-                  own profile
-                </Route>
+                <Routes>
+                  <Route
+                    path={`${ownProfileBasePath}/*`}
+                    element={<>own profile</>}
+                  />
+                </Routes>
               </CheckOnboarded>
-            </Router>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>,
     );
 
-    history.push(foreignProfilePath);
-    expect(await findByText('own profile')).toBeVisible();
+    // Should redirect to own profile
+    const locationElement = await findByTestId('location');
+    await waitFor(() => {
+      expect(locationElement.textContent).toContain(ownProfileBasePath);
+    });
   });
-  it('is not let through to another page', async () => {
+
+  it('redirects from another page to profile', async () => {
+    window.alert = jest.fn();
     const anotherPagePath = sharedResearch({}).$;
-    const { findByText } = render(
+    const { findByTestId } = render(
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router history={history}>
+            <MemoryRouter initialEntries={[anotherPagePath]}>
+              <LocationDisplay />
               <CheckOnboarded>
-                <Route path={anotherPagePath}>another page</Route>
-                <Route path={network({}).users({}).user({ userId: user.id }).$}>
-                  own profile
-                </Route>
+                <Routes>
+                  <Route
+                    path={`${ownProfileBasePath}/*`}
+                    element={<>own profile</>}
+                  />
+                </Routes>
               </CheckOnboarded>
-            </Router>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>,
     );
 
-    history.push(anotherPagePath);
-    expect(await findByText('own profile')).toBeVisible();
+    // Should redirect to own profile
+    const locationElement = await findByTestId('location');
+    await waitFor(() => {
+      expect(locationElement.textContent).toContain(ownProfileBasePath);
+    });
   });
 
   it('should trigger an alert when accessing protected routes', async () => {
@@ -170,24 +252,26 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <Router history={history}>
-              <CheckOnboarded>
-                <Route path={teamPage}>team page</Route>
-                <Route path={ownProfilePath}>profile page</Route>
-              </CheckOnboarded>
-            </Router>
+            <MemoryRouter initialEntries={[ownProfilePath]}>
+              <NavigationHelper />
+              <CheckOnboarded>profile page</CheckOnboarded>
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>,
     );
 
-    history.push(ownProfilePath);
     expect(await findByText('profile page')).toBeVisible();
     expect(window.alert).not.toHaveBeenCalled();
 
-    history.push(teamPage);
+    act(() => {
+      navigateToPath?.(teamPage);
+    });
+    await waitFor(() => {
+      expect(window.alert).toHaveBeenCalled();
+    });
+    // Should still be on profile page after blocked navigation
     expect(await findByText('profile page')).toBeVisible();
-    expect(window.alert).toHaveBeenCalled();
   });
 });
 

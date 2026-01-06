@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import UserNavigation from '../UserNavigation';
 
 describe('UserNavigation', () => {
@@ -10,10 +11,14 @@ describe('UserNavigation', () => {
     workingGroups: [],
   };
 
-  it('opens user menu when clicked', () => {
-    render(<UserNavigation {...props} />);
+  it('opens user menu when clicked', async () => {
+    render(
+      <MemoryRouter>
+        <UserNavigation {...props} />
+      </MemoryRouter>,
+    );
 
-    userEvent.click(screen.getByLabelText(/toggle.+user menu/i));
+    await userEvent.click(screen.getByLabelText(/toggle.+user menu/i));
 
     expect(screen.getByText(/Log Out/i, { selector: 'p' })).toBeVisible();
   });

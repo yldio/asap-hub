@@ -1,4 +1,4 @@
-import { createElement, Fragment } from 'react';
+import { createElement, Fragment, ReactNode } from 'react';
 
 import {
   isTextChildren,
@@ -34,7 +34,7 @@ describe.each([
   [{}],
   [Symbol('Forbidden primitive type')],
   [createElement('div')],
-  [createElement(Fragment, { children: {} })],
+  [createElement(Fragment, { children: {} as ReactNode })],
 ])('for the children %p', (children) => {
   describe('isTextChildren', () => {
     it('returns false', () => {
@@ -76,7 +76,7 @@ describe.each([
   [Symbol('Forbidden primitive type')],
   [createElement('div')],
   [createElement('i', { children: [createElement('div')] })],
-  [createElement(Fragment, { children: {} })],
+  [createElement(Fragment, { children: {} as ReactNode })],
 ])('for the children %p', (children) => {
   describe('isAllowedChildren', () => {
     it('returns false', () => {

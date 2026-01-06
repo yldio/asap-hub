@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentProps, ReactNode, useEffect, useRef, useState } from 'react';
-import { Prompt } from 'react-router-dom';
 import { css } from '@emotion/react';
 import { FormSection, Modal, ModalEditHeaderDecorator } from '../molecules';
+import { useNavigationWarning } from '../navigation';
 import { rem } from '../pixels';
 import { usePushFromHere } from '../routing';
 import Toast from './Toast';
@@ -43,6 +43,12 @@ const EditModal: React.FC<EditModalProps> = ({
     'initial' | 'isSaving' | 'hasError' | 'hasSaved'
   >('initial');
 
+  // TODO: React Router 6 warns "You should call navigate() in a React.useEffect()"
+  // even though this IS inside useEffect. The issue is that during the initial mount's
+  // passive effects phase, React Router considers the component not fully mounted.
+  // To fix properly: add a mountedRef (or create a hook called `isMounted()`) check
+  // before calling historyPush, or use setTimeout to defer navigation to the next tick.
+  // See tests for warning suppression.
   useEffect(() => {
     if (status === 'hasSaved') {
       setStatus('initial');
@@ -67,17 +73,19 @@ const EditModal: React.FC<EditModalProps> = ({
     }
   };
 
-  const prompt =
+  const shouldWarn =
     status === 'isSaving' ||
     status === 'hasError' ||
     (status === 'initial' && dirty);
 
+  useNavigationWarning({
+    shouldBlock: shouldWarn,
+    message:
+      'Are you sure you want to leave the dialog? Unsaved changes will be lost.',
+  });
+
   return (
     <Modal padding={false}>
-      <Prompt
-        when={prompt}
-        message="Are you sure you want to leave the dialog? Unsaved changes will be lost."
-      />
       {status === 'hasError' && (
         <Toast>
           There was an error and we were unable to save your changes

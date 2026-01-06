@@ -15,6 +15,7 @@ import {
 } from '@asap-hub/model';
 import {
   fetchOrcidProfile,
+  isValidOrcidFormat,
   isValidOrcidResponse,
   parseUserDisplayName,
   transformOrcidWorks,
@@ -96,6 +97,55 @@ export default class UserController {
     }
 
     return parseUserToResponse(user);
+  }
+
+  async fetchByIdForAlgoliaList(id: string): Promise<UserResponse> {
+    const user = await this.userDataProvider.fetchByIdForAlgoliaList(id);
+
+    if (!user) {
+      throw new NotFoundError(undefined, `user with id ${id} not found`);
+    }
+    const displayName = parseUserDisplayName(
+      user.firstName,
+      user.lastName,
+      undefined,
+      user.nickname,
+    );
+    const fullDisplayName = parseUserDisplayName(
+      user.firstName,
+      user.lastName,
+      user.middleName,
+      user.nickname,
+    );
+
+    return {
+      createdDate: user.createdDate,
+      displayName,
+      membershipStatus: user.membershipStatus,
+      openScienceTeamMember: user.openScienceTeamMember,
+      teams: user.teams,
+      alumniSinceDate: user.alumniSinceDate,
+      avatarUrl: user.avatarUrl,
+      city: user.city,
+      country: user.country,
+      dismissedGettingStarted: !!user.dismissedGettingStarted,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      middleName: user.middleName,
+      nickname: user.nickname,
+      fullDisplayName,
+      id: user.id,
+      institution: user.institution,
+      jobTitle: user.jobTitle,
+      labs: user.labs,
+      onboarded: typeof user.onboarded === 'boolean' ? user.onboarded : true,
+      role: user.role,
+      degree: user.degree,
+
+      stateOrProvince: user.stateOrProvince,
+      tags: user.tags,
+    } as UserResponse;
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {
@@ -181,6 +231,19 @@ export default class UserController {
     }
 
     const user = cachedUser || (fetchedUser as UserResponse);
+
+    // Validate ORCID format before attempting to fetch
+    if (!isValidOrcidFormat(user?.orcid)) {
+      logger.warn(
+        { userId: user.id, orcid: user?.orcid },
+        'Skipping ORCID sync: invalid or missing ORCID format',
+      );
+      // Don't update orcidLastSyncDate - let cronjob retry periodically
+      // This allows event-driven sync to work when user fixes their ORCID
+      // Return the user without updating since there's nothing to update
+      return user;
+    }
+
     const [error, res] = await Intercept(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       fetchOrcidProfile(user!.orcid!),
@@ -197,7 +260,10 @@ export default class UserController {
       updateToUser.orcidWorks = works.slice(0, 10);
     }
     if (error) {
-      logger.warn(error, 'Failed to sync ORCID profile');
+      logger.warn(
+        error,
+        `Failed to sync ORCID profile for user ${user.id} with ORCID ${user.orcid}`,
+      );
     }
 
     return this.update(user.id, updateToUser, {

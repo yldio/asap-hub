@@ -130,7 +130,7 @@ it('renders a new author option for new values', async () => {
     />,
   );
 
-  userEvent.type(getByRole('textbox'), 'Chris B');
+  await userEvent.type(getByRole('textbox'), 'Chris B');
 
   await waitFor(() => {
     expect(queryByText(/loading/i)).not.toBeInTheDocument();
@@ -140,7 +140,7 @@ it('renders a new author option for new values', async () => {
   expect(getByText(/(Non CRN)/i, { selector: 'span' })).toBeVisible();
 });
 
-it('renders an author multi select, passing through props for new external author', () => {
+it('renders an author multi select, passing through props for new external author', async () => {
   const { getByText } = render(
     <AuthorSelect
       title="Title"
@@ -156,10 +156,12 @@ it('renders an author multi select, passing through props for new external autho
     />,
   );
 
-  expect(getByText('Chris White (Non CRN)')).toBeVisible();
+  await waitFor(() => {
+    expect(getByText('Chris White (Non CRN)')).toBeVisible();
+  });
 });
 
-it('renders the warning label correctly for a required author', () => {
+it('renders the warning label correctly for a required author', async () => {
   const { getByText, getByRole, rerender, queryByText } = render(
     <AuthorSelect
       title="Title"
@@ -171,9 +173,13 @@ it('renders the warning label correctly for a required author', () => {
     />,
   );
 
-  userEvent.click(getByRole('textbox'));
+  const textbox = getByRole('textbox');
+  await userEvent.click(textbox);
+  await userEvent.tab(); // blur the textbox to trigger validation
 
-  expect(getByText('Please select at least one author.')).toBeVisible();
+  await waitFor(() => {
+    expect(getByText('Please select at least one author.')).toBeVisible();
+  });
 
   rerender(
     <AuthorSelect

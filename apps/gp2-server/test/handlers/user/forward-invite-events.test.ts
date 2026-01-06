@@ -3,14 +3,10 @@ import logger from '../../../src/utils/logger';
 
 const mockSend = jest.fn();
 
-jest.mock('@aws-sdk/client-sqs', () => {
-  return {
-    SQSClient: jest.fn().mockImplementation(() => ({
-      send: mockSend,
-    })),
-    SendMessageCommand: jest.fn((args) => args),
-  };
-});
+jest.mock('@aws-sdk/client-sqs', () => ({
+  SQSClient: jest.fn().mockImplementation(() => ({ send: mockSend })),
+  SendMessageCommand: jest.fn((args) => args),
+}));
 
 jest.mock('../../../src/config', () => ({
   inviteUserQueueUrl: 'https://sqs.example.com/queue',

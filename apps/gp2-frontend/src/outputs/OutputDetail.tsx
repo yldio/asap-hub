@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Frame from '../Frame';
 import { useOutputById } from './state';
 
@@ -17,7 +17,6 @@ const ShareOutput = lazy(loadShareOutput);
 
 const OutputDetail: FC = () => {
   const { outputId } = useRouteParams(gp2Routing.outputs({}).output);
-  const { path } = useRouteMatch();
   const currentUser = useCurrentUserGP2();
 
   const output = useOutputById(outputId);
@@ -38,39 +37,40 @@ const OutputDetail: FC = () => {
     return <NotFoundPage />;
   }
   return (
-    <Switch>
-      <Route exact path={path}>
-        <Frame title="Output">
-          <OutputDetailPage isAdministrator={isAdministrator} {...output} />
-        </Frame>
-      </Route>
+    <Routes>
       <Route
-        exact
-        path={path + gp2Routing.outputs({}).output({ outputId }).edit.template}
-      >
-        <Frame title="Edit Output">
-          <OutputFormPage>
-            <ShareOutput output={output} />
-          </OutputFormPage>
-        </Frame>
-      </Route>
-      <Route
-        exact
-        path={
-          path + gp2Routing.outputs({}).output({ outputId }).version.template
+        index
+        element={
+          <Frame title="Output">
+            <OutputDetailPage isAdministrator={isAdministrator} {...output} />
+          </Frame>
         }
-      >
-        <Frame title="Version Output">
-          <OutputFormPage
-            message="The previous output page will be replaced with a summarised version
-            history section."
-          >
-            <ShareOutput output={output} createVersion />
-          </OutputFormPage>
-        </Frame>
-      </Route>
-      <Route component={NotFoundPage} />
-    </Switch>
+      />
+      <Route
+        path={gp2Routing.outputs({}).output({ outputId }).edit.template}
+        element={
+          <Frame title="Edit Output">
+            <OutputFormPage>
+              <ShareOutput output={output} />
+            </OutputFormPage>
+          </Frame>
+        }
+      />
+      <Route
+        path={gp2Routing.outputs({}).output({ outputId }).version.template}
+        element={
+          <Frame title="Version Output">
+            <OutputFormPage
+              message="The previous output page will be replaced with a summarised version
+              history section."
+            >
+              <ShareOutput output={output} createVersion />
+            </OutputFormPage>
+          </Frame>
+        }
+      />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 };
 

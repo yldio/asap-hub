@@ -1,5 +1,5 @@
 import { FC, useCallback } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
 import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import { analytics } from '@asap-hub/routing';
@@ -25,16 +25,17 @@ import { preprintComplianceToCSV, publicationComplianceToCSV } from './export';
 type MetricOption = 'preprint-compliance' | 'publication-compliance';
 
 const OpenScience: FC<Record<string, never>> = () => {
-  const history = useHistory();
-  const { metric } = useParams<{
+  const navigate = useNavigate();
+  const { metric: metricParam } = useParams<{
     metric: MetricOption;
   }>();
+  const metric = (metricParam ?? 'preprint-compliance') as MetricOption;
 
   const { currentPage } = usePaginationParams();
   const isPreprintCompliancePage = metric === 'preprint-compliance';
 
   const setMetric = (newMetric: MetricOption) => {
-    history.push(analytics({}).openScience({}).metric({ metric: newMetric }).$);
+    navigate(analytics({}).openScience({}).metric({ metric: newMetric }).$);
   };
 
   const { timeRange } = useAnalytics();

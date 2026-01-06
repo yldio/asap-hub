@@ -11,6 +11,9 @@ module.exports = {
   rootDir: __dirname,
   testEnvironment: 'jsdom',
 
+  // Performance optimizations
+  maxWorkers: process.env.CI ? '100%' : '75%',
+
   setupFiles: [require.resolve('react-app-polyfill/jsdom')],
   setupFilesAfterEnv: [
     ...(setupFilesAfterEnv || []),

@@ -5,6 +5,7 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ContactSupport } from '../molecules';
 import EditUserModal from './EditUserModal';
 
@@ -22,6 +23,7 @@ const TagsModal: React.FC<TagsModalProps> = ({
   tags,
   suggestions,
 }) => {
+  const navigate = useNavigate();
   const [newTags, setNewTags] = useState<gp2.TagDataObject[]>(tags || []);
 
   const checkDirty = () =>
@@ -32,11 +34,12 @@ const TagsModal: React.FC<TagsModalProps> = ({
     <EditUserModal
       title="Tags"
       description="Help others to understand your areas of expertise or what you’re passionate about."
-      onSave={() =>
-        onSave({
+      onSave={async () => {
+        await onSave({
           tags: newTags.map(({ id }) => ({ id })),
-        })
-      }
+        });
+        navigate(backHref);
+      }}
       backHref={backHref}
       dirty={checkDirty()}
     >

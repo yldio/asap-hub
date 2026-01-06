@@ -6,7 +6,7 @@ import {
   RequestedAPCCoverageOption,
 } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from '../../hooks';
 
@@ -43,8 +43,9 @@ const generateLinkFactory =
   };
 
 export const useComplianceSearch = () => {
-  const currentUrlParams = new URLSearchParams(useLocation().search);
-  const history = useHistory();
+  const location = useLocation();
+  const currentUrlParams = new URLSearchParams(location.search);
+  const navigate = useNavigate();
 
   const { resetPagination } = usePaginationParams();
 
@@ -63,9 +64,8 @@ export const useComplianceSearch = () => {
   ) as ManuscriptStatus[];
 
   const setStatus = (status: ManuscriptStatus) => {
-    resetPagination();
-
-    const params = new URLSearchParams(history.location.search);
+    const params = new URLSearchParams(location.search);
+    resetPagination(params);
     const currentStatuses = params.getAll('status');
 
     if (currentStatuses.includes(status)) {
@@ -79,18 +79,17 @@ export const useComplianceSearch = () => {
       params.append('status', status);
     }
 
-    history.replace({ search: params.toString() });
+    navigate({ search: params.toString() } as never, { replace: true });
   };
 
   const setSearchQuery = (newSearchQuery: string) => {
-    resetPagination();
-
-    const newUrlParams = new URLSearchParams(history.location.search);
+    const newUrlParams = new URLSearchParams(location.search);
+    resetPagination(newUrlParams);
     newSearchQuery
       ? newUrlParams.set(searchQueryParam, newSearchQuery)
       : newUrlParams.delete(searchQueryParam);
 
-    history.replace({ search: newUrlParams.toString() });
+    navigate({ search: newUrlParams.toString() } as never, { replace: true });
   };
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 600);

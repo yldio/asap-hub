@@ -18,6 +18,21 @@ import {
   updateOutput,
 } from './api';
 
+// Promise cache to prevent throwing new promises on every render (Suspense requirement)
+const pendingOutputPromises = new Map<string, Promise<void>>();
+
+// Helper to create a stable key from options
+const serializeOutputOptions = (options: OutputListOptions): string =>
+  JSON.stringify({
+    currentPage: options.currentPage,
+    pageSize: options.pageSize,
+    searchQuery: options.searchQuery,
+    filters: options.filters ? Array.from(options.filters).sort() : [],
+    workingGroupId: options.workingGroupId,
+    projectId: options.projectId,
+    authorId: options.authorId,
+  });
+
 const outputIndexState = atomFamily<
   | {
       ids: ReadonlyArray<string>;
@@ -119,22 +134,37 @@ const OutputState = selectorFamily<gp2.OutputResponse | undefined, string>({
 export const useOutputs = (options: OutputListOptions) => {
   const [outputs, setOutputs] = useRecoilState(outputsState(options));
   const { client } = useAlgolia();
+  const optionsKey = serializeOutputOptions(options);
+
   if (outputs === undefined) {
-    throw getOutputs(client, options)
-      .then(
-        (data): gp2.ListOutputResponse => ({
-          total: data.nbHits,
-          items: data.hits,
-          algoliaQueryId: data.queryID,
-          algoliaIndexName: data.index,
-        }),
-      )
-      .then(setOutputs)
-      .catch(setOutputs);
+    let pendingPromise = pendingOutputPromises.get(optionsKey);
+
+    if (!pendingPromise) {
+      pendingPromise = getOutputs(client, options)
+        .then(
+          (data): gp2.ListOutputResponse => ({
+            total: data.nbHits,
+            items: data.hits,
+            algoliaQueryId: data.queryID,
+            algoliaIndexName: data.index,
+          }),
+        )
+        .then(setOutputs)
+        .catch(setOutputs)
+        .finally(() => {
+          pendingOutputPromises.delete(optionsKey);
+        });
+
+      pendingOutputPromises.set(optionsKey, pendingPromise);
+    }
+
+    throw pendingPromise;
   }
+
   if (outputs instanceof Error) {
     throw outputs;
   }
+
   return outputs;
 };
 

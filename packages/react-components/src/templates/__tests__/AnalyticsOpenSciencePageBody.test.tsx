@@ -76,14 +76,14 @@ describe('AnalyticsOpenSciencePageBody', () => {
     expect(mockSetMetric).not.toHaveBeenCalled();
 
     const dropdownIndicators = screen.getAllByTitle('Chevron Down');
-    userEvent.click(dropdownIndicators[0]!);
+    await userEvent.click(dropdownIndicators[0]!);
 
     await waitFor(() => {
       expect(screen.getByText('Publication Compliance')).toBeInTheDocument();
     });
 
     const publicationOption = screen.getByText('Publication Compliance');
-    userEvent.click(publicationOption);
+    await userEvent.click(publicationOption);
 
     expect(mockSetMetric).toHaveBeenCalledWith('publication-compliance');
   });
@@ -141,7 +141,7 @@ describe('AnalyticsOpenSciencePageBody', () => {
       />,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /CSV/i }));
+    await userEvent.click(screen.getByRole('button', { name: /CSV/i }));
     await waitFor(() => {
       expect(
         screen.getByRole('heading', { name: 'Preprint Compliance' }),

@@ -53,4 +53,11 @@ module.exports = {
   ],
   testTimeout: 10000,
   testRegex: '^$', // root project does not have tests itself
+  watchPlugins: [
+    require.resolve('jest-watch-select-projects'),
+    require.resolve('jest-watch-typeahead/filename'),
+    require.resolve('jest-watch-typeahead/testname'),
+    require.resolve('jest-watch-suspend'),
+    require.resolve('jest-runner-eslint/watch-fix'),
+  ],
 };

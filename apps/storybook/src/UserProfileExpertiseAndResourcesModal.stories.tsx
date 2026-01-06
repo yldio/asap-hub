@@ -1,4 +1,4 @@
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { ExpertiseAndResourcesModal } from '@asap-hub/react-components';
 
 import { array, text } from './knobs';
@@ -8,7 +8,7 @@ export default {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/">
     <ExpertiseAndResourcesModal
       expertiseAndResourceDescription={text('Description', '')}
       tags={[]}

@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { aperture, filter, uniqBy, sortWith, pipe, ascend } from 'ramda';
 import { css, Theme } from '@emotion/react';
 
 import {
@@ -90,20 +89,29 @@ const disabledTextStyles = css({
   },
 });
 
+// Helper function to create sliding windows over an array
+function* aperture<T>(n: number, arr: T[]): Generator<T[]> {
+  for (let i = 0; i <= arr.length - n; i += 1) {
+    yield arr.slice(i, i + n);
+  }
+}
+
 interface PageNumber {
   index: number;
   wideScreenOnly?: boolean;
   followsGap?: boolean;
 }
-function* optimizeGaps(pageNumbers: PageNumber[]) {
+function* optimizeGaps(pageNumbers: PageNumber[]): Generator<PageNumber> {
   if (pageNumbers.length < 2) {
-    yield* pageNumbers;
+    for (const p of pageNumbers) yield p;
     return;
   }
 
   yield pageNumbers[0]!;
 
-  for (const [prev, curr] of aperture(2, pageNumbers)) {
+  for (const pair of aperture(2, pageNumbers)) {
+    const prev = pair[0]!;
+    const curr = pair[1]!;
     // No point in leaving a gap of 1 if we can just render the number instead of the ellipsis
     if (prev.index + 1 === curr.index - 1) {
       yield {
@@ -119,14 +127,19 @@ function* optimizeGaps(pageNumbers: PageNumber[]) {
     };
   }
 }
-function* makeFillersMandatory(pageNumbers: PageNumber[]) {
+function* makeFillersMandatory(
+  pageNumbers: PageNumber[],
+): Generator<PageNumber> {
   if (pageNumbers.length < 3) {
-    yield* pageNumbers;
+    for (const p of pageNumbers) yield p;
     return;
   }
 
   yield pageNumbers[0]!;
-  for (const [prev, curr, next] of aperture(3, pageNumbers)) {
+  for (const triple of aperture(3, pageNumbers)) {
+    const prev = triple[0]!;
+    const curr = triple[1]!;
+    const next = triple[2]!;
     if (
       prev.index + 1 === curr.index &&
       curr.index === next.index - 1 &&
@@ -177,22 +190,29 @@ const PageControls: React.FC<PageControlsProps> = ({
       ? []
       : [renderPageHref(currentPageIndex + 1), renderPageHref(lastPageIndex)];
 
-  const desiredPages: PageNumber[] = pipe(
-    () => [
-      { index: firstPageIndex },
-      { index: currentPageIndex - 1, wideScreenOnly: true },
-      { index: currentPageIndex },
-      { index: currentPageIndex + 1, wideScreenOnly: true },
-      { index: lastPageIndex },
-    ],
-    filter<PageNumber>(({ index }) => index >= 0 && index < numberOfPages),
-    sortWith([
-      ascend(({ index }) => index),
-      // sort wideScreenOnly to the back so that uniq does not lose mandatory pages
-      ascend(({ wideScreenOnly }) => (wideScreenOnly ? 1 : 0)),
-    ]),
-    uniqBy(({ index }) => index),
-  )();
+  const desiredPages: PageNumber[] = [
+    { index: firstPageIndex },
+    { index: currentPageIndex - 1, wideScreenOnly: true },
+    { index: currentPageIndex },
+    { index: currentPageIndex + 1, wideScreenOnly: true },
+    { index: lastPageIndex },
+  ]
+    .filter(({ index }) => index >= 0 && index < numberOfPages)
+    .sort((a, b) => {
+      // First sort by index
+      if (a.index !== b.index) {
+        return a.index - b.index;
+      }
+      // Then sort wideScreenOnly to the back so that uniq does not lose mandatory pages
+      const aWide = a.wideScreenOnly ? 1 : 0;
+      const bWide = b.wideScreenOnly ? 1 : 0;
+      return aWide - bWide;
+    })
+    .filter(
+      (page, index, arr) =>
+        // Remove duplicates by index, keeping the first occurrence
+        index === arr.findIndex((p) => p.index === page.index),
+    );
 
   const shownPages = Array.from(
     makeFillersMandatory(Array.from(optimizeGaps(desiredPages)) || []),

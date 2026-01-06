@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import {
   createResearchOutputResponse,
@@ -14,7 +14,6 @@ import {
 } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory, History } from 'history';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -22,11 +21,11 @@ import {
   expectedRequest,
 } from '../../test-utils/research-output-form';
 import { editorRef } from '../../../atoms';
+import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
 
 describe('on submit 2', () => {
-  let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
@@ -35,8 +34,9 @@ describe('on submit 2', () => {
   const getRelatedResearchSuggestions = jest.fn();
   const getShortDescriptionFromDescription = jest.fn();
 
+  let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
+
   beforeEach(() => {
-    history = createMemoryHistory();
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
@@ -44,11 +44,11 @@ describe('on submit 2', () => {
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
 
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 
@@ -89,7 +89,7 @@ describe('on submit 2', () => {
     },
   ) => {
     render(
-      <Router history={history}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}
@@ -109,7 +109,7 @@ describe('on submit 2', () => {
           researchTags={researchTags}
           {...propOverride}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     fireEvent.change(screen.getByLabelText(/url/i), {
@@ -123,10 +123,10 @@ describe('on submit 2', () => {
     editorRef.current?.focus();
 
     const descriptionEditor = screen.getByTestId('editor');
-    userEvent.click(descriptionEditor);
-    userEvent.tab();
+    await userEvent.click(descriptionEditor);
+    await userEvent.tab();
     fireEvent.input(descriptionEditor, { data: data.descriptionMD });
-    userEvent.tab();
+    await userEvent.tab();
 
     fireEvent.change(
       screen.getByRole('textbox', { name: /short description/i }),
@@ -158,8 +158,10 @@ describe('on submit 2', () => {
   };
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await userEvent.click(button);
+    await userEvent.click(
+      screen.getByRole('button', { name: /Publish Output/i }),
+    );
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
@@ -184,8 +186,10 @@ describe('on submit 2', () => {
       keyCode: ENTER_KEYCODE,
     });
 
-    userEvent.click(await screen.findByRole('textbox', { name: /organisms/i }));
-    userEvent.click(screen.getByText('Rat'));
+    await userEvent.click(
+      await screen.findByRole('textbox', { name: /organisms/i }),
+    );
+    await userEvent.click(screen.getByText('Rat'));
 
     await submitForm();
 

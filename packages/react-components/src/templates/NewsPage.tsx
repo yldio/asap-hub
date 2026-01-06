@@ -3,7 +3,9 @@ import { ComponentProps } from 'react';
 import NewsPageHeader from './NewsPageHeader';
 import PageConstraints from './PageConstraints';
 
-type NewsPageProps = ComponentProps<typeof NewsPageHeader>;
+type NewsPageProps = ComponentProps<typeof NewsPageHeader> & {
+  children?: React.ReactNode;
+};
 
 const NewsPage: React.FC<NewsPageProps> = ({ children, ...props }) => (
   <article>

@@ -2,11 +2,10 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createListNewsResponse } from '@asap-hub/fixtures';
 import { NewsFrequency } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
-import { render, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { render, waitFor, renderHook } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -43,9 +42,9 @@ const renderPage = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/news']}>
-              <Route path="/news">
-                <NewsPage />
-              </Route>
+              <Routes>
+                <Route path="/news/*" element={<NewsPage />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -78,7 +77,9 @@ it('renders a counter with the total number of items', async () => {
 
   const { getByText } = await renderPage();
   await waitFor(() => expect(mockGetNews).toHaveBeenCalled());
-  expect(getByText(`${numberOfItems} results found`)).toBeVisible();
+  await waitFor(() =>
+    expect(getByText(`${numberOfItems} results found`)).toBeVisible(),
+  );
 });
 
 it('renders a paginated list of news', async () => {
@@ -101,7 +102,7 @@ it('renders a paginated list of news', async () => {
   );
 
   const { getAllByText } = await renderPage();
-  expect(getAllByText('News Item')).toHaveLength(pageSize);
+  await waitFor(() => expect(getAllByText('News Item')).toHaveLength(pageSize));
   expect(result.current.usePagination.numberOfPages).toBe(4);
   expect(result.current.usePaginationParams.currentPage).toBe(0);
 });
@@ -110,8 +111,8 @@ it('renders error message when when the request it not a 2XX', async () => {
   mockGetNews.mockRejectedValue(new Error('error'));
 
   const { getByText } = await renderPage();
-  expect(mockGetNews).toHaveBeenCalled();
-  expect(getByText(/Something went wrong/i)).toBeVisible();
+  await waitFor(() => expect(mockGetNews).toHaveBeenCalled());
+  await waitFor(() => expect(getByText(/Something went wrong/i)).toBeVisible());
 });
 
 it('can perform a search', async () => {
@@ -131,8 +132,8 @@ it('can perform a search', async () => {
 it('can perform a filter search', async () => {
   mockGetNews.mockResolvedValue(createListNewsResponse(pageSize));
   const { getByTitle, getByText } = await renderPage();
-  userEvent.click(getByTitle('Filter'));
-  userEvent.click(getByText(/Biweekly/i));
+  await userEvent.click(getByTitle('Filter'));
+  await userEvent.click(getByText(/Biweekly/i));
 
   await waitFor(() =>
     expect(mockGetNews).toHaveBeenLastCalledWith(

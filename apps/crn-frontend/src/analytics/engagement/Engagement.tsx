@@ -9,7 +9,7 @@ import {
 import { AnalyticsEngagementPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
-import { Redirect, useHistory, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import {
   useAnalytics,
@@ -26,15 +26,16 @@ import { useEngagementPerformanceValue } from './state';
 
 const Engagement = () => {
   const { currentPage } = usePaginationParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { timeRange } = useAnalytics();
 
-  const { metric } = useParams<{
+  const { metric: metricParam } = useParams<{
     metric: EngagementType;
   }>();
+  const metric = (metricParam ?? 'presenters') as EngagementType;
 
   const setMetric = (newMetric: EngagementType) => {
-    history.push(
+    navigate(
       analytics({}).engagement({}).metric({
         metric: newMetric,
       }).$,
@@ -141,8 +142,9 @@ const Engagement = () => {
     }));
   };
   return !isMeetingRepAttendanceEnabled && isAttendancePage ? (
-    <Redirect
+    <Navigate
       to={analytics({}).engagement({}).metric({ metric: 'presenters' }).$}
+      replace
     />
   ) : (
     <AnalyticsEngagementPageBody

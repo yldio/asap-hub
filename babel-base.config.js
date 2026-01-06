@@ -7,7 +7,6 @@ module.exports = {
       ? {}
       : require.resolve('babel-plugin-transform-inline-environment-variables'),
     require.resolve('babel-plugin-lodash'),
-    require.resolve('@jeysal/babel-plugin-ramda'),
   ],
   babelrcRoots: ['.', 'apps/*', 'packages/**'],
 };

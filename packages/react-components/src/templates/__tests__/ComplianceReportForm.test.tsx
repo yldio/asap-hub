@@ -6,15 +6,12 @@ import {
   waitFor,
 } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
-import { createMemoryHistory, History } from 'history';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import userEvent from '@testing-library/user-event';
 import ComplianceReportForm from '../ComplianceReportForm';
 
-let history!: History;
-
 beforeEach(() => {
-  history = createMemoryHistory();
   jest.spyOn(console, 'error').mockImplementation();
 });
 
@@ -28,7 +25,7 @@ const defaultProps = {
 
 it('renders the form', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -53,8 +50,9 @@ it('data is sent on form submission and calls setManuscript', async () => {
     ],
   };
   const setManuscript = jest.fn();
+
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm
         {...defaultProps}
         url="http://example.com"
@@ -66,20 +64,42 @@ it('data is sent on form submission and calls setManuscript', async () => {
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByLabelText(/Status/i));
+  // Trigger validation by blurring fields with initial values
+  const urlInput = screen.getByRole('textbox', { name: /url/i });
+  fireEvent.focus(urlInput);
+  fireEvent.blur(urlInput);
+
+  const editor = screen.getByTestId('editor');
+  fireEvent.focus(editor);
+  fireEvent.blur(editor);
+
+  // Select status
+  const statusLabel = screen.getByLabelText(/Status/i);
+
+  // Find the dropdown button - it's the element returned by getByLabelText
+  const statusButton = statusLabel as HTMLElement;
+
+  await userEvent.click(statusButton);
+
   await act(async () => {
-    userEvent.click(screen.getByText(/Addendum Required/i));
+    await userEvent.click(screen.getByText(/Addendum Required/i));
   });
 
-  const shareButton = screen.getByRole('button', { name: /Share/i });
-  await waitFor(() => expect(shareButton).toBeEnabled());
+  // Manually blur the dropdown button to trigger validation in onBlur mode
+  await act(async () => {
+    fireEvent.blur(statusButton);
+  });
 
-  userEvent.click(shareButton);
+  // Wait for all validations to complete and form to become valid
+  const shareButton = screen.getByRole('button', { name: /Share/i });
+  await waitFor(() => expect(shareButton).toBeEnabled(), { timeout: 3000 });
+
+  await userEvent.click(shareButton);
 
   const confirmButton = screen.getByRole('button', {
     name: /Share Compliance Report/i,
   });
-  userEvent.click(confirmButton);
+  await userEvent.click(confirmButton);
 
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
@@ -105,7 +125,7 @@ it('data is sent on form submission without calling setManuscript', async () => 
   const setManuscript = jest.fn();
 
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm
         {...defaultProps}
         url="http://example.com"
@@ -117,20 +137,42 @@ it('data is sent on form submission without calling setManuscript', async () => 
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByLabelText(/Status/i));
+  // Trigger validation by blurring fields with initial values
+  const urlInput = screen.getByRole('textbox', { name: /url/i });
+  fireEvent.focus(urlInput);
+  fireEvent.blur(urlInput);
+
+  const editor = screen.getByTestId('editor');
+  fireEvent.focus(editor);
+  fireEvent.blur(editor);
+
+  // Select status
+  const statusLabel = screen.getByLabelText(/Status/i);
+
+  // Find the dropdown button - it's the element returned by getByLabelText
+  const statusButton = statusLabel as HTMLElement;
+
+  await userEvent.click(statusButton);
+
   await act(async () => {
     await userEvent.click(screen.getByText(/Addendum Required/i));
   });
 
-  const shareButton = screen.getByRole('button', { name: /Share/i });
-  await waitFor(() => expect(shareButton).toBeEnabled());
+  // Manually blur the dropdown button to trigger validation in onBlur mode
+  await act(async () => {
+    fireEvent.blur(statusButton);
+  });
 
-  userEvent.click(shareButton);
+  // Wait for all validations to complete and form to become valid
+  const shareButton = screen.getByRole('button', { name: /Share/i });
+  await waitFor(() => expect(shareButton).toBeEnabled(), { timeout: 3000 });
+
+  await userEvent.click(shareButton);
 
   const confirmButton = screen.getByRole('button', {
     name: /Share Compliance Report/i,
   });
-  userEvent.click(confirmButton);
+  await userEvent.click(confirmButton);
 
   await waitFor(() => {
     expect(onSave).toHaveBeenCalledWith({
@@ -146,14 +188,17 @@ it('data is sent on form submission without calling setManuscript', async () => 
 
 it('displays error message when url is missing', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
 
   const input = screen.getByRole('textbox', { name: /url/i });
 
-  fireEvent.blur(input);
+  // Blur empty field to trigger validation
+  await act(async () => {
+    fireEvent.blur(input);
+  });
 
   await waitFor(() => {
     expect(
@@ -161,7 +206,10 @@ it('displays error message when url is missing', async () => {
     ).toBeGreaterThanOrEqual(1);
   });
 
-  userEvent.type(input, 'http://example.com');
+  // Type a valid URL and blur to trigger revalidation
+  await act(async () => {
+    await userEvent.type(input, 'http://example.com');
+  });
   fireEvent.blur(input);
 
   await waitFor(() => {
@@ -171,14 +219,17 @@ it('displays error message when url is missing', async () => {
 
 it('displays error message when description is missing', async () => {
   const { getByTestId, queryByText, getAllByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
 
   const editor = await waitFor(() => getByTestId('editor'));
 
-  fireEvent.blur(editor);
+  // Blur empty editor to trigger validation
+  await act(async () => {
+    fireEvent.blur(editor);
+  });
 
   await waitFor(() => {
     expect(
@@ -186,49 +237,63 @@ it('displays error message when description is missing', async () => {
     ).toBeGreaterThanOrEqual(1);
   });
 
+  // Type description using fireEvent.input (required for Lexical editor)
   await act(async () => {
-    userEvent.click(editor);
-    userEvent.tab();
-    userEvent.type(editor, 'manuscription description');
-    userEvent.tab();
+    await userEvent.click(editor);
+    await userEvent.tab();
+    fireEvent.input(editor, { data: 'manuscript description' });
   });
 
-  fireEvent.blur(editor);
-  await waitFor(() => {
-    expect(queryByText(/Please enter a description/i)).toBeNull();
+  // Wait for Lexical's onChange to propagate to react-hook-form
+  // then blur to trigger validation with the updated value
+  await act(async () => {
+    fireEvent.blur(editor);
   });
+
+  await waitFor(
+    () => {
+      expect(queryByText(/Please enter a description/i)).toBeNull();
+    },
+    { timeout: 3000 },
+  );
 });
 
-it('should go back when cancel button is clicked', () => {
-  const { getByRole } = render(
-    <MemoryRouter>
-      <Router history={history}>
-        <Route path="/form">
-          <ComplianceReportForm {...defaultProps} />
-        </Route>
-      </Router>
-    </MemoryRouter>,
+it('should go back when cancel button is clicked', async () => {
+  const router = createMemoryRouter(
+    [
+      {
+        path: '/form',
+        element: <ComplianceReportForm {...defaultProps} />,
+      },
+      {
+        path: '/another-url',
+        element: <div>Another page</div>,
+      },
+    ],
+    { initialEntries: ['/another-url', '/form'], initialIndex: 1 },
   );
 
-  history.push('/another-url');
-  history.push('/form');
+  const { getByRole } = render(<RouterProvider router={router} />);
 
   const cancelButton = getByRole('button', {
     name: /cancel/i,
   });
-  userEvent.click(cancelButton);
+  await userEvent.click(cancelButton);
 
   const confirmCancellationButton = getByRole('button', {
     name: /cancel compliance report sharing/i,
   });
 
-  act(() => userEvent.click(confirmCancellationButton));
-  expect(history.location.pathname).toBe('/another-url');
+  await userEvent.click(confirmCancellationButton);
+
+  await waitFor(() => {
+    expect(router.state.location.pathname).toBe('/another-url');
+  });
 });
 
-it('should dismiss confirmation modal when Keep Editing button is clicked', () => {
+it('should dismiss confirmation modal when Keep Editing button is clicked', async () => {
   const { getByText, getByRole, queryByText } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -236,14 +301,14 @@ it('should dismiss confirmation modal when Keep Editing button is clicked', () =
   const cancelButton = getByRole('button', {
     name: /cancel/i,
   });
-  userEvent.click(cancelButton);
+  await userEvent.click(cancelButton);
 
   expect(getByText(/Cancel sharing of compliance report?/i)).toBeVisible();
 
   const keepEditingButton = getByRole('button', {
     name: /keep editing/i,
   });
-  userEvent.click(keepEditingButton);
+  await userEvent.click(keepEditingButton);
 
   expect(
     queryByText(/Cancel sharing of compliance report?/i),
@@ -252,7 +317,7 @@ it('should dismiss confirmation modal when Keep Editing button is clicked', () =
 
 it('should focus the Lexical editor when pressing Tab on the URL input', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm {...defaultProps} />
     </StaticRouter>,
   );
@@ -278,7 +343,7 @@ it('should focus the Lexical editor when pressing Tab on the URL input', async (
 
 it('should show compliant modal when compliant status is selected', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm
         {...defaultProps}
         url="http://example.com"
@@ -290,15 +355,37 @@ it('should show compliant modal when compliant status is selected', async () => 
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByLabelText(/Status/i));
+  // Trigger validation by blurring fields with initial values
+  const urlInput = screen.getByRole('textbox', { name: /url/i });
+  fireEvent.focus(urlInput);
+  fireEvent.blur(urlInput);
+
+  const editor = screen.getByTestId('editor');
+  fireEvent.focus(editor);
+  fireEvent.blur(editor);
+
+  // Select status
+  const statusLabel = screen.getByLabelText(/Status/i);
+
+  // Find the dropdown button - it's the element returned by getByLabelText
+  const statusButton = statusLabel as HTMLElement;
+
+  await userEvent.click(statusButton);
+
   await act(async () => {
     await userEvent.click(screen.getByText(/Compliant/i));
   });
 
-  const shareButton = screen.getByRole('button', { name: /Share/i });
-  await waitFor(() => expect(shareButton).toBeEnabled());
+  // Manually blur the dropdown button to trigger validation in onBlur mode
+  await act(async () => {
+    fireEvent.blur(statusButton);
+  });
 
-  userEvent.click(shareButton);
+  // Wait for all validations to complete and form to become valid
+  const shareButton = screen.getByRole('button', { name: /Share/i });
+  await waitFor(() => expect(shareButton).toBeEnabled(), { timeout: 3000 });
+
+  await userEvent.click(shareButton);
 
   const compliantModal = screen.getByText(
     /Share compliance report and set status to compliant\?/i,
@@ -309,7 +396,7 @@ it('should show compliant modal when compliant status is selected', async () => 
 
 it('should show "closed (other)" modal when compliant status is selected', async () => {
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ComplianceReportForm
         {...defaultProps}
         url="http://example.com"
@@ -321,15 +408,37 @@ it('should show "closed (other)" modal when compliant status is selected', async
     </StaticRouter>,
   );
 
-  userEvent.click(screen.getByLabelText(/Status/i));
+  // Trigger validation by blurring fields with initial values
+  const urlInput = screen.getByRole('textbox', { name: /url/i });
+  fireEvent.focus(urlInput);
+  fireEvent.blur(urlInput);
+
+  const editor = screen.getByTestId('editor');
+  fireEvent.focus(editor);
+  fireEvent.blur(editor);
+
+  // Select status
+  const statusLabel = screen.getByLabelText(/Status/i);
+
+  // Find the dropdown button - it's the element returned by getByLabelText
+  const statusButton = statusLabel as HTMLElement;
+
+  await userEvent.click(statusButton);
+
   await act(async () => {
     await userEvent.click(screen.getByText(/Closed \(other\)/i));
   });
 
-  const shareButton = screen.getByRole('button', { name: /Share/i });
-  await waitFor(() => expect(shareButton).toBeEnabled());
+  // Manually blur the dropdown button to trigger validation in onBlur mode
+  await act(async () => {
+    fireEvent.blur(statusButton);
+  });
 
-  userEvent.click(shareButton);
+  // Wait for all validations to complete and form to become valid
+  const shareButton = screen.getByRole('button', { name: /Share/i });
+  await waitFor(() => expect(shareButton).toBeEnabled(), { timeout: 3000 });
+
+  await userEvent.click(shareButton);
 
   const compliantModal = screen.getByText(
     /Share compliance report and set status to closed \(other\)\?/i,

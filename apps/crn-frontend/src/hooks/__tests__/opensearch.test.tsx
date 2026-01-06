@@ -1,4 +1,5 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { render, renderHook, screen, waitFor } from '@testing-library/react';
+import { Component, ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -9,6 +10,22 @@ import * as leadershipApi from '../../analytics/leadership/api';
 import * as engagementApi from '../../analytics/engagement/api';
 import * as collaborationApi from '../../analytics/collaboration/api';
 import * as productivityApi from '../../analytics/productivity/api';
+
+class ErrorBoundary extends Component<
+  { children: ReactNode },
+  { error: Error | null }
+> {
+  state: { error: Error | null } = { error: null };
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+  render() {
+    if (this.state.error) {
+      return <div data-testid="error">{this.state.error.message}</div>;
+    }
+    return this.props.children;
+  }
+}
 
 jest.mock('../../analytics/utils/opensearch');
 jest.mock('../../analytics/open-science/api');
@@ -27,37 +44,61 @@ describe('useOpensearchMetrics', () => {
     mockOpensearchClient.mockReset();
   });
 
-  it('throws when user is not provided', () => {
-    const { result } = renderHook(() => useOpensearchMetrics());
-    expect(() => result.current).toThrow();
+  it('throws when user is not provided', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    const TestComponent = () => {
+      useOpensearchMetrics();
+      return <div>Success</div>;
+    };
+
+    render(
+      <RecoilRoot>
+        <ErrorBoundary>
+          <Suspense fallback={<div>Loading...</div>}>
+            <TestComponent />
+          </Suspense>
+        </ErrorBoundary>
+      </RecoilRoot>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error')).toHaveTextContent(
+        'Auth0 not available',
+      );
+    });
   });
 
   it('returns all metric functions', async () => {
-    const { result, waitForNextUpdate } = renderHook(
-      () => useOpensearchMetrics(),
-      {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
+    const { result } = renderHook(() => useOpensearchMetrics(), {
+      wrapper: ({ children }) => (
+        <RecoilRoot>
+          <Suspense fallback="loading">
             <Auth0Provider user={{ id: 'user-id' }}>
               <WhenReady>{children}</WhenReady>
             </Auth0Provider>
-          </RecoilRoot>
-        ),
-      },
-    );
-    await waitForNextUpdate();
+          </Suspense>
+        </RecoilRoot>
+      ),
+    });
 
-    expect(result.current).toHaveProperty('getPublicationCompliance');
-    expect(result.current).toHaveProperty('getPreprintCompliance');
-    expect(result.current).toHaveProperty('getAnalyticsOSChampion');
-    expect(result.current).toHaveProperty('getMeetingRepAttendance');
-    expect(result.current).toHaveProperty('getPreliminaryDataSharing');
-    expect(result.current).toHaveProperty('getUserProductivity');
-    expect(result.current).toHaveProperty('getUserProductivityTagSuggestions');
-    expect(result.current).toHaveProperty('getUserProductivityPerformance');
-    expect(result.current).toHaveProperty('getTeamProductivity');
-    expect(result.current).toHaveProperty('getTeamProductivityTagSuggestions');
-    expect(result.current).toHaveProperty('getTeamProductivityPerformance');
+    await waitFor(() => {
+      expect(result.current).toHaveProperty('getPublicationCompliance');
+      expect(result.current).toHaveProperty('getPreprintCompliance');
+      expect(result.current).toHaveProperty('getAnalyticsOSChampion');
+      expect(result.current).toHaveProperty('getMeetingRepAttendance');
+      expect(result.current).toHaveProperty('getPreliminaryDataSharing');
+      expect(result.current).toHaveProperty('getUserProductivity');
+      expect(result.current).toHaveProperty(
+        'getUserProductivityTagSuggestions',
+      );
+      expect(result.current).toHaveProperty('getUserProductivityPerformance');
+      expect(result.current).toHaveProperty('getTeamProductivity');
+      expect(result.current).toHaveProperty(
+        'getTeamProductivityTagSuggestions',
+      );
+      expect(result.current).toHaveProperty('getTeamProductivityPerformance');
+    });
   });
 
   describe('getPublicationCompliance', () => {
@@ -69,19 +110,21 @@ describe('useOpensearchMetrics', () => {
           total: 0,
         });
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const paginationParams = {
         tags: ['Team A'],
@@ -116,19 +159,21 @@ describe('useOpensearchMetrics', () => {
           total: 0,
         });
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const paginationParams = {
         tags: [],
@@ -171,19 +216,21 @@ describe('useOpensearchMetrics', () => {
           total: 1,
         });
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const paginationParams = {
         tags: ['Team One'],
@@ -225,19 +272,21 @@ describe('useOpensearchMetrics', () => {
           total: 1,
         });
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const paginationParams = {
         tags: [],
@@ -279,19 +328,21 @@ describe('useOpensearchMetrics', () => {
           total: 1,
         });
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const paginationParams = {
         tags: ['Team Beta', 'Team Gamma'],
@@ -341,19 +392,21 @@ describe('useOpensearchMetrics', () => {
           total: 1,
         });
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const paginationParams = {
         tags: ['Team Alpha'],
@@ -388,19 +441,21 @@ describe('useOpensearchMetrics', () => {
           }) as unknown as OpensearchClient<unknown>,
       );
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const tagQuery = 'Team';
 
@@ -448,19 +503,21 @@ describe('useOpensearchMetrics', () => {
           },
         });
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const paginationParams = {
         timeRange: '90d' as const,
@@ -501,19 +558,21 @@ describe('useOpensearchMetrics', () => {
           total: 1,
         });
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const paginationParams = {
         tags: ['Team Alpha'],
@@ -552,19 +611,21 @@ describe('useOpensearchMetrics', () => {
           }) as unknown as OpensearchClient<unknown>,
       );
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const tagQuery = 'Team';
 
@@ -628,19 +689,21 @@ describe('useOpensearchMetrics', () => {
           },
         });
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useOpensearchMetrics(),
-        {
-          wrapper: ({ children }) => (
-            <RecoilRoot>
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
               <Auth0Provider user={{ id: 'user-id' }}>
                 <WhenReady>{children}</WhenReady>
               </Auth0Provider>
-            </RecoilRoot>
-          ),
-        },
-      );
-      await waitForNextUpdate();
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
 
       const paginationParams = {
         timeRange: '90d' as const,
@@ -662,19 +725,21 @@ describe('useOpensearchMetrics', () => {
   });
 
   it('uses the same authorization for all OpenSearch clients', async () => {
-    const { result, waitForNextUpdate } = renderHook(
-      () => useOpensearchMetrics(),
-      {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
+    const { result } = renderHook(() => useOpensearchMetrics(), {
+      wrapper: ({ children }) => (
+        <RecoilRoot>
+          <Suspense fallback="loading">
             <Auth0Provider user={{ id: 'user-id' }}>
               <WhenReady>{children}</WhenReady>
             </Auth0Provider>
-          </RecoilRoot>
-        ),
-      },
-    );
-    await waitForNextUpdate();
+          </Suspense>
+        </RecoilRoot>
+      ),
+    });
+
+    await waitFor(() => {
+      expect(result.current).toBeTruthy();
+    });
 
     // Call multiple methods
     await result.current.getPublicationCompliance({

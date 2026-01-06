@@ -1,7 +1,6 @@
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter } from 'react-router-dom';
-import { render, act } from '@testing-library/react';
-import { waitFor } from '@testing-library/dom';
+import { render, waitFor, screen } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { UserResponse } from '@asap-hub/model';
@@ -13,6 +12,33 @@ import { getUser } from '../network/users/api';
 
 jest.mock('../network/users/api');
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+
+// Suppress act() warnings from Recoil state updates
+// eslint-disable-next-line no-console
+const originalError = console.error;
+beforeAll(() => {
+  // eslint-disable-next-line no-console
+  console.error = jest.fn((...args: unknown[]) => {
+    if (
+      typeof args[0] === 'string' &&
+      args[0].includes(
+        'The current testing environment is not configured to support act(...)',
+      )
+    ) {
+      return;
+    }
+    originalError(...args);
+  }) as typeof console.error;
+});
+
+afterAll(() => {
+  // eslint-disable-next-line no-console
+  console.error = originalError;
+});
+
+beforeEach(() => {
+  mockGetUser.mockReset();
+});
 const onboardableUser: UserResponse = {
   ...createUserResponse(),
   questions: ['1', '2'],
@@ -77,23 +103,23 @@ const renderOnboardable = (onboarded: boolean) => (
 );
 
 it('is undefined when the logged in user is already onboarded', async () => {
-  const { queryByText } = render(renderOnboardable(true));
-  await act(() =>
-    waitFor(() =>
-      expect(queryByText('isOnboardable: undefined')).toBeVisible(),
-    ),
-  );
+  render(renderOnboardable(true));
+
+  // Then check for the expected text
+  await waitFor(() => {
+    expect(screen.getByText('isOnboardable: undefined')).toBeVisible();
+  });
 });
 
 it('is true when: logged in, not onboarded and conditions met', async () => {
   mockGetUser.mockResolvedValue(onboardableUser);
-  const { queryByText } = render(renderOnboardable(false));
-  await act(() =>
-    waitFor(() => {
-      expect(mockGetUser).toHaveBeenCalled();
-      expect(queryByText('isOnboardable: true')).toBeVisible();
-    }),
-  );
+  render(renderOnboardable(false));
+
+  // Then wait for the API call and result
+  await waitFor(() => {
+    expect(mockGetUser).toHaveBeenCalled();
+    expect(screen.getByText('isOnboardable: true')).toBeVisible();
+  });
 });
 
 it('is false when: logged in, not onboarded but conditions not met', async () => {
@@ -101,11 +127,10 @@ it('is false when: logged in, not onboarded but conditions not met', async () =>
     ...onboardableUser,
     jobTitle: undefined,
   });
-  const { queryByText } = render(renderOnboardable(false));
-  await act(() =>
-    waitFor(() => {
-      expect(mockGetUser).toHaveBeenCalled();
-      expect(queryByText('isOnboardable: false')).toBeVisible();
-    }),
-  );
+  render(renderOnboardable(false));
+  // Then wait for the API call and result
+  await waitFor(() => {
+    expect(mockGetUser).toHaveBeenCalled();
+    expect(screen.getByText('isOnboardable: false')).toBeVisible();
+  });
 });

@@ -33,8 +33,8 @@ it('should trigger an onChange event when a tag is selected', async () => {
       onChangeTags={mockOnChange}
     />,
   );
-  userEvent.click(screen.getByLabelText(/keyword/i));
-  userEvent.click(screen.getByText('Example'));
+  await userEvent.click(screen.getByLabelText(/keyword/i));
+  await userEvent.click(screen.getByText('Example'));
   expect(mockOnChange).toHaveBeenCalledWith(['Example']);
 });
 
@@ -51,7 +51,7 @@ it('should trigger an onChange event when a text is being typed into access inst
   expect(screen.getByText('access-instructions-value')).toBeVisible();
 
   const input = screen.getByRole('textbox', { name: /usage notes/i });
-  userEvent.type(input, 't');
+  await userEvent.type(input, 't');
   expect(mockOnChange).toHaveBeenLastCalledWith('access-instructions-valuet');
 });
 
@@ -87,8 +87,8 @@ it('should trigger an onChange event when a method is selected', async () => {
 
   expect(await screen.findByLabelText(/method/i)).toBeVisible();
 
-  userEvent.click(screen.getByLabelText(/method/i));
-  userEvent.click(screen.getByText('ELISA'));
+  await userEvent.click(screen.getByLabelText(/method/i));
+  await userEvent.click(screen.getByText('ELISA'));
   expect(mockOnChange).toHaveBeenCalledWith(['ELISA']);
 });
 
@@ -109,8 +109,8 @@ it('should trigger an onChange event when an organism is selected', async () => 
 
   expect(await screen.findByLabelText(/organisms/i)).toBeVisible();
 
-  userEvent.click(screen.getByLabelText(/organisms/i));
-  userEvent.click(screen.getByText('Rat'));
+  await userEvent.click(screen.getByLabelText(/organisms/i));
+  await userEvent.click(screen.getByText('Rat'));
   expect(mockOnChange).toHaveBeenCalledWith(['Rat']);
 });
 
@@ -131,7 +131,7 @@ it('should trigger an onChange event when an environment is selected', async () 
 
   expect(await screen.findByLabelText(/environments/i)).toBeVisible();
 
-  userEvent.click(screen.getByLabelText(/environments/i));
-  userEvent.click(screen.getByText('In Vitro'));
+  await userEvent.click(screen.getByLabelText(/environments/i));
+  await userEvent.click(screen.getByText('In Vitro'));
   expect(mockOnChange).toHaveBeenCalledWith(['In Vitro']);
 });

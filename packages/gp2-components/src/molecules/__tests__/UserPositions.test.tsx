@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
@@ -25,27 +25,29 @@ describe('UserPositions', () => {
       </MemoryRouter>,
     );
 
-  it('renders a dialog with the right title', () => {
+  it('renders a dialog with the right title', async () => {
     renderUserPositions({
       positions: [
         { institution: 'FPF', department: "Men's Team", role: 'Striker' },
       ],
     });
-    expect(
-      screen.getByRole('heading', { name: 'Primary Position' }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: 'Institution (required)' }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: 'Department (required)' }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole('textbox', { name: 'Role (required)' }),
-    ).toBeVisible();
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: 'Primary Position' }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole('textbox', { name: 'Institution (required)' }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole('textbox', { name: 'Department (required)' }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole('textbox', { name: 'Role (required)' }),
+      ).toBeVisible();
+    });
   });
 
-  it('can click add an extra position', () => {
+  it('can click add an extra position', async () => {
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
     ];
@@ -55,14 +57,14 @@ describe('UserPositions', () => {
       onChange,
     });
     const addButton = getAddButton();
-    userEvent.click(addButton);
+    await userEvent.click(addButton);
     expect(onChange).toHaveBeenCalledWith([
       ...positions,
       { institution: '', department: '', role: '' },
     ]);
   });
 
-  it('there can be only 3 positions', () => {
+  it('there can be only 3 positions', async () => {
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
       { institution: 'Benfica', department: 'First Team', role: 'Forward' },
@@ -71,11 +73,13 @@ describe('UserPositions', () => {
     renderUserPositions({
       positions,
     });
-    expect(
-      screen.queryByRole('button', {
-        name: /add another position/i,
-      }),
-    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('button', {
+          name: /add another position/i,
+        }),
+      ).not.toBeInTheDocument();
+    });
   });
 
   it('can save a position institution', async () => {
@@ -102,13 +106,13 @@ describe('UserPositions', () => {
       })
       .closest('section') as HTMLElement;
 
-    userEvent.click(
+    await userEvent.click(
       within(secondary).getByRole('textbox', {
         name: /Institution/i,
       }),
     );
     const institution = await screen.findByText(position.institution);
-    userEvent.click(institution);
+    await userEvent.click(institution);
 
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
@@ -132,7 +136,7 @@ describe('UserPositions', () => {
         name: /Secondary Position/i,
       })
       .closest('section') as HTMLElement;
-    userEvent.type(
+    await userEvent.type(
       within(secondary).getByRole('textbox', { name: /Department/i }),
       position.department,
     );
@@ -159,7 +163,7 @@ describe('UserPositions', () => {
         name: /Secondary Position/i,
       })
       .closest('section') as HTMLElement;
-    userEvent.type(
+    await userEvent.type(
       within(secondary).getByRole('textbox', { name: /Role/i }),
       position.role,
     );
@@ -167,7 +171,7 @@ describe('UserPositions', () => {
     expect(onChange).toHaveBeenCalledWith([positions[0], position]);
   });
 
-  it('can delete a position', () => {
+  it('can delete a position', async () => {
     const onChange = jest.fn();
     const positions = [
       { institution: 'FPF', department: "Men's Team", role: 'Striker' },
@@ -178,7 +182,7 @@ describe('UserPositions', () => {
       onChange,
     });
     const deleteButton = screen.getByRole('button', { name: /delete/i });
-    userEvent.click(deleteButton);
+    await userEvent.click(deleteButton);
     expect(onChange).toHaveBeenCalledWith([positions[0]]);
   });
 });

@@ -10,7 +10,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -34,11 +34,14 @@ const renderAdditionalDetails = async (id: string) => {
                 gp2Routing.onboarding({}).additionalDetails({}).$,
               ]}
             >
-              <Route
-                path={gp2Routing.onboarding({}).additionalDetails.template}
-              >
-                <AdditionalDetails />
-              </Route>
+              <Routes>
+                <Route
+                  path={`${
+                    gp2Routing.onboarding({}).additionalDetails.template
+                  }/*`}
+                  element={<AdditionalDetails />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -96,9 +99,9 @@ describe('AdditionalDetails', () => {
     const [openQuestionsButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(openQuestionsButton!);
+    await userEvent.click(openQuestionsButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -119,9 +122,9 @@ describe('AdditionalDetails', () => {
     const [fundingProvidersButton] = screen.getAllByRole('link', {
       name: 'Optional Add',
     });
-    userEvent.click(fundingProvidersButton!);
+    await userEvent.click(fundingProvidersButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -153,9 +156,9 @@ describe('AdditionalDetails', () => {
     const [, cohortEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(cohortEditButton!);
+    await userEvent.click(cohortEditButton!);
     expect(await screen.findByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });

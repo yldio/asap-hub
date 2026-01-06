@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/dom';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import Cookies from 'js-cookie';
 import { v4 as uuidv4, validate } from 'uuid';
 import {
@@ -151,6 +151,66 @@ describe('useCookieConsent', () => {
     expect(result.current.showCookieModal).toBe(false);
   });
 
+  it('throws error when save response is null', async () => {
+    jest
+      .spyOn(global, 'fetch')
+      .mockImplementationOnce(() =>
+        Promise.resolve(null as unknown as Response),
+      );
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: COOKIE_NAME,
+        baseUrl: apiUrl,
+        savePath: `save`,
+      }),
+    );
+
+    await expect(
+      act(async () => result.current.onSaveCookiePreferences(true)),
+    ).rejects.toThrow('Failed to save cookie preferences: unknown');
+  });
+
+  it('throws error when save response is not ok with status code', async () => {
+    jest.spyOn(global, 'fetch').mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: false,
+        status: 500,
+        json: () => Promise.resolve(),
+      } as Response),
+    );
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: COOKIE_NAME,
+        baseUrl: apiUrl,
+        savePath: `save`,
+      }),
+    );
+
+    await expect(
+      act(async () => result.current.onSaveCookiePreferences(true)),
+    ).rejects.toThrow('Failed to save cookie preferences: 500');
+  });
+
+  it('throws error when save response is not ok without status code', async () => {
+    jest.spyOn(global, 'fetch').mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: false,
+        json: () => Promise.resolve(),
+      } as Response),
+    );
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: COOKIE_NAME,
+        baseUrl: apiUrl,
+        savePath: `save`,
+      }),
+    );
+
+    await expect(
+      act(async () => result.current.onSaveCookiePreferences(true)),
+    ).rejects.toThrow('Failed to save cookie preferences: unknown');
+  });
+
   it('should toggle the value of showCookieModal when toggleCookieModal is called', async () => {
     const { result } = renderHook(() =>
       useCookieConsent({
@@ -257,7 +317,134 @@ describe('useCookieConsent', () => {
     });
   });
 
-  it('should show modal when cookie data is not found', async () => {
+  it('should show modal when remote cookie data returns 404 status', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    const fetchPromise = Promise.resolve({
+      ok: false,
+      status: 404,
+    } as Response);
+    (global.fetch as jest.Mock).mockReturnValue(fetchPromise);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await act(async () => {
+      await fetchPromise;
+    });
+
+    await waitFor(() => {
+      // Modal should show when remote data is not found (404)
+      expect(result.current.showCookieModal).toBe(true);
+    });
+  });
+
+  it('should not show modal when fetch fails with non-404 error', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: () => Promise.resolve({}),
+    } as Response);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await waitFor(() => {
+      // Modal should not show when fetch fails for non-404 reasons
+      expect(result.current.showCookieModal).toBe(false);
+    });
+  });
+
+  it('should not show modal when fetch returns null/undefined response', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    (global.fetch as jest.Mock).mockResolvedValue(null);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await waitFor(() => {
+      // Modal should not show when fetch returns null
+      expect(result.current.showCookieModal).toBe(false);
+    });
+  });
+
+  it('should not show modal when remoteCookieData is null', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(null),
+    } as Response);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await waitFor(() => {
+      // Modal should not show when remoteCookieData is null
+      expect(result.current.showCookieModal).toBe(false);
+    });
+  });
+
+  it('should not show modal when remoteCookieData has error', async () => {
     jest.spyOn(console, 'error').mockImplementation();
     const mockCookieData = {
       cookieId: 'test-id',
@@ -273,10 +460,9 @@ describe('useCookieConsent', () => {
       ok: true,
       json: () =>
         Promise.resolve({
-          error: 'Not found - mocked',
-          statusCode: 404,
+          error: 'Some error occurred',
         }),
-    });
+    } as Response);
 
     const { result } = renderHook(() =>
       useCookieConsent({
@@ -287,7 +473,43 @@ describe('useCookieConsent', () => {
     );
 
     await waitFor(() => {
-      expect(result.current.showCookieModal).toBe(true);
+      // Modal should not show when remoteCookieData has error
+      expect(result.current.showCookieModal).toBe(false);
+    });
+  });
+
+  it('should not show modal when remoteCookieData is missing preferences', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const mockCookieData = {
+      cookieId: 'test-id',
+      preferences: {
+        essential: true,
+        analytics: true,
+      },
+    };
+
+    (Cookies.get as jest.Mock).mockReturnValue(JSON.stringify(mockCookieData));
+
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          cookieId: 'test-id',
+          // preferences is missing
+        }),
+    } as Response);
+
+    const { result } = renderHook(() =>
+      useCookieConsent({
+        name: mockCookieName,
+        baseUrl: apiUrl,
+        savePath: 'save',
+      }),
+    );
+
+    await waitFor(() => {
+      // Modal should not show when remoteCookieData is missing preferences
+      expect(result.current.showCookieModal).toBe(false);
     });
   });
 
@@ -323,16 +545,7 @@ describe('useCookieConsent', () => {
   });
 
   it('does not generates a new cookieId when cookieId is Valid', async () => {
-    jest.spyOn(global, 'fetch').mockImplementationOnce(() =>
-      Promise.resolve({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve(),
-      } as Response),
-    );
-
-    jest.spyOn(Cookies, 'get').mockReturnValue(
-      // @ts-expect-error Ignores jest mock expecting an object instead
+    (Cookies.get as jest.Mock) = jest.fn().mockReturnValue(
       JSON.stringify({
         cookieId: 'ee8bb207-12a5-4567-9c78-1207ee174497',
         preferences: { essential: true, analytics: false },
@@ -340,6 +553,28 @@ describe('useCookieConsent', () => {
     );
 
     (validate as jest.Mock).mockReturnValue(true);
+
+    // Mock fetch to handle both the checkConsistencyWithRemote call and the onSaveCookiePreferences call
+    (global.fetch as jest.Mock).mockImplementation((url) => {
+      // First call is for checkConsistencyWithRemote (GET request)
+      if (url.includes('ee8bb207-12a5-4567-9c78-1207ee174497')) {
+        return Promise.resolve({
+          ok: true,
+          status: 200,
+          json: () =>
+            Promise.resolve({
+              cookieId: 'ee8bb207-12a5-4567-9c78-1207ee174497',
+              preferences: { essential: true, analytics: false },
+            }),
+        } as Response);
+      }
+      // Second call is for onSaveCookiePreferences (POST request)
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve(),
+      } as Response);
+    });
 
     const { result } = renderHook(() =>
       useCookieConsent({
@@ -357,6 +592,7 @@ describe('useCookieConsent', () => {
   });
 
   it('clears cookies with prefix "_ga" and clears window.dataLayer when analytics is false', async () => {
+    jest.spyOn(console, 'warn').mockImplementation();
     (Cookies.get as jest.Mock).mockImplementation((name) => {
       if (name) {
         return JSON.stringify({
@@ -371,7 +607,30 @@ describe('useCookieConsent', () => {
       };
     });
 
+    // Mock fetch for checkConsistencyWithRemote call and onSaveCookiePreferences call
+    (global.fetch as jest.Mock).mockImplementation((url, options) => {
+      // GET request is for checkConsistencyWithRemote
+      if (options?.method === 'GET' || !options?.method) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              cookieId: 'mocked-uuid',
+              preferences: { essential: true, analytics: false },
+            }),
+        } as Response);
+      }
+      // POST request is for onSaveCookiePreferences
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(),
+      } as Response);
+    });
+
     const mockRemove = jest.spyOn(Cookies, 'remove');
+
+    // Set up dataLayer before the test
+    window.dataLayer = [{ test: 'data' }];
 
     const { result } = renderHook(() =>
       useCookieConsent({
@@ -386,5 +645,6 @@ describe('useCookieConsent', () => {
     expect(mockRemove).toHaveBeenCalledWith('_ga123');
     expect(mockRemove).toHaveBeenCalledWith('_ga456');
     expect(mockRemove).not.toHaveBeenCalledWith('unrelatedCookie');
+    expect(window.dataLayer).toBeUndefined();
   });
 });

@@ -1,7 +1,12 @@
 import { authTestUtils } from '@asap-hub/gp2-components';
 import { useFlags } from '@asap-hub/react-context';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  renderHook,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { getConsentCookie } from '@asap-hub/frontend-utils';
@@ -108,8 +113,24 @@ describe('Cookie Modal & Button', () => {
   });
 
   it('closes modal when save button is clicked, shows the cookie button and saves cookies', async () => {
+    // Mock fetch for both the consistency check (GET) and save (POST) requests
+    (global.fetch as jest.Mock).mockImplementation((url, options) => {
+      // GET request is for checkConsistencyWithRemote
+      if (options?.method === 'GET' || !options?.method) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({}),
+        } as Response);
+      }
+      // POST request is for onSaveCookiePreferences
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(),
+      } as Response);
+    });
+
     render(<App />);
-    userEvent.click(screen.getByText('Save and close'));
+    await userEvent.click(screen.getByText('Save and close'));
 
     await waitFor(() => {
       expect(screen.getByTestId('cookie-button')).toBeInTheDocument();
@@ -127,18 +148,29 @@ describe('Cookie Modal & Button', () => {
   });
 
   it('shows the cookie modal when cookie button is clicked', async () => {
-    document.cookie = `gp2-cookie-consent=${JSON.stringify({
+    const mockCookiesPreferences = {
       cookieId: 'a29956e6-897a-47c9-a2f6-3216986d20c7',
       preferences: { essential: true, analytics: false },
-    })};`;
+    };
+    document.cookie = `gp2-cookie-consent=${JSON.stringify(
+      mockCookiesPreferences,
+    )};`;
+
+    // Mock fetch to only handle cookie-preferences requests (like CRN test)
+    (global.fetch as jest.Mock).mockImplementation((url: string) => {
+      if (url.includes('/cookie-preferences/')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockCookiesPreferences),
+        });
+      }
+      return Promise.reject(new Error('Unexpected fetch call'));
+    });
 
     render(<App />);
 
     const cookieButton = await screen.findByTestId('cookie-button');
-    userEvent.click(cookieButton);
-
-    const saveAndCloseButton = await screen.findByText('Save and close');
-    userEvent.click(saveAndCloseButton);
+    await userEvent.click(cookieButton);
 
     await waitFor(() => {
       expect(

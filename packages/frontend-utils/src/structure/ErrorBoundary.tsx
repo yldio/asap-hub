@@ -36,7 +36,12 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
     </ReactErrorBoundary>
   ) : (
     <SentryErrorBoundary
-      fallback={({ error }) => <ErrorCard error={error} {...errorCardProps} />}
+      fallback={({ error }) => (
+        <ErrorCard
+          error={error instanceof Error ? error : undefined}
+          {...errorCardProps}
+        />
+      )}
     >
       {children}
     </SentryErrorBoundary>

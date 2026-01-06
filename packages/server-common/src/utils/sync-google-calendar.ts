@@ -28,7 +28,10 @@ export const syncCalendarFactory = (
     pageToken?: PageToken,
   ): Promise<calendarV3.Schema$Events | null> => {
     const auth = await getAuthClient(getJWTCredentials);
-    const calendar = googleCalendar({ version: 'v3', auth });
+    const calendar = googleCalendar({
+      version: 'v3',
+      auth,
+    } as unknown as calendarV3.Options);
     try {
       const { data } = await calendar.events.list({
         pageToken: pageToken || undefined,

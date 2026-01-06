@@ -17,6 +17,7 @@ type EditableCardProps = {
   edit?: boolean;
   editHref?: string;
   optional?: boolean;
+  children?: ReactNode;
 };
 const { rem } = pixels;
 

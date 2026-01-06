@@ -1,5 +1,5 @@
 import { ComponentProps, FC, lazy, ReactElement } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import { NoEvents } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';
@@ -50,67 +50,85 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
   Compliance,
 }) => (
   <Frame title={displayName}>
-    <Switch>
-      <Route path={paths.about}>
-        <Frame title="About">{<About />}</Frame>
-      </Route>
+    <Routes>
+      <Route
+        path={paths.about}
+        element={<Frame title="About">{<About />}</Frame>}
+      />
       {isActive && Calendar && (
-        <Route path={paths.calendar}>
-          <Frame title="Calendar">
-            <Calendar />
-          </Frame>
-        </Route>
+        <Route
+          path={paths.calendar}
+          element={
+            <Frame title="Calendar">
+              <Calendar />
+            </Frame>
+          }
+        />
       )}
       {Outputs && (
-        <Route path={paths.outputs}>
-          <SearchFrame title="Outputs">{Outputs}</SearchFrame>
-        </Route>
+        <Route
+          path={paths.outputs}
+          element={<SearchFrame title="Outputs">{Outputs}</SearchFrame>}
+        />
       )}
       {DraftOutputs && (
-        <Route path={paths.draftOutputs}>
-          <SearchFrame title="Draft Outputs">{DraftOutputs}</SearchFrame>
-        </Route>
+        <Route
+          path={paths.draftOutputs}
+          element={
+            <SearchFrame title="Draft Outputs">{DraftOutputs}</SearchFrame>
+          }
+        />
       )}
       {Workspace && (
-        <Route path={paths.workspace}>
-          <Frame title="Workspace">
-            <Workspace />
-          </Frame>
-        </Route>
+        <Route
+          path={`${paths.workspace}/*`}
+          element={
+            <Frame title="Workspace">
+              <Workspace />
+            </Frame>
+          }
+        />
       )}
       {Compliance && (
-        <Route path={paths.compliance}>
-          <SearchFrame title="Compliance">{Compliance}</SearchFrame>
-        </Route>
+        <Route
+          path={paths.compliance}
+          element={<SearchFrame title="Compliance">{Compliance}</SearchFrame>}
+        />
       )}
       {isActive && (
-        <Route path={paths.upcoming}>
-          <Frame title="Upcoming Events">
+        <Route
+          path={paths.upcoming}
+          element={
+            <Frame title="Upcoming Events">
+              <EventsList
+                constraint={eventConstraint}
+                currentTime={currentTime}
+                past={false}
+                noEventsComponent={
+                  <NoEvents link={events({}).upcoming({}).$} type={type} />
+                }
+              />
+            </Frame>
+          }
+        />
+      )}
+      <Route
+        path={paths.past}
+        element={
+          <Frame title="Past Events">
             <EventsList
               constraint={eventConstraint}
               currentTime={currentTime}
-              past={false}
+              past={true}
               noEventsComponent={
-                <NoEvents link={events({}).upcoming({}).$} type={type} />
+                <NoEvents past link={events({}).past({}).$} type={type} />
               }
             />
           </Frame>
-        </Route>
-      )}
-      <Route path={paths.past}>
-        <Frame title="Past Events">
-          <EventsList
-            constraint={eventConstraint}
-            currentTime={currentTime}
-            past={true}
-            noEventsComponent={
-              <NoEvents past link={events({}).past({}).$} type={type} />
-            }
-          />
-        </Frame>
-      </Route>
-      <Redirect to={paths.about} />
-    </Switch>
+        }
+      />
+      <Route index element={<Navigate to={paths.about} replace />} />
+    </Routes>
   </Frame>
 );
 

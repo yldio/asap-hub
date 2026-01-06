@@ -72,24 +72,33 @@ export function useValidation<T extends ValidationTarget>(
 } {
   const inputRef = useRef<T>(null);
   const [validationMessage, setValidationMessage] = useState('');
+
   useEffect(() => {
-    const input = inputRef.current!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    if (!skipValidation) input.setCustomValidity(customValidationMessage);
+    const input = inputRef.current;
+    if (!input || skipValidation) return;
 
-    if ((validationMessage || customValidationMessage) && !skipValidation) {
-      setValidationMessage(customValidationMessage);
-      input.reportValidity();
-    }
+    // Normalize undefined to empty string to ensure setCustomValidity works correctly
+    // (setCustomValidity(undefined) would convert to "undefined" string, keeping field invalid)
+    const normalizedMessage = customValidationMessage || '';
+    // Set the custom validity on the input element so browser knows about it
+    input.setCustomValidity(normalizedMessage);
+    // Update the validation message state when customValidationMessage changes
+    // This handles both setting errors and clearing them when the field becomes valid
+    setValidationMessage(normalizedMessage);
 
+    // eslint-disable-next-line consistent-return
     return () => {
-      !skipValidation && input.setCustomValidity('');
+      if (!skipValidation) {
+        input.setCustomValidity('');
+      }
     };
-  }, [customValidationMessage, validationMessage, skipValidation]);
+  }, [customValidationMessage, skipValidation]);
 
   const validate = () => {
     if (inputRef.current && !skipValidation) {
       const inputField = inputRef.current;
       const inputFieldValidity = inputField.validity.valid;
+      // Only NOW set the validation message state, which triggers display
       setValidationMessage(
         (getValidationMessage &&
           !inputFieldValidity &&
@@ -98,12 +107,25 @@ export function useValidation<T extends ValidationTarget>(
       );
     }
   };
+
+  const handleBlur = (e: React.FocusEvent<ValidationTarget>) => {
+    // Don't validate if blur is caused by clicking a button
+    // This prevents validation errors when clicking cancel/action buttons
+    if (e?.relatedTarget) {
+      const relatedTarget = e.relatedTarget as HTMLElement | null;
+      if (relatedTarget && relatedTarget.tagName === 'BUTTON') {
+        return;
+      }
+    }
+    validate();
+  };
+
   return {
     validate,
     validationMessage,
     validationTargetProps: {
       ref: inputRef,
-      onBlur: validate,
+      onBlur: handleBlur,
       onInvalid: (event: FormEvent<ValidationTarget>) => {
         validate();
         event.preventDefault();

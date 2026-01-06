@@ -1,5 +1,10 @@
 import { InputHTMLAttributes } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import {
+  render,
+  fireEvent,
+  waitFor,
+  createEvent,
+} from '@testing-library/react';
 
 import { useValidation } from '../form';
 import { noop } from '../utils';
@@ -47,14 +52,16 @@ describe('useValidation', () => {
     expect(await findByText(/match/i)).toBeVisible();
   });
 
-  it('shows a validation error message when the form is validated', () => {
-    const { getByRole, getByText } = render(
+  it('shows a validation error message when the form is validated', async () => {
+    const { getByRole, findByText } = render(
       <form>
         <ValidatedInput value="wrong" pattern="^val$" />
       </form>,
     );
-    (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
-    expect(getByText(/match/i)).toBeVisible();
+    await waitFor(() => {
+      (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
+    });
+    expect(await findByText(/match/i)).toBeVisible();
   });
 
   it('does not immediately show a custom validation error message', () => {
@@ -82,9 +89,9 @@ describe('useValidation', () => {
     expect(message).toHaveBeenCalled();
   });
 
-  it('shows a custom validation error message when the form is validated', () => {
+  it('shows a custom validation error message when the form is validated', async () => {
     const message = jest.fn(() => 'custom error message');
-    const { getByRole, getByText } = render(
+    const { getByRole, findByText } = render(
       <form>
         <ValidatedInput
           getValidationMessage={message}
@@ -93,8 +100,10 @@ describe('useValidation', () => {
         />
       </form>,
     );
-    (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
-    expect(getByText('custom error message')).toBeVisible();
+    await waitFor(() => {
+      (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
+    });
+    expect(await findByText('custom error message')).toBeVisible();
     expect(message).toHaveBeenCalled();
   });
 
@@ -115,5 +124,34 @@ describe('useValidation', () => {
       <ValidatedInput value="wrong" customValidationMessage="Almost!" />,
     );
     expect(getByText('Almost!')).toBeVisible();
+  });
+
+  it('does not show validation error when blur is caused by clicking a button', () => {
+    const { getByRole, queryByText } = render(
+      <form>
+        <ValidatedInput value="wrong" pattern="^val$" />
+        <button type="button">Cancel</button>
+      </form>,
+    );
+    const input = getByRole('textbox') as HTMLInputElement;
+    const button = getByRole('button');
+
+    fireEvent.focus(input);
+    const blurEvent = createEvent.blur(input, { relatedTarget: button });
+    fireEvent(input, blurEvent);
+
+    expect(queryByText(/match/i)).not.toBeInTheDocument();
+  });
+
+  it('shows validation error when blur is not caused by clicking a button', async () => {
+    const { getByRole, findByText } = render(
+      <ValidatedInput value="wrong" pattern="^val$" />,
+    );
+    const input = getByRole('textbox') as HTMLInputElement;
+
+    fireEvent.focus(input);
+    fireEvent.focusOut(input);
+
+    expect(await findByText(/match/i)).toBeVisible();
   });
 });

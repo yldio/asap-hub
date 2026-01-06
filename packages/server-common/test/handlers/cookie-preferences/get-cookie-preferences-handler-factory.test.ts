@@ -9,6 +9,7 @@ jest.mock('@aws-sdk/client-dynamodb');
 const logger = {
   info: jest.fn(),
   debug: jest.fn(),
+  error: jest.fn(),
 } as unknown as jest.Mocked<Logger>;
 
 const getMockResponse = () => ({
@@ -102,9 +103,13 @@ describe('Get cookie preferences handler', () => {
         cookieId: 'cookie-id',
       });
 
-      await expect(handler(request)).rejects.toThrow(
-        'Cookie with id cookie-id not found',
-      );
+      const result = await handler(request);
+      expect(result.statusCode).toBe(404);
+      expect(result.payload).toEqual({
+        error: 'Not Found',
+        message: 'Cookie with id cookie-id not found',
+        statusCode: 404,
+      });
     });
 
     it('when preferences is missing in the response', async () => {
@@ -125,9 +130,13 @@ describe('Get cookie preferences handler', () => {
         cookieId: 'cookie-id',
       });
 
-      await expect(handler(request)).rejects.toThrow(
-        'Cookie with id cookie-id not found',
-      );
+      const result = await handler(request);
+      expect(result.statusCode).toBe(404);
+      expect(result.payload).toEqual({
+        error: 'Not Found',
+        message: 'Cookie with id cookie-id not found',
+        statusCode: 404,
+      });
     });
 
     it('when cookieId is missing in the response', async () => {
@@ -148,9 +157,13 @@ describe('Get cookie preferences handler', () => {
         cookieId: 'cookie-id',
       });
 
-      await expect(handler(request)).rejects.toThrow(
-        'Cookie with id cookie-id not found',
-      );
+      const result = await handler(request);
+      expect(result.statusCode).toBe(404);
+      expect(result.payload).toEqual({
+        error: 'Not Found',
+        message: 'Cookie with id cookie-id not found',
+        statusCode: 404,
+      });
     });
 
     it('when createdAt is missing in the response', async () => {
@@ -171,9 +184,13 @@ describe('Get cookie preferences handler', () => {
         cookieId: 'cookie-id',
       });
 
-      await expect(handler(request)).rejects.toThrow(
-        'Cookie with id cookie-id not found',
-      );
+      const result = await handler(request);
+      expect(result.statusCode).toBe(404);
+      expect(result.payload).toEqual({
+        error: 'Not Found',
+        message: 'Cookie with id cookie-id not found',
+        statusCode: 404,
+      });
     });
   });
 
@@ -191,5 +208,29 @@ describe('Get cookie preferences handler', () => {
     });
 
     await expect(handler(request)).rejects.toThrow('DynamoDB error');
+  });
+
+  it('should handle non-Error exceptions', async () => {
+    const mockDynamoClient = new DynamoDBClient(
+      {},
+    ) as jest.Mocked<DynamoDBClient>;
+
+    // Mock a non-Error exception (e.g., a string or object)
+    (mockDynamoClient.send as jest.Mock).mockRejectedValueOnce('String error');
+
+    const request = getLambdaGetRequest({
+      cookieId: 'cookie-id',
+    });
+
+    await expect(handler(request)).rejects.toThrow('String error');
+    expect(logger.error).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Failed to fetch cookie preferences from DynamoDB',
+      ),
+      expect.objectContaining({
+        error: 'String error',
+        errorName: 'Error',
+      }),
+    );
   });
 });

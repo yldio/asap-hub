@@ -49,7 +49,7 @@ describe('Onboarding', () => {
     mockGetUser.mockResolvedValueOnce(user);
     await renderOnboarding(user.id);
     expect(screen.getByRole('link', { name: /core details/i })).toHaveClass(
-      'active-link',
+      'active',
     );
   });
   it('reaches publish link if user profile is completed', async () => {
@@ -61,10 +61,10 @@ describe('Onboarding', () => {
     mockGetUser.mockResolvedValueOnce(user);
 
     await renderOnboarding(user.id);
-    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
-    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
-    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
-    userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Continue' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Continue' }));
     expect(screen.getByRole('link', { name: 'Publish' })).toBeVisible();
   });
 });

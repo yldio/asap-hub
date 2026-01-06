@@ -6,7 +6,7 @@ import {
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { usePatchUserById, useUserById } from '../users/state';
 import { useTags } from '../shared/state';
@@ -22,29 +22,39 @@ const Background: React.FC<Record<string, never>> = () => {
 
   const { items: allTags } = useTags();
 
+  const backgroundRoute = onboarding({}).background({});
+
   if (userData) {
     return (
       <>
         <OnboardingBackground
           {...userData}
-          editBiographyHref={onboarding({}).background({}).editBiography({}).$}
-          editTagsHref={onboarding({}).background({}).editTags({}).$}
+          editBiographyHref={backgroundRoute.editBiography({}).$}
+          editTagsHref={backgroundRoute.editTags({}).$}
         />
-        <Route path={onboarding({}).background({}).editBiography({}).$}>
-          <BiographyModal
-            {...userData}
-            backHref={onboarding({}).background({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
+        <Routes>
+          <Route
+            path={backgroundRoute.editBiography.template.slice(1)}
+            element={
+              <BiographyModal
+                {...userData}
+                backHref={backgroundRoute.$}
+                onSave={(patchedUser) => patchUser(patchedUser)}
+              />
+            }
           />
-        </Route>
-        <Route path={onboarding({}).background({}).editTags({}).$}>
-          <TagsModal
-            {...userData}
-            backHref={onboarding({}).background({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
-            suggestions={allTags}
+          <Route
+            path={backgroundRoute.editTags.template.slice(1)}
+            element={
+              <TagsModal
+                {...userData}
+                backHref={backgroundRoute.$}
+                onSave={(patchedUser) => patchUser(patchedUser)}
+                suggestions={allTags}
+              />
+            }
           />
-        </Route>
+        </Routes>
       </>
     );
   }

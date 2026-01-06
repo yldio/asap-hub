@@ -93,9 +93,14 @@ it('renders os champion data', async () => {
   mockGetAnalyticsOSChampion.mockResolvedValue(data);
 
   const { container, getAllByText } = await renderPage();
-  expect(container).toHaveTextContent('Team One');
-  expect(container).toHaveTextContent('Team Two');
 
-  expect(getAllByText('2')).toHaveLength(1);
-  expect(getAllByText('0')).toHaveLength(1);
+  await waitFor(() => {
+    expect(container).toHaveTextContent('Team One');
+    expect(container).toHaveTextContent('Team Two');
+  });
+
+  await waitFor(() => {
+    expect(getAllByText('2')).toHaveLength(1);
+    expect(getAllByText('0')).toHaveLength(1);
+  });
 });

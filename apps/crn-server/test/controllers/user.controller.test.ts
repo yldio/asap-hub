@@ -18,6 +18,10 @@ import { getDataProviderMock } from '../mocks/data-provider.mock';
 import { userDataProviderMock } from '../mocks/user.data-provider.mock';
 
 describe('Users controller', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+    nock.cleanAll();
+  });
   const assetDataProviderMock: jest.Mocked<AssetDataProvider> =
     getDataProviderMock();
   const researchTagDataProviderMock = getDataProviderMock();
@@ -164,6 +168,62 @@ describe('Users controller', () => {
 
         expect(fullDisplayName).toEqual('John (Jack) W. T. G. Smith');
       });
+    });
+  });
+
+  describe('FetchByIdForAlgoliaList', () => {
+    test('Should throw when user is not found', async () => {
+      userDataProviderMock.fetchByIdForAlgoliaList.mockResolvedValue(null);
+
+      await expect(
+        userController.fetchByIdForAlgoliaList('not-found'),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('Should return the user when it finds it', async () => {
+      const userListItem = getUserListItemDataObject();
+      const { _tags: _ignoredTags, ...userListItemWithoutTags } = userListItem;
+
+      userDataProviderMock.fetchByIdForAlgoliaList.mockResolvedValue(
+        userListItem,
+      );
+      const result = await userController.fetchByIdForAlgoliaList('user-id');
+
+      expect(result).toMatchObject({
+        ...userListItemWithoutTags,
+        displayName: 'Tom (Iron Man) Hardy',
+        fullDisplayName: 'Tom (Iron Man) E. Hardy',
+        onboarded: true,
+        dismissedGettingStarted: false,
+      });
+      expect(result.id).toBe('user-id-1');
+      expect(result.teams).toEqual([
+        {
+          id: 'team-id-0',
+          role: 'Lead PI (Core Leadership)',
+          displayName: 'Team A',
+        },
+      ]);
+    });
+
+    test('Should default onboarded flag to true when its null', async () => {
+      const userData = getUserListItemDataObject();
+      userData.onboarded = null;
+      userDataProviderMock.fetchByIdForAlgoliaList.mockResolvedValue(userData);
+      const result = await userController.fetchByIdForAlgoliaList('user-id');
+
+      expect(result?.onboarded).toEqual(true);
+    });
+
+    test('Should call data provider with correct id', async () => {
+      userDataProviderMock.fetchByIdForAlgoliaList.mockResolvedValue(
+        getUserListItemDataObject(),
+      );
+      await userController.fetchByIdForAlgoliaList('user-id');
+
+      expect(userDataProviderMock.fetchByIdForAlgoliaList).toHaveBeenCalledWith(
+        'user-id',
+      );
     });
   });
 
@@ -443,7 +503,7 @@ describe('Users controller', () => {
 
   describe('syncOrcidProfile', () => {
     const userId = 'userId';
-    const orcid = '363-98-9330';
+    const orcid = '0000-0001-9884-1913';
 
     test('should successfully fetch and update user - with id', async () => {
       const user = { ...getUserDataObject(), orcid };
@@ -579,6 +639,127 @@ describe('Users controller', () => {
         }),
         { suppressConflict: true, polling: false },
       );
+    });
+
+    describe('ORCID validation', () => {
+      test('should skip sync and return early when ORCID is undefined', async () => {
+        const user = { ...getUserDataObject(), id: userId, orcid: undefined };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(userId);
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        expect(result).toEqual({
+          ...getUserResponse(),
+          id: userId,
+          orcid: undefined,
+        });
+      });
+
+      test('should skip sync and return early when ORCID is empty string', async () => {
+        const user = { ...getUserDataObject(), id: userId, orcid: '' };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(userId);
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        expect(result).toEqual({ ...getUserResponse(), id: userId, orcid: '' });
+      });
+
+      test('should skip sync and return early when ORCID is placeholder "-"', async () => {
+        const user = { ...getUserDataObject(), id: userId, orcid: '-' };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(userId);
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        expect(result).toEqual({
+          ...getUserResponse(),
+          id: userId,
+          orcid: '-',
+        });
+      });
+
+      test('should skip sync when ORCID has wrong format (too short)', async () => {
+        const user = {
+          ...getUserDataObject(),
+          id: userId,
+          orcid: '363-98-9330',
+        };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(userId);
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        expect(result).toEqual({
+          ...getUserResponse(),
+          id: userId,
+          orcid: '363-98-9330',
+        });
+      });
+
+      test('should skip sync when ORCID has wrong format (missing hyphens)', async () => {
+        const user = {
+          ...getUserDataObject(),
+          id: userId,
+          orcid: '00000000198841913',
+        };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(userId);
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        expect(result).toEqual({
+          ...getUserResponse(),
+          id: userId,
+          orcid: '00000000198841913',
+        });
+      });
+
+      test('should skip sync when ORCID has wrong format (non-numeric)', async () => {
+        const user = {
+          ...getUserDataObject(),
+          id: userId,
+          orcid: 'abcd-efgh-ijkl-mnop',
+        };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        const result = await userController.syncOrcidProfile(userId);
+
+        expect(nock.pendingMocks()).toHaveLength(0);
+        expect(userDataProviderMock.update).not.toHaveBeenCalled();
+        expect(result).toEqual({
+          ...getUserResponse(),
+          id: userId,
+          orcid: 'abcd-efgh-ijkl-mnop',
+        });
+      });
+
+      test('should proceed with sync when ORCID format is valid', async () => {
+        const user = { ...getUserDataObject(), id: userId, orcid };
+        userDataProviderMock.fetchById.mockResolvedValue(user);
+
+        nock('https://pub.orcid.org')
+          .get(`/v2.1/${orcid}/works`)
+          .reply(200, orcidFixtures.orcidWorksResponse);
+
+        await userController.syncOrcidProfile(userId);
+
+        expect(nock.isDone()).toBe(true);
+        expect(userDataProviderMock.update).toHaveBeenCalledWith(
+          userId,
+          expect.objectContaining({
+            email: user.email,
+            orcidLastSyncDate: expect.any(String),
+          }),
+          { suppressConflict: true, polling: false },
+        );
+      });
     });
   });
 });

@@ -4,7 +4,9 @@ import { rem } from '../pixels';
 
 import TutorialsPageHeader from './TutorialsPageHeader';
 
-type TutorialsPageProps = ComponentProps<typeof TutorialsPageHeader>;
+type TutorialsPageProps = ComponentProps<typeof TutorialsPageHeader> & {
+  children?: React.ReactNode;
+};
 
 const containerStyles = css({ paddingTop: rem(48) });
 

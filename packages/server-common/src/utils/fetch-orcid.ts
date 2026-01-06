@@ -85,6 +85,19 @@ export const transformOrcidWorks = (orcidWorks: {
     ),
   });
 
+/**
+ * Validates ORCID format.
+ * ORCID format: 0000-0000-0000-000X (16 characters in 4 groups separated by hyphens)
+ * The last character can be a digit (0-9) or 'X' (checksum according to ISO/IEC 7064:2003, MOD 11-2)
+ */
+export const isValidOrcidFormat = (orcid: string | undefined): boolean => {
+  if (!orcid) {
+    return false;
+  }
+  // Last character can be a digit or 'X' (checksum)
+  return /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/.test(orcid);
+};
+
 export const isValidOrcidResponse = (
   res: ORCIDWorksResponse,
 ): res is {

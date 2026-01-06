@@ -4,7 +4,9 @@ import TeamProfileHeader from './TeamProfileHeader';
 import { Toast } from '../organisms';
 import PageConstraints from './PageConstraints';
 
-type TeamProfilePageProps = ComponentProps<typeof TeamProfileHeader>;
+type TeamProfilePageProps = ComponentProps<typeof TeamProfileHeader> & {
+  children?: React.ReactNode;
+};
 
 const TeamProfilePage: React.FC<TeamProfilePageProps> = ({
   children,

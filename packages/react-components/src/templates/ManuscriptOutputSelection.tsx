@@ -2,7 +2,7 @@ import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, ReactElement, ReactNode } from 'react';
 import Lottie from 'react-lottie';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { components } from 'react-select';
 import {
   Button,
@@ -158,10 +158,10 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
   selectedVersion,
   setSelectedVersion,
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleCancel = () => {
-    history.goBack();
+    navigate(-1);
   };
 
   const renderManuscriptImport = () => {

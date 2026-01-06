@@ -11,7 +11,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Stringifier } from 'csv-stringify';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getPresignedUrl } from '../../../shared-api/files';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -100,11 +100,16 @@ const renderCompliancePage = async () => {
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: '/' }]}>
               <ManuscriptToastProvider>
-                <Route path="/">
-                  <Frame title={null}>
-                    <Compliance />
-                  </Frame>
-                </Route>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      <Frame title={null}>
+                        <Compliance />
+                      </Frame>
+                    }
+                  />
+                </Routes>
               </ManuscriptToastProvider>
             </MemoryRouter>
           </WhenReady>
@@ -175,19 +180,19 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   ).getByRole('button', {
     name: /Review Compliance Report/i,
   });
-  userEvent.click(statusButton);
+  await userEvent.click(statusButton);
 
   const newStatusButton = within(
     screen.getByTestId('compliance-table-row'),
   ).getByRole('button', {
     name: /Addendum Required/i,
   });
-  userEvent.click(newStatusButton);
+  await userEvent.click(newStatusButton);
 
   const confirmButton = screen.getByRole('button', {
     name: /Update status and notify/i,
   });
-  userEvent.click(confirmButton);
+  await userEvent.click(confirmButton);
 
   await waitFor(() => {
     expect(mockUpdateManuscript).toHaveBeenCalledWith(
@@ -238,19 +243,19 @@ it('manuscripts remain the same when there is not a match between the manuscript
   ).getByRole('button', {
     name: /Review Compliance Report/i,
   });
-  userEvent.click(statusButton);
+  await userEvent.click(statusButton);
 
   const newStatusButton = within(
     screen.getByTestId('compliance-table-row'),
   ).getByRole('button', {
     name: /Addendum Required/i,
   });
-  userEvent.click(newStatusButton);
+  await userEvent.click(newStatusButton);
 
   const confirmButton = screen.getByRole('button', {
     name: /Update status and notify/i,
   });
-  userEvent.click(confirmButton);
+  await userEvent.click(confirmButton);
 
   await waitFor(() => {
     expect(mockUpdateManuscript).toHaveBeenCalledWith(
@@ -303,19 +308,19 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
   ).getByRole('button', {
     name: /Review Compliance Report/i,
   });
-  userEvent.click(statusButton);
+  await userEvent.click(statusButton);
 
   const newStatusButton = within(
     screen.getByTestId('compliance-table-row'),
   ).getByRole('button', {
     name: /Addendum Required/i,
   });
-  userEvent.click(newStatusButton);
+  await userEvent.click(newStatusButton);
 
   const confirmButton = screen.getByRole('button', {
     name: /Update status and notify/i,
   });
-  userEvent.click(confirmButton);
+  await userEvent.click(confirmButton);
 
   await waitFor(() => {
     expect(mockUpdateManuscript).toHaveBeenCalledWith(
@@ -375,9 +380,9 @@ it('fetches assigned users suggestions and displays them properly', async () => 
 
   expect(screen.queryByText(/Billie Eilish/i)).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByTitle(/Add user/i));
+  await userEvent.click(screen.getByTitle(/Add user/i));
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole('textbox', { name: /Assign User/i }),
     'Billie',
   );
@@ -427,9 +432,9 @@ it('displays success message when assigning users', async () => {
     expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
   });
 
-  userEvent.click(screen.getByLabelText(/Edit Assigned Users/i));
+  await userEvent.click(screen.getByLabelText(/Edit Assigned Users/i));
 
-  userEvent.click(screen.getByRole('button', { name: 'Update' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Update' }));
 
   await waitFor(() => {
     expect(
@@ -464,7 +469,9 @@ describe('csv export', () => {
       expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByRole('button', { name: /data in table/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /data in table/i }),
+    );
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/manuscripts_\d+\.csv/),
       expect.anything(),
@@ -494,7 +501,9 @@ describe('csv export', () => {
       expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByRole('button', { name: /full dataset/i }));
+    await userEvent.click(
+      screen.getByRole('button', { name: /full dataset/i }),
+    );
 
     expect(mockGetPresignedUrl).toHaveBeenCalledWith(
       'ComplianceFullDataset.csv',

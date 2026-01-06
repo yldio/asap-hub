@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { FormSection, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
@@ -16,14 +17,17 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
   onSave = noop,
   backHref,
 }) => {
+  const navigate = useNavigate();
   const [newBiography, setNewBiography] = useState(biography);
-
   return (
     <EditUserModal
       title="Biography"
       dirty={newBiography !== biography}
       backHref={backHref}
-      onSave={() => onSave(newBiography)}
+      onSave={async () => {
+        await onSave(newBiography);
+        navigate(backHref);
+      }}
     >
       {({ isSaving }) => (
         <FormSection>

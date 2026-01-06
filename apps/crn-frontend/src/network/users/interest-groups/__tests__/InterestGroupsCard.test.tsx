@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/fixtures';
 import { ErrorBoundary } from '@asap-hub/frontend-utils';
 
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { RecoilRoot } from 'recoil';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
@@ -32,7 +32,7 @@ const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: '42' }}>
           <WhenReady>
-            <StaticRouter>{children}</StaticRouter>
+            <StaticRouter location="/">{children}</StaticRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>

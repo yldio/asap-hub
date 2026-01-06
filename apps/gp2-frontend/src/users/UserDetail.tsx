@@ -22,7 +22,7 @@ import { usePaginationParams } from '../hooks';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { useOutputs } from '../outputs/state';
 import { useContributingCohorts, useTags } from '../shared/state';
-import { getInstitutions } from './api';
+import { loadInstitutionOptions } from './institutionUtils';
 import countryCodesSuggestions from './country-codes-suggestions';
 import locationSuggestions from './location-suggestions';
 import { usePatchUserById, useUserById } from './state';
@@ -128,11 +128,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
                           locationSuggestions={locationSuggestions.map(
                             ({ shortName }) => shortName,
                           )}
-                          loadInstitutionOptions={(searchQuery) =>
-                            getInstitutions({ searchQuery }).then((data) =>
-                              data.items.map(({ name }) => name),
-                            )
-                          }
+                          loadInstitutionOptions={loadInstitutionOptions}
                         />
                       }
                     />

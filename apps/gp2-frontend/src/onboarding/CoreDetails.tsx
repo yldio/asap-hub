@@ -8,7 +8,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
-import { getInstitutions } from '../users/api';
+import { loadInstitutionOptions } from '../users/institutionUtils';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
 import locationSuggestions from '../users/location-suggestions';
 import { usePatchUserById, useUserById } from '../users/state';
@@ -42,11 +42,7 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
                 locationSuggestions={locationSuggestions.map(
                   ({ shortName }) => shortName,
                 )}
-                loadInstitutionOptions={(searchQuery) =>
-                  getInstitutions({ searchQuery }).then((data) =>
-                    data.items.map(({ name }) => name),
-                  )
-                }
+                loadInstitutionOptions={loadInstitutionOptions}
                 backHref={onboarding({}).coreDetails({}).$}
                 onSave={async (patchedUser) => {
                   await patchUser(patchedUser);

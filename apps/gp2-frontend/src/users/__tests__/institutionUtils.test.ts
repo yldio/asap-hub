@@ -2,7 +2,7 @@ import {
   extractInstitutionDisplayName,
   transformRorInstitutionsToNames,
   loadInstitutionOptions,
-} from '../Editing';
+} from '../institutionUtils';
 import { getInstitutions } from '../api';
 
 type RorInstitutionName = {

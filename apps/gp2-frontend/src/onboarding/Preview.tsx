@@ -15,7 +15,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { Route, Routes } from 'react-router-dom';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
-import { getInstitutions } from '../users/api';
+import { loadInstitutionOptions } from '../users/institutionUtils';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
 import locationSuggestions from '../users/location-suggestions';
 
@@ -75,11 +75,7 @@ const Preview: React.FC<Record<string, never>> = () => {
                 locationSuggestions={locationSuggestions.map(
                   ({ shortName }) => shortName,
                 )}
-                loadInstitutionOptions={(searchQuery) =>
-                  getInstitutions({ searchQuery }).then((data) =>
-                    data.items.map(({ name }) => name),
-                  )
-                }
+                loadInstitutionOptions={loadInstitutionOptions}
               />
             }
           />

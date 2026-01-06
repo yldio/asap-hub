@@ -34,14 +34,12 @@ type RorApiResponse = {
 export const extractInstitutionDisplayName = (
   institution: RorInstitution,
 ): string | null => {
-  const names = institution.names;
+  const { names } = institution;
   if (!names || names.length === 0) {
     return null;
   }
 
-  const displayName = names.find((name) =>
-    name.types?.includes('ror_display'),
-  );
+  const displayName = names.find((name) => name.types?.includes('ror_display'));
   const fallbackName = names[0];
 
   return displayName?.value || fallbackName?.value || null;
@@ -67,6 +65,7 @@ export const loadInstitutionOptions = async (
     const response = await getInstitutions({ searchQuery });
     return transformRorInstitutionsToNames(response as RorApiResponse);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Failed to load institutions:', error);
     return [];
   }

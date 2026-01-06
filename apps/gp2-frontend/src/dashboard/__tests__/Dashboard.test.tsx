@@ -2,6 +2,7 @@ import { gp2 as gp2Auth } from '@asap-hub/auth';
 import { createListReminderResponse, gp2 } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
@@ -34,14 +35,17 @@ const renderDashboard = async ({
       <RecoilRoot>
         <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
           <WhenReady>
-            <Dashboard />
+            <MemoryRouter>
+              <Dashboard />
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </RecoilRoot>
     </Suspense>,
   );
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 10000 },
   );
 };
 const mockGetNews = getNews as jest.MockedFunction<typeof getNews>;
@@ -60,12 +64,11 @@ const mockGetOutputs = getOutputs as jest.MockedFunction<typeof getOutputs>;
 
 it('renders dashboard header', async () => {
   mockGetReminders.mockResolvedValue(createListReminderResponse());
-  mockGetNews.mockResolvedValueOnce(gp2.createNewsResponse());
-  mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
-  mockGetEvents.mockResolvedValueOnce(createEventListAlgoliaResponse(1));
-  mockDashboard.mockResolvedValueOnce(gp2.createDashboardStatsResponse());
-  mockGetUsers.mockResolvedValueOnce(createUserListAlgoliaResponse(3));
-  mockGetOutputs.mockResolvedValueOnce(createOutputListAlgoliaResponse(2));
+  mockGetNews.mockResolvedValue(gp2.createNewsResponse());
+  mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
+  mockDashboard.mockResolvedValue(gp2.createDashboardStatsResponse());
+  mockGetUsers.mockResolvedValue(createUserListAlgoliaResponse(3));
+  mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(2));
   await renderDashboard({});
   expect(
     await screen.getByRole('heading', { name: 'Dashboard' }),

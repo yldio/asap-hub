@@ -1,8 +1,10 @@
 import { ValidationErrorResponse } from '@asap-hub/model';
+import {
+  useNavigationWarning,
+  usePushFromHere,
+} from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
-import { Prompt, useHistory } from 'react-router-dom';
-import { usePushFromHere } from '@asap-hub/react-components';
 
 const styles = css({
   boxSizing: 'border-box',
@@ -37,8 +39,6 @@ const Form = <T extends void | Record<string, unknown>>({
   validate = () => true,
   serverErrors = [],
 }: FormProps<T>): React.ReactElement => {
-  const history = useHistory();
-
   const pushFromHere = usePushFromHere();
   const [redirectOnSave, setRedirectOnSave] = useState<string>();
 
@@ -56,6 +56,15 @@ const Form = <T extends void | Record<string, unknown>>({
       formRef.current.reportValidity();
     }
   }, [serverErrors]);
+
+  const shouldWarn =
+    status === 'isSaving' ||
+    status === 'hasError' ||
+    (status === 'initial' && dirty);
+
+  const { blockedNavigate } = useNavigationWarning({
+    shouldBlock: shouldWarn,
+  });
 
   const getWrappedOnSave =
     (
@@ -100,28 +109,23 @@ const Form = <T extends void | Record<string, unknown>>({
 
   const onCancel = () => {
     setStatus('initial');
-    history.location.key ? history.goBack() : history.push('/');
+    // In React Router v6, location.key is always set, so we check history.length instead
+    if (window.history.length > 1) {
+      blockedNavigate(-1);
+    } else {
+      blockedNavigate('/');
+    }
   };
 
   return (
-    <>
-      <Prompt
-        when={
-          status === 'isSaving' ||
-          status === 'hasError' ||
-          (status === 'initial' && dirty)
-        }
-        message="Are you sure you want to leave? Unsaved changes will be lost."
-      />
-      <form ref={formRef} css={styles}>
-        {children({
-          onCancel,
-          isSaving: status === 'isSaving',
-          getWrappedOnSave,
-          setRedirectOnSave,
-        })}
-      </form>
-    </>
+    <form ref={formRef} css={styles}>
+      {children({
+        onCancel,
+        isSaving: status === 'isSaving',
+        getWrappedOnSave,
+        setRedirectOnSave,
+      })}
+    </form>
   );
 };
 export default Form;

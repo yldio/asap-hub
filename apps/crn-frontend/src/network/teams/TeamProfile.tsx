@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useParams } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 
 import { Frame } from '@asap-hub/frontend-utils';
@@ -57,7 +57,7 @@ type TeamProfileProps = {
 
 const DuplicateOutput: FC = () => {
   const { id } = useParams<{ id: string }>();
-  const output = useResearchOutputById(id);
+  const output = useResearchOutputById(id ?? '');
   if (output && output.teams[0]?.id) {
     return (
       <TeamOutput
@@ -78,7 +78,6 @@ const DuplicateOutput: FC = () => {
 };
 
 const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
-  const { path } = useRouteMatch();
   const route = network({}).teams({}).team;
   const [teamListElementId] = useState(`team-list-${uuid()}`);
   const { teamId } = useRouteParams(route);
@@ -143,24 +142,20 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
     const {
       about,
       compliance,
-      createOutput,
-      duplicateOutput,
       outputs,
       past,
       upcoming,
       workspace,
       draftOutputs,
-    } = route({
-      teamId,
-    });
+    } = route({ teamId });
     const paths = {
-      about: path + about.template,
-      compliance: path + compliance.template,
-      outputs: path + outputs.template,
-      past: path + past.template,
-      upcoming: path + upcoming.template,
-      workspace: path + workspace.template,
-      draftOutputs: path + draftOutputs.template,
+      about: about.template.replace(/^\//, ''),
+      compliance: compliance.template.replace(/^\//, ''),
+      outputs: outputs.template.replace(/^\//, ''),
+      past: past.template.replace(/^\//, ''),
+      upcoming: upcoming.template.replace(/^\//, ''),
+      workspace: workspace.template.replace(/^\//, ''),
+      draftOutputs: draftOutputs.template.replace(/^\//, ''),
     };
 
     return (
@@ -169,101 +164,126 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
       >
         <ManuscriptToastProvider>
           <EligibilityReasonProvider>
-            <Switch>
+            <Routes>
               <Route
-                path={workspace({}).$ + workspace({}).createManuscript.template}
-              >
-                <Frame title="Create Manuscript">
-                  <TeamManuscript teamId={teamId} />
-                </Frame>
-              </Route>
-              <Route
-                path={workspace({}).$ + workspace({}).editManuscript.template}
-              >
-                <Frame title="Edit Manuscript">
-                  <TeamManuscript teamId={teamId} />
-                </Frame>
-              </Route>
-              <Route
-                path={
-                  workspace({}).$ + workspace({}).resubmitManuscript.template
+                path={`${workspace.template.replace(/^\//, '')}${
+                  workspace({}).createManuscript.template
+                }`}
+                element={
+                  <Frame title="Create Manuscript">
+                    <TeamManuscript teamId={teamId} />
+                  </Frame>
                 }
-              >
-                <Frame title="Resubmit Manuscript">
-                  <TeamManuscript teamId={teamId} resubmitManuscript />
-                </Frame>
-              </Route>
+              />
+              <Route
+                path={`${workspace.template.replace(/^\//, '')}${
+                  workspace({}).editManuscript.template
+                }`}
+                element={
+                  <Frame title="Edit Manuscript">
+                    <TeamManuscript teamId={teamId} />
+                  </Frame>
+                }
+              />
+              <Route
+                path={`${workspace.template.replace(/^\//, '')}${
+                  workspace({}).resubmitManuscript.template
+                }`}
+                element={
+                  <Frame title="Resubmit Manuscript">
+                    <TeamManuscript teamId={teamId} resubmitManuscript />
+                  </Frame>
+                }
+              />
               {canCreateComplianceReport && (
                 <Route
-                  path={
-                    workspace({}).$ +
+                  path={`${workspace.template.replace(/^\//, '')}${
                     workspace({}).createComplianceReport.template
+                  }`}
+                  element={
+                    <Frame title="Create Compliance Report">
+                      <TeamComplianceReport teamId={teamId} />
+                    </Frame>
                   }
-                >
-                  <Frame title="Create Compliance Report">
-                    <TeamComplianceReport teamId={teamId} />
-                  </Frame>
-                </Route>
+                />
               )}
               {canShareResearchOutput && (
-                <Route path={path + createOutput.template}>
-                  <Frame title="Share Output">
-                    <TeamOutput teamId={teamId} />
-                  </Frame>
-                </Route>
+                <Route
+                  path="create-output/:outputDocumentType"
+                  element={
+                    <Frame title="Share Output">
+                      <TeamOutput teamId={teamId} />
+                    </Frame>
+                  }
+                />
               )}
               {canDuplicateResearchOutput && (
-                <Route path={path + duplicateOutput.template}>
-                  <Frame title="Duplicate Output">
-                    <DuplicateOutput />
-                  </Frame>
-                </Route>
-              )}
-              <TeamProfilePage
-                {...team}
-                isStaff={isStaff}
-                isAsapTeam={isAsapTeam}
-                teamListElementId={teamListElementId}
-                upcomingEventsCount={upcomingEvents?.total || 0}
-                pastEventsCount={pastEvents?.total || 0}
-                teamOutputsCount={teamOutputsResult.total}
-                teamDraftOutputsCount={
-                  canShareResearchOutput ? outputDraftResults.total : undefined
-                }
-                manuscriptsCount={manuscriptCount.total || 0}
-              >
-                <ProfileSwitch
-                  About={() => (
-                    <About teamListElementId={teamListElementId} team={team} />
-                  )}
-                  currentTime={currentTime}
-                  displayName={team.displayName}
-                  eventConstraint={{ teamId }}
-                  isActive={!team?.inactiveSince}
-                  Outputs={
-                    <Outputs
-                      userAssociationMember={canShareResearchOutput}
-                      team={team}
-                    />
+                <Route
+                  path="duplicate/:id"
+                  element={
+                    <Frame title="Duplicate Output">
+                      <DuplicateOutput />
+                    </Frame>
                   }
-                  DraftOutputs={
-                    <Outputs
-                      team={team}
-                      draftOutputs
-                      userAssociationMember={canShareResearchOutput}
-                    />
-                  }
-                  paths={paths}
-                  type="team"
-                  Workspace={() => (
-                    <Workspace team={{ ...team, tools: team.tools ?? [] }} />
-                  )}
-                  {...(canDisplayCompliancePage
-                    ? { Compliance: <Compliance /> }
-                    : {})}
                 />
-              </TeamProfilePage>
-            </Switch>
+              )}
+              <Route
+                path="*"
+                element={
+                  <TeamProfilePage
+                    {...team}
+                    isStaff={isStaff}
+                    isAsapTeam={isAsapTeam}
+                    teamListElementId={teamListElementId}
+                    upcomingEventsCount={upcomingEvents?.total || 0}
+                    pastEventsCount={pastEvents?.total || 0}
+                    teamOutputsCount={teamOutputsResult.total}
+                    teamDraftOutputsCount={
+                      canShareResearchOutput
+                        ? outputDraftResults.total
+                        : undefined
+                    }
+                    manuscriptsCount={manuscriptCount.total || 0}
+                  >
+                    <ProfileSwitch
+                      About={() => (
+                        <About
+                          teamListElementId={teamListElementId}
+                          team={team}
+                        />
+                      )}
+                      currentTime={currentTime}
+                      displayName={team.displayName}
+                      eventConstraint={{ teamId }}
+                      isActive={!team?.inactiveSince}
+                      Outputs={
+                        <Outputs
+                          userAssociationMember={canShareResearchOutput}
+                          team={team}
+                        />
+                      }
+                      DraftOutputs={
+                        <Outputs
+                          team={team}
+                          draftOutputs
+                          userAssociationMember={canShareResearchOutput}
+                        />
+                      }
+                      paths={paths}
+                      type="team"
+                      Workspace={() => (
+                        <Workspace
+                          team={{ ...team, tools: team.tools ?? [] }}
+                        />
+                      )}
+                      {...(canDisplayCompliancePage
+                        ? { Compliance: <Compliance /> }
+                        : {})}
+                    />
+                  </TeamProfilePage>
+                }
+              />
+            </Routes>
           </EligibilityReasonProvider>
         </ManuscriptToastProvider>
       </ResearchOutputPermissionsContext.Provider>

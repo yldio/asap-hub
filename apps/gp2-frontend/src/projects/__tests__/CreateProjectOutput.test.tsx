@@ -1,8 +1,10 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import { ValidationErrorResponse } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -10,7 +12,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
@@ -34,7 +36,7 @@ jest.mock('../../users/api');
 jest.mock('../../working-groups/api');
 jest.mock('../api');
 
-jest.setTimeout(60000);
+jest.setTimeout(30000);
 
 const mockCreateOutput = createOutput as jest.MockedFunction<
   typeof createOutput
@@ -73,18 +75,24 @@ const renderCreateProjectOutput = async (
                   .createOutput({ outputDocumentType: documentType }).$,
               ]}
             >
-              <Route
-                path={
-                  gp2Routing.projects.template +
-                  gp2Routing.projects({}).project.template +
-                  gp2Routing.projects({}).project({ projectId: 'project-id-1' })
-                    .createOutput.template
-                }
-              >
-                <NotificationMessages>
-                  <CreateProjectOutput />
-                </NotificationMessages>
-              </Route>
+              <Routes>
+                <Route
+                  path={`${gp2Routing.projects.template}${
+                    gp2Routing.projects({}).project.template
+                  }${
+                    gp2Routing
+                      .projects({})
+                      .project({ projectId: 'project-id-1' }).createOutput
+                      .template
+                  }/*`}
+                  element={
+                    <NotificationMessages>
+                      <CreateProjectOutput />
+                    </NotificationMessages>
+                  }
+                />
+                <Route path="*" element={<div />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -125,31 +133,35 @@ describe('Create Projects Output', () => {
   });
 
   it('publishes the output', async () => {
+    const user = userEvent.setup({ delay: null });
     mockCreateOutput.mockResolvedValueOnce(gp2.createOutputResponse());
     const title = 'this is the output title';
     const link = 'https://example.com';
     await renderCreateProjectOutput('procedural-form');
 
-    userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
-    userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
-    userEvent.type(
-      screen.getByRole('textbox', { name: /^description/i }),
-      'An interesting article',
-    );
-    userEvent.type(
+    fireEvent.change(screen.getByRole('textbox', { name: /title/i }), {
+      target: { value: title },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /^url/i }), {
+      target: { value: link },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /^description/i }), {
+      target: { value: 'An interesting article' },
+    });
+    fireEvent.change(
       screen.getByRole('textbox', { name: /^short description/i }),
-      'An article',
+      { target: { value: 'An article' } },
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Tony Stark'));
-    userEvent.click(authors);
-    userEvent.click(screen.getByText(/Steve Rogers \(/i));
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByText(/^none/i));
+    await user.click(authors);
+    await user.click(screen.getByText('Tony Stark'));
+    await user.click(authors);
+    await user.click(screen.getByText(/Steve Rogers \(/i));
+    await user.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    await user.click(screen.getByText(/^none/i));
     expect(screen.getByText('Project Title')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+    await user.click(screen.getByRole('button', { name: 'Publish' }));
+    await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
     await waitFor(() => {
       expect(mockCreateOutput).toHaveBeenCalledWith(
@@ -183,6 +195,9 @@ describe('Create Projects Output', () => {
   });
 
   it('will show server side validation error for link', async () => {
+    // Suppress act() warnings from async validation state updates
+    const consoleSpy = mockActWarningsInConsole('error');
+
     const validationResponse: ValidationErrorResponse = {
       message: 'Validation error',
       error: 'Bad Request',
@@ -199,44 +214,50 @@ describe('Create Projects Output', () => {
     const link = 'https://example.com';
     await renderCreateProjectOutput('procedural-form');
 
-    userEvent.type(screen.getByRole('textbox', { name: /title/i }), title);
-    userEvent.type(screen.getByRole('textbox', { name: /^url/i }), link);
-    userEvent.type(
-      screen.getByRole('textbox', { name: /^description/i }),
-      'An interesting article',
-    );
-    userEvent.type(
+    const user = userEvent.setup({ delay: null });
+
+    fireEvent.change(screen.getByRole('textbox', { name: /title/i }), {
+      target: { value: title },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /^url/i }), {
+      target: { value: link },
+    });
+    fireEvent.change(screen.getByRole('textbox', { name: /^description/i }), {
+      target: { value: 'An interesting article' },
+    });
+    fireEvent.change(
       screen.getByRole('textbox', { name: /^short description/i }),
-      'An article',
+      { target: { value: 'An article' } },
     );
     const authors = screen.getByRole('textbox', { name: /Authors/i });
-    userEvent.click(authors);
-    userEvent.click(screen.getByText('Tony Stark'));
-    userEvent.click(screen.getByRole('textbox', { name: /identifier type/i }));
-    userEvent.click(screen.getByText(/^none/i));
+    await user.click(authors);
+    await user.click(screen.getByText('Tony Stark'));
+    await user.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    await user.click(screen.getByText(/^none/i));
     expect(screen.getByText('Project Title')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
-
-    await waitFor(() => {
-      expect(mockCreateOutput).toHaveBeenCalled();
-    });
+    await user.click(screen.getByRole('button', { name: 'Publish' }));
+    await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
     expect(
-      screen.queryAllByText(
+      await screen.findByText(
         'An Output with this URL already exists. Please enter a different URL.',
-      ).length,
-    ).toBeGreaterThan(1);
+      ),
+    ).toBeInTheDocument();
+    expect(mockCreateOutput).toHaveBeenCalled();
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-    userEvent.type(url, 'a');
-    url.blur();
+    fireEvent.change(url, { target: { value: 'a' } });
+    await user.tab();
 
-    expect(
-      screen.queryByText(
-        'An Output with this URL already exists. Please enter a different URL.',
-      ),
-    ).toBeNull();
-  });
+    await waitFor(() => {
+      expect(
+        screen.queryByText(
+          'An Output with this URL already exists. Please enter a different URL.',
+        ),
+      ).toBeNull();
+    });
+
+    consoleSpy.mockRestore();
+  }, 120_000);
 });

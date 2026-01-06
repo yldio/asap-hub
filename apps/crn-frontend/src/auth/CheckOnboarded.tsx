@@ -2,7 +2,7 @@ import { User } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { logout, network, staticPages } from '@asap-hub/routing';
 import { ReactNode, useEffect } from 'react';
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 interface CheckOnboardedProps {
   children: ReactNode;
@@ -32,13 +32,13 @@ export const navigationPromptHandler = (
 
 const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
   const user = useCurrentUserCRN();
-  const history = useHistory();
+  const location = useLocation();
 
-  useEffect(
-    () =>
-      history.block(({ pathname }) => navigationPromptHandler(user, pathname)),
-    [user, history],
-  );
+  // Note: React Router v6 removed history.block()
+  // We now check on each navigation attempt
+  useEffect(() => {
+    navigationPromptHandler(user, location.pathname);
+  }, [user, location.pathname]);
 
   if (!user) {
     throw new Error(
@@ -52,12 +52,13 @@ const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
     return <>{children}</>;
   }
 
-  return (
-    <Switch>
-      <Route path={ownProfilePath}>{children}</Route>
-      <Redirect to={ownProfilePath} />
-    </Switch>
-  );
+  // For non-onboarded users, redirect to profile if not already there
+  // Use Navigate component synchronously during render for immediate redirect
+  if (!location.pathname.startsWith(ownProfilePath)) {
+    return <Navigate to={ownProfilePath} replace />;
+  }
+
+  return <>{children}</>;
 };
 
 export default CheckOnboarded;

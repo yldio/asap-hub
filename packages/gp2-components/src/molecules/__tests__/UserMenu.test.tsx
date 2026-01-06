@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { gp2 as gp2Routing, logout } from '@asap-hub/routing';
 import userEvent from '@testing-library/user-event';
 import UserMenu from '../UserMenu';
@@ -19,7 +20,11 @@ describe('UserMenu', () => {
   };
 
   it('renders the navigation items', () => {
-    render(<UserMenu {...props} />);
+    render(
+      <MemoryRouter>
+        <UserMenu {...props} />
+      </MemoryRouter>,
+    );
     const profileLink = screen.getByRole('link', { name: /my profile/i });
     expect(profileLink).toBeVisible();
     expect(profileLink).toHaveAttribute(
@@ -31,11 +36,15 @@ describe('UserMenu', () => {
     expect(logoutLink).toHaveAttribute('href', logout({}).$);
   });
 
-  it('verifies the my profile button is clickable', () => {
+  it('verifies the my profile button is clickable', async () => {
     const closeUserMenu = jest.fn();
-    render(<UserMenu {...props} closeUserMenu={closeUserMenu} />);
+    render(
+      <MemoryRouter>
+        <UserMenu {...props} closeUserMenu={closeUserMenu} />
+      </MemoryRouter>,
+    );
     const profileLink = screen.getByRole('link', { name: /my profile/i });
-    userEvent.click(profileLink);
+    await userEvent.click(profileLink);
     expect(closeUserMenu).toHaveBeenCalledWith(false);
   });
 
@@ -54,7 +63,11 @@ describe('UserMenu', () => {
         members: [],
       },
     ];
-    render(<UserMenu {...props} projects={projects} />);
+    render(
+      <MemoryRouter>
+        <UserMenu {...props} projects={projects} />
+      </MemoryRouter>,
+    );
     expect(
       screen.getByRole('link', { name: /the first project title/i }),
     ).toBeVisible();
@@ -63,7 +76,7 @@ describe('UserMenu', () => {
     ).toBeVisible();
   });
 
-  it('links to the project details', () => {
+  it('links to the project details', async () => {
     const closeUserMenu = jest.fn();
     const projects: (typeof props)['projects'] = [
       {
@@ -74,7 +87,13 @@ describe('UserMenu', () => {
       },
     ];
     render(
-      <UserMenu {...props} projects={projects} closeUserMenu={closeUserMenu} />,
+      <MemoryRouter>
+        <UserMenu
+          {...props}
+          projects={projects}
+          closeUserMenu={closeUserMenu}
+        />
+      </MemoryRouter>,
     );
     expect(
       screen.getByRole('link', { name: /the first project title/i }),
@@ -83,7 +102,7 @@ describe('UserMenu', () => {
       projectsRoute({}).project({ projectId: projects[0]!.id }).$,
     );
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('link', { name: /the first project title/i }),
     );
 
@@ -111,7 +130,11 @@ describe('UserMenu', () => {
         members: [],
       },
     ];
-    render(<UserMenu {...props} projects={projects} />);
+    render(
+      <MemoryRouter>
+        <UserMenu {...props} projects={projects} />
+      </MemoryRouter>,
+    );
     expect(
       screen.getByRole('link', { name: /the first project title/i }),
     ).toBeVisible();
@@ -138,7 +161,11 @@ describe('UserMenu', () => {
         role: 'Co-lead',
       },
     ];
-    render(<UserMenu {...props} workingGroups={workingGroups} />);
+    render(
+      <MemoryRouter>
+        <UserMenu {...props} workingGroups={workingGroups} />
+      </MemoryRouter>,
+    );
     expect(
       screen.getByRole('link', { name: /the first wg title/i }),
     ).toBeVisible();
@@ -147,7 +174,7 @@ describe('UserMenu', () => {
     ).toBeVisible();
   });
 
-  it('links to the working group detail page', () => {
+  it('links to the working group detail page', async () => {
     const closeUserMenu = jest.fn();
     const workingGroups: (typeof props)['workingGroups'] = [
       {
@@ -158,11 +185,13 @@ describe('UserMenu', () => {
       },
     ];
     render(
-      <UserMenu
-        {...props}
-        workingGroups={workingGroups}
-        closeUserMenu={closeUserMenu}
-      />,
+      <MemoryRouter>
+        <UserMenu
+          {...props}
+          workingGroups={workingGroups}
+          closeUserMenu={closeUserMenu}
+        />
+      </MemoryRouter>,
     );
     expect(
       screen.getByRole('link', { name: /the first wg title/i }),
@@ -173,7 +202,9 @@ describe('UserMenu', () => {
       }).$,
     );
 
-    userEvent.click(screen.getByRole('link', { name: /the first wg title/i }));
+    await userEvent.click(
+      screen.getByRole('link', { name: /the first wg title/i }),
+    );
 
     expect(closeUserMenu).toHaveBeenCalledWith(false);
   });
@@ -181,17 +212,21 @@ describe('UserMenu', () => {
   it('closes when the user clicks outside the User Menu', () => {
     const closeUserMenu = jest.fn();
     render(
-      <>
+      <MemoryRouter>
         <h1>Title</h1>
         <UserMenu {...props} closeUserMenu={closeUserMenu} />{' '}
-      </>,
+      </MemoryRouter>,
     );
     fireEvent.mouseDown(screen.getByRole('heading'));
     expect(closeUserMenu).toHaveBeenCalledWith(false);
   });
 
   it('renders the bottom links', () => {
-    render(<UserMenu {...props} />);
+    render(
+      <MemoryRouter>
+        <UserMenu {...props} />
+      </MemoryRouter>,
+    );
     expect(screen.getByText(/terms/i)).toBeVisible();
     expect(screen.getByText(/privacy/i)).toBeVisible();
   });

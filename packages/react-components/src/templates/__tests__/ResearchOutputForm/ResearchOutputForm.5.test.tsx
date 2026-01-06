@@ -1,21 +1,20 @@
 import userEvent from '@testing-library/user-event';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
-import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
   defaultProps,
   initialResearchOutputData,
 } from '../../test-utils/research-output-form';
+import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
 
 describe('on submit', () => {
-  let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
@@ -23,9 +22,9 @@ describe('on submit', () => {
   const getAuthorSuggestions = jest.fn();
   const getRelatedResearchSuggestions = jest.fn();
   const getShortDescriptionFromDescription = jest.fn();
+  let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 
   beforeEach(() => {
-    history = createMemoryHistory();
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
@@ -33,18 +32,20 @@ describe('on submit', () => {
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
 
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });
-    userEvent.click(button);
-    userEvent.click(screen.getByRole('button', { name: /Publish Output/i }));
+    await userEvent.click(button);
+    await userEvent.click(
+      screen.getByRole('button', { name: /Publish Output/i }),
+    );
     await waitFor(() => {
       expect(screen.getByRole('button', { name: 'Publish' })).toBeEnabled();
       expect(screen.getByRole('button', { name: /Cancel/i })).toBeEnabled();
@@ -65,7 +66,7 @@ describe('on submit', () => {
       const documentType = 'Bioinformatics' as const;
 
       render(
-        <Router history={history}>
+        <MemoryRouter>
           <ResearchOutputForm
             {...defaultProps}
             researchOutputData={initialResearchOutputData}
@@ -84,13 +85,13 @@ describe('on submit', () => {
             }
             researchTags={[]}
           />
-        </Router>,
+        </MemoryRouter>,
       );
 
       const funded = screen.getByRole('group', {
         name: selector,
       });
-      userEvent.click(within(funded).getByText(value));
+      await userEvent.click(within(funded).getByText(value));
 
       await submitForm();
       expect(saveFn).toHaveBeenLastCalledWith(
@@ -102,18 +103,16 @@ describe('on submit', () => {
   });
 
   it('should disable "No" and "Not Sure" options', async () => {
-    history = createMemoryHistory({
-      initialEntries: [
-        network({}).teams({}).team({ teamId: 'TEAMID' }).createOutput({
-          outputDocumentType: 'article',
-        }).$,
-      ],
-    });
-
     const documentType = 'Article' as const;
 
     render(
-      <Router history={history}>
+      <MemoryRouter
+        initialEntries={[
+          network({}).teams({}).team({ teamId: 'TEAMID' }).createOutput({
+            outputDocumentType: 'article',
+          }).$,
+        ]}
+      >
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -137,7 +136,7 @@ describe('on submit', () => {
           }
           researchTags={[]}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     const usedInPublication = screen.getByRole('group', {

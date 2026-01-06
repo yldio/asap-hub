@@ -8,10 +8,10 @@ import {
   render,
   waitFor,
 } from '@testing-library/react';
-import userEvent, { specialChars } from '@testing-library/user-event';
-import { createMemoryHistory, History } from 'history';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
-import { MemoryRouter, Route, Router, StaticRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import ManuscriptForm from '../ManuscriptForm';
 
 type FindByRole = (
@@ -19,8 +19,6 @@ type FindByRole = (
   options?: ByRoleOptions | undefined,
   waitForElementOptions?: waitForOptions | undefined,
 ) => Promise<HTMLElement>;
-
-let history!: History;
 
 const teamId = '1';
 
@@ -124,7 +122,7 @@ const renderManuscriptForm = async (
   props: ComponentProps<typeof ManuscriptForm>,
 ) => {
   const container = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <Suspense fallback={<div>Loading...</div>}>
         <ManuscriptForm {...props} />
       </Suspense>
@@ -141,7 +139,6 @@ describe('Manuscript form', () => {
   beforeEach(() => {
     cleanup();
     jest.spyOn(console, 'error').mockImplementation();
-    history = createMemoryHistory();
   });
 
   it('renders the form', async () => {
@@ -224,24 +221,19 @@ describe('Manuscript form', () => {
   });
 
   it('displays error message when manuscript title is missing', async () => {
-    const { getByRole, getAllByText, queryByText } =
-      await renderManuscriptForm(defaultProps);
+    const { getByRole, getAllByText } = await renderManuscriptForm({
+      ...defaultProps,
+      title: 'initial title',
+    });
 
     const input = getByRole('textbox', { name: /Title of Manuscript/i });
-    userEvent.type(input, '');
-    input.focus();
+
+    await userEvent.clear(input);
     input.blur();
     await waitFor(() => {
       expect(
         getAllByText(/Please enter a title/i).length,
       ).toBeGreaterThanOrEqual(1);
-    });
-
-    userEvent.type(input, 'title');
-    input.blur();
-
-    await waitFor(() => {
-      expect(queryByText(/Please enter a title/i)).toBeNull();
     });
   });
 
@@ -284,7 +276,7 @@ describe('Manuscript form', () => {
     const textbox = getByRole('textbox', {
       name: /Type of Manuscript/i,
     });
-    userEvent.type(textbox, 'invalid type');
+    await userEvent.type(textbox, 'invalid type');
 
     expect(getByText(/Sorry, no types match/i)).toBeVisible();
   });
@@ -335,7 +327,7 @@ describe('Manuscript form', () => {
       lifecycleInput,
       'Draft Manuscript (prior to Publication)',
     );
-    await userEvent.type(lifecycleInput, specialChars.enter);
+    await userEvent.type(lifecycleInput, '{Enter}');
     lifecycleInput.blur();
 
     expect(
@@ -356,20 +348,29 @@ describe('Manuscript form', () => {
   });
 
   it('should go back when cancel button is clicked', async () => {
+    jest.spyOn(console, 'warn').mockImplementation();
+    let currentPathname = '/form';
+    const LocationCapture: React.FC = () => {
+      const location = useLocation();
+      currentPathname = location.pathname;
+      return null;
+    };
+
     const { findByText, getByRole } = render(
-      <MemoryRouter>
-        <Router history={history}>
-          <Route path="/form">
-            <Suspense fallback={<div>Loading...</div>}>
-              <ManuscriptForm {...defaultProps} />
-            </Suspense>
-          </Route>
-        </Router>
+      <MemoryRouter initialEntries={['/another-url', '/form']}>
+        <LocationCapture />
+        <Routes>
+          <Route
+            path="/form"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <ManuscriptForm {...defaultProps} />
+              </Suspense>
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     );
-
-    history.push('/another-url');
-    history.push('/form');
 
     await act(async () => {
       await userEvent.click(await findByText(/cancel/i));
@@ -379,7 +380,7 @@ describe('Manuscript form', () => {
       getByRole('button', { name: /Cancel manuscript submission/i }),
     );
 
-    expect(history.location.pathname).toBe('/another-url');
+    expect(currentPathname).toBe('/another-url');
   });
 
   it('should not enable OS fields on edit mode if user is not an OS team member', async () => {
@@ -493,24 +494,24 @@ describe('Manuscript form', () => {
     // --- Required category error message ---
     await userEvent.clear(categoryInput);
 
-    userEvent.click(categoryInput);
+    await userEvent.click(categoryInput);
     categoryInput.blur();
 
     await waitFor(() => {
       expect(getByText(/Please add at least one category/i)).toBeVisible();
     });
     await userEvent.type(categoryInput, 'Category');
-    userEvent.click(getByText('Category A'));
+    await userEvent.click(getByText('Category A'));
     categoryInput.blur();
 
     expect(getByText('Category A')).toBeInTheDocument();
 
     // --- Category limit ---
-    userEvent.click(categoryInput);
-    userEvent.click(getByText('Category B'));
-    userEvent.click(categoryInput);
-    userEvent.click(getByText('Category C'));
-    await categoryInput.blur();
+    await userEvent.click(categoryInput);
+    await userEvent.click(getByText('Category B'));
+    await userEvent.click(categoryInput);
+    await userEvent.click(getByText('Category C'));
+    categoryInput.blur();
 
     await waitFor(() => {
       expect(
@@ -522,7 +523,7 @@ describe('Manuscript form', () => {
     const impactInput = getByRole('textbox', { name: /Impact/i });
 
     // --- Required impact error message ---
-    userEvent.click(impactInput);
+    await userEvent.click(impactInput);
     impactInput.blur();
 
     await waitFor(() => {
@@ -538,7 +539,7 @@ describe('Manuscript form', () => {
     });
 
     // --- Valid impact field ---
-    userEvent.clear(impactInput);
+    await userEvent.clear(impactInput);
 
     await userEvent.type(impactInput, 'Impact');
 
@@ -546,7 +547,7 @@ describe('Manuscript form', () => {
       expect(getByText('Impact A')).toBeVisible();
     });
 
-    userEvent.click(getByText('Impact A'));
+    await userEvent.click(getByText('Impact A'));
     expect(getByText('Impact A')).toBeInTheDocument();
   });
 

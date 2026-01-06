@@ -10,6 +10,7 @@ const headerStyles = css({
 
 type DashboardPageProps = {
   readonly firstName?: string;
+  readonly children?: React.ReactNode;
 };
 
 const Dashboard: React.FC<DashboardPageProps> = ({ firstName, children }) => (

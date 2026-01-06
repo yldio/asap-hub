@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { createListTeamResponse } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import {
@@ -46,7 +46,9 @@ describe.each([
           <Auth0Provider user={{}}>
             <WhenReady>
               <MemoryRouter initialEntries={[route]}>
-                <Route path={route} component={Teams} />
+                <Routes>
+                  <Route path={route} element={<Teams filters={new Set()} />} />
+                </Routes>
               </MemoryRouter>
             </WhenReady>
           </Auth0Provider>
@@ -160,7 +162,12 @@ it('throws error when route is invalid', async () => {
           <Auth0Provider user={{}}>
             <WhenReady>
               <MemoryRouter initialEntries={['/network/invalid-teams']}>
-                <Route path="/network/invalid-teams" component={Teams} />
+                <Routes>
+                  <Route
+                    path="/network/invalid-teams"
+                    element={<Teams filters={new Set()} />}
+                  />
+                </Routes>
               </MemoryRouter>
             </WhenReady>
           </Auth0Provider>

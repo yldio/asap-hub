@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
-import { ComponentProps } from 'react';
-import { Router } from 'react-router-dom';
+import { useEffect, ComponentProps } from 'react';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
@@ -11,7 +11,6 @@ import {
 } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory, History } from 'history';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -19,11 +18,22 @@ import {
   expectedRequest,
 } from '../../test-utils/research-output-form';
 import { editorRef } from '../../../atoms';
+import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
 
+// Helper to capture location in tests
+let currentLocation: { pathname: string; search: string } | null = null;
+let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentLocation = { pathname: location.pathname, search: location.search };
+  }, [location]);
+  return null;
+};
+
 describe('on submit', () => {
-  let history!: History;
   const id = '42';
   const saveDraftFn = jest.fn();
   const saveFn = jest.fn();
@@ -33,7 +43,7 @@ describe('on submit', () => {
   const getShortDescriptionFromDescription = jest.fn();
 
   beforeEach(() => {
-    history = createMemoryHistory();
+    currentLocation = null;
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     getLabSuggestions.mockResolvedValue([]);
@@ -41,11 +51,11 @@ describe('on submit', () => {
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
 
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 
@@ -86,7 +96,8 @@ describe('on submit', () => {
     },
   ) => {
     render(
-      <Router history={history}>
+      <MemoryRouter>
+        <LocationCapture />
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}
@@ -106,7 +117,7 @@ describe('on submit', () => {
           researchTags={researchTags}
           {...propOverride}
         />
-      </Router>,
+      </MemoryRouter>,
     );
 
     fireEvent.change(screen.getByLabelText(/url/i), {
@@ -120,10 +131,10 @@ describe('on submit', () => {
 
     editorRef.current?.focus();
     const descriptionEditor = screen.getByTestId('editor');
-    userEvent.click(descriptionEditor);
-    userEvent.tab();
+    await userEvent.click(descriptionEditor);
+    await userEvent.tab();
     fireEvent.input(descriptionEditor, { data: data.descriptionMD });
-    userEvent.tab();
+    await userEvent.tab();
 
     fireEvent.change(
       screen.getByRole('textbox', { name: /short description/i }),
@@ -156,7 +167,7 @@ describe('on submit', () => {
 
   const saveDraft = async () => {
     const button = screen.getByRole('button', { name: /Save Draft/i });
-    userEvent.click(button);
+    await userEvent.click(button);
 
     expect(
       await screen.findByRole('button', { name: /Save Draft/i }),
@@ -174,8 +185,9 @@ describe('on submit', () => {
       published: false,
     });
     await waitFor(() => {
-      expect(history.location.pathname).toEqual(`/shared-research/${id}`);
-      expect(history.location.search).toEqual('?draftCreated=true');
+      expect(currentLocation).not.toBeNull();
+      expect(currentLocation?.pathname).toEqual(`/shared-research/${id}`);
+      expect(currentLocation?.search).toEqual('?draftCreated=true');
     });
   });
 });

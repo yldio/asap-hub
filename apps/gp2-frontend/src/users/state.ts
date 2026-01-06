@@ -18,6 +18,18 @@ import {
   UserListOptions,
 } from './api';
 
+// Promise cache to prevent throwing new promises on every render (Suspense requirement)
+const pendingUserPromises = new Map<string, Promise<void>>();
+
+// Helper to create a stable key from options
+const serializeUserOptions = (options: UserListOptions): string =>
+  JSON.stringify({
+    currentPage: options.currentPage,
+    pageSize: options.pageSize,
+    searchQuery: options.searchQuery,
+    filters: options.filters ? Array.from(options.filters).sort() : [],
+  });
+
 const userIndexState = atomFamily<
   | {
       ids: ReadonlyArray<string>;
@@ -80,22 +92,37 @@ export const usersState = selectorFamily<
 export const useUsers = (options: UserListOptions) => {
   const [users, setUsers] = useRecoilState(usersState(options));
   const { client } = useAlgolia();
+  const optionsKey = serializeUserOptions(options);
+
   if (users === undefined) {
-    throw getAlgoliaUsers(client, options)
-      .then(
-        (data): gp2.ListUserResponse => ({
-          total: data.nbHits,
-          items: data.hits,
-          algoliaIndexName: data.index,
-          algoliaQueryId: data.queryID,
-        }),
-      )
-      .then(setUsers)
-      .catch(setUsers);
+    let pendingPromise = pendingUserPromises.get(optionsKey);
+
+    if (!pendingPromise) {
+      pendingPromise = getAlgoliaUsers(client, options)
+        .then(
+          (data): gp2.ListUserResponse => ({
+            total: data.nbHits,
+            items: data.hits,
+            algoliaIndexName: data.index,
+            algoliaQueryId: data.queryID,
+          }),
+        )
+        .then(setUsers)
+        .catch(setUsers)
+        .finally(() => {
+          pendingUserPromises.delete(optionsKey);
+        });
+
+      pendingUserPromises.set(optionsKey, pendingPromise);
+    }
+
+    throw pendingPromise;
   }
+
   if (users instanceof Error) {
     throw users;
   }
+
   return users;
 };
 

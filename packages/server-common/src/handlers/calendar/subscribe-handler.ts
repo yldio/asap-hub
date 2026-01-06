@@ -1,5 +1,8 @@
 import 'source-map-support/register';
-import { calendar as googleCalendar } from '@googleapis/calendar';
+import {
+  calendar as googleCalendar,
+  calendar_v3 as calendarV3,
+} from '@googleapis/calendar';
 import { getAuthClient, GetJWTCredentials, Logger } from '../../utils';
 
 type Config = {
@@ -33,7 +36,7 @@ export const subscribeToEventChangesFactory =
       const calendar = googleCalendar({
         version: 'v3',
         auth,
-      });
+      } as unknown as calendarV3.Options);
 
       const {
         data: { resourceId, expiration },
@@ -97,7 +100,7 @@ export const unsubscribeFromEventChangesFactory =
     const calendar = googleCalendar({
       version: 'v3',
       auth,
-    });
+    } as unknown as calendarV3.Options);
     const response = await calendar.channels.stop({
       requestBody: {
         id: channelId,

@@ -4,7 +4,9 @@ import { layoutContentStyles, mainStyles } from '../layout';
 
 import UserDetailHeader from '../organisms/UserDetailHeader';
 
-type UserDetailPageProps = ComponentProps<typeof UserDetailHeader>;
+type UserDetailPageProps = ComponentProps<typeof UserDetailHeader> & {
+  children?: React.ReactNode;
+};
 
 const { rem } = pixels;
 

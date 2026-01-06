@@ -10,7 +10,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -32,9 +32,12 @@ const renderBackground = async (id: string) => {
             <MemoryRouter
               initialEntries={[gp2Routing.onboarding({}).background({}).$]}
             >
-              <Route path={gp2Routing.onboarding({}).background.template}>
-                <Background />
-              </Route>
+              <Routes>
+                <Route
+                  path={`${gp2Routing.onboarding({}).background.template}/*`}
+                  element={<Background />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -81,9 +84,9 @@ describe('Background', () => {
     const [, biographyEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(biographyEditButton!);
+    await userEvent.click(biographyEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -103,9 +106,9 @@ describe('Background', () => {
     const [tagsEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(tagsEditButton!);
+    await userEvent.click(tagsEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });

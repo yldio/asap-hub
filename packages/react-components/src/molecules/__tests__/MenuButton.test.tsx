@@ -17,10 +17,10 @@ describe('when open', () => {
   });
 });
 
-it('triggers the click event', () => {
+it('triggers the click event', async () => {
   const handleClick = jest.fn();
   const { getByLabelText } = render(<MenuButton onClick={handleClick} />);
 
-  userEvent.click(getByLabelText(/toggle menu/i));
+  await userEvent.click(getByLabelText(/toggle menu/i));
   expect(handleClick).toHaveBeenCalledTimes(1);
 });

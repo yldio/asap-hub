@@ -26,6 +26,7 @@ type UserMenuButtonProps = {
   onClick?: () => void;
   open?: boolean;
   displayName?: string;
+  children?: React.ReactNode;
 } & {
   [K in keyof AvatarProps as K extends 'imageUrl'
     ? 'avatarUrl'

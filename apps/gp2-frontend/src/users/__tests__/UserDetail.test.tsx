@@ -1,7 +1,9 @@
+import { mockNavigateWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -9,7 +11,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
@@ -36,13 +38,14 @@ const renderUserDetail = async (id: string) => {
             <MemoryRouter
               initialEntries={[gp2Routing.users({}).user({ userId: id }).$]}
             >
-              <Route
-                path={
-                  gp2Routing.users.template + gp2Routing.users({}).user.template
-                }
-              >
-                <UserDetail currentTime={new Date()} />
-              </Route>
+              <Routes>
+                <Route
+                  path={`${gp2Routing.users.template}${
+                    gp2Routing.users({}).user.template
+                  }/*`}
+                  element={<UserDetail currentTime={new Date()} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -128,6 +131,16 @@ describe('UserDetail', () => {
     });
   });
   describe('own profile', () => {
+    let consoleWarnSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      consoleWarnSpy = mockNavigateWarningsInConsole();
+    });
+
+    afterEach(() => {
+      consoleWarnSpy.mockRestore();
+    });
+
     it('renders edit buttons for each section', async () => {
       const user = gp2Fixtures.createUserResponse({
         id: 'testuserid',
@@ -195,9 +208,9 @@ describe('UserDetail', () => {
       const [keyInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(keyInformationEditButton!);
-      expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(keyInformationEditButton!);
+      expect(await screen.findByRole('dialog')).toBeVisible();
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -218,9 +231,9 @@ describe('UserDetail', () => {
       const [, contactInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(contactInformationEditButton!);
-      expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(contactInformationEditButton!);
+      expect(await screen.findByRole('dialog')).toBeVisible();
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -247,9 +260,9 @@ describe('UserDetail', () => {
       const [, , tagsEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(tagsEditButton!);
-      expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(tagsEditButton!);
+      expect(await screen.findByRole('dialog')).toBeVisible();
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -272,9 +285,9 @@ describe('UserDetail', () => {
       const [, , , biographyEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(biographyEditButton!);
-      expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(biographyEditButton!);
+      expect(await screen.findByRole('dialog')).toBeVisible();
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -295,9 +308,9 @@ describe('UserDetail', () => {
       const [, , , , questionsEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(questionsEditButton!);
-      expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(questionsEditButton!);
+      expect(await screen.findByRole('dialog')).toBeVisible();
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -319,9 +332,9 @@ describe('UserDetail', () => {
       const [, , , , , fundingStreamsEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(fundingStreamsEditButton!);
-      expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(fundingStreamsEditButton!);
+      expect(await screen.findByRole('dialog')).toBeVisible();
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -352,9 +365,9 @@ describe('UserDetail', () => {
           name: 'Edit Edit',
         },
       );
-      userEvent.click(contributingCohortsEditButton!);
-      expect(screen.getByRole('dialog')).toBeVisible();
-      userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await userEvent.click(contributingCohortsEditButton!);
+      expect(await screen.findByRole('dialog')).toBeVisible();
+      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
@@ -377,6 +390,7 @@ describe('UserDetail', () => {
     });
 
     it('searches and displays results from organisations api', async () => {
+      const user$ = userEvent.setup({ delay: null });
       mockGetInstitutions.mockResolvedValue({
         number_of_results: 1,
         time_taken: 0,
@@ -399,14 +413,28 @@ describe('UserDetail', () => {
         id: 'testuserid',
       });
       mockGetUser.mockResolvedValueOnce(user);
+      // Mock both upcoming and past events calls
+      mockGetEvents
+        .mockResolvedValueOnce(createEventListAlgoliaResponse(1))
+        .mockResolvedValueOnce(createEventListAlgoliaResponse(1));
       await renderUserDetail(user.id);
       const [keyInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
-      userEvent.click(keyInformationEditButton!);
+      await user$.click(keyInformationEditButton!);
 
-      userEvent.type(await screen.findByDisplayValue('Stark Industries'), ' 1');
-      expect(await screen.findByText('ExampleInst')).toBeVisible();
+      // Wait for dialog to be visible first
+      await screen.findByRole('dialog');
+
+      const institutionField =
+        await screen.findByDisplayValue('Stark Industries');
+      fireEvent.change(institutionField, {
+        target: { value: 'Stark Industries 1' },
+      });
+      await waitFor(
+        () => expect(screen.getByText('ExampleInst')).toBeVisible(),
+        { timeout: 5000 },
+      );
       expect(mockGetInstitutions).toHaveBeenCalledWith({
         searchQuery: 'Stark Industries 1',
       });
@@ -417,7 +445,7 @@ describe('UserDetail', () => {
       const user = gp2Fixtures.createUserResponse();
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
-      userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
+      await userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });
@@ -427,7 +455,7 @@ describe('UserDetail', () => {
       const user = gp2Fixtures.createUserResponse();
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
-      userEvent.click(await screen.findByText(/past events \(1\)/i));
+      await userEvent.click(await screen.findByText(/past events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });

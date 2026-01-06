@@ -1,4 +1,4 @@
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
 
@@ -11,16 +11,19 @@ it('renders a heading', () => {
   expect(getByRole('heading')).toHaveTextContent(/email.+sent/i);
 });
 
-it('links back to sign in', () => {
+it('links back to sign in', async () => {
   const { getByText } = render(
     <MemoryRouter initialEntries={['/email-sent']}>
-      <Route path="/email-sent">
-        <PasswordResetEmailSentPage signInHref="/signin" />,
-      </Route>
-      <Route path="/signin">Signin page</Route>
+      <Routes>
+        <Route
+          path="/email-sent"
+          element={<PasswordResetEmailSentPage signInHref="/signin" />}
+        />
+        <Route path="/signin" element={<>Signin page</>} />
+      </Routes>
     </MemoryRouter>,
   );
 
-  userEvent.click(getByText(/sign.+in/i));
+  await userEvent.click(getByText(/sign.+in/i));
   expect(getByText('Signin page')).toBeVisible();
 });

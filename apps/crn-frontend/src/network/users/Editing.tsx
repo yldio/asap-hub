@@ -1,4 +1,4 @@
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import {
   PersonalInfoModal,
   ContactInfoModal,
@@ -18,56 +18,68 @@ interface EditingProps {
 }
 
 const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
-  const { path } = useRouteMatch();
+  const navigate = useNavigate();
   const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);
 
   return (
-    <>
-      <Route exact path={path + route.editPersonalInfo.template}>
-        <Frame title="Edit Personal Information">
-          <PersonalInfoModal
-            {...user}
-            countrySuggestions={countrySuggestions.map(
-              ({ countryName }) => countryName,
-            )}
-            loadInstitutionOptions={(searchQuery) =>
-              getInstitutions({ searchQuery }).then((data) =>
-                data.items.map(({ name }) => name),
-              )
-            }
-            backHref={backHref}
-            onSave={patchUser}
-          />
-        </Frame>
-      </Route>
-      <Route exact path={path + route.editContactInfo.template}>
-        <Frame title="Edit Contact Information">
-          <ContactInfoModal
-            {...user}
-            email={user.contactEmail}
-            fallbackEmail={user.email}
-            backHref={backHref}
-            onSave={patchUser}
-          />
-        </Frame>
-      </Route>
-      <Route exact path={path + route.editOnboarded.template}>
-        <Frame title="Publish your profile">
-          <ConfirmModal
-            backHref={backHref}
-            successHref="/"
-            title="Ready to publish your profile?"
-            description="In order to show you the Hub, we will need to make your profile public to the Hub network. Would you like to continue?"
-            error="There was an error and we were unable to publish your profile"
-            cancelText="Cancel"
-            confirmText="Publish Profile"
-            onSave={() => patchUser({ onboarded: true })}
-          />
-        </Frame>
-      </Route>
-    </>
+    <Routes>
+      <Route
+        path={route.editPersonalInfo.template}
+        element={
+          <Frame title="Edit Personal Information">
+            <PersonalInfoModal
+              {...user}
+              countrySuggestions={countrySuggestions.map(
+                ({ countryName }) => countryName,
+              )}
+              loadInstitutionOptions={(searchQuery) =>
+                getInstitutions({ searchQuery }).then((data) =>
+                  data.items.map(({ name }) => name),
+                )
+              }
+              backHref={backHref}
+              onSave={patchUser}
+            />
+          </Frame>
+        }
+      />
+      <Route
+        path={route.editContactInfo.template}
+        element={
+          <Frame title="Edit Contact Information">
+            <ContactInfoModal
+              {...user}
+              email={user.contactEmail}
+              fallbackEmail={user.email}
+              backHref={backHref}
+              onSave={patchUser}
+            />
+          </Frame>
+        }
+      />
+      <Route
+        path={route.editOnboarded.template}
+        element={
+          <Frame title="Publish your profile">
+            <ConfirmModal
+              backHref={backHref}
+              successHref="/"
+              title="Ready to publish your profile?"
+              description="In order to show you the Hub, we will need to make your profile public to the Hub network. Would you like to continue?"
+              error="There was an error and we were unable to publish your profile"
+              cancelText="Cancel"
+              confirmText="Publish Profile"
+              onSave={async () => {
+                await patchUser({ onboarded: true });
+                navigate(backHref);
+              }}
+            />
+          </Frame>
+        }
+      />
+    </Routes>
   );
 };
 

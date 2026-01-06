@@ -1,5 +1,5 @@
 import { BiographyModal } from '@asap-hub/react-components';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 export default {
   title: 'Templates / User Profile / Biography Modal',
@@ -7,7 +7,7 @@ export default {
 };
 
 export const Normal = () => (
-  <StaticRouter>
+  <StaticRouter location="/">
     <BiographyModal biography="My Bio" backHref="#" />
   </StaticRouter>
 );

@@ -1,5 +1,5 @@
 import { render, waitFor } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { ComponentProps } from 'react';
 import userEvent from '@testing-library/user-event';
 
@@ -17,7 +17,7 @@ const props: ComponentProps<typeof ResearchOutputRelatedEventsCard> = {
 
 it('renders the related events card', async () => {
   const { getByRole } = render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ResearchOutputRelatedEventsCard {...props} />
     </StaticRouter>,
   );
@@ -35,7 +35,7 @@ it('should render message when there is no match', async () => {
       getRelatedEventSuggestions={loadOptions}
     />,
   );
-  userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
+  await userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
   await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
   expect(queryByText(/no related events match/i)).toBeInTheDocument();
 });
@@ -57,8 +57,8 @@ it('Can select an option', async () => {
       onChangeRelatedEvents={mockOnChange}
     />,
   );
-  userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
+  await userEvent.click(getByRole('textbox', { name: /Hub Events/i }));
   await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
-  userEvent.click(getByText('Event 1'));
+  await userEvent.click(getByText('Event 1'));
   expect(mockOnChange).toHaveBeenCalledWith(result, expect.anything());
 });

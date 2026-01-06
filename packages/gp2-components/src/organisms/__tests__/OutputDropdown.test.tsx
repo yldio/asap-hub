@@ -23,7 +23,7 @@ describe('OutputDropdown', () => {
     );
 
   describe('permissions', () => {
-    it('displays working groups and projects if the user is an Admin and project is not completed', () => {
+    it('displays working groups and projects if the user is an Admin and project is not completed', async () => {
       const { getByText, queryByText } = renderWithContent({
         groups: [
           {
@@ -50,13 +50,13 @@ describe('OutputDropdown', () => {
         role: 'Administrator',
       });
 
-      userEvent.click(getByText('Share an output'));
+      await userEvent.click(getByText('Share an output'));
       expect(getByText('Test Group')).toBeInTheDocument();
       expect(getByText('Test Project')).toBeInTheDocument();
       expect(queryByText('Completed Project')).not.toBeInTheDocument();
     });
 
-    it('displays projects if the user is a PM for the project and if project is not completed', () => {
+    it('displays projects if the user is a PM for the project and if project is not completed', async () => {
       const { getByText, queryByText } = renderWithContent({
         projects: [
           {
@@ -95,13 +95,13 @@ describe('OutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Share an output'));
+      await userEvent.click(getByText('Share an output'));
       expect(getByText('Test Project 1')).toBeInTheDocument();
       expect(queryByText('Test Project 2')).not.toBeInTheDocument();
       expect(queryByText('Completed Project')).not.toBeInTheDocument();
     });
 
-    it('does not display working groups if the user is not an Admin', () => {
+    it('does not display working groups if the user is not an Admin', async () => {
       const { getByText, queryByText } = renderWithContent({
         projects: [
           {
@@ -126,7 +126,7 @@ describe('OutputDropdown', () => {
         ],
       });
 
-      userEvent.click(getByText('Share an output'));
+      await userEvent.click(getByText('Share an output'));
       expect(queryByText('Test Group')).not.toBeInTheDocument();
     });
 
@@ -138,7 +138,7 @@ describe('OutputDropdown', () => {
   });
 
   describe('document type options', () => {
-    it('links to create output page', () => {
+    it('links to create output page', async () => {
       const { getByText, getByTitle } = renderWithContent({
         groups: [
           {
@@ -171,16 +171,16 @@ describe('OutputDropdown', () => {
         role: 'Administrator',
       });
 
-      userEvent.click(getByText('Working Group 1'));
+      await userEvent.click(getByText('Working Group 1'));
       expect(getByTitle('Article')).toBeInTheDocument();
       expect(getByTitle('Article').closest('a')).toHaveAttribute(
         'href',
         '/working-groups/1/create-output/article',
       );
 
-      userEvent.click(getByText('Working Group 1'));
+      await userEvent.click(getByText('Working Group 1'));
 
-      userEvent.click(getByText('Project 1'));
+      await userEvent.click(getByText('Project 1'));
       expect(getByTitle('Article')).toBeInTheDocument();
       expect(getByTitle('Article').closest('a')).toHaveAttribute(
         'href',

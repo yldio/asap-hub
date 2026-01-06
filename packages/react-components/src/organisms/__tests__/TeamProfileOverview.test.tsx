@@ -64,7 +64,7 @@ it('renders supplement grant title, description and read full proposal button', 
   ).toBeInTheDocument();
 });
 
-it('renders original grant when user clicks on original grant tab', () => {
+it('renders original grant when user clicks on original grant tab', async () => {
   const { queryByText, getByRole, getByText } = render(
     <TeamProfileOverview
       projectTitle="Original Title"
@@ -73,7 +73,7 @@ it('renders original grant when user clicks on original grant tab', () => {
     />,
   );
 
-  userEvent.click(getByRole('button', { name: /Original Grant/i }));
+  await userEvent.click(getByRole('button', { name: /Original Grant/i }));
 
   expect(getByText('Original Title')).toBeInTheDocument();
   expect(getByText('Original Summary')).toBeInTheDocument();

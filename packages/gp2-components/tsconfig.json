@@ -4,6 +4,7 @@
     "rootDir": "src",
     "outDir": "build",
 
+    "types": ["jest", "@testing-library/jest-dom"],
     "lib": ["esnext", "dom", "dom.iterable"],
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react"

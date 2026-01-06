@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import ModalEditHeaderDecorator from '../ModalEditHeaderDecorator';
 
@@ -8,7 +8,7 @@ const renderDecorator = (
   props: React.ComponentProps<typeof ModalEditHeaderDecorator>,
 ) =>
   render(
-    <StaticRouter>
+    <StaticRouter location="/">
       <ModalEditHeaderDecorator {...props} />
     </StaticRouter>,
   );
@@ -53,24 +53,24 @@ describe('save button', () => {
     expect(saveButton).not.toBeInTheDocument();
   });
 
-  it('calls onSave when save button is clicked', () => {
+  it('calls onSave when save button is clicked', async () => {
     const handleSave = jest.fn();
     renderDecorator({ backHref: '/back', onSave: handleSave });
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     expect(handleSave).toHaveBeenCalledTimes(1);
   });
 
-  it('calls onSave multiple times when clicked multiple times', () => {
+  it('calls onSave multiple times when clicked multiple times', async () => {
     const handleSave = jest.fn();
     renderDecorator({ backHref: '/back', onSave: handleSave });
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    userEvent.click(saveButton);
-    userEvent.click(saveButton);
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
+    await userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     expect(handleSave).toHaveBeenCalledTimes(3);
   });
@@ -109,7 +109,7 @@ describe('save button state', () => {
     expect(saveButton).toBeDisabled();
   });
 
-  it('does not call onSave when save button is disabled and clicked', () => {
+  it('does not call onSave when save button is disabled and clicked', async () => {
     const handleSave = jest.fn();
     renderDecorator({
       backHref: '/back',
@@ -118,7 +118,7 @@ describe('save button state', () => {
     });
 
     const saveButton = screen.getByRole('button', { name: 'Save' });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     expect(handleSave).not.toHaveBeenCalled();
   });

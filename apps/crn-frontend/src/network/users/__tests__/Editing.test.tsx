@@ -1,13 +1,15 @@
-import { ReactNode, Suspense } from 'react';
+import { ReactNode, Suspense, useState, useCallback } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { User } from '@auth0/auth0-spa-js';
-import { Auth0Provider } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { getUserClaimKey } from '@asap-hub/react-context';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/crn-frontend/src/auth/test-utils';
 
 import Editing from '../Editing';
 import { patchUser, getInstitutions } from '../api';
@@ -26,7 +28,9 @@ const renderWithRoot = (children: ReactNode): ReturnType<typeof render> =>
   render(
     <RecoilRoot>
       <Suspense fallback="loading">
-        <Auth0Provider user={{ id }}>{children}</Auth0Provider>
+        <Auth0Provider user={{ id }}>
+          <WhenReady>{children}</WhenReady>
+        </Auth0Provider>
       </Suspense>
     </RecoilRoot>,
   );
@@ -44,32 +48,38 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
   it('goes back when closed', async () => {
     const { findByText, findByTitle } = renderWithRoot(
       <MemoryRouter initialEntries={[route({}).$]}>
-        <Route path={aboutPath}>
-          <Route exact path={aboutPath}>
-            Profile
-          </Route>
-          <Editing user={createUserResponse()} backHref={aboutPath} />
-        </Route>
+        <Routes>
+          <Route path={aboutPath} element={<>Profile</>} />
+          <Route
+            path={`${aboutPath}/*`}
+            element={
+              <Editing user={createUserResponse()} backHref={aboutPath} />
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     );
 
-    userEvent.click(await findByTitle(/close/i));
+    await userEvent.click(await findByTitle(/close/i));
     expect(await findByText('Profile')).toBeVisible();
   });
 
   it('goes back when saved', async () => {
     const { findByText } = renderWithRoot(
       <MemoryRouter initialEntries={[route({}).$]}>
-        <Route path={aboutPath}>
-          <Route exact path={aboutPath}>
-            Profile
-          </Route>
-          <Editing user={createUserResponse()} backHref={aboutPath} />
-        </Route>
+        <Routes>
+          <Route path={aboutPath} element={<>Profile</>} />
+          <Route
+            path={`${aboutPath}/*`}
+            element={
+              <Editing user={createUserResponse()} backHref={aboutPath} />
+            }
+          />
+        </Routes>
       </MemoryRouter>,
     );
 
-    userEvent.click(await findByText(/save/i));
+    await userEvent.click(await findByText(/save/i));
     expect(await findByText('Profile')).toBeVisible();
   });
 });
@@ -97,20 +107,25 @@ describe('the personal info modal', () => {
     const { findByDisplayValue, findByText } = renderWithRoot(
       <Auth0Provider user={{ id }}>
         <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
-          <Route path={aboutPath}>
-            <Editing
-              user={{
-                ...createUserResponse(),
-                institution: 'NCU',
-              }}
-              backHref={aboutPath}
+          <Routes>
+            <Route
+              path={`${aboutPath}/*`}
+              element={
+                <Editing
+                  user={{
+                    ...createUserResponse(),
+                    institution: 'NCU',
+                  }}
+                  backHref={aboutPath}
+                />
+              }
             />
-          </Route>
+          </Routes>
         </MemoryRouter>
       </Auth0Provider>,
     );
 
-    userEvent.type(await findByDisplayValue('NCU'), ' 1');
+    await userEvent.type(await findByDisplayValue('NCU'), ' 1');
     expect(await findByText('ExampleInst')).toBeVisible();
     expect(mockGetInstitutions).toHaveBeenCalledWith({
       searchQuery: 'NCU 1',
@@ -127,24 +142,29 @@ describe('the personal info modal', () => {
     } = renderWithRoot(
       <Auth0Provider user={{ id }}>
         <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
-          <Route path={aboutPath}>
-            <Editing
-              user={{
-                ...createUserResponse(),
-                id,
-                city: 'Lon',
-              }}
-              backHref={aboutPath}
+          <Routes>
+            <Route
+              path={`${aboutPath}/*`}
+              element={
+                <Editing
+                  user={{
+                    ...createUserResponse(),
+                    id,
+                    city: 'Lon',
+                  }}
+                  backHref={aboutPath}
+                />
+              }
             />
-          </Route>
+          </Routes>
         </MemoryRouter>
       </Auth0Provider>,
     );
 
-    userEvent.type(await findByLabelText(/city/i), 'don');
+    await userEvent.type(await findByLabelText(/city/i), 'don');
     expect(getByDisplayValue('London')).toBeVisible();
 
-    userEvent.click(await findByText(/save/i));
+    await userEvent.click(await findByText(/save/i));
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('London')).not.toBeInTheDocument();
@@ -163,15 +183,20 @@ describe('the contact info modal', () => {
   it('passes user data to contact info modal', async () => {
     const { findByDisplayValue } = renderWithRoot(
       <MemoryRouter initialEntries={[editContactInfo({}).$]}>
-        <Route path={aboutPath}>
-          <Editing
-            user={{
-              ...createUserResponse(),
-              social: { github: 'github' },
-            }}
-            backHref={aboutPath}
+        <Routes>
+          <Route
+            path={`${aboutPath}/*`}
+            element={
+              <Editing
+                user={{
+                  ...createUserResponse(),
+                  social: { github: 'github' },
+                }}
+                backHref={aboutPath}
+              />
+            }
           />
-        </Route>
+        </Routes>
       </MemoryRouter>,
     );
     expect(await findByDisplayValue('github')).toBeVisible();
@@ -179,15 +204,20 @@ describe('the contact info modal', () => {
   it('uses the contact email as the email value', async () => {
     const { findByLabelText } = renderWithRoot(
       <MemoryRouter initialEntries={[editContactInfo({}).$]}>
-        <Route path={aboutPath}>
-          <Editing
-            user={{
-              ...createUserResponse(),
-              contactEmail: 'contact@example.com',
-            }}
-            backHref={aboutPath}
+        <Routes>
+          <Route
+            path={`${aboutPath}/*`}
+            element={
+              <Editing
+                user={{
+                  ...createUserResponse(),
+                  contactEmail: 'contact@example.com',
+                }}
+                backHref={aboutPath}
+              />
+            }
           />
-        </Route>
+        </Routes>
       </MemoryRouter>,
     );
 
@@ -204,26 +234,30 @@ describe('the contact info modal', () => {
       queryByText,
       queryByDisplayValue,
     } = renderWithRoot(
-      <Auth0Provider user={{ id }}>
-        <MemoryRouter initialEntries={[`/profile${editContactInfo.template}`]}>
-          <Route path="/profile">
-            <Editing
-              user={{
-                ...createUserResponse(),
-                id,
-                contactEmail: 'contact@example.com',
-              }}
-              backHref={aboutPath}
-            />
-          </Route>
-        </MemoryRouter>
-      </Auth0Provider>,
+      <MemoryRouter initialEntries={[`/profile${editContactInfo.template}`]}>
+        <Routes>
+          <Route
+            path="/profile/*"
+            element={
+              <Editing
+                user={{
+                  ...createUserResponse(),
+                  id,
+                  contactEmail: 'contact@example.com',
+                }}
+                backHref="/profile"
+              />
+            }
+          />
+          <Route path="/profile" element={<>Profile</>} />
+        </Routes>
+      </MemoryRouter>,
     );
 
-    userEvent.type(await findByLabelText(/e-?mail/i), 'm');
+    await userEvent.type(await findByLabelText(/e-?mail/i), 'm');
     expect(getByDisplayValue('contact@example.comm')).toBeVisible();
 
-    userEvent.click(await findByText(/save/i));
+    await userEvent.click(await findByText(/save/i));
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('Yorkshire')).not.toBeInTheDocument();
@@ -239,23 +273,27 @@ describe('the contact info modal', () => {
 describe('the onboarded modal', () => {
   it('saves changes', async () => {
     const { findByText } = renderWithRoot(
-      <Auth0Provider user={{ id, onboarded: false }}>
-        <MemoryRouter initialEntries={[`/profile${editOnboarded.template}`]}>
-          <Route path="/profile">
-            <Editing
-              user={{
-                ...createUserResponse(),
-                id,
-                onboarded: false,
-              }}
-              backHref={aboutPath}
-            />
-          </Route>
-        </MemoryRouter>
-      </Auth0Provider>,
+      <MemoryRouter initialEntries={[`/profile${editOnboarded.template}`]}>
+        <Routes>
+          <Route
+            path="/profile/*"
+            element={
+              <Editing
+                user={{
+                  ...createUserResponse(),
+                  id,
+                  onboarded: false,
+                }}
+                backHref="/profile"
+              />
+            }
+          />
+          <Route path="/" element={<>Homepage</>} />
+        </Routes>
+      </MemoryRouter>,
     );
 
-    userEvent.click(await findByText(/publish profile/i));
+    await userEvent.click(await findByText(/publish profile/i));
     await waitFor(() => {
       expect(mockPatchUser).toHaveBeenLastCalledWith(
         id,
@@ -266,50 +304,105 @@ describe('the onboarded modal', () => {
   });
 
   it('redirects to homepage', async () => {
-    let user: User = {
+    window.alert = jest.fn();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const initialUser: User = {
       ...createUserResponse(),
       id,
       onboarded: false,
     };
     const ownProfileRoute = network({})
       .users({})
-      .user({ userId: user.id })
+      .user({ userId: initialUser.id })
       .about({});
+    const ownProfileBasePath = network({})
+      .users({})
+      .user({ userId: initialUser.id }).$;
 
-    const { findByText } = renderWithRoot(
-      <Auth0Provider
-        user={user}
-        auth0Overrides={() => ({
-          user: {
-            sub: 'testuser',
-            name: user.displayName,
-            given_name: user.firstName,
-            family_name: user.lastName,
-            aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
-            [getUserClaimKey()]: user,
-          },
-        })}
-      >
-        <MemoryRouter initialEntries={[ownProfileRoute.editOnboarded({}).$]}>
-          <CheckOnboarded>
-            <Route path={ownProfileRoute.$}>
-              <Editing
-                user={{
-                  ...createUserResponse(),
-                  ...user,
-                }}
-                backHref={aboutPath}
-              />
-            </Route>
-            <Route exact path={'/'}>
-              Homepage!
-            </Route>
-          </CheckOnboarded>
-        </MemoryRouter>
-      </Auth0Provider>,
-    );
+    // Mock patchUser to return updated user
+    mockPatchUser.mockResolvedValue({
+      ...createUserResponse(),
+      id,
+      onboarded: true,
+    });
 
-    userEvent.click(await findByText(/publish profile/i));
+    // Location display helper
+    const LocationDisplay = () => {
+      const location = useLocation();
+      return <div data-testid="location">{location.pathname}</div>;
+    };
+
+    // Component to manage user state
+    const TestComponent = () => {
+      const [currentUser, setCurrentUser] = useState(initialUser);
+
+      // Stable refreshUser callback that updates the user state
+      const handleRefreshUser = useCallback(async () => {
+        // Use a new object to ensure React detects the change
+        setCurrentUser((prev) => ({
+          ...prev,
+          onboarded: true,
+        }));
+        // Wait for React to process the state update and for Auth0Provider's useEffect to run
+        // This ensures the auth0 object is recreated with the updated user before navigation
+        await new Promise((resolve) => {
+          setTimeout(resolve, 50);
+        });
+      }, []);
+
+      // Stable auth0Overrides function - only override refreshUser, let Auth0Provider handle user updates
+      const auth0Overrides = useCallback(
+        () => ({
+          refreshUser: handleRefreshUser,
+        }),
+        [handleRefreshUser],
+      );
+
+      return (
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={currentUser} auth0Overrides={auth0Overrides}>
+              <WhenReady>
+                <MemoryRouter
+                  initialEntries={[ownProfileRoute.editOnboarded({}).$]}
+                >
+                  <LocationDisplay />
+                  <CheckOnboarded>
+                    <Routes>
+                      <Route
+                        path={`${ownProfileBasePath}/*`}
+                        element={
+                          <Routes>
+                            <Route
+                              path="about/*"
+                              element={
+                                <Editing
+                                  user={{
+                                    ...createUserResponse(),
+                                    ...currentUser,
+                                  }}
+                                  backHref={ownProfileRoute.$}
+                                />
+                              }
+                            />
+                          </Routes>
+                        }
+                      />
+                      <Route path="/" element={<>Homepage!</>} />
+                    </Routes>
+                  </CheckOnboarded>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      );
+    };
+
+    const { findByText, findByTestId } = render(<TestComponent />);
+
+    await userEvent.click(await findByText(/publish profile/i));
     await waitFor(() => {
       expect(mockPatchUser).toHaveBeenLastCalledWith(
         id,
@@ -317,10 +410,16 @@ describe('the onboarded modal', () => {
         expect.any(String),
       );
     });
-    user = {
-      ...user,
-      onboarded: true,
-    };
+
+    await waitFor(
+      async () => {
+        const locationElement = await findByTestId('location');
+        expect(locationElement.textContent).toBe('/');
+      },
+      { timeout: 5000 },
+    );
+
+    // Verify homepage is rendered after successful navigation
     expect(await findByText('Homepage!')).toBeVisible();
   });
 });

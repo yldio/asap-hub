@@ -11,7 +11,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { OutputFormPage } from '@asap-hub/gp2-components';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -64,20 +64,24 @@ const renderShareOutput = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]} initialIndex={1}>
-              <Route
-                path={
-                  gp2Routing.outputs.template +
-                  gp2Routing.outputs({}).output.template +
-                  gp2Routing.outputs({}).output({ outputId: 'output-id' }).edit
-                    .template
-                }
-              >
-                <NotificationMessages>
-                  <OutputFormPage>
-                    <ShareOutput output={output} />
-                  </OutputFormPage>
-                </NotificationMessages>
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    gp2Routing.outputs.template +
+                    gp2Routing.outputs({}).output.template +
+                    gp2Routing.outputs({}).output({ outputId: 'output-id' })
+                      .edit.template
+                  }
+                  element={
+                    <NotificationMessages>
+                      <OutputFormPage>
+                        <ShareOutput output={output} />
+                      </OutputFormPage>
+                    </NotificationMessages>
+                  }
+                />
+                <Route path="*" element={<div>Redirect target</div>} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -128,13 +132,15 @@ describe('ShareOutput', () => {
       projects: [{ id: '42', title: 'a title' }],
     });
 
-    userEvent.click(screen.getByRole('button', { name: /save/i }));
-    expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
-    expect(mockUpdateOutput).toHaveBeenCalledWith(
-      id,
-      expect.objectContaining({ title, link }),
-      expect.anything(),
-    );
+    await userEvent.click(screen.getByRole('button', { name: /save/i }));
+    await waitFor(() => {
+      expect(mockUpdateOutput).toHaveBeenCalledWith(
+        id,
+        expect.objectContaining({ title, link }),
+        expect.anything(),
+      );
+    });
+    expect(await screen.findByText('Redirect target')).toBeInTheDocument();
   });
 
   it('generates the short description based on the current description', async () => {
@@ -149,7 +155,7 @@ describe('ShareOutput', () => {
       id,
     });
 
-    userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+    await userEvent.click(screen.getByRole('button', { name: /Generate/i }));
 
     await waitFor(() => {
       expect(
@@ -159,6 +165,7 @@ describe('ShareOutput', () => {
   });
 
   it('will show server side validation error for link', async () => {
+    const user = userEvent.setup({ delay: null });
     const title = 'Output title';
     const link = 'https://example.com';
     const id = 'output-id';
@@ -183,26 +190,28 @@ describe('ShareOutput', () => {
       projects: [{ id: '42', title: 'a title' }],
     });
 
-    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    await user.click(screen.getByRole('button', { name: /save/i }));
     expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
 
     expect(mockUpdateOutput).toHaveBeenCalled();
     expect(
-      screen.queryAllByText(
+      await screen.findByText(
         'An Output with this URL already exists. Please enter a different URL.',
-      ).length,
-    ).toBeGreaterThan(1);
+      ),
+    ).toBeInTheDocument();
     expect(window.scrollTo).toHaveBeenCalled();
 
     const url = screen.getByRole('textbox', { name: /URL \(required\)/i });
-    userEvent.type(url, 'a');
-    url.blur();
+    await user.type(url, 'a');
+    await user.tab();
 
-    expect(
-      screen.queryByText(
-        'An Output with this URL already exists. Please enter a different URL.',
-      ),
-    ).toBeNull();
+    await waitFor(() => {
+      expect(
+        screen.queryByText(
+          'An Output with this URL already exists. Please enter a different URL.',
+        ),
+      ).toBeNull();
+    });
   });
 
   it('will toast server side errors for unknown errors', async () => {
@@ -219,7 +228,7 @@ describe('ShareOutput', () => {
       projects: [{ id: '42', title: 'a title' }],
     });
 
-    userEvent.click(screen.getByRole('button', { name: /save/i }));
+    await userEvent.click(screen.getByRole('button', { name: /save/i }));
     expect(await screen.findByRole('button', { name: /save/i })).toBeEnabled();
 
     expect(mockUpdateOutput).toHaveBeenCalled();

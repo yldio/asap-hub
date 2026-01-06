@@ -8,7 +8,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -46,9 +46,9 @@ const renderPage = async (searchQuery = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/news']}>
-              <Route path="/news">
-                <NewsPage />
-              </Route>
+              <Routes>
+                <Route path="/news/*" element={<NewsPage />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -129,8 +129,8 @@ it('can perform a filter search', async () => {
   );
 
   await renderPage();
-  userEvent.click(screen.getByTitle('Filter'));
-  userEvent.click(screen.getByRole('checkbox', { name: /Newsletters/i }));
+  await userEvent.click(screen.getByTitle('Filter'));
+  await userEvent.click(screen.getByRole('checkbox', { name: /Newsletters/i }));
 
   await waitFor(() =>
     expect(mockGetNews).toHaveBeenLastCalledWith(

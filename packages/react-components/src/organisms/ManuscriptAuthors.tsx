@@ -92,7 +92,7 @@ const ManuscriptAuthors = ({
             enabled={!isSubmitting}
             placeholder="Start typing..."
             loadOptions={getAuthorSuggestions}
-            onChange={(
+            onChange={async (
               newAuthors: OptionsType<AuthorOption> | AuthorOption | null,
             ) => {
               if (isMultiSelect && Array.isArray(newAuthors)) {
@@ -170,10 +170,17 @@ const ManuscriptAuthors = ({
               }
 
               if (validate) {
+                // Trigger React Hook Form validation first to ensure state is updated
+                // Then run custom validation
+                await trigger(`versions.0.${fieldName}`);
                 validate();
               }
             }}
-            onBlur={validate}
+            onBlur={() => {
+              if (validate) {
+                validate();
+              }
+            }}
             values={authors || []}
             noOptionsMessage={({ inputValue }) =>
               `Sorry, no authors match ${inputValue}`

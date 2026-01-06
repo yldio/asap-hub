@@ -1,5 +1,6 @@
 import { UserDegree, UserPatchRequest } from '@asap-hub/model';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   FormSection,
   LabeledDropdown,
@@ -45,6 +46,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   onSave = noop,
   backHref,
 }) => {
+  const navigate = useNavigate();
   const [newFirstName, setNewFirstName] = useState<string>(firstName);
   const [newMiddleName, setNewMiddleName] = useState<string>(middleName);
   const [newLastName, setNewLastName] = useState<string>(lastName);
@@ -73,8 +75,8 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
         newStateOrProvince !== stateOrProvince
       }
       backHref={backHref}
-      onSave={() =>
-        onSave(
+      onSave={async () => {
+        await onSave(
           Object.fromEntries(
             Object.entries({
               firstName: newFirstName,
@@ -89,8 +91,9 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               stateOrProvince: newStateOrProvince,
             }).map(([key, value]) => [key, value.trim()]),
           ),
-        )
-      }
+        );
+        navigate(backHref);
+      }}
     >
       {({ isSaving }) => (
         <FormSection>

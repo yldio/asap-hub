@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-syntax, no-continue */
-import { sheets_v4 as sheetsV4 } from '@googleapis/sheets';
+import { GlobalOptions, sheets_v4 as sheetsV4 } from '@googleapis/sheets';
 import { GoogleAuth, JWT } from 'google-auth-library';
 import { GetJWTCredentials } from './aws-secret-manager';
 
@@ -116,7 +116,9 @@ export const getLocalSheetsClient = async () => {
     credentials,
     scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
   });
-  return new sheetsV4.Sheets({ auth });
+  return new sheetsV4.Sheets({ auth } as unknown as {
+    auth: GoogleAuth;
+  } as unknown as GlobalOptions);
 };
 
 /* istanbul ignore next */
@@ -126,7 +128,9 @@ export const getSheetsClient = async (getJWTCredentials: GetJWTCredentials) => {
     scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
   }).fromJSON(creds) as JWT;
 
-  return new sheetsV4.Sheets({ auth });
+  return new sheetsV4.Sheets({ auth } as unknown as {
+    auth: GoogleAuth;
+  } as unknown as GlobalOptions);
 };
 
 /* istanbul ignore next */

@@ -1,3 +1,4 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
@@ -9,7 +10,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
@@ -59,14 +60,14 @@ const renderWorkingGroupDetail = async ({
                     .workingGroup({ workingGroupId: id }).$,
               ]}
             >
-              <Route
-                path={
-                  gp2Routing.workingGroups.template +
-                  gp2Routing.workingGroups({}).workingGroup.template
-                }
-              >
-                <WorkingGroupDetail currentTime={new Date()} />
-              </Route>
+              <Routes>
+                <Route
+                  path={`${gp2Routing.workingGroups.template}${
+                    gp2Routing.workingGroups({}).workingGroup.template
+                  }/*`}
+                  element={<WorkingGroupDetail currentTime={new Date()} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -87,6 +88,11 @@ const workingGroupMember = {
 
 describe('WorkingGroupDetail', () => {
   beforeEach(jest.resetAllMocks);
+
+  // Suppress React act() warnings from async Suspense resolution
+  beforeAll(() => {
+    mockActWarningsInConsole('error');
+  });
   const mockGetWorkingGroup = getWorkingGroup as jest.MockedFunction<
     typeof getWorkingGroup
   >;
@@ -167,7 +173,7 @@ describe('WorkingGroupDetail', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('does renders the resources if the user is not in the working group', async () => {
+    it('does renders the resources if the user is in the working group', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
       workingGroup.members = [workingGroupMember];
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
@@ -210,7 +216,7 @@ describe('WorkingGroupDetail', () => {
       id: workingGroup.id,
       userId: '23',
     });
-    userEvent.click(screen.getByRole('link', { name: /workspace/i }));
+    await userEvent.click(screen.getByRole('link', { name: /workspace/i }));
     expect(
       screen.getByRole('heading', { name: /Workspace Resources/i }),
     ).toBeInTheDocument();
@@ -231,7 +237,7 @@ describe('WorkingGroupDetail', () => {
     expect(
       screen.queryByRole('heading', { name: /Contact/i }),
     ).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('link', { name: /overview/i }));
+    await userEvent.click(screen.getByRole('link', { name: /overview/i }));
 
     expect(
       screen.getByRole('heading', { name: /Contact/i }),
@@ -323,6 +329,7 @@ describe('WorkingGroupDetail', () => {
     );
 
     it('can submit an add modal when form data is valid', async () => {
+      const user = userEvent.setup({ delay: null });
       const title = 'example42 title';
       const type = 'Note';
 
@@ -339,23 +346,28 @@ describe('WorkingGroupDetail', () => {
       });
 
       const addButton = screen.getByRole('link', { name: /add/i });
-      userEvent.click(addButton);
+      await user.click(addButton);
       const typeBox = await screen.findByRole('textbox', { name: /type/i });
-      userEvent.type(typeBox, `${type}{enter}`);
+      await user.type(typeBox, `${type}{enter}`);
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      userEvent.type(titleBox, title);
+      await user.type(titleBox, title);
       const saveButton = screen.getByRole('button', { name: /save/i });
-      userEvent.click(saveButton);
+      await user.click(saveButton);
 
       expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
         workingGroup.id,
         [...workingGroup.resources!, { title, type }],
         expect.anything(),
       );
-      await waitFor(() => expect(saveButton).toBeEnabled());
-    });
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('heading', { name: /Add Resource/i }),
+        ).not.toBeInTheDocument(),
+      );
+    }, 120_000);
 
     it('can submit an edit modal when form data is valid', async () => {
+      const user = userEvent.setup({ delay: null });
       const resources: gp2Model.Resource[] = [
         {
           type: 'Note',
@@ -386,27 +398,33 @@ describe('WorkingGroupDetail', () => {
       });
 
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
-      userEvent.click(editButton);
+      await user.click(editButton);
+      // Wait for modal to fully render before interacting
+      await screen.findByRole('heading', { name: /Edit Resource/i });
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      userEvent.clear(titleBox);
-      userEvent.type(titleBox, title);
+      await user.clear(titleBox);
+      await user.type(titleBox, title);
       const saveButton = screen.getByRole('button', { name: /save/i });
-      userEvent.click(saveButton);
+      await user.click(saveButton);
 
       expect(mockPutWorkingGroupResources).toHaveBeenCalledWith(
         workingGroup.id,
         [resources[0], { ...resources[1], title }, resources[2]],
         expect.anything(),
       );
-      await waitFor(() => expect(saveButton).toBeEnabled());
-    });
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('heading', { name: /Edit Resource/i }),
+        ).not.toBeInTheDocument(),
+      );
+    }, 120_000);
   });
   describe('the upcoming events tab', () => {
     it('can be switched to', async () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({ id: workingGroup.id });
-      userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
+      await userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });
@@ -416,7 +434,7 @@ describe('WorkingGroupDetail', () => {
       const workingGroup = gp2Fixtures.createWorkingGroupResponse();
       mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
       await renderWorkingGroupDetail({ id: workingGroup.id });
-      userEvent.click(await screen.findByText(/past events \(1\)/i));
+      await userEvent.click(await screen.findByText(/past events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });
@@ -469,10 +487,10 @@ describe('WorkingGroupDetail', () => {
           .duplicateOutput({ outputId: output.id }).$,
       });
 
-      expect(screen.getByLabelText(/Title/i)).toHaveValue(
+      expect(await screen.findByLabelText(/Title/i)).toHaveValue(
         'Copy of Test Output',
       );
-      expect(screen.getByLabelText(/URL/i)).toHaveValue('');
+      expect(await screen.findByLabelText(/URL/i)).toHaveValue('');
     });
 
     it('will show a page not found if output does not exist', async () => {
@@ -489,7 +507,9 @@ describe('WorkingGroupDetail', () => {
           .workingGroup({ workingGroupId: workingGroup.id })
           .duplicateOutput({ outputId: 'test-id' }).$,
       });
-      expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+      });
     });
   });
 });

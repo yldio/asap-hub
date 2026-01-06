@@ -1,6 +1,6 @@
 import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { createInterestGroupResponse } from '@asap-hub/fixtures';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
@@ -29,7 +29,7 @@ const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: 'u42' }}>
           <WhenReady>
-            <StaticRouter>{children}</StaticRouter>
+            <StaticRouter location="/">{children}</StaticRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>

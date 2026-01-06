@@ -2,7 +2,7 @@ import { TeamProfilePage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { formatISO, subDays } from 'date-fns';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 
 import { number, select, text } from './knobs';
 import { LayoutDecorator } from './layout';
@@ -113,7 +113,7 @@ export const Normal = () => {
     route.about({}).$,
   );
   return (
-    <StaticRouter key={tab} location={route}>
+    <StaticRouter key={tab} location={route.$}>
       <TeamProfilePage {...props()}>Page Content</TeamProfilePage>
     </StaticRouter>
   );

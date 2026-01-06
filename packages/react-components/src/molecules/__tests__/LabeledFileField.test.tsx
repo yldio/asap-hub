@@ -147,7 +147,7 @@ it('calls handleFileUpload when a file is selected', async () => {
   });
   const uploadInput = screen.getByLabelText(/Upload Manuscript File/i);
 
-  userEvent.upload(uploadInput, testFile);
+  await userEvent.upload(uploadInput, testFile);
 
   await waitFor(() =>
     expect(handleFileUploadMock).toHaveBeenCalledWith(testFile),
@@ -181,7 +181,7 @@ it('calls the onRemove function when the remove button is clicked and allows for
     /Upload Manuscript File/i,
   ) as HTMLInputElement;
 
-  userEvent.upload(uploadInput, testFile);
+  await userEvent.upload(uploadInput, testFile);
 
   expect(handleFileUploadMock).toHaveBeenCalledTimes(1);
 
@@ -191,7 +191,7 @@ it('calls the onRemove function when the remove button is clicked and allows for
   const differentFile = new File(['file content'], 'file.txt', {
     type: 'text/plain',
   });
-  userEvent.upload(uploadInput, differentFile);
+  await userEvent.upload(uploadInput, differentFile);
   expect(handleFileUploadMock).toHaveBeenCalledTimes(2);
 });
 
@@ -214,8 +214,8 @@ it('trigger file upload when clicking on the add file button', async () => {
   uploadInput.click = jest.fn();
 
   expect(addFileButton).toBeInTheDocument();
-  await waitFor(() => {
-    userEvent.click(addFileButton);
+  await waitFor(async () => {
+    await userEvent.click(addFileButton);
   });
 
   expect(uploadInput.click).toHaveBeenCalled();

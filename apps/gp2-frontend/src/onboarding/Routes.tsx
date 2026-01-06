@@ -1,7 +1,7 @@
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Frame from '../Frame';
 import Onboarding from './Onboarding';
 
@@ -29,7 +29,7 @@ const Preview = lazy(loadPreview);
 
 const { onboarding } = gp2;
 
-const Routes: React.FC<Record<string, never>> = () => {
+const RoutesComponent: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadWelcome()
@@ -39,36 +39,73 @@ const Routes: React.FC<Record<string, never>> = () => {
       .then(loadAdditionalDetails)
       .then(loadPreview);
   }, []);
-  const { path } = useRouteMatch();
 
   return (
-    <Switch>
-      <Route exact path={path}>
-        <Welcome />
-      </Route>
-      <Frame title={null}>
-        <Onboarding>
+    <Routes>
+      <Route index element={<Welcome />} />
+      <Route
+        path={`${onboarding({}).coreDetails.template}/*`}
+        element={
           <Frame title={null}>
-            <Route path={onboarding({}).coreDetails({}).$}>
-              <CoreDetails />
-            </Route>
-            <Route path={onboarding({}).background({}).$}>
-              <Background />
-            </Route>
-            <Route path={onboarding({}).groups({}).$}>
-              <Groups />
-            </Route>
-            <Route path={onboarding({}).additionalDetails({}).$}>
-              <AdditionalDetails />
-            </Route>
-            <Route path={onboarding({}).preview({}).$}>
-              <Preview />
-            </Route>
+            <Onboarding>
+              <Frame title={null}>
+                <CoreDetails />
+              </Frame>
+            </Onboarding>
           </Frame>
-        </Onboarding>
-      </Frame>
-      <Route component={NotFoundPage} />
-    </Switch>
+        }
+      />
+      <Route
+        path={`${onboarding({}).background.template}/*`}
+        element={
+          <Frame title={null}>
+            <Onboarding>
+              <Frame title={null}>
+                <Background />
+              </Frame>
+            </Onboarding>
+          </Frame>
+        }
+      />
+      <Route
+        path={onboarding({}).groups.template}
+        element={
+          <Frame title={null}>
+            <Onboarding>
+              <Frame title={null}>
+                <Groups />
+              </Frame>
+            </Onboarding>
+          </Frame>
+        }
+      />
+      <Route
+        path={`${onboarding({}).additionalDetails.template}/*`}
+        element={
+          <Frame title={null}>
+            <Onboarding>
+              <Frame title={null}>
+                <AdditionalDetails />
+              </Frame>
+            </Onboarding>
+          </Frame>
+        }
+      />
+      <Route
+        path={`${onboarding({}).preview.template}/*`}
+        element={
+          <Frame title={null}>
+            <Onboarding>
+              <Frame title={null}>
+                <Preview />
+              </Frame>
+            </Onboarding>
+          </Frame>
+        }
+      />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 };
-export default Routes;
+
+export default RoutesComponent;

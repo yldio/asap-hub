@@ -9,7 +9,6 @@ import {
   ReactNode,
 } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Location } from 'history';
 import { css } from '@emotion/react';
 import { tags } from '@asap-hub/routing';
 
@@ -36,6 +35,7 @@ import { tagSearchIcon } from '../icons';
 import { rem } from '../pixels';
 import { Navigation } from '../atoms/NavigationLink';
 import { LoadingUserButton, LoadingMenu } from './LoadingLayout';
+import { useScrollToHash } from '../routing';
 
 const UserMenuButton = lazy(
   () =>
@@ -231,14 +231,15 @@ const Layout: FC<LayoutProps> = ({
 }) => {
   const [menuShown, setMenuShown] = useState(false);
 
-  let location: Location | undefined;
-  let prevLocation: Location | undefined;
+  let location: ReturnType<typeof useLocation> | undefined;
+  let prevLocation: ReturnType<typeof useLocation> | undefined;
   const mainRef = createRef<HTMLDivElement>();
   // This hook *is* called unconditionally despite what rules-of-hooks says
   /* eslint-disable react-hooks/rules-of-hooks */
   try {
     location = useLocation();
     prevLocation = usePrevious(location);
+    useScrollToHash();
   } catch {
     // If there is no router, fine, never auto-close the menu
   }

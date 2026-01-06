@@ -62,6 +62,7 @@ type EventPageProps<
       documentType: T[number]['documentType'],
     ) => EmotionJSX.Element;
     readonly hasFinished?: boolean;
+    readonly children?: ReactNode;
   };
 const EventPage = <
   T extends

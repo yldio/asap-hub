@@ -10,14 +10,14 @@ import {
 const Field = () => {
   useAutoResizer();
   const sdk = useSDK<FieldAppSDK>();
-  const [value, setValue] = useFieldValue();
+  const [value, setValue] = useFieldValue<string | undefined>();
   const exclude = sdk.parameters.instance.exclude
     .split(',')
     .map((s: string) => s.trim());
 
   const values: unknown[] = Object.keys(sdk.entry.fields).reduce(
     (arr: unknown[], field: string): unknown[] => {
-      const [val] = useFieldValue(field);
+      const [val] = useFieldValue<string | undefined>(field);
       if (!exclude.includes(field) && field !== sdk.field.id) {
         return [...arr, val];
       }

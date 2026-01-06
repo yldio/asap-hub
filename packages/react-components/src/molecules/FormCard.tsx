@@ -7,6 +7,7 @@ export type FormCardProps = {
   title?: string;
   description?: string | React.ReactNode;
   headerDecorator?: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 const cardStyles = css({

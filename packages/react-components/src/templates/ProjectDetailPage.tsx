@@ -5,6 +5,7 @@ import PageConstraints from './PageConstraints';
 type ProjectDetailPageProps = ProjectDetail & {
   readonly pointOfContactEmail?: string;
   readonly aboutHref: string;
+  readonly children?: React.ReactNode;
 };
 
 const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({

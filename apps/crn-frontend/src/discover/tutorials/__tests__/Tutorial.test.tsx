@@ -1,7 +1,7 @@
 import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { TutorialsResponse } from '@asap-hub/model';
 import { discover } from '@asap-hub/routing';
 
@@ -44,15 +44,16 @@ const renderPage = async () => {
                   .$,
               ]}
             >
-              <Route
-                path={
-                  discover.template +
-                  discover({}).tutorials.template +
-                  discover({}).tutorials({}).tutorial.template
-                }
-              >
-                <Tutorial />
-              </Route>
+              <Routes>
+                <Route
+                  path={
+                    discover.template +
+                    discover({}).tutorials.template +
+                    discover({}).tutorials({}).tutorial.template
+                  }
+                  element={<Tutorial />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

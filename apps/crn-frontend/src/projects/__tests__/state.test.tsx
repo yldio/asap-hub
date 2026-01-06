@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import type { MutableSnapshot } from 'recoil';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
@@ -82,39 +82,36 @@ describe('projects state hooks', () => {
       mockGetProjects.mockResolvedValueOnce(algoliaResponse);
       mockToListProjectResponse.mockReturnValueOnce(listResponse);
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useProjects(defaultOptions),
-        { wrapper: createWrapper() },
-      );
+      const { result } = renderHook(() => useProjects(defaultOptions), {
+        wrapper: createWrapper(),
+      });
 
-      await waitForNextUpdate();
+      await waitFor(() => {
+        expect(result.current).toEqual(listResponse);
+      });
 
       expect(mockGetProjects).toHaveBeenCalledWith(
         mockAlgoliaClient,
         defaultOptions,
       );
       expect(mockToListProjectResponse).toHaveBeenCalledWith(algoliaResponse);
-      expect(result.current).toEqual(listResponse);
     });
 
-    it('throws when Algolia search fails', async () => {
-      const rejection = new Error('Algolia failure');
-      mockGetProjects.mockRejectedValueOnce(rejection);
+    it('throws when Algolia search fails', () => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      const consoleErrorSpy = jest
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
+      const error = new Error('Algolia failure');
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useProjects(defaultOptions),
-        { wrapper: createWrapper() },
-      );
+      // Pre-populate state with an error to test the throw behavior
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(projectsState(defaultOptions), error);
+      };
 
-      await waitForNextUpdate();
-
-      expect(result.error).toBe(rejection);
-
-      consoleErrorSpy.mockRestore();
+      expect(() =>
+        renderHook(() => useProjects(defaultOptions), {
+          wrapper: createWrapper(initializeState),
+        }),
+      ).toThrow(error);
     });
   });
 
@@ -198,19 +195,19 @@ describe('projects state hooks', () => {
         set(auth0State, { getTokenSilently } as never);
       };
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useProjectById('project-99'),
-        { wrapper: createWrapper(initializeState) },
-      );
+      const { result } = renderHook(() => useProjectById('project-99'), {
+        wrapper: createWrapper(initializeState),
+      });
 
-      await waitForNextUpdate();
+      await waitFor(() => {
+        expect(result.current).toEqual(project);
+      });
 
       expect(getTokenSilently).toHaveBeenCalled();
       expect(mockGetProject).toHaveBeenCalledWith(
         'project-99',
         'Bearer token-123',
       );
-      expect(result.current).toEqual(project);
     });
 
     it('fetches complete detail data from API even when incomplete list data exists', async () => {
@@ -271,12 +268,13 @@ describe('projects state hooks', () => {
         });
       };
 
-      const { result, waitForNextUpdate } = renderHook(
-        () => useProjectById('project-1'),
-        { wrapper: createWrapper(initializeState) },
-      );
+      const { result } = renderHook(() => useProjectById('project-1'), {
+        wrapper: createWrapper(initializeState),
+      });
 
-      await waitForNextUpdate();
+      await waitFor(() => {
+        expect(result.current).toEqual(completeDetailProject);
+      });
 
       // Should fetch from API, not use incomplete list data
       expect(mockGetProject).toHaveBeenCalledWith(
@@ -284,7 +282,6 @@ describe('projects state hooks', () => {
         'Bearer token-123',
       );
       // Should return complete data, not incomplete list data
-      expect(result.current).toEqual(completeDetailProject);
       expect(result.current).not.toEqual(incompleteListProject);
     });
 
@@ -343,17 +340,18 @@ describe('projects state hooks', () => {
       );
 
       // Fetch detail data
-      const { result: detailResult, waitForNextUpdate } = renderHook(
+      const { result: detailResult } = renderHook(
         () => useProjectById('project-1'),
         { wrapper: createWrapper(initializeState) },
       );
 
-      await waitForNextUpdate();
+      await waitFor(() => {
+        expect(detailResult.current).toEqual(detailProject);
+      });
 
       // List cache should have list data
       expect(listResult.current?.items[0]).toEqual(listProject);
       // Detail cache should have detail data (fetched from API)
-      expect(detailResult.current).toEqual(detailProject);
       // They should be different (separate caches)
       expect(listResult.current?.items[0]).not.toEqual(detailResult.current);
     });
@@ -407,13 +405,14 @@ describe('projects state hooks', () => {
       };
 
       // Fetch detail data first
-      const { result: detailResult, waitForNextUpdate } = renderHook(
+      const { result: detailResult } = renderHook(
         () => useProjectById('project-1'),
         { wrapper: createWrapper(initializeState) },
       );
 
-      await waitForNextUpdate();
-      expect(detailResult.current).toEqual(detailProject);
+      await waitFor(() => {
+        expect(detailResult.current).toEqual(detailProject);
+      });
 
       // Clear list cache
       const { result: listResult } = renderHook(

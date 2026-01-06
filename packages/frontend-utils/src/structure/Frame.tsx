@@ -16,13 +16,14 @@ type FrameProps = {
 
 type FrameBoundaryProps = {
   title: string | null; // explicit null, omitting prop not allowed to make sure title is not forgotten when adding a page
+  children?: ReactNode;
   boundaryProps?: Omit<ComponentProps<typeof ErrorBoundary>, 'children'>;
   fallback?: ComponentProps<typeof Suspense>['fallback'];
 };
 
 const Frame = ({ fallback, children, title }: FrameProps) => (
   <Titled
-    title={(parentTitle) =>
+    title={(parentTitle: string) =>
       title ? (parentTitle ? `${title} | ${parentTitle}` : title) : parentTitle
     }
   >

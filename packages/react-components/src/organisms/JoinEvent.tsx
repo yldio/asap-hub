@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import {
   MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
@@ -13,6 +12,7 @@ import { layoutStyles } from '../text';
 import { rem, mobileScreen } from '../pixels';
 import { mailToSupport } from '../mail';
 import { useDateHasPassed } from '../date';
+import { useInterval } from '../hooks';
 
 const REFRESH_INTERVAL_SECONDS = 60;
 
@@ -45,16 +45,13 @@ const JoinEvent: React.FC<JoinEventProps> = ({
   const hasStarted = useDateHasPassed(considerStartedAfter);
   const hasEnded = useDateHasPassed(considerEndedAfter(endDate));
 
-  useEffect(() => {
-    const refreshInterval = globalThis.setInterval(() => {
-      if (!meetingLink && startRefreshing && !hasEnded) {
-        onRefresh();
-      }
-    }, REFRESH_INTERVAL_SECONDS * 1000);
-    return () => {
-      globalThis.clearInterval(refreshInterval);
-    };
-  }, [meetingLink, startRefreshing, hasEnded, onRefresh]);
+  // Use interval to periodically refresh when conditions are met
+  // The callback always has access to the latest values via React's closure
+  useInterval(() => {
+    if (!meetingLink && startRefreshing && !hasEnded) {
+      onRefresh();
+    }
+  }, REFRESH_INTERVAL_SECONDS * 1000);
 
   if (hasEnded) {
     return null;

@@ -1,7 +1,12 @@
 import { authTestUtils } from '@asap-hub/gp2-components';
 import { useFlags } from '@asap-hub/react-context';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import {
+  cleanup,
+  render,
+  screen,
+  waitFor,
+  renderHook,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { getConsentCookie } from '@asap-hub/frontend-utils';
@@ -125,7 +130,7 @@ describe('Cookie Modal & Button', () => {
     });
 
     render(<App />);
-    userEvent.click(screen.getByText('Save and close'));
+    await userEvent.click(screen.getByText('Save and close'));
 
     await waitFor(() => {
       expect(screen.getByTestId('cookie-button')).toBeInTheDocument();
@@ -151,16 +156,21 @@ describe('Cookie Modal & Button', () => {
       mockCookiesPreferences,
     )};`;
 
-    // Mock fetch for consistency check (GET request)
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve(mockCookiesPreferences),
+    // Mock fetch to only handle cookie-preferences requests (like CRN test)
+    (global.fetch as jest.Mock).mockImplementation((url: string) => {
+      if (url.includes('/cookie-preferences/')) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockCookiesPreferences),
+        });
+      }
+      return Promise.reject(new Error('Unexpected fetch call'));
     });
 
     render(<App />);
 
     const cookieButton = await screen.findByTestId('cookie-button');
-    userEvent.click(cookieButton);
+    await userEvent.click(cookieButton);
 
     await waitFor(() => {
       expect(

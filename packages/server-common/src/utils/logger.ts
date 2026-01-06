@@ -61,7 +61,7 @@ export const getHttpLogger = ({
   customProps?: PinoHttpOptions['customProps'];
 }) =>
   pinoHttp({
-    logger,
+    logger: logger as PinoLogger<never>,
     serializers,
     customProps,
   });

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { createListUserResponse } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import {
@@ -38,7 +38,9 @@ const renderUserList = async () => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/users']}>
-              <Route path="/users" component={UserList} />
+              <Routes>
+                <Route path="/users" element={<UserList />} />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

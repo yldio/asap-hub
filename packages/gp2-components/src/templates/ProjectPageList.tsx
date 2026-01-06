@@ -4,6 +4,7 @@ import { ComponentProps } from 'react';
 
 type ProjectPageListProps = {
   hasProjects: boolean;
+  children?: React.ReactNode;
 } & Pick<
   ComponentProps<typeof SearchAndFilter>,
   'filters' | 'onChangeFilter' | 'onChangeSearch' | 'searchQuery'

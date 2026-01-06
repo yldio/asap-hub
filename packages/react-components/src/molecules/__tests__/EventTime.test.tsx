@@ -55,7 +55,7 @@ describe('the date', () => {
 });
 
 describe('a tooltip', () => {
-  it('is shown mentioning the original timezone once if the same for start and end date', () => {
+  it('is shown mentioning the original timezone once if the same for start and end date', async () => {
     const { getByTitle, getByRole } = render(
       <EventTime
         startDate={new Date('2021-01-26T09:00:00Z').toISOString()}
@@ -64,14 +64,14 @@ describe('a tooltip', () => {
         endDateTimeZone="Europe/Berlin"
       />,
     );
-    userEvent.click(getByTitle(/info/i));
+    await userEvent.click(getByTitle(/info/i));
     expect(getByRole('tooltip')).toHaveTextContent(
       /\D10:00\D.*\D11:00\D.*GMT\+1\D/,
     );
     expect(getByRole('tooltip')).not.toHaveTextContent(/GMT\+1\D.*GMT\+1\D/);
   });
 
-  it('is shown mentioning the original start and end timezones', () => {
+  it('is shown mentioning the original start and end timezones', async () => {
     const { getByTitle, getByRole } = render(
       <EventTime
         startDate={new Date('2021-01-26T09:00:00Z').toISOString()}
@@ -80,7 +80,7 @@ describe('a tooltip', () => {
         endDateTimeZone="Europe/Tallinn"
       />,
     );
-    userEvent.click(getByTitle(/info/i));
+    await userEvent.click(getByTitle(/info/i));
     expect(getByRole('tooltip')).toHaveTextContent(
       /\D10:00\D.*GMT\+1\D.*\D12:00\D.*GMT\+2\D/,
     );

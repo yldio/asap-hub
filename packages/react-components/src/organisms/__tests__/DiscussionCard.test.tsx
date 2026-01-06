@@ -8,6 +8,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ManuscriptDiscussion } from '@asap-hub/model';
 import DiscussionCard from '../DiscussionCard';
+import { mockActErrorsInConsole } from '../../test-utils';
 
 const mockOnMarkDiscussionAsRead = jest.fn();
 const mockDiscussion: ManuscriptDiscussion = {
@@ -91,7 +92,7 @@ describe('DiscussionCard', () => {
     const expandButton = screen.getByTestId(
       'discussion-collapsible-button-discussion-1',
     );
-    userEvent.click(expandButton);
+    await userEvent.click(expandButton);
 
     await waitFor(() => {
       expect(screen.getByText('Test discussion content')).toBeInTheDocument();
@@ -222,7 +223,7 @@ describe('DiscussionCard', () => {
     });
   });
 
-  it('collapses when clicking the collapse button', () => {
+  it('collapses when clicking the collapse button', async () => {
     render(
       <DiscussionCard
         manuscriptId="manuscript-1"
@@ -235,10 +236,10 @@ describe('DiscussionCard', () => {
     const expandButton = screen.getByTestId(
       'discussion-collapsible-button-discussion-1',
     );
-    userEvent.click(expandButton);
+    await userEvent.click(expandButton);
     expect(screen.getByText('Test discussion content')).toBeInTheDocument();
 
-    userEvent.click(expandButton);
+    await userEvent.click(expandButton);
     expect(
       screen.queryByText('Test discussion content'),
     ).not.toBeInTheDocument();
@@ -258,7 +259,7 @@ describe('DiscussionCard', () => {
     const expandButton = screen.getByTestId(
       'discussion-collapsible-button-discussion-1',
     );
-    userEvent.click(expandButton);
+    await userEvent.click(expandButton);
 
     await waitFor(() => {
       expect(screen.getByText('Reply')).toBeInTheDocument();
@@ -279,7 +280,7 @@ describe('DiscussionCard', () => {
     const expandButton = screen.getByTestId(
       'discussion-collapsible-button-discussion-1',
     );
-    userEvent.click(expandButton);
+    await userEvent.click(expandButton);
 
     await waitFor(() => {
       expect(screen.queryByText('Reply')).not.toBeInTheDocument();
@@ -300,18 +301,21 @@ describe('DiscussionCard', () => {
     const expandButton = screen.getByTestId(
       'discussion-collapsible-button-discussion-1',
     );
-    userEvent.click(expandButton);
+    await userEvent.click(expandButton);
 
-    await waitFor(() => {
+    await waitFor(async () => {
       const replyButton = screen.getByText('Reply');
       expect(replyButton).toBeInTheDocument();
-      userEvent.click(replyButton);
+      await userEvent.click(replyButton);
     });
 
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
   it('handles reply submission correctly', async () => {
+    // Suppress act() warnings from react-hook-form's internal state updates
+    const consoleMock = mockActErrorsInConsole();
+
     render(
       <DiscussionCard
         manuscriptId="manuscript-1"
@@ -325,22 +329,22 @@ describe('DiscussionCard', () => {
     const expandButton = screen.getByTestId(
       'discussion-collapsible-button-discussion-1',
     );
-    userEvent.click(expandButton);
-    await waitFor(() => {
+    await userEvent.click(expandButton);
+    await waitFor(async () => {
       const replyButton = screen.getByText('Reply');
       expect(replyButton).toBeInTheDocument();
-      userEvent.click(replyButton);
+      await userEvent.click(replyButton);
     });
 
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
     const saveButton = screen.getByRole('button', { name: /send/i });
-    userEvent.click(saveButton);
+    await userEvent.click(saveButton);
 
     await waitFor(() => {
       expect(mockOnReplyToDiscussion).toHaveBeenCalledWith(
@@ -349,6 +353,8 @@ describe('DiscussionCard', () => {
         { text: 'test message', manuscriptId: 'manuscript-1' },
       );
     });
+
+    consoleMock.mockRestore();
   });
 
   it('renders without replies when displayReplyButton is true', async () => {
@@ -371,7 +377,7 @@ describe('DiscussionCard', () => {
     const expandButton = screen.getByTestId(
       'discussion-collapsible-button-discussion-1',
     );
-    userEvent.click(expandButton);
+    await userEvent.click(expandButton);
     await waitFor(() => {
       expect(screen.getByText('Reply')).toBeInTheDocument();
     });
@@ -397,7 +403,7 @@ describe('DiscussionCard', () => {
     const expandButton = screen.getByTestId(
       'discussion-collapsible-button-discussion-1',
     );
-    userEvent.click(expandButton);
+    await userEvent.click(expandButton);
     await waitFor(() => {
       expect(screen.queryByText('Reply')).not.toBeInTheDocument();
     });
@@ -433,7 +439,7 @@ describe('DiscussionCard', () => {
     const expandButton = screen.getByTestId(
       'discussion-collapsible-button-discussion-1',
     );
-    userEvent.click(expandButton);
+    await userEvent.click(expandButton);
 
     await waitFor(() => {
       expect(screen.getByText('Team 1')).toBeInTheDocument();

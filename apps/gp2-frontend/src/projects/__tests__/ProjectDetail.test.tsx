@@ -2,6 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import {
+  fireEvent,
   render,
   screen,
   waitFor,
@@ -9,7 +10,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
@@ -54,14 +55,14 @@ const renderProjectDetail = async ({
                 route || gp2Routing.projects({}).project({ projectId: id }).$,
               ]}
             >
-              <Route
-                path={
-                  gp2Routing.projects.template +
-                  gp2Routing.projects({}).project.template
-                }
-              >
-                <ProjectDetail currentTime={new Date()} />
-              </Route>
+              <Routes>
+                <Route
+                  path={`${gp2Routing.projects.template}${
+                    gp2Routing.projects({}).project.template
+                  }/*`}
+                  element={<ProjectDetail currentTime={new Date()} />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -103,6 +104,9 @@ describe('ProjectDetail', () => {
   beforeEach(() => {
     mockGetOutputs.mockResolvedValue(createOutputListAlgoliaResponse(1));
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
+  });
+  afterEach(() => {
+    jest.clearAllTimers();
   });
   it('renders header with title', async () => {
     const project = gp2Fixtures.createProjectResponse();
@@ -189,6 +193,7 @@ describe('ProjectDetail', () => {
   });
 
   it('clicking on the resource tab loads the resources', async () => {
+    const user = userEvent.setup({ delay: null });
     const project = gp2Fixtures.createProjectResponse();
     project.members = [projectMember];
     mockGetProject.mockResolvedValueOnce(project);
@@ -196,13 +201,14 @@ describe('ProjectDetail', () => {
       id: project.id,
       userId: '23',
     });
-    userEvent.click(screen.getByRole('link', { name: /workspace/i }));
+    await user.click(screen.getByRole('link', { name: /workspace/i }));
     expect(
       screen.getByRole('heading', { name: /Workspace Resources/i }),
     ).toBeInTheDocument();
   });
 
   it('clicking on the overview tab loads the resources', async () => {
+    const user = userEvent.setup({ delay: null });
     const project = gp2Fixtures.createProjectResponse();
     project.members = [projectMember];
     mockGetProject.mockResolvedValueOnce(project);
@@ -217,7 +223,7 @@ describe('ProjectDetail', () => {
     expect(
       screen.queryByRole('heading', { name: /Contact/i }),
     ).not.toBeInTheDocument();
-    userEvent.click(screen.getByRole('link', { name: /overview/i }));
+    await user.click(screen.getByRole('link', { name: /overview/i }));
 
     expect(
       screen.getByRole('heading', { name: /Contact/i }),
@@ -334,6 +340,7 @@ describe('ProjectDetail', () => {
     );
 
     it('can submit an add modal when form data is valid', async () => {
+      const user = userEvent.setup({ delay: null });
       const title = 'example42 title';
       const type = 'Note';
 
@@ -350,23 +357,28 @@ describe('ProjectDetail', () => {
       });
 
       const addButton = screen.getByRole('link', { name: /add/i });
-      userEvent.click(addButton);
+      await user.click(addButton);
       const typeBox = await screen.findByRole('textbox', { name: /type/i });
-      userEvent.type(typeBox, `${type}{enter}`);
+      await user.type(typeBox, `${type}{enter}`);
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      userEvent.type(titleBox, title);
+      fireEvent.change(titleBox, { target: { value: title } });
       const saveButton = screen.getByRole('button', { name: /save/i });
-      userEvent.click(saveButton);
+      await user.click(saveButton);
 
       expect(mockPutProjectResources).toHaveBeenCalledWith(
         project.id,
         [...project.resources!, { title, type }],
         expect.anything(),
       );
-      await waitFor(() => expect(saveButton).toBeEnabled());
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('heading', { name: /Add Resource/i }),
+        ).not.toBeInTheDocument(),
+      );
     });
 
     it('can submit an edit modal when form data is valid', async () => {
+      const user = userEvent.setup({ delay: null });
       const resources: gp2Model.Resource[] = [
         {
           type: 'Note',
@@ -397,37 +409,43 @@ describe('ProjectDetail', () => {
       });
 
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
-      userEvent.click(editButton);
+      await user.click(editButton);
+      await screen.findByRole('heading', { name: /Edit Resource/i });
       const titleBox = screen.getByRole('textbox', { name: /title/i });
-      userEvent.clear(titleBox);
-      userEvent.type(titleBox, title);
+      fireEvent.change(titleBox, { target: { value: title } });
       const saveButton = screen.getByRole('button', { name: /save/i });
-      userEvent.click(saveButton);
+      await user.click(saveButton);
 
       expect(mockPutProjectResources).toHaveBeenCalledWith(
         project.id,
         [resources[0], { ...resources[1], title }, resources[2]],
         expect.anything(),
       );
-      await waitFor(() => expect(saveButton).toBeEnabled());
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('heading', { name: /Edit Resource/i }),
+        ).not.toBeInTheDocument(),
+      );
     });
   });
   describe('the upcoming events tab', () => {
     it('can be switched to', async () => {
+      const user = userEvent.setup({ delay: null });
       const project = gp2Fixtures.createProjectResponse();
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id });
-      userEvent.click(await screen.findByText(/upcoming events \(1\)/i));
+      await user.click(await screen.findByText(/upcoming events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });
 
   describe('the past events tab', () => {
     it('can be switched to', async () => {
+      const user = userEvent.setup({ delay: null });
       const project = gp2Fixtures.createProjectResponse();
       mockGetProject.mockResolvedValueOnce(project);
       await renderProjectDetail({ id: project.id });
-      userEvent.click(await screen.findByText(/past events \(1\)/i));
+      await user.click(await screen.findByText(/past events \(1\)/i));
       expect(await screen.findByText(/Event 0/i)).toBeVisible();
     });
   });
@@ -489,7 +507,7 @@ describe('ProjectDetail', () => {
         projects: [project],
       });
 
-      expect(screen.getByLabelText(/Title/i)).toHaveValue(
+      expect(await screen.findByLabelText(/Title/i)).toHaveValue(
         'Copy of Test Output',
       );
       expect(screen.getByLabelText(/URL/i)).toHaveValue('');
@@ -518,7 +536,9 @@ describe('ProjectDetail', () => {
           .duplicateOutput({ outputId: 'test-id' }).$,
         projects: [project],
       });
-      expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+      });
     });
   });
 });

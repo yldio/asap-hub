@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { format, utcToZonedTime } from 'date-fns-tz';
 
 import { getLocalTimezone } from './localization';
+import { useInterval } from './hooks';
 
 export const formatDate = (date: Date): string => format(date, 'do MMMM yyyy');
 export const formatDateAndWeekday = (date: Date): string =>
@@ -32,11 +33,10 @@ export const formatProjectDate = (dateString: string): string => {
 const UPDATE_INTERVAL_SECONDS = 10;
 export const useDateHasPassed = (date: string | Date): boolean => {
   const [hasPassed, setPassed] = useState(new Date() > new Date(date));
-  useEffect(() => {
-    const updateInterval = globalThis.setInterval(() => {
-      setPassed(new Date() > new Date(date));
-    }, UPDATE_INTERVAL_SECONDS * 1000);
-    return () => globalThis.clearInterval(updateInterval);
-  }, [date]);
+
+  useInterval(() => {
+    setPassed(new Date() > new Date(date));
+  }, UPDATE_INTERVAL_SECONDS * 1000);
+
   return hasPassed;
 };

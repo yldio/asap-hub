@@ -6,7 +6,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { PAGE_SIZE } from '../../hooks';
@@ -77,9 +77,14 @@ const renderUserList = async ({
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/users/']}>
-              <Route path="/users">
-                <UserList searchQuery={searchQuery} filters={filters} />
-              </Route>
+              <Routes>
+                <Route
+                  path="/users"
+                  element={
+                    <UserList searchQuery={searchQuery} filters={filters} />
+                  }
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

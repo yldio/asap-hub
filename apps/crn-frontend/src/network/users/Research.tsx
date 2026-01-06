@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import { usePatchUserById } from './state';
 import InterestGroupsCard from './interest-groups/InterestGroupsCard';
@@ -23,7 +23,6 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
   const researchTagsSuggestions = useResearchTags();
 
   const { id } = useCurrentUserCRN() ?? {};
-  const { path } = useRouteMatch();
   const route = network({}).users({}).user({ userId: user.id }).research({});
 
   const patchUser = usePatchUserById(user.id);
@@ -68,36 +67,45 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         isOwnProfile={id === user.id}
       />
       {id === user.id && (
-        <>
-          <Route path={path + route.editRole.template}>
-            <Frame title="Edit Role">
-              <RoleModal
-                {...commonModalProps}
-                teams={user.teams}
-                labs={user.labs}
-                researchInterests={user.researchInterests}
-                responsibilities={user.responsibilities}
-                role={user.role}
-                reachOut={user.reachOut}
-                firstName={user.firstName}
-              />
-            </Frame>
-          </Route>
-          <Route path={path + route.editQuestions.template}>
-            <Frame title="Edit Open Questions">
-              <OpenQuestionsModal {...user} {...commonModalProps} />
-            </Frame>
-          </Route>
-          <Route path={path + route.editExpertiseAndResources.template}>
-            <Frame title="Edit Expertise and Resources">
-              <ExpertiseAndResourcesModal
-                {...user}
-                {...commonModalProps}
-                suggestions={researchTagsSuggestions}
-              />
-            </Frame>
-          </Route>
-        </>
+        <Routes>
+          <Route
+            path={route.editRole.template}
+            element={
+              <Frame title="Edit Role">
+                <RoleModal
+                  {...commonModalProps}
+                  teams={user.teams}
+                  labs={user.labs}
+                  researchInterests={user.researchInterests}
+                  responsibilities={user.responsibilities}
+                  role={user.role}
+                  reachOut={user.reachOut}
+                  firstName={user.firstName}
+                />
+              </Frame>
+            }
+          />
+          <Route
+            path={route.editQuestions.template}
+            element={
+              <Frame title="Edit Open Questions">
+                <OpenQuestionsModal {...user} {...commonModalProps} />
+              </Frame>
+            }
+          />
+          <Route
+            path={route.editExpertiseAndResources.template}
+            element={
+              <Frame title="Edit Expertise and Resources">
+                <ExpertiseAndResourcesModal
+                  {...user}
+                  {...commonModalProps}
+                  suggestions={researchTagsSuggestions}
+                />
+              </Frame>
+            }
+          />
+        </Routes>
       )}
     </>
   );

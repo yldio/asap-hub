@@ -29,13 +29,13 @@ it('adds toast messages in order', () => {
   expect(getByRole('list')).toHaveTextContent(/t1.*t2/);
 });
 
-it('can close toast messages', () => {
+it('can close toast messages', async () => {
   const { getByText, getByRole } = render(
     <ToastStack>
       <TwoToasts />
     </ToastStack>,
   );
-  userEvent.click(getByTitle(getByText('t1').closest('li')!, /close/i));
+  await userEvent.click(getByTitle(getByText('t1').closest('li')!, /close/i));
   expect(getByRole('list')).toHaveTextContent('t2');
   expect(getByRole('list')).not.toHaveTextContent('t1');
 });

@@ -4,6 +4,7 @@ import { SearchField } from '../molecules';
 type EventSearchProps = {
   searchQuery?: ComponentProps<typeof SearchField>['value'];
   onChangeSearchQuery?: ComponentProps<typeof SearchField>['onChange'];
+  children?: React.ReactNode;
 };
 const EventSearch: React.FC<EventSearchProps> = ({
   searchQuery,

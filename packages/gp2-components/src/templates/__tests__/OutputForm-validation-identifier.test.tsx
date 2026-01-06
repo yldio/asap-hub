@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import OutputForm from '../OutputForm';
 
 describe('OutputForm', () => {
@@ -22,7 +22,7 @@ describe('OutputForm', () => {
   describe('validation', () => {
     it('shows error message for missing value identifier type', () => {
       render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <OutputForm {...defaultProps} documentType="Article" />
         </StaticRouter>,
       );

@@ -8,7 +8,8 @@ const Field = () => {
 
   const { observedField } = sdk.parameters.instance;
   const [observedFieldValue] = useFieldValue(observedField);
-  const [currentFieldValue, setCurrentFieldValue] = useFieldValue();
+  const [currentFieldValue, setCurrentFieldValue] =
+    useFieldValue<React.ReactNode | null>();
   const firstUpdate = useRef(true);
 
   useEffect(() => {

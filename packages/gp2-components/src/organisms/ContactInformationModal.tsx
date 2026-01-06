@@ -11,6 +11,7 @@ import {
 } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { mobileQuery } from '../layout';
 import { ContactSupport } from '../molecules';
 import EditUserModal from './EditUserModal';
@@ -42,6 +43,7 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
   telephone,
   countryCodeSuggestions,
 }) => {
+  const navigate = useNavigate();
   const [newAlternativeEmail, setNewAlternativeEmail] = useState(
     alternativeEmail || '',
   );
@@ -59,15 +61,16 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
     <EditUserModal
       title="Contact Information"
       description="Provide alternative contact details."
-      onSave={() =>
-        onSave({
+      onSave={async () => {
+        await onSave({
           alternativeEmail: newAlternativeEmail || null,
           telephone: {
             countryCode: newCountryCode || undefined,
             number: newNumber || undefined,
           },
-        })
-      }
+        });
+        navigate(backHref);
+      }}
       backHref={backHref}
       dirty={checkDirty()}
     >

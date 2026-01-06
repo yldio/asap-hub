@@ -26,12 +26,12 @@ it('renders the rich text notes', () => {
   expect(getByText('Google').tagName).toBe('A');
 });
 
-it('is collapsible when prop set', () => {
+it('is collapsible when prop set', async () => {
   const { getByText, queryByText } = render(
     <RichTextCard {...props} text="example text" collapsible />,
   );
   expect(queryByText('example text')).toBeVisible();
 
-  userEvent.click(getByText(/show/i));
+  await userEvent.click(getByText(/show/i));
   expect(getByText(/hide/i)).toBeVisible();
 });

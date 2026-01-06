@@ -1,7 +1,8 @@
 import { authTestUtils } from '@asap-hub/react-components';
 import { cleanup, render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import nock from 'nock';
 
@@ -87,7 +88,7 @@ it('syncs the auth state to recoil', async () => {
     <RecoilRoot>
       <authTestUtils.UserAuth0Provider>
         <authTestUtils.UserLoggedIn user={{}}>
-          <StaticRouter>
+          <StaticRouter location="/">
             <Suspense fallback="loading">
               <AuthenticatedApp />
             </Suspense>
@@ -115,7 +116,7 @@ it("should call setIsOnboardable if it's set", async () => {
     <RecoilRoot>
       <authTestUtils.UserAuth0Provider>
         <authTestUtils.UserLoggedIn user={{}}>
-          <StaticRouter>
+          <StaticRouter location="/">
             <Suspense fallback="loading">
               <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
             </Suspense>
@@ -168,7 +169,7 @@ it('renders the application layout correctly', async () => {
   const menu = getByText('Menu');
   expect(menu).toBeInTheDocument();
 
-  userEvent.click(menu);
+  await userEvent.click(menu);
 
   await waitFor(() => {
     expect(getByText('Team One')).toBeInTheDocument();
@@ -215,7 +216,7 @@ it('shows Projects in navigation when PROJECTS_MVP flag is enabled', async () =>
   );
 
   const menu = getByText('Menu');
-  userEvent.click(menu);
+  await userEvent.click(menu);
 
   await waitFor(() => {
     expect(getByText('Projects')).toBeInTheDocument();
@@ -243,7 +244,7 @@ it('hides Projects in navigation when PROJECTS_MVP flag is disabled', async () =
   );
 
   const menu = getByText('Menu');
-  userEvent.click(menu);
+  await userEvent.click(menu);
 
   await waitFor(() => {
     expect(

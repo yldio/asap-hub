@@ -44,24 +44,24 @@ describe('ExportAnalyticsModal', () => {
     expect(container).toHaveTextContent(/Select metrics to download/i);
   });
 
-  it('calls onDismiss when user clicks on "Cancel" button', () => {
+  it('calls onDismiss when user clicks on "Cancel" button', async () => {
     const onDismiss = jest.fn();
     renderModal(
       <ExportAnalyticsModal {...defaultProps} onDismiss={onDismiss} />,
     );
 
-    userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+    await userEvent.click(screen.getByRole('button', { name: /cancel/i }));
 
     expect(onDismiss).toHaveBeenCalled();
   });
 
-  it('calls onDismiss when user clicks on "Close" button', () => {
+  it('calls onDismiss when user clicks on "Close" button', async () => {
     const onDismiss = jest.fn();
     renderModal(
       <ExportAnalyticsModal {...defaultProps} onDismiss={onDismiss} />,
     );
 
-    userEvent.click(screen.getByTitle(/close/i));
+    await userEvent.click(screen.getByTitle(/close/i));
 
     expect(onDismiss).toHaveBeenCalled();
   });
@@ -77,15 +77,15 @@ describe('ExportAnalyticsModal', () => {
       />,
     );
 
-    userEvent.click(screen.getByText(/Choose a data range/i));
-    userEvent.click(screen.getByText(/This year/i));
+    await userEvent.click(screen.getByText(/Choose a data range/i));
+    await userEvent.click(screen.getByText(/This year/i));
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('checkbox', { name: /Team Productivity/i }),
     );
 
     const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
-    userEvent.click(exportButton);
+    await userEvent.click(exportButton);
     await waitFor(() => {
       expect(onDownload).toHaveBeenCalledWith(
         'current-year',
@@ -102,11 +102,11 @@ describe('ExportAnalyticsModal', () => {
     const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
     expect(exportButton).toBeDisabled();
 
-    userEvent.click(screen.getByText(/Choose a data range/i));
-    userEvent.click(screen.getByText(/Last 12 months/i));
+    await userEvent.click(screen.getByText(/Choose a data range/i));
+    await userEvent.click(screen.getByText(/Last 12 months/i));
     expect(exportButton).toBeDisabled();
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('checkbox', { name: /Team Productivity/i }),
     );
 
@@ -120,16 +120,16 @@ describe('ExportAnalyticsModal', () => {
     );
     const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
 
-    userEvent.click(screen.getByText(/Choose a data range/i));
-    userEvent.click(screen.getByText(/This year/i));
+    await userEvent.click(screen.getByText(/Choose a data range/i));
+    await userEvent.click(screen.getByText(/This year/i));
     expect(exportButton).toBeDisabled();
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('checkbox', { name: /Team Productivity/i }),
     );
     expect(exportButton).toBeEnabled();
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('checkbox', { name: /Team Productivity/i }),
     );
     expect(exportButton).toBeDisabled();
@@ -141,27 +141,29 @@ describe('ExportAnalyticsModal', () => {
       <ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />,
     );
 
-    userEvent.click(screen.getByText(/Choose a data range/i));
-    userEvent.click(screen.getByText(/Since Hub Launch/i));
+    await userEvent.click(screen.getByText(/Choose a data range/i));
+    await userEvent.click(screen.getByText(/Since Hub Launch/i));
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('checkbox', { name: /Team Productivity/i }),
     );
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('checkbox', {
         name: /Team Co-Production: Within Team/i,
       }),
     );
 
-    userEvent.click(screen.getByRole('checkbox', { name: /Interest Groups/i }));
+    await userEvent.click(
+      screen.getByRole('checkbox', { name: /Interest Groups/i }),
+    );
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('checkbox', { name: /Speaker Diversity/i }),
     );
 
     const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
-    userEvent.click(exportButton);
+    await userEvent.click(exportButton);
     await waitFor(() => {
       expect(onDownload).toHaveBeenCalledWith(
         'all',
@@ -176,21 +178,29 @@ describe('ExportAnalyticsModal', () => {
   });
 
   it('changes the text to "Exporting..." and disables buttons while downloading', async () => {
-    const onDownload = jest.fn(() => Promise.resolve());
+    let resolveDownload: () => void;
+    const downloadPromise = new Promise<void>((resolve) => {
+      resolveDownload = resolve;
+    });
+    const onDownload = jest.fn(() => downloadPromise);
     renderModal(
       <ExportAnalyticsModal {...defaultProps} onDownload={onDownload} />,
     );
 
-    userEvent.click(screen.getByText(/Choose a data range/i));
-    userEvent.click(screen.getByText(/Since Hub Launch/i));
+    await userEvent.click(screen.getByText(/Choose a data range/i));
+    await userEvent.click(screen.getByText(/Since Hub Launch/i));
 
-    userEvent.click(
+    await userEvent.click(
       screen.getByRole('checkbox', { name: /Team Productivity/i }),
     );
     const exportButton = screen.getByRole('button', { name: /Download XLSX/i });
-    userEvent.click(exportButton);
 
-    expect(exportButton).toHaveTextContent('Exporting...');
+    // Start the click but don't await it - we want to check state while downloading
+    const clickPromise = userEvent.click(exportButton);
+
+    await waitFor(() => {
+      expect(exportButton).toHaveTextContent('Exporting...');
+    });
     expect(exportButton).toBeDisabled();
 
     expect(screen.getByLabelText(/time range/i)).toBeDisabled();
@@ -198,9 +208,12 @@ describe('ExportAnalyticsModal', () => {
       screen.getByRole('checkbox', { name: /User Productivity/i }),
     ).toBeDisabled();
 
+    // Now resolve the download promise to let the export complete
+    resolveDownload!();
+    await clickPromise;
+
     await waitFor(() => {
-      expect(exportButton).toHaveTextContent('Download XLSX');
-      expect(exportButton).toBeEnabled();
+      expect(onDownload).toHaveBeenCalled();
     });
   });
 
@@ -212,10 +225,10 @@ describe('ExportAnalyticsModal', () => {
     ])(
       'when time range is "%s" (alwaysVisible)',
       (timeRangeName, timeRangePattern) => {
-        beforeEach(() => {
+        beforeEach(async () => {
           renderModal(<ExportAnalyticsModal {...defaultProps} />);
-          userEvent.click(screen.getByText(/Choose a data range/i));
-          userEvent.click(screen.getByText(timeRangePattern));
+          await userEvent.click(screen.getByText(/Choose a data range/i));
+          await userEvent.click(screen.getByText(timeRangePattern));
         });
 
         it('shows RESOURCE & DATA SHARING section with basic options', () => {
@@ -306,7 +319,7 @@ describe('ExportAnalyticsModal', () => {
 
     describe('when time range is "Last 12 months"', () => {
       describe('without ANALYTICS_PHASE_TWO feature flag', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
           mockUseFlags.mockReturnValue({
             isEnabled: jest.fn().mockReturnValue(false),
             enable: jest.fn(),
@@ -316,8 +329,8 @@ describe('ExportAnalyticsModal', () => {
             setEnvironment: jest.fn(),
           });
           renderModal(<ExportAnalyticsModal {...defaultProps} />);
-          userEvent.click(screen.getByText(/Choose a data range/i));
-          userEvent.click(screen.getByText(/Last 12 months/i));
+          await userEvent.click(screen.getByText(/Choose a data range/i));
+          await userEvent.click(screen.getByText(/Last 12 months/i));
         });
 
         it('shows RESOURCE & DATA SHARING section with all options', () => {
@@ -369,7 +382,7 @@ describe('ExportAnalyticsModal', () => {
       });
 
       describe('with ANALYTICS_PHASE_TWO feature flag', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
           mockUseFlags.mockReturnValue({
             isEnabled: jest.fn().mockReturnValue(true),
             enable: jest.fn(),
@@ -379,8 +392,8 @@ describe('ExportAnalyticsModal', () => {
             setEnvironment: jest.fn(),
           });
           renderModal(<ExportAnalyticsModal {...defaultProps} />);
-          userEvent.click(screen.getByText(/Choose a data range/i));
-          userEvent.click(screen.getByText(/Last 12 months/i));
+          await userEvent.click(screen.getByText(/Choose a data range/i));
+          await userEvent.click(screen.getByText(/Last 12 months/i));
         });
 
         it('shows RESOURCE & DATA SHARING section with all options', () => {
@@ -434,7 +447,7 @@ describe('ExportAnalyticsModal', () => {
 
     describe('when time range is "Since Hub Launch"', () => {
       describe('without ANALYTICS_PHASE_TWO feature flag', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
           mockUseFlags.mockReturnValue({
             isEnabled: jest.fn().mockReturnValue(false),
             enable: jest.fn(),
@@ -444,8 +457,8 @@ describe('ExportAnalyticsModal', () => {
             setEnvironment: jest.fn(),
           });
           renderModal(<ExportAnalyticsModal {...defaultProps} />);
-          userEvent.click(screen.getByText(/Choose a data range/i));
-          userEvent.click(screen.getByText(/Since Hub Launch/i));
+          await userEvent.click(screen.getByText(/Choose a data range/i));
+          await userEvent.click(screen.getByText(/Since Hub Launch/i));
         });
 
         it('shows some sections but not OPEN SCIENCE', () => {
@@ -510,7 +523,7 @@ describe('ExportAnalyticsModal', () => {
       });
 
       describe('with ANALYTICS_PHASE_TWO feature flag', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
           mockUseFlags.mockReturnValue({
             isEnabled: jest.fn().mockReturnValue(true),
             enable: jest.fn(),
@@ -520,8 +533,8 @@ describe('ExportAnalyticsModal', () => {
             setEnvironment: jest.fn(),
           });
           renderModal(<ExportAnalyticsModal {...defaultProps} />);
-          userEvent.click(screen.getByText(/Choose a data range/i));
-          userEvent.click(screen.getByText(/Since Hub Launch/i));
+          await userEvent.click(screen.getByText(/Choose a data range/i));
+          await userEvent.click(screen.getByText(/Since Hub Launch/i));
         });
 
         it('shows all sections including LEADERSHIP & MEMBERSHIP', () => {

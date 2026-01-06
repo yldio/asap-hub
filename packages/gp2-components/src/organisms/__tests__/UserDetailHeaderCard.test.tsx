@@ -1,6 +1,5 @@
 import { gp2 } from '@asap-hub/model';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render, screen } from '@testing-library/react';
 import UserDetailHeaderCard from '../UserDetailHeaderCard';
 
 describe('UserDetailHeaderCard', () => {
@@ -91,7 +90,7 @@ describe('UserDetailHeaderCard', () => {
     ).toBeInTheDocument();
   });
   it('renders upload button for avatar', () => {
-    const onImageSelect = jest.fn((file: File) => {});
+    const onImageSelect = jest.fn();
     const testFile = new File(['foo'], 'foo.png', { type: 'image/png' });
     render(
       <UserDetailHeaderCard {...defaultProps} onImageSelect={onImageSelect} />,
@@ -100,7 +99,7 @@ describe('UserDetailHeaderCard', () => {
     const uploadInput = screen.getByLabelText(/upload.+avatar/i);
     expect(editButton).toBeVisible();
     expect(uploadInput).not.toHaveAttribute('disabled');
-    userEvent.upload(uploadInput, testFile);
+    fireEvent.change(uploadInput, { target: { files: [testFile] } });
     expect(onImageSelect).toHaveBeenCalledWith(testFile);
   });
   describe('when passing a editHref', () => {

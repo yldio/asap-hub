@@ -4,9 +4,9 @@ import {
   MouseEventHandler,
   ReactElement,
   ReactNode,
-  useCallback,
   useEffect,
   useRef,
+  useState,
 } from 'react';
 import Select, {
   ActionMeta,
@@ -219,19 +219,16 @@ const MultiSelect = <
       getValidationMessage,
     );
 
-  const initialRender = useRef(true);
-  const checkValidation = useCallback(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
-    } else {
+  const [hasBlurred, setHasBlurred] = useState(false);
+  const previousValues = useRef(values);
+
+  // Only validate when values change AFTER user has interacted (blurred)
+  useEffect(() => {
+    if (hasBlurred && previousValues.current !== values) {
       validate();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    checkValidation();
-  }, [values, checkValidation]);
+    previousValues.current = values;
+  }, [values, hasBlurred, validate]);
 
   let sortableProps: SortableContainerProps | undefined;
 
@@ -286,12 +283,11 @@ const MultiSelect = <
       if (onFocus) {
         onFocus();
       }
-
-      checkValidation();
     },
     onBlur: () => {
+      setHasBlurred(true);
+      validate();
       onBlur();
-      checkValidation();
     },
     onChange: (
       options: M extends true ? OptionsType<T> : T | null,
@@ -319,7 +315,6 @@ const MultiSelect = <
         );
       }
       onBlur();
-      checkValidation();
     },
     ...(creatable && {
       createOptionPosition: 'first',

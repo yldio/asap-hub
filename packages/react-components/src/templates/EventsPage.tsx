@@ -3,7 +3,9 @@ import { ComponentProps } from 'react';
 import EventsPageHeader from './EventsPageHeader';
 import PageConstraints from './PageConstraints';
 
-type EventsPageProps = ComponentProps<typeof EventsPageHeader>;
+type EventsPageProps = ComponentProps<typeof EventsPageHeader> & {
+  children?: React.ReactNode;
+};
 
 const EventsPage: React.FC<EventsPageProps> = ({ children, ...props }) => (
   <article>

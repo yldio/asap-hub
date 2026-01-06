@@ -16,7 +16,7 @@ import imageCompression from 'browser-image-compression';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
@@ -62,9 +62,12 @@ const renderPreview = async (
               <MemoryRouter
                 initialEntries={[gp2Routing.onboarding({}).preview({}).$]}
               >
-                <Route path={gp2Routing.onboarding({}).preview.template}>
-                  <Preview />
-                </Route>
+                <Routes>
+                  <Route
+                    path={`${gp2Routing.onboarding({}).preview.template}/*`}
+                    element={<Preview />}
+                  />
+                </Routes>
               </MemoryRouter>
             </WhenReady>
           </Auth0Provider>
@@ -172,7 +175,7 @@ describe('Preview', () => {
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keyInformationEditButton!);
+    await userEvent.click(keyInformationEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
   });
 
@@ -201,9 +204,12 @@ describe('Preview', () => {
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keyInformationEditButton!);
+    await userEvent.click(keyInformationEditButton!);
 
-    userEvent.type(await screen.findByDisplayValue('Stark Industries'), ' 1');
+    await userEvent.type(
+      await screen.findByDisplayValue('Stark Industries'),
+      ' 1',
+    );
     expect(await screen.findByText('ExampleInst')).toBeVisible();
     expect(mockGetInstitutions).toHaveBeenCalledWith({
       searchQuery: 'Stark Industries 1',
@@ -218,9 +224,9 @@ describe('Preview', () => {
     const [keyInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(keyInformationEditButton!);
+    await userEvent.click(keyInformationEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -239,9 +245,9 @@ describe('Preview', () => {
     const [, contactInformationEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(contactInformationEditButton!);
+    await userEvent.click(contactInformationEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -267,9 +273,9 @@ describe('Preview', () => {
     const [, , , biographyEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(biographyEditButton!);
+    await userEvent.click(biographyEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -289,9 +295,9 @@ describe('Preview', () => {
     const [, , tagsEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(tagsEditButton!);
+    await userEvent.click(tagsEditButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -310,9 +316,9 @@ describe('Preview', () => {
     const [, , , , openQuestionsButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(openQuestionsButton!);
+    await userEvent.click(openQuestionsButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -333,9 +339,9 @@ describe('Preview', () => {
     const [fundingProvidersButton] = screen.getAllByRole('link', {
       name: 'Optional Add',
     });
-    userEvent.click(fundingProvidersButton!);
+    await userEvent.click(fundingProvidersButton!);
     expect(screen.getByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -367,9 +373,9 @@ describe('Preview', () => {
     const [, , , , , cohortEditButton] = screen.getAllByRole('link', {
       name: 'Edit Edit',
     });
-    userEvent.click(cohortEditButton!);
+    await userEvent.click(cohortEditButton!);
     expect(await screen.findByRole('dialog')).toBeVisible();
-    userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
@@ -399,7 +405,10 @@ describe('Preview', () => {
     );
     await renderPreview(user.id);
 
-    userEvent.upload(await screen.findByLabelText(/upload.+avatar/i), file);
+    await userEvent.upload(
+      await screen.findByLabelText(/upload.+avatar/i),
+      file,
+    );
     await waitFor(() =>
       expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
         '42',

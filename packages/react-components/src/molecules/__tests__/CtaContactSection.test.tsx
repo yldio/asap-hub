@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import CtaContactSection from '../CtaContactSection';
 
-it('renders with copy email button', () => {
+it('renders with copy email button', async () => {
   Object.assign(navigator, {
     clipboard: {
       writeText: jest.fn(),
@@ -20,7 +20,7 @@ it('renders with copy email button', () => {
 
   const copyButton = getByRole('button', { name: 'Copy' });
   expect(copyButton).toBeVisible();
-  userEvent.click(copyButton);
+  await userEvent.click(copyButton);
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
     'test123@gmail.com',
   );

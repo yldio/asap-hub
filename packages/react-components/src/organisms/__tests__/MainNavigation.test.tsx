@@ -1,4 +1,5 @@
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
@@ -6,7 +7,11 @@ import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import MainNavigation from '../MainNavigation';
 
 it('renders the navigation items without projects', () => {
-  const { getAllByRole } = render(<MainNavigation userOnboarded={true} />);
+  const { getAllByRole } = render(
+    <MemoryRouter>
+      <MainNavigation userOnboarded={true} />
+    </MemoryRouter>,
+  );
 
   expect(
     getAllByRole('listitem').map((item) => {
@@ -25,7 +30,9 @@ it('renders the navigation items without projects', () => {
 
 it('renders the navigation items with projects when flag is enabled', () => {
   const { getAllByRole } = render(
-    <MainNavigation userOnboarded={true} canViewProjects={true} />,
+    <MemoryRouter>
+      <MainNavigation userOnboarded={true} canViewProjects={true} />
+    </MemoryRouter>,
   );
 
   expect(
@@ -46,7 +53,9 @@ it('renders the navigation items with projects when flag is enabled', () => {
 
 it('renders the analytics menu item when allowed', () => {
   const { getByTitle } = render(
-    <MainNavigation userOnboarded={true} canViewAnalytics={true} />,
+    <MemoryRouter>
+      <MainNavigation userOnboarded={true} canViewAnalytics={true} />
+    </MemoryRouter>,
   );
   expect(getByTitle(/analytics/i)).toBeInTheDocument();
 });
@@ -98,7 +107,9 @@ describe('a navigation item', () => {
 
   it('is disabled when the current user is not onboarded', () => {
     const { getAllByRole } = render(
-      <MainNavigation userOnboarded={false} canViewProjects={true} />,
+      <MemoryRouter>
+        <MainNavigation userOnboarded={false} canViewProjects={true} />
+      </MemoryRouter>,
     );
 
     getAllByRole('listitem').map((item) =>

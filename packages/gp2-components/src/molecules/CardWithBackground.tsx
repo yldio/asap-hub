@@ -5,6 +5,7 @@ import colors from '../templates/colors';
 
 type CardWithBackgroundProps = {
   image: string;
+  children?: React.ReactNode;
 };
 const { rem } = pixels;
 

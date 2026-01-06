@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/react-context';
 import { dashboard as dashboardRoute } from '@asap-hub/routing';
 import { FC, useState } from 'react';
-import { useRouteMatch } from 'react-router-dom';
+import { useMatch } from 'react-router-dom';
 
 import { usePrefetchCalendars } from '../events/calendar/state';
 import { CARD_VIEW_PAGE_SIZE } from '../hooks';
@@ -23,9 +23,7 @@ const Dashboard: FC<Record<string, never>> = () => {
   if (!currentUser) {
     throw new Error('Failed to find out who is currently logged in');
   }
-  const displayModal = useRouteMatch(
-    dashboardRoute({}).dismissGettingStarted({}).$,
-  );
+  const displayModal = useMatch(dashboardRoute({}).dismissGettingStarted({}).$);
 
   const { firstName, id, teams } = currentUser;
   const dashboard = useDashboardState();

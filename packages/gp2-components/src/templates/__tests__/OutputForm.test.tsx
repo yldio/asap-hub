@@ -1,7 +1,9 @@
+import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 } from '@asap-hub/model';
 import { Notification, NotificationContext } from '@asap-hub/react-context';
 import {
+  act,
   fireEvent,
   render,
   screen,
@@ -10,16 +12,25 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
-import { ReactNode } from 'react';
-import { Router, StaticRouter } from 'react-router-dom';
+import { ReactNode, useEffect } from 'react';
+import { MemoryRouter, useLocation } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
 jest.setTimeout(95_000);
 
+let currentLocation: { pathname: string; search: string } | null = null;
+const LocationCapture = () => {
+  const location = useLocation();
+  useEffect(() => {
+    currentLocation = { pathname: location.pathname, search: location.search };
+  }, [location]);
+  return null;
+};
+
 const renderWithRouter = (children: ReactNode) =>
-  render(<StaticRouter>{children}</StaticRouter>);
+  render(<StaticRouter location="/">{children}</StaticRouter>);
 
 describe('OutputForm', () => {
   const defaultProps = {
@@ -93,8 +104,6 @@ describe('OutputForm', () => {
       },
     ]);
 
-    const history = createMemoryHistory();
-
     const shareOutput = jest.fn();
     shareOutput.mockResolvedValueOnce(gp2Fixtures.createOutputResponse());
 
@@ -109,10 +118,14 @@ describe('OutputForm', () => {
       getRelatedEventSuggestions,
       getRelatedOutputSuggestions,
       getShortDescriptionFromDescription,
-      history,
       shareOutput,
     };
   };
+
+  beforeEach(() => {
+    currentLocation = null;
+  });
+
   afterEach(jest.resetAllMocks);
 
   it.each`
@@ -122,12 +135,12 @@ describe('OutputForm', () => {
   `(
     'publish the form for entity $entityType',
     async ({ entityType, entityText, entity, notificationMessage }) => {
+      const user = userEvent.setup();
       const {
         addNotification,
         getAuthorSuggestions,
         getRelatedEventSuggestions,
         getRelatedOutputSuggestions,
-        history,
         shareOutput,
       } = setup();
       const { container } = render(
@@ -163,72 +176,78 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      userEvent.type(
+      await user.type(
         screen.getByRole('textbox', { name: /title/i }),
         'output title',
       );
 
-      userEvent.type(
+      await user.type(
         screen.getByRole('textbox', { name: /url/i }),
         'https://example.com',
       );
 
-      userEvent.click(
+      await user.click(
         screen.getByRole('textbox', { name: /identifier type/i }),
       );
-      userEvent.click(screen.getByText(/^none/i));
-      userEvent.click(
+      await user.click(screen.getByText(/^none/i));
+      await user.click(
         screen.getByRole('textbox', {
           name: /working groups/i,
         }),
       );
 
-      userEvent.click(screen.getByText('another group'));
+      await user.click(screen.getByText('another group'));
 
-      userEvent.click(
+      await user.click(
         screen.getByRole('textbox', {
           name: /projects/i,
         }),
       );
 
-      userEvent.click(screen.getByText('another project'));
+      await user.click(screen.getByText('another project'));
 
       const authors = screen.getByRole('textbox', { name: /Authors/i });
-      userEvent.click(authors);
+      await user.click(authors);
 
-      userEvent.click(await screen.findByText(/Chris Reed/i));
-      userEvent.click(authors);
-      userEvent.click(screen.getByText('Chris Blue'));
-      userEvent.click(authors);
-      userEvent.type(authors, 'Alex White');
+      await user.click(await screen.findByText(/Chris Reed/i));
+      await user.click(authors);
+      await user.click(screen.getByText('Chris Blue'));
+      await user.click(authors);
+      await user.type(authors, 'Alex White');
 
-      await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-      userEvent.click(screen.getAllByText('Alex White')[1]!);
+      const loadingElement = screen.queryByText(/loading/i);
+      if (loadingElement) {
+        await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+      }
+      await user.click(screen.getAllByText('Alex White')[1]!);
 
-      userEvent.click(
+      await user.click(
         screen.getByRole('textbox', {
           name: /related output/i,
         }),
       );
-      userEvent.click(await screen.findByText('some related output'));
-      userEvent.click(
+      await user.click(await screen.findByText('some related output'));
+      await user.click(
         screen.getByRole('textbox', {
           name: /related gp2 hub events/i,
         }),
       );
-      userEvent.click(await screen.findByText('some related event'));
+      await user.click(await screen.findByText('some related event'));
 
       expect(
         screen.queryByText('Publish output for the whole hub?'),
       ).not.toBeInTheDocument();
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
 
       expect(
         screen.getByText('Publish output for the whole hub?'),
@@ -237,7 +256,7 @@ describe('OutputForm', () => {
         `All ${entityText} members listed on this output will be notified and all GP2 members will be able to access it. If you need to unpublish this output, please contact techsupport@gp2.org.`,
       );
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+      await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
       await waitFor(() => {
         expect(shareOutput).toHaveBeenCalledWith({
@@ -271,13 +290,13 @@ describe('OutputForm', () => {
           type: 'success',
         }),
       );
-      expect(history.location.pathname).toEqual(`/outputs/ro0`);
+      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
     },
   );
 
   it('can submit published date', async () => {
-    const { addNotification, getAuthorSuggestions, history, shareOutput } =
-      setup();
+    const user = userEvent.setup();
+    const { addNotification, getAuthorSuggestions, shareOutput } = setup();
 
     render(
       <OutputForm
@@ -296,13 +315,16 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>{children}</Router>
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
           </NotificationContext.Provider>
         ),
       },
     );
 
-    userEvent.type(
+    await user.type(
       screen.getByRole('textbox', { name: /url/i }),
       'https://example.com',
     );
@@ -310,7 +332,7 @@ describe('OutputForm', () => {
     const sharingStatus = screen.getByRole('group', {
       name: /sharing status?/i,
     });
-    userEvent.click(
+    await user.click(
       within(sharingStatus).getByRole('radio', { name: 'Public' }),
     );
     fireEvent.change(
@@ -320,8 +342,8 @@ describe('OutputForm', () => {
       },
     );
 
-    userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-    userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+    await user.click(screen.getByRole('button', { name: 'Publish' }));
+    await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
     await waitFor(() => {
       expect(shareOutput).toHaveBeenCalledWith(
@@ -334,8 +356,8 @@ describe('OutputForm', () => {
   });
 
   it('can generate short description when description is present', async () => {
-    const { addNotification, getShortDescriptionFromDescription, history } =
-      setup();
+    const user = userEvent.setup();
+    const { addNotification, getShortDescriptionFromDescription } = setup();
     getShortDescriptionFromDescription.mockResolvedValue(
       'An interesting article',
     );
@@ -355,7 +377,10 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>{children}</Router>
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
           </NotificationContext.Provider>
         ),
       },
@@ -364,7 +389,7 @@ describe('OutputForm', () => {
       screen.getByRole('textbox', { name: /short description/i }),
     ).toHaveValue('');
 
-    userEvent.click(screen.getByRole('button', { name: /Generate/i }));
+    await user.click(screen.getByRole('button', { name: /Generate/i }));
 
     await waitFor(() => {
       expect(
@@ -407,7 +432,8 @@ describe('OutputForm', () => {
     });
 
     it('does not display publish modal when editing and clicks save', async () => {
-      const { addNotification, history } = setup();
+      const user = userEvent.setup();
+      const { addNotification } = setup();
       const publishDate = '2020-03-04';
       const output = {
         ...defaultProps,
@@ -427,12 +453,15 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <Router history={history}>{children}</Router>
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
           </NotificationContext.Provider>
         ),
       });
 
-      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
 
       expect(
         screen.queryByText('Publish output for the whole hub?'),
@@ -500,8 +529,8 @@ describe('OutputForm', () => {
     });
 
     it('should publish the version for an Article and display an appropriate message', async () => {
-      const { addNotification, getAuthorSuggestions, history, shareOutput } =
-        setup();
+      const user = userEvent.setup();
+      const { addNotification, getAuthorSuggestions, shareOutput } = setup();
 
       render(
         <OutputForm
@@ -521,14 +550,17 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-      userEvent.click(
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(
         screen.getByRole('button', { name: 'Publish new version' }),
       );
 
@@ -543,7 +575,7 @@ describe('OutputForm', () => {
           type: 'success',
         }),
       );
-      expect(history.location.pathname).toEqual(`/outputs/ro0`);
+      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
     });
   });
 
@@ -554,26 +586,34 @@ describe('OutputForm', () => {
     });
     it.each<gp2.OutputType>(['Blog', 'Hot Topic', 'Letter', 'Review'])(
       '%s does not render subtype',
-      (type) => {
+      async (type) => {
+        const user = userEvent.setup();
         renderWithRouter(
           <OutputForm {...defaultProps} documentType="Article" />,
         );
-        userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
-        userEvent.click(screen.getByText(type));
+        await user.click(screen.getByRole('textbox', { name: /^type/i }));
+        await user.click(screen.getByText(type));
         expect(
           screen.queryByRole('textbox', { name: /subtype/i }),
         ).not.toBeInTheDocument();
       },
     );
-    it.each<gp2.OutputType>(['Research'])('%s renders subtype', (type) => {
-      renderWithRouter(<OutputForm {...defaultProps} documentType="Article" />);
-      userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
-      userEvent.click(screen.getByText(type));
-      expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
-    });
+    it.each<gp2.OutputType>(['Research'])(
+      '%s renders subtype',
+      async (type) => {
+        const user = userEvent.setup();
+        renderWithRouter(
+          <OutputForm {...defaultProps} documentType="Article" />,
+        );
+        await user.click(screen.getByRole('textbox', { name: /^type/i }));
+        await user.click(screen.getByText(type));
+        expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
+      },
+    );
 
     it('publishes with type and subtype', async () => {
-      const { getAuthorSuggestions, history, shareOutput } = setup();
+      const user = userEvent.setup();
+      const { getAuthorSuggestions, shareOutput } = setup();
 
       render(
         <OutputForm
@@ -593,23 +633,26 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      userEvent.type(
+      await user.type(
         screen.getByRole('textbox', { name: /url/i }),
         'https://example.com',
       );
-      userEvent.click(screen.getByRole('textbox', { name: /^type/i }));
-      userEvent.click(screen.getByText('Research'));
-      userEvent.click(screen.getByRole('textbox', { name: /subtype/i }));
-      userEvent.click(screen.getByText('Published'));
+      await user.click(screen.getByRole('textbox', { name: /^type/i }));
+      await user.click(screen.getByText('Research'));
+      await user.click(screen.getByRole('textbox', { name: /subtype/i }));
+      await user.click(screen.getByText('Published'));
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
-      userEvent.click(screen.getByRole('button', { name: 'Publish Output' }));
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(screen.getByRole('button', { name: 'Publish Output' }));
 
       await waitFor(() => {
         expect(shareOutput).toHaveBeenCalledWith(
@@ -620,7 +663,7 @@ describe('OutputForm', () => {
           }),
         );
       });
-      expect(history.location.pathname).toEqual(`/outputs/ro0`);
+      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
     });
   });
 
@@ -789,9 +832,10 @@ describe('OutputForm', () => {
         ).toBeVisible();
       });
 
-      it('displays tags suggestions', () => {
+      it('displays tags suggestions', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/additional tags/i));
+        await user.click(screen.getByLabelText(/additional tags/i));
         expect(screen.getByText('2D Cultures')).toBeVisible();
         expect(screen.getByText('Adenosine')).toBeVisible();
         expect(screen.getByText('Adrenal')).toBeVisible();
@@ -802,10 +846,11 @@ describe('OutputForm', () => {
         expect(screen.getByText('Neurology')).toBeVisible();
       });
 
-      it('update tags after adding one', () => {
+      it('update tags after adding one', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/additional tags/i));
-        userEvent.click(screen.getByText('2D Cultures'));
+        await user.click(screen.getByLabelText(/additional tags/i));
+        await user.click(screen.getByText('2D Cultures'));
         expect(screen.getByText('Neurology')).toBeVisible();
         expect(screen.getByText('2D Cultures')).toBeVisible();
       });
@@ -889,9 +934,10 @@ describe('OutputForm', () => {
         expect(textbox).toHaveValue('');
       });
 
-      it('displays cohorts suggestions', () => {
+      it('displays cohorts suggestions', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/cohorts/i));
+        await user.click(screen.getByLabelText(/cohorts/i));
         expect(screen.getByText('2D Cultures')).toBeVisible();
         expect(screen.getByText('Adenosine')).toBeVisible();
         expect(screen.getByText('Adrenal')).toBeVisible();
@@ -902,10 +948,11 @@ describe('OutputForm', () => {
         expect(screen.getByText('Neurology')).toBeVisible();
       });
 
-      it('update cohorts after adding one', () => {
+      it('update cohorts after adding one', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/cohorts/i));
-        userEvent.click(screen.getByText('2D Cultures'));
+        await user.click(screen.getByLabelText(/cohorts/i));
+        await user.click(screen.getByText('2D Cultures'));
         expect(screen.getByText('Neurology')).toBeVisible();
         expect(screen.getByText('2D Cultures')).toBeVisible();
       });
@@ -936,9 +983,10 @@ describe('OutputForm', () => {
         expect(textbox).toHaveValue('');
       });
 
-      it('displays working groups suggestions', () => {
+      it('displays working groups suggestions', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/working groups/i));
+        await user.click(screen.getByLabelText(/working groups/i));
         expect(screen.getByText('WG 1')).toBeVisible();
       });
 
@@ -947,18 +995,20 @@ describe('OutputForm', () => {
         expect(screen.getByText('A WG title')).toBeVisible();
       });
 
-      it('update working groups after adding one', () => {
+      it('update working groups after adding one', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/working groups/i));
-        userEvent.click(screen.getByText('WG 1'));
+        await user.click(screen.getByLabelText(/working groups/i));
+        await user.click(screen.getByText('WG 1'));
         expect(screen.getByText('A WG title')).toBeVisible();
         expect(screen.getByText('WG 1')).toBeVisible();
       });
 
       it('shows the custom no options message for working groups', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
 
-        userEvent.type(
+        await user.type(
           screen.getByLabelText(/working groups/i),
           'asdflkjasdflkj',
         );
@@ -995,9 +1045,10 @@ describe('OutputForm', () => {
         expect(textbox).toHaveValue('');
       });
 
-      it('displays projects suggestions', () => {
+      it('displays projects suggestions', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/projects/i));
+        await user.click(screen.getByLabelText(/projects/i));
         expect(screen.getByText('Project 1')).toBeVisible();
       });
 
@@ -1006,18 +1057,20 @@ describe('OutputForm', () => {
         expect(screen.getByText('A Project title')).toBeVisible();
       });
 
-      it('update projects after adding one', () => {
+      it('update projects after adding one', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
-        userEvent.click(screen.getByLabelText(/projects/i));
-        userEvent.click(screen.getByText('Project 1'));
+        await user.click(screen.getByLabelText(/projects/i));
+        await user.click(screen.getByText('Project 1'));
         expect(screen.getByText('A Project title')).toBeVisible();
         expect(screen.getByText('Project 1')).toBeVisible();
       });
 
       it('shows the custom no options message for projects', async () => {
+        const user = userEvent.setup();
         renderWithSuggestions();
 
-        userEvent.type(screen.getByLabelText(/projects/i), 'asdflkjasdflkj');
+        await user.type(screen.getByLabelText(/projects/i), 'asdflkjasdflkj');
 
         expect(
           screen.getByText('Sorry, no projects match asdflkjasdflkj'),
@@ -1027,62 +1080,73 @@ describe('OutputForm', () => {
   });
 
   describe('Validation', () => {
-    it('shows error message for missing value title', () => {
+    it('shows error message for missing value title', async () => {
       renderWithRouter(<OutputForm {...defaultProps} />);
       const input = screen.getByLabelText(/title/i);
       fireEvent.focusOut(input);
-      expect(screen.getByText('Please enter a title.')).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByText('Please enter a title.')).toBeVisible();
+      });
     });
 
     describe('Short Description Validation', () => {
-      it('shows error message when short description exceeds 250 characters', () => {
+      it('shows error message when short description exceeds 250 characters', async () => {
         renderWithRouter(<OutputForm {...defaultProps} />);
         const input = screen.getByLabelText(/short description/i);
         const longText = 'a'.repeat(251);
         fireEvent.change(input, { target: { value: longText } });
         fireEvent.focusOut(input);
-        expect(
-          screen.getByText(
-            'The short description exceeds the character limit. Please limit it to 250 characters.',
-          ),
-        ).toBeVisible();
+        await waitFor(() => {
+          expect(
+            screen.getByText(
+              'The short description exceeds the character limit. Please limit it to 250 characters.',
+            ),
+          ).toBeVisible();
+        });
       });
 
-      it('shows error message when short description is empty after trimming', () => {
+      it('shows error message when short description is empty after trimming', async () => {
         renderWithRouter(<OutputForm {...defaultProps} />);
         const input = screen.getByLabelText(/short description/i);
         fireEvent.change(input, { target: { value: '   ' } });
         fireEvent.focusOut(input);
-        expect(
-          screen.getByText('Please enter a short description'),
-        ).toBeVisible();
+        await waitFor(() => {
+          expect(
+            screen.getByText('Please enter a short description'),
+          ).toBeVisible();
+        });
       });
 
-      it('does not show error message when short description is valid', () => {
+      it('does not show error message when short description is valid', async () => {
         renderWithRouter(<OutputForm {...defaultProps} />);
         const input = screen.getByLabelText(/short description/i);
         fireEvent.change(input, {
           target: { value: 'Valid short description' },
         });
         fireEvent.focusOut(input);
-        expect(
-          screen.queryByText('Please enter a short description'),
-        ).not.toBeInTheDocument();
-        expect(
-          screen.queryByText(
-            'The short description exceeds the character limit. Please limit it to 250 characters.',
-          ),
-        ).not.toBeInTheDocument();
+        await waitFor(() => {
+          expect(
+            screen.queryByText('Please enter a short description'),
+          ).not.toBeInTheDocument();
+          expect(
+            screen.queryByText(
+              'The short description exceeds the character limit. Please limit it to 250 characters.',
+            ),
+          ).not.toBeInTheDocument();
+        });
       });
     });
 
     it('shows the custom error message for a date in the future', async () => {
+      const user = userEvent.setup();
+      const consoleErrorSpy = mockActWarningsInConsole('error');
+
       renderWithRouter(<OutputForm {...defaultProps} />);
 
       const sharingStatus = screen.getByRole('group', {
         name: /sharing status?/i,
       });
-      userEvent.click(
+      await user.click(
         within(sharingStatus).getByRole('radio', { name: 'Public' }),
       );
 
@@ -1092,9 +1156,15 @@ describe('OutputForm', () => {
       });
       fireEvent.focusOut(input);
 
-      expect(
-        screen.getByText(/publish date cannot be greater than today/i),
-      ).toBeVisible();
+      await waitFor(() => {
+        expect(
+          screen.getByText(/publish date cannot be greater than today/i),
+        ).toBeVisible();
+      });
+      // Wait for any pending state updates to settle
+      await waitFor(() => {});
+
+      consoleErrorSpy.mockRestore();
     });
   });
 
@@ -1127,18 +1197,63 @@ describe('OutputForm', () => {
   });
 
   describe('Notification Errors', () => {
-    const {
-      addNotification,
-      getAuthorSuggestions,
-      getRelatedOutputSuggestions,
-      history,
-      shareOutput,
-    } = setup();
+    let addNotification: jest.Mock;
+    let getAuthorSuggestions: jest.Mock;
+    let getRelatedOutputSuggestions: jest.Mock;
+    let shareOutput: jest.Mock;
+    let removeNotification: jest.Mock;
+    let notifications: Notification[];
 
-    const removeNotification = jest.fn();
-    const notifications: Notification[] = [];
+    beforeEach(() => {
+      addNotification = jest.fn();
+      getAuthorSuggestions = jest.fn();
+      getAuthorSuggestions.mockResolvedValue([
+        {
+          author: {
+            ...gp2Fixtures.createUserResponse(),
+            displayName: 'Chris Blue',
+          },
+          label: 'Chris Blue',
+          value: 'u2',
+        },
+        {
+          author: {
+            ...gp2Fixtures.createExternalUserResponse(),
+            displayName: 'Chris Reed',
+          },
+          label: 'Chris Reed (Non CRN)',
+          value: 'u1',
+        },
+      ]);
+      getRelatedOutputSuggestions = jest.fn();
+      getRelatedOutputSuggestions.mockResolvedValue([
+        {
+          value: '11',
+          label: 'some related output',
+          documentType: 'GP2 Reports',
+        },
+      ]);
+      shareOutput = jest.fn();
+      shareOutput.mockResolvedValue(gp2Fixtures.createOutputResponse());
+      removeNotification = jest.fn();
+      notifications = [];
+    });
 
     it('shows error message because of empty required fields', async () => {
+      const user = userEvent.setup();
+
+      // Suppress act warnings from async state updates in TextField
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('not wrapped in act(')) {
+            return; // Suppress act warnings
+          }
+          // eslint-disable-next-line no-console
+          console.error(...args);
+        });
+
       render(
         <OutputForm
           {...defaultProps}
@@ -1157,17 +1272,20 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
 
-      expect(shareOutput).not.toHaveBeenCalled();
-      expect(removeNotification).not.toHaveBeenCalled();
-      await waitFor(() =>
+      await waitFor(() => {
+        expect(shareOutput).not.toHaveBeenCalled();
+        expect(removeNotification).not.toHaveBeenCalled();
         expect(addNotification).toHaveBeenCalledWith(
           expect.objectContaining({
             message:
@@ -1175,11 +1293,29 @@ describe('OutputForm', () => {
             page: 'output-form',
             type: 'error',
           }),
-        ),
-      );
+        );
+      });
+      // Wait for any pending state updates to settle
+      await waitFor(() => {});
+
+      consoleErrorSpy.mockRestore();
     });
 
-    it('does not remove notification if error remains', () => {
+    it('does not remove notification if error remains', async () => {
+      const user = userEvent.setup();
+
+      // Suppress act warnings from async state updates in TextField
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('not wrapped in act(')) {
+            return; // Suppress act warnings
+          }
+          // eslint-disable-next-line no-console
+          console.error(...args);
+        });
+
       render(
         <OutputForm
           {...defaultProps}
@@ -1198,28 +1334,39 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
 
-      expect(
-        screen.queryByText('Publish output for the whole hub?'),
-      ).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          screen.queryByText('Publish output for the whole hub?'),
+        ).not.toBeInTheDocument();
+      });
 
-      userEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      await user.click(screen.getByRole('button', { name: 'Publish' }));
 
-      expect(
-        screen.queryByText('Publish output for the whole hub?'),
-      ).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          screen.queryByText('Publish output for the whole hub?'),
+        ).not.toBeInTheDocument();
+        expect(removeNotification).not.toHaveBeenCalled();
+      });
+      // Wait for any pending state updates to settle
+      await waitFor(() => {});
 
-      expect(removeNotification).not.toHaveBeenCalled();
+      consoleErrorSpy.mockRestore();
     });
 
     it('shows error message because of unknown error', async () => {
+      const user = userEvent.setup();
       shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
       render(
         <OutputForm
@@ -1241,13 +1388,16 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
       );
 
-      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
       expect(
         await screen.findByRole('button', { name: /save/i }),
       ).toBeEnabled();
@@ -1266,6 +1416,20 @@ describe('OutputForm', () => {
     });
 
     it('changes notification if another error', async () => {
+      const user = userEvent.setup();
+
+      // Suppress act warnings from async state updates in TextField
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('not wrapped in act(')) {
+            return; // Suppress act warnings
+          }
+          // eslint-disable-next-line no-console
+          console.error(...args);
+        });
+
       shareOutput.mockRejectedValueOnce(new Error('something went wrong'));
       render(
         <OutputForm
@@ -1287,7 +1451,10 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <Router history={history}>{children}</Router>
+              <MemoryRouter>
+                <LocationCapture />
+                {children}
+              </MemoryRouter>
             </NotificationContext.Provider>
           ),
         },
@@ -1296,7 +1463,7 @@ describe('OutputForm', () => {
       addNotification.mockImplementationOnce((not: Notification) =>
         notifications.push(not),
       );
-      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await user.click(screen.getByRole('button', { name: /save/i }));
       expect(
         await screen.findByRole('button', { name: /save/i }),
       ).toBeEnabled();
@@ -1312,9 +1479,13 @@ describe('OutputForm', () => {
         ),
       );
 
-      userEvent.clear(screen.getByRole('textbox', { name: /title/i }));
+      await user.clear(screen.getByRole('textbox', { name: /title/i }));
 
-      userEvent.click(screen.getByRole('button', { name: /save/i }));
+      await waitFor(() => {
+        expect(screen.getByRole('textbox', { name: /title/i })).toHaveValue('');
+      });
+
+      await user.click(screen.getByRole('button', { name: /save/i }));
       expect(
         await screen.findByRole('button', { name: /save/i }),
       ).toBeEnabled();
@@ -1331,10 +1502,28 @@ describe('OutputForm', () => {
           }),
         ),
       );
+      // Wait for any pending state updates to settle
+      await waitFor(() => {});
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('displays server side validation error for link and calls clears function when changed', async () => {
+      const user = userEvent.setup();
       const mockClearError = jest.fn();
+
+      // Suppress act warnings from async state updates in TextField
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('not wrapped in act(')) {
+            return; // Suppress act warnings
+          }
+          // eslint-disable-next-line no-console
+          console.error(...args);
+        });
+
       render(
         <OutputForm
           {...defaultProps}
@@ -1351,7 +1540,10 @@ describe('OutputForm', () => {
         />,
         {
           wrapper: ({ children }) => (
-            <Router history={createMemoryHistory()}>{children}</Router>
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
           ),
         },
       );
@@ -1361,12 +1553,41 @@ describe('OutputForm', () => {
         ),
       ).toBeVisible();
 
-      userEvent.type(screen.getByLabelText(/URL/i), 'a');
-      expect(mockClearError).toHaveBeenCalledWith('/link');
+      const linkInput = screen.getByLabelText(/URL/i);
+      await user.type(linkInput, 'a');
+      await waitFor(() => {
+        expect(mockClearError).toHaveBeenCalledWith('/link');
+      });
+      // Wait for the input value to be updated and component to finish rendering
+      await waitFor(() => {
+        expect(linkInput).toHaveValue('http://example.coma');
+      });
+      // Flush any pending timers and state updates
+      await act(async () => {
+        await new Promise<void>((resolve) => {
+          setTimeout(resolve, 0);
+        });
+      });
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('displays server side validation error for title and calls clears function when changed', async () => {
+      const user = userEvent.setup();
       const mockClearError = jest.fn();
+
+      // Suppress act warnings from async state updates in TextField
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('not wrapped in act(')) {
+            return; // Suppress act warnings
+          }
+          // eslint-disable-next-line no-console
+          console.error(...args);
+        });
+
       render(
         <OutputForm
           {...defaultProps}
@@ -1383,7 +1604,10 @@ describe('OutputForm', () => {
         />,
         {
           wrapper: ({ children }) => (
-            <Router history={createMemoryHistory()}>{children}</Router>
+            <MemoryRouter>
+              <LocationCapture />
+              {children}
+            </MemoryRouter>
           ),
         },
       );
@@ -1393,8 +1617,23 @@ describe('OutputForm', () => {
         ),
       ).toBeVisible();
 
-      userEvent.type(screen.getByLabelText(/title/i), 'a');
-      expect(mockClearError).toHaveBeenCalledWith('/title');
+      const titleInput = screen.getByLabelText(/title/i);
+      await user.type(titleInput, 'a');
+      await waitFor(() => {
+        expect(mockClearError).toHaveBeenCalledWith('/title');
+      });
+      // Wait for the input value to be updated and component to finish rendering
+      await waitFor(() => {
+        expect(titleInput).toHaveValue('Examplea');
+      });
+      // Flush any pending timers and state updates
+      await act(async () => {
+        await new Promise<void>((resolve) => {
+          setTimeout(resolve, 0);
+        });
+      });
+
+      consoleErrorSpy.mockRestore();
     });
   });
 });

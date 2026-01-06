@@ -205,10 +205,10 @@ describe('footer', () => {
     );
   });
 
-  it('adds the tech support email to clipboard when user clicks on copy button', () => {
+  it('adds the tech support email to clipboard when user clicks on copy button', async () => {
     const { getByTitle } = render(<EventPage {...props} hasFinished={false} />);
 
-    userEvent.click(getByTitle(/copy/i));
+    await userEvent.click(getByTitle(/copy/i));
     expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith(
       expect.stringMatching(/techsupport@asap.science/i),
     );

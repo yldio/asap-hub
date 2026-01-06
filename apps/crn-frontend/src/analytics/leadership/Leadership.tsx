@@ -13,7 +13,7 @@ import {
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
-import { Redirect, useHistory, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
 import {
@@ -28,10 +28,11 @@ import OSChampion from './OSChampion';
 import TeamLeadership from './TeamLeadership';
 
 const Leadership: FC<Record<string, never>> = () => {
-  const history = useHistory();
-  const { metric } = useParams<{
+  const navigate = useNavigate();
+  const { metric: metricParam } = useParams<{
     metric: MetricOption;
   }>();
+  const metric = (metricParam ?? 'working-group') as MetricOption;
   const { currentPage } = usePaginationParams();
 
   const [osChampionSort, setOsChampionSort] =
@@ -39,7 +40,7 @@ const Leadership: FC<Record<string, never>> = () => {
   const [teamSort, setTeamSort] =
     useState<SortLeadershipAndMembership>('team_asc');
   const setMetric = (newMetric: MetricOption) => {
-    history.push(analytics({}).leadership({}).metric({ metric: newMetric }).$);
+    navigate(analytics({}).leadership({}).metric({ metric: newMetric }).$);
   };
 
   const { tags, setTags } = useSearch();
@@ -63,7 +64,9 @@ const Leadership: FC<Record<string, never>> = () => {
           tags,
           ...paginationParams,
         }),
-      leadershipToCSV(metric),
+      leadershipToCSV(
+        metric as 'working-group' | 'interest-group' | 'os-champion',
+      ),
     );
 
   const exportOSChampion = () =>
@@ -111,8 +114,9 @@ const Leadership: FC<Record<string, never>> = () => {
 
   const isOSChampionEnabled = isEnabled('ANALYTICS_PHASE_TWO');
   return !isOSChampionEnabled && isOSChampionPage ? (
-    <Redirect
+    <Navigate
       to={analytics({}).leadership({}).metric({ metric: 'working-group' }).$}
+      replace
     />
   ) : (
     <AnalyticsLeadershipPageBody
@@ -137,7 +141,7 @@ const Leadership: FC<Record<string, never>> = () => {
           tags={tags}
           sort={teamSort}
           setSort={setTeamSort}
-          metric={metric}
+          metric={metric as 'working-group' | 'interest-group'}
         />
       )}
     </AnalyticsLeadershipPageBody>

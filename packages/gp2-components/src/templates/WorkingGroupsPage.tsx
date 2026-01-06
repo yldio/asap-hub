@@ -10,7 +10,9 @@ const navStyles = css({
   marginTop: rem(32),
 });
 
-const WorkingGroupsPage: React.FC = ({ children }) => (
+const WorkingGroupsPage: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => (
   <article css={layoutContentStyles}>
     <WorkingGroupsHeader>
       <div css={navStyles}>

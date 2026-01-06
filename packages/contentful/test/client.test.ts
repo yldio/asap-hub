@@ -17,13 +17,11 @@ jest.mock('contentful-management');
 jest.mock('graphql-request');
 jest.mock('contentful');
 
-jest.mock('limiter', () => {
-  return {
-    RateLimiter: jest.fn().mockImplementation(() => ({
-      removeTokens: jest.fn(),
-    })),
-  };
-});
+jest.mock('limiter', () => ({
+  RateLimiter: jest
+    .fn()
+    .mockImplementation(() => ({ removeTokens: jest.fn() })),
+}));
 
 describe('graphQL and Rest clients', () => {
   beforeEach(jest.resetAllMocks);

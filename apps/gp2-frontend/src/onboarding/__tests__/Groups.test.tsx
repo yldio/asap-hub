@@ -7,7 +7,7 @@ import {
   screen,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -27,9 +27,12 @@ const renderGroups = async (id: string) => {
             <MemoryRouter
               initialEntries={[gp2Routing.onboarding({}).groups({}).$]}
             >
-              <Route path={gp2Routing.onboarding({}).groups.template}>
-                <Groups />
-              </Route>
+              <Routes>
+                <Route
+                  path={gp2Routing.onboarding({}).groups.template}
+                  element={<Groups />}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>

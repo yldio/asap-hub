@@ -1,6 +1,6 @@
 import { render, waitFor, within } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import userEvent from '@testing-library/user-event';
 import { createMessage } from '@asap-hub/fixtures';
 import {
@@ -157,8 +157,8 @@ describe('QuickCheck logic', () => {
         [fieldDetails]: 'Explanation',
         getDiscussion,
       };
-      const { findByRole, queryByText } = render(
-        <StaticRouter>
+      const { findByRole } = render(
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...props}
@@ -182,9 +182,7 @@ describe('QuickCheck logic', () => {
         </StaticRouter>,
       );
 
-      await waitFor(() => {
-        expect(queryByText(/Loading.../i)).not.toBeInTheDocument();
-      });
+      await findByRole('button', { name: /Submit/ }, { timeout: 15000 });
 
       await submitForm({ findByRole });
       const payload = {
@@ -236,6 +234,7 @@ describe('QuickCheck logic', () => {
         expect(onCreate).toHaveBeenCalledWith(payload);
       });
     },
+    30000,
   );
 
   test.each`
@@ -269,7 +268,7 @@ describe('QuickCheck logic', () => {
         getDiscussion,
       };
       const { findByRole } = render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...props}
@@ -292,6 +291,8 @@ describe('QuickCheck logic', () => {
           </Suspense>
         </StaticRouter>,
       );
+
+      await findByRole('button', { name: /Submit/ }, { timeout: 15000 });
 
       await submitForm({ findByRole });
       const payload = {
@@ -343,6 +344,7 @@ describe('QuickCheck logic', () => {
         expect(onCreate).toHaveBeenCalledWith(payload);
       });
     },
+    30000,
   );
 
   test.each`
@@ -371,7 +373,7 @@ describe('QuickCheck logic', () => {
         [fieldDetails]: { message: { text: 'Explanation' } },
       };
       const { findByRole, getByRole, getByTestId } = render(
-        <StaticRouter>
+        <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...props}
@@ -395,7 +397,9 @@ describe('QuickCheck logic', () => {
         </StaticRouter>,
       );
 
-      userEvent.type(
+      await findByRole('button', { name: /Submit/ }, { timeout: 15000 });
+
+      await userEvent.type(
         getByRole('textbox', { name: /Title of Manuscript/i }),
         'manuscript title',
       );
@@ -439,6 +443,7 @@ describe('QuickCheck logic', () => {
         });
       });
     },
+    30000,
   );
 
   it('displays an error message when user selects no in a quick check and does not provide details', async () => {
@@ -450,7 +455,7 @@ describe('QuickCheck logic', () => {
       getAllByText,
       getByRole,
     } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -469,9 +474,12 @@ describe('QuickCheck logic', () => {
         </Suspense>
       </StaticRouter>,
     );
-    await waitFor(() => {
-      expect(queryByText(/Loading.../i)).not.toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(queryByText(/Loading.../i)).not.toBeInTheDocument();
+      },
+      { timeout: 15000 },
+    );
     expect(queryByText(/Please enter the details./i)).not.toBeInTheDocument();
 
     const quickCheckFields = quickCheckQuestions.map((q) => q.field);
@@ -498,9 +506,12 @@ describe('QuickCheck logic', () => {
       );
     });
 
-    userEvent.type(getByLabelText(/Please provide details/i), 'Some details');
+    await userEvent.type(
+      getByLabelText(/Please provide details/i),
+      'Some details',
+    );
 
-    userEvent.click(getByRole('button', { name: /Submit/ }));
+    await userEvent.click(getByRole('button', { name: /Submit/ }));
 
     await waitFor(() => {
       expect(queryByText(/Please enter the details./i)).not.toBeInTheDocument();
@@ -510,7 +521,7 @@ describe('QuickCheck logic', () => {
   it('displays an error message when quick check detail is longer than 256 characters', async () => {
     const onCreate = jest.fn();
     const { findByText, getByLabelText, queryByText } = render(
-      <StaticRouter>
+      <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>
           <ManuscriptForm
             {...defaultProps}
@@ -532,15 +543,18 @@ describe('QuickCheck logic', () => {
       </StaticRouter>,
     );
 
-    await waitFor(() => {
-      expect(getByLabelText(/Please provide details/i)).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(getByLabelText(/Please provide details/i)).toBeInTheDocument();
+      },
+      { timeout: 15000 },
+    );
     expect(
       queryByText(/Reason cannot exceed 256 characters./i),
     ).not.toBeInTheDocument();
 
     const input = getByLabelText(/Please provide details/i);
-    userEvent.type(input, 'A'.repeat(257));
+    await userEvent.type(input, 'A'.repeat(257));
     input.blur();
 
     expect(

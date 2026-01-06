@@ -1,12 +1,14 @@
 import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import {
   render,
   waitFor,
   getByText as getChildByText,
   fireEvent,
   act,
+  screen,
+  renderHook,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ManuscriptVersion, TeamResponse } from '@asap-hub/model';
@@ -39,6 +41,7 @@ import {
   useMarkDiscussionAsRead,
 } from '../state';
 import { useManuscriptToast } from '../useManuscriptToast';
+import { ManuscriptToastContext } from '../ManuscriptToastProvider';
 
 jest.setTimeout(60000);
 jest.mock('../api', () => ({
@@ -80,16 +83,17 @@ const renderWithWrapper = (
                 network({}).teams({}).team({ teamId: id }).workspace({}).$,
               ]}
             >
-              <Route
-                path={
-                  network.template +
-                  network({}).teams.template +
-                  network({}).teams({}).team.template +
-                  network({}).teams({}).team({ teamId: id }).workspace.template
-                }
-              >
-                {children}
-              </Route>
+              <Routes>
+                <Route
+                  path={`${network.template}${network({}).teams.template}${
+                    network({}).teams({}).team.template
+                  }${
+                    network({}).teams({}).team({ teamId: id }).workspace
+                      .template
+                  }/*`}
+                  element={children}
+                />
+              </Routes>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -149,8 +153,12 @@ beforeEach(() => {
 afterEach(jest.resetAllMocks);
 
 describe('Manuscript', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation();
+  });
+
   it('status can be changed', async () => {
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -161,9 +169,9 @@ describe('Manuscript', () => {
       />,
     );
 
-    userEvent.click(await screen.findByTestId('status-button'));
-    userEvent.click(screen.getByText('Addendum Required'));
-    userEvent.click(
+    await userEvent.click(await screen.findByTestId('status-button'));
+    await userEvent.click(screen.getByText('Addendum Required'));
+    await userEvent.click(
       screen.getByRole('button', { name: 'Update Status and Notify' }),
     );
     await waitFor(() => {
@@ -179,7 +187,7 @@ describe('Manuscript', () => {
   });
 
   it('should create discussion', async () => {
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -189,22 +197,25 @@ describe('Manuscript', () => {
         }}
       />,
     );
-
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(screen.getByRole('button', { name: /Start Discussion/i }));
-    userEvent.type(screen.getByRole('textbox', { name: /Title/i }), 'Test');
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(
+      screen.getByRole('button', { name: /Start Discussion/i }),
+    );
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Title/i }),
+      'Test',
+    );
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
-
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(createDiscussion).toHaveBeenCalledWith(
         {
@@ -250,8 +261,7 @@ describe('Manuscript', () => {
       },
       jest.fn(),
     ]);
-
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -261,41 +271,35 @@ describe('Manuscript', () => {
         }}
       />,
     );
-
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
     await act(async () => {
-      userEvent.click(
+      await userEvent.click(
         await screen.findByTestId(
           'discussion-collapsible-button-discussion-id-1',
         ),
       );
     });
-
     await waitFor(() => {
       expect(mockMarkDiscussionAsRead).toHaveBeenCalledWith(
         'manuscript_0',
         'discussion-id-1',
       );
     });
-
-    userEvent.click(
+    await userEvent.click(
       await screen.findByTestId('discussion-reply-button-discussion-id-1'),
     );
-
-    userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
-
+    await userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
-
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(mockReplyToDiscussion).toHaveBeenCalledWith(
         'manuscript_0',
@@ -350,7 +354,7 @@ describe('Manuscript', () => {
       Promise.reject(new Error('Reply failed')),
     );
 
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -361,31 +365,31 @@ describe('Manuscript', () => {
       />,
     );
 
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(
       await screen.findByTestId(
         'discussion-collapsible-button-discussion-id-1',
       ),
     );
 
-    userEvent.click(
+    await userEvent.click(
       await screen.findByTestId('discussion-reply-button-discussion-id-1'),
     );
 
-    userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
+    await userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
 
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
 
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(mockSetFormType).toHaveBeenCalledWith({
         type: 'default-error',
@@ -401,6 +405,14 @@ describe('a tool', () => {
   const { mockConfirm } = mockAlert();
 
   it('can be deleted', async () => {
+    mockConfirm.mockReturnValue(true);
+    // Use a deferred promise to control when the delete completes
+    let resolveDelete: (value: TeamResponse) => void;
+    const deletePromise = new Promise<TeamResponse>((resolve) => {
+      resolveDelete = resolve;
+    });
+    mockPatchTeam.mockReturnValue(deletePromise);
+
     const { findByText } = renderWithWrapper(
       <Workspace
         team={{
@@ -417,14 +429,18 @@ describe('a tool', () => {
       />,
       user,
     );
-
-    userEvent.click(await findByText(/delete/i));
+    await userEvent.click(await findByText(/delete/i));
+    // Now we should see "Deleting..." while the promise is pending
     await findByText(/deleting/i);
     expect(mockPatchTeam).toHaveBeenLastCalledWith(
       id,
       { tools: [] },
       expect.anything(),
     );
+    // Resolve the promise to complete the delete
+    await act(async () => {
+      resolveDelete!(createTeamResponse());
+    });
   });
 
   it('is not deleted when rejecting the confirm prompt', async () => {
@@ -446,7 +462,7 @@ describe('a tool', () => {
     );
 
     mockConfirm.mockReturnValue(false);
-    userEvent.click(await findByText(/delete/i));
+    await userEvent.click(await findByText(/delete/i));
     await findByText(/delete/i);
 
     expect(mockPatchTeam).not.toHaveBeenCalled();
@@ -474,7 +490,7 @@ describe('a tool', () => {
     );
 
     mockPatchTeam.mockRejectedValue(new Error('Nope'));
-    userEvent.click(await findByText(/delete/i));
+    await userEvent.click(await findByText(/delete/i));
 
     await waitFor(() => expect(mockToast).toHaveBeenCalled());
   });
@@ -509,11 +525,11 @@ describe('a tool', () => {
         }),
     );
 
-    userEvent.click((await findAllByText(/delete/i))[0]!);
+    await userEvent.click((await findAllByText(/delete/i))[0]!);
     await findByText(/deleting/i);
     mockPatchTeam.mockClear();
 
-    userEvent.click(await findByText(/delete/i));
+    await userEvent.click(await findByText(/delete/i));
     expect(mockPatchTeam).not.toHaveBeenCalled();
 
     resolvePatchTeam(createTeamResponse());
@@ -530,9 +546,9 @@ describe('the add tool dialog', () => {
         <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
         user,
       );
-    userEvent.click(await findByText(/add/i));
+    await userEvent.click(await findByText(/add/i));
 
-    userEvent.click(await findByTitle(/close/i));
+    await userEvent.click(await findByTitle(/close/i));
     expect(queryByTitle(/close/i)).not.toBeInTheDocument();
     expect(getByText(/add/i)).toBeVisible();
   });
@@ -543,11 +559,14 @@ describe('the add tool dialog', () => {
         <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
         user,
       );
-    userEvent.click(await findByText(/add/i));
-    userEvent.type(await findByLabelText(/tool.+name/i), 'tool');
-    userEvent.type(await findByLabelText(/description/i), 'description');
-    userEvent.type(await findByLabelText(/url/i), 'http://example.com/tool');
-    userEvent.click(await findByText(/save/i));
+    await userEvent.click(await findByText(/add/i));
+    await userEvent.type(await findByLabelText(/tool.+name/i), 'tool');
+    await userEvent.type(await findByLabelText(/description/i), 'description');
+    await userEvent.type(
+      await findByLabelText(/url/i),
+      'http://example.com/tool',
+    );
+    await userEvent.click(await findByText(/save/i));
 
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
@@ -570,6 +589,64 @@ describe('the add tool dialog', () => {
 });
 
 describe('the edit tool dialog', () => {
+  it('renders not found page when tool index is invalid', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+
+    const teamWithTools = {
+      ...createTeamResponse(),
+      id,
+      tools: [
+        {
+          name: 'tool',
+          description: 'desc',
+          url: 'http://example.com/tool',
+        },
+      ],
+    };
+
+    render(
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user as never}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  network({})
+                    .teams({})
+                    .team({ teamId: id })
+                    .workspace({})
+                    .tools({})
+                    .tool({ toolIndex: '99' }).$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={`${network.template}${network({}).teams.template}${
+                      network({}).teams({}).team.template
+                    }${
+                      network({}).teams({}).team({ teamId: id }).workspace
+                        .template
+                    }/*`}
+                    element={<Workspace team={teamWithTools} />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Sorry! We can’t seem to find that page./i),
+      ).toBeVisible();
+    });
+
+    jest.restoreAllMocks();
+  });
+
+  // TODO: React Router v6 migration - skipped due to: timing issues with finding close button title
   it('goes back when closed', async () => {
     const { getByText, queryByTitle, findByText, findByTitle } =
       renderWithWrapper(
@@ -588,9 +665,8 @@ describe('the edit tool dialog', () => {
         />,
         user,
       );
-    userEvent.click(await findByText(/edit/i, { selector: 'li *' }));
-
-    userEvent.click(await findByTitle(/close/i));
+    await userEvent.click(await findByText(/edit/i, { selector: 'li *' }));
+    await userEvent.click(await findByTitle(/close/i));
     expect(queryByTitle(/close/i)).not.toBeInTheDocument();
     expect(getByText(/edit/i, { selector: 'li *' })).toBeVisible();
   });
@@ -618,14 +694,13 @@ describe('the edit tool dialog', () => {
         />,
         user,
       );
-    userEvent.click(
+    await userEvent.click(
       getChildByText((await findByText('tool 2')).closest('li')!, /edit/i),
     );
-    userEvent.type(await findByLabelText(/tool.+name/i), ' new');
-    userEvent.type(await findByLabelText(/description/i), ' new');
-    userEvent.type(await findByLabelText(/url/i), '-new');
-    userEvent.click(await findByText(/save/i));
-
+    await userEvent.type(await findByLabelText(/tool.+name/i), ' new');
+    await userEvent.type(await findByLabelText(/description/i), ' new');
+    await userEvent.type(await findByLabelText(/url/i), '-new');
+    await userEvent.click(await findByText(/save/i));
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('tool 2 new')).not.toBeInTheDocument();
@@ -648,6 +723,32 @@ describe('the edit tool dialog', () => {
 });
 
 describe('error handling for 403 BackendError', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation();
+    // Mock DOM APIs required by Lexical editor
+    Range.prototype.getBoundingClientRect = jest.fn(() => ({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 20,
+      top: 0,
+      right: 100,
+      bottom: 20,
+      left: 0,
+      toJSON: jest.fn(),
+    }));
+    Range.prototype.getClientRects = jest.fn(
+      () =>
+        ({
+          length: 1,
+          item: () => null,
+          *[Symbol.iterator]() {
+            yield new DOMRect(0, 0, 100, 20);
+          },
+        }) as unknown as DOMRectList,
+    );
+  });
+
   it('shows manuscript-status-error when reply to discussion fails with 403', async () => {
     (useManuscriptById as jest.Mock).mockImplementation(() => [
       {
@@ -689,8 +790,7 @@ describe('error handling for 403 BackendError', () => {
         ),
       ),
     );
-
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -700,28 +800,27 @@ describe('error handling for 403 BackendError', () => {
         }}
       />,
     );
-
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(
       await screen.findByTestId(
         'discussion-collapsible-button-discussion-id-1',
       ),
     );
-    userEvent.click(
+    await userEvent.click(
       await screen.findByTestId('discussion-reply-button-discussion-id-1'),
     );
-    userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
+    await userEvent.click(await screen.findByText('Reply', { selector: 'h3' }));
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(mockSetFormType).toHaveBeenCalledWith({
         type: 'manuscript-status-error',
@@ -740,7 +839,7 @@ describe('error handling for 403 BackendError', () => {
         ),
       ),
     );
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -750,20 +849,25 @@ describe('error handling for 403 BackendError', () => {
         }}
       />,
     );
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(screen.getByRole('button', { name: /Start Discussion/i }));
-    userEvent.type(screen.getByRole('textbox', { name: /Title/i }), 'Test');
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(
+      screen.getByRole('button', { name: /Start Discussion/i }),
+    );
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Title/i }),
+      'Test',
+    );
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(mockSetFormType).toHaveBeenCalledWith({
         type: 'manuscript-status-error',
@@ -782,8 +886,7 @@ describe('error handling for 403 BackendError', () => {
         ),
       ),
     );
-
-    const screen = renderWithWrapper(
+    renderWithWrapper(
       <Workspace
         team={{
           ...createTeamResponse(),
@@ -793,24 +896,25 @@ describe('error handling for 403 BackendError', () => {
         }}
       />,
     );
-
-    userEvent.click(await screen.findByTestId('collapsible-button'));
-    userEvent.click(screen.getByText('Discussions'));
-    userEvent.click(screen.getByRole('button', { name: /Start Discussion/i }));
-    userEvent.type(screen.getByRole('textbox', { name: /Title/i }), 'Test');
-
+    await userEvent.click(await screen.findByTestId('collapsible-button'));
+    await userEvent.click(screen.getByText('Discussions'));
+    await userEvent.click(
+      screen.getByRole('button', { name: /Start Discussion/i }),
+    );
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Title/i }),
+      'Test',
+    );
     const textInput = screen.getByTestId('editor');
     await act(async () => {
-      userEvent.click(textInput);
-      userEvent.tab();
+      await userEvent.click(textInput);
+      await userEvent.tab();
       fireEvent.input(textInput, { data: 'test message' });
-      userEvent.tab();
+      await userEvent.tab();
     });
-
     const shareButton = screen.getByRole('button', { name: /Send/i });
     await waitFor(() => expect(shareButton).toBeEnabled());
-    userEvent.click(shareButton);
-
+    await userEvent.click(shareButton);
     await waitFor(() => {
       expect(mockSetFormType).toHaveBeenCalledWith({
         type: 'default-error',
@@ -818,5 +922,65 @@ describe('error handling for 403 BackendError', () => {
       });
       expect(window.scrollTo).toHaveBeenCalled();
     });
+  });
+});
+
+describe('useManuscriptToast error handling', () => {
+  it('logs error when context.setFormType is missing (covers lines 7-12)', () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    // Get the actual implementation (bypassing the mock)
+    // This works because jest.requireActual gets the real module before mocks
+    const actualUseManuscriptToast = jest.requireActual(
+      '../useManuscriptToast',
+    ).useManuscriptToast;
+
+    // Create a context value without setFormType to trigger the error path
+    // This covers line 7: if (!context.setFormType)
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <ManuscriptToastContext.Provider
+        value={{ setFormType: undefined as never }}
+      >
+        {children}
+      </ManuscriptToastContext.Provider>
+    );
+
+    const { result } = renderHook(() => actualUseManuscriptToast(), {
+      wrapper,
+    });
+
+    // Should log error
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'useManuscriptToast must be used within a ManuscriptToastProvider',
+    );
+
+    // Should still return the context even if setFormType is missing
+    expect(result.current.setFormType).toBeUndefined();
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('provides default context value with no-op setFormType when used without provider', () => {
+    // Get the actual implementation
+    const actualUseManuscriptToast = jest.requireActual(
+      '../useManuscriptToast',
+    ).useManuscriptToast;
+
+    // Use the hook without a provider wrapper - it will use the default context value
+    const { result } = renderHook(() => actualUseManuscriptToast());
+
+    // Should have setFormType from default context value
+    expect(result.current.setFormType).toBeDefined();
+    expect(typeof result.current.setFormType).toBe('function');
+
+    // Should be able to call it without errors (it's a no-op)
+    expect(() => {
+      result.current.setFormType({
+        type: 'manuscript',
+        accent: 'successLarge',
+      });
+    }).not.toThrow();
   });
 });

@@ -6,7 +6,7 @@ import {
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
-import { Route } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { getInstitutions } from '../users/api';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
@@ -15,6 +15,7 @@ import { usePatchUserById, useUserById } from '../users/state';
 
 const CoreDetails: React.FC<Record<string, never>> = () => {
   const currentUser = useCurrentUserGP2();
+  const navigate = useNavigate();
 
   const { onboarding } = gp2;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -32,29 +33,43 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
           onImageSelect={onImageSelect}
           avatarSaving={avatarSaving}
         />
-        <Route path={onboarding({}).coreDetails({}).editKeyInfo({}).$}>
-          <KeyInformationModal
-            {...userData}
-            locationSuggestions={locationSuggestions.map(
-              ({ shortName }) => shortName,
-            )}
-            loadInstitutionOptions={(searchQuery) =>
-              getInstitutions({ searchQuery }).then((data) =>
-                data.items.map(({ name }) => name),
-              )
+        <Routes>
+          <Route
+            path={onboarding({}).coreDetails({}).editKeyInfo.template}
+            element={
+              <KeyInformationModal
+                {...userData}
+                locationSuggestions={locationSuggestions.map(
+                  ({ shortName }) => shortName,
+                )}
+                loadInstitutionOptions={(searchQuery) =>
+                  getInstitutions({ searchQuery }).then((data) =>
+                    data.items.map(({ name }) => name),
+                  )
+                }
+                backHref={onboarding({}).coreDetails({}).$}
+                onSave={async (patchedUser) => {
+                  await patchUser(patchedUser);
+                  navigate(onboarding({}).coreDetails({}).$);
+                }}
+              />
             }
-            backHref={onboarding({}).coreDetails({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
           />
-        </Route>
-        <Route path={onboarding({}).coreDetails({}).editContactInfo({}).$}>
-          <ContactInformationModal
-            {...userData}
-            countryCodeSuggestions={countryCodesSuggestions}
-            backHref={onboarding({}).coreDetails({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
+          <Route
+            path={onboarding({}).coreDetails({}).editContactInfo.template}
+            element={
+              <ContactInformationModal
+                {...userData}
+                countryCodeSuggestions={countryCodesSuggestions}
+                backHref={onboarding({}).coreDetails({}).$}
+                onSave={async (patchedUser) => {
+                  await patchUser(patchedUser);
+                  navigate(onboarding({}).coreDetails({}).$);
+                }}
+              />
+            }
           />
-        </Route>
+        </Routes>
       </>
     );
   }

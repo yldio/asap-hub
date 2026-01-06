@@ -26,7 +26,9 @@ type WorkingGroupOverviewProps = Pick<
   | 'calendar'
   | 'milestones'
   | 'tags'
->;
+> & {
+  children?: React.ReactNode;
+};
 
 const { rem } = pixels;
 

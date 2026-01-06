@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { Frame } from '@asap-hub/frontend-utils';
 import {
   ProjectDetailPage,
@@ -15,7 +15,7 @@ type ResourceProjectDetailParams = {
 
 const ResourceProjectDetail: FC<Record<string, never>> = () => {
   const { projectId } = useParams<ResourceProjectDetailParams>();
-  const projectDetail = useProjectById(projectId);
+  const projectDetail = useProjectById(projectId ?? '');
 
   if (!projectDetail) {
     return <NotFoundPage />;
@@ -28,7 +28,7 @@ const ResourceProjectDetail: FC<Record<string, never>> = () => {
 
   const route = projects({})
     .resourceProjects({})
-    .resourceProject({ projectId });
+    .resourceProject({ projectId: projectId ?? '' });
 
   return (
     <Frame title={projectDetail?.title || ''}>
@@ -37,10 +37,18 @@ const ResourceProjectDetail: FC<Record<string, never>> = () => {
         pointOfContactEmail={projectDetail.contactEmail || undefined}
         aboutHref={route.about({}).$}
       >
-        <ProjectDetailAbout
-          {...projectDetail}
-          pointOfContactEmail={projectDetail.contactEmail || undefined}
-        />
+        <Routes>
+          <Route
+            path="about"
+            element={
+              <ProjectDetailAbout
+                {...projectDetail}
+                pointOfContactEmail={projectDetail.contactEmail || undefined}
+              />
+            }
+          />
+          <Route index element={<Navigate to="about" replace />} />
+        </Routes>
       </ProjectDetailPage>
     </Frame>
   );

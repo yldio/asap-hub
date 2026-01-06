@@ -17,6 +17,7 @@ type PageBannerProp = {
   noMarginBottom?: boolean;
   noLayoutPadding?: boolean;
   noBorderTop?: boolean;
+  children?: React.ReactNode;
 };
 
 const headerMaxWidth = 748;

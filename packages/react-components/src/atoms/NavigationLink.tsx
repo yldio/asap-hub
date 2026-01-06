@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
-import { NavHashLink } from 'react-router-hash-link';
+import { css, Theme } from '@emotion/react';
+import { PropsWithChildren } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { activePrimaryStyles } from '../button';
 import { charcoal, lead, silver } from '../colors';
+import { useBlockedClick } from '../navigation';
 import {
   largeDesktopScreen,
   lineHeight,
@@ -12,8 +14,6 @@ import {
 } from '../pixels';
 import { useHasRouter } from '../routing';
 import { isInternalLink } from '../utils';
-
-const activeClassName = 'active-link';
 
 const styles = css({
   display: 'block',
@@ -70,7 +70,7 @@ const squareBorderStyles = css({
 
 type NavigationLinkProps = NavigationProps & {
   readonly icon?: JSX.Element;
-};
+} & PropsWithChildren;
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   children,
@@ -89,32 +89,44 @@ interface NavigationProps {
   readonly enabled?: boolean;
   readonly squareBorder?: boolean;
 }
-export const Navigation: React.FC<NavigationProps> = ({
+export const Navigation: React.FC<NavigationProps & PropsWithChildren> = ({
   href,
   children,
   enabled = true,
   squareBorder,
 }) => {
+  const blockedClick = useBlockedClick();
   const [internal, url] = isInternalLink(href);
+  const location = useLocation();
+
   if (useHasRouter() && internal) {
+    // Use prefix matching to highlight parent sections when viewing subsections
+    // e.g., /network should be highlighted when at /network/interest-groups
+    const linkPath = url.split('#')[0];
+    const isActive =
+      linkPath &&
+      (location.pathname === linkPath ||
+        location.pathname.startsWith(`${linkPath}/`));
+
     return (
-      <NavHashLink
+      <NavLink
         to={url}
-        activeClassName={activeClassName}
-        css={({ colors, components }) => [
-          styles,
-          squareBorder && squareBorderStyles,
-          {
-            [`&.${activeClassName}`]: activePrimaryStyles(colors),
-          },
-          !enabled && disableStyles,
-          components?.NavigationLink?.styles,
-        ]}
-        smooth
-        isActive={(match) => enabled && !!match && match.url === url}
+        style={{ textDecoration: 'none', color: 'unset' }}
+        className={enabled && isActive ? 'active' : undefined}
+        onClick={blockedClick}
       >
-        {children}
-      </NavHashLink>
+        <div
+          css={({ colors, components }: Theme) => [
+            styles,
+            squareBorder && squareBorderStyles,
+            enabled && isActive && activePrimaryStyles(colors),
+            !enabled && disableStyles,
+            components?.NavigationLink?.styles,
+          ]}
+        >
+          {children}
+        </div>
+      </NavLink>
     );
   }
   const active =
@@ -123,7 +135,8 @@ export const Navigation: React.FC<NavigationProps> = ({
   return (
     <a
       href={url}
-      css={({ colors, components }) => [
+      className={active ? 'active' : undefined}
+      css={({ colors, components }: Theme) => [
         styles,
         squareBorder && squareBorderStyles,
         active && activePrimaryStyles(colors),

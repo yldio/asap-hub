@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { Router } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { InnerToastContext } from '@asap-hub/react-context';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
@@ -10,31 +10,31 @@ import {
   ResearchTagResponse,
 } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory, History } from 'history';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { fern, paper } from '../../../colors';
 import { defaultProps } from '../../test-utils/research-output-form';
+import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
 
+let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
+
 describe('form buttons', () => {
-  let history!: History;
   const id = '42';
   const saveFn = jest.fn();
   const getLabSuggestions = jest.fn();
   const getAuthorSuggestions = jest.fn();
 
   beforeEach(() => {
-    history = createMemoryHistory();
     saveFn.mockResolvedValue({ id } as ResearchOutputResponse);
     getLabSuggestions.mockResolvedValue([]);
     getAuthorSuggestions.mockResolvedValue([]);
 
-    // TODO: fix act error
-    jest.spyOn(console, 'error').mockImplementation();
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 
@@ -75,7 +75,7 @@ describe('form buttons', () => {
   ) => {
     render(
       <InnerToastContext.Provider value={jest.fn()}>
-        <Router history={history}>
+        <MemoryRouter>
           <ResearchOutputForm
             {...defaultProps}
             versionAction={versionAction}
@@ -98,7 +98,7 @@ describe('form buttons', () => {
               canShareResearchOutput: true,
             }}
           />
-        </Router>
+        </MemoryRouter>
       </InnerToastContext.Provider>,
     );
   };
@@ -224,7 +224,9 @@ describe('form buttons', () => {
         published: false,
         researchOutputData: createResearchOutputResponse(),
       });
-      userEvent.click(screen.getByRole('button', { name: /Save Draft/i }));
+      await userEvent.click(
+        screen.getByRole('button', { name: /Save Draft/i }),
+      );
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
       expect(screen.getByText(/Keep and save/i)).toBeVisible();
     });
@@ -236,7 +238,7 @@ describe('form buttons', () => {
         researchOutputData: createResearchOutputResponse(),
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
       expect(screen.getByText(/Keep and publish/i)).toBeVisible();
     });
@@ -248,9 +250,11 @@ describe('form buttons', () => {
         researchOutputData: createResearchOutputResponse(),
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+      await userEvent.click(
+        screen.getAllByRole('button', { name: /Cancel/i })[0]!,
+      );
       expect(screen.queryByText(/Keep the same description/i)).toBeNull();
     });
 
@@ -266,9 +270,9 @@ describe('form buttons', () => {
         },
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Keep and publish/i }),
       );
       await waitFor(() => {
@@ -288,16 +292,16 @@ describe('form buttons', () => {
         },
         published: false,
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.getByText(/Keep the same description/i)).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Keep and publish/i }),
       );
       await waitFor(() => {
         expect(screen.queryByText(/Keep the same description/i)).toBeNull();
         expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(screen.queryByText(/Keep the same description/i)).toBeNull();
     });
   });
@@ -310,7 +314,7 @@ describe('form buttons', () => {
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
@@ -326,11 +330,13 @@ describe('form buttons', () => {
         canPublishResearchOutput: true,
         researchOutputData: createResearchOutputResponse(),
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
-      userEvent.click(screen.getAllByRole('button', { name: /Cancel/i })[0]!);
+      await userEvent.click(
+        screen.getAllByRole('button', { name: /Cancel/i })[0]!,
+      );
       expect(
         screen.queryByText(/Publish new version for the whole hub?/i),
       ).toBeNull();
@@ -346,11 +352,11 @@ describe('form buttons', () => {
           link: '',
         },
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Publish new version/i }),
       );
       await waitFor(() => {
@@ -371,11 +377,11 @@ describe('form buttons', () => {
           link: '',
         },
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.getByText(/Publish new version for the whole hub?/i),
       ).toBeVisible();
-      userEvent.click(
+      await userEvent.click(
         screen.getByRole('button', { name: /Publish new version/i }),
       );
       await waitFor(() => {
@@ -384,7 +390,7 @@ describe('form buttons', () => {
         ).toBeNull();
         expect(screen.getByText(/Please enter a valid URL/i)).toBeVisible();
       });
-      userEvent.click(screen.getByRole('button', { name: /Publish/i }));
+      await userEvent.click(screen.getByRole('button', { name: /Publish/i }));
       expect(
         screen.queryByText(/Publish new version for the whole hub?/i),
       ).toBeNull();

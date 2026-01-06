@@ -13,8 +13,8 @@ import { UserPatchRequest } from '@asap-hub/model';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2, useRouteParams } from '@asap-hub/routing';
-import { FC, lazy, useEffect } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { FC, lazy, useEffect, useMemo } from 'react';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -58,11 +58,6 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
 
   const userRoute = users({}).user({ userId });
 
-  const overview = userRoute.overview({}).$;
-  const outputs = userRoute.outputs({}).$;
-  const upcoming = userRoute.upcoming({}).$;
-  const past = userRoute.past({}).$;
-
   const backToUserDetails = users({}).user({ userId }).$;
   const userOverviewRoute = userRoute.overview({});
   const editHrefs = {
@@ -80,91 +75,131 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   const { avatarSaving, onImageSelect } = useSelectAvatar(currentUser!.id);
 
   const { items: allTags } = useTags();
+  const navigate = useNavigate();
 
   const commonModalProps = {
     backHref: backToUserDetails,
-    onSave: (patchedUser: UserPatchRequest) => patchUser(patchedUser),
+    onSave: async (patchedUser: UserPatchRequest) => {
+      await patchUser(patchedUser);
+      // TODO: This is a quickfix implemented to prevent https://asaphub.atlassian.net/browse/ASAP-1318
+      // Ideally, the EditModal component in react-component should be able to navigate to `backHref`
+      // but GP2 unmounts the whole app when the user's data is refreshed, causing the form to be unmounted
+      // when it needs to perform the navigation.
+      // So, this is a workaround that forces the navigation immediately after saving.
+      navigate(backToUserDetails);
+    },
   };
-  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(currentTime, {
-    userId,
-  });
+
+  // Memoize constraint to prevent new object reference on every render
+  const constraint = useMemo(() => ({ userId }), [userId]);
+
+  const [upcomingEvents, pastEvents] = useUpcomingAndPastEvents(
+    currentTime,
+    constraint,
+  );
 
   if (user) {
     return (
-      <Switch>
-        <UserDetailPage
-          editHref={
-            isOwnProfile ? userOverviewRoute.editKeyInfo({}).$ : undefined
-          }
-          outputsTotal={outputsTotal}
-          upcomingTotal={upcomingEvents?.total || 0}
-          pastTotal={pastEvents?.total || 0}
-          avatarSaving={avatarSaving}
-          onImageSelect={isOwnProfile ? onImageSelect : undefined}
-          {...user}
-        >
-          <Switch>
-            <Route path={overview}>
+      <UserDetailPage
+        editHref={
+          isOwnProfile ? userOverviewRoute.editKeyInfo({}).$ : undefined
+        }
+        outputsTotal={outputsTotal}
+        upcomingTotal={upcomingEvents?.total || 0}
+        pastTotal={pastEvents?.total || 0}
+        avatarSaving={avatarSaving}
+        onImageSelect={isOwnProfile ? onImageSelect : undefined}
+        {...user}
+      >
+        <Routes>
+          <Route
+            path="overview/*"
+            element={
               <Frame title="Overview">
                 <UserOverview {...user} {...(isOwnProfile ? editHrefs : {})} />
                 {isOwnProfile && (
-                  <>
-                    <Route path={userOverviewRoute.editKeyInfo({}).$}>
-                      <KeyInformationModal
-                        {...user}
-                        {...commonModalProps}
-                        locationSuggestions={locationSuggestions.map(
-                          ({ shortName }) => shortName,
-                        )}
-                        loadInstitutionOptions={(searchQuery) =>
-                          getInstitutions({ searchQuery }).then((data) =>
-                            data.items.map(({ name }) => name),
-                          )
-                        }
-                      />
-                    </Route>
-                    <Route path={userOverviewRoute.editBiography({}).$}>
-                      <BiographyModal {...user} {...commonModalProps} />
-                    </Route>
-                    <Route path={userOverviewRoute.editContactInfo({}).$}>
-                      <ContactInformationModal
-                        {...user}
-                        {...commonModalProps}
-                        countryCodeSuggestions={countryCodesSuggestions}
-                      />
-                    </Route>
+                  <Routes>
                     <Route
-                      path={userOverviewRoute.editContributingCohorts({}).$}
-                    >
-                      <ContributingCohortsModal
-                        {...user}
-                        {...commonModalProps}
-                        cohortOptions={cohortOptions}
-                      />
-                    </Route>
-                    <Route path={userOverviewRoute.editFundingStreams({}).$}>
-                      <FundingProviderModal {...user} {...commonModalProps} />
-                    </Route>
-                    <Route path={userOverviewRoute.editTags({}).$}>
-                      <TagsModal
-                        {...user}
-                        {...commonModalProps}
-                        suggestions={allTags}
-                      />
-                    </Route>
-                    <Route path={userOverviewRoute.editQuestions({}).$}>
-                      <OpenQuestionsModal {...user} {...commonModalProps} />
-                    </Route>
-                  </>
+                      path="edit-key-info"
+                      element={
+                        <KeyInformationModal
+                          {...user}
+                          {...commonModalProps}
+                          locationSuggestions={locationSuggestions.map(
+                            ({ shortName }) => shortName,
+                          )}
+                          loadInstitutionOptions={(searchQuery) =>
+                            getInstitutions({ searchQuery }).then((data) =>
+                              data.items.map(({ name }) => name),
+                            )
+                          }
+                        />
+                      }
+                    />
+                    <Route
+                      path="edit-biography"
+                      element={
+                        <BiographyModal {...user} {...commonModalProps} />
+                      }
+                    />
+                    <Route
+                      path="edit-contact-info"
+                      element={
+                        <ContactInformationModal
+                          {...user}
+                          {...commonModalProps}
+                          countryCodeSuggestions={countryCodesSuggestions}
+                        />
+                      }
+                    />
+                    <Route
+                      path="edit-contributing-cohorts"
+                      element={
+                        <ContributingCohortsModal
+                          {...user}
+                          {...commonModalProps}
+                          cohortOptions={cohortOptions}
+                        />
+                      }
+                    />
+                    <Route
+                      path="edit-funding-streams"
+                      element={
+                        <FundingProviderModal {...user} {...commonModalProps} />
+                      }
+                    />
+                    <Route
+                      path="edit-tags"
+                      element={
+                        <TagsModal
+                          {...user}
+                          {...commonModalProps}
+                          suggestions={allTags}
+                        />
+                      }
+                    />
+                    <Route
+                      path="edit-questions"
+                      element={
+                        <OpenQuestionsModal {...user} {...commonModalProps} />
+                      }
+                    />
+                  </Routes>
                 )}
               </Frame>
-            </Route>
-            <Route path={outputs}>
+            }
+          />
+          <Route
+            path="outputs"
+            element={
               <Frame title="Shared Outputs">
                 <OutputDirectory userId={userId} />
               </Frame>
-            </Route>
-            <Route path={upcoming}>
+            }
+          />
+          <Route
+            path="upcoming"
+            element={
               <Frame title="Upcoming Events">
                 <EventsList
                   constraint={{ userId }}
@@ -172,8 +207,11 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
                   past={false}
                 />
               </Frame>
-            </Route>
-            <Route path={past}>
+            }
+          />
+          <Route
+            path="past"
+            element={
               <Frame title="Past Events">
                 <EventsList
                   currentTime={currentTime}
@@ -181,11 +219,11 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
                   constraint={{ userId }}
                 />
               </Frame>
-            </Route>
-            <Redirect to={overview} />
-          </Switch>
-        </UserDetailPage>
-      </Switch>
+            }
+          />
+          <Route index element={<Navigate to="overview" replace />} />
+        </Routes>
+      </UserDetailPage>
     );
   }
   return <NotFoundPage />;

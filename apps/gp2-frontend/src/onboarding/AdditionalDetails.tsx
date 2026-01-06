@@ -7,7 +7,7 @@ import {
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
-import { Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useContributingCohorts } from '../shared/state';
 
 import { usePatchUserById, useUserById } from '../users/state';
@@ -21,49 +21,56 @@ const AdditionalDetails: React.FC<Record<string, never>> = () => {
   const patchUser = usePatchUserById(currentUser!.id);
 
   const cohortOptions = useContributingCohorts();
+  const additionalDetailsRoute = onboarding({}).additionalDetails({});
+
   if (userData) {
     return (
       <>
         <OnboardingAdditionalDetails
           {...userData}
-          editQuestionsHref={
-            onboarding({}).additionalDetails({}).editQuestions({}).$
-          }
+          editQuestionsHref={additionalDetailsRoute.editQuestions({}).$}
           editFundingStreamsHref={
-            onboarding({}).additionalDetails({}).editFundingStreams({}).$
+            additionalDetailsRoute.editFundingStreams({}).$
           }
           editContributingCohortsHref={
-            onboarding({}).additionalDetails({}).editContributingCohorts({}).$
+            additionalDetailsRoute.editContributingCohorts({}).$
           }
         />
-        <Route path={onboarding({}).additionalDetails({}).editQuestions({}).$}>
-          <OpenQuestionsModal
-            {...userData}
-            backHref={onboarding({}).additionalDetails({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
+        <Routes>
+          <Route
+            path={additionalDetailsRoute.editQuestions.template.slice(1)}
+            element={
+              <OpenQuestionsModal
+                {...userData}
+                backHref={additionalDetailsRoute.$}
+                onSave={(patchedUser) => patchUser(patchedUser)}
+              />
+            }
           />
-        </Route>
-        <Route
-          path={onboarding({}).additionalDetails({}).editFundingStreams({}).$}
-        >
-          <FundingProviderModal
-            {...userData}
-            backHref={onboarding({}).additionalDetails({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
+          <Route
+            path={additionalDetailsRoute.editFundingStreams.template.slice(1)}
+            element={
+              <FundingProviderModal
+                {...userData}
+                backHref={additionalDetailsRoute.$}
+                onSave={(patchedUser) => patchUser(patchedUser)}
+              />
+            }
           />
-        </Route>
-        <Route
-          path={
-            onboarding({}).additionalDetails({}).editContributingCohorts({}).$
-          }
-        >
-          <ContributingCohortsModal
-            {...userData}
-            backHref={onboarding({}).additionalDetails({}).$}
-            onSave={(patchedUser) => patchUser(patchedUser)}
-            cohortOptions={cohortOptions}
+          <Route
+            path={additionalDetailsRoute.editContributingCohorts.template.slice(
+              1,
+            )}
+            element={
+              <ContributingCohortsModal
+                {...userData}
+                backHref={additionalDetailsRoute.$}
+                onSave={(patchedUser) => patchUser(patchedUser)}
+                cohortOptions={cohortOptions}
+              />
+            }
           />
-        </Route>
+        </Routes>
       </>
     );
   }

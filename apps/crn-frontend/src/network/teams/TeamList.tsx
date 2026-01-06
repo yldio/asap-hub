@@ -1,7 +1,6 @@
 import { network } from '@asap-hub/routing';
 import { useLocation } from 'react-router-dom';
 import { TeamDataObject } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
 import {
   NetworkTeams,
   DiscoveryTeamIcon,

@@ -257,7 +257,7 @@ describe('ProjectProfileOverview', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('renders Read Full Proposal button for original grant even when supplement grant has no URL', () => {
+    it('renders Read Full Proposal button for original grant even when supplement grant has no URL', async () => {
       const supplementGrantNoURL = {
         ...supplementGrant,
         proposalURL: undefined,
@@ -273,7 +273,7 @@ describe('ProjectProfileOverview', () => {
       const originalGrantTab = screen.getByRole('button', {
         name: 'Original Grant',
       });
-      userEvent.click(originalGrantTab);
+      await userEvent.click(originalGrantTab);
 
       const link = screen.getByRole('link', { name: /read full proposal/i });
       expect(link).toHaveAttribute(

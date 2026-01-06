@@ -91,16 +91,18 @@ describe('the personal info modal', () => {
       time_taken: 0,
       items: [
         {
-          name: 'ExampleInst',
-          id: 'id-1',
-          email_address: 'example@example.com',
-          status: '',
-          wikipedia_url: '',
+          id: 'https://ror.org/id-1',
+          names: [
+            {
+              value: 'ExampleInst',
+              types: ['ror_display', 'label'],
+              lang: 'en',
+            },
+          ],
           established: 1999,
-          aliases: [],
-          acronyms: [],
+          types: ['education'],
           links: [],
-          types: [],
+          status: 'active',
         },
       ],
     });

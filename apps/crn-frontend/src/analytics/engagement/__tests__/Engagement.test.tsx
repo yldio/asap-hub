@@ -4,7 +4,6 @@ import {
   EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { disable, enable, Flag } from '@asap-hub/flags';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   EngagementPerformance,
@@ -88,10 +87,6 @@ jest.mock('@asap-hub/frontend-utils', () => {
       .fn()
       .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
   };
-});
-
-beforeEach(() => {
-  disable('ANALYTICS_PHASE_TWO' as Flag);
 });
 
 afterEach(() => {
@@ -349,9 +344,21 @@ describe('Engagement', () => {
     });
   });
 
-  it('redirects to presenters when metric is attendance and flag is disabled', async () => {
+  it('renders meeting rep attendance', async () => {
     await renderPage(
       analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
+    );
+
+    expect(
+      screen.getByRole('heading', {
+        name: /Meeting Rep Attendance/i,
+      }),
+    ).toBeVisible();
+  });
+
+  it('can navigate to meeting rep attendance page', async () => {
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
     );
 
     expect(
@@ -359,99 +366,69 @@ describe('Engagement', () => {
         name: /Representation of Presenters/i,
       }),
     ).toBeVisible();
+
+    const input = screen.getAllByRole('textbox', { hidden: false });
+
+    await userEvent.click(input[0]!);
+    await userEvent.click(screen.getByText('Meeting Rep Attendance'));
+
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    expect(
+      screen.getByRole('heading', { name: /Meeting Rep Attendance/i }),
+    ).toBeVisible();
+    expect(
+      screen.queryByText(/Representation of Presenters/i),
+    ).not.toBeInTheDocument();
   });
 
-  describe('when ANALYTICS_PHASE_TWO flag is enabled', () => {
-    beforeEach(() => {
-      enable('ANALYTICS_PHASE_TWO' as Flag);
-    });
+  it('exports analytics for meeting rep attendance', async () => {
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
+    );
+    await userEvent.click(screen.getByText(/csv/i));
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/engagement_attendance_\d+\.csv/),
+      expect.anything(),
+    );
+  });
 
-    it('renders meeting rep attendance', async () => {
-      await renderPage(
-        analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
-      );
+  it('throws error when fails to fetch attendance data', async () => {
+    const error = new Error('Failed to fetch engagement data');
+    mockGetMeetingRepAttendance.mockRejectedValue(error);
+    jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      expect(
-        screen.getByRole('heading', {
-          name: /Meeting Rep Attendance/i,
+    let caughtError: Error | null = null;
+    errorCallback = (err) => {
+      caughtError = err;
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot>
+        <TestErrorBoundary>
+          <Suspense fallback="loading">{children}</Suspense>
+        </TestErrorBoundary>
+      </RecoilRoot>
+    );
+
+    renderHook(
+      () =>
+        useAnalyticsMeetingRepAttendance({
+          currentPage: 0,
+          pageSize: 10,
+          sort: 'team_asc',
+          timeRange: 'all',
+          tags: [],
         }),
-      ).toBeVisible();
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      expect(caughtError?.message).toBe('Failed to fetch engagement data');
     });
 
-    it('can navigate to meeting rep attendance page', async () => {
-      await renderPage(
-        analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
-      );
-
-      expect(
-        screen.getByRole('heading', {
-          name: /Representation of Presenters/i,
-        }),
-      ).toBeVisible();
-
-      const input = screen.getAllByRole('textbox', { hidden: false });
-
-      await userEvent.click(input[0]!);
-      await userEvent.click(screen.getByText('Meeting Rep Attendance'));
-
-      await waitFor(() =>
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-      );
-      expect(
-        screen.getByRole('heading', { name: /Meeting Rep Attendance/i }),
-      ).toBeVisible();
-      expect(
-        screen.queryByText(/Representation of Presenters/i),
-      ).not.toBeInTheDocument();
-    });
-
-    it('exports analytics for meeting rep attendance', async () => {
-      await renderPage(
-        analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
-      );
-      await userEvent.click(screen.getByText(/csv/i));
-      expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
-        expect.stringMatching(/engagement_attendance_\d+\.csv/),
-        expect.anything(),
-      );
-    });
-
-    it('throws error when fails to fetch attendance data', async () => {
-      const error = new Error('Failed to fetch engagement data');
-      mockGetMeetingRepAttendance.mockRejectedValue(error);
-      jest.spyOn(console, 'error').mockImplementation(() => {});
-
-      let caughtError: Error | null = null;
-      errorCallback = (err) => {
-        caughtError = err;
-      };
-
-      const wrapper = ({ children }: { children: React.ReactNode }) => (
-        <RecoilRoot>
-          <TestErrorBoundary>
-            <Suspense fallback="loading">{children}</Suspense>
-          </TestErrorBoundary>
-        </RecoilRoot>
-      );
-
-      renderHook(
-        () =>
-          useAnalyticsMeetingRepAttendance({
-            currentPage: 0,
-            pageSize: 10,
-            sort: 'team_asc',
-            timeRange: 'all',
-            tags: [],
-          }),
-        { wrapper },
-      );
-
-      await waitFor(() => {
-        expect(caughtError?.message).toBe('Failed to fetch engagement data');
-      });
-
-      errorCallback = null;
-    });
+    errorCallback = null;
   });
 
   it('throws error when engagement state is an Error', async () => {
@@ -492,34 +469,28 @@ describe('Engagement', () => {
   });
 
   describe('loadTags function', () => {
-    describe('when ANALYTICS_PHASE_TWO flag is enabled', () => {
-      beforeEach(() => {
-        enable('ANALYTICS_PHASE_TWO' as Flag);
+    it('calls attendanceClient.getTagSuggestions and maps response correctly for attendance page', async () => {
+      const mockTagSuggestions = ['team1', 'team2', 'team3'];
+      mockGetTagSuggestions.mockResolvedValue(mockTagSuggestions);
+
+      await renderPage(
+        analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
+      );
+
+      const searchContainer = screen.getByRole('search') as HTMLElement;
+      const searchBox = within(searchContainer).getByRole(
+        'textbox',
+      ) as HTMLInputElement;
+
+      mockGetTagSuggestions.mockClear(); // Clear any previous calls
+      await userEvent.type(searchBox, 'test');
+
+      await waitFor(() => {
+        expect(mockGetTagSuggestions).toHaveBeenCalledWith('test', 'flat');
       });
 
-      it('calls attendanceClient.getTagSuggestions and maps response correctly for attendance page', async () => {
-        const mockTagSuggestions = ['team1', 'team2', 'team3'];
-        mockGetTagSuggestions.mockResolvedValue(mockTagSuggestions);
-
-        await renderPage(
-          analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
-        );
-
-        const searchContainer = screen.getByRole('search') as HTMLElement;
-        const searchBox = within(searchContainer).getByRole(
-          'textbox',
-        ) as HTMLInputElement;
-
-        mockGetTagSuggestions.mockClear(); // Clear any previous calls
-        await userEvent.type(searchBox, 'test');
-
-        await waitFor(() => {
-          expect(mockGetTagSuggestions).toHaveBeenCalledWith('test', 'flat');
-        });
-
-        // May be called multiple times due to typing/debounce, verify at least once with correct params
-        expect(mockGetTagSuggestions).toHaveBeenCalled();
-      });
+      // May be called multiple times due to typing/debounce, verify at least once with correct params
+      expect(mockGetTagSuggestions).toHaveBeenCalled();
     });
   });
 });

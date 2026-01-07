@@ -5,7 +5,6 @@ import { ComponentProps } from 'react';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { rem } from '../pixels';
-import { removeFlaggedOptions } from '../utils';
 
 type MetricOption = 'user' | 'team' | 'sharing-prelim-findings';
 type TypeOption = 'within-team' | 'across-teams';
@@ -76,7 +75,6 @@ type CollaborationAnalyticsProps = Pick<
   setMetric: (option: MetricOption) => void;
   setType: (option: TypeOption) => void;
   type: TypeOption | undefined;
-  isPrelimSharingEnabled: boolean;
 };
 
 const metricDropdownStyles = css({
@@ -101,15 +99,12 @@ const AnalyticsCollaborationPageBody: React.FC<CollaborationAnalyticsProps> = ({
   tags,
   timeRange,
   type,
-  isPrelimSharingEnabled,
 }) => {
   const { header, description } = getPageHeaderDescription(metric, type);
-  const metricOptionList = Object.keys(metricOptions)
-    .filter((option) => removeFlaggedOptions(isPrelimSharingEnabled, option))
-    .map((value) => ({
-      value: value as MetricOption,
-      label: metricOptions[value as MetricOption],
-    }));
+  const metricOptionList = Object.keys(metricOptions).map((value) => ({
+    value: value as MetricOption,
+    label: metricOptions[value as MetricOption],
+  }));
   return (
     <article>
       <div css={metricDropdownStyles}>

@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   AnalyticsTeamLeadershipResponse,
@@ -13,7 +12,7 @@ import {
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
 import {
@@ -112,15 +111,8 @@ const Leadership: FC<Record<string, never>> = () => {
     }));
   };
 
-  const isOSChampionEnabled = isEnabled('ANALYTICS_PHASE_TWO');
-  return !isOSChampionEnabled && isOSChampionPage ? (
-    <Navigate
-      to={analytics({}).leadership({}).metric({ metric: 'working-group' }).$}
-      replace
-    />
-  ) : (
+  return (
     <AnalyticsLeadershipPageBody
-      isOSChampionEnabled={isOSChampionEnabled}
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => loadTags(tagQuery)}

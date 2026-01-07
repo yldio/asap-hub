@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   EngagementResponse,
@@ -9,7 +8,7 @@ import {
 import { AnalyticsEngagementPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   useAnalytics,
@@ -42,8 +41,6 @@ const Engagement = () => {
     );
   };
   const { tags, setTags } = useSearch();
-
-  const isMeetingRepAttendanceEnabled = isEnabled('ANALYTICS_PHASE_TWO');
 
   const performance = useEngagementPerformanceValue({ timeRange });
   const { client } = useAnalyticsAlgolia();
@@ -141,24 +138,18 @@ const Engagement = () => {
       value,
     }));
   };
-  return !isMeetingRepAttendanceEnabled && isAttendancePage ? (
-    <Navigate
-      to={analytics({}).engagement({}).metric({ metric: 'presenters' }).$}
-      replace
-    />
-  ) : (
+  return (
     <AnalyticsEngagementPageBody
       exportResults={exportResults}
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => loadTags(tagQuery)}
-      isMeetingRepAttendanceEnabled={isMeetingRepAttendanceEnabled}
       metric={metric}
       setMetric={setMetric}
       timeRange={timeRange}
       currentPage={currentPage}
     >
-      {isAttendancePage && isMeetingRepAttendanceEnabled ? (
+      {isAttendancePage ? (
         <MeetingRepAttendance
           tags={tags}
           timeRange={timeRange as LimitedTimeRangeOption}

@@ -1886,6 +1886,84 @@ describe('Teams data provider', () => {
       });
     });
 
+    describe('projectStatus', () => {
+      test('should return projectStatus in team response when linked project has status', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+
+        const contentfulGraphQLTeamProjectResponse =
+          getContentfulGraphqlTeamProjectById();
+        contentfulGraphQLTeamProjectResponse.linkedFrom!.projectMembershipCollection!.items[0]!.linkedFrom!.projectsCollection!.items[0]!.status =
+          'Active';
+
+        mockFetchByIdGraphqlResponses(
+          contentfulGraphQLResponse,
+          contentfulGraphQLTeamProjectResponse,
+        );
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.projectStatus).toEqual('Active');
+      });
+
+      test('should return projectStatus as Completed when linked project status is Completed', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+
+        const contentfulGraphQLTeamProjectResponse =
+          getContentfulGraphqlTeamProjectById();
+        contentfulGraphQLTeamProjectResponse.linkedFrom!.projectMembershipCollection!.items[0]!.linkedFrom!.projectsCollection!.items[0]!.status =
+          'Completed';
+
+        mockFetchByIdGraphqlResponses(
+          contentfulGraphQLResponse,
+          contentfulGraphQLTeamProjectResponse,
+        );
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.projectStatus).toEqual('Completed');
+      });
+
+      test('should return projectStatus as Closed when linked project status is Closed', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+
+        const contentfulGraphQLTeamProjectResponse =
+          getContentfulGraphqlTeamProjectById();
+        contentfulGraphQLTeamProjectResponse.linkedFrom!.projectMembershipCollection!.items[0]!.linkedFrom!.projectsCollection!.items[0]!.status =
+          'Closed';
+
+        mockFetchByIdGraphqlResponses(
+          contentfulGraphQLResponse,
+          contentfulGraphQLTeamProjectResponse,
+        );
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.projectStatus).toEqual('Closed');
+      });
+
+      test('should return projectStatus as undefined when linked project status is not set', async () => {
+        const id = 'some-id';
+        const contentfulGraphQLResponse = getContentfulGraphqlTeamById();
+
+        const contentfulGraphQLTeamProjectResponse =
+          getContentfulGraphqlTeamProjectById();
+        contentfulGraphQLTeamProjectResponse.linkedFrom!.projectMembershipCollection!.items[0]!.linkedFrom!.projectsCollection!.items[0]!.status =
+          null;
+
+        mockFetchByIdGraphqlResponses(
+          contentfulGraphQLResponse,
+          contentfulGraphQLTeamProjectResponse,
+        );
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.projectStatus).toBeUndefined();
+      });
+    });
+
     describe('Tools', () => {
       const tools = [
         {

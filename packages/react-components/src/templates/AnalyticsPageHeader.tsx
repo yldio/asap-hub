@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { analytics } from '@asap-hub/routing';
-import { useFlags } from '@asap-hub/react-context';
 import { Button, Display, Paragraph, TabLink } from '../atoms';
 import { rem, smallDesktopScreen } from '../pixels';
 import TabNav from '../molecules/TabNav';
@@ -35,68 +34,56 @@ type AnalyticsPageHeaderProps = {
 
 const AnalyticsPageHeader: React.FC<AnalyticsPageHeaderProps> = ({
   onExportAnalytics,
-}) => {
-  const { isEnabled } = useFlags();
-
-  return (
-    <header>
-      <PageInfoContainer
-        nav={
-          <TabNav>
-            <TabLink
-              href={analytics({}).productivity({}).$}
-              Icon={ProductivityIcon}
-            >
-              Resource & Data Sharing
-            </TabLink>
-            <TabLink href={analytics({}).collaboration({}).$} Icon={TeamIcon}>
-              Collaboration
-            </TabLink>
-            <TabLink
-              href={analytics({}).leadership({}).$}
-              Icon={LeadershipIcon}
-            >
-              Leadership & Membership
-            </TabLink>
-            <TabLink
-              href={analytics({}).engagement({}).$}
-              Icon={EngagementIcon}
-            >
-              Engagement
-            </TabLink>
-            {isEnabled('ANALYTICS_PHASE_TWO') && (
-              <TabLink
-                href={analytics({}).openScience({}).$}
-                Icon={OpenScienceIcon}
-              >
-                Open Science
-              </TabLink>
-            )}
-          </TabNav>
-        }
-      >
-        <Display styleAsHeading={2}>Analytics</Display>
-        <div css={containerStyles}>
-          <div css={textStyles}>
-            <Paragraph accent="lead">
-              Explore dashboards related to CRN activities.
-            </Paragraph>
-          </div>
-          <div css={buttonsStyles}>
-            <Button
-              onClick={onExportAnalytics}
-              primary
-              noMargin
-              small
-              overrideStyles={css({ whiteSpace: 'nowrap' })}
-            >
-              {downloadIcon} Multiple XLSX
-            </Button>
-          </div>
+}) => (
+  <header>
+    <PageInfoContainer
+      nav={
+        <TabNav>
+          <TabLink
+            href={analytics({}).productivity({}).$}
+            Icon={ProductivityIcon}
+          >
+            Resource & Data Sharing
+          </TabLink>
+          <TabLink href={analytics({}).collaboration({}).$} Icon={TeamIcon}>
+            Collaboration
+          </TabLink>
+          <TabLink href={analytics({}).leadership({}).$} Icon={LeadershipIcon}>
+            Leadership & Membership
+          </TabLink>
+          <TabLink href={analytics({}).engagement({}).$} Icon={EngagementIcon}>
+            Engagement
+          </TabLink>
+          <TabLink
+            href={analytics({}).openScience({}).$}
+            Icon={OpenScienceIcon}
+          >
+            Open Science
+          </TabLink>
+        </TabNav>
+      }
+    >
+      <Display styleAsHeading={2}>Analytics</Display>
+      <div css={containerStyles}>
+        <div css={textStyles}>
+          <Paragraph accent="lead">
+            Explore dashboards related to CRN activities.
+          </Paragraph>
         </div>
-      </PageInfoContainer>
-    </header>
-  );
-};
+        <div css={buttonsStyles}>
+          <Button
+            onClick={onExportAnalytics}
+            primary
+            noMargin
+            small
+            overrideStyles={css({ whiteSpace: 'nowrap' })}
+          >
+            {downloadIcon} Multiple XLSX
+          </Button>
+        </div>
+      </div>
+    </PageInfoContainer>
+  </header>
+);
 
 export default AnalyticsPageHeader;

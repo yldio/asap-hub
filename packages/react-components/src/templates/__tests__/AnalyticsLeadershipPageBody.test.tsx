@@ -1,4 +1,5 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { AnalyticsLeadershipPageBody } from '..';
 
@@ -9,7 +10,6 @@ describe('AnalyticsLeadershipPageBody', () => {
     metric: 'interest-group',
     setTags: jest.fn(),
     tags: [],
-    isOSChampionEnabled: true,
     children: <></>,
   };
 
@@ -41,15 +41,11 @@ describe('AnalyticsLeadershipPageBody', () => {
     expect(getAllByText('Open Science Champion').length).toBe(2);
   });
 
-  it('filters out OS champion option from dropdown when feature flag is off', async () => {
-    const { queryByText } = render(
-      <AnalyticsLeadershipPageBody
-        {...props}
-        metric="working-group"
-        isOSChampionEnabled={false}
-      />,
-    );
+  it('displays OS champion option in dropdown', async () => {
+    render(<AnalyticsLeadershipPageBody {...props} metric="working-group" />);
 
-    expect(queryByText('Open Science Champion')).not.toBeInTheDocument();
+    const dropdowns = screen.getAllByRole('textbox', { hidden: false });
+    await userEvent.click(dropdowns[0] as Element);
+    expect(screen.getByText('Open Science Champion')).toBeInTheDocument();
   });
 });

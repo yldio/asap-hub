@@ -13,7 +13,6 @@ const pageControlProps = {
 const renderComponent = (props = {}) =>
   render(
     <AnalyticsLeadershipPageBody
-      isOSChampionEnabled={true}
       tags={[]}
       setTags={jest.fn()}
       exportResults={() => Promise.resolve()}

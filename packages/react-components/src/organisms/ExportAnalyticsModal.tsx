@@ -6,7 +6,6 @@ import {
   timeRangeOptions,
   warningMessageByTimeRange,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Button } from '../atoms';
@@ -84,8 +83,6 @@ const whenSinceLaunch = (currentTimeRange: TimeRangeOption) =>
 const optionsToExport: ReadonlyArray<
   (Option<MetricExportKeys> | Title) & {
     isVisible: (currentTimeRange: TimeRangeOption) => boolean;
-    /** @deprecated remove once ANALYTICS_PHASE_TWO is completed */
-    requiresFeatureFlag?: boolean;
   }
 > = [
   {
@@ -130,7 +127,6 @@ const optionsToExport: ReadonlyArray<
     label: metricsExportMap['preliminary-data-sharing'],
     value: 'preliminary-data-sharing',
     isVisible: whenLastYearOrSinceLaunch,
-    requiresFeatureFlag: true,
   },
   {
     title: 'LEADERSHIP & MEMBERSHIP',
@@ -151,7 +147,6 @@ const optionsToExport: ReadonlyArray<
     label: metricsExportMap['os-champion'],
     value: 'os-champion',
     isVisible: whenSinceLaunch,
-    requiresFeatureFlag: true,
   },
   {
     title: 'ENGAGEMENT',
@@ -166,25 +161,21 @@ const optionsToExport: ReadonlyArray<
     label: metricsExportMap.attendance,
     value: 'attendance',
     isVisible: whenLastYearOrSinceLaunch,
-    requiresFeatureFlag: true,
   },
 
   {
     title: 'OPEN SCIENCE',
     isVisible: whenLastYearOrSinceLaunch,
-    requiresFeatureFlag: true,
   },
   {
     label: metricsExportMap['preprint-compliance'],
     value: 'preprint-compliance',
     isVisible: whenLastYearOrSinceLaunch,
-    requiresFeatureFlag: true,
   },
   {
     label: metricsExportMap['publication-compliance'],
     value: 'publication-compliance',
     isVisible: whenLastYearOrSinceLaunch,
-    requiresFeatureFlag: true,
   },
 ];
 
@@ -205,7 +196,6 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
   onDownload,
 }) => {
   const [isDownloading, setIsDownloading] = useState(false);
-  const { isEnabled } = useFlags();
 
   const methods = useForm<ExportAnalyticsModalData>({
     mode: 'onBlur',
@@ -314,11 +304,6 @@ const ExportAnalyticsModal: React.FC<ExportAnalyticsModalProps> = ({
                   values={value}
                   validationMessage={error?.message ?? ''}
                   options={optionsToExport
-                    .filter((item) =>
-                      item.requiresFeatureFlag
-                        ? isEnabled('ANALYTICS_PHASE_TWO')
-                        : true,
-                    )
                     .filter((item) =>
                       getValues('timeRange')
                         ? item.isVisible(getValues('timeRange'))

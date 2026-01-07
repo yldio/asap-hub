@@ -6,7 +6,6 @@ import { ComponentProps } from 'react';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { rem } from '../pixels';
-import { removeFlaggedOptions } from '../utils';
 
 const tableHeaderStyles = css({
   paddingBottom: rem(24),
@@ -30,14 +29,10 @@ type AnalyticsEngagementPageBodyProps = Pick<
   metric: EngagementType;
   setMetric: (option: EngagementType) => void;
   exportResults: () => Promise<void>;
-  isMeetingRepAttendanceEnabled: boolean;
 };
 
-const getPageHeaderDescription = (
-  metric: EngagementType,
-  isFlagEnabled: boolean,
-) =>
-  metric === 'attendance' && isFlagEnabled
+const getPageHeaderDescription = (metric: EngagementType) =>
+  metric === 'attendance'
     ? {
         header: 'Meeting Rep Attendance',
         description:
@@ -59,23 +54,15 @@ const AnalyticsEngagementPageBody: React.FC<
   loadTags,
   metric,
   setMetric,
-  isMeetingRepAttendanceEnabled,
   children,
   currentPage,
 }) => {
-  const { header, description } = getPageHeaderDescription(
-    metric,
-    isMeetingRepAttendanceEnabled,
-  );
+  const { header, description } = getPageHeaderDescription(metric);
 
-  const metricOptionList = Object.keys(metricOptions)
-    .filter((option) =>
-      removeFlaggedOptions(isMeetingRepAttendanceEnabled, option),
-    )
-    .map((value) => ({
-      value: value as EngagementType,
-      label: metricOptions[value as EngagementType],
-    }));
+  const metricOptionList = Object.keys(metricOptions).map((value) => ({
+    value: value as EngagementType,
+    label: metricOptions[value as EngagementType],
+  }));
   return (
     <article>
       <div css={metricDropdownStyles}>

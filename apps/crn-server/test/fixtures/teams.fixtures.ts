@@ -402,6 +402,7 @@ export const getContentfulGraphqlProjectsCollection = (): {
       projectId: 'WH1',
       grantId: '000282',
       originalGrant: '',
+      status: 'Active',
       proposal: {
         sys: {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',

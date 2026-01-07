@@ -641,7 +641,7 @@ export const parseContentfulGraphQlTeam = (
     teamStatus: item.inactiveSince ? 'Inactive' : 'Active',
     projectTitle: linkedProject?.title ?? '',
     linkedProjectId: linkedProject?.sys.id ?? '',
-    projectStatus: linkedProject?.status as ProjectStatus,
+    projectStatus: (linkedProject?.status as ProjectStatus) ?? undefined,
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
     tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
     tools,

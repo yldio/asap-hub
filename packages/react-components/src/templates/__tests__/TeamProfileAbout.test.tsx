@@ -13,6 +13,10 @@ jest.mock('@asap-hub/flags', () => ({
 const props: ComponentProps<typeof TeamProfileAbout> = {
   teamDescription: '',
   tags: [],
+  projectTitle: '',
+  projectSummary: undefined,
+  linkedProjectId: undefined,
+  supplementGrant: undefined,
   members: [],
   teamListElementId: '',
   teamStatus: 'Active',
@@ -119,6 +123,23 @@ it('renders the tags list when tags are present', () => {
   );
   expect(getByText(/example expertise/i)).toBeVisible();
   expect(getByText(/tags/i)).toBeVisible();
+});
+
+it('renders the Projects card when PROJECTS_MVP is enabled and project data is present', () => {
+  (isEnabled as jest.Mock).mockReturnValue(true);
+  const { getByText } = render(
+    <TeamProfileAbout
+      {...props}
+      projectTitle="Project Alpha"
+      linkedProjectId="proj-1"
+      projectSummary="Original grant"
+      supplementGrant={{ title: 'Supp', description: 'Supplement desc' }}
+    />,
+  );
+
+  expect(getByText('Projects')).toBeVisible();
+  expect(getByText('Project Alpha')).toBeVisible();
+  expect(getByText('Supplement desc')).toBeVisible();
 });
 
 it('renders the Teams Tabbed card when team is inactive and there are members', () => {

@@ -65,4 +65,35 @@ describe('TeamProjectsCard', () => {
     expect(screen.queryByText('Completed')).not.toBeInTheDocument();
     expect(screen.queryByText('Closed')).not.toBeInTheDocument();
   });
+
+  it('renders resource team project with resource project route', () => {
+    render(
+      <TeamProjectsCard
+        {...baseProps}
+        teamType="Resource Team"
+        researchTheme={undefined}
+        resourceType="Isogenic iPSC Lines"
+      />,
+    );
+
+    const titleLink = screen.getByRole('link', { name: 'Project Alpha' });
+    expect(titleLink).toHaveAttribute(
+      'href',
+      expect.stringContaining('/projects/resource/'),
+    );
+  });
+
+  it('displays resource type pill for resource team', () => {
+    render(
+      <TeamProjectsCard
+        {...baseProps}
+        teamType="Resource Team"
+        researchTheme={undefined}
+        resourceType="Isogenic iPSC Lines"
+      />,
+    );
+
+    expect(screen.getByText('Resource Team')).toBeInTheDocument();
+    expect(screen.getByText('Isogenic iPSC Lines')).toBeInTheDocument();
+  });
 });

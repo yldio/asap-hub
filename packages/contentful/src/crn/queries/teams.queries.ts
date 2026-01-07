@@ -264,6 +264,7 @@ export const FETCH_PROJECT_BY_TEAM_ID = gql`
                   projectId
                   grantId
                   originalGrant
+                  status
                   proposal {
                     sys {
                       id

@@ -394,6 +394,7 @@ export const parseContentfulGraphQlTeamListItem = (
     labCount: labIds.size,
     researchTheme: item.researchTheme?.name ?? undefined,
     resourceType: linkedProject?.resourceType?.name ?? undefined,
+    projectType: (linkedProject?.projectType as ProjectType) ?? undefined,
   };
 };
 

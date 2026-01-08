@@ -38,6 +38,7 @@ export const indexTeamHandler =
           teamStatus,
           researchTheme,
           resourceType,
+          projectType,
         } = team;
         await algoliaClient.save({
           data: {
@@ -54,6 +55,7 @@ export const indexTeamHandler =
             _tags: team.tags.map(({ name }) => name),
             researchTheme,
             resourceType,
+            projectType,
           },
           type: 'team',
         });

@@ -25,6 +25,7 @@ const teamCardProps: ComponentProps<typeof TeamCard> = {
   researchTheme: 'GP2',
   resourceType: 'Analysis',
   linkedProjectId: 'prod-123',
+  projectType: 'Discovery Project',
 };
 
 it('renders the title', () => {
@@ -55,7 +56,11 @@ it('displays footer', () => {
 
 it('renders the team type pill', () => {
   const { getByText } = render(
-    <TeamCard {...teamCardProps} teamType="Discovery Team" />,
+    <TeamCard
+      {...teamCardProps}
+      teamType="Discovery Team"
+      projectType="Discovery Project"
+    />,
   );
   expect(getByText('Discovery Team')).toBeVisible();
 });
@@ -65,6 +70,7 @@ it('renders the research theme pill for Discovery Team', () => {
     <TeamCard
       {...teamCardProps}
       teamType="Discovery Team"
+      projectType="Discovery Project"
       researchTheme="Test Theme"
     />,
   );
@@ -76,6 +82,7 @@ it('does not render the research theme pill for Resource Team', () => {
     <TeamCard
       {...teamCardProps}
       teamType="Resource Team"
+      projectType="Resource Project"
       researchTheme="Test Theme"
     />,
   );
@@ -87,6 +94,7 @@ it('renders the resource type pill for Resource Team', () => {
     <TeamCard
       {...teamCardProps}
       teamType="Resource Team"
+      projectType="Resource Project"
       resourceType="Test Resource"
     />,
   );
@@ -99,6 +107,7 @@ it('renders project title and links to discovery project when PROJECTS_MVP flag 
     <TeamCard
       {...teamCardProps}
       teamType="Discovery Team"
+      projectType="Discovery Project"
       linkedProjectId="123"
     />,
   );
@@ -115,7 +124,7 @@ it('renders project title and links to resource project when PROJECTS_MVP flag i
   const { getByText } = render(
     <TeamCard
       {...teamCardProps}
-      teamType="Resource Team"
+      projectType="Resource Project"
       linkedProjectId="456"
     />,
   );
@@ -133,6 +142,7 @@ it('does not render project title when PROJECTS_MVP flag is disabled', () => {
     <TeamCard
       {...teamCardProps}
       teamType="Discovery Team"
+      projectType="Discovery Project"
       linkedProjectId="123"
     />,
   );
@@ -145,6 +155,7 @@ it('renders project title without link when linkedProjectId is not provided', ()
     <TeamCard
       {...teamCardProps}
       teamType="Discovery Team"
+      projectType="Discovery Project"
       linkedProjectId={undefined}
     />,
   );
@@ -159,6 +170,7 @@ it('renders the Discovery Project icon for Discovery Team when PROJECTS_MVP flag
     <TeamCard
       {...teamCardProps}
       teamType="Discovery Team"
+      projectType="Discovery Project"
       linkedProjectId="123"
     />,
   );
@@ -171,6 +183,7 @@ it('renders the Resource Project icon for Resource Team when PROJECTS_MVP flag i
     <TeamCard
       {...teamCardProps}
       teamType="Resource Team"
+      projectType="Resource Project"
       linkedProjectId="123"
     />,
   );

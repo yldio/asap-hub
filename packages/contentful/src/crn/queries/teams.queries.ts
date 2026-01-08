@@ -151,6 +151,7 @@ export const FETCH_TEAMS = gql`
                       id
                     }
                     title
+                    projectType
                     resourceType {
                       name
                     }

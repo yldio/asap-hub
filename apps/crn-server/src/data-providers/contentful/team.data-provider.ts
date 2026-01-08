@@ -109,7 +109,9 @@ type PublicTeamByIdProjectItem = NonNullable<
       NonNullable<
         NonNullable<
           NonNullable<
-            NonNullable<PublicTeamByIdItem['linkedFrom']>['projectMembershipCollection']
+            NonNullable<
+              PublicTeamByIdItem['linkedFrom']
+            >['projectMembershipCollection']
           >['items'][number]
         >['linkedFrom']
       >['projectsCollection']

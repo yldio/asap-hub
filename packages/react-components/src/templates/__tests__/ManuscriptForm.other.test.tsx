@@ -169,7 +169,13 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
+      // Wait for the form to be ready by checking for a specific form element
+      await waitFor(
+        () => {
+          expect(getByLabelText(/Title of Manuscript/i)).toBeInTheDocument();
+        },
+        { timeout: 10000 },
+      );
 
       await userEvent.click(getByLabelText(section));
       await userEvent.click(getByText('Author One'));

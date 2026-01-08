@@ -5,7 +5,7 @@ import {
 } from '@asap-hub/model';
 
 export type RorApiResponse = {
-  readonly items?: ReadonlyArray<RorInstitutionItem>;
+  readonly items?: ReadonlyArray<Pick<RorInstitutionItem, 'names'>>;
 };
 
 export const getInstitutions = async ({
@@ -25,7 +25,7 @@ export const getInstitutions = async ({
 };
 
 export const extractInstitutionDisplayName = (
-  institution: RorInstitutionItem,
+  institution: Pick<RorInstitutionItem, 'names'>,
 ): string | null => {
   const { names } = institution;
   if (!names || names.length === 0) {

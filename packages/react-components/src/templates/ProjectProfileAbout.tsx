@@ -1,6 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/react';
-import { TeamMember } from '@asap-hub/model';
+import { TeamMember, TeamResponse } from '@asap-hub/model';
 
 import { rem } from '../pixels';
 import {
@@ -34,14 +34,7 @@ type ProjectProfileAboutProps = {
   tags?: Array<{ id: string; name: string }>;
   hideExpertiseAndResources?: boolean;
   // Additional props
-  pointOfContact?: {
-    id: string;
-    displayName: string;
-    firstName: string;
-    lastName: string;
-    role: string;
-    email: string;
-  };
+  pointOfContact?: TeamResponse['pointOfContact'];
   members: TeamMember[];
   inactiveSince?: string;
   teamGroupsCard?: React.ReactNode;
@@ -82,7 +75,7 @@ const ProjectProfileAbout: React.FC<ProjectProfileAboutProps> = ({
     {teamGroupsCard}
     {pointOfContact && (
       <CtaCard
-        href={createMailTo(pointOfContact.email)}
+        href={createMailTo(pointOfContact)}
         buttonText="Contact"
         displayCopy
       >

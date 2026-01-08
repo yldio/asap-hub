@@ -87,7 +87,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   tags: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   members: TeamMember[];
   lastModifiedDate: string;
-  pointOfContact?: TeamMember;
+  pointOfContact?: string;
   tools?: TeamTool[];
   manuscripts: TeamManuscript[];
   collaborationManuscripts?: TeamManuscript[];

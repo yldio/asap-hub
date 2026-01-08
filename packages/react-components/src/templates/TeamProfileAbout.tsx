@@ -103,7 +103,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
     {teamType !== 'Resource Team' && teamGroupsCard}
     {pointOfContact && teamStatus === 'Active' && (
       <CtaCard
-        href={createMailTo(pointOfContact.email)}
+        href={createMailTo(pointOfContact)}
         buttonText="Contact"
         displayCopy
       >

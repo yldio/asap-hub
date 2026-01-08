@@ -256,7 +256,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                   buttonStyle
                   small
                   primary
-                  href={`${createMailTo(pointOfContact.email)}`}
+                  href={`${createMailTo(pointOfContact)}`}
                   noMargin
                 >
                   Contact
@@ -265,9 +265,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               <CopyButton
                 hoverTooltipText="Copy Email"
                 clickTooltipText="Email Copied"
-                onClick={() =>
-                  navigator.clipboard.writeText(pointOfContact.email)
-                }
+                onClick={() => navigator.clipboard.writeText(pointOfContact)}
               />
             </div>
           )}

@@ -191,7 +191,7 @@ const Outputs: React.FC<OutputsProps> = ({
           searchQuery={debouncedSearchQuery}
           filters={filters}
           userAssociationMember={userAssociationMember}
-          contactEmail={team?.pointOfContact?.email}
+          contactEmail={team?.pointOfContact}
           displayName={team?.displayName ?? ''}
           hasOutputs={hasOutputs}
         />

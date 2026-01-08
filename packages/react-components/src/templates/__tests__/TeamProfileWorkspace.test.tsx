@@ -552,19 +552,22 @@ describe('compliance section', () => {
   });
 });
 
-it('renders contact project manager when point of contact provided', () => {
-  const { getByText } = renderWithRouter(
-    <TeamProfileWorkspace
-      {...team}
-      pointOfContact={{
-        displayName: 'Mr PM',
-        firstName: 'Mr',
-        lastName: 'PM',
+it('renders contact project manager when PM is in members', () => {
+  const teamWithPM = {
+    ...team,
+    members: [
+      {
+        id: 'pm-id',
+        displayName: 'Andrei Covaciu',
+        firstName: 'Andrei',
+        lastName: 'Covaciu',
         email: 'test@example.com',
-        id: '123',
-        role: 'Project Manager',
-      }}
-    />,
+        role: 'Project Manager' as const,
+      },
+    ],
+  };
+  const { getByText } = renderWithRouter(
+    <TeamProfileWorkspace {...teamWithPM} />,
   );
 
   const link = getByText('Mr PM', {
@@ -576,30 +579,45 @@ it('renders contact project manager when point of contact provided', () => {
 });
 
 it('does not render contact project manager when user is not part a team member', () => {
-  const { queryByText } = renderWithRouter(
-    <TeamProfileWorkspace
-      {...team}
-      isTeamMember={false}
-      pointOfContact={{
-        displayName: 'Mr PM',
-        firstName: 'Mr',
-        lastName: 'PM',
+  const teamWithPM = {
+    ...team,
+    members: [
+      {
+        id: 'pm-id',
+        displayName: 'Andrei Covaciu',
+        firstName: 'Andrei',
+        lastName: 'Covaciu',
         email: 'test@example.com',
-        id: '123',
-        role: 'Project Manager',
-      }}
-    />,
+        role: 'Project Manager' as const,
+      },
+    ],
+  };
+  const { queryByText } = renderWithRouter(
+    <TeamProfileWorkspace {...teamWithPM} isTeamMember={false} />,
   );
 
   expect(queryByText('Team Contact Email')).not.toBeInTheDocument();
 });
 
-it('omits contact project manager when point of contact omitted', () => {
+it('omits contact project manager when PM is not in members', () => {
+  const teamWithoutPM = {
+    ...team,
+    members: [
+      {
+        id: 'non-pm-id',
+        displayName: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john@example.com',
+        role: 'Collaborating PI' as const,
+      },
+    ],
+  };
   const { queryByText } = renderWithRouter(
-    <TeamProfileWorkspace {...team} pointOfContact={undefined} />,
+    <TeamProfileWorkspace {...teamWithoutPM} />,
   );
 
-  expect(queryByText('Team Contact Email')).toBe(null);
+  expect(queryByText('Team Contact Email')).not.toBeInTheDocument();
 });
 
 describe('a tool', () => {

@@ -1,6 +1,6 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import { forwardInviteEventToQueue } from '../../../src/handlers/user';
-import { UserPayload } from '../../event-bus';
+import { UserPayload } from '../../../src';
 
 // Mock SQSClient
 const mockSend = jest.fn();

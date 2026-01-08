@@ -10,7 +10,6 @@ import {
   userCollaborationPerformance,
   teamCollaborationPerformance,
 } from '@asap-hub/fixtures';
-import { enable, disable } from '@asap-hub/flags';
 import { EngagementPerformance } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
 import {
@@ -355,7 +354,6 @@ describe('Leadership & Membership', () => {
   });
 
   it('renders error message when os champion response is not a 2XX', async () => {
-    enable('ANALYTICS_PHASE_TWO');
     mockGetAnalyticsOSChampion.mockRejectedValue(new Error('Failed to fetch'));
     await renderPage(
       analytics({}).leadership({}).metric({ metric: 'os-champion' }).$,
@@ -443,36 +441,6 @@ describe('Engagement', () => {
 });
 
 describe('Open Science', () => {
-  beforeEach(() => {
-    enable('ANALYTICS_PHASE_TWO');
-  });
-
-  it('does not render the Open Science tab when the flag is disabled', async () => {
-    disable('ANALYTICS_PHASE_TWO');
-    mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
-    mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
-
-    await renderPage(
-      analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,
-    );
-    expect(
-      await screen.findByText(/Analytics/i, {
-        selector: 'h1',
-      }),
-    ).toBeVisible();
-    expect(
-      screen.queryByText(/Preprint Compliance/i, {
-        selector: 'h3',
-      }),
-    ).not.toBeInTheDocument();
-
-    expect(
-      await screen.findByText(/User Productivity/i, {
-        selector: 'h3',
-      }),
-    ).toBeVisible();
-  });
-
   it('renders the Open Science tab successfully', async () => {
     await renderPage(
       analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,

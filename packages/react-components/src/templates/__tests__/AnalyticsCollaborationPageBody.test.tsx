@@ -15,7 +15,6 @@ describe('AnalyticsCollaborationPageBody', () => {
     tags: [],
     timeRange: '30d',
     type: 'within-team',
-    isPrelimSharingEnabled: false,
   };
 
   describe('user tab', () => {
@@ -89,7 +88,6 @@ describe('AnalyticsCollaborationPageBody', () => {
           {...props}
           metric="sharing-prelim-findings"
           type={undefined}
-          isPrelimSharingEnabled
         />,
       );
 
@@ -106,7 +104,6 @@ describe('AnalyticsCollaborationPageBody', () => {
         <AnalyticsCollaborationPageBody
           {...props}
           metric="team"
-          isPrelimSharingEnabled
           type={undefined}
         />,
       );

@@ -12,6 +12,7 @@ export const FETCH_TEAM_BY_ID = gql`
       }
       displayName
       teamType
+      teamDescription
       inactiveSince
       researchTheme {
         name
@@ -76,6 +77,11 @@ export const FETCH_TEAM_BY_ID = gql`
                         id
                       }
                       name
+                      labPi {
+                        sys {
+                          id
+                        }
+                      }
                     }
                   }
                 }
@@ -123,6 +129,11 @@ export const FETCH_TEAMS = gql`
                       items {
                         sys {
                           id
+                        }
+                        labPi {
+                          sys {
+                            id
+                          }
                         }
                       }
                     }
@@ -253,6 +264,8 @@ export const FETCH_PROJECT_BY_TEAM_ID = gql`
                   projectId
                   grantId
                   originalGrant
+                  status
+                  projectType
                   proposal {
                     sys {
                       id

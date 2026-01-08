@@ -27,6 +27,8 @@ import {
   ListPublicTeamDataObject,
   ListTeamDataObject,
   manuscriptMapStatus,
+  ProjectStatus,
+  ProjectType,
   PublicTeamListItemDataObject,
   TeamDataObject,
   TeamLeader,
@@ -538,6 +540,7 @@ export const parseContentfulGraphQlTeam = (
             {
               id: lab.sys.id,
               name: lab.name || '',
+              labPrincipalInvestigatorId: lab.labPi?.sys.id,
             },
           ];
         },
@@ -639,6 +642,7 @@ export const parseContentfulGraphQlTeam = (
     teamStatus: item.inactiveSince ? 'Inactive' : 'Active',
     projectTitle: linkedProject?.title ?? '',
     linkedProjectId: linkedProject?.sys.id ?? '',
+    projectStatus: (linkedProject?.status as ProjectStatus) ?? undefined,
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
     tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
     tools,
@@ -656,6 +660,13 @@ export const parseContentfulGraphQlTeam = (
       : undefined,
     researchTheme: item.researchTheme?.name ?? undefined,
     resourceType: linkedProject?.resourceType?.name ?? undefined,
+    projectType: (linkedProject?.projectType as ProjectType) ?? undefined,
+    teamDescription: item.teamDescription ?? undefined,
+    labs: members
+      .flatMap((member) => member.labs || [])
+      .filter(
+        (lab, index, labs) => labs.findIndex((l) => l.id === lab.id) === index,
+      ),
   };
 };
 

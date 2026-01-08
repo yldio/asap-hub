@@ -18,7 +18,6 @@ import {
   SortUserCollaboration,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
-import * as flags from '@asap-hub/flags';
 import {
   render,
   screen,
@@ -444,11 +443,7 @@ describe('team collaboration', () => {
 });
 
 describe('sharing prelim findings', () => {
-  beforeEach(() => {
-    flags.enable('ANALYTICS_PHASE_TWO');
-  });
-
-  it('renders sharing prelim findings page when flag is enabled', async () => {
+  it('renders sharing prelim findings page', async () => {
     await renderPage('sharing-prelim-findings', undefined);
 
     expect(
@@ -457,16 +452,6 @@ describe('sharing prelim findings', () => {
     expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
 
     expect(screen.queryByText('Type')).not.toBeInTheDocument();
-  });
-
-  it('redirects to user collaboration within team if analytics phase 2 feature flag is off', async () => {
-    flags.disable('ANALYTICS_PHASE_TWO');
-    await renderPage('sharing-prelim-findings', undefined);
-
-    expect(screen.getByText('User Co-Production')).toBeVisible();
-    expect(
-      screen.queryByText('Sharing Preliminary Findings'),
-    ).not.toBeInTheDocument();
   });
 
   it('can navigate to sharing preliminary findings page', async () => {

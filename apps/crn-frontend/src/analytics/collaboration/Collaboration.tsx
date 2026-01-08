@@ -1,4 +1,3 @@
-import { isEnabled } from '@asap-hub/flags';
 import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   PreliminaryDataSharingDataObject,
@@ -18,7 +17,7 @@ import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   useAnalytics,
@@ -233,17 +232,7 @@ const Collaboration = () => {
     }));
   };
 
-  const isPrelimSharingEnabled = isEnabled('ANALYTICS_PHASE_TWO');
-  return !isPrelimSharingEnabled && metric === 'sharing-prelim-findings' ? (
-    <Navigate
-      to={
-        analytics({})
-          .collaboration({})
-          .collaborationPath({ metric: 'user', type: 'within-team' }).$
-      }
-      replace
-    />
-  ) : (
+  return (
     <AnalyticsCollaborationPageBody
       currentPage={currentPage}
       documentCategory={metric === 'user' ? documentCategory : undefined}
@@ -257,7 +246,6 @@ const Collaboration = () => {
       tags={tags}
       timeRange={timeRange}
       type={metric === 'sharing-prelim-findings' ? undefined : type}
-      isPrelimSharingEnabled={isPrelimSharingEnabled}
     >
       {metric === 'user' && type ? (
         <UserCollaboration

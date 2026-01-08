@@ -3,7 +3,6 @@ import {
   EMPTY_ALGOLIA_FACET_HITS,
 } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { enable } from '@asap-hub/flags';
 import { analytics } from '@asap-hub/routing';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { render, screen, waitFor, within } from '@testing-library/react';
@@ -126,10 +125,6 @@ const renderPage = async (path: string) => {
 };
 
 describe('OpenScience', () => {
-  beforeEach(() => {
-    enable('ANALYTICS_PHASE_TWO');
-  });
-
   it('renders with preprint-compliance metric', async () => {
     await renderPage(
       analytics({}).openScience({}).metric({ metric: 'preprint-compliance' }).$,

@@ -1,12 +1,15 @@
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
+import { isEnabled } from '@asap-hub/flags';
 
 import { rem } from '../pixels';
 import {
   ProfileExpertiseAndResources,
+  TeamLabsCard,
   TeamMembersTabbedCard,
   TeamProfileOverview,
+  TeamProjectsCard,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
@@ -24,7 +27,21 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<
     TeamResponse,
-    'pointOfContact' | 'members' | 'inactiveSince' | 'supplementGrant'
+    | 'pointOfContact'
+    | 'members'
+    | 'inactiveSince'
+    | 'supplementGrant'
+    | 'teamStatus'
+    | 'teamType'
+    | 'projectTitle'
+    | 'projectSummary'
+    | 'linkedProjectId'
+    | 'projectStatus'
+    | 'tags'
+    | 'researchTheme'
+    | 'resourceType'
+    | 'labs'
+    | 'projectType'
   > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
@@ -32,27 +49,49 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
 
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   inactiveSince,
+  tags,
   projectTitle,
   projectSummary,
-  tags,
+  linkedProjectId,
+  projectStatus,
+  supplementGrant,
   pointOfContact,
   members,
-  proposalURL,
   teamGroupsCard,
   teamListElementId,
-  supplementGrant,
+  teamStatus,
+  teamType,
+  teamDescription,
+  researchTheme,
+  resourceType,
+  projectType,
+  labs,
 }) => (
   <div css={styles}>
-    {projectTitle ? (
+    {teamDescription ? (
       <TeamProfileOverview
-        supplementGrant={supplementGrant}
-        projectTitle={projectTitle}
-        projectSummary={projectSummary}
-        proposalURL={proposalURL}
+        tags={tags}
+        teamDescription={teamDescription}
+        teamType={teamType}
+        researchTheme={researchTheme}
+        resourceType={resourceType}
       />
     ) : null}
-    {tags && tags.length ? (
-      <ProfileExpertiseAndResources hideExpertiseAndResources tags={tags} />
+    {isEnabled('PROJECTS_MVP') && projectTitle && linkedProjectId ? (
+      <TeamProjectsCard
+        teamType={teamType}
+        projectType={projectType}
+        projectTitle={projectTitle}
+        projectSummary={projectSummary}
+        linkedProjectId={linkedProjectId}
+        projectStatus={projectStatus}
+        supplementGrant={supplementGrant}
+        researchTheme={researchTheme}
+        resourceType={resourceType}
+      />
+    ) : null}
+    {isEnabled('PROJECTS_MVP') && labs && labs.length ? (
+      <TeamLabsCard labs={labs} isTeamActive={teamStatus === 'Active'} />
     ) : null}
     <section id={teamListElementId} css={membersCardStyles}>
       <TeamMembersTabbedCard
@@ -61,8 +100,8 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         isTeamInactive={!!inactiveSince}
       />
     </section>
-    {teamGroupsCard}
-    {pointOfContact && (
+    {teamType !== 'Resource Team' && teamGroupsCard}
+    {pointOfContact && teamStatus === 'Active' && (
       <CtaCard
         href={createMailTo(pointOfContact.email)}
         buttonText="Contact"

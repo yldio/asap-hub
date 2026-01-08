@@ -4,7 +4,6 @@ import { ComponentProps } from 'react';
 import { Dropdown, Headline3, Paragraph, Subtitle } from '../atoms';
 import { AnalyticsControls } from '../molecules';
 import { rem } from '../pixels';
-import { removeFlaggedOptions } from '../utils';
 
 export type MetricOption = 'working-group' | 'interest-group' | 'os-champion';
 
@@ -35,7 +34,6 @@ type LeadershipAndMembershipAnalyticsProps = Pick<
   metric: MetricOption;
   setMetric: (option: MetricOption) => void;
   exportResults: () => Promise<void>;
-  isOSChampionEnabled: boolean;
 };
 
 const metricDropdownStyles = css({
@@ -56,14 +54,11 @@ const LeadershipPageBody: React.FC<LeadershipAndMembershipAnalyticsProps> = ({
   metric,
   setMetric,
   exportResults,
-  isOSChampionEnabled,
 }) => {
-  const metricOptionList = Object.keys(metricOptions)
-    .filter((option) => removeFlaggedOptions(isOSChampionEnabled, option))
-    .map((value) => ({
-      value: value as MetricOption,
-      label: metricOptions[value as MetricOption],
-    }));
+  const metricOptionList = Object.keys(metricOptions).map((value) => ({
+    value: value as MetricOption,
+    label: metricOptions[value as MetricOption],
+  }));
 
   return (
     <article>

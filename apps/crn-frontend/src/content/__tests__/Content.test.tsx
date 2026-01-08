@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, waitFor, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { createPageResponse } from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
@@ -23,7 +24,9 @@ const renderPage = async (pageId: string = 'privacy-notice') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <Content pageId={pageId} />
+            <MemoryRouter>
+              <Content pageId={pageId} />
+            </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>

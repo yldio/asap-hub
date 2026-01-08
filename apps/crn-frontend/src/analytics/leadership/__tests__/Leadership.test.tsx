@@ -16,7 +16,6 @@ import React, { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import * as flags from '@asap-hub/flags';
 import { OSChampionOpensearchResponse } from '@asap-hub/model';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
 import Leadership from '../Leadership';
@@ -184,8 +183,7 @@ it('renders with interest group data', async () => {
   ).toBe(2);
 });
 
-it('renders with open science data if flag is on', async () => {
-  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+it('renders with open science data', async () => {
   await renderPage('os-champion');
   expect(screen.getAllByText('Open Science Champion').length).toBe(2);
 });
@@ -202,9 +200,8 @@ it('switches to interest group data', async () => {
   expect(screen.getAllByText(label).length).toBe(2);
 });
 
-it('switches to open science champion data if flag is on', async () => {
+it('switches to open science champion data', async () => {
   jest.spyOn(console, 'error').mockImplementation();
-  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
   const label = /Open Science Champion/;
 
   await renderPage();
@@ -217,12 +214,9 @@ it('switches to open science champion data if flag is on', async () => {
   expect(screen.getAllByText(label).length).toBeGreaterThanOrEqual(2);
 });
 
-it('redirects to working group if OS Champion feature flag is off', async () => {
-  jest.spyOn(flags, 'isEnabled').mockReturnValue(false);
+it('renders OS Champion page without redirect', async () => {
   await renderPage('os-champion');
-  expect(
-    screen.getAllByText('Working Group Leadership & Membership').length,
-  ).toBe(2);
+  expect(screen.getAllByText('Open Science Champion').length).toBe(2);
 });
 
 it('calls algolia client with the right index name', async () => {
@@ -292,7 +286,6 @@ describe('search', () => {
 
   describe('opensearch', () => {
     it('allows typing in search queries', async () => {
-      jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
       await renderPage('os-champion');
       const searchBox = getSearchBox();
 
@@ -303,7 +296,6 @@ describe('search', () => {
       );
     });
     it('Will search opensearch using selected team', async () => {
-      jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
       mockGetTagSuggestions.mockResolvedValue(['Alessi']);
 
       await renderPage('os-champion');
@@ -347,7 +339,6 @@ describe('csv export', () => {
   });
 
   it('exports analytics for os champion', async () => {
-    jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
     await renderPage('os-champion');
     await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
@@ -378,7 +369,6 @@ it('renders data for different time ranges', async () => {
       },
     ],
   };
-  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
   when(mockOSChampionSearch)
     .calledWith({
       searchTags: [],

@@ -65,6 +65,7 @@ const teamMock = {
   labCount: 1,
   displayName: 'Team One',
   projectTitle: 'Project Title',
+  labs: [],
 };
 
 const mockVersionData = createManuscriptResponse()
@@ -112,6 +113,7 @@ describe('team selectors', () => {
       displayName: 'Team One',
       projectTitle: 'Project Title',
       manuscripts: [],
+      labs: [],
     };
     const initialState = ({ set }: MutableSnapshot) => {
       // Mock auth0State to prevent "Auth0 not available" error
@@ -418,15 +420,14 @@ const manuscriptId = 'manuscript-id-0';
 const manuscriptId2 = 'manuscript-id-1';
 
 const mockTeam = {
-  id: 'id-0',
-  teamId,
-  teamType,
+  ...teamMock,
   manuscripts: [
     {
       id: manuscriptId,
       status: 'Waiting for Report',
-    },
+    } as unknown as TeamManuscript,
   ],
+  labs: [],
 };
 
 const mockDiscussion = {

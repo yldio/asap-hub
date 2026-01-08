@@ -1,6 +1,7 @@
 import { FetchOptions, ListResponse } from './common';
 import { LabResponse } from './lab';
 import { ManuscriptResponse } from './manuscript';
+import { ProjectStatus, ProjectType } from './project';
 import { ResearchTagDataObject } from './research-tag';
 
 export const teamRole = [
@@ -91,12 +92,15 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   manuscripts: TeamManuscript[];
   collaborationManuscripts?: TeamManuscript[];
   labCount: number;
+  labs: LabResponse[];
   inactiveSince?: string;
   teamStatus: TeamStatus;
   linkedProjectId?: string;
+  projectStatus?: ProjectStatus;
   supplementGrant?: TeamSupplementGrant;
   researchTheme?: string;
   resourceType?: string;
+  projectType?: ProjectType;
   teamDescription?: string;
 };
 
@@ -132,6 +136,7 @@ export type TeamListItemDataObject = Pick<
   | 'tags'
   | 'labCount'
   | 'researchTheme'
+  | 'teamDescription'
 > & { memberCount: number; resourceType?: string };
 
 export type ListTeamDataObject = ListResponse<TeamListItemDataObject>;

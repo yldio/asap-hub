@@ -10,7 +10,6 @@ describe('AnalyticsEngagementPageBody', () => {
     currentPage: 2,
     metric: 'presenters',
     setMetric: () => null,
-    isMeetingRepAttendanceEnabled: false,
     exportResults: () => Promise.resolve(),
     setTags: jest.fn(),
     tags: [],
@@ -25,7 +24,6 @@ describe('AnalyticsEngagementPageBody', () => {
     const { getByRole } = render(
       <AnalyticsEngagementPageBody
         {...props}
-        isMeetingRepAttendanceEnabled
         metric={metric as EngagementType}
       />,
     );
@@ -46,7 +44,6 @@ describe('AnalyticsEngagementPageBody', () => {
     const { getByText } = render(
       <AnalyticsEngagementPageBody
         {...props}
-        isMeetingRepAttendanceEnabled
         metric={metric as EngagementType}
       />,
     );
@@ -54,27 +51,11 @@ describe('AnalyticsEngagementPageBody', () => {
     expect(getByText(text)).toBeInTheDocument();
   });
 
-  it('displays attendance option when flag is enabled', async () => {
-    render(
-      <AnalyticsEngagementPageBody {...props} isMeetingRepAttendanceEnabled />,
-    );
+  it('displays attendance option', async () => {
+    render(<AnalyticsEngagementPageBody {...props} />);
 
     const dropdowns = screen.getAllByRole('textbox', { hidden: false });
     await userEvent.click(dropdowns[0] as Element);
     expect(screen.getByText('Meeting Rep Attendance')).toBeInTheDocument();
-  });
-  it('does not display attendance option when flag is disabled', async () => {
-    render(
-      <AnalyticsEngagementPageBody
-        {...props}
-        isMeetingRepAttendanceEnabled={false}
-      />,
-    );
-
-    const dropdowns = screen.getAllByRole('textbox', { hidden: false });
-    await userEvent.click(dropdowns[0] as Element);
-    expect(
-      screen.queryByText('Meeting Rep Attendance'),
-    ).not.toBeInTheDocument();
   });
 });

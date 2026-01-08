@@ -119,6 +119,7 @@ export const getContentfulGraphqlTeamProjectById = (): NonNullable<
                   projectId: '',
                   grantId: '',
                   originalGrant: '',
+                  status: 'Active',
                   proposal: {
                     sys: {
                       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -401,6 +402,7 @@ export const getContentfulGraphqlProjectsCollection = (): {
       projectId: 'WH1',
       grantId: '000282',
       originalGrant: '',
+      status: 'Active',
       proposal: {
         sys: {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -548,10 +550,23 @@ export const getTeamDataObject = (): TeamDataObject => ({
   ],
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
+  projectStatus: 'Active',
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
   tools: [],
   researchTheme: 'PD Functional Genomics',
   resourceType: 'Isogenic iPSC Lines',
+  labs: [
+    {
+      id: 'cd7be4902',
+      name: 'Brighton',
+      labPrincipalInvestigatorId: 'user-id-1',
+    },
+    {
+      id: 'cd7be4903',
+      name: 'Liverpool',
+      labPrincipalInvestigatorId: 'user-id-1',
+    },
+  ],
 });
 
 export const getPublicTeamListItemDataObject =

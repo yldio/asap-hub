@@ -187,38 +187,36 @@ const AnalyticsRoutes = () => {
             </Routes>
           }
         />
-        {isEnabled('ANALYTICS_PHASE_TWO') && (
-          <Route
-            path={`${analytics({}).openScience.template}/*`}
-            element={
-              <Routes>
-                <Route
-                  path={analytics({}).openScience({}).metric.template}
-                  element={
-                    <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
-                      <Frame title="Open Science">
-                        <OpenScienceBody />
-                      </Frame>
-                    </AnalyticsPage>
-                  }
-                />
-                <Route
-                  path="*"
-                  element={
-                    <Navigate
-                      to={
-                        analytics({})
-                          .openScience({})
-                          .metric({ metric: 'preprint-compliance' }).$
-                      }
-                      replace
-                    />
-                  }
-                />
-              </Routes>
-            }
-          />
-        )}
+        <Route
+          path={`${analytics({}).openScience.template}/*`}
+          element={
+            <Routes>
+              <Route
+                path={analytics({}).openScience({}).metric.template}
+                element={
+                  <AnalyticsPage onExportAnalytics={handleExportAnalytics}>
+                    <Frame title="Open Science">
+                      <OpenScienceBody />
+                    </Frame>
+                  </AnalyticsPage>
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <Navigate
+                    to={
+                      analytics({})
+                        .openScience({})
+                        .metric({ metric: 'preprint-compliance' }).$
+                    }
+                    replace
+                  />
+                }
+              />
+            </Routes>
+          }
+        />
         <Route
           path="*"
           element={

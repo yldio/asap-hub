@@ -110,7 +110,7 @@ it('renders the tags list when tags are present', () => {
 });
 
 it('renders the Projects card when PROJECTS_MVP is enabled and project data is present', () => {
-  (isEnabled as jest.Mock).mockReturnValue(true);
+  enable('PROJECTS_MVP');
   const { getByText } = render(
     <TeamProfileAbout
       {...props}

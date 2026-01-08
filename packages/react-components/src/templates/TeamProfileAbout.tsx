@@ -6,6 +6,7 @@ import { isEnabled } from '@asap-hub/flags';
 import { rem } from '../pixels';
 import {
   ProfileExpertiseAndResources,
+  ProjectProfileOverview,
   TeamLabsCard,
   TeamMembersTabbedCard,
   TeamProfileOverview,
@@ -42,9 +43,11 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
     | 'resourceType'
     | 'labs'
     | 'projectType'
+    | 'proposalURL'
   > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
+    hideExpertiseAndResources?: boolean;
   };
 
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
@@ -66,26 +69,53 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   resourceType,
   projectType,
   labs,
+  proposalURL,
+  hideExpertiseAndResources,
 }) => {
+  const projectsMVPEnabled = isEnabled('PROJECTS_MVP');
+
   const pointOfContactEmail = useMemo(() => {
-    if (isEnabled('PROJECTS_MVP')) {
+    if (projectsMVPEnabled) {
       return pointOfContact;
     }
+    // Legacy mode: use PM email from members (pointOfContact is only available when flag is enabled)
     return members.find((member) => member.role === 'Project Manager')?.email;
-  }, [pointOfContact, members]);
+  }, [pointOfContact, members, projectsMVPEnabled]);
 
   return (
     <div css={styles}>
-      {teamDescription ? (
-        <TeamProfileOverview
-          tags={tags}
-          teamDescription={teamDescription}
-          teamType={teamType}
-          researchTheme={researchTheme}
-          resourceType={resourceType}
+      {/* Overview Section - Different based on PROJECTS_MVP flag */}
+      {projectsMVPEnabled ? (
+        // New MVP version: TeamProfileOverview
+        teamDescription ? (
+          <TeamProfileOverview
+            tags={tags}
+            teamDescription={teamDescription}
+            teamType={teamType}
+            researchTheme={researchTheme}
+            resourceType={resourceType}
+          />
+        ) : null
+      ) : // Legacy version: ProjectProfileOverview
+      projectTitle ? (
+        <ProjectProfileOverview
+          supplementGrant={supplementGrant}
+          projectTitle={projectTitle}
+          projectSummary={projectSummary}
+          proposalURL={proposalURL}
         />
       ) : null}
-      {isEnabled('PROJECTS_MVP') && projectTitle && linkedProjectId ? (
+
+      {/* Expertise and Resources - Only in legacy version */}
+      {!projectsMVPEnabled && tags && tags.length ? (
+        <ProfileExpertiseAndResources
+          hideExpertiseAndResources={hideExpertiseAndResources}
+          tags={tags}
+        />
+      ) : null}
+
+      {/* Projects Card - Only in MVP version */}
+      {projectsMVPEnabled && projectTitle && linkedProjectId ? (
         <TeamProjectsCard
           teamType={teamType}
           projectType={projectType}
@@ -98,9 +128,13 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
           resourceType={resourceType}
         />
       ) : null}
-      {isEnabled('PROJECTS_MVP') && labs && labs.length ? (
+
+      {/* Labs Card - Only in MVP version */}
+      {projectsMVPEnabled && labs && labs.length ? (
         <TeamLabsCard labs={labs} isTeamActive={teamStatus === 'Active'} />
       ) : null}
+
+      {/* Team Members */}
       <section id={teamListElementId} css={membersCardStyles}>
         <TeamMembersTabbedCard
           title="Team Members"
@@ -108,17 +142,24 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
           isTeamInactive={!!inactiveSince}
         />
       </section>
-      {teamType !== 'Resource Team' && teamGroupsCard}
-      {pointOfContactEmail && teamStatus === 'Active' && (
-        <CtaCard
-          href={createMailTo(pointOfContactEmail)}
-          buttonText="Contact"
-          displayCopy
-        >
-          <strong>Have additional questions?</strong>
-          <br /> Members are here to help.
-        </CtaCard>
-      )}
+
+      {/* Team Groups Card */}
+      {projectsMVPEnabled
+        ? teamType !== 'Resource Team' && teamGroupsCard
+        : teamGroupsCard}
+
+      {/* Contact CTA */}
+      {pointOfContactEmail &&
+        (!projectsMVPEnabled || teamStatus === 'Active') && (
+          <CtaCard
+            href={createMailTo(pointOfContactEmail)}
+            buttonText="Contact"
+            displayCopy
+          >
+            <strong>Have additional questions?</strong>
+            <br /> Members are here to help.
+          </CtaCard>
+        )}
     </div>
   );
 };

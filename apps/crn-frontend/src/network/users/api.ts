@@ -2,7 +2,6 @@ import type { AlgoliaClient } from '@asap-hub/algolia';
 import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   ExternalAuthorResponse,
-  InstitutionsResponse,
   ListResponse,
   UserAvatarPostRequest,
   UserPatchRequest,
@@ -158,18 +157,3 @@ export const postUserAvatar = async (
   return resp.json();
 };
 
-export const getInstitutions = async ({
-  searchQuery,
-}: {
-  searchQuery?: string;
-} = {}): Promise<InstitutionsResponse> => {
-  const url = new URL('https://api.ror.org/v2/organizations');
-  searchQuery && url.searchParams.set('query', searchQuery);
-  const resp = await fetch(url.toString());
-  if (!resp.ok) {
-    throw new Error(
-      `Failed to fetch institutions. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
-};

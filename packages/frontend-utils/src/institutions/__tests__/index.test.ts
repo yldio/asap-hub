@@ -2,15 +2,21 @@ import {
   extractInstitutionDisplayName,
   transformRorInstitutionsToNames,
   loadInstitutionOptions,
+  getInstitutions,
   type RorInstitutionName,
   type RorApiResponse,
-} from '../Editing';
-import { getInstitutions } from '../api';
+} from '../index';
 
-jest.mock('../api');
-const mockGetInstitutions = getInstitutions as jest.MockedFunction<
-  typeof getInstitutions
->;
+jest.mock('../index', () => {
+  const actual = jest.requireActual('../index');
+  return {
+    ...actual,
+    getInstitutions: jest.fn(),
+  };
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockGetInstitutions = getInstitutions as any;
 
 describe('extractInstitutionDisplayName', () => {
   it('returns the display name when ror_display type is present', () => {
@@ -397,3 +403,4 @@ describe('loadInstitutionOptions', () => {
     ]);
   });
 });
+

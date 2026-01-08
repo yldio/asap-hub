@@ -22,7 +22,7 @@ import { usePaginationParams } from '../hooks';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { useOutputs } from '../outputs/state';
 import { useContributingCohorts, useTags } from '../shared/state';
-import { loadInstitutionOptions } from './institutionUtils';
+import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import countryCodesSuggestions from './country-codes-suggestions';
 import locationSuggestions from './location-suggestions';
 import { usePatchUserById, useUserById } from './state';

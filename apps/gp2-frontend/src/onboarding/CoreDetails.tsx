@@ -8,7 +8,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
-import { loadInstitutionOptions } from '../users/institutionUtils';
+import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
 import locationSuggestions from '../users/location-suggestions';
 import { usePatchUserById, useUserById } from '../users/state';

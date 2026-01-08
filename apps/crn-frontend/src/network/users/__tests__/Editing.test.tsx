@@ -12,14 +12,22 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 
 import Editing from '../Editing';
-import { patchUser, getInstitutions } from '../api';
+import { patchUser } from '../api';
+import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import CheckOnboarded from '../../../auth/CheckOnboarded';
 
 jest.mock('../api');
+jest.mock('@asap-hub/frontend-utils', () => {
+  const actual = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...actual,
+    loadInstitutionOptions: jest.fn(),
+  };
+});
 
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
-const mockGetInstitutions = getInstitutions as jest.MockedFunction<
-  typeof getInstitutions
+const mockLoadInstitutionOptions = loadInstitutionOptions as jest.MockedFunction<
+  typeof loadInstitutionOptions
 >;
 
 const id = '42';
@@ -86,26 +94,7 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
 
 describe('the personal info modal', () => {
   it('searches and displays results from organisations api', async () => {
-    mockGetInstitutions.mockResolvedValue({
-      number_of_results: 1,
-      time_taken: 0,
-      items: [
-        {
-          id: 'https://ror.org/id-1',
-          names: [
-            {
-              value: 'ExampleInst',
-              types: ['ror_display', 'label'],
-              lang: 'en',
-            },
-          ],
-          established: 1999,
-          types: ['education'],
-          links: [],
-          status: 'active',
-        },
-      ],
-    } as unknown as Awaited<ReturnType<typeof getInstitutions>>);
+    mockLoadInstitutionOptions.mockResolvedValue(['ExampleInst']);
     const { findByDisplayValue, findByText } = renderWithRoot(
       <Auth0Provider user={{ id }}>
         <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
@@ -129,9 +118,7 @@ describe('the personal info modal', () => {
 
     await userEvent.type(await findByDisplayValue('NCU'), ' 1');
     expect(await findByText('ExampleInst')).toBeVisible();
-    expect(mockGetInstitutions).toHaveBeenCalledWith({
-      searchQuery: 'NCU 1',
-    });
+    expect(mockLoadInstitutionOptions).toHaveBeenCalledWith('NCU 1');
   });
 
   it('saves changes', async () => {

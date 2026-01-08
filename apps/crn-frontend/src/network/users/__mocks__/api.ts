@@ -4,7 +4,6 @@ import {
   UserResponse,
   UserAvatarPostRequest,
   ListUserResponse,
-  InstitutionsResponse,
 } from '@asap-hub/model';
 
 export const getUser = jest.fn(
@@ -41,23 +40,4 @@ export const getUsers = jest.fn(
 
 export const getUsersAndExternalAuthors = jest.fn(
   async (): Promise<ListUserResponse> => createListUserResponse(10),
-);
-
-export const getInstitutions = jest.fn(
-  async (): Promise<InstitutionsResponse> => ({
-    number_of_results: 20,
-    time_taken: 0,
-    items: Array.from({ length: 20 }).map((_, i) => ({
-      name: `Institution ${i + 1}`,
-      id: `id-${i}`,
-      email_address: 'example@example.com',
-      status: '',
-      wikipedia_url: '',
-      established: 1999,
-      aliases: [],
-      acronyms: [],
-      links: [],
-      types: [],
-    })),
-  }),
 );

@@ -88,8 +88,7 @@ const TeamProjectsCard: React.FC<TeamProjectsCardProps> = ({
       title="Projects"
       description={
         <Paragraph accent="lead" noMargin styles={headerParagraphStyles}>
-          Explore projects where a team has received funding or participated as
-          a collaborator.
+          Explore projects where a team has received funding.
         </Paragraph>
       }
       tabs={[

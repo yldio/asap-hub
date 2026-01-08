@@ -15,6 +15,7 @@ import {
   getContentfulGraphqlTeam,
   getUnsortedManuscripts,
   getContentfulGraphqlPublicTeam,
+  getContentfulGraphqlPublicTeamById,
   getPublicTeamListItemDataObject,
   getContentfulGraphqlTeamProjectById,
 } from '../../fixtures/teams.fixtures';
@@ -1111,6 +1112,604 @@ describe('Teams data provider', () => {
           ],
           total: 1,
         });
+      });
+    });
+  });
+
+  describe('FetchPublicTeamById method', () => {
+    test('Should fetch the team from Contentful GraphQl', async () => {
+      const teamId = 'team-id-0';
+      const contentfulGraphQLResponse = {
+        teams: getContentfulGraphqlPublicTeamById(),
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        contentfulGraphQLResponse,
+      );
+
+      const result = await teamDataProvider.fetchPublicTeamById(teamId);
+
+      expect(result).toMatchObject({
+        id: 'team-id-0',
+        displayName: 'Team A',
+        teamStatus: 'Active',
+        projectTitle: 'Test Project Title',
+        projectSummary: 'Test project summary',
+        researchTheme: 'PD Functional Genomics',
+        tags: [
+          { id: 'tag-1', name: 'Animal resources 1' },
+          { id: 'tag-2', name: 'Animal resources 2' },
+        ],
+        manuscripts: [],
+        labCount: 0,
+        labs: [],
+      });
+      expect(result?.members).toHaveLength(3);
+      expect(result?.members[0]?.role).toBe('Lead PI (Core Leadership)');
+    });
+
+    test('Should return null when the team is not found', async () => {
+      const teamId = 'not-found';
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        teams: null,
+      });
+
+      const result = await teamDataProvider.fetchPublicTeamById(teamId);
+
+      expect(result).toBeNull();
+    });
+
+    test('Should throw an error with a specific error message when the graphql client throws one', async () => {
+      const id = 'some-id';
+      contentfulGraphqlClientMock.request.mockRejectedValueOnce(
+        new GraphQLError('some error message'),
+      );
+
+      await expect(teamDataProvider.fetchPublicTeamById(id)).rejects.toThrow(
+        'some error message',
+      );
+    });
+
+    test('Should handle team with no project data', async () => {
+      const team = {
+        ...getContentfulGraphqlPublicTeamById(),
+        linkedFrom: {
+          ...getContentfulGraphqlPublicTeamById().linkedFrom,
+          projectMembershipCollection: {
+            items: [],
+          },
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        teams: team,
+      });
+
+      const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+      expect(result).toMatchObject({
+        projectTitle: '',
+        projectSummary: undefined,
+        tags: [],
+      });
+    });
+
+    test('Should handle inactive team', async () => {
+      const team = {
+        ...getContentfulGraphqlPublicTeamById(),
+        inactiveSince: '2020-09-23T20:45:22.000Z',
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        teams: team,
+      });
+
+      const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+      expect(result?.teamStatus).toBe('Inactive');
+      expect(result?.inactiveSince).toBe('2020-09-23T20:45:22.000Z');
+    });
+
+    describe('team members', () => {
+      test('should ignore falsy items in the team membership list', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeamById(),
+          linkedFrom: {
+            ...getContentfulGraphqlPublicTeamById().linkedFrom,
+            teamMembershipCollection: {
+              items: [
+                null,
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [null],
+                    },
+                  },
+                },
+                {
+                  role: 'Lead PI (Core Leadership)',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'user-id-1',
+                          },
+                          firstName: 'Tom',
+                          nickname: null,
+                          lastName: 'Hardy',
+                          alumniSinceDate: null,
+                          avatar: null,
+                          onboarded: true,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.members).toHaveLength(1);
+        expect(result?.members[0]?.firstName).toBe('Tom');
+        expect(result?.members[0]?.lastName).toBe('Hardy');
+      });
+
+      test('should filter non onboarded users', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeamById(),
+          linkedFrom: {
+            ...getContentfulGraphqlPublicTeamById().linkedFrom,
+            teamMembershipCollection: {
+              items: [
+                {
+                  role: 'Key Personnel',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'user-id-1',
+                          },
+                          firstName: 'Tom',
+                          nickname: null,
+                          lastName: 'Hardy',
+                          alumniSinceDate: null,
+                          avatar: null,
+                          onboarded: false,
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'user-id-2',
+                          },
+                          firstName: 'John',
+                          nickname: null,
+                          lastName: 'Doe',
+                          alumniSinceDate: null,
+                          avatar: null,
+                          onboarded: true,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.members).toHaveLength(1);
+        expect(result?.members[0]?.id).toBe('user-id-2');
+      });
+
+      test('should filter members without role', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeamById(),
+          linkedFrom: {
+            ...getContentfulGraphqlPublicTeamById().linkedFrom,
+            teamMembershipCollection: {
+              items: [
+                {
+                  role: null,
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'user-id-1',
+                          },
+                          firstName: 'Tom',
+                          nickname: null,
+                          lastName: 'Hardy',
+                          alumniSinceDate: null,
+                          avatar: null,
+                          onboarded: true,
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'user-id-2',
+                          },
+                          firstName: 'John',
+                          nickname: null,
+                          lastName: 'Doe',
+                          alumniSinceDate: null,
+                          avatar: null,
+                          onboarded: true,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.members).toHaveLength(1);
+        expect(result?.members[0]?.id).toBe('user-id-2');
+      });
+
+      test('should extract all member fields correctly', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeamById(),
+          linkedFrom: {
+            ...getContentfulGraphqlPublicTeamById().linkedFrom,
+            teamMembershipCollection: {
+              items: [
+                {
+                  role: 'Lead PI (Core Leadership)',
+                  inactiveSinceDate: '2020-09-23T20:45:22.000Z',
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'user-id-1',
+                          },
+                          firstName: 'Tom',
+                          nickname: 'Tim',
+                          lastName: 'Hardy',
+                          alumniSinceDate: '2021-01-01T00:00:00.000Z',
+                          avatar: {
+                            url: 'https://example.com/avatar.jpg',
+                          },
+                          onboarded: true,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.members[0]).toMatchObject({
+          id: 'user-id-1',
+          firstName: 'Tom',
+          lastName: 'Hardy',
+          email: '',
+          role: 'Lead PI (Core Leadership)',
+          inactiveSinceDate: '2020-09-23T20:45:22.000Z',
+          alumniSinceDate: '2021-01-01T00:00:00.000Z',
+          avatarUrl: 'https://example.com/avatar.jpg',
+          displayName: 'Tom (Tim) Hardy',
+          labs: [],
+        });
+      });
+
+      test('should handle members with null/undefined fields', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeamById(),
+          linkedFrom: {
+            ...getContentfulGraphqlPublicTeamById().linkedFrom,
+            teamMembershipCollection: {
+              items: [
+                {
+                  role: 'Key Personnel',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'user-id-1',
+                          },
+                          firstName: null,
+                          nickname: null,
+                          lastName: null,
+                          alumniSinceDate: null,
+                          avatar: null,
+                          onboarded: true,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.members[0]).toMatchObject({
+          id: 'user-id-1',
+          firstName: '',
+          lastName: '',
+          email: '',
+          role: 'Key Personnel',
+          inactiveSinceDate: undefined,
+          alumniSinceDate: null,
+          avatarUrl: undefined,
+          displayName: ' ',
+          labs: [],
+        });
+      });
+
+      test('should sort team members by role priority', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeamById(),
+          linkedFrom: {
+            ...getContentfulGraphqlPublicTeamById().linkedFrom,
+            teamMembershipCollection: {
+              items: [
+                {
+                  role: 'Key Personnel',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'user-id-1',
+                          },
+                          firstName: 'John',
+                          nickname: null,
+                          lastName: 'Doe',
+                          alumniSinceDate: null,
+                          avatar: null,
+                          onboarded: true,
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Lead PI (Core Leadership)',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'user-id-2',
+                          },
+                          firstName: 'Tom',
+                          nickname: null,
+                          lastName: 'Hardy',
+                          alumniSinceDate: null,
+                          avatar: null,
+                          onboarded: true,
+                        },
+                      ],
+                    },
+                  },
+                },
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      items: [
+                        {
+                          sys: {
+                            id: 'user-id-3',
+                          },
+                          firstName: 'Jane',
+                          nickname: null,
+                          lastName: 'Smith',
+                          alumniSinceDate: null,
+                          avatar: null,
+                          onboarded: true,
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.members).toEqual([
+          expect.objectContaining({
+            role: 'Lead PI (Core Leadership)',
+            id: 'user-id-2',
+          }),
+          expect.objectContaining({ role: 'Project Manager', id: 'user-id-3' }),
+          expect.objectContaining({ role: 'Key Personnel', id: 'user-id-1' }),
+        ]);
+      });
+    });
+
+    describe('project data', () => {
+      test('should extract project title and summary', async () => {
+        const team = getContentfulGraphqlPublicTeamById();
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.projectTitle).toBe('Test Project Title');
+        expect(result?.projectSummary).toBe('Test project summary');
+      });
+
+      test('should parse research tags', async () => {
+        const team = getContentfulGraphqlPublicTeamById();
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.tags).toEqual([
+          { id: 'tag-1', name: 'Animal resources 1' },
+          { id: 'tag-2', name: 'Animal resources 2' },
+        ]);
+      });
+
+      test('should handle missing project data', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeamById(),
+          linkedFrom: {
+            ...getContentfulGraphqlPublicTeamById().linkedFrom,
+            projectMembershipCollection: {
+              items: [],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.projectTitle).toBe('');
+        expect(result?.projectSummary).toBeUndefined();
+        expect(result?.tags).toEqual([]);
+      });
+    });
+
+    describe('team fields', () => {
+      test('should extract all team fields correctly', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeamById(),
+          sys: {
+            id: 'team-id-123',
+            publishedAt: '2021-01-01T00:00:00.000Z',
+          },
+          displayName: 'Test Team Name',
+          inactiveSince: null,
+          researchTheme: {
+            name: 'Test Research Theme',
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result).toMatchObject({
+          id: 'team-id-123',
+          displayName: 'Test Team Name',
+          inactiveSince: undefined,
+          teamStatus: 'Active',
+          researchTheme: 'Test Research Theme',
+          teamType: 'Discovery Team',
+          lastModifiedDate: '2021-01-01T00:00:00.000Z',
+          manuscripts: [],
+          labCount: 0,
+          labs: [],
+        });
+      });
+
+      test('should handle inactive team', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeamById(),
+          inactiveSince: '2020-09-23T20:45:22.000Z',
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.inactiveSince).toBe('2020-09-23T20:45:22.000Z');
+        expect(result?.teamStatus).toBe('Inactive');
+      });
+
+      test('should handle missing research theme', async () => {
+        const team = {
+          ...getContentfulGraphqlPublicTeamById(),
+          researchTheme: null,
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teams: team,
+        });
+
+        const result = await teamDataProvider.fetchPublicTeamById('team-id');
+
+        expect(result?.researchTheme).toBeUndefined();
       });
     });
   });

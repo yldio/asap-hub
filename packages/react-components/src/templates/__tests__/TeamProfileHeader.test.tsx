@@ -1,5 +1,4 @@
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
-import { TeamRole } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen } from '@testing-library/react';
@@ -84,17 +83,7 @@ it('renders no more than 5 members', () => {
 
 it('renders a contact button when there is a pointOfContact', () => {
   render(
-    <TeamProfileHeader
-      {...boilerplateProps}
-      pointOfContact={{
-        id: 'uuid',
-        displayName: 'John Doe',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'test@test.com',
-        role: 'Project Manager',
-      }}
-    />,
+    <TeamProfileHeader {...boilerplateProps} pointOfContact="test@test.com" />,
   );
 
   expect(screen.getByText('Contact').parentElement).toHaveAttribute(
@@ -282,17 +271,7 @@ describe('copy button', () => {
     });
     jest.spyOn(navigator.clipboard, 'writeText');
     render(
-      <TeamProfileHeader
-        {...boilerplateProps}
-        pointOfContact={{
-          id: 'uuid',
-          displayName: 'Patricia Mendes',
-          firstName: 'Patricia',
-          lastName: 'Mendes',
-          role: 'Project Manager' as TeamRole,
-          email: 'pm@asap.com',
-        }}
-      />,
+      <TeamProfileHeader {...boilerplateProps} pointOfContact="pm@asap.com" />,
     );
 
     fireEvent.click(screen.getByTitle(/copy/i));

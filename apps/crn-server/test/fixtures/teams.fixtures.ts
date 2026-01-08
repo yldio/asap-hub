@@ -121,6 +121,7 @@ export const getContentfulGraphqlTeamProjectById = (): NonNullable<
                   grantId: '',
                   originalGrant: '',
                   status: 'Active',
+                  contactEmail: undefined,
                   proposal: {
                     sys: {
                       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',

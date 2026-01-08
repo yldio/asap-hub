@@ -128,14 +128,7 @@ describe('ProjectProfileAbout', () => {
 
   describe('Contact CTA', () => {
     it('renders contact CTA when pointOfContact is provided', () => {
-      const pointOfContact = {
-        id: 'contact-1',
-        displayName: 'Contact Person',
-        firstName: 'Contact',
-        lastName: 'Person',
-        role: 'Project Manager' as TeamRole,
-        email: 'contact@example.com',
-      };
+      const pointOfContact = 'contact@example.com';
 
       render(
         <ProjectProfileAbout {...props} pointOfContact={pointOfContact} />,
@@ -155,14 +148,7 @@ describe('ProjectProfileAbout', () => {
     });
 
     it('renders contact CTA with correct mailto link', () => {
-      const pointOfContact = {
-        id: 'contact-1',
-        displayName: 'Contact Person',
-        firstName: 'Contact',
-        lastName: 'Person',
-        role: 'Project Manager' as TeamRole,
-        email: 'contact@example.com',
-      };
+      const pointOfContact = 'contact@example.com';
 
       render(
         <ProjectProfileAbout {...props} pointOfContact={pointOfContact} />,
@@ -190,14 +176,7 @@ describe('ProjectProfileAbout', () => {
 
   describe('Complete component rendering', () => {
     it('renders all sections when all props are provided', () => {
-      const pointOfContact = {
-        id: 'contact-1',
-        displayName: 'Contact Person',
-        firstName: 'Contact',
-        lastName: 'Person',
-        role: 'Project Manager' as TeamRole,
-        email: 'contact@example.com',
-      };
+      const pointOfContact = 'contact@example.com';
 
       const members = [
         {

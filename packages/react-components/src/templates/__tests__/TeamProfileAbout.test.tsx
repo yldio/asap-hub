@@ -1,5 +1,4 @@
 import { ComponentProps } from 'react';
-import { TeamRole } from '@asap-hub/model';
 import { fireEvent, render } from '@testing-library/react';
 import { isEnabled } from '@asap-hub/flags';
 
@@ -34,17 +33,7 @@ it('renders the overview', () => {
 
 it('renders the contact banner', () => {
   const { getByRole } = render(
-    <TeamProfileAbout
-      {...props}
-      pointOfContact={{
-        id: 'uuid',
-        displayName: 'John Doe',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'test@test.com',
-        role: 'Project Manager',
-      }}
-    />,
+    <TeamProfileAbout {...props} pointOfContact="test@test.com" />,
   );
 
   const link = getByRole('link');
@@ -218,14 +207,7 @@ describe('footer', () => {
   afterEach(() => {
     Object.assign(window.navigator, originalNavigator);
   });
-  const pointOfContact = {
-    id: 'uuid',
-    displayName: 'Patricia Mendes',
-    firstName: 'Patricia',
-    lastName: 'Mendes',
-    role: 'Project Manager' as TeamRole,
-    email: 'pm@asap.com',
-  };
+  const pointOfContact = 'pm@asap.com';
 
   it('does not render the footer when there is not a point of contact', () => {
     const { queryByText, queryByTitle } = render(

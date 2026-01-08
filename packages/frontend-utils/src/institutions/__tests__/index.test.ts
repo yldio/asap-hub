@@ -1,9 +1,9 @@
+import { type RorInstitutionName } from '@asap-hub/model';
 import {
   extractInstitutionDisplayName,
   transformRorInstitutionsToNames,
   loadInstitutionOptions,
   getInstitutions,
-  type RorInstitutionName,
   type RorApiResponse,
 } from '../index';
 

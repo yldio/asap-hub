@@ -1,17 +1,11 @@
-import { InstitutionsResponse } from '@asap-hub/model';
-
-export type RorInstitutionName = {
-  readonly value: string;
-  readonly types?: ReadonlyArray<string>;
-  readonly lang: string | null;
-};
-
-export type RorInstitution = {
-  readonly names?: ReadonlyArray<RorInstitutionName>;
-};
+import {
+  InstitutionsResponse,
+  RorInstitutionItem,
+  RorInstitutionName,
+} from '@asap-hub/model';
 
 export type RorApiResponse = {
-  readonly items?: ReadonlyArray<RorInstitution>;
+  readonly items?: ReadonlyArray<RorInstitutionItem>;
 };
 
 export const getInstitutions = async ({
@@ -31,14 +25,16 @@ export const getInstitutions = async ({
 };
 
 export const extractInstitutionDisplayName = (
-  institution: RorInstitution,
+  institution: RorInstitutionItem,
 ): string | null => {
   const { names } = institution;
   if (!names || names.length === 0) {
     return null;
   }
 
-  const displayName = names.find((name) => name.types?.includes('ror_display'));
+  const displayName = names.find(
+    (name: RorInstitutionName) => name.types?.includes('ror_display'),
+  );
   const fallbackName = names[0];
 
   return displayName?.value || fallbackName?.value || null;

@@ -25,6 +25,7 @@ import CheckOnboarded from './auth/CheckOnboarded';
 import { auth0State } from './auth/state';
 import { useCurrentUserProfileTabRoute } from './hooks';
 import Onboardable from './Onboardable';
+import { ProjectsBanner } from './components/ProjectsBanner';
 
 const loadNews = () => import(/* webpackChunkName: "news" */ './news/Routes');
 const loadNetwork = () =>
@@ -138,6 +139,7 @@ const AuthenticatedApp: FC<{
             )}
             aboutHref="https://www.parkinsonsroadmap.org/"
           >
+            <ProjectsBanner />
             <CheckOnboarded>
               <Routes>
                 <Route

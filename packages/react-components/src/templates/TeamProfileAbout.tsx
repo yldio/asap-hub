@@ -9,6 +9,7 @@ import {
   TeamLabsCard,
   TeamMembersTabbedCard,
   TeamProfileOverview,
+  TeamProjectsCard,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
@@ -32,7 +33,15 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
     | 'supplementGrant'
     | 'teamStatus'
     | 'teamType'
+    | 'projectTitle'
+    | 'projectSummary'
+    | 'linkedProjectId'
+    | 'projectStatus'
+    | 'tags'
+    | 'researchTheme'
+    | 'resourceType'
     | 'labs'
+    | 'projectType'
   > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
@@ -41,6 +50,11 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   inactiveSince,
   tags,
+  projectTitle,
+  projectSummary,
+  linkedProjectId,
+  projectStatus,
+  supplementGrant,
   pointOfContact,
   members,
   teamGroupsCard,
@@ -50,6 +64,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   teamDescription,
   researchTheme,
   resourceType,
+  projectType,
   labs,
 }) => (
   <div css={styles}>
@@ -58,6 +73,19 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         tags={tags}
         teamDescription={teamDescription}
         teamType={teamType}
+        researchTheme={researchTheme}
+        resourceType={resourceType}
+      />
+    ) : null}
+    {isEnabled('PROJECTS_MVP') && projectTitle && linkedProjectId ? (
+      <TeamProjectsCard
+        teamType={teamType}
+        projectType={projectType}
+        projectTitle={projectTitle}
+        projectSummary={projectSummary}
+        linkedProjectId={linkedProjectId}
+        projectStatus={projectStatus}
+        supplementGrant={supplementGrant}
         researchTheme={researchTheme}
         resourceType={resourceType}
       />

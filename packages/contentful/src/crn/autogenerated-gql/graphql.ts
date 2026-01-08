@@ -27636,7 +27636,12 @@ export type FetchTeamProjectByIdQuery = {
                   Maybe<
                     Pick<
                       Projects,
-                      'title' | 'projectId' | 'grantId' | 'originalGrant'
+                      | 'title'
+                      | 'projectId'
+                      | 'grantId'
+                      | 'originalGrant'
+                      | 'status'
+                      | 'projectType'
                     > & {
                       sys: Pick<Sys, 'id'>;
                       proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
@@ -54278,6 +54283,20 @@ export const FetchTeamProjectByIdDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value: 'originalGrant',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'status',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'projectType',
                                                       },
                                                     },
                                                     {

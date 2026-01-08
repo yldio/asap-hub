@@ -222,6 +222,7 @@ export {
   TeamMembersSection,
   TeamMembersTabbedCard,
   TeamProductivityTable,
+  TeamProjectsCard,
   Toast,
   ToastStack,
   ToolCard,

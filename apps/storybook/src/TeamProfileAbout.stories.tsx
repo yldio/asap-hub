@@ -88,6 +88,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
       email: 'emanuel@asap.com',
     },
   ],
+  projectTitle: 'Project Title',
 });
 
 export const Normal = () => <TeamProfileAbout {...props()}></TeamProfileAbout>;

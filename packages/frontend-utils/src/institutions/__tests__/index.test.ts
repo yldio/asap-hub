@@ -2,6 +2,7 @@ import {
   extractInstitutionDisplayName,
   transformRorInstitutionsToNames,
   loadInstitutionOptions,
+  getInstitutions,
   type RorInstitutionName,
   type RorApiResponse,
 } from '../index';
@@ -214,6 +215,105 @@ describe('transformRorInstitutionsToNames', () => {
     expect(transformRorInstitutionsToNames(response)).toEqual([
       'Official Name',
     ]);
+  });
+});
+
+describe('getInstitutions', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockFetch.mockClear();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('fetches institutions successfully without search query', async () => {
+    const mockResponse = {
+      number_of_results: 1,
+      time_taken: 0,
+      items: [
+        {
+          id: 'https://ror.org/test',
+          names: [
+            {
+              value: 'Test University',
+              types: ['ror_display', 'label'],
+              lang: 'en',
+            },
+          ],
+        },
+      ],
+    };
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
+
+    const result = await getInstitutions();
+
+    expect(result).toEqual(mockResponse);
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://api.ror.org/v2/organizations',
+    );
+  });
+
+  it('fetches institutions successfully with search query', async () => {
+    const mockResponse = {
+      number_of_results: 1,
+      time_taken: 0,
+      items: [
+        {
+          id: 'https://ror.org/test',
+          names: [
+            {
+              value: 'Search University',
+              types: ['ror_display', 'label'],
+              lang: 'en',
+            },
+          ],
+        },
+      ],
+    };
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
+
+    const result = await getInstitutions({ searchQuery: 'search term' });
+
+    expect(result).toEqual(mockResponse);
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://api.ror.org/v2/organizations?query=search+term',
+    );
+  });
+
+  it('throws error when response is not ok with status code', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      statusText: 'Internal Server Error',
+      json: async () => ({}),
+    } as Response);
+
+    await expect(getInstitutions({ searchQuery: 'test' })).rejects.toThrow(
+      'Failed to fetch institutions. Expected status 2xx. Received status 500 Internal Server Error.',
+    );
+  });
+
+  it('throws error when response is not ok with status code only', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 404,
+      statusText: '',
+      json: async () => ({}),
+    } as Response);
+
+    await expect(getInstitutions()).rejects.toThrow(
+      'Failed to fetch institutions. Expected status 2xx. Received status 404.',
+    );
   });
 });
 

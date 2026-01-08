@@ -3,6 +3,7 @@ import TeamController from '../../src/controllers/team.controller';
 export const teamControllerMock = {
   fetch: jest.fn(),
   fetchPublicTeams: jest.fn(),
+  fetchPublicTeamById: jest.fn(),
   fetchById: jest.fn(),
   fetchTeamIdByProjectId: jest.fn(),
   update: jest.fn(),

@@ -160,6 +160,25 @@ describe('Team Controller', () => {
     });
   });
 
+  describe('FetchPublicTeamById method', () => {
+    test('Should throw when team is not found', async () => {
+      teamDataProviderMock.fetchPublicTeamById.mockResolvedValueOnce(null);
+
+      await expect(
+        teamController.fetchPublicTeamById('not-found'),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('Should return the team when it finds it', async () => {
+      teamDataProviderMock.fetchPublicTeamById.mockResolvedValueOnce(
+        getTeamDataObject(),
+      );
+      const result = await teamController.fetchPublicTeamById('team-id');
+
+      expect(result).toEqual(getTeamResponse());
+    });
+  });
+
   describe('Fetch-by-ID method', () => {
     test('Should throw when team is not found', async () => {
       teamDataProviderMock.fetchById.mockResolvedValueOnce(null);

@@ -94,7 +94,9 @@ describe('/teams/ route', () => {
     teamResponse.members = [teamResponse.members[0]!, activeMember];
     const publicTeamResponse = getPublicTeamResponse();
     test('Should return a 404 error when the team or members are not found', async () => {
-      teamControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
+      teamControllerMock.fetchPublicTeamById.mockRejectedValueOnce(
+        Boom.notFound(),
+      );
 
       const response = await supertest(publicApp).get('/public/teams/123');
 
@@ -104,18 +106,21 @@ describe('/teams/ route', () => {
     test('Should call the controller with the right parameters', async () => {
       const teamId = 'abc123';
 
-      teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
+      teamControllerMock.fetchPublicTeamById.mockResolvedValueOnce(
+        teamResponse,
+      );
 
       await supertest(publicApp).get(`/public/teams/${teamId}`);
 
-      expect(teamControllerMock.fetchById).toHaveBeenCalledWith(teamId, {
-        showTools: false,
-        internalAPI: false,
-      });
+      expect(teamControllerMock.fetchPublicTeamById).toHaveBeenCalledWith(
+        teamId,
+      );
     });
 
     test('Should return the result correctly', async () => {
-      teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
+      teamControllerMock.fetchPublicTeamById.mockResolvedValueOnce(
+        teamResponse,
+      );
 
       const response = await supertest(publicApp).get('/public/teams/123');
 
@@ -127,7 +132,9 @@ describe('/teams/ route', () => {
         ...teamResponse,
         inactiveSince: '2020-09-23T20:45:22.000Z',
       };
-      teamControllerMock.fetchById.mockResolvedValueOnce(inactiveTeam);
+      teamControllerMock.fetchPublicTeamById.mockResolvedValueOnce(
+        inactiveTeam,
+      );
 
       const response = await supertest(publicApp).get('/public/teams/123');
 

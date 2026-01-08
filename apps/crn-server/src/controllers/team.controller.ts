@@ -71,6 +71,16 @@ export default class TeamController {
     };
   }
 
+  async fetchPublicTeamById(teamId: string): Promise<TeamResponse> {
+    const team = await this.teamDataProvider.fetchPublicTeamById(teamId);
+
+    if (!team) {
+      throw new NotFoundError(undefined, `team with id ${teamId} not found`);
+    }
+
+    return team;
+  }
+
   async fetchById(
     teamId: string,
     options?: FetchTeamOptions,

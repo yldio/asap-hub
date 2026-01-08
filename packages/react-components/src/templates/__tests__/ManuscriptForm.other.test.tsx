@@ -141,7 +141,7 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByLabelText, getByText, findByRole } = render(
+      const { getByText, findByRole, findByLabelText } = render(
         <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
@@ -169,14 +169,9 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      // Wait for the form to be ready by checking for a specific form element
-      await waitFor(
-        () => {
-          expect(getByLabelText(/Title of Manuscript/i)).toBeInTheDocument();
-        },
-        { timeout: 10000 },
-      );
-
+      // Wait for the form section to be ready - findByLabelText waits for the element to appear
+      // This avoids race conditions with Suspense fallbacks in CI environments
+      const sectionInput = await findByLabelText(section);
       await userEvent.click(sectionInput);
       await userEvent.click(getByText('Author One'));
 

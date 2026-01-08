@@ -13,6 +13,7 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
@@ -22,7 +23,6 @@ import {
   createOutputListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
 import { getUser, patchUser } from '../api';
-import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import UserDetail from '../UserDetail';
 
 jest.mock('../api');
@@ -72,9 +72,10 @@ describe('UserDetail', () => {
   const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
   const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 
-  const mockLoadInstitutionOptions = loadInstitutionOptions as jest.MockedFunction<
-    typeof loadInstitutionOptions
-  >;
+  const mockLoadInstitutionOptions =
+    loadInstitutionOptions as jest.MockedFunction<
+      typeof loadInstitutionOptions
+    >;
 
   const mockGetContributingCohorts =
     getContributingCohorts as jest.MockedFunction<

@@ -391,7 +391,6 @@ describe('createUserApiUrl', () => {
   );
 });
 
-
 describe('postUserAvatar', () => {
   it('makes an authorized POST request for the user id', async () => {
     const post: gp2Model.UserAvatarPostRequest = { avatar: '123' };

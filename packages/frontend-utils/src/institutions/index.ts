@@ -69,4 +69,3 @@ export const loadInstitutionOptions = async (
     return [];
   }
 };
-

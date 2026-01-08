@@ -172,7 +172,6 @@ export const postUserAvatar = async (
   return resp.json();
 };
 
-
 export const getUsersAndExternalUsers = async (
   algoliaClient: AlgoliaClient<'gp2'>,
   { searchQuery, currentPage, pageSize }: GetListOptions,

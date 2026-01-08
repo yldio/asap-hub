@@ -2,21 +2,13 @@ import {
   extractInstitutionDisplayName,
   transformRorInstitutionsToNames,
   loadInstitutionOptions,
-  getInstitutions,
   type RorInstitutionName,
   type RorApiResponse,
 } from '../index';
 
-jest.mock('../index', () => {
-  const actual = jest.requireActual('../index');
-  return {
-    ...actual,
-    getInstitutions: jest.fn(),
-  };
-});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mockGetInstitutions = getInstitutions as any;
+// Mock fetch globally
+global.fetch = jest.fn() as jest.MockedFunction<typeof fetch>;
+const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
 
 describe('extractInstitutionDisplayName', () => {
   it('returns the display name when ror_display type is present', () => {
@@ -229,6 +221,7 @@ describe('loadInstitutionOptions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, 'error').mockImplementation(() => {});
+    mockFetch.mockClear();
   });
 
   afterEach(() => {
@@ -237,6 +230,8 @@ describe('loadInstitutionOptions', () => {
 
   it('loads and transforms institutions successfully', async () => {
     const mockResponse = {
+      number_of_results: 1,
+      time_taken: 0,
       items: [
         {
           names: [
@@ -250,18 +245,23 @@ describe('loadInstitutionOptions', () => {
       ],
     };
 
-    mockGetInstitutions.mockResolvedValue(
-      mockResponse as unknown as Awaited<ReturnType<typeof getInstitutions>>,
-    );
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
 
     const result = await loadInstitutionOptions('test');
 
     expect(result).toEqual(['Test University']);
-    expect(mockGetInstitutions).toHaveBeenCalledWith({ searchQuery: 'test' });
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://api.ror.org/v2/organizations?query=test',
+    );
   });
 
   it('handles empty search query', async () => {
     const mockResponse = {
+      number_of_results: 1,
+      time_taken: 0,
       items: [
         {
           names: [
@@ -275,22 +275,30 @@ describe('loadInstitutionOptions', () => {
       ],
     };
 
-    mockGetInstitutions.mockResolvedValue(
-      mockResponse as unknown as Awaited<ReturnType<typeof getInstitutions>>,
-    );
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
 
     const result = await loadInstitutionOptions();
 
     expect(result).toEqual(['Default University']);
-    expect(mockGetInstitutions).toHaveBeenCalledWith({
-      searchQuery: undefined,
-    });
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://api.ror.org/v2/organizations',
+    );
   });
 
   it('returns empty array when API returns empty items', async () => {
-    mockGetInstitutions.mockResolvedValue({
+    const mockResponse = {
+      number_of_results: 0,
+      time_taken: 0,
       items: [],
-    } as unknown as Awaited<ReturnType<typeof getInstitutions>>);
+    };
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
 
     const result = await loadInstitutionOptions('query');
 
@@ -298,9 +306,15 @@ describe('loadInstitutionOptions', () => {
   });
 
   it('returns empty array when API returns no items property', async () => {
-    mockGetInstitutions.mockResolvedValue(
-      {} as unknown as Awaited<ReturnType<typeof getInstitutions>>,
-    );
+    const mockResponse = {
+      number_of_results: 0,
+      time_taken: 0,
+    };
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
 
     const result = await loadInstitutionOptions('query');
 
@@ -309,7 +323,7 @@ describe('loadInstitutionOptions', () => {
 
   it('handles API errors gracefully', async () => {
     const error = new Error('API Error');
-    mockGetInstitutions.mockRejectedValue(error);
+    mockFetch.mockRejectedValueOnce(error);
 
     const result = await loadInstitutionOptions('query');
 
@@ -323,6 +337,8 @@ describe('loadInstitutionOptions', () => {
 
   it('filters out institutions with invalid names', async () => {
     const mockResponse = {
+      number_of_results: 3,
+      time_taken: 0,
       items: [
         {
           names: [
@@ -348,9 +364,10 @@ describe('loadInstitutionOptions', () => {
       ],
     };
 
-    mockGetInstitutions.mockResolvedValue(
-      mockResponse as unknown as Awaited<ReturnType<typeof getInstitutions>>,
-    );
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
 
     const result = await loadInstitutionOptions('test');
 
@@ -359,6 +376,8 @@ describe('loadInstitutionOptions', () => {
 
   it('handles multiple institutions with various name types', async () => {
     const mockResponse = {
+      number_of_results: 3,
+      time_taken: 0,
       items: [
         {
           names: [
@@ -390,9 +409,10 @@ describe('loadInstitutionOptions', () => {
       ],
     };
 
-    mockGetInstitutions.mockResolvedValue(
-      mockResponse as unknown as Awaited<ReturnType<typeof getInstitutions>>,
-    );
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockResponse,
+    } as Response);
 
     const result = await loadInstitutionOptions('universities');
 
@@ -403,4 +423,3 @@ describe('loadInstitutionOptions', () => {
     ]);
   });
 });
-

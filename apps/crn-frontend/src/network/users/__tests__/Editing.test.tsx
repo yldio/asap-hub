@@ -10,10 +10,10 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 
 import Editing from '../Editing';
 import { patchUser } from '../api';
-import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import CheckOnboarded from '../../../auth/CheckOnboarded';
 
 jest.mock('../api');
@@ -26,9 +26,8 @@ jest.mock('@asap-hub/frontend-utils', () => {
 });
 
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
-const mockLoadInstitutionOptions = loadInstitutionOptions as jest.MockedFunction<
-  typeof loadInstitutionOptions
->;
+const mockLoadInstitutionOptions =
+  loadInstitutionOptions as jest.MockedFunction<typeof loadInstitutionOptions>;
 
 const id = '42';
 

@@ -17,17 +17,20 @@ import { join } from 'path';
 import { ContextType, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import {
-  getInstitutions,
-  getUser,
-  patchUser,
-  postUserAvatar,
-} from '../../users/api';
+import { getUser, patchUser, postUserAvatar } from '../../users/api';
 import CoreDetails from '../CoreDetails';
 
 jest.mock('browser-image-compression');
 jest.mock('../../users/api');
+jest.mock('@asap-hub/frontend-utils', () => {
+  const actual = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...actual,
+    loadInstitutionOptions: jest.fn(),
+  };
+});
 
 const mockToast = jest.fn() as jest.MockedFunction<
   ContextType<typeof ToastContext>
@@ -83,9 +86,10 @@ describe('CoreDetails', () => {
   const mockPostUserAvatar = postUserAvatar as jest.MockedFunction<
     typeof postUserAvatar
   >;
-  const mockGetInstitutions = getInstitutions as jest.MockedFunction<
-    typeof getInstitutions
-  >;
+  const mockLoadInstitutionOptions =
+    loadInstitutionOptions as jest.MockedFunction<
+      typeof loadInstitutionOptions
+    >;
   const imageCompressionMock = imageCompression as jest.MockedFunction<
     typeof imageCompression
   >;
@@ -141,30 +145,7 @@ describe('CoreDetails', () => {
   });
 
   it('searches and displays results from organisations api', async () => {
-    mockGetInstitutions.mockResolvedValue({
-      number_of_results: 1,
-      time_taken: 0,
-      items: [
-        {
-          names: [
-            {
-              value: 'ExampleInst',
-              types: ['ror_display', 'label'],
-              lang: 'en',
-            },
-          ],
-          id: 'id-1',
-          email_address: 'example@example.com',
-          status: '',
-          wikipedia_url: '',
-          established: 1999,
-          aliases: [],
-          acronyms: [],
-          links: [],
-          types: [],
-        },
-      ],
-    } as unknown as Awaited<ReturnType<typeof getInstitutions>>);
+    mockLoadInstitutionOptions.mockResolvedValue(['ExampleInst']);
     const user = gp2Fixtures.createUserResponse();
     mockGetUser.mockResolvedValueOnce(user);
     await renderCoreDetails(user.id);
@@ -178,9 +159,9 @@ describe('CoreDetails', () => {
       ' 1',
     );
     expect(await screen.findByText('ExampleInst')).toBeVisible();
-    expect(mockGetInstitutions).toHaveBeenCalledWith({
-      searchQuery: 'Stark Industries 1',
-    });
+    expect(mockLoadInstitutionOptions).toHaveBeenCalledWith(
+      'Stark Industries 1',
+    );
   });
 
   it('saves the key information modal', async () => {

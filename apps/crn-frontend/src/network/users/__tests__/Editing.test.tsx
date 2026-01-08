@@ -92,6 +92,11 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
 });
 
 describe('the personal info modal', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockLoadInstitutionOptions.mockResolvedValue([]);
+  });
+
   it('searches and displays results from organisations api', async () => {
     mockLoadInstitutionOptions.mockResolvedValue(['ExampleInst']);
     const { findByDisplayValue, findByText } = renderWithRoot(

@@ -4,6 +4,7 @@ import { fireEvent } from '@testing-library/dom';
 import { render, screen } from '@testing-library/react';
 import { formatISO } from 'date-fns';
 import { ComponentProps } from 'react';
+import { enable, disable } from '@asap-hub/flags';
 import TeamProfileHeader from '../TeamProfileHeader';
 
 const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
@@ -90,6 +91,71 @@ it('renders a contact button when there is a pointOfContact', () => {
     'href',
     'mailto:test@test.com',
   );
+});
+
+describe('Contact email with PROJECTS_MVP feature flag', () => {
+  it('uses pointOfContact when PROJECTS_MVP flag is enabled', () => {
+    enable('PROJECTS_MVP');
+    render(
+      <TeamProfileHeader
+        {...boilerplateProps}
+        pointOfContact="project@example.com"
+        members={[
+          {
+            id: 'pm-id',
+            displayName: 'PM Name',
+            firstName: 'PM',
+            lastName: 'Name',
+            email: 'pm@example.com',
+            role: 'Project Manager',
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getByText('Contact').parentElement).toHaveAttribute(
+      'href',
+      'mailto:project@example.com',
+    );
+  });
+
+  it('uses PM email from members when PROJECTS_MVP flag is disabled', () => {
+    disable('PROJECTS_MVP');
+    render(
+      <TeamProfileHeader
+        {...boilerplateProps}
+        pointOfContact="project@example.com"
+        members={[
+          {
+            id: 'pm-id',
+            displayName: 'PM Name',
+            firstName: 'PM',
+            lastName: 'Name',
+            email: 'pm@example.com',
+            role: 'Project Manager',
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getByText('Contact').parentElement).toHaveAttribute(
+      'href',
+      'mailto:pm@example.com',
+    );
+  });
+
+  it('does not render contact button when flag is disabled and no PM exists', () => {
+    disable('PROJECTS_MVP');
+    render(
+      <TeamProfileHeader
+        {...boilerplateProps}
+        pointOfContact="project@example.com"
+        members={[]}
+      />,
+    );
+
+    expect(screen.queryByText('Contact')).not.toBeInTheDocument();
+  });
 });
 
 it('renders a lab count for multiple labs', () => {

@@ -1,13 +1,8 @@
 import { ComponentProps } from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import { isEnabled } from '@asap-hub/flags';
+import { enable, disable } from '@asap-hub/flags';
 
 import TeamProfileAbout from '../TeamProfileAbout';
-
-jest.mock('@asap-hub/flags', () => ({
-  isEnabled: jest.fn(() => true),
-  reset: jest.fn(),
-}));
 
 const props: ComponentProps<typeof TeamProfileAbout> = {
   teamDescription: '',
@@ -229,8 +224,71 @@ describe('footer', () => {
     );
   });
 
+  it('uses pointOfContact when PROJECTS_MVP flag is enabled', () => {
+    enable('PROJECTS_MVP');
+    const { getByText } = render(
+      <TeamProfileAbout
+        {...props}
+        pointOfContact="project@example.com"
+        members={[
+          {
+            id: 'pm-id',
+            displayName: 'PM Name',
+            firstName: 'PM',
+            lastName: 'Name',
+            email: 'pm@example.com',
+            role: 'Project Manager',
+          },
+        ]}
+      />,
+    );
+
+    expect(getByText('Contact').parentElement).toHaveAttribute(
+      'href',
+      'mailto:project@example.com',
+    );
+  });
+
+  it('uses PM email from members when PROJECTS_MVP flag is disabled', () => {
+    disable('PROJECTS_MVP');
+    const { getByText } = render(
+      <TeamProfileAbout
+        {...props}
+        pointOfContact="project@example.com"
+        members={[
+          {
+            id: 'pm-id',
+            displayName: 'PM Name',
+            firstName: 'PM',
+            lastName: 'Name',
+            email: 'pm@example.com',
+            role: 'Project Manager',
+          },
+        ]}
+      />,
+    );
+
+    expect(getByText('Contact').parentElement).toHaveAttribute(
+      'href',
+      'mailto:pm@example.com',
+    );
+  });
+
+  it('does not render contact button when flag is disabled and no PM exists', () => {
+    disable('PROJECTS_MVP');
+    const { queryByText } = render(
+      <TeamProfileAbout
+        {...props}
+        pointOfContact="project@example.com"
+        members={[]}
+      />,
+    );
+
+    expect(queryByText('Contact')).not.toBeInTheDocument();
+  });
+
   it('renders the lab list when team has labs and flag is enabled', () => {
-    (isEnabled as jest.Mock).mockReturnValue(true);
+    enable('PROJECTS_MVP');
     const { getByText, getByRole } = render(
       <TeamProfileAbout
         {...props}
@@ -243,7 +301,7 @@ describe('footer', () => {
   });
 
   it('does not render the lab list when team has labs but flag is disabled', () => {
-    (isEnabled as jest.Mock).mockReturnValue(false);
+    disable('PROJECTS_MVP');
     const { queryByText, queryByRole } = render(
       <TeamProfileAbout
         {...props}

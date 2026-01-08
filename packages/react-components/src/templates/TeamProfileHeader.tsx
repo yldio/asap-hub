@@ -3,7 +3,7 @@ import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { network, projects } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { CopyButton, Display, Link, Pill, StateTag, TabLink } from '../atoms';
 import { lead, pine } from '../colors';
 import {
@@ -176,6 +176,13 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   const route = network({}).teams({}).team({ teamId: id });
   let projectLink;
 
+  const pointOfContactEmail = useMemo(() => {
+    if (isEnabled('PROJECTS_MVP')) {
+      return pointOfContact;
+    }
+    return members.find((member) => member.role === 'Project Manager')?.email;
+  }, [pointOfContact, members]);
+
   if (linkedProjectId) {
     if (projectType === 'Discovery Project') {
       projectLink = projects({})
@@ -249,14 +256,14 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               fullListRoute={`${route.about({}).$}#${teamListElementId}`}
             />
           )}
-          {pointOfContact && teamStatus === 'Active' && (
+          {pointOfContactEmail && teamStatus === 'Active' && (
             <div css={pointOfContactStyles}>
               <span css={buttonStyles}>
                 <Link
                   buttonStyle
                   small
                   primary
-                  href={`${createMailTo(pointOfContact)}`}
+                  href={`${createMailTo(pointOfContactEmail)}`}
                   noMargin
                 >
                   Contact
@@ -265,7 +272,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               <CopyButton
                 hoverTooltipText="Copy Email"
                 clickTooltipText="Email Copied"
-                onClick={() => navigator.clipboard.writeText(pointOfContact)}
+                onClick={() =>
+                  navigator.clipboard.writeText(pointOfContactEmail)
+                }
               />
             </div>
           )}

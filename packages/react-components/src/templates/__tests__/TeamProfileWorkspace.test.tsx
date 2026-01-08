@@ -570,7 +570,7 @@ it('renders contact project manager when PM is in members', () => {
     <TeamProfileWorkspace {...teamWithPM} />,
   );
 
-  const link = getByText('Mr PM', {
+  const link = getByText('Andrei Covaciu', {
     selector: 'a',
   }) as HTMLAnchorElement;
 

@@ -41,6 +41,7 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
     | 'researchTheme'
     | 'resourceType'
     | 'labs'
+    | 'projectType'
   > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
@@ -63,6 +64,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   teamDescription,
   researchTheme,
   resourceType,
+  projectType,
   labs,
 }) => (
   <div css={styles}>
@@ -78,6 +80,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
     {isEnabled('PROJECTS_MVP') && projectTitle && linkedProjectId ? (
       <TeamProjectsCard
         teamType={teamType}
+        projectType={projectType}
         projectTitle={projectTitle}
         projectSummary={projectSummary}
         linkedProjectId={linkedProjectId}

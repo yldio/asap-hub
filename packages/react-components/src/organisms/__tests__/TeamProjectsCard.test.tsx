@@ -25,7 +25,7 @@ describe('TeamProjectsCard', () => {
   });
 
   it('renders funded project information with title link', () => {
-    render(<TeamProjectsCard {...baseProps} />);
+    render(<TeamProjectsCard {...baseProps} projectType="Discovery Project" />);
 
     expect(
       screen.getByRole('heading', { name: /projects/i }),
@@ -66,11 +66,12 @@ describe('TeamProjectsCard', () => {
     expect(screen.queryByText('Closed')).not.toBeInTheDocument();
   });
 
-  it('renders resource team project with resource project route', () => {
+  it('renders resource project with resource project route based on projectType', () => {
     render(
       <TeamProjectsCard
         {...baseProps}
-        teamType="Resource Team"
+        teamType="Discovery Team"
+        projectType="Resource Project"
         researchTheme={undefined}
         resourceType="Isogenic iPSC Lines"
       />,
@@ -83,17 +84,69 @@ describe('TeamProjectsCard', () => {
     );
   });
 
-  it('displays resource type pill for resource team', () => {
+  it('renders discovery project with discovery project route based on projectType', () => {
     render(
       <TeamProjectsCard
         {...baseProps}
         teamType="Resource Team"
+        projectType="Discovery Project"
+        researchTheme="Neurodegeneration"
+        resourceType={undefined}
+      />,
+    );
+
+    const titleLink = screen.getByRole('link', { name: 'Project Alpha' });
+    expect(titleLink).toHaveAttribute(
+      'href',
+      expect.stringContaining('/projects/discovery/'),
+    );
+  });
+
+  it('displays projectType pill', () => {
+    render(
+      <TeamProjectsCard
+        {...baseProps}
+        teamType="Discovery Team"
+        projectType="Resource Project"
         researchTheme={undefined}
         resourceType="Isogenic iPSC Lines"
       />,
     );
 
-    expect(screen.getByText('Resource Team')).toBeInTheDocument();
+    expect(screen.getByText('Resource Project')).toBeInTheDocument();
+    expect(screen.queryByText('Discovery Team')).not.toBeInTheDocument();
     expect(screen.getByText('Isogenic iPSC Lines')).toBeInTheDocument();
+  });
+
+  it('displays research theme pill for discovery project based on projectType', () => {
+    render(
+      <TeamProjectsCard
+        {...baseProps}
+        teamType="Resource Team"
+        projectType="Discovery Project"
+        researchTheme="Neurodegeneration"
+        resourceType={undefined}
+      />,
+    );
+
+    expect(screen.getByText('Discovery Project')).toBeInTheDocument();
+    expect(screen.getByText('Neurodegeneration')).toBeInTheDocument();
+    expect(screen.queryByText('Resource Team')).not.toBeInTheDocument();
+  });
+
+  it('displays resource type pill for resource project based on projectType', () => {
+    render(
+      <TeamProjectsCard
+        {...baseProps}
+        teamType="Discovery Team"
+        projectType="Resource Project"
+        researchTheme={undefined}
+        resourceType="Isogenic iPSC Lines"
+      />,
+    );
+
+    expect(screen.getByText('Resource Project')).toBeInTheDocument();
+    expect(screen.getByText('Isogenic iPSC Lines')).toBeInTheDocument();
+    expect(screen.queryByText('Discovery Team')).not.toBeInTheDocument();
   });
 });

@@ -28,6 +28,7 @@ import {
   ListTeamDataObject,
   manuscriptMapStatus,
   ProjectStatus,
+  ProjectType,
   PublicTeamListItemDataObject,
   TeamDataObject,
   TeamLeader,
@@ -659,6 +660,7 @@ export const parseContentfulGraphQlTeam = (
       : undefined,
     researchTheme: item.researchTheme?.name ?? undefined,
     resourceType: linkedProject?.resourceType?.name ?? undefined,
+    projectType: (linkedProject?.projectType as ProjectType) ?? undefined,
     teamDescription: item.teamDescription ?? undefined,
     labs: members
       .flatMap((member) => member.labs || [])

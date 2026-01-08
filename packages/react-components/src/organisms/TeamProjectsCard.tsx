@@ -40,6 +40,7 @@ type ProjectData = {
   supplementGrant?: TeamResponse['supplementGrant'];
   researchTheme?: string;
   resourceType?: string;
+  projectType?: TeamResponse['projectType'];
 };
 
 type TeamProjectsCardProps = Pick<
@@ -52,6 +53,7 @@ type TeamProjectsCardProps = Pick<
   | 'supplementGrant'
   | 'researchTheme'
   | 'resourceType'
+  | 'projectType'
 >;
 
 const TeamProjectsCard: React.FC<TeamProjectsCardProps> = ({
@@ -63,6 +65,7 @@ const TeamProjectsCard: React.FC<TeamProjectsCardProps> = ({
   supplementGrant,
   researchTheme,
   resourceType,
+  projectType,
 }) => {
   if (!projectTitle || !linkedProjectId) {
     return null;
@@ -77,6 +80,7 @@ const TeamProjectsCard: React.FC<TeamProjectsCardProps> = ({
     supplementGrant,
     researchTheme,
     resourceType,
+    projectType,
   };
 
   return (
@@ -111,7 +115,7 @@ const TeamProjectsCard: React.FC<TeamProjectsCardProps> = ({
           : project.projectSummary ?? '';
 
         const projectRoute =
-          project.teamType === 'Discovery Team'
+          project.projectType === 'Discovery Project'
             ? projects({})
                 .discoveryProjects({})
                 .discoveryProject({ projectId: project.linkedProjectId }).$
@@ -132,14 +136,15 @@ const TeamProjectsCard: React.FC<TeamProjectsCardProps> = ({
                   {project.projectStatus}
                 </Pill>
               )}
-              <Pill noMargin>{project.teamType}</Pill>
-              {project.teamType === 'Discovery Team' &&
+              <Pill noMargin>{project.projectType}</Pill>
+              {project.projectType === 'Discovery Project' &&
                 project.researchTheme && (
                   <Pill noMargin>{project.researchTheme}</Pill>
                 )}
-              {project.teamType === 'Resource Team' && project.resourceType && (
-                <Pill noMargin>{project.resourceType}</Pill>
-              )}
+              {project.projectType === 'Resource Project' &&
+                project.resourceType && (
+                  <Pill noMargin>{project.resourceType}</Pill>
+                )}
             </div>
 
             <div css={titleStyles}>

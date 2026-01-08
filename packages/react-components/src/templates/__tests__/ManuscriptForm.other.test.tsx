@@ -141,7 +141,7 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByLabelText, queryAllByText, getByText, findByRole } = render(
+      const { getByText, findByRole, findByLabelText } = render(
         <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
@@ -169,9 +169,11 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
+      // Wait for the form section to be ready - findByLabelText waits for the element to appear
+      // This avoids race conditions with Suspense fallbacks in CI environments
+      const sectionInput = await findByLabelText(section);
 
-      await userEvent.click(getByLabelText(section));
+      await userEvent.click(sectionInput);
       await userEvent.click(getByText('Author One'));
 
       await submitForm({ findByRole });
@@ -208,7 +210,7 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByLabelText, queryAllByText, getByText, findByRole } = render(
+      const { getByLabelText, getByText, findByRole, findByLabelText } = render(
         <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
@@ -236,8 +238,10 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
-      await userEvent.click(getByLabelText(section));
+      // Wait for the form section to be ready - findByLabelText waits for the element to appear
+      // This avoids race conditions with Suspense fallbacks in CI environments
+      const sectionInput = await findByLabelText(section);
+      await userEvent.click(sectionInput);
       await userEvent.click(getByText(/External Author One \(Non CRN\)/));
       await userEvent.type(
         getByLabelText(/External Author One Email/i),
@@ -282,7 +286,7 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByLabelText, queryAllByText, getByText, findByRole } = render(
+      const { getByLabelText, getByText, findByRole, findByLabelText } = render(
         <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
@@ -310,9 +314,11 @@ describe('authors', () => {
         </StaticRouter>,
       );
 
-      await userEvent.type(getByLabelText(section), 'Jane Doe');
+      // Wait for the form section to be ready - findByLabelText waits for the element to appear
+      // This avoids race conditions with Suspense fallbacks in CI environments
+      const sectionInput = await findByLabelText(section);
 
-      await waitFor(() => expect(queryAllByText(/loading/i)).toHaveLength(0));
+      await userEvent.type(sectionInput, 'Jane Doe');
 
       await userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
       await userEvent.type(getByLabelText(/Jane Doe Email/i), 'jane@doe.com');

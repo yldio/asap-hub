@@ -31,11 +31,22 @@ const listStyle = css({
 
 type UserNavigationAssociationSectionProps = {
   userOnboarded: boolean;
-  association: ReadonlyArray<{ name: string; href: string; active?: boolean }>;
-  title: 'MY TEAMS' | 'MY INTEREST GROUPS' | 'MY WORKING GROUPS';
+  association: ReadonlyArray<{
+    name: string;
+    href: string;
+    active?: boolean;
+    icon?: JSX.Element;
+  }>;
+  title:
+    | 'MY TEAMS'
+    | 'MY INTEREST GROUPS'
+    | 'MY WORKING GROUPS'
+    | 'MY PROJECTS';
 };
 
-const icon = {
+const sectionIcon: Partial<
+  Record<UserNavigationAssociationSectionProps['title'], JSX.Element>
+> = {
   'MY TEAMS': <TeamIcon />,
   'MY INTEREST GROUPS': <InterestGroupsIcon />,
   'MY WORKING GROUPS': <WorkingGroupsIcon />,
@@ -53,12 +64,12 @@ const UserNavigationAssociationSection: React.FC<
         <Headline5 noMargin>{title}</Headline5>
       </span>
       {association.map(
-        ({ name, href, active = true }) =>
+        ({ name, href, active = true, icon }) =>
           active && (
             <li css={listStyle} key={href}>
               <NavigationLink
                 href={href}
-                icon={icon[title]}
+                icon={icon ?? sectionIcon[title]}
                 enabled={userOnboarded}
               >
                 {name}

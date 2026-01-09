@@ -7,8 +7,8 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
-import { getInstitutions } from '../users/api';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
 import locationSuggestions from '../users/location-suggestions';
 import { usePatchUserById, useUserById } from '../users/state';
@@ -42,11 +42,7 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
                 locationSuggestions={locationSuggestions.map(
                   ({ shortName }) => shortName,
                 )}
-                loadInstitutionOptions={(searchQuery) =>
-                  getInstitutions({ searchQuery }).then((data) =>
-                    data.items.map(({ name }) => name),
-                  )
-                }
+                loadInstitutionOptions={loadInstitutionOptions}
                 backHref={onboarding({}).coreDetails({}).$}
                 onSave={async (patchedUser) => {
                   await patchUser(patchedUser);

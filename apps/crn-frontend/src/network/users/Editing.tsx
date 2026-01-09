@@ -6,11 +6,10 @@ import {
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, loadInstitutionOptions } from '@asap-hub/frontend-utils';
 
 import { usePatchUserById } from './state';
 import countrySuggestions from './country-suggestions';
-import { getInstitutions } from './api';
 
 interface EditingProps {
   user: UserResponse;
@@ -34,11 +33,7 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
               countrySuggestions={countrySuggestions.map(
                 ({ countryName }) => countryName,
               )}
-              loadInstitutionOptions={(searchQuery) =>
-                getInstitutions({ searchQuery }).then((data) =>
-                  data.items.map(({ name }) => name),
-                )
-              }
+              loadInstitutionOptions={loadInstitutionOptions}
               backHref={backHref}
               onSave={patchUser}
             />

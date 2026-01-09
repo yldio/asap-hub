@@ -1,7 +1,7 @@
 import { ClientSearchResponse } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-import { gp2, InstitutionsResponse } from '@asap-hub/model';
+import { gp2 } from '@asap-hub/model';
 import { createUserListAlgoliaResponse } from '../../__fixtures__/algolia';
 
 export const getAlgoliaUsers = jest.fn(
@@ -45,25 +45,6 @@ export const postUserAvatar = jest.fn(
       avatarUrl: `url: ${post.avatar}`,
     };
   },
-);
-
-export const getInstitutions = jest.fn(
-  async (): Promise<InstitutionsResponse> => ({
-    number_of_results: 20,
-    time_taken: 0,
-    items: Array.from({ length: 20 }).map((_, i) => ({
-      name: `Institution ${i + 1}`,
-      id: `id-${i}`,
-      email_address: 'example@example.com',
-      status: '',
-      wikipedia_url: '',
-      established: 1999,
-      aliases: [],
-      acronyms: [],
-      links: [],
-      types: [],
-    })),
-  }),
 );
 
 export const getContributingCohorts = jest.fn(

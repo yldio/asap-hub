@@ -172,7 +172,6 @@ describe('authors', () => {
       // Wait for the form section to be ready - findByLabelText waits for the element to appear
       // This avoids race conditions with Suspense fallbacks in CI environments
       const sectionInput = await findByLabelText(section);
-
       await userEvent.click(sectionInput);
       await userEvent.click(getByText('Author One'));
 

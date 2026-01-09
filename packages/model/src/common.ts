@@ -21,22 +21,30 @@ export type FetchOptions<TFilter = string[]> = {
   filter?: TFilter;
 } & FetchPaginationOptions;
 
-// Partial response type
+export interface RorInstitutionName {
+  readonly value: string;
+  readonly types?: ReadonlyArray<string>;
+  readonly lang: string | null;
+}
+
+export interface RorInstitutionItem {
+  readonly id: string;
+  readonly names?: ReadonlyArray<RorInstitutionName>;
+  readonly email_address?: string;
+  readonly established?: number;
+  readonly types?: string[];
+  readonly links?: string[];
+  readonly aliases?: string[];
+  readonly acronyms?: string[];
+  readonly status?: string;
+  readonly wikipedia_url?: string;
+}
+
+// ROR API v2 response type
 export interface InstitutionsResponse {
   readonly number_of_results: number;
   readonly time_taken: number;
-  readonly items: ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-    readonly email_address: string;
-    readonly established: number;
-    readonly types: string[];
-    readonly links: string[];
-    readonly aliases: string[];
-    readonly acronyms: string[];
-    readonly status: string;
-    readonly wikipedia_url: string;
-  }>;
+  readonly items: ReadonlyArray<RorInstitutionItem>;
 }
 
 export const orcidWorkType = [

@@ -5,7 +5,6 @@ import {
 } from '@asap-hub/fixtures';
 import {
   inactiveUserMembershipStatus,
-  InstitutionsResponse,
   UserAvatarPostRequest,
   UserPatchRequest,
   UserResponse,
@@ -22,7 +21,6 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../../config';
 import {
-  getInstitutions,
   getOpenScienceMembers,
   getUser,
   getUsers,
@@ -451,53 +449,6 @@ describe('postUserAvatar', () => {
       postUserAvatar('42', post, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update avatar for user with id 42. Expected status 2xx. Received status 500."`,
-    );
-  });
-});
-
-describe('getInstitutions', () => {
-  const validResponse: InstitutionsResponse = {
-    number_of_results: 1,
-    time_taken: 0,
-    items: [
-      {
-        name: 'Institution 1',
-        id: 'id-1',
-        email_address: 'example@example.com',
-        status: '',
-        wikipedia_url: '',
-        established: 1999,
-        aliases: [],
-        acronyms: [],
-        links: [],
-        types: [],
-      },
-    ],
-  };
-  it('returns successfully fetched users', async () => {
-    nock('https://api.ror.org')
-      .get('/v2/organizations')
-      .query({})
-      .reply(200, validResponse);
-    expect(await getInstitutions()).toEqual(validResponse);
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('returns queried users', async () => {
-    nock('https://api.ror.org')
-      .get('/v2/organizations')
-      .query({ query: 'abc' })
-      .reply(200, validResponse);
-    expect(await getInstitutions({ searchQuery: 'abc' })).toEqual(
-      validResponse,
-    );
-    expect(nock.isDone()).toBe(true);
-  });
-  it('errors for an error status', async () => {
-    nock('https://api.ror.org').get('/v2/organizations').reply(500, {});
-
-    await expect(getInstitutions()).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch institutions. Expected status 2xx. Received status 500."`,
     );
   });
 });

@@ -15,6 +15,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useMemo } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -22,7 +23,6 @@ import { usePaginationParams } from '../hooks';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import { useOutputs } from '../outputs/state';
 import { useContributingCohorts, useTags } from '../shared/state';
-import { getInstitutions } from './api';
 import countryCodesSuggestions from './country-codes-suggestions';
 import locationSuggestions from './location-suggestions';
 import { usePatchUserById, useUserById } from './state';
@@ -128,11 +128,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
                           locationSuggestions={locationSuggestions.map(
                             ({ shortName }) => shortName,
                           )}
-                          loadInstitutionOptions={(searchQuery) =>
-                            getInstitutions({ searchQuery }).then((data) =>
-                              data.items.map(({ name }) => name),
-                            )
-                          }
+                          loadInstitutionOptions={loadInstitutionOptions}
                         />
                       }
                     />

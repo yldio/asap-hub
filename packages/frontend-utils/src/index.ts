@@ -4,6 +4,7 @@ export * from './cookie-consent';
 export * from './hooks';
 export * from './events';
 export * from './content-generator';
+export * from './institutions';
 export {
   ErrorBoundary,
   Frame,

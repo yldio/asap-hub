@@ -13,6 +13,7 @@ import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
 import { getOutputs } from '../../outputs/api';
@@ -21,10 +22,17 @@ import {
   createEventListAlgoliaResponse,
   createOutputListAlgoliaResponse,
 } from '../../__fixtures__/algolia';
-import { getInstitutions, getUser, patchUser } from '../api';
+import { getUser, patchUser } from '../api';
 import UserDetail from '../UserDetail';
 
 jest.mock('../api');
+jest.mock('@asap-hub/frontend-utils', () => {
+  const actual = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...actual,
+    loadInstitutionOptions: jest.fn(),
+  };
+});
 jest.mock('../../outputs/api');
 jest.mock('../../events/api');
 jest.mock('../../shared/api');
@@ -64,9 +72,10 @@ describe('UserDetail', () => {
   const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
   const mockGetTags = getTags as jest.MockedFunction<typeof getTags>;
 
-  const mockGetInstitutions = getInstitutions as jest.MockedFunction<
-    typeof getInstitutions
-  >;
+  const mockLoadInstitutionOptions =
+    loadInstitutionOptions as jest.MockedFunction<
+      typeof loadInstitutionOptions
+    >;
 
   const mockGetContributingCohorts =
     getContributingCohorts as jest.MockedFunction<
@@ -391,24 +400,7 @@ describe('UserDetail', () => {
 
     it('searches and displays results from organisations api', async () => {
       const user$ = userEvent.setup({ delay: null });
-      mockGetInstitutions.mockResolvedValue({
-        number_of_results: 1,
-        time_taken: 0,
-        items: [
-          {
-            name: 'ExampleInst',
-            id: 'id-1',
-            email_address: 'example@example.com',
-            status: '',
-            wikipedia_url: '',
-            established: 1999,
-            aliases: [],
-            acronyms: [],
-            links: [],
-            types: [],
-          },
-        ],
-      });
+      mockLoadInstitutionOptions.mockResolvedValue(['ExampleInst']);
       const user = gp2Fixtures.createUserResponse({
         id: 'testuserid',
       });
@@ -435,9 +427,9 @@ describe('UserDetail', () => {
         () => expect(screen.getByText('ExampleInst')).toBeVisible(),
         { timeout: 5000 },
       );
-      expect(mockGetInstitutions).toHaveBeenCalledWith({
-        searchQuery: 'Stark Industries 1',
-      });
+      expect(mockLoadInstitutionOptions).toHaveBeenCalledWith(
+        'Stark Industries 1',
+      );
     });
   });
   describe('the upcoming events tab', () => {

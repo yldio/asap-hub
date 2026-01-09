@@ -44,6 +44,7 @@ const createAuth0 = (
       algoliaApiKey: 'test-api-key',
       workingGroups: [],
       interestGroups: [],
+      projects: [],
       role: 'Grantee',
       openScienceTeamMember: false,
       ...user,

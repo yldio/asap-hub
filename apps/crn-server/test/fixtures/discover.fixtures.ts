@@ -34,6 +34,7 @@ const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
     labs: [],
     workingGroups: [],
     interestGroups: [],
+    projects: [],
   },
   {
     id: `${prefix}uuid-members-2`,
@@ -63,6 +64,7 @@ const getDiscoverMembersResponse = (prefix = ''): UserResponse[] => [
     labs: [],
     workingGroups: [],
     interestGroups: [],
+    projects: [],
   },
 ];
 

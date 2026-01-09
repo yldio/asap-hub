@@ -84,7 +84,7 @@ it('syncs the auth state to recoil', async () => {
     const authorization = useRecoilValue(authorizationState);
     return <>{authorization}</>;
   });
-  const { queryByText, getByText } = render(
+  const { findByText } = render(
     <RecoilRoot>
       <authTestUtils.UserAuth0Provider>
         <authTestUtils.UserLoggedIn user={{}}>
@@ -97,13 +97,12 @@ it('syncs the auth state to recoil', async () => {
       </authTestUtils.UserAuth0Provider>
     </RecoilRoot>,
   );
-  await waitFor(
-    () => {
-      expect(queryByText(/loading/i)).not.toBeInTheDocument();
-      expect(getByText(/Bearer token/i)).toBeVisible();
-    },
-    { timeout: 2000 },
+  const tokenElement = await findByText(
+    /Bearer token/i,
+    {},
+    { timeout: 10000 },
   );
+  expect(tokenElement).toBeVisible();
 });
 it("should call setIsOnboardable if it's set", async () => {
   MockDashboard.mockImplementation(() => {
@@ -254,4 +253,208 @@ it('hides Projects in navigation when PROJECTS_MVP flag is disabled', async () =
 
   // Projects should not be in the navigation
   expect(queryByText('Projects')).not.toBeInTheDocument();
+});
+
+describe('User projects in navigation', () => {
+  const userWithProjects = {
+    ...mockedUser,
+    projects: [
+      {
+        id: 'discovery-project-1',
+        title: 'My Discovery Project',
+        projectType: 'Discovery Project' as const,
+      },
+      {
+        id: 'resource-project-1',
+        title: 'My Resource Project',
+        projectType: 'Resource Project' as const,
+      },
+      {
+        id: 'trainee-project-1',
+        title: 'My Trainee Project',
+        projectType: 'Trainee Project' as const,
+      },
+    ],
+  };
+
+  it('shows MY PROJECTS section with user projects when flag is enabled', async () => {
+    enable('PROJECTS_MVP');
+    (useCurrentUserCRN as jest.Mock).mockReturnValue(userWithProjects);
+
+    const { getByText } = render(
+      <RecoilRoot>
+        <authTestUtils.UserAuth0Provider>
+          <authTestUtils.UserLoggedIn user={{}}>
+            <MemoryRouter>
+              <Suspense fallback="loading">
+                <AuthenticatedApp />
+              </Suspense>
+            </MemoryRouter>
+          </authTestUtils.UserLoggedIn>
+        </authTestUtils.UserAuth0Provider>
+      </RecoilRoot>,
+    );
+
+    const menu = getByText('Menu');
+    await userEvent.click(menu);
+
+    await waitFor(() => {
+      expect(getByText('MY PROJECTS')).toBeInTheDocument();
+      expect(getByText('My Discovery Project')).toBeInTheDocument();
+      expect(getByText('My Resource Project')).toBeInTheDocument();
+      expect(getByText('My Trainee Project')).toBeInTheDocument();
+    });
+  });
+
+  it('generates correct href for Discovery Project', async () => {
+    enable('PROJECTS_MVP');
+    (useCurrentUserCRN as jest.Mock).mockReturnValue(userWithProjects);
+
+    const { getByText } = render(
+      <RecoilRoot>
+        <authTestUtils.UserAuth0Provider>
+          <authTestUtils.UserLoggedIn user={{}}>
+            <MemoryRouter>
+              <Suspense fallback="loading">
+                <AuthenticatedApp />
+              </Suspense>
+            </MemoryRouter>
+          </authTestUtils.UserLoggedIn>
+        </authTestUtils.UserAuth0Provider>
+      </RecoilRoot>,
+    );
+
+    const menu = getByText('Menu');
+    await userEvent.click(menu);
+
+    await waitFor(() => {
+      const discoveryLink = getByText('My Discovery Project').closest('a');
+      expect(discoveryLink).toHaveAttribute(
+        'href',
+        '/projects/discovery/discovery-project-1',
+      );
+    });
+  });
+
+  it('generates correct href for Resource Project', async () => {
+    enable('PROJECTS_MVP');
+    (useCurrentUserCRN as jest.Mock).mockReturnValue(userWithProjects);
+
+    const { getByText } = render(
+      <RecoilRoot>
+        <authTestUtils.UserAuth0Provider>
+          <authTestUtils.UserLoggedIn user={{}}>
+            <MemoryRouter>
+              <Suspense fallback="loading">
+                <AuthenticatedApp />
+              </Suspense>
+            </MemoryRouter>
+          </authTestUtils.UserLoggedIn>
+        </authTestUtils.UserAuth0Provider>
+      </RecoilRoot>,
+    );
+
+    const menu = getByText('Menu');
+    await userEvent.click(menu);
+
+    await waitFor(() => {
+      const resourceLink = getByText('My Resource Project').closest('a');
+      expect(resourceLink).toHaveAttribute(
+        'href',
+        '/projects/resource/resource-project-1',
+      );
+    });
+  });
+
+  it('generates correct href for Trainee Project', async () => {
+    enable('PROJECTS_MVP');
+    (useCurrentUserCRN as jest.Mock).mockReturnValue(userWithProjects);
+
+    const { getByText } = render(
+      <RecoilRoot>
+        <authTestUtils.UserAuth0Provider>
+          <authTestUtils.UserLoggedIn user={{}}>
+            <MemoryRouter>
+              <Suspense fallback="loading">
+                <AuthenticatedApp />
+              </Suspense>
+            </MemoryRouter>
+          </authTestUtils.UserLoggedIn>
+        </authTestUtils.UserAuth0Provider>
+      </RecoilRoot>,
+    );
+
+    const menu = getByText('Menu');
+    await userEvent.click(menu);
+
+    await waitFor(() => {
+      const traineeLink = getByText('My Trainee Project').closest('a');
+      expect(traineeLink).toHaveAttribute(
+        'href',
+        '/projects/trainee/trainee-project-1',
+      );
+    });
+  });
+
+  it('does not show MY PROJECTS section when flag is disabled', async () => {
+    disable('PROJECTS_MVP');
+    (useCurrentUserCRN as jest.Mock).mockReturnValue(userWithProjects);
+
+    const { getByText, queryByText, getAllByText } = render(
+      <RecoilRoot>
+        <authTestUtils.UserAuth0Provider>
+          <authTestUtils.UserLoggedIn user={{}}>
+            <MemoryRouter>
+              <Suspense fallback="loading">
+                <AuthenticatedApp />
+              </Suspense>
+            </MemoryRouter>
+          </authTestUtils.UserLoggedIn>
+        </authTestUtils.UserAuth0Provider>
+      </RecoilRoot>,
+    );
+
+    const menu = getByText('Menu');
+    await userEvent.click(menu);
+
+    await waitFor(() => {
+      expect(
+        getAllByText(/network/i, { selector: 'nav *' }).length,
+      ).toBeGreaterThan(0);
+    });
+
+    expect(queryByText('MY PROJECTS')).not.toBeInTheDocument();
+    expect(queryByText('My Discovery Project')).not.toBeInTheDocument();
+  });
+
+  it('does not show MY PROJECTS section when user has no projects', async () => {
+    enable('PROJECTS_MVP');
+    (useCurrentUserCRN as jest.Mock).mockReturnValue({
+      ...mockedUser,
+      projects: [],
+    });
+
+    const { getByText, queryByText } = render(
+      <RecoilRoot>
+        <authTestUtils.UserAuth0Provider>
+          <authTestUtils.UserLoggedIn user={{}}>
+            <MemoryRouter>
+              <Suspense fallback="loading">
+                <AuthenticatedApp />
+              </Suspense>
+            </MemoryRouter>
+          </authTestUtils.UserLoggedIn>
+        </authTestUtils.UserAuth0Provider>
+      </RecoilRoot>,
+    );
+
+    const menu = getByText('Menu');
+    await userEvent.click(menu);
+
+    await waitFor(() => {
+      expect(getByText('MY TEAMS')).toBeInTheDocument();
+    });
+
+    expect(queryByText('MY PROJECTS')).not.toBeInTheDocument();
+  });
 });

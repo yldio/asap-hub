@@ -55,12 +55,14 @@ const parseUserMetadata = ({
   teams,
   workingGroups,
   interestGroups,
+  projects,
   role,
   openScienceTeamMember,
 }: UserMetadataResponse) => ({
   teams: teams.map(parseTeam),
   workingGroups,
   interestGroups,
+  projects,
   role,
   openScienceTeamMember,
 });

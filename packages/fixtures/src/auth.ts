@@ -31,6 +31,18 @@ export const createAuthUser = (): User => ({
       active: true,
     },
   ],
+  projects: [
+    {
+      id: 'project-id-1',
+      title: 'Discovery Project Alpha',
+      projectType: 'Discovery Project',
+    },
+    {
+      id: 'project-id-2',
+      title: 'Trainee Project Beta',
+      projectType: 'Trainee Project',
+    },
+  ],
   role: 'Grantee',
   openScienceTeamMember: false,
 });

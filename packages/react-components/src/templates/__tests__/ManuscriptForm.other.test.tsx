@@ -141,7 +141,7 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByText, findByRole, findByLabelText, queryByText } = render(
+      const { getByText, findByRole, findByLabelText } = render(
         <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm

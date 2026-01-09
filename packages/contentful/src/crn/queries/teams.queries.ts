@@ -248,6 +248,67 @@ export const FETCH_PUBLIC_TEAMS = gql`
   }
 `;
 
+export const FETCH_PUBLIC_TEAM_BY_ID = gql`
+  query FetchPublicTeamById($id: String!) {
+    teams(id: $id) {
+      sys {
+        id
+        publishedAt
+      }
+      displayName
+      inactiveSince
+      researchTheme {
+        name
+      }
+      linkedFrom {
+        teamMembershipCollection(limit: 100) {
+          items {
+            role
+            inactiveSinceDate
+            linkedFrom {
+              usersCollection(limit: 1) {
+                items {
+                  sys {
+                    id
+                  }
+                  firstName
+                  nickname
+                  lastName
+                  alumniSinceDate
+                  avatar {
+                    url
+                  }
+                  onboarded
+                }
+              }
+            }
+          }
+        }
+        projectMembershipCollection(limit: 1) {
+          items {
+            linkedFrom {
+              projectsCollection(limit: 1) {
+                items {
+                  title
+                  originalGrant
+                  researchTagsCollection(limit: 20) {
+                    items {
+                      sys {
+                        id
+                      }
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const FETCH_PROJECT_BY_TEAM_ID = gql`
   query FetchTeamProjectById($id: String!) {
     teams(id: $id) {

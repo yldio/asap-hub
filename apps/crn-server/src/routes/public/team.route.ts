@@ -34,10 +34,7 @@ export const teamRouteFactory = (teamController: TeamController): Router => {
     async (req, res: Response<PublicTeamResponse>) => {
       const { teamId } = req.params;
 
-      const team = await teamController.fetchById(teamId, {
-        showTools: false,
-        internalAPI: false,
-      });
+      const team = await teamController.fetchPublicTeamById(teamId);
 
       res.json(mapTeamToPublicTeam(team));
     },

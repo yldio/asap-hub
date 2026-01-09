@@ -5,6 +5,7 @@ import {
   FetchTeamsQuery as ContentfulFetchTeamsQuery,
   FetchTeamByIdQuery,
   FetchPublicTeamsQuery,
+  FetchPublicTeamByIdQuery,
   FetchTeamProjectByIdQuery,
 } from '@asap-hub/contentful';
 import { manuscriptAuthor } from '@asap-hub/fixtures';
@@ -265,6 +266,123 @@ export const getContentfulGraphqlPublicTeam = (): NonNullable<
                   },
                   name: 'Interest Group 1',
                   active: true,
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  },
+});
+
+export const getContentfulGraphqlPublicTeamById = (): NonNullable<
+  FetchPublicTeamByIdQuery['teams']
+> => ({
+  sys: {
+    id: 'team-id-0',
+    publishedAt: '2020-11-26T11:56:04.000Z',
+  },
+  displayName: 'Team A',
+  inactiveSince: null,
+  researchTheme: {
+    name: 'PD Functional Genomics',
+  },
+  linkedFrom: {
+    teamMembershipCollection: {
+      items: [
+        {
+          role: 'Lead PI (Core Leadership)',
+          inactiveSinceDate: null,
+          linkedFrom: {
+            usersCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'user-id-1',
+                  },
+                  firstName: 'Tom',
+                  nickname: 'Tim',
+                  lastName: 'Hardy',
+                  alumniSinceDate: null,
+                  avatar: {
+                    url: 'https://example.com/avatar.jpg',
+                  },
+                  onboarded: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          role: 'Project Manager',
+          inactiveSinceDate: '2020-09-23T20:45:22.000Z',
+          linkedFrom: {
+            usersCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'user-id-2',
+                  },
+                  firstName: 'John',
+                  nickname: null,
+                  lastName: 'Doe',
+                  alumniSinceDate: null,
+                  avatar: null,
+                  onboarded: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          role: 'Key Personnel',
+          inactiveSinceDate: null,
+          linkedFrom: {
+            usersCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'user-id-3',
+                  },
+                  firstName: 'Jane',
+                  nickname: null,
+                  lastName: 'Smith',
+                  alumniSinceDate: '2021-01-01T00:00:00.000Z',
+                  avatar: null,
+                  onboarded: true,
+                },
+              ],
+            },
+          },
+        },
+      ],
+    },
+    projectMembershipCollection: {
+      items: [
+        {
+          linkedFrom: {
+            projectsCollection: {
+              items: [
+                {
+                  title: 'Test Project Title',
+                  originalGrant: 'Test project summary',
+                  researchTagsCollection: {
+                    items: [
+                      {
+                        sys: {
+                          id: 'tag-1',
+                        },
+                        name: 'Animal resources 1',
+                      },
+                      {
+                        sys: {
+                          id: 'tag-2',
+                        },
+                        name: 'Animal resources 2',
+                      },
+                    ],
+                  },
                 },
               ],
             },

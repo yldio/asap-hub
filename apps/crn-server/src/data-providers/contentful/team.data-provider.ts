@@ -1,6 +1,8 @@
 import {
   addLocaleToFields,
   Environment,
+  FetchPublicTeamByIdQuery,
+  FetchPublicTeamByIdQueryVariables,
   FetchPublicTeamsQuery,
   FetchPublicTeamsQueryVariables,
   FetchTeamByIdQuery,
@@ -12,6 +14,7 @@ import {
   FetchTeamsQuery,
   FetchTeamsQueryVariables,
   FETCH_PROJECT_BY_TEAM_ID,
+  FETCH_PUBLIC_TEAM_BY_ID,
   FETCH_PUBLIC_TEAMS,
   FETCH_TEAMS,
   FETCH_TEAM_BY_ID,
@@ -88,6 +91,32 @@ type PublicTeamMembership = NonNullable<
   NonNullable<
     NonNullable<PublicTeamItem['linkedFrom']>['teamMembershipCollection']
   >['items'][number]
+>;
+
+export type PublicTeamByIdItem = NonNullable<
+  NonNullable<FetchPublicTeamByIdQuery['teams']>
+>;
+
+type PublicTeamByIdMembership = NonNullable<
+  NonNullable<
+    NonNullable<PublicTeamByIdItem['linkedFrom']>['teamMembershipCollection']
+  >['items'][number]
+>;
+
+type PublicTeamByIdProjectItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<
+        NonNullable<
+          NonNullable<
+            NonNullable<
+              PublicTeamByIdItem['linkedFrom']
+            >['projectMembershipCollection']
+          >['items'][number]
+        >['linkedFrom']
+      >['projectsCollection']
+    >['items'][number]
+  >
 >;
 
 type TeamInterestGroupItem = NonNullable<
@@ -230,6 +259,24 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
         .filter((x): x is PublicTeamItem => x !== null)
         .map(parseContentfulGraphQlPublicTeamListItem),
     };
+  }
+
+  async fetchPublicTeamById(id: string): Promise<TeamDataObject | null> {
+    // Using FETCH_PUBLIC_TEAM_BY_ID query (no manuscript fragment)
+    const { teams } = await this.contentfulClient.request<
+      FetchPublicTeamByIdQuery,
+      FetchPublicTeamByIdQueryVariables
+    >(FETCH_PUBLIC_TEAM_BY_ID, { id });
+
+    if (!teams) {
+      return null;
+    }
+
+    const linkedProject =
+      teams.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
+        ?.projectsCollection?.items[0];
+
+    return parseContentfulGraphQlPublicTeam(teams, linkedProject);
   }
 
   async fetchById(
@@ -667,6 +714,78 @@ export const parseContentfulGraphQlTeam = (
       .filter(
         (lab, index, labs) => labs.findIndex((l) => l.id === lab.id) === index,
       ),
+  };
+};
+
+export const parseContentfulGraphQlPublicTeam = (
+  item: PublicTeamByIdItem,
+  linkedProject?: PublicTeamByIdProjectItem | null,
+): TeamDataObject => {
+  const members: TeamMember[] = (
+    item.linkedFrom?.teamMembershipCollection?.items || []
+  ).reduce(
+    (
+      userList: TeamMember[],
+      membership: PublicTeamByIdMembership | null,
+    ): TeamMember[] => {
+      if (
+        !membership ||
+        !membership.linkedFrom?.usersCollection?.items[0]?.onboarded ||
+        !membership.role
+      ) {
+        return userList;
+      }
+
+      const { role, inactiveSinceDate } = membership;
+      const {
+        sys: { id },
+        firstName,
+        nickname,
+        lastName,
+        avatar,
+        alumniSinceDate,
+      } = membership.linkedFrom?.usersCollection?.items[0] || {};
+
+      return [
+        ...userList,
+        {
+          id,
+          firstName: firstName ?? '',
+          lastName: lastName ?? '',
+          email: '', // Not needed for public API but required by TeamMember type
+          role: (role as TeamRole) ?? '',
+          inactiveSinceDate: inactiveSinceDate ?? undefined,
+          alumniSinceDate,
+          avatarUrl: avatar?.url ?? undefined,
+          displayName: parseUserDisplayName(
+            firstName ?? '',
+            lastName ?? '',
+            undefined,
+            nickname ?? '',
+          ),
+          labs: [], // Not needed for public API but required by TeamMember type
+        },
+      ];
+    },
+    [],
+  );
+
+  return {
+    id: item.sys.id ?? '',
+    displayName: item.displayName ?? '',
+    inactiveSince: item.inactiveSince ?? undefined,
+    teamStatus: item.inactiveSince ? 'Inactive' : 'Active',
+    projectTitle: linkedProject?.title ?? '',
+    projectSummary: linkedProject?.originalGrant ?? undefined,
+    researchTheme: item.researchTheme?.name ?? undefined,
+    tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
+    members: members.sort(sortMembers),
+    // Required fields with minimal defaults
+    teamType: 'Discovery Team' as TeamType,
+    lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
+    manuscripts: [],
+    labCount: 0,
+    labs: [],
   };
 };
 

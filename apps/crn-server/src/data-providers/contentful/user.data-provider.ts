@@ -3,6 +3,7 @@ import {
   FetchUsersOptions,
   inactiveUserMembershipStatus,
   InterestGroupMembership,
+  isProjectType,
   isUserDegree,
   isUserRole,
   LabResponse,
@@ -14,6 +15,7 @@ import {
   UserDataObject,
   UserListItemDataObject,
   UserListItemTeam,
+  UserProjectMembership,
   UserSocialLinks,
   UserTeam,
   UserUpdateDataObject,
@@ -118,6 +120,12 @@ export type InterestGroupItem = NonNullable<
 export type InterestGroupLeaderItem = NonNullable<
   NonNullable<
     NonNullable<UserItem['linkedFrom']>['interestGroupLeadersCollection']
+  >['items'][number]
+>;
+
+export type DirectProjectMembershipItem = NonNullable<
+  NonNullable<
+    NonNullable<UserItem['linkedFrom']>['projectMembershipCollection']
   >['items'][number]
 >;
 
@@ -389,6 +397,63 @@ const cleanUser = ({
     {} as { [key: string]: unknown },
   );
 
+const getProjectFromTeamMembership = (teamItem: TeamMembership | null) =>
+  teamItem?.team?.linkedFrom?.projectMembershipCollection?.items?.[0]
+    ?.linkedFrom?.projectsCollection?.items?.[0] ?? null;
+
+const getProjectFromDirectMembership = (
+  membership: DirectProjectMembershipItem | null,
+) => membership?.linkedFrom?.projectsCollection?.items?.[0] ?? null;
+
+const toUserProjectMembership = (
+  project:
+    | {
+        sys?: { id?: string };
+        title?: string | null;
+        projectType?: string | null;
+      }
+    | null
+    | undefined,
+): UserProjectMembership | null => {
+  if (
+    !project ||
+    !project.sys?.id ||
+    !project.title ||
+    !isProjectType(project.projectType)
+  ) {
+    return null;
+  }
+  return {
+    id: project.sys.id,
+    title: project.title,
+    projectType: project.projectType,
+  };
+};
+
+const parseUserProjects = (
+  teamsCollection: UserItem['teamsCollection'],
+  directProjectMemberships:
+    | NonNullable<UserItem['linkedFrom']>['projectMembershipCollection']
+    | undefined,
+): UserProjectMembership[] => {
+  const teamProjects = cleanArray(teamsCollection?.items)
+    .map(getProjectFromTeamMembership)
+    .map(toUserProjectMembership)
+    .filter((p): p is UserProjectMembership => p !== null);
+
+  const directProjects = cleanArray(directProjectMemberships?.items)
+    .map(getProjectFromDirectMembership)
+    .map(toUserProjectMembership)
+    .filter((p): p is UserProjectMembership => p !== null);
+
+  // Deduplicate in case a project has both types of relationship
+  // with the user (the team project will take precedence)
+  const seenIds = new Set(teamProjects.map((p) => p.id));
+  const uniqueDirectProjects = directProjects.filter((p) => !seenIds.has(p.id));
+
+  return [...teamProjects, ...uniqueDirectProjects];
+};
+
 export const parseContentfulGraphQlPublicUsers = (
   item: PublicUserItem,
 ): PublicUserDataObject => {
@@ -541,6 +606,11 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     userId,
   );
 
+  const projects = parseUserProjects(
+    item.teamsCollection,
+    item.linkedFrom?.projectMembershipCollection,
+  );
+
   return {
     id: userId,
     activeCampaignId: item.activeCampaignId || undefined,
@@ -553,6 +623,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     lastModifiedDate: item.lastUpdated,
     workingGroups,
     interestGroups,
+    projects,
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : undefined,
     email: item.email ?? '',
     researchTheme: teamsCollection

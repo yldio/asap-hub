@@ -302,11 +302,12 @@ describe('copy button', () => {
   });
 });
 
-it('renders project icon and links to project when linkedProjectId is present', () => {
+it('renders project icon and links to discovery project when linkedProjectId and projectType are present', () => {
   render(
     <TeamProfileHeader
       {...boilerplateProps}
       teamType="Discovery Team"
+      projectType="Discovery Project"
       linkedProjectId="123"
       projectTitle="Test Project"
     />,
@@ -315,6 +316,21 @@ it('renders project icon and links to project when linkedProjectId is present', 
     'href',
     expect.stringMatching(/discovery\/123/),
   );
+});
+
+it('renders project icon and links to resource project when linkedProjectId and projectType are present', () => {
+  render(
+    <TeamProfileHeader
+      {...boilerplateProps}
+      teamType="Resource Team"
+      projectType="Resource Project"
+      linkedProjectId="456"
+      projectTitle="Resource Test Project"
+    />,
+  );
+  expect(
+    screen.getByText('Resource Test Project').closest('a'),
+  ).toHaveAttribute('href', expect.stringMatching(/resource\/456/));
 });
 
 it('renders the Discovery Project icon for Discovery Team', () => {

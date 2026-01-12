@@ -77,7 +77,19 @@ const Field = () => {
     const fieldType = sdk.field.type;
 
     if (fieldType === 'Date') {
-      return <DateEditor field={sdk.field} />;
+      return (
+        <DateEditor
+          field={sdk.field}
+          parameters={{
+            instance: {
+              format: 'dateonly',
+              ampm: '24',
+            },
+            installation: {},
+            invocation: {},
+          }}
+        />
+      );
     }
 
     if (fieldType === 'Link' && sdk.field.linkType === 'Entry') {

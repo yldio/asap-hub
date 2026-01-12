@@ -7,7 +7,14 @@ import {
 import { DiscoveryProject } from '@asap-hub/model';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
-import { toDiscoveryThemeFilters, toStatusFilters } from './utils';
+import {
+  DiscoveryProjectCSV,
+  discoveryProjectToCSV,
+  exportProjects,
+  isDiscoveryProject,
+  toDiscoveryThemeFilters,
+  toStatusFilters,
+} from './utils';
 import { ProjectListOptions } from './api';
 import {
   FilterOption,
@@ -15,6 +22,7 @@ import {
   createDiscoveryThemeFilterOptionsFromThemes,
 } from './filter-options';
 import { useResearchThemes } from '../shared-state/shared-research';
+import { useAlgolia } from '../hooks/algolia';
 
 type DiscoveryProjectsProps = {
   searchQuery: string;
@@ -42,6 +50,17 @@ const DiscoveryProjectsListContent: FC<DiscoveryProjectsListContentProps> = ({
     pageSize,
   );
 
+  const { client } = useAlgolia();
+
+  const exportResults = () =>
+    exportProjects<DiscoveryProject, DiscoveryProjectCSV>(
+      client,
+      'DiscoveryProjects',
+      isDiscoveryProject,
+      discoveryProjectToCSV,
+      options,
+    );
+
   return (
     <DiscoveryProjectsList
       projects={projects.items as DiscoveryProject[]}
@@ -50,6 +69,7 @@ const DiscoveryProjectsListContent: FC<DiscoveryProjectsListContentProps> = ({
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
       algoliaIndexName={projects.algoliaIndexName}
+      exportResults={exportResults}
     />
   );
 };

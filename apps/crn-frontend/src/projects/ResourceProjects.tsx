@@ -6,13 +6,21 @@ import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
 import { ProjectListOptions } from './api';
-import { toResourceTypeFilters, toStatusFilters } from './utils';
+import {
+  exportProjects,
+  isResourceProject,
+  ResourceProjectCSV,
+  resourceProjectToCSV,
+  toResourceTypeFilters,
+  toStatusFilters,
+} from './utils';
 import {
   FilterOption,
   STATUS_FILTER_OPTIONS,
   createResourceTypeFilterOptionsFromTypes,
 } from './filter-options';
 import { useResourceTypes } from '../shared-state/shared-research';
+import { useAlgolia } from '../hooks/algolia';
 
 type ResourceProjectsProps = {
   searchQuery: string;
@@ -58,6 +66,17 @@ const ResourceProjectsListContent: FC<ResourceProjectsListContentProps> = ({
     pageSize,
   );
 
+  const { client } = useAlgolia();
+
+  const exportResults = () =>
+    exportProjects<ResourceProject, ResourceProjectCSV>(
+      client,
+      'ResourceProjects',
+      isResourceProject,
+      resourceProjectToCSV,
+      options,
+    );
+
   return (
     <ResourceProjectsList
       projects={projectsWithMemberLinks}
@@ -66,6 +85,7 @@ const ResourceProjectsListContent: FC<ResourceProjectsListContentProps> = ({
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
       algoliaIndexName={projects.algoliaIndexName}
+      exportResults={exportResults}
     />
   );
 };

@@ -6,8 +6,15 @@ import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
 import { ProjectListOptions } from './api';
-import { toStatusFilters } from './utils';
+import {
+  exportProjects,
+  isTraineeProject,
+  toStatusFilters,
+  TraineeProjectCSV,
+  traineeProjectToCSV,
+} from './utils';
 import { STATUS_FILTER_OPTIONS } from './filter-options';
+import { useAlgolia } from '../hooks/algolia';
 
 type TraineeProjectsProps = {
   searchQuery: string;
@@ -48,6 +55,17 @@ const TraineeProjectsListContent: FC<TraineeProjectsListContentProps> = ({
     pageSize,
   );
 
+  const { client } = useAlgolia();
+
+  const exportResults = () =>
+    exportProjects<TraineeProject, TraineeProjectCSV>(
+      client,
+      'TraineeProjects',
+      isTraineeProject,
+      traineeProjectToCSV,
+      options,
+    );
+
   return (
     <TraineeProjectsList
       projects={projectsWithMemberLinks}
@@ -56,6 +74,7 @@ const TraineeProjectsListContent: FC<TraineeProjectsListContentProps> = ({
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
       algoliaIndexName={projects.algoliaIndexName}
+      exportResults={exportResults}
     />
   );
 };

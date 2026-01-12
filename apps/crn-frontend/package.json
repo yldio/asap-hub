@@ -69,7 +69,7 @@
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "@types/react-lottie": "^1",
-    "@types/react-test-renderer": "18.3.0",
+    "@types/react-test-renderer": "18.3.1",
     "@types/streamsaver": "2.0.5",
     "@types/uuid": "8.3.4",
     "babel-preset-vite": "^1.1.0",

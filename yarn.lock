@@ -907,7 +907,7 @@ __metadata:
     "@types/react": 18.3.12
     "@types/react-dom": 18.3.1
     "@types/react-lottie": ^1
-    "@types/react-test-renderer": 18.3.0
+    "@types/react-test-renderer": 18.3.1
     "@types/streamsaver": 2.0.5
     "@types/uuid": 8.3.4
     "@vitejs/plugin-react": ^4.2.0
@@ -1319,7 +1319,7 @@ __metadata:
     "@types/jest": 29.5.14
     "@types/react": 18.3.12
     "@types/react-dom": 18.3.1
-    "@types/react-test-renderer": 18.3.0
+    "@types/react-test-renderer": 18.3.1
     "@types/uuid": 8.3.4
     core-js: 3.34.0
     date-fns: 2.30.0
@@ -1375,7 +1375,7 @@ __metadata:
     "@types/nock": 11.1.0
     "@types/react": 18.3.12
     "@types/react-dom": 18.3.1
-    "@types/react-test-renderer": 18.3.0
+    "@types/react-test-renderer": 18.3.1
     "@types/streamsaver": 2.0.5
     "@types/uuid": 8.3.4
     "@vitejs/plugin-react": ^4.2.0
@@ -1643,7 +1643,7 @@ __metadata:
     "@types/react-dom": 18.3.1
     "@types/react-lottie": ^1
     "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
-    "@types/react-test-renderer": 18.3.0
+    "@types/react-test-renderer": 18.3.1
     "@types/rehype-slug": "workspace:*"
     "@types/unist": ^2.0.6
     "@types/uuid": 8.3.4
@@ -13728,12 +13728,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:18.3.0":
-  version: 18.3.0
-  resolution: "@types/react-test-renderer@npm:18.3.0"
+"@types/react-test-renderer@npm:18.3.1":
+  version: 18.3.1
+  resolution: "@types/react-test-renderer@npm:18.3.1"
   dependencies:
-    "@types/react": "*"
-  checksum: c53683990bd194cb68e3987bda79c78eff41517f7a747e92f3e54217c2ce3addd031b8a45bf631982c909cc2caeeb905372f322758e05bb76c03754a3f24426e
+    "@types/react": ^18
+  checksum: f8cc23cc8decdb6068cdc8f8c306e189eab8e569443ce97b216e757ee42eb20b18d2280ef41e2955668413f14be92765a3ba86cfcfeeae6b20c965acd9674786
   languageName: node
   linkType: hard
 
@@ -15798,7 +15798,7 @@ __metadata:
     "@peculiar/webcrypto": 1.4.6
     "@testing-library/jest-dom": ^6.9.0
     "@types/jest": 29.5.14
-    "@types/react-test-renderer": 18.3.0
+    "@types/react-test-renderer": 18.3.1
     "@types/uuid": 8.3.4
     "@types/webpack": 4.41.40
     "@yarnpkg/pnpify": 3.1.8

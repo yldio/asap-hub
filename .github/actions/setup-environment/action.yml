@@ -44,6 +44,9 @@ outputs:
   cache-prefix-transpile:
     description: 'Cache Prefix Transpile'
     value: ${{ steps.vars.outputs.cache-prefix-transpile }}
+  contentful-app-conditional-field-validation:
+    description: 'Contentful App Extension Conditional Field Validation (for Teams and Projects)'
+    value: ${{ steps.vars.outputs.contentful-app-conditional-field-validation }}
   contentful-app-date-field-as-first-published-at:
     description: 'Contentful App Extension Date Field as firstPublishedAt'
     value: ${{ steps.vars.outputs.contentful-app-date-field-as-first-published-at }}

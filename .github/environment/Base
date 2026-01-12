@@ -7,6 +7,7 @@ cache-prefix-frontend=frontend-output
 cache-prefix-transpile=transpile-output
 contentful-app-auto-populate-date-field=5k7jEBXizWrEHPIebdDTJN
 contentful-app-clear-on-change=6en82KYFrsxlAIPqypMdOp
+contentful-app-conditional-field-validation=oXPp9wSsw0L6GzJS4yGkG
 contentful-app-date-field-as-first-published-at=6AEbdOZc7KICbwW6KszNlp
 contentful-app-date-field-as-last-published-at=1TW8dnAmczxAAQ46SQpQUi
 contentful-app-disabled-fields=2finDNk15g5UtOq4DaLNxv

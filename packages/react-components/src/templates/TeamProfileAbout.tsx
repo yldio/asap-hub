@@ -82,40 +82,51 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
     return members.find((member) => member.role === 'Project Manager')?.email;
   }, [pointOfContact, members, projectsMVPEnabled]);
 
+  const showTeamOverview = projectsMVPEnabled && Boolean(teamDescription);
+  const showProjectOverview = !projectsMVPEnabled && Boolean(projectTitle);
+  const showExpertiseAndResources =
+    !projectsMVPEnabled && Boolean(tags?.length);
+  const showProjectsCard =
+    projectsMVPEnabled && Boolean(projectTitle) && Boolean(linkedProjectId);
+  const showLabsCard = projectsMVPEnabled && Boolean(labs?.length);
+  const showTeamGroupsCard = projectsMVPEnabled
+    ? teamType !== 'Resource Team' && teamGroupsCard
+    : teamGroupsCard;
+  const showContactCta =
+    pointOfContactEmail && (!projectsMVPEnabled || teamStatus === 'Active');
+
   return (
     <div css={styles}>
       {/* Overview Section - Different based on PROJECTS_MVP flag */}
-      {projectsMVPEnabled ? (
-        // New MVP version: TeamProfileOverview
-        teamDescription ? (
-          <TeamProfileOverview
-            tags={tags}
-            teamDescription={teamDescription}
-            teamType={teamType}
-            researchTheme={researchTheme}
-            resourceType={resourceType}
-          />
-        ) : null
-      ) : // Legacy version: ProjectProfileOverview
-      projectTitle ? (
+      {showTeamOverview && (
+        <TeamProfileOverview
+          tags={tags}
+          teamDescription={teamDescription}
+          teamType={teamType}
+          researchTheme={researchTheme}
+          resourceType={resourceType}
+        />
+      )}
+
+      {showProjectOverview && (
         <ProjectProfileOverview
           supplementGrant={supplementGrant}
           projectTitle={projectTitle}
           projectSummary={projectSummary}
           proposalURL={proposalURL}
         />
-      ) : null}
+      )}
 
       {/* Expertise and Resources - Only in legacy version */}
-      {!projectsMVPEnabled && tags && tags.length ? (
+      {showExpertiseAndResources && (
         <ProfileExpertiseAndResources
           hideExpertiseAndResources={hideExpertiseAndResources}
           tags={tags}
         />
-      ) : null}
+      )}
 
       {/* Projects Card - Only in MVP version */}
-      {projectsMVPEnabled && projectTitle && linkedProjectId ? (
+      {showProjectsCard && (
         <TeamProjectsCard
           teamType={teamType}
           projectType={projectType}
@@ -127,39 +138,36 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
           researchTheme={researchTheme}
           resourceType={resourceType}
         />
-      ) : null}
+      )}
 
       {/* Labs Card - Only in MVP version */}
-      {projectsMVPEnabled && labs && labs.length ? (
+      {showLabsCard && (
         <TeamLabsCard labs={labs} isTeamActive={teamStatus === 'Active'} />
-      ) : null}
+      )}
 
       {/* Team Members */}
       <section id={teamListElementId} css={membersCardStyles}>
         <TeamMembersTabbedCard
           title="Team Members"
           members={members}
-          isTeamInactive={!!inactiveSince}
+          isTeamInactive={Boolean(inactiveSince)}
         />
       </section>
 
       {/* Team Groups Card */}
-      {projectsMVPEnabled
-        ? teamType !== 'Resource Team' && teamGroupsCard
-        : teamGroupsCard}
+      {showTeamGroupsCard}
 
       {/* Contact CTA */}
-      {pointOfContactEmail &&
-        (!projectsMVPEnabled || teamStatus === 'Active') && (
-          <CtaCard
-            href={createMailTo(pointOfContactEmail)}
-            buttonText="Contact"
-            displayCopy
-          >
-            <strong>Have additional questions?</strong>
-            <br /> Members are here to help.
-          </CtaCard>
-        )}
+      {showContactCta && (
+        <CtaCard
+          href={createMailTo(pointOfContactEmail)}
+          buttonText="Contact"
+          displayCopy
+        >
+          <strong>Have additional questions?</strong>
+          <br /> Members are here to help.
+        </CtaCard>
+      )}
     </div>
   );
 };

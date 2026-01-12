@@ -22,6 +22,7 @@ import { EligibilityModal, ToolCard } from '../organisms';
 import DiscussionCard from '../organisms/DiscussionCard';
 import ManuscriptCard from '../organisms/ManuscriptCard';
 import { mobileScreen, rem } from '../pixels';
+import { getActiveProjectManager } from '../utils';
 
 const containerStyles = css({
   display: 'grid',
@@ -101,10 +102,10 @@ type TeamProfileWorkspaceProps = Readonly<
     TeamResponse,
     | 'id'
     | 'inactiveSince'
-    | 'pointOfContact'
     | 'lastModifiedDate'
     | 'manuscripts'
     | 'collaborationManuscripts'
+    | 'members'
   >
 > &
   Pick<
@@ -137,10 +138,10 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   id,
   inactiveSince,
   onUpdateManuscript,
-  pointOfContact,
   lastModifiedDate,
   manuscripts,
   collaborationManuscripts,
+  members,
   tools,
   onDeleteTool,
   setEligibilityReasons,
@@ -182,6 +183,8 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   const handleGoToManuscriptForm = () => {
     navigate(manuscriptRoute);
   };
+
+  const contactPM = getActiveProjectManager(members);
 
   return (
     <div css={containerStyles}>
@@ -318,14 +321,14 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
           </Caption>
         </Card>
       )}
-      {isTeamMember && pointOfContact && (
+      {isTeamMember && contactPM && (
         <Card>
           <Headline2 styleAsHeading={3}>Team Contact Email</Headline2>
           <Paragraph accent="lead">
             Everyone else on the Hub can contact your team via the email address
             of your Project Manager,{' '}
-            <Link href={createMailTo(pointOfContact.email)}>
-              {pointOfContact.displayName}
+            <Link href={createMailTo(contactPM.email)}>
+              {contactPM.displayName}
             </Link>
             .
           </Paragraph>

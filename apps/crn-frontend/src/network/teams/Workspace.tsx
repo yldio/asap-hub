@@ -141,6 +141,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
         onReplyToDiscussion={handleReplytoDiscussion}
         onMarkDiscussionAsRead={handleMarkDiscussionAsRead}
         targetManuscriptId={targetManuscript.slice(1)}
+        members={team.members ?? []}
       />
       <Routes>
         <Route

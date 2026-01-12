@@ -6,10 +6,12 @@ import {
   createListResearchOutputResponse,
   createTeamResponse,
 } from '@asap-hub/fixtures';
+import { TeamRole } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { RecoilRoot } from 'recoil';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import { disable, enable, reset } from '@asap-hub/flags';
 import Outputs from '../Outputs';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -38,6 +40,7 @@ jest.mock('../api');
 
 afterEach(() => {
   jest.clearAllMocks();
+  reset();
 });
 
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
@@ -61,8 +64,8 @@ const renderOutputs = async (
 ) => {
   const result = render(
     <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
+      initializeState={({ reset: resetState }) => {
+        resetState(
           researchOutputsState({
             searchQuery,
             filters,
@@ -71,7 +74,7 @@ const renderOutputs = async (
             pageSize: CARD_VIEW_PAGE_SIZE,
           }),
         );
-        reset(
+        resetState(
           researchOutputsState({
             searchQuery,
             filters,
@@ -259,4 +262,155 @@ it('triggers draft research output export with custom file name', async () => {
     expect.stringMatching(/SharedOutputs_Drafts_Team_Team123_\d+\.csv/),
     expect.anything(),
   );
+});
+
+describe('contactEmail logic', () => {
+  beforeEach(() => {
+    mockGetResearchOutputs.mockResolvedValue({
+      ...createResearchOutputListAlgoliaResponse(0),
+    });
+  });
+
+  it('uses pointOfContact when PROJECTS_MVP flag is enabled', async () => {
+    enable('PROJECTS_MVP');
+    const team = {
+      ...createTeamResponse(),
+      pointOfContact: 'project@example.com',
+      members: [
+        {
+          ...createTeamResponse({ teamMembers: 1 }).members[0]!,
+          role: 'Project Manager' as TeamRole,
+          email: 'pm@example.com',
+        },
+      ],
+    };
+
+    const { getByRole } = await renderOutputs('', new Set(), team);
+    expect(getByRole('link', { name: /contact the PM/i })).toHaveAttribute(
+      'href',
+      'mailto:project@example.com',
+    );
+  });
+
+  it('uses PM email when PROJECTS_MVP is disabled and PM is active', async () => {
+    disable('PROJECTS_MVP');
+    const team = {
+      ...createTeamResponse(),
+      members: [
+        {
+          ...createTeamResponse({ teamMembers: 1 }).members[0]!,
+          role: 'Project Manager' as TeamRole,
+          email: 'pm@example.com',
+          alumniSinceDate: undefined,
+          inactiveSinceDate: undefined,
+        },
+      ],
+    };
+
+    const { getByRole } = await renderOutputs('', new Set(), team);
+    expect(getByRole('link', { name: /contact the PM/i })).toHaveAttribute(
+      'href',
+      'mailto:pm@example.com',
+    );
+  });
+
+  it('does not use PM email when PM is alumni', async () => {
+    disable('PROJECTS_MVP');
+    const team = {
+      ...createTeamResponse(),
+      members: [
+        {
+          ...createTeamResponse({ teamMembers: 1 }).members[0]!,
+          role: 'Project Manager' as TeamRole,
+          email: 'pm@example.com',
+          alumniSinceDate: '2023-01-01',
+          inactiveSinceDate: undefined,
+        },
+      ],
+    };
+
+    const { queryByRole, getByText } = await renderOutputs('', new Set(), team);
+    // Text is still shown, but it's not a link when there's no valid contactEmail
+    expect(getByText(/contact the PM/i)).toBeInTheDocument();
+    expect(
+      queryByRole('link', { name: /contact the PM/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not use PM email when PM is inactive', async () => {
+    disable('PROJECTS_MVP');
+    const team = {
+      ...createTeamResponse(),
+      members: [
+        {
+          ...createTeamResponse({ teamMembers: 1 }).members[0]!,
+          role: 'Project Manager' as TeamRole,
+          email: 'pm@example.com',
+          alumniSinceDate: undefined,
+          inactiveSinceDate: '2023-01-01',
+        },
+      ],
+    };
+
+    const { queryByRole, getByText } = await renderOutputs('', new Set(), team);
+    // Text is still shown, but it's not a link when there's no valid contactEmail
+    expect(getByText(/contact the PM/i)).toBeInTheDocument();
+    expect(
+      queryByRole('link', { name: /contact the PM/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not use PM email when PM is both alumni and inactive', async () => {
+    disable('PROJECTS_MVP');
+    const team = {
+      ...createTeamResponse(),
+      members: [
+        {
+          ...createTeamResponse({ teamMembers: 1 }).members[0]!,
+          role: 'Project Manager' as TeamRole,
+          email: 'pm@example.com',
+          alumniSinceDate: '2023-01-01',
+          inactiveSinceDate: '2023-01-01',
+        },
+      ],
+    };
+
+    const { queryByRole, getByText } = await renderOutputs('', new Set(), team);
+    // Text is still shown, but it's not a link when there's no valid contactEmail
+    expect(getByText(/contact the PM/i)).toBeInTheDocument();
+    expect(
+      queryByRole('link', { name: /contact the PM/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('uses first active PM when multiple PMs exist', async () => {
+    disable('PROJECTS_MVP');
+    const team = {
+      ...createTeamResponse(),
+      members: [
+        {
+          ...createTeamResponse({ teamMembers: 1 }).members[0]!,
+          role: 'Project Manager' as TeamRole,
+          email: 'inactive-pm@example.com',
+          alumniSinceDate: '2023-01-01',
+          inactiveSinceDate: undefined,
+        },
+        {
+          ...createTeamResponse({ teamMembers: 1 }).members[0]!,
+          id: 'pm-2',
+          displayName: 'Active PM',
+          role: 'Project Manager' as TeamRole,
+          email: 'active-pm@example.com',
+          alumniSinceDate: undefined,
+          inactiveSinceDate: undefined,
+        },
+      ],
+    };
+
+    const { getByRole } = await renderOutputs('', new Set(), team);
+    expect(getByRole('link', { name: /contact the PM/i })).toHaveAttribute(
+      'href',
+      'mailto:active-pm@example.com',
+    );
+  });
 });

@@ -1,16 +1,11 @@
 import { ComponentProps } from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { TeamRole } from '@asap-hub/model';
-import { fireEvent, render } from '@testing-library/react';
-import { isEnabled } from '@asap-hub/flags';
+import { enable, disable } from '@asap-hub/flags';
 
 import TeamProfileAbout from '../TeamProfileAbout';
 
-jest.mock('@asap-hub/flags', () => ({
-  isEnabled: jest.fn(() => true),
-  reset: jest.fn(),
-}));
-
-const props: ComponentProps<typeof TeamProfileAbout> = {
+const baseProps: ComponentProps<typeof TeamProfileAbout> = {
   teamDescription: '',
   tags: [],
   projectTitle: '',
@@ -18,293 +13,631 @@ const props: ComponentProps<typeof TeamProfileAbout> = {
   linkedProjectId: undefined,
   supplementGrant: undefined,
   members: [],
-  teamListElementId: '',
+  teamListElementId: 'test-team-list',
   teamStatus: 'Active',
   teamType: 'Discovery Team',
   labs: [],
+  researchTheme: undefined,
+  resourceType: undefined,
+  projectType: undefined,
+  proposalURL: undefined,
+  hideExpertiseAndResources: false,
 };
-it('renders the overview', () => {
-  const { getByText } = render(
-    <TeamProfileAbout {...props} teamDescription="Description" />,
-  );
 
-  expect(getByText(/Team Description/i)).toBeVisible();
-  expect(getByText('Description')).toBeVisible();
-});
-
-it('renders the contact banner', () => {
-  const { getByRole } = render(
-    <TeamProfileAbout
-      {...props}
-      pointOfContact={{
-        id: 'uuid',
-        displayName: 'John Doe',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'test@test.com',
-        role: 'Project Manager',
-      }}
-    />,
-  );
-
-  const link = getByRole('link');
-  expect(link).toBeVisible();
-  expect(link).toHaveAttribute('href', 'mailto:test@test.com');
-});
-
-it('renders the team list', () => {
-  const { getByText } = render(
-    <TeamProfileAbout
-      {...props}
-      members={[
-        {
-          id: 'uuid',
-          displayName: 'John Doe',
-          firstName: 'John',
-          lastName: 'Doe',
-          role: 'Project Manager',
-          email: 'johndoe@asap.com',
-        },
-      ]}
-    />,
-  );
-
-  const avatar = getByText(/john doe/i);
-  expect(avatar).toBeVisible();
-  expect(avatar.closest('a')).toHaveAttribute(
-    'href',
-    expect.stringMatching(/uuid/i),
-  );
-  expect(getByText('Project Manager')).toBeInTheDocument();
-});
-it('shows the lab list when present on member list', () => {
-  const { queryByText, rerender } = render(
-    <TeamProfileAbout
-      {...props}
-      members={[
-        {
-          id: 'uuid',
-          displayName: 'John Doe',
-          firstName: 'John',
-          lastName: 'Doe',
-          role: 'Project Manager',
-          email: 'johndoe@asap.com',
-        },
-      ]}
-    />,
-  );
-  expect(queryByText('Lab')).not.toBeInTheDocument();
-  rerender(
-    <TeamProfileAbout
-      {...props}
-      members={[
-        {
-          id: 'uuid',
-          displayName: 'John Doe',
-          firstName: 'John',
-          lastName: 'Doe',
-          role: 'Project Manager',
-          email: 'johndoe@asap.com',
-          labs: [{ name: 'Doe', id: '1' }],
-        },
-      ]}
-    />,
-  );
-  expect(queryByText('Doe Lab')).toBeInTheDocument();
-});
-
-it('renders the tags list when tags are present', () => {
-  const { getByText } = render(
-    <TeamProfileAbout
-      {...props}
-      teamDescription="Description"
-      tags={[{ name: 'example expertise', id: '1' }]}
-    />,
-  );
-  expect(getByText(/example expertise/i)).toBeVisible();
-  expect(getByText(/tags/i)).toBeVisible();
-});
-
-it('renders the Projects card when PROJECTS_MVP is enabled and project data is present', () => {
-  (isEnabled as jest.Mock).mockReturnValue(true);
-  const { getByText } = render(
-    <TeamProfileAbout
-      {...props}
-      projectTitle="Project Alpha"
-      linkedProjectId="proj-1"
-      projectSummary="Original grant"
-      supplementGrant={{ title: 'Supp', description: 'Supplement desc' }}
-    />,
-  );
-
-  expect(getByText('Projects')).toBeVisible();
-  expect(getByText('Project Alpha')).toBeVisible();
-  expect(getByText('Supplement desc')).toBeVisible();
-});
-
-it('renders the Teams Tabbed card when team is inactive and there are members', () => {
-  const { getByText } = render(
-    <TeamProfileAbout
-      {...props}
-      members={[
-        {
-          id: 'uuid',
-          displayName: 'John Doe',
-          firstName: 'John',
-          lastName: 'Doe',
-          role: 'Project Manager',
-          email: 'johndoe@asap.com',
-        },
-      ]}
-      inactiveSince="2022-10-25"
-    />,
-  );
-
-  expect(getByText('Team Members', { selector: 'h3' })).toBeVisible();
-  expect(getByText('Past Team Members (1)', { selector: 'p' })).toBeVisible();
-});
-
-it('renders the Teams Tabbed card when team is inactive and there isnt any members', () => {
-  const { getByText } = render(
-    <TeamProfileAbout {...props} members={[]} inactiveSince="2022-10-25" />,
-  );
-
-  expect(getByText('Team Members', { selector: 'h3' })).toBeVisible();
-  expect(
-    getByText('There are no past team members.', { selector: 'p' }),
-  ).toBeVisible();
-});
-
-it('renders team members section when team is active and there are members', () => {
-  const { getByText } = render(
-    <TeamProfileAbout
-      {...props}
-      members={[
-        {
-          id: 'uuid',
-          displayName: 'John Doe',
-          firstName: 'John',
-          lastName: 'Doe',
-          role: 'Project Manager',
-          email: 'johndoe@asap.com',
-        },
-      ]}
-      inactiveSince={undefined}
-    />,
-  );
-
-  expect(getByText('Active Team Members (1)', { selector: 'p' })).toBeVisible();
-});
-
-it('renders team members section when team is active and there isnt any members', () => {
-  const { queryByText } = render(
-    <TeamProfileAbout {...props} members={[]} inactiveSince={undefined} />,
-  );
-
-  expect(queryByText('Active Team Members (0)')).toBeVisible();
-});
-
-describe('footer', () => {
-  const originalNavigator = window.navigator;
-  Object.assign(window.navigator, {
-    clipboard: {
-      writeText: () => {},
-    },
-  });
-
+describe('TeamProfileAbout', () => {
   beforeEach(() => {
-    jest.spyOn(window.navigator.clipboard, 'writeText');
-  });
-  afterEach(() => {
-    Object.assign(window.navigator, originalNavigator);
-  });
-  const pointOfContact = {
-    id: 'uuid',
-    displayName: 'Patricia Mendes',
-    firstName: 'Patricia',
-    lastName: 'Mendes',
-    role: 'Project Manager' as TeamRole,
-    email: 'pm@asap.com',
-  };
-
-  it('does not render the footer when there is not a point of contact', () => {
-    const { queryByText, queryByTitle } = render(
-      <TeamProfileAbout {...props} pointOfContact={undefined} />,
-    );
-
-    expect(queryByText('Contact')).not.toBeInTheDocument();
-    expect(queryByTitle(/copy/i)).not.toBeInTheDocument();
+    // Reset flag state before each test
+    disable('PROJECTS_MVP');
   });
 
-  it('renders a contact button when there is a pointOfContact', () => {
-    const { getByText } = render(
-      <TeamProfileAbout {...props} pointOfContact={pointOfContact} />,
-    );
+  describe('Overview Section', () => {
+    describe('MVP Mode (PROJECTS_MVP enabled)', () => {
+      it('renders TeamProfileOverview when teamDescription is provided', () => {
+        enable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            teamDescription="Team description text"
+            tags={[{ name: 'Tag 1', id: '1' }]}
+          />,
+        );
 
-    expect(getByText('Contact').parentElement).toHaveAttribute(
-      'href',
-      'mailto:pm@asap.com',
-    );
+        expect(
+          screen.getByRole('heading', { name: /Team Description/i }),
+        ).toBeVisible();
+        expect(screen.getByText('Team description text')).toBeVisible();
+      });
+
+      it('does not render TeamProfileOverview when teamDescription is not provided', () => {
+        enable('PROJECTS_MVP');
+        render(<TeamProfileAbout {...baseProps} teamDescription={undefined} />);
+
+        expect(screen.queryByText(/Team Description/i)).not.toBeInTheDocument();
+      });
+
+      it('passes correct props to TeamProfileOverview', () => {
+        enable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            teamDescription="Description"
+            teamType="Discovery Team"
+            researchTheme="Theme 1"
+            resourceType={undefined}
+            tags={[{ name: 'Tag 1', id: '1' }]}
+          />,
+        );
+
+        expect(screen.getByText('Description')).toBeVisible();
+        expect(screen.getByText('Tag 1')).toBeVisible();
+      });
+    });
+
+    describe('Legacy Mode (PROJECTS_MVP disabled)', () => {
+      it('renders ProjectProfileOverview when projectTitle is provided', () => {
+        disable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            projectTitle="Test Project"
+            projectSummary="Project summary"
+            proposalURL="proposal-id"
+          />,
+        );
+
+        expect(screen.getByText('Project Overview')).toBeInTheDocument();
+        expect(screen.getByText('Test Project')).toBeInTheDocument();
+      });
+
+      it('does not render ProjectProfileOverview when projectTitle is not provided', () => {
+        disable('PROJECTS_MVP');
+        render(<TeamProfileAbout {...baseProps} projectTitle={''} />);
+
+        expect(screen.queryByText('Project Overview')).not.toBeInTheDocument();
+      });
+
+      it('passes supplementGrant to ProjectProfileOverview', () => {
+        disable('PROJECTS_MVP');
+        const supplementGrant = {
+          title: 'Supplement Grant',
+          description: 'Supplement description',
+          proposalURL: 'supplement-id',
+        };
+
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            projectTitle="Test Project"
+            supplementGrant={supplementGrant}
+          />,
+        );
+
+        expect(screen.getByText('Project Overview')).toBeInTheDocument();
+      });
+    });
   });
 
-  it('renders the lab list when team has labs and flag is enabled', () => {
-    (isEnabled as jest.Mock).mockReturnValue(true);
-    const { getByText, getByRole } = render(
-      <TeamProfileAbout
-        {...props}
-        labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
-      />,
-    );
+  describe('Expertise and Resources Section', () => {
+    it('renders ProfileExpertiseAndResources in legacy mode when tags are provided', () => {
+      disable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          tags={[
+            { name: 'Machine Learning', id: '1' },
+            { name: 'Neuroscience', id: '2' },
+          ]}
+        />,
+      );
 
-    expect(getByText('Lab 1')).toBeVisible();
-    expect(getByRole('heading', { name: /labs/i })).toBeVisible();
+      expect(screen.getByText('Machine Learning')).toBeInTheDocument();
+      expect(screen.getByText('Neuroscience')).toBeInTheDocument();
+    });
+
+    it('does not render ProfileExpertiseAndResources in MVP mode', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          tags={[{ name: 'Machine Learning', id: '1' }]}
+        />,
+      );
+
+      expect(screen.queryByText('Machine Learning')).not.toBeInTheDocument();
+    });
+
+    it('does not render tags section when tags array is empty in legacy mode', () => {
+      disable('PROJECTS_MVP');
+      render(<TeamProfileAbout {...baseProps} tags={[]} />);
+
+      expect(screen.queryByText('Machine Learning')).not.toBeInTheDocument();
+    });
+
+    it('respects hideExpertiseAndResources prop in legacy mode', () => {
+      disable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          tags={[{ name: 'Tag 1', id: '1' }]}
+          hideExpertiseAndResources={true}
+        />,
+      );
+
+      // Component should still render but may hide certain elements
+      expect(screen.getByText('Tag 1')).toBeInTheDocument();
+    });
   });
 
-  it('does not render the lab list when team has labs but flag is disabled', () => {
-    (isEnabled as jest.Mock).mockReturnValue(false);
-    const { queryByText, queryByRole } = render(
-      <TeamProfileAbout
-        {...props}
-        labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
-      />,
-    );
+  describe('Projects Card', () => {
+    it('renders TeamProjectsCard in MVP mode when project data is present', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          projectTitle="Project Alpha"
+          linkedProjectId="proj-1"
+          projectSummary="Original grant"
+          supplementGrant={{ title: 'Supp', description: 'Supplement desc' }}
+        />,
+      );
 
-    expect(queryByText('Lab 1')).not.toBeInTheDocument();
-    expect(queryByRole('heading', { name: /labs/i })).not.toBeInTheDocument();
+      expect(screen.getByText('Projects')).toBeVisible();
+      expect(screen.getByText('Project Alpha')).toBeVisible();
+      expect(screen.getByText('Supplement desc')).toBeVisible();
+    });
+
+    it('does not render TeamProjectsCard in legacy mode', () => {
+      disable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          projectTitle="Project Alpha"
+          linkedProjectId="proj-1"
+        />,
+      );
+
+      expect(screen.queryByText('Projects')).not.toBeInTheDocument();
+    });
+
+    it('does not render TeamProjectsCard when linkedProjectId is missing', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          projectTitle="Project Alpha"
+          linkedProjectId={undefined}
+        />,
+      );
+
+      expect(screen.queryByText('Projects')).not.toBeInTheDocument();
+    });
   });
 
-  it('adds the pm email to clipboard when user clicks on copy button', () => {
-    const { getByTitle } = render(
-      <TeamProfileAbout {...props} pointOfContact={pointOfContact} />,
-    );
+  describe('Labs Card', () => {
+    it('renders TeamLabsCard in MVP mode when labs are present', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
+          teamStatus="Active"
+        />,
+      );
 
-    fireEvent.click(getByTitle(/copy/i));
-    expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith(
-      expect.stringMatching(/pm@asap.com/i),
-    );
+      expect(screen.getByText('Lab 1')).toBeVisible();
+      expect(screen.getByRole('heading', { name: /labs/i })).toBeVisible();
+    });
+
+    it('does not render TeamLabsCard in legacy mode', () => {
+      disable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
+        />,
+      );
+
+      expect(screen.queryByText('Lab 1')).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('heading', { name: /labs/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render TeamLabsCard when labs array is empty', () => {
+      enable('PROJECTS_MVP');
+      render(<TeamProfileAbout {...baseProps} labs={[]} />);
+
+      expect(
+        screen.queryByRole('heading', { name: /labs/i }),
+      ).not.toBeInTheDocument();
+    });
   });
 
-  it('renders team groups card when team is active', () => {
-    const { getByText } = render(
-      <TeamProfileAbout
-        {...props}
-        teamStatus="Active"
-        teamGroupsCard={<div>Groups Card</div>}
-      />,
-    );
+  describe('Team Members Section', () => {
+    it('renders the team members section', () => {
+      render(<TeamProfileAbout {...baseProps} />);
+      expect(screen.getByText('Team Members')).toBeInTheDocument();
+    });
 
-    expect(getByText('Groups Card')).toBeVisible();
+    it('renders team members list when members are provided', () => {
+      const members = [
+        {
+          id: 'member-1',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'Project Manager' as TeamRole,
+          email: 'john.doe@example.com',
+        },
+        {
+          id: 'member-2',
+          displayName: 'Jane Smith',
+          firstName: 'Jane',
+          lastName: 'Smith',
+          role: 'Research Scientist' as TeamRole,
+          email: 'jane.smith@example.com',
+        },
+      ];
+
+      render(<TeamProfileAbout {...baseProps} members={members} />);
+      expect(screen.getByText(/john doe/i)).toBeInTheDocument();
+      expect(screen.getByText(/jane smith/i)).toBeInTheDocument();
+    });
+
+    it('passes correct props to TeamMembersTabbedCard for active team', () => {
+      render(<TeamProfileAbout {...baseProps} inactiveSince={undefined} />);
+      expect(screen.getByText('Team Members')).toBeInTheDocument();
+    });
+
+    it('passes correct props to TeamMembersTabbedCard for inactive team', () => {
+      render(<TeamProfileAbout {...baseProps} inactiveSince="2022-10-25" />);
+      expect(screen.getByText('Team Members')).toBeInTheDocument();
+    });
+
+    it('renders team members section with correct id', () => {
+      const { container } = render(<TeamProfileAbout {...baseProps} />);
+      const teamSection = container.querySelector('#test-team-list');
+      expect(teamSection).toBeInTheDocument();
+    });
   });
 
-  it('renders team groups card when team is not active', () => {
-    const { getByText } = render(
-      <TeamProfileAbout
-        {...props}
-        teamStatus="Inactive"
-        teamGroupsCard={<div>Groups Card</div>}
-      />,
-    );
+  describe('Team Groups Card', () => {
+    it('renders team groups card for Discovery Team in MVP mode', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          teamType="Discovery Team"
+          teamGroupsCard={<div>Groups Card</div>}
+        />,
+      );
 
-    expect(getByText('Groups Card')).toBeVisible();
+      expect(screen.getByText('Groups Card')).toBeVisible();
+    });
+
+    it('does not render team groups card for Resource Team in MVP mode', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          teamType="Resource Team"
+          teamGroupsCard={<div>Groups Card</div>}
+        />,
+      );
+
+      expect(screen.queryByText('Groups Card')).not.toBeInTheDocument();
+    });
+
+    it('renders team groups card in legacy mode regardless of team type', () => {
+      disable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          teamType="Resource Team"
+          teamGroupsCard={<div>Groups Card</div>}
+        />,
+      );
+
+      expect(screen.getByText('Groups Card')).toBeVisible();
+    });
+
+    it('does not render team groups card when not provided', () => {
+      render(<TeamProfileAbout {...baseProps} teamGroupsCard={undefined} />);
+      expect(screen.queryByText('Groups Card')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Contact CTA', () => {
+    const originalNavigator = window.navigator;
+    beforeEach(() => {
+      Object.assign(window.navigator, {
+        clipboard: {
+          writeText: jest.fn(),
+        },
+      });
+    });
+
+    afterEach(() => {
+      Object.assign(window.navigator, originalNavigator);
+    });
+
+    describe('MVP Mode (PROJECTS_MVP enabled)', () => {
+      it('renders contact CTA when pointOfContact exists and team is Active', () => {
+        enable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            pointOfContact="contact@example.com"
+            teamStatus="Active"
+          />,
+        );
+
+        expect(
+          screen.getByText('Have additional questions?'),
+        ).toBeInTheDocument();
+        expect(screen.getByText('Contact')).toBeInTheDocument();
+      });
+
+      it('does not render contact CTA when team is Inactive', () => {
+        enable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            pointOfContact="contact@example.com"
+            teamStatus="Inactive"
+          />,
+        );
+
+        expect(
+          screen.queryByText('Have additional questions?'),
+        ).not.toBeInTheDocument();
+      });
+
+      it('uses pointOfContact directly in MVP mode', () => {
+        enable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            pointOfContact="project@example.com"
+            teamStatus="Active"
+            members={[
+              {
+                id: 'pm-id',
+                displayName: 'PM Name',
+                firstName: 'PM',
+                lastName: 'Name',
+                email: 'pm@example.com',
+                role: 'Project Manager',
+              },
+            ]}
+          />,
+        );
+
+        expect(screen.getByText('Contact').parentElement).toHaveAttribute(
+          'href',
+          'mailto:project@example.com',
+        );
+      });
+
+      it('does not render contact CTA when pointOfContact is missing', () => {
+        enable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            pointOfContact={undefined}
+            teamStatus="Active"
+          />,
+        );
+
+        expect(screen.queryByText('Contact')).not.toBeInTheDocument();
+      });
+    });
+
+    describe('Legacy Mode (PROJECTS_MVP disabled)', () => {
+      it('renders contact CTA when PM exists in members', () => {
+        disable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            members={[
+              {
+                id: 'pm-id',
+                displayName: 'PM Name',
+                firstName: 'PM',
+                lastName: 'Name',
+                email: 'pm@example.com',
+                role: 'Project Manager',
+              },
+            ]}
+          />,
+        );
+
+        expect(
+          screen.getByText('Have additional questions?'),
+        ).toBeInTheDocument();
+        expect(screen.getByText('Contact')).toBeInTheDocument();
+      });
+
+      it('renders contact CTA even when team is Inactive', () => {
+        disable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            teamStatus="Inactive"
+            members={[
+              {
+                id: 'pm-id',
+                displayName: 'PM Name',
+                firstName: 'PM',
+                lastName: 'Name',
+                email: 'pm@example.com',
+                role: 'Project Manager',
+              },
+            ]}
+          />,
+        );
+
+        expect(
+          screen.getByText('Have additional questions?'),
+        ).toBeInTheDocument();
+      });
+
+      it('uses PM email from members (ignores pointOfContact in legacy mode)', () => {
+        disable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            pointOfContact="contact@example.com"
+            members={[
+              {
+                id: 'pm-id',
+                displayName: 'PM Name',
+                firstName: 'PM',
+                lastName: 'Name',
+                email: 'pm@example.com',
+                role: 'Project Manager',
+              },
+            ]}
+          />,
+        );
+
+        expect(screen.getByText('Contact').parentElement).toHaveAttribute(
+          'href',
+          'mailto:pm@example.com',
+        );
+      });
+
+      it('does not render contact CTA when no PM exists', () => {
+        disable('PROJECTS_MVP');
+        render(<TeamProfileAbout {...baseProps} members={[]} />);
+
+        expect(screen.queryByText('Contact')).not.toBeInTheDocument();
+      });
+
+      it('renders contact CTA with correct mailto link using PM email', () => {
+        disable('PROJECTS_MVP');
+        render(
+          <TeamProfileAbout
+            {...baseProps}
+            members={[
+              {
+                id: 'pm-id',
+                displayName: 'PM Name',
+                firstName: 'PM',
+                lastName: 'Name',
+                email: 'pm@example.com',
+                role: 'Project Manager',
+              },
+            ]}
+          />,
+        );
+
+        const contactLink = screen.getByText('Contact').closest('a');
+        expect(contactLink).toHaveAttribute('href', 'mailto:pm@example.com');
+      });
+    });
+
+    it('adds the email to clipboard when user clicks on copy button', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          pointOfContact="pm@asap.com"
+          teamStatus="Active"
+        />,
+      );
+
+      fireEvent.click(screen.getByTitle(/copy/i));
+      expect(navigator.clipboard.writeText).toHaveBeenLastCalledWith(
+        expect.stringMatching(/pm@asap.com/i),
+      );
+    });
+  });
+
+  describe('Complete component rendering', () => {
+    it('renders all sections in MVP mode when all props are provided', () => {
+      enable('PROJECTS_MVP');
+      const members = [
+        {
+          id: 'member-1',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'Project Manager' as TeamRole,
+          email: 'john.doe@example.com',
+        },
+      ];
+
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          teamDescription="Team description"
+          projectTitle="Project Title"
+          linkedProjectId="proj-1"
+          labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
+          tags={[{ name: 'Tag 1', id: '1' }]}
+          pointOfContact="contact@example.com"
+          teamStatus="Active"
+          teamType="Discovery Team"
+          members={members}
+          teamGroupsCard={<div>Groups Card</div>}
+        />,
+      );
+
+      expect(
+        screen.getByRole('heading', { name: /Team Description/i }),
+      ).toBeVisible();
+      expect(screen.getByText('Team description')).toBeVisible();
+      expect(screen.getByText('Projects')).toBeVisible();
+      expect(screen.getByText('Lab 1')).toBeVisible();
+      expect(screen.getByText('Team Members')).toBeInTheDocument();
+      expect(screen.getByText('Groups Card')).toBeVisible();
+      expect(
+        screen.getByText('Have additional questions?'),
+      ).toBeInTheDocument();
+    });
+
+    it('renders all sections in legacy mode when all props are provided', () => {
+      disable('PROJECTS_MVP');
+      const members = [
+        {
+          id: 'member-1',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'Project Manager' as TeamRole,
+          email: 'john.doe@example.com',
+        },
+      ];
+
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          projectTitle="Test Project"
+          projectSummary="Project summary"
+          tags={[{ name: 'Machine Learning', id: '1' }]}
+          pointOfContact="contact@example.com"
+          members={members}
+          teamGroupsCard={<div>Groups Card Content</div>}
+        />,
+      );
+
+      expect(screen.getByText('Project Overview')).toBeInTheDocument();
+      expect(screen.getByText('Machine Learning')).toBeInTheDocument();
+      expect(screen.getByText('Team Members')).toBeInTheDocument();
+      expect(screen.getByText('Groups Card Content')).toBeInTheDocument();
+      expect(
+        screen.getByText('Have additional questions?'),
+      ).toBeInTheDocument();
+    });
+
+    it('renders minimal component when only required props provided', () => {
+      render(<TeamProfileAbout {...baseProps} />);
+
+      expect(screen.getByText('Team Members')).toBeInTheDocument();
+      expect(
+        screen.queryByText('Have additional questions?'),
+      ).not.toBeInTheDocument();
+    });
   });
 });

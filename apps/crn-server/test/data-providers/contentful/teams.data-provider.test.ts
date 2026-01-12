@@ -2217,43 +2217,6 @@ describe('Teams data provider', () => {
         };
       };
 
-      test('should return point of contact in team response when there is one active PM', async () => {
-        const id = 'some-id';
-        const teams = {
-          ...getContentfulGraphqlTeamById(),
-          linkedFrom: {
-            teamMembershipCollection: {
-              total: 3,
-              items: [
-                getTeamMembership({ userId: 'non-pm-user' }),
-                getTeamMembership({
-                  userId: 'inactive-pm-user',
-                  inactiveSinceDate: '2022-02-28T17:00:00.000Z',
-                  role: 'Project Manager',
-                }),
-                getTeamMembership({
-                  userId: 'active-pm-user',
-                  role: 'Project Manager',
-                }),
-              ],
-            },
-          },
-        };
-
-        mockFetchByIdGraphqlResponses(teams);
-
-        const result = await teamDataProvider.fetchById(id);
-
-        expect(result!.pointOfContact).toEqual(
-          expect.objectContaining({
-            id: 'active-pm-user',
-            role: 'Project Manager',
-            alumniSinceDate: null,
-            inactiveSinceDate: undefined,
-          }),
-        );
-      });
-
       test('should return point of contact as undefined when there is a PM but it is inactive', async () => {
         const id = 'some-id';
         const teams = {
@@ -2304,6 +2267,40 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetchById(id);
 
         expect(result!.pointOfContact).toBeUndefined();
+      });
+
+      test('should return point of contact from project contactEmail when available', async () => {
+        const id = 'some-id';
+        const projectContactEmail = 'project-contact@example.com';
+        const teams = {
+          ...getContentfulGraphqlTeamById(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 1,
+              items: [
+                getTeamMembership({
+                  userId: 'active-pm-user',
+                  role: 'Project Manager',
+                }),
+              ],
+            },
+          },
+        };
+
+        const projectWithContactEmail = getContentfulGraphqlTeamProjectById();
+        if (
+          projectWithContactEmail.linkedFrom?.projectMembershipCollection
+            ?.items[0]?.linkedFrom?.projectsCollection?.items[0]
+        ) {
+          projectWithContactEmail.linkedFrom.projectMembershipCollection.items[0].linkedFrom.projectsCollection.items[0].contactEmail =
+            projectContactEmail;
+        }
+
+        mockFetchByIdGraphqlResponses(teams, projectWithContactEmail);
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result!.pointOfContact).toEqual(projectContactEmail);
       });
     });
 

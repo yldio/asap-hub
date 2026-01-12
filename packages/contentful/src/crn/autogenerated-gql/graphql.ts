@@ -27709,6 +27709,7 @@ export type FetchTeamProjectByIdQuery = {
                       | 'originalGrant'
                       | 'status'
                       | 'projectType'
+                      | 'contactEmail'
                     > & {
                       sys: Pick<Sys, 'id'>;
                       proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
@@ -54776,6 +54777,13 @@ export const FetchTeamProjectByIdDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value: 'projectType',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'contactEmail',
                                                       },
                                                     },
                                                     {

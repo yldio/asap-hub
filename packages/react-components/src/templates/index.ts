@@ -58,7 +58,6 @@ export { default as PageInfoContainer } from './PageInfoContainer';
 export { default as ProjectDetailAbout } from './ProjectDetailAbout';
 export { default as ProjectDetailHeader } from './ProjectDetailHeader';
 export { default as ProjectDetailPage } from './ProjectDetailPage';
-export { default as ProjectProfileAbout } from './ProjectProfileAbout';
 export { default as NewsPage } from './NewsPage';
 export { default as NewsPageBody } from './NewsPageBody';
 export { default as NewsPageHeader } from './NewsPageHeader';

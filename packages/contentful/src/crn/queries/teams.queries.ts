@@ -328,6 +328,7 @@ export const FETCH_PROJECT_BY_TEAM_ID = gql`
                   originalGrant
                   status
                   projectType
+                  contactEmail
                   proposal {
                     sys {
                       id

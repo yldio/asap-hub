@@ -30,14 +30,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
   manuscripts: [],
   teamListElementId: 'uuid',
   upcomingEventsCount: 7,
-  pointOfContact: {
-    id: '2',
-    displayName: 'Peter Venkman',
-    firstName: 'Peter',
-    lastName: 'Venkman',
-    email: 'peter@ven.com',
-    role: 'Project Manager',
-  },
+  pointOfContact: 'peter@ven.com',
   members: [
     {
       id: '1',

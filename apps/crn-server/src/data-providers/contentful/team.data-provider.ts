@@ -699,10 +699,7 @@ export const parseContentfulGraphQlTeam = (
     projectSummary: linkedProject?.originalGrant ?? undefined,
     members: members.sort(sortMembers),
     labCount,
-    pointOfContact: members.find(
-      ({ role, alumniSinceDate, inactiveSinceDate }) =>
-        role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
-    ),
+    pointOfContact: linkedProject?.contactEmail ?? undefined,
     proposalURL: linkedProject?.proposal
       ? linkedProject.proposal.sys.id
       : undefined,

@@ -1,10 +1,10 @@
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
-import { TeamRole } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { fireEvent } from '@testing-library/dom';
 import { render, screen } from '@testing-library/react';
 import { formatISO } from 'date-fns';
 import { ComponentProps } from 'react';
+import { enable, disable } from '@asap-hub/flags';
 import TeamProfileHeader from '../TeamProfileHeader';
 
 const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
@@ -84,23 +84,78 @@ it('renders no more than 5 members', () => {
 
 it('renders a contact button when there is a pointOfContact', () => {
   render(
-    <TeamProfileHeader
-      {...boilerplateProps}
-      pointOfContact={{
-        id: 'uuid',
-        displayName: 'John Doe',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'test@test.com',
-        role: 'Project Manager',
-      }}
-    />,
+    <TeamProfileHeader {...boilerplateProps} pointOfContact="test@test.com" />,
   );
 
   expect(screen.getByText('Contact').parentElement).toHaveAttribute(
     'href',
     'mailto:test@test.com',
   );
+});
+
+describe('Contact email with PROJECTS_MVP feature flag', () => {
+  it('uses pointOfContact when PROJECTS_MVP flag is enabled', () => {
+    enable('PROJECTS_MVP');
+    render(
+      <TeamProfileHeader
+        {...boilerplateProps}
+        pointOfContact="project@example.com"
+        members={[
+          {
+            id: 'pm-id',
+            displayName: 'PM Name',
+            firstName: 'PM',
+            lastName: 'Name',
+            email: 'pm@example.com',
+            role: 'Project Manager',
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getByText('Contact').parentElement).toHaveAttribute(
+      'href',
+      'mailto:project@example.com',
+    );
+  });
+
+  it('uses PM email from members when PROJECTS_MVP flag is disabled', () => {
+    disable('PROJECTS_MVP');
+    render(
+      <TeamProfileHeader
+        {...boilerplateProps}
+        pointOfContact="project@example.com"
+        members={[
+          {
+            id: 'pm-id',
+            displayName: 'PM Name',
+            firstName: 'PM',
+            lastName: 'Name',
+            email: 'pm@example.com',
+            role: 'Project Manager',
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getByText('Contact').parentElement).toHaveAttribute(
+      'href',
+      'mailto:pm@example.com',
+    );
+  });
+
+  it('does not render contact button when flag is disabled and no PM exists', () => {
+    disable('PROJECTS_MVP');
+    render(
+      <TeamProfileHeader
+        {...boilerplateProps}
+        pointOfContact="project@example.com"
+        members={[]}
+      />,
+    );
+
+    expect(screen.queryByText('Contact')).not.toBeInTheDocument();
+  });
 });
 
 it('renders a lab count for multiple labs', () => {
@@ -282,17 +337,7 @@ describe('copy button', () => {
     });
     jest.spyOn(navigator.clipboard, 'writeText');
     render(
-      <TeamProfileHeader
-        {...boilerplateProps}
-        pointOfContact={{
-          id: 'uuid',
-          displayName: 'Patricia Mendes',
-          firstName: 'Patricia',
-          lastName: 'Mendes',
-          role: 'Project Manager' as TeamRole,
-          email: 'pm@asap.com',
-        }}
-      />,
+      <TeamProfileHeader {...boilerplateProps} pointOfContact="pm@asap.com" />,
     );
 
     fireEvent.click(screen.getByTitle(/copy/i));

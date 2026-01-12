@@ -64,6 +64,7 @@ jobs:
       matrix:
         app:
           - auto-populate-date-field
+          - conditional-field-validation
           - date-field-as-first-published-at
           - date-field-as-last-published-at
           - disabled-fields

@@ -4,7 +4,10 @@ module.exports.description =
 module.exports.up = (migration) => {
   const projects = migration.editContentType('projects');
 
-  projects.changeFieldControl('endDate', 'app', 'oXPp9wSsw0L6GzJS4yGkG', {});
+  projects.changeFieldControl('endDate', 'app', 'oXPp9wSsw0L6GzJS4yGkG', {
+    format: 'dateonly',
+    ampm: '24',
+  });
   projects.changeFieldControl(
     'resourceType',
     'app',

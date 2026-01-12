@@ -64,8 +64,8 @@ const renderOutputs = async (
 ) => {
   const result = render(
     <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
+      initializeState={({ reset: resetState }) => {
+        resetState(
           researchOutputsState({
             searchQuery,
             filters,
@@ -74,7 +74,7 @@ const renderOutputs = async (
             pageSize: CARD_VIEW_PAGE_SIZE,
           }),
         );
-        reset(
+        resetState(
           researchOutputsState({
             searchQuery,
             filters,

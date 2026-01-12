@@ -22,6 +22,7 @@ import { EligibilityModal, ToolCard } from '../organisms';
 import DiscussionCard from '../organisms/DiscussionCard';
 import ManuscriptCard from '../organisms/ManuscriptCard';
 import { mobileScreen, rem } from '../pixels';
+import { getActiveProjectManager } from '../utils';
 
 const containerStyles = css({
   display: 'grid',
@@ -183,7 +184,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
     navigate(manuscriptRoute);
   };
 
-  const contactPM = members.find((member) => member.role === 'Project Manager');
+  const contactPM = getActiveProjectManager(members);
 
   return (
     <div css={containerStyles}>

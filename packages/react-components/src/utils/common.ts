@@ -1,6 +1,7 @@
 import {
   ResearchOutputAssociations,
   ResearchOutputResponse,
+  TeamMember,
 } from '@asap-hub/model';
 import { renderToStaticMarkup } from 'react-dom/server';
 
@@ -123,3 +124,14 @@ export const groupTraineeProjectMembers = <T extends { role?: string }>(
   );
   return { trainees, mentors };
 };
+
+// Get the active Project Manager from a list of team members
+export const getActiveProjectManager = (
+  members: ReadonlyArray<TeamMember>,
+): TeamMember | undefined =>
+  members.find(
+    (member) =>
+      member.role === 'Project Manager' &&
+      !member.alumniSinceDate &&
+      !member.inactiveSinceDate,
+  );

@@ -22,7 +22,7 @@ import {
 import { createMailTo } from '../mail';
 import { DropdownButton, UserAvatarList, TabNav } from '../molecules';
 import { mobileScreen, rem, tabletScreen } from '../pixels';
-import { getCounterString } from '../utils';
+import { getActiveProjectManager, getCounterString } from '../utils';
 import PageInfoContainer from './PageInfoContainer';
 
 const titleStyle = css({
@@ -180,7 +180,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
     if (isEnabled('PROJECTS_MVP')) {
       return pointOfContact;
     }
-    return members.find((member) => member.role === 'Project Manager')?.email;
+    return getActiveProjectManager(members)?.email;
   }, [pointOfContact, members]);
 
   if (linkedProjectId) {

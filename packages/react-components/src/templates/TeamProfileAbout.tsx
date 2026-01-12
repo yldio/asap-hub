@@ -14,6 +14,7 @@ import {
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
+import { getActiveProjectManager } from '../utils';
 
 const styles = css({
   display: 'grid',
@@ -79,7 +80,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       return pointOfContact;
     }
     // Legacy mode: use PM email from members (pointOfContact is only available when flag is enabled)
-    return members.find((member) => member.role === 'Project Manager')?.email;
+    return getActiveProjectManager(members)?.email;
   }, [pointOfContact, members, projectsMVPEnabled]);
 
   const showTeamOverview = projectsMVPEnabled && Boolean(teamDescription);

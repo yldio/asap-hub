@@ -285,9 +285,11 @@ describe('contactEmail logic', () => {
       ],
     };
 
-    const { container } = await renderOutputs('', new Set(), team);
-    // Component should render without errors
-    expect(container).toBeInTheDocument();
+    const { getByRole } = await renderOutputs('', new Set(), team);
+    expect(getByRole('link', { name: /contact the PM/i })).toHaveAttribute(
+      'href',
+      'mailto:project@example.com',
+    );
   });
 
   it('uses PM email when PROJECTS_MVP is disabled and PM is active', async () => {
@@ -305,8 +307,11 @@ describe('contactEmail logic', () => {
       ],
     };
 
-    const { container } = await renderOutputs('', new Set(), team);
-    expect(container).toBeInTheDocument();
+    const { getByRole } = await renderOutputs('', new Set(), team);
+    expect(getByRole('link', { name: /contact the PM/i })).toHaveAttribute(
+      'href',
+      'mailto:pm@example.com',
+    );
   });
 
   it('does not use PM email when PM is alumni', async () => {
@@ -324,8 +329,12 @@ describe('contactEmail logic', () => {
       ],
     };
 
-    const { container } = await renderOutputs('', new Set(), team);
-    expect(container).toBeInTheDocument();
+    const { queryByRole, getByText } = await renderOutputs('', new Set(), team);
+    // Text is still shown, but it's not a link when there's no valid contactEmail
+    expect(getByText(/contact the PM/i)).toBeInTheDocument();
+    expect(
+      queryByRole('link', { name: /contact the PM/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('does not use PM email when PM is inactive', async () => {
@@ -343,8 +352,12 @@ describe('contactEmail logic', () => {
       ],
     };
 
-    const { container } = await renderOutputs('', new Set(), team);
-    expect(container).toBeInTheDocument();
+    const { queryByRole, getByText } = await renderOutputs('', new Set(), team);
+    // Text is still shown, but it's not a link when there's no valid contactEmail
+    expect(getByText(/contact the PM/i)).toBeInTheDocument();
+    expect(
+      queryByRole('link', { name: /contact the PM/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('does not use PM email when PM is both alumni and inactive', async () => {
@@ -362,8 +375,12 @@ describe('contactEmail logic', () => {
       ],
     };
 
-    const { container } = await renderOutputs('', new Set(), team);
-    expect(container).toBeInTheDocument();
+    const { queryByRole, getByText } = await renderOutputs('', new Set(), team);
+    // Text is still shown, but it's not a link when there's no valid contactEmail
+    expect(getByText(/contact the PM/i)).toBeInTheDocument();
+    expect(
+      queryByRole('link', { name: /contact the PM/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('uses first active PM when multiple PMs exist', async () => {
@@ -390,7 +407,10 @@ describe('contactEmail logic', () => {
       ],
     };
 
-    const { container } = await renderOutputs('', new Set(), team);
-    expect(container).toBeInTheDocument();
+    const { getByRole } = await renderOutputs('', new Set(), team);
+    expect(getByRole('link', { name: /contact the PM/i })).toHaveAttribute(
+      'href',
+      'mailto:active-pm@example.com',
+    );
   });
 });

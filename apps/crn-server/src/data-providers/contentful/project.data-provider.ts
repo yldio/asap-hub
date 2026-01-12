@@ -169,7 +169,7 @@ export const parseContentfulProject = (
     contactEmail: item.contactEmail || undefined,
     projectType: item.projectType as ProjectType,
     originalGrant: item.originalGrant || '',
-    supplementGrantDescription: item.supplementGrant?.description || undefined,
+    supplementGrantDescription: item.supplementGrant?.description || '',
   };
 
   const members = cleanArray(item.membersCollection?.items || []);

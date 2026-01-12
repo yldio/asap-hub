@@ -120,7 +120,7 @@ export const resourceProjectToCSV = (
   'Project Type': project.projectType,
   'Project Status': project.status,
   'Resource Type': project.resourceType,
-  'Funded Team Name': project.teamName,
+  'Funded Team Name': project.isTeamBased ? project.teamName : '',
   'Project Members': project.isTeamBased
     ? ''
     : project.members?.map((member) => member.displayName).join(','),

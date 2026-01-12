@@ -4,6 +4,7 @@ import {
   OpenQuestionsModal,
   RoleModal,
   UserProfileResearch,
+  UserProjectsCard,
   WorkingGroupsTabbedCard,
   UserTeamsTabbedCard,
   ExpertiseAndResourcesModal,
@@ -15,12 +16,14 @@ import { Route, Routes } from 'react-router-dom';
 import { usePatchUserById } from './state';
 import InterestGroupsCard from './interest-groups/InterestGroupsCard';
 import { useResearchTags } from '../../shared-state';
+import { useProjectsByUserId } from '../../projects/state';
 
 type ResearchProps = {
   user: UserResponse;
 };
 const Research: React.FC<ResearchProps> = ({ user }) => {
   const researchTagsSuggestions = useResearchTags();
+  const userProjects = useProjectsByUserId(user.id);
 
   const { id } = useCurrentUserCRN() ?? {};
   const route = network({}).users({}).user({ userId: user.id }).research({});
@@ -39,6 +42,11 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         userProfileGroupsCard={
           <Frame title={null} fallback={null}>
             <InterestGroupsCard user={user} />
+          </Frame>
+        }
+        userProfileProjectsCard={
+          <Frame title={null} fallback={null}>
+            <UserProjectsCard projects={userProjects.items} />
           </Frame>
         }
         userProfileWorkingGroupsCard={

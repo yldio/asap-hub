@@ -11,6 +11,7 @@ import Boom, { isBoom } from '@hapi/boom';
 import { Response, Router } from 'express';
 import parseURI from 'parse-data-url';
 import InterestGroupController from '../controllers/interest-group.controller';
+import ProjectController from '../controllers/project.controller';
 import UserController from '../controllers/user.controller';
 import {
   validateUserParameters,
@@ -51,6 +52,7 @@ export const userPublicRouteFactory = (
 export const userRouteFactory = (
   userController: UserController,
   interestGroupController: InterestGroupController,
+  projectController: ProjectController,
 ): Router => {
   const userRoutes = Router();
 
@@ -94,6 +96,18 @@ export const userRouteFactory = (
       const { userId } = validateUserParameters(params);
 
       const result = await interestGroupController.fetchByUserId(userId);
+
+      res.json(result);
+    },
+  );
+
+  userRoutes.get<{ userId: string }>(
+    '/users/:userId/projects',
+    async (req, res) => {
+      const { userId } = validateUserParameters(req.params);
+      const options = validateFetchOptions(req.query);
+
+      const result = await projectController.fetchByUserId(userId, options);
 
       res.json(result);
     },

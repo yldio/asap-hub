@@ -468,7 +468,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const teamRoutes = teamRouteFactory(interestGroupController, teamController);
   const tutorialRoutes = tutorialRouteFactory(tutorialsController);
   const userPublicRoutes = userPublicRouteFactory(userController);
-  const userRoutes = userRouteFactory(userController, interestGroupController);
+  const userRoutes = userRouteFactory(userController, interestGroupController, projectController);
   const workingGroupRoutes = workingGroupRouteFactory(workingGroupsController);
 
   const fileRoutes = fileRouteFactory(filesController);

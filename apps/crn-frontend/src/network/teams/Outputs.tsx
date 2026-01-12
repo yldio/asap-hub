@@ -179,8 +179,10 @@ const Outputs: React.FC<OutputsProps> = ({
     if (isEnabled('PROJECTS_MVP')) {
       return team?.pointOfContact;
     }
-    return team?.members.find((member) => member.role === 'Project Manager')
-      ?.email;
+    return team?.members.find(
+      ({ role, alumniSinceDate, inactiveSinceDate }) =>
+        role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
+    )?.email;
   }, [team?.pointOfContact, team?.members]);
 
   return (

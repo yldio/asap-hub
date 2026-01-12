@@ -11,19 +11,11 @@ type ResourceProjectsListProps = Omit<
   readonly projects: ReadonlyArray<ResourceProject>;
 };
 
-// Placeholder export function - will be replaced with actual implementation
-/* istanbul ignore next */
-const exportResults = () => Promise.resolve();
-
 const ResourceProjectsList: FC<ResourceProjectsListProps> = ({
   projects,
   ...cardListProps
 }) => (
-  <ResultList
-    icon={<ProjectIcon />}
-    {...cardListProps}
-    exportResults={exportResults}
-  >
+  <ResultList icon={<ProjectIcon />} {...cardListProps}>
     {projects.map((project) => (
       <ProjectCard key={project.id} {...project} />
     ))}

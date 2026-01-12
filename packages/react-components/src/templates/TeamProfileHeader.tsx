@@ -170,17 +170,18 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   resourceType,
   researchTheme,
   projectTitle,
+  projectType,
   linkedProjectId,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   let projectLink;
 
   if (linkedProjectId) {
-    if (teamType === 'Discovery Team') {
+    if (projectType === 'Discovery Project') {
       projectLink = projects({})
         .discoveryProjects({})
         .discoveryProject({ projectId: linkedProjectId }).$;
-    } else if (teamType === 'Resource Team') {
+    } else if (projectType === 'Resource Project') {
       projectLink = projects({})
         .resourceProjects({})
         .resourceProject({ projectId: linkedProjectId }).$;

@@ -49,16 +49,17 @@ const TeamCard: React.FC<TeamCardProps> = ({
   researchTheme,
   resourceType,
   linkedProjectId,
+  projectType,
 }) => {
   const href = network({}).teams({}).team({ teamId: id }).$;
   let projectLink;
 
   if (linkedProjectId) {
-    if (teamType === 'Discovery Team') {
+    if (projectType === 'Discovery Project') {
       projectLink = projects({})
         .discoveryProjects({})
         .discoveryProject({ projectId: linkedProjectId }).$;
-    } else {
+    } else if (projectType === 'Resource Project') {
       projectLink = projects({})
         .resourceProjects({})
         .resourceProject({ projectId: linkedProjectId }).$;

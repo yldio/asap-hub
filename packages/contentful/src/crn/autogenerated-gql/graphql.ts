@@ -27511,7 +27511,7 @@ export type FetchTeamsQuery = {
                       projectsCollection?: Maybe<{
                         items: Array<
                           Maybe<
-                            Pick<Projects, 'title'> & {
+                            Pick<Projects, 'title' | 'projectType'> & {
                               sys: Pick<Sys, 'id'>;
                               resourceType?: Maybe<Pick<ResourceType, 'name'>>;
                               researchTagsCollection?: Maybe<{
@@ -53554,6 +53554,14 @@ export const FetchTeamsDocument = {
                                                             name: {
                                                               kind: 'Name',
                                                               value: 'title',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'projectType',
                                                             },
                                                           },
                                                           {

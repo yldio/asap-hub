@@ -147,7 +147,7 @@ const mandatoryFields = async (
         const button = screen.getByRole('button', { name: /Save/i });
         await user.click(button);
         await waitFor(() => {
-          expect(button).toBeEnabled();
+          expect(button).not.toBeInTheDocument(); // asserts navigation happened
         });
       } else {
         await user.click(screen.getByRole('button', { name: /Publish/i }));
@@ -165,7 +165,24 @@ const mandatoryFields = async (
       if (saveDraftButton) {
         await user.click(saveDraftButton);
         await waitFor(() => {
-          expect(saveDraftButton).toBeEnabled();
+          expect(saveDraftButton).not.toBeInTheDocument(); // asserts navigation happened
+        });
+      }
+    },
+    // Confirms publish for forms with errors
+    clickPublish: async () => {
+      if (isEditMode && published) {
+        const button = screen.getByRole('button', { name: /Save/i });
+        await user.click(button);
+        await waitFor(() => {
+          expect(button).toBeEnabled();
+        });
+      } else {
+        await user.click(screen.getByRole('button', { name: /Publish/i }));
+        const button = screen.getByRole('button', { name: /Publish Output/i });
+        await user.click(button);
+        await waitFor(() => {
+          expect(button).toBeEnabled(); // asserts user's still in the form
         });
       }
     },
@@ -752,7 +769,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
   });
 
   const user = userEvent.setup({ delay: null });
-  const { publish } = await mandatoryFields(
+  const { clickPublish } = await mandatoryFields(
     {
       link,
       title,
@@ -765,7 +782,7 @@ it('will toast server side errors for unknown errors in edit mode', async () => 
     true,
     user,
   );
-  await publish();
+  await clickPublish();
 
   expect(mockUpdateResearchOutput).toHaveBeenCalled();
   expect(

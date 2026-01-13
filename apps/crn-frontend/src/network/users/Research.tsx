@@ -9,7 +9,7 @@ import {
   UserTeamsTabbedCard,
   ExpertiseAndResourcesModal,
 } from '@asap-hub/react-components';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { Route, Routes } from 'react-router-dom';
 
@@ -22,6 +22,7 @@ type ResearchProps = {
 };
 const Research: React.FC<ResearchProps> = ({ user }) => {
   const researchTagsSuggestions = useResearchTags();
+  const { isEnabled } = useFlags();
 
   const { id } = useCurrentUserCRN() ?? {};
   const route = network({}).users({}).user({ userId: user.id }).research({});
@@ -43,9 +44,11 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
           </Frame>
         }
         userProfileProjectsCard={
-          <Frame title={null} fallback={null}>
-            <UserProjectsCard projects={user.projects || []} />
-          </Frame>
+          isEnabled('PROJECTS_MVP') ? (
+            <Frame title={null} fallback={null}>
+              <UserProjectsCard projects={user.projects || []} />
+            </Frame>
+          ) : undefined
         }
         userProfileWorkingGroupsCard={
           <Frame title={null} fallback={null}>

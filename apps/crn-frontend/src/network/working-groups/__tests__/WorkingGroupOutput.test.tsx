@@ -146,7 +146,7 @@ const mandatoryFields = async (
       await user.click(screen.getByRole('button', { name: /Publish Output/i }));
       await waitFor(
         () => {
-          expect(button).toBeEnabled();
+          expect(button).not.toBeInTheDocument(); // asserts navigation happened
         },
         { interval: 50 },
       );
@@ -158,7 +158,7 @@ const mandatoryFields = async (
       await user.click(saveDraftButton);
       await waitFor(
         () => {
-          expect(saveDraftButton).toBeEnabled();
+          expect(saveDraftButton).not.toBeInTheDocument(); // asserts navigation happened
         },
         { interval: 50 },
       );
@@ -170,7 +170,19 @@ const mandatoryFields = async (
       await user.click(updatePublishedButton);
       await waitFor(
         () => {
-          expect(updatePublishedButton).toBeEnabled();
+          expect(updatePublishedButton).not.toBeInTheDocument(); // asserts navigation happened
+        },
+        { interval: 50 },
+      );
+    },
+    // For forms with errors: confirm publication but wait for Publish button to be re-enabled.
+    clickPublish: async () => {
+      const button = screen.getByRole('button', { name: /Publish/i });
+      await user.click(button);
+      await user.click(screen.getByRole('button', { name: /Publish Output/i }));
+      await waitFor(
+        () => {
+          expect(button).toBeEnabled();
         },
         { interval: 50 },
       );
@@ -555,9 +567,9 @@ it('will show server side validation error for link', async () => {
   await renderPage({
     outputDocumentType: 'bioinformatics',
   });
-  const { publish } = await mandatoryFields({ type: 'Code' }, true, user);
+  const { clickPublish } = await mandatoryFields({ type: 'Code' }, true, user);
 
-  await publish();
+  await clickPublish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
   // Verify error is shown - validation errors trigger the generic error toast
@@ -578,9 +590,9 @@ it('will toast server side errors for unknown errors', async () => {
     outputDocumentType: 'bioinformatics',
   });
 
-  const { publish } = await mandatoryFields({ type: 'Code' }, true, user);
+  const { clickPublish } = await mandatoryFields({ type: 'Code' }, true, user);
 
-  await publish();
+  await clickPublish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
   expect(
@@ -666,7 +678,6 @@ it.each([
     }
     await waitFor(
       () => {
-        expect(button).toBeEnabled();
         expect(currentLocation?.pathname).toBe(
           buttonName === 'Publish'
             ? '/shared-research/research-output-id/publishedNow'

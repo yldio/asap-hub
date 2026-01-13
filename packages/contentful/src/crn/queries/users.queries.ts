@@ -78,6 +78,11 @@ export const usersContentQueryFragment = gql`
                 linkedFrom {
                   projectsCollection(limit: 1) {
                     items {
+                      sys {
+                        id
+                      }
+                      title
+                      projectType
                       proposal {
                         sys {
                           id
@@ -190,6 +195,21 @@ export const usersContentQueryFragment = gql`
                 sys {
                   id
                 }
+              }
+            }
+          }
+        }
+      }
+      projectMembershipCollection(limit: 20) {
+        items {
+          linkedFrom {
+            projectsCollection(limit: 1) {
+              items {
+                sys {
+                  id
+                }
+                title
+                projectType
               }
             }
           }

@@ -131,3 +131,136 @@ it('does only renders associations which are active', () => {
   expect(queryByText('Interest Group 1')).not.toBeInTheDocument();
   expect(queryByText('Interest Group 2')).toBeVisible();
 });
+
+describe('Project icons', () => {
+  it('renders MY PROJECTS section when projects are provided', () => {
+    const { getByText } = render(
+      <MemoryRouter>
+        <UserNavigation
+          {...props}
+          projects={[
+            {
+              name: 'My Project',
+              href: '/project-1',
+              projectType: 'Discovery Project',
+            },
+          ]}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(getByText('MY PROJECTS')).toBeVisible();
+    expect(getByText('My Project')).toBeVisible();
+  });
+
+  it('does not render MY PROJECTS section when projects array is empty', () => {
+    const { queryByText } = render(
+      <MemoryRouter>
+        <UserNavigation {...props} projects={[]} />
+      </MemoryRouter>,
+    );
+
+    expect(queryByText('MY PROJECTS')).not.toBeInTheDocument();
+  });
+
+  it('does not render MY PROJECTS section when projects is undefined', () => {
+    const { queryByText } = render(
+      <MemoryRouter>
+        <UserNavigation {...props} />
+      </MemoryRouter>,
+    );
+
+    expect(queryByText('MY PROJECTS')).not.toBeInTheDocument();
+  });
+
+  it('renders Discovery Project icon for Discovery Project type', () => {
+    const { getByTitle } = render(
+      <MemoryRouter>
+        <UserNavigation
+          {...props}
+          projects={[
+            {
+              name: 'Discovery Research',
+              href: '/discovery-1',
+              projectType: 'Discovery Project',
+            },
+          ]}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(getByTitle('Discovery Project')).toBeInTheDocument();
+  });
+
+  it('renders Resource Project icon for Resource Project type', () => {
+    const { getByTitle } = render(
+      <MemoryRouter>
+        <UserNavigation
+          {...props}
+          projects={[
+            {
+              name: 'Resource Initiative',
+              href: '/resource-1',
+              projectType: 'Resource Project',
+            },
+          ]}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(getByTitle('Resource Project')).toBeInTheDocument();
+  });
+
+  it('renders Trainee Project icon for Trainee Project type', () => {
+    const { getByTitle } = render(
+      <MemoryRouter>
+        <UserNavigation
+          {...props}
+          projects={[
+            {
+              name: 'Trainee Study',
+              href: '/trainee-1',
+              projectType: 'Trainee Project',
+            },
+          ]}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(getByTitle('Trainee Project')).toBeInTheDocument();
+  });
+
+  it('renders correct icons for multiple projects of different types', () => {
+    const { getByTitle, getByText } = render(
+      <MemoryRouter>
+        <UserNavigation
+          {...props}
+          projects={[
+            {
+              name: 'Discovery Research',
+              href: '/discovery-1',
+              projectType: 'Discovery Project',
+            },
+            {
+              name: 'Resource Initiative',
+              href: '/resource-1',
+              projectType: 'Resource Project',
+            },
+            {
+              name: 'Trainee Study',
+              href: '/trainee-1',
+              projectType: 'Trainee Project',
+            },
+          ]}
+        />
+      </MemoryRouter>,
+    );
+
+    expect(getByText('Discovery Research')).toBeVisible();
+    expect(getByText('Resource Initiative')).toBeVisible();
+    expect(getByText('Trainee Study')).toBeVisible();
+    expect(getByTitle('Discovery Project')).toBeInTheDocument();
+    expect(getByTitle('Resource Project')).toBeInTheDocument();
+    expect(getByTitle('Trainee Project')).toBeInTheDocument();
+  });
+});

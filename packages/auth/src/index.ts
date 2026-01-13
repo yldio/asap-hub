@@ -17,6 +17,7 @@ export type User = Pick<
   | 'algoliaApiKey'
   | 'workingGroups'
   | 'interestGroups'
+  | 'projects'
   | 'role'
   | 'openScienceTeamMember'
 > & {

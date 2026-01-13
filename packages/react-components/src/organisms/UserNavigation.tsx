@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { ProjectType } from '@asap-hub/model';
 import { logout, staticPages } from '@asap-hub/routing';
 
 import {
@@ -8,9 +9,28 @@ import {
   largeDesktopScreen,
 } from '../pixels';
 import { Divider, NavigationLink, Caption, Anchor } from '../atoms';
-import { UserIcon, feedbackIcon, logoutIcon } from '../icons';
+import {
+  UserIcon,
+  feedbackIcon,
+  logoutIcon,
+  DiscoveryProjectIcon,
+  ResourceProjectIcon,
+  TraineeProjectIcon,
+} from '../icons';
 import { mailToFeedback } from '../mail';
 import { UserNavigationAssociationSection } from '../molecules';
+
+const getProjectIcon = (projectType: ProjectType): JSX.Element => {
+  switch (projectType) {
+    case 'Discovery Project':
+      return <DiscoveryProjectIcon />;
+    case 'Resource Project':
+      return <ResourceProjectIcon />;
+    case 'Trainee Project':
+    default:
+      return <TraineeProjectIcon />;
+  }
+};
 
 const containerStyles = css({
   minWidth: '312px',
@@ -53,6 +73,11 @@ export interface UserNavigationProps {
   readonly userOnboarded?: boolean;
   readonly userProfileHref: string;
   readonly teams: ReadonlyArray<{ name: string; href: string }>;
+  readonly projects?: ReadonlyArray<{
+    name: string;
+    href: string;
+    projectType: ProjectType;
+  }>;
   readonly workingGroups: ReadonlyArray<{
     name: string;
     href: string;
@@ -69,6 +94,7 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
   userOnboarded = true,
   userProfileHref,
   teams,
+  projects,
   workingGroups,
   interestGroups,
   aboutHref,
@@ -80,6 +106,16 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
           My Profile
         </NavigationLink>
       </li>
+      {projects && projects.length > 0 && (
+        <UserNavigationAssociationSection
+          userOnboarded={userOnboarded}
+          association={projects.map((project) => ({
+            ...project,
+            icon: getProjectIcon(project.projectType),
+          }))}
+          title="MY PROJECTS"
+        />
+      )}
       <UserNavigationAssociationSection
         userOnboarded={userOnboarded}
         association={teams}

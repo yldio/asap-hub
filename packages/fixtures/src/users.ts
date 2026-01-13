@@ -66,6 +66,7 @@ export const createUserResponse = (
   },
   workingGroups: [],
   interestGroups: [],
+  projects: [],
 
   id: `user-id-${itemIndex}`,
   displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,

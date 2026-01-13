@@ -1940,4 +1940,218 @@ describe('User data provider', () => {
       expect(parsedWorkingGroups[0]!.active).toBe(false);
     });
   });
+
+  describe('User projects parsing', () => {
+    test('should parse direct project memberships (Trainee Projects)', async () => {
+      const userWithDirectProject = {
+        ...getContentfulGraphqlUser(),
+        linkedFrom: {
+          ...getContentfulGraphqlUser().linkedFrom,
+          projectMembershipCollection: {
+            items: [
+              {
+                linkedFrom: {
+                  projectsCollection: {
+                    items: [
+                      {
+                        sys: { id: 'trainee-project-1' },
+                        title: 'My Trainee Project',
+                        projectType: 'Trainee Project',
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: userWithDirectProject,
+      });
+
+      const result = await userDataProvider.fetchById('123');
+      expect(result?.projects).toContainEqual({
+        id: 'trainee-project-1',
+        title: 'My Trainee Project',
+        projectType: 'Trainee Project',
+      });
+    });
+
+    test('should deduplicate projects appearing in both team and direct memberships', async () => {
+      const userWithDuplicateProject = {
+        ...getContentfulGraphqlUser(),
+        teamsCollection: {
+          items: [
+            {
+              role: 'Lead PI (Core Leadership)',
+              inactiveSinceDate: null,
+              team: {
+                sys: { id: 'team-id-1' },
+                displayName: 'Team 1',
+                inactiveSince: null,
+                researchTheme: { name: 'PD Functional Genomics' },
+                linkedFrom: {
+                  interestGroupsTeamsCollection: { items: [] },
+                  projectMembershipCollection: {
+                    items: [
+                      {
+                        linkedFrom: {
+                          projectsCollection: {
+                            items: [
+                              {
+                                sys: { id: 'shared-project-id' },
+                                title: 'Shared Project',
+                                projectType: 'Discovery Project',
+                                proposal: null,
+                              },
+                            ],
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+        linkedFrom: {
+          ...getContentfulGraphqlUser().linkedFrom,
+          projectMembershipCollection: {
+            items: [
+              {
+                linkedFrom: {
+                  projectsCollection: {
+                    items: [
+                      {
+                        sys: { id: 'shared-project-id' },
+                        title: 'Shared Project',
+                        projectType: 'Discovery Project',
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: userWithDuplicateProject,
+      });
+
+      const result = await userDataProvider.fetchById('123');
+      const projectsWithSharedId = result?.projects.filter(
+        (p) => p.id === 'shared-project-id',
+      );
+      expect(projectsWithSharedId).toHaveLength(1);
+    });
+
+    test('should skip projects missing required fields', async () => {
+      const userWithIncompleteProject = {
+        ...getContentfulGraphqlUser(),
+        linkedFrom: {
+          ...getContentfulGraphqlUser().linkedFrom,
+          projectMembershipCollection: {
+            items: [
+              {
+                linkedFrom: {
+                  projectsCollection: {
+                    items: [
+                      {
+                        sys: { id: 'valid-project' },
+                        title: 'Valid Project',
+                        projectType: 'Trainee Project',
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                linkedFrom: {
+                  projectsCollection: {
+                    items: [
+                      {
+                        sys: { id: 'missing-title' },
+                        title: null,
+                        projectType: 'Trainee Project',
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                linkedFrom: {
+                  projectsCollection: {
+                    items: [
+                      {
+                        sys: { id: 'missing-type' },
+                        title: 'Missing Type',
+                        projectType: null,
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: userWithIncompleteProject,
+      });
+
+      const result = await userDataProvider.fetchById('123');
+      expect(result?.projects).toContainEqual({
+        id: 'valid-project',
+        title: 'Valid Project',
+        projectType: 'Trainee Project',
+      });
+      expect(
+        result?.projects.find((p) => p.id === 'missing-title'),
+      ).toBeUndefined();
+      expect(
+        result?.projects.find((p) => p.id === 'missing-type'),
+      ).toBeUndefined();
+    });
+
+    test('should return empty array when no direct project memberships exist', async () => {
+      const userWithoutDirectProjects = {
+        ...getContentfulGraphqlUser(),
+        teamsCollection: {
+          items: [
+            {
+              role: 'Lead PI (Core Leadership)',
+              inactiveSinceDate: null,
+              team: {
+                sys: { id: 'team-id-1' },
+                displayName: 'Team 1',
+                inactiveSince: null,
+                researchTheme: { name: 'PD Functional Genomics' },
+                linkedFrom: {
+                  interestGroupsTeamsCollection: { items: [] },
+                  projectMembershipCollection: { items: [] },
+                },
+              },
+            },
+          ],
+        },
+        linkedFrom: {
+          ...getContentfulGraphqlUser().linkedFrom,
+          projectMembershipCollection: { items: [] },
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: userWithoutDirectProjects,
+      });
+
+      const result = await userDataProvider.fetchById('123');
+      expect(result?.projects).toEqual([]);
+    });
+  });
 });

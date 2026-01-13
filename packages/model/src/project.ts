@@ -3,10 +3,16 @@ import { TeamDataObject } from './team';
 
 export type ProjectStatus = 'Active' | 'Completed' | 'Closed';
 
-export type ProjectType =
-  | 'Discovery Project'
-  | 'Resource Project'
-  | 'Trainee Project';
+export const projectTypes = [
+  'Discovery Project',
+  'Resource Project',
+  'Trainee Project',
+] as const;
+
+export type ProjectType = (typeof projectTypes)[number];
+
+export const isProjectType = (value: unknown): value is ProjectType =>
+  (projectTypes as readonly string[]).includes(value as string);
 
 export type ResearchTag = {
   readonly id: string;

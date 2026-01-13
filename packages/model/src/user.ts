@@ -1,6 +1,7 @@
 import { FetchOptions, ListResponse, OrcidWork } from './common';
 import { InterestGroupMembership } from './interest-group';
 import { LabResponse } from './lab';
+import { ProjectType } from './project';
 import { ResearchTagDataObject } from './research-tag';
 import { TeamRole } from './team';
 import { WorkingGroupMembership } from './working-group';
@@ -57,6 +58,12 @@ export interface UserTeam {
   inactiveSinceDate?: string;
 }
 
+export interface UserProjectMembership {
+  id: string;
+  title: string;
+  projectType: ProjectType;
+}
+
 export interface UserSocialLinks {
   website1?: string;
   website2?: string;
@@ -105,6 +112,7 @@ export interface UserDataObject extends Invitee {
   teams: UserTeam[];
   workingGroups: WorkingGroupMembership[];
   interestGroups: InterestGroupMembership[];
+  projects: UserProjectMembership[];
   tags?: Pick<ResearchTagDataObject, 'id' | 'name'>[];
   researchTheme?: string[];
 }

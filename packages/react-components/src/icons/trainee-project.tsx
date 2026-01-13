@@ -9,7 +9,7 @@ interface TraineeProjectIconProps {
 const TraineeProjectIcon: React.FC<TraineeProjectIconProps> = ({
   width = 25,
   height = 24,
-  color = '#00202C',
+  color = '#4D646B',
 }) => (
   <svg
     width={width}
@@ -18,6 +18,7 @@ const TraineeProjectIcon: React.FC<TraineeProjectIconProps> = ({
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Trainee Project</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

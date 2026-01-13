@@ -61,6 +61,7 @@ export const fetchUserResponseDataObject = (): UserDataObject => ({
   ],
   workingGroups: [],
   interestGroups: [],
+  projects: [],
   researchOutputs: [],
   connections: [],
 });
@@ -105,6 +106,13 @@ export const getUserResponse = (): UserResponse => ({
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
   workingGroups: [],
   interestGroups: [],
+  projects: [
+    {
+      id: 'project-id-1',
+      title: 'Test Project',
+      projectType: 'Discovery Project',
+    },
+  ],
   researchOutputs: [],
   expertiseAndResourceDescription: 'some expertise and resource description',
   orcidWorks: [
@@ -344,6 +352,13 @@ export const getUserDataObject = (): UserDataObject => ({
   lastModifiedDate: '2021-09-23T20:45:22.000Z',
   workingGroups: [],
   interestGroups: [],
+  projects: [
+    {
+      id: 'project-id-1',
+      title: 'Test Project',
+      projectType: 'Discovery Project',
+    },
+  ],
   orcidWorks: [
     {
       doi: 'test-doi',
@@ -547,6 +562,11 @@ export const getContentfulGraphqlUser = (
                     projectsCollection: {
                       items: [
                         {
+                          sys: {
+                            id: 'project-id-1',
+                          },
+                          title: 'Test Project',
+                          projectType: 'Discovery Project',
                           proposal: {
                             sys: {
                               id: 'proposalId1',

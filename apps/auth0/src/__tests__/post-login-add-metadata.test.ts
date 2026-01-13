@@ -204,6 +204,7 @@ describe('For a CRN login', () => {
     questions: [],
     workingGroups: [],
     interestGroups: [],
+    projects: [],
     role: 'Grantee',
     openScienceTeamMember: false,
     algoliaApiKey: 'test-api-key',

@@ -32,6 +32,7 @@ export const getUserResponse = (): UserResponse => ({
   ],
   workingGroups: [],
   interestGroups: [],
+  projects: [],
   orcid: '363-98-9330',
   orcidWorks: [],
   social: {

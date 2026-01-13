@@ -43,7 +43,7 @@ const createMockField = (getValue: () => unknown) => {
 const mockBaseSdk = (
   contentTypeId: string,
   fieldId: string,
-  fieldType: 'Date' | 'Link' = 'Link',
+  fieldType: 'Date' | 'Link' | 'Text' | 'Symbol' = 'Link',
 ) => {
   const fields: Record<string, ReturnType<typeof createMockField>> = {
     teamType: createMockField(() => null),
@@ -62,7 +62,7 @@ const mockBaseSdk = (
     field: {
       id: fieldId,
       type: fieldType,
-      linkType: fieldType === 'Date' ? undefined : 'Entry',
+      linkType: fieldType === 'Link' ? 'Entry' : undefined,
       setValue: jest.fn(),
       getValue: jest.fn(() => null),
       setInvalid: jest.fn(),
@@ -101,17 +101,52 @@ describe('Field component', () => {
   });
 
   describe('height management', () => {
-    it('uses auto resizer for non-date fields', async () => {
+    it('uses auto resizer for non-date and non-entry-link fields', async () => {
       const sdk = mockBaseSdk(
         'teams',
         'researchTheme',
-        'Link',
+        'Text',
       ) as unknown as jest.Mocked<FieldAppSDK>;
       (useSDK as jest.Mock).mockReturnValue(sdk);
 
       render(<Field />);
       await waitFor(() => {
         expect(sdk.window.startAutoResizer).toHaveBeenCalled();
+      });
+    });
+
+    it('uses custom height management for entry link fields', async () => {
+      const sdk = mockBaseSdk(
+        'teams',
+        'researchTheme',
+        'Link',
+      ) as unknown as jest.Mocked<FieldAppSDK>;
+      (sdk.field as any).linkType = 'Entry';
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+      await waitFor(() => {
+        expect(sdk.window.updateHeight).toHaveBeenCalledWith(80);
+        expect(sdk.window.startAutoResizer).not.toHaveBeenCalled();
+      });
+    });
+
+    it('sets adjusted height for entry link fields with warning', async () => {
+      const sdk = mockBaseSdk(
+        'teams',
+        'researchTheme',
+        'Link',
+      ) as unknown as jest.Mocked<FieldAppSDK>;
+      (sdk.field as any).linkType = 'Entry';
+      (sdk.entry.fields.teamType as any).getValue = jest.fn(
+        () => 'Discovery Team',
+      );
+      (sdk.entry.fields.researchTheme as any).getValue = jest.fn(() => null);
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+      await waitFor(() => {
+        expect(sdk.window.updateHeight).toHaveBeenCalledWith(120);
       });
     });
 

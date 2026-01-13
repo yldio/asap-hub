@@ -71,76 +71,131 @@ const Field = () => {
     return unsubscribe;
   }, [sdk, validateField]);
 
-  // Dynamic height management for date picker
+  // Dynamic height management for date picker and entry reference editor
   useEffect(() => {
-    if (sdk.field.type !== 'Date') {
+    const fieldType = sdk.field.type;
+    const isDateField = fieldType === 'Date';
+    const isEntryLinkField =
+      fieldType === 'Link' &&
+      'linkType' in sdk.field &&
+      sdk.field.linkType === 'Entry';
+
+    // Use auto resizer for other field types
+    if (!isDateField && !isEntryLinkField) {
       sdk.window.startAutoResizer();
       return () => sdk.window.stopAutoResizer();
     }
 
-    // Set initial compact height for date field
-    const compactHeight = warning ? 120 : 40;
-    const expandedHeight = 370;
+    // Set initial compact height
+    const compactHeight = warning ? 120 : isDateField ? 40 : 80;
+    const expandedHeight = isDateField ? 370 : 110; // Adjust for entry reference menu
 
     sdk.window.updateHeight(compactHeight);
-    let isPickerCurrentlyOpen = false;
+    let isMenuCurrentlyOpen = false;
 
-    // Watch for picker opening/closing
-    const observer = new MutationObserver((mutations) => {
-      // Check multiple possible selectors for the date picker
-      const picker =
-        document.querySelector('[data-test-id="date-picker"]') ||
-        document.querySelector('[role="dialog"]') ||
-        document.querySelector('.cf-date-picker-popper') ||
-        document.querySelector('[data-radix-popper-content-wrapper]');
+    // Watch for menu/picker opening/closing
+    const observer = new MutationObserver(() => {
+      let isMenuOpen = false;
 
-      if (picker) {
-        const ariaHidden = picker.getAttribute('aria-hidden');
-        const dataState = picker.getAttribute('data-state');
-        const style = window.getComputedStyle(picker);
-        const isVisible =
-          style.display !== 'none' && style.visibility !== 'hidden';
+      if (isDateField) {
+        // Date picker detection
+        const picker =
+          document.querySelector('[data-test-id="date-picker"]') ||
+          document.querySelector('[role="dialog"]') ||
+          document.querySelector('.cf-date-picker-popper') ||
+          document.querySelector('[data-radix-popper-content-wrapper]');
 
-        // Picker is open if aria-hidden is "false" or data-state is "open" or if it's visible
-        const isPickerOpen =
-          ariaHidden === 'false' ||
-          dataState === 'open' ||
-          (ariaHidden === null && dataState === null && isVisible);
+        if (picker) {
+          const ariaHidden = picker.getAttribute('aria-hidden');
+          const dataState = picker.getAttribute('data-state');
+          const style = window.getComputedStyle(picker);
+          const isVisible =
+            style.display !== 'none' && style.visibility !== 'hidden';
 
-        // Only update if state changed
-        if (isPickerOpen !== isPickerCurrentlyOpen) {
-          isPickerCurrentlyOpen = isPickerOpen;
-          const newHeight = isPickerOpen ? expandedHeight : compactHeight;
-          sdk.window.updateHeight(newHeight);
+          isMenuOpen =
+            ariaHidden === 'false' ||
+            dataState === 'open' ||
+            (ariaHidden === null && dataState === null && isVisible);
         }
-      } else if (isPickerCurrentlyOpen) {
-        // Picker was removed from DOM, so it's closed
-        isPickerCurrentlyOpen = false;
-        sdk.window.updateHeight(compactHeight);
+      } else if (isEntryLinkField) {
+        // Entry reference editor menu detection
+        // Look for dropdown menus, popovers, or action menus
+        const menu =
+          document.querySelector('[role="menu"]') ||
+          document.querySelector('[role="listbox"]') ||
+          document.querySelector('[data-radix-popper-content-wrapper]') ||
+          document.querySelector('.cf-ui-dropdown') ||
+          document.querySelector('[class*="Dropdown"]') ||
+          document.querySelector('[class*="Menu"]') ||
+          document.querySelector('[class*="Popover"]');
+
+        if (menu) {
+          const ariaHidden = menu.getAttribute('aria-hidden');
+          const dataState = menu.getAttribute('data-state');
+          const style = window.getComputedStyle(menu);
+          const isVisible =
+            style.display !== 'none' &&
+            style.visibility !== 'hidden' &&
+            style.opacity !== '0';
+
+          isMenuOpen =
+            ariaHidden === 'false' ||
+            dataState === 'open' ||
+            (ariaHidden === null && dataState === null && isVisible);
+        }
+      }
+
+      // Only update if state changed
+      if (isMenuOpen !== isMenuCurrentlyOpen) {
+        isMenuCurrentlyOpen = isMenuOpen;
+        const newHeight = isMenuOpen ? expandedHeight : compactHeight;
+        sdk.window.updateHeight(newHeight);
       }
     });
 
-    // Handle clicks outside to close picker
+    // Handle clicks outside to close menu
     const handleDocumentClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      const picker =
-        document.querySelector('[data-test-id="date-picker"]') ||
-        document.querySelector('[role="dialog"]') ||
-        document.querySelector('.cf-date-picker-popper') ||
-        document.querySelector('[data-radix-popper-content-wrapper]');
 
-      const dateButton = target.closest(
-        '[data-test-id="cf-ui-datepicker-button"]',
-      );
+      if (isDateField) {
+        const picker =
+          document.querySelector('[data-test-id="date-picker"]') ||
+          document.querySelector('[role="dialog"]') ||
+          document.querySelector('.cf-date-picker-popper') ||
+          document.querySelector('[data-radix-popper-content-wrapper]');
 
-      // If clicking outside both the picker and the button, close it
-      if (picker && !picker.contains(target) && !dateButton) {
-        setTimeout(() => {
-          if (isPickerCurrentlyOpen) {
-            isPickerCurrentlyOpen = false;
-            sdk.window.updateHeight(compactHeight);
-          }
-        }, 100);
+        const dateButton = target.closest(
+          '[data-test-id="cf-ui-datepicker-button"]',
+        );
+
+        if (picker && !picker.contains(target) && !dateButton) {
+          setTimeout(() => {
+            if (isMenuCurrentlyOpen) {
+              isMenuCurrentlyOpen = false;
+              sdk.window.updateHeight(compactHeight);
+            }
+          }, 100);
+        }
+      } else if (isEntryLinkField) {
+        // Check if click is outside the menu and not on a trigger button
+        const menu =
+          document.querySelector('[role="menu"]') ||
+          document.querySelector('[role="listbox"]') ||
+          document.querySelector('[data-radix-popper-content-wrapper]') ||
+          document.querySelector('.cf-ui-dropdown');
+
+        const triggerButton =
+          target.closest('[aria-haspopup="true"]') ||
+          target.closest('button[aria-expanded]');
+
+        if (menu && !menu.contains(target) && !triggerButton) {
+          setTimeout(() => {
+            if (isMenuCurrentlyOpen) {
+              isMenuCurrentlyOpen = false;
+              sdk.window.updateHeight(compactHeight);
+            }
+          }, 100);
+        }
       }
     };
 
@@ -149,7 +204,13 @@ const Field = () => {
       attributes: true,
       childList: true,
       subtree: true,
-      attributeFilter: ['aria-hidden', 'style', 'class', 'data-state'],
+      attributeFilter: [
+        'aria-hidden',
+        'style',
+        'class',
+        'data-state',
+        'aria-expanded',
+      ],
     });
 
     document.addEventListener('click', handleDocumentClick, true);
@@ -158,7 +219,12 @@ const Field = () => {
       observer.disconnect();
       document.removeEventListener('click', handleDocumentClick, true);
     };
-  }, [sdk.field.type, sdk.window, warning]);
+  }, [
+    sdk.field.type,
+    'linkType' in sdk.field ? sdk.field.linkType : undefined,
+    sdk.window,
+    warning,
+  ]);
 
   const renderFieldEditor = () => {
     const fieldType = sdk.field.type;
@@ -179,7 +245,11 @@ const Field = () => {
       );
     }
 
-    if (fieldType === 'Link' && sdk.field.linkType === 'Entry') {
+    if (
+      fieldType === 'Link' &&
+      'linkType' in sdk.field &&
+      sdk.field.linkType === 'Entry'
+    ) {
       return (
         <SingleEntryReferenceEditor
           sdk={sdk}

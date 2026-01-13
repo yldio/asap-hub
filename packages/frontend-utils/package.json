@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@asap-hub/flags": "workspace:*",
-    "@babel/runtime-corejs3": "7.28.4",
+    "@babel/runtime-corejs3": "7.28.6",
     "csv-stringify": "6.4.5",
     "date-fns": "2.30.0",
     "js-cookie": "^3.0.5",
@@ -39,7 +39,7 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
-    "@babel/core": "7.28.5",
+    "@babel/core": "7.28.6",
     "@babel/preset-react": "7.28.5",
     "@sentry/react": "^8.0.0",
     "@testing-library/dom": "10.4.0",

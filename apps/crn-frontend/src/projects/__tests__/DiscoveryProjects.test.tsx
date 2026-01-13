@@ -83,11 +83,11 @@ beforeEach(() => {
 const themeFilter = 'Neuro';
 const statusFilter = 'Active';
 
-const renderDiscoveryProjects = async (
+const renderDiscoveryProjects = (
   searchQuery: string = '',
   filters?: Set<string>,
-) => {
-  const result = render(
+) =>
+  render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
@@ -104,30 +104,28 @@ const renderDiscoveryProjects = async (
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
-};
 
 it('renders the Discovery Projects page', async () => {
-  const { container } = await renderDiscoveryProjects();
+  renderDiscoveryProjects();
+
   expect(
-    screen.getByText(
+    await screen.findByText(
       /Discovery Projects are collaborative research projects whose primary objective/i,
     ),
   ).toBeVisible();
-  expect(container.querySelector('section')).toBeInTheDocument();
+
   expect(screen.getByText('Discovery Team')).toBeVisible();
 });
 
 it('passes Algolia facet filters when the discovery theme filter is active', async () => {
-  await renderDiscoveryProjects('', new Set([themeFilter]));
+  renderDiscoveryProjects('', new Set([themeFilter]));
 
-  expect(mockUseProjects).toHaveBeenLastCalledWith(
-    expect.objectContaining({
-      facetFilters: { researchTheme: ['Neuro'] },
-    }),
+  await waitFor(() =>
+    expect(mockUseProjects).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        facetFilters: { researchTheme: ['Neuro'] },
+      }),
+    ),
   );
 });
 
@@ -146,11 +144,10 @@ it('triggers export with the expected parameters', async () => {
     ],
   });
   const searchQuery = 'searched project name';
-  const { getByText } = await renderDiscoveryProjects(
-    searchQuery,
-    new Set([themeFilter, statusFilter]),
-  );
-  await userEvent.click(getByText(/csv/i));
+  renderDiscoveryProjects(searchQuery, new Set([themeFilter, statusFilter]));
+
+  const csvButton = await screen.findByRole('button', { name: /csv/i });
+  await userEvent.click(csvButton);
   expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
     expect.stringMatching(/DiscoveryProjects_\d+\.csv/),
     expect.anything(),

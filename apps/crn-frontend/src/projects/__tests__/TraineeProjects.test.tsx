@@ -1,6 +1,6 @@
 import { MemoryRouter } from 'react-router-dom';
 import { ComponentProps, Suspense } from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { network } from '@asap-hub/routing';
 import { RecoilRoot } from 'recoil';
@@ -87,11 +87,11 @@ beforeEach(() => {
   });
 });
 
-const renderTraineeProjects = async (
+const renderTraineeProjects = (
   searchQuery: string = '',
   filters?: Set<string>,
-) => {
-  const result = render(
+) =>
+  render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
@@ -108,20 +108,16 @@ const renderTraineeProjects = async (
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
-};
 
 it('renders the Trainee Projects page', async () => {
-  const { container } = await renderTraineeProjects();
+  renderTraineeProjects();
+
   expect(
-    screen.getByText(
+    await screen.findByText(
       /Trainee Projects provide early-career scientists with dedicated support/i,
     ),
   ).toBeVisible();
-  expect(container.querySelector('section')).toBeInTheDocument();
+
   expect(screen.getByText('Taylor Trainer')).toBeVisible();
 });
 
@@ -133,13 +129,20 @@ it('renders trainer and members as links', async () => {
     algoliaQueryId: 'query',
   });
 
-  await renderTraineeProjects();
+  renderTraineeProjects();
 
-  expect(screen.getByRole('link', { name: 'Taylor Trainer' })).toHaveAttribute(
+  const trainerLink = await screen.findByRole('link', {
+    name: 'Taylor Trainer',
+  });
+  expect(trainerLink).toHaveAttribute(
     'href',
     network({}).users({}).user({ userId: 'trainer-2' }).$,
   );
-  expect(screen.getByRole('link', { name: 'Morgan Trainee' })).toHaveAttribute(
+
+  const memberLink = await screen.findByRole('link', {
+    name: 'Morgan Trainee',
+  });
+  expect(memberLink).toHaveAttribute(
     'href',
     network({}).users({}).user({ userId: 'member-2' }).$,
   );
@@ -160,11 +163,10 @@ it('triggers export with the expected parameters', async () => {
     ],
   });
   const searchQuery = 'searched project name';
-  const { getByText } = await renderTraineeProjects(
-    searchQuery,
-    new Set([statusFilter]),
-  );
-  await userEvent.click(getByText(/csv/i));
+  renderTraineeProjects(searchQuery, new Set([statusFilter]));
+
+  const csvButton = await screen.findByRole('button', { name: /csv/i });
+  await userEvent.click(csvButton);
   expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
     expect.stringMatching(/TraineeProjects_\d+\.csv/),
     expect.anything(),

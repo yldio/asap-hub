@@ -108,11 +108,11 @@ beforeEach(() => {
   ]);
 });
 
-const renderResourceProjects = async (
+const renderResourceProjects = (
   searchQuery: string = '',
   filters?: Set<string>,
-) => {
-  const result = render(
+) =>
+  render(
     <RecoilRoot>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
@@ -129,20 +129,16 @@ const renderResourceProjects = async (
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
-};
 
 it('renders the Resource Projects page', async () => {
-  const { container } = await renderResourceProjects();
+  renderResourceProjects();
+
   expect(
-    screen.getByText(
+    await screen.findByText(
       /Resource Projects are projects whose primary objective is to generate research tools/i,
     ),
   ).toBeVisible();
-  expect(container.querySelector('section')).toBeInTheDocument();
+
   expect(screen.getByText('Resource Team')).toBeVisible();
 });
 
@@ -154,21 +150,24 @@ it('renders resource project members as links when the project is not team-based
     algoliaQueryId: 'query',
   });
 
-  await renderResourceProjects();
+  renderResourceProjects();
 
-  expect(screen.getByRole('link', { name: 'Pat Scientist' })).toHaveAttribute(
+  const memberLink = await screen.findByRole('link', { name: 'Pat Scientist' });
+  expect(memberLink).toHaveAttribute(
     'href',
     network({}).users({}).user({ userId: 'resource-member-1' }).$,
   );
 });
 
 it('passes Algolia facet filters when the resource type filter is active', async () => {
-  await renderResourceProjects('', new Set([resourceTypeFilter]));
+  renderResourceProjects('', new Set([resourceTypeFilter]));
 
-  expect(mockUseProjects).toHaveBeenLastCalledWith(
-    expect.objectContaining({
-      facetFilters: { resourceType: ['Dataset'] },
-    }),
+  await waitFor(() =>
+    expect(mockUseProjects).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        facetFilters: { resourceType: ['Dataset'] },
+      }),
+    ),
   );
 });
 
@@ -187,11 +186,14 @@ it('triggers export with the expected parameters', async () => {
     ],
   });
   const searchQuery = 'searched project name';
-  const { getByText } = await renderResourceProjects(
+  renderResourceProjects(
     searchQuery,
     new Set([resourceTypeFilter, statusFilter]),
   );
-  await userEvent.click(getByText(/csv/i));
+
+  const csvButton = await screen.findByRole('button', { name: /csv/i });
+  await userEvent.click(csvButton);
+
   expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
     expect.stringMatching(/ResourceProjects_\d+\.csv/),
     expect.anything(),

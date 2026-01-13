@@ -26993,9 +26993,11 @@ __metadata:
   linkType: hard
 
 "jest-fail-on-console@npm:^3.1.1":
-  version: 3.3.1
-  resolution: "jest-fail-on-console@npm:3.3.1"
-  checksum: ca83aaf623e3772ec612e639fefca54472d38a7f4ea8119de8f12dcdb5e425e9f09d803ffd3b7db7b78fdc4edcffea3340f1ea7d160007da32f03d6ec569686b
+  version: 3.3.4
+  resolution: "jest-fail-on-console@npm:3.3.4"
+  peerDependencies:
+    "@jest/globals": ">=27.5.1"
+  checksum: 92090ce7c70adc174641273d24ab4471bb001296c3e5703ad322616cadd3f85ecd8ff47ddc4789ccc179dbb81d9ea5298f23bddd62eda1e762a65a13230be884
   languageName: node
   linkType: hard
 

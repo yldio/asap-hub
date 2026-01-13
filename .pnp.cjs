@@ -7417,7 +7417,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "jest-fail-on-console",\
-        "npm:3.3.1"\
+        "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:3.3.4"\
       ],\
       [\
         "jest-get-type",\
@@ -11481,7 +11481,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hyperform", "npm:0.12.1"],\
             ["jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:29.7.0"],\
             ["jest-environment-jsdom", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:29.7.0"],\
-            ["jest-fail-on-console", "npm:3.3.1"],\
+            ["jest-fail-on-console", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:3.3.4"],\
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.2.0"],\
             ["jest-watch-select-projects", "npm:2.0.0"],\
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
@@ -38845,7 +38845,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hyperform", "npm:0.12.1"],\
             ["jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:29.7.0"],\
             ["jest-environment-jsdom", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:29.7.0"],\
-            ["jest-fail-on-console", "npm:3.3.1"],\
+            ["jest-fail-on-console", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:3.3.4"],\
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.2.0"],\
             ["jest-watch-select-projects", "npm:2.0.0"],\
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
@@ -51721,10 +51721,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["jest-fail-on-console", [\
-        ["npm:3.3.1", {\
-          "packageLocation": "./.yarn/cache/jest-fail-on-console-npm-3.3.1-b34e1ea54c-ca83aaf623.zip/node_modules/jest-fail-on-console/",\
+        ["npm:3.3.4", {\
+          "packageLocation": "./.yarn/cache/jest-fail-on-console-npm-3.3.4-1360b637cc-92090ce7c7.zip/node_modules/jest-fail-on-console/",\
           "packageDependencies": [\
-            ["jest-fail-on-console", "npm:3.3.1"]\
+            ["jest-fail-on-console", "npm:3.3.4"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:3.3.4", {\
+          "packageLocation": "./.yarn/__virtual__/jest-fail-on-console-virtual-c12d08a407/0/cache/jest-fail-on-console-npm-3.3.4-1360b637cc-92090ce7c7.zip/node_modules/jest-fail-on-console/",\
+          "packageDependencies": [\
+            ["jest-fail-on-console", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:3.3.4"],\
+            ["@jest/globals", null],\
+            ["@types/jest__globals", null]\
+          ],\
+          "packagePeers": [\
+            "@jest/globals",\
+            "@types/jest__globals"\
           ],\
           "linkType": "HARD"\
         }]\

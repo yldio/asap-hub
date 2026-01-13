@@ -6402,7 +6402,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "form-data",\
-        "npm:4.0.4"\
+        "npm:4.0.5"\
       ],\
       [\
         "form-data-encoder",\
@@ -12708,7 +12708,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["esbuild", "npm:0.25.12"],\
             ["express", "npm:4.20.0"],\
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
-            ["form-data", "npm:4.0.4"],\
+            ["form-data", "npm:4.0.5"],\
             ["got", "npm:11.8.6"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:2.12.6"],\
@@ -13445,7 +13445,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["esbuild", "npm:0.25.12"],\
             ["express", "npm:4.20.0"],\
             ["express-async-errors", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:3.1.1"],\
-            ["form-data", "npm:4.0.4"],\
+            ["form-data", "npm:4.0.5"],\
             ["graphql", "npm:15.8.0"],\
             ["graphql-tag", "virtual:190ef0160ba946cf7e73459640ba1e0562856a9e57af12873e04856ddb4d0a78826458a3c4484c2dd9a1b3579fe82cb5668480512120173800bfd772f135d982#npm:2.12.6"],\
             ["graphql-typescript-integration", "npm:1.2.1"],\
@@ -47918,6 +47918,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/form-data-npm-4.0.4-10eb4ef9c3-9b7788836d.zip/node_modules/form-data/",\
           "packageDependencies": [\
             ["form-data", "npm:4.0.4"],\
+            ["asynckit", "npm:0.4.0"],\
+            ["combined-stream", "npm:1.0.8"],\
+            ["es-set-tostringtag", "npm:2.1.0"],\
+            ["hasown", "npm:2.0.2"],\
+            ["mime-types", "npm:2.1.35"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:4.0.5", {\
+          "packageLocation": "./.yarn/cache/form-data-npm-4.0.5-c35fce815a-af8328413c.zip/node_modules/form-data/",\
+          "packageDependencies": [\
+            ["form-data", "npm:4.0.5"],\
             ["asynckit", "npm:0.4.0"],\
             ["combined-stream", "npm:1.0.8"],\
             ["es-set-tostringtag", "npm:2.1.0"],\

@@ -207,4 +207,44 @@ describe('UserProjectsCard', () => {
     // Other status (Paused) should show the actual status
     expect(screen.getByText('Paused')).toBeInTheDocument();
   });
+
+  it('renders project without link when project type is unknown', () => {
+    // Use type assertion to test unknown project type case
+    const projectWithUnknownType = {
+      id: 'unknown-project',
+      title: 'Unknown Type Project',
+      projectType: 'Unknown Project Type' as any,
+      status: 'Active',
+    };
+
+    render(<UserProjectsCard projects={[projectWithUnknownType]} />);
+
+    // Should render the title but not as a link
+    expect(screen.getByText('Unknown Type Project')).toBeInTheDocument();
+    
+    // Should not have a link (should be a span, not an anchor)
+    const projectElement = screen.getByText('Unknown Type Project');
+    expect(projectElement.tagName).toBe('SPAN');
+    expect(projectElement).not.toHaveAttribute('href');
+  });
+
+  it('renders fallback status badge for statuses that are not Active, Completed, or Closed', () => {
+    const projectWithOtherStatus: UserProjectMembership[] = [
+      {
+        id: 'other-status-project',
+        title: 'Other Status Project',
+        projectType: 'Discovery Project',
+        status: 'On Hold',
+      },
+    ];
+
+    render(<UserProjectsCard projects={projectWithOtherStatus} />);
+
+    // Should show the actual status text
+    expect(screen.getByText('On Hold')).toBeInTheDocument();
+    
+    // Should not show "Active" or "Complete"
+    expect(screen.queryByText('Active')).not.toBeInTheDocument();
+    expect(screen.queryByText('Complete')).not.toBeInTheDocument();
+  });
 });

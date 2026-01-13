@@ -213,7 +213,8 @@ describe('UserProjectsCard', () => {
     const projectWithUnknownType = {
       id: 'unknown-project',
       title: 'Unknown Type Project',
-      projectType: 'Unknown Project Type' as any,
+      projectType:
+        'Unknown Project Type' as unknown as UserProjectMembership['projectType'],
       status: 'Active',
     };
 
@@ -221,7 +222,7 @@ describe('UserProjectsCard', () => {
 
     // Should render the title but not as a link
     expect(screen.getByText('Unknown Type Project')).toBeInTheDocument();
-    
+
     // Should not have a link (should be a span, not an anchor)
     const projectElement = screen.getByText('Unknown Type Project');
     expect(projectElement.tagName).toBe('SPAN');
@@ -242,7 +243,7 @@ describe('UserProjectsCard', () => {
 
     // Should show the actual status text
     expect(screen.getByText('On Hold')).toBeInTheDocument();
-    
+
     // Should not show "Active" or "Complete"
     expect(screen.queryByText('Active')).not.toBeInTheDocument();
     expect(screen.queryByText('Complete')).not.toBeInTheDocument();

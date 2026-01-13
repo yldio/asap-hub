@@ -13,6 +13,181 @@ export const PROJECT_END_DATE_WARNING =
 export const PROJECT_RESOURCE_TYPE_WARNING =
   'Resource Projects require a Resource Type';
 
+interface ValidationResult {
+  warning: string | null;
+  isInvalid: boolean;
+}
+
+const validateResearchTheme = (
+  teamType: string | null,
+  researchTheme: string | null,
+): ValidationResult => {
+  if (teamType === 'Discovery Team' && !researchTheme) {
+    return {
+      warning: TEAM_RESEARCH_THEME_WARNING,
+      isInvalid: true,
+    };
+  }
+  return { warning: null, isInvalid: false };
+};
+
+const validateEndDate = (
+  status: string | null,
+  endDate: string | null,
+): ValidationResult => {
+  if ((status === 'Closed' || status === 'Completed') && !endDate) {
+    return {
+      warning: PROJECT_END_DATE_WARNING,
+      isInvalid: true,
+    };
+  }
+  return { warning: null, isInvalid: false };
+};
+
+const validateResourceType = (
+  projectType: string | null,
+  resourceType: string | null,
+): ValidationResult => {
+  if (projectType === 'Resource Project' && !resourceType) {
+    return {
+      warning: PROJECT_RESOURCE_TYPE_WARNING,
+      isInvalid: true,
+    };
+  }
+  return { warning: null, isInvalid: false };
+};
+
+const getFieldValidation = (
+  contentTypeId: string,
+  fieldId: string,
+  entry: ReturnType<typeof getEntry>,
+): ValidationResult => {
+  if (contentTypeId === 'teams' && fieldId === 'researchTheme') {
+    return validateResearchTheme(
+      entry.fields.teamType,
+      entry.fields.researchTheme,
+    );
+  }
+
+  if (contentTypeId === 'projects' && fieldId === 'endDate') {
+    return validateEndDate(entry.fields.status, entry.fields.endDate);
+  }
+
+  if (contentTypeId === 'projects' && fieldId === 'resourceType') {
+    return validateResourceType(
+      entry.fields.projectType,
+      entry.fields.resourceType,
+    );
+  }
+
+  return { warning: null, isInvalid: false };
+};
+
+const getDatePickerElement = (): Element | null => {
+  return (
+    document.querySelector('[data-test-id="date-picker"]') ||
+    document.querySelector('[role="dialog"]') ||
+    document.querySelector('.cf-date-picker-popper') ||
+    document.querySelector('[data-radix-popper-content-wrapper]')
+  );
+};
+
+const getEntryLinkMenuElement = (): Element | null => {
+  return (
+    document.querySelector('[role="menu"]') ||
+    document.querySelector('[role="listbox"]') ||
+    document.querySelector('[data-radix-popper-content-wrapper]') ||
+    document.querySelector('.cf-ui-dropdown') ||
+    document.querySelector('[class*="Dropdown"]') ||
+    document.querySelector('[class*="Menu"]') ||
+    document.querySelector('[class*="Popover"]')
+  );
+};
+
+const isElementVisible = (element: Element): boolean => {
+  const ariaHidden = element.getAttribute('aria-hidden');
+  const dataState = element.getAttribute('data-state');
+  const style = window.getComputedStyle(element);
+  const isVisible =
+    style.display !== 'none' &&
+    style.visibility !== 'hidden' &&
+    style.opacity !== '0';
+
+  return (
+    ariaHidden === 'false' ||
+    dataState === 'open' ||
+    (ariaHidden === null && dataState === null && isVisible)
+  );
+};
+
+const isDatePickerOpen = (): boolean => {
+  const picker = getDatePickerElement();
+  return picker ? isElementVisible(picker) : false;
+};
+
+const isEntryLinkMenuOpen = (): boolean => {
+  const menu = getEntryLinkMenuElement();
+  return menu ? isElementVisible(menu) : false;
+};
+
+const createHeightManager = (
+  sdk: FieldAppSDK,
+  isDateField: boolean,
+  isEntryLinkField: boolean,
+  warning: string | null,
+) => {
+  const compactHeight = warning ? 120 : isDateField ? 40 : 80;
+  const expandedHeight = isDateField ? 370 : 110;
+
+  let isMenuCurrentlyOpen = false;
+
+  const updateHeight = (isOpen: boolean) => {
+    if (isOpen !== isMenuCurrentlyOpen) {
+      isMenuCurrentlyOpen = isOpen;
+      sdk.window.updateHeight(isOpen ? expandedHeight : compactHeight);
+    }
+  };
+
+  const checkMenuState = () => {
+    const isOpen = isDateField ? isDatePickerOpen() : isEntryLinkMenuOpen();
+    updateHeight(isOpen);
+  };
+
+  const handleDocumentClick = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+
+    if (isDateField) {
+      const picker = getDatePickerElement();
+      const dateButton = target.closest(
+        '[data-test-id="cf-ui-datepicker-button"]',
+      );
+
+      if (picker && !picker.contains(target) && !dateButton) {
+        setTimeout(() => {
+          if (isMenuCurrentlyOpen) {
+            updateHeight(false);
+          }
+        }, 100);
+      }
+    } else if (isEntryLinkField) {
+      const menu = getEntryLinkMenuElement();
+      const triggerButton =
+        target.closest('[aria-haspopup="true"]') ||
+        target.closest('button[aria-expanded]');
+
+      if (menu && !menu.contains(target) && !triggerButton) {
+        setTimeout(() => {
+          if (isMenuCurrentlyOpen) {
+            updateHeight(false);
+          }
+        }, 100);
+      }
+    }
+  };
+
+  return { checkMenuState, handleDocumentClick, compactHeight };
+};
+
 const Field = () => {
   const sdk = useSDK<FieldAppSDK>();
   const [warning, setWarning] = useState<string | null>(null);
@@ -22,38 +197,11 @@ const Field = () => {
     const contentTypeId = sdk.contentType.sys.id;
     const fieldId = sdk.field.id;
 
-    let newWarning: string | null = null;
-    let isInvalid = false;
-
-    if (contentTypeId === 'teams' && fieldId === 'researchTheme') {
-      const teamType = entry.fields.teamType;
-      const researchTheme = entry.fields.researchTheme;
-
-      if (teamType === 'Discovery Team' && !researchTheme) {
-        newWarning = TEAM_RESEARCH_THEME_WARNING;
-        isInvalid = true;
-      }
-    }
-
-    if (contentTypeId === 'projects' && fieldId === 'endDate') {
-      const status = entry.fields.status;
-      const endDate = entry.fields.endDate;
-
-      if ((status === 'Closed' || status === 'Completed') && !endDate) {
-        newWarning = PROJECT_END_DATE_WARNING;
-        isInvalid = true;
-      }
-    }
-
-    if (contentTypeId === 'projects' && fieldId === 'resourceType') {
-      const projectType = entry.fields.projectType;
-      const resourceType = entry.fields.resourceType;
-
-      if (projectType === 'Resource Project' && !resourceType) {
-        newWarning = PROJECT_RESOURCE_TYPE_WARNING;
-        isInvalid = true;
-      }
-    }
+    const { warning: newWarning, isInvalid } = getFieldValidation(
+      contentTypeId,
+      fieldId,
+      entry,
+    );
 
     setWarning(newWarning);
     sdk.field.setInvalid(isInvalid);
@@ -63,7 +211,7 @@ const Field = () => {
     if (warning) {
       sdk.notifier.error(warning);
     }
-  }, [warning]);
+  }, [sdk.notifier, warning]);
 
   useEffect(() => {
     const unsubscribe = onEntryChanged(sdk, validateField);
@@ -71,7 +219,6 @@ const Field = () => {
     return unsubscribe;
   }, [sdk, validateField]);
 
-  // Dynamic height management for date picker and entry reference editor
   useEffect(() => {
     const fieldType = sdk.field.type;
     const isDateField = fieldType === 'Date';
@@ -80,126 +227,18 @@ const Field = () => {
       'linkType' in sdk.field &&
       sdk.field.linkType === 'Entry';
 
-    // Use auto resizer for other field types
     if (!isDateField && !isEntryLinkField) {
       sdk.window.startAutoResizer();
       return () => sdk.window.stopAutoResizer();
     }
 
-    // Set initial compact height
-    const compactHeight = warning ? 120 : isDateField ? 40 : 80;
-    const expandedHeight = isDateField ? 370 : 110; // Adjust for entry reference menu
+    const { checkMenuState, handleDocumentClick, compactHeight } =
+      createHeightManager(sdk, isDateField, isEntryLinkField, warning);
 
     sdk.window.updateHeight(compactHeight);
-    let isMenuCurrentlyOpen = false;
 
-    // Watch for menu/picker opening/closing
-    const observer = new MutationObserver(() => {
-      let isMenuOpen = false;
+    const observer = new MutationObserver(checkMenuState);
 
-      if (isDateField) {
-        // Date picker detection
-        const picker =
-          document.querySelector('[data-test-id="date-picker"]') ||
-          document.querySelector('[role="dialog"]') ||
-          document.querySelector('.cf-date-picker-popper') ||
-          document.querySelector('[data-radix-popper-content-wrapper]');
-
-        if (picker) {
-          const ariaHidden = picker.getAttribute('aria-hidden');
-          const dataState = picker.getAttribute('data-state');
-          const style = window.getComputedStyle(picker);
-          const isVisible =
-            style.display !== 'none' && style.visibility !== 'hidden';
-
-          isMenuOpen =
-            ariaHidden === 'false' ||
-            dataState === 'open' ||
-            (ariaHidden === null && dataState === null && isVisible);
-        }
-      } else if (isEntryLinkField) {
-        // Entry reference editor menu detection
-        // Look for dropdown menus, popovers, or action menus
-        const menu =
-          document.querySelector('[role="menu"]') ||
-          document.querySelector('[role="listbox"]') ||
-          document.querySelector('[data-radix-popper-content-wrapper]') ||
-          document.querySelector('.cf-ui-dropdown') ||
-          document.querySelector('[class*="Dropdown"]') ||
-          document.querySelector('[class*="Menu"]') ||
-          document.querySelector('[class*="Popover"]');
-
-        if (menu) {
-          const ariaHidden = menu.getAttribute('aria-hidden');
-          const dataState = menu.getAttribute('data-state');
-          const style = window.getComputedStyle(menu);
-          const isVisible =
-            style.display !== 'none' &&
-            style.visibility !== 'hidden' &&
-            style.opacity !== '0';
-
-          isMenuOpen =
-            ariaHidden === 'false' ||
-            dataState === 'open' ||
-            (ariaHidden === null && dataState === null && isVisible);
-        }
-      }
-
-      // Only update if state changed
-      if (isMenuOpen !== isMenuCurrentlyOpen) {
-        isMenuCurrentlyOpen = isMenuOpen;
-        const newHeight = isMenuOpen ? expandedHeight : compactHeight;
-        sdk.window.updateHeight(newHeight);
-      }
-    });
-
-    // Handle clicks outside to close menu
-    const handleDocumentClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-
-      if (isDateField) {
-        const picker =
-          document.querySelector('[data-test-id="date-picker"]') ||
-          document.querySelector('[role="dialog"]') ||
-          document.querySelector('.cf-date-picker-popper') ||
-          document.querySelector('[data-radix-popper-content-wrapper]');
-
-        const dateButton = target.closest(
-          '[data-test-id="cf-ui-datepicker-button"]',
-        );
-
-        if (picker && !picker.contains(target) && !dateButton) {
-          setTimeout(() => {
-            if (isMenuCurrentlyOpen) {
-              isMenuCurrentlyOpen = false;
-              sdk.window.updateHeight(compactHeight);
-            }
-          }, 100);
-        }
-      } else if (isEntryLinkField) {
-        // Check if click is outside the menu and not on a trigger button
-        const menu =
-          document.querySelector('[role="menu"]') ||
-          document.querySelector('[role="listbox"]') ||
-          document.querySelector('[data-radix-popper-content-wrapper]') ||
-          document.querySelector('.cf-ui-dropdown');
-
-        const triggerButton =
-          target.closest('[aria-haspopup="true"]') ||
-          target.closest('button[aria-expanded]');
-
-        if (menu && !menu.contains(target) && !triggerButton) {
-          setTimeout(() => {
-            if (isMenuCurrentlyOpen) {
-              isMenuCurrentlyOpen = false;
-              sdk.window.updateHeight(compactHeight);
-            }
-          }, 100);
-        }
-      }
-    };
-
-    // Observe the entire document for changes
     observer.observe(document.body, {
       attributes: true,
       childList: true,

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Project } from '@asap-hub/model';
-import { projects } from '@asap-hub/routing';
+import { projects as projectRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Card, Paragraph, Link, Button } from '../atoms';
+import { fern } from '../colors';
 import { rem } from '../pixels';
 
 const MAX_PROJECTS = 6;
@@ -38,11 +39,15 @@ const tableStyles = css({
 const tableHeaderStyles = css({
   textAlign: 'left',
   padding: `${rem(12)} ${rem(16)}`,
-  fontSize: '0.875rem',
-  fontWeight: 'bold',
-  color: '#2B388F',
+  fontSize: '17px',
+  fontFamily: 'Roboto',
+  fontStyle: 'normal',
+  fontWeight: 700,
+  lineHeight: '24px',
+  letterSpacing: '0.1px',
+  color: '#00202C',
+  fontFeatureSettings: "'liga' off, 'clig' off",
   borderBottom: '1px solid #D6D6D6',
-  backgroundColor: '#F8F8F8',
 });
 
 const tableCellStyles = css({
@@ -80,6 +85,7 @@ const activeBadgeStyles = css({
   fontStyle: 'normal',
   fontWeight: 400,
   lineHeight: '16px',
+  height: '24px',
 });
 
 const completeBadgeStyles = css({
@@ -96,11 +102,36 @@ const completeBadgeStyles = css({
   fontStyle: 'normal',
   fontWeight: 400,
   lineHeight: '16px',
+  height: '24px',
+  maxWidth: '77px',
 });
 
 const showMoreButtonStyles = css({
-  marginTop: rem(24),
-  textAlign: 'center',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  fontWeight: 'normal',
+  color: fern.rgba,
+  paddingTop: rem(24),
+  paddingBottom: rem(24),
+
+  textDecoration: 'none',
+
+  ':hover': {
+    textDecoration: 'none',
+  },
+});
+
+const showMoreButtonTextStyles = css({
+  height: rem(24),
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(4),
+});
+
+const arrowIconStyles = css({
+  alignSelf: 'start',
 });
 
 type UserProjectsCardProps = {
@@ -112,12 +143,12 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
 
   const getProjectRoute = (project: Project) => {
     if (project.projectType === 'Discovery Project') {
-      return projects({})
+      return projectRoutes({})
         .discoveryProjects({})
         .discoveryProject({ projectId: project.id }).$;
     }
     if (project.projectType === 'Resource Project') {
-      return projects({})
+      return projectRoutes({})
         .resourceProjects({})
         .resourceProject({ projectId: project.id }).$;
     }
@@ -194,14 +225,15 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
         </table>
 
         {hasMoreProjects && (
-          <div css={showMoreButtonStyles}>
-            <Button
-              linkStyle
-              onClick={() => setShowMore(!showMore)}
-            >
-              View {showMore ? 'Less' : 'More'} Projects
-            </Button>
-          </div>
+          <Button
+            linkStyle
+            onClick={() => setShowMore(!showMore)}
+            overrideStyles={showMoreButtonStyles}
+          >
+            <span css={showMoreButtonTextStyles}>
+              {showMore ? `Show less ↑` : `Show more ↓`}
+            </span>
+          </Button>
         )}
       </div>
     </Card>

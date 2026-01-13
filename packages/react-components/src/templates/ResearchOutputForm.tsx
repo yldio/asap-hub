@@ -14,7 +14,7 @@ import { ResearchOutputPermissions } from '@asap-hub/react-context';
 import { network, sharedResearch } from '@asap-hub/routing';
 import equal from 'fast-deep-equal';
 import React, { ComponentProps, useEffect, useState } from 'react';
-import { useMatch } from 'react-router-dom';
+import { useMatch, useNavigate } from 'react-router-dom';
 
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
@@ -183,6 +183,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   versionAction,
   isImportedFromManuscript,
 }) => {
+  const navigate = useNavigate();
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
   const showSaveDraftButton =
@@ -477,11 +478,18 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                     researchOutputId: id,
                   })
                   .researchOutputPublished({}).$;
-                setRedirectOnSave(
+
+                const redirectPath =
                   (!published || versionAction === 'create') && !draftSave
                     ? publishPath
-                    : savePath,
-                );
+                    : savePath;
+
+                setRedirectOnSave(redirectPath);
+
+                // Force navigation immediately to prevent React 18 batching from
+                // letting useNavigationWarning cleanup interfere with the redirect.
+                // See https://asaphub.atlassian.net/browse/ASAP-1319
+                navigate(redirectPath);
               }
               return researchOutput;
             })();

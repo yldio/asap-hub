@@ -1,5 +1,5 @@
 import { FieldAppSDK } from '@contentful/app-sdk';
-import { useSDK, useAutoResizer } from '@contentful/react-apps-toolkit';
+import { useSDK } from '@contentful/react-apps-toolkit';
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
@@ -12,7 +12,6 @@ import Field, {
 
 jest.mock('@contentful/react-apps-toolkit', () => ({
   useSDK: jest.fn(),
-  useAutoResizer: jest.fn(),
 }));
 
 jest.mock('@contentful/field-editor-date', () => ({
@@ -34,7 +33,6 @@ const createMockField = (getValue: () => unknown) => {
     getValue: jest.fn(getValue),
     onValueChanged: jest.fn((cb: () => void) => {
       callback = cb;
-      // Immediately invoke callback to simulate initial state
       setTimeout(() => callback?.(), 0);
       return unsubscribeFn;
     }),
@@ -42,7 +40,11 @@ const createMockField = (getValue: () => unknown) => {
   };
 };
 
-const mockBaseSdk = (contentTypeId: string, fieldId: string) => {
+const mockBaseSdk = (
+  contentTypeId: string,
+  fieldId: string,
+  fieldType: 'Date' | 'Link' = 'Link',
+) => {
   const fields: Record<string, ReturnType<typeof createMockField>> = {
     teamType: createMockField(() => null),
     researchTheme: createMockField(() => null),
@@ -52,7 +54,6 @@ const mockBaseSdk = (contentTypeId: string, fieldId: string) => {
     resourceType: createMockField(() => null),
   };
 
-  // Add id to each field
   Object.keys(fields).forEach((key) => {
     fields[key].id = key;
   });
@@ -60,8 +61,8 @@ const mockBaseSdk = (contentTypeId: string, fieldId: string) => {
   return {
     field: {
       id: fieldId,
-      type: fieldId === 'endDate' ? 'Date' : 'Link',
-      linkType: fieldId === 'endDate' ? undefined : 'Entry',
+      type: fieldType,
+      linkType: fieldType === 'Date' ? undefined : 'Entry',
       setValue: jest.fn(),
       getValue: jest.fn(() => null),
       setInvalid: jest.fn(),
@@ -86,6 +87,11 @@ const mockBaseSdk = (contentTypeId: string, fieldId: string) => {
     notifier: {
       error: jest.fn(),
     },
+    window: {
+      updateHeight: jest.fn(),
+      startAutoResizer: jest.fn(),
+      stopAutoResizer: jest.fn(),
+    },
   };
 };
 
@@ -94,16 +100,49 @@ describe('Field component', () => {
     jest.clearAllMocks();
   });
 
-  it('enables automatic resizing', async () => {
-    const sdk = mockBaseSdk(
-      'teams',
-      'researchTheme',
-    ) as unknown as jest.Mocked<FieldAppSDK>;
-    (useSDK as jest.Mock).mockReturnValue(sdk);
+  describe('height management', () => {
+    it('uses auto resizer for non-date fields', async () => {
+      const sdk = mockBaseSdk(
+        'teams',
+        'researchTheme',
+        'Link',
+      ) as unknown as jest.Mocked<FieldAppSDK>;
+      (useSDK as jest.Mock).mockReturnValue(sdk);
 
-    render(<Field />);
-    await waitFor(() => {
-      expect(useAutoResizer).toHaveBeenCalled();
+      render(<Field />);
+      await waitFor(() => {
+        expect(sdk.window.startAutoResizer).toHaveBeenCalled();
+      });
+    });
+
+    it('sets initial compact height for date fields', async () => {
+      const sdk = mockBaseSdk(
+        'projects',
+        'endDate',
+        'Date',
+      ) as unknown as jest.Mocked<FieldAppSDK>;
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+      await waitFor(() => {
+        expect(sdk.window.updateHeight).toHaveBeenCalledWith(40);
+      });
+    });
+
+    it('sets adjusted height for date fields with warning', async () => {
+      const sdk = mockBaseSdk(
+        'projects',
+        'endDate',
+        'Date',
+      ) as unknown as jest.Mocked<FieldAppSDK>;
+      (sdk.entry.fields.status as any).getValue = jest.fn(() => 'Closed');
+      (sdk.entry.fields.endDate as any).getValue = jest.fn(() => null);
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+      await waitFor(() => {
+        expect(sdk.window.updateHeight).toHaveBeenCalledWith(120);
+      });
     });
   });
 
@@ -126,7 +165,7 @@ describe('Field component', () => {
         ).toBeInTheDocument();
         expect(sdk.field.setInvalid).toHaveBeenCalledWith(true);
         expect(sdk.notifier.error).toHaveBeenCalledWith(
-          'Please fill in the required field',
+          TEAM_RESEARCH_THEME_WARNING,
         );
       });
     });
@@ -168,6 +207,7 @@ describe('Field component', () => {
         const sdk = mockBaseSdk(
           'projects',
           'endDate',
+          'Date',
         ) as unknown as jest.Mocked<FieldAppSDK>;
         (sdk.entry.fields.status as any).getValue = jest.fn(() => status);
         (sdk.entry.fields.endDate as any).getValue = jest.fn(() => null);

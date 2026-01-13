@@ -18,10 +18,10 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
     'email' | 'contactEmail' | 'displayName' | 'alumniSinceDate'
   > &
   ComponentProps<typeof UserProfileRole> & {
-  userProfileGroupsCard?: ReactNode;
-  userProfileProjectsCard?: ReactNode;
-  userProfileWorkingGroupsCard?: ReactNode;
-  userProfileTeamsCard?: ReactNode;
+    userProfileGroupsCard?: ReactNode;
+    userProfileProjectsCard?: ReactNode;
+    userProfileWorkingGroupsCard?: ReactNode;
+    userProfileTeamsCard?: ReactNode;
     editExpertiseAndResourcesHref?: string;
     editQuestionsHref?: string;
     editRoleHref?: string;

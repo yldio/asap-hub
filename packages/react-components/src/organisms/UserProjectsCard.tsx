@@ -1,34 +1,16 @@
 import React, { useState } from 'react';
-import { Project } from '@asap-hub/model';
+import { UserProjectMembership } from '@asap-hub/model';
 import { projects as projectRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
-import { Card, Paragraph, Link, Button } from '../atoms';
+import { Card, Paragraph, Button, Headline2, Anchor } from '../atoms';
 import { fern } from '../colors';
 import { rem } from '../pixels';
 
 const MAX_PROJECTS = 6;
 
-const containerStyles = css({
-  padding: `${rem(32)} ${rem(24)}`,
-});
-
 const headerStyles = css({
   marginBottom: rem(24),
-});
-
-const titleStyles = css({
-  fontSize: '1.25rem',
-  fontWeight: 'bold',
-  margin: 0,
-  marginBottom: rem(8),
-});
-
-const subtitleStyles = css({
-  color: '#708090',
-  fontSize: '0.875rem',
-  margin: 0,
-  lineHeight: 1.4,
 });
 
 const tableStyles = css({
@@ -38,7 +20,6 @@ const tableStyles = css({
 
 const tableHeaderStyles = css({
   textAlign: 'left',
-  padding: `${rem(12)} ${rem(16)}`,
   fontSize: '17px',
   fontFamily: 'Roboto',
   fontStyle: 'normal',
@@ -47,11 +28,10 @@ const tableHeaderStyles = css({
   letterSpacing: '0.1px',
   color: '#00202C',
   fontFeatureSettings: "'liga' off, 'clig' off",
-  borderBottom: '1px solid #D6D6D6',
 });
 
 const tableCellStyles = css({
-  padding: `${rem(16)}`,
+  padding: `${rem(16)} 0`,
   borderBottom: '1px solid #E5E5E5',
   verticalAlign: 'top',
 });
@@ -59,7 +39,7 @@ const tableCellStyles = css({
 const projectNameStyles = css({
   fontSize: '1rem',
   fontWeight: '500',
-  color: '#2B388F',
+  color: fern.rgb,
   textDecoration: 'none',
   '&:hover': {
     textDecoration: 'underline',
@@ -130,18 +110,14 @@ const showMoreButtonTextStyles = css({
   gap: rem(4),
 });
 
-const arrowIconStyles = css({
-  alignSelf: 'start',
-});
-
 type UserProjectsCardProps = {
-  projects: Project[];
+  projects: UserProjectMembership[];
 };
 
 const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
   const [showMore, setShowMore] = useState(false);
 
-  const getProjectRoute = (project: Project) => {
+  const getProjectRoute = (project: UserProjectMembership) => {
     if (project.projectType === 'Discovery Project') {
       return projectRoutes({})
         .discoveryProjects({})
@@ -152,7 +128,12 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
         .resourceProjects({})
         .resourceProject({ projectId: project.id }).$;
     }
-    // Trainee projects don't have individual pages
+    if (project.projectType === 'Trainee Project') {
+      return projectRoutes({})
+        .traineeProjects({})
+        .traineeProject({ projectId: project.id }).$;
+    }
+    // Unknown project type
     return undefined;
   };
 
@@ -162,80 +143,82 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
   if (projects.length === 0) {
     return (
       <Card>
-          <div css={headerStyles}>
-            <h3 css={titleStyles}>Projects</h3>
-          </div>
-          <Paragraph accent="lead">
-            This user is not currently assigned to any projects.
-          </Paragraph>
+        <div css={headerStyles}>
+          <Headline2 styleAsHeading={3}>Projects</Headline2>
+        </div>
+        <Paragraph accent="lead">
+          This user is not currently assigned to any projects.
+        </Paragraph>
       </Card>
     );
   }
 
   return (
     <Card>
-      <div css={containerStyles}>
-        <div css={headerStyles}>
-          <h3 css={titleStyles}>Projects</h3>
-          <p css={subtitleStyles}>
-            Explore all projects this user has contributed to.
-          </p>
-        </div>
-
-        <table css={tableStyles}>
-          <thead>
-            <tr>
-              <th css={tableHeaderStyles}>Project Name</th>
-              <th css={tableHeaderStyles}>Type</th>
-              <th css={tableHeaderStyles}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayProjects.map((project) => {
-              const projectRoute = getProjectRoute(project);
-              const isActive = project.status === 'Active';
-              const isCompleted = project.status === 'Completed' || project.status === 'Closed';
-
-              return (
-                <tr key={project.id}>
-                  <td css={tableCellStyles}>
-                    {projectRoute ? (
-                      <Link href={projectRoute} css={projectNameStyles}>
-                        {project.title}
-                      </Link>
-                    ) : (
-                      <span css={projectNameStyles}>{project.title}</span>
-                    )}
-                  </td>
-                  <td css={tableCellStyles}>
-                    <span css={typeLabelStyles}>{project.projectType}</span>
-                  </td>
-                  <td css={tableCellStyles}>
-                    {isActive && (
-                      <span css={activeBadgeStyles}>Active</span>
-                    )}
-                    {isCompleted && (
-                      <span css={completeBadgeStyles}>Complete</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-
-        {hasMoreProjects && (
-          <Button
-            linkStyle
-            onClick={() => setShowMore(!showMore)}
-            overrideStyles={showMoreButtonStyles}
-          >
-            <span css={showMoreButtonTextStyles}>
-              {showMore ? `Show less ↑` : `Show more ↓`}
-            </span>
-          </Button>
-        )}
+      <div css={headerStyles}>
+        <Headline2 styleAsHeading={3}>Projects</Headline2>
+        <Paragraph accent="lead">
+          Explore all projects this user has contributed to.
+        </Paragraph>
       </div>
+
+      <table css={tableStyles}>
+        <thead>
+          <tr>
+            <th css={tableHeaderStyles}>Project Name</th>
+            <th css={tableHeaderStyles}>Type</th>
+            <th css={tableHeaderStyles}>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {displayProjects.map((project) => {
+            const projectRoute = getProjectRoute(project);
+            const isActive = project.status === 'Active';
+            const isCompleted =
+              project.status === 'Completed' || project.status === 'Closed';
+
+            return (
+              <tr key={project.id}>
+                <td css={tableCellStyles}>
+                  {projectRoute ? (
+                    <Anchor href={projectRoute} css={projectNameStyles}>
+                      {project.title}
+                    </Anchor>
+                  ) : (
+                    <span css={projectNameStyles}>{project.title}</span>
+                  )}
+                </td>
+                <td css={tableCellStyles}>
+                  <span css={typeLabelStyles}>{project.projectType}</span>
+                </td>
+                <td css={tableCellStyles}>
+                  {isActive && (
+                    <span css={activeBadgeStyles}>{project.status}</span>
+                  )}
+                  {isCompleted && (
+                    <span css={completeBadgeStyles}>Complete</span>
+                  )}
+                  {!isActive && !isCompleted && (
+                    <span css={completeBadgeStyles}>{project.status}</span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      {hasMoreProjects && (
+        <Button
+          linkStyle
+          onClick={() => setShowMore(!showMore)}
+          overrideStyles={showMoreButtonStyles}
+        >
+          <span css={showMoreButtonTextStyles}>
+            {showMore ? 'Show less ↑' : 'Show more ↓'}
+          </span>
+        </Button>
+      )}
     </Card>
   );
 };

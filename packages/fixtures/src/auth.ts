@@ -36,11 +36,13 @@ export const createAuthUser = (): User => ({
       id: 'project-id-1',
       title: 'Discovery Project Alpha',
       projectType: 'Discovery Project',
+      status: 'Active',
     },
     {
       id: 'project-id-2',
       title: 'Trainee Project Beta',
       projectType: 'Trainee Project',
+      status: 'Active',
     },
   ],
   role: 'Grantee',

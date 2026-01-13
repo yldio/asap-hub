@@ -263,16 +263,19 @@ describe('User projects in navigation', () => {
         id: 'discovery-project-1',
         title: 'My Discovery Project',
         projectType: 'Discovery Project' as const,
+        status: 'Active',
       },
       {
         id: 'resource-project-1',
         title: 'My Resource Project',
         projectType: 'Resource Project' as const,
+        status: 'Active',
       },
       {
         id: 'trainee-project-1',
         title: 'My Trainee Project',
         projectType: 'Trainee Project' as const,
+        status: 'Active',
       },
     ],
   };

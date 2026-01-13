@@ -1,5 +1,4 @@
 import {
-  GetListOptions,
   ListProjectResponse,
   ProjectDetail,
   ProjectResponse,
@@ -15,7 +14,6 @@ import { useAlgolia } from '../hooks/algolia';
 import {
   getProject,
   getProjects,
-  getProjectsByUserId,
   ProjectListOptions,
   toListProjectResponse,
 } from './api';
@@ -122,47 +120,3 @@ export const useProjects = (options: ProjectListOptions) => {
 // No need to reset since list data doesn't pollute this cache
 export const useProjectById = (id: string) =>
   useRecoilState(projectState(id))[0];
-
-const fetchProjectsByUserIdState = selectorFamily<
-  ListProjectResponse | Error | undefined,
-  { userId: string; options?: GetListOptions }
->({
-  key: 'fetchProjectsByUserId',
-  get:
-    ({ userId, options }) =>
-    async ({ get }) => {
-      const authorization = get(authorizationState);
-      try {
-        return await getProjectsByUserId(userId, authorization, options);
-      } catch (error) {
-        return error as Error;
-      }
-    },
-});
-
-const projectsByUserIdState = atomFamily<
-  ListProjectResponse | Error | undefined,
-  { userId: string; options?: GetListOptions }
->({
-  key: 'projectsByUserId',
-  default: fetchProjectsByUserIdState,
-});
-
-export const useProjectsByUserId = (
-  userId: string,
-  options: GetListOptions = {},
-) => {
-  const [projects, setProjects] = useRecoilState(
-    projectsByUserIdState({ userId, options }),
-  );
-
-  if (projects === undefined) {
-    throw fetchProjectsByUserIdState({ userId, options });
-  }
-
-  if (projects instanceof Error) {
-    throw projects;
-  }
-
-  return projects;
-};

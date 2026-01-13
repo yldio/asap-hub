@@ -62,6 +62,7 @@ export interface UserProjectMembership {
   id: string;
   title: string;
   projectType: ProjectType;
+  status: string;
 }
 
 export interface UserSocialLinks {

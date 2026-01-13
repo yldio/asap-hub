@@ -83,6 +83,7 @@ export const usersContentQueryFragment = gql`
                       }
                       title
                       projectType
+                      status
                       proposal {
                         sys {
                           id
@@ -210,6 +211,7 @@ export const usersContentQueryFragment = gql`
                 }
                 title
                 projectType
+                status
               }
             }
           }

@@ -110,34 +110,3 @@ export const getProject = async (
   }
   return resp.json();
 };
-
-export const getProjectsByUserId = async (
-  userId: string,
-  authorization: string,
-  options: GetListOptions = {},
-): Promise<ListProjectResponse> => {
-  const { currentPage = 0, pageSize = 10, searchQuery } = options;
-  const params = new URLSearchParams({
-    take: pageSize.toString(),
-    skip: (currentPage * pageSize).toString(),
-  });
-  if (searchQuery) {
-    params.set('search', searchQuery);
-  }
-
-  const resp = await fetch(
-    `${API_BASE_URL}/users/${userId}/projects?${params.toString()}`,
-    {
-      headers: { authorization, ...createSentryHeaders() },
-    },
-  );
-
-  if (!resp.ok) {
-    throw new BackendError(
-      `Failed to fetch projects for user ${userId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-      await resp.json().catch(() => undefined),
-      resp.status,
-    );
-  }
-  return resp.json();
-};

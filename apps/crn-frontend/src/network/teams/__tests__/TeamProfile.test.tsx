@@ -203,7 +203,8 @@ it('renders the header info', async () => {
     ...createTeamResponse(),
     displayName: 'Bla',
   });
-  expect(screen.getByText(/Team.+Bla/i)).toBeVisible();
+  const header = await screen.findByText(/Team.+Bla/i, {}, { timeout: 5000 });
+  expect(header).toBeVisible();
 });
 
 it('renders the about info', async () => {
@@ -211,7 +212,12 @@ it('renders the about info', async () => {
     ...createTeamResponse(),
     teamDescription: 'This is the team description',
   });
-  expect(screen.getAllByText('This is the team description')[0]).toBeVisible();
+  const description = await screen.findByText(
+    'This is the team description',
+    {},
+    { timeout: 5000 },
+  );
+  expect(description).toBeVisible();
 });
 
 it('navigates to the outputs tab', async () => {
@@ -289,9 +295,12 @@ it('shows workspace tab if user is not part of the team and is hub Staff', async
     },
   );
 
-  expect(
-    screen.getByText(/Team Workspace/i, { selector: 'nav *' }),
-  ).toBeVisible();
+  const workspaceTab = await screen.findByText(
+    /Team Workspace/i,
+    { selector: 'nav *' },
+    { timeout: 5000 },
+  );
+  expect(workspaceTab).toBeVisible();
 });
 
 it('navigates to the workspace tab', async () => {
@@ -719,7 +728,12 @@ describe('Create Compliance Report', () => {
 
 it('renders the 404 page for a missing team', async () => {
   await renderPage({ ...createTeamResponse(), id: '42' }, { teamId: '1337' });
-  expect(screen.getByText(/sorry.+page/i)).toBeVisible();
+  const notFound = await screen.findByText(
+    /sorry.+page/i,
+    {},
+    { timeout: 5000 },
+  );
+  expect(notFound).toBeVisible();
 });
 
 it('deep links to the teams list', async () => {

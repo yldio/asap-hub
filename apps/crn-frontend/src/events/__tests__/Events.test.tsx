@@ -3,7 +3,6 @@ import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { events } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
@@ -25,32 +24,25 @@ const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
 >;
 
-const renderEventsPage = async (pathname = events({}).$, search?: string) => {
-  const result = render(
-    <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ set, reset }) => {
-          set(refreshCalendarsState, Math.random());
-          reset(eventsState(getEventListOptions(new Date(), { past: false })));
-        }}
-      >
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname, search }]}>
-              <Routes>
-                <Route path={`${events.template}/*`} element={<Events />} />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>
-    </Suspense>,
+const renderEventsPage = (pathname = events({}).$, search?: string) =>
+  render(
+    <RecoilRoot
+      initializeState={({ set, reset }) => {
+        set(refreshCalendarsState, Math.random());
+        reset(eventsState(getEventListOptions(new Date(), { past: false })));
+      }}
+    >
+      <Auth0Provider user={{}}>
+        <WhenReady>
+          <MemoryRouter initialEntries={[{ pathname, search }]}>
+            <Routes>
+              <Route path={`${events.template}/*`} element={<Events />} />
+            </Routes>
+          </MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>
+    </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
-  return result;
-};
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -59,10 +51,10 @@ beforeEach(() => {
 describe('Events', () => {
   it('Renders the events page header', async () => {
     mockGetCalendars.mockResolvedValue(createListCalendarResponse(0));
-    await renderEventsPage();
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toEqual(
-      'Calendar and Events',
-    );
+    renderEventsPage();
+
+    const heading = await screen.findByRole('heading', { level: 1 });
+    expect(heading.textContent).toEqual('Calendar and Events');
   });
 
   describe.each`
@@ -72,15 +64,19 @@ describe('Events', () => {
   `('the events $expected page', ({ eventProperty, route, expected }) => {
     it('renders search box even without searchQuery parameter', async () => {
       // Search box is always visible for past/upcoming events pages
-      await renderEventsPage(route);
-      expect(screen.getByRole('searchbox')).toBeInTheDocument();
+      renderEventsPage(route);
+
+      const searchBox = await screen.findByRole('searchbox');
+      expect(searchBox).toBeInTheDocument();
     });
 
     it('can search for events', async () => {
-      await renderEventsPage(route);
-      const searchBox = screen.getByRole('searchbox');
+      renderEventsPage(route);
+
+      const searchBox = await screen.findByRole('searchbox');
       // Select all existing text and replace it with new text
       await userEvent.type(searchBox, '{selectall}searchterm');
+
       await waitFor(() =>
         expect(mockGetEventsFromAlgolia).toHaveBeenLastCalledWith(
           expect.anything(),
@@ -93,8 +89,9 @@ describe('Events', () => {
   describe('the events calendar page', () => {
     it('renders a google calendar iframe', async () => {
       mockGetCalendars.mockResolvedValue(createListCalendarResponse(0));
-      await renderEventsPage(events({}).calendar({}).$);
-      const calendars = screen.getByTitle('Calendar');
+      renderEventsPage(events({}).calendar({}).$);
+
+      const calendars = await screen.findByTitle('Calendar');
       expect(calendars.tagName).toBe('IFRAME');
     });
 
@@ -106,9 +103,12 @@ describe('Events', () => {
           name: `Calendar title ${index}`,
         })),
       });
-      await renderEventsPage(events({}).calendar({}).$);
-      expect(screen.getByText(/calendar title 0/i)).toBeVisible();
-      expect(screen.getByText(/calendar title 1/i)).toBeVisible();
+      renderEventsPage(events({}).calendar({}).$);
+
+      const calendar0 = await screen.findByText(/calendar title 0/i);
+      const calendar1 = await screen.findByText(/calendar title 1/i);
+      expect(calendar0).toBeVisible();
+      expect(calendar1).toBeVisible();
     });
   });
 });

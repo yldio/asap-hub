@@ -270,17 +270,19 @@ const Field = () => {
 
     if (fieldType === 'Date') {
       return (
-        <DateEditor
-          field={sdk.field}
-          parameters={{
-            instance: {
-              format: 'dateonly',
-              ampm: '24',
-            },
-            installation: {},
-            invocation: {},
-          }}
-        />
+        <div style={{ width: '100%' }}>
+          <DateEditor
+            field={sdk.field}
+            parameters={{
+              instance: {
+                format: 'dateonly',
+                ampm: '24',
+              },
+              installation: {},
+              invocation: {},
+            }}
+          />
+        </div>
       );
     }
 

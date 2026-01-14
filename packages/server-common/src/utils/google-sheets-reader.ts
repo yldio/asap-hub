@@ -12,7 +12,7 @@ export interface GoogleSheetsConfig {
   range: string;
 }
 
-export const parsePreprintSheet = async (
+export const parseComplianceSheet = async (
   sheets: sheetsV4.Sheets,
   spreadsheetId: string,
   range: string,
@@ -56,7 +56,10 @@ export const parsePreprintSheet = async (
         const header = headers[index];
         if (!header) continue;
 
-        if (header === 'Team' && (!row[index] || row[index] === '')) {
+        // Use endsWith('Team') because the Team column header can be either "Team"
+        // or prefixed (e.g. " - Team") depending on whether it appears in the first
+        // or second header row
+        if (header.endsWith('Team') && (!row[index] || row[index] === '')) {
           break;
         }
 
@@ -139,7 +142,7 @@ export const readGoogleSheetsDataLocal = async (
   range: string = 'A:Z',
 ): Promise<GoogleSheetsRow[]> => {
   const sheets = await getLocalSheetsClient();
-  return parsePreprintSheet(sheets, spreadsheetId, range);
+  return parseComplianceSheet(sheets, spreadsheetId, range);
 };
 
 /* istanbul ignore next */
@@ -148,5 +151,5 @@ export const readGoogleSheetsData = async (
   config: GoogleSheetsConfig,
 ): Promise<GoogleSheetsRow[]> => {
   const sheets = await getSheetsClient(getJWTCredentials);
-  return parsePreprintSheet(sheets, config.spreadsheetId, config.range);
+  return parseComplianceSheet(sheets, config.spreadsheetId, config.range);
 };

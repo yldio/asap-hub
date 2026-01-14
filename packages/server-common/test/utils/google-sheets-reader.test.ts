@@ -1,6 +1,6 @@
 import { sheets_v4 as sheetsV4 } from '@googleapis/sheets';
 import {
-  parsePreprintSheet,
+  parseComplianceSheet,
   extractSpreadsheetIdFromUrl,
 } from '../../src/utils/google-sheets-reader';
 
@@ -26,7 +26,7 @@ describe('Google Sheets Reader', () => {
     delete process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
   });
 
-  describe('parsePreprintSheet', () => {
+  describe('parseComplianceSheet', () => {
     const mockSpreadsheetId = 'test-spreadsheet-id';
     const mockRange = 'A1:Z100';
 
@@ -46,7 +46,7 @@ describe('Google Sheets Reader', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await parsePreprintSheet(
+      const result = await parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
@@ -86,7 +86,7 @@ describe('Google Sheets Reader', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await parsePreprintSheet(
+      const result = await parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
@@ -116,7 +116,7 @@ describe('Google Sheets Reader', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await parsePreprintSheet(
+      const result = await parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
@@ -149,7 +149,7 @@ describe('Google Sheets Reader', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await parsePreprintSheet(
+      const result = await parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
@@ -174,7 +174,7 @@ describe('Google Sheets Reader', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await parsePreprintSheet(
+      const result = await parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
@@ -203,7 +203,7 @@ describe('Google Sheets Reader', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await parsePreprintSheet(
+      const result = await parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
@@ -215,7 +215,7 @@ describe('Google Sheets Reader', () => {
       ]);
     });
 
-    it('should break when Team field is empty', async () => {
+    it('should break when Team field is empty and Team header is on the first row', async () => {
       const mockResponse = {
         data: {
           values: [
@@ -232,13 +232,41 @@ describe('Google Sheets Reader', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await parsePreprintSheet(
+      const result = await parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
       );
 
       expect(result).toEqual([{ Team: 'Team1', 'All Time - # preprints': 10 }]);
+    });
+
+    it('should break when Team field is empty and Team header is on the second row', async () => {
+      const mockResponse = {
+        data: {
+          values: [
+            ['', 'All Time'],
+            ['Team', '# publications'],
+            ['Team1', '10'],
+            ['', ''],
+            ['OUTSTANDING', '90'],
+          ],
+        },
+      };
+
+      mockSheetsClient.spreadsheets.values.get = jest
+        .fn()
+        .mockResolvedValue(mockResponse);
+
+      const result = await parseComplianceSheet(
+        mockSheetsClient,
+        mockSpreadsheetId,
+        mockRange,
+      );
+
+      expect(result).toEqual([
+        { ' - Team': 'Team1', 'All Time - # publications': 10 },
+      ]);
     });
 
     it('should skip when headers are empty', async () => {
@@ -256,7 +284,7 @@ describe('Google Sheets Reader', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await parsePreprintSheet(
+      const result = await parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
@@ -282,7 +310,7 @@ describe('Google Sheets Reader', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await parsePreprintSheet(
+      const result = await parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
@@ -302,7 +330,7 @@ describe('Google Sheets Reader', () => {
         .fn()
         .mockResolvedValue(mockResponse);
 
-      const result = await parsePreprintSheet(
+      const result = await parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
@@ -318,7 +346,7 @@ describe('Google Sheets Reader', () => {
         .mockRejectedValue(error);
 
       await expect(
-        parsePreprintSheet(mockSheetsClient, mockSpreadsheetId, mockRange),
+        parseComplianceSheet(mockSheetsClient, mockSpreadsheetId, mockRange),
       ).rejects.toThrow('Failed to read Google Sheets data: Error: API Error');
     });
   });

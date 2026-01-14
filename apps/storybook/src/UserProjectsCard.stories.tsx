@@ -1,10 +1,18 @@
 import { UserProjectsCard } from '@asap-hub/react-components';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { UserProjectMembership } from '@asap-hub/model';
+import { StaticRouter } from 'react-router-dom/server';
 
 const meta: Meta<typeof UserProjectsCard> = {
-  title: 'Organisms / UserProjectsCard',
+  title: 'Organisms / User Projects Card',
   component: UserProjectsCard,
+  decorators: [
+    (Story) => (
+      <StaticRouter location="/">
+        <Story />
+      </StaticRouter>
+    ),
+  ],
   argTypes: {
     projects: { control: false },
   },

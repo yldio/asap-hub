@@ -36,7 +36,7 @@ const tableCellStyles = css({
 });
 
 const projectNameStyles = css({
-  fontSize: rem(1),
+  fontSize: rem(16),
   fontWeight: '500',
   color: fern.rgb,
   textDecoration: 'none',

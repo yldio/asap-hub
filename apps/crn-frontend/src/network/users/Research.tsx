@@ -44,11 +44,11 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
           </Frame>
         }
         userProfileProjectsCard={
-          isEnabled('PROJECTS_MVP') ? (
+          isEnabled('PROJECTS_MVP') && (
             <Frame title={null} fallback={null}>
               <UserProjectsCard projects={user.projects || []} />
             </Frame>
-          ) : undefined
+          )
         }
         userProfileWorkingGroupsCard={
           <Frame title={null} fallback={null}>

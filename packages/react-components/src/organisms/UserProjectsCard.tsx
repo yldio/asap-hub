@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { UserProjectMembership } from '@asap-hub/model';
+import { UserProjectMembership, ProjectStatus } from '@asap-hub/model';
 import { projects as projectRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
-import { Card, Paragraph, Button, Headline2, Anchor } from '../atoms';
-import { fern } from '../colors';
+import { Card, Paragraph, Button, Headline2, Anchor, Pill } from '../atoms';
+import { charcoal, fern, lead, steel } from '../colors';
 import { rem } from '../pixels';
+import { getStatusPillAccent } from './ProjectCard';
 
 const MAX_PROJECTS = 6;
 
@@ -20,24 +21,22 @@ const tableStyles = css({
 
 const tableHeaderStyles = css({
   textAlign: 'left',
-  fontSize: '17px',
-  fontFamily: 'Roboto',
+  fontSize: rem(17),
   fontStyle: 'normal',
   fontWeight: 700,
   lineHeight: '24px',
   letterSpacing: '0.1px',
-  color: '#00202C',
-  fontFeatureSettings: "'liga' off, 'clig' off",
+  color: charcoal.rgb,
 });
 
 const tableCellStyles = css({
   padding: `${rem(16)} 0`,
-  borderBottom: '1px solid #E5E5E5',
+  borderBottom: `1px solid ${steel.rgb}`,
   verticalAlign: 'top',
 });
 
 const projectNameStyles = css({
-  fontSize: '1rem',
+  fontSize: rem(1),
   fontWeight: '500',
   color: fern.rgb,
   textDecoration: 'none',
@@ -47,43 +46,8 @@ const projectNameStyles = css({
 });
 
 const typeLabelStyles = css({
-  fontSize: '0.875rem',
-  color: '#708090',
-});
-
-const activeBadgeStyles = css({
-  display: 'flex',
-  width: '55px',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: '4px',
-  border: '1px solid #0C8DC3',
-  background: '#E6F3F9',
-  color: '#0C8DC3',
-  fontSize: '14px',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  lineHeight: '16px',
-  height: '24px',
-});
-
-const completeBadgeStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: '4px',
-  border: '1px solid #34A270',
-  background: '#E4F5EE',
-  color: '#34A270',
-  fontFamily: 'Roboto',
-  fontSize: '14px',
-  fontStyle: 'normal',
-  fontWeight: 400,
-  lineHeight: '16px',
-  height: '24px',
-  maxWidth: '77px',
+  fontSize: rem(14),
+  color: lead.rgb,
 });
 
 const showMoreButtonStyles = css({
@@ -173,9 +137,6 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
         <tbody>
           {displayProjects.map((project) => {
             const projectRoute = getProjectRoute(project);
-            const isActive = project.status === 'Active';
-            const isCompleted =
-              project.status === 'Completed' || project.status === 'Closed';
 
             return (
               <tr key={project.id}>
@@ -192,14 +153,15 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
                   <span css={typeLabelStyles}>{project.projectType}</span>
                 </td>
                 <td css={tableCellStyles}>
-                  {isActive && (
-                    <span css={activeBadgeStyles}>{project.status}</span>
-                  )}
-                  {isCompleted && (
-                    <span css={completeBadgeStyles}>Complete</span>
-                  )}
-                  {!isActive && !isCompleted && (
-                    <span css={completeBadgeStyles}>{project.status}</span>
+                  {project.status && (
+                    <Pill
+                      accent={getStatusPillAccent(
+                        project.status as ProjectStatus,
+                      )}
+                      noMargin
+                    >
+                      {project.status}
+                    </Pill>
                   )}
                 </td>
               </tr>

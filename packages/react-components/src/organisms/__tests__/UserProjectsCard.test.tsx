@@ -65,14 +65,17 @@ describe('UserProjectsCard', () => {
     expect(screen.getAllByText('Trainee Project')).toHaveLength(1);
   });
 
-  it('displays status badges correctly', () => {
+  it('displays status pills correctly', () => {
     render(<UserProjectsCard projects={mockProjects} />);
 
     // Active status should show "Active" (2 projects have Active status)
     expect(screen.getAllByText('Active')).toHaveLength(2);
 
-    // Completed/Closed statuses should show "Complete" (2 projects have Complete status)
-    expect(screen.getAllByText('Complete')).toHaveLength(2);
+    // Completed status should show "Completed"
+    expect(screen.getByText('Completed')).toBeInTheDocument();
+
+    // Closed status should show "Closed"
+    expect(screen.getByText('Closed')).toBeInTheDocument();
   });
 
   it('creates correct links for different project types', () => {
@@ -201,8 +204,11 @@ describe('UserProjectsCard', () => {
     // Active should show "Active"
     expect(screen.getByText('Active')).toBeInTheDocument();
 
-    // Completed and Closed should show "Complete"
-    expect(screen.getAllByText('Complete')).toHaveLength(2);
+    // Completed should show "Completed"
+    expect(screen.getByText('Completed')).toBeInTheDocument();
+
+    // Closed should show "Closed"
+    expect(screen.getByText('Closed')).toBeInTheDocument();
 
     // Other status (Paused) should show the actual status
     expect(screen.getByText('Paused')).toBeInTheDocument();
@@ -229,7 +235,7 @@ describe('UserProjectsCard', () => {
     expect(projectElement).not.toHaveAttribute('href');
   });
 
-  it('renders fallback status badge for statuses that are not Active, Completed, or Closed', () => {
+  it('renders status pill for any status value', () => {
     const projectWithOtherStatus: UserProjectMembership[] = [
       {
         id: 'other-status-project',
@@ -244,8 +250,31 @@ describe('UserProjectsCard', () => {
     // Should show the actual status text
     expect(screen.getByText('On Hold')).toBeInTheDocument();
 
-    // Should not show "Active" or "Complete"
+    // Should not show "Active", "Completed", or "Closed"
     expect(screen.queryByText('Active')).not.toBeInTheDocument();
-    expect(screen.queryByText('Complete')).not.toBeInTheDocument();
+    expect(screen.queryByText('Completed')).not.toBeInTheDocument();
+    expect(screen.queryByText('Closed')).not.toBeInTheDocument();
+  });
+
+  it('does not render status when status is missing', () => {
+    const projectWithoutStatus: UserProjectMembership[] = [
+      {
+        id: 'no-status-project',
+        title: 'No Status Project',
+        projectType: 'Discovery Project',
+        status: undefined as unknown as string,
+      },
+    ];
+
+    render(<UserProjectsCard projects={projectWithoutStatus} />);
+
+    // Should render the project
+    expect(screen.getByText('No Status Project')).toBeInTheDocument();
+
+    // Should not render any status pill
+    const statusCell = screen.getByText('No Status Project').closest('tr');
+    expect(statusCell).toBeInTheDocument();
+    // Status column should be empty (no status text)
+    expect(screen.queryByText('Active')).not.toBeInTheDocument();
   });
 });

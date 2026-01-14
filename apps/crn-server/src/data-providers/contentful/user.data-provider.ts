@@ -428,7 +428,7 @@ const toUserProjectMembership = (
     id: project.sys.id,
     title: project.title,
     projectType: project.projectType,
-    status: project.status || 'Active',
+    status: project.status || '',
   };
 };
 

@@ -12099,7 +12099,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@asap-hub/contentful-app-conditional-field-validation", "workspace:packages/contentful-app-extensions/conditional-field-validation"],\
             ["@contentful/app-scripts", "npm:1.33.2"],\
-            ["@contentful/app-sdk", "npm:4.46.0"],\
+            ["@contentful/app-sdk", "npm:4.51.0"],\
             ["@contentful/f36-components", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:4.81.1"],\
             ["@contentful/f36-tokens", "npm:4.2.0"],\
             ["@contentful/field-editor-date", "virtual:19c9f708eca3d47369c1a0ea590c8ca8f7067323538872cc7586d47ecab0ec157f1339899ca30aae318e9507d0d5eb8339ded949aeb54107c3939c310f8690d3#npm:1.9.21"],\
@@ -26687,10 +26687,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["virtual:19c9f708eca3d47369c1a0ea590c8ca8f7067323538872cc7586d47ecab0ec157f1339899ca30aae318e9507d0d5eb8339ded949aeb54107c3939c310f8690d3#npm:5.31.2", {\
           "packageLocation": "./.yarn/__virtual__/@contentful-field-editor-reference-virtual-ac51f69584/0/cache/@contentful-field-editor-reference-npm-5.31.2-8d5997b179-48873db9d2.zip/node_modules/@contentful/field-editor-reference/",\
           "packageDependencies": [\
-            ["@contentful/field-editor-reference", "virtual:e160a0f87f2e75687b2085336ba8b88e2e5539d3b4c70d648e6c128a3dd976e8a9ca7d9ac587d7378c4cef218dbf5313729b8f8a03f6c34f469b83474ea777ce#npm:5.31.2"],\
+            ["@contentful/field-editor-reference", "virtual:19c9f708eca3d47369c1a0ea590c8ca8f7067323538872cc7586d47ecab0ec157f1339899ca30aae318e9507d0d5eb8339ded949aeb54107c3939c310f8690d3#npm:5.31.2"],\
             ["@contentful/app-sdk", "npm:4.51.0"],\
-            ["@contentful/f36-components", "virtual:20c508fcd09fc61f51f82237c9d65f19e8f5ad92ebc000cda9f83f7119f4801fba1d0eea791c0ea42fe69de04372760afe55308a48b008106acc223e83462138#npm:4.81.1"],\
-            ["@contentful/f36-icons", "virtual:20c508fcd09fc61f51f82237c9d65f19e8f5ad92ebc000cda9f83f7119f4801fba1d0eea791c0ea42fe69de04372760afe55308a48b008106acc223e83462138#npm:4.29.1"],\
+            ["@contentful/f36-components", "virtual:ac51f6958473b2bd22f1df8642b4a32b954b15870dc002d2612804e42829036d3cb69caf6262adc26e7473cb81d46f7934acfd58e30152bb5cdc4ff0a889ac2a#npm:4.81.1"],\
+            ["@contentful/f36-icons", "virtual:ac51f6958473b2bd22f1df8642b4a32b954b15870dc002d2612804e42829036d3cb69caf6262adc26e7473cb81d46f7934acfd58e30152bb5cdc4ff0a889ac2a#npm:4.29.1"],\
             ["@contentful/f36-tokens", "npm:4.2.0"],\
             ["@contentful/field-editor-shared", "virtual:ac51f6958473b2bd22f1df8642b4a32b954b15870dc002d2612804e42829036d3cb69caf6262adc26e7473cb81d46f7934acfd58e30152bb5cdc4ff0a889ac2a#npm:1.8.0"],\
             ["@contentful/mimetype", "npm:2.6.1"],\
@@ -26736,10 +26736,43 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["virtual:271ca68c75158d258dcf4d89c5711be8c6920cd8c8c22aa7e1957235fe6ef094ebc195f18b36679044421c585d72c291a0d87ecc718e636ab570570fb991ff46#npm:2.17.0", {\
           "packageLocation": "./.yarn/__virtual__/@contentful-field-editor-shared-virtual-6c11d649d8/0/cache/@contentful-field-editor-shared-npm-2.17.0-d6538f3e50-273df15624.zip/node_modules/@contentful/field-editor-shared/",\
           "packageDependencies": [\
-            ["@contentful/field-editor-shared", "virtual:e160a0f87f2e75687b2085336ba8b88e2e5539d3b4c70d648e6c128a3dd976e8a9ca7d9ac587d7378c4cef218dbf5313729b8f8a03f6c34f469b83474ea777ce#npm:1.8.0"],\
+            ["@contentful/field-editor-shared", "virtual:271ca68c75158d258dcf4d89c5711be8c6920cd8c8c22aa7e1957235fe6ef094ebc195f18b36679044421c585d72c291a0d87ecc718e636ab570570fb991ff46#npm:2.17.0"],\
+            ["@contentful/app-sdk", null],\
+            ["@contentful/f36-components", "virtual:271ca68c75158d258dcf4d89c5711be8c6920cd8c8c22aa7e1957235fe6ef094ebc195f18b36679044421c585d72c291a0d87ecc718e636ab570570fb991ff46#npm:5.8.0"],\
+            ["@contentful/f36-icons", "virtual:b09f7948326af05dac7f90b28db376273ab70a86030c289b97581279bf6e1d538d30418c295804152b1b9914f7748df6e1e0e342e8d5fd1b728318074bee0194#npm:5.8.0"],\
+            ["@contentful/f36-note", "virtual:b09f7948326af05dac7f90b28db376273ab70a86030c289b97581279bf6e1d538d30418c295804152b1b9914f7748df6e1e0e342e8d5fd1b728318074bee0194#npm:5.8.0"],\
+            ["@contentful/f36-tokens", "npm:5.1.0"],\
+            ["@lingui/core", null],\
+            ["@types/contentful__app-sdk", null],\
+            ["@types/lingui__core", null],\
+            ["@types/react", "npm:18.3.12"],\
+            ["@types/react-dom", null],\
+            ["contentful-management", "npm:11.63.1"],\
+            ["emotion", "npm:10.0.27"],\
+            ["fast-deep-equal", "npm:3.1.3"],\
+            ["lodash", "npm:4.17.21"],\
+            ["react", "npm:18.3.1"],\
+            ["react-dom", null]\
+          ],\
+          "packagePeers": [\
+            "@contentful/app-sdk",\
+            "@lingui/core",\
+            "@types/contentful__app-sdk",\
+            "@types/lingui__core",\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:ac51f6958473b2bd22f1df8642b4a32b954b15870dc002d2612804e42829036d3cb69caf6262adc26e7473cb81d46f7934acfd58e30152bb5cdc4ff0a889ac2a#npm:1.8.0", {\
+          "packageLocation": "./.yarn/__virtual__/@contentful-field-editor-shared-virtual-3f0754522b/0/cache/@contentful-field-editor-shared-npm-1.8.0-55070cb46e-6481e8565d.zip/node_modules/@contentful/field-editor-shared/",\
+          "packageDependencies": [\
+            ["@contentful/field-editor-shared", "virtual:ac51f6958473b2bd22f1df8642b4a32b954b15870dc002d2612804e42829036d3cb69caf6262adc26e7473cb81d46f7934acfd58e30152bb5cdc4ff0a889ac2a#npm:1.8.0"],\
             ["@contentful/app-sdk", "npm:4.51.0"],\
-            ["@contentful/f36-components", "virtual:20c508fcd09fc61f51f82237c9d65f19e8f5ad92ebc000cda9f83f7119f4801fba1d0eea791c0ea42fe69de04372760afe55308a48b008106acc223e83462138#npm:4.81.1"],\
-            ["@contentful/f36-note", "virtual:631bd5e232da40170c1588241c0a29f9e9042a8bbd110cce76954d1c7cb526748e410f7b097dbe54c939b4133606d77e9453221d7e37ab0d2853681a536bc4cd#npm:4.81.1"],\
+            ["@contentful/f36-components", "virtual:ac51f6958473b2bd22f1df8642b4a32b954b15870dc002d2612804e42829036d3cb69caf6262adc26e7473cb81d46f7934acfd58e30152bb5cdc4ff0a889ac2a#npm:4.81.1"],\
+            ["@contentful/f36-note", "virtual:09a6c17c28c8f5d4bbe961de8e238b546113d9e00d2deac6dc35e30aaa9665764325598095d747210774cd2527abf91b34c71c970813fffd09fb09e5ce0e54af#npm:4.81.1"],\
             ["@contentful/f36-tokens", "npm:4.2.0"],\
             ["@types/contentful__app-sdk", null],\
             ["@types/react", "npm:18.3.12"],\

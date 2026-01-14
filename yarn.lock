@@ -446,7 +446,7 @@ __metadata:
   resolution: "@asap-hub/contentful-app-conditional-field-validation@workspace:packages/contentful-app-extensions/conditional-field-validation"
   dependencies:
     "@contentful/app-scripts": 1.33.2
-    "@contentful/app-sdk": 4.46.0
+    "@contentful/app-sdk": 4.51.0
     "@contentful/f36-components": 4.81.1
     "@contentful/f36-tokens": 4.2.0
     "@contentful/field-editor-date": ^1.6.2

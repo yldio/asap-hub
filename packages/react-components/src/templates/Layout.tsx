@@ -65,7 +65,7 @@ export const styles = css({
     "header     header  search-button"  max-content
     "main-menu  content content"        max-content
     "user-menu  content content"        1fr
-    "footer     footer  footer"         auto   / max-content 1fr`,
+    "footer     footer  footer"         auto   / max-content 1fr 72px`,
 
   [crossQuery]: {
     grid: `
@@ -174,10 +174,25 @@ export const searchButtonAreaStyles = css({
   svg: {
     fill: charcoal.rgb,
   },
-  '& .active-link': {
+  '& .active': {
     svg: {
       fill: success900.rgb,
     },
+  },
+  // Target the Navigation's inner div that renders the Search button
+  // See https://asaphub.atlassian.net/browse/ASAP-1333
+  // I'd rather have a property `overrideStyles` in `Navigation`, but
+  // the problem is that even with that we won't be able to target the
+  // `a` tag in it, so this custom override is needed.
+  '& > a': {
+    width: '100%',
+    height: '100%',
+  },
+  '& > a > div': {
+    padding: 0,
+    height: '100%',
+    width: '100%',
+    justifyItems: 'center',
   },
 });
 const SearchIconStyles = css({

@@ -5,35 +5,14 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { activePrimaryStyles } from '../button';
 import { charcoal, lead, silver } from '../colors';
 import { useBlockedClick } from '../navigation';
-import {
-  largeDesktopScreen,
-  lineHeight,
-  mobileScreen,
-  rem,
-  vminLinearCalc,
-} from '../pixels';
+import { lineHeight, rem } from '../pixels';
 import { useHasRouter } from '../routing';
 import { isInternalLink } from '../utils';
 
 const styles = css({
   display: 'block',
-  paddingLeft: rem(12),
-  paddingRight: rem(12),
-  paddingTop: vminLinearCalc(
-    mobileScreen,
-    12 + 1,
-    largeDesktopScreen,
-    15 + 1,
-    'px',
-  ),
-  paddingBottom: vminLinearCalc(
-    mobileScreen,
-    12 - 1,
-    largeDesktopScreen,
-    15 - 1,
-    'px',
-  ),
   color: 'unset',
+  padding: rem(16),
   stroke: lead.rgb,
   svg: {
     stroke: charcoal.rgb,

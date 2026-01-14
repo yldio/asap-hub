@@ -1,5 +1,6 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { ReactNode } from 'react';
+import { MAX_PAGE_CONTENT_WIDTH } from '../layout';
 
 import { rem, smallDesktopScreen } from '../pixels';
 
@@ -13,7 +14,7 @@ const containerStyles = css({
 });
 
 const constrainedContainerStyles = css({
-  maxWidth: rem(1600),
+  maxWidth: rem(MAX_PAGE_CONTENT_WIDTH),
   width: '100%',
   margin: '0 auto',
 });

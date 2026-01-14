@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { Divider, Headline5, NavigationLink } from '../atoms';
 import { InterestGroupsIcon, TeamIcon, WorkingGroupsIcon } from '../icons';
+import { MAX_NAVIGATION_MENU_WIDTH } from '../layout';
 import { rem } from '../pixels';
 
 const dividerStyle = css({
@@ -27,6 +28,14 @@ const listStyle = css({
       },
     },
   },
+});
+
+const listTextItemStyle = css({
+  maxWidth: rem(MAX_NAVIGATION_MENU_WIDTH * 0.8),
+  display: 'inline-block',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
 });
 
 type UserNavigationAssociationSectionProps = {
@@ -72,7 +81,7 @@ const UserNavigationAssociationSection: React.FC<
                 icon={icon ?? sectionIcon[title]}
                 enabled={userOnboarded}
               >
-                {name}
+                <span css={listTextItemStyle}>{name}</span>
               </NavigationLink>
             </li>
           ),

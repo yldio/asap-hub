@@ -2,12 +2,7 @@ import { css } from '@emotion/react';
 import { ProjectType } from '@asap-hub/model';
 import { logout, staticPages } from '@asap-hub/routing';
 
-import {
-  rem,
-  vminLinearCalc,
-  mobileScreen,
-  largeDesktopScreen,
-} from '../pixels';
+import { rem } from '../pixels';
 import { Divider, NavigationLink, Caption, Anchor } from '../atoms';
 import {
   UserIcon,
@@ -19,6 +14,7 @@ import {
 } from '../icons';
 import { mailToFeedback } from '../mail';
 import { UserNavigationAssociationSection } from '../molecules';
+import { MAX_NAVIGATION_MENU_WIDTH } from '../layout';
 
 const getProjectIcon = (projectType: ProjectType): JSX.Element => {
   switch (projectType) {
@@ -33,20 +29,15 @@ const getProjectIcon = (projectType: ProjectType): JSX.Element => {
 };
 
 const containerStyles = css({
-  minWidth: '312px',
+  width: '100%',
+  maxWidth: rem(MAX_NAVIGATION_MENU_WIDTH),
   height: '100%',
 
   display: 'flex',
   flexDirection: 'column',
 
   boxSizing: 'border-box',
-  padding: `${rem(9)} ${rem(12)} ${vminLinearCalc(
-    mobileScreen,
-    8,
-    largeDesktopScreen,
-    12,
-    'px',
-  )}`,
+  padding: rem(24),
 });
 
 const listStyles = css({

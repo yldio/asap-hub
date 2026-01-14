@@ -397,9 +397,9 @@ __metadata:
     "@contentful/f36-components": 4.81.1
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -424,9 +424,9 @@ __metadata:
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.6.10
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -450,9 +450,9 @@ __metadata:
     "@contentful/f36-components": 4.81.1
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -478,9 +478,9 @@ __metadata:
     "@contentful/field-editor-date": ^1.6.2
     "@contentful/react-apps-toolkit": 1.2.16
     "@lingui/core": ^4.0.0
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -505,9 +505,9 @@ __metadata:
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -531,9 +531,9 @@ __metadata:
     "@contentful/f36-components": 4.81.1
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -558,9 +558,9 @@ __metadata:
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -586,9 +586,9 @@ __metadata:
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -614,9 +614,9 @@ __metadata:
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -641,9 +641,9 @@ __metadata:
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-html-renderer": 16.6.10
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -668,9 +668,9 @@ __metadata:
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
     "@contentful/rich-text-react-renderer": ^15.16.4
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -696,9 +696,9 @@ __metadata:
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -722,9 +722,9 @@ __metadata:
     "@contentful/f36-components": 4.81.1
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -748,9 +748,9 @@ __metadata:
     "@contentful/f36-components": 4.81.1
     "@contentful/f36-tokens": 4.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -776,9 +776,9 @@ __metadata:
     "@contentful/field-editor-reference": ^5.9.0
     "@contentful/field-editor-shared": ^1.2.0
     "@contentful/react-apps-toolkit": 1.2.16
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/react": 18.3.12
@@ -847,10 +847,10 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.6
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
-    "@testing-library/user-event": 14.5.2
+    "@testing-library/react": 16.3.1
+    "@testing-library/user-event": 14.6.1
     "@types/jest": 29.5.14
     "@types/jsdom": 16.2.15
     "@types/react": 18.3.12
@@ -894,10 +894,10 @@ __metadata:
     "@babel/runtime-corejs3": 7.28.6
     "@sentry/cli": ^2.20.3
     "@sentry/react": ^8.0.0
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
-    "@testing-library/user-event": 14.5.2
+    "@testing-library/react": 16.3.1
+    "@testing-library/user-event": 14.6.1
     "@types/file-saver": ^2
     "@types/jest": 29.5.14
     "@types/jest-when": 3.5.2
@@ -1220,9 +1220,9 @@ __metadata:
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.6
     "@sentry/react": ^8.0.0
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/js-cookie": ^3
     "@types/node": 20.10.5
@@ -1264,10 +1264,10 @@ __metadata:
     "@asap-hub/react-components": "workspace:*"
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.6
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
-    "@testing-library/user-event": 14.5.2
+    "@testing-library/react": 16.3.1
+    "@testing-library/user-event": 14.6.1
     "@types/jest": 29.5.14
     "@types/jsdom": 16.2.15
     "@types/react": 18.3.12
@@ -1310,10 +1310,10 @@ __metadata:
     "@emotion/babel-plugin": 11.11.0
     "@emotion/jest": ^11.10.5
     "@emotion/react": 11.11.1
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
-    "@testing-library/user-event": 14.5.2
+    "@testing-library/react": 16.3.1
+    "@testing-library/user-event": 14.6.1
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/jest": 29.5.14
@@ -1366,10 +1366,10 @@ __metadata:
     "@babel/runtime-corejs3": 7.28.6
     "@sentry/cli": ^2.20.3
     "@sentry/react": ^8.0.0
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
-    "@testing-library/user-event": 14.5.2
+    "@testing-library/react": 16.3.1
+    "@testing-library/user-event": 14.6.1
     "@types/jest": 29.5.14
     "@types/jsonwebtoken": 8.5.9
     "@types/nock": 11.1.0
@@ -1632,10 +1632,10 @@ __metadata:
     "@lexical/rich-text": 0.18.0
     "@lexical/selection": 0.18.0
     "@lexical/utils": 0.18.0
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
-    "@testing-library/user-event": 14.5.2
+    "@testing-library/react": 16.3.1
+    "@testing-library/user-event": 14.6.1
     "@types/asap-hub__assets": "workspace:*"
     "@types/hast-util-sanitize": "workspace:*"
     "@types/jest": 29.5.14
@@ -1701,9 +1701,9 @@ __metadata:
     "@babel/core": 7.28.6
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.6
-    "@testing-library/dom": 10.4.0
+    "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.0
+    "@testing-library/react": 16.3.1
     "@types/jest": 29.5.14
     "@types/react": 18.3.12
     core-js: 3.34.0
@@ -13263,19 +13263,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:10.4.0":
-  version: 10.4.0
-  resolution: "@testing-library/dom@npm:10.4.0"
+"@testing-library/dom@npm:10.4.1":
+  version: 10.4.1
+  resolution: "@testing-library/dom@npm:10.4.1"
   dependencies:
     "@babel/code-frame": ^7.10.4
     "@babel/runtime": ^7.12.5
     "@types/aria-query": ^5.0.1
     aria-query: 5.3.0
-    chalk: ^4.1.0
     dom-accessibility-api: ^0.5.9
     lz-string: ^1.5.0
+    picocolors: 1.1.1
     pretty-format: ^27.0.2
-  checksum: bb128b90be0c8cd78c5f5e67aa45f53de614cc048a2b50b230e736ec710805ac6c73375af354b83c74d710b3928d52b83a273a4cb89de4eb3efe49e91e706837
+  checksum: 3887fe95594b6d9467a804e2cc82e719c57f4d55d7d9459b72a949b3a8189db40375b89034637326d4be559f115abc6b6bcfcc6fec0591c4a4d4cdde96751a6c
   languageName: node
   linkType: hard
 
@@ -13293,9 +13293,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:16.3.0":
-  version: 16.3.0
-  resolution: "@testing-library/react@npm:16.3.0"
+"@testing-library/react@npm:16.3.1":
+  version: 16.3.1
+  resolution: "@testing-library/react@npm:16.3.1"
   dependencies:
     "@babel/runtime": ^7.12.5
   peerDependencies:
@@ -13309,20 +13309,11 @@ __metadata:
       optional: true
     "@types/react-dom":
       optional: true
-  checksum: 85728ea8a1bcc9d865782a3d3bcc1db6632cb77907b47fb99c7f338e3ebdfc74dc6d21dfc5526a215a4f4f7b7d8a6392de87f48da3848866ab088f327ebb3e92
+  checksum: 33c62acc913045f04276e4db08a8d87f3f247313e9eed89c2a72afc00044804138fed720a41c7397d51cbe34c96e91fe819f0b77ca9b43bad4aae2e6b391248c
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:14.5.2":
-  version: 14.5.2
-  resolution: "@testing-library/user-event@npm:14.5.2"
-  peerDependencies:
-    "@testing-library/dom": ">=7.21.4"
-  checksum: d76937dffcf0082fbf3bb89eb2b81a31bf5448048dd61c33928c5f10e33a58e035321d39145cefd469bb5a499c68a5b4086b22f1a44e3e7c7e817dc5f6782867
-  languageName: node
-  linkType: hard
-
-"@testing-library/user-event@npm:^14.6.1":
+"@testing-library/user-event@npm:14.6.1, @testing-library/user-event@npm:^14.6.1":
   version: 14.6.1
   resolution: "@testing-library/user-event@npm:14.6.1"
   peerDependencies:
@@ -31908,17 +31899,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"picocolors@npm:1.1.1, picocolors@npm:^1.0.0, picocolors@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "picocolors@npm:1.1.1"
+  checksum: e1cf46bf84886c79055fdfa9dcb3e4711ad259949e3565154b004b260cd356c5d54b31a1437ce9782624bf766272fe6b0154f5f0c744fb7af5d454d2b60db045
+  languageName: node
+  linkType: hard
+
 "picocolors@npm:^0.2.1":
   version: 0.2.1
   resolution: "picocolors@npm:0.2.1"
   checksum: 3b0f441f0062def0c0f39e87b898ae7461c3a16ffc9f974f320b44c799418cabff17780ee647fda42b856a1dc45897e2c62047e1b546d94d6d5c6962f45427b2
-  languageName: node
-  linkType: hard
-
-"picocolors@npm:^1.0.0, picocolors@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "picocolors@npm:1.1.1"
-  checksum: e1cf46bf84886c79055fdfa9dcb3e4711ad259949e3565154b004b260cd356c5d54b31a1437ce9782624bf766272fe6b0154f5f0c744fb7af5d454d2b60db045
   languageName: node
   linkType: hard
 

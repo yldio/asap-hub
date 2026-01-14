@@ -569,12 +569,13 @@ export const getContentfulGraphqlUser = (
                           },
                           title: 'Test Project',
                           projectType: 'Discovery Project',
+                          status: 'Active',
                           proposal: {
                             sys: {
                               id: 'proposalId1',
                             },
                           },
-                        },
+                        } as any,
                       ],
                     },
                   },

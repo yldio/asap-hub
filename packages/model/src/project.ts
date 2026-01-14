@@ -34,6 +34,8 @@ export type BaseProject = {
   readonly applicationNumber?: string;
   readonly contactEmail?: string;
   readonly researchTags?: ReadonlyArray<ResearchTag>;
+  readonly originalGrant?: string;
+  readonly supplementGrantDescription?: string;
 };
 
 export type ProjectMemberTeam = {
@@ -118,7 +120,6 @@ export type SupplementGrantInfo = {
 
 // Extended project detail types
 export type DiscoveryProjectDetail = DiscoveryProject & {
-  readonly originalGrant?: string;
   readonly originalGrantProposalId?: string;
   readonly supplementGrant?: SupplementGrantInfo;
   readonly milestones?: ReadonlyArray<Milestone>;
@@ -127,7 +128,6 @@ export type DiscoveryProjectDetail = DiscoveryProject & {
 };
 
 export type ResourceProjectDetail = ResourceProject & {
-  readonly originalGrant?: string;
   readonly originalGrantProposalId?: string;
   readonly supplementGrant?: SupplementGrantInfo;
   readonly milestones?: ReadonlyArray<Milestone>;
@@ -136,7 +136,6 @@ export type ResourceProjectDetail = ResourceProject & {
 };
 
 export type TraineeProjectDetail = TraineeProject & {
-  readonly originalGrant?: string;
   readonly originalGrantProposalId?: string;
   readonly supplementGrant?: SupplementGrantInfo;
   readonly milestones?: ReadonlyArray<Milestone>;

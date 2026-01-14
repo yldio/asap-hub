@@ -377,6 +377,8 @@ export const getExpectedDiscoveryProject = (): DiscoveryProject => ({
   teamName: 'Discovery Team',
   teamId: 'team-1',
   inactiveSinceDate: '2025-01-01',
+  originalGrant: '',
+  supplementGrantDescription: '',
 });
 
 // Expected discovery project detail (for fetchById) with additional detail fields
@@ -412,6 +414,7 @@ export const getExpectedDiscoveryProjectDetailWithAllFields = () => ({
   ...getExpectedDiscoveryProject(),
   originalGrant: 'Original Grant Title',
   originalGrantProposalId: 'proposal-1',
+  supplementGrantDescription: 'Supplement grant description',
   supplementGrant: {
     grantTitle: 'Supplement Grant Title',
     grantDescription: 'Supplement grant description',
@@ -472,6 +475,8 @@ export const getExpectedDiscoveryProjectWithoutTeam = (): DiscoveryProject => ({
   projectType: 'Discovery Project',
   researchTheme: '',
   teamName: '',
+  originalGrant: '',
+  supplementGrantDescription: '',
 });
 
 export const getExpectedResourceTeamProject = (): ResourceProject => ({
@@ -496,6 +501,8 @@ export const getExpectedResourceTeamProject = (): ResourceProject => ({
     { id: 'resource-team-main', displayName: 'Resource Team' },
     { id: 'resource-team-support', displayName: 'Resource Support' },
   ],
+  originalGrant: '',
+  supplementGrantDescription: '',
 });
 
 export const getExpectedResourceIndividualProject = (): ResourceProject => ({
@@ -543,6 +550,8 @@ export const getExpectedResourceIndividualProject = (): ResourceProject => ({
       alumniSinceDate: undefined,
     },
   ],
+  originalGrant: '',
+  supplementGrantDescription: '',
 });
 
 export const getExpectedTraineeProject = (): TraineeProject => ({
@@ -580,6 +589,8 @@ export const getExpectedTraineeProject = (): TraineeProject => ({
       alumniSinceDate: undefined,
     },
   ],
+  originalGrant: '',
+  supplementGrantDescription: '',
 });
 
 export const getExpectedProjectList = () => [

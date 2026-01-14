@@ -168,6 +168,8 @@ export const parseContentfulProject = (
     applicationNumber: item.applicationNumber || undefined,
     contactEmail: item.contactEmail || undefined,
     projectType: item.projectType as ProjectType,
+    originalGrant: item.originalGrant || '',
+    supplementGrantDescription: item.supplementGrant?.description || '',
   };
 
   const members = cleanArray(item.membersCollection?.items || []);
@@ -262,10 +264,7 @@ export const parseContentfulProjectDetail = (
   }));
 
   // Parse original grant
-  const originalGrant = {
-    originalGrant: item.originalGrant || '',
-    originalGrantProposalId: item.proposal?.sys.id || undefined,
-  };
+  const originalGrantProposalId = item.proposal?.sys.id || undefined;
 
   // Parse supplement grant
   const supplementGrant: SupplementGrantInfo | undefined = item.supplementGrant
@@ -302,7 +301,7 @@ export const parseContentfulProjectDetail = (
 
         return {
           ...baseProject,
-          ...originalGrant,
+          originalGrantProposalId,
           supplementGrant,
           milestones: milestones.length > 0 ? milestones : undefined,
           fundedTeam,
@@ -313,7 +312,7 @@ export const parseContentfulProjectDetail = (
       // Fallback if no team found
       return {
         ...baseProject,
-        ...originalGrant,
+        originalGrantProposalId,
         supplementGrant,
         milestones: milestones.length > 0 ? milestones : undefined,
       } as DiscoveryProjectDetail;
@@ -339,7 +338,7 @@ export const parseContentfulProjectDetail = (
 
         return {
           ...baseProject,
-          ...originalGrant,
+          originalGrantProposalId,
           supplementGrant,
           milestones: milestones.length > 0 ? milestones : undefined,
           fundedTeam,
@@ -354,7 +353,7 @@ export const parseContentfulProjectDetail = (
 
       return {
         ...baseProject,
-        ...originalGrant,
+        originalGrantProposalId,
         supplementGrant,
         milestones: milestones.length > 0 ? milestones : undefined,
         members: userMembers.length > 0 ? userMembers : undefined,
@@ -366,7 +365,7 @@ export const parseContentfulProjectDetail = (
 
       return {
         ...baseProject,
-        ...originalGrant,
+        originalGrantProposalId,
         supplementGrant,
         milestones: milestones.length > 0 ? milestones : undefined,
         members: allMembers,

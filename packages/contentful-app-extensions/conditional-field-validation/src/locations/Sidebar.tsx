@@ -1,5 +1,5 @@
 import { SidebarAppSDK } from '@contentful/app-sdk';
-import { Note, Stack } from '@contentful/f36-components';
+import { Note, Stack, Text } from '@contentful/f36-components';
 import { useSDK, useAutoResizer } from '@contentful/react-apps-toolkit';
 import React, { useEffect, useState } from 'react';
 import { getEntry, onEntryChanged } from '../utils';
@@ -80,7 +80,7 @@ const Sidebar = () => {
   };
 
   if (warnings.length === 0) {
-    return null;
+    return <Text fontColor="gray500">No additional validation warnings.</Text>;
   }
 
   return (

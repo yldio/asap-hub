@@ -77,14 +77,16 @@ describe('Sidebar component', () => {
     });
   });
 
-  it('returns null when there are no warnings', async () => {
+  it('shows empty state message when there are no warnings', async () => {
     const sdk = mockBaseSdk('teams') as unknown as jest.Mocked<SidebarAppSDK>;
     (sdk.entry.fields.teamType as any).getValue = jest.fn(() => 'Regular Team');
     (useSDK as jest.Mock).mockReturnValue(sdk);
 
-    const { container } = render(<Sidebar />);
+    render(<Sidebar />);
     await waitFor(() => {
-      expect(container.firstChild).toBeNull();
+      expect(
+        screen.getByText('No additional validation warnings.'),
+      ).toBeInTheDocument();
     });
   });
 

@@ -1,6 +1,6 @@
 import { sheets_v4 as sheetsV4 } from '@googleapis/sheets';
 import {
-  parsePreprintSheet,
+  parseComplianceSheet,
   extractSpreadsheetIdFromUrl,
 } from '../../src/utils/google-sheets-reader';
 
@@ -26,31 +26,32 @@ describe('Google Sheets Reader', () => {
     delete process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
   });
 
-  describe('parsePreprintSheet', () => {
+  describe('parseComplianceSheet', () => {
     const mockSpreadsheetId = 'test-spreadsheet-id';
     const mockRange = 'A1:Z100';
 
-    it('should parse sheet data with two header rows correctly', async () => {
-      const mockResponse = {
-        data: {
-          values: [
-            ['Team', 'All Time', 'All Time'],
-            ['', '# preprints', '# publications'],
-            ['Alessi', '24', '22'],
-            ['ASAP', '5', '2'],
-          ],
-        },
-      };
-
+    const mockGetValues = (values?: string[][]) => {
       mockSheetsClient.spreadsheets.values.get = jest
         .fn()
-        .mockResolvedValue(mockResponse);
+        .mockResolvedValue({ data: { values } });
+    };
 
-      const result = await parsePreprintSheet(
+    const runParse = async (values?: string[][]) => {
+      mockGetValues(values);
+      return parseComplianceSheet(
         mockSheetsClient,
         mockSpreadsheetId,
         mockRange,
       );
+    };
+
+    it('should parse sheet data with two header rows correctly', async () => {
+      const result = await runParse([
+        ['Team', 'All Time', 'All Time'],
+        ['', '# preprints', '# publications'],
+        ['Alessi', '24', '22'],
+        ['ASAP', '5', '2'],
+      ]);
 
       expect(mockSheetsClient.spreadsheets.values.get).toHaveBeenCalledWith({
         spreadsheetId: mockSpreadsheetId,
@@ -72,25 +73,11 @@ describe('Google Sheets Reader', () => {
     });
 
     it('should handle empty first header by using last first header text', async () => {
-      const mockResponse = {
-        data: {
-          values: [
-            ['Team', 'All Time', ''],
-            ['', '# preprints', '# publications'],
-            ['Alessi', '24', '22'],
-          ],
-        },
-      };
-
-      mockSheetsClient.spreadsheets.values.get = jest
-        .fn()
-        .mockResolvedValue(mockResponse);
-
-      const result = await parsePreprintSheet(
-        mockSheetsClient,
-        mockSpreadsheetId,
-        mockRange,
-      );
+      const result = await runParse([
+        ['Team', 'All Time', ''],
+        ['', '# preprints', '# publications'],
+        ['Alessi', '24', '22'],
+      ]);
 
       expect(result).toEqual([
         {
@@ -102,26 +89,11 @@ describe('Google Sheets Reader', () => {
     });
 
     it('should handle empty second header by using first header only', async () => {
-      const mockResponse = {
-        data: {
-          values: [
-            ['Team', 'All Time', ''],
-            ['', '# preprints', '# publications'],
-            ['Alessi', '24', '22'],
-          ],
-        },
-      };
-
-      mockSheetsClient.spreadsheets.values.get = jest
-        .fn()
-        .mockResolvedValue(mockResponse);
-
-      const result = await parsePreprintSheet(
-        mockSheetsClient,
-        mockSpreadsheetId,
-        mockRange,
-      );
-
+      const result = await runParse([
+        ['Team', 'All Time', ''],
+        ['', '# preprints', '# publications'],
+        ['Alessi', '24', '22'],
+      ]);
       expect(result).toEqual([
         {
           Team: 'Alessi',
@@ -132,28 +104,14 @@ describe('Google Sheets Reader', () => {
     });
 
     it('should convert boolean values correctly', async () => {
-      const mockResponse = {
-        data: {
-          values: [
-            ['Boolean Field'],
-            ['Boolean'],
-            ['TRUE'],
-            ['FALSE'],
-            ['true'],
-            ['false'],
-          ],
-        },
-      };
-
-      mockSheetsClient.spreadsheets.values.get = jest
-        .fn()
-        .mockResolvedValue(mockResponse);
-
-      const result = await parsePreprintSheet(
-        mockSheetsClient,
-        mockSpreadsheetId,
-        mockRange,
-      );
+      const result = await runParse([
+        ['Boolean Field'],
+        ['Boolean'],
+        ['TRUE'],
+        ['FALSE'],
+        ['true'],
+        ['false'],
+      ]);
 
       expect(result).toEqual([
         { 'Boolean Field - Boolean': true },
@@ -164,21 +122,13 @@ describe('Google Sheets Reader', () => {
     });
 
     it('should convert numeric values correctly', async () => {
-      const mockResponse = {
-        data: {
-          values: [['Number Field'], ['Number'], ['123'], ['45.67'], ['0']],
-        },
-      };
-
-      mockSheetsClient.spreadsheets.values.get = jest
-        .fn()
-        .mockResolvedValue(mockResponse);
-
-      const result = await parsePreprintSheet(
-        mockSheetsClient,
-        mockSpreadsheetId,
-        mockRange,
-      );
+      const result = await runParse([
+        ['Number Field'],
+        ['Number'],
+        ['123'],
+        ['45.67'],
+        ['0'],
+      ]);
 
       expect(result).toEqual([
         { 'Number Field - Number': 123 },
@@ -188,26 +138,12 @@ describe('Google Sheets Reader', () => {
     });
 
     it('should handle empty values as null', async () => {
-      const mockResponse = {
-        data: {
-          values: [
-            ['Team', 'All Time'],
-            ['', '# preprints'],
-            ['Team 1', ''],
-            ['Team 2', '8'],
-          ],
-        },
-      };
-
-      mockSheetsClient.spreadsheets.values.get = jest
-        .fn()
-        .mockResolvedValue(mockResponse);
-
-      const result = await parsePreprintSheet(
-        mockSheetsClient,
-        mockSpreadsheetId,
-        mockRange,
-      );
+      const result = await runParse([
+        ['Team', 'All Time'],
+        ['', '# preprints'],
+        ['Team 1', ''],
+        ['Team 2', '8'],
+      ]);
 
       expect(result).toEqual([
         { Team: 'Team 1', 'All Time - # preprints': null },
@@ -215,52 +151,38 @@ describe('Google Sheets Reader', () => {
       ]);
     });
 
-    it('should break when Team field is empty', async () => {
-      const mockResponse = {
-        data: {
-          values: [
-            ['Team', 'All Time'],
-            ['', '# preprints'],
-            ['Team1', '10'],
-            ['', ''],
-            ['OUTSTANDING', '90'],
-          ],
-        },
-      };
-
-      mockSheetsClient.spreadsheets.values.get = jest
-        .fn()
-        .mockResolvedValue(mockResponse);
-
-      const result = await parsePreprintSheet(
-        mockSheetsClient,
-        mockSpreadsheetId,
-        mockRange,
-      );
+    it('should break when Team field is empty and Team header is on the first row', async () => {
+      const result = await runParse([
+        ['Team', 'All Time'],
+        ['', '# preprints'],
+        ['Team1', '10'],
+        ['', ''],
+        ['OUTSTANDING', '90'],
+      ]);
 
       expect(result).toEqual([{ Team: 'Team1', 'All Time - # preprints': 10 }]);
     });
 
+    it('should break when Team field is empty and Team header is on the second row', async () => {
+      const result = await runParse([
+        ['', 'All Time'],
+        ['Team', '# publications'],
+        ['ASAP', '9'],
+        ['', ''],
+        ['ADEQUATE', '82'],
+      ]);
+
+      expect(result).toEqual([
+        { ' - Team': 'ASAP', 'All Time - # publications': 9 },
+      ]);
+    });
+
     it('should skip when headers are empty', async () => {
-      const mockResponse = {
-        data: {
-          values: [
-            ['Team', 'All Time', '', 'Last Year'],
-            ['', '# preprints', '', '# preprints'],
-            ['Team1', '10', '', '5'],
-          ],
-        },
-      };
-
-      mockSheetsClient.spreadsheets.values.get = jest
-        .fn()
-        .mockResolvedValue(mockResponse);
-
-      const result = await parsePreprintSheet(
-        mockSheetsClient,
-        mockSpreadsheetId,
-        mockRange,
-      );
+      const result = await runParse([
+        ['Team', 'All Time', '', 'Last Year'],
+        ['', '# preprints', '', '# preprints'],
+        ['Team1', '10', '', '5'],
+      ]);
 
       expect(result).toEqual([
         {
@@ -272,41 +194,13 @@ describe('Google Sheets Reader', () => {
     });
 
     it('should return empty array when no rows are returned', async () => {
-      const mockResponse = {
-        data: {
-          values: undefined,
-        },
-      };
-
-      mockSheetsClient.spreadsheets.values.get = jest
-        .fn()
-        .mockResolvedValue(mockResponse);
-
-      const result = await parsePreprintSheet(
-        mockSheetsClient,
-        mockSpreadsheetId,
-        mockRange,
-      );
+      const result = await runParse(undefined);
 
       expect(result).toEqual([]);
     });
 
     it('should return empty array when empty rows are returned', async () => {
-      const mockResponse = {
-        data: {
-          values: [],
-        },
-      };
-
-      mockSheetsClient.spreadsheets.values.get = jest
-        .fn()
-        .mockResolvedValue(mockResponse);
-
-      const result = await parsePreprintSheet(
-        mockSheetsClient,
-        mockSpreadsheetId,
-        mockRange,
-      );
+      const result = await runParse([]);
 
       expect(result).toEqual([]);
     });
@@ -318,7 +212,7 @@ describe('Google Sheets Reader', () => {
         .mockRejectedValue(error);
 
       await expect(
-        parsePreprintSheet(mockSheetsClient, mockSpreadsheetId, mockRange),
+        parseComplianceSheet(mockSheetsClient, mockSpreadsheetId, mockRange),
       ).rejects.toThrow('Failed to read Google Sheets data: Error: API Error');
     });
   });

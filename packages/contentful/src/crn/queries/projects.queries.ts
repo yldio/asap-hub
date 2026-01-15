@@ -3,7 +3,7 @@
 import { gql } from 'graphql-tag';
 
 export const projectsContentQueryFragment = gql`
-  fragment ProjectsContentFields on Projects {
+  fragment ProjectsContentData on Projects {
     sys {
       id
       firstPublishedAt
@@ -125,7 +125,7 @@ export const FETCH_PROJECTS = gql`
     ) {
       total
       items {
-        ...ProjectsContentFields
+        ...ProjectsContentData
       }
     }
   }
@@ -135,7 +135,7 @@ export const FETCH_PROJECT_BY_ID = gql`
   ${projectsContentQueryFragment}
   query FetchProjectById($id: String!) {
     projects(id: $id) {
-      ...ProjectsContentFields
+      ...ProjectsContentData
     }
   }
 `;
@@ -153,7 +153,7 @@ export const FETCH_PROJECTS_BY_TEAM_ID = gql`
             linkedFrom {
               projectsCollection(limit: 1) {
                 items {
-                  ...ProjectsContentFields
+                  ...ProjectsContentData
                 }
               }
             }
@@ -177,7 +177,7 @@ export const FETCH_PROJECTS_BY_USER_ID = gql`
             linkedFrom {
               projectsCollection(limit: 1) {
                 items {
-                  ...ProjectsContentFields
+                  ...ProjectsContentData
                 }
               }
             }
@@ -201,7 +201,7 @@ export const FETCH_PROJECTS_BY_MEMBERSHIP_ID = gql`
         projectsCollection(limit: $limit) {
           total
           items {
-            ...ProjectsContentFields
+            ...ProjectsContentData
           }
         }
       }

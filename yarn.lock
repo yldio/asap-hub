@@ -11439,20 +11439,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@peculiar/webcrypto@npm:1.4.6":
-  version: 1.4.6
-  resolution: "@peculiar/webcrypto@npm:1.4.6"
-  dependencies:
-    "@peculiar/asn1-schema": ^2.3.8
-    "@peculiar/json-schema": ^1.1.12
-    pvtsutils: ^1.3.5
-    tslib: ^2.6.2
-    webcrypto-core: ^1.7.9
-  checksum: 27201a9b8abf95ec70db151dc62548736e87fbacc5e534e972b1187d328826a13fd5fb1b02994dc46ab819667e5020e01893d6d143b937e6dbb99e81b3b87c90
-  languageName: node
-  linkType: hard
-
-"@peculiar/webcrypto@npm:^1.4.0":
+"@peculiar/webcrypto@npm:1.5.0, @peculiar/webcrypto@npm:^1.4.0":
   version: 1.5.0
   resolution: "@peculiar/webcrypto@npm:1.5.0"
   dependencies:
@@ -17242,7 +17229,7 @@ __metadata:
     "@babel/preset-typescript": 7.28.5
     "@babel/runtime-corejs3": 7.28.6
     "@emotion/jest": ^11.10.5
-    "@peculiar/webcrypto": 1.4.6
+    "@peculiar/webcrypto": 1.5.0
     "@testing-library/jest-dom": ^6.9.0
     "@types/jest": 29.5.14
     "@types/react-test-renderer": 18.3.1
@@ -40463,7 +40450,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webcrypto-core@npm:^1.7.9, webcrypto-core@npm:^1.8.0":
+"webcrypto-core@npm:^1.8.0":
   version: 1.8.1
   resolution: "webcrypto-core@npm:1.8.1"
   dependencies:

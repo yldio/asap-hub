@@ -3395,7 +3395,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/babel__preset-env",\
-        "npm:7.9.7"\
+        "npm:7.10.0"\
       ],\
       [\
         "@types/babel__template",\
@@ -12668,7 +12668,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/async", "npm:3.2.25"],\
             ["@types/async-retry", "npm:1.4.9"],\
             ["@types/aws-lambda", "npm:8.10.159"],\
-            ["@types/babel__preset-env", "npm:7.9.7"],\
+            ["@types/babel__preset-env", "npm:7.10.0"],\
             ["@types/chance", "npm:1.1.7"],\
             ["@types/cors", "npm:2.8.19"],\
             ["@types/debug", "npm:4.1.12"],\
@@ -35906,10 +35906,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/babel__preset-env", [\
-        ["npm:7.9.7", {\
-          "packageLocation": "./.yarn/cache/@types-babel__preset-env-npm-7.9.7-d1fff5768c-624425a84d.zip/node_modules/@types/babel__preset-env/",\
+        ["npm:7.10.0", {\
+          "packageLocation": "./.yarn/cache/@types-babel__preset-env-npm-7.10.0-ab62c7e6f4-7d4d12758d.zip/node_modules/@types/babel__preset-env/",\
           "packageDependencies": [\
-            ["@types/babel__preset-env", "npm:7.9.7"]\
+            ["@types/babel__preset-env", "npm:7.10.0"]\
           ],\
           "linkType": "HARD"\
         }]\

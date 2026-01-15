@@ -43,7 +43,7 @@ module.exports.up = (migration) => {
       {
         regexp: {
           pattern:
-            '^[a-zA-Z0-9.!#$%&\'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$',
+            "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
           flags: null,
         },
       },
@@ -71,7 +71,12 @@ module.exports.up = (migration) => {
 
   // Set up field controls for better UX in Contentful
   teams.changeFieldControl('resourceTitle', 'builtin', 'singleLine', {});
-  teams.changeFieldControl('resourceDescription', 'builtin', 'multipleLine', {});
+  teams.changeFieldControl(
+    'resourceDescription',
+    'builtin',
+    'multipleLine',
+    {},
+  );
   teams.changeFieldControl('resourceButtonCopy', 'builtin', 'singleLine', {});
   teams.changeFieldControl('resourceContactEmail', 'builtin', 'singleLine', {});
   teams.changeFieldControl('resourceLink', 'builtin', 'urlEditor', {});

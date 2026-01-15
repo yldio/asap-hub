@@ -72,9 +72,9 @@ it('disables the navigation link based on user onboarded', () => {
   );
   const targetElement = getByText('group 1');
   expect(targetElement).toBeVisible();
-  // The pointer-events style is on the parent div element
-  const { parentElement } = targetElement;
-  expect(parentElement).toHaveStyle('pointer-events: none');
+  // The pointer-events style is on the grandparent div element (span -> p -> div)
+  const disabledDiv = targetElement.parentElement?.parentElement;
+  expect(disabledDiv).toHaveStyle('pointer-events: none');
 });
 
 it('renders a association section with the correct icon', () => {

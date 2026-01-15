@@ -126,7 +126,7 @@ describe('ManuscriptForm team validation', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
     await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
     await waitFor(() => {
@@ -194,7 +194,7 @@ describe('ManuscriptForm team validation', () => {
       );
 
       await waitFor(() => {
-        expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
       });
 
       await userEvent.click(screen.getByLabelText(label));
@@ -289,7 +289,7 @@ describe('ManuscriptForm team validation', () => {
       );
 
       await waitFor(() => {
-        expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
       });
 
       await userEvent.click(screen.getByLabelText(label));
@@ -327,7 +327,7 @@ describe('ManuscriptForm team validation', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
     await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
@@ -410,7 +410,7 @@ describe('ManuscriptForm team validation', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByText(/Loading.../i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
     await userEvent.click(screen.getByLabelText(/First Author/i));
@@ -491,7 +491,7 @@ describe('ManuscriptForm URL Requirement', () => {
       );
 
       await waitFor(() => {
-        expect(container.queryByText(/Loading.../i)).not.toBeInTheDocument();
+        expect(container.queryByText(/loading/i)).not.toBeInTheDocument();
         expect(
           container.getByRole('textbox', { name: label, hidden: true }),
         ).toBeInTheDocument();
@@ -523,7 +523,7 @@ describe('ManuscriptForm URL Requirement', () => {
       );
 
       await waitFor(() => {
-        expect(container.queryByText(/Loading.../i)).not.toBeInTheDocument();
+        expect(container.queryByText(/loading/i)).not.toBeInTheDocument();
       });
 
       await userEvent.click(

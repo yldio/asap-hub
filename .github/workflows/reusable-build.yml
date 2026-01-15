@@ -105,13 +105,17 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Cache turbo build setup
+      - name: Restore persistent build cache
         uses: actions/cache@v3
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-transpile-${{ github.sha }}
+          path: |
+            .turbo
+            apps/**/build
+            packages/**/build
+          key: build-cache-transpile-${{ runner.os }}-${{ hashFiles('yarn.lock', 'package.json', 'apps/**/package.json', 'packages/**/package.json') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-turbo-transpile
+            build-cache-transpile-${{ runner.os }}-${{ hashFiles('yarn.lock', 'package.json', 'apps/**/package.json', 'packages/**/package.json') }}-
+            build-cache-transpile-${{ runner.os }}-
       - name: Cache build output
         uses: ./.github/actions/cache-unplugged
         with:
@@ -143,13 +147,17 @@ jobs:
         uses: ./.github/actions/setup-environment
         with:
           environment-name: ${{ inputs.environment-name }}
-      - name: Cache turbo build setup
+      - name: Restore persistent build cache
         uses: actions/cache@v3
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-definitions-${{ github.sha }}
+          path: |
+            .turbo
+            apps/**/build
+            packages/**/build
+          key: build-cache-definitions-${{ runner.os }}-${{ hashFiles('yarn.lock', 'package.json', 'apps/**/package.json', 'packages/**/package.json') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-turbo-definitions
+            build-cache-definitions-${{ runner.os }}-${{ hashFiles('yarn.lock', 'package.json', 'apps/**/package.json', 'packages/**/package.json') }}-
+            build-cache-definitions-${{ runner.os }}-
       - name: Restore
         uses: ./.github/actions/cache-unplugged
         with:
@@ -197,13 +205,18 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
-      - name: Cache turbo build setup
+      - name: Restore persistent build cache
         uses: actions/cache@v3
         with:
-          path: .turbo
-          key: ${{ runner.os }}-turbo-frontend-${{ github.sha }}
+          path: |
+            .turbo
+            apps/**/dist
+            apps/**/build
+            packages/**/build
+          key: build-cache-frontend-${{ runner.os }}-${{ hashFiles('yarn.lock', 'package.json', 'apps/**/package.json', 'packages/**/package.json') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-turbo-frontend
+            build-cache-frontend-${{ runner.os }}-${{ hashFiles('yarn.lock', 'package.json', 'apps/**/package.json', 'packages/**/package.json') }}-
+            build-cache-frontend-${{ runner.os }}-
       - name: Restore .unplugged from cache
         uses: ./.github/actions/cache-unplugged
         with:

@@ -98,6 +98,16 @@ runs:
       uses: ./.github/actions/setup-environment
       with:
         environment-name: ${{ inputs.environment-name }}
+    - name: Restore serverless package cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          apps/${{ inputs.app }}/.serverless
+          apps/${{ inputs.app }}/node_modules
+        key: sls-cache-${{ inputs.app }}-${{ runner.os }}-${{ hashFiles('apps/${{ inputs.app }}/package.json', 'yarn.lock') }}-${{ github.sha }}
+        restore-keys: |
+          sls-cache-${{ inputs.app }}-${{ runner.os }}-${{ hashFiles('apps/${{ inputs.app }}/package.json', 'yarn.lock') }}-
+          sls-cache-${{ inputs.app }}-${{ runner.os }}-
     - name: Cache build output
       uses: ./.github/actions/cache-unplugged
       with:

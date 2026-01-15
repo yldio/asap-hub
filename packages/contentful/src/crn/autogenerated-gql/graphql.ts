@@ -3288,6 +3288,14 @@ export enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -6010,6 +6018,14 @@ export enum ManuscriptVersionsTeamsCollectionOrder {
   GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -6519,6 +6535,14 @@ export enum ManuscriptsTeamsCollectionOrder {
   GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -10270,6 +10294,14 @@ export enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
   GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -10497,6 +10529,14 @@ export enum ResearchOutputsTeamsCollectionOrder {
   GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -10910,6 +10950,14 @@ export enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
   GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -11139,6 +11187,14 @@ export enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
   GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -11456,6 +11512,14 @@ export enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
   GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -11775,6 +11839,11 @@ export type Teams = Entry &
     proposal?: Maybe<ResearchOutputs>;
     researchTagsCollection?: Maybe<TeamsResearchTagsCollection>;
     researchTheme?: Maybe<ResearchTheme>;
+    resourceButtonCopy?: Maybe<Scalars['String']>;
+    resourceContactEmail?: Maybe<Scalars['String']>;
+    resourceDescription?: Maybe<Scalars['String']>;
+    resourceLink?: Maybe<Scalars['String']>;
+    resourceTitle?: Maybe<Scalars['String']>;
     supplementGrant?: Maybe<SupplementGrant>;
     sys: Sys;
     teamDescription?: Maybe<Scalars['String']>;
@@ -11849,6 +11918,36 @@ export type TeamsResearchThemeArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResearchThemeFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsResourceButtonCopyArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsResourceContactEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsResourceDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsResourceLinkArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsResourceTitleArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
@@ -11949,6 +12048,43 @@ export type TeamsFilter = {
   researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   researchTheme?: InputMaybe<CfResearchThemeNestedFilter>;
   researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceButtonCopy?: InputMaybe<Scalars['String']>;
+  resourceButtonCopy_contains?: InputMaybe<Scalars['String']>;
+  resourceButtonCopy_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceButtonCopy_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceButtonCopy_not?: InputMaybe<Scalars['String']>;
+  resourceButtonCopy_not_contains?: InputMaybe<Scalars['String']>;
+  resourceButtonCopy_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceContactEmail?: InputMaybe<Scalars['String']>;
+  resourceContactEmail_contains?: InputMaybe<Scalars['String']>;
+  resourceContactEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceContactEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceContactEmail_not?: InputMaybe<Scalars['String']>;
+  resourceContactEmail_not_contains?: InputMaybe<Scalars['String']>;
+  resourceContactEmail_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  resourceDescription?: InputMaybe<Scalars['String']>;
+  resourceDescription_contains?: InputMaybe<Scalars['String']>;
+  resourceDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceDescription_not?: InputMaybe<Scalars['String']>;
+  resourceDescription_not_contains?: InputMaybe<Scalars['String']>;
+  resourceDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceLink?: InputMaybe<Scalars['String']>;
+  resourceLink_contains?: InputMaybe<Scalars['String']>;
+  resourceLink_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceLink_not?: InputMaybe<Scalars['String']>;
+  resourceLink_not_contains?: InputMaybe<Scalars['String']>;
+  resourceLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceTitle?: InputMaybe<Scalars['String']>;
+  resourceTitle_contains?: InputMaybe<Scalars['String']>;
+  resourceTitle_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceTitle_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceTitle_not?: InputMaybe<Scalars['String']>;
+  resourceTitle_not_contains?: InputMaybe<Scalars['String']>;
+  resourceTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   supplementGrant?: InputMaybe<CfSupplementGrantNestedFilter>;
   supplementGrant_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
@@ -12391,6 +12527,14 @@ export enum TeamsOrder {
   GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -12970,6 +13114,14 @@ export enum TutorialsTeamsCollectionOrder {
   GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -16401,6 +16553,43 @@ export type CfTeamsNestedFilter = {
   proposal_exists?: InputMaybe<Scalars['Boolean']>;
   researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceButtonCopy?: InputMaybe<Scalars['String']>;
+  resourceButtonCopy_contains?: InputMaybe<Scalars['String']>;
+  resourceButtonCopy_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceButtonCopy_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceButtonCopy_not?: InputMaybe<Scalars['String']>;
+  resourceButtonCopy_not_contains?: InputMaybe<Scalars['String']>;
+  resourceButtonCopy_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceContactEmail?: InputMaybe<Scalars['String']>;
+  resourceContactEmail_contains?: InputMaybe<Scalars['String']>;
+  resourceContactEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceContactEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceContactEmail_not?: InputMaybe<Scalars['String']>;
+  resourceContactEmail_not_contains?: InputMaybe<Scalars['String']>;
+  resourceContactEmail_not_in?: InputMaybe<
+    Array<InputMaybe<Scalars['String']>>
+  >;
+  resourceDescription?: InputMaybe<Scalars['String']>;
+  resourceDescription_contains?: InputMaybe<Scalars['String']>;
+  resourceDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceDescription_not?: InputMaybe<Scalars['String']>;
+  resourceDescription_not_contains?: InputMaybe<Scalars['String']>;
+  resourceDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceLink?: InputMaybe<Scalars['String']>;
+  resourceLink_contains?: InputMaybe<Scalars['String']>;
+  resourceLink_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceLink_not?: InputMaybe<Scalars['String']>;
+  resourceLink_not_contains?: InputMaybe<Scalars['String']>;
+  resourceLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceTitle?: InputMaybe<Scalars['String']>;
+  resourceTitle_contains?: InputMaybe<Scalars['String']>;
+  resourceTitle_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceTitle_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  resourceTitle_not?: InputMaybe<Scalars['String']>;
+  resourceTitle_not_contains?: InputMaybe<Scalars['String']>;
+  resourceTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   supplementGrant_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
   teamDescription?: InputMaybe<Scalars['String']>;

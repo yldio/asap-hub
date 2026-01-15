@@ -2619,7 +2619,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@peculiar/webcrypto",\
-        "npm:1.4.6"\
+        "npm:1.5.0"\
       ],\
       [\
         "@phosphor-icons/react",\
@@ -11475,7 +11475,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.28.5"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
             ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.14.2"],\
-            ["@peculiar/webcrypto", "npm:1.4.6"],\
+            ["@peculiar/webcrypto", "npm:1.5.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/react-test-renderer", "npm:18.3.1"],\
@@ -32154,18 +32154,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@peculiar/webcrypto", [\
-        ["npm:1.4.6", {\
-          "packageLocation": "./.yarn/cache/@peculiar-webcrypto-npm-1.4.6-bae8244a02-27201a9b8a.zip/node_modules/@peculiar/webcrypto/",\
-          "packageDependencies": [\
-            ["@peculiar/webcrypto", "npm:1.4.6"],\
-            ["@peculiar/asn1-schema", "npm:2.5.0"],\
-            ["@peculiar/json-schema", "npm:1.1.12"],\
-            ["pvtsutils", "npm:1.3.6"],\
-            ["tslib", "npm:2.8.1"],\
-            ["webcrypto-core", "npm:1.8.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:1.5.0", {\
           "packageLocation": "./.yarn/cache/@peculiar-webcrypto-npm-1.5.0-4d84865c57-9022d7452d.zip/node_modules/@peculiar/webcrypto/",\
           "packageDependencies": [\
@@ -39636,7 +39624,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.28.5"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
             ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.14.2"],\
-            ["@peculiar/webcrypto", "npm:1.4.6"],\
+            ["@peculiar/webcrypto", "npm:1.5.0"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/react-test-renderer", "npm:18.3.1"],\

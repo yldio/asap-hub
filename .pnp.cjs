@@ -3739,7 +3739,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/qs",\
-        "npm:6.9.11"\
+        "npm:6.14.0"\
       ],\
       [\
         "@types/range-parser",\
@@ -12536,7 +12536,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest-when", "npm:3.5.2"],\
             ["@types/jsonwebtoken", "npm:8.5.9"],\
             ["@types/nock", "npm:11.1.0"],\
-            ["@types/qs", "npm:6.9.11"],\
+            ["@types/qs", "npm:6.14.0"],\
             ["@types/react", "npm:18.3.12"],\
             ["@types/react-dom", "npm:18.3.1"],\
             ["@types/react-lottie", "npm:1.2.10"],\
@@ -14172,7 +14172,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/routing"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["@types/qs", "npm:6.9.11"],\
+            ["@types/qs", "npm:6.14.0"],\
             ["@types/react-router-dom", null],\
             ["qs", "npm:6.14.1"],\
             ["react-router-dom", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#npm:6.28.0"],\
@@ -14191,7 +14191,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["@types/qs", "npm:6.9.11"],\
+            ["@types/qs", "npm:6.14.0"],\
             ["@types/react-router-dom", null],\
             ["qs", "npm:6.14.1"],\
             ["react-router-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:6.28.0"],\
@@ -14210,7 +14210,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#workspace:packages/routing"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["@types/qs", "npm:6.9.11"],\
+            ["@types/qs", "npm:6.14.0"],\
             ["@types/react-router-dom", null],\
             ["qs", "npm:6.14.1"],\
             ["react-router-dom", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:6.28.0"],\
@@ -14229,7 +14229,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "workspace:packages/routing"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["@types/qs", "npm:6.9.11"],\
+            ["@types/qs", "npm:6.14.0"],\
             ["qs", "npm:6.14.1"],\
             ["react-router-dom", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:6.28.0"],\
             ["typesafe-routes", "virtual:fe7376caf77184dfcae2453793b081c50ba691a5c68f81fdfb72f3509158bd9ece9df1b5a5c08798829c50ff017c8ea53d48d6f8cc9306a60af2cb277154cae5#npm:9.0.1"],\
@@ -36851,13 +36851,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-qs-npm-6.14.0-e27d9ca044-1909205514.zip/node_modules/@types/qs/",\
           "packageDependencies": [\
             ["@types/qs", "npm:6.14.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:6.9.11", {\
-          "packageLocation": "./.yarn/cache/@types-qs-npm-6.9.11-e12802ac61-620ca1628b.zip/node_modules/@types/qs/",\
-          "packageDependencies": [\
-            ["@types/qs", "npm:6.9.11"]\
           ],\
           "linkType": "HARD"\
         }]\

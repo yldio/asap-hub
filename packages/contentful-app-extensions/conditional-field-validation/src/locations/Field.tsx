@@ -13,6 +13,14 @@ export const PROJECT_END_DATE_WARNING =
 export const PROJECT_RESOURCE_TYPE_WARNING =
   'Resource Projects require a Resource Type';
 
+const HEIGHTS = {
+  DATE_COMPACT: 40,
+  DATE_EXPANDED: 370,
+  LINK_COMPACT: 80,
+  LINK_EXPANDED: 110,
+  WARNING_OFFSET: 40,
+} as const;
+
 interface ValidationResult {
   warning: string | null;
   isInvalid: boolean;
@@ -136,8 +144,14 @@ const createHeightManager = (
   isEntryLinkField: boolean,
   warning: string | null,
 ) => {
-  const compactHeight = warning ? 120 : isDateField ? 40 : 80;
-  const expandedHeight = isDateField ? 370 : 110;
+  const compactHeight = warning
+    ? HEIGHTS.LINK_COMPACT + HEIGHTS.WARNING_OFFSET
+    : isDateField
+      ? HEIGHTS.DATE_COMPACT
+      : HEIGHTS.LINK_COMPACT;
+  const expandedHeight = isDateField
+    ? HEIGHTS.DATE_EXPANDED
+    : HEIGHTS.LINK_EXPANDED;
 
   let isMenuCurrentlyOpen = false;
 

@@ -8,7 +8,7 @@ module.exports.up = (migration) => {
     .name('Resource Title')
     .type('Symbol')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([])
     .disabled(false)
     .omitted(false);
@@ -18,7 +18,7 @@ module.exports.up = (migration) => {
     .name('Resource Description')
     .type('Text')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([])
     .disabled(false)
     .omitted(false);
@@ -28,7 +28,7 @@ module.exports.up = (migration) => {
     .name('Resource Button Copy')
     .type('Symbol')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([])
     .disabled(false)
     .omitted(false);
@@ -38,7 +38,7 @@ module.exports.up = (migration) => {
     .name('Resource Contact Email')
     .type('Symbol')
     .localized(false)
-    .required(true)
+    .required(false)
     .validations([
       {
         regexp: {

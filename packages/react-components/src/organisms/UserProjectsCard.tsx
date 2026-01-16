@@ -4,8 +4,8 @@ import { projects as projectRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Card, Paragraph, Button, Headline2, Anchor, Pill } from '../atoms';
-import { charcoal, fern, lead, steel } from '../colors';
-import { rem } from '../pixels';
+import { charcoal, fern, neutral900, steel } from '../colors';
+import { rem, tabletScreen } from '../pixels';
 import { getStatusPillAccent } from './ProjectCard';
 
 const MAX_PROJECTS = 6;
@@ -14,9 +14,15 @@ const headerStyles = css({
   marginBottom: rem(24),
 });
 
+const minTableColumnWidth = css({ width: rem(150) });
+const paddingRight24 = css({ paddingRight: rem(24) });
+
 const tableStyles = css({
   width: '100%',
   borderCollapse: 'collapse',
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    display: 'none !important',
+  },
 });
 
 const tableHeaderStyles = css({
@@ -29,14 +35,45 @@ const tableHeaderStyles = css({
   color: charcoal.rgb,
 });
 
+const tableHeaderAutoWidthStyles = css({
+  width: '1%',
+  whiteSpace: 'nowrap',
+});
+
+const tableHeaderLastColumnStyles = css({
+  width: '1%',
+  whiteSpace: 'nowrap',
+  textAlign: 'left',
+});
+
 const tableCellStyles = css({
   padding: `${rem(16)} 0`,
   borderBottom: `1px solid ${steel.rgb}`,
   verticalAlign: 'top',
+  wordBreak: 'break-word',
+  overflowWrap: 'break-word',
+  minWidth: 0,
+});
+
+const tableCellAutoWidthStyles = css({
+  width: '1%',
+  whiteSpace: 'nowrap',
+});
+
+const tableCellLastColumnStyles = css({
+  width: '1%',
+  whiteSpace: 'nowrap',
+  padding: `${rem(16)} 0 ${rem(16)} 0`,
+  borderBottom: `1px solid ${steel.rgb}`,
+  verticalAlign: 'top',
+});
+
+const lastRowNoBorder = css({
+  borderBottom: 'none',
 });
 
 const projectNameStyles = css({
-  fontSize: rem(16),
+  fontSize: rem(17),
   fontWeight: '500',
   color: fern.rgb,
   textDecoration: 'none',
@@ -46,8 +83,10 @@ const projectNameStyles = css({
 });
 
 const typeLabelStyles = css({
-  fontSize: rem(14),
-  color: lead.rgb,
+  color: neutral900.rgb,
+  fontSize: rem(17),
+  fontWeight: 400,
+  lineHeight: rem(24),
 });
 
 const showMoreButtonStyles = css({
@@ -72,6 +111,58 @@ const showMoreButtonTextStyles = css({
   display: 'flex',
   alignItems: 'center',
   gap: rem(4),
+});
+
+// Mobile styles
+const mobileProjectsList = css({
+  display: 'none',
+  flexDirection: 'column',
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    display: 'flex !important',
+  },
+});
+
+const mobileProjectItem = css({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: `${rem(20)} 0`,
+  borderBottom: `1px solid ${steel.rgb}`,
+  gap: rem(32),
+  ':last-child': {
+    borderBottom: 'none',
+  },
+});
+
+const mobileProjectField = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(16),
+});
+
+const mobileFieldLabel = css({
+  fontSize: rem(12),
+  fontWeight: 700,
+  lineHeight: '16px',
+  letterSpacing: '0.1px',
+  color: charcoal.rgb,
+  textTransform: 'uppercase',
+});
+
+const mobileFieldValue = css({
+  fontSize: rem(17),
+  fontWeight: 400,
+  lineHeight: rem(24),
+  color: neutral900.rgb,
+});
+
+const mobileProjectNameValue = css({
+  fontSize: rem(17),
+  fontWeight: '500',
+  color: fern.rgb,
+  textDecoration: 'none',
+  '&:hover': {
+    textDecoration: 'underline',
+  },
 });
 
 type UserProjectsCardProps = {
@@ -126,21 +217,47 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
         </Paragraph>
       </div>
 
-      <table css={tableStyles}>
+      {/* Desktop Table View */}
+      <table css={tableStyles} data-testid="projects-table">
         <thead>
           <tr>
             <th css={tableHeaderStyles}>Project Name</th>
-            <th css={tableHeaderStyles}>Type</th>
-            <th css={tableHeaderStyles}>Status</th>
+            <th
+              css={[
+                tableHeaderStyles,
+                tableHeaderAutoWidthStyles,
+                minTableColumnWidth,
+                paddingRight24,
+              ]}
+            >
+              Type
+            </th>
+            <th
+              css={[
+                tableHeaderStyles,
+                tableHeaderAutoWidthStyles,
+                tableHeaderLastColumnStyles,
+              ]}
+            >
+              Status
+            </th>
           </tr>
         </thead>
         <tbody>
-          {displayProjects.map((project) => {
+          {displayProjects.map((project, index) => {
             const projectRoute = getProjectRoute(project);
+            const isLastRow = index === displayProjects.length - 1;
+            const shouldRemoveBorder = isLastRow && !hasMoreProjects;
 
             return (
               <tr key={project.id}>
-                <td css={tableCellStyles}>
+                <td
+                  css={[
+                    tableCellStyles,
+                    paddingRight24,
+                    shouldRemoveBorder && lastRowNoBorder,
+                  ]}
+                >
                   {projectRoute ? (
                     <Anchor href={projectRoute} css={projectNameStyles}>
                       {project.title}
@@ -149,10 +266,23 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
                     <span css={projectNameStyles}>{project.title}</span>
                   )}
                 </td>
-                <td css={tableCellStyles}>
+                <td
+                  css={[
+                    tableCellStyles,
+                    tableCellAutoWidthStyles,
+                    minTableColumnWidth,
+                    paddingRight24,
+                    shouldRemoveBorder && lastRowNoBorder,
+                  ]}
+                >
                   <span css={typeLabelStyles}>{project.projectType}</span>
                 </td>
-                <td css={tableCellStyles}>
+                <td
+                  css={[
+                    tableCellLastColumnStyles,
+                    shouldRemoveBorder && lastRowNoBorder,
+                  ]}
+                >
                   {project.status && (
                     <Pill
                       accent={getStatusPillAccent(
@@ -169,6 +299,54 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
           })}
         </tbody>
       </table>
+
+      {/* Mobile Card View */}
+      <div css={mobileProjectsList} data-testid="projects-mobile-list">
+        {displayProjects.map((project, index) => {
+          const projectRoute = getProjectRoute(project);
+          const isLastItem = index === displayProjects.length - 1;
+          const shouldRemoveBorder = isLastItem && !hasMoreProjects;
+
+          return (
+            <div
+              key={project.id}
+              css={[mobileProjectItem, shouldRemoveBorder && lastRowNoBorder]}
+            >
+              <div css={mobileProjectField}>
+                <div css={mobileFieldLabel}>Project Name</div>
+                <div css={mobileFieldValue}>
+                  {projectRoute ? (
+                    <Anchor href={projectRoute} css={mobileProjectNameValue}>
+                      {project.title}
+                    </Anchor>
+                  ) : (
+                    <span css={mobileProjectNameValue}>{project.title}</span>
+                  )}
+                </div>
+              </div>
+              <div css={mobileProjectField}>
+                <div css={mobileFieldLabel}>Type</div>
+                <div css={mobileFieldValue}>{project.projectType}</div>
+              </div>
+              {project.status && (
+                <div css={mobileProjectField}>
+                  <div css={mobileFieldLabel}>Status</div>
+                  <div css={mobileFieldValue}>
+                    <Pill
+                      accent={getStatusPillAccent(
+                        project.status as ProjectStatus,
+                      )}
+                      noMargin
+                    >
+                      {project.status}
+                    </Pill>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
 
       {hasMoreProjects && (
         <Button

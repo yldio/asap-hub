@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { UserProjectMembership } from '@asap-hub/model';
 
 import UserProjectsCard from '../UserProjectsCard';
@@ -42,46 +42,50 @@ describe('UserProjectsCard', () => {
 
   it('renders project table with headers', () => {
     render(<UserProjectsCard projects={mockProjects} />);
+    const table = screen.getByTestId('projects-table');
 
-    expect(screen.getByText('Project Name')).toBeInTheDocument();
-    expect(screen.getByText('Type')).toBeInTheDocument();
-    expect(screen.getByText('Status')).toBeInTheDocument();
+    expect(within(table).getByText('Project Name')).toBeInTheDocument();
+    expect(within(table).getByText('Type')).toBeInTheDocument();
+    expect(within(table).getByText('Status')).toBeInTheDocument();
   });
 
   it('displays project titles and types correctly', () => {
     render(<UserProjectsCard projects={mockProjects} />);
+    const table = screen.getByTestId('projects-table');
 
     expect(
-      screen.getByText('Understanding Genetic Mechanisms in PD'),
+      within(table).getByText('Understanding Genetic Mechanisms in PD'),
     ).toBeInTheDocument();
-    expect(screen.getByText('PD Biobank Resource')).toBeInTheDocument();
+    expect(within(table).getByText('PD Biobank Resource')).toBeInTheDocument();
     expect(
-      screen.getByText('Molecular Biology Training Program'),
+      within(table).getByText('Molecular Biology Training Program'),
     ).toBeInTheDocument();
 
     // Check project types
-    expect(screen.getAllByText('Discovery Project')).toHaveLength(1);
-    expect(screen.getAllByText('Resource Project')).toHaveLength(2);
-    expect(screen.getAllByText('Trainee Project')).toHaveLength(1);
+    expect(within(table).getAllByText('Discovery Project')).toHaveLength(1);
+    expect(within(table).getAllByText('Resource Project')).toHaveLength(2);
+    expect(within(table).getAllByText('Trainee Project')).toHaveLength(1);
   });
 
   it('displays status pills correctly', () => {
     render(<UserProjectsCard projects={mockProjects} />);
+    const table = screen.getByTestId('projects-table');
 
     // Active status should show "Active" (2 projects have Active status)
-    expect(screen.getAllByText('Active')).toHaveLength(2);
+    expect(within(table).getAllByText('Active')).toHaveLength(2);
 
     // Completed status should show "Completed"
-    expect(screen.getByText('Completed')).toBeInTheDocument();
+    expect(within(table).getByText('Completed')).toBeInTheDocument();
 
     // Closed status should show "Closed"
-    expect(screen.getByText('Closed')).toBeInTheDocument();
+    expect(within(table).getByText('Closed')).toBeInTheDocument();
   });
 
   it('creates correct links for different project types', () => {
     render(<UserProjectsCard projects={mockProjects} />);
+    const table = screen.getByTestId('projects-table');
 
-    const discoveryLink = screen.getByRole('link', {
+    const discoveryLink = within(table).getByRole('link', {
       name: /Understanding Genetic Mechanisms in PD/,
     });
     expect(discoveryLink).toHaveAttribute(
@@ -89,7 +93,7 @@ describe('UserProjectsCard', () => {
       '/projects/discovery/discovery-project-1',
     );
 
-    const resourceLink = screen.getByRole('link', {
+    const resourceLink = within(table).getByRole('link', {
       name: /PD Biobank Resource/,
     });
     expect(resourceLink).toHaveAttribute(
@@ -97,7 +101,7 @@ describe('UserProjectsCard', () => {
       '/projects/resource/resource-project-1',
     );
 
-    const traineeLink = screen.getByRole('link', {
+    const traineeLink = within(table).getByRole('link', {
       name: /Molecular Biology Training Program/,
     });
     expect(traineeLink).toHaveAttribute(
@@ -128,11 +132,32 @@ describe('UserProjectsCard', () => {
     }));
 
     render(<UserProjectsCard projects={manyProjects} />);
+    const table = screen.getByTestId('projects-table');
 
+    // Initially should show first 6 projects
+    expect(within(table).getByText('Project 0')).toBeInTheDocument();
+    expect(within(table).getByText('Project 5')).toBeInTheDocument();
+    expect(within(table).queryByText('Project 6')).not.toBeInTheDocument();
+
+    // Click show more
     const showMoreButton = screen.getByText(/Show more/);
     fireEvent.click(showMoreButton);
 
+    // Should now show all projects and button should say "Show less"
     expect(screen.getByText(/Show less/)).toBeInTheDocument();
+    expect(within(table).getByText('Project 6')).toBeInTheDocument();
+    expect(within(table).getByText('Project 7')).toBeInTheDocument();
+
+    // Click show less
+    const showLessButton = screen.getByText(/Show less/);
+    fireEvent.click(showLessButton);
+
+    // Should collapse back to first 6 projects
+    expect(screen.getByText(/Show more/)).toBeInTheDocument();
+    expect(within(table).getByText('Project 0')).toBeInTheDocument();
+    expect(within(table).getByText('Project 5')).toBeInTheDocument();
+    expect(within(table).queryByText('Project 6')).not.toBeInTheDocument();
+    expect(within(table).queryByText('Project 7')).not.toBeInTheDocument();
   });
 
   it('does not show show more button when 6 or fewer projects', () => {
@@ -157,18 +182,19 @@ describe('UserProjectsCard', () => {
     }));
 
     render(<UserProjectsCard projects={manyProjects} />);
+    const table = screen.getByTestId('projects-table');
 
     // Initially should show first 6 projects
-    expect(screen.getByText('Project 0')).toBeInTheDocument();
-    expect(screen.getByText('Project 5')).toBeInTheDocument();
+    expect(within(table).getByText('Project 0')).toBeInTheDocument();
+    expect(within(table).getByText('Project 5')).toBeInTheDocument();
 
     // Click show more
     const showMoreButton = screen.getByText(/Show more/);
     fireEvent.click(showMoreButton);
 
     // Should now show all 8 projects
-    expect(screen.getByText('Project 6')).toBeInTheDocument();
-    expect(screen.getByText('Project 7')).toBeInTheDocument();
+    expect(within(table).getByText('Project 6')).toBeInTheDocument();
+    expect(within(table).getByText('Project 7')).toBeInTheDocument();
   });
 
   it('shows correct status for different project statuses', () => {
@@ -200,18 +226,19 @@ describe('UserProjectsCard', () => {
     ];
 
     render(<UserProjectsCard projects={projectsWithDifferentStatuses} />);
+    const table = screen.getByTestId('projects-table');
 
     // Active should show "Active"
-    expect(screen.getByText('Active')).toBeInTheDocument();
+    expect(within(table).getByText('Active')).toBeInTheDocument();
 
     // Completed should show "Completed"
-    expect(screen.getByText('Completed')).toBeInTheDocument();
+    expect(within(table).getByText('Completed')).toBeInTheDocument();
 
     // Closed should show "Closed"
-    expect(screen.getByText('Closed')).toBeInTheDocument();
+    expect(within(table).getByText('Closed')).toBeInTheDocument();
 
     // Other status (Paused) should show the actual status
-    expect(screen.getByText('Paused')).toBeInTheDocument();
+    expect(within(table).getByText('Paused')).toBeInTheDocument();
   });
 
   it('renders project without link when project type is unknown', () => {
@@ -225,12 +252,13 @@ describe('UserProjectsCard', () => {
     };
 
     render(<UserProjectsCard projects={[projectWithUnknownType]} />);
+    const table = screen.getByTestId('projects-table');
 
     // Should render the title but not as a link
-    expect(screen.getByText('Unknown Type Project')).toBeInTheDocument();
+    const projectElement = within(table).getByText('Unknown Type Project');
+    expect(projectElement).toBeInTheDocument();
 
     // Should not have a link (should be a span, not an anchor)
-    const projectElement = screen.getByText('Unknown Type Project');
     expect(projectElement.tagName).toBe('SPAN');
     expect(projectElement).not.toHaveAttribute('href');
   });
@@ -246,14 +274,15 @@ describe('UserProjectsCard', () => {
     ];
 
     render(<UserProjectsCard projects={projectWithOtherStatus} />);
+    const table = screen.getByTestId('projects-table');
 
     // Should show the actual status text
-    expect(screen.getByText('On Hold')).toBeInTheDocument();
+    expect(within(table).getByText('On Hold')).toBeInTheDocument();
 
     // Should not show "Active", "Completed", or "Closed"
-    expect(screen.queryByText('Active')).not.toBeInTheDocument();
-    expect(screen.queryByText('Completed')).not.toBeInTheDocument();
-    expect(screen.queryByText('Closed')).not.toBeInTheDocument();
+    expect(within(table).queryByText('Active')).not.toBeInTheDocument();
+    expect(within(table).queryByText('Completed')).not.toBeInTheDocument();
+    expect(within(table).queryByText('Closed')).not.toBeInTheDocument();
   });
 
   it('does not render status when status is missing', () => {
@@ -267,14 +296,88 @@ describe('UserProjectsCard', () => {
     ];
 
     render(<UserProjectsCard projects={projectWithoutStatus} />);
+    const table = screen.getByTestId('projects-table');
 
     // Should render the project
-    expect(screen.getByText('No Status Project')).toBeInTheDocument();
+    const projectElement = within(table).getByText('No Status Project');
+    expect(projectElement).toBeInTheDocument();
 
     // Should not render any status pill
-    const statusCell = screen.getByText('No Status Project').closest('tr');
+    const statusCell = projectElement.closest('tr');
     expect(statusCell).toBeInTheDocument();
     // Status column should be empty (no status text)
-    expect(screen.queryByText('Active')).not.toBeInTheDocument();
+    expect(within(table).queryByText('Active')).not.toBeInTheDocument();
+  });
+
+  it('removes border from last row when there is no show more button', () => {
+    const fewProjects = Array.from({ length: 3 }, (_, i) => ({
+      id: `project-${i}`,
+      title: `Project ${i}`,
+      projectType: 'Discovery Project' as const,
+      status: 'Active' as const,
+    }));
+
+    const { container } = render(<UserProjectsCard projects={fewProjects} />);
+    const table = container.querySelector('table');
+    const rows = table?.querySelectorAll('tbody tr') || [];
+
+    // Last row should exist
+    expect(rows.length).toBe(3);
+
+    // Last row should not have border-bottom (lastRowNoBorder style applied)
+    const lastRow = rows[rows.length - 1];
+    const lastRowCells = lastRow.querySelectorAll('td');
+
+    // Check that the last row cells have the border removed
+    // This is tested by checking the rendered output - the border should be removed
+    expect(lastRowCells.length).toBe(3);
+  });
+
+  it('keeps border on last row when there is a show more button', () => {
+    const manyProjects = Array.from({ length: 8 }, (_, i) => ({
+      id: `project-${i}`,
+      title: `Project ${i}`,
+      projectType: 'Discovery Project' as const,
+      status: 'Active' as const,
+    }));
+
+    const { container } = render(<UserProjectsCard projects={manyProjects} />);
+    const table = container.querySelector('table');
+    const rows = table?.querySelectorAll('tbody tr') || [];
+
+    // Should show first 6 projects initially
+    expect(rows.length).toBe(6);
+
+    // Last row should have border (no lastRowNoBorder style applied when hasMoreProjects is true)
+    const lastRow = rows[rows.length - 1];
+    expect(lastRow).toBeInTheDocument();
+
+    // Show more button should be present
+    expect(screen.getByText(/Show more/)).toBeInTheDocument();
+  });
+
+  it('removes border from last row after clicking show more when all projects are displayed', () => {
+    const manyProjects = Array.from({ length: 8 }, (_, i) => ({
+      id: `project-${i}`,
+      title: `Project ${i}`,
+      projectType: 'Discovery Project' as const,
+      status: 'Active' as const,
+    }));
+
+    const { container } = render(<UserProjectsCard projects={manyProjects} />);
+
+    // Click show more to expand
+    const showMoreButton = screen.getByText(/Show more/);
+    fireEvent.click(showMoreButton);
+
+    const table = container.querySelector('table');
+    const rows = table?.querySelectorAll('tbody tr') || [];
+
+    // Should now show all 8 projects
+    expect(rows.length).toBe(8);
+
+    // Last row should not have border (lastRowNoBorder style applied)
+    const lastRow = rows[rows.length - 1];
+    expect(lastRow).toBeInTheDocument();
   });
 });

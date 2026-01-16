@@ -391,37 +391,40 @@ export const exportAnalyticsData = async <T extends Metrics>(
 
             const enriched = res.items.map((item) => {
               const teamCollabItem = item as TeamCollaborationDataObject;
+              const within = teamCollabItem.outputsCoProducedWithin || {};
+              const across =
+                teamCollabItem.outputsCoProducedAcross?.byDocumentType || {};
+              const collaboratingTeams =
+                teamCollabItem.outputsCoProducedAcross?.byTeam || [];
+
               return {
-                id: teamCollabItem.id,
-                name: teamCollabItem.name,
+                ...teamCollabItem,
                 isInactive: !!teamCollabItem.inactiveSince,
-                inactiveSince: teamCollabItem.inactiveSince,
                 // Flatten outputsCoProducedWithin
-                Article: teamCollabItem.outputsCoProducedWithin.Article,
-                Bioinformatics:
-                  teamCollabItem.outputsCoProducedWithin.Bioinformatics,
-                Dataset: teamCollabItem.outputsCoProducedWithin.Dataset,
-                'Lab Material':
-                  teamCollabItem.outputsCoProducedWithin['Lab Material'],
-                Protocol: teamCollabItem.outputsCoProducedWithin.Protocol,
+                Article: Number(within.Article) || 0,
+                Bioinformatics: Number(within.Bioinformatics) || 0,
+                Dataset: Number(within.Dataset) || 0,
+                'Lab Material': Number(within['Lab Material']) || 0,
+                Protocol: Number(within.Protocol) || 0,
                 // Flatten outputsCoProducedAcross.byDocumentType
-                ArticleAcross:
-                  teamCollabItem.outputsCoProducedAcross.byDocumentType.Article,
-                BioinformaticsAcross:
-                  teamCollabItem.outputsCoProducedAcross.byDocumentType
-                    .Bioinformatics,
-                DatasetAcross:
-                  teamCollabItem.outputsCoProducedAcross.byDocumentType.Dataset,
-                'Lab Material Across':
-                  teamCollabItem.outputsCoProducedAcross.byDocumentType[
-                    'Lab Material'
-                  ],
-                ProtocolAcross:
-                  teamCollabItem.outputsCoProducedAcross.byDocumentType
-                    .Protocol,
+                ArticleAcross: Number(across.Article) || 0,
+                BioinformaticsAcross: Number(across.Bioinformatics) || 0,
+                DatasetAcross: Number(across.Dataset) || 0,
+                'Lab Material Across': Number(across['Lab Material']) || 0,
+                ProtocolAcross: Number(across.Protocol) || 0,
                 // Include collaborating teams array
-                collaboratingTeams:
-                  teamCollabItem.outputsCoProducedAcross.byTeam,
+                collaboratingTeams: collaboratingTeams
+                  .filter((team) => team != null)
+                  .map((team) => ({
+                    id: team.id || '',
+                    name: team.name || '',
+                    isInactive: !!team.isInactive,
+                    Article: Number(team.Article) || 0,
+                    Bioinformatics: Number(team.Bioinformatics) || 0,
+                    Dataset: Number(team.Dataset) || 0,
+                    'Lab Material': Number(team['Lab Material']) || 0,
+                    Protocol: Number(team.Protocol) || 0,
+                  })),
                 timeRange,
                 outputType,
               };

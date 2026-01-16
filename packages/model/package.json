@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.28.6",
-    "ajv": "8.11.0"
+    "ajv": "8.17.1"
   }
 }

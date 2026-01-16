@@ -300,7 +300,7 @@ __metadata:
     algoliasearch: 4.25.3
     apr-intercept: 3.0.4
     async-sema: 3.1.1
-    aws-sdk: 2.1524.0
+    aws-sdk: 2.1693.0
     csv-parse: 4.16.3
     got: 11.8.6
     jwt-encode: 1.0.1
@@ -996,7 +996,7 @@ __metadata:
     "@types/node": 20.10.5
     "@types/react": 18.3.12
     "@types/react-dom": 18.3.1
-    aws-sdk: 2.1524.0
+    aws-sdk: 2.1693.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.34.0
@@ -1456,7 +1456,7 @@ __metadata:
     "@types/node": 20.10.5
     "@types/react": 18.3.12
     "@types/react-dom": 18.3.1
-    aws-sdk: 2.1524.0
+    aws-sdk: 2.1693.0
     babel-loader: 8.3.0
     babel-preset-react-app: 10.0.1
     core-js: 3.34.0
@@ -17602,9 +17602,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:2.1524.0":
-  version: 2.1524.0
-  resolution: "aws-sdk@npm:2.1524.0"
+"aws-sdk@npm:2.1693.0":
+  version: 2.1693.0
+  resolution: "aws-sdk@npm:2.1693.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -17615,8 +17615,8 @@ __metadata:
     url: 0.10.3
     util: ^0.12.4
     uuid: 8.0.0
-    xml2js: 0.5.0
-  checksum: dd39413855444028feaea5f1628aade21812d11e221546d91e203a7b2143e69301d2acb9f8f9ef2eb584b1213b5695ace5b086fb405c51ddd3fe3826a37bc93d
+    xml2js: 0.6.2
+  checksum: d1487f5f3721bb9d3cbe3d4200759ea328c94d599ca6bbf5ea86e811bccb4eaf566c32282fffac53bdda32c026e0571f1c0e5509326cd9eb20f9c167b4971382
   languageName: node
   linkType: hard
 
@@ -41416,16 +41416,6 @@ __metadata:
   version: 4.0.0
   resolution: "xml-name-validator@npm:4.0.0"
   checksum: af100b79c29804f05fa35aa3683e29a321db9b9685d5e5febda3fa1e40f13f85abc40f45a6b2bf7bee33f68a1dc5e8eaef4cec100a304a9db565e6061d4cb5ad
-  languageName: node
-  linkType: hard
-
-"xml2js@npm:0.5.0":
-  version: 0.5.0
-  resolution: "xml2js@npm:0.5.0"
-  dependencies:
-    sax: ">=0.6.0"
-    xmlbuilder: ~11.0.0
-  checksum: 1aa71d62e5bc2d89138e3929b9ea46459157727759cbc62ef99484b778641c0cd21fb637696c052d901a22f82d092a3e740a16b4ce218e81ac59b933535124ea
   languageName: node
   linkType: hard
 

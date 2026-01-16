@@ -5,6 +5,7 @@ import {
   render,
   waitFor,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import {
@@ -270,7 +271,8 @@ describe('UserDetail', () => {
       await renderResearch(userWithProjects);
 
       expect(screen.getByText('Projects')).toBeInTheDocument();
-      expect(screen.getByText('Test Project')).toBeInTheDocument();
+      const table = screen.getByTestId('projects-table');
+      expect(within(table).getByText('Test Project')).toBeInTheDocument();
     });
 
     it('does not show UserProjectsCard when PROJECTS_MVP flag is disabled', async () => {

@@ -326,8 +326,9 @@ describe('UserProjectsCard', () => {
 
     // Last row should not have border-bottom (lastRowNoBorder style applied)
     const lastRow = rows[rows.length - 1];
-    const lastRowCells = lastRow.querySelectorAll('td');
+    expect(lastRow).toBeDefined();
 
+    const lastRowCells = lastRow!.querySelectorAll('td');
     // Check that the last row cells have the border removed
     // This is tested by checking the rendered output - the border should be removed
     expect(lastRowCells.length).toBe(3);
@@ -350,7 +351,7 @@ describe('UserProjectsCard', () => {
 
     // Last row should have border (no lastRowNoBorder style applied when hasMoreProjects is true)
     const lastRow = rows[rows.length - 1];
-    expect(lastRow).toBeInTheDocument();
+    expect(lastRow).toBeDefined();
 
     // Show more button should be present
     expect(screen.getByText(/Show more/)).toBeInTheDocument();
@@ -378,6 +379,6 @@ describe('UserProjectsCard', () => {
 
     // Last row should not have border (lastRowNoBorder style applied)
     const lastRow = rows[rows.length - 1];
-    expect(lastRow).toBeInTheDocument();
+    expect(lastRow).toBeDefined();
   });
 });

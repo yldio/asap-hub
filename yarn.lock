@@ -341,11 +341,11 @@ __metadata:
     "@babel/core": 7.28.6
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.6
-    "@types/auth0-js": 9.21.5
+    "@types/auth0-js": 9.21.6
     "@types/jest": 29.5.14
     "@types/node": 20.10.5
     "@types/pify": 5.0.4
-    auth0-js: 9.24.1
+    auth0-js: 9.30.0
     camelcase: 6.3.0
     pify: 5.0.0
     util: 0.12.5
@@ -14250,10 +14250,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/auth0-js@npm:9.21.5":
-  version: 9.21.5
-  resolution: "@types/auth0-js@npm:9.21.5"
-  checksum: 7df92564af1a3c09aec463c9296869a7e7bbdce4c627e90c557513cd1f998e8570a816f25c250587d15b2d72b318a47a5b44dd4dd538e997ef1ba91d97da2cc7
+"@types/auth0-js@npm:9.21.6":
+  version: 9.21.6
+  resolution: "@types/auth0-js@npm:9.21.6"
+  checksum: a1c2a7f8de7c2b65148972a1f64360015baabe91cd46d3213cbbc444653ffa3e0eff12f69db10031a58d05c880cb601174ccc61180fe0723b3345898a81c23cd
   languageName: node
   linkType: hard
 
@@ -17507,19 +17507,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"auth0-js@npm:9.24.1":
-  version: 9.24.1
-  resolution: "auth0-js@npm:9.24.1"
+"auth0-js@npm:9.30.0":
+  version: 9.30.0
+  resolution: "auth0-js@npm:9.30.0"
   dependencies:
     base64-js: ^1.5.1
     idtoken-verifier: ^2.2.4
     js-cookie: ^2.2.0
     minimist: ^1.2.5
     qs: ^6.10.1
-    superagent: ^7.1.5
+    superagent: ^10.2.3
     url-join: ^4.0.1
     winchan: ^0.2.2
-  checksum: 4086d95d365afaa34c73974a798d1c6f7cdc408171339d798d011948c66bb08bf65c963eefc6b22d654d4dc653ae1e4a58546d12bf2e8589d97578b90c631868
+  checksum: 5efeec661d8c2088af465b6c27f298eb4ba6bc5103ff04e17a33803b7c6c0691c911156f409c978229b3f3c4948cb81e5138b7526972e3abbf9ebc79a886a009
   languageName: node
   linkType: hard
 
@@ -19771,7 +19771,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"component-emitter@npm:^1.3.0":
+"component-emitter@npm:^1.3.0, component-emitter@npm:^1.3.1":
   version: 1.3.1
   resolution: "component-emitter@npm:1.3.1"
   checksum: 94550aa462c7bd5a61c1bc480e28554aa306066930152d1b1844a0dd3845d4e5db7e261ddec62ae184913b3e59b55a2ad84093b9d3596a8f17c341514d6c483d
@@ -21091,7 +21091,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.0.1, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.4.0, debug@npm:^4.4.1":
+"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.0.1, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.3.7, debug@npm:^4.4.0, debug@npm:^4.4.1":
   version: 4.4.3
   resolution: "debug@npm:4.4.3"
   dependencies:
@@ -24552,7 +24552,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"form-data@npm:4.0.5":
+"form-data@npm:4.0.5, form-data@npm:^4.0.5":
   version: 4.0.5
   resolution: "form-data@npm:4.0.5"
   dependencies:
@@ -24621,6 +24621,17 @@ __metadata:
     once: ^1.4.0
     qs: ^6.11.0
   checksum: b7a38dbf3f2d32858e9199f9e1597038d22854dc7f3120e30a05097fd538c3a5ebdfcb1b14ed3d68139f592176e64a3544aa14b5be624e26fe5b383a5c096a74
+  languageName: node
+  linkType: hard
+
+"formidable@npm:^3.5.4":
+  version: 3.5.4
+  resolution: "formidable@npm:3.5.4"
+  dependencies:
+    "@paralleldrive/cuid2": ^2.2.2
+    dezalgo: ^1.0.4
+    once: ^1.4.0
+  checksum: bdb8ecd8af16d40e7e4c06a9dbaf0394fe9cabb7a4cef6f68512ce6fe7933f5a9c588dfc5c1d92cbf83a9e4764f5216064d955669530d3d23ca816e93ea62989
   languageName: node
   linkType: hard
 
@@ -38069,7 +38080,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"superagent@npm:^7.1.3, superagent@npm:^7.1.5, superagent@npm:^7.1.6":
+"superagent@npm:^10.2.3":
+  version: 10.3.0
+  resolution: "superagent@npm:10.3.0"
+  dependencies:
+    component-emitter: ^1.3.1
+    cookiejar: ^2.1.4
+    debug: ^4.3.7
+    fast-safe-stringify: ^2.1.1
+    form-data: ^4.0.5
+    formidable: ^3.5.4
+    methods: ^1.1.2
+    mime: 2.6.0
+    qs: ^6.14.1
+  checksum: a29406b60522ab195cb7e743eec4eef8fc36ae5bdeeafa70328c41eb5f177cbdf31b43fcc415bfcc568547b74500f8847608e69b383ffb01421d9b018ec4b8dd
+  languageName: node
+  linkType: hard
+
+"superagent@npm:^7.1.3, superagent@npm:^7.1.6":
   version: 7.1.6
   resolution: "superagent@npm:7.1.6"
   dependencies:

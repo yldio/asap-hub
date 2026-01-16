@@ -1,5 +1,7 @@
 {
-  "extends": ["config:base"],
+  "extends": ["config:recommended"],
+  "minimumReleaseAge": "14 days",
+  "separateMajorMinor": true,
   "prConcurrentLimit": 8,
   "prHourlyLimit": 1,
   "platformAutomerge": true,
@@ -7,12 +9,49 @@
   "packageRules": [
     {
       "matchCurrentVersion": "!/^0/",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "groupName": "AWS SDK",
+      "matchPackagePatterns": ["^@aws-sdk/"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "groupName": "Babel",
+      "matchPackagePatterns": ["^@babel/"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "groupName": "Testing Library",
+      "matchPackagePatterns": ["^@testing-library/"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "groupName": "Serverless",
+      "matchPackagePatterns": ["^serverless"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "groupName": "Sentry",
+      "matchPackagePatterns": ["^@sentry/"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "groupName": "GraphQL Tools",
+      "matchPackagePatterns": ["^@graphql-tools/", "^graphql"],
+      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     }
   ],
   "timezone": "Europe/London",
   "updateNotScheduled": false,
-  "schedule": ["after 5am and before 3pm every weekday"],
+  "schedule": ["* 4-8 * * 1-4"],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true

@@ -3388,7 +3388,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/auth0-js",\
-        "npm:9.21.5"\
+        "npm:9.21.6"\
       ],\
       [\
         "@types/aws-lambda",\
@@ -4523,7 +4523,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "auth0-js",\
-        "npm:9.24.1"\
+        "npm:9.30.0"\
       ],\
       [\
         "auto-bind",\
@@ -11955,11 +11955,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/core", "npm:7.28.6"],\
             ["@babel/preset-react", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.28.5"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["@types/auth0-js", "npm:9.21.5"],\
+            ["@types/auth0-js", "npm:9.21.6"],\
             ["@types/jest", "npm:29.5.14"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/pify", "npm:5.0.4"],\
-            ["auth0-js", "npm:9.24.1"],\
+            ["auth0-js", "npm:9.30.0"],\
             ["camelcase", "npm:6.3.0"],\
             ["pify", "npm:5.0.0"],\
             ["util", "npm:0.12.5"]\
@@ -35940,10 +35940,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/auth0-js", [\
-        ["npm:9.21.5", {\
-          "packageLocation": "./.yarn/cache/@types-auth0-js-npm-9.21.5-bcf5df8a93-7df92564af.zip/node_modules/@types/auth0-js/",\
+        ["npm:9.21.6", {\
+          "packageLocation": "./.yarn/cache/@types-auth0-js-npm-9.21.6-b3a2583bcd-a1c2a7f8de.zip/node_modules/@types/auth0-js/",\
           "packageDependencies": [\
-            ["@types/auth0-js", "npm:9.21.5"]\
+            ["@types/auth0-js", "npm:9.21.6"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -39997,16 +39997,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["auth0-js", [\
-        ["npm:9.24.1", {\
-          "packageLocation": "./.yarn/cache/auth0-js-npm-9.24.1-d24625a1d6-4086d95d36.zip/node_modules/auth0-js/",\
+        ["npm:9.30.0", {\
+          "packageLocation": "./.yarn/cache/auth0-js-npm-9.30.0-d5f80ca356-5efeec661d.zip/node_modules/auth0-js/",\
           "packageDependencies": [\
-            ["auth0-js", "npm:9.24.1"],\
+            ["auth0-js", "npm:9.30.0"],\
             ["base64-js", "npm:1.5.1"],\
             ["idtoken-verifier", "npm:2.2.4"],\
             ["js-cookie", "npm:2.2.1"],\
             ["minimist", "npm:1.2.8"],\
             ["qs", "npm:6.14.0"],\
-            ["superagent", "npm:7.1.6"],\
+            ["superagent", "npm:10.3.0"],\
             ["url-join", "npm:4.0.1"],\
             ["winchan", "npm:0.2.2"]\
           ],\
@@ -48877,6 +48877,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dezalgo", "npm:1.0.4"],\
             ["once", "npm:1.4.0"],\
             ["qs", "npm:6.14.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:3.5.4", {\
+          "packageLocation": "./.yarn/cache/formidable-npm-3.5.4-a3473998f7-bdb8ecd8af.zip/node_modules/formidable/",\
+          "packageDependencies": [\
+            ["formidable", "npm:3.5.4"],\
+            ["@paralleldrive/cuid2", "npm:2.3.1"],\
+            ["dezalgo", "npm:1.0.4"],\
+            ["once", "npm:1.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -65273,6 +65283,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["superagent", [\
+        ["npm:10.3.0", {\
+          "packageLocation": "./.yarn/cache/superagent-npm-10.3.0-8dedd29079-a29406b605.zip/node_modules/superagent/",\
+          "packageDependencies": [\
+            ["superagent", "npm:10.3.0"],\
+            ["component-emitter", "npm:1.3.1"],\
+            ["cookiejar", "npm:2.1.4"],\
+            ["debug", "virtual:1ff4b5f90832ba0a9c93ba1223af226e44ba70c1126a3740d93562b97bc36544e896a5e95908196f7458713e6a6089a34bfc67362fc6df7fa093bd06c878be47#npm:4.4.3"],\
+            ["fast-safe-stringify", "npm:2.1.1"],\
+            ["form-data", "npm:4.0.5"],\
+            ["formidable", "npm:3.5.4"],\
+            ["methods", "npm:1.1.2"],\
+            ["mime", "npm:2.6.0"],\
+            ["qs", "npm:6.14.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:7.1.6", {\
           "packageLocation": "./.yarn/cache/superagent-npm-7.1.6-8f8391ba79-b733168360.zip/node_modules/superagent/",\
           "packageDependencies": [\

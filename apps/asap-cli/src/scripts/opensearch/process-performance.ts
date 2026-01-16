@@ -11,6 +11,7 @@ import {
   userProductivityPerformanceMapping,
   teamProductivityPerformanceMapping,
   userCollaborationPerformanceMapping,
+  teamCollaborationPerformanceMapping,
 } from './mappings';
 
 interface UserProductivityDocument {
@@ -98,6 +99,57 @@ interface UserCollaborationPerformanceDocument {
   documentCategory: string;
 }
 
+interface TeamCollaborationDocument {
+  Article: number;
+  Bioinformatics: number;
+  Dataset: number;
+  'Lab Material': number;
+  Protocol: number;
+  ArticleAcross: number;
+  BioinformaticsAcross: number;
+  DatasetAcross: number;
+  'Lab Material Across': number;
+  ProtocolAcross: number;
+  timeRange: string;
+  outputType: string;
+}
+
+interface TeamCollaborationHit {
+  _source?: {
+    Article?: number;
+    Bioinformatics?: number;
+    Dataset?: number;
+    'Lab Material'?: number;
+    Protocol?: number;
+    ArticleAcross?: number;
+    BioinformaticsAcross?: number;
+    DatasetAcross?: number;
+    'Lab Material Across'?: number;
+    ProtocolAcross?: number;
+    timeRange?: string;
+    outputType?: string;
+  };
+}
+
+interface TeamCollaborationPerformanceDocument {
+  withinTeam: {
+    article: PerformanceMetrics;
+    bioinformatics: PerformanceMetrics;
+    dataset: PerformanceMetrics;
+    labMaterial: PerformanceMetrics;
+    protocol: PerformanceMetrics;
+  };
+  acrossTeam: {
+    article: PerformanceMetrics;
+    bioinformatics: PerformanceMetrics;
+    dataset: PerformanceMetrics;
+    labMaterial: PerformanceMetrics;
+    protocol: PerformanceMetrics;
+  };
+  timeRange: string;
+  outputType: string;
+}
+
 export interface ProcessPerformanceOptions {
   awsRegion: string;
   environment: string;
@@ -107,12 +159,14 @@ export interface ProcessPerformanceOptions {
     | 'all'
     | 'user-productivity'
     | 'team-productivity'
-    | 'user-collaboration';
+    | 'user-collaboration'
+    | 'team-collaboration';
 }
 
 const USER_PRODUCTIVITY_INDEX = 'user-productivity';
 const TEAM_PRODUCTIVITY_INDEX = 'team-productivity';
 const USER_COLLABORATION_INDEX = 'user-collaboration';
+const TEAM_COLLABORATION_INDEX = 'team-collaboration';
 const MAX_RESULTS = 10000;
 
 /**
@@ -519,6 +573,193 @@ export const processUserCollaborationPerformance = async (
 };
 
 /**
+ * Maps a search hit to a TeamCollaborationDocument
+ */
+const mapTeamCollaborationHitToDocument = (
+  hit: TeamCollaborationHit,
+): TeamCollaborationDocument => ({
+  Article: hit._source?.Article ?? 0,
+  Bioinformatics: hit._source?.Bioinformatics ?? 0,
+  Dataset: hit._source?.Dataset ?? 0,
+  'Lab Material': hit._source?.['Lab Material'] ?? 0,
+  Protocol: hit._source?.Protocol ?? 0,
+  ArticleAcross: hit._source?.ArticleAcross ?? 0,
+  BioinformaticsAcross: hit._source?.BioinformaticsAcross ?? 0,
+  DatasetAcross: hit._source?.DatasetAcross ?? 0,
+  'Lab Material Across': hit._source?.['Lab Material Across'] ?? 0,
+  ProtocolAcross: hit._source?.ProtocolAcross ?? 0,
+  timeRange: hit._source?.timeRange ?? '',
+  outputType: hit._source?.outputType ?? '',
+});
+
+/**
+ * Retrieves all team collaboration documents for a given time range and output type
+ */
+const getAllTeamCollaborationDocuments = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+  timeRange: string,
+  outputType: string,
+): Promise<TeamCollaborationDocument[]> => {
+  try {
+    const response = await client.search({
+      index: TEAM_COLLABORATION_INDEX,
+      body: {
+        query: {
+          bool: {
+            must: [{ term: { timeRange } }, { term: { outputType } }],
+          },
+        },
+        size: MAX_RESULTS,
+      },
+    });
+
+    const hits = response.body.hits?.hits || [];
+    return hits.map(mapTeamCollaborationHitToDocument);
+  } catch (error) {
+    console.error('Failed to retrieve team collaboration documents', {
+      error,
+      timeRange,
+      outputType,
+    });
+    throw error;
+  }
+};
+
+/**
+ * Processes team collaboration performance metrics for a single time range and output type combination
+ */
+const processTeamCollaborationMetricsForCombination = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+  timeRange: string,
+  outputType: string,
+): Promise<TeamCollaborationPerformanceDocument> => {
+  console.info(
+    `Processing team collaboration performance metrics for ${timeRange}/${outputType}`,
+  );
+
+  const documents = await getAllTeamCollaborationDocuments(
+    client,
+    timeRange,
+    outputType,
+  );
+
+  // Within team metrics
+  const withinArticleMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.Article),
+    true,
+  );
+
+  const withinBioinformaticsMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.Bioinformatics),
+    true,
+  );
+
+  const withinDatasetMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.Dataset),
+    true,
+  );
+
+  const withinLabMaterialMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc['Lab Material']),
+    true,
+  );
+
+  const withinProtocolMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.Protocol),
+    true,
+  );
+
+  // Across team metrics
+  const acrossArticleMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.ArticleAcross),
+    true,
+  );
+
+  const acrossBioinformaticsMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.BioinformaticsAcross),
+    true,
+  );
+
+  const acrossDatasetMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.DatasetAcross),
+    true,
+  );
+
+  const acrossLabMaterialMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc['Lab Material Across']),
+    true,
+  );
+
+  const acrossProtocolMetrics = getPerformanceMetrics(
+    documents.map((doc) => doc.ProtocolAcross),
+    true,
+  );
+
+  console.info(
+    `Processed team collaboration performance metrics for ${timeRange}/${outputType} (${documents.length} teams)`,
+  );
+
+  return {
+    withinTeam: {
+      article: withinArticleMetrics,
+      bioinformatics: withinBioinformaticsMetrics,
+      dataset: withinDatasetMetrics,
+      labMaterial: withinLabMaterialMetrics,
+      protocol: withinProtocolMetrics,
+    },
+    acrossTeam: {
+      article: acrossArticleMetrics,
+      bioinformatics: acrossBioinformaticsMetrics,
+      dataset: acrossDatasetMetrics,
+      labMaterial: acrossLabMaterialMetrics,
+      protocol: acrossProtocolMetrics,
+    },
+    timeRange,
+    outputType,
+  };
+};
+
+/**
+ * Processes team collaboration performance metrics for all time ranges and output types
+ */
+export const processTeamCollaborationPerformance = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+): Promise<TeamCollaborationPerformanceDocument[]> => {
+  const combinations = timeRanges.flatMap((timeRange) =>
+    outputTypes.map((outputType) => ({
+      timeRange,
+      outputType,
+    })),
+  );
+
+  const results = await Promise.allSettled(
+    combinations.map(({ timeRange, outputType }) =>
+      processTeamCollaborationMetricsForCombination(
+        client,
+        timeRange,
+        outputType,
+      ),
+    ),
+  );
+
+  const performanceDocuments: TeamCollaborationPerformanceDocument[] = [];
+
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      performanceDocuments.push(result.value);
+    } else {
+      const { timeRange, outputType } = combinations[index];
+      console.error(
+        `Failed to process team collaboration performance metrics for ${timeRange}/${outputType}`,
+        { error: result.reason },
+      );
+    }
+  });
+
+  return performanceDocuments;
+};
+
+/**
  * Main entry point for processing productivity performance metrics
  */
 export const processPerformance = async ({
@@ -630,6 +871,42 @@ export const processPerformance = async ({
       console.info('Successfully indexed user-collaboration-performance data');
     } catch (error) {
       console.error('Failed to process user-collaboration-performance', {
+        error,
+      });
+      throw error;
+    }
+  }
+
+  if (metric === 'all' || metric === 'team-collaboration') {
+    try {
+      console.info('Processing team-collaboration-performance...');
+
+      await indexOpensearchData<TeamCollaborationPerformanceDocument>({
+        awsRegion,
+        stage: environment,
+        opensearchUsername,
+        opensearchPassword,
+        indexAlias: 'team-collaboration-performance',
+        getData: async () => {
+          const client = await getClient(
+            awsRegion,
+            environment,
+            opensearchUsername,
+            opensearchPassword,
+          );
+
+          const documents = await processTeamCollaborationPerformance(client);
+
+          return {
+            documents,
+            mapping: teamCollaborationPerformanceMapping,
+          };
+        },
+      });
+
+      console.info('Successfully indexed team-collaboration-performance data');
+    } catch (error) {
+      console.error('Failed to process team-collaboration-performance', {
         error,
       });
       throw error;

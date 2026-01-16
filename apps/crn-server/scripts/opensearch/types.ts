@@ -4,6 +4,7 @@ import {
   PreliminaryDataSharingDataObject,
   PreprintComplianceDataObject,
   PublicationComplianceDataObject,
+  TeamCollaborationDataObject,
   TeamProductivityDataObject,
   UserCollaborationDataObject,
   UserProductivityDataObject,
@@ -21,6 +22,7 @@ export type MetricToObjectMap = {
   'user-productivity': UserProductivityDataObject;
   'team-productivity': TeamProductivityDataObject;
   'user-collaboration': UserCollaborationDataObject;
+  'team-collaboration': TeamCollaborationDataObject;
 };
 
 export type MetricObject<T extends Metrics> = MetricToObjectMap[T];

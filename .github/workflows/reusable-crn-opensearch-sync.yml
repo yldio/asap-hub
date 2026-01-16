@@ -87,7 +87,7 @@ jobs:
           GOOGLE_API_CREDENTIALS_SECRET_ID: google-api-credentials-${{ steps.env-alias.outputs.env-alias }}
           ENVIRONMENT: ${{ inputs.environment-name }}
       - name: Process Performance
-        if: ${{ inputs.metric == 'all' || inputs.metric == 'user-productivity' || inputs.metric == 'team-productivity' || inputs.metric == 'user-collaboration' }}
+        if: ${{ inputs.metric == 'all' || inputs.metric == 'user-productivity' || inputs.metric == 'team-productivity' || inputs.metric == 'user-collaboration' || inputs.metric == 'team-collaboration' }}
         run: yarn opensearch:process-performance --awsRegion "$AWS_REGION" --environment "$ENVIRONMENT" --opensearchUsername "$OPENSEARCH_USERNAME" --opensearchPassword "$OPENSEARCH_PASSWORD" --metric $METRIC
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

@@ -4,6 +4,7 @@ import {
   timeRanges,
   documentCategories,
   outputTypes,
+  TeamCollaborationDataObject,
   UserCollaborationDataObject,
 } from '@asap-hub/model';
 import { indexOpensearchData } from '@asap-hub/server-common';
@@ -328,6 +329,148 @@ export const exportAnalyticsData = async <T extends Metrics>(
         } as ListResponse<MetricObject<T>>;
       }
 
+      case 'team-collaboration': {
+        // Helper to fetch all pages for a single timeRange/outputType combination
+        const fetchAllPagesForTeamCollaborationCombination = async (
+          timeRange: (typeof timeRanges)[number],
+          outputType: (typeof outputTypes)[number],
+        ): Promise<MetricObject<T>[]> => {
+          const items: MetricObject<T>[] = [];
+
+          console.log(
+            `Fetching team-collaboration data for ${timeRange}/${outputType}...`,
+          );
+
+          // First request => get total pages
+          const firstPage = (await analyticsController.fetchTeamCollaboration({
+            take: PAGE_SIZE,
+            skip: 0,
+            filter: { timeRange, outputType },
+          })) as ListResponse<MetricObject<T>>;
+
+          if (!firstPage) {
+            console.log(`No data found for ${timeRange}/${outputType}`);
+            return items;
+          }
+
+          const total = firstPage.total;
+          const pages = Math.ceil(total / PAGE_SIZE);
+
+          console.log(
+            `Found ${total} items (${pages} pages) for ${timeRange}/${outputType}`,
+          );
+
+          // Build page indexes [0, 1, 2, ...]
+          const pageIndexes = [...Array(pages).keys()];
+
+          // Fetch all pages with concurrency control
+          const responses = await mapLimit(
+            pageIndexes,
+            MAX_CONCURRENT_PAGES,
+            async (pageIndex: number) => {
+              // Use cached first page
+              if (pageIndex === 0) return firstPage;
+
+              console.log(
+                `Fetching page ${
+                  pageIndex + 1
+                }/${pages} for ${timeRange}/${outputType}...`,
+              );
+
+              return (await analyticsController.fetchTeamCollaboration({
+                take: PAGE_SIZE,
+                skip: pageIndex * PAGE_SIZE,
+                filter: { timeRange, outputType },
+              })) as ListResponse<MetricObject<T>>;
+            },
+          );
+
+          // Process and enrich items
+          for (const res of responses) {
+            if (!res) continue;
+
+            const enriched = res.items.map((item) => {
+              const teamCollabItem = item as TeamCollaborationDataObject;
+              return {
+                id: teamCollabItem.id,
+                name: teamCollabItem.name,
+                isInactive: !!teamCollabItem.inactiveSince,
+                inactiveSince: teamCollabItem.inactiveSince,
+                // Flatten outputsCoProducedWithin
+                Article: teamCollabItem.outputsCoProducedWithin.Article,
+                Bioinformatics:
+                  teamCollabItem.outputsCoProducedWithin.Bioinformatics,
+                Dataset: teamCollabItem.outputsCoProducedWithin.Dataset,
+                'Lab Material':
+                  teamCollabItem.outputsCoProducedWithin['Lab Material'],
+                Protocol: teamCollabItem.outputsCoProducedWithin.Protocol,
+                // Flatten outputsCoProducedAcross.byDocumentType
+                ArticleAcross:
+                  teamCollabItem.outputsCoProducedAcross.byDocumentType.Article,
+                BioinformaticsAcross:
+                  teamCollabItem.outputsCoProducedAcross.byDocumentType
+                    .Bioinformatics,
+                DatasetAcross:
+                  teamCollabItem.outputsCoProducedAcross.byDocumentType.Dataset,
+                'Lab Material Across':
+                  teamCollabItem.outputsCoProducedAcross.byDocumentType[
+                    'Lab Material'
+                  ],
+                ProtocolAcross:
+                  teamCollabItem.outputsCoProducedAcross.byDocumentType
+                    .Protocol,
+                // Include collaborating teams array
+                collaboratingTeams:
+                  teamCollabItem.outputsCoProducedAcross.byTeam,
+                timeRange,
+                outputType,
+              };
+            });
+
+            items.push(...(enriched as unknown as MetricObject<T>[]));
+          }
+
+          return items;
+        };
+
+        // Build all (timeRange, outputType) combos
+        const teamCollabCombos = timeRanges.flatMap((timeRange) =>
+          outputTypes.map((outputType) => ({
+            timeRange,
+            outputType,
+          })),
+        );
+
+        console.log(
+          `Processing ${teamCollabCombos.length} combinations (${timeRanges.length} timeRanges × ${outputTypes.length} outputTypes)`,
+        );
+
+        // Process combinations with controlled concurrency
+        const teamCollaborationResultArrays = await mapLimit(
+          teamCollabCombos,
+          MAX_CONCURRENT_COMBINATIONS,
+          async (combination: (typeof teamCollabCombos)[number]) =>
+            fetchAllPagesForTeamCollaborationCombination(
+              combination.timeRange,
+              combination.outputType,
+            ),
+        );
+
+        console.log(
+          `Completed fetching all combinations. Total items: ${teamCollaborationResultArrays.reduce(
+            (sum, arr) => sum + arr.length,
+            0,
+          )}`,
+        );
+
+        const items = teamCollaborationResultArrays.flat();
+
+        return {
+          total: items.length,
+          items,
+        } as ListResponse<MetricObject<T>>;
+      }
+
       default:
         throw new Error(`Metric ${metric} not supported`);
     }
@@ -351,7 +494,9 @@ export const exportAnalyticsData = async <T extends Metrics>(
   return documents;
 };
 
-const exportMetricToOpensearch = async <T extends Metrics>(metric: T) => {
+export const exportMetricToOpensearch = async <T extends Metrics>(
+  metric: T,
+) => {
   console.log(`Starting export for metric: ${metric}`);
 
   const config = metricConfig[metric];

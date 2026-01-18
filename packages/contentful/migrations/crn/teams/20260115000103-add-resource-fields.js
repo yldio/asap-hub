@@ -74,15 +74,10 @@ module.exports.up = (migration) => {
     helpText:
       '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
   });
-  teams.changeFieldControl(
-    'resourceDescription',
-    'builtin',
-    'multipleLine',
-    {
-      helpText:
-        '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
-    },
-  );
+  teams.changeFieldControl('resourceDescription', 'builtin', 'multipleLine', {
+    helpText:
+      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
+  });
   teams.changeFieldControl('resourceButtonCopy', 'builtin', 'singleLine', {
     helpText:
       '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',

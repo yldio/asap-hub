@@ -11,7 +11,10 @@ module.exports.up = (migration) => {
     .required(false)
     .validations([])
     .disabled(false)
-    .omitted(false);
+    .omitted(false)
+    .description(
+      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
+    );
 
   teams
     .createField('resourceDescription')
@@ -21,7 +24,10 @@ module.exports.up = (migration) => {
     .required(false)
     .validations([])
     .disabled(false)
-    .omitted(false);
+    .omitted(false)
+    .description(
+      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
+    );
 
   teams
     .createField('resourceButtonCopy')
@@ -31,7 +37,10 @@ module.exports.up = (migration) => {
     .required(false)
     .validations([])
     .disabled(false)
-    .omitted(false);
+    .omitted(false)
+    .description(
+      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
+    );
 
   teams
     .createField('resourceContactEmail')
@@ -49,7 +58,10 @@ module.exports.up = (migration) => {
       },
     ])
     .disabled(false)
-    .omitted(false);
+    .omitted(false)
+    .description(
+      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
+    );
 
   teams
     .createField('resourceLink')

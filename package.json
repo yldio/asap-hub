@@ -76,8 +76,6 @@
     "test:workspace": "yarn test --config=jest-workspace.config.js",
     "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",
     "test:build-output": "yarn test --config=jest-build-output.config.js",
-    "test:e2e": "yarn test --config=apps/e2e-tests/jest-e2e.config.js",
-    "test:e2e:gp2": "yarn test --config=apps/e2e-tests/jest-e2e-gp2.config.js",
     "test:integration": "LOG_ENABLED=true LOG_LEVEL=error yarn test --config=jest-integration.config.js -i",
     "typecheck": "turbo typecheck",
     "update:browser-list": "yarn up -R caniuse-lite",
@@ -87,7 +85,6 @@
   },
   "resolutions": {
     "encoding": "0.1.13",
-    "expect-playwright": "0.8.0",
     "vfile": "4.2.1",
     "@typescript-eslint/eslint-plugin": "6.18.1",
     "@typescript-eslint/parser": "6.18.1",

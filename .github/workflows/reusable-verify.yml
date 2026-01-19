@@ -27,62 +27,6 @@ on:
         required: false
 
 jobs:
-  sls:
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Test CRN
-        run: API_URL=${{ steps.setup.outputs.crn-api-url }} yarn test:e2e
-      - name: Test GP2
-        run: API_URL=${{ steps.setup.outputs.gp2-api-url }} yarn test:e2e:gp2
-
-  test-e2e:
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:focal
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Cache build typecheck output
-        uses: ./.github/actions/cache-unplugged
-        with:
-          environment-name: ${{ inputs.environment-name }}
-      - name: Install Playwright
-        if: ${{ inputs.environment-name=='Branch' }}
-        run: |
-          yarn workspace @asap-hub/e2e-tests run playwright install
-      - name: Test CRN
-        if: ${{ inputs.environment-name=='Branch' }}
-        run: |
-          yarn workspace @asap-hub/e2e-tests run playwright test
-        env:
-          APP_URL: ${{ steps.setup.outputs.crn-app-url }}
-      - name: Test GP2
-        if: ${{ inputs.environment-name=='Branch' }}
-        run: |
-          yarn workspace @asap-hub/e2e-tests run playwright test
-        env:
-          APP_URL: ${{ steps.setup.outputs.gp2-app-url }}
-
   crn-contentful-schema:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}

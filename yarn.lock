@@ -1166,15 +1166,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/e2e-tests@workspace:apps/e2e-tests":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/e2e-tests@workspace:apps/e2e-tests"
-  dependencies:
-    "@babel/runtime-corejs3": 7.28.6
-    "@playwright/test": ^1.40.0
-  languageName: unknown
-  linkType: soft
-
 "@asap-hub/errors@workspace:*, @asap-hub/errors@workspace:packages/errors":
   version: 0.0.0-use.local
   resolution: "@asap-hub/errors@workspace:packages/errors"
@@ -11509,17 +11500,6 @@ __metadata:
   version: 0.2.9
   resolution: "@pkgr/core@npm:0.2.9"
   checksum: bb2fb86977d63f836f8f5b09015d74e6af6488f7a411dcd2bfdca79d76b5a681a9112f41c45bdf88a9069f049718efc6f3900d7f1de66a2ec966068308ae517f
-  languageName: node
-  linkType: hard
-
-"@playwright/test@npm:^1.40.0":
-  version: 1.56.1
-  resolution: "@playwright/test@npm:1.56.1"
-  dependencies:
-    playwright: 1.56.1
-  bin:
-    playwright: cli.js
-  checksum: 109544665800de973987893adffa17d1e563fb99d3485d6399784e8c8a9269081cae9a00e09ca308aa140e932a4e862dca0b3de07a21e2dfbf8cfcc3b2b6b4f3
   languageName: node
   linkType: hard
 
@@ -23561,7 +23541,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expect-playwright@npm:0.8.0":
+"expect-playwright@npm:^0.2.5":
+  version: 0.2.6
+  resolution: "expect-playwright@npm:0.2.6"
+  peerDependencies:
+    playwright-core: ^1.5.1
+  checksum: c58030606953af32be4b4a7971f83d8e663440f576d05f4ab1ee0cfefc0901e19c6a2e146ad838143bede6309b7e62b91c756707c2b3d28fa6be4e40508fef99
+  languageName: node
+  linkType: hard
+
+"expect-playwright@npm:^0.8.0":
   version: 0.8.0
   resolution: "expect-playwright@npm:0.8.0"
   checksum: d9e8f0529527020524f2e27f454bdbee042df0c3b1e32f0902513d7c8cac927d87bd5b7cd835c8cc08776a4f61a8fd9adfde22a3390f253846a4c3422c415110
@@ -32971,7 +32960,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright@npm:1.56.1, playwright@npm:^1.40.0":
+"playwright@npm:^1.40.0":
   version: 1.56.1
   resolution: "playwright@npm:1.56.1"
   dependencies:

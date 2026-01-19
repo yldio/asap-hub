@@ -235,6 +235,7 @@ export {
   UserProfilePlaceholderCard,
   UserProfileRecentWorks,
   UserProfileRole,
+  UserProjectsCard,
   UserTeamsTabbedCard,
   WorkingGroupCard,
   WorkingGroupMembers,

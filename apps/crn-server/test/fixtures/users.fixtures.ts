@@ -111,6 +111,7 @@ export const getUserResponse = (): UserResponse => ({
       id: 'project-id-1',
       title: 'Test Project',
       projectType: 'Discovery Project',
+      status: 'Active',
     },
   ],
   researchOutputs: [],
@@ -357,6 +358,7 @@ export const getUserDataObject = (): UserDataObject => ({
       id: 'project-id-1',
       title: 'Test Project',
       projectType: 'Discovery Project',
+      status: 'Active',
     },
   ],
   orcidWorks: [
@@ -567,12 +569,13 @@ export const getContentfulGraphqlUser = (
                           },
                           title: 'Test Project',
                           projectType: 'Discovery Project',
+                          status: 'Active',
                           proposal: {
                             sys: {
                               id: 'proposalId1',
                             },
                           },
-                        },
+                        } as any,
                       ],
                     },
                   },

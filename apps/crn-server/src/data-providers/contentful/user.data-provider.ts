@@ -411,6 +411,7 @@ const toUserProjectMembership = (
         sys?: { id?: string };
         title?: string | null;
         projectType?: string | null;
+        status?: string | null;
       }
     | null
     | undefined,
@@ -427,6 +428,7 @@ const toUserProjectMembership = (
     id: project.sys.id,
     title: project.title,
     projectType: project.projectType,
+    status: project.status || '',
   };
 };
 

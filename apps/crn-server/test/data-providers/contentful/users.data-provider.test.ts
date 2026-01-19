@@ -1957,6 +1957,7 @@ describe('User data provider', () => {
                         sys: { id: 'trainee-project-1' },
                         title: 'My Trainee Project',
                         projectType: 'Trainee Project',
+                        status: 'Active',
                       },
                     ],
                   },
@@ -1976,6 +1977,7 @@ describe('User data provider', () => {
         id: 'trainee-project-1',
         title: 'My Trainee Project',
         projectType: 'Trainee Project',
+        status: 'Active',
       });
     });
 
@@ -2065,6 +2067,7 @@ describe('User data provider', () => {
                         sys: { id: 'valid-project' },
                         title: 'Valid Project',
                         projectType: 'Trainee Project',
+                        status: 'Active',
                       },
                     ],
                   },
@@ -2110,6 +2113,7 @@ describe('User data provider', () => {
         id: 'valid-project',
         title: 'Valid Project',
         projectType: 'Trainee Project',
+        status: 'Active',
       });
       expect(
         result?.projects.find((p) => p.id === 'missing-title'),

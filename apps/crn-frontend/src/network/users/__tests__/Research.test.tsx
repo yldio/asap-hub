@@ -5,6 +5,7 @@ import {
   render,
   waitFor,
   waitForElementToBeRemoved,
+  within,
 } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import {
@@ -12,6 +13,7 @@ import {
   createUserResponse,
 } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
+import { enable, disable } from '@asap-hub/flags';
 import { network } from '@asap-hub/routing';
 
 import {
@@ -80,6 +82,12 @@ describe('UserDetail', () => {
     mockGetUserInterestGroups.mockResolvedValue(
       createListInterestGroupResponse(0),
     );
+    // Enable PROJECTS_MVP by default for tests
+    enable('PROJECTS_MVP');
+  });
+
+  afterEach(() => {
+    disable('PROJECTS_MVP');
   });
 
   it('renders the profile research section', async () => {
@@ -242,6 +250,37 @@ describe('UserDetail', () => {
         },
         expect.any(String),
       );
+    });
+  });
+
+  describe('UserProjectsCard feature flag', () => {
+    const userWithProjects = {
+      ...createUserResponse(),
+      projects: [
+        {
+          id: 'project-1',
+          title: 'Test Project',
+          projectType: 'Discovery Project' as const,
+          status: 'Active',
+        },
+      ],
+    };
+
+    it('shows UserProjectsCard when PROJECTS_MVP flag is enabled', async () => {
+      enable('PROJECTS_MVP');
+      await renderResearch(userWithProjects);
+
+      expect(screen.getByText('Projects')).toBeInTheDocument();
+      const table = screen.getByTestId('projects-table');
+      expect(within(table).getByText('Test Project')).toBeInTheDocument();
+    });
+
+    it('does not show UserProjectsCard when PROJECTS_MVP flag is disabled', async () => {
+      disable('PROJECTS_MVP');
+      await renderResearch(userWithProjects);
+
+      expect(screen.queryByText('Projects')).not.toBeInTheDocument();
+      expect(screen.queryByText('Test Project')).not.toBeInTheDocument();
     });
   });
 });

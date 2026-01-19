@@ -19,6 +19,7 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   > &
   ComponentProps<typeof UserProfileRole> & {
     userProfileGroupsCard?: ReactNode;
+    userProfileProjectsCard?: ReactNode;
     userProfileWorkingGroupsCard?: ReactNode;
     userProfileTeamsCard?: ReactNode;
     editExpertiseAndResourcesHref?: string;
@@ -37,6 +38,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   isOwnProfile,
   displayName,
   userProfileGroupsCard,
+  userProfileProjectsCard,
   userProfileWorkingGroupsCard,
   userProfileTeamsCard,
   editExpertiseAndResourcesHref,
@@ -111,6 +113,9 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   return (
     <ProfileCardList>
       {[
+        userProfileProjectsCard !== undefined && {
+          card: userProfileProjectsCard,
+        },
         ...roleSection,
         {
           card: (
@@ -129,7 +134,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                 },
         },
         ...(role === 'Staff' ? staffCards : defaultCards),
-      ]}
+      ].filter(Boolean)}
     </ProfileCardList>
   );
 };

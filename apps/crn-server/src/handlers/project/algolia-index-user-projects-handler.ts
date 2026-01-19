@@ -8,6 +8,7 @@ import {
   createProcessingFunction,
   loopOverCustomCollection,
   LoopOverCustomCollectionFetchOptions,
+  UserPayload,
 } from '@asap-hub/server-common';
 import { EventBridgeEvent } from 'aws-lambda';
 import { algoliaApiKey, algoliaAppId, algoliaIndex } from '../../config';
@@ -15,7 +16,6 @@ import ProjectController from '../../controllers/project.controller';
 import { getProjectDataProvider } from '../../dependencies/projects.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { UserPayload } from '../event-bus';
 import { addTagsFunction } from '../helper';
 
 export const indexUserProjectsHandler = (
@@ -40,7 +40,10 @@ export const indexUserProjectsHandler = (
         skip,
         take,
       }: LoopOverCustomCollectionFetchOptions): Promise<ListProjectResponse> =>
-        projectController.fetchByUserId(userId, { skip, take });
+        projectController.fetchByUserId(userId, {
+          skip,
+          take,
+        });
 
       await loopOverCustomCollection(fetchFunction, processingFunction, 8);
     } catch (error) {

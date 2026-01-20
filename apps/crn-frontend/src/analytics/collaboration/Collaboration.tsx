@@ -1,4 +1,8 @@
-import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  resultsToStream,
+  createCsvFileStream,
+  GetListOptions,
+} from '@asap-hub/frontend-utils';
 import {
   PreliminaryDataSharingDataObject,
   PreliminaryDataSharingResponse,
@@ -8,10 +12,12 @@ import {
   TeamCollaborationAlgoliaResponse,
   teamCollaborationInitialSortingDirection,
   TeamCollaborationSortingDirection,
+  TeamCollaborationResponse,
   LimitedTimeRangeOption,
   UserCollaborationAlgoliaResponse,
   userCollaborationInitialSortingDirection,
   UserCollaborationSortingDirection,
+  UserCollaborationResponse,
 } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
@@ -147,7 +153,7 @@ const Collaboration = () => {
             header: true,
           },
         ),
-        (paginationParams) =>
+        (paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>) =>
           getPreliminaryDataSharing(preliminaryDataSharingClient.client, {
             tags,
             timeRange: timeRange as LimitedTimeRangeOption,
@@ -166,7 +172,7 @@ const Collaboration = () => {
           },
         ),
         async (
-          paginationParams,
+          paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>,
         ): Promise<
           | { total: number; items: UserCollaborationAlgoliaResponse[] }
           | undefined
@@ -184,7 +190,7 @@ const Collaboration = () => {
 
             return {
               total: result.total,
-              items: result.items.map((item) => ({
+              items: result.items.map((item: UserCollaborationResponse) => ({
                 ...item,
                 objectID: item.id,
               })),
@@ -203,7 +209,7 @@ const Collaboration = () => {
 
           return {
             total: result.total,
-            items: result.items.map((item) => ({
+            items: result.items.map((item: UserCollaborationResponse) => ({
               ...item,
               objectID: item.id,
             })),
@@ -242,7 +248,9 @@ const Collaboration = () => {
           header: true,
         },
       ),
-      async (paginationParams) => {
+      async (
+        paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>,
+      ) => {
         const result = await getTeamCollaboration(teamClient, {
           outputType,
           sort: teamSort,
@@ -255,7 +263,7 @@ const Collaboration = () => {
 
         return {
           total: result.total,
-          items: result.items.map((item) => ({
+          items: result.items.map((item: TeamCollaborationResponse) => ({
             ...item,
             objectID: item.id,
           })),

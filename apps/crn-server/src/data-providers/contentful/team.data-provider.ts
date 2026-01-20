@@ -29,7 +29,7 @@ import {
   LabResponse,
   ListPublicTeamDataObject,
   ListTeamDataObject,
-  manuscriptMapStatus,
+  // manuscriptMapStatus,
   ProjectStatus,
   ProjectType,
   PublicTeamListItemDataObject,
@@ -48,7 +48,7 @@ import { DateTime } from 'luxon';
 
 import { sortMembers } from '../transformers';
 import { TeamDataProvider } from '../types/teams.data-provider.types';
-import { parseGraphqlManuscriptVersion } from './manuscript.data-provider';
+// import { parseGraphqlManuscriptVersion } from './manuscript.data-provider';
 import { parseResearchTags } from './research-tag.data-provider';
 
 export type TeamByIdItem = NonNullable<
@@ -279,14 +279,11 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
     return parseContentfulGraphQlPublicTeam(teams, linkedProject);
   }
 
-  async fetchById(
-    id: string,
-    internalAPI: boolean = true,
-  ): Promise<TeamDataObject | null> {
+  async fetchById(id: string): Promise<TeamDataObject | null> {
     const { teams } = await this.contentfulClient.request<
       FetchTeamByIdQuery,
       FetchTeamByIdQueryVariables
-    >(FETCH_TEAM_BY_ID, { id, internalAPI });
+    >(FETCH_TEAM_BY_ID, { id });
 
     if (!teams) {
       return null;
@@ -483,47 +480,28 @@ export const parseContentfulGraphQlPublicTeamListItem = (
   };
 };
 
-const mapManuscripts = (
-  manuscript: ManuscriptItem,
-): TeamDataObject['manuscripts'][number] => {
-  const linkedProject =
-    manuscript.teamsCollection?.items[0]?.linkedFrom
-      ?.projectMembershipCollection?.items[0]?.linkedFrom?.projectsCollection
-      ?.items[0];
-  const teamId = linkedProject?.projectId || '';
-  const grantId = linkedProject?.grantId || '';
-  const count = manuscript.count || 1;
-  const impact = manuscript.impact
-    ? {
-        id: manuscript.impact.sys.id || '',
-        name: manuscript.impact.name || '',
-      }
-    : undefined;
-  const categories = manuscript.categoriesCollection?.items
-    ? manuscript.categoriesCollection?.items.map((category) => ({
-        id: category?.sys.id || '',
-        name: category?.name || '',
-      }))
-    : [];
+// const mapManuscripts = (
+//   manuscript: ManuscriptItem,
+// ): TeamDataObject['manuscripts'][number] => {
 
-  return {
-    id: manuscript.sys.id,
-    count,
-    title: manuscript.title || '',
-    url: manuscript.url || undefined,
-    teamId,
-    grantId,
-    impact,
-    categories,
-    status: manuscriptMapStatus(manuscript.status) || undefined,
-    versions: parseGraphqlManuscriptVersion(
-      manuscript.versionsCollection?.items || [],
-      grantId,
-      teamId,
-      count,
-    ),
-  };
-};
+//   return {
+//     id: manuscript.sys.id,
+//     count,
+//     title: manuscript.title || '',
+//     url: manuscript.url || undefined,
+//     teamId,
+//     grantId,
+//     impact,
+//     categories,
+//     status: manuscriptMapStatus(manuscript.status) || undefined,
+//     versions: parseGraphqlManuscriptVersion(
+//       manuscript.versionsCollection?.items || [],
+//       grantId,
+//       teamId,
+//       count,
+//     ),
+//   };
+// };
 
 export const parseContentfulGraphQlTeam = (
   item: TeamByIdItem,
@@ -673,9 +651,11 @@ export const parseContentfulGraphQlTeam = (
     );
 
     return {
-      manuscripts: sortManuscripts(teamManuscripts).map(mapManuscripts),
+      manuscripts: sortManuscripts(teamManuscripts).map(
+        (manuscript) => manuscript.sys.id,
+      ),
       collaborationManuscripts: sortManuscripts(collaborationManuscripts).map(
-        mapManuscripts,
+        (manuscript) => manuscript.sys.id,
       ),
     };
   };

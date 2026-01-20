@@ -20,9 +20,6 @@ export type TeamDataProvider = DataProvider<
     options: FetchTeamsOptions,
   ) => Promise<ListPublicTeamDataObject>;
   fetchPublicTeamById: (id: string) => Promise<TeamDataObject | null>;
-  fetchById: (
-    id: string,
-    internalAPI: boolean,
-  ) => Promise<TeamDataObject | null>;
+  fetchById: (id: string) => Promise<TeamDataObject | null>;
   fetchTeamIdByProjectId: (projectId: string) => Promise<string | null>;
 };

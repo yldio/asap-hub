@@ -620,6 +620,62 @@ describe('search', () => {
       ),
     );
   });
+
+  it('uses OpenSearch for tag suggestions when flag is enabled', async () => {
+    const mockGetUserCollaborationTagSuggestionsOS = jest
+      .fn()
+      .mockResolvedValue(['tag-os-1']);
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getUserCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaborationTagSuggestions:
+        mockGetUserCollaborationTagSuggestionsOS,
+      getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getPreliminaryDataSharing: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreprintCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPublicationCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsOSChampion: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+    });
+
+    await renderPage('user', 'within-team');
+    const searchBox = getSearchBox();
+
+    await userEvent.type(searchBox, 'tag');
+    await waitFor(() =>
+      expect(mockGetUserCollaborationTagSuggestionsOS).toHaveBeenCalledWith(
+        'tag',
+      ),
+    );
+  });
 });
 
 describe('csv export', () => {

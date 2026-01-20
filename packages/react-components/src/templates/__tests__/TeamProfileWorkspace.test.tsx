@@ -330,7 +330,7 @@ describe('compliance section', () => {
         useManuscriptById={jest
           .fn()
           .mockImplementation((id) => [
-            manuscriptResponse.find((manuscriptId) => manuscriptId === id)!,
+            manuscriptResponse.find((manuscript) => manuscript.id === id)!,
             jest.fn(),
           ])}
         tools={[]}

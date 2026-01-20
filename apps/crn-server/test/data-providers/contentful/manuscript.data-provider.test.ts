@@ -42,7 +42,6 @@ import {
 } from '../../fixtures/research-output.fixtures';
 import {
   getContentfulGraphql,
-  getContentfulGraphqlManuscripts,
   getUsersTeamsCollection,
 } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
@@ -97,7 +96,14 @@ describe('Manuscripts Contentful Data Provider', () => {
       ...getContentfulGraphql(),
       UsersTeamsCollection: () => getUsersTeamsCollection(),
       ManuscriptsCollection: () => ({
-        ...getContentfulGraphqlManuscripts(),
+        items: [
+          getContentfulGraphqlManuscript({ title: 'Manuscript 1' }),
+          getContentfulGraphqlManuscript({
+            sys: { id: 'manuscript-id-2' },
+            count: 2,
+            title: 'Manuscript 2',
+          }),
+        ],
         total: 2,
       }),
       ManuscriptsDiscussionsCollection: () => ({

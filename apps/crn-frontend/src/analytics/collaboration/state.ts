@@ -1,6 +1,7 @@
 import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   ListTeamCollaborationAlgoliaResponse,
+  ListTeamCollaborationResponse,
   ListUserCollaborationAlgoliaResponse,
   SortSharingPrelimFindings,
   SortTeamCollaboration,
@@ -14,7 +15,10 @@ import {
   ListSharingPrelimFindingsResponse,
   SharingPrelimFindingsResponse,
   LimitedTimeRangeOption,
+  UserCollaborationResponse,
+  TeamCollaborationResponse,
 } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import {
   atomFamily,
   DefaultValue,
@@ -24,8 +28,10 @@ import {
 } from 'recoil';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
+import { SearchResult } from '../utils/opensearch';
 import {
   getAlgoliaIndexName,
+  makeFlagBasedPerformanceHook,
   makePerformanceHook,
   makePerformanceState,
 } from '../utils/state';
@@ -105,15 +111,49 @@ export const analyticsUserCollaborationState = selectorFamily<
 export const useAnalyticsUserCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>,
 ) => {
+  const { isEnabled } = useFlags();
   const indexName = getAlgoliaIndexName(options.sort, 'user-collaboration');
 
   const algoliaClient = useAnalyticsAlgolia(indexName).client;
+  const opensearchClient =
+    useAnalyticsOpensearch<UserCollaborationResponse>(
+      'user-collaboration',
+    ).client;
+
   const [userCollaboration, setUserCollaboration] = useRecoilState(
     analyticsUserCollaborationState(options),
   );
 
   if (userCollaboration === undefined) {
-    throw getUserCollaboration(algoliaClient, options)
+    throw getUserCollaboration(
+      isEnabled('OPENSEARCH_METRICS') ? opensearchClient : algoliaClient,
+      options,
+    )
+      .then(
+        (
+          results:
+            | SearchResult<UserCollaborationResponse>
+            | ListUserCollaborationAlgoliaResponse
+            | undefined,
+        ) => {
+          if (!results) return undefined;
+
+          if (isEnabled('OPENSEARCH_METRICS')) {
+            const searchResults =
+              results as SearchResult<UserCollaborationResponse>;
+            return {
+              total: searchResults.total,
+              items: searchResults.items.map(
+                (item: UserCollaborationResponse) => ({
+                  ...item,
+                  objectID: item.id,
+                }),
+              ),
+            };
+          }
+          return results as ListUserCollaborationAlgoliaResponse;
+        },
+      )
       .then(setUserCollaboration)
       .catch(setUserCollaboration);
   }
@@ -191,6 +231,7 @@ export const useAnalyticsTeamCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
 ) => {
   const indexName = getAlgoliaIndexName(options.sort, 'team-collaboration');
+
   const algoliaClient = useAnalyticsAlgolia(indexName).client;
 
   const [teamCollaboration, setTeamCollaboration] = useRecoilState(
@@ -199,6 +240,17 @@ export const useAnalyticsTeamCollaboration = (
 
   if (teamCollaboration === undefined) {
     throw getTeamCollaboration(algoliaClient, options)
+      .then((results: ListTeamCollaborationResponse | undefined) => {
+        if (!results) return undefined;
+
+        return {
+          total: results.total,
+          items: results.items.map((item: TeamCollaborationResponse) => ({
+            ...item,
+            objectID: item.id,
+          })),
+        };
+      })
       .then(setTeamCollaboration)
       .catch(setTeamCollaboration);
   }
@@ -234,9 +286,10 @@ export const userCollaborationPerformanceState =
   );
 
 export const useUserCollaborationPerformance =
-  makePerformanceHook<UserCollaborationPerformance>(
+  makeFlagBasedPerformanceHook<UserCollaborationPerformance>(
     userCollaborationPerformanceState,
     getUserCollaborationPerformance,
+    'user-collaboration-performance',
   );
 
 export const useUserCollaborationPerformanceValue = (

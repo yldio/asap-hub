@@ -1,27 +1,35 @@
 import {
-  getPerformanceForMetric,
+  AlgoliaClient,
+  AnalyticsPerformanceOptions,
+  AnalyticsSearchOptionsWithFiltering,
   getMetric,
+  getPerformanceForMetric,
+  TEAM_COLLABORATION,
   TEAM_COLLABORATION_PERFORMANCE,
   USER_COLLABORATION,
-  TEAM_COLLABORATION,
   USER_COLLABORATION_PERFORMANCE,
 } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
-  ListTeamCollaborationAlgoliaResponse,
-  ListUserCollaborationAlgoliaResponse,
-  TeamCollaborationPerformance,
-  UserCollaborationPerformance,
-  TimeRangeOption,
   DocumentCategoryOption,
-  OutputTypeOption,
-  SortUserCollaboration,
-  SortTeamCollaboration,
-  ListPreliminaryDataSharingResponse,
-  PreliminaryDataSharingDataObject,
   LimitedTimeRangeOption,
+  ListPreliminaryDataSharingResponse,
+  ListTeamCollaborationResponse,
+  OutputTypeOption,
+  PreliminaryDataSharingDataObject,
+  SortTeamCollaboration,
+  SortUserCollaboration,
+  TeamCollaborationPerformance,
+  TimeRangeOption,
+  UserCollaborationPerformance,
+  UserCollaborationResponse,
 } from '@asap-hub/model';
-import { OpensearchClient } from '../utils/opensearch';
+import {
+  buildNormalizedStringSort,
+  OpensearchClient,
+  OpensearchSort,
+  SearchResult,
+} from '../utils/opensearch';
 
 export type CollaborationListOptions = Pick<
   GetListOptions,
@@ -32,13 +40,112 @@ export type CollaborationListOptions = Pick<
   outputType?: OutputTypeOption;
 };
 
-export const getUserCollaboration = getMetric<
-  ListUserCollaborationAlgoliaResponse,
-  SortUserCollaboration
->(USER_COLLABORATION);
+type OpensearchSortMap<T extends `${string}_asc` | `${string}_desc` | string> =
+  Record<T, OpensearchSort[]>;
+
+const userCollaborationOpensearchSort: OpensearchSortMap<SortUserCollaboration> =
+  {
+    user_asc: [
+      buildNormalizedStringSort({
+        keyword: 'name.keyword',
+        order: 'asc',
+      }),
+    ],
+    user_desc: [
+      buildNormalizedStringSort({
+        keyword: 'name.keyword',
+        order: 'desc',
+      }),
+    ],
+    team_asc: [
+      buildNormalizedStringSort({
+        keyword: 'teams.team.keyword',
+        order: 'asc',
+        nested: { path: 'teams' },
+      }),
+    ],
+    team_desc: [
+      buildNormalizedStringSort({
+        keyword: 'teams.team.keyword',
+        order: 'desc',
+        nested: { path: 'teams' },
+      }),
+    ],
+    role_asc: [
+      {
+        'teams.role': {
+          nested: { path: 'teams' },
+          order: 'asc',
+          missing: '_last',
+        },
+      },
+    ],
+    role_desc: [
+      {
+        'teams.role': {
+          nested: { path: 'teams' },
+          order: 'desc',
+          missing: '_last',
+        },
+      },
+    ],
+    outputs_coauthored_within_asc: [
+      {
+        totalUniqueOutputsCoAuthoredWithinTeam: {
+          order: 'asc',
+        },
+      },
+    ],
+    outputs_coauthored_within_desc: [
+      {
+        totalUniqueOutputsCoAuthoredWithinTeam: {
+          order: 'desc',
+        },
+      },
+    ],
+    outputs_coauthored_across_asc: [
+      {
+        totalUniqueOutputsCoAuthoredAcrossTeams: {
+          order: 'asc',
+        },
+      },
+    ],
+    outputs_coauthored_across_desc: [
+      {
+        totalUniqueOutputsCoAuthoredAcrossTeams: {
+          order: 'desc',
+        },
+      },
+    ],
+  };
+
+export const getUserCollaboration = (
+  client:
+    | AlgoliaClient<'analytics'>
+    | OpensearchClient<UserCollaborationResponse>,
+  options: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>,
+) => {
+  if (client instanceof OpensearchClient) {
+    const { tags, currentPage, pageSize, timeRange, documentCategory, sort } =
+      options;
+    return client.search({
+      searchTags: tags,
+      currentPage: currentPage ?? undefined,
+      pageSize: pageSize ?? undefined,
+      timeRange,
+      searchScope: 'extended',
+      documentCategory,
+      sort: userCollaborationOpensearchSort[sort],
+    });
+  }
+  return getMetric<
+    SearchResult<UserCollaborationResponse>,
+    SortUserCollaboration
+  >(USER_COLLABORATION)(client, options);
+};
 
 export const getTeamCollaboration = getMetric<
-  ListTeamCollaborationAlgoliaResponse,
+  ListTeamCollaborationResponse,
   SortTeamCollaboration
 >(TEAM_COLLABORATION);
 
@@ -47,10 +154,26 @@ export const getTeamCollaborationPerformance =
     TEAM_COLLABORATION_PERFORMANCE,
   );
 
-export const getUserCollaborationPerformance =
-  getPerformanceForMetric<UserCollaborationPerformance>(
+export const getUserCollaborationPerformance = async (
+  client:
+    | AlgoliaClient<'analytics'>
+    | OpensearchClient<UserCollaborationPerformance>,
+  options: AnalyticsPerformanceOptions,
+) => {
+  if (client instanceof OpensearchClient) {
+    const results = await client.search({
+      searchTags: [],
+      timeRange: options.timeRange,
+      searchScope: 'flat',
+      sort: [],
+      documentCategory: options.documentCategory,
+    });
+    return results.items[0] as UserCollaborationPerformance | undefined;
+  }
+  return getPerformanceForMetric<UserCollaborationPerformance>(
     USER_COLLABORATION_PERFORMANCE,
-  );
+  )(client, options);
+};
 
 export type PreliminaryDataSharingSearchOptions = {
   currentPage: number | null;

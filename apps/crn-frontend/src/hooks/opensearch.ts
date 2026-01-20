@@ -8,6 +8,8 @@ import {
   TeamProductivityResponse,
   UserProductivityPerformanceDataObject,
   UserProductivityResponse,
+  UserCollaborationResponse,
+  UserCollaborationPerformance,
 } from '@asap-hub/model';
 import { useRecoilValue } from 'recoil';
 import {
@@ -16,7 +18,11 @@ import {
   getUserProductivity,
   getUserProductivityPerformance,
 } from '../analytics/productivity/api';
-import { getPreliminaryDataSharing } from '../analytics/collaboration/api';
+import {
+  getUserCollaboration,
+  getUserCollaborationPerformance,
+  getPreliminaryDataSharing,
+} from '../analytics/collaboration/api';
 import { getMeetingRepAttendance } from '../analytics/engagement/api';
 import { getAnalyticsOSChampion } from '../analytics/leadership/api';
 import {
@@ -151,6 +157,34 @@ export const useOpensearchMetrics = () => {
           authorization,
         );
       return getTeamProductivityPerformance(client, paginationParams);
+    },
+
+    getUserCollaboration(
+      paginationParams: Parameters<typeof getUserCollaboration>[1],
+    ) {
+      const client = new OpensearchClient<UserCollaborationResponse>(
+        'user-collaboration',
+        authorization,
+      );
+      return getUserCollaboration(client, paginationParams);
+    },
+
+    getUserCollaborationTagSuggestions(tagQuery: string) {
+      const client = new OpensearchClient<UserCollaborationResponse>(
+        'user-collaboration',
+        authorization,
+      );
+      return client.getTagSuggestions(tagQuery, 'extended');
+    },
+
+    getUserCollaborationPerformance(
+      paginationParams: Parameters<typeof getUserCollaborationPerformance>[1],
+    ) {
+      const client = new OpensearchClient<UserCollaborationPerformance>(
+        'user-collaboration-performance',
+        authorization,
+      );
+      return getUserCollaborationPerformance(client, paginationParams);
     },
   } as const;
 };

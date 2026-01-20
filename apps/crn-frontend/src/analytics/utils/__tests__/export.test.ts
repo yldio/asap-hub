@@ -1131,6 +1131,161 @@ describe('downloadAnalyticsXLSX', () => {
       expect.stringContaining('crn-analytics-30d'),
     );
   });
+
+  it('should process user-collaboration-within and user-collaboration-across with OpenSearch when flag is enabled', async () => {
+    // Mock OpenSearch user collaboration performance response
+    mockOpensearchMetrics.getUserCollaborationPerformance.mockResolvedValue({
+      withinTeam: {
+        belowAverageMin: 0,
+        belowAverageMax: 1,
+        averageMin: 1,
+        averageMax: 3,
+        aboveAverageMin: 3,
+        aboveAverageMax: 5,
+      },
+      acrossTeam: {
+        belowAverageMin: 0,
+        belowAverageMax: 2,
+        averageMin: 2,
+        averageMax: 4,
+        aboveAverageMin: 4,
+        aboveAverageMax: 6,
+      },
+    });
+
+    // Mock OpenSearch user collaboration data response
+    mockOpensearchMetrics.getUserCollaboration.mockResolvedValue({
+      items: [
+        {
+          id: 'user-1',
+          name: 'John Doe',
+          alumniSince: undefined,
+          teams: [
+            {
+              id: 'team-1',
+              team: 'Team Alpha',
+              role: 'Collaborating PI',
+              teamInactiveSince: undefined,
+              teamMembershipInactiveSince: undefined,
+              outputsCoAuthoredAcrossTeams: 5,
+              outputsCoAuthoredWithinTeam: 4,
+            },
+          ],
+          totalUniqueOutputsCoAuthoredAcrossTeams: 5,
+          totalUniqueOutputsCoAuthoredWithinTeam: 4,
+        },
+      ],
+      total: 1,
+    });
+
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
+    })(
+      'current-year',
+      new Set([
+        'user-collaboration-within',
+        'user-collaboration-across',
+      ]) as Set<MetricExportKeys>,
+    );
+
+    // Verify getUserCollaborationPerformance was called with correct parameters
+    expect(
+      mockOpensearchMetrics.getUserCollaborationPerformance,
+    ).toHaveBeenCalledWith({
+      timeRange: 'current-year',
+      documentCategory: 'all',
+    });
+
+    // Verify getUserCollaboration was called with correct parameters
+    expect(mockOpensearchMetrics.getUserCollaboration).toHaveBeenCalledWith({
+      timeRange: 'current-year',
+      documentCategory: 'all',
+      sort: 'team_asc',
+      tags: [],
+      currentPage: 0,
+      pageSize: 200,
+    });
+
+    // Verify worksheet for within was created with transformed data
+    expect(XLSX.utils.json_to_sheet).toHaveBeenNthCalledWith(1, [
+      {
+        User: 'John Doe',
+        'User Status': 'Active',
+        'Alumni Since': '',
+        'Team A': 'Team Alpha',
+        'Role A': 'Collaborating PI',
+        'Team Status A': 'Active',
+        'Team Inactive Since A': '',
+        'User Team Inactive Since A': '',
+        'User Team Status A': 'Active',
+        'Outputs Co-Authored: Average A': 'Above',
+        'Outputs Co-Authored: Value A': 4,
+        'Team B': '',
+        'Role B': '',
+        'Team Status B': '',
+        'User Team Inactive Since B': '',
+        'Team Inactive Since B': '',
+        'User Team Status B': '',
+        'Outputs Co-Authored: Average B': '',
+        'Outputs Co-Authored: Value B': '',
+        'Team C': '',
+        'Role C': '',
+        'Team Status C': '',
+        'User Team Inactive Since C': '',
+        'Team Inactive Since C': '',
+        'User Team Status C': '',
+        'Outputs Co-Authored: Average C': '',
+        'Outputs Co-Authored: Value C': '',
+      },
+    ]);
+
+    // Verify worksheet for across was created with transformed data
+    expect(XLSX.utils.json_to_sheet).toHaveBeenNthCalledWith(2, [
+      {
+        User: 'John Doe',
+        'User Status': 'Active',
+        'Alumni Since': '',
+        'Team A': 'Team Alpha',
+        'Role A': 'Collaborating PI',
+        'Team Status A': 'Active',
+        'Team Inactive Since A': '',
+        'User Team Inactive Since A': '',
+        'User Team Status A': 'Active',
+        'Outputs Co-Authored: Average A': 'Above',
+        'Outputs Co-Authored: Value A': 5,
+        'Team B': '',
+        'Role B': '',
+        'Team Status B': '',
+        'User Team Inactive Since B': '',
+        'Team Inactive Since B': '',
+        'User Team Status B': '',
+        'Outputs Co-Authored: Average B': '',
+        'Outputs Co-Authored: Value B': '',
+        'Team C': '',
+        'Role C': '',
+        'Team Status C': '',
+        'User Team Inactive Since C': '',
+        'Team Inactive Since C': '',
+        'User Team Status C': '',
+        'Outputs Co-Authored: Average C': '',
+        'Outputs Co-Authored: Value C': '',
+      },
+    ]);
+
+    // Verify worksheet was appended with correct sheet name
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'User Co-Prod Within Team',
+    );
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'User Co-Prod Across Teams',
+    );
+  });
 });
 
 describe('getPerformanceRanking', () => {

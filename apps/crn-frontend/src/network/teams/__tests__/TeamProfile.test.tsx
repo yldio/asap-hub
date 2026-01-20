@@ -652,7 +652,7 @@ describe('Create Compliance Report', () => {
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
 
-    teamResponse.manuscripts = [createTeamManuscriptResponse()];
+    teamResponse.manuscripts = ['manuscript_0'];
     userResponse.role = 'Staff';
     userResponse.openScienceTeamMember = true;
 
@@ -685,7 +685,7 @@ describe('Create Compliance Report', () => {
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
     const teamManuscript = createTeamManuscriptResponse();
-    teamResponse.manuscripts = [teamManuscript];
+    teamResponse.manuscripts = [teamManuscript.id];
     userResponse.role = 'Staff';
     userResponse.openScienceTeamMember = true;
 

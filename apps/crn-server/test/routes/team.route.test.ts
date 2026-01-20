@@ -166,7 +166,6 @@ describe('/teams/ route', () => {
 
       expect(teamControllerMock.fetchById).toHaveBeenCalledWith(teamId, {
         showTools: false,
-        internalAPI: true,
       });
     });
 
@@ -180,7 +179,6 @@ describe('/teams/ route', () => {
 
         expect(teamControllerMock.fetchById).toBeCalledWith(teamId, {
           showTools: false,
-          internalAPI: true,
         });
       });
 
@@ -193,7 +191,6 @@ describe('/teams/ route', () => {
 
         expect(teamControllerMock.fetchById).toBeCalledWith(teamId, {
           showTools: true,
-          internalAPI: true,
         });
       });
     });

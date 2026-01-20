@@ -1,11 +1,4 @@
-import { createManuscriptResponse } from '@asap-hub/fixtures';
-import {
-  ManuscriptVersion,
-  TeamDataObject,
-  TeamManuscript,
-  TeamStatus,
-  TeamType,
-} from '@asap-hub/model';
+import { TeamDataObject, TeamStatus, TeamType } from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
 import { waitFor } from '@testing-library/dom';
 import { act, renderHook } from '@testing-library/react';
@@ -29,8 +22,6 @@ import {
   patchedTeamState,
   teamState,
   useReplyToDiscussion,
-  useVersionById,
-  versionSelector,
   useUploadManuscriptFileViaPresignedUrl,
 } from '../state';
 
@@ -67,9 +58,6 @@ const teamMock = {
   projectTitle: 'Project Title',
   labs: [],
 };
-
-const mockVersionData = createManuscriptResponse()
-  .versions[0] as ManuscriptVersion;
 
 describe('team selectors', () => {
   test('teamState selector retrieves team with tags', () => {
@@ -157,276 +145,13 @@ describe('team selectors', () => {
   });
 });
 
-describe('versionSelector', () => {
-  test('retrieves manuscript version', () => {
-    const manuscriptId = 'manuscript-id-0';
-    const versionId = 'version-id-0';
-
-    const initialState = ({ set }: MutableSnapshot) => {
-      const mockTeam = {
-        ...teamMock,
-        manuscripts: [
-          {
-            id: manuscriptId,
-            versions: [
-              {
-                id: versionId,
-              },
-            ],
-          },
-        ] as TeamManuscript[],
-      };
-
-      set(teamState(teamId), mockTeam);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(
-      () =>
-        useRecoilValue(versionSelector({ teamId, manuscriptId, versionId })),
-      {
-        wrapper,
-      },
-    );
-
-    expect(result.current?.id).toBe(versionId);
-  });
-
-  test('returns undefined if manuscript or version does not exist', () => {
-    const manuscriptId = 'manuscript-id-0';
-    const versionId = 'nonexistent-version-id';
-
-    const initialState = ({ set }: MutableSnapshot) => {
-      const mockTeam = {
-        ...teamMock,
-        manuscripts: [
-          {
-            id: manuscriptId,
-            versions: [
-              {
-                id: 'version-id-0',
-              },
-            ],
-          },
-        ] as TeamManuscript[],
-      };
-
-      set(teamState(teamId), mockTeam);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(
-      () =>
-        useRecoilValue(versionSelector({ teamId, manuscriptId, versionId })),
-      {
-        wrapper,
-      },
-    );
-
-    expect(result.current).toBeUndefined();
-  });
-
-  test('does not update version if versionId does not match', () => {
-    const manuscriptId = 'manuscript-id-1';
-
-    const initialState = ({ set }: MutableSnapshot) => {
-      const mockTeam = {
-        ...teamMock,
-        manuscripts: [
-          {
-            id: manuscriptId,
-            versions: [
-              { id: 'version-id-1', description: 'Original Version 1' },
-              { id: 'version-id-2', description: 'Original Version 2' },
-            ],
-          },
-        ] as TeamManuscript[],
-      };
-
-      set(teamState(teamId), mockTeam);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(
-      () =>
-        useVersionById({
-          teamId,
-          manuscriptId,
-          versionId: 'nonexistent-version-id',
-        }),
-      { wrapper },
-    );
-
-    const updateVersion = (prev: ManuscriptVersion) => ({
-      ...prev,
-      description: 'Updated description',
-    });
-
-    act(() => {
-      result.current[1](updateVersion);
-    });
-
-    const updatedTeam = renderHook(() => useRecoilValue(teamState(teamId)), {
-      wrapper,
-    }).result.current;
-
-    const originalVersions = updatedTeam?.manuscripts.find(
-      (m) => m.id === manuscriptId,
-    )?.versions;
-    expect(originalVersions).toEqual([
-      { id: 'version-id-1', description: 'Original Version 1' },
-      { id: 'version-id-2', description: 'Original Version 2' },
-    ]);
-  });
-});
-
-describe('useVersionById hook', () => {
-  test('retrieves manuscript version and allows updating', () => {
-    const manuscriptId = 'manuscript-id-1';
-
-    const initialState = ({ set }: MutableSnapshot) => {
-      const mockTeam = {
-        ...teamMock,
-        manuscripts: [
-          {
-            id: manuscriptId,
-            versions: [mockVersionData],
-          },
-        ] as TeamManuscript[],
-      };
-
-      set(teamState(teamId), mockTeam);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(
-      () =>
-        useVersionById({ teamId, manuscriptId, versionId: mockVersionData.id }),
-      {
-        wrapper,
-      },
-    );
-
-    expect(result.current[0]?.id).toBe('version-1');
-
-    const updateVersion = (prev: ManuscriptVersion) => ({
-      ...prev,
-      description: 'Updated description',
-    });
-    act(() => {
-      result.current[1](updateVersion);
-    });
-
-    expect(result.current[0]?.description).toBe('Updated description');
-  });
-
-  test('only updates the matching version in the concerned manuscript and leaves other versions and manuscripts untouched', () => {
-    const manuscriptId = 'manuscript-id-1';
-
-    const initialState = ({ set }: MutableSnapshot) => {
-      const mockTeam = {
-        ...teamMock,
-        manuscripts: [
-          {
-            id: manuscriptId,
-            versions: [
-              {
-                ...mockVersionData,
-                description: 'Original Version 1 Description',
-              },
-              {
-                ...mockVersionData,
-                id: 'version-2',
-                description: 'Original Version 2 Description',
-              },
-            ],
-          },
-          {
-            id: 'manuscript-id-2',
-            versions: [
-              {
-                ...mockVersionData,
-                id: 'version-3',
-                description: 'Original Version 3 Description',
-              },
-            ],
-          },
-        ] as TeamManuscript[],
-      };
-
-      set(teamState(teamId), mockTeam);
-    };
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(
-      () =>
-        useVersionById({ teamId, manuscriptId, versionId: mockVersionData.id }),
-      {
-        wrapper,
-      },
-    );
-
-    expect(result.current[0]?.id).toBe('version-1');
-
-    const updateVersion = (prev: ManuscriptVersion) => ({
-      ...prev,
-      description: 'Updated description',
-    });
-    act(() => {
-      result.current[1](updateVersion);
-    });
-
-    expect(result.current[0]?.description).toBe('Updated description');
-
-    const { result: resultState } = renderHook(
-      () => useRecoilValue(teamState(teamId)),
-      { wrapper },
-    );
-
-    const resultVersion =
-      resultState.current && resultState.current.manuscripts
-        ? resultState.current.manuscripts[1]
-        : undefined;
-    expect(resultVersion).toEqual({
-      id: 'manuscript-id-2',
-      versions: [
-        {
-          ...mockVersionData,
-          id: 'version-3',
-          description: 'Original Version 3 Description',
-        },
-      ],
-    });
-  });
-});
-
 const discussionId = 'discussion-id-0';
 const manuscriptId = 'manuscript-id-0';
 const manuscriptId2 = 'manuscript-id-1';
 
 const mockTeam = {
   ...teamMock,
-  manuscripts: [
-    {
-      id: manuscriptId,
-      status: 'Waiting for Report',
-    } as unknown as TeamManuscript,
-  ],
+  manuscripts: [manuscriptId],
   labs: [],
 };
 

@@ -17,6 +17,7 @@ import {
   SortTeamCollaboration,
   SortUserCollaboration,
 } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import { analytics } from '@asap-hub/routing';
 import {
   render,
@@ -34,7 +35,10 @@ import { RecoilRoot } from 'recoil';
 import { OpensearchClient } from '../../utils/opensearch';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
-import { useAnalyticsOpensearch } from '../../../hooks/opensearch';
+import {
+  useAnalyticsOpensearch,
+  useOpensearchMetrics,
+} from '../../../hooks/opensearch';
 import {
   getTeamCollaboration,
   getTeamCollaborationPerformance,
@@ -61,6 +65,11 @@ jest.mock('../../../hooks/algolia', () => ({
 
 jest.mock('../../../hooks/opensearch', () => ({
   useAnalyticsOpensearch: jest.fn(),
+  useOpensearchMetrics: jest.fn(),
+}));
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: jest.fn(),
 }));
 mockConsoleError();
 
@@ -109,6 +118,10 @@ const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
 >;
 const mockUseAnalyticsOpensearch =
   useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
+const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
+  typeof useOpensearchMetrics
+>;
+const mockUseFlags = useFlags as jest.MockedFunction<typeof useFlags>;
 
 const userData: ListUserCollaborationAlgoliaResponse = {
   total: 2,
@@ -249,6 +262,40 @@ beforeEach(() => {
       mockOpensearchClient as unknown as OpensearchClient<PreliminaryDataSharingDataObject>,
   });
 
+  mockUseOpensearchMetrics.mockReturnValue({
+    getUserCollaboration: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+    getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+    getPreliminaryDataSharing: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+    getMeetingRepAttendance: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+    getPreprintCompliance: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getPublicationCompliance: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+    getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+    getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+    getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+    getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+    getAnalyticsOSChampion: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+  });
+
+  mockUseFlags.mockReturnValue({
+    isEnabled: jest.fn().mockReturnValue(false),
+    reset: jest.fn(),
+    disable: jest.fn(),
+    setCurrentOverrides: jest.fn(),
+    setEnvironment: jest.fn(),
+    enable: jest.fn(),
+  });
+
   mockGetUserCollaboration.mockResolvedValue(userData);
   mockGetTeamCollaboration.mockResolvedValue(teamData);
 });
@@ -298,7 +345,7 @@ describe('user collaboration', () => {
         items: [
           {
             ...userData.items[0]!,
-            objectID: '1-user-collaboration-all-article',
+            id: '1-user-collaboration-all-article',
             teams: [
               {
                 ...userData.items[0]!.teams[0]!,
@@ -394,7 +441,7 @@ describe('team collaboration', () => {
         items: [
           {
             ...teamData.items[0]!,
-            objectID: '1-team-collaboration-all-public',
+            id: '1-team-collaboration-all-public',
             outputsCoProducedWithin: {
               Article: 50,
               Bioinformatics: 0,
@@ -599,4 +646,72 @@ describe('csv export', () => {
       );
     },
   );
+
+  it('exports user collaboration analytics via OpenSearch when flag is enabled', async () => {
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    const mockGetUserCollaborationOS = jest.fn().mockResolvedValue(userData);
+    const mockGetUserCollaborationPerformanceOS = jest
+      .fn()
+      .mockResolvedValue(userCollaborationPerformance);
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getUserCollaboration: mockGetUserCollaborationOS,
+      getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserCollaborationPerformance: mockGetUserCollaborationPerformanceOS,
+      getPreliminaryDataSharing: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreprintCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPublicationCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsOSChampion: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+    });
+
+    await renderPage('user', 'within-team');
+
+    // Clear only the Algolia mock after initial render
+    mockGetUserCollaboration.mockClear();
+
+    await userEvent.click(screen.getByText(/csv/i));
+
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/collaboration_user_\d+\.csv/),
+      expect.anything(),
+    );
+
+    expect(mockGetUserCollaborationOS).toHaveBeenCalledWith({
+      documentCategory: 'all',
+      sort: 'user_asc',
+      tags: [],
+      timeRange: 'all',
+      currentPage: expect.any(Number),
+      pageSize: 200,
+    });
+
+    expect(mockGetUserCollaboration).not.toHaveBeenCalled();
+  });
 });

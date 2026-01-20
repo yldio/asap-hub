@@ -161,6 +161,9 @@ beforeEach(() => {
     getPreliminaryDataSharing: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
+    getUserCollaboration: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+    getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
   });
   mockUseAnalyticsOpensearch.mockReturnValue({
     client: {} as OpensearchClient<unknown>, // Mock opensearch client (not used since flag is false)
@@ -741,6 +744,11 @@ describe('csv export', () => {
       getPreliminaryDataSharing: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
     });
 
     // Render the page
@@ -876,6 +884,11 @@ describe('csv export', () => {
       getPreliminaryDataSharing: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
     });
 
     // Render the page
@@ -966,6 +979,11 @@ describe('tag suggestions', () => {
       getPreliminaryDataSharing: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
     });
 
     await renderPage(
@@ -1022,6 +1040,11 @@ describe('tag suggestions', () => {
       getPreliminaryDataSharing: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
     });
 
     await renderPage(

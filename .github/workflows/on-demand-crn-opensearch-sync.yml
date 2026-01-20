@@ -17,6 +17,8 @@ on:
           - team-productivity
           - user-collaboration
           - team-collaboration
+          - ig-leadership
+          - wg-leadership
           - all
       environment-name:
         required: true

@@ -13,6 +13,7 @@ import {
   userCollaborationInitialSortingDirection,
   UserCollaborationSortingDirection,
 } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
@@ -21,6 +22,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   useAnalytics,
+  useOpensearchMetrics,
   useAnalyticsOpensearch,
   usePaginationParams,
   useSearch,
@@ -52,6 +54,7 @@ type CollaborationType = 'within-team' | 'across-teams' | undefined;
 const Collaboration = () => {
   const navigate = useNavigate();
 
+  const { isEnabled } = useFlags();
   const { metric: metricParam, type: typeParam } = useParams<{
     metric: 'user' | 'team' | 'sharing-prelim-findings';
     type: CollaborationType;
@@ -117,6 +120,7 @@ const Collaboration = () => {
     useAnalyticsOpensearch<PreliminaryDataSharingDataObject>(
       'preliminary-data-sharing',
     );
+  const opensearchMetrics = useOpensearchMetrics();
   const userClient = useAnalyticsAlgolia(
     getAlgoliaIndexName(userSort, 'user-collaboration'),
   ).client;
@@ -150,6 +154,7 @@ const Collaboration = () => {
             ...paginationParams,
           }),
         preliminaryDataSharingToCSV,
+        200,
       );
     }
     if (metric === 'user' && type) {
@@ -160,14 +165,50 @@ const Collaboration = () => {
             header: true,
           },
         ),
-        (paginationParams) =>
-          getUserCollaboration(userClient, {
+        async (
+          paginationParams,
+        ): Promise<
+          | { total: number; items: UserCollaborationAlgoliaResponse[] }
+          | undefined
+        > => {
+          if (isEnabled('OPENSEARCH_METRICS')) {
+            const result = await opensearchMetrics.getUserCollaboration({
+              documentCategory,
+              sort: userSort,
+              tags,
+              timeRange,
+              ...paginationParams,
+            });
+
+            if (!result) return undefined;
+
+            return {
+              total: result.total,
+              items: result.items.map((item) => ({
+                ...item,
+                objectID: item.id,
+              })),
+            };
+          }
+
+          const result = await getUserCollaboration(userClient, {
             documentCategory,
             sort: userSort,
             tags,
             timeRange,
             ...paginationParams,
-          }),
+          });
+
+          if (!result) return undefined;
+
+          return {
+            total: result.total,
+            items: result.items.map((item) => ({
+              ...item,
+              objectID: item.id,
+            })),
+          };
+        },
         userCollaborationToCSV(
           type,
           userPerformance ?? {
@@ -190,6 +231,7 @@ const Collaboration = () => {
           },
           documentCategory,
         ),
+        200,
       );
     }
 
@@ -200,14 +242,25 @@ const Collaboration = () => {
           header: true,
         },
       ),
-      (paginationParams) =>
-        getTeamCollaboration(teamClient, {
+      async (paginationParams) => {
+        const result = await getTeamCollaboration(teamClient, {
           outputType,
           sort: teamSort,
           tags,
           timeRange,
           ...paginationParams,
-        }),
+        });
+
+        if (!result) return undefined;
+
+        return {
+          total: result.total,
+          items: result.items.map((item) => ({
+            ...item,
+            objectID: item.id,
+          })),
+        };
+      },
       type === 'within-team'
         ? teamCollaborationWithinTeamToCSV(
             teamPerformance ?? TEAM_PERFORMANCE_INITIAL_DATA,
@@ -217,10 +270,20 @@ const Collaboration = () => {
             teamPerformance ?? TEAM_PERFORMANCE_INITIAL_DATA,
             outputType,
           ),
+      200,
     );
   };
 
   const loadTags = async (tagQuery: string) => {
+    if (isEnabled('OPENSEARCH_METRICS') && metric === 'user') {
+      const suggestions =
+        await opensearchMetrics.getUserCollaborationTagSuggestions(tagQuery);
+      return suggestions.map((value) => ({
+        label: value,
+        value,
+      }));
+    }
+
     const searchedTags = await client.searchForTagValues(
       [entityType],
       tagQuery,

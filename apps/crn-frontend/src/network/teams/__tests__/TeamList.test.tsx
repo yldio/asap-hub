@@ -10,6 +10,7 @@ import {
 import * as flags from '@asap-hub/flags';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { Frame } from '@asap-hub/frontend-utils';
+import { TeamType } from '@asap-hub/model';
 
 import Teams from '../TeamList';
 import { getAlgoliaTeams } from '../api';
@@ -27,7 +28,7 @@ const mockGetAlgoliaTeams = getAlgoliaTeams as jest.MockedFunction<
   typeof getAlgoliaTeams
 >;
 
-const renderTeamList = async (route: string, teamType?: string) => {
+const renderTeamList = async (route: string, teamType?: TeamType | 'all') => {
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) => {

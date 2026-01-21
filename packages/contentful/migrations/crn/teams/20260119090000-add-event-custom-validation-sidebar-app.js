@@ -13,4 +13,3 @@ module.exports.description =
 module.exports.up = () => {};
 
 module.exports.down = () => {};
-

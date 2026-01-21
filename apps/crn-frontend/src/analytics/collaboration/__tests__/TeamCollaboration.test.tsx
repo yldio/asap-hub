@@ -1,6 +1,6 @@
 import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
-  ListTeamCollaborationAlgoliaResponse,
+  ListTeamCollaborationResponse,
   teamCollaborationInitialSortingDirection,
 } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
@@ -42,7 +42,7 @@ mockGetTeamCollaborationPerformance.mockResolvedValue(
 const mockSetSort = jest.fn();
 const mockSetSortingDirection = jest.fn();
 
-const data: ListTeamCollaborationAlgoliaResponse = {
+const data: ListTeamCollaborationResponse = {
   total: 2,
   items: [
     {
@@ -66,7 +66,6 @@ const data: ListTeamCollaborationAlgoliaResponse = {
         },
         byTeam: [],
       },
-      objectID: '1',
     },
     {
       id: '2',
@@ -89,7 +88,6 @@ const data: ListTeamCollaborationAlgoliaResponse = {
         },
         byTeam: [],
       },
-      objectID: '2',
     },
   ],
 };

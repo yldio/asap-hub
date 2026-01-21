@@ -1,7 +1,7 @@
 import {
   CollaborationType,
   SortUserCollaboration,
-  UserCollaborationAlgoliaResponse,
+  UserCollaborationResponse,
   UserCollaborationPerformance,
   UserCollaborationSortingDirection,
 } from '@asap-hub/model';
@@ -18,7 +18,7 @@ import {
 } from './state';
 
 const getDataForType = (
-  data: UserCollaborationAlgoliaResponse[],
+  data: UserCollaborationResponse[],
   type: 'within-team' | 'across-teams',
 ): UserCollaborationMetric[] => {
   if (type === 'within-team') {

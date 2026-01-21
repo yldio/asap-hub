@@ -11,8 +11,8 @@ import {
 } from '@asap-hub/fixtures';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
-  ListTeamCollaborationAlgoliaResponse,
-  ListUserCollaborationAlgoliaResponse,
+  ListTeamCollaborationResponse,
+  ListUserCollaborationResponse,
   PreliminaryDataSharingDataObject,
   SortTeamCollaboration,
   SortUserCollaboration,
@@ -123,7 +123,7 @@ const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
 >;
 const mockUseFlags = useFlags as jest.MockedFunction<typeof useFlags>;
 
-const userData: ListUserCollaborationAlgoliaResponse = {
+const userData: ListUserCollaborationResponse = {
   total: 2,
   items: [
     {
@@ -142,7 +142,6 @@ const userData: ListUserCollaborationAlgoliaResponse = {
       ],
       totalUniqueOutputsCoAuthoredAcrossTeams: 400,
       totalUniqueOutputsCoAuthoredWithinTeam: 300,
-      objectID: '1',
     },
     {
       id: '2',
@@ -160,12 +159,11 @@ const userData: ListUserCollaborationAlgoliaResponse = {
       ],
       totalUniqueOutputsCoAuthoredAcrossTeams: 3,
       totalUniqueOutputsCoAuthoredWithinTeam: 2,
-      objectID: '2',
     },
   ],
 };
 
-const teamData: ListTeamCollaborationAlgoliaResponse = {
+const teamData: ListTeamCollaborationResponse = {
   total: 1,
   items: [
     {
@@ -200,7 +198,6 @@ const teamData: ListTeamCollaborationAlgoliaResponse = {
           },
         ],
       },
-      objectID: '1',
     },
   ],
 };

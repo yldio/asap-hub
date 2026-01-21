@@ -14,39 +14,39 @@
     },
     {
       "groupName": "AWS SDK",
-      "matchPackagePatterns": ["^@aws-sdk/"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^@aws-sdk//"]
     },
     {
       "groupName": "Babel",
-      "matchPackagePatterns": ["^@babel/"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^@babel//"]
     },
     {
       "groupName": "Testing Library",
-      "matchPackagePatterns": ["^@testing-library/"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^@testing-library//"]
     },
     {
       "groupName": "Serverless",
-      "matchPackagePatterns": ["^serverless"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^serverless/"]
     },
     {
       "groupName": "Sentry",
-      "matchPackagePatterns": ["^@sentry/"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^@sentry//"]
     },
     {
       "groupName": "GraphQL Tools",
-      "matchPackagePatterns": ["^@graphql-tools/", "^graphql"],
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^@graphql-tools//", "/^graphql/"]
     }
   ],
   "timezone": "Europe/London",

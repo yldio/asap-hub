@@ -307,6 +307,7 @@ yargs(hideBin(process.argv))
             'user-productivity',
             'team-productivity',
             'user-collaboration',
+            'team-collaboration',
           ] as const,
           default: 'all' as const,
         }),

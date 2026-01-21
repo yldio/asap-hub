@@ -47,6 +47,7 @@ export const validMetrics = [
   'user-productivity',
   'team-productivity',
   'user-collaboration',
+  'team-collaboration',
 ] as const;
 
 export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
@@ -286,6 +287,60 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         totalUniqueOutputsCoAuthoredAcrossTeams: { type: 'integer' },
         timeRange: { type: 'keyword' },
         documentCategory: { type: 'keyword' },
+      },
+    },
+  },
+  'team-collaboration': {
+    indexAlias: 'team-collaboration',
+    mapping: {
+      properties: {
+        id: { type: 'text' },
+        name: {
+          type: 'text',
+          analyzer: 'ngram_analyzer',
+          search_analyzer: 'ngram_search_analyzer',
+          fields: {
+            keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
+            raw: { type: 'keyword' },
+          },
+        },
+        isInactive: { type: 'boolean' },
+        inactiveSince: { type: 'keyword' },
+        Article: { type: 'integer' },
+        Bioinformatics: { type: 'integer' },
+        Dataset: { type: 'integer' },
+        'Lab Material': { type: 'integer' },
+        Protocol: { type: 'integer' },
+        ArticleAcross: { type: 'integer' },
+        BioinformaticsAcross: { type: 'integer' },
+        DatasetAcross: { type: 'integer' },
+        'Lab Material Across': { type: 'integer' },
+        ProtocolAcross: { type: 'integer' },
+        collaboratingTeams: {
+          type: 'nested',
+          properties: {
+            id: { type: 'text' },
+            name: {
+              type: 'text',
+              analyzer: 'ngram_analyzer',
+              search_analyzer: 'ngram_search_analyzer',
+              fields: {
+                keyword: {
+                  type: 'keyword',
+                  normalizer: 'lowercase_normalizer',
+                },
+              },
+            },
+            isInactive: { type: 'boolean' },
+            Article: { type: 'integer' },
+            Bioinformatics: { type: 'integer' },
+            Dataset: { type: 'integer' },
+            'Lab Material': { type: 'integer' },
+            Protocol: { type: 'integer' },
+          },
+        },
+        timeRange: { type: 'keyword' },
+        outputType: { type: 'keyword' },
       },
     },
   },

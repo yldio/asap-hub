@@ -9,12 +9,10 @@ import {
   SortSharingPrelimFindings,
   SortTeamCollaboration,
   SortUserCollaboration,
-  TeamCollaborationAlgoliaResponse,
   teamCollaborationInitialSortingDirection,
   TeamCollaborationSortingDirection,
   TeamCollaborationResponse,
   LimitedTimeRangeOption,
-  UserCollaborationAlgoliaResponse,
   userCollaborationInitialSortingDirection,
   UserCollaborationSortingDirection,
   UserCollaborationResponse,
@@ -164,57 +162,29 @@ const Collaboration = () => {
       );
     }
     if (metric === 'user' && type) {
-      return resultsToStream<UserCollaborationAlgoliaResponse>(
+      return resultsToStream<UserCollaborationResponse>(
         createCsvFileStream(
           `collaboration_${metric}_${format(new Date(), 'MMddyy')}.csv`,
           {
             header: true,
           },
         ),
-        async (
-          paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>,
-        ): Promise<
-          | { total: number; items: UserCollaborationAlgoliaResponse[] }
-          | undefined
-        > => {
-          if (isEnabled('OPENSEARCH_METRICS')) {
-            const result = await opensearchMetrics.getUserCollaboration({
-              documentCategory,
-              sort: userSort,
-              tags,
-              timeRange,
-              ...paginationParams,
-            });
-
-            if (!result) return undefined;
-
-            return {
-              total: result.total,
-              items: result.items.map((item: UserCollaborationResponse) => ({
-                ...item,
-                objectID: item.id,
-              })),
-            };
-          }
-
-          const result = await getUserCollaboration(userClient, {
-            documentCategory,
-            sort: userSort,
-            tags,
-            timeRange,
-            ...paginationParams,
-          });
-
-          if (!result) return undefined;
-
-          return {
-            total: result.total,
-            items: result.items.map((item: UserCollaborationResponse) => ({
-              ...item,
-              objectID: item.id,
-            })),
-          };
-        },
+        (paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>) =>
+          isEnabled('OPENSEARCH_METRICS')
+            ? opensearchMetrics.getUserCollaboration({
+                documentCategory,
+                sort: userSort,
+                tags,
+                timeRange,
+                ...paginationParams,
+              })
+            : getUserCollaboration(userClient, {
+                documentCategory,
+                sort: userSort,
+                tags,
+                timeRange,
+                ...paginationParams,
+              }),
         userCollaborationToCSV(
           type,
           userPerformance ?? {
@@ -241,34 +211,21 @@ const Collaboration = () => {
       );
     }
 
-    return resultsToStream<TeamCollaborationAlgoliaResponse>(
+    return resultsToStream<TeamCollaborationResponse>(
       createCsvFileStream(
         `collaboration_${metric}_${format(new Date(), 'MMddyy')}.csv`,
         {
           header: true,
         },
       ),
-      async (
-        paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>,
-      ) => {
-        const result = await getTeamCollaboration(teamClient, {
+      (paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>) =>
+        getTeamCollaboration(teamClient, {
           outputType,
           sort: teamSort,
           tags,
           timeRange,
           ...paginationParams,
-        });
-
-        if (!result) return undefined;
-
-        return {
-          total: result.total,
-          items: result.items.map((item: TeamCollaborationResponse) => ({
-            ...item,
-            objectID: item.id,
-          })),
-        };
-      },
+        }),
       type === 'within-team'
         ? teamCollaborationWithinTeamToCSV(
             teamPerformance ?? TEAM_PERFORMANCE_INITIAL_DATA,

@@ -768,6 +768,32 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/contentful-app-team-resource-validation@workspace:packages/contentful-app-extensions/team-resource-validation":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/contentful-app-team-resource-validation@workspace:packages/contentful-app-extensions/team-resource-validation"
+  dependencies:
+    "@contentful/app-scripts": 1.33.2
+    "@contentful/app-sdk": 4.51.0
+    "@contentful/f36-components": 4.81.1
+    "@contentful/f36-tokens": 4.2.0
+    "@contentful/react-apps-toolkit": 1.2.16
+    "@testing-library/dom": 10.4.1
+    "@testing-library/jest-dom": ^6.9.0
+    "@testing-library/react": 16.3.1
+    "@types/jest": 29.5.14
+    "@types/node": 20.10.5
+    "@types/react": 18.3.12
+    "@types/react-dom": 18.3.1
+    contentful-management: 10.46.4
+    cross-env: 7.0.3
+    emotion: 10.0.27
+    react: 18.3.1
+    react-dom: 18.3.1
+    react-scripts: 5.0.1
+    typescript: 4.9.5
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/contentful-app-user-positions@workspace:packages/contentful-app-extensions/user-positions":
   version: 0.0.0-use.local
   resolution: "@asap-hub/contentful-app-user-positions@workspace:packages/contentful-app-extensions/user-positions"

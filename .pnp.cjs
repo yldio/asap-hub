@@ -172,6 +172,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/contentful-app-extensions/partial-last-updated"\
       },\
       {\
+        "name": "@asap-hub/contentful-app-team-resource-validation",\
+        "reference": "workspace:packages/contentful-app-extensions/team-resource-validation"\
+      },\
+      {\
         "name": "@asap-hub/contentful-app-user-positions",\
         "reference": "workspace:packages/contentful-app-extensions/user-positions"\
       },\
@@ -276,6 +280,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/contentful-app-membership-custom-validation", ["workspace:packages/contentful-app-extensions/membership-custom-validation"]],\
       ["@asap-hub/contentful-app-membership-reference", ["workspace:packages/contentful-app-extensions/membership-reference"]],\
       ["@asap-hub/contentful-app-partial-last-updated", ["workspace:packages/contentful-app-extensions/partial-last-updated"]],\
+      ["@asap-hub/contentful-app-team-resource-validation", ["workspace:packages/contentful-app-extensions/team-resource-validation"]],\
       ["@asap-hub/contentful-app-user-positions", ["workspace:packages/contentful-app-extensions/user-positions"]],\
       ["@asap-hub/contentful-app-working-group-deliverables", ["workspace:packages/contentful-app-extensions/working-group-deliverables"]],\
       ["@asap-hub/crn-auth-frontend", ["workspace:apps/crn-auth-frontend"]],\
@@ -488,6 +493,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "@asap-hub/contentful-app-partial-last-updated",\
         "workspace:packages/contentful-app-extensions/partial-last-updated"\
+      ],\
+      [\
+        "@asap-hub/contentful-app-team-resource-validation",\
+        "workspace:packages/contentful-app-extensions/team-resource-validation"\
       ],\
       [\
         "@asap-hub/contentful-app-user-positions",\
@@ -12408,6 +12417,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/contentful-app-extensions/partial-last-updated/",\
           "packageDependencies": [\
             ["@asap-hub/contentful-app-partial-last-updated", "workspace:packages/contentful-app-extensions/partial-last-updated"],\
+            ["@contentful/app-scripts", "npm:1.33.2"],\
+            ["@contentful/app-sdk", "npm:4.51.0"],\
+            ["@contentful/f36-components", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:4.81.1"],\
+            ["@contentful/f36-tokens", "npm:4.2.0"],\
+            ["@contentful/react-apps-toolkit", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:1.2.16"],\
+            ["@testing-library/dom", "npm:10.4.1"],\
+            ["@testing-library/jest-dom", "npm:6.9.1"],\
+            ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.1"],\
+            ["@types/jest", "npm:29.5.14"],\
+            ["@types/node", "npm:20.10.5"],\
+            ["@types/react", "npm:18.3.12"],\
+            ["@types/react-dom", "npm:18.3.1"],\
+            ["contentful-management", "npm:10.46.4"],\
+            ["cross-env", "npm:7.0.3"],\
+            ["emotion", "npm:10.0.27"],\
+            ["react", "npm:18.3.1"],\
+            ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
+            ["react-scripts", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:5.0.1"],\
+            ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@asap-hub/contentful-app-team-resource-validation", [\
+        ["workspace:packages/contentful-app-extensions/team-resource-validation", {\
+          "packageLocation": "./packages/contentful-app-extensions/team-resource-validation/",\
+          "packageDependencies": [\
+            ["@asap-hub/contentful-app-team-resource-validation", "workspace:packages/contentful-app-extensions/team-resource-validation"],\
             ["@contentful/app-scripts", "npm:1.33.2"],\
             ["@contentful/app-sdk", "npm:4.51.0"],\
             ["@contentful/f36-components", "virtual:1d47b7e957e0138f6086a7faebe847e5508e2838ed66681182f829fb247165a9e7d2dedfdb5253efd814664c91c8a9a71d0a25de245f4f0502c8f6aa12f72ac5#npm:4.81.1"],\

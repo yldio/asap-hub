@@ -11,10 +11,7 @@ import {
   renderHook,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {
-  // ManuscriptVersion,
-  TeamResponse,
-} from '@asap-hub/model';
+import { TeamResponse } from '@asap-hub/model';
 import {
   createTeamManuscriptResponse,
   createTeamResponse,

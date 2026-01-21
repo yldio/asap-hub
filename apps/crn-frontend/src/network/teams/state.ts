@@ -11,7 +11,6 @@ import {
   ManuscriptPostRequest,
   ManuscriptPutRequest,
   ManuscriptResponse,
-  // ManuscriptVersion,
   PartialManuscriptResponse,
   ResearchOutputResponse,
   TeamListItemResponse,
@@ -24,7 +23,6 @@ import {
   atom,
   atomFamily,
   DefaultValue,
-  // RecoilState,
   selectorFamily,
   useRecoilCallback,
   useRecoilState,
@@ -531,83 +529,6 @@ export const useLatestManuscriptVersionByManuscriptId = () => {
   return (manuscriptId: string) =>
     getManuscriptVersionByManuscriptId(algoliaClient.client, manuscriptId);
 };
-
-// export const versionSelector = selectorFamily<
-//   ManuscriptVersion | undefined,
-//   { teamId: string; manuscriptId: string; versionId: string }
-// >({
-//   key: 'versionSelector',
-//   get:
-//     (params) =>
-//     ({ get }) => {
-//       const { teamId, manuscriptId, versionId } = params;
-
-//       const team = get(teamState(teamId));
-//       if (!team) return undefined;
-
-//       const currentManuscript = team.manuscripts.find(
-//         (manuscript) => manuscript.id === manuscriptId,
-//       );
-//       if (!currentManuscript) return undefined;
-
-//       return currentManuscript.versions.find(
-//         (version) => version.id === versionId,
-//       );
-//     },
-//   set:
-//     (params) =>
-//     ({ set, get }, newValue: ManuscriptVersion | DefaultValue | undefined) => {
-//       const { teamId, manuscriptId, versionId } = params;
-
-//       const team = get(teamState(teamId));
-//       if (!team) return;
-
-//       const manuscript = team.manuscripts.find(
-//         (item) => item.id === manuscriptId,
-//       );
-//       if (!manuscript) return;
-
-//       const version = manuscript.versions.find((item) => item.id === versionId);
-//       if (!version) return;
-
-//       set(
-//         teamState(teamId) as RecoilState<TeamResponse>,
-//         (prev: TeamResponse) => ({
-//           ...prev,
-//           manuscripts: team.manuscripts.map((manuscriptItem) => {
-//             if (manuscriptItem.id === manuscriptId) {
-//               return {
-//                 ...manuscriptItem,
-//                 versions: manuscriptItem.versions.map((versionItem) =>
-//                   versionItem.id === versionId
-//                     ? (newValue as ManuscriptVersion)
-//                     : versionItem,
-//                 ),
-//               };
-//             }
-//             return manuscriptItem;
-//           }),
-//         }),
-//       );
-//     },
-// });
-
-// export const useVersionById = (params: {
-//   teamId: string;
-//   manuscriptId: string;
-//   versionId: string;
-// }): [
-//   ManuscriptVersion | undefined,
-//   (callback: (prev: ManuscriptVersion) => ManuscriptVersion) => void,
-// ] => {
-//   const [version, setVersion] = useRecoilState(versionSelector(params));
-//   const setVersionCallback = (
-//     callback: (prev: ManuscriptVersion) => ManuscriptVersion,
-//   ) => {
-//     setVersion((prev) => (prev ? callback(prev) : prev));
-//   };
-//   return [version, setVersionCallback];
-// };
 
 export const useCreateDiscussion = () => {
   const authorization = useRecoilValue(authorizationState);

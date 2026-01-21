@@ -29,7 +29,6 @@ import {
   LabResponse,
   ListPublicTeamDataObject,
   ListTeamDataObject,
-  // manuscriptMapStatus,
   ProjectStatus,
   ProjectType,
   PublicTeamListItemDataObject,
@@ -48,7 +47,6 @@ import { DateTime } from 'luxon';
 
 import { sortMembers } from '../transformers';
 import { TeamDataProvider } from '../types/teams.data-provider.types';
-// import { parseGraphqlManuscriptVersion } from './manuscript.data-provider';
 import { parseResearchTags } from './research-tag.data-provider';
 
 export type TeamByIdItem = NonNullable<
@@ -479,29 +477,6 @@ export const parseContentfulGraphQlPublicTeamListItem = (
     ...membershipData,
   };
 };
-
-// const mapManuscripts = (
-//   manuscript: ManuscriptItem,
-// ): TeamDataObject['manuscripts'][number] => {
-
-//   return {
-//     id: manuscript.sys.id,
-//     count,
-//     title: manuscript.title || '',
-//     url: manuscript.url || undefined,
-//     teamId,
-//     grantId,
-//     impact,
-//     categories,
-//     status: manuscriptMapStatus(manuscript.status) || undefined,
-//     versions: parseGraphqlManuscriptVersion(
-//       manuscript.versionsCollection?.items || [],
-//       grantId,
-//       teamId,
-//       count,
-//     ),
-//   };
-// };
 
 export const parseContentfulGraphQlTeam = (
   item: TeamByIdItem,

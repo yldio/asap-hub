@@ -28,7 +28,10 @@ const mockGetAlgoliaTeams = getAlgoliaTeams as jest.MockedFunction<
   typeof getAlgoliaTeams
 >;
 
-const renderTeamList = async (route: string, teamType?: TeamType | 'all') => {
+const renderTeamList = async (
+  route: string,
+  teamType: TeamType | 'all' = 'all',
+) => {
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) => {
@@ -137,69 +140,11 @@ describe.each([
     const { findByText, getByText } = await renderTeamList(route, teamType);
 
     expect(await findByText(/Something went wrong/i)).toBeVisible();
-    expect(getByText(/error fetching teams/i)).toBeVisible();
+    expect(getByText(errorText)).toBeVisible();
   });
 });
 
 it('throws error when route is invalid', async () => {
-  // const spy = jest.spyOn(console, 'error').mockImplementation();
-
-  // const ErrorBoundary = class extends React.Component<
-  //   { children: React.ReactNode },
-  //   { hasError: boolean; error?: Error }
-  // > {
-  //   constructor(props: { children: React.ReactNode }) {
-  //     super(props);
-  //     this.state = { hasError: false };
-  //   }
-
-  //   static getDerivedStateFromError(error: Error) {
-  //     return { hasError: true, error };
-  //   }
-
-  //   render() {
-  //     if (this.state.hasError) {
-  //       return <div>Error: {this.state.error?.message}</div>;
-  //     }
-  //     return this.props.children;
-  //   }
-  // };
-
-  // const { getByText } = render(
-  //     <RecoilRoot
-  //       initializeState={({ reset }) => {
-  //         reset(
-  //           teamsState({
-  //             currentPage: 0,
-  //             pageSize: CARD_VIEW_PAGE_SIZE,
-  //             filters: new Set(),
-  //             searchQuery: '',
-  //             teamType: 'all',
-  //           }),
-  //         );
-  //       }}
-  //     >
-  //       <Suspense fallback="loading">
-  //         <Auth0Provider user={{}}>
-  //           <WhenReady>
-  //             <MemoryRouter initialEntries={['/network/invalid-teams']}>
-  //               <Routes>
-  //                 <Route
-  //                   path="/network/invalid-teams"
-  //                   element={<Fram<Teams filters={new Set()} />}
-  //                 />
-  //               </Routes>
-  //             </MemoryRouter>
-  //           </WhenReady>
-  //         </Auth0Provider>
-  //       </Suspense>
-  //     </RecoilRoot>,
-  // );
-
-  // await waitFor(() => {
-  //   expect(getByText(/Error: Invalid route/i)).toBeInTheDocument();
-  // });
-
   const { findByText, getByText } = await renderTeamList(
     '/network/invalid-teams',
   );

@@ -8,7 +8,6 @@ import {
   FetchPublicTeamByIdQuery,
   FetchTeamProjectByIdQuery,
 } from '@asap-hub/contentful';
-// import { manuscriptAuthor } from '@asap-hub/fixtures';
 import {
   ListPublicTeamResponse,
   ListTeamResponse,
@@ -432,11 +431,7 @@ export const getContentfulGraphqlManuscripts = (
   items: [
     {
       sys: { id: 'manuscript-id-1' },
-      //count: 1,
-      // title: 'Manuscript 1',
       status: 'Compliant',
-      // apcRequested: false,
-      // apcAmountPaid: null,
       teamsCollection: {
         items: [
           {
@@ -444,14 +439,9 @@ export const getContentfulGraphqlManuscripts = (
           },
         ],
       },
-      // versionsCollection: getContentfulGraphqlManuscriptVersions(teamId),
     },
     {
       sys: { id: 'manuscript-id-2' },
-      //count: 2,
-      // title: 'Manuscript 2',
-      //apcRequested: false,
-      //apcAmountPaid: null,
       teamsCollection: {
         items: [
           {
@@ -459,7 +449,6 @@ export const getContentfulGraphqlManuscripts = (
           },
         ],
       },
-      // versionsCollection: getContentfulGraphqlManuscriptVersions(teamId),
     },
   ],
 });
@@ -582,93 +571,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
       ],
     },
   ],
-  manuscripts: [
-    'manuscript-id-2',
-    'manuscript-id-1',
-    // {
-    //   id: 'manuscript-id-2',
-    //   count: 2,
-    //   title: 'Manuscript 2',
-    //   teamId: 'WH1',
-    //   grantId: '000282',
-    //   versions: [
-    //     {
-    //       id: 'version-1',
-    //       lifecycle: 'Preprint',
-    //       type: 'Original Research',
-    //       description: 'A good description',
-    //       shortDescription: 'A good short description',
-    //       count: 1,
-    //       createdBy: manuscriptAuthor,
-    //       updatedBy: manuscriptAuthor,
-    //       createdDate: '2020-09-23T20:45:22.000Z',
-    //       publishedAt: '2020-09-23T20:45:22.000Z',
-    //       manuscriptFile: {
-    //         id: 'file-id',
-    //         url: 'https://example.com/manuscript.pdf',
-    //         filename: 'manuscript.pdf',
-    //       },
-    //       keyResourceTable: {
-    //         id: 'file-table-id',
-    //         url: 'https://example.com/manuscript.csv',
-    //         filename: 'manuscript.csv',
-    //       },
-    //       teams: [
-    //         {
-    //           id: 'team-1',
-    //           displayName: 'Test 1',
-    //         },
-    //       ],
-    //       labs: [{ id: 'lab-1', name: 'Lab 1' }],
-    //       firstAuthors: [],
-    //       correspondingAuthor: [],
-    //       additionalAuthors: [],
-    //     },
-    //   ],
-    // },
-    // {
-    //   id: 'manuscript-id-1',
-    //   count: 1,
-    //   title: 'Manuscript 1',
-    //   status: 'Compliant',
-    //   teamId: 'WH1',
-    //   grantId: '000282',
-    //   versions: [
-    //     {
-    //       id: 'version-1',
-    //       lifecycle: 'Preprint',
-    //       type: 'Original Research',
-    //       description: 'A good description',
-    //       shortDescription: 'A good short description',
-    //       count: 1,
-    //       createdBy: manuscriptAuthor,
-    //       updatedBy: manuscriptAuthor,
-    //       createdDate: '2020-09-23T20:45:22.000Z',
-    //       publishedAt: '2020-09-23T20:45:22.000Z',
-    //       manuscriptFile: {
-    //         id: 'file-id',
-    //         url: 'https://example.com/manuscript.pdf',
-    //         filename: 'manuscript.pdf',
-    //       },
-    //       keyResourceTable: {
-    //         id: 'file-table-id',
-    //         url: 'https://example.com/manuscript.csv',
-    //         filename: 'manuscript.csv',
-    //       },
-    //       teams: [
-    //         {
-    //           id: 'team-1',
-    //           displayName: 'Test 1',
-    //         },
-    //       ],
-    //       labs: [{ id: 'lab-1', name: 'Lab 1' }],
-    //       firstAuthors: [],
-    //       correspondingAuthor: [],
-    //       additionalAuthors: [],
-    //     },
-    //   ],
-    // },
-  ],
+  manuscripts: ['manuscript-id-2', 'manuscript-id-1'],
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   projectStatus: 'Active',

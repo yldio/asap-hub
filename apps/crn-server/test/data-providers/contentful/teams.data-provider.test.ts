@@ -1731,23 +1731,13 @@ describe('Teams data provider', () => {
 
     test('Should fetch the team from Contentful GraphQl', async () => {
       const teamId = 'team-id-0';
-      // const teamName = 'Team A';
 
       const expectedResult = getTeamDataObject();
-      // expectedResult.manuscripts[0]!.versions[0]!.teams[0]!.id = teamId;
-      // expectedResult.manuscripts[0]!.versions[0]!.teams[0]!.displayName =
-      //   teamName;
-      // expectedResult.manuscripts[1]!.versions[0]!.teams[0]!.id = teamId;
-      // expectedResult.manuscripts[1]!.versions[0]!.teams[0]!.displayName =
-      //   teamName;
 
       const teamById = true;
       const contentfulGraphqlClientMockServer =
         getContentfulGraphqlClientMockServer({
           ...getContentfulGraphql(teamById, teamId),
-          // ManuscriptVersionsTeamsCollection: () => ({
-          //   items: [{ sys: { id: teamId }, displayName: teamName }],
-          // }),
         });
 
       const teamByIdDataProviderMock = new TeamContentfulDataProvider(

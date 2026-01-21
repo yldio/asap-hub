@@ -39,7 +39,6 @@ import {
 import Workspace from '../Workspace';
 import {
   useManuscriptById,
-  // useVersionById,
   useReplyToDiscussion,
   useMarkDiscussionAsRead,
 } from '../state';
@@ -115,25 +114,10 @@ const user = {
   ],
 };
 
-// const mockSetVersion = jest.fn();
-
-// const version = createTeamManuscriptResponse().versions[0] as ManuscriptVersion;
-
-// const mockVersionData = {
-//   ...version,
-//   complianceReport: {
-//     ...version.complianceReport,
-//     discussionId: 'discussion-id',
-//   },
-// };
 const mockReplyToDiscussion = jest.fn();
 const mockSetFormType = jest.fn();
 const mockMarkDiscussionAsRead = jest.fn();
 beforeEach(() => {
-  // (useVersionById as jest.Mock).mockImplementation(() => [
-  //   mockVersionData,
-  //   mockSetVersion,
-  // ]);
   (useManuscriptToast as jest.Mock).mockImplementation(() => ({
     setFormType: mockSetFormType,
   }));

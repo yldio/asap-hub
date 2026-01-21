@@ -28077,7 +28077,10 @@ export type UsersContentFragment = Pick<
                         projectsCollection?: Maybe<{
                           items: Array<
                             Maybe<
-                              Pick<Projects, 'title' | 'projectType'> & {
+                              Pick<
+                                Projects,
+                                'title' | 'projectType' | 'status'
+                              > & {
                                 sys: Pick<Sys, 'id'>;
                                 proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                               }
@@ -28204,7 +28207,7 @@ export type UsersContentFragment = Pick<
             projectsCollection?: Maybe<{
               items: Array<
                 Maybe<
-                  Pick<Projects, 'title' | 'projectType'> & {
+                  Pick<Projects, 'title' | 'projectType' | 'status'> & {
                     sys: Pick<Sys, 'id'>;
                   }
                 >
@@ -28443,7 +28446,10 @@ export type FetchUserByIdQuery = {
                             projectsCollection?: Maybe<{
                               items: Array<
                                 Maybe<
-                                  Pick<Projects, 'title' | 'projectType'> & {
+                                  Pick<
+                                    Projects,
+                                    'title' | 'projectType' | 'status'
+                                  > & {
                                     sys: Pick<Sys, 'id'>;
                                     proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
                                   }
@@ -28570,7 +28576,7 @@ export type FetchUserByIdQuery = {
                 projectsCollection?: Maybe<{
                   items: Array<
                     Maybe<
-                      Pick<Projects, 'title' | 'projectType'> & {
+                      Pick<Projects, 'title' | 'projectType' | 'status'> & {
                         sys: Pick<Sys, 'id'>;
                       }
                     >
@@ -37321,6 +37327,14 @@ export const UsersContentFragmentDoc = {
                                                                   name: {
                                                                     kind: 'Name',
                                                                     value:
+                                                                      'status',
+                                                                  },
+                                                                },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
                                                                       'proposal',
                                                                   },
                                                                   selectionSet:
@@ -38124,6 +38138,13 @@ export const UsersContentFragmentDoc = {
                                                 name: {
                                                   kind: 'Name',
                                                   value: 'projectType',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'status',
                                                 },
                                               },
                                             ],

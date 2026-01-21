@@ -143,6 +143,47 @@ describe('team selectors', () => {
       expect(result.current.getTeamState).toEqual(mockTeam);
     });
   });
+
+  test('merges new team data when team data already exists', async () => {
+    const initialTeam: TeamDataObject = {
+      ...teamMock,
+      manuscripts: [],
+    };
+
+    const updatedTeam: TeamDataObject = {
+      ...teamMock,
+      manuscripts: ['new-manuscript'],
+    };
+
+    const initialState = ({ set }: MutableSnapshot) => {
+      set(patchedTeamState(teamId), initialTeam);
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot initializeState={initialState}>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(
+      () => {
+        const [getTeamState, setTeamState] = useRecoilState(teamState(teamId));
+        return { setTeamState, getTeamState };
+      },
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      expect(result.current.getTeamState).toEqual(initialTeam);
+    });
+
+    act(() => {
+      result.current.setTeamState(updatedTeam);
+    });
+
+    expect(result.current.getTeamState).toEqual({
+      ...initialTeam,
+      ...updatedTeam,
+    });
+  });
 });
 
 const discussionId = 'discussion-id-0';

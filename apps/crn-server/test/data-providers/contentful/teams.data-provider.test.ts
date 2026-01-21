@@ -18,6 +18,7 @@ import {
   getContentfulGraphqlPublicTeamById,
   getPublicTeamListItemDataObject,
   getContentfulGraphqlTeamProjectById,
+  getContentfulGraphqlManuscripts,
 } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -1776,6 +1777,37 @@ describe('Teams data provider', () => {
         'submit-final-publication-manuscript-id',
         'compliant-manuscript-id',
         'closed-manuscript-id',
+      ]);
+    });
+
+    test('should separate team manuscripts from collaboration manuscripts', async () => {
+      const teamId = 'team-id';
+      const collaboratingTeamId = 'collaborating-team-id';
+
+      const [teamManuscript, collaboratingTeamManuscript] =
+        getContentfulGraphqlManuscripts(teamId)!.items;
+      collaboratingTeamManuscript!.teamsCollection!.items[0]!.sys.id =
+        collaboratingTeamId;
+
+      const graphqlTeamById = getContentfulGraphqlTeamById(teamId);
+
+      const team = {
+        ...graphqlTeamById,
+        linkedFrom: {
+          ...graphqlTeamById.linkedFrom,
+          manuscriptsCollection: {
+            items: [teamManuscript, collaboratingTeamManuscript],
+          },
+        },
+      };
+
+      mockFetchByIdGraphqlResponses(team);
+
+      const result = await teamDataProvider.fetchById(teamId);
+
+      expect(result?.manuscripts).toEqual([teamManuscript?.sys.id]);
+      expect(result?.collaborationManuscripts).toEqual([
+        collaboratingTeamManuscript?.sys.id,
       ]);
     });
 

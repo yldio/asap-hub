@@ -305,16 +305,6 @@ export const useIsComplianceReviewer = (): boolean => {
   return role === 'Staff' && !!openScienceTeamMember;
 };
 
-export const useUploadManuscriptFile = () => {
-  const authorization = useRecoilValue(authorizationState);
-
-  return (
-    file: File,
-    fileType: ManuscriptFileType,
-    handleError: (errorMessage: string) => void,
-  ) => uploadManuscriptFile(file, fileType, authorization, handleError);
-};
-
 // Uses S3 presigned URL to upload file
 export const useUploadManuscriptFileViaPresignedUrl = () => {
   const authorization = useRecoilValue(authorizationState);
@@ -338,31 +328,12 @@ export const useDownloadFullComplianceDataset = () => {
   return () => downloadFullComplianceDataset(authorization);
 };
 
-export const refreshDiscussionState = atomFamily<number, string>({
-  key: 'refreshDiscussion',
-  default: 0,
-});
-
-const fetchDiscussionState = selectorFamily<
-  DiscussionResponse | undefined,
-  string
->({
-  key: 'fetchDiscussion',
-  get:
-    (id) =>
-    ({ get }) => {
-      get(refreshDiscussionState(id));
-      const authorization = get(authorizationState);
-      return getDiscussion(id, authorization);
-    },
-});
-
 export const discussionState = atomFamily<
   DiscussionResponse | undefined,
   string
 >({
   key: 'discussion',
-  default: fetchDiscussionState,
+  default: undefined,
 });
 
 export const useSetDiscussion = () =>

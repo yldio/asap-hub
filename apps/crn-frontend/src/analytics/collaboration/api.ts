@@ -119,6 +119,92 @@ const userCollaborationOpensearchSort: OpensearchSortMap<SortUserCollaboration> 
     ],
   };
 
+const teamCollborationOpensearchSort: OpensearchSortMap<SortTeamCollaboration> =
+  {
+    team_asc: [
+      buildNormalizedStringSort({
+        keyword: 'name.keyword',
+        order: 'asc',
+      }),
+    ],
+    team_desc: [
+      buildNormalizedStringSort({
+        keyword: 'name.keyword',
+        order: 'desc',
+      }),
+    ],
+    article_asc: [
+      {
+        'articles.title': {
+          order: 'asc',
+        },
+      },
+    ],
+    article_desc: [
+      {
+        'articles.title': {
+          order: 'desc',
+        },
+      },
+    ],
+    bioinformatics_asc: [
+      {
+        bioinformatics: {
+          order: 'asc',
+        },
+      },
+    ],
+    bioinformatics_desc: [
+      {
+        bioinformatics: {
+          order: 'desc',
+        },
+      },
+    ],
+    dataset_asc: [
+      {
+        datasets: {
+          order: 'asc',
+        },
+      },
+    ],
+    dataset_desc: [
+      {
+        datasets: {
+          order: 'desc',
+        },
+      },
+    ],
+    lab_material_asc: [
+      {
+        'lab_material.title': {
+          order: 'asc',
+        },
+      },
+    ],
+    lab_material_desc: [
+      {
+        'lab_material.title': {
+          order: 'desc',
+        },
+      },
+    ],
+    protocol_asc: [
+      {
+        protocols: {
+          order: 'asc',
+        },
+      },
+    ],
+    protocol_desc: [
+      {
+        protocols: {
+          order: 'desc',
+        },
+      },
+    ],
+  };
+
 export const getUserCollaboration = (
   client:
     | AlgoliaClient<'analytics'>
@@ -144,10 +230,30 @@ export const getUserCollaboration = (
   >(USER_COLLABORATION)(client, options);
 };
 
-export const getTeamCollaboration = getMetric<
-  ListTeamCollaborationResponse,
-  SortTeamCollaboration
->(TEAM_COLLABORATION);
+export const getTeamCollaboration = (
+  client:
+    | AlgoliaClient<'analytics'>
+    | OpensearchClient<ListTeamCollaborationResponse>,
+  options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
+) => {
+  if (client instanceof OpensearchClient) {
+    const { tags, currentPage, pageSize, timeRange, documentCategory, sort } =
+      options;
+    return client.search({
+      searchTags: tags,
+      currentPage: currentPage ?? undefined,
+      pageSize: pageSize ?? undefined,
+      timeRange,
+      searchScope: 'extended',
+      documentCategory,
+      sort: teamCollborationOpensearchSort[sort],
+    });
+  }
+  return getMetric<
+    SearchResult<ListTeamCollaborationResponse>,
+    SortTeamCollaboration
+  >(TEAM_COLLABORATION)(client, options);
+};
 
 export const getTeamCollaborationPerformance =
   getPerformanceForMetric<TeamCollaborationPerformance>(

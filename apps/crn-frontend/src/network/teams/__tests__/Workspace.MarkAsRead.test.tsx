@@ -104,7 +104,7 @@ it('should mark discussion as read and remove discussion notification dot', asyn
         ...createTeamResponse(),
         id,
         tools: [],
-        manuscripts: [createTeamManuscriptResponse()],
+        manuscripts: ['manuscript_0'],
       }}
     />,
   );
@@ -192,7 +192,7 @@ it('if there are still unread discussions, the notification dot should be shown'
         ...createTeamResponse(),
         id,
         tools: [],
-        manuscripts: [createTeamManuscriptResponse()],
+        manuscripts: ['manuscript_0'],
       }}
     />,
   );

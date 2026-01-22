@@ -226,10 +226,10 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                   {manuscriptSubmissions}
                 </Paragraph>
                 <div>
-                  {manuscripts.map((manuscript) => (
-                    <div key={manuscript.id}>
+                  {manuscripts.map((manuscriptId) => (
+                    <div key={manuscriptId}>
                       <ManuscriptCard
-                        id={manuscript.id}
+                        id={manuscriptId}
                         user={user}
                         teamId={id}
                         isComplianceReviewer={isComplianceReviewer}
@@ -239,7 +239,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                         useManuscriptById={useManuscriptById}
                         onReplyToDiscussion={onReplyToDiscussion}
                         onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                        {...(manuscript.id === targetManuscriptId
+                        {...(manuscriptId === targetManuscriptId
                           ? { isTargetManuscript: true }
                           : {})}
                       />
@@ -264,10 +264,10 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                   {manuscriptCollaborations}
                 </Paragraph>
                 <div>
-                  {collaborationManuscripts?.map((manuscript) => (
-                    <div key={manuscript.id}>
+                  {collaborationManuscripts?.map((manuscriptId) => (
+                    <div key={manuscriptId}>
                       <ManuscriptCard
-                        {...manuscript}
+                        id={manuscriptId}
                         user={user}
                         teamId={id}
                         isComplianceReviewer={isComplianceReviewer}

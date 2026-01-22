@@ -11,7 +11,7 @@ import {
   renderHook,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ManuscriptVersion, TeamResponse } from '@asap-hub/model';
+import { TeamResponse } from '@asap-hub/model';
 import {
   createTeamManuscriptResponse,
   createTeamResponse,
@@ -36,7 +36,6 @@ import {
 import Workspace from '../Workspace';
 import {
   useManuscriptById,
-  useVersionById,
   useReplyToDiscussion,
   useMarkDiscussionAsRead,
 } from '../state';
@@ -68,6 +67,7 @@ jest.mock('../useManuscriptToast', () => ({
 const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
 
 const id = '42';
+const manuscriptId = 'manuscript_0';
 
 const renderWithWrapper = (
   children: ReactNode,
@@ -111,25 +111,10 @@ const user = {
   ],
 };
 
-const mockSetVersion = jest.fn();
-
-const version = createTeamManuscriptResponse().versions[0] as ManuscriptVersion;
-
-const mockVersionData = {
-  ...version,
-  complianceReport: {
-    ...version.complianceReport,
-    discussionId: 'discussion-id',
-  },
-};
 const mockReplyToDiscussion = jest.fn();
 const mockSetFormType = jest.fn();
 const mockMarkDiscussionAsRead = jest.fn();
 beforeEach(() => {
-  (useVersionById as jest.Mock).mockImplementation(() => [
-    mockVersionData,
-    mockSetVersion,
-  ]);
   (useManuscriptToast as jest.Mock).mockImplementation(() => ({
     setFormType: mockSetFormType,
   }));
@@ -164,7 +149,7 @@ describe('Manuscript', () => {
           ...createTeamResponse(),
           id,
           tools: [],
-          manuscripts: [createTeamManuscriptResponse()],
+          manuscripts: [manuscriptId],
         }}
       />,
     );
@@ -193,7 +178,7 @@ describe('Manuscript', () => {
           ...createTeamResponse(),
           id,
           tools: [],
-          manuscripts: [createTeamManuscriptResponse()],
+          manuscripts: [manuscriptId],
         }}
       />,
     );
@@ -267,7 +252,7 @@ describe('Manuscript', () => {
           ...createTeamResponse(),
           id,
           tools: [],
-          manuscripts: [createTeamManuscriptResponse()],
+          manuscripts: [manuscriptId],
         }}
       />,
     );
@@ -360,7 +345,7 @@ describe('Manuscript', () => {
           ...createTeamResponse(),
           id,
           tools: [],
-          manuscripts: [createTeamManuscriptResponse()],
+          manuscripts: [manuscriptId],
         }}
       />,
     );
@@ -796,7 +781,7 @@ describe('error handling for 403 BackendError', () => {
           ...createTeamResponse(),
           id,
           tools: [],
-          manuscripts: [createTeamManuscriptResponse()],
+          manuscripts: [manuscriptId],
         }}
       />,
     );
@@ -845,7 +830,7 @@ describe('error handling for 403 BackendError', () => {
           ...createTeamResponse(),
           id,
           tools: [],
-          manuscripts: [createTeamManuscriptResponse()],
+          manuscripts: [manuscriptId],
         }}
       />,
     );
@@ -892,7 +877,7 @@ describe('error handling for 403 BackendError', () => {
           ...createTeamResponse(),
           id,
           tools: [],
-          manuscripts: [createTeamManuscriptResponse()],
+          manuscripts: [manuscriptId],
         }}
       />,
     );

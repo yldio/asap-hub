@@ -1,10 +1,9 @@
 /* istanbul ignore file */
 
 import { gql } from 'graphql-tag';
-import { manuscriptContentQueryFragment } from './manuscript.queries';
 
 export const FETCH_TEAM_BY_ID = gql`
-  query FetchTeamById($id: String!, $internalAPI: Boolean = true) {
+  query FetchTeamById($id: String!) {
     teams(id: $id) {
       sys {
         id
@@ -25,28 +24,16 @@ export const FETCH_TEAM_BY_ID = gql`
         }
       }
       linkedFrom {
-        manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC)
-          @include(if: $internalAPI) {
+        manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
           items {
-            ...ManuscriptsContent
+            sys {
+              id
+            }
+            status
             teamsCollection(limit: 1) {
               items {
                 sys {
                   id
-                }
-                linkedFrom {
-                  projectMembershipCollection(limit: 1) {
-                    items {
-                      linkedFrom {
-                        projectsCollection(limit: 1) {
-                          items {
-                            projectId
-                            grantId
-                          }
-                        }
-                      }
-                    }
-                  }
                 }
               }
             }
@@ -92,7 +79,6 @@ export const FETCH_TEAM_BY_ID = gql`
       }
     }
   }
-  ${manuscriptContentQueryFragment}
 `;
 
 export const FETCH_TEAMS = gql`

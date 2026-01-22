@@ -206,7 +206,6 @@ describe('Team Controller', () => {
       teamDataProviderMock.fetchById.mockResolvedValueOnce(getTeamDataObject());
       const result = await teamController.fetchById('team-id', {
         showTools: false,
-        internalAPI: true,
       });
 
       expect(result.tools).toBeUndefined();

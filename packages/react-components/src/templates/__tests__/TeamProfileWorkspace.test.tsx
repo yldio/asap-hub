@@ -98,24 +98,7 @@ describe('compliance section', () => {
   it('renders compliance section when feature flag is enabled', () => {
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
-      manuscripts: [
-        {
-          id: '1',
-          count: 1,
-          title: 'Nice manuscript',
-          versions: [],
-          teamId: 'WH1',
-          grantId: '000282',
-        },
-        {
-          id: '2',
-          count: 2,
-          title: 'A Good Manuscript',
-          versions: [],
-          teamId: 'WH1',
-          grantId: '000282',
-        },
-      ],
+      manuscripts: ['1', '2'],
     };
 
     const { getByRole, queryByRole } = renderWithRouter(
@@ -135,24 +118,7 @@ describe('compliance section', () => {
   it('renders all manuscript titles', () => {
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
-      manuscripts: [
-        {
-          id: '1',
-          count: 1,
-          title: 'Nice manuscript',
-          versions: [],
-          teamId: 'WH1',
-          grantId: '000282',
-        },
-        {
-          id: '2',
-          count: 2,
-          title: 'A Good Manuscript',
-          versions: [],
-          teamId: 'WH1',
-          grantId: '000282',
-        },
-      ],
+      manuscripts: ['1', '2'],
     };
     const { container } = renderWithRouter(
       <TeamProfileWorkspace
@@ -168,26 +134,8 @@ describe('compliance section', () => {
   it("should show team's manuscripts and contribution manuscripts in different sections", () => {
     const props: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
-      manuscripts: [
-        {
-          id: '1',
-          count: 1,
-          title: 'Nice manuscript',
-          versions: [],
-          teamId: 'WH1',
-          grantId: '000282',
-        },
-      ],
-      collaborationManuscripts: [
-        {
-          id: '2',
-          count: 2,
-          title: 'A Good Manuscript',
-          versions: [],
-          teamId: 'CS1',
-          grantId: '000301',
-        },
-      ],
+      manuscripts: ['1'],
+      collaborationManuscripts: ['2'],
     };
 
     const { container } = renderWithRouter(
@@ -286,94 +234,95 @@ describe('compliance section', () => {
       avatarUrl: '',
       alumniSinceDate: undefined,
     };
+    const manuscriptResponse = [
+      {
+        id: '1',
+        count: 1,
+        title: 'Nice manuscript',
+        teamId: 'WH1',
+        grantId: '000282',
+        versions: [
+          {
+            id: 'version-1',
+            type: 'Original Research',
+            lifecycle: 'Draft Manuscript (prior to Publication)',
+            description: 'A description',
+            shortDescription: 'A good short description',
+            count: 1,
+            manuscriptFile: {
+              url: 'http://example.com/file.pdf',
+              filename: 'file.pdf',
+              id: 'file-id',
+            },
+            createdBy: user,
+            updatedBy: user,
+            createdDate: '2020-12-10T20:36:54Z',
+            publishedAt: '2020-12-10T20:36:54Z',
+            teams: [
+              {
+                id: 'team-1',
+                displayName: 'Team 1',
+                inactiveSince: undefined,
+              },
+              {
+                id: 'team-2',
+                displayName: 'Team 2',
+                inactiveSince: '2022-10-10T20:36:54Z',
+              },
+            ],
+            labs: [{ name: 'Lab 1', id: 'lab-1' }],
+            firstAuthors: [],
+            correspondingAuthor: [],
+            additionalAuthors: [],
+          },
+        ],
+      },
+      {
+        id: '2',
+        count: 2,
+        title: 'A Good Manuscript',
+        teamId: 'WH1',
+        grantId: '000282',
+        versions: [
+          {
+            id: 'version-1',
+            type: 'Review / Op-Ed / Letter / Hot Topic',
+            lifecycle: 'Preprint',
+            description: 'Another description',
+            shortDescription: 'Another good short description',
+            count: 1,
+            manuscriptFile: {
+              url: 'http://example.com/file.pdf',
+              filename: 'file.pdf',
+              id: 'file-id',
+            },
+            createdBy: user,
+            updatedBy: user,
+            createdDate: '2020-12-10T20:36:54Z',
+            publishedAt: '2020-12-10T20:36:54Z',
+            teams: [
+              {
+                id: 'team-1',
+                displayName: 'Team 1',
+                inactiveSince: undefined,
+              },
+              {
+                id: 'team-2',
+                displayName: 'Team 2',
+                inactiveSince: '2022-10-10T20:36:54Z',
+              },
+            ],
+            labs: [{ name: 'Lab 1', id: 'lab-1' }],
+            firstAuthors: [],
+            correspondingAuthor: [],
+            additionalAuthors: [],
+          },
+        ],
+      },
+    ];
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
-      manuscripts: [
-        {
-          id: '1',
-          count: 1,
-          title: 'Nice manuscript',
-          teamId: 'WH1',
-          grantId: '000282',
-          versions: [
-            {
-              id: 'version-1',
-              type: 'Original Research',
-              lifecycle: 'Draft Manuscript (prior to Publication)',
-              description: 'A description',
-              shortDescription: 'A good short description',
-              count: 1,
-              manuscriptFile: {
-                url: 'http://example.com/file.pdf',
-                filename: 'file.pdf',
-                id: 'file-id',
-              },
-              createdBy: user,
-              updatedBy: user,
-              createdDate: '2020-12-10T20:36:54Z',
-              publishedAt: '2020-12-10T20:36:54Z',
-              teams: [
-                {
-                  id: 'team-1',
-                  displayName: 'Team 1',
-                  inactiveSince: undefined,
-                },
-                {
-                  id: 'team-2',
-                  displayName: 'Team 2',
-                  inactiveSince: '2022-10-10T20:36:54Z',
-                },
-              ],
-              labs: [{ name: 'Lab 1', id: 'lab-1' }],
-              firstAuthors: [],
-              correspondingAuthor: [],
-              additionalAuthors: [],
-            },
-          ],
-        },
-        {
-          id: '2',
-          count: 2,
-          title: 'A Good Manuscript',
-          teamId: 'WH1',
-          grantId: '000282',
-          versions: [
-            {
-              id: 'version-1',
-              type: 'Review / Op-Ed / Letter / Hot Topic',
-              lifecycle: 'Preprint',
-              description: 'Another description',
-              shortDescription: 'Another good short description',
-              count: 1,
-              manuscriptFile: {
-                url: 'http://example.com/file.pdf',
-                filename: 'file.pdf',
-                id: 'file-id',
-              },
-              createdBy: user,
-              updatedBy: user,
-              createdDate: '2020-12-10T20:36:54Z',
-              publishedAt: '2020-12-10T20:36:54Z',
-              teams: [
-                {
-                  id: 'team-1',
-                  displayName: 'Team 1',
-                  inactiveSince: undefined,
-                },
-                {
-                  id: 'team-2',
-                  displayName: 'Team 2',
-                  inactiveSince: '2022-10-10T20:36:54Z',
-                },
-              ],
-              labs: [{ name: 'Lab 1', id: 'lab-1' }],
-              firstAuthors: [],
-              correspondingAuthor: [],
-              additionalAuthors: [],
-            },
-          ],
-        },
-      ],
+      manuscripts: ['1', '2'],
     };
     const { container } = renderWithRouter(
       <TeamProfileWorkspace
@@ -381,7 +330,7 @@ describe('compliance section', () => {
         useManuscriptById={jest
           .fn()
           .mockImplementation((id) => [
-            teamWithManuscripts.manuscripts.find((m) => m.id === id)!,
+            manuscriptResponse.find((manuscript) => manuscript.id === id)!,
             jest.fn(),
           ])}
         tools={[]}
@@ -491,55 +440,51 @@ describe('compliance section', () => {
     };
     const teamWithManuscripts: ComponentProps<typeof TeamProfileWorkspace> = {
       ...team,
-      manuscripts: [
-        {
-          id: '1',
-          count: 1,
-          title: 'Nice manuscript',
-          teamId: 'WH1',
-          grantId: '000282',
-          versions: [
-            {
-              id: 'version-1',
-              type: 'Original Research',
-              lifecycle: 'Draft Manuscript (prior to Publication)',
-              description: 'A description',
-              shortDescription: 'A short description',
-              count: 1,
-              manuscriptFile: {
-                url: 'http://example.com/file.pdf',
-                filename: 'file.pdf',
-                id: 'file-id',
-              },
-              createdBy: user,
-              updatedBy: user,
-              createdDate: '2020-12-10T20:36:54Z',
-              publishedAt: '2020-12-10T20:36:54Z',
-              teams: [
-                {
-                  id: 'team-1',
-                  displayName: 'Team 1',
-                  inactiveSince: undefined,
-                },
-              ],
-              labs: [{ name: 'Lab 1', id: 'lab-1' }],
-              firstAuthors: [],
-              correspondingAuthor: [],
-              additionalAuthors: [],
-            },
-          ],
-        },
-      ],
+      manuscripts: ['1'],
     };
     const { container } = renderWithRouter(
       <TeamProfileWorkspace
         {...teamWithManuscripts}
-        useManuscriptById={jest
-          .fn()
-          .mockImplementation(() => [
-            teamWithManuscripts.manuscripts[0]!,
-            jest.fn(),
-          ])}
+        useManuscriptById={jest.fn().mockImplementation(() => [
+          {
+            id: '1',
+            count: 1,
+            title: 'Nice manuscript',
+            teamId: 'WH1',
+            grantId: '000282',
+            versions: [
+              {
+                id: 'version-1',
+                type: 'Original Research',
+                lifecycle: 'Draft Manuscript (prior to Publication)',
+                description: 'A description',
+                shortDescription: 'A short description',
+                count: 1,
+                manuscriptFile: {
+                  url: 'http://example.com/file.pdf',
+                  filename: 'file.pdf',
+                  id: 'file-id',
+                },
+                createdBy: user,
+                updatedBy: user,
+                createdDate: '2020-12-10T20:36:54Z',
+                publishedAt: '2020-12-10T20:36:54Z',
+                teams: [
+                  {
+                    id: 'team-1',
+                    displayName: 'Team 1',
+                    inactiveSince: undefined,
+                  },
+                ],
+                labs: [{ name: 'Lab 1', id: 'lab-1' }],
+                firstAuthors: [],
+                correspondingAuthor: [],
+                additionalAuthors: [],
+              },
+            ],
+          },
+          jest.fn(),
+        ])}
         tools={[]}
         targetManuscriptId={'1'}
       />,

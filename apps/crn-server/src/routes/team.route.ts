@@ -58,11 +58,8 @@ export const teamRouteFactory = (
         (team) => team.id === teamId,
       );
 
-      const internalAPI = true;
-
       const result = await teamController.fetchById(teamId, {
         showTools,
-        internalAPI,
       });
 
       res.json(result);

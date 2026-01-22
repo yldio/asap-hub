@@ -10,7 +10,6 @@ import {
 import { TeamDataProvider } from '../data-providers/types/teams.data-provider.types';
 
 type FetchTeamOptions = {
-  internalAPI: boolean;
   showTools: boolean;
 };
 
@@ -85,8 +84,7 @@ export default class TeamController {
     teamId: string,
     options?: FetchTeamOptions,
   ): Promise<TeamResponse> {
-    const internalAPI = options?.internalAPI ?? true;
-    const team = await this.teamDataProvider.fetchById(teamId, internalAPI);
+    const team = await this.teamDataProvider.fetchById(teamId);
 
     if (!team) {
       throw new NotFoundError(undefined, `team with id ${teamId} not found`);

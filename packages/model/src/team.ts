@@ -89,8 +89,8 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   lastModifiedDate: string;
   pointOfContact?: string;
   tools?: TeamTool[];
-  manuscripts: TeamManuscript[];
-  collaborationManuscripts?: TeamManuscript[];
+  manuscripts: string[];
+  collaborationManuscripts?: string[];
   labCount: number;
   labs: LabResponse[];
   inactiveSince?: string;

@@ -681,6 +681,67 @@ describe('search', () => {
       ),
     );
   });
+
+  it('uses OpenSearch for team tag suggestions when flag is enabled', async () => {
+    const mockGetTeamCollaborationTagSuggestionsOS = jest
+      .fn()
+      .mockResolvedValue(['team-tag-os-1']);
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getUserCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getTeamCollaborationTagSuggestions:
+        mockGetTeamCollaborationTagSuggestionsOS,
+      getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getPreliminaryDataSharing: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreprintCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPublicationCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsOSChampion: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+    });
+
+    await renderPage('team', 'within-team');
+    const searchBox = getSearchBox();
+
+    await userEvent.type(searchBox, 'team-tag');
+    await waitFor(() =>
+      expect(mockGetTeamCollaborationTagSuggestionsOS).toHaveBeenCalledWith(
+        'team-tag',
+      ),
+    );
+  });
 });
 
 describe('csv export', () => {
@@ -779,5 +840,78 @@ describe('csv export', () => {
     });
 
     expect(mockGetUserCollaboration).not.toHaveBeenCalled();
+  });
+
+  it('exports team collaboration analytics via OpenSearch when flag is enabled', async () => {
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    const mockGetTeamCollaborationOS = jest.fn().mockResolvedValue(teamData);
+    const mockGetTeamCollaborationPerformanceOS = jest
+      .fn()
+      .mockResolvedValue(teamCollaborationPerformance);
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getUserCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamCollaboration: mockGetTeamCollaborationOS,
+      getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamCollaborationPerformance: mockGetTeamCollaborationPerformanceOS,
+      getPreliminaryDataSharing: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPreprintCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPublicationCompliance: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getUserProductivityPerformance: jest.fn().mockResolvedValue(undefined),
+      getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsOSChampion: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+    });
+
+    await renderPage('team', 'within-team');
+
+    // Clear only the Algolia mock after initial render
+    mockGetTeamCollaboration.mockClear();
+
+    await userEvent.click(screen.getByText(/csv/i));
+
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/collaboration_team_\d+\.csv/),
+      expect.anything(),
+    );
+
+    expect(mockGetTeamCollaborationOS).toHaveBeenCalledWith({
+      outputType: 'all',
+      sort: 'team_asc',
+      tags: [],
+      timeRange: 'all',
+      currentPage: expect.any(Number),
+      pageSize: 200,
+    });
+
+    expect(mockGetTeamCollaboration).not.toHaveBeenCalled();
   });
 });

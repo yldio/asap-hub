@@ -103,6 +103,11 @@ describe('useOpensearchMetrics', () => {
         'getUserCollaborationTagSuggestions',
       );
       expect(result.current).toHaveProperty('getUserCollaborationPerformance');
+      expect(result.current).toHaveProperty('getTeamCollaboration');
+      expect(result.current).toHaveProperty(
+        'getTeamCollaborationTagSuggestions',
+      );
+      expect(result.current).toHaveProperty('getTeamCollaborationPerformance');
     });
   });
 
@@ -853,6 +858,136 @@ describe('useOpensearchMetrics', () => {
       );
 
       expect(mockGetUserCollaborationPerformance).toHaveBeenCalledWith(
+        expect.any(OpensearchClient),
+        paginationParams,
+      );
+    });
+  });
+
+  describe('getTeamCollaboration', () => {
+    it('creates OpensearchClient with correct index and calls API method', async () => {
+      const mockGetTeamCollaboration = jest
+        .spyOn(collaborationApi, 'getTeamCollaboration')
+        .mockResolvedValue({
+          items: [],
+          total: 0,
+        });
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const paginationParams = {
+        tags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: 'all' as const,
+        outputType: 'all' as const,
+        sort: 'team_asc' as const,
+      };
+
+      await result.current.getTeamCollaboration(paginationParams);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'team-collaboration',
+        expect.any(String),
+      );
+
+      expect(mockGetTeamCollaboration).toHaveBeenCalledWith(
+        expect.any(OpensearchClient),
+        paginationParams,
+      );
+    });
+  });
+
+  describe('getTeamCollaborationTagSuggestions', () => {
+    it('creates OpensearchClient with correct index and calls getTagSuggestions', async () => {
+      const mockGetTagSuggestions = jest.fn().mockResolvedValue(['Tag 1']);
+      mockOpensearchClient.mockImplementation(
+        () =>
+          ({
+            getTagSuggestions: mockGetTagSuggestions,
+          }) as unknown as OpensearchClient<unknown>,
+      );
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const tagQuery = 'Tag';
+
+      const suggestions =
+        await result.current.getTeamCollaborationTagSuggestions(tagQuery);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'team-collaboration',
+        expect.any(String),
+      );
+
+      expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
+      expect(suggestions).toEqual(['Tag 1']);
+    });
+  });
+
+  describe('getTeamCollaborationPerformance', () => {
+    it('creates OpensearchClient with correct index and calls API method', async () => {
+      const mockGetTeamCollaborationPerformance = jest
+        .spyOn(collaborationApi, 'getTeamCollaborationPerformance')
+        .mockResolvedValue(undefined);
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const paginationParams = {
+        timeRange: 'all' as const,
+        outputType: 'all' as const,
+      };
+
+      await result.current.getTeamCollaborationPerformance(paginationParams);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'team-collaboration-performance',
+        expect.any(String),
+      );
+
+      expect(mockGetTeamCollaborationPerformance).toHaveBeenCalledWith(
         expect.any(OpensearchClient),
         paginationParams,
       );

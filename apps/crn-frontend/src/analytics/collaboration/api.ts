@@ -244,7 +244,7 @@ export const getTeamCollaboration = (
       currentPage: currentPage ?? undefined,
       pageSize: pageSize ?? undefined,
       timeRange,
-      searchScope: 'extended',
+      searchScope: 'flat',
       documentCategory,
       sort: teamCollborationOpensearchSort[sort],
     });
@@ -255,10 +255,26 @@ export const getTeamCollaboration = (
   >(TEAM_COLLABORATION)(client, options);
 };
 
-export const getTeamCollaborationPerformance =
-  getPerformanceForMetric<TeamCollaborationPerformance>(
+export const getTeamCollaborationPerformance = async (
+  client:
+    | AlgoliaClient<'analytics'>
+    | OpensearchClient<TeamCollaborationPerformance>,
+  options: AnalyticsPerformanceOptions,
+) => {
+  if (client instanceof OpensearchClient) {
+    const results = await client.search({
+      searchTags: [],
+      timeRange: options.timeRange,
+      searchScope: 'flat',
+      sort: [],
+      documentCategory: options.documentCategory,
+    });
+    return results.items[0] as TeamCollaborationPerformance | undefined;
+  }
+  return getPerformanceForMetric<TeamCollaborationPerformance>(
     TEAM_COLLABORATION_PERFORMANCE,
-  );
+  )(client, options);
+};
 
 export const getUserCollaborationPerformance = async (
   client:

@@ -3824,7 +3824,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "@types/serverless",\
-        "npm:3.12.20"\
+        "npm:3.12.27"\
       ],\
       [\
         "@types/shot",\
@@ -12734,7 +12734,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:20.10.5"],\
             ["@types/parse-data-url", "npm:3.0.2"],\
             ["@types/pump", "npm:1.1.3"],\
-            ["@types/serverless", "npm:3.12.20"],\
+            ["@types/serverless", "npm:3.12.27"],\
             ["@types/source-map-support", "npm:0.5.10"],\
             ["@types/stream-json", "npm:1.7.7"],\
             ["@types/supertest", "npm:2.0.16"],\
@@ -13481,7 +13481,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/mime-types", "npm:2.1.4"],\
             ["@types/node", "npm:20.10.5"],\
             ["@types/parse-data-url", "npm:3.0.2"],\
-            ["@types/serverless", "npm:3.12.20"],\
+            ["@types/serverless", "npm:3.12.27"],\
             ["@types/source-map-support", "npm:0.5.10"],\
             ["@types/supertest", "npm:2.0.16"],\
             ["@types/uuid", "npm:8.3.4"],\
@@ -37175,10 +37175,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@types/serverless", [\
-        ["npm:3.12.20", {\
-          "packageLocation": "./.yarn/cache/@types-serverless-npm-3.12.20-24d7196bb3-078dd550ea.zip/node_modules/@types/serverless/",\
+        ["npm:3.12.27", {\
+          "packageLocation": "./.yarn/cache/@types-serverless-npm-3.12.27-608e33dd94-3a4bc426be.zip/node_modules/@types/serverless/",\
           "packageDependencies": [\
-            ["@types/serverless", "npm:3.12.20"]\
+            ["@types/serverless", "npm:3.12.27"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -63684,7 +63684,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/boom", "npm:9.1.4"],\
             ["@hapi/h2o2", "npm:9.1.0"],\
             ["@hapi/hapi", "npm:20.3.0"],\
-            ["@types/serverless", "npm:3.12.20"],\
+            ["@types/serverless", "npm:3.12.27"],\
             ["aws-sdk", "npm:2.1692.0"],\
             ["boxen", "npm:5.1.2"],\
             ["chalk", "npm:4.1.2"],\
@@ -63764,7 +63764,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["serverless-s3-sync", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:3.2.0"],\
             ["@auth0/s3", "npm:1.0.0"],\
-            ["@types/serverless", "npm:3.12.20"],\
+            ["@types/serverless", "npm:3.12.27"],\
             ["bluebird", "npm:3.7.2"],\
             ["mime", "npm:2.6.0"],\
             ["minimatch", "npm:3.1.2"],\
@@ -63790,7 +63790,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["serverless-webpack", "virtual:5c4276c214944a596557d2b52166f54e54402d7898c808ec3d8c1de11ce271e7fa400d2f89c2eb5a737786057f5bb974fccb8b2db29d3bdc7f8699623548d063#npm:5.13.0"],\
             ["@types/node", "npm:20.10.5"],\
-            ["@types/serverless", "npm:3.12.20"],\
+            ["@types/serverless", "npm:3.12.27"],\
             ["@types/typescript", null],\
             ["@types/webpack", null],\
             ["archiver", "npm:5.3.2"],\

@@ -104,7 +104,11 @@ export type OpensearchIndex =
   | 'user-productivity'
   | 'user-productivity-performance'
   | 'team-productivity'
-  | 'team-productivity-performance';
+  | 'team-productivity-performance'
+  | 'user-collaboration'
+  | 'user-collaboration-performance'
+  | 'team-collaboration'
+  | 'team-collaboration-performance';
 
 export type ShouldClause =
   | {

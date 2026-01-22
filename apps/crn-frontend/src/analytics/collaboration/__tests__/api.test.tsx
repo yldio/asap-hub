@@ -18,9 +18,11 @@ import {
   SortTeamCollaboration,
   SortUserCollaboration,
   TimeRangeOption,
+  UserCollaborationResponse,
+  UserCollaborationPerformance,
 } from '@asap-hub/model';
 import nock from 'nock';
-import { OpensearchClient } from 'src/analytics/utils/opensearch';
+import { OpensearchClient } from '../../utils/opensearch';
 
 import {
   getTeamCollaboration,
@@ -160,6 +162,107 @@ describe('getUserCollaboration', () => {
         tagFilters: [['Alessi']],
       }),
     );
+  });
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<UserCollaborationResponse>;
+    let searchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient(
+        'user-collaboration',
+        'Bearer test-token',
+      );
+      searchSpy = jest.spyOn(opensearchClient, 'search').mockResolvedValue({
+        items: userCollaborationResponse.items,
+        total: userCollaborationResponse.total,
+      });
+    });
+
+    afterEach(() => {
+      searchSpy.mockRestore();
+    });
+
+    it('calls opensearch client with correct parameters', async () => {
+      await getUserCollaboration(opensearchClient, defaultUserOptions);
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'extended',
+        sort: expect.any(Array),
+      });
+    });
+
+    it('applies user_asc sort correctly', async () => {
+      await getUserCollaboration(opensearchClient, {
+        ...defaultUserOptions,
+        sort: 'user_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              _script: {
+                type: 'string',
+                script: {
+                  source: "doc['name.keyword'].value.toLowerCase()",
+                  lang: 'painless',
+                },
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies team_asc sort with nested path', async () => {
+      await getUserCollaboration(opensearchClient, {
+        ...defaultUserOptions,
+        sort: 'team_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              _script: {
+                type: 'string',
+                script: {
+                  source: "doc['teams.team.keyword'].value.toLowerCase()",
+                  lang: 'painless',
+                },
+                order: 'asc',
+                nested: { path: 'teams' },
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies outputs_coauthored_within_desc sort correctly', async () => {
+      await getUserCollaboration(opensearchClient, {
+        ...defaultUserOptions,
+        sort: 'outputs_coauthored_within_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              totalUniqueOutputsCoAuthoredWithinTeam: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
   });
 });
 
@@ -331,6 +434,50 @@ describe('getUserCollaborationPerformance', () => {
       );
     },
   );
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<UserCollaborationPerformance>;
+    let searchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient(
+        'user-collaboration-performance',
+        'Bearer test-token',
+      );
+      searchSpy = jest.spyOn(opensearchClient, 'search').mockResolvedValue({
+        items: [userCollaborationPerformance],
+        total: 1,
+      });
+    });
+
+    afterEach(() => {
+      searchSpy.mockRestore();
+    });
+
+    it('calls opensearch client with correct parameters', async () => {
+      await getUserCollaborationPerformance(opensearchClient, {
+        timeRange: '30d',
+        documentCategory: 'all',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: [],
+        documentCategory: 'all',
+      });
+    });
+
+    it('returns the first item from opensearch results', async () => {
+      const result = await getUserCollaborationPerformance(opensearchClient, {
+        timeRange: '30d',
+        documentCategory: 'all',
+      });
+
+      expect(result).toEqual(userCollaborationPerformance);
+    });
+  });
 });
 
 describe('getTeamCollaborationPerformance', () => {

@@ -1,5 +1,5 @@
 import {
-  ListUserCollaborationAlgoliaResponse,
+  ListUserCollaborationResponse,
   userCollaborationInitialSortingDirection,
   UserCollaborationResponse,
 } from '@asap-hub/model';
@@ -52,7 +52,7 @@ const userTeam: UserCollaborationResponse['teams'][number] = {
   outputsCoAuthoredAcrossTeams: 2,
 };
 
-const data: ListUserCollaborationAlgoliaResponse = {
+const data: ListUserCollaborationResponse = {
   total: 2,
   items: [
     {
@@ -62,7 +62,6 @@ const data: ListUserCollaborationAlgoliaResponse = {
       teams: [userTeam],
       totalUniqueOutputsCoAuthoredAcrossTeams: 2,
       totalUniqueOutputsCoAuthoredWithinTeam: 1,
-      objectID: '1',
     },
     {
       id: '2',
@@ -71,7 +70,6 @@ const data: ListUserCollaborationAlgoliaResponse = {
       teams: [{ ...userTeam, role: 'Key Personnel' }],
       totalUniqueOutputsCoAuthoredAcrossTeams: 2,
       totalUniqueOutputsCoAuthoredWithinTeam: 1,
-      objectID: '2',
     },
   ],
 };

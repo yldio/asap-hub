@@ -1,8 +1,8 @@
 import {
   AnalyticsTeamLeadershipResponse,
   ListEngagementAlgoliaResponse,
-  ListTeamCollaborationAlgoliaResponse,
-  ListUserCollaborationAlgoliaResponse,
+  ListTeamCollaborationResponse,
+  ListUserCollaborationResponse,
   PerformanceMetricByDocumentType,
   TeamCollaborationPerformance,
   TeamProductivityPerformance,
@@ -27,7 +27,7 @@ export const teamLeadershipResponse: AnalyticsTeamLeadershipResponse = {
   interestGroupPreviousMemberCount: 8,
 };
 
-export const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
+export const userCollaborationResponse: ListUserCollaborationResponse = {
   total: 1,
   items: [
     {
@@ -46,12 +46,11 @@ export const userCollaborationResponse: ListUserCollaborationAlgoliaResponse = {
       ],
       totalUniqueOutputsCoAuthoredAcrossTeams: 1,
       totalUniqueOutputsCoAuthoredWithinTeam: 2,
-      objectID: '1-user-collaboration-30d',
     },
   ],
 };
 
-export const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
+export const teamCollaborationResponse: ListTeamCollaborationResponse = {
   total: 1,
   items: [
     {
@@ -86,7 +85,6 @@ export const teamCollaborationResponse: ListTeamCollaborationAlgoliaResponse = {
           },
         ],
       },
-      objectID: '1-team-collaboration-30d',
     },
   ],
 };

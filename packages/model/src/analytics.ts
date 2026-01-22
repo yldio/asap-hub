@@ -403,13 +403,8 @@ export type UserCollaborationDataObject = {
 export type ListUserCollaborationDataObject =
   ListResponse<UserCollaborationDataObject>;
 export type UserCollaborationResponse = UserCollaborationDataObject;
-export type UserCollaborationAlgoliaResponse = UserCollaborationDataObject & {
-  objectID: string;
-};
 export type ListUserCollaborationResponse =
   ListResponse<UserCollaborationResponse>;
-export type ListUserCollaborationAlgoliaResponse =
-  ListResponse<UserCollaborationAlgoliaResponse>;
 
 export type TeamCollaborationWithinOutputData = {
   Article: number;
@@ -438,13 +433,8 @@ export type TeamCollaborationDataObject = {
 export type ListTeamCollaborationDataObject =
   ListResponse<TeamCollaborationDataObject>;
 export type TeamCollaborationResponse = TeamCollaborationDataObject;
-export type TeamCollaborationAlgoliaResponse = TeamCollaborationDataObject & {
-  objectID: string;
-};
 export type ListTeamCollaborationResponse =
   ListResponse<TeamCollaborationResponse>;
-export type ListTeamCollaborationAlgoliaResponse =
-  ListResponse<TeamCollaborationAlgoliaResponse>;
 
 export type SortUserCollaboration =
   | 'user_asc'

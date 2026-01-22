@@ -45,6 +45,10 @@ const queryBuilderByIndex: Record<
   'user-productivity-performance': taglessSearchQueryBuilder,
   'team-productivity': teamRecordSearchQueryBuilder,
   'team-productivity-performance': taglessSearchQueryBuilder,
+  'user-collaboration': userWithTeamsRecordSearchQueryBuilder,
+  'user-collaboration-performance': taglessSearchQueryBuilder,
+  'team-collaboration': teamRecordSearchQueryBuilder,
+  'team-collaboration-performance': taglessSearchQueryBuilder,
 };
 
 const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
@@ -57,6 +61,10 @@ const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
   'user-productivity-performance': unsupportedTagQueryBuilder,
   'team-productivity': teamRecordTagQueryBuilder,
   'team-productivity-performance': unsupportedTagQueryBuilder,
+  'user-collaboration': userWithTeamsRecordsTagQueryBuilder,
+  'user-collaboration-performance': unsupportedTagQueryBuilder,
+  'team-collaboration': teamRecordTagQueryBuilder,
+  'team-collaboration-performance': unsupportedTagQueryBuilder,
 };
 
 export class OpensearchClient<T> {

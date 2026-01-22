@@ -1,18 +1,23 @@
-import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  resultsToStream,
+  createCsvFileStream,
+  GetListOptions,
+} from '@asap-hub/frontend-utils';
 import {
   PreliminaryDataSharingDataObject,
   PreliminaryDataSharingResponse,
   SortSharingPrelimFindings,
   SortTeamCollaboration,
   SortUserCollaboration,
-  TeamCollaborationAlgoliaResponse,
   teamCollaborationInitialSortingDirection,
   TeamCollaborationSortingDirection,
+  TeamCollaborationResponse,
   LimitedTimeRangeOption,
-  UserCollaborationAlgoliaResponse,
   userCollaborationInitialSortingDirection,
   UserCollaborationSortingDirection,
+  UserCollaborationResponse,
 } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
@@ -21,6 +26,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   useAnalytics,
+  useOpensearchMetrics,
   useAnalyticsOpensearch,
   usePaginationParams,
   useSearch,
@@ -52,6 +58,7 @@ type CollaborationType = 'within-team' | 'across-teams' | undefined;
 const Collaboration = () => {
   const navigate = useNavigate();
 
+  const { isEnabled } = useFlags();
   const { metric: metricParam, type: typeParam } = useParams<{
     metric: 'user' | 'team' | 'sharing-prelim-findings';
     type: CollaborationType;
@@ -117,6 +124,7 @@ const Collaboration = () => {
     useAnalyticsOpensearch<PreliminaryDataSharingDataObject>(
       'preliminary-data-sharing',
     );
+  const opensearchMetrics = useOpensearchMetrics();
   const userClient = useAnalyticsAlgolia(
     getAlgoliaIndexName(userSort, 'user-collaboration'),
   ).client;
@@ -143,31 +151,45 @@ const Collaboration = () => {
             header: true,
           },
         ),
-        (paginationParams) =>
+        (paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>) =>
           getPreliminaryDataSharing(preliminaryDataSharingClient.client, {
             tags,
             timeRange: timeRange as LimitedTimeRangeOption,
             ...paginationParams,
           }),
         preliminaryDataSharingToCSV,
+        200,
       );
     }
     if (metric === 'user' && type) {
-      return resultsToStream<UserCollaborationAlgoliaResponse>(
+      return resultsToStream<UserCollaborationResponse>(
         createCsvFileStream(
           `collaboration_${metric}_${format(new Date(), 'MMddyy')}.csv`,
           {
             header: true,
           },
         ),
-        (paginationParams) =>
-          getUserCollaboration(userClient, {
+        (
+          paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>,
+        ) => {
+          if (isEnabled('OPENSEARCH_METRICS')) {
+            return opensearchMetrics.getUserCollaboration({
+              documentCategory,
+              sort: userSort,
+              tags,
+              timeRange,
+              ...paginationParams,
+            });
+          }
+
+          return getUserCollaboration(userClient, {
             documentCategory,
             sort: userSort,
             tags,
             timeRange,
             ...paginationParams,
-          }),
+          });
+        },
         userCollaborationToCSV(
           type,
           userPerformance ?? {
@@ -190,17 +212,18 @@ const Collaboration = () => {
           },
           documentCategory,
         ),
+        200,
       );
     }
 
-    return resultsToStream<TeamCollaborationAlgoliaResponse>(
+    return resultsToStream<TeamCollaborationResponse>(
       createCsvFileStream(
         `collaboration_${metric}_${format(new Date(), 'MMddyy')}.csv`,
         {
           header: true,
         },
       ),
-      (paginationParams) =>
+      (paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>) =>
         getTeamCollaboration(teamClient, {
           outputType,
           sort: teamSort,
@@ -217,10 +240,20 @@ const Collaboration = () => {
             teamPerformance ?? TEAM_PERFORMANCE_INITIAL_DATA,
             outputType,
           ),
+      200,
     );
   };
 
   const loadTags = async (tagQuery: string) => {
+    if (isEnabled('OPENSEARCH_METRICS') && metric === 'user') {
+      const suggestions =
+        await opensearchMetrics.getUserCollaborationTagSuggestions(tagQuery);
+      return suggestions.map((value) => ({
+        label: value,
+        value,
+      }));
+    }
+
     const searchedTags = await client.searchForTagValues(
       [entityType],
       tagQuery,

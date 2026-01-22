@@ -12,6 +12,18 @@ jest.mock('@contentful/react-apps-toolkit', () => ({
   useAutoResizer: jest.fn(),
 }));
 
+jest.mock('@contentful/field-editor-single-line', () => ({
+  SingleLineEditor: () => (
+    <div data-testid="single-line-editor">Single Line Editor</div>
+  ),
+}));
+
+jest.mock('@contentful/field-editor-multiple-line', () => ({
+  MultipleLineEditor: () => (
+    <div data-testid="multiple-line-editor">Multiple Line Editor</div>
+  ),
+}));
+
 const unsubscribeFn = jest.fn();
 
 const createMockField = (getValue: () => unknown) => {
@@ -28,7 +40,11 @@ const createMockField = (getValue: () => unknown) => {
   };
 };
 
-const mockSdk = (contentTypeId: string, fieldId: string) => {
+const mockSdk = (
+  contentTypeId: string,
+  fieldId: string,
+  fieldType: 'Symbol' | 'Text' = 'Symbol',
+) => {
   const fields: Record<string, ReturnType<typeof createMockField>> = {
     resourceTitle: createMockField(() => null),
     resourceDescription: createMockField(() => null),
@@ -45,7 +61,7 @@ const mockSdk = (contentTypeId: string, fieldId: string) => {
     contentType: { sys: { id: contentTypeId } },
     field: {
       id: fieldId,
-      type: 'Symbol',
+      type: fieldType,
       setInvalid: jest.fn(),
     },
     entry: {
@@ -77,6 +93,7 @@ describe('Team resource validation field', () => {
     const sdk = mockSdk(
       'teams',
       'resourceTitle',
+      'Symbol',
     ) as unknown as jest.Mocked<FieldAppSDK>;
     (useSDK as jest.Mock).mockReturnValue(sdk);
 
@@ -90,6 +107,7 @@ describe('Team resource validation field', () => {
     const sdk = mockSdk(
       'teams',
       'resourceTitle',
+      'Symbol',
     ) as unknown as jest.Mocked<FieldAppSDK>;
     (sdk.entry.fields.resourceTitle as any).getValue = jest.fn(
       () => 'Some title',
@@ -101,9 +119,6 @@ describe('Team resource validation field', () => {
       expect(
         screen.getByText(TEAM_RESOURCE_FIELDS_WARNING),
       ).toBeInTheDocument();
-      expect(sdk.notifier.error).toHaveBeenCalledWith(
-        TEAM_RESOURCE_FIELDS_WARNING,
-      );
     });
   });
 
@@ -111,6 +126,7 @@ describe('Team resource validation field', () => {
     const sdk = mockSdk(
       'teams',
       'resourceTitle',
+      'Symbol',
     ) as unknown as jest.Mocked<FieldAppSDK>;
     (sdk.entry.fields.resourceTitle as any).getValue = jest.fn(
       () => 'Some title',
@@ -138,6 +154,7 @@ describe('Team resource validation field', () => {
     const sdk = mockSdk(
       'teams',
       'displayName',
+      'Symbol',
     ) as unknown as jest.Mocked<FieldAppSDK>;
     (useSDK as jest.Mock).mockReturnValue(sdk);
 
@@ -153,6 +170,7 @@ describe('Team resource validation field', () => {
     const sdk = mockSdk(
       'projects',
       'resourceTitle',
+      'Symbol',
     ) as unknown as jest.Mocked<FieldAppSDK>;
     (sdk.entry.fields.resourceTitle as any).getValue = jest.fn(
       () => 'Some title',

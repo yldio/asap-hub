@@ -1,5 +1,7 @@
 import { FieldAppSDK } from '@contentful/app-sdk';
 import { Note, Stack } from '@contentful/f36-components';
+import { MultipleLineEditor } from '@contentful/field-editor-multiple-line';
+import { SingleLineEditor } from '@contentful/field-editor-single-line';
 import { useSDK, useAutoResizer } from '@contentful/react-apps-toolkit';
 import React, { useEffect, useState, useCallback } from 'react';
 import { getEntry, onEntryChanged } from '../utils';
@@ -90,19 +92,44 @@ const Field = () => {
   }, [sdk]);
 
   useEffect(() => {
-    if (warning) {
-      sdk.notifier.error(warning);
-    }
-  }, [sdk.notifier, warning]);
-
-  useEffect(() => {
     const unsubscribe = onEntryChanged(sdk, validateField);
     validateField();
     return unsubscribe;
   }, [sdk, validateField]);
 
+  const renderFieldEditor = () => {
+    const fieldType = sdk.field.type;
+
+    if (fieldType === 'Symbol') {
+      return (
+        <div style={{ width: '100%' }}>
+          <SingleLineEditor
+            field={sdk.field}
+            locales={sdk.locales}
+            isInitiallyDisabled={false}
+          />
+        </div>
+      );
+    }
+
+    if (fieldType === 'Text') {
+      return (
+        <div style={{ width: '100%' }}>
+          <MultipleLineEditor
+            field={sdk.field}
+            locales={sdk.locales}
+            isInitiallyDisabled={false}
+          />
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <Stack flexDirection="column" spacing="spacingS" alignItems="flex-start">
+      {renderFieldEditor()}
       {warning && <Note variant="warning">{warning}</Note>}
     </Stack>
   );

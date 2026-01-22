@@ -72,10 +72,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/crn-server"\
       },\
       {\
-        "name": "@asap-hub/e2e-tests",\
-        "reference": "workspace:apps/e2e-tests"\
-      },\
-      {\
         "name": "@asap-hub/gp2-auth-frontend",\
         "reference": "workspace:apps/gp2-auth-frontend"\
       },\
@@ -287,7 +283,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/crn-messages", ["workspace:apps/crn-messages"]],\
       ["@asap-hub/crn-server", ["workspace:apps/crn-server"]],\
       ["@asap-hub/dom-test-utils", ["workspace:packages/dom-test-utils"]],\
-      ["@asap-hub/e2e-tests", ["workspace:apps/e2e-tests"]],\
       ["@asap-hub/errors", ["workspace:packages/errors"]],\
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],\
       ["@asap-hub/fixtures", ["workspace:packages/fixtures"]],\
@@ -521,10 +516,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "@asap-hub/dom-test-utils",\
         "workspace:packages/dom-test-utils"\
-      ],\
-      [\
-        "@asap-hub/e2e-tests",\
-        "workspace:apps/e2e-tests"\
       ],\
       [\
         "@asap-hub/errors",\
@@ -2641,10 +2632,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "@pkgr/core",\
         "npm:0.2.9"\
-      ],\
-      [\
-        "@playwright/test",\
-        "npm:1.56.1"\
       ],\
       [\
         "@popperjs/core",\
@@ -12813,17 +12800,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
             ["@types/jest", "npm:29.5.14"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
-      ["@asap-hub/e2e-tests", [\
-        ["workspace:apps/e2e-tests", {\
-          "packageLocation": "./apps/e2e-tests/",\
-          "packageDependencies": [\
-            ["@asap-hub/e2e-tests", "workspace:apps/e2e-tests"],\
-            ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["@playwright/test", "npm:1.56.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -32313,16 +32289,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@playwright/test", [\
-        ["npm:1.56.1", {\
-          "packageLocation": "./.yarn/cache/@playwright-test-npm-1.56.1-74bef72ba3-1095446658.zip/node_modules/@playwright/test/",\
-          "packageDependencies": [\
-            ["@playwright/test", "npm:1.56.1"],\
-            ["playwright", "npm:1.56.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["@pmmmwh/react-refresh-webpack-plugin", [\
         ["npm:0.5.17", {\
           "packageLocation": "./.yarn/cache/@pmmmwh-react-refresh-webpack-plugin-npm-0.5.17-e232522275-ff80b5064f.zip/node_modules/@pmmmwh/react-refresh-webpack-plugin/",\
@@ -47716,10 +47682,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["expect-playwright", [\
+        ["npm:0.2.6", {\
+          "packageLocation": "./.yarn/cache/expect-playwright-npm-0.2.6-d8b6606c83-c580306069.zip/node_modules/expect-playwright/",\
+          "packageDependencies": [\
+            ["expect-playwright", "npm:0.2.6"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
         ["npm:0.8.0", {\
           "packageLocation": "./.yarn/cache/expect-playwright-npm-0.8.0-0fec7940e9-d9e8f05295.zip/node_modules/expect-playwright/",\
           "packageDependencies": [\
             ["expect-playwright", "npm:0.8.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:f96f31ad1d800240a13174cee0a2bb0a2fce0a3cdaa86fe3b56e858d7285eca717f58d5579337f462d835a1c562b2d59346a053c6fa96258673f78d8f229bd32#npm:0.2.6", {\
+          "packageLocation": "./.yarn/__virtual__/expect-playwright-virtual-a2525223a0/0/cache/expect-playwright-npm-0.2.6-d8b6606c83-c580306069.zip/node_modules/expect-playwright/",\
+          "packageDependencies": [\
+            ["expect-playwright", "virtual:f96f31ad1d800240a13174cee0a2bb0a2fce0a3cdaa86fe3b56e858d7285eca717f58d5579337f462d835a1c562b2d59346a053c6fa96258673f78d8f229bd32#npm:0.2.6"],\
+            ["@types/playwright-core", null],\
+            ["playwright-core", null]\
+          ],\
+          "packagePeers": [\
+            "@types/playwright-core",\
+            "playwright-core"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -52925,7 +52911,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/jest-playwright-jsdom-npm-0.0.4-f96f31ad1d-f9a6497c89.zip/node_modules/jest-playwright-jsdom/",\
           "packageDependencies": [\
             ["jest-playwright-jsdom", "npm:0.0.4"],\
-            ["expect-playwright", "npm:0.8.0"],\
+            ["expect-playwright", "virtual:f96f31ad1d800240a13174cee0a2bb0a2fce0a3cdaa86fe3b56e858d7285eca717f58d5579337f462d835a1c562b2d59346a053c6fa96258673f78d8f229bd32#npm:0.2.6"],\
             ["jest-playwright-preset", "virtual:f96f31ad1d800240a13174cee0a2bb0a2fce0a3cdaa86fe3b56e858d7285eca717f58d5579337f462d835a1c562b2d59346a053c6fa96258673f78d8f229bd32#npm:1.7.2"]\
           ],\
           "linkType": "HARD"\

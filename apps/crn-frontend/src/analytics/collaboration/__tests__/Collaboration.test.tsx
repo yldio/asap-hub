@@ -729,7 +729,9 @@ describe('csv export', () => {
       getUserCollaboration: mockGetUserCollaborationOS,
       getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserCollaborationPerformance: mockGetUserCollaborationPerformanceOS,
-      getTeamCollaboration: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
       getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
       getPreliminaryDataSharing: jest

@@ -206,7 +206,7 @@ export const useOpensearchMetrics = () => {
         'team-collaboration',
         authorization,
       );
-      return client.getTagSuggestions(tagQuery, 'extended');
+      return client.getTagSuggestions(tagQuery, 'flat');
     },
 
     getTeamCollaborationPerformance(

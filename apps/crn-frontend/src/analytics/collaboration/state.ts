@@ -28,7 +28,6 @@ import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import {
   getAlgoliaIndexName,
   makeFlagBasedPerformanceHook,
-  makePerformanceHook,
   makePerformanceState,
 } from '../utils/state';
 import {

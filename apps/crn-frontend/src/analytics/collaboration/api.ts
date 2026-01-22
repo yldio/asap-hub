@@ -14,12 +14,12 @@ import {
   DocumentCategoryOption,
   LimitedTimeRangeOption,
   ListPreliminaryDataSharingResponse,
-  ListTeamCollaborationResponse,
   OutputTypeOption,
   PreliminaryDataSharingDataObject,
   SortTeamCollaboration,
   SortUserCollaboration,
   TeamCollaborationPerformance,
+  TeamCollaborationResponse,
   TimeRangeOption,
   UserCollaborationPerformance,
   UserCollaborationResponse,
@@ -119,7 +119,7 @@ const userCollaborationOpensearchSort: OpensearchSortMap<SortUserCollaboration> 
     ],
   };
 
-const teamCollborationOpensearchSort: OpensearchSortMap<SortTeamCollaboration> =
+const teamCollaborationOpensearchSort: OpensearchSortMap<SortTeamCollaboration> =
   {
     team_asc: [
       buildNormalizedStringSort({
@@ -135,70 +135,140 @@ const teamCollborationOpensearchSort: OpensearchSortMap<SortTeamCollaboration> =
     ],
     article_asc: [
       {
-        'articles.title': {
+        'outputsCoProducedWithin.Article': {
           order: 'asc',
         },
       },
     ],
     article_desc: [
       {
-        'articles.title': {
+        'outputsCoProducedWithin.Article': {
           order: 'desc',
         },
       },
     ],
     bioinformatics_asc: [
       {
-        bioinformatics: {
+        'outputsCoProducedWithin.Bioinformatics': {
           order: 'asc',
         },
       },
     ],
     bioinformatics_desc: [
       {
-        bioinformatics: {
+        'outputsCoProducedWithin.Bioinformatics': {
           order: 'desc',
         },
       },
     ],
     dataset_asc: [
       {
-        datasets: {
+        'outputsCoProducedWithin.Dataset': {
           order: 'asc',
         },
       },
     ],
     dataset_desc: [
       {
-        datasets: {
+        'outputsCoProducedWithin.Dataset': {
           order: 'desc',
         },
       },
     ],
     lab_material_asc: [
       {
-        'lab_material.title': {
+        'outputsCoProducedWithin.Lab Material': {
           order: 'asc',
         },
       },
     ],
     lab_material_desc: [
       {
-        'lab_material.title': {
+        'outputsCoProducedWithin.Lab Material': {
           order: 'desc',
         },
       },
     ],
     protocol_asc: [
       {
-        protocols: {
+        'outputsCoProducedWithin.Protocol': {
           order: 'asc',
         },
       },
     ],
     protocol_desc: [
       {
-        protocols: {
+        'outputsCoProducedWithin.Protocol': {
+          order: 'desc',
+        },
+      },
+    ],
+    article_across_asc: [
+      {
+        'outputsCoProducedAcross.byDocumentType.Article': {
+          order: 'asc',
+        },
+      },
+    ],
+    article_across_desc: [
+      {
+        'outputsCoProducedAcross.byDocumentType.Article': {
+          order: 'desc',
+        },
+      },
+    ],
+    bioinformatics_across_asc: [
+      {
+        'outputsCoProducedAcross.byDocumentType.Bioinformatics': {
+          order: 'asc',
+        },
+      },
+    ],
+    bioinformatics_across_desc: [
+      {
+        'outputsCoProducedAcross.byDocumentType.Bioinformatics': {
+          order: 'desc',
+        },
+      },
+    ],
+    dataset_across_asc: [
+      {
+        'outputsCoProducedAcross.byDocumentType.Dataset': {
+          order: 'asc',
+        },
+      },
+    ],
+    dataset_across_desc: [
+      {
+        'outputsCoProducedAcross.byDocumentType.Dataset': {
+          order: 'desc',
+        },
+      },
+    ],
+    lab_material_across_asc: [
+      {
+        'outputsCoProducedAcross.byDocumentType.Lab Material': {
+          order: 'asc',
+        },
+      },
+    ],
+    lab_material_across_desc: [
+      {
+        'outputsCoProducedAcross.byDocumentType.Lab Material': {
+          order: 'desc',
+        },
+      },
+    ],
+    protocol_across_asc: [
+      {
+        'outputsCoProducedAcross.byDocumentType.Protocol': {
+          order: 'asc',
+        },
+      },
+    ],
+    protocol_across_desc: [
+      {
+        'outputsCoProducedAcross.byDocumentType.Protocol': {
           order: 'desc',
         },
       },
@@ -233,12 +303,19 @@ export const getUserCollaboration = (
 export const getTeamCollaboration = (
   client:
     | AlgoliaClient<'analytics'>
-    | OpensearchClient<ListTeamCollaborationResponse>,
+    | OpensearchClient<TeamCollaborationResponse>,
   options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
 ) => {
   if (client instanceof OpensearchClient) {
-    const { tags, currentPage, pageSize, timeRange, documentCategory, sort } =
-      options;
+    const {
+      tags,
+      currentPage,
+      pageSize,
+      timeRange,
+      documentCategory,
+      outputType,
+      sort,
+    } = options;
     return client.search({
       searchTags: tags,
       currentPage: currentPage ?? undefined,
@@ -246,11 +323,12 @@ export const getTeamCollaboration = (
       timeRange,
       searchScope: 'flat',
       documentCategory,
-      sort: teamCollborationOpensearchSort[sort],
+      outputType,
+      sort: teamCollaborationOpensearchSort[sort],
     });
   }
   return getMetric<
-    SearchResult<ListTeamCollaborationResponse>,
+    SearchResult<TeamCollaborationResponse>,
     SortTeamCollaboration
   >(TEAM_COLLABORATION)(client, options);
 };
@@ -268,6 +346,7 @@ export const getTeamCollaborationPerformance = async (
       searchScope: 'flat',
       sort: [],
       documentCategory: options.documentCategory,
+      outputType: options.outputType,
     });
     return results.items[0] as TeamCollaborationPerformance | undefined;
   }

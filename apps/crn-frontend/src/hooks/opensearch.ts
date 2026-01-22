@@ -9,7 +9,7 @@ import {
   UserProductivityPerformanceDataObject,
   UserProductivityResponse,
   UserCollaborationResponse,
-  TeamCollaborationReponse,
+  TeamCollaborationResponse,
   TeamCollaborationPerformance,
   UserCollaborationPerformance,
 } from '@asap-hub/model';
@@ -194,7 +194,7 @@ export const useOpensearchMetrics = () => {
     getTeamCollaboration(
       paginationParams: Parameters<typeof getTeamCollaboration>[1],
     ) {
-      const client = new OpensearchClient<TeamCollaborationReponse>(
+      const client = new OpensearchClient<TeamCollaborationResponse>(
         'team-collaboration',
         authorization,
       );
@@ -202,7 +202,7 @@ export const useOpensearchMetrics = () => {
     },
 
     getTeamCollaborationTagSuggestions(tagQuery: string) {
-      const client = new OpensearchClient<TeamCollaborationReponse>(
+      const client = new OpensearchClient<TeamCollaborationResponse>(
         'team-collaboration',
         authorization,
       );

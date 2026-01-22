@@ -110,6 +110,9 @@ describe('downloadAnalyticsXLSX', () => {
     getUserCollaboration: jest.fn(),
     getUserCollaborationTagSuggestions: jest.fn(),
     getUserCollaborationPerformance: jest.fn(),
+    getTeamCollaboration: jest.fn(),
+    getTeamCollaborationTagSuggestions: jest.fn(),
+    getTeamCollaborationPerformance: jest.fn(),
   };
 
   beforeEach(() => {

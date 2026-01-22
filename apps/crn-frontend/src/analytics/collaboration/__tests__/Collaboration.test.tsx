@@ -263,6 +263,9 @@ beforeEach(() => {
     getUserCollaboration: jest.fn().mockResolvedValue({ items: [], total: 0 }),
     getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
     getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+    getTeamCollaboration: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+    getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
     getPreliminaryDataSharing: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
@@ -640,6 +643,11 @@ describe('search', () => {
       getUserCollaborationTagSuggestions:
         mockGetUserCollaborationTagSuggestionsOS,
       getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
       getPreliminaryDataSharing: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -721,6 +729,9 @@ describe('csv export', () => {
       getUserCollaboration: mockGetUserCollaborationOS,
       getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserCollaborationPerformance: mockGetUserCollaborationPerformanceOS,
+      getTeamCollaboration: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+      getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
       getPreliminaryDataSharing: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),

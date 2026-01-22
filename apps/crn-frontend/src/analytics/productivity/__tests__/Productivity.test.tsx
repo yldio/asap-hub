@@ -164,6 +164,9 @@ beforeEach(() => {
     getUserCollaboration: jest.fn().mockResolvedValue({ items: [], total: 0 }),
     getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
     getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+    getTeamCollaboration: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+    getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
   });
   mockUseAnalyticsOpensearch.mockReturnValue({
     client: {} as OpensearchClient<unknown>, // Mock opensearch client (not used since flag is false)
@@ -749,6 +752,11 @@ describe('csv export', () => {
         .mockResolvedValue({ items: [], total: 0 }),
       getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
     });
 
     // Render the page
@@ -889,6 +897,11 @@ describe('csv export', () => {
         .mockResolvedValue({ items: [], total: 0 }),
       getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
     });
 
     // Render the page
@@ -984,6 +997,11 @@ describe('tag suggestions', () => {
         .mockResolvedValue({ items: [], total: 0 }),
       getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
     });
 
     await renderPage(
@@ -1045,6 +1063,11 @@ describe('tag suggestions', () => {
         .mockResolvedValue({ items: [], total: 0 }),
       getUserCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getUserCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getTeamCollaboration: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
+      getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
     });
 
     await renderPage(

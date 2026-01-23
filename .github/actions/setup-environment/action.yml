@@ -50,6 +50,9 @@ outputs:
   contentful-app-date-field-as-first-published-at:
     description: 'Contentful App Extension Date Field as firstPublishedAt'
     value: ${{ steps.vars.outputs.contentful-app-date-field-as-first-published-at }}
+  contentful-app-team-resource-validation:
+    description: 'Contentful App Extension Team Resource Validation'
+    value: ${{ steps.vars.outputs.contentful-app-team-resource-validation }}
   contentful-app-date-field-as-last-published-at:
     description: 'Contentful App Extension Date Field as last publishedAt'
     value: ${{ steps.vars.outputs.contentful-app-date-field-as-last-published-at }}

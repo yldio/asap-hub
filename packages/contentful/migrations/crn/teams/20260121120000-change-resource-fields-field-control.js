@@ -15,7 +15,6 @@ module.exports.up = (migration) => {
 };
 
 module.exports.down = (migration) => {
-
   const teams = migration.editContentType('teams');
 
   // Revert to builtin field controls

@@ -28,7 +28,8 @@ const createMockField = (getValue: () => unknown) => {
 const mockBaseSdk = (
   contentTypeId: string,
   fieldId: string,
-  fieldType: 'Date' | 'Link' | 'Text' | 'Symbol' = 'Link',
+  projectMemberValue: unknown = null,
+  linkedEntryContentType: string | null = null,
 ) => {
   const fields: Record<string, ReturnType<typeof createMockField>> = {
     teamType: createMockField(() => null),
@@ -37,6 +38,7 @@ const mockBaseSdk = (
     endDate: createMockField(() => null),
     projectType: createMockField(() => null),
     resourceType: createMockField(() => null),
+    projectMember: createMockField(() => projectMemberValue),
   };
 
   Object.keys(fields).forEach((key) => {
@@ -46,10 +48,29 @@ const mockBaseSdk = (
   return {
     field: {
       id: fieldId,
-      type: 'Text',
+      type: 'Symbol',
       setValue: jest.fn(),
       getValue: jest.fn(() => null),
       setInvalid: jest.fn(),
+      onValueChanged: jest.fn(() => unsubscribeFn),
+      validations: [
+        {
+          in: [
+            'Lead PI',
+            'Co-PI',
+            'Collaborating PI',
+            'Project Manager',
+            'Data Manager',
+            'Staff Scientist',
+            'ASAP Staff',
+            'Trainee',
+            'Trainee Project - Lead',
+            'Trainee Project - Mentor',
+            'Trainee Project - Key Personnel',
+          ],
+        },
+      ],
+      name: 'Role',
     },
     contentType: {
       sys: {
@@ -68,6 +89,20 @@ const mockBaseSdk = (
       onMetadataChanged: jest.fn(() => unsubscribeFn),
       fields,
     },
+    space: {
+      getEntry: jest.fn((id: string) =>
+        Promise.resolve({
+          sys: {
+            id,
+            contentType: {
+              sys: {
+                id: linkedEntryContentType,
+              },
+            },
+          },
+        }),
+      ),
+    },
     notifier: {
       error: jest.fn(),
     },
@@ -84,19 +119,89 @@ describe('Field component', () => {
     jest.clearAllMocks();
   });
 
-  describe('placeholder', () => {
-    it('renders placeholder for role field', async () => {
+  describe('role field visibility', () => {
+    it('shows enabled role field when project member is a user', async () => {
+      const projectMemberValue = {
+        sys: { id: 'user-123', type: 'Link', linkType: 'Entry' },
+      };
       const sdk = mockBaseSdk(
-        'project-membership',
+        'projectMembership',
         'role',
+        projectMemberValue,
+        'users',
       ) as unknown as jest.Mocked<FieldAppSDK>;
       (useSDK as jest.Mock).mockReturnValue(sdk);
 
       render(<Field />);
       await waitFor(() => {
-        expect(
-          screen.getByText('should be a custom field for role selection'),
-        ).toBeInTheDocument();
+        const select = screen.getByRole('combobox');
+        expect(select).toBeInTheDocument();
+        expect(select).not.toBeDisabled();
+        expect(sdk.window.startAutoResizer).toHaveBeenCalled();
+      });
+    });
+
+    it('shows disabled role field when project member is a team', async () => {
+      const projectMemberValue = {
+        sys: { id: 'team-123', type: 'Link', linkType: 'Entry' },
+      };
+      const sdk = mockBaseSdk(
+        'projectMembership',
+        'role',
+        projectMemberValue,
+        'teams',
+      ) as unknown as jest.Mocked<FieldAppSDK>;
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+      await waitFor(() => {
+        const select = screen.getByRole('combobox');
+        expect(select).toBeInTheDocument();
+        expect(select).toBeDisabled();
+        expect(sdk.window.startAutoResizer).toHaveBeenCalled();
+      });
+    });
+
+    it('shows disabled role field when no project member is selected', async () => {
+      const sdk = mockBaseSdk(
+        'projectMembership',
+        'role',
+        null,
+        null,
+      ) as unknown as jest.Mocked<FieldAppSDK>;
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+      await waitFor(() => {
+        const select = screen.getByRole('combobox');
+        expect(select).toBeInTheDocument();
+        expect(select).toBeDisabled();
+        expect(sdk.window.startAutoResizer).toHaveBeenCalled();
+      });
+    });
+
+    it('displays all role options in the select dropdown', async () => {
+      const projectMemberValue = {
+        sys: { id: 'user-123', type: 'Link', linkType: 'Entry' },
+      };
+      const sdk = mockBaseSdk(
+        'projectMembership',
+        'role',
+        projectMemberValue,
+        'users',
+      ) as unknown as jest.Mocked<FieldAppSDK>;
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+      await waitFor(() => {
+        const select = screen.getByRole('combobox');
+        expect(select).toBeInTheDocument();
+
+        // Check that the options are present
+        expect(screen.getByText('Lead PI')).toBeInTheDocument();
+        expect(screen.getByText('Co-PI')).toBeInTheDocument();
+        expect(screen.getByText('Collaborating PI')).toBeInTheDocument();
+        expect(screen.getByText('Project Manager')).toBeInTheDocument();
       });
     });
   });

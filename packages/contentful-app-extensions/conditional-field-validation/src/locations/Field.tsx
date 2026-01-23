@@ -8,8 +8,6 @@ import { getEntry, onEntryChanged } from '../utils';
 
 export const TEAM_RESEARCH_THEME_WARNING =
   'Discovery teams require a Research Theme';
-export const TEAM_RESOURCE_FIELDS_WARNING =
-  'If you populate any Resource fields, please complete Resource Title, Resource Description, Resource Button Copy, and Resource Contact Email. (Resource Link is optional.)';
 export const PROJECT_END_DATE_WARNING =
   'Closed or Completed projects require an End Date';
 export const PROJECT_RESOURCE_TYPE_WARNING =

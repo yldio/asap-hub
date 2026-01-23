@@ -48,6 +48,7 @@ const Input = (
     <components.Input
       {...props}
       {...inputProps}
+      isHidden={false}
       onBlur={(event: React.FocusEvent<HTMLInputElement>) => {
         props.onBlur?.(event);
         onBlur(event);

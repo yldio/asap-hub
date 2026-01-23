@@ -1,5 +1,5 @@
 {
-  "name": "@asap-hub/contentful-project-membership-role",
+  "name": "@asap-hub/contentful-app-project-membership-role",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

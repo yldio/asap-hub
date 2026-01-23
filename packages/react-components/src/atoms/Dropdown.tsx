@@ -2,10 +2,9 @@ import { css, useTheme } from '@emotion/react';
 import { FC, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
 import Select, {
   ControlProps,
-  OptionTypeBase,
   SingleValueProps,
+  GroupBase,
 } from 'react-select';
-import { v4 as uuidV4 } from 'uuid';
 import { useValidation, validationMessageStyles } from '../form';
 import { dropdownChevronIcon, dropdownCrossIcon } from '../icons';
 import { Option, reactSelectStyles } from '../select';
@@ -17,21 +16,18 @@ const containerStyles = css({
 });
 
 const singleValueStyles = css({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
+  gridArea: '1 / 1 / 2 / 3',
   display: 'flex',
   alignItems: 'center',
-  pointerEvents: 'none', // allows clicks to pass through to the input/dropdown
+  pointerEvents: 'none',
+  overflow: 'hidden',
 });
 
 function CustomSingleValue<V extends string>({
   data,
   renderValue,
   ...props
-}: SingleValueProps<OptionTypeBase> & {
+}: SingleValueProps<Option<V>, false, GroupBase<Option<V>>> & {
   renderValue?: (value: V) => React.ReactNode;
 }) {
   return (
@@ -43,9 +39,12 @@ function CustomSingleValue<V extends string>({
 
 const DropdownIndicator: FC = () => dropdownChevronIcon;
 const CrossIcon: FC = () => dropdownCrossIcon;
-const ClearIndicator = ({
+const ClearIndicator = <V extends string>({
   innerProps,
-}: Pick<ControlProps<OptionTypeBase, false>, 'innerProps'>) => (
+}: Pick<
+  ControlProps<Option<V>, false, GroupBase<Option<V>>>,
+  'innerProps'
+>) => (
   <span {...innerProps}>
     <CrossIcon />
   </span>
@@ -113,14 +112,14 @@ export default function Dropdown<V extends string>({
   const theme = useTheme();
   return (
     <div css={containerStyles}>
-      <Select<OptionTypeBase>
+      <Select<Option<V>, false, GroupBase<Option<V>>>
         placeholder={placeholder}
         inputId={id}
         isClearable={!required}
         isDisabled={!enabled}
-        options={validOptions}
+        options={validOptions as Option<V>[]}
         onChange={(option) => {
-          onChange(option?.value);
+          onChange(option?.value as V);
         }}
         value={selectValue || null}
         components={{
@@ -133,7 +132,6 @@ export default function Dropdown<V extends string>({
         styles={reactSelectStyles(theme, !!validationMessage)}
         noOptionsMessage={noOptionsMessage}
         tabSelectsValue={false}
-        autoComplete={uuidV4()}
         onBlur={() => {
           setHasBlurred(true);
           validate();

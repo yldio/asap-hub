@@ -1,13 +1,6 @@
 import { css, useTheme } from '@emotion/react';
-import {
-  ComponentProps,
-  createContext,
-  createRef,
-  FC,
-  useContext,
-  useState,
-} from 'react';
-import { components, InputActionMeta, OptionTypeBase } from 'react-select';
+import { createContext, createRef, FC, useContext, useState } from 'react';
+import { components, InputActionMeta, GroupBase, InputProps } from 'react-select';
 import AsyncCreatable from 'react-select/async-creatable';
 import Creatable from 'react-select/creatable';
 import { useValidation, validationMessageStyles } from '../form';
@@ -16,6 +9,11 @@ import { loadingImage } from '../images';
 import { rem } from '../pixels';
 import { reactSelectStyles } from '../select';
 import { noop } from '../utils';
+
+interface TypeaheadOption {
+  value: string;
+  label: string;
+}
 
 const containerStyles = css({
   flexBasis: '100%',
@@ -42,7 +40,9 @@ const InputContext = createContext<
   onBlur: noop,
   onInvalid: noop,
 });
-const Input: React.FC<ComponentProps<typeof components.Input>> = (props) => {
+const Input = (
+  props: InputProps<TypeaheadOption, false, GroupBase<TypeaheadOption>>,
+) => {
   const { ref, onBlur, ...inputProps } = useContext(InputContext);
   return (
     <components.Input
@@ -52,12 +52,10 @@ const Input: React.FC<ComponentProps<typeof components.Input>> = (props) => {
         props.onBlur?.(event);
         onBlur(event);
       }}
-      style={{ display: 'unset' }}
       autoComplete="off"
-      isHidden={false}
       innerRef={(element) => {
         ref.current = element;
-        props.innerRef(element);
+        props.innerRef?.(element);
       }}
     />
   );
@@ -124,9 +122,13 @@ const Typeahead: FC<TypeaheadProps> = ({
     noOptionsMessage: () => null,
     tabSelectsValue: false,
     controlShouldRenderValue: false,
-    components: { DropdownIndicator, Input, LoadingIndicator },
+    components: {
+      DropdownIndicator,
+      Input: Input as typeof components.Input,
+      LoadingIndicator,
+    },
     styles: reactSelectStyles(theme, !!validationMessage),
-    onChange: (option: OptionTypeBase | null) => {
+    onChange: (option: TypeaheadOption | null) => {
       const newValue = option?.value || '';
       onNewValue(newValue);
     },
@@ -144,7 +146,7 @@ const Typeahead: FC<TypeaheadProps> = ({
         value={{ ...validationTargetProps, required, maxLength }}
       >
         {rest.suggestions ? (
-          <Creatable<OptionTypeBase>
+          <Creatable<TypeaheadOption, false, GroupBase<TypeaheadOption>>
             {...commonProps}
             options={rest.suggestions.map((suggestion) => ({
               value: suggestion,
@@ -152,7 +154,7 @@ const Typeahead: FC<TypeaheadProps> = ({
             }))}
           />
         ) : (
-          <AsyncCreatable<OptionTypeBase, false>
+          <AsyncCreatable<TypeaheadOption, false, GroupBase<TypeaheadOption>>
             {...commonProps}
             defaultOptions
             cacheOptions

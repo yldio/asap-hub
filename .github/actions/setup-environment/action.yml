@@ -92,6 +92,9 @@ outputs:
   contentful-app-auto-populate-date-field:
     description: 'Contentful App Extension Auto Populate Date Field'
     value: ${{ steps.vars.outputs.contentful-app-auto-populate-date-field }}
+  contentful-app-project-membership-role:
+    description: 'Contentful App Extension Project Membership Role'
+    value: ${{ steps.vars.outputs.contentful-app-project-membership-role }}
   contentful-environment:
     description: 'Contentful Environment'
     value: ${{ steps.vars.outputs.contentful-environment }}

@@ -6,7 +6,7 @@ import * as text from './text';
 import * as utils from './utils';
 import * as colors from './colors';
 
-export type { OptionsType } from 'react-select';
+export type { OptionsType } from './select';
 export * from './button';
 export * from './event-mapper';
 export * from './appearance';

@@ -3,6 +3,7 @@ import {
   ListPublicOutputResponse,
   PublicResearchOutputResponse,
   ResearchOutputResponse,
+  TeamType,
 } from '@asap-hub/model';
 import { validateFetchPaginationOptions } from '@asap-hub/server-common';
 import { Response, Router } from 'express';
@@ -118,5 +119,14 @@ const mapToPublicResearchOutput = (
         : undefined,
     ...(preprint.title ? { preprint } : {}),
     lastModifiedDate: researchOutput.lastUpdatedPartial,
+    impact: researchOutput.impact?.name,
+    categories: (researchOutput.categories ?? []).map(
+      (category) => category.name,
+    ),
+    teamType: researchOutput.teams[0]?.teamType as TeamType | undefined,
+    workingGroup: researchOutput.workingGroups && {
+      id: researchOutput.workingGroups[0].id,
+      title: researchOutput.workingGroups[0].title,
+    },
   };
 };

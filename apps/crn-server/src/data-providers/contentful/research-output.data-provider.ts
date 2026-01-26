@@ -7,6 +7,7 @@ import {
   ResearchOutputDataObject,
   researchOutputMapType,
   ResearchOutputUpdateDataObject,
+  TeamType,
 } from '@asap-hub/model';
 import {
   addLocaleToFields,
@@ -323,6 +324,7 @@ const mapTeams = (items: (TeamItem | null)[]) =>
     .map((team) => ({
       id: team.sys.id,
       displayName: team.displayName || '',
+      teamType: (team.teamType || 'Discovery Team') as TeamType,
     }));
 
 export const mapOutputVersions = (items: (OutputVersionItem | null)[]) =>

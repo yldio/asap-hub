@@ -4,7 +4,7 @@ import { EventDataObject } from './event';
 import { ExternalAuthorResponse } from './external-author';
 import { ImpactResponse } from './impact';
 import { LabResponse } from './lab';
-import { TeamResponse } from './team';
+import { TeamResponse, TeamType } from './team';
 import { UserDataObject, UserResponse } from './user';
 import { WorkingGroupResponse } from './working-group';
 
@@ -264,7 +264,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   organisms: string[];
   subtype?: string;
   keywords: string[];
-  teams: Pick<TeamResponse, 'id' | 'displayName'>[];
+  teams: (Pick<TeamResponse, 'id' | 'displayName'> & { teamType?: TeamType })[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
   published: boolean;
   relatedResearch: Array<
@@ -391,6 +391,13 @@ export type PublicResearchOutputResponse = Pick<
     addedDate?: string;
   };
   lastModifiedDate?: string;
+  impact?: string;
+  categories: string[];
+  teamType: TeamType | undefined;
+  workingGroup?: {
+    id: string;
+    title: string;
+  };
 };
 
 export type ListPublicOutputResponse =

@@ -6,6 +6,7 @@ const baseProject = {
   id: 'project-1',
   title: 'Test Project',
   status: 'Active' as const,
+  statusRank: 1,
   startDate: '2023-01-01',
   endDate: '2025-12-31',
   duration: '3 yrs',

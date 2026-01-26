@@ -36,6 +36,7 @@ import {
   SupplementGrantInfo,
   TraineeProject,
   TraineeProjectDetail,
+  ProjectStatusRank,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import logger from '../../utils/logger';
@@ -159,6 +160,7 @@ export const parseContentfulProject = (
     id: item.sys.id,
     title: item.title,
     status,
+    statusRank: ProjectStatusRank[status],
     startDate: item.startDate,
     endDate: item.endDate,
     tags,

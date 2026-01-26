@@ -44,6 +44,7 @@ const mockTraineeProject = {
   id: 'trainee-1',
   title: 'Trainee Project',
   status: 'Active',
+  statusRank: 1,
   projectType: 'Trainee Project',
   startDate: '2024-03-01',
   endDate: '2025-03-01',

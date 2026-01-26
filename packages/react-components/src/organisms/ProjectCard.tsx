@@ -89,7 +89,10 @@ const driveButtonStyles = css({
   marginTop: rem(12),
 });
 
-type ProjectCardProps = DiscoveryProject | ResourceProject | TraineeProject;
+type ProjectCardProps =
+  | Omit<DiscoveryProject, 'statusRank'>
+  | Omit<ResourceProject, 'statusRank'>
+  | Omit<TraineeProject, 'statusRank'>;
 
 export const getStatusPillAccent = (
   status: ProjectStatus,

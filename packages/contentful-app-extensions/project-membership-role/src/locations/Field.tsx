@@ -1,7 +1,7 @@
 import { FieldAppSDK } from '@contentful/app-sdk';
 import { Stack, Select } from '@contentful/f36-components';
 import { useSDK } from '@contentful/react-apps-toolkit';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 
 const Field = () => {
   const sdk = useSDK<FieldAppSDK>();
@@ -23,6 +23,15 @@ const Field = () => {
     return [];
   }, [sdk.field]);
 
+  const clearRoleAndSave = useCallback(() => {
+    const currentRole = sdk.field.getValue();
+    if (currentRole) {
+      setSavedRoleValue(currentRole);
+      sdk.field.setValue(undefined);
+      setRoleValue('');
+    }
+  }, [sdk.field]);
+
   useEffect(() => {
     const checkProjectMemberType = async () => {
       const fieldType = sdk.field.type;
@@ -40,12 +49,7 @@ const Field = () => {
         // Disable field if no project member is selected
         setShouldShowField(false);
         // Save current role value before clearing
-        const currentRole = sdk.field.getValue();
-        if (currentRole) {
-          setSavedRoleValue(currentRole);
-          sdk.field.setValue(undefined);
-          setRoleValue('');
-        }
+        clearRoleAndSave();
         sdk.window.startAutoResizer();
         return;
       }
@@ -61,12 +65,7 @@ const Field = () => {
 
         if (!isUser) {
           // Save current role value before clearing when a team is selected
-          const currentRole = sdk.field.getValue();
-          if (currentRole) {
-            setSavedRoleValue(currentRole);
-            sdk.field.setValue(undefined);
-            setRoleValue('');
-          }
+          clearRoleAndSave();
         } else {
           // Restore saved role value when switching back to a user
           if (savedRoleValue && !sdk.field.getValue()) {
@@ -80,12 +79,7 @@ const Field = () => {
         // eslint-disable-next-line no-console
         console.error('Error fetching project member entry:', error);
         setShouldShowField(false);
-        const currentRole = sdk.field.getValue();
-        if (currentRole) {
-          setSavedRoleValue(currentRole);
-          sdk.field.setValue(undefined);
-          setRoleValue('');
-        }
+        clearRoleAndSave();
         sdk.window.startAutoResizer();
       }
     };
@@ -122,38 +116,21 @@ const Field = () => {
     sdk.field.setValue(newValue || undefined);
   };
 
-  const renderFieldEditor = () => {
-    const fieldType = sdk.field.type;
-    const fieldId = sdk.field.id;
-
-    if (fieldType === 'Symbol' && fieldId === 'role') {
-      return (
-        <div style={{ width: '100%' }}>
-          <Select
-            id={fieldId}
-            name={fieldId}
-            value={shouldShowField ? roleValue : ''}
-            onChange={handleRoleChange}
-            isDisabled={!shouldShowField}
-          >
-            <Select.Option value="">Choose a value</Select.Option>
-            {roleOptions.map((role) => (
-              <Select.Option key={role} value={role}>
-                {role}
-              </Select.Option>
-            ))}
-          </Select>
-        </div>
-      );
-    }
-
-    return null;
-  };
-
   return (
-    <Stack flexDirection="column" spacing="spacingS" alignItems="flex-start">
-      {renderFieldEditor()}
-    </Stack>
+    <Select
+      id={sdk.field.id}
+      name={sdk.field.id}
+      value={shouldShowField ? roleValue : ''}
+      onChange={handleRoleChange}
+      isDisabled={!shouldShowField}
+    >
+      <Select.Option value="">Choose a value</Select.Option>
+      {roleOptions.map((role) => (
+        <Select.Option key={role} value={role}>
+          {role}
+        </Select.Option>
+      ))}
+    </Select>
   );
 };
 

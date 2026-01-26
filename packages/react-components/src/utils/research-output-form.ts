@@ -11,8 +11,8 @@ import {
 } from '@asap-hub/model';
 import { isInternalUser } from '@asap-hub/validation';
 import { ComponentProps, ComponentPropsWithRef } from 'react';
-import { OptionsType } from 'react-select';
 import { MultiSelectOptionsType } from '../atoms';
+import { OptionsType } from '../select';
 import { ResearchOutputRelatedEventsCard } from '../organisms';
 import AuthorSelect, { AuthorOption } from '../organisms/AuthorSelect';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';

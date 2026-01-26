@@ -1,6 +1,6 @@
 import { ComponentPropsWithRef } from 'react';
-import { OptionsType } from 'react-select';
 import { MultiSelectOptionsType } from '../atoms';
+import { OptionsType } from '../select';
 import { MultiSelectOnChange } from '../atoms/MultiSelect';
 
 import { FormCard, LabeledMultiSelect } from '../molecules';

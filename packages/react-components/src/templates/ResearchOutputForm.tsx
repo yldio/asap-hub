@@ -8,9 +8,9 @@ import {
   ResearchTagResponse,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { OptionsType } from 'react-select';
 
 import { ResearchOutputPermissions } from '@asap-hub/react-context';
+import { OptionsType } from '../select';
 import { network, sharedResearch } from '@asap-hub/routing';
 import equal from 'fast-deep-equal';
 import React, { ComponentProps, useEffect, useState } from 'react';

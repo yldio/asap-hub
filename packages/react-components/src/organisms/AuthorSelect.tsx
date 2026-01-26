@@ -12,6 +12,7 @@ import LabeledMultiSelect, {
   LabeledMultiSelectProps,
 } from '../molecules/LabeledMultiSelect';
 import { rem } from '../pixels';
+import { getMultiValueStyles } from '../select';
 
 const externalAuthorStyles = css({
   borderRadius: '50%',
@@ -125,7 +126,7 @@ const AuthorSelect: React.FC<AuthorSelectProps> = ({
       MultiValueContainer: (multiValueContainerProps) => (
         <div
           css={{
-            ...multiValueContainerProps.selectProps.styles.multiValue(),
+            ...getMultiValueStyles(multiValueContainerProps.selectProps.styles),
             paddingLeft: rem(8),
           }}
         >

@@ -252,3 +252,29 @@ export const reactMultiSelectStyles = <
       marginLeft: rem(6),
     }),
   }) as StylesConfig<T, M, GroupBase<T>>;
+
+/**
+ * Extracts multiValue CSS styles from react-select's styles config.
+ *
+ * Use this helper in custom MultiValueContainer components to get the
+ * configured multiValue styles without type casting gymnastics.
+ *
+ * @example
+ * ```tsx
+ * MultiValueContainer: (props) => (
+ *   <div css={{ ...getMultiValueStyles(props.selectProps.styles), paddingLeft: rem(8) }}>
+ *     {props.children}
+ *   </div>
+ * )
+ * ```
+ */
+export const getMultiValueStyles = (
+  styles: { multiValue?: unknown } | undefined,
+): CSSObject => {
+  if (styles?.multiValue && typeof styles.multiValue === 'function') {
+    // The multiValue style function signature is (base, state) => CSSObject
+    // but our implementation ignores both arguments, so we can safely call with empty args
+    return (styles.multiValue as () => CSSObject)();
+  }
+  return {};
+};

@@ -16,7 +16,7 @@ module.exports.up = (migration) => {
   teams
     .createField('resourceDescription')
     .name('Resource Description')
-    .type('RichText')
+    .type('Text')
     .localized(false)
     .required(false)
     .validations([])
@@ -71,7 +71,7 @@ module.exports.up = (migration) => {
 
   // Set up field controls for better UX in Contentful
   teams.changeFieldControl('resourceTitle', 'builtin', 'singleLine');
-  teams.changeFieldControl('resourceDescription', 'builtin', 'richTextEditor');
+  teams.changeFieldControl('resourceDescription', 'builtin', 'multipleLine');
   teams.changeFieldControl('resourceButtonCopy', 'builtin', 'singleLine');
   teams.changeFieldControl('resourceContactEmail', 'builtin', 'singleLine');
   teams.changeFieldControl('resourceLink', 'builtin', 'urlEditor', {});

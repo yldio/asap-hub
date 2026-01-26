@@ -19,7 +19,7 @@ module.exports.down = (migration) => {
 
   // Revert to builtin field controls
   teams.changeFieldControl('resourceTitle', 'builtin', 'singleLine');
-  teams.changeFieldControl('resourceDescription', 'builtin', 'richTextEditor');
+  teams.changeFieldControl('resourceDescription', 'builtin', 'multipleLine');
   teams.changeFieldControl('resourceButtonCopy', 'builtin', 'singleLine');
   teams.changeFieldControl('resourceContactEmail', 'builtin', 'singleLine');
 };

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { getEntry, onEntryChanged } from '../utils';
 
 export const TEAM_RESOURCE_FIELDS_WARNING =
-  'If you populate any Resource fields, please complete Resource Title, Resource Description, Resource Button Copy, and Resource Contact Email. (Resource Link is optional.)';
+  'When adding Resource information, Resource Title, Resource Description, Resource Button Copy, and Resource Contact Email are required. Resource Link is optional.';
 
 interface Warning {
   id: string;

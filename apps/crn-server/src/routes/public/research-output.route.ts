@@ -87,7 +87,11 @@ const mapToPublicResearchOutput = (
     id: researchOutput.id,
     sharingStatus: researchOutput.sharingStatus,
     asapFunded: researchOutput.asapFunded,
-    teams: researchOutput.teams.map((team) => team.displayName),
+    teams: researchOutput.teams.map((team) => ({
+      id: team.id,
+      displayName: team.displayName,
+      teamType: team.teamType as TeamType,
+    })),
     authors: researchOutput.authors.map((author) => ({
       name: author.displayName,
       id: author.email && author.id,
@@ -123,7 +127,6 @@ const mapToPublicResearchOutput = (
     categories: (researchOutput.categories ?? []).map(
       (category) => category.name,
     ),
-    teamType: researchOutput.teams[0]?.teamType as TeamType | undefined,
     workingGroup: researchOutput.workingGroups && {
       id: researchOutput.workingGroups[0].id,
       title: researchOutput.workingGroups[0].title,

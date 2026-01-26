@@ -12,8 +12,8 @@ import {
   ResearchOutputPutRequest,
   ResearchOutputResponse,
   ResearchOutputUpdateDataObject,
-  TeamType,
   WebhookDetail,
+  TeamType,
 } from '@asap-hub/model';
 import {
   ContentfulWebhookPayload,
@@ -164,7 +164,11 @@ export const getPublicResearchOutputResponse =
       id: researchOutput.id,
       sharingStatus: 'Public',
       asapFunded: true,
-      teams: researchOutput.teams.map((team) => team.displayName),
+      teams: researchOutput.teams.map((team) => ({
+        id: team.id,
+        displayName: team.displayName,
+        teamType: team.teamType as TeamType,
+      })),
       authors: researchOutput.authors.map((author) => ({
         id: author.email && author.id,
         name: author.displayName,
@@ -198,7 +202,6 @@ export const getPublicResearchOutputResponse =
       categories: (researchOutput.categories ?? []).map(
         (category) => category.name,
       ),
-      teamType: researchOutput.teams[0]?.teamType as TeamType | undefined,
       workingGroup: researchOutput.workingGroups?.[0] && {
         id: researchOutput.workingGroups[0].id,
         title: researchOutput.workingGroups[0].title,

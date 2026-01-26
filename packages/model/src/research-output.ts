@@ -379,7 +379,7 @@ export type PublicResearchOutputResponse = Pick<
   | 'documentType'
 > & {
   hyperlink: ResearchOutputResponse['link'];
-  teams: string[];
+  teams: Pick<TeamResponse, 'id' | 'displayName' | 'teamType'>[];
   authors: Array<{ id?: string; name: string }>;
   tags: string[];
   persistentIdentifier: ResearchOutputResponse['doi'];
@@ -393,7 +393,6 @@ export type PublicResearchOutputResponse = Pick<
   lastModifiedDate?: string;
   impact?: string;
   categories: string[];
-  teamType: TeamType | undefined;
   workingGroup?: {
     id: string;
     title: string;

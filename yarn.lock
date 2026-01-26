@@ -1494,6 +1494,7 @@ __metadata:
     "@hapi/boom": 9.1.4
     "@sentry/serverless": 6.19.7
     "@serverless/typescript": 3.38.0
+    "@slack/webhook": ^6.1.0
     "@types/apicache": ^1
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": 8.10.159

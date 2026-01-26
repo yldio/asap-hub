@@ -13443,6 +13443,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/boom", "npm:9.1.4"],\
             ["@sentry/serverless", "npm:6.19.7"],\
             ["@serverless/typescript", "npm:3.38.0"],\
+            ["@slack/webhook", "npm:6.1.0"],\
             ["@types/apicache", "npm:1.6.8"],\
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],\
             ["@types/aws-lambda", "npm:8.10.159"],\

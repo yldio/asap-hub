@@ -23306,7 +23306,7 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
               teamsCollection?: Maybe<{
                 items: Array<
                   Maybe<
-                    Pick<Teams, 'displayName'> & {
+                    Pick<Teams, 'displayName' | 'teamType'> & {
                       sys: Pick<Sys, 'id'>;
                       researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
                       linkedFrom?: Maybe<{
@@ -26213,7 +26213,7 @@ export type ResearchOutputsContentFragment = Pick<
   teamsCollection?: Maybe<{
     items: Array<
       Maybe<
-        Pick<Teams, 'displayName'> & {
+        Pick<Teams, 'displayName' | 'teamType'> & {
           sys: Pick<Sys, 'id'>;
           researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
           linkedFrom?: Maybe<{
@@ -26490,7 +26490,7 @@ export type FetchResearchOutputByIdQuery = {
       teamsCollection?: Maybe<{
         items: Array<
           Maybe<
-            Pick<Teams, 'displayName'> & {
+            Pick<Teams, 'displayName' | 'teamType'> & {
               sys: Pick<Sys, 'id'>;
               researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
               linkedFrom?: Maybe<{
@@ -26830,7 +26830,7 @@ export type FetchResearchOutputsQuery = {
             teamsCollection?: Maybe<{
               items: Array<
                 Maybe<
-                  Pick<Teams, 'displayName'> & {
+                  Pick<Teams, 'displayName' | 'teamType'> & {
                     sys: Pick<Sys, 'id'>;
                     researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
                     linkedFrom?: Maybe<{
@@ -35603,6 +35603,10 @@ export const ResearchOutputsContentFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'displayName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'teamType' },
                       },
                       {
                         kind: 'Field',

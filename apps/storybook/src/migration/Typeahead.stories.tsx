@@ -1,11 +1,7 @@
-// apps/storybook/src/migration/Typeahead.stories.tsx
-// Migration verification stories for Typeahead (via LabeledTypeahead)
-
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { LabeledTypeahead } from '@asap-hub/react-components';
 
-// Mock data - Typeahead uses string arrays, not option objects
 const stringOptions = [
   'Option 1',
   'Option 2',

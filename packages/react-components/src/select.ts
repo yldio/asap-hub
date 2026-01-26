@@ -1,6 +1,6 @@
 import { Theme } from '@emotion/react';
 import { CSSObject } from '@emotion/serialize';
-import { GroupBase, StylesConfig } from 'react-select';
+import { GroupBase, InputProps, StylesConfig } from 'react-select';
 import { ellipsisStyles } from './atoms/Ellipsis';
 import { MultiSelectOptionsType } from './atoms/MultiSelect';
 import {
@@ -228,10 +228,9 @@ export const reactMultiSelectStyles = <
       ...provided,
       padding: 0,
     }),
-    input: (provided, state) => {
+    input: (provided: CSSObject, state: InputProps<T, M, GroupBase<T>>) => {
       const hasSingleSelectedValue =
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        !isMulti && Object.keys((state as any).selectProps.value).length > 0;
+        !isMulti && state.selectProps.value !== null;
 
       return {
         ...provided,
@@ -269,12 +268,15 @@ export const reactMultiSelectStyles = <
  * ```
  */
 export const getMultiValueStyles = (
-  styles: { multiValue?: unknown } | undefined,
+  selectStyles: { multiValue?: unknown } | undefined,
 ): CSSObject => {
-  if (styles?.multiValue && typeof styles.multiValue === 'function') {
+  if (
+    selectStyles?.multiValue &&
+    typeof selectStyles.multiValue === 'function'
+  ) {
     // The multiValue style function signature is (base, state) => CSSObject
     // but our implementation ignores both arguments, so we can safely call with empty args
-    return (styles.multiValue as () => CSSObject)();
+    return (selectStyles.multiValue as () => CSSObject)();
   }
   return {};
 };

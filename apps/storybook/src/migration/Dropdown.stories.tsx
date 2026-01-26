@@ -1,7 +1,4 @@
-// apps/storybook/src/migration/Dropdown.stories.tsx
-// Migration verification stories for single-select Dropdown (via LabeledDropdown)
-
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { LabeledDropdown } from '@asap-hub/react-components';
 

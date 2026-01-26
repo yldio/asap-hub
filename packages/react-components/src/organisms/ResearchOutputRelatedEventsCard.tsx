@@ -68,7 +68,9 @@ const ResearchOutputRelatedEventsCard: React.FC<
         MultiValueContainer: (multiValueContainerProps) => (
           <div
             css={{
-              ...getMultiValueStyles(multiValueContainerProps.selectProps.styles),
+              ...getMultiValueStyles(
+                multiValueContainerProps.selectProps.styles,
+              ),
               paddingLeft: rem(8),
             }}
           >

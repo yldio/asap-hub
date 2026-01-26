@@ -1,18 +1,20 @@
-// apps/storybook/src/migration/MultiSelect.stories.tsx
-// Migration verification stories for MultiSelect (via LabeledMultiSelect)
-
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import {
   LabeledMultiSelect,
   MultiSelectOptionsType,
 } from '@asap-hub/react-components';
 
+// Pre-defined options for type-safe reuse in stories
+const option1: MultiSelectOptionsType = { value: 'opt1', label: 'Option 1' };
+const option2: MultiSelectOptionsType = { value: 'opt2', label: 'Option 2' };
+const option3: MultiSelectOptionsType = { value: 'opt3', label: 'Option 3' };
+
 // Mock data
 const multiSelectOptions: MultiSelectOptionsType[] = [
-  { value: 'opt1', label: 'Option 1' },
-  { value: 'opt2', label: 'Option 2' },
-  { value: 'opt3', label: 'Option 3' },
+  option1,
+  option2,
+  option3,
   { value: 'opt4', label: 'Option 4' },
   { value: 'opt5', label: 'Option 5' },
 ];
@@ -53,9 +55,9 @@ export const Basic: Story = {
 export const WithInitialValues: Story = {
   render: () => {
     const [values, setValues] = useState<MultiSelectOptionsType[]>([
-      multiSelectOptions[0]!,
-      multiSelectOptions[1]!,
-      multiSelectOptions[2]!,
+      option1,
+      option2,
+      option3,
     ]);
     return (
       <LabeledMultiSelect
@@ -68,14 +70,12 @@ export const WithInitialValues: Story = {
   },
 };
 
-// NOTE: DragAndDrop story REMOVED - sortable functionality is being removed
-
 // ==================== REMOVE ITEM ====================
 export const RemoveItem: Story = {
   render: () => {
     const [values, setValues] = useState<MultiSelectOptionsType[]>([
-      multiSelectOptions[0]!,
-      multiSelectOptions[1]!,
+      option1,
+      option2,
     ]);
     return (
       <div>
@@ -99,7 +99,7 @@ export const Disabled: Story = {
     <LabeledMultiSelect
       title="Disabled MultiSelect"
       suggestions={multiSelectOptions}
-      values={[multiSelectOptions[0]!, multiSelectOptions[1]!]}
+      values={[option1, option2]}
       onChange={() => {}}
       enabled={false}
     />

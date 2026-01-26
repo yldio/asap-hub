@@ -2317,6 +2317,14 @@ enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  resourceButtonCopy_ASC
+  resourceButtonCopy_DESC
+  resourceContactEmail_ASC
+  resourceContactEmail_DESC
+  resourceLink_ASC
+  resourceLink_DESC
+  resourceTitle_ASC
+  resourceTitle_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4168,6 +4176,14 @@ enum ManuscriptVersionsTeamsCollectionOrder {
   grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  resourceButtonCopy_ASC
+  resourceButtonCopy_DESC
+  resourceContactEmail_ASC
+  resourceContactEmail_DESC
+  resourceLink_ASC
+  resourceLink_DESC
+  resourceTitle_ASC
+  resourceTitle_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4500,6 +4516,14 @@ enum ManuscriptsTeamsCollectionOrder {
   grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  resourceButtonCopy_ASC
+  resourceButtonCopy_DESC
+  resourceContactEmail_ASC
+  resourceContactEmail_DESC
+  resourceLink_ASC
+  resourceLink_DESC
+  resourceTitle_ASC
+  resourceTitle_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -6408,6 +6432,14 @@ enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
   grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  resourceButtonCopy_ASC
+  resourceButtonCopy_DESC
+  resourceContactEmail_ASC
+  resourceContactEmail_DESC
+  resourceLink_ASC
+  resourceLink_DESC
+  resourceTitle_ASC
+  resourceTitle_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -6635,6 +6667,14 @@ enum ResearchOutputsTeamsCollectionOrder {
   grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  resourceButtonCopy_ASC
+  resourceButtonCopy_DESC
+  resourceContactEmail_ASC
+  resourceContactEmail_DESC
+  resourceLink_ASC
+  resourceLink_DESC
+  resourceTitle_ASC
+  resourceTitle_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -6911,6 +6951,14 @@ enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
   grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  resourceButtonCopy_ASC
+  resourceButtonCopy_DESC
+  resourceContactEmail_ASC
+  resourceContactEmail_DESC
+  resourceLink_ASC
+  resourceLink_DESC
+  resourceTitle_ASC
+  resourceTitle_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -7109,6 +7157,14 @@ enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
   grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  resourceButtonCopy_ASC
+  resourceButtonCopy_DESC
+  resourceContactEmail_ASC
+  resourceContactEmail_DESC
+  resourceLink_ASC
+  resourceLink_DESC
+  resourceTitle_ASC
+  resourceTitle_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -7327,6 +7383,14 @@ enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
   grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  resourceButtonCopy_ASC
+  resourceButtonCopy_DESC
+  resourceContactEmail_ASC
+  resourceContactEmail_DESC
+  resourceLink_ASC
+  resourceLink_DESC
+  resourceTitle_ASC
+  resourceTitle_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -7589,6 +7653,11 @@ type Teams implements Entry & _Node {
   proposal(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: ResearchOutputsFilter): ResearchOutputs
   researchTagsCollection(limit: Int = 100, locale: String, order: [TeamsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResearchTagsFilter): TeamsResearchTagsCollection
   researchTheme(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: ResearchThemeFilter): ResearchTheme
+  resourceButtonCopy(locale: String, useFallbackLocale: Boolean): String
+  resourceContactEmail(locale: String, useFallbackLocale: Boolean): String
+  resourceDescription(locale: String, useFallbackLocale: Boolean): String
+  resourceLink(locale: String, useFallbackLocale: Boolean): String
+  resourceTitle(locale: String, useFallbackLocale: Boolean): String
   supplementGrant(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: SupplementGrantFilter): SupplementGrant
   sys: Sys!
   teamDescription(locale: String, useFallbackLocale: Boolean): String
@@ -7658,6 +7727,41 @@ input TeamsFilter {
   researchTagsCollection_exists: Boolean
   researchTheme: cfResearchThemeNestedFilter
   researchTheme_exists: Boolean
+  resourceButtonCopy: String
+  resourceButtonCopy_contains: String
+  resourceButtonCopy_exists: Boolean
+  resourceButtonCopy_in: [String]
+  resourceButtonCopy_not: String
+  resourceButtonCopy_not_contains: String
+  resourceButtonCopy_not_in: [String]
+  resourceContactEmail: String
+  resourceContactEmail_contains: String
+  resourceContactEmail_exists: Boolean
+  resourceContactEmail_in: [String]
+  resourceContactEmail_not: String
+  resourceContactEmail_not_contains: String
+  resourceContactEmail_not_in: [String]
+  resourceDescription: String
+  resourceDescription_contains: String
+  resourceDescription_exists: Boolean
+  resourceDescription_in: [String]
+  resourceDescription_not: String
+  resourceDescription_not_contains: String
+  resourceDescription_not_in: [String]
+  resourceLink: String
+  resourceLink_contains: String
+  resourceLink_exists: Boolean
+  resourceLink_in: [String]
+  resourceLink_not: String
+  resourceLink_not_contains: String
+  resourceLink_not_in: [String]
+  resourceTitle: String
+  resourceTitle_contains: String
+  resourceTitle_exists: Boolean
+  resourceTitle_in: [String]
+  resourceTitle_not: String
+  resourceTitle_not_contains: String
+  resourceTitle_not_in: [String]
   supplementGrant: cfSupplementGrantNestedFilter
   supplementGrant_exists: Boolean
   sys: SysFilter
@@ -7969,6 +8073,14 @@ enum TeamsOrder {
   grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  resourceButtonCopy_ASC
+  resourceButtonCopy_DESC
+  resourceContactEmail_ASC
+  resourceContactEmail_DESC
+  resourceLink_ASC
+  resourceLink_DESC
+  resourceTitle_ASC
+  resourceTitle_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -8394,6 +8506,14 @@ enum TutorialsTeamsCollectionOrder {
   grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
+  resourceButtonCopy_ASC
+  resourceButtonCopy_DESC
+  resourceContactEmail_ASC
+  resourceContactEmail_DESC
+  resourceLink_ASC
+  resourceLink_DESC
+  resourceTitle_ASC
+  resourceTitle_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -11053,6 +11173,41 @@ input cfTeamsNestedFilter {
   proposal_exists: Boolean
   researchTagsCollection_exists: Boolean
   researchTheme_exists: Boolean
+  resourceButtonCopy: String
+  resourceButtonCopy_contains: String
+  resourceButtonCopy_exists: Boolean
+  resourceButtonCopy_in: [String]
+  resourceButtonCopy_not: String
+  resourceButtonCopy_not_contains: String
+  resourceButtonCopy_not_in: [String]
+  resourceContactEmail: String
+  resourceContactEmail_contains: String
+  resourceContactEmail_exists: Boolean
+  resourceContactEmail_in: [String]
+  resourceContactEmail_not: String
+  resourceContactEmail_not_contains: String
+  resourceContactEmail_not_in: [String]
+  resourceDescription: String
+  resourceDescription_contains: String
+  resourceDescription_exists: Boolean
+  resourceDescription_in: [String]
+  resourceDescription_not: String
+  resourceDescription_not_contains: String
+  resourceDescription_not_in: [String]
+  resourceLink: String
+  resourceLink_contains: String
+  resourceLink_exists: Boolean
+  resourceLink_in: [String]
+  resourceLink_not: String
+  resourceLink_not_contains: String
+  resourceLink_not_in: [String]
+  resourceTitle: String
+  resourceTitle_contains: String
+  resourceTitle_exists: Boolean
+  resourceTitle_in: [String]
+  resourceTitle_not: String
+  resourceTitle_not_contains: String
+  resourceTitle_not_in: [String]
   supplementGrant_exists: Boolean
   sys: SysFilter
   teamDescription: String

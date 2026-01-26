@@ -85,7 +85,7 @@ const Sidebar = () => {
 
   return (
     <Stack flexDirection="column" spacing="spacingS">
-      {warnings.map((warning) => (
+      {warnings.map((warning: Warning) => (
         <Note
           key={warning.id}
           variant="warning"

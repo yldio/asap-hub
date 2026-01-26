@@ -64,6 +64,10 @@ const mockSdk = (
       type: fieldType,
       setInvalid: jest.fn(),
     },
+    locales: {
+      default: 'en-US',
+      available: ['en-US'],
+    },
     entry: {
       getSys: jest.fn(() => ({ id: 'entry-1' })),
       getMetadata: jest.fn(() => ({})),
@@ -103,7 +107,31 @@ describe('Team resource validation field', () => {
     });
   });
 
-  it('shows warning when one required Resource field is populated but not all are', async () => {
+  it('shows warning under empty field when one required Resource field is populated but not all are', async () => {
+    // Viewing resourceDescription field (which is empty)
+    // while resourceTitle is populated
+    const sdk = mockSdk(
+      'teams',
+      'resourceDescription',
+      'Text',
+    ) as unknown as jest.Mocked<FieldAppSDK>;
+    (sdk.entry.fields.resourceTitle as any).getValue = jest.fn(
+      () => 'Some title',
+    );
+    // resourceDescription is empty (default null)
+    (useSDK as jest.Mock).mockReturnValue(sdk);
+
+    render(<Field />);
+    await waitFor(() => {
+      expect(
+        screen.getByText(TEAM_RESOURCE_FIELDS_WARNING),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('does not show warning under populated field when other fields are empty', async () => {
+    // Viewing resourceTitle field (which is populated)
+    // while other fields are empty
     const sdk = mockSdk(
       'teams',
       'resourceTitle',
@@ -112,13 +140,14 @@ describe('Team resource validation field', () => {
     (sdk.entry.fields.resourceTitle as any).getValue = jest.fn(
       () => 'Some title',
     );
+    // Other fields are empty (default null)
     (useSDK as jest.Mock).mockReturnValue(sdk);
 
     render(<Field />);
     await waitFor(() => {
       expect(
-        screen.getByText(TEAM_RESOURCE_FIELDS_WARNING),
-      ).toBeInTheDocument();
+        screen.queryByText(TEAM_RESOURCE_FIELDS_WARNING),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -156,6 +185,24 @@ describe('Team resource validation field', () => {
       'displayName',
       'Symbol',
     ) as unknown as jest.Mocked<FieldAppSDK>;
+    (useSDK as jest.Mock).mockReturnValue(sdk);
+
+    render(<Field />);
+    await waitFor(() => {
+      expect(
+        screen.queryByText(TEAM_RESOURCE_FIELDS_WARNING),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it('does not show warning when no Resource fields are populated', async () => {
+    // Viewing resourceTitle field when no fields are populated
+    const sdk = mockSdk(
+      'teams',
+      'resourceTitle',
+      'Symbol',
+    ) as unknown as jest.Mocked<FieldAppSDK>;
+    // All fields are empty (default null)
     (useSDK as jest.Mock).mockReturnValue(sdk);
 
     render(<Field />);

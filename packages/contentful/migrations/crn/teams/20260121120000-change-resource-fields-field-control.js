@@ -8,10 +8,17 @@ module.exports.up = (migration) => {
 
   // Change field controls for Resource fields to use our validation app
   // This will show warnings directly under each Resource field input
-  teams.changeFieldControl('resourceTitle', 'app', APP_ID, {});
-  teams.changeFieldControl('resourceDescription', 'app', APP_ID, {});
-  teams.changeFieldControl('resourceButtonCopy', 'app', APP_ID, {});
-  teams.changeFieldControl('resourceContactEmail', 'app', APP_ID, {});
+  // Explicitly clear helpText to remove any existing help text
+  teams.changeFieldControl('resourceTitle', 'app', APP_ID, { helpText: '' });
+  teams.changeFieldControl('resourceDescription', 'app', APP_ID, {
+    helpText: '',
+  });
+  teams.changeFieldControl('resourceButtonCopy', 'app', APP_ID, {
+    helpText: '',
+  });
+  teams.changeFieldControl('resourceContactEmail', 'app', APP_ID, {
+    helpText: '',
+  });
 };
 
 module.exports.down = (migration) => {

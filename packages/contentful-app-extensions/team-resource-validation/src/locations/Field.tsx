@@ -64,7 +64,37 @@ const getFieldValidation = (
     ];
 
     if (resourceFieldIds.includes(fieldId)) {
-      return validateResourceFields(entry);
+      // Check if any Resource field is populated
+      const requiredResourceFields = [
+        { id: 'resourceTitle', value: entry.fields.resourceTitle },
+        { id: 'resourceDescription', value: entry.fields.resourceDescription },
+        { id: 'resourceButtonCopy', value: entry.fields.resourceButtonCopy },
+        {
+          id: 'resourceContactEmail',
+          value: entry.fields.resourceContactEmail,
+        },
+      ] as const;
+
+      const anyRequiredResourceFieldPopulated = requiredResourceFields.some(
+        ({ value }) => isPopulated(value),
+      );
+
+      // Only show warning if:
+      // 1. At least one Resource field is populated (user started adding Resource info)
+      // 2. The current field is NOT populated (this specific field is empty)
+      const currentField = requiredResourceFields.find(
+        ({ id }) => id === fieldId,
+      );
+      const isCurrentFieldEmpty = currentField
+        ? !isPopulated(currentField.value)
+        : false;
+
+      if (anyRequiredResourceFieldPopulated && isCurrentFieldEmpty) {
+        return {
+          warning: TEAM_RESOURCE_FIELDS_WARNING,
+          isInvalid: false,
+        };
+      }
     }
   }
 

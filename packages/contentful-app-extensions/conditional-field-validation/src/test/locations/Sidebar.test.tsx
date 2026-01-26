@@ -7,6 +7,7 @@ import React from 'react';
 import Sidebar from '../../locations/Sidebar';
 import {
   TEAM_RESEARCH_THEME_WARNING,
+  TEAM_RESOURCE_FIELDS_WARNING,
   PROJECT_END_DATE_WARNING,
   PROJECT_RESOURCE_TYPE_WARNING,
 } from '../../locations/Field';
@@ -36,6 +37,11 @@ const mockBaseSdk = (contentTypeId: string) => {
   const fields: Record<string, ReturnType<typeof createMockField>> = {
     teamType: createMockField(() => null),
     researchTheme: createMockField(() => null),
+    resourceTitle: createMockField(() => null),
+    resourceDescription: createMockField(() => null),
+    resourceButtonCopy: createMockField(() => null),
+    resourceContactEmail: createMockField(() => null),
+    resourceLink: createMockField(() => null),
     status: createMockField(() => null),
     endDate: createMockField(() => null),
     projectType: createMockField(() => null),
@@ -103,6 +109,76 @@ describe('Sidebar component', () => {
       await waitFor(() => {
         expect(
           screen.getByText(TEAM_RESEARCH_THEME_WARNING),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('shows warning when one Resource field is populated but not all required fields are', async () => {
+      const sdk = mockBaseSdk('teams') as unknown as jest.Mocked<SidebarAppSDK>;
+      (sdk.entry.fields.teamType as any).getValue = jest.fn(
+        () => 'Regular Team',
+      );
+      (sdk.entry.fields.resourceTitle as any).getValue = jest.fn(
+        () => 'Some title',
+      );
+      (sdk.entry.fields.resourceDescription as any).getValue = jest.fn(
+        () => null,
+      );
+      (sdk.entry.fields.resourceButtonCopy as any).getValue = jest.fn(() => '');
+      (sdk.entry.fields.resourceContactEmail as any).getValue = jest.fn(
+        () => null,
+      );
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Sidebar />);
+      await waitFor(() => {
+        expect(
+          screen.getByText(TEAM_RESOURCE_FIELDS_WARNING),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('does not show warning when all required Resource fields are populated', async () => {
+      const sdk = mockBaseSdk('teams') as unknown as jest.Mocked<SidebarAppSDK>;
+      (sdk.entry.fields.teamType as any).getValue = jest.fn(
+        () => 'Regular Team',
+      );
+      (sdk.entry.fields.resourceTitle as any).getValue = jest.fn(
+        () => 'Some title',
+      );
+      (sdk.entry.fields.resourceDescription as any).getValue = jest.fn(
+        () => 'Some description',
+      );
+      (sdk.entry.fields.resourceButtonCopy as any).getValue = jest.fn(
+        () => 'Click',
+      );
+      (sdk.entry.fields.resourceContactEmail as any).getValue = jest.fn(
+        () => 'test@example.com',
+      );
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Sidebar />);
+      await waitFor(() => {
+        expect(
+          screen.getByText('No additional validation warnings.'),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('does not show warning when only Resource Link is populated (optional)', async () => {
+      const sdk = mockBaseSdk('teams') as unknown as jest.Mocked<SidebarAppSDK>;
+      (sdk.entry.fields.teamType as any).getValue = jest.fn(
+        () => 'Regular Team',
+      );
+      (sdk.entry.fields.resourceLink as any).getValue = jest.fn(
+        () => 'https://example.com',
+      );
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Sidebar />);
+      await waitFor(() => {
+        expect(
+          screen.getByText('No additional validation warnings.'),
         ).toBeInTheDocument();
       });
     });

@@ -31,6 +31,7 @@ const researchOutputResponse: Omit<
     {
       id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
       displayName: 'Jakobsson, J',
+      teamType: 'Discovery Team',
     },
   ],
   publishingEntity: 'Working Group',

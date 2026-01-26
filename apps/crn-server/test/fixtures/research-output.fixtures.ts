@@ -12,6 +12,7 @@ import {
   ResearchOutputPutRequest,
   ResearchOutputResponse,
   ResearchOutputUpdateDataObject,
+  TeamType,
   WebhookDetail,
 } from '@asap-hub/model';
 import {
@@ -38,14 +39,22 @@ export const getResearchOutputDataObject =
     descriptionMD: 'Text MD',
     shortDescription: 'short description',
     authors: fetchExpectation.items,
-    teams: [{ id: 'team-id-0', displayName: 'Team A' }],
+    teams: [
+      { id: 'team-id-0', displayName: 'Team A', teamType: 'Discovery Team' },
+    ],
     relatedResearch: [
       {
         id: 'related-research-id-0',
         title: 'Related Research1',
         type: 'Report',
         documentType: 'Bioinformatics',
-        teams: [{ id: 'team-id-1', displayName: 'Team B' }],
+        teams: [
+          {
+            id: 'team-id-1',
+            displayName: 'Team B',
+            teamType: 'Discovery Team',
+          },
+        ],
         workingGroups: [
           {
             id: 'working-group-id-1',
@@ -59,7 +68,13 @@ export const getResearchOutputDataObject =
         title: 'Related Research2',
         type: 'Report',
         documentType: 'Bioinformatics',
-        teams: [{ displayName: 'Team B', id: 'team-id-1' }],
+        teams: [
+          {
+            displayName: 'Team B',
+            id: 'team-id-1',
+            teamType: 'Discovery Team',
+          },
+        ],
         workingGroups: [
           {
             id: 'working-group-id-1',
@@ -179,6 +194,15 @@ export const getPublicResearchOutputResponse =
           ? researchOutput.publishDate
           : undefined,
       lastModifiedDate: researchOutput.lastUpdatedPartial,
+      impact: researchOutput.impact?.name,
+      categories: (researchOutput.categories ?? []).map(
+        (category) => category.name,
+      ),
+      teamType: researchOutput.teams[0]?.teamType as TeamType | undefined,
+      workingGroup: researchOutput.workingGroups?.[0] && {
+        id: researchOutput.workingGroups[0].id,
+        title: researchOutput.workingGroups[0].title,
+      },
     };
   };
 
@@ -446,6 +470,7 @@ export const getContentfulResearchOutputGraphqlResponse =
             id: 'team-id-0',
           },
           displayName: 'Team A',
+          teamType: 'Discovery Team',
           researchTheme: {
             name: 'PD Functional Genomics',
           },

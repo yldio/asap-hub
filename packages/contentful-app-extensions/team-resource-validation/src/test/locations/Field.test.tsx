@@ -18,9 +18,9 @@ jest.mock('@contentful/field-editor-single-line', () => ({
   ),
 }));
 
-jest.mock('@contentful/field-editor-multiple-line', () => ({
-  MultipleLineEditor: () => (
-    <div data-testid="multiple-line-editor">Multiple Line Editor</div>
+jest.mock('@contentful/field-editor-rich-text', () => ({
+  RichTextEditor: () => (
+    <div data-testid="rich-text-editor">Rich Text Editor</div>
   ),
 }));
 
@@ -43,7 +43,7 @@ const createMockField = (getValue: () => unknown) => {
 const mockSdk = (
   contentTypeId: string,
   fieldId: string,
-  fieldType: 'Symbol' | 'Text' = 'Symbol',
+  fieldType: 'Symbol' | 'Text' | 'RichText' = 'Symbol',
 ) => {
   const fields: Record<string, ReturnType<typeof createMockField>> = {
     resourceTitle: createMockField(() => null),

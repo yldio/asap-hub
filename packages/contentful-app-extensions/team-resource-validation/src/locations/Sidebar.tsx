@@ -17,15 +17,6 @@ const isPopulated = (value: unknown): boolean => {
   if (value === null || value === undefined) return false;
   if (typeof value === 'string') return value.trim().length > 0;
   if (Array.isArray(value)) return value.length > 0;
-  // RichText field returns a Document object
-  if (typeof value === 'object' && 'content' in value) {
-    const doc = value as { content?: Array<{ content?: unknown[] }> };
-    // Check if document has any content besides empty paragraphs
-    return (
-      doc.content?.some((node) => node.content && node.content.length > 0) ??
-      false
-    );
-  }
   return true;
 };
 

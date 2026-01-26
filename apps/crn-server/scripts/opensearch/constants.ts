@@ -2,6 +2,9 @@ import { OpensearchMetricConfig } from '@asap-hub/server-common';
 import { Metrics } from './types';
 
 export const PAGE_SIZE = 45;
+// Leadership query has deeply nested collections, requiring smaller page size
+// to stay within Contentful's query complexity limit
+export const LEADERSHIP_PAGE_SIZE = 10;
 export const MAX_CONCURRENT_COMBINATIONS = 5;
 export const MAX_CONCURRENT_PAGES = 10;
 export const PREPRINT_COMPLIANCE_SHEET_NAME = 'Preprint Compliance';
@@ -48,6 +51,8 @@ export const validMetrics = [
   'team-productivity',
   'user-collaboration',
   'team-collaboration',
+  'ig-leadership',
+  'wg-leadership',
 ] as const;
 
 export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
@@ -341,6 +346,52 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         },
         timeRange: { type: 'keyword' },
         outputType: { type: 'keyword' },
+      },
+    },
+  },
+  'ig-leadership': {
+    indexAlias: 'ig-leadership',
+    mapping: {
+      properties: {
+        id: { type: 'text' },
+        displayName: {
+          type: 'text',
+          analyzer: 'ngram_analyzer',
+          search_analyzer: 'ngram_search_analyzer',
+          fields: {
+            keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
+            raw: { type: 'keyword' },
+          },
+        },
+        isInactive: { type: 'boolean' },
+        inactiveSince: { type: 'keyword' },
+        interestGroupLeadershipRoleCount: { type: 'integer' },
+        interestGroupPreviousLeadershipRoleCount: { type: 'integer' },
+        interestGroupMemberCount: { type: 'integer' },
+        interestGroupPreviousMemberCount: { type: 'integer' },
+      },
+    },
+  },
+  'wg-leadership': {
+    indexAlias: 'wg-leadership',
+    mapping: {
+      properties: {
+        id: { type: 'text' },
+        displayName: {
+          type: 'text',
+          analyzer: 'ngram_analyzer',
+          search_analyzer: 'ngram_search_analyzer',
+          fields: {
+            keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
+            raw: { type: 'keyword' },
+          },
+        },
+        isInactive: { type: 'boolean' },
+        inactiveSince: { type: 'keyword' },
+        workingGroupLeadershipRoleCount: { type: 'integer' },
+        workingGroupPreviousLeadershipRoleCount: { type: 'integer' },
+        workingGroupMemberCount: { type: 'integer' },
+        workingGroupPreviousMemberCount: { type: 'integer' },
       },
     },
   },

@@ -24,6 +24,7 @@ import {
   PAGE_SIZE,
   validMetrics,
 } from './constants';
+import { exportLeadershipData } from './leadership';
 import { exportPreprintComplianceData } from './preprint-compliance';
 import { exportPublicationComplianceData } from './publication-compliance';
 import type { MetricObject, Metrics } from './types';
@@ -37,6 +38,14 @@ export const exportAnalyticsData = async <T extends Metrics>(
 
   if (metric === 'publication-compliance') {
     return exportPublicationComplianceData() as Promise<MetricObject<T>[]>;
+  }
+
+  if (metric === 'ig-leadership') {
+    return exportLeadershipData('ig-leadership') as Promise<MetricObject<T>[]>;
+  }
+
+  if (metric === 'wg-leadership') {
+    return exportLeadershipData('wg-leadership') as Promise<MetricObject<T>[]>;
   }
 
   const analyticsController = new AnalyticsController(
@@ -568,4 +577,7 @@ const run = async () => {
   console.log('All metrics exported successfully!');
 };
 
-run();
+// Only run when executed directly, not when imported for testing
+if (require.main === module) {
+  run();
+}

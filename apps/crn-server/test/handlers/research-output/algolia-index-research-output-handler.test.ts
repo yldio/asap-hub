@@ -84,6 +84,7 @@ describe('Research Output index handler', () => {
           {
             id: 'team-1234',
             displayName: 'Team 1',
+            teamType: 'Discovery Team',
           },
         ],
         workingGroups: [],
@@ -215,6 +216,7 @@ describe('Research Output index handler', () => {
             {
               id: 'team-1234',
               displayName: 'Team 1',
+              teamType: 'Discovery Team',
             },
           ],
           workingGroups: [],

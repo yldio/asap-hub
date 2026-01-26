@@ -9,6 +9,7 @@ import {
   ResearchOutputWorkingGroupResponse,
   ResearchOutputTeamResponse,
   TeamRole,
+  TeamType,
   WorkingGroupRole,
   Role,
 } from '@asap-hub/model';
@@ -45,6 +46,7 @@ describe('/research-outputs/ route', () => {
     id: 'team-1',
     displayName: 'team 1',
     role: 'Project Manager' as TeamRole,
+    teamType: 'Discovery Team' as TeamType,
   };
 
   const userWorkingGroup = {

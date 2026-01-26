@@ -49,6 +49,16 @@ const validateResourceFields = (
   return { warning: null, isInvalid: false };
 };
 
+const getFieldName = (fieldId: string): string => {
+  const fieldNames: Record<string, string> = {
+    resourceTitle: 'Resource Title',
+    resourceDescription: 'Resource Description',
+    resourceButtonCopy: 'Resource Button Copy',
+    resourceContactEmail: 'Resource Contact Email',
+  };
+  return fieldNames[fieldId] || fieldId;
+};
+
 const getFieldValidation = (
   contentTypeId: string,
   fieldId: string,
@@ -90,8 +100,10 @@ const getFieldValidation = (
         : false;
 
       if (anyRequiredResourceFieldPopulated && isCurrentFieldEmpty) {
+        // Show field-specific warning message
+        const fieldName = getFieldName(fieldId);
         return {
-          warning: TEAM_RESOURCE_FIELDS_WARNING,
+          warning: `${fieldName} is required when adding Resource information.`,
           isInvalid: false,
         };
       }

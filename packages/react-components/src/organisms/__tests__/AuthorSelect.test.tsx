@@ -130,7 +130,7 @@ it('renders a new author option for new values', async () => {
     />,
   );
 
-  await userEvent.type(getByRole('textbox'), 'Chris B');
+  await userEvent.type(getByRole('combobox'), 'Chris B');
 
   await waitFor(() => {
     expect(queryByText(/loading/i)).not.toBeInTheDocument();
@@ -173,9 +173,9 @@ it('renders the warning label correctly for a required author', async () => {
     />,
   );
 
-  const textbox = getByRole('textbox');
-  await userEvent.click(textbox);
-  await userEvent.tab(); // blur the textbox to trigger validation
+  const combobox = getByRole('combobox');
+  await userEvent.click(combobox);
+  await userEvent.tab(); // blur the combobox to trigger validation
 
   await waitFor(() => {
     expect(getByText('Please select at least one author.')).toBeVisible();

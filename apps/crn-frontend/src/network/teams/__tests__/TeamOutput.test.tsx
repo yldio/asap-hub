@@ -131,11 +131,11 @@ const mandatoryFields = async (
     );
   }
 
-  const typeInput = screen.getByRole('textbox', { name: /Select the type/i });
+  const typeInput = screen.getByRole('combobox', { name: /Select the type/i });
   await user.type(typeInput, type);
   await user.keyboard('{Enter}');
 
-  const identifier = screen.getByRole('textbox', { name: /identifier/i });
+  const identifier = screen.getByRole('combobox', { name: /identifier/i });
   await user.type(identifier, 'DOI');
   await user.keyboard('{Enter}');
   fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
@@ -330,9 +330,9 @@ it('can publish a form when the data is valid', async () => {
     user,
   );
 
-  await user.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await user.click(screen.getByRole('combobox', { name: /Labs/i }));
   await user.click(screen.getByText('Example 1 Lab'));
-  await user.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await user.click(screen.getByRole('combobox', { name: /Authors/i }));
   await user.click(screen.getByText('Person A 3'));
 
   await publish();
@@ -404,9 +404,9 @@ it('can save draft when form data is valid', async () => {
     user,
   );
 
-  await user.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await user.click(screen.getByRole('combobox', { name: /Labs/i }));
   await user.click(screen.getByText('Example 1 Lab'));
-  await user.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await user.click(screen.getByRole('combobox', { name: /Authors/i }));
   await user.click(screen.getByText('Person A 3'));
 
   await saveDraft();
@@ -936,7 +936,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       const user = userEvent.setup({ delay: null });
       await user.click(screen.getByLabelText(manuscriptImportLabelText));
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('combobox');
       await user.type(input, 'Error');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
       await user.click(option);
@@ -971,7 +971,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       const user = userEvent.setup({ delay: null });
       await user.click(screen.getByLabelText(manuscriptImportLabelText));
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('combobox');
       await user.type(input, 'Version One');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
       await user.click(option);
@@ -1033,7 +1033,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
       const user = userEvent.setup({ delay: null });
       await user.click(screen.getByLabelText(manuscriptImportLabelText));
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('combobox');
       await user.type(input, 'Version One');
       const option = await screen.findByText('DA1-000463-002-org-G-1');
       await user.click(option);
@@ -1182,7 +1182,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
     const user = userEvent.setup({ delay: null });
     await user.click(screen.getByLabelText(manuscriptImportLabelText));
 
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole('combobox');
     await user.type(input, 'Version One');
     await user.keyboard('{Tab}');
 
@@ -1252,7 +1252,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     const user = userEvent.setup({ delay: null });
     await user.click(screen.getByLabelText(manuscriptImportLabelText));
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole('combobox');
     await user.type(input, 'Version');
     const option = await screen.findByText('Version One');
     await user.click(option);
@@ -1394,7 +1394,7 @@ describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
 
     const user = userEvent.setup({ delay: null });
     await user.click(screen.getByLabelText('Import from compliance'));
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole('combobox');
     await user.type(input, 'Version');
     const option = await screen.findByText('Version One');
     await user.click(option);

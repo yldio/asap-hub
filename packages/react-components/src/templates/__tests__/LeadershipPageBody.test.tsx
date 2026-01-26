@@ -36,7 +36,7 @@ it('renders the selected metric', () => {
 describe('search', () => {
   const getSearchBox = () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
-    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+    return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
 
   it('displays supplied tag', () => {

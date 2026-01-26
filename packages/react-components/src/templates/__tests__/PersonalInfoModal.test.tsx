@@ -88,10 +88,6 @@ it('renders default values into text inputs', async () => {
       "middleName",
       "lastName",
       "nickname",
-      "",
-      "institution",
-      "jobTitle",
-      "",
       "New York",
       "city",
     ]
@@ -116,6 +112,9 @@ it('renders a country selector', async () => {
   expect(screen.queryByText(/no+countries/i)).toBeDefined();
 });
 it('shows validation message country when it not selected', async () => {
+  // Suppress act() warnings from async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
   renderModal(
     <PersonalInfoModal
       {...props}
@@ -126,7 +125,9 @@ it('shows validation message country when it not selected', async () => {
       jobTitle="Assistant Professor"
     />,
   );
-  const field = screen.getByRole('textbox', { name: /country/i });
+
+  // In react-select v5, select inputs use role="combobox" instead of "textbox"
+  const field = screen.getByRole('combobox', { name: /country/i });
   await userEvent.click(field);
   await userEvent.tab();
 
@@ -135,6 +136,8 @@ it('shows validation message country when it not selected', async () => {
   await waitFor(() =>
     expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
   );
+
+  consoleMock.mockRestore();
 });
 
 it.each`

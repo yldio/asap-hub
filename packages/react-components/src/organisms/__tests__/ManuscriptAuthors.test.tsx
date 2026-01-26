@@ -94,7 +94,7 @@ it.each([true, false])(
   async (isMultiSelect) => {
     render(<ManuscriptAuthorsComponent isMultiSelect={isMultiSelect} />);
 
-    await userEvent.type(screen.getByRole('textbox'), 'Jane Doe');
+    await userEvent.type(screen.getByRole('combobox'), 'Jane Doe');
 
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -148,7 +148,7 @@ it.each([true, false])(
   async (isMultiSelect) => {
     render(<ManuscriptAuthorsComponent isMultiSelect={isMultiSelect} />);
 
-    await userEvent.type(screen.getByRole('textbox'), 'Jane Doe');
+    await userEvent.type(screen.getByRole('combobox'), 'Jane Doe');
 
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -221,7 +221,7 @@ describe('Multiple Option Selection', () => {
 
     await userEvent.click(screen.getByText('Author Two'));
 
-    await userEvent.type(screen.getByRole('textbox'), 'Jane Doe');
+    await userEvent.type(screen.getByRole('combobox'), 'Jane Doe');
 
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();

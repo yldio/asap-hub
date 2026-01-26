@@ -538,7 +538,7 @@ describe('metric switching', () => {
     // Find the metric dropdown textbox by looking for it near the "Metric" label
     const metricSubtitle = screen.getByText('Metric');
     const metricContainer = metricSubtitle.parentElement;
-    const metricDropdown = within(metricContainer!).getByRole('textbox', {
+    const metricDropdown = within(metricContainer!).getByRole('combobox', {
       hidden: false,
     });
     expect(metricDropdown).toBeInTheDocument();
@@ -577,7 +577,7 @@ describe('metric switching', () => {
     // Find the metric dropdown textbox by looking for it near the "Metric" label
     const metricSubtitle = screen.getByText('Metric');
     const metricContainer = metricSubtitle.parentElement;
-    const metricDropdown = within(metricContainer!).getByRole('textbox', {
+    const metricDropdown = within(metricContainer!).getByRole('combobox', {
       hidden: false,
     });
     expect(metricDropdown).toBeInTheDocument();
@@ -608,7 +608,7 @@ describe('metric switching', () => {
 describe('search', () => {
   const getSearchBox = () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
-    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+    return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
   it('allows typing in search queries', async () => {
     await renderPage(
@@ -646,7 +646,7 @@ describe('csv export', () => {
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );
-    const input = screen.getAllByRole('textbox', { hidden: false })[0];
+    const input = screen.getAllByRole('combobox', { hidden: false })[0];
 
     await act(async () => {
       input && (await userEvent.click(input));
@@ -938,7 +938,7 @@ describe('csv export', () => {
 describe('tag suggestions', () => {
   const getSearchBox = () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
-    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+    return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
 
   it('uses OpenSearch for user productivity tag suggestions when flag is enabled', async () => {

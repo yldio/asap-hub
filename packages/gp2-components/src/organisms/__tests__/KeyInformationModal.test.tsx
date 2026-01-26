@@ -361,7 +361,7 @@ describe('KeyInformationModal', () => {
     await waitFor(
       () => {
         expect(
-          within(secondarySection).getByRole('textbox', {
+          within(secondarySection).getByRole('combobox', {
             name: /Institution/i,
           }),
         ).toBeVisible();
@@ -376,7 +376,7 @@ describe('KeyInformationModal', () => {
     await waitFor(
       () => {
         expect(
-          within(tertiarySection).getByRole('textbox', {
+          within(tertiarySection).getByRole('combobox', {
             name: /Institution/i,
           }),
         ).toBeVisible();
@@ -431,7 +431,7 @@ describe('KeyInformationModal', () => {
     });
     const tertiarySection = tertiary.closest('section') as HTMLElement;
 
-    const institutionField = within(tertiarySection).getByRole('textbox', {
+    const institutionField = within(tertiarySection).getByRole('combobox', {
       name: /Institution/i,
     });
     await user.click(institutionField);
@@ -480,7 +480,7 @@ describe('KeyInformationModal', () => {
       { interval: 50 },
     );
     // Should have one empty position initialized
-    const institutionField = await screen.findByRole('textbox', {
+    const institutionField = await screen.findByRole('combobox', {
       name: /Institution/i,
     });
     expect(institutionField).toHaveValue('');
@@ -527,7 +527,7 @@ describe('KeyInformationModal', () => {
     });
 
     // Find the degrees MultiSelect and change it
-    const degreesField = screen.getByRole('textbox', {
+    const degreesField = screen.getByRole('combobox', {
       name: /Degree/i,
     });
     await user.click(degreesField);

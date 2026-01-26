@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import { AnalyticsLeadershipPageBody } from '..';
@@ -44,8 +44,10 @@ describe('AnalyticsLeadershipPageBody', () => {
   it('displays OS champion option in dropdown', async () => {
     render(<AnalyticsLeadershipPageBody {...props} metric="working-group" />);
 
-    const dropdowns = screen.getAllByRole('textbox', { hidden: false });
+    const dropdowns = screen.getAllByRole('combobox', { hidden: false });
     await userEvent.click(dropdowns[0] as Element);
-    expect(screen.getByText('Open Science Champion')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Open Science Champion')).toBeInTheDocument();
+    });
   });
 });

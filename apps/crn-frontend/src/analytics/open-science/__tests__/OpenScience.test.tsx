@@ -359,7 +359,7 @@ describe('OpenScience', () => {
     mockGetTagSuggestions.mockClear();
 
     const teamsSection = screen.getByText('Teams:').closest('div')!;
-    const input = within(teamsSection).getByRole('textbox');
+    const input = within(teamsSection).getByRole('combobox');
 
     // Type something to trigger the debounced function
     await userEvent.type(input, 'bio');

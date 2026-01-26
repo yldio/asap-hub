@@ -309,7 +309,7 @@ describe('user collaboration', () => {
       screen.queryByText('Co-Production Across Teams by User'),
     ).not.toBeInTheDocument();
 
-    const input = screen.getAllByRole('textbox', { hidden: false });
+    const input = screen.getAllByRole('combobox', { hidden: false });
 
     await userEvent.click(input[1]!);
     await userEvent.click(screen.getByText('Across Teams'));
@@ -405,7 +405,7 @@ describe('team collaboration', () => {
       screen.queryByText('Co-Production Across Teams by Team'),
     ).not.toBeInTheDocument();
 
-    const input = screen.getAllByRole('textbox', { hidden: false });
+    const input = screen.getAllByRole('combobox', { hidden: false });
 
     await userEvent.click(input[1]!);
     await userEvent.click(screen.getByText('Across Teams'));
@@ -500,7 +500,7 @@ describe('sharing prelim findings', () => {
 
   it('can navigate to sharing preliminary findings page', async () => {
     await renderPage('user', 'within-team');
-    const input = screen.getAllByRole('textbox', { hidden: false });
+    const input = screen.getAllByRole('combobox', { hidden: false });
 
     await userEvent.click(input[0]!);
     await userEvent.click(screen.getByText('Sharing Preliminary Findings'));
@@ -578,7 +578,7 @@ describe('sharing prelim findings', () => {
 
 it('navigates between user and team collaboration pages', async () => {
   await renderPage('user', 'within-team');
-  const input = screen.getAllByRole('textbox', { hidden: false });
+  const input = screen.getAllByRole('combobox', { hidden: false });
 
   await userEvent.click(input[0]!);
   await userEvent.click(screen.getByText('Team Co-Production'));
@@ -593,7 +593,7 @@ it('navigates between user and team collaboration pages', async () => {
 describe('search', () => {
   const getSearchBox = () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
-    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+    return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
   it('allows typing in search queries', async () => {
     const mockAlgoliaClient = {
@@ -689,7 +689,7 @@ describe('csv export', () => {
     'exports analytics for teams (%s)',
     async (type) => {
       await renderPage('team', type);
-      const input = screen.getAllByRole('textbox', { hidden: false })[0];
+      const input = screen.getAllByRole('combobox', { hidden: false })[0];
 
       input && (await userEvent.click(input));
       await userEvent.click(screen.getByText(/csv/i));

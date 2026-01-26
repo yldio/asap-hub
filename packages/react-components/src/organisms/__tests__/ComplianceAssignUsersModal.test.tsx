@@ -153,7 +153,7 @@ describe('ComplianceAssignUsersModal', () => {
       />,
     );
 
-    const input = screen.getByRole('textbox', { name: /Assign User/i });
+    const input = screen.getByRole('combobox', { name: /Assign User/i });
     await userEvent.type(input, 'Bob');
 
     await waitFor(() => {
@@ -177,7 +177,7 @@ describe('ComplianceAssignUsersModal', () => {
     expect(screen.getByRole('button', { name: /Assign/ })).toBeDisabled();
 
     await userEvent.click(
-      screen.getByRole('textbox', { name: /Assign User/i }),
+      screen.getByRole('combobox', { name: /Assign User/i }),
     );
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
@@ -206,16 +206,22 @@ describe('ComplianceAssignUsersModal', () => {
     expect(screen.getByRole('button', { name: /Update/ })).toBeEnabled();
 
     await userEvent.click(
-      screen.getByRole('textbox', { name: /Assign User/i }),
+      screen.getByRole('combobox', { name: /Assign User/i }),
     );
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
-    expect(screen.getAllByLabelText(/Remove/i)).toHaveLength(2);
-    await userEvent.click(screen.getByLabelText(/Remove John Doe/i));
-    await userEvent.click(screen.getByLabelText(/Remove Jane Smith/i));
-    expect(screen.queryAllByLabelText(/Remove/i)).toHaveLength(0);
+    expect(screen.getAllByRole('button', { name: /Remove/i })).toHaveLength(2);
+    await userEvent.click(
+      screen.getByRole('button', { name: /Remove John Doe/i }),
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: /Remove Jane Smith/i }),
+    );
+    expect(screen.queryAllByRole('button', { name: /Remove/i })).toHaveLength(
+      0,
+    );
 
     expect(screen.getByRole('button', { name: /Update/ })).toBeEnabled();
   });

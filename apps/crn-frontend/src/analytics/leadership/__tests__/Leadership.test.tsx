@@ -193,7 +193,7 @@ it('switches to interest group data', async () => {
   const label = /Interest Group Leadership & Membership/;
 
   await renderPage('working-group');
-  const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
+  const input = screen.getAllByRole('combobox', { hidden: false })[0]!;
   await userEvent.click(input);
   await userEvent.click(screen.getByText(label));
 
@@ -205,7 +205,7 @@ it('switches to open science champion data', async () => {
   const label = /Open Science Champion/;
 
   await renderPage();
-  const input = screen.getAllByRole('textbox', { hidden: false })[0]!;
+  const input = screen.getAllByRole('combobox', { hidden: false })[0]!;
   await userEvent.click(input);
   await userEvent.click(screen.getByText(label));
 
@@ -243,7 +243,7 @@ it('calls algolia client with the right index name', async () => {
 describe('search', () => {
   const getSearchBox = () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
-    return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+    return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
   describe('algolia', () => {
     it('allows typing in search queries', async () => {

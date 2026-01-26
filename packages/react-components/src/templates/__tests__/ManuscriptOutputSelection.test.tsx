@@ -169,7 +169,7 @@ describe('ManuscriptOutputSelection', () => {
       />,
     );
 
-    await userEvent.type(getByRole('textbox'), 'asdflkjasdflkj');
+    await userEvent.type(getByRole('combobox'), 'asdflkjasdflkj');
 
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -203,7 +203,7 @@ describe('ManuscriptOutputSelection', () => {
       />,
     );
 
-    const input = getByRole('textbox');
+    const input = getByRole('combobox');
     await userEvent.type(input, 'Version');
     // await userEvent.tab();
     const option = await screen.findByText('Version One');

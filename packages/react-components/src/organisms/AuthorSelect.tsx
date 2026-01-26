@@ -58,9 +58,9 @@ const optionStyles = css({
 const singleValueStyles = css({
   padding: `${rem(5)} ${rem(15)} ${rem(5)} ${rem(8)}`,
   margin: `${rem(5)} ${rem(6)} ${rem(5)}`,
-  display: 'flex',
-  justifyContent: 'center',
   alignItems: 'center',
+  gridTemplateColumns: `${rem(24)} auto auto`,
+  width: 'fit-content',
 
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,

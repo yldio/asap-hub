@@ -228,7 +228,7 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
   });
   await user.type(urlTextbox, 'https://example.com/manuscript');
 
-  const lifecycleTextbox = screen.getByRole('textbox', {
+  const lifecycleTextbox = screen.getByRole('combobox', {
     name: /Where is the manuscript in the life cycle/i,
   });
 
@@ -347,7 +347,7 @@ it('files are not prefilled on manuscript resubmit', async () => {
 
   await renderPage({}, true, resubmitPath, resubmitInitialEntries);
 
-  const lifecycleTextbox = screen.getByRole('textbox', {
+  const lifecycleTextbox = screen.getByRole('combobox', {
     name: /Where is the manuscript in the life cycle/i,
   });
 

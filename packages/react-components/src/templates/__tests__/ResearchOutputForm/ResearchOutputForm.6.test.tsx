@@ -80,7 +80,7 @@ describe('on submit', () => {
       </MemoryRouter>,
     );
     await userEvent.click(
-      await screen.findByRole('textbox', { name: /methods/i }),
+      await screen.findByRole('combobox', { name: /methods/i }),
     );
     await userEvent.click(screen.getByText('ELISA'));
     await submitForm();
@@ -123,7 +123,7 @@ describe('on submit', () => {
       </MemoryRouter>,
     );
 
-    const typeDropdown = screen.getByRole('textbox', {
+    const typeDropdown = screen.getByRole('combobox', {
       name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
@@ -133,7 +133,7 @@ describe('on submit', () => {
       keyCode: ENTER_KEYCODE,
     });
 
-    const methods = await screen.findByRole('textbox', { name: /methods/i });
+    const methods = await screen.findByRole('combobox', { name: /methods/i });
     await userEvent.click(methods);
     await userEvent.click(screen.getByText('ELISA'));
 

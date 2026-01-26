@@ -152,12 +152,14 @@ describe('Create Projects Output', () => {
       screen.getByRole('textbox', { name: /^short description/i }),
       { target: { value: 'An article' } },
     );
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
+    const authors = screen.getByRole('combobox', { name: /Authors/i });
     await user.click(authors);
     await user.click(screen.getByText('Tony Stark'));
     await user.click(authors);
     await user.click(screen.getByText(/Steve Rogers \(/i));
-    await user.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    await user.click(
+      screen.getByRole('combobox', { name: /identifier type/i }),
+    );
     await user.click(screen.getByText(/^none/i));
     expect(screen.getByText('Project Title')).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Publish' }));
@@ -229,10 +231,12 @@ describe('Create Projects Output', () => {
       screen.getByRole('textbox', { name: /^short description/i }),
       { target: { value: 'An article' } },
     );
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
+    const authors = screen.getByRole('combobox', { name: /Authors/i });
     await user.click(authors);
     await user.click(screen.getByText('Tony Stark'));
-    await user.click(screen.getByRole('textbox', { name: /identifier type/i }));
+    await user.click(
+      screen.getByRole('combobox', { name: /identifier type/i }),
+    );
     await user.click(screen.getByText(/^none/i));
     expect(screen.getByText('Project Title')).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Publish' }));

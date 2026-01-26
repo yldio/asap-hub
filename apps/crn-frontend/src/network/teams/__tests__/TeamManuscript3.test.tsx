@@ -189,14 +189,14 @@ it('shows server validation error toast and a message when submitting with dupli
   });
   await user.type(titleInput, title);
   // Type of manuscript
-  const typeTextbox = screen.getByRole('textbox', {
+  const typeTextbox = screen.getByRole('combobox', {
     name: /Type of Manuscript/i,
   });
   await user.click(typeTextbox);
   await user.type(typeTextbox, 'Original{enter}');
 
   // Lifecycle
-  const lifecycleTextbox = screen.getByRole('textbox', {
+  const lifecycleTextbox = screen.getByRole('combobox', {
     name: /Where is the manuscript in the life cycle/i,
   });
   await user.click(lifecycleTextbox);
@@ -213,11 +213,11 @@ it('shows server validation error toast and a message when submitting with dupli
   );
 
   // Impact and category
-  const impactInput = screen.getByRole('textbox', { name: /Impact/i });
+  const impactInput = screen.getByRole('combobox', { name: /Impact/i });
   await user.type(impactInput, 'My Imp');
   await user.click(await screen.findByText(/^My Impact$/i));
 
-  const categoryInput = screen.getByRole('textbox', { name: /Category/i });
+  const categoryInput = screen.getByRole('combobox', { name: /Category/i });
   await user.type(categoryInput, 'My Cat');
   await user.click(await screen.findByText(/^My Category$/i));
 

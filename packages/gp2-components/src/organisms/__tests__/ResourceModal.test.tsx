@@ -28,7 +28,7 @@ const deleteClick = async () => {
   return deleteButton;
 };
 
-const typeBox = () => screen.getByRole('textbox', { name: /type/i });
+const typeBox = () => screen.getByRole('combobox', { name: /type/i });
 const enterType = async (type: string) => {
   await userEvent.type(typeBox(), `${type}{enter}`);
 };

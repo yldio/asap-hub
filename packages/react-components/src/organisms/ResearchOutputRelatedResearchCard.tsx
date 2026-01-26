@@ -123,7 +123,9 @@ const ResearchOutputRelatedResearchCard = <
             >
               {
                 <div css={iconStyles}>
-                  {getIconForDocumentType(optionProps.data.documentType)}
+                  {getIconForDocumentType(
+                    optionProps.data.documentType as T[number]['documentType'],
+                  )}
                 </div>
               }
               {optionProps.data.documentType === 'Article' && (

@@ -33,7 +33,9 @@ const TeamProfileOverviewContent: React.FC<TeamProfileOverviewContentProps> = ({
       Team Description
     </Headline2>
     <ExpandableText variant="arrow">
-      <Paragraph noMargin>{description}</Paragraph>
+      <Paragraph accent="lead" noMargin>
+        {description}
+      </Paragraph>
     </ExpandableText>
   </div>
 );

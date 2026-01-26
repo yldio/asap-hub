@@ -16,7 +16,7 @@ module.exports.up = (migration) => {
   teams
     .createField('resourceDescription')
     .name('Resource Description')
-    .type('Text')
+    .type('RichText')
     .localized(false)
     .required(false)
     .validations([])
@@ -70,22 +70,10 @@ module.exports.up = (migration) => {
     .omitted(false);
 
   // Set up field controls for better UX in Contentful
-  teams.changeFieldControl('resourceTitle', 'builtin', 'singleLine', {
-    helpText:
-      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
-  });
-  teams.changeFieldControl('resourceDescription', 'builtin', 'multipleLine', {
-    helpText:
-      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
-  });
-  teams.changeFieldControl('resourceButtonCopy', 'builtin', 'singleLine', {
-    helpText:
-      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
-  });
-  teams.changeFieldControl('resourceContactEmail', 'builtin', 'singleLine', {
-    helpText:
-      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
-  });
+  teams.changeFieldControl('resourceTitle', 'builtin', 'singleLine');
+  teams.changeFieldControl('resourceDescription', 'builtin', 'richTextEditor');
+  teams.changeFieldControl('resourceButtonCopy', 'builtin', 'singleLine');
+  teams.changeFieldControl('resourceContactEmail', 'builtin', 'singleLine');
   teams.changeFieldControl('resourceLink', 'builtin', 'urlEditor', {});
 };
 

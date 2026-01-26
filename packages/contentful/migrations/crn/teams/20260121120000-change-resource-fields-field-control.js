@@ -18,20 +18,8 @@ module.exports.down = (migration) => {
   const teams = migration.editContentType('teams');
 
   // Revert to builtin field controls
-  teams.changeFieldControl('resourceTitle', 'builtin', 'singleLine', {
-    helpText:
-      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
-  });
-  teams.changeFieldControl('resourceDescription', 'builtin', 'multipleLine', {
-    helpText:
-      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
-  });
-  teams.changeFieldControl('resourceButtonCopy', 'builtin', 'singleLine', {
-    helpText:
-      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
-  });
-  teams.changeFieldControl('resourceContactEmail', 'builtin', 'singleLine', {
-    helpText:
-      '⚠️ If you fill any Resource field (Title, Description, Button Copy, or Contact Email), please fill all of them. Resource Link is optional.',
-  });
+  teams.changeFieldControl('resourceTitle', 'builtin', 'singleLine');
+  teams.changeFieldControl('resourceDescription', 'builtin', 'richTextEditor');
+  teams.changeFieldControl('resourceButtonCopy', 'builtin', 'singleLine');
+  teams.changeFieldControl('resourceContactEmail', 'builtin', 'singleLine');
 };

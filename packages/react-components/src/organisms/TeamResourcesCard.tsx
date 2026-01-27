@@ -83,7 +83,7 @@ const TeamResourcesCard: React.FC<TeamResourcesCardProps> = ({
 
         {resourceDescription && (
           <ExpandableText variant="arrow">
-            <Paragraph noMargin css={descriptionStyles}>
+            <Paragraph noMargin styles={descriptionStyles}>
               {resourceDescription}
             </Paragraph>
           </ExpandableText>

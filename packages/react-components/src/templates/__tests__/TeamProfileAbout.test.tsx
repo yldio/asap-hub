@@ -273,7 +273,7 @@ describe('TeamProfileAbout', () => {
       );
 
       expect(
-        screen.getByRole('heading', { name: /resources/i }),
+        screen.getByRole('heading', { name: 'Resource Title' }),
       ).toBeInTheDocument();
       expect(screen.getByText('Resource description')).toBeInTheDocument();
       expect(
@@ -293,7 +293,7 @@ describe('TeamProfileAbout', () => {
       );
 
       expect(
-        screen.queryByRole('heading', { name: /resources/i }),
+        screen.queryByRole('heading', { name: 'Resource Title' }),
       ).not.toBeInTheDocument();
     });
 
@@ -309,7 +309,7 @@ describe('TeamProfileAbout', () => {
       );
 
       expect(
-        screen.queryByRole('heading', { name: /resources/i }),
+        screen.queryByRole('heading', { name: 'Resource Title' }),
       ).not.toBeInTheDocument();
     });
 
@@ -318,7 +318,7 @@ describe('TeamProfileAbout', () => {
       render(<TeamProfileAbout {...baseProps} teamType="Resource Team" />);
 
       expect(
-        screen.queryByRole('heading', { name: /resources/i }),
+        screen.queryByRole('heading', { name: 'Resource Title' }),
       ).not.toBeInTheDocument();
     });
 

@@ -15,11 +15,11 @@ describe('TeamResourcesCard', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it('renders Resources heading when at least one field is populated', () => {
+  it('renders resource title as heading when provided', () => {
     render(<TeamResourcesCard {...baseProps} resourceTitle="Test Resource" />);
 
     expect(
-      screen.getByRole('heading', { name: /resources/i }),
+      screen.getByRole('heading', { name: 'Test Resource' }),
     ).toBeInTheDocument();
   });
 
@@ -52,7 +52,11 @@ describe('TeamResourcesCard', () => {
 
   it('renders external link when resource link is provided', () => {
     render(
-      <TeamResourcesCard {...baseProps} resourceLink="https://example.com" />,
+      <TeamResourcesCard
+        {...baseProps}
+        resourceTitle="Test Resource"
+        resourceLink="https://example.com"
+      />,
     );
 
     const link = screen.getByRole('link', { name: /access drive/i });
@@ -73,7 +77,7 @@ describe('TeamResourcesCard', () => {
     );
 
     expect(
-      screen.getByRole('heading', { name: /resources/i }),
+      screen.getByRole('heading', { name: 'Resource Title' }),
     ).toBeInTheDocument();
     expect(screen.getByText('Resource description')).toBeInTheDocument();
     expect(

@@ -6,11 +6,11 @@ import {
 import { Routes, Route } from 'react-router-dom';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
+import { useFlags } from '@asap-hub/react-context';
 
 import Tags from './TagsList';
 import { useAlgolia } from '../hooks/algolia';
 import { useSearch } from '../hooks';
-import { useFlags } from '@asap-hub/react-context';
 
 const options: { label: string; value: CRNTagSearchEntities }[] = [
   { label: 'Calendar & Events', value: 'event' },

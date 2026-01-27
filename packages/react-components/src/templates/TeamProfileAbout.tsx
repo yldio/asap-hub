@@ -11,6 +11,7 @@ import {
   TeamMembersTabbedCard,
   TeamProfileOverview,
   TeamProjectsCard,
+  TeamResourcesCard,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
@@ -45,6 +46,11 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
     | 'labs'
     | 'projectType'
     | 'proposalURL'
+    | 'resourceTitle'
+    | 'resourceDescription'
+    | 'resourceButtonCopy'
+    | 'resourceContactEmail'
+    | 'resourceLink'
   > & {
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
@@ -72,6 +78,11 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   labs,
   proposalURL,
   hideExpertiseAndResources,
+  resourceTitle,
+  resourceDescription,
+  resourceButtonCopy,
+  resourceContactEmail,
+  resourceLink,
 }) => {
   const projectsMVPEnabled = isEnabled('PROJECTS_MVP');
 
@@ -93,6 +104,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   const showTeamGroupsCard = projectsMVPEnabled
     ? teamType !== 'Resource Team' && teamGroupsCard
     : teamGroupsCard;
+  const showResourcesCard = projectsMVPEnabled && teamType === 'Resource Team';
   const showContactCta =
     pointOfContactEmail && (!projectsMVPEnabled || teamStatus === 'Active');
 
@@ -123,6 +135,17 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         <ProfileExpertiseAndResources
           hideExpertiseAndResources={hideExpertiseAndResources}
           tags={tags}
+        />
+      )}
+
+      {/* Resources Card - Only for Resource Teams in MVP version */}
+      {showResourcesCard && (
+        <TeamResourcesCard
+          resourceTitle={resourceTitle}
+          resourceDescription={resourceDescription}
+          resourceButtonCopy={resourceButtonCopy}
+          resourceContactEmail={resourceContactEmail}
+          resourceLink={resourceLink}
         />
       )}
 

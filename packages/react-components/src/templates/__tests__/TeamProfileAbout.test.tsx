@@ -22,6 +22,11 @@ const baseProps: ComponentProps<typeof TeamProfileAbout> = {
   projectType: undefined,
   proposalURL: undefined,
   hideExpertiseAndResources: false,
+  resourceTitle: undefined,
+  resourceDescription: undefined,
+  resourceButtonCopy: undefined,
+  resourceContactEmail: undefined,
+  resourceLink: undefined,
 };
 
 describe('TeamProfileAbout', () => {
@@ -250,6 +255,87 @@ describe('TeamProfileAbout', () => {
       expect(
         screen.queryByRole('heading', { name: /labs/i }),
       ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Resources Card', () => {
+    it('renders TeamResourcesCard in MVP mode for Resource Team when resource fields are populated', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          teamType="Resource Team"
+          resourceTitle="Resource Title"
+          resourceDescription="Resource description"
+          resourceButtonCopy="Get Started"
+          resourceContactEmail="contact@example.com"
+        />,
+      );
+
+      expect(
+        screen.getByRole('heading', { name: /resources/i }),
+      ).toBeInTheDocument();
+      expect(screen.getByText('Resource description')).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: 'Get Started' }),
+      ).toBeInTheDocument();
+    });
+
+    it('does not render TeamResourcesCard in legacy mode', () => {
+      disable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          teamType="Resource Team"
+          resourceTitle="Resource Title"
+          resourceDescription="Resource description"
+        />,
+      );
+
+      expect(
+        screen.queryByRole('heading', { name: /resources/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render TeamResourcesCard for Discovery Team', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          teamType="Discovery Team"
+          resourceTitle="Resource Title"
+          resourceDescription="Resource description"
+        />,
+      );
+
+      expect(
+        screen.queryByRole('heading', { name: /resources/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render TeamResourcesCard when no resource fields are populated', () => {
+      enable('PROJECTS_MVP');
+      render(<TeamProfileAbout {...baseProps} teamType="Resource Team" />);
+
+      expect(
+        screen.queryByRole('heading', { name: /resources/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('renders external link when resourceLink is provided', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          teamType="Resource Team"
+          resourceTitle="Resource Title"
+          resourceLink="https://drive.google.com"
+        />,
+      );
+
+      const link = screen.getByRole('link', { name: /access drive/i });
+      expect(link).toBeInTheDocument();
+      expect(link).toHaveAttribute('href', 'https://drive.google.com');
     });
   });
 

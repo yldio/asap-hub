@@ -27271,7 +27271,15 @@ export type FetchTeamByIdQuery = {
   teams?: Maybe<
     Pick<
       Teams,
-      'displayName' | 'teamType' | 'teamDescription' | 'inactiveSince'
+      | 'displayName'
+      | 'teamType'
+      | 'teamDescription'
+      | 'inactiveSince'
+      | 'resourceTitle'
+      | 'resourceDescription'
+      | 'resourceButtonCopy'
+      | 'resourceContactEmail'
+      | 'resourceLink'
     > & {
       sys: Pick<Sys, 'id' | 'publishedAt'>;
       researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
@@ -52626,6 +52634,26 @@ export const FetchTeamByIdDocument = {
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                     ],
                   },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resourceTitle' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resourceDescription' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resourceButtonCopy' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resourceContactEmail' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'resourceLink' },
                 },
                 {
                   kind: 'Field',

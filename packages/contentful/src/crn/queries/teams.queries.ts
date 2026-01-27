@@ -16,6 +16,11 @@ export const FETCH_TEAM_BY_ID = gql`
       researchTheme {
         name
       }
+      resourceTitle
+      resourceDescription
+      resourceButtonCopy
+      resourceContactEmail
+      resourceLink
       toolsCollection {
         items {
           name

@@ -314,7 +314,7 @@ export type CRNEntities = keyof EntityResponses['crn'];
 // we don't show cards of these entities
 export type CRNTagSearchEntities = Exclude<
   CRNEntities,
-  'external-author' | 'manuscript' | 'manuscript-version' | 'project'
+  'external-author' | 'manuscript' | 'manuscript-version'
 >;
 
 export type CRNTagSearchEntitiesList = Array<CRNTagSearchEntities>;
@@ -323,6 +323,7 @@ export const CRNTagSearchEntitiesListArray: CRNTagSearchEntitiesList = [
   'event',
   'interest-group',
   'news',
+  'project',
   'research-output',
   'team',
   'tutorial',

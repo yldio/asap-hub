@@ -27,6 +27,7 @@ type TagsPageHeaderProps = {
   tags: string[];
   loadTags?: ComponentProps<typeof MultiSelect>['loadOptions'];
   setTags: (tags: string[]) => void;
+  isProjectsEnabled: boolean;
 } & Pick<
   ComponentProps<typeof Filter<CRNTagSearchEntities>>,
   'filters' | 'onChangeFilter' | 'filterOptions'
@@ -39,6 +40,7 @@ const TagsPageHeader: React.FC<TagsPageHeaderProps> = ({
   filterOptions,
   onChangeFilter,
   loadTags = noop,
+  isProjectsEnabled,
 }) => (
   <header>
     <PageInfoContainer>
@@ -46,8 +48,11 @@ const TagsPageHeader: React.FC<TagsPageHeaderProps> = ({
       <div css={textStyles}>
         <Paragraph accent="lead">
           Search for all CRN Hub areas that include selected tags (research
-          outputs, events, people, teams, tutorials, interest groups, working
-          groups and news).
+          {`outputs, events, people, ${
+            isProjectsEnabled ? 'projects, ' : ''
+          }teams, tutorials, interest groups,
+          working groups and news`}
+          ).
         </Paragraph>
       </div>
     </PageInfoContainer>

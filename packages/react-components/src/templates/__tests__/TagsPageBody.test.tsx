@@ -8,6 +8,8 @@ import {
   createNewsResponse,
   createInterestGroupResponse,
 } from '@asap-hub/fixtures';
+import { ProjectResponse } from '@asap-hub/model';
+
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import TagsPageBody from '../TagsPageBody';
@@ -18,6 +20,19 @@ const props: ComponentProps<typeof TagsPageBody> = {
   numberOfPages: 1,
   renderPageHref: () => '',
   results: [],
+};
+
+const projectResponse: ProjectResponse = {
+  id: 'project-1',
+  projectType: 'Discovery Project',
+  title: 'Discovery Project Title',
+  status: 'Active',
+  tags: [],
+  startDate: '2024-01-01',
+  endDate: '2024-06-01',
+  researchTheme: 'Research Theme',
+  teamName: 'Team Name',
+  teamId: 'team-1',
 };
 
 it('renders no results page', () => {
@@ -78,6 +93,10 @@ it('renders a list of cards', () => {
           __meta: { type: 'interest-group' },
           name: 'Sci 1: GWAS functional validation',
         },
+        {
+          ...projectResponse,
+          __meta: { type: 'project' },
+        },
       ]}
     />,
   );
@@ -101,4 +120,6 @@ it('renders a list of cards', () => {
   expect(
     screen.getByText(/Sci 1: GWAS functional validation/i),
   ).toBeInTheDocument();
+
+  expect(screen.getByText(/Discovery Project Title/i)).toBeInTheDocument();
 });

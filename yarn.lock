@@ -17353,7 +17353,7 @@ __metadata:
     babel-plugin-lodash: 3.3.4
     babel-plugin-transform-inline-environment-variables: 0.5.0-alpha.42
     babel-preset-react-app: 10.0.1
-    bundlewatch: 0.3.3
+    bundlewatch: 0.4.1
     dotenv: 16.3.1
     escape-string-regexp: 4.0.0
     eslint: 8.56.0
@@ -17766,15 +17766,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.24.0":
-  version: 0.24.0
-  resolution: "axios@npm:0.24.0"
-  dependencies:
-    follow-redirects: ^1.14.4
-  checksum: 468cf496c08a6aadfb7e699bebdac02851e3043d4e7d282350804ea8900e30d368daa6e3cd4ab83b8ddb5a3b1e17a5a21ada13fc9cebd27b74828f47a4236316
-  languageName: node
-  linkType: hard
-
 "axios@npm:^0.27.2":
   version: 0.27.2
   resolution: "axios@npm:0.27.2"
@@ -17782,6 +17773,17 @@ __metadata:
     follow-redirects: ^1.14.9
     form-data: ^4.0.0
   checksum: 38cb7540465fe8c4102850c4368053c21683af85c5fdf0ea619f9628abbcb59415d1e22ebc8a6390d2bbc9b58a9806c874f139767389c862ec9b772235f06854
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.30.0":
+  version: 0.30.2
+  resolution: "axios@npm:0.30.2"
+  dependencies:
+    follow-redirects: ^1.15.4
+    form-data: ^4.0.4
+    proxy-from-env: ^1.1.0
+  checksum: c21a17bab1385c1b9aad0d3a293397be418a24d16ef02b34bb332a40c4ae645ce4e06ff2cf44acd5fb3cacea6fe6e6ea018ed581e0cd21fdfbd74e4e94f54f92
   languageName: node
   linkType: hard
 
@@ -18691,11 +18693,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bundlewatch@npm:0.3.3":
-  version: 0.3.3
-  resolution: "bundlewatch@npm:0.3.3"
+"bundlewatch@npm:0.4.1":
+  version: 0.4.1
+  resolution: "bundlewatch@npm:0.4.1"
   dependencies:
-    axios: ^0.24.0
+    axios: ^0.30.0
     bytes: ^3.1.1
     chalk: ^4.0.0
     ci-env: ^1.17.0
@@ -18707,7 +18709,7 @@ __metadata:
     read-pkg-up: ^7.0.1
   bin:
     bundlewatch: lib/bin/index.js
-  checksum: ed47e5081664b667c512ef9c4f4d3b60228580939727b3ab39ff2f19c89b3fece7cdd0d0a175ed3ab0ade73a185b60ed9f9bc61a0b36c44f10835b2069f22c6a
+  checksum: e53309a880047c2488a256451a4e8490ee2495212d116524f1712d49ff0507f81010a49563a1e72cf0eb50cb2460d44b00aeed9f74ff078212fe0b6259b912f4
   languageName: node
   linkType: hard
 
@@ -24546,7 +24548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.4, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.6":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.4, follow-redirects@npm:^1.15.6":
   version: 1.15.11
   resolution: "follow-redirects@npm:1.15.11"
   peerDependenciesMeta:

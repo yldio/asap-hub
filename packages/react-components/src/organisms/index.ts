@@ -108,6 +108,7 @@ export { default as TeamMembersTabbedCard } from './TeamMembersTabbedCard';
 export { default as TeamProductivityTable } from './TeamProductivityTable';
 export { default as TeamProjectsCard } from './TeamProjectsCard';
 export { default as TeamProfileOverview } from './TeamProfileOverview';
+export { default as TeamResourcesCard } from './TeamResourcesCard';
 export { default as Toast } from './Toast';
 export { default as ToastStack } from './ToastStack';
 export { default as ToolCard } from './ToolCard';

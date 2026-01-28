@@ -662,6 +662,11 @@ export const parseContentfulGraphQlTeam = (
     resourceType: linkedProject?.resourceType?.name ?? undefined,
     projectType: (linkedProject?.projectType as ProjectType) ?? undefined,
     teamDescription: item.teamDescription ?? undefined,
+    resourceTitle: item.resourceTitle ?? undefined,
+    resourceDescription: item.resourceDescription ?? undefined,
+    resourceButtonCopy: item.resourceButtonCopy ?? undefined,
+    resourceContactEmail: item.resourceContactEmail ?? undefined,
+    resourceLink: item.resourceLink ?? undefined,
     labs: members
       .flatMap((member) => member.labs || [])
       .filter(

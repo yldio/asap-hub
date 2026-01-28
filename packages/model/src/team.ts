@@ -102,6 +102,11 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   resourceType?: string;
   projectType?: ProjectType;
   teamDescription?: string;
+  resourceTitle?: string;
+  resourceDescription?: string;
+  resourceButtonCopy?: string;
+  resourceContactEmail?: string;
+  resourceLink?: string;
 };
 
 export type TeamCreateDataObject = {

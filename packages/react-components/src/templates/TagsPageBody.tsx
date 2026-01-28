@@ -8,6 +8,7 @@ import {
   TutorialsResponse,
   UserListItemResponse,
   WorkingGroupResponse,
+  ProjectResponse,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { Headline3, Paragraph } from '../atoms';
@@ -21,6 +22,7 @@ import {
   ResultList,
   SharedResearchCard,
   TeamCard,
+  ProjectCard,
   TutorialCard,
   WorkingGroupCard,
 } from '../organisms';
@@ -94,6 +96,10 @@ const EntityCard: React.FC<TagsPageBodyProps['results'][number]> = ({
 
   if (type === 'news') {
     return <NewsCard {...(data as NewsResponse)} type="News" />;
+  }
+
+  if (type === 'project') {
+    return <ProjectCard {...(data as ProjectResponse)} />;
   }
 
   return <TeamCard {...(data as TeamListItemResponse)} />;

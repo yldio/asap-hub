@@ -1,6 +1,7 @@
 import { EventResponse } from './event';
 import { InterestGroupResponse } from './interest-group';
 import { NewsResponse } from './news';
+import { ProjectResponse } from './project';
 import { ResearchOutputResponse } from './research-output';
 import { TeamListItemResponse } from './team';
 import { TutorialsResponse } from './tutorials';
@@ -19,4 +20,5 @@ export type TagSearchResponse =
   | WithMeta<WorkingGroupResponse, 'working-group'>
   | WithMeta<InterestGroupResponse, 'interest-group'>
   | WithMeta<TutorialsResponse, 'tutorial'>
-  | WithMeta<NewsResponse, 'news'>;
+  | WithMeta<NewsResponse, 'news'>
+  | WithMeta<ProjectResponse, 'project'>;

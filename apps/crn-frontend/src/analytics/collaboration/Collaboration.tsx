@@ -223,14 +223,25 @@ const Collaboration = () => {
           header: true,
         },
       ),
-      (paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>) =>
-        getTeamCollaboration(teamClient, {
+      (paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>) => {
+        if (isEnabled('OPENSEARCH_METRICS')) {
+          return opensearchMetrics.getTeamCollaboration({
+            outputType,
+            sort: teamSort,
+            tags,
+            timeRange,
+            ...paginationParams,
+          });
+        }
+
+        return getTeamCollaboration(teamClient, {
           outputType,
           sort: teamSort,
           tags,
           timeRange,
           ...paginationParams,
-        }),
+        });
+      },
       type === 'within-team'
         ? teamCollaborationWithinTeamToCSV(
             teamPerformance ?? TEAM_PERFORMANCE_INITIAL_DATA,
@@ -245,13 +256,23 @@ const Collaboration = () => {
   };
 
   const loadTags = async (tagQuery: string) => {
-    if (isEnabled('OPENSEARCH_METRICS') && metric === 'user') {
-      const suggestions =
-        await opensearchMetrics.getUserCollaborationTagSuggestions(tagQuery);
-      return suggestions.map((value) => ({
-        label: value,
-        value,
-      }));
+    if (isEnabled('OPENSEARCH_METRICS')) {
+      if (metric === 'user') {
+        const suggestions =
+          await opensearchMetrics.getUserCollaborationTagSuggestions(tagQuery);
+        return suggestions.map((value) => ({
+          label: value,
+          value,
+        }));
+      }
+      if (metric === 'team') {
+        const suggestions =
+          await opensearchMetrics.getTeamCollaborationTagSuggestions(tagQuery);
+        return suggestions.map((value) => ({
+          label: value,
+          value,
+        }));
+      }
     }
 
     const searchedTags = await client.searchForTagValues(

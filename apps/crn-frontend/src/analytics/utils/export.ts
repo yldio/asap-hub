@@ -259,18 +259,31 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-collaboration-within',
           () =>
-            getTeamCollaborationPerformance(algoliaClient, {
-              timeRange,
-              outputType,
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getTeamCollaborationPerformance({
+                  timeRange,
+                  outputType,
+                })
+              : getTeamCollaborationPerformance(algoliaClient, {
+                  timeRange,
+                  outputType,
+                }),
           (paginationParams) =>
-            getTeamCollaboration(algoliaClient, {
-              timeRange,
-              outputType,
-              sort,
-              tags,
-              ...paginationParams,
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getTeamCollaboration({
+                  timeRange,
+                  outputType,
+                  sort,
+                  tags,
+                  ...paginationParams,
+                })
+              : getTeamCollaboration(algoliaClient, {
+                  timeRange,
+                  outputType,
+                  sort,
+                  tags,
+                  ...paginationParams,
+                }),
           (performance) =>
             teamCollaborationWithinTeamToCSV(performance, outputType),
         ),
@@ -278,18 +291,31 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-collaboration-across',
           () =>
-            getTeamCollaborationPerformance(algoliaClient, {
-              timeRange,
-              outputType: 'all',
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getTeamCollaborationPerformance({
+                  timeRange,
+                  outputType: 'all',
+                })
+              : getTeamCollaborationPerformance(algoliaClient, {
+                  timeRange,
+                  outputType: 'all',
+                }),
           (paginationParams) =>
-            getTeamCollaboration(algoliaClient, {
-              timeRange,
-              outputType,
-              sort,
-              tags,
-              ...paginationParams,
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getTeamCollaboration({
+                  timeRange,
+                  outputType,
+                  sort,
+                  tags,
+                  ...paginationParams,
+                })
+              : getTeamCollaboration(algoliaClient, {
+                  timeRange,
+                  outputType,
+                  sort,
+                  tags,
+                  ...paginationParams,
+                }),
           (performance) =>
             teamCollaborationAcrossTeamToCSV(performance, outputType),
         ),

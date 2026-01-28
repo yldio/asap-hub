@@ -110,6 +110,9 @@ describe('downloadAnalyticsXLSX', () => {
     getUserCollaboration: jest.fn(),
     getUserCollaborationTagSuggestions: jest.fn(),
     getUserCollaborationPerformance: jest.fn(),
+    getTeamCollaboration: jest.fn(),
+    getTeamCollaborationTagSuggestions: jest.fn(),
+    getTeamCollaborationPerformance: jest.fn(),
   };
 
   beforeEach(() => {
@@ -1284,6 +1287,239 @@ describe('downloadAnalyticsXLSX', () => {
       'workbook',
       'worksheet',
       'User Co-Prod Across Teams',
+    );
+  });
+
+  it('should process team-collaboration-within and team-collaboration-across with OpenSearch when flag is enabled', async () => {
+    // Mock OpenSearch team collaboration performance response
+    mockOpensearchMetrics.getTeamCollaborationPerformance.mockResolvedValue({
+      withinTeam: {
+        article: {
+          belowAverageMin: 0,
+          belowAverageMax: 1,
+          averageMin: 1,
+          averageMax: 2,
+          aboveAverageMin: 2,
+          aboveAverageMax: 5,
+        },
+        bioinformatics: {
+          belowAverageMin: 0,
+          belowAverageMax: 0,
+          averageMin: 0,
+          averageMax: 1,
+          aboveAverageMin: 1,
+          aboveAverageMax: 3,
+        },
+        dataset: {
+          belowAverageMin: 0,
+          belowAverageMax: 0,
+          averageMin: 0,
+          averageMax: 1,
+          aboveAverageMin: 1,
+          aboveAverageMax: 2,
+        },
+        labMaterial: {
+          belowAverageMin: 0,
+          belowAverageMax: 0,
+          averageMin: 0,
+          averageMax: 1,
+          aboveAverageMin: 1,
+          aboveAverageMax: 2,
+        },
+        protocol: {
+          belowAverageMin: 0,
+          belowAverageMax: 1,
+          averageMin: 1,
+          averageMax: 2,
+          aboveAverageMin: 2,
+          aboveAverageMax: 4,
+        },
+      },
+      acrossTeam: {
+        article: {
+          belowAverageMin: 0,
+          belowAverageMax: 1,
+          averageMin: 1,
+          averageMax: 3,
+          aboveAverageMin: 3,
+          aboveAverageMax: 6,
+        },
+        bioinformatics: {
+          belowAverageMin: 0,
+          belowAverageMax: 0,
+          averageMin: 0,
+          averageMax: 1,
+          aboveAverageMin: 1,
+          aboveAverageMax: 3,
+        },
+        dataset: {
+          belowAverageMin: 0,
+          belowAverageMax: 0,
+          averageMin: 0,
+          averageMax: 1,
+          aboveAverageMin: 1,
+          aboveAverageMax: 3,
+        },
+        labMaterial: {
+          belowAverageMin: 0,
+          belowAverageMax: 0,
+          averageMin: 0,
+          averageMax: 1,
+          aboveAverageMin: 1,
+          aboveAverageMax: 2,
+        },
+        protocol: {
+          belowAverageMin: 0,
+          belowAverageMax: 1,
+          averageMin: 1,
+          averageMax: 2,
+          aboveAverageMin: 2,
+          aboveAverageMax: 5,
+        },
+      },
+    });
+
+    // Mock OpenSearch team collaboration data response
+    mockOpensearchMetrics.getTeamCollaboration.mockResolvedValue({
+      items: [
+        {
+          id: 'team-1',
+          name: 'Team Alpha',
+          inactiveSince: undefined,
+          outputsCoProducedWithin: {
+            Article: 3,
+            Bioinformatics: 1,
+            Dataset: 0,
+            'Lab Material': 1,
+            Protocol: 2,
+          },
+          outputsCoProducedAcross: {
+            byDocumentType: {
+              Article: 4,
+              Bioinformatics: 2,
+              Dataset: 1,
+              'Lab Material': 0,
+              Protocol: 3,
+            },
+            byTeam: [
+              {
+                id: 'team-2',
+                name: 'Team Beta',
+                isInactive: false,
+                Article: 2,
+                Bioinformatics: 1,
+                Dataset: 1,
+                'Lab Material': 0,
+                Protocol: 2,
+              },
+              {
+                id: 'team-3',
+                name: 'Team Gamma',
+                isInactive: false,
+                Article: 2,
+                Bioinformatics: 1,
+                Dataset: 0,
+                'Lab Material': 0,
+                Protocol: 1,
+              },
+            ],
+          },
+        },
+      ],
+      total: 1,
+    });
+
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
+    })(
+      'current-year',
+      new Set([
+        'team-collaboration-within',
+        'team-collaboration-across',
+      ]) as Set<MetricExportKeys>,
+    );
+
+    // Verify getTeamCollaborationPerformance was called with correct parameters
+    expect(
+      mockOpensearchMetrics.getTeamCollaborationPerformance,
+    ).toHaveBeenCalledWith({
+      timeRange: 'current-year',
+      outputType: 'all',
+    });
+
+    // Verify getTeamCollaboration was called with correct parameters
+    expect(mockOpensearchMetrics.getTeamCollaboration).toHaveBeenCalledWith({
+      timeRange: 'current-year',
+      outputType: 'all',
+      sort: 'team_asc',
+      tags: [],
+      currentPage: 0,
+      pageSize: 200,
+    });
+
+    // Verify worksheet for within was created with transformed data
+    expect(XLSX.utils.json_to_sheet).toHaveBeenNthCalledWith(1, [
+      {
+        Team: 'Team Alpha',
+        'Team Status': 'Active',
+        'Inactive Since': '',
+        'ASAP Article Output: Value': 3,
+        'ASAP Article Output: Average': 'Above',
+        'ASAP Bioinformatic Output: Value': 1,
+        'ASAP Bioinformatic Output: Average': 'Average',
+        'ASAP Dataset Output: Value': 0,
+        'ASAP Dataset Output: Average': 'Below',
+        'ASAP Lab Material Output: Value': 1,
+        'ASAP Lab Material Output: Average': 'Average',
+        'ASAP Protocol Output: Value': 2,
+        'ASAP Protocol Output: Average': 'Average',
+      },
+    ]);
+
+    // Verify worksheet for across was created with transformed data
+    expect(XLSX.utils.json_to_sheet).toHaveBeenNthCalledWith(2, [
+      {
+        Team: 'Team Alpha',
+        'Team Status': 'Active',
+        'Inactive Since': '',
+        'ASAP Article Output: Average': 'Above',
+        'ASAP Article Output: Name of teams collaborated with':
+          'Team Beta, Team Gamma',
+        'ASAP Article Output: No. of teams collaborated with': 2,
+        'ASAP Article Output: Value': 4,
+        'ASAP Bioinformatic Output: Average': 'Above',
+        'ASAP Bioinformatic Output: Value': 2,
+        'ASAP Bioinformatics Output: Name of teams collaborated with':
+          'Team Beta, Team Gamma',
+        'ASAP Bioinformatics Output: No. of teams collaborated with': 2,
+        'ASAP Dataset Output: Average': 'Average',
+        'ASAP Dataset Output: Name of teams collaborated with': 'Team Beta',
+        'ASAP Dataset Output: No. of teams collaborated with': 1,
+        'ASAP Dataset Output: Value': 1,
+        'ASAP Lab Material Output: Average': 'Below',
+        'ASAP Lab Material Output: Name of teams collaborated with': '',
+        'ASAP Lab Material Output: No. of teams collaborated with': 0,
+        'ASAP Lab Material Output: Value': 0,
+        'ASAP Protocol Output: Average': 'Above',
+        'ASAP Protocol Output: Name of teams collaborated with':
+          'Team Beta, Team Gamma',
+        'ASAP Protocol Output: No. of teams collaborated with': 2,
+        'ASAP Protocol Output: Value': 3,
+      },
+    ]);
+
+    // Verify worksheet was appended with correct sheet name
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Team Co-Prod Within Team',
+    );
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Team Co-Prod Across Teams',
     );
   });
 });

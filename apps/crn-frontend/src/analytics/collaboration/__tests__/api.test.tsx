@@ -17,6 +17,8 @@ import {
   PreliminaryDataSharingDataObject,
   SortTeamCollaboration,
   SortUserCollaboration,
+  TeamCollaborationPerformance,
+  TeamCollaborationResponse,
   TimeRangeOption,
   UserCollaborationResponse,
   UserCollaborationPerformance,
@@ -349,6 +351,114 @@ describe('getTeamCollaboration', () => {
       }),
     );
   });
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<TeamCollaborationResponse>;
+    let searchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient(
+        'team-collaboration',
+        'Bearer test-token',
+      );
+      searchSpy = jest.spyOn(opensearchClient, 'search').mockResolvedValue({
+        items: teamCollaborationResponse.items,
+        total: teamCollaborationResponse.total,
+      });
+    });
+
+    afterEach(() => {
+      searchSpy.mockRestore();
+    });
+
+    it('calls opensearch client with correct parameters', async () => {
+      await getTeamCollaboration(opensearchClient, defaultTeamOptions);
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: expect.any(Array),
+      });
+    });
+
+    it('applies team_asc sort correctly', async () => {
+      await getTeamCollaboration(opensearchClient, {
+        ...defaultTeamOptions,
+        sort: 'team_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              _script: {
+                type: 'string',
+                script: {
+                  source: "doc['name.keyword'].value.toLowerCase()",
+                  lang: 'painless',
+                },
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies article_asc sort correctly', async () => {
+      await getTeamCollaboration(opensearchClient, {
+        ...defaultTeamOptions,
+        sort: 'article_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              'outputsCoProducedWithin.Article': {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies article_across_asc sort correctly', async () => {
+      await getTeamCollaboration(opensearchClient, {
+        ...defaultTeamOptions,
+        sort: 'article_across_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              'outputsCoProducedAcross.byDocumentType.Article': {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('passes outputType to opensearch client', async () => {
+      await getTeamCollaboration(opensearchClient, {
+        ...defaultTeamOptions,
+        outputType: 'public',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          outputType: 'public',
+        }),
+      );
+    });
+  });
 });
 
 describe('getUserCollaborationPerformance', () => {
@@ -555,6 +665,50 @@ describe('getTeamCollaborationPerformance', () => {
       );
     },
   );
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<TeamCollaborationPerformance>;
+    let searchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient(
+        'team-collaboration-performance',
+        'Bearer test-token',
+      );
+      searchSpy = jest.spyOn(opensearchClient, 'search').mockResolvedValue({
+        items: [teamCollaborationPerformance],
+        total: 1,
+      });
+    });
+
+    afterEach(() => {
+      searchSpy.mockRestore();
+    });
+
+    it('calls opensearch client with correct parameters', async () => {
+      await getTeamCollaborationPerformance(opensearchClient, {
+        timeRange: '30d',
+        outputType: 'all',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: [],
+        outputType: 'all',
+      });
+    });
+
+    it('returns the first item from opensearch results', async () => {
+      const result = await getTeamCollaborationPerformance(opensearchClient, {
+        timeRange: '30d',
+        outputType: 'all',
+      });
+
+      expect(result).toEqual(teamCollaborationPerformance);
+    });
+  });
 });
 
 describe('getPreliminaryDataSharing', () => {

@@ -28,7 +28,6 @@ import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import {
   getAlgoliaIndexName,
   makeFlagBasedPerformanceHook,
-  makePerformanceHook,
   makePerformanceState,
 } from '../utils/state';
 import {
@@ -208,18 +207,29 @@ export const analyticsTeamCollaborationState = selectorFamily<
 export const useAnalyticsTeamCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
 ) => {
+  const { isEnabled } = useFlags();
   const indexName = getAlgoliaIndexName(options.sort, 'team-collaboration');
 
   const algoliaClient = useAnalyticsAlgolia(indexName).client;
+  const opensearchClient =
+    useAnalyticsOpensearch<TeamCollaborationResponse>(
+      'team-collaboration',
+    ).client;
 
   const [teamCollaboration, setTeamCollaboration] = useRecoilState(
     analyticsTeamCollaborationState(options),
   );
 
   if (teamCollaboration === undefined) {
-    throw getTeamCollaboration(algoliaClient, options)
-      .then(setTeamCollaboration)
-      .catch(setTeamCollaboration);
+    if (isEnabled('OPENSEARCH_METRICS')) {
+      throw getTeamCollaboration(opensearchClient, options)
+        .then(setTeamCollaboration)
+        .catch(setTeamCollaboration);
+    } else {
+      throw getTeamCollaboration(algoliaClient, options)
+        .then(setTeamCollaboration)
+        .catch(setTeamCollaboration);
+    }
   }
   if (teamCollaboration instanceof Error) {
     throw teamCollaboration;
@@ -233,9 +243,10 @@ export const teamCollaborationPerformanceState =
   );
 
 export const useTeamCollaborationPerformance =
-  makePerformanceHook<TeamCollaborationPerformance>(
+  makeFlagBasedPerformanceHook<TeamCollaborationPerformance>(
     teamCollaborationPerformanceState,
     getTeamCollaborationPerformance,
+    'team-collaboration-performance',
   );
 
 export const useTeamCollaborationPerformanceValue = (

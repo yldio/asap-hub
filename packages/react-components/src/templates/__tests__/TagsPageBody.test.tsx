@@ -33,6 +33,7 @@ const projectResponse: ProjectResponse = {
   researchTheme: 'Research Theme',
   teamName: 'Team Name',
   teamId: 'team-1',
+  statusRank: 1,
 };
 
 it('renders no results page', () => {

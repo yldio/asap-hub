@@ -1,4 +1,4 @@
-import { useRecoilValue, selectorFamily } from 'recoil';
+import { useRecoilValueLoadable, selectorFamily } from 'recoil';
 import { PageResponse } from '@asap-hub/model';
 import { getPageByPath } from './api';
 
@@ -8,4 +8,4 @@ export const pageState = selectorFamily<PageResponse | undefined, string>({
 });
 
 export const usePageByPageId = (pageId: string) =>
-  useRecoilValue(pageState(pageId));
+  useRecoilValueLoadable(pageState(pageId));

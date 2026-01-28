@@ -1,5 +1,5 @@
 import { RecoilRoot } from 'recoil';
-import { ContentPage, NotFoundPage } from '@asap-hub/react-components';
+import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
 
 import { usePageByPageId } from './state';
@@ -8,12 +8,16 @@ interface ContentProps {
   pageId: string;
 }
 const Content: React.FC<ContentProps> = ({ pageId }) => {
-  const page = usePageByPageId(pageId);
+  const pageLoadable = usePageByPageId(pageId);
 
-  if (page) {
+  if (pageLoadable.state === 'loading') {
+    return <Loading />;
+  }
+
+  if (pageLoadable.state === 'hasValue' && pageLoadable.contents) {
     return (
-      <Frame title={page.title}>
-        <ContentPage {...page} />
+      <Frame title={pageLoadable.contents.title}>
+        <ContentPage {...pageLoadable.contents} />
       </Frame>
     );
   }

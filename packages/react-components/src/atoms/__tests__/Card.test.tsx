@@ -33,7 +33,7 @@ it('applies a ember border and rose background', () => {
 
 it('omits the padding if requested', () => {
   const { getByText, rerender } = render(<Card>text</Card>);
-  expect(getByText('text')).toHaveStyleRule('padding-top', /px/);
+  expect(getByText('text')).toHaveStyleRule('padding-top', /em/);
 
   rerender(<Card padding={false}>text</Card>);
   expect(getByText('text')).not.toHaveStyleRule('padding-top', /.*/);

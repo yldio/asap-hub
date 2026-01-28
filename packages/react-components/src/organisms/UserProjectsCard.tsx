@@ -11,13 +11,16 @@ import { getStatusPillAccent } from './ProjectCard';
 const MAX_PROJECTS = 6;
 
 const headerStyles = css({
-  marginBottom: rem(24),
+  display: 'flex',
+  flexFlow: 'column',
+  gap: rem(24),
 });
 
 const minTableColumnWidth = css({ width: rem(150) });
 const paddingRight24 = css({ paddingRight: rem(24) });
 
 const tableStyles = css({
+  marginTop: rem(32),
   width: '100%',
   borderCollapse: 'collapse',
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
@@ -96,11 +99,10 @@ const showMoreButtonStyles = css({
   width: '100%',
   fontWeight: 'normal',
   color: fern.rgba,
-  paddingTop: rem(24),
-  paddingBottom: rem(24),
-
+  borderTop: `1px solid ${steel.rgb}`,
+  marginTop: rem(16),
+  paddingTop: rem(16),
   textDecoration: 'none',
-
   ':hover': {
     textDecoration: 'none',
   },
@@ -115,6 +117,7 @@ const showMoreButtonTextStyles = css({
 
 // Mobile styles
 const mobileProjectsList = css({
+  marginTop: rem(32),
   display: 'none',
   flexDirection: 'column',
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
@@ -199,20 +202,26 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
     return (
       <Card>
         <div css={headerStyles}>
-          <Headline2 styleAsHeading={3}>Projects</Headline2>
+          <Headline2 styleAsHeading={3} noMargin>
+            Projects
+          </Headline2>
+          <Paragraph accent="lead" noMargin>
+            This user is not currently assigned to any projects.
+          </Paragraph>
         </div>
-        <Paragraph accent="lead">
-          This user is not currently assigned to any projects.
-        </Paragraph>
       </Card>
     );
   }
 
   return (
-    <Card>
+    <Card
+      overrideStyles={css(hasMoreProjects ? { paddingBottom: rem(16) } : {})}
+    >
       <div css={headerStyles}>
-        <Headline2 styleAsHeading={3}>Projects</Headline2>
-        <Paragraph accent="lead">
+        <Headline2 styleAsHeading={3} noMargin>
+          Projects
+        </Headline2>
+        <Paragraph accent="lead" noMargin>
           Explore all projects this user has contributed to.
         </Paragraph>
       </div>
@@ -247,7 +256,6 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
           {displayProjects.map((project, index) => {
             const projectRoute = getProjectRoute(project);
             const isLastRow = index === displayProjects.length - 1;
-            const shouldRemoveBorder = isLastRow && !hasMoreProjects;
 
             return (
               <tr key={project.id}>
@@ -255,7 +263,7 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
                   css={[
                     tableCellStyles,
                     paddingRight24,
-                    shouldRemoveBorder && lastRowNoBorder,
+                    isLastRow && lastRowNoBorder,
                   ]}
                 >
                   {projectRoute ? (
@@ -272,7 +280,7 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
                     tableCellAutoWidthStyles,
                     minTableColumnWidth,
                     paddingRight24,
-                    shouldRemoveBorder && lastRowNoBorder,
+                    isLastRow && lastRowNoBorder,
                   ]}
                 >
                   <span css={typeLabelStyles}>{project.projectType}</span>
@@ -280,7 +288,7 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
                 <td
                   css={[
                     tableCellLastColumnStyles,
-                    shouldRemoveBorder && lastRowNoBorder,
+                    isLastRow && lastRowNoBorder,
                   ]}
                 >
                   {project.status && (
@@ -304,13 +312,12 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
       <div css={mobileProjectsList} data-testid="projects-mobile-list">
         {displayProjects.map((project, index) => {
           const projectRoute = getProjectRoute(project);
-          const isLastItem = index === displayProjects.length - 1;
-          const shouldRemoveBorder = isLastItem && !hasMoreProjects;
+          const isLastRow = index === displayProjects.length - 1;
 
           return (
             <div
               key={project.id}
-              css={[mobileProjectItem, shouldRemoveBorder && lastRowNoBorder]}
+              css={[mobileProjectItem, isLastRow && lastRowNoBorder]}
             >
               <div css={mobileProjectField}>
                 <div css={mobileFieldLabel}>Project Name</div>

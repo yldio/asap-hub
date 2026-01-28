@@ -47,6 +47,7 @@ const mockDiscoveryProject = {
   id: 'proj-1',
   title: 'Discovery Project',
   status: 'Active',
+  statusRank: 1,
   projectType: 'Discovery Project',
   researchTheme: 'Theme',
   startDate: '2024-01-01',

@@ -21,10 +21,17 @@ export type ResearchTag = {
   readonly types?: ReadonlyArray<string>;
 };
 
+export const ProjectStatusRank: Record<ProjectStatus, number> = {
+  Active: 1,
+  Completed: 2,
+  Closed: 3,
+};
+
 export type BaseProject = {
   readonly id: string;
   readonly title: string;
   readonly status: ProjectStatus;
+  readonly statusRank: number;
   readonly startDate: string;
   readonly endDate: string;
   readonly duration?: string;

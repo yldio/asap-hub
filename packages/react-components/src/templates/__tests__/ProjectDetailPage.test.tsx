@@ -6,6 +6,7 @@ const mockProject: ProjectDetail = {
   id: 'project-1',
   title: 'Test Project',
   status: 'Active',
+  statusRank: 1,
   projectType: 'Discovery Project',
   researchTheme: 'Genetics',
   teamName: 'Test Team',

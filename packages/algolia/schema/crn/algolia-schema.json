@@ -108,7 +108,9 @@
     "desc(addedDate)",
     "desc(createdDate)",
     "asc(team.displayName)",
-    "asc(displayName)"
+    "asc(displayName)",
+    "asc(statusRank)",
+    "asc(title)"
   ],
   "separatorsToIndex": "",
   "removeWordsIfNoResults": "none",

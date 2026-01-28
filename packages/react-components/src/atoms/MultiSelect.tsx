@@ -99,7 +99,7 @@ export type MultiSelectProps<
 const getValues = <T extends MultiSelectOptionsType, M extends boolean>(
   isMulti: M,
 ): M extends true ? readonly T[] : T | null =>
-  (isMulti ? [] : {}) as M extends true ? readonly T[] : T | null;
+  (isMulti ? [] : null) as M extends true ? readonly T[] : T | null;
 
 const MultiSelect = <
   T extends MultiSelectOptionsType,

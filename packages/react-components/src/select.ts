@@ -181,6 +181,9 @@ export const reactMultiSelectStyles = <
       justifyContent: 'space-between',
       alignItems: 'center',
 
+      // Ensure single-select has same height as multi-select with chips
+      ...(!isMulti ? { minHeight: rem(54) } : {}),
+
       ...(isFocused ? { borderColor: primary500.rgba } : {}),
       ...(isInvalid
         ? {
@@ -249,6 +252,10 @@ export const reactMultiSelectStyles = <
       color: isInvalid ? ember.rgb : provided.color,
       opacity: isInvalid ? 0.4 : provided.opacity,
       marginLeft: rem(6),
+    }),
+    menu: (provided: CSSObject) => ({
+      ...provided,
+      zIndex: 300,
     }),
   }) as StylesConfig<T, M, GroupBase<T>>;
 

@@ -20,6 +20,12 @@ const externalAuthorStyles = css({
   overflow: 'hidden',
 });
 
+const avatarStyles = css({
+  margin: 0,
+  maxWidth: rem(24),
+  width: rem(24),
+});
+
 const LabelWithAvatar = ({
   author,
   externalLabel,
@@ -35,7 +41,7 @@ const LabelWithAvatar = ({
         firstName={author.firstName}
         lastName={author.lastName}
         imageUrl={author.avatarUrl}
-        overrideStyles={css({ margin: 0 })}
+        overrideStyles={avatarStyles}
       />
       <span>{children}</span>
     </>
@@ -58,8 +64,11 @@ const optionStyles = css({
 const singleValueStyles = css({
   padding: `${rem(5)} ${rem(15)} ${rem(5)} ${rem(8)}`,
   margin: `${rem(5)} ${rem(6)} ${rem(5)}`,
+  display: 'flex',
   alignItems: 'center',
-  gridTemplateColumns: `${rem(24)} auto auto`,
+  gap: rem(8),
+
+  // Constrain width to content (like multi-value chips)
   width: 'fit-content',
 
   borderStyle: 'solid',
@@ -67,6 +76,10 @@ const singleValueStyles = css({
   borderColor: steel.rgb,
   borderRadius: rem(18),
   backgroundColor: paper.rgb,
+
+  // Position above react-select's input overlay to enable click interactions
+  position: 'relative',
+  zIndex: 1,
 });
 
 const singleValuesRemoveStyles = css({

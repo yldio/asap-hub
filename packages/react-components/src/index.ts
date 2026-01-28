@@ -346,6 +346,7 @@ export type { AccentVariant, SwitchProps } from './atoms';
 export type { ItemType, StatusType, ReminderEntity } from './molecules';
 export type {
   Association,
+  AuthorOption,
   UserCollaborationMetric,
   TeamCollaborationMetric,
 } from './organisms';

@@ -185,6 +185,9 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           }}
           getImpactSuggestions={getImpactSuggestions}
           getCategorySuggestions={getCategorySuggestions}
+          onInvalid={() => {
+            setFormType({ type: 'server-validation-error', accent: 'error' });
+          }}
           {...manuscriptVersion}
         />
       </Frame>

@@ -121,7 +121,7 @@ describe('on submit 3', () => {
       },
     );
 
-    const identifier = screen.getByRole('textbox', { name: /identifier/i });
+    const identifier = screen.getByRole('combobox', { name: /identifier/i });
     fireEvent.change(identifier, {
       target: { value: 'DOI' },
     });
@@ -133,7 +133,7 @@ describe('on submit 3', () => {
     });
 
     // test
-    const typeDropdown = screen.getByRole('textbox', {
+    const typeDropdown = screen.getByRole('combobox', {
       name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
@@ -144,7 +144,7 @@ describe('on submit 3', () => {
     });
 
     await userEvent.click(
-      await screen.findByRole('textbox', { name: /environments/i }),
+      await screen.findByRole('combobox', { name: /environments/i }),
     );
     await userEvent.click(screen.getByText('In Vitro'));
     await submitForm();

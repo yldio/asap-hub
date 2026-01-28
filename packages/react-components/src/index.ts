@@ -6,7 +6,7 @@ import * as text from './text';
 import * as utils from './utils';
 import * as colors from './colors';
 
-export type { OptionsType } from 'react-select';
+export type { OptionsType } from './select';
 export * from './button';
 export * from './event-mapper';
 export * from './appearance';
@@ -346,6 +346,7 @@ export type { AccentVariant, SwitchProps } from './atoms';
 export type { ItemType, StatusType, ReminderEntity } from './molecules';
 export type {
   Association,
+  AuthorOption,
   UserCollaborationMetric,
   TeamCollaborationMetric,
 } from './organisms';

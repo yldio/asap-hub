@@ -6,9 +6,13 @@ import {
   researchTagSubtypeResponse,
 } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
-import { fireEvent } from '@testing-library/dom';
-import { render, screen, waitFor, within } from '@testing-library/react';
-import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { mockActErrorsInConsole } from '../../../test-utils';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
@@ -92,21 +96,18 @@ describe('on submit', () => {
 
     expect(screen.getByText(/metabolite/i)).toBeInTheDocument();
 
-    const typeDropdown = screen.getByRole('textbox', {
-      name: /Select the type/i,
+    const typeDropdown = screen.getByRole('combobox', {
+      name: /^Type \(required\)/i,
     });
 
-    fireEvent.change(typeDropdown, {
-      target: { value: 'Microscopy' },
-    });
-    fireEvent.keyDown(typeDropdown, {
-      keyCode: ENTER_KEYCODE,
-    });
+    await userEvent.click(typeDropdown);
+    await userEvent.click(screen.getByText('Microscopy & Imaging'));
+
     await waitFor(() =>
       expect(screen.queryByText(/metabolite/i)).not.toBeInTheDocument(),
     );
-    const subtype = screen.getByRole('textbox', {
-      name: /subtype/i,
+    const subtype = screen.getByRole('combobox', {
+      name: /^Subtype/i,
     });
     expect(subtype).toBeInTheDocument();
   });

@@ -56,10 +56,10 @@ describe('ContributingCohortsModal', () => {
   it('renders name and role', () => {
     renderContributingCohorts();
     expect(
-      screen.getByRole('textbox', { name: /Name \(required\)/i }),
+      screen.getByRole('combobox', { name: /Name \(required\)/i }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: /Role \(required\)/i }),
+      screen.getByRole('combobox', { name: /Role \(required\)/i }),
     ).toBeVisible();
   });
 
@@ -190,7 +190,7 @@ describe('ContributingCohortsModal', () => {
       onSave,
     });
     const name = 'S3';
-    const input = screen.getByRole('textbox', { name: /Name/i });
+    const input = screen.getByRole('combobox', { name: /Name/i });
     await userEvent.click(input);
     await userEvent.click(screen.getByText(name));
     expect(screen.getByText(/S3/i)).toBeVisible();
@@ -227,7 +227,7 @@ describe('ContributingCohortsModal', () => {
         ],
         onSave,
       });
-      const input = screen.getByRole('textbox', { name: /Role/i });
+      const input = screen.getByRole('combobox', { name: /Role/i });
       await userEvent.click(input);
       await userEvent.click(screen.getByText(updatedRole));
       expect(screen.getByText(updatedRole)).toBeVisible();

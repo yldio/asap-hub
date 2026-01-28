@@ -24,7 +24,7 @@ it('sets authors to required', () => {
     </StaticRouter>,
   );
   expect(
-    screen.getByRole('textbox', { name: 'Authors (optional)' }),
+    screen.getByRole('combobox', { name: 'Authors (optional)' }),
   ).toBeVisible();
   render(
     <StaticRouter location="/">
@@ -32,7 +32,7 @@ it('sets authors to required', () => {
     </StaticRouter>,
   );
   expect(
-    screen.getByRole('textbox', { name: 'Authors (required)' }),
+    screen.getByRole('combobox', { name: 'Authors (required)' }),
   ).toBeVisible();
 });
 
@@ -189,7 +189,7 @@ it('displays error message when no author is found', async () => {
     </StaticRouter>,
   );
 
-  await userEvent.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await userEvent.click(screen.getByRole('combobox', { name: /Authors/i }));
   expect(screen.getByText(/Sorry, no authors match/i)).toBeVisible();
 });
 
@@ -203,7 +203,7 @@ it('displays error message when no lab is found', async () => {
       />
     </StaticRouter>,
   );
-  await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
   expect(screen.getByText(/Sorry, no labs match/i)).toBeVisible();
 });
 
@@ -218,7 +218,7 @@ it('displays error message when no related research is found', async () => {
     </StaticRouter>,
   );
   await userEvent.click(
-    screen.getByRole('textbox', { name: /Related Outputs/i }),
+    screen.getByRole('combobox', { name: /Related Outputs/i }),
   );
   expect(screen.getByText(/Sorry, no related outputs match/i)).toBeVisible();
 });

@@ -142,7 +142,7 @@ describe('on submit', () => {
       },
     );
 
-    const typeDropdown = screen.getByRole('textbox', {
+    const typeDropdown = screen.getByRole('combobox', {
       name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
@@ -152,7 +152,7 @@ describe('on submit', () => {
       keyCode: ENTER_KEYCODE,
     });
 
-    const identifier = screen.getByRole('textbox', { name: /identifier/i });
+    const identifier = screen.getByRole('combobox', { name: /identifier/i });
     fireEvent.change(identifier, {
       target: { value: 'DOI' },
     });
@@ -165,27 +165,30 @@ describe('on submit', () => {
 
     // can submit a lab
 
-    await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+    await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
     await userEvent.click(screen.getByText('One Lab'));
 
     // related research
     await userEvent.click(
-      screen.getByRole('textbox', { name: /Related Outputs/i }),
+      screen.getByRole('combobox', { name: /Related Outputs/i }),
     );
     await userEvent.click(screen.getByText('First Related Research'));
 
     // authors
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
+    const authors = screen.getByRole('combobox', { name: /Authors/i });
     await userEvent.click(authors);
     await userEvent.click(screen.getByText(/Chris Reed/i));
     await userEvent.click(authors);
     await userEvent.click(screen.getByText('Chris Blue'));
-    await userEvent.click(authors);
-    await userEvent.type(authors, 'Alex White');
+    // Add external author Alex White by typing and pressing Enter
+    const authorsInput = screen.getByRole('combobox', { name: /Authors/i });
+    await userEvent.clear(authorsInput);
+    await userEvent.type(authorsInput, 'Alex White');
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
-    await userEvent.click(screen.getAllByText('Alex White')[1]!);
+    // Press down arrow and enter to select the create option
+    await userEvent.keyboard('{Enter}');
 
     // access instructions
     await userEvent.type(

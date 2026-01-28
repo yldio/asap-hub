@@ -59,7 +59,7 @@ it('renders impact input and does not throw when getImpactSuggestions is noop', 
     </MemoryRouter>,
   );
 
-  const impactInput = screen.getByRole('textbox', { name: /impact/i });
+  const impactInput = screen.getByRole('combobox', { name: /impact/i });
   expect(impactInput).toBeInTheDocument();
   await userEvent.click(impactInput);
   await userEvent.type(impactInput, 'Test');
@@ -80,7 +80,7 @@ it('renders category input and does not throw when getCategorySuggestions is noo
     </MemoryRouter>,
   );
 
-  const categoryInput = screen.getByRole('textbox', { name: /category/i });
+  const categoryInput = screen.getByRole('combobox', { name: /category/i });
   expect(categoryInput).toBeInTheDocument();
   await userEvent.click(categoryInput);
   await userEvent.type(categoryInput, 'Test');

@@ -8,6 +8,7 @@ import { Pill } from '../atoms';
 import { charcoal } from '../colors';
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { rem } from '../pixels';
+import { getMultiValueStyles } from '../select';
 import { noop, ResearchOutputOption } from '../utils';
 
 const optionStyles = (showPill: boolean) =>
@@ -85,7 +86,9 @@ const ResearchOutputRelatedResearchCard = <
         MultiValueContainer: (multiValueContainerProps) => (
           <div
             css={{
-              ...multiValueContainerProps.selectProps.styles.multiValue(),
+              ...getMultiValueStyles(
+                multiValueContainerProps.selectProps.styles,
+              ),
               paddingLeft: rem(8),
             }}
           >
@@ -120,7 +123,9 @@ const ResearchOutputRelatedResearchCard = <
             >
               {
                 <div css={iconStyles}>
-                  {getIconForDocumentType(optionProps.data.documentType)}
+                  {getIconForDocumentType(
+                    optionProps.data.documentType as T[number]['documentType'],
+                  )}
                 </div>
               }
               {optionProps.data.documentType === 'Article' && (

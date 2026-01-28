@@ -7,6 +7,7 @@ import { MultiSelectOptionsType, Pill } from '../atoms';
 import { formatDateToTimezone } from '../date';
 import { FormCard, LabeledMultiSelect } from '../molecules';
 import { rem } from '../pixels';
+import { getMultiValueStyles } from '../select';
 import { noop } from '../utils';
 
 export type ResearchOutputRelatedEventsOption = Pick<EventResponse, 'endDate'> &
@@ -67,7 +68,9 @@ const ResearchOutputRelatedEventsCard: React.FC<
         MultiValueContainer: (multiValueContainerProps) => (
           <div
             css={{
-              ...multiValueContainerProps.selectProps.styles.multiValue(),
+              ...getMultiValueStyles(
+                multiValueContainerProps.selectProps.styles,
+              ),
               paddingLeft: rem(8),
             }}
           >

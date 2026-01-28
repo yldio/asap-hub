@@ -143,7 +143,7 @@ describe('on submit', () => {
       },
     );
 
-    const typeDropdown = screen.getByRole('textbox', {
+    const typeDropdown = screen.getByRole('combobox', {
       name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
@@ -153,7 +153,7 @@ describe('on submit', () => {
       keyCode: ENTER_KEYCODE,
     });
 
-    const identifier = screen.getByRole('textbox', { name: /identifier/i });
+    const identifier = screen.getByRole('combobox', { name: /identifier/i });
     fireEvent.change(identifier, {
       target: { value: 'DOI' },
     });

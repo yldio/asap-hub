@@ -21,10 +21,6 @@ failOnConsole({
       ) {
         return true;
       }
-      // react-sortable-hoc findDOMNode warning
-      if (msg.includes('findDOMNode is deprecated')) {
-        return true;
-      }
       // React Router v7 future flags warning (should be configured in individual routers)
       if (msg.includes('React Router Future Flag Warning')) {
         return true;

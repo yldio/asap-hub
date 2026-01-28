@@ -11,7 +11,9 @@ const props: ComponentProps<typeof ResearchOutputIdentifier> = {
 
 it('should render Identifier', () => {
   render(<ResearchOutputIdentifier {...props} />);
-  expect(screen.getByRole('textbox', { name: /Identifier/i })).toBeVisible();
+  expect(
+    screen.getByRole('combobox', { name: /Identifier Type/i }),
+  ).toBeVisible();
 });
 
 it('should render Identifier info with DOI and RRID', async () => {
@@ -50,15 +52,17 @@ it('should reset the identifier to a valid value on entering something unknown',
       setIdentifierType={setIdentifierType}
     />,
   );
-  const textbox = screen.getByRole('textbox', { name: /identifier/i });
-  await userEvent.type(textbox, 'UNKNOWN');
-  await userEvent.type(textbox, '{Enter}');
+  const combobox = screen.getByRole('combobox', { name: /Identifier Type/i });
+  await userEvent.type(combobox, 'UNKNOWN');
+  await userEvent.type(combobox, '{Enter}');
   await userEvent.tab();
 
   await waitFor(() => {
     expect(screen.getByText('Choose an identifier')).toBeVisible();
   });
-  expect(screen.getByRole('textbox', { name: /Identifier/i })).toHaveValue('');
+  expect(
+    screen.getByRole('combobox', { name: /Identifier Type/i }),
+  ).toHaveValue('');
 });
 
 it('should set the identifier to the selected value', async () => {
@@ -69,14 +73,21 @@ it('should set the identifier to the selected value', async () => {
       setIdentifierType={setIdentifierType}
     />,
   );
-  const textbox = screen.getByRole('textbox', { name: /identifier/i });
-  await userEvent.type(textbox, 'DOI');
-  await userEvent.type(textbox, '{Enter}');
+  const combobox = screen.getByRole('combobox', { name: /Identifier Type/i });
+  await userEvent.type(combobox, 'DOI');
+
+  await waitFor(() => {
+    expect(screen.getByRole('option', { name: 'DOI' })).toBeInTheDocument();
+  });
+
+  await userEvent.type(combobox, '{Enter}');
   await userEvent.tab();
 
-  expect(setIdentifierType).toHaveBeenCalledWith(
-    ResearchOutputIdentifierType.DOI,
-  );
+  await waitFor(() => {
+    expect(setIdentifierType).toHaveBeenCalledWith(
+      ResearchOutputIdentifierType.DOI,
+    );
+  });
 });
 
 it('should show an error when field is required but no input is provided', async () => {

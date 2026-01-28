@@ -81,7 +81,7 @@ const renderTagsPage = async (query = '') => {
 
 it('allows typing in tag queries', async () => {
   await renderTagsPage();
-  const searchBox = screen.getByRole('textbox') as HTMLInputElement;
+  const searchBox = screen.getByRole('combobox') as HTMLInputElement;
 
   await userEvent.type(searchBox, 'test123');
   expect(searchBox.value).toEqual('test123');
@@ -105,7 +105,7 @@ describe('tags', () => {
 
     await renderTagsPage();
 
-    await userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByRole('combobox'));
     await userEvent.click(screen.getByText('LGW'));
     await waitFor(() =>
       expect(mockGetTagSearch).toHaveBeenCalledWith(
@@ -126,7 +126,7 @@ describe('tags', () => {
     });
     await renderTagsPage();
 
-    await userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByRole('combobox'));
     await userEvent.click(screen.getByText('LGW'));
     await waitFor(() => {
       expect(mockGetTagSearch).toHaveBeenCalled();
@@ -147,7 +147,7 @@ describe('filters', () => {
     });
 
     await renderTagsPage();
-    fireEvent.focus(screen.getByRole('textbox'));
+    fireEvent.focus(screen.getByRole('combobox'));
 
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenLastCalledWith(
@@ -168,7 +168,7 @@ describe('filters', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /Filter/i }));
     await userEvent.click(screen.getByText('Calendar & Events'));
-    fireEvent.focus(screen.getByRole('textbox'));
+    fireEvent.focus(screen.getByRole('combobox'));
 
     await waitFor(() =>
       expect(mockSearchForTagValues).toHaveBeenLastCalledWith(
@@ -188,9 +188,9 @@ describe('filters', () => {
     await renderTagsPage();
     await userEvent.click(screen.getByRole('button', { name: /Filter/i }));
     await userEvent.click(screen.getByText('Calendar & Events'));
-    await userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByRole('combobox'));
     await userEvent.click(await screen.findByText('LGW'));
-    fireEvent.focus(screen.getByRole('textbox'));
+    fireEvent.focus(screen.getByRole('combobox'));
 
     await waitFor(() => {
       expect(mockSearchForTagValues).toHaveBeenLastCalledWith(
@@ -220,7 +220,7 @@ it('Will show algolia results', async () => {
 
   await renderTagsPage();
 
-  await userEvent.click(screen.getByRole('textbox'));
+  await userEvent.click(screen.getByRole('combobox'));
   await userEvent.click(screen.getByText('LGW'));
   await waitFor(() =>
     expect(screen.getByText('Tom Cruise')).toBeInTheDocument(),
@@ -237,7 +237,7 @@ it('Will show page when algolia rejects with undefined', async () => {
 
   await renderTagsPage();
 
-  await userEvent.click(screen.getByRole('textbox'));
+  await userEvent.click(screen.getByRole('combobox'));
   await userEvent.click(screen.getByText('LGW'));
   await waitFor(() =>
     expect(mockGetTagSearch).toHaveBeenCalledWith(
@@ -261,7 +261,7 @@ it('Will show page when algolia rejects with error', async () => {
 
   await renderTagsPage();
 
-  await userEvent.click(screen.getByRole('textbox'));
+  await userEvent.click(screen.getByRole('combobox'));
   await userEvent.click(screen.getByText('LGW'));
   await waitFor(() =>
     expect(mockGetTagSearch).toHaveBeenCalledWith(

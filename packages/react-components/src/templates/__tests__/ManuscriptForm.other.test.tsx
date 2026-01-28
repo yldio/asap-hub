@@ -1071,13 +1071,13 @@ it('user can add teams', async () => {
     </StaticRouter>,
   );
 
-  await userEvent.click(getByRole('textbox', { name: /Teams/i }));
+  await userEvent.click(getByRole('combobox', { name: /Teams/i }));
   await waitFor(() => {
     expect(getByText('Team A')).toBeVisible();
   });
   await userEvent.click(getByText('Team A'));
 
-  await userEvent.click(getByRole('textbox', { name: /Teams/i }));
+  await userEvent.click(getByRole('combobox', { name: /Teams/i }));
   await waitFor(() => {
     expect(getByText('Team B')).toBeVisible();
   });
@@ -1131,13 +1131,13 @@ it('user can add labs', async () => {
       </Suspense>
     </StaticRouter>,
   );
-  await userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(getByRole('combobox', { name: /Labs/i }));
   await waitFor(() => {
     expect(getByText('Lab One')).toBeVisible();
   });
   await userEvent.click(getByText('Lab One'));
 
-  await userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(getByRole('combobox', { name: /Labs/i }));
   expect(getByText('Lab Two')).toBeVisible();
   await userEvent.click(getByText('Lab Two'));
 
@@ -1168,7 +1168,7 @@ it('displays error message when no team is found', async () => {
       </Suspense>
     </StaticRouter>,
   );
-  await userEvent.click(getByRole('textbox', { name: /Teams/i }));
+  await userEvent.click(getByRole('combobox', { name: /Teams/i }));
   await waitFor(() => {
     expect(getByText(/Sorry, no teams match/i)).toBeVisible();
   });
@@ -1186,7 +1186,7 @@ it('displays error message when no lab is found', async () => {
       </Suspense>
     </StaticRouter>,
   );
-  await userEvent.click(getByRole('textbox', { name: /Labs/i }));
+  await userEvent.click(getByRole('combobox', { name: /Labs/i }));
   await waitFor(() => {
     expect(getByText(/Sorry, no labs match/i)).toBeVisible();
   });
@@ -1308,7 +1308,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     </StaticRouter>,
   );
 
-  const lifecycleTextbox = getByRole('textbox', {
+  const lifecycleTextbox = getByRole('combobox', {
     name: /Where is the manuscript in the life cycle/i,
   });
 

@@ -48,7 +48,7 @@ describe('AnalyticsControls', () => {
       />,
     );
 
-    await userEvent.type(getByRole('textbox'), 'te');
+    await userEvent.type(getByRole('combobox'), 'te');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -63,8 +63,8 @@ describe('AnalyticsControls', () => {
       />,
     );
 
-    await userEvent.clear(getByRole('textbox'));
-    await userEvent.type(getByRole('textbox'), 'te');
+    await userEvent.clear(getByRole('combobox'));
+    await userEvent.type(getByRole('combobox'), 'te');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -147,12 +147,12 @@ describe('AnalyticsControls', () => {
         />,
       );
 
-      await userEvent.type(getByRole('textbox'), 'test');
+      await userEvent.type(getByRole('combobox'), 'test');
       await waitFor(() => {
         expect(loadTags).toHaveBeenCalledWith('test');
       });
 
-      await userEvent.click(getByRole('textbox'));
+      await userEvent.click(getByRole('combobox'));
 
       // shouls show test-user
       await waitFor(() => {
@@ -170,12 +170,12 @@ describe('AnalyticsControls', () => {
         />,
       );
 
-      await userEvent.type(getByRole('textbox'), 'test');
+      await userEvent.type(getByRole('combobox'), 'test');
       await waitFor(() => {
         expect(loadTags).toHaveBeenCalledWith('test');
       });
 
-      await userEvent.click(getByRole('textbox'));
+      await userEvent.click(getByRole('combobox'));
 
       // should show no results found
       await waitFor(() => {
@@ -199,7 +199,7 @@ describe('AnalyticsControls', () => {
         />,
       );
 
-      await userEvent.type(getByRole('textbox'), 'test');
+      await userEvent.type(getByRole('combobox'), 'test');
       await waitFor(() => {
         expect(loadTags).toHaveBeenCalledWith('test');
       });
@@ -220,12 +220,12 @@ describe('AnalyticsControls', () => {
         />,
       );
 
-      await userEvent.type(getByRole('textbox'), 'test');
+      await userEvent.type(getByRole('combobox'), 'test');
       await waitFor(() => {
         expect(loadTags).toHaveBeenCalledWith('test');
       });
 
-      await userEvent.click(getByRole('textbox'));
+      await userEvent.click(getByRole('combobox'));
 
       await waitFor(() => {
         expect(getByText('No results found')).toBeVisible();

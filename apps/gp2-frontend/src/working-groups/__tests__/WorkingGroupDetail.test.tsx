@@ -347,7 +347,7 @@ describe('WorkingGroupDetail', () => {
 
       const addButton = screen.getByRole('link', { name: /add/i });
       await user.click(addButton);
-      const typeBox = await screen.findByRole('textbox', { name: /type/i });
+      const typeBox = await screen.findByRole('combobox', { name: /type/i });
       await user.type(typeBox, `${type}{enter}`);
       const titleBox = screen.getByRole('textbox', { name: /title/i });
       await user.type(titleBox, title);
@@ -487,9 +487,9 @@ describe('WorkingGroupDetail', () => {
           .duplicateOutput({ outputId: output.id }).$,
       });
 
-      expect(await screen.findByLabelText(/Title/i)).toHaveValue(
-        'Copy of Test Output',
-      );
+      expect(
+        await screen.findByRole('textbox', { name: /^Title/ }),
+      ).toHaveValue('Copy of Test Output');
       expect(await screen.findByLabelText(/URL/i)).toHaveValue('');
     });
 

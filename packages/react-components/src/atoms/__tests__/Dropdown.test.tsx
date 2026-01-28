@@ -3,11 +3,13 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Theme } from '@emotion/react';
 import { matchers } from '@emotion/jest';
-import { GroupTypeBase, OptionTypeBase, SingleValueProps } from 'react-select';
+import { GroupBase, SingleValueProps } from 'react-select';
 
 import { ember, fern, lead, pine, silver, tin } from '../../colors';
 import Dropdown from '../Dropdown';
-import { reactSelectStyles } from '../../select';
+import { Option, reactSelectStyles } from '../../select';
+
+type TestOption = Option<string>;
 
 expect.extend(matchers);
 
@@ -77,7 +79,7 @@ it('allows selecting from a menu with available options', async () => {
       onChange={handleChange}
     />,
   );
-  const input = screen.getByRole('textbox', { hidden: false });
+  const input = screen.getByRole('combobox', { hidden: false });
 
   await userEvent.click(input);
   await userEvent.click(screen.getByText('Heathrow'));
@@ -100,7 +102,7 @@ it('only shows valid options', async () => {
     />,
   );
 
-  const input = screen.getByRole('textbox', { hidden: false });
+  const input = screen.getByRole('combobox', { hidden: false });
   await userEvent.click(input);
   expect(screen.getByText('Heathrow')).toBeVisible();
   expect(screen.queryByText('-')).toBeNull();
@@ -173,7 +175,7 @@ it('gets greyed out when disabled', () => {
   expect(
     findParentWithStyle(screen.getByText('Heathrow'), 'background')?.background,
   ).toBe(silver.rgb);
-  expect(screen.getByRole('textbox')).toBeDisabled();
+  expect(screen.getByRole('combobox', { hidden: true })).toBeDisabled();
 
   rerender(
     <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="LHR" />,
@@ -184,7 +186,7 @@ it('gets greyed out when disabled', () => {
   expect(
     findParentWithStyle(screen.getByText('Heathrow'), 'background')?.background,
   ).not.toBe(silver.rgb);
-  expect(screen.getByRole('textbox')).not.toBeDisabled();
+  expect(screen.getByRole('combobox', { hidden: true })).not.toBeDisabled();
 });
 
 it('when invalidated and then option selected it should not display error message', async () => {
@@ -199,7 +201,7 @@ it('when invalidated and then option selected it should not display error messag
   expect(
     screen.queryByText('Please fill out this field.'),
   ).not.toBeInTheDocument();
-  const input = screen.getByRole('textbox', { hidden: false });
+  const input = screen.getByRole('combobox', { hidden: false });
   await userEvent.click(input);
   await userEvent.tab();
 
@@ -229,7 +231,7 @@ it('when invalidated and then rendered optional it should not display error mess
   expect(
     screen.queryByText('Please fill out this field.'),
   ).not.toBeInTheDocument();
-  const input = screen.getByRole('textbox', { hidden: false });
+  const input = screen.getByRole('combobox', { hidden: false });
   await userEvent.click(input);
   await userEvent.tab();
 
@@ -287,12 +289,16 @@ it('shows the field in red when required field not filled', async () => {
       onChange={handleChange}
     />,
   );
-  const input = screen.getByRole('textbox', { hidden: false });
-  expect(findParentWithStyle(input, 'color')?.color).not.toBe(ember.rgb);
+  const input = screen.getByRole('combobox', { hidden: false });
+  expect(findParentWithStyle(input, 'borderColor')?.borderColor).not.toBe(
+    ember.rgb,
+  );
 
   await userEvent.click(input);
   await userEvent.tab();
-  expect(findParentWithStyle(input, 'color')?.color).toBe(ember.rgb);
+  expect(findParentWithStyle(input, 'borderColor')?.borderColor).toBe(
+    ember.rgb,
+  );
 
   await userEvent.click(input);
   await userEvent.type(input, 'Heathrow');
@@ -319,7 +325,7 @@ it('shows an error message when required field not filled', async () => {
       required
     />,
   );
-  const input = screen.getByRole('textbox', { hidden: false });
+  const input = screen.getByRole('combobox', { hidden: false });
   await userEvent.click(input);
   await userEvent.tab();
 
@@ -353,13 +359,13 @@ it('clears invalid values, when it looses focus', async () => {
   await userEvent.type(screen.getByText('Select'), 'xxx');
 
   expect(screen.queryByText('Select')).toBeNull();
-  expect(screen.getByRole('textbox')).toHaveValue('xxx');
+  expect(screen.getByRole('combobox')).toHaveValue('xxx');
 
   await userEvent.tab();
 
   await waitFor(() => {
     expect(screen.getByText('Select')).toBeVisible();
-    expect(screen.getByRole('textbox')).toHaveValue('');
+    expect(screen.getByRole('combobox')).toHaveValue('');
   });
 });
 
@@ -376,7 +382,7 @@ it('can clear the value when required is false', async () => {
     />,
   );
 
-  const input = screen.getByRole('textbox', { hidden: false });
+  const input = screen.getByRole('combobox', { hidden: false });
   await userEvent.click(input);
   await userEvent.click(screen.getByText('Gatwick'));
   expect(handleChange).toHaveBeenCalledWith('LGW');
@@ -412,7 +418,7 @@ it('cannot clear the value when required is true', async () => {
     />,
   );
 
-  const input = screen.getByRole('textbox', { hidden: false });
+  const input = screen.getByRole('combobox', { hidden: false });
   await userEvent.click(input);
   await userEvent.click(screen.getByText('Gatwick'));
   expect(handleChange).toHaveBeenCalledWith('LGW');
@@ -465,7 +471,7 @@ it('applies the correct styles for the custom rendered value', () => {
   );
 
   const customValue = screen.getByTestId('custom-value');
-  expect(customValue.parentElement).toHaveStyleRule('position', 'absolute');
+  expect(customValue.parentElement).toHaveStyleRule('grid-area', '1/1/2/3');
   expect(customValue.parentElement).toHaveStyleRule('pointer-events', 'none');
 });
 
@@ -475,17 +481,14 @@ const baseProvided = { color: '' };
 
 const createSingleValueProps = (
   value: string,
-): SingleValueProps<OptionTypeBase, GroupTypeBase<OptionTypeBase>> =>
+): SingleValueProps<TestOption, false, GroupBase<TestOption>> =>
   ({
     getValue: () => [{ value, label: '' }],
     hasValue: true,
     isDisabled: false,
     selectProps: {},
     data: { value, label: '' },
-  }) as unknown as SingleValueProps<
-    OptionTypeBase,
-    GroupTypeBase<OptionTypeBase>
-  >;
+  }) as unknown as SingleValueProps<TestOption, false, GroupBase<TestOption>>;
 
 it('applies tin color for singleValue when selected value is empty string', () => {
   const styles = reactSelectStyles(mockTheme, false);

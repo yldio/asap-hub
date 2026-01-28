@@ -54,7 +54,7 @@ describe('AnalyticsEngagementPageBody', () => {
   it('displays attendance option', async () => {
     render(<AnalyticsEngagementPageBody {...props} />);
 
-    const dropdowns = screen.getAllByRole('textbox', { hidden: false });
+    const dropdowns = screen.getAllByRole('combobox', { hidden: false });
     await userEvent.click(dropdowns[0] as Element);
     expect(screen.getByText('Meeting Rep Attendance')).toBeInTheDocument();
   });

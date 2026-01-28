@@ -121,22 +121,22 @@ const mandatoryFields = async (
     { target: { value: shortDescription } },
   );
 
-  const typeInput = screen.getByRole('textbox', {
+  const typeInput = screen.getByRole('combobox', {
     name: /Select the type/i,
   });
   await user.click(typeInput);
   await user.click(screen.getByText(type));
 
-  const identifier = screen.getByRole('textbox', { name: /identifier/i });
+  const identifier = screen.getByRole('combobox', { name: /identifier/i });
   await user.click(identifier);
   await user.click(screen.getByText('DOI'));
   fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
     target: { value: doi },
   });
-  await user.click(screen.getByRole('textbox', { name: /Authors/i }));
+  await user.click(screen.getByRole('combobox', { name: /Authors/i }));
   await user.click(screen.getByText('Person A 3'));
 
-  await user.click(screen.getByRole('textbox', { name: /Teams/i }));
+  await user.click(screen.getByRole('combobox', { name: /Teams/i }));
   await user.click(screen.getByText('Abu-Remaileh, M 1'));
 
   return {
@@ -279,7 +279,7 @@ it('Renders the working group research output form with relevant fields', async 
     screen.getByRole('heading', { name: /Share a Working Group Article/i }),
   ).toBeInTheDocument();
   expect(
-    screen.getByRole('textbox', { name: 'Authors (required)' }),
+    screen.getByRole('combobox', { name: 'Authors (required)' }),
   ).toBeVisible();
   expect(
     screen.getByText('Add an abstract or a summary that describes this work.'),
@@ -355,7 +355,7 @@ it('can submit a form when form data is valid', async () => {
     user,
   );
 
-  await user.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await user.click(screen.getByRole('combobox', { name: /Labs/i }));
   await user.click(screen.getByText('Example 1 Lab'));
 
   await publish();
@@ -442,7 +442,7 @@ it('can save draft when form data is valid', async () => {
     user,
   );
 
-  await user.click(screen.getByRole('textbox', { name: /Labs/i }));
+  await user.click(screen.getByRole('combobox', { name: /Labs/i }));
   await user.click(screen.getByText('Example 1 Lab'));
 
   await saveDraft();

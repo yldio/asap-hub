@@ -128,7 +128,7 @@ describe('ManuscriptForm team validation', () => {
     await waitFor(() => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
-    await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+    await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
     await waitFor(() => {
       expect(screen.getByText('Lab One')).toBeVisible();
     });
@@ -151,7 +151,7 @@ describe('ManuscriptForm team validation', () => {
 
     expect(screen.getAllByText(/•.*Lab One/i).length).toBe(2);
 
-    await userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+    await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
     await waitFor(() => {
       expect(screen.getByText('Team A')).toBeVisible();
     });
@@ -217,7 +217,7 @@ describe('ManuscriptForm team validation', () => {
 
       expect(screen.getAllByText(/•.*Author A/i).length).toBe(2);
 
-      await userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+      await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
       await waitFor(() => {
         expect(screen.getByText('Team A')).toBeVisible();
       });
@@ -330,7 +330,7 @@ describe('ManuscriptForm team validation', () => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+    await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
     await waitFor(() => {
       expect(screen.getByText('Lab One')).toBeVisible();
     });
@@ -359,7 +359,7 @@ describe('ManuscriptForm team validation', () => {
 
     expect(container).toHaveTextContent(labErrorMessage);
 
-    await userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+    await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
     await waitFor(() => {
       expect(screen.getByText('Team B')).toBeVisible();
     });
@@ -374,7 +374,7 @@ describe('ManuscriptForm team validation', () => {
 
     expect(container).toHaveTextContent(labErrorMessage);
 
-    await userEvent.click(screen.getByRole('textbox', { name: /Teams/i }));
+    await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
     await waitFor(() => {
       expect(screen.getByText('Team A')).toBeVisible();
     });
@@ -429,7 +429,7 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.click(screen.getByText('Author B'));
     await userEvent.tab();
 
-    await userEvent.click(screen.getByRole('textbox', { name: /Labs/i }));
+    await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
     await waitFor(() => {
       expect(screen.getByText('Lab One')).toBeVisible();
     });
@@ -448,7 +448,7 @@ describe('ManuscriptForm team validation', () => {
       "The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Lab One",
     );
 
-    await userEvent.click(screen.getByLabelText('Remove Author A'));
+    await userEvent.click(screen.getAllByLabelText('Remove Author A')[0]!);
     await userEvent.tab();
 
     expect(container).toHaveTextContent(
@@ -527,7 +527,7 @@ describe('ManuscriptForm URL Requirement', () => {
       });
 
       await userEvent.click(
-        screen.getByRole('textbox', {
+        screen.getByRole('combobox', {
           name: /Where is the manuscript in the life cycle/i,
         }),
       );

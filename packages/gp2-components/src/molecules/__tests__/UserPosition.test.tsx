@@ -38,7 +38,7 @@ describe('UserPosition', () => {
     });
     await waitFor(() => {
       expect(
-        screen.getByRole('textbox', { name: 'Institution (required)' }),
+        screen.getByRole('combobox', { name: 'Institution (required)' }),
       ).toHaveValue(position.institution);
       expect(
         screen.getByRole('textbox', { name: 'Department (required)' }),
@@ -58,7 +58,7 @@ describe('UserPosition', () => {
       index: 1,
     });
     await userEvent.click(
-      screen.getByRole('textbox', { name: /Institution/i }),
+      screen.getByRole('combobox', { name: /Institution/i }),
     );
     const institutionBox = await screen.findByText(institution);
     await userEvent.click(institutionBox);
@@ -164,7 +164,7 @@ describe('UserPosition', () => {
       });
 
       await userEvent.click(
-        await screen.findByRole('textbox', { name: /Institution/i }),
+        await screen.findByRole('combobox', { name: /Institution/i }),
       );
       await userEvent.tab();
       expect(screen.getByText(/Please add your institution/i)).toBeVisible();

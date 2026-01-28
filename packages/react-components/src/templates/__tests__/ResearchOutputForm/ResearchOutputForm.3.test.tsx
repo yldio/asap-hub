@@ -15,8 +15,11 @@ import {
   defaultProps,
   initialResearchOutputData,
 } from '../../test-utils/research-output-form';
+import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
+
+let consoleMock: ReturnType<typeof mockActErrorsInConsole>;
 
 describe('on submit', () => {
   const id = '42';
@@ -34,9 +37,12 @@ describe('on submit', () => {
     getAuthorSuggestions.mockResolvedValue([]);
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
+
+    consoleMock = mockActErrorsInConsole();
   });
 
   afterEach(() => {
+    consoleMock.mockRestore();
     jest.resetAllMocks();
   });
 
@@ -75,11 +81,11 @@ describe('on submit', () => {
       </MemoryRouter>,
     );
 
-    const typeDropdown = screen.getByRole('textbox', {
+    const typeDropdown = screen.getByRole('combobox', {
       name: /Select the type/i,
     });
 
-    const organisms = await screen.findByRole('textbox', {
+    const organisms = await screen.findByRole('combobox', {
       name: /organisms/i,
     });
     await userEvent.click(organisms);
@@ -131,7 +137,7 @@ describe('on submit', () => {
       </MemoryRouter>,
     );
 
-    const typeDropdown = screen.getByRole('textbox', {
+    const typeDropdown = screen.getByRole('combobox', {
       name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
@@ -141,7 +147,7 @@ describe('on submit', () => {
       keyCode: ENTER_KEYCODE,
     });
 
-    const environments = await screen.findByRole('textbox', {
+    const environments = await screen.findByRole('combobox', {
       name: /environments/i,
     });
     await userEvent.click(environments);

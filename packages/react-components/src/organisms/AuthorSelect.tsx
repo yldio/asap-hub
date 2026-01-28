@@ -12,11 +12,18 @@ import LabeledMultiSelect, {
   LabeledMultiSelectProps,
 } from '../molecules/LabeledMultiSelect';
 import { rem } from '../pixels';
+import { getMultiValueStyles } from '../select';
 
 const externalAuthorStyles = css({
   borderRadius: '50%',
   height: rem(24),
   overflow: 'hidden',
+});
+
+const avatarStyles = css({
+  margin: 0,
+  maxWidth: rem(24),
+  width: rem(24),
 });
 
 const LabelWithAvatar = ({
@@ -34,7 +41,7 @@ const LabelWithAvatar = ({
         firstName={author.firstName}
         lastName={author.lastName}
         imageUrl={author.avatarUrl}
-        overrideStyles={css({ margin: 0 })}
+        overrideStyles={avatarStyles}
       />
       <span>{children}</span>
     </>
@@ -58,14 +65,21 @@ const singleValueStyles = css({
   padding: `${rem(5)} ${rem(15)} ${rem(5)} ${rem(8)}`,
   margin: `${rem(5)} ${rem(6)} ${rem(5)}`,
   display: 'flex',
-  justifyContent: 'center',
   alignItems: 'center',
+  gap: rem(8),
+
+  // Constrain width to content (like multi-value chips)
+  width: 'fit-content',
 
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderColor: steel.rgb,
   borderRadius: rem(18),
   backgroundColor: paper.rgb,
+
+  // Position above react-select's input overlay to enable click interactions
+  position: 'relative',
+  zIndex: 1,
 });
 
 const singleValuesRemoveStyles = css({
@@ -125,7 +139,7 @@ const AuthorSelect: React.FC<AuthorSelectProps> = ({
       MultiValueContainer: (multiValueContainerProps) => (
         <div
           css={{
-            ...multiValueContainerProps.selectProps.styles.multiValue(),
+            ...getMultiValueStyles(multiValueContainerProps.selectProps.styles),
             paddingLeft: rem(8),
           }}
         >

@@ -48,11 +48,8 @@ const TagsPageHeader: React.FC<TagsPageHeaderProps> = ({
       <div css={textStyles}>
         <Paragraph accent="lead">
           Search for all CRN Hub areas that include selected tags (research
-          {`outputs, events, people, ${
-            isProjectsEnabled ? 'projects, ' : ''
-          }teams, tutorials, interest groups,
-          working groups and news`}
-          ).
+          outputs, events, people, {isProjectsEnabled ? 'projects, ' : ''}
+          teams, tutorials, interest groups, working groups and news ).
         </Paragraph>
       </div>
     </PageInfoContainer>

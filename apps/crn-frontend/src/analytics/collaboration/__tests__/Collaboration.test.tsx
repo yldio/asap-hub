@@ -501,6 +501,24 @@ describe('sharing prelim findings', () => {
     expect(screen.queryByText('Type')).not.toBeInTheDocument();
   });
 
+  it('sets default time range to last 12 months', async () => {
+    await renderPage('sharing-prelim-findings', undefined);
+
+    expect(
+      screen.getByRole('heading', { name: /Sharing Preliminary Findings/i }),
+    ).toBeVisible();
+
+    expect(
+      screen.queryByRole('button', {
+        name: /Since Hub Launch \(2020\)/i,
+      }),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByRole('button', { name: /Last 12 months/i }),
+    ).toBeVisible();
+  });
+
   it('can navigate to sharing preliminary findings page', async () => {
     await renderPage('user', 'within-team');
     const input = screen.getAllByRole('textbox', { hidden: false });

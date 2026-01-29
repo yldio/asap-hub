@@ -5728,7 +5728,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "dotenv",\
-        "npm:16.3.1"\
+        "npm:16.6.1"\
       ],\
       [\
         "dotenv-expand",\
@@ -11509,7 +11509,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["bundlewatch", "npm:0.3.3"],\
-            ["dotenv", "npm:16.3.1"],\
+            ["dotenv", "npm:16.6.1"],\
             ["escape-string-regexp", "npm:4.0.0"],\
             ["eslint", "npm:8.56.0"],\
             ["hyperform", "npm:0.12.1"],\
@@ -39877,7 +39877,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],\
             ["babel-preset-react-app", "npm:10.0.1"],\
             ["bundlewatch", "npm:0.3.3"],\
-            ["dotenv", "npm:16.3.1"],\
+            ["dotenv", "npm:16.6.1"],\
             ["escape-string-regexp", "npm:4.0.0"],\
             ["eslint", "npm:8.56.0"],\
             ["hyperform", "npm:0.12.1"],\
@@ -45310,13 +45310,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/dotenv-npm-10.0.0-36b272df25-f412c5fe8c.zip/node_modules/dotenv/",\
           "packageDependencies": [\
             ["dotenv", "npm:10.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
-        ["npm:16.3.1", {\
-          "packageLocation": "./.yarn/cache/dotenv-npm-16.3.1-e6d380a398-15d75e7279.zip/node_modules/dotenv/",\
-          "packageDependencies": [\
-            ["dotenv", "npm:16.3.1"]\
           ],\
           "linkType": "HARD"\
         }],\

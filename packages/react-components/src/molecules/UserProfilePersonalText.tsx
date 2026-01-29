@@ -102,7 +102,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
             <span>{labsList}</span>
           </>
         )}
-        {teams.length ? (
+        {teams.length === 0 ? (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             No team affiliation
             <TooltipInfo>

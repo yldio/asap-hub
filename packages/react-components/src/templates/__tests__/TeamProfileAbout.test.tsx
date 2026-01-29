@@ -260,7 +260,13 @@ describe('TeamProfileAbout', () => {
 
     it('does not render TeamLabsCard when isAsapTeam is true', () => {
       enable('PROJECTS_MVP');
-      render(<TeamProfileAbout {...baseProps} isAsapTeam />);
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
+          isAsapTeam
+        />,
+      );
 
       expect(
         screen.queryByRole('heading', { name: /labs/i }),

@@ -441,9 +441,6 @@ it('displays manuscript success toast message and user can dismiss toast', async
     await user.click(button);
   }
 
-  await waitFor(() => {
-    expect(submitButton).toBeEnabled();
-  });
   await act(async () => {
     await user.click(await screen.findByRole('button', { name: /Submit/ }));
   });

@@ -103,11 +103,13 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   categories: [{ value: 'category-id-1', label: 'Category A' }],
   getImpactSuggestions: getImpactSuggestionsMock,
   getCategorySuggestions: getCategorySuggestionsMock,
+  onInvalid: jest.fn(),
 };
 
 const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {
   const submitBtn = await findByRole('button', { name: /Submit/ });
   await userEvent.click(submitBtn);
+  expect(defaultProps.onInvalid).not.toHaveBeenCalled();
 
   const confirmBtn = await findByRole('button', {
     name: /Submit Manuscript/i,

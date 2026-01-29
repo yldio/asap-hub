@@ -277,8 +277,6 @@ it('can publish a form when the data is valid and navigates to team workspace', 
     { timeout: 5000 },
   );
 
-  expect(submitButton).toBeEnabled();
-
   await user.click(submitButton);
 
   const confirmButton = await screen.findByRole('button', {

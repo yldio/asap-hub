@@ -113,6 +113,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   categories: [{ value: 'category-id-1', label: 'Category A' }],
   getImpactSuggestions: getImpactSuggestionsMock,
   getCategorySuggestions: getCategorySuggestionsMock,
+  onInvalid: jest.fn(),
 };
 
 beforeEach(() => {
@@ -158,6 +159,8 @@ it('displays error message when manuscript title is not unique', async () => {
 
   const submitBtn = await findByRole('button', { name: /Submit/ });
   await userEvent.click(submitBtn);
+
+  expect(defaultProps.onInvalid).not.toHaveBeenCalled();
 
   await waitFor(() => {
     const confirmBtn = screen.getByRole('button', {

@@ -274,8 +274,6 @@ it('shows server validation error toast and a message when submitting with dupli
     name: /Submit/,
   });
 
-  expect(submitButton).toBeEnabled();
-
   await user.click(submitButton);
 
   const confirmButton = await screen.findByRole('button', {

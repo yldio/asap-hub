@@ -5,13 +5,20 @@ import {
 } from '@asap-hub/model';
 import { useLocation } from 'react-router-dom';
 
-export const useAnalytics = () => {
+type UseAnalyticsOptions = {
+  defaultTimeRange?: TimeRangeOption;
+};
+
+export const useAnalytics = (options: UseAnalyticsOptions = {}) => {
+  const { defaultTimeRange = 'all' } = options;
   const currentUrlParams = new URLSearchParams(useLocation().search);
   const rangeParam = currentUrlParams.get('range');
   const documentCategoryParam = currentUrlParams.get('documentCategory');
   const outputTypeParam = currentUrlParams.get('outputType');
 
-  const timeRange = rangeParam ? (rangeParam as TimeRangeOption) : 'all';
+  const timeRange = rangeParam
+    ? (rangeParam as TimeRangeOption)
+    : defaultTimeRange;
   const documentCategory = documentCategoryParam
     ? (documentCategoryParam as DocumentCategoryOption)
     : 'all';

@@ -69,7 +69,10 @@ const Collaboration = () => {
     | 'sharing-prelim-findings';
   const type = typeParam as CollaborationType;
 
-  const { timeRange, documentCategory, outputType } = useAnalytics();
+  const { timeRange, documentCategory, outputType } = useAnalytics({
+    defaultTimeRange:
+      metric === 'sharing-prelim-findings' ? 'last-year' : 'all',
+  });
   const { tags, setTags } = useSearch();
   const { client } = useAnalyticsAlgolia();
   const { currentPage } = usePaginationParams();

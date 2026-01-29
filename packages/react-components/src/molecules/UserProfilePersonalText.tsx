@@ -14,6 +14,7 @@ import {
   splitListBy,
 } from '../utils';
 import TagList from './TagList';
+import TooltipInfo from './TooltipInfo';
 import { styles, getLinkColors } from '../atoms/Link';
 
 const MAX_TEAMS = 2;
@@ -101,71 +102,83 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
             <span>{labsList}</span>
           </>
         )}
-        {activeTeams
-          .slice(0, MAX_TEAMS)
-          .map(({ id, role: teamRole, displayName }) => (
-            <div style={{ display: 'flex' }} key={id}>
-              <div>{teamRole} on&nbsp;</div>
-              <Link href={network({}).teams({}).team({ teamId: id }).$}>
-                Team {displayName}
-              </Link>
-            </div>
-          ))}
-        {activeTeams.length > MAX_TEAMS && (
-          <Anchor
-            href="#"
-            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-              e.preventDefault();
-              const teamsCard = document.getElementById(
-                'user-teams-tabbed-card',
-              );
-              if (teamsCard) {
-                teamsCard.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
-            css={(theme) => [styles, getLinkColors(theme.colors, 'light')]}
-          >
-            View all roles
-          </Anchor>
-        )}
-        {inactiveTeams.length ? (
-          <div
-            css={css({
-              display: 'flex',
-              alignItems: 'center',
-              marginTop: rem(16),
-            })}
-          >
-            <Subtitle noMargin>Former Roles</Subtitle>
-            <span css={badgeStyles}>{alumniBadgeIcon}</span>
+        {teams.length === 0 ? (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            No team affiliation
+            <TooltipInfo>
+              Some members are not linked to a team because they work directly
+              under a project.
+            </TooltipInfo>
           </div>
-        ) : null}
-        {inactiveTeams
-          .slice(0, MAX_TEAMS)
-          .map(({ id, role: teamRole, displayName }) => (
-            <div style={{ display: 'flex' }} key={id}>
-              <div>{teamRole} on&nbsp;</div>
-              <Link href={network({}).teams({}).team({ teamId: id }).$}>
-                Team {displayName}
-              </Link>
-            </div>
-          ))}
-        {inactiveTeams.length > MAX_TEAMS && (
-          <Anchor
-            href="#"
-            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
-              e.preventDefault();
-              const teamsCard = document.getElementById(
-                'user-teams-tabbed-card',
-              );
-              if (teamsCard) {
-                teamsCard.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
-            css={(theme) => [styles, getLinkColors(theme.colors, 'light')]}
-          >
-            View all former roles
-          </Anchor>
+        ) : (
+          <>
+            {activeTeams
+              .slice(0, MAX_TEAMS)
+              .map(({ id, role: teamRole, displayName }) => (
+                <div style={{ display: 'flex' }} key={id}>
+                  <div>{teamRole} on&nbsp;</div>
+                  <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                    Team {displayName}
+                  </Link>
+                </div>
+              ))}
+            {activeTeams.length > MAX_TEAMS && (
+              <Anchor
+                href="#"
+                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                  e.preventDefault();
+                  const teamsCard = document.getElementById(
+                    'user-teams-tabbed-card',
+                  );
+                  if (teamsCard) {
+                    teamsCard.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                css={(theme) => [styles, getLinkColors(theme.colors, 'light')]}
+              >
+                View all roles
+              </Anchor>
+            )}
+            {inactiveTeams.length ? (
+              <div
+                css={css({
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginTop: rem(16),
+                })}
+              >
+                <Subtitle noMargin>Former Roles</Subtitle>
+                <span css={badgeStyles}>{alumniBadgeIcon}</span>
+              </div>
+            ) : null}
+            {inactiveTeams
+              .slice(0, MAX_TEAMS)
+              .map(({ id, role: teamRole, displayName }) => (
+                <div style={{ display: 'flex' }} key={id}>
+                  <div>{teamRole} on&nbsp;</div>
+                  <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                    Team {displayName}
+                  </Link>
+                </div>
+              ))}
+            {inactiveTeams.length > MAX_TEAMS && (
+              <Anchor
+                href="#"
+                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                  e.preventDefault();
+                  const teamsCard = document.getElementById(
+                    'user-teams-tabbed-card',
+                  );
+                  if (teamsCard) {
+                    teamsCard.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                css={(theme) => [styles, getLinkColors(theme.colors, 'light')]}
+              >
+                View all former roles
+              </Anchor>
+            )}
+          </>
         )}
       </div>
       {(country || stateOrProvince || city || isOwnProfile) && (

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { TeamProfileAbout } from '@asap-hub/react-components';
 
-import { text } from './knobs';
+import { text, boolean } from './knobs';
 
 export default {
   title: 'Templates / Team Profile / About',
@@ -82,6 +82,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
     },
   ],
   projectTitle: 'Project Title',
+  isAsapTeam: boolean('Is Asap Team', true),
 });
 
 export const Normal = () => <TeamProfileAbout {...props()}></TeamProfileAbout>;

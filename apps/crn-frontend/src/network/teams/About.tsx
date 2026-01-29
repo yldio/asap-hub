@@ -8,10 +8,16 @@ import InterestGroupsCard from './interest-groups/InterestGroupsCard';
 interface AboutProps {
   readonly team: TeamResponse;
   readonly teamListElementId: string;
+  readonly isAsapTeam: boolean;
 }
-const About: React.FC<AboutProps> = ({ team, teamListElementId }) => (
+const About: React.FC<AboutProps> = ({
+  isAsapTeam,
+  team,
+  teamListElementId,
+}) => (
   <TeamProfileAbout
     {...team}
+    isAsapTeam={isAsapTeam}
     teamListElementId={teamListElementId}
     teamGroupsCard={
       <Frame title={null} fallback={null}>

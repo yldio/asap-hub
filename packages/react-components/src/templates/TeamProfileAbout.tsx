@@ -52,6 +52,7 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
     | 'resourceContactEmail'
     | 'resourceLink'
   > & {
+    isAsapTeam: boolean;
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
     hideExpertiseAndResources?: boolean;
@@ -83,6 +84,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   resourceButtonCopy,
   resourceContactEmail,
   resourceLink,
+  isAsapTeam,
 }) => {
   const projectsMVPEnabled = isEnabled('PROJECTS_MVP');
 
@@ -100,7 +102,8 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
     !projectsMVPEnabled && Boolean(tags?.length);
   const showProjectsCard =
     projectsMVPEnabled && Boolean(projectTitle) && Boolean(linkedProjectId);
-  const showLabsCard = projectsMVPEnabled && Boolean(labs?.length);
+  const showLabsCard =
+    projectsMVPEnabled && Boolean(labs?.length) && !isAsapTeam;
   const showTeamGroupsCard = projectsMVPEnabled
     ? teamType !== 'Resource Team' && teamGroupsCard
     : teamGroupsCard;

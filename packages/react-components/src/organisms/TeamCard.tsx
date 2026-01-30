@@ -52,6 +52,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
   projectType,
 }) => {
   const href = network({}).teams({}).team({ teamId: id }).$;
+  const isAsapTeam = displayName === 'ASAP';
   let projectLink;
 
   if (linkedProjectId) {
@@ -74,7 +75,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
         </span>
         <span>{getCounterString(memberCount, 'Team Member')}</span>
       </div>
-      {labCount > 0 && (
+      {!isAsapTeam && labCount > 0 && (
         <div>
           <span css={iconStyles}>
             <LabIcon />{' '}

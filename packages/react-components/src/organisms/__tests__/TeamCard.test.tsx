@@ -205,6 +205,13 @@ it('does not display labs when 0 labs are avaialble', () => {
   expect(queryByText(/lab/i)).toBeNull();
 });
 
+it('does not display labs when isAsapTeam is true', () => {
+  const { queryByText } = render(
+    <TeamCard {...teamCardProps} displayName={'ASAP'} labCount={3} />,
+  );
+  expect(queryByText(/lab/i)).toBeNull();
+});
+
 it('does not display footer when the team is inactive', () => {
   const { queryByText } = render(
     <TeamCard {...teamCardProps} inactiveSince="2022-09-30T09:00:00Z" />,

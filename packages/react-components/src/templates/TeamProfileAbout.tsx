@@ -1,12 +1,10 @@
-import React, { ComponentProps, useMemo } from 'react';
+import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
-import { isEnabled } from '@asap-hub/flags';
 
 import { rem } from '../pixels';
 import {
   ProfileExpertiseAndResources,
-  ProjectProfileOverview,
   TeamLabsCard,
   TeamMembersTabbedCard,
   TeamProfileOverview,
@@ -15,7 +13,6 @@ import {
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
-import { getActiveProjectManager } from '../utils';
 
 const styles = css({
   display: 'grid',
@@ -45,7 +42,6 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
     | 'resourceType'
     | 'labs'
     | 'projectType'
-    | 'proposalURL'
     | 'resourceTitle'
     | 'resourceDescription'
     | 'resourceButtonCopy'
@@ -55,7 +51,6 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
     isAsapTeam: boolean;
     teamGroupsCard?: React.ReactNode;
     readonly teamListElementId: string;
-    hideExpertiseAndResources?: boolean;
   };
 
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
@@ -77,8 +72,6 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   resourceType,
   projectType,
   labs,
-  proposalURL,
-  hideExpertiseAndResources,
   resourceTitle,
   resourceDescription,
   resourceButtonCopy,
@@ -86,34 +79,15 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   resourceLink,
   isAsapTeam,
 }) => {
-  const projectsMVPEnabled = isEnabled('PROJECTS_MVP');
-
-  const pointOfContactEmail = useMemo(() => {
-    if (projectsMVPEnabled) {
-      return pointOfContact;
-    }
-    // Legacy mode: use PM email from members (pointOfContact is only available when flag is enabled)
-    return getActiveProjectManager(members)?.email;
-  }, [pointOfContact, members, projectsMVPEnabled]);
-
-  const showTeamOverview = projectsMVPEnabled && Boolean(teamDescription);
-  const showProjectOverview = !projectsMVPEnabled && Boolean(projectTitle);
-  const showExpertiseAndResources =
-    !projectsMVPEnabled && Boolean(tags?.length);
-  const showProjectsCard =
-    projectsMVPEnabled && Boolean(projectTitle) && Boolean(linkedProjectId);
-  const showLabsCard =
-    projectsMVPEnabled && Boolean(labs?.length) && !isAsapTeam;
-  const showTeamGroupsCard = projectsMVPEnabled
-    ? teamType !== 'Resource Team' && teamGroupsCard
-    : teamGroupsCard;
-  const showResourcesCard = projectsMVPEnabled && teamType === 'Resource Team';
-  const showContactCta =
-    pointOfContactEmail && (!projectsMVPEnabled || teamStatus === 'Active');
+  const showTeamOverview = Boolean(teamDescription);
+  const showProjectsCard = Boolean(projectTitle) && Boolean(linkedProjectId);
+  const showLabsCard = Boolean(labs?.length) && !isAsapTeam;
+  const showTeamGroupsCard = teamType !== 'Resource Team' && teamGroupsCard;
+  const showResourcesCard = teamType === 'Resource Team';
+  const showContactCta = pointOfContact && teamStatus === 'Active';
 
   return (
     <div css={styles}>
-      {/* Overview Section - Different based on PROJECTS_MVP flag */}
       {showTeamOverview && (
         <TeamProfileOverview
           tags={tags}
@@ -123,25 +97,6 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
           resourceType={resourceType}
         />
       )}
-
-      {showProjectOverview && (
-        <ProjectProfileOverview
-          supplementGrant={supplementGrant}
-          projectTitle={projectTitle}
-          projectSummary={projectSummary}
-          proposalURL={proposalURL}
-        />
-      )}
-
-      {/* Expertise and Resources - Only in legacy version */}
-      {showExpertiseAndResources && (
-        <ProfileExpertiseAndResources
-          hideExpertiseAndResources={hideExpertiseAndResources}
-          tags={tags}
-        />
-      )}
-
-      {/* Resources Card - Only for Resource Teams in MVP version */}
       {showResourcesCard && (
         <TeamResourcesCard
           resourceTitle={resourceTitle}
@@ -151,8 +106,6 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
           resourceLink={resourceLink}
         />
       )}
-
-      {/* Projects Card - Only in MVP version */}
       {showProjectsCard && (
         <TeamProjectsCard
           teamType={teamType}
@@ -166,13 +119,9 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
           resourceType={resourceType}
         />
       )}
-
-      {/* Labs Card - Only in MVP version */}
       {showLabsCard && (
         <TeamLabsCard labs={labs} isTeamActive={teamStatus === 'Active'} />
       )}
-
-      {/* Team Members */}
       <section id={teamListElementId} css={membersCardStyles}>
         <TeamMembersTabbedCard
           title="Team Members"
@@ -181,13 +130,11 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         />
       </section>
 
-      {/* Team Groups Card */}
       {showTeamGroupsCard}
 
-      {/* Contact CTA */}
       {showContactCta && (
         <CtaCard
-          href={createMailTo(pointOfContactEmail)}
+          href={createMailTo(pointOfContact)}
           buttonText="Contact"
           displayCopy
         >

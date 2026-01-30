@@ -241,7 +241,6 @@ const Layout: FC<LayoutProps> = ({
   onboardable,
   onboardModalHref,
   canViewAnalytics,
-  canViewProjects,
   ...userNavProps
 }) => {
   const [menuShown, setMenuShown] = useState(false);
@@ -309,7 +308,6 @@ const Layout: FC<LayoutProps> = ({
               <MainNavigation
                 userOnboarded={userNavProps.userOnboarded}
                 canViewAnalytics={canViewAnalytics}
-                canViewProjects={canViewProjects}
               />
             </Suspense>
           </div>

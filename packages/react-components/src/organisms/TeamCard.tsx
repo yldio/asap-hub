@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { TeamListItemResponse } from '@asap-hub/model';
 import { network, projects } from '@asap-hub/routing';
-import { isEnabled } from '@asap-hub/flags';
 
 import { StateTag } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
@@ -86,8 +85,6 @@ const TeamCard: React.FC<TeamCardProps> = ({
     </div>
   );
 
-  const projectsMVPFlagEnabled = isEnabled('PROJECTS_MVP');
-
   return (
     <EntityCard
       active={!inactiveSince}
@@ -95,8 +92,8 @@ const TeamCard: React.FC<TeamCardProps> = ({
       href={href}
       inactiveBadge={<StateTag icon={<InactiveBadgeIcon />} label="Inactive" />}
       tags={tags.map(({ name }) => name)}
-      text={projectsMVPFlagEnabled ? projectTitle : ''}
-      textHref={projectsMVPFlagEnabled ? projectLink : undefined}
+      text={projectTitle}
+      textHref={projectLink}
       title={`Team ${displayName}`}
       teamType={teamType}
       researchTheme={

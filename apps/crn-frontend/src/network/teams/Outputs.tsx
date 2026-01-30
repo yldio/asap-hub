@@ -13,7 +13,6 @@ import format from 'date-fns/format';
 import { ComponentProps, useMemo } from 'react';
 import { ResearchOutputResponse, TeamResponse } from '@asap-hub/model';
 import { useRecoilValue } from 'recoil';
-import { isEnabled } from '@asap-hub/flags';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
@@ -175,15 +174,10 @@ const Outputs: React.FC<OutputsProps> = ({
     teamId: team.id,
   }).total;
 
-  const contactEmail = useMemo(() => {
-    if (isEnabled('PROJECTS_MVP')) {
-      return team?.pointOfContact;
-    }
-    return team?.members.find(
-      ({ role, alumniSinceDate, inactiveSinceDate }) =>
-        role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
-    )?.email;
-  }, [team?.pointOfContact, team?.members]);
+  const contactEmail = useMemo(
+    () => team?.pointOfContact,
+    [team?.pointOfContact],
+  );
 
   return (
     <article>

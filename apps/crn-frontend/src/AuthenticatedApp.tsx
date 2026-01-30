@@ -1,10 +1,6 @@
 import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
 import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
-import {
-  useAuth0CRN,
-  useCurrentUserCRN,
-  useFlags,
-} from '@asap-hub/react-context';
+import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   about,
   analytics,
@@ -88,9 +84,7 @@ const AuthenticatedApp: FC<{
 
   const user = useCurrentUserCRN();
   const tabRoute = useCurrentUserProfileTabRoute();
-  const { isEnabled } = useFlags();
   const canViewAnalytics = user?.role === 'Staff';
-  const canViewProjects = isEnabled('PROJECTS_MVP');
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
@@ -106,7 +100,6 @@ const AuthenticatedApp: FC<{
             userOnboarded={user.onboarded}
             onboardable={onboardable}
             canViewAnalytics={canViewAnalytics}
-            canViewProjects={canViewProjects}
             onboardModalHref={
               tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
             }
@@ -138,7 +131,7 @@ const AuthenticatedApp: FC<{
               }),
             )}
             projects={
-              canViewProjects && user.projects
+              user.projects
                 ? user.projects.map(({ id, title, projectType }) => ({
                     name: title,
                     href:
@@ -228,16 +221,14 @@ const AuthenticatedApp: FC<{
                     </Frame>
                   }
                 />
-                {canViewProjects && (
-                  <Route
-                    path={`${projects.template}/*`}
-                    element={
-                      <Frame title={null}>
-                        <Projects />
-                      </Frame>
-                    }
-                  />
-                )}
+                <Route
+                  path={`${projects.template}/*`}
+                  element={
+                    <Frame title={null}>
+                      <Projects />
+                    </Frame>
+                  }
+                />
                 <Route
                   path={`${events.template}/*`}
                   element={

@@ -6,7 +6,6 @@ import {
   EMPTY_ALGOLIA_FACET_HITS,
   EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
-import { enable, reset } from '@asap-hub/flags';
 import { createUserListItemResponse } from '@asap-hub/fixtures';
 import {
   fireEvent,

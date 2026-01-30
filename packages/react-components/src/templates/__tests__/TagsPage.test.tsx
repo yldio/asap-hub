@@ -12,7 +12,6 @@ const props: ComponentProps<typeof TagsPage> = {
   setTags: jest.fn(),
   loadTags: jest.fn(),
   filters: new Set<CRNTagSearchEntities>(),
-  isProjectsEnabled: false,
 };
 
 it('renders the tags page header and children', () => {

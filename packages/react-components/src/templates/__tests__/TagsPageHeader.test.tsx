@@ -8,7 +8,6 @@ const props: ComponentProps<typeof TagsPageHeader> = {
   tags: [],
   setTags: jest.fn(),
   filterOptions: [],
-  isProjectsEnabled: false,
 };
 
 it('renders the header', () => {
@@ -43,14 +42,4 @@ it('will call set tags when a tag has been selected', async () => {
   await waitFor(() => expect(screen.getByText('foo')).toBeVisible());
   await userEvent.click(screen.getByText('foo'));
   expect(setTags).toHaveBeenCalledWith(['foo']);
-});
-
-it('shows "projects" in the copy text when isProjectsEnabled is true', () => {
-  render(<TagsPageHeader {...props} isProjectsEnabled={true} />);
-  expect(screen.getByText(/projects/i)).toBeVisible();
-});
-
-it('does not show "projects" in the copy text when isProjectsEnabled is false', () => {
-  render(<TagsPageHeader {...props} isProjectsEnabled={false} />);
-  expect(screen.queryByText(/projects/i)).not.toBeInTheDocument();
 });

@@ -104,7 +104,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
         )}
         {teams.length === 0 ? (
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            No team affiliation
+            <em>No team affiliation</em>
             <TooltipInfo>
               Some members are not linked to a team because they work directly
               under a project.

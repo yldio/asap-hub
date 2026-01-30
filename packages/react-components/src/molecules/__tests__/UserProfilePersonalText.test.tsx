@@ -39,11 +39,13 @@ it('does not show the location icon if no location is available', () => {
   expect(queryByTitle(/location/i)).toBe(null);
 });
 
-it('shows "No team affiliation" with info tooltip when the user has no teams', () => {
-  const { container, getByRole } = render(
+it('shows "No team affiliation" in italic with info tooltip when the user has no teams', () => {
+  const { container, getByRole, getByText } = render(
     <UserProfilePersonalText {...props} teams={[]} />,
   );
-  expect(container).toHaveTextContent('No team affiliation');
+  const noTeamText = getByText('No team affiliation');
+  expect(noTeamText).toBeInTheDocument();
+  expect(noTeamText.tagName).toBe('EM');
   expect(container).toHaveTextContent(
     'Some members are not linked to a team because they work directly under a project.',
   );

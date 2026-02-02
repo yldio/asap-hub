@@ -112,6 +112,7 @@ export const researchOutputContentQueryFragment = gql`
           id
         }
         displayName
+        teamType
         researchTheme {
           name
         }

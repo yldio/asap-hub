@@ -325,7 +325,13 @@ describe('Not Grant Documents', () => {
               {
                 id: 'id1',
                 title: 'Related research article',
-                teams: [{ id: 'team1', displayName: 'team 1' }],
+                teams: [
+                  {
+                    id: 'team1',
+                    displayName: 'team 1',
+                    teamType: 'Discovery Team',
+                  },
+                ],
                 workingGroups: [],
                 type: 'Published',
                 documentType: 'Article',
@@ -420,7 +426,9 @@ describe('a draft output', () => {
         {...props}
         published={false}
         publishedNow={true}
-        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        teams={[
+          { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+        ]}
         workingGroups={undefined}
       />,
     );
@@ -434,7 +442,9 @@ describe('a draft output', () => {
         {...props}
         published={false}
         draftCreated={true}
-        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        teams={[
+          { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+        ]}
         workingGroups={undefined}
       />,
     );
@@ -449,7 +459,9 @@ describe('a draft output', () => {
         {...props}
         published={false}
         draftCreated={true}
-        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        teams={[
+          { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+        ]}
         workingGroups={undefined}
       />,
     );
@@ -466,7 +478,9 @@ describe('a draft output', () => {
           {...props}
           published={false}
           draftCreated={true}
-          teams={[{ id: 'team1', displayName: 'team 1' }]}
+          teams={[
+            { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+          ]}
           workingGroups={undefined}
           documentType={researchOutputDocumentType}
         />,
@@ -486,7 +500,9 @@ describe('a draft output', () => {
           {...props}
           published={false}
           draftCreated={true}
-          teams={[{ id: 'team1', displayName: 'team 1' }]}
+          teams={[
+            { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+          ]}
           workingGroups={[
             {
               id: 'wg1',
@@ -508,7 +524,9 @@ describe('a draft output', () => {
       <SharedResearchOutput
         {...props}
         published={false}
-        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        teams={[
+          { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+        ]}
         workingGroups={undefined}
       />,
     );
@@ -525,8 +543,8 @@ describe('a draft output', () => {
         {...props}
         published={false}
         teams={[
-          { id: 'team1', displayName: 'team 1' },
-          { id: 'team2', displayName: 'team 2' },
+          { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+          { id: 'team2', displayName: 'team 2', teamType: 'Discovery Team' },
         ]}
         workingGroups={undefined}
       />,
@@ -543,7 +561,9 @@ describe('a draft output', () => {
       <SharedResearchOutput
         {...props}
         published={false}
-        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        teams={[
+          { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+        ]}
         workingGroups={[
           {
             id: 'wg1',
@@ -567,7 +587,9 @@ describe('a newly published output', () => {
     const { getByText, getByTitle } = renderWithRouter(
       <SharedResearchOutput
         {...props}
-        teams={[{ id: 'team1', displayName: 'team 1' }]}
+        teams={[
+          { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+        ]}
         workingGroups={undefined}
         documentType="Article"
         published={true}
@@ -585,7 +607,9 @@ describe('a newly published output', () => {
       const { getByText } = renderWithRouter(
         <SharedResearchOutput
           {...props}
-          teams={[{ id: 'team1', displayName: 'team 1' }]}
+          teams={[
+            { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+          ]}
           workingGroups={undefined}
           documentType={researchOutputDocumentType}
           published={true}
@@ -603,7 +627,9 @@ describe('a newly published output', () => {
       const { getByText } = renderWithRouter(
         <SharedResearchOutput
           {...props}
-          teams={[{ id: 'team1', displayName: 'team 1' }]}
+          teams={[
+            { id: 'team1', displayName: 'team 1', teamType: 'Discovery Team' },
+          ]}
           workingGroups={[
             {
               id: 'wg1',

@@ -190,7 +190,13 @@ describe('researchOutputToCSV', () => {
         title: `t${i}`,
         documentType: 'Grant Document',
         type: '3D Printing',
-        teams: [{ id: 'team-id-1', displayName: 'Team B' }],
+        teams: [
+          {
+            id: 'team-id-1',
+            displayName: 'Team B',
+            teamType: 'Discovery Team',
+          },
+        ],
         workingGroups: [],
       })),
     };

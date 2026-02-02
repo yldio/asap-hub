@@ -33,6 +33,7 @@ it('renders output cards', () => {
             {
               id: 'uuid-team',
               displayName: 'Unknown',
+              teamType: 'Discovery Team',
             },
           ],
           workingGroups: [

@@ -48,6 +48,7 @@ it('displays team information when present', () => {
         {
           id: '123',
           displayName: 'A',
+          teamType: 'Discovery Team',
         },
       ]}
     />,

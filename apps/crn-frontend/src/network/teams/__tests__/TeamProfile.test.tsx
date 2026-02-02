@@ -536,7 +536,13 @@ describe('Duplicate Output', () => {
       ...createResearchOutputResponse(),
       id: '123',
       workingGroups: undefined,
-      teams: [{ displayName: teamResponse.displayName, id: teamResponse.id }],
+      teams: [
+        {
+          displayName: teamResponse.displayName,
+          id: teamResponse.id,
+          teamType: 'Discovery Team',
+        },
+      ],
       title: 'Example',
       link: 'http://example.com',
     };
@@ -577,7 +583,13 @@ describe('Duplicate Output', () => {
       ...createResearchOutputResponse(),
       id: '123',
       workingGroups: undefined,
-      teams: [{ displayName: teamResponse.displayName, id: teamResponse.id }],
+      teams: [
+        {
+          displayName: teamResponse.displayName,
+          id: teamResponse.id,
+          teamType: 'Discovery Team',
+        },
+      ],
       title: 'Example',
       link: 'http://example.com',
     };

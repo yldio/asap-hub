@@ -64,6 +64,7 @@ const baseResearchOutput: ResearchOutputResponse = {
     {
       id: '42',
       displayName: 'Jakobsson, J',
+      teamType: 'Discovery Team',
     },
   ],
 };

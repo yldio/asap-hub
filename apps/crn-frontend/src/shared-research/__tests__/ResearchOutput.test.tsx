@@ -147,6 +147,7 @@ describe('a grant document research output', () => {
         {
           displayName: 'Grant Document Team',
           id: teams[0]!.id,
+          teamType: 'Discovery Team',
         },
       ],
       title: 'Grant Document title!',
@@ -166,6 +167,7 @@ describe('a grant document research output', () => {
         {
           id: teams[0]!.id,
           displayName: 'Sulzer, D',
+          teamType: 'Discovery Team',
         },
       ],
     });
@@ -185,6 +187,7 @@ describe('a grant document research output', () => {
         {
           id: 't0',
           displayName: 'Jakobsson, J',
+          teamType: 'Discovery Team',
         },
       ],
       workingGroups: undefined,
@@ -212,6 +215,7 @@ describe('a not-grant-document research output', () => {
         {
           id: teams[0]!.id,
           displayName: 'Sulzer, D',
+          teamType: 'Discovery Team',
         },
       ],
     });

@@ -1032,8 +1032,16 @@ describe('ResearchOutputs controller', () => {
       test('Should throw a validation error when the first team is removed', async () => {
         const currentResearchOutput = getResearchOutputDataObject();
         currentResearchOutput.teams = [
-          { id: 'team-id-a', displayName: 'Team A' },
-          { id: 'team-id-b', displayName: 'Team B' },
+          {
+            id: 'team-id-a',
+            displayName: 'Team A',
+            teamType: 'Discovery Team',
+          },
+          {
+            id: 'team-id-b',
+            displayName: 'Team B',
+            teamType: 'Discovery Team',
+          },
         ];
         researchOutputDataProviderMock.fetchById.mockResolvedValue(
           currentResearchOutput,
@@ -1063,8 +1071,16 @@ describe('ResearchOutputs controller', () => {
       test('Should throw a validation error when the first team is moved down the list', async () => {
         const currentResearchOutput = getResearchOutputDataObject();
         currentResearchOutput.teams = [
-          { id: 'team-id-a', displayName: 'Team A' },
-          { id: 'team-id-b', displayName: 'Team B' },
+          {
+            id: 'team-id-a',
+            displayName: 'Team A',
+            teamType: 'Discovery Team',
+          },
+          {
+            id: 'team-id-b',
+            displayName: 'Team B',
+            teamType: 'Discovery Team',
+          },
         ];
         researchOutputDataProviderMock.fetchById.mockResolvedValue(
           currentResearchOutput,

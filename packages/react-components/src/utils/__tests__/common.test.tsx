@@ -140,7 +140,9 @@ describe('getResearchOutputAssociation', () => {
   it('returns team for a research output with only a team', () => {
     const researchOutput: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
-      teams: [{ id: '1', displayName: 'Team ASAP' }],
+      teams: [
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+      ],
       workingGroups: undefined,
     };
     expect(getResearchOutputAssociation(researchOutput)).toEqual('team');
@@ -149,8 +151,8 @@ describe('getResearchOutputAssociation', () => {
     const researchOutput: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
       teams: [
-        { id: '1', displayName: 'Team ASAP' },
-        { id: '2', displayName: 'Second team' },
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+        { id: '2', displayName: 'Second team', teamType: 'Discovery Team' },
       ],
       workingGroups: undefined,
     };
@@ -160,8 +162,8 @@ describe('getResearchOutputAssociation', () => {
     const researchOutput: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
       teams: [
-        { id: '1', displayName: 'Team ASAP' },
-        { id: '2', displayName: 'Second team' },
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+        { id: '2', displayName: 'Second team', teamType: 'Discovery Team' },
       ],
       workingGroups: [{ id: '1', title: 'Working group' }],
     };
@@ -175,7 +177,9 @@ describe('getResearchOutputAssociationName', () => {
   it('returns team name for a team research output', () => {
     const researchOutput: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
-      teams: [{ id: '1', displayName: 'Team ASAP' }],
+      teams: [
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+      ],
       workingGroups: undefined,
     };
     expect(getResearchOutputAssociationName(researchOutput)).toEqual(
@@ -185,7 +189,7 @@ describe('getResearchOutputAssociationName', () => {
   it('returns an empty string for a team research output with an empty displayname', () => {
     const researchOutput: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
-      teams: [{ id: '1', displayName: '' }],
+      teams: [{ id: '1', displayName: '', teamType: 'Discovery Team' }],
       workingGroups: undefined,
     };
     expect(getResearchOutputAssociationName(researchOutput)).toEqual('');
@@ -194,8 +198,8 @@ describe('getResearchOutputAssociationName', () => {
     const researchOutput: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
       teams: [
-        { id: '1', displayName: 'Team ASAP' },
-        { id: '2', displayName: 'Second team' },
+        { id: '1', displayName: 'Team ASAP', teamType: 'Discovery Team' },
+        { id: '2', displayName: 'Second team', teamType: 'Discovery Team' },
       ],
       workingGroups: [{ id: '1', title: 'My new Working Group' }],
     };

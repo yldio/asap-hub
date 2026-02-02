@@ -1,6 +1,7 @@
 import {
   createAlgoliaResponse,
   AlgoliaSearchClient,
+  CRNTagSearchEntities,
   CRNTagSearchEntitiesListArray,
   EMPTY_ALGOLIA_FACET_HITS,
   EMPTY_ALGOLIA_RESPONSE,
@@ -88,7 +89,9 @@ it('allows typing in tag queries', async () => {
   expect(searchBox.value).toEqual('test123');
   await waitFor(() => {
     expect(mockSearchForTagValues).toHaveBeenCalledWith(
-      CRNTagSearchEntitiesListArray.filter((entity) => entity !== 'project'),
+      CRNTagSearchEntitiesListArray.filter(
+        (entity: CRNTagSearchEntities) => entity !== 'project',
+      ),
       'test123',
       {
         facetFilters: [],
@@ -100,7 +103,7 @@ it('allows typing in tag queries', async () => {
 it('allows typing in tag queries and includes project when PROJECTS_MVP is enabled', async () => {
   enable('PROJECTS_MVP');
   await renderTagsPage();
-  const searchBox = screen.getByRole('textbox') as HTMLInputElement;
+  const searchBox = screen.getByRole('combobox') as HTMLInputElement;
 
   await userEvent.type(searchBox, 'test123');
   expect(searchBox.value).toEqual('test123');

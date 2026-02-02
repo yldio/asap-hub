@@ -20,7 +20,7 @@ it('renders the no teams message', () => {
   );
   expect(screen.getByText('There are no previous teams.')).toBeVisible();
   rerender(<UserTeamsTabbedCard {...props} userAlumni={false} />);
-  expect(screen.getByText('There are no current teams.')).toBeVisible();
+  expect(screen.getByText('No team affiliation.')).toBeVisible();
 });
 
 it('displays the show more message', () => {

@@ -105,9 +105,7 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
             tabTitle: `Current (${activeTeams.length})`,
             items: activeTeams,
             truncateFrom: MAX_TEAMS,
-            empty: (
-              <Paragraph accent="lead">There are no current teams.</Paragraph>
-            ),
+            empty: <Paragraph accent="lead">No team affiliation.</Paragraph>,
           },
           {
             tabTitle: `Former (${inactiveTeams.length})`,

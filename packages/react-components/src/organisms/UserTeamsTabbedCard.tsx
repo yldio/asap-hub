@@ -54,10 +54,6 @@ const titleStyle = css({
   fontWeight: 'bold',
 });
 
-const detailsContentStyle = css({
-  marginBottom: rem(32),
-});
-
 const priorities: Record<TeamRole, number> = {
   'Lead PI (Core Leadership)': 1,
   'Co-PI (Core Leadership)': 2,
@@ -105,14 +101,20 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
             tabTitle: `Current (${activeTeams.length})`,
             items: activeTeams,
             truncateFrom: MAX_TEAMS,
-            empty: <Paragraph accent="lead">No team affiliation.</Paragraph>,
+            empty: (
+              <Paragraph accent="lead" noMargin>
+                No team affiliation.
+              </Paragraph>
+            ),
           },
           {
             tabTitle: `Former (${inactiveTeams.length})`,
             items: inactiveTeams,
             truncateFrom: MAX_TEAMS,
             empty: (
-              <Paragraph accent="lead">There are no previous teams.</Paragraph>
+              <Paragraph accent="lead" noMargin>
+                There are no previous teams.
+              </Paragraph>
             ),
           },
         ]}
@@ -121,7 +123,7 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
         }
       >
         {({ data }) => (
-          <div css={detailsContentStyle}>
+          <div>
             <ul css={containerStyle}>
               {data.map(
                 (

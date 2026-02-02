@@ -82,6 +82,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
     },
   ],
   projectTitle: 'Project Title',
+  isAsapTeam: false,
 });
 
 export const Normal = () => <TeamProfileAbout {...props()}></TeamProfileAbout>;

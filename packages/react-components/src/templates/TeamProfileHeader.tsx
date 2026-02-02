@@ -292,7 +292,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               )}
             </div>
           ) : null}
-          {labCount > 0 && teamStatus === 'Active' && (
+          {labCount > 0 && teamStatus === 'Active' && !isAsapTeam && (
             <div css={labCountStyles}>
               <span css={iconStyles}>
                 <LabIcon />

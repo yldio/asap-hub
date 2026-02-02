@@ -176,6 +176,12 @@ it('does not display labs when 0 labs are available', () => {
   expect(screen.queryByText(/Labs/i)).toBeNull();
 });
 
+it('does not display labs if isAsapTeam is true', () => {
+  render(<TeamProfileHeader {...boilerplateProps} isAsapTeam labCount={5} />);
+
+  expect(screen.queryByText(/Labs/i)).toBeNull();
+});
+
 it('renders tabs', () => {
   render(<TeamProfileHeader {...boilerplateProps} />);
   expect(

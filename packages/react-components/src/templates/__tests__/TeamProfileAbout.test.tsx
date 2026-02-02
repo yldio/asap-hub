@@ -27,6 +27,7 @@ const baseProps: ComponentProps<typeof TeamProfileAbout> = {
   resourceButtonCopy: undefined,
   resourceContactEmail: undefined,
   resourceLink: undefined,
+  isAsapTeam: false,
 };
 
 describe('TeamProfileAbout', () => {
@@ -251,6 +252,21 @@ describe('TeamProfileAbout', () => {
     it('does not render TeamLabsCard when labs array is empty', () => {
       enable('PROJECTS_MVP');
       render(<TeamProfileAbout {...baseProps} labs={[]} />);
+
+      expect(
+        screen.queryByRole('heading', { name: /labs/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render TeamLabsCard when isAsapTeam is true', () => {
+      enable('PROJECTS_MVP');
+      render(
+        <TeamProfileAbout
+          {...baseProps}
+          labs={[{ name: 'Lab 1', id: '1', labPrincipalInvestigatorId: '' }]}
+          isAsapTeam
+        />,
+      );
 
       expect(
         screen.queryByRole('heading', { name: /labs/i }),

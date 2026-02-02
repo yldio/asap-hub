@@ -35,7 +35,10 @@ afterEach(() => {
   reset();
 });
 const renderTeamAbout = async (
-  aboutProps: Omit<ComponentProps<typeof About>, 'teamListElementId'>,
+  aboutProps: Omit<
+    ComponentProps<typeof About>,
+    'teamListElementId' | 'isAsapTeam'
+  >,
 ) => {
   render(
     <RecoilRoot
@@ -59,7 +62,13 @@ const renderTeamAbout = async (
                     network({}).teams({}).team.template +
                     network({}).teams({}).team({ teamId }).about.template
                   }
-                  element={<About teamListElementId="uuid" {...aboutProps} />}
+                  element={
+                    <About
+                      teamListElementId="uuid"
+                      isAsapTeam={false}
+                      {...aboutProps}
+                    />
+                  }
                 />
               </Routes>
             </MemoryRouter>

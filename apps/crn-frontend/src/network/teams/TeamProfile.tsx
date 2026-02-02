@@ -250,6 +250,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                         <About
                           teamListElementId={teamListElementId}
                           team={team}
+                          isAsapTeam={isAsapTeam}
                         />
                       )}
                       currentTime={currentTime}

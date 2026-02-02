@@ -71,33 +71,41 @@ it('shows the focused suggestion in green', async () => {
 });
 
 it('gets greyed out when disabled', () => {
-  const { getByRole, getByText, rerender } = render(
+  const { container, rerender } = render(
     <Typeahead suggestions={['LHR', 'LGW']} value="LHR" enabled={false} />,
   );
-  expect(findParentWithStyle(getByText('LHR'), 'color')?.color).toBe(lead.rgb);
-  expect(findParentWithStyle(getByText('LHR'), 'background')?.background).toBe(
-    silver.rgb,
-  );
-  expect(getByRole('textbox')).toBeDisabled();
+  // In react-select v5, the control element has the color/background styles
+  const disabledControl = container.querySelector('[aria-disabled="true"]');
+  expect(disabledControl).not.toBeNull();
+  expect(getComputedStyle(disabledControl!).color).toBe(lead.rgb);
+  expect(getComputedStyle(disabledControl!).backgroundColor).toBe(silver.rgb);
+  const disabledInput = container.querySelector('input');
+  expect(disabledInput).toBeDisabled();
 
   rerender(<Typeahead suggestions={['LHR', 'LGW']} value="LHR" />);
-  expect(findParentWithStyle(getByText('LHR'), 'color')?.color).not.toBe(
-    lead.rgb,
+  // After rerender, there's no aria-disabled, so we find control by class pattern
+  const enabledControl = container.querySelector(
+    '[class*="-container"] > div:not([aria-disabled])',
   );
-  expect(
-    findParentWithStyle(getByText('LHR'), 'background')?.background,
-  ).not.toBe(silver.rgb);
-  expect(getByRole('textbox')).not.toBeDisabled();
+  expect(enabledControl).not.toBeNull();
+  expect(getComputedStyle(enabledControl!).color).not.toBe(lead.rgb);
+  expect(getComputedStyle(enabledControl!).backgroundColor).not.toBe(
+    silver.rgb,
+  );
+  const enabledInput = container.querySelector('input');
+  expect(enabledInput).not.toBeDisabled();
 });
 
 describe('invalidity', () => {
   it('makes the value red', () => {
-    const { getByText, rerender } = render(
+    const { container, rerender } = render(
       <Typeahead suggestions={['LHR', 'LGW']} value="LHR" />,
     );
-    expect(findParentWithStyle(getByText('LHR'), 'color')?.color).not.toBe(
-      ember.rgb,
-    );
+    // In react-select v5, use findParentWithStyle from the input to check invalid state via borderColor
+    const inputBefore = container.querySelector('input')!;
+    expect(
+      findParentWithStyle(inputBefore, 'borderColor')?.borderColor,
+    ).not.toBe(ember.rgb);
 
     rerender(
       <Typeahead
@@ -106,20 +114,26 @@ describe('invalidity', () => {
         customValidationMessage="Nope."
       />,
     );
-    expect(findParentWithStyle(getByText('LHR'), 'color')?.color).toBe(
+    // After rerender with validation message, control should have ember color
+    const inputAfter = container.querySelector('input')!;
+    expect(findParentWithStyle(inputAfter, 'borderColor')?.borderColor).toBe(
       ember.rgb,
     );
   });
 
   it('is caused by being empty when required', async () => {
-    const { getByDisplayValue } = render(
+    const { getByDisplayValue, container } = render(
       <Typeahead suggestions={['LHR', 'LGW']} value="LHR" required />,
     );
     await userEvent.clear(getByDisplayValue('LHR'));
     await userEvent.tab();
-    expect(findParentWithStyle(getByDisplayValue(''), 'color')?.color).toBe(
-      ember.rgb,
-    );
+    await waitFor(() => {
+      // In react-select v5, use findParentWithStyle from the input to check invalid state via borderColor
+      const inputElement = container.querySelector('input')!;
+      expect(
+        findParentWithStyle(inputElement, 'borderColor')?.borderColor,
+      ).toBe(ember.rgb);
+    });
   });
 });
 

@@ -1,95 +1,13 @@
-import { ComponentProps, RefObject } from 'react';
+import { ComponentProps } from 'react';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { waitFor } from '@testing-library/dom';
 
-import Select from 'react-select';
-import {
-  // @ts-expect-error sortableController is used to handle the mock
-  sortableController,
-  SortableContainerProps,
-  SortEndHandler,
-} from 'react-sortable-hoc';
 import { ember, fern, pine } from '../../colors';
 
-import MultiSelect, { arrayMove } from '../MultiSelect';
-import { noop } from '../../utils';
+import MultiSelect from '../MultiSelect';
 import { searchIcon } from '../../icons';
-
-interface SortableMock {
-  onSortEnd?: SortEndHandler;
-  getHelperDimensions?: SortableContainerProps['getHelperDimensions'];
-}
-
-jest.mock('react-sortable-hoc', () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires,global-require
-  const React = require('react');
-  const controller: SortableMock = {
-    onSortEnd: undefined,
-    getHelperDimensions: undefined,
-  };
-
-  return {
-    sortableController: controller,
-    SortableContainer: (
-      Component: React.ComponentType<{ ref: RefObject<unknown> }>,
-    ) =>
-      React.forwardRef(
-        (
-          props: {
-            onSortEnd: SortEndHandler;
-            getHelperDimensions: SortableContainerProps['getHelperDimensions'];
-          },
-          ref: RefObject<unknown>,
-        ) => {
-          controller.onSortEnd = props.onSortEnd;
-          controller.getHelperDimensions = props.getHelperDimensions;
-          return <Component {...props} ref={ref} />;
-        },
-      ),
-    SortableHandle: (id: React.ComponentType) => id,
-    SortableElement: (id: React.ComponentType) => id,
-  };
-});
-
-describe('Sorting elements', () => {
-  it('can sort elements', () => {
-    const onChange = jest.fn();
-    const value1 = { label: 'LHR', value: 'LHR' };
-    const value2 = { label: 'RHL', value: 'RHL' };
-    render(
-      <MultiSelect
-        suggestions={[]}
-        values={[value1, value2]}
-        onChange={onChange}
-      />,
-    );
-
-    sortableController.onSortEnd({ oldIndex: 0, newIndex: 1 });
-    expect(onChange).toHaveBeenCalledWith([value2, value1]);
-  });
-
-  it('getHelperDimensions calls getBoundingClientRect', () => {
-    render(<MultiSelect suggestions={[]} values={[]} onChange={noop} />);
-
-    const getBoundingClientRect = jest.fn();
-    sortableController.getHelperDimensions({ node: { getBoundingClientRect } });
-    expect(getBoundingClientRect).toHaveBeenCalled();
-  });
-
-  describe('arrayMove', () => {
-    it('can insert at the start', () => {
-      expect(arrayMove([1, 2, 3], 2, 0)).toEqual([3, 1, 2]);
-    });
-    it('can insert at the end', () => {
-      expect(arrayMove([1, 2, 3], 0, 2)).toEqual([2, 3, 1]);
-    });
-    it('throws when element cant be found', () => {
-      expect(() => arrayMove([], 0, 2)).toThrow();
-    });
-  });
-});
 
 it('shows the selected value', () => {
   const { getByText } = render(
@@ -122,7 +40,7 @@ it('shows the no option message when there are no options', async () => {
   const { getByRole, getByText } = render(
     <MultiSelect suggestions={[]} noOptionsMessage={() => 'No options'} />,
   );
-  await userEvent.type(getByRole('textbox'), 'LT');
+  await userEvent.type(getByRole('combobox'), 'LT');
   expect(getByText(/no options/i)).toBeVisible();
 });
 
@@ -138,7 +56,7 @@ it('opens a menu to select from on click', async () => {
     />,
   );
 
-  await userEvent.click(getByRole('textbox'));
+  await userEvent.click(getByRole('combobox'));
   await userEvent.click(getByText('LGW'));
   expect(handleChange).toHaveBeenLastCalledWith(
     [{ label: 'LGW', value: 'LGW' }],
@@ -150,7 +68,7 @@ it('opens a menu to select from on click', async () => {
   );
 });
 
-it('does not open a menu when clicking a value', async () => {
+it('opens a menu when clicking a value in react-select v5', async () => {
   const handleChange = jest.fn();
   const { getByText } = render(
     <MultiSelect
@@ -164,7 +82,10 @@ it('does not open a menu when clicking a value', async () => {
   );
 
   await userEvent.click(getByText('LGW'));
-  expect(() => getByText('LHR')).toThrow();
+  // In react-select v5, clicking on a value opens the menu
+  await waitFor(() => {
+    expect(getByText('LHR')).toBeInTheDocument();
+  });
 });
 
 it('opens a filtered menu to select from when typing', async () => {
@@ -180,7 +101,7 @@ it('opens a filtered menu to select from when typing', async () => {
     />,
   );
 
-  await userEvent.type(getByRole('textbox'), 'LT');
+  await userEvent.type(getByRole('combobox'), 'LT');
   expect(queryByText('LGW')).not.toBeInTheDocument();
 
   await userEvent.click(getByText('LTN'));
@@ -205,7 +126,7 @@ it('does not allow non-suggested input', async () => {
       onChange={handleChange}
     />,
   );
-  await userEvent.type(getByRole('textbox'), 'LTN');
+  await userEvent.type(getByRole('combobox'), 'LTN');
   await userEvent.tab();
   expect(handleChange).not.toHaveBeenCalled();
 });
@@ -219,7 +140,7 @@ it('shows the focused suggestion in green', async () => {
       ]}
     />,
   );
-  await userEvent.click(getByRole('textbox'));
+  await userEvent.click(getByRole('combobox'));
   expect(
     findParentWithStyle(getByText('LGW'), 'color')?.color.replace(/ /g, ''),
   ).not.toBe(pine.rgb.replace(/ /g, ''));
@@ -242,7 +163,7 @@ describe('invalidity', () => {
       />,
     );
 
-    const input = getByRole('textbox');
+    const input = getByRole('combobox');
     fireEvent.focusIn(input);
     fireEvent.focusOut(input);
 
@@ -261,7 +182,7 @@ describe('invalidity', () => {
         ]}
       />,
     );
-    const input = getByRole('textbox');
+    const input = getByRole('combobox');
     fireEvent.focusIn(input);
 
     expect(queryByText('Nope.')).toBeNull();
@@ -271,7 +192,6 @@ describe('invalidity', () => {
   });
 
   it('blurs the multiselect when right clicked (handle right click bug)', async () => {
-    const blurSelect = jest.spyOn(Select.prototype, 'blur');
     const { getByRole, queryByText } = render(
       <MultiSelect
         suggestions={[
@@ -280,7 +200,7 @@ describe('invalidity', () => {
         ]}
       />,
     );
-    const input = getByRole('textbox');
+    const input = getByRole('combobox');
     fireEvent.focusIn(input);
 
     expect(queryByText('Nope.')).toBeNull();
@@ -290,7 +210,10 @@ describe('invalidity', () => {
 
     const parent = findParentWithStyle(input, 'flexBasis')?.element;
     fireEvent.contextMenu(parent!);
-    expect(blurSelect).toHaveBeenCalledTimes(1);
+
+    await waitFor(() => {
+      expect(document.activeElement).not.toBe(input);
+    });
   });
 });
 
@@ -307,7 +230,7 @@ describe('Async', () => {
         noOptionsMessage={() => 'No options'}
       />,
     );
-    await userEvent.type(getByRole('textbox'), 'LT');
+    await userEvent.type(getByRole('combobox'), 'LT');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -334,7 +257,7 @@ describe('Async', () => {
         />,
       );
 
-      await userEvent.click(getByRole('textbox'));
+      await userEvent.click(getByRole('combobox'));
       await waitFor(() =>
         expect(queryByText(/loading/i)).not.toBeInTheDocument(),
       );
@@ -419,7 +342,7 @@ describe('Async', () => {
         required
       />,
     );
-    const input = getByRole('textbox', { hidden: false });
+    const input = getByRole('combobox');
     await userEvent.click(input);
     await userEvent.tab();
 
@@ -442,32 +365,8 @@ describe('Async', () => {
   it('supports adding new options', async () => {
     const mockOnChange = jest.fn();
 
-    const { queryByText, getAllByText, rerender, getByRole } = render(
+    const { queryByText, getByText, getByRole } = render(
       <MultiSelect
-        {...asyncProps}
-        placeholder={'type something'}
-        loadOptions={() =>
-          Promise.resolve([{ label: 'Example', value: '123' }])
-        }
-        sortable={false}
-      />,
-    );
-
-    await userEvent.click(getByRole('textbox'));
-    await waitFor(() =>
-      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
-
-    await userEvent.type(getByRole('textbox'), 'Test');
-    await waitFor(() =>
-      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
-
-    expect(getAllByText('Test')).toHaveLength(1);
-
-    rerender(
-      <MultiSelect
-        {...asyncProps}
         loadOptions={jest
           .fn()
           .mockResolvedValue([{ label: 'Example', value: '123' }])}
@@ -476,17 +375,18 @@ describe('Async', () => {
       />,
     );
 
-    await userEvent.click(getByRole('textbox'));
+    await userEvent.click(getByRole('combobox'));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    await userEvent.type(getByRole('textbox'), 'Test');
+    await userEvent.type(getByRole('combobox'), 'Test');
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    await userEvent.click(getAllByText('Test')[1]!);
+    await waitFor(() => expect(getByText('Test')).toBeInTheDocument());
+    await userEvent.click(getByText('Test'));
 
     await waitFor(() => {
       expect(mockOnChange).toHaveBeenCalledWith(

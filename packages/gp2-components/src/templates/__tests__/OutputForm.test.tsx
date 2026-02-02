@@ -8,7 +8,6 @@ import {
   render,
   screen,
   waitFor,
-  waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -196,11 +195,11 @@ describe('OutputForm', () => {
       );
 
       await user.click(
-        screen.getByRole('textbox', { name: /identifier type/i }),
+        screen.getByRole('combobox', { name: /identifier type/i }),
       );
       await user.click(screen.getByText(/^none/i));
       await user.click(
-        screen.getByRole('textbox', {
+        screen.getByRole('combobox', {
           name: /working groups/i,
         }),
       );
@@ -208,14 +207,14 @@ describe('OutputForm', () => {
       await user.click(screen.getByText('another group'));
 
       await user.click(
-        screen.getByRole('textbox', {
+        screen.getByRole('combobox', {
           name: /projects/i,
         }),
       );
 
       await user.click(screen.getByText('another project'));
 
-      const authors = screen.getByRole('textbox', { name: /Authors/i });
+      const authors = screen.getByRole('combobox', { name: /Authors/i });
       await user.click(authors);
 
       await user.click(await screen.findByText(/Chris Reed/i));
@@ -223,21 +222,16 @@ describe('OutputForm', () => {
       await user.click(screen.getByText('Chris Blue'));
       await user.click(authors);
       await user.type(authors, 'Alex White');
-
-      const loadingElement = screen.queryByText(/loading/i);
-      if (loadingElement) {
-        await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
-      }
-      await user.click(screen.getAllByText('Alex White')[1]!);
+      await user.keyboard('{Enter}');
 
       await user.click(
-        screen.getByRole('textbox', {
+        screen.getByRole('combobox', {
           name: /related output/i,
         }),
       );
       await user.click(await screen.findByText('some related output'));
       await user.click(
-        screen.getByRole('textbox', {
+        screen.getByRole('combobox', {
           name: /related gp2 hub events/i,
         }),
       );
@@ -410,14 +404,14 @@ describe('OutputForm', () => {
       renderWithRouter(<OutputForm {...output} />);
 
       expect(
-        screen.getByRole('textbox', { name: /working groups/i }),
+        screen.getByRole('combobox', { name: /working groups/i }),
       ).toBeVisible();
       expect(
         screen.getByLabelText(/working groups/i, {
           selector: 'input',
         }),
       ).toHaveValue('');
-      expect(screen.getByRole('textbox', { name: /projects/i })).toBeVisible();
+      expect(screen.getByRole('combobox', { name: /projects/i })).toBeVisible();
       expect(screen.getByText('a project')).toBeVisible();
     });
 
@@ -427,7 +421,7 @@ describe('OutputForm', () => {
       );
 
       expect(
-        screen.queryByRole('textbox', { name: /cohorts/i }),
+        screen.queryByRole('combobox', { name: /cohorts/i }),
       ).not.toBeInTheDocument();
     });
 
@@ -582,7 +576,7 @@ describe('OutputForm', () => {
   describe('Article', () => {
     it('renders type', () => {
       renderWithRouter(<OutputForm {...defaultProps} documentType="Article" />);
-      expect(screen.getByRole('textbox', { name: /^type/i })).toBeVisible();
+      expect(screen.getByRole('combobox', { name: /^type/i })).toBeVisible();
     });
     it.each<gp2.OutputType>(['Blog', 'Hot Topic', 'Letter', 'Review'])(
       '%s does not render subtype',
@@ -591,10 +585,10 @@ describe('OutputForm', () => {
         renderWithRouter(
           <OutputForm {...defaultProps} documentType="Article" />,
         );
-        await user.click(screen.getByRole('textbox', { name: /^type/i }));
+        await user.click(screen.getByRole('combobox', { name: /^type/i }));
         await user.click(screen.getByText(type));
         expect(
-          screen.queryByRole('textbox', { name: /subtype/i }),
+          screen.queryByRole('combobox', { name: /subtype/i }),
         ).not.toBeInTheDocument();
       },
     );
@@ -605,9 +599,11 @@ describe('OutputForm', () => {
         renderWithRouter(
           <OutputForm {...defaultProps} documentType="Article" />,
         );
-        await user.click(screen.getByRole('textbox', { name: /^type/i }));
+        await user.click(screen.getByRole('combobox', { name: /^type/i }));
         await user.click(screen.getByText(type));
-        expect(screen.getByRole('textbox', { name: /subtype/i })).toBeVisible();
+        expect(
+          screen.getByRole('combobox', { name: /subtype/i }),
+        ).toBeVisible();
       },
     );
 
@@ -646,9 +642,9 @@ describe('OutputForm', () => {
         screen.getByRole('textbox', { name: /url/i }),
         'https://example.com',
       );
-      await user.click(screen.getByRole('textbox', { name: /^type/i }));
+      await user.click(screen.getByRole('combobox', { name: /^type/i }));
       await user.click(screen.getByText('Research'));
-      await user.click(screen.getByRole('textbox', { name: /subtype/i }));
+      await user.click(screen.getByRole('combobox', { name: /subtype/i }));
       await user.click(screen.getByText('Published'));
 
       await user.click(screen.getByRole('button', { name: 'Publish' }));
@@ -793,7 +789,7 @@ describe('OutputForm', () => {
         renderWithRouter(<OutputForm {...defaultProps} documentType={type} />);
 
         expect(
-          screen.queryByRole('textbox', { name: /identifier type/i }),
+          screen.queryByRole('combobox', { name: /identifier type/i }),
         ).not.toBeInTheDocument();
       },
     );
@@ -822,7 +818,7 @@ describe('OutputForm', () => {
 
       it('displays tags empty', () => {
         renderWithSuggestions(defaultSuggestions, []);
-        const textbox = screen.getByRole('textbox', {
+        const textbox = screen.getByRole('combobox', {
           name: /tags/i,
         });
         expect(textbox).toBeVisible();
@@ -927,7 +923,7 @@ describe('OutputForm', () => {
 
       it('displays cohorts empty', () => {
         renderWithSuggestions(defaultCohortSuggestions, []);
-        const textbox = screen.getByRole('textbox', {
+        const textbox = screen.getByRole('combobox', {
           name: /cohorts/i,
         });
         expect(textbox).toBeVisible();
@@ -976,7 +972,7 @@ describe('OutputForm', () => {
 
       it('displays working groups empty', () => {
         renderWithSuggestions(defaultWorkingGroupsSuggestions, []);
-        const textbox = screen.getByRole('textbox', {
+        const textbox = screen.getByRole('combobox', {
           name: /working groups/i,
         });
         expect(textbox).toBeVisible();
@@ -1038,7 +1034,7 @@ describe('OutputForm', () => {
 
       it('displays projects empty', () => {
         renderWithSuggestions(defaultProjectsSuggestions, []);
-        const textbox = screen.getByRole('textbox', {
+        const textbox = screen.getByRole('combobox', {
           name: /projects/i,
         });
         expect(textbox).toBeVisible();
@@ -1082,7 +1078,7 @@ describe('OutputForm', () => {
   describe('Validation', () => {
     it('shows error message for missing value title', async () => {
       renderWithRouter(<OutputForm {...defaultProps} />);
-      const input = screen.getByLabelText(/title/i);
+      const input = screen.getByRole('textbox', { name: /^Title/i });
       fireEvent.focusOut(input);
       await waitFor(() => {
         expect(screen.getByText('Please enter a title.')).toBeVisible();
@@ -1617,7 +1613,7 @@ describe('OutputForm', () => {
         ),
       ).toBeVisible();
 
-      const titleInput = screen.getByLabelText(/title/i);
+      const titleInput = screen.getByRole('textbox', { name: /^Title/i });
       await user.type(titleInput, 'a');
       await waitFor(() => {
         expect(mockClearError).toHaveBeenCalledWith('/title');

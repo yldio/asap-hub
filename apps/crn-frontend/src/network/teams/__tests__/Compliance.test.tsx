@@ -383,7 +383,7 @@ it('fetches assigned users suggestions and displays them properly', async () => 
   await userEvent.click(screen.getByTitle(/Add user/i));
 
   await userEvent.type(
-    screen.getByRole('textbox', { name: /Assign User/i }),
+    screen.getByRole('combobox', { name: /Assign User/i }),
     'Billie',
   );
 

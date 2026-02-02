@@ -376,14 +376,14 @@ it('displays manuscript success toast message and user can dismiss toast', async
     screen.getByRole('textbox', { name: /Title of Manuscript/i }),
     { target: { value: 'manuscript title' } },
   );
-  const typeTextbox = screen.getByRole('textbox', {
+  const typeTextbox = screen.getByRole('combobox', {
     name: /Type of Manuscript/i,
   });
   await user.type(typeTextbox, 'Original');
   await user.type(typeTextbox, '{Enter}');
   typeTextbox.blur();
 
-  const lifecycleTextbox = screen.getByRole('textbox', {
+  const lifecycleTextbox = screen.getByRole('combobox', {
     name: /Where is the manuscript in the life cycle/i,
   });
   await user.type(lifecycleTextbox, 'Typeset proof');
@@ -408,13 +408,13 @@ it('displays manuscript success toast message and user can dismiss toast', async
     target: { value: 'Some description' },
   });
 
-  const impactInput = screen.getByRole('textbox', {
+  const impactInput = screen.getByRole('combobox', {
     name: /Impact/i,
   });
   await user.type(impactInput, 'My Imp');
   await user.click(screen.getByText(/^My Impact$/i));
 
-  const categoryInput = screen.getByRole('textbox', {
+  const categoryInput = screen.getByRole('combobox', {
     name: /Category/i,
   });
   await user.type(categoryInput, 'My Cat');

@@ -16,7 +16,7 @@ const props: ComponentProps<typeof OutputIdentifier> = {
 it('should render Identifier', () => {
   render(<OutputIdentifier {...props} />);
   expect(
-    screen.getByRole('textbox', { name: /Identifier Type/i }),
+    screen.getByRole('combobox', { name: /Identifier Type/i }),
   ).toBeVisible();
 });
 
@@ -51,19 +51,19 @@ it('should render Identifier info with DOI and Accession Number', async () => {
 it('should reset the identifier to a valid value on entering something unknown', async () => {
   const setIdentifierType = jest.fn();
   render(<OutputIdentifier {...props} setIdentifierType={setIdentifierType} />);
-  const textbox = screen.getByRole('textbox', { name: /identifier type/i });
+  const textbox = screen.getByRole('combobox', { name: /identifier type/i });
   await userEvent.type(textbox, 'UNKNOWN');
   await userEvent.type(textbox, '{Enter}');
   await userEvent.tab();
 
   expect(screen.getByText('Choose an identifier...')).toBeVisible();
-  expect(screen.getByRole('textbox', { name: /Identifier/i })).toHaveValue('');
+  expect(screen.getByRole('combobox', { name: /Identifier/i })).toHaveValue('');
 });
 
 it('should set the identifier to the selected value', async () => {
   const setIdentifierType = jest.fn();
   render(<OutputIdentifier {...props} setIdentifierType={setIdentifierType} />);
-  const textbox = screen.getByRole('textbox', { name: /identifier/i });
+  const textbox = screen.getByRole('combobox', { name: /identifier/i });
   await userEvent.type(textbox, 'DOI');
   await userEvent.type(textbox, '{Enter}');
   await userEvent.tab();

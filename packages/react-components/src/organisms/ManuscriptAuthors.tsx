@@ -7,8 +7,7 @@ import {
   UseFormGetValues,
   UseFormTrigger,
 } from 'react-hook-form';
-import { OptionsType } from 'react-select';
-import { LabeledTextField, MultiSelectOptionsType } from '..';
+import { LabeledTextField, MultiSelectOptionsType, OptionsType } from '..';
 import AuthorSelect, { AuthorOption } from './AuthorSelect';
 
 type ManuscriptAuthorsProps = {

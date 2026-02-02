@@ -2,8 +2,8 @@ import { ResearchOutputSharingStatus } from '@asap-hub/model';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { OptionsType } from 'react-select';
 import { MultiSelectOptionsType } from '../../atoms';
+import { OptionsType } from '../../select';
 import { noop } from '../../utils';
 
 import ResearchOutputFormSharingCard from '../ResearchOutputFormSharingCard';
@@ -106,10 +106,10 @@ it('renders the impact and categories', async () => {
     />,
   );
 
-  const impactInput = screen.getByRole('textbox', { name: /impact/i });
+  const impactInput = screen.getByRole('combobox', { name: /impact/i });
   expect(impactInput).toBeInTheDocument();
 
-  const categoryInput = screen.getByRole('textbox', { name: /category/i });
+  const categoryInput = screen.getByRole('combobox', { name: /category/i });
   expect(categoryInput).toBeInTheDocument();
 
   await waitFor(() => {
@@ -138,7 +138,7 @@ it('renders category input and does not throw when getCategorySuggestions is noo
     />,
   );
 
-  const categoryInput = screen.getByRole('textbox', { name: /category/i });
+  const categoryInput = screen.getByRole('combobox', { name: /category/i });
   expect(categoryInput).toBeInTheDocument();
 
   fireEvent.change(categoryInput, { target: { value: 'Test' } });
@@ -161,7 +161,7 @@ it('renders category input and does not throw when onChangeCategories is noop', 
     />,
   );
 
-  const categoryInput = screen.getByRole('textbox', { name: /category/i });
+  const categoryInput = screen.getByRole('combobox', { name: /category/i });
   expect(categoryInput).toBeInTheDocument();
 
   fireEvent.change(categoryInput, { target: { value: 'Test' } });
@@ -205,7 +205,7 @@ it('shows validation message when more than two categories are selected', async 
     />,
   );
 
-  const categoryInput = screen.getByRole('textbox', { name: /category/i });
+  const categoryInput = screen.getByRole('combobox', { name: /category/i });
   expect(categoryInput).toBeInTheDocument();
 
   fireEvent.change(categoryInput, { target: { value: 'Cat' } });

@@ -7,6 +7,7 @@ import {
   cleanup,
   render,
   waitFor,
+  within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
@@ -273,7 +274,7 @@ describe('Manuscript form', () => {
   it('displays error message when no type was found', async () => {
     const { getByRole, getByText } = await renderManuscriptForm(defaultProps);
 
-    const textbox = getByRole('textbox', {
+    const textbox = getByRole('combobox', {
       name: /Type of Manuscript/i,
     });
     await userEvent.type(textbox, 'invalid type');
@@ -319,7 +320,7 @@ describe('Manuscript form', () => {
       },
     });
 
-    const lifecycleInput = getByRole('textbox', {
+    const lifecycleInput = getByRole('combobox', {
       name: /Where is the manuscript in the life cycle/i,
     });
 
@@ -401,13 +402,24 @@ describe('Manuscript form', () => {
     });
 
     // type, lifecycle, manuscriptFile, and additionalFiles
+    // In react-select v5, disabled comboboxes may not have accessible names from labels,
+    // so we find the label and scope to its container. We also need hidden: true to include disabled elements.
+    const typeLabel = getByText('Type of Manuscript');
+    const typeContainer = typeLabel.closest(
+      '[data-testid^="label-"]',
+    ) as HTMLElement;
     expect(
-      getByRole('textbox', { name: /Type of Manuscript/i }),
+      within(typeContainer).getByRole('combobox', { hidden: true }),
     ).toBeDisabled();
+
+    const lifecycleLabel = getByText(
+      /Where is the manuscript in the life cycle/i,
+    );
+    const lifecycleContainer = lifecycleLabel.closest(
+      '[data-testid^="label-"]',
+    ) as HTMLElement;
     expect(
-      getByRole('textbox', {
-        name: /Where is the manuscript in the life cycle/i,
-      }),
+      within(lifecycleContainer).getByRole('combobox', { hidden: true }),
     ).toBeDisabled();
 
     // Check that the "Add File" buttons are disabled
@@ -480,7 +492,7 @@ describe('Manuscript form', () => {
     });
 
     // --- Category field ---
-    const categoryInput = getByRole('textbox', { name: /Category/i });
+    const categoryInput = getByRole('combobox', { name: /Category/i });
 
     // --- Type invalid category ---
     await userEvent.type(categoryInput, 'Unknown Category');
@@ -520,7 +532,7 @@ describe('Manuscript form', () => {
     });
 
     // --- Impact field ---
-    const impactInput = getByRole('textbox', { name: /Impact/i });
+    const impactInput = getByRole('combobox', { name: /Impact/i });
 
     // --- Required impact error message ---
     await userEvent.click(impactInput);

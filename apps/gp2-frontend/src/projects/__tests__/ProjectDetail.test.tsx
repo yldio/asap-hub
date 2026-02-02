@@ -358,9 +358,9 @@ describe('ProjectDetail', () => {
 
       const addButton = screen.getByRole('link', { name: /add/i });
       await user.click(addButton);
-      const typeBox = await screen.findByRole('textbox', { name: /type/i });
+      const typeBox = await screen.findByRole('combobox', { name: /type/i });
       await user.type(typeBox, `${type}{enter}`);
-      const titleBox = screen.getByRole('textbox', { name: /title/i });
+      const titleBox = screen.getByRole('textbox', { name: /^Title/i });
       fireEvent.change(titleBox, { target: { value: title } });
       const saveButton = screen.getByRole('button', { name: /save/i });
       await user.click(saveButton);
@@ -411,7 +411,7 @@ describe('ProjectDetail', () => {
       const editButton = screen.getAllByRole('link', { name: /edit/i })[1]!;
       await user.click(editButton);
       await screen.findByRole('heading', { name: /Edit Resource/i });
-      const titleBox = screen.getByRole('textbox', { name: /title/i });
+      const titleBox = screen.getByRole('textbox', { name: /^Title/i });
       fireEvent.change(titleBox, { target: { value: title } });
       const saveButton = screen.getByRole('button', { name: /save/i });
       await user.click(saveButton);
@@ -507,7 +507,7 @@ describe('ProjectDetail', () => {
         projects: [project],
       });
 
-      expect(await screen.findByLabelText(/Title/i)).toHaveValue(
+      expect(await screen.findByLabelText(/^Title/i)).toHaveValue(
         'Copy of Test Output',
       );
       expect(screen.getByLabelText(/URL/i)).toHaveValue('');

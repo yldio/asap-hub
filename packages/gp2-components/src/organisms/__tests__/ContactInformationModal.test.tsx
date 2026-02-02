@@ -54,7 +54,7 @@ describe('ContactInformationModal', () => {
       }),
     ).toBeVisible();
     expect(
-      screen.getByRole('textbox', { name: /country code \(optional\)/i }),
+      screen.getByRole('combobox', { name: /country code \(optional\)/i }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', {
@@ -107,7 +107,7 @@ describe('ContactInformationModal', () => {
     );
 
     await userEvent.click(
-      screen.getByRole('textbox', {
+      screen.getByRole('combobox', {
         name: /country code \(optional\)/i,
       }),
     );

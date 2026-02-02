@@ -12,9 +12,9 @@ it('renders a labeled dropdown, passing through props', () => {
     />,
   );
 
-  expect(screen.getByRole('textbox', { name: /Title/i })).toBeVisible();
-  expect(screen.getByRole('textbox', { name: /Description/i })).toBeVisible();
-  expect(screen.getByRole('textbox', { name: /Optional/i })).toBeVisible();
+  expect(screen.getByRole('combobox', { name: /Title/i })).toBeVisible();
+  expect(screen.getByRole('combobox', { name: /Description/i })).toBeVisible();
+  expect(screen.getByRole('combobox', { name: /Optional/i })).toBeVisible();
   expect(screen.getByText('Value')).toBeVisible();
 });
 
@@ -30,5 +30,5 @@ it('renders a labeled dropdown with an info', () => {
     />,
   );
 
-  expect(screen.getByRole('textbox', { name: /info/i })).toBeVisible();
+  expect(screen.getByRole('combobox', { name: /info/i })).toBeVisible();
 });

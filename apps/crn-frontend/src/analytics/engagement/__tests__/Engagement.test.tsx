@@ -323,7 +323,7 @@ describe('Engagement', () => {
   describe('search', () => {
     const getSearchBox = () => {
       const searchContainer = screen.getByRole('search') as HTMLElement;
-      return within(searchContainer).getByRole('textbox') as HTMLInputElement;
+      return within(searchContainer).getByRole('combobox') as HTMLInputElement;
     };
     it('allows typing in search queries', async () => {
       await renderPage(
@@ -367,7 +367,7 @@ describe('Engagement', () => {
       }),
     ).toBeVisible();
 
-    const input = screen.getAllByRole('textbox', { hidden: false });
+    const input = screen.getAllByRole('combobox', { hidden: false });
 
     await userEvent.click(input[0]!);
     await userEvent.click(screen.getByText('Meeting Rep Attendance'));
@@ -479,7 +479,7 @@ describe('Engagement', () => {
 
       const searchContainer = screen.getByRole('search') as HTMLElement;
       const searchBox = within(searchContainer).getByRole(
-        'textbox',
+        'combobox',
       ) as HTMLInputElement;
 
       mockGetTagSuggestions.mockClear(); // Clear any previous calls

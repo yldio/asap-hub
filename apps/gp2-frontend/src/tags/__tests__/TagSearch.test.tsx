@@ -109,7 +109,7 @@ describe('TagSearch', () => {
     });
 
     await renderPage();
-    await userEvent.click(screen.getByRole('textbox'));
+    await userEvent.click(screen.getByRole('combobox'));
     await userEvent.click(screen.getByText('LGW'));
     expect(mockSetTags).toHaveBeenCalledWith(['LGW']);
   });

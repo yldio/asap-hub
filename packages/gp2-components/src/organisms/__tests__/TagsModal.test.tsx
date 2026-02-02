@@ -53,10 +53,10 @@ describe('TagsModal', () => {
     ${[{ id: 'id-1', name: 'Genetics' }]} | ${'Genetics'}
   `('renders tags with value "$expected"', ({ tags, expected }) => {
     renderModal({ tags });
-    const textbox = screen.getByRole('textbox', {
+    const combobox = screen.getByRole('combobox', {
       name: /Tags/i,
     });
-    expect(textbox).toBeVisible();
+    expect(combobox).toBeVisible();
     expect(screen.getByText(expected)).toBeVisible();
   });
 
@@ -84,7 +84,7 @@ describe('TagsModal', () => {
     });
 
     await userEvent.click(
-      screen.getByRole('textbox', {
+      screen.getByRole('combobox', {
         name: /Tags/i,
       }),
     );

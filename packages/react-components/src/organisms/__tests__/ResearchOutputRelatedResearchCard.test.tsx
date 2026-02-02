@@ -71,7 +71,7 @@ describe('Related Research Multiselect', () => {
         onChangeRelatedResearch={mockOnChange}
       />,
     );
-    await userEvent.click(getByRole('textbox', { name: /related/i }));
+    await userEvent.click(getByRole('combobox', { name: /related/i }));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -107,7 +107,7 @@ describe('Related Research Multiselect', () => {
         getRelatedResearchSuggestions={loadOptions}
       />,
     );
-    await userEvent.click(getByRole('textbox', { name: /related/i }));
+    await userEvent.click(getByRole('combobox', { name: /related/i }));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );

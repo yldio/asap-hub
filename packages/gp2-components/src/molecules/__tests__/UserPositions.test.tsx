@@ -36,7 +36,7 @@ describe('UserPositions', () => {
         screen.getByRole('heading', { name: 'Primary Position' }),
       ).toBeVisible();
       expect(
-        screen.getByRole('textbox', { name: 'Institution (required)' }),
+        screen.getByRole('combobox', { name: 'Institution (required)' }),
       ).toBeVisible();
       expect(
         screen.getByRole('textbox', { name: 'Department (required)' }),
@@ -107,7 +107,7 @@ describe('UserPositions', () => {
       .closest('section') as HTMLElement;
 
     await userEvent.click(
-      within(secondary).getByRole('textbox', {
+      within(secondary).getByRole('combobox', {
         name: /Institution/i,
       }),
     );

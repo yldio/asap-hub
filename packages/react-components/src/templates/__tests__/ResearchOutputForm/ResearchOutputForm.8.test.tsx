@@ -135,7 +135,7 @@ describe('on submit 2', () => {
       },
     );
 
-    const typeDropdown = screen.getByRole('textbox', {
+    const typeDropdown = screen.getByRole('combobox', {
       name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
@@ -145,7 +145,7 @@ describe('on submit 2', () => {
       keyCode: ENTER_KEYCODE,
     });
 
-    const identifier = screen.getByRole('textbox', { name: /identifier/i });
+    const identifier = screen.getByRole('combobox', { name: /identifier/i });
     fireEvent.change(identifier, {
       target: { value: 'DOI' },
     });
@@ -176,7 +176,7 @@ describe('on submit 2', () => {
       researchTags,
       documentType,
     });
-    const typeDropdown = screen.getByRole('textbox', {
+    const typeDropdown = screen.getByRole('combobox', {
       name: /Select the type/i,
     });
     fireEvent.change(typeDropdown, {
@@ -187,7 +187,7 @@ describe('on submit 2', () => {
     });
 
     await userEvent.click(
-      await screen.findByRole('textbox', { name: /organisms/i }),
+      await screen.findByRole('combobox', { name: /organisms/i }),
     );
     await userEvent.click(screen.getByText('Rat'));
 

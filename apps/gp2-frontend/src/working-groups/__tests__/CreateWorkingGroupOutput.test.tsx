@@ -152,13 +152,13 @@ describe('Create WorkingGroup Output', () => {
       screen.getByRole('textbox', { name: /^short description/i }),
       'An article',
     );
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
+    const authors = screen.getByRole('combobox', { name: /Authors/i });
     await userEvent.click(authors);
     await userEvent.click(screen.getByText('Tony Stark'));
     await userEvent.click(authors);
     await userEvent.click(screen.getByText(/Steve Rogers \(/i));
     await userEvent.click(
-      screen.getByRole('textbox', { name: /identifier type/i }),
+      screen.getByRole('combobox', { name: /identifier type/i }),
     );
     await userEvent.click(screen.getByText(/^none/i));
     expect(screen.getByText('Working Group Title')).toBeVisible();
@@ -231,11 +231,11 @@ describe('Create WorkingGroup Output', () => {
       screen.getByRole('textbox', { name: /^short description/i }),
       'An article',
     );
-    const authors = screen.getByRole('textbox', { name: /Authors/i });
+    const authors = screen.getByRole('combobox', { name: /Authors/i });
     await userEvent.click(authors);
     await userEvent.click(screen.getByText('Tony Stark'));
     await userEvent.click(
-      screen.getByRole('textbox', { name: /identifier type/i }),
+      screen.getByRole('combobox', { name: /identifier type/i }),
     );
     await userEvent.click(screen.getByText(/^none/i));
     expect(screen.getByText('Working Group Title')).toBeVisible();

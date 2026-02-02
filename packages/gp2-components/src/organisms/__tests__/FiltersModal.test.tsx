@@ -31,13 +31,13 @@ describe('FiltersModal', () => {
     { id: '32', name: 'Data Science' },
   ];
   const getRegionsField = () =>
-    screen.getByRole('textbox', { name: 'Regions' });
+    screen.getByRole('combobox', { name: 'Regions' });
   const getExpertiseField = () =>
-    screen.getByRole('textbox', { name: 'Expertise / Interests' });
+    screen.getByRole('combobox', { name: 'Expertise / Interests' });
   const getProjectsField = () =>
-    screen.getByRole('textbox', { name: 'Projects' });
+    screen.getByRole('combobox', { name: 'Projects' });
   const getWorkingGroupsField = () =>
-    screen.getByRole('textbox', { name: 'Working Groups' });
+    screen.getByRole('combobox', { name: 'Working Groups' });
   const getApplyButton = () => screen.getByRole('button', { name: 'Apply' });
   beforeEach(jest.resetAllMocks);
   it('renders the header', () => {
@@ -54,7 +54,7 @@ describe('FiltersModal', () => {
     'renders the %s input field',
     (fieldName) => {
       render(<FiltersModal {...defaultProps} />);
-      expect(screen.getByRole('textbox', { name: fieldName })).toBeVisible();
+      expect(screen.getByRole('combobox', { name: fieldName })).toBeVisible();
     },
   );
   it.each(userRegions)('%s region is selectable', async (region) => {

@@ -110,20 +110,22 @@ it('does not display the lifecycle select box until type is selected', async () 
     screen.queryByLabelText(/Where is the manuscript in the life cycle/i),
   ).not.toBeInTheDocument();
 
-  const textbox = screen.getByRole('textbox', {
+  const combobox = screen.getByRole('combobox', {
     name: /Type of Manuscript/i,
   });
   await act(async () => {
-    await userEvent.type(textbox, 'Original');
-    await userEvent.type(textbox, '{Enter}');
-    await userEvent.click(textbox);
+    await userEvent.type(combobox, 'Original');
+    await userEvent.type(combobox, '{Enter}');
+    await userEvent.click(combobox);
   });
 
-  expect(
-    screen.getByRole('textbox', {
-      name: /Where is the manuscript in the life cycle/i,
-    }),
-  ).toBeInTheDocument();
+  await waitFor(() => {
+    expect(
+      screen.getByRole('combobox', {
+        name: /Where is the manuscript in the life cycle/i,
+      }),
+    ).toBeInTheDocument();
+  });
 });
 
 const manuscriptTypeLifecyclesFlat = manuscriptTypeLifecycles.flatMap(
@@ -139,10 +141,10 @@ it.each(manuscriptTypeLifecyclesFlat)(
       lifecycle,
     });
 
-    const lifecycleTextbox = await screen.findByRole('textbox', {
+    const lifecycleCombobox = await screen.findByRole('combobox', {
       name: /Where is the manuscript in the life cycle/i,
     });
-    await userEvent.click(lifecycleTextbox);
+    await userEvent.click(lifecycleCombobox);
 
     const hiddenInput = screen.getByDisplayValue(lifecycle);
     expect(hiddenInput).toHaveValue(lifecycle);
@@ -152,45 +154,47 @@ it.each(manuscriptTypeLifecyclesFlat)(
 it('displays error message when no lifecycle was found', async () => {
   await renderManuscriptForm(defaultProps);
 
-  const typeTextbox = screen.getByRole('textbox', {
+  const typeCombobox = screen.getByRole('combobox', {
     name: /Type of Manuscript/i,
   });
-  await userEvent.type(typeTextbox, 'Original');
-  await userEvent.type(typeTextbox, '{Enter}');
-  typeTextbox.blur();
+  await userEvent.type(typeCombobox, 'Original');
+  await userEvent.type(typeCombobox, '{Enter}');
+  typeCombobox.blur();
 
-  const lifecycleTextbox = screen.getByRole('textbox', {
+  const lifecycleCombobox = await screen.findByRole('combobox', {
     name: /Where is the manuscript in the life cycle/i,
   });
-  await userEvent.type(lifecycleTextbox, 'invalid lifecycle');
+  await userEvent.type(lifecycleCombobox, 'invalid lifecycle');
 
-  expect(screen.getByText(/Sorry, no options match/i)).toBeVisible();
+  await waitFor(() => {
+    expect(screen.getByText(/Sorry, no options match/i)).toBeVisible();
+  });
 });
 
 it('maintains values provided when lifecycle changes but field is still visible', async () => {
   await renderManuscriptForm({ ...defaultProps, title: 'manuscript title' });
 
-  const typeTextbox = screen.getByRole('textbox', {
+  const typeCombobox = screen.getByRole('combobox', {
     name: /Type of Manuscript/i,
   });
-  await userEvent.type(typeTextbox, 'Original');
-  await userEvent.type(typeTextbox, '{Enter}');
-  typeTextbox.blur();
+  await userEvent.type(typeCombobox, 'Original');
+  await userEvent.type(typeCombobox, '{Enter}');
+  typeCombobox.blur();
 
-  const lifecycleTextbox = screen.getByRole('textbox', {
+  const lifecycleCombobox = await screen.findByRole('combobox', {
     name: /Where is the manuscript in the life cycle/i,
   });
   await userEvent.type(
-    lifecycleTextbox,
+    lifecycleCombobox,
     'Publication with addendum or corrigendum',
   );
-  await userEvent.type(lifecycleTextbox, '{Enter}');
-  lifecycleTextbox.blur();
+  await userEvent.type(lifecycleCombobox, '{Enter}');
+  lifecycleCombobox.blur();
 
   const preprintDoi = '10.4444/test';
   const publicationDoi = '10.4467/test';
 
-  const preprintDoiTextbox = screen.getByRole('textbox', {
+  const preprintDoiTextbox = await screen.findByRole('textbox', {
     name: /Preprint DOI/i,
   });
   await userEvent.type(preprintDoiTextbox, preprintDoi);
@@ -203,15 +207,17 @@ it('maintains values provided when lifecycle changes but field is still visible'
   expect(preprintDoiTextbox).toHaveValue(preprintDoi);
   expect(publicationDoiTextbox).toHaveValue(publicationDoi);
 
-  await userEvent.type(lifecycleTextbox, 'Preprint');
-  await userEvent.type(lifecycleTextbox, '{Enter}');
-  lifecycleTextbox.blur();
+  await userEvent.type(lifecycleCombobox, 'Preprint');
+  await userEvent.type(lifecycleCombobox, '{Enter}');
+  lifecycleCombobox.blur();
 
-  expect(
-    screen.getByRole('textbox', {
-      name: /Preprint DOI/i,
-    }),
-  ).toHaveValue(preprintDoi);
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', {
+        name: /Preprint DOI/i,
+      }),
+    ).toHaveValue(preprintDoi);
+  });
   expect(
     screen.queryByRole('textbox', {
       name: /Publication DOI/i,

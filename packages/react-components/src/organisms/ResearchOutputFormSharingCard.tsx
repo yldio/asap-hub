@@ -9,8 +9,8 @@ import {
 } from '@asap-hub/model';
 import { urlExpression } from '@asap-hub/validation';
 import { ComponentPropsWithRef, useCallback, useEffect, useState } from 'react';
-import { OptionsType } from 'react-select';
 import { getAjvErrorForPath } from '../ajv-errors';
+import { OptionsType } from '../select';
 import { Markdown } from '../atoms';
 import { MultiSelectOptionsType } from '../atoms/MultiSelect';
 import { GlobeIcon } from '../icons';

@@ -33,7 +33,7 @@ const SharingPreliminaryFindingsTableContent: FC<
     pageSize,
     sort,
     tags,
-    timeRange: timeRange || 'all',
+    timeRange: timeRange || 'last-year',
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

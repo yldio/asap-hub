@@ -120,7 +120,6 @@ describe('TeamProfileAbout', () => {
     });
 
     it('does not render TeamLabsCard when isAsapTeam is true', () => {
-      enable('PROJECTS_MVP');
       render(
         <TeamProfileAbout
           {...baseProps}

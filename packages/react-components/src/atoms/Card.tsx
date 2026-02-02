@@ -1,5 +1,5 @@
 import { css, CSSObject, SerializedStyles } from '@emotion/react';
-import { borderRadius, paddingStyles } from '../card';
+import { borderRadius } from '../card';
 import * as colors from '../colors';
 import { rem } from '../pixels';
 import { themes } from '../theme';
@@ -64,6 +64,13 @@ const strokeStyles = (color: string, strokeSize: number) =>
     background: `linear-gradient(${color}, ${color}) no-repeat left/${strokeSize}px 100%`,
   });
 
+const cardPaddingStyles = css({
+  paddingTop: rem(32),
+  paddingBottom: rem(32),
+  paddingLeft: rem(24),
+  paddingRight: rem(24),
+});
+
 interface CardProps {
   readonly accent?: AccentVariant;
   readonly padding?: boolean;
@@ -76,6 +83,7 @@ interface CardProps {
 
   readonly children: React.ReactNode;
 }
+
 const Card: React.FC<CardProps> = ({
   children,
   accent = 'default',
@@ -93,7 +101,7 @@ const Card: React.FC<CardProps> = ({
       themes.light,
       containerStyles,
       stroke && strokeStyles(strokeColor, strokeSize),
-      padding && paddingStyles,
+      padding && cardPaddingStyles,
       accents[accent],
       !shadow && { boxShadow: 'none' },
       overrideStyles,

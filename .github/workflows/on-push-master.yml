@@ -117,30 +117,6 @@ jobs:
       AWS_OS_USERNAME: ${{ secrets.AWS_OS_USERNAME }}
       AWS_OS_PASSWORD: ${{ secrets.AWS_OS_PASSWORD }}
 
-  crn-contentful-migrate-empty:
-    needs: [deployment-development]
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        id: setup
-        uses: ./.github/actions/setup-environment
-        with:
-          environment-name: Development
-      - name: Run Contentful migrations
-        run: |
-          yarn contentful:migration:run:crn
-        env:
-          CONTENTFUL_ENV_ID: Empty
-          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
-          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
-
   algolia-sync-development-crn:
     needs: [deployment-development]
     uses: ./.github/workflows/reusable-crn-algolia-sync.yml

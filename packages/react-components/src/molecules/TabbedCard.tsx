@@ -16,7 +16,7 @@ const TabbedCard = <T extends object>({
   children,
   ...props
 }: TabbedCardProps<T>) => (
-  <Card padding={false} overrideStyles={cardStyles}>
+  <Card overrideStyles={cardStyles}>
     <TabbedContent {...props}>{children}</TabbedContent>
   </Card>
 );

@@ -25,7 +25,9 @@ const ProfileExpertiseAndResources: React.FC<
     <Card>
       {!hideExpertiseAndResources && (
         <>
-          <Headline2 styleAsHeading={3}>Expertise and Resources</Headline2>
+          <Headline2 styleAsHeading={3} noMargin>
+            Expertise and Resources
+          </Headline2>
           {!expertiseAndResourceDescription && isOwnProfile ? (
             <UserProfilePlaceholderCard title="How would you summarize your expertise and resources?">
               Add one or two sentences to help others understand your strengths

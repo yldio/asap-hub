@@ -6,10 +6,6 @@ import { steel } from '../colors';
 import { rem } from '../pixels';
 import { TabNav } from '.';
 
-const paddingStyles = css({
-  padding: `${rem(32)} ${rem(24)}`,
-});
-
 const headerStyles = css({
   display: 'grid',
   paddingBottom: 0,
@@ -19,13 +15,13 @@ const headerStyles = css({
 const showMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  paddingTop: rem(16),
-  paddingBottom: rem(16),
   borderTop: `1px solid ${steel.rgb}`,
+  paddingTop: rem(16),
+  marginTop: rem(32),
 });
 
 const emptyContainer = css({
-  padding: `${rem(20)} 0`,
+  paddingTop: rem(32),
 });
 
 export type TabProps<T> = {
@@ -64,7 +60,7 @@ export const TabbedContent = <T extends object>({
 
   return (
     <div>
-      <div css={[paddingStyles, headerStyles]}>
+      <div css={[headerStyles]}>
         <div css={{ marginBottom: rem(24) }}>
           <Headline3 noMargin>{title}</Headline3>
         </div>
@@ -85,7 +81,7 @@ export const TabbedContent = <T extends object>({
           ))}
         </TabNav>
       </div>
-      <div css={[paddingStyles, { paddingBottom: 0, paddingTop: 0 }]}>
+      <div>
         {items.length ? (
           children({
             data: items.slice(0, showMore ? undefined : truncateFrom),

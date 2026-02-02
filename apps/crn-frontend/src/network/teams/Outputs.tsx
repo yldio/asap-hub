@@ -10,10 +10,9 @@ import {
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import format from 'date-fns/format';
-import { ComponentProps, useMemo } from 'react';
+import { ComponentProps } from 'react';
 import { ResearchOutputResponse, TeamResponse } from '@asap-hub/model';
 import { useRecoilValue } from 'recoil';
-import { isEnabled } from '@asap-hub/flags';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
@@ -175,16 +174,6 @@ const Outputs: React.FC<OutputsProps> = ({
     teamId: team.id,
   }).total;
 
-  const contactEmail = useMemo(() => {
-    if (isEnabled('PROJECTS_MVP')) {
-      return team?.pointOfContact;
-    }
-    return team?.members.find(
-      ({ role, alumniSinceDate, inactiveSinceDate }) =>
-        role === 'Project Manager' && !alumniSinceDate && !inactiveSinceDate,
-    )?.email;
-  }, [team?.pointOfContact, team?.members]);
-
   return (
     <article>
       {hasOutputs && (
@@ -202,7 +191,7 @@ const Outputs: React.FC<OutputsProps> = ({
           searchQuery={debouncedSearchQuery}
           filters={filters}
           userAssociationMember={userAssociationMember}
-          contactEmail={contactEmail}
+          contactEmail={team?.pointOfContact}
           displayName={team?.displayName ?? ''}
           hasOutputs={hasOutputs}
         />

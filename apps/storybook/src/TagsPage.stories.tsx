@@ -28,6 +28,5 @@ export const Normal = () => (
     ]}
     setTags={() => {}}
     onChangeFilter={() => {}}
-    isProjectsEnabled={false}
   />
 );

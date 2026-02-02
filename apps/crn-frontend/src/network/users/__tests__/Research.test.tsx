@@ -13,7 +13,6 @@ import {
   createUserResponse,
 } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
-import { enable, disable } from '@asap-hub/flags';
 import { network } from '@asap-hub/routing';
 
 import {
@@ -82,12 +81,6 @@ describe('UserDetail', () => {
     mockGetUserInterestGroups.mockResolvedValue(
       createListInterestGroupResponse(0),
     );
-    // Enable PROJECTS_MVP by default for tests
-    enable('PROJECTS_MVP');
-  });
-
-  afterEach(() => {
-    disable('PROJECTS_MVP');
   });
 
   it('renders the profile research section', async () => {
@@ -266,21 +259,12 @@ describe('UserDetail', () => {
       ],
     };
 
-    it('shows UserProjectsCard when PROJECTS_MVP flag is enabled', async () => {
-      enable('PROJECTS_MVP');
+    it('shows UserProjectsCard', async () => {
       await renderResearch(userWithProjects);
 
       expect(screen.getByText('Projects')).toBeInTheDocument();
       const table = screen.getByTestId('projects-table');
       expect(within(table).getByText('Test Project')).toBeInTheDocument();
-    });
-
-    it('does not show UserProjectsCard when PROJECTS_MVP flag is disabled', async () => {
-      disable('PROJECTS_MVP');
-      await renderResearch(userWithProjects);
-
-      expect(screen.queryByText('Projects')).not.toBeInTheDocument();
-      expect(screen.queryByText('Test Project')).not.toBeInTheDocument();
     });
   });
 });

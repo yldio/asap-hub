@@ -16,7 +16,6 @@ import {
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { network } from '@asap-hub/routing';
-import { enable, reset } from '@asap-hub/flags';
 
 import About from '../About';
 import { refreshTeamState } from '../state';
@@ -31,9 +30,7 @@ const mockedGetTeamGroups = getTeamInterestGroups as jest.MockedFunction<
 const teamId = '42';
 
 beforeEach(jest.clearAllMocks);
-afterEach(() => {
-  reset();
-});
+
 const renderTeamAbout = async (
   aboutProps: Omit<
     ComponentProps<typeof About>,
@@ -97,8 +94,7 @@ it('renders the member links', async () => {
   await waitFor(() => expect(mockedGetTeamGroups).toHaveBeenCalled());
 });
 
-it('renders funded project information on the About tab when PROJECTS_MVP is enabled', async () => {
-  enable('PROJECTS_MVP');
+it('renders funded project information on the About tab', async () => {
   const team = {
     ...createTeamResponse(),
     projectTitle: 'Project Alpha',

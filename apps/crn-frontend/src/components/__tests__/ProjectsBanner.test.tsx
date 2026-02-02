@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { enable, disable } from '@asap-hub/flags';
 import { ProjectsBanner } from '../ProjectsBanner';
 
 const PROJECTS_BANNER_DISMISSED_KEY = 'crn-projects-banner-dismissed';
@@ -8,24 +7,13 @@ const PROJECTS_BANNER_DISMISSED_KEY = 'crn-projects-banner-dismissed';
 describe('ProjectsBanner', () => {
   beforeEach(() => {
     localStorage.removeItem(PROJECTS_BANNER_DISMISSED_KEY);
-    enable('PROJECTS_MVP');
   });
 
   afterEach(() => {
     localStorage.removeItem(PROJECTS_BANNER_DISMISSED_KEY);
-    disable('PROJECTS_MVP');
-  });
-
-  it('does not render when PROJECTS_MVP flag is disabled', () => {
-    disable('PROJECTS_MVP');
-
-    const { container } = render(<ProjectsBanner />);
-
-    expect(container.firstChild).toBeNull();
   });
 
   it('does not render when banner has been dismissed', () => {
-    enable('PROJECTS_MVP');
     localStorage.setItem(PROJECTS_BANNER_DISMISSED_KEY, 'true');
 
     const { container } = render(<ProjectsBanner />);
@@ -33,7 +21,7 @@ describe('ProjectsBanner', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders the banner when flag is enabled and not dismissed', async () => {
+  it('renders the banner when not dismissed', async () => {
     render(<ProjectsBanner />);
 
     await waitFor(() => {
@@ -48,7 +36,6 @@ describe('ProjectsBanner', () => {
   });
 
   it('dismisses the banner when close button is clicked', async () => {
-    enable('PROJECTS_MVP');
     localStorage.removeItem(PROJECTS_BANNER_DISMISSED_KEY);
 
     const { container } = render(<ProjectsBanner />);
@@ -69,7 +56,6 @@ describe('ProjectsBanner', () => {
   });
 
   it('does not render after being dismissed and re-rendered', async () => {
-    enable('PROJECTS_MVP');
     localStorage.removeItem(PROJECTS_BANNER_DISMISSED_KEY);
 
     const { rerender } = render(<ProjectsBanner />);

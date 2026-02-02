@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import {
   CRNTagSearchEntities,
   CRNTagSearchEntitiesListArray,
@@ -6,7 +5,6 @@ import {
 import { Routes, Route } from 'react-router-dom';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
-import { useFlags } from '@asap-hub/react-context';
 
 import Tags from './TagsList';
 import { useAlgolia } from '../hooks/algolia';
@@ -25,15 +23,6 @@ const options: { label: string; value: CRNTagSearchEntities }[] = [
 ];
 
 const RoutesComponent: React.FC<Record<string, never>> = () => {
-  const { isEnabled } = useFlags();
-
-  const filteredOptions = useMemo(
-    () =>
-      !isEnabled('PROJECTS_MVP')
-        ? options.filter((option) => option.value !== 'project')
-        : options,
-    [isEnabled],
-  );
   const { client } = useAlgolia();
   const { tags, setTags, filters, toggleFilter } = useSearch();
 
@@ -41,13 +30,8 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
     CRNTagSearchEntitiesListArray.includes(value as CRNTagSearchEntities),
   ) as CRNTagSearchEntities[];
 
-  const initialEntities = isEnabled('PROJECTS_MVP')
-    ? CRNTagSearchEntitiesListArray
-    : CRNTagSearchEntitiesListArray.filter(
-        (entity: CRNTagSearchEntities) => entity !== 'project',
-      );
-
-  const entities = urlEntities.length > 0 ? urlEntities : initialEntities;
+  const entities =
+    urlEntities.length > 0 ? urlEntities : CRNTagSearchEntitiesListArray;
 
   return (
     <Routes>
@@ -69,9 +53,8 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
               }));
             }}
             filters={new Set(urlEntities)}
-            filterOptions={[{ title: 'AREAS' }, ...filteredOptions]}
+            filterOptions={[{ title: 'AREAS' }, ...options]}
             onChangeFilter={toggleFilter}
-            isProjectsEnabled={isEnabled('PROJECTS_MVP')}
           >
             <Frame title="Search">
               <Tags entities={entities} />

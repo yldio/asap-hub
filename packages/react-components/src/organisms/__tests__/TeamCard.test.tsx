@@ -1,7 +1,6 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
-import * as flags from '@asap-hub/flags';
 import TeamCard from '../TeamCard';
 
 const teamCardProps: ComponentProps<typeof TeamCard> = {
@@ -101,8 +100,7 @@ it('renders the resource type pill for Resource Team', () => {
   expect(getByText('Test Resource')).toBeVisible();
 });
 
-it('renders project title and links to discovery project when PROJECTS_MVP flag is enabled', () => {
-  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+it('renders project title and links to discovery project', () => {
   const { getByText } = render(
     <TeamCard
       {...teamCardProps}
@@ -119,8 +117,7 @@ it('renders project title and links to discovery project when PROJECTS_MVP flag 
   );
 });
 
-it('renders project title and links to resource project when PROJECTS_MVP flag is enabled', () => {
-  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+it('renders project title and links to resource project', () => {
   const { getByText } = render(
     <TeamCard
       {...teamCardProps}
@@ -136,21 +133,7 @@ it('renders project title and links to resource project when PROJECTS_MVP flag i
   );
 });
 
-it('does not render project title when PROJECTS_MVP flag is disabled', () => {
-  jest.spyOn(flags, 'isEnabled').mockReturnValue(false);
-  const { queryByText } = render(
-    <TeamCard
-      {...teamCardProps}
-      teamType="Discovery Team"
-      projectType="Discovery Project"
-      linkedProjectId="123"
-    />,
-  );
-  expect(queryByText(teamCardProps.projectTitle!)).not.toBeInTheDocument();
-});
-
 it('renders project title without link when linkedProjectId is not provided', () => {
-  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
   const { getByText } = render(
     <TeamCard
       {...teamCardProps}
@@ -164,8 +147,7 @@ it('renders project title without link when linkedProjectId is not provided', ()
   expect(anchor).not.toBeInTheDocument();
 });
 
-it('renders the Discovery Project icon for Discovery Team when PROJECTS_MVP flag is enabled', () => {
-  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+it('renders the Discovery Project icon for Discovery Team', () => {
   const { getByTitle } = render(
     <TeamCard
       {...teamCardProps}
@@ -177,8 +159,7 @@ it('renders the Discovery Project icon for Discovery Team when PROJECTS_MVP flag
   expect(getByTitle('Discovery Project')).toBeInTheDocument();
 });
 
-it('renders the Resource Project icon for Resource Team when PROJECTS_MVP flag is enabled', () => {
-  jest.spyOn(flags, 'isEnabled').mockReturnValue(true);
+it('renders the Resource Project icon for Resource Team', () => {
   const { getByTitle } = render(
     <TeamCard
       {...teamCardProps}

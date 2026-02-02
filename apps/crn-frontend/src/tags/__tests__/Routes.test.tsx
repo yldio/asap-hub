@@ -1,12 +1,10 @@
 import {
   createAlgoliaResponse,
   AlgoliaSearchClient,
-  CRNTagSearchEntities,
   CRNTagSearchEntitiesListArray,
   EMPTY_ALGOLIA_FACET_HITS,
   EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
-import { enable, reset } from '@asap-hub/flags';
 import { createUserListItemResponse } from '@asap-hub/fixtures';
 import {
   fireEvent,
@@ -89,26 +87,6 @@ it('allows typing in tag queries', async () => {
   expect(searchBox.value).toEqual('test123');
   await waitFor(() => {
     expect(mockSearchForTagValues).toHaveBeenCalledWith(
-      CRNTagSearchEntitiesListArray.filter(
-        (entity: CRNTagSearchEntities) => entity !== 'project',
-      ),
-      'test123',
-      {
-        facetFilters: [],
-      },
-    );
-  });
-});
-
-it('allows typing in tag queries and includes project when PROJECTS_MVP is enabled', async () => {
-  enable('PROJECTS_MVP');
-  await renderTagsPage();
-  const searchBox = screen.getByRole('combobox') as HTMLInputElement;
-
-  await userEvent.type(searchBox, 'test123');
-  expect(searchBox.value).toEqual('test123');
-  await waitFor(() => {
-    expect(mockSearchForTagValues).toHaveBeenCalledWith(
       CRNTagSearchEntitiesListArray,
       'test123',
       {
@@ -116,7 +94,6 @@ it('allows typing in tag queries and includes project when PROJECTS_MVP is enabl
       },
     );
   });
-  reset();
 });
 
 describe('tags', () => {

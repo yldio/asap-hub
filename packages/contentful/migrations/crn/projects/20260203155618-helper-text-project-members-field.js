@@ -1,4 +1,4 @@
-module.exports.description = '<Put your description here>';
+module.exports.description = 'Add helper text to project members field';
 
 module.exports.up = (migration) => {
   const contentTypes = migration.editContentType('projects');

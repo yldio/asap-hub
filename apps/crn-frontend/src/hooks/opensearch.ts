@@ -1,6 +1,5 @@
 import {
   MeetingRepAttendanceResponse,
-  OSChampionOpensearchResponse,
   PreliminaryDataSharingDataObject,
   PreprintComplianceOpensearchResponse,
   PublicationComplianceOpensearchResponse,
@@ -12,6 +11,8 @@ import {
   TeamCollaborationResponse,
   TeamCollaborationPerformance,
   UserCollaborationPerformance,
+  AnalyticsTeamLeadershipResponse,
+  OSChampionOpensearchResponse,
 } from '@asap-hub/model';
 import { useRecoilValue } from 'recoil';
 import {
@@ -28,7 +29,10 @@ import {
   getPreliminaryDataSharing,
 } from '../analytics/collaboration/api';
 import { getMeetingRepAttendance } from '../analytics/engagement/api';
-import { getAnalyticsOSChampion } from '../analytics/leadership/api';
+import {
+  getAnalyticsLeadership,
+  getAnalyticsOSChampion,
+} from '../analytics/leadership/api';
 import {
   getPublicationCompliance,
   getPreprintCompliance,
@@ -75,6 +79,23 @@ export const useOpensearchMetrics = () => {
       return getPreprintCompliance(client, paginationParams);
     },
 
+    getAnalyticsLeadership(
+      paginationParams: Parameters<typeof getAnalyticsLeadership>[1],
+    ) {
+      const client = new OpensearchClient<AnalyticsTeamLeadershipResponse>(
+        'wg-leadership',
+        authorization,
+      );
+      return getAnalyticsLeadership(client, paginationParams);
+    },
+
+    getAnalyticsLeadershipTagSuggestions(tagQuery: string) {
+      const client = new OpensearchClient<AnalyticsTeamLeadershipResponse>(
+        'wg-leadership',
+        authorization,
+      );
+      return client.getTagSuggestions(tagQuery, 'flat');
+    },
     getAnalyticsOSChampion(
       paginationParams: Parameters<typeof getAnalyticsOSChampion>[1],
     ) {

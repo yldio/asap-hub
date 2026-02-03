@@ -237,3 +237,45 @@ export const taglessSearchQueryBuilder = (
     },
   };
 };
+
+export const leadershipRecordSearchQueryBuilder = (
+  options: OpensearchSearchOptions,
+): SearchQuery => {
+  const shouldClauses = options.searchTags.flatMap((term) => {
+    const pattern = `*${term.toLowerCase()}*`;
+    return [
+      {
+        wildcard: {
+          'displayName.keyword': {
+            value: pattern,
+            case_insensitive: true,
+          },
+        },
+      },
+    ];
+  });
+
+  const mustClauses: MustClause[] = [];
+
+  return {
+    from: options.currentPage * options.pageSize,
+    size: options.pageSize,
+    query: {
+      bool: {
+        ...(shouldClauses.length > 0
+          ? { should: shouldClauses, minimum_should_match: 1 }
+          : {}),
+        must: mustClauses,
+      },
+    },
+    sort: options.sort
+      ? (options.sort as SearchQuery['sort'])
+      : [
+          {
+            'displayName.keyword': {
+              order: 'asc',
+            },
+          },
+        ],
+  };
+};

@@ -13,6 +13,7 @@ import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useFlags } from '@asap-hub/react-context';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
 import {
@@ -20,8 +21,13 @@ import {
   useAnalyticsOpensearch,
   useAnalytics,
   usePaginationParams,
+  useOpensearchMetrics,
 } from '../../hooks';
-import { getAnalyticsLeadership, getAnalyticsOSChampion } from './api';
+import {
+  AnalyticsSearchOptionsWithSort,
+  getAnalyticsLeadership,
+  getAnalyticsOSChampion,
+} from './api';
 import { leadershipToCSV, osChampionToCSV } from './export';
 import OSChampion from './OSChampion';
 import TeamLeadership from './TeamLeadership';
@@ -45,6 +51,8 @@ const Leadership: FC<Record<string, never>> = () => {
   const { tags, setTags } = useSearch();
   const { timeRange } = useAnalytics();
   const { client } = useAnalyticsAlgolia();
+  const { isEnabled } = useFlags();
+  const opensearchMetrics = useOpensearchMetrics();
   const osChampionClient =
     useAnalyticsOpensearch<OSChampionOpensearchResponse>('os-champion');
   const isOSChampionPage = metric === 'os-champion';
@@ -57,12 +65,18 @@ const Leadership: FC<Record<string, never>> = () => {
           header: true,
         },
       ),
-      (paginationParams) =>
-        getAnalyticsLeadership(client, {
-          metric,
+      (paginationParams) => {
+        const useOpensearch =
+          isEnabled('OPENSEARCH_METRICS') && metric === 'working-group';
+        const fetcher = useOpensearch
+          ? opensearchMetrics.getAnalyticsLeadership
+          : (params: AnalyticsSearchOptionsWithSort) =>
+              getAnalyticsLeadership(client, params);
+        return fetcher({
           tags,
           ...paginationParams,
-        }),
+        });
+      },
       leadershipToCSV(
         metric as 'working-group' | 'interest-group' | 'os-champion',
       ),
@@ -95,6 +109,14 @@ const Leadership: FC<Record<string, never>> = () => {
       const response =
         await osChampionClient.client.getTagSuggestions(tagQuery);
 
+      return response.map((value) => ({
+        label: value,
+        value,
+      }));
+    }
+    if (isEnabled('OPENSEARCH_METRICS') && metric === 'working-group') {
+      const response =
+        await opensearchMetrics.getAnalyticsLeadershipTagSuggestions(tagQuery);
       return response.map((value) => ({
         label: value,
         value,

@@ -324,10 +324,15 @@ export const downloadAnalyticsXLSX =
           'wg-leadership',
           async () => undefined,
           (paginationParams) =>
-            getAnalyticsLeadership(algoliaClient, {
-              tags,
-              ...paginationParams,
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getAnalyticsLeadership({
+                  tags,
+                  ...paginationParams,
+                })
+              : getAnalyticsLeadership(algoliaClient, {
+                  tags,
+                  ...paginationParams,
+                }),
           () => leadershipToCSV('working-group'),
         ),
       'ig-leadership': () =>

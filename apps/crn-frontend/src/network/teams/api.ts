@@ -505,38 +505,6 @@ export const getManuscriptVersions = async (
   };
 };
 
-export const uploadManuscriptFile = async (
-  file: File,
-  fileType: ManuscriptFileType,
-  authorization: string,
-  handleError: (errorMessage: string) => void,
-): Promise<ManuscriptFileResponse | undefined> => {
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('fileType', fileType);
-
-  const resp = await fetch(`${API_BASE_URL}/manuscripts/file-upload`, {
-    method: 'POST',
-    headers: {
-      authorization,
-      ...createSentryHeaders(),
-    },
-    body: formData,
-  });
-
-  if (!resp.ok) {
-    if (resp.status === 400 && handleError) {
-      handleError((await resp.json()).message);
-      return undefined;
-    }
-    throw new Error(
-      `Failed to upload ${fileType.toLowerCase()}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-
-  return resp.json();
-};
-
 export const createComplianceReport = async (
   complianceReport: ComplianceReportPostRequest,
   authorization: string,
@@ -607,27 +575,6 @@ export const markDiscussionAsRead = async (
     );
   }
   return response;
-};
-
-export const getDiscussion = async (
-  id: string,
-  authorization: string,
-): Promise<DiscussionResponse | undefined> => {
-  const resp = await fetch(`${API_BASE_URL}/discussions/${id}`, {
-    headers: {
-      authorization,
-      ...createSentryHeaders(),
-    },
-  });
-  if (!resp.ok) {
-    if (resp.status === 404) {
-      return undefined;
-    }
-    throw new Error(
-      `Failed to fetch discussion with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
-    );
-  }
-  return resp.json();
 };
 
 export const createDiscussion = async (

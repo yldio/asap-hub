@@ -18,8 +18,6 @@ import {
   ComplianceReportPostRequest,
   DiscussionCreateRequest,
   DiscussionDataObject,
-  DiscussionResponse,
-  ManuscriptFileResponse,
   ManuscriptPostRequest,
   ManuscriptPutRequest,
   RequestedAPCCoverageOption,
@@ -38,7 +36,6 @@ import {
   createPreprintResearchOutput,
   createResearchOutput,
   getAlgoliaTeams,
-  getDiscussion,
   getLabs,
   getManuscript,
   getManuscripts,
@@ -50,10 +47,8 @@ import {
   markDiscussionAsRead,
   patchTeam,
   resubmitManuscript,
-  updateDiscussion,
   updateManuscript,
   updateTeamResearchOutput,
-  uploadManuscriptFile,
   uploadManuscriptFileViaPresignedUrl,
 } from '../api';
 
@@ -944,97 +939,6 @@ describe('Manuscript', () => {
     });
   });
 
-  describe('uploadManuscriptFile', () => {
-    // nock does not deal well with actual files so we use this as a mock instead
-    const file = 'test-file' as unknown as File;
-    const mockResponse: ManuscriptFileResponse = {
-      id: '42',
-      filename: 'test-file',
-      url: 'https://example.com/test-file',
-    };
-
-    afterEach(() => {
-      nock.cleanAll();
-    });
-
-    it('makes an authorized POST request', async () => {
-      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .post('/manuscripts/file-upload')
-        .reply(200, {});
-
-      await uploadManuscriptFile(
-        file,
-        'Manuscript File',
-        'Bearer x',
-        jest.fn(),
-      );
-      expect(nock.isDone()).toBe(true);
-    });
-
-    it('passes the object in the body', async () => {
-      nock(API_BASE_URL)
-        .post('/manuscripts/file-upload', (body) => {
-          if (typeof body === 'string' && body.includes('test-file')) {
-            return true;
-          }
-          return false;
-        })
-        .reply(200, {});
-
-      await uploadManuscriptFile(
-        file,
-        'Manuscript File',
-        'Bearer x',
-        jest.fn(),
-      );
-      expect(nock.isDone()).toBe(true);
-    });
-
-    it('returns a successfully uploaded file data', async () => {
-      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .post('/manuscripts/file-upload')
-        .reply(200, mockResponse);
-
-      const response = await uploadManuscriptFile(
-        file,
-        'Manuscript File',
-        'Bearer x',
-        jest.fn(),
-      );
-      expect(response).toEqual(mockResponse);
-    });
-
-    it('errors for an error status', async () => {
-      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .post('/manuscripts/file-upload')
-        .reply(500, {});
-
-      await expect(
-        uploadManuscriptFile(file, 'Manuscript File', 'Bearer x', jest.fn()),
-      ).rejects.toThrowErrorMatchingInlineSnapshot(
-        `"Failed to upload manuscript file. Expected status 2xx. Received status 500."`,
-      );
-    });
-
-    it('invokes handleError with the error message when a 400 error occurs', async () => {
-      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .post('/manuscripts/file-upload')
-        .reply(400, {
-          message: 'Validation Error',
-        });
-
-      const handleErrorMock = jest.fn();
-      await uploadManuscriptFile(
-        file,
-        'Manuscript File',
-        'Bearer x',
-        handleErrorMock,
-      );
-
-      expect(handleErrorMock).toHaveBeenCalledWith('Validation Error');
-    });
-  });
-
   describe('resubmitManuscript', () => {
     const payload: ManuscriptPostRequest = {
       title: 'The Manuscript',
@@ -1142,77 +1046,6 @@ describe('Compliance Report', () => {
 });
 
 describe('Discussion', () => {
-  describe('getDiscussion', () => {
-    it('makes an authorized GET request for the discussion id', async () => {
-      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .get('/discussions/42')
-        .reply(200, {});
-      await getDiscussion('42', 'Bearer x');
-      expect(nock.isDone()).toBe(true);
-    });
-
-    it('returns a successfully fetched discussion', async () => {
-      const discussion = createDiscussionResponse();
-      nock(API_BASE_URL).get('/discussions/42').reply(200, discussion);
-      expect(await getDiscussion('42', '')).toEqual(discussion);
-    });
-
-    it('returns undefined for a 404', async () => {
-      nock(API_BASE_URL).get('/discussions/42').reply(404);
-      expect(await getDiscussion('42', '')).toBe(undefined);
-    });
-
-    it('errors for another status', async () => {
-      nock(API_BASE_URL).get('/discussions/42').reply(500);
-      await expect(
-        getDiscussion('42', ''),
-      ).rejects.toThrowErrorMatchingInlineSnapshot(
-        `"Failed to fetch discussion with id 42. Expected status 2xx or 404. Received status 500."`,
-      );
-    });
-  });
-
-  describe('updateDiscussion', () => {
-    const patch = {
-      text: 'test reply',
-      manuscriptId: 'manuscript-id-1',
-    };
-    it('makes an authorized PATCH request for the discussion id', async () => {
-      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-        .patch('/discussions/42')
-        .reply(200, {});
-
-      await updateDiscussion('42', patch, 'Bearer x');
-      expect(nock.isDone()).toBe(true);
-    });
-
-    it('passes the patch object in the body', async () => {
-      nock(API_BASE_URL).patch('/discussions/42', patch).reply(200, {});
-
-      await updateDiscussion('42', patch, '');
-      expect(nock.isDone()).toBe(true);
-    });
-
-    it('returns a successfully updated discussion', async () => {
-      const updated: Partial<DiscussionResponse> = {
-        replies: [createMessage('')],
-      };
-      nock(API_BASE_URL).patch('/discussions/42', patch).reply(200, updated);
-
-      expect(await updateDiscussion('42', patch, '')).toEqual(updated);
-    });
-
-    it('errors for an error status', async () => {
-      nock(API_BASE_URL).patch('/discussions/42', patch).reply(500, {});
-
-      await expect(
-        updateDiscussion('42', patch, ''),
-      ).rejects.toThrowErrorMatchingInlineSnapshot(
-        `"Failed to update discussion with id 42. Expected status 200. Received status 500."`,
-      );
-    });
-  });
-
   describe('createDiscussion', () => {
     const manuscriptId = '42';
     const title = 'test discussion title';

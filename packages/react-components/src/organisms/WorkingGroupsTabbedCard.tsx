@@ -8,7 +8,7 @@ import { splitListBy } from '../utils';
 import { Paragraph } from '../atoms';
 
 const containerStyles = css({
-  padding: `${rem(32)} 0`,
+  marginTop: rem(32),
   display: 'grid',
   rowGap: rem(12),
   [`@media (min-width: ${tabletScreen.min}px)`]: {

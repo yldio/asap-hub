@@ -51,7 +51,7 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
   );
 
   return (
-    <Card padding={false}>
+    <Card>
       <TabbedContent
         title="Working Group Members"
         description={

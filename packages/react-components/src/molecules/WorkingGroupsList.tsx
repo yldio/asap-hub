@@ -27,6 +27,7 @@ const listItemStyle = css({
   gridTemplateColumns: '1fr',
   gridTemplateRows: '1fr 1fr',
   gridRowGap: rem(12),
+  gridColumnGap: rem(12),
 
   '&:not(:last-of-type)': {
     marginBottom: rem(8),

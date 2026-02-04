@@ -1,7 +1,6 @@
 import {
   AlgoliaSearchClient,
   EMPTY_ALGOLIA_FACET_HITS,
-  EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
@@ -21,7 +20,7 @@ import { teamLeadershipResponse } from '@asap-hub/fixtures';
 import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
-import { useAnalyticsOpensearch } from '../../../hooks';
+import { useAnalyticsOpensearch, useOpensearchMetrics } from '../../../hooks';
 import { OpensearchClient } from '../../utils/opensearch';
 
 jest.spyOn(console, 'error').mockImplementation();
@@ -67,6 +66,24 @@ jest.mock('../../../hooks/opensearch', () => ({
   useAnalyticsOpensearch: jest.fn(),
 }));
 
+jest.mock('../../../hooks', () => {
+  const actual = jest.requireActual('../../../hooks');
+  return {
+    ...actual,
+    useOpensearchMetrics: jest.fn(),
+  };
+});
+
+jest.mock('@asap-hub/react-context', () => {
+  const actual = jest.requireActual('@asap-hub/react-context');
+  return {
+    ...actual,
+    useFlags: jest.fn(() => ({
+      isEnabled: jest.fn(() => false),
+    })),
+  };
+});
+
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
 >;
@@ -94,6 +111,10 @@ const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
 const mockUseAnalyticsOpensearch =
   useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
+const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
+  typeof useOpensearchMetrics
+>;
+
 beforeEach(() => {
   jest.clearAllMocks();
 
@@ -118,7 +139,19 @@ beforeEach(() => {
   mockUseAnalyticsAlgolia.mockReturnValue({
     client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
   });
-  mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
+  mockAlgoliaClient.search.mockResolvedValue({
+    hits: [],
+    nbHits: 0,
+    page: 0,
+    nbPages: 0,
+    hitsPerPage: 10,
+    exhaustiveNbHits: true,
+    processingTimeMS: 0,
+    query: '',
+    params: '',
+    index: 'test-index',
+    queryID: 'test-query-id',
+  });
 
   mockGetTagSuggestions.mockResolvedValue(['Alessi', 'tag2']);
 
@@ -127,6 +160,15 @@ beforeEach(() => {
       mockOpensearchClient as unknown as OpensearchClient<OSChampionOpensearchResponse>,
   });
   mockOpensearchClient.search.mockResolvedValue({ items: [], total: 0 });
+
+  mockUseOpensearchMetrics.mockReturnValue({
+    getAnalyticsLeadership: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+    getAnalyticsLeadershipTagSuggestions: jest
+      .fn()
+      .mockResolvedValue(['Alessi', 'tag2']),
+  } as unknown as ReturnType<typeof useOpensearchMetrics>);
 });
 
 const getPath = (metric: string) =>
@@ -141,6 +183,7 @@ const renderPage = async (metric = 'working-group') => {
             pageSize: 10,
             sort: 'team_asc',
             tags: [],
+            metric: metric as 'working-group' | 'interest-group',
           }),
         );
       }}
@@ -439,6 +482,7 @@ describe('error handling', () => {
               pageSize: 10,
               sort: 'team_asc',
               tags: [],
+              metric: 'working-group',
             }),
           );
         }}
@@ -493,6 +537,7 @@ describe('error handling', () => {
               pageSize: 10,
               sort: 'team_asc',
               tags: [],
+              metric: 'working-group',
             }),
             error,
           );
@@ -540,7 +585,6 @@ describe('error handling', () => {
     };
 
     mockSearch.mockResolvedValueOnce({
-      ...EMPTY_ALGOLIA_RESPONSE,
       hits: [
         {
           ...mockTeam1,
@@ -554,6 +598,15 @@ describe('error handling', () => {
         },
       ],
       nbHits: 2,
+      page: 0,
+      nbPages: 1,
+      hitsPerPage: 10,
+      exhaustiveNbHits: true,
+      processingTimeMS: 0,
+      query: '',
+      params: '',
+      index: 'test-index',
+      queryID: 'test-query-id',
     });
 
     const result = render(
@@ -565,6 +618,7 @@ describe('error handling', () => {
               pageSize: 10,
               sort: 'team_asc',
               tags: [],
+              metric: 'working-group',
             }),
           );
         }}

@@ -8,7 +8,7 @@ import {
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
 import { OSChampionOpensearchResponse, SortOSChampion } from '@asap-hub/model';
 import {
-  AnalyticsSearchOptions,
+  AnalyticsSearchOptionsWithSort,
   getAnalyticsLeadership,
   getAnalyticsOSChampion,
 } from '../api';
@@ -21,10 +21,11 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-const defaultOptions: AnalyticsSearchOptions = {
+const defaultOptions: AnalyticsSearchOptionsWithSort = {
   pageSize: null,
   currentPage: null,
   tags: [],
+  metric: 'working-group',
 };
 
 describe('getAnalyticsLeadership', () => {

@@ -486,6 +486,17 @@ describe('ProjectDetailHeader', () => {
       );
       expect(screen.queryByText('Access Drive')).not.toBeInTheDocument();
     });
+
+    it('renders member link with href /network/users/{id}', () => {
+      render(
+        <ProjectDetailHeader
+          {...mockResourceMemberProject}
+          aboutHref="/projects/resource/1/about"
+        />,
+      );
+      const memberLink = screen.getByText('John Doe').closest('a');
+      expect(memberLink).toHaveAttribute('href', '/network/users/user-1');
+    });
   });
 
   describe('Trainee projects', () => {
@@ -517,6 +528,19 @@ describe('ProjectDetailHeader', () => {
         />,
       );
       expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
+    });
+
+    it('renders trainee and mentor links with href /network/users/{id}', () => {
+      render(
+        <ProjectDetailHeader
+          {...mockTraineeProject}
+          aboutHref="/projects/trainee/1/about"
+        />,
+      );
+      const traineeLink = screen.getByText('Emily Trainee').closest('a');
+      const mentorLink = screen.getByText('Dr. Sarah Mentor').closest('a');
+      expect(traineeLink).toHaveAttribute('href', '/network/users/trainee-1');
+      expect(mentorLink).toHaveAttribute('href', '/network/users/trainer-1');
     });
 
     it('renders multiple mentors correctly', () => {

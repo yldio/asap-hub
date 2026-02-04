@@ -17,6 +17,7 @@ import { getStatusPillAccent } from '../organisms/ProjectCard';
 import PageInfoContainer from './PageInfoContainer';
 import Toast from '../organisms/Toast';
 import { groupTraineeProjectMembers } from '../utils';
+import { ProjectMember } from '../../../model/src';
 
 const headerStyles = css({
   display: 'flex',
@@ -145,8 +146,13 @@ export const getTeamIcon = (project: ProjectDetail) => {
   return null;
 };
 
-const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
+const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
   const { pointOfContactEmail, aboutHref } = project;
+
+  const membersWithHref = project.members?.map((member: ProjectMember) => ({
+    ...member,
+    href: `/network/users/${member.id}`,
+  }));
 
   return (
     <>
@@ -303,17 +309,17 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
 
             {project.projectType === 'Resource Project' &&
               !project.isTeamBased &&
-              project.members && (
+              membersWithHref && (
                 <div css={metadataRowStyles}>
                   <span css={iconStyles}>{getTeamIcon(project)}</span>
-                  <UsersList users={project.members} separator="•" noMargin />
+                  <UsersList users={membersWithHref} separator="•" noMargin />
                 </div>
               )}
 
             {project.projectType === 'Trainee Project' &&
               (() => {
                 const { trainees, mentors } = groupTraineeProjectMembers(
-                  project.members,
+                  membersWithHref,
                 );
 
                 return (

@@ -1,22 +1,30 @@
 module.exports.description = 'Add helper text to project members field';
 
 module.exports.up = (migration) => {
-  const contentTypes = migration.editContentType('projects');
+  const projects = migration.editContentType('projects');
 
-  contentTypes.editField('members').name('Members (Users and Teams)');
+  projects.editField('members').name('Members (Users and Teams)');
 
-  contentTypes.changeFieldControl('members', 'builtin', 'entryLinksEditor', {
+  projects.changeFieldControl('members', 'app', 'Yp64pYYDuRNHdvAAAJPYa', {
+    entityName: 'projectMember',
+    showUserEmail: false,
+    showLinkEntityAction: false,
+    showCreateEntityAction: true,
     helpText:
       'User-based projects: add users only. Team-based projects: add teams only.',
   });
 };
 
 module.exports.down = (migration) => {
-  const contentTypes = migration.editContentType('projects');
+  const projects = migration.editContentType('projects');
 
-  contentTypes.editField('members').name('Members');
+  projects.editField('members').name('Members');
 
-  contentTypes.changeFieldControl('members', 'builtin', 'entryLinksEditor', {
+  projects.changeFieldControl('members', 'app', 'Yp64pYYDuRNHdvAAAJPYa', {
+    entityName: 'projectMember',
+    showUserEmail: false,
+    showLinkEntityAction: false,
+    showCreateEntityAction: true,
     helpText: '',
   });
 };

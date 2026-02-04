@@ -78,15 +78,10 @@ jest.mock('../../../hooks', () => {
   };
 });
 
-jest.mock('@asap-hub/react-context', () => {
-  const actual = jest.requireActual('@asap-hub/react-context');
-  return {
-    ...actual,
-    useFlags: jest.fn(() => ({
-      isEnabled: jest.fn(() => false),
-    })),
-  };
-});
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: jest.fn(),
+}));
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream

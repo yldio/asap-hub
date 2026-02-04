@@ -25,9 +25,6 @@ export const FETCH_TAGS_WITH_COUNTS = gql`
           eventsCollection(limit: 1) {
             total
           }
-          teamsCollection(limit: 1) {
-            total
-          }
           workingGroupsCollection(limit: 1) {
             total
           }

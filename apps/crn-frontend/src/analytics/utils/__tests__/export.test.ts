@@ -1524,6 +1524,58 @@ describe('downloadAnalyticsXLSX', () => {
       'Team Co-Prod Across Teams',
     );
   });
+
+  it('should process wg-leadership with OpenSearch when flag is enabled', async () => {
+    // Mock OpenSearch leadership response
+    mockOpensearchMetrics.getAnalyticsLeadership.mockResolvedValue({
+      items: [
+        {
+          ...teamLeadershipResponse,
+          id: 'team-leadership-1',
+        },
+      ],
+      total: 1,
+    });
+
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
+    })('current-year', new Set(['wg-leadership']) as Set<MetricExportKeys>);
+
+    // Verify getAnalyticsLeadership was called with correct parameters
+    expect(mockOpensearchMetrics.getAnalyticsLeadership).toHaveBeenCalledWith({
+      tags: [],
+      currentPage: 0,
+      pageSize: 200,
+    });
+
+    // Verify worksheet was created with transformed data
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([
+      {
+        Team: 'Team 1',
+        'Team Status': 'Active',
+        'Inactive Since': '',
+        'Currently a member': '3',
+        'Currently in a leadership role': '1',
+        'Previously a member': '4',
+        'Previously in a leadership role': '2',
+      },
+    ]);
+
+    // Verify worksheet was appended with correct sheet name
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Working Groups',
+    );
+
+    // Verify workbook was written
+    expect(XLSX.writeFile).toHaveBeenCalledWith(
+      'workbook',
+      expect.stringContaining('crn-analytics-current-year'),
+    );
+  });
 });
 
 describe('getPerformanceRanking', () => {

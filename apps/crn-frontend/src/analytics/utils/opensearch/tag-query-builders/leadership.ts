@@ -1,5 +1,6 @@
 import type {
   AggregationBucket,
+  SearchScope,
   ShouldClause,
   TagQueryBuilder,
   TagSuggestionsResponse,
@@ -63,7 +64,13 @@ function isLeadershipBasedIndexSearchQueryResponse(
 
 export const leadershipRecordTagQueryBuilder: TagQueryBuilder = (
   searchQuery: string,
+  searchScope: SearchScope,
 ): ReturnType<TagQueryBuilder> => {
+  if (searchScope === 'extended') {
+    throw new Error(
+      `The search scope 'extended' is not available for this index`,
+    );
+  }
   if (!searchQuery) {
     const aggs: LeadershipBasedIndexEmptyQueryAggregation = {
       [LEADERSHIP_BASED_INDEX_TEAMS]: {

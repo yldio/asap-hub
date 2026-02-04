@@ -15,7 +15,11 @@ import React, { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
-import { OSChampionOpensearchResponse } from '@asap-hub/model';
+import {
+  OSChampionOpensearchResponse,
+  AnalyticsTeamLeadershipResponse,
+} from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
 import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
@@ -74,15 +78,10 @@ jest.mock('../../../hooks', () => {
   };
 });
 
-jest.mock('@asap-hub/react-context', () => {
-  const actual = jest.requireActual('@asap-hub/react-context');
-  return {
-    ...actual,
-    useFlags: jest.fn(() => ({
-      isEnabled: jest.fn(() => false),
-    })),
-  };
-});
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: jest.fn(),
+}));
 
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
@@ -114,6 +113,15 @@ const mockUseAnalyticsOpensearch =
 const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
   typeof useOpensearchMetrics
 >;
+
+const mockUseFlags = useFlags as jest.MockedFunction<typeof useFlags>;
+
+// Create actual OpensearchClient instances for testing
+const wgLeadershipClient =
+  new OpensearchClient<AnalyticsTeamLeadershipResponse>(
+    'wg-leadership',
+    'Bearer token',
+  );
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -155,10 +163,21 @@ beforeEach(() => {
 
   mockGetTagSuggestions.mockResolvedValue(['Alessi', 'tag2']);
 
-  mockUseAnalyticsOpensearch.mockReturnValue({
-    client:
-      mockOpensearchClient as unknown as OpensearchClient<OSChampionOpensearchResponse>,
+  // Mock useAnalyticsOpensearch to return different clients based on index
+  mockUseAnalyticsOpensearch.mockImplementation((index: string) => {
+    if (index === 'wg-leadership') {
+      return { client: wgLeadershipClient };
+    }
+    return {
+      client:
+        mockOpensearchClient as unknown as OpensearchClient<OSChampionOpensearchResponse>,
+    };
   });
+
+  // Set up default search response for wg-leadership client
+  jest
+    .spyOn(wgLeadershipClient, 'search')
+    .mockResolvedValue({ items: [], total: 0 });
   mockOpensearchClient.search.mockResolvedValue({ items: [], total: 0 });
 
   mockUseOpensearchMetrics.mockReturnValue({
@@ -169,6 +188,15 @@ beforeEach(() => {
       .fn()
       .mockResolvedValue(['Alessi', 'tag2']),
   } as unknown as ReturnType<typeof useOpensearchMetrics>);
+
+  mockUseFlags.mockReturnValue({
+    isEnabled: jest.fn().mockReturnValue(false),
+    reset: jest.fn(),
+    disable: jest.fn(),
+    setCurrentOverrides: jest.fn(),
+    setEnvironment: jest.fn(),
+    enable: jest.fn(),
+  });
 });
 
 const getPath = (metric: string) =>
@@ -386,6 +414,80 @@ describe('csv export', () => {
     await userEvent.click(screen.getByText(/csv/i));
     expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
       expect.stringMatching(/leadership_os-champion_\d+\.csv/),
+      expect.anything(),
+    );
+  });
+});
+
+describe('working-group with OPENSEARCH_METRICS enabled', () => {
+  it('uses opensearch for tag suggestions when OPENSEARCH_METRICS is enabled', async () => {
+    // This test covers line 119: opensearchMetrics.getAnalyticsLeadershipTagSuggestions(tagQuery)
+    // Enable OPENSEARCH_METRICS flag
+    mockUseFlags.mockReturnValue({
+      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    const localMockGetTagSuggestions = jest
+      .fn()
+      .mockResolvedValue(['Alessi', 'tag2']);
+    const mockGetAnalyticsLeadership = jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 });
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getAnalyticsLeadership: mockGetAnalyticsLeadership,
+      getAnalyticsLeadershipTagSuggestions: localMockGetTagSuggestions,
+    } as unknown as ReturnType<typeof useOpensearchMetrics>);
+
+    await renderPage('working-group');
+
+    const searchContainer = screen.getByRole('search') as HTMLElement;
+    const searchBox = within(searchContainer).getByRole(
+      'combobox',
+    ) as HTMLInputElement;
+
+    await userEvent.type(searchBox, 'test123');
+
+    await waitFor(() => {
+      expect(localMockGetTagSuggestions).toHaveBeenCalledWith('test123');
+    });
+  });
+
+  it('uses opensearch for CSV export when OPENSEARCH_METRICS is enabled', async () => {
+    mockUseFlags.mockReturnValue({
+      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    const mockGetAnalyticsLeadership = jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 });
+    const localMockGetTagSuggestions = jest
+      .fn()
+      .mockResolvedValue(['Alessi', 'tag2']);
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      getAnalyticsLeadership: mockGetAnalyticsLeadership,
+      getAnalyticsLeadershipTagSuggestions: localMockGetTagSuggestions,
+    } as unknown as ReturnType<typeof useOpensearchMetrics>);
+
+    await renderPage('working-group');
+
+    await userEvent.click(screen.getByText(/csv/i));
+
+    expect(mockGetAnalyticsLeadership).toHaveBeenCalled();
+
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/leadership_working-group_\d+\.csv/),
       expect.anything(),
     );
   });

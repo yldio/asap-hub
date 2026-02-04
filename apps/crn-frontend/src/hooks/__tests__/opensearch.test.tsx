@@ -1035,4 +1035,91 @@ describe('useOpensearchMetrics', () => {
     expect(authorizationCalls[0]).toBe(authorizationCalls[1]);
     expect(authorizationCalls).toHaveLength(2);
   });
+
+  describe('getAnalyticsLeadership', () => {
+    it('creates OpensearchClient with correct index and calls API method', async () => {
+      const mockGetAnalyticsLeadership = jest
+        .spyOn(leadershipApi, 'getAnalyticsLeadership')
+        .mockResolvedValue({
+          items: [],
+          total: 0,
+        });
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const paginationParams = {
+        tags: [],
+        currentPage: 0,
+        pageSize: 10,
+        metric: 'working-group' as const,
+      };
+
+      await result.current.getAnalyticsLeadership(paginationParams);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'wg-leadership',
+        expect.any(String),
+      );
+
+      expect(mockGetAnalyticsLeadership).toHaveBeenCalledWith(
+        expect.any(OpensearchClient),
+        paginationParams,
+      );
+    });
+  });
+
+  describe('getAnalyticsLeadershipTagSuggestions', () => {
+    it('creates OpensearchClient with correct index and calls getTagSuggestions', async () => {
+      const mockGetTagSuggestions = jest.fn().mockResolvedValue(['Tag 1']);
+      mockOpensearchClient.mockImplementation(
+        () =>
+          ({
+            getTagSuggestions: mockGetTagSuggestions,
+          }) as unknown as OpensearchClient<unknown>,
+      );
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const tagQuery = 'Tag';
+
+      const suggestions =
+        await result.current.getAnalyticsLeadershipTagSuggestions(tagQuery);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'wg-leadership',
+        expect.any(String),
+      );
+
+      expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
+      expect(suggestions).toEqual(['Tag 1']);
+    });
+  });
 });

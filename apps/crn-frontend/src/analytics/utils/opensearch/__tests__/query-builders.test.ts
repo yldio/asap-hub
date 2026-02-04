@@ -4,6 +4,7 @@ import {
   userWithTeamsRecordSearchQueryBuilder,
   teamRecordSearchQueryBuilder,
   taglessSearchQueryBuilder,
+  leadershipRecordSearchQueryBuilder,
 } from '../query-builders';
 
 describe('buildNormalizedStringSort', () => {
@@ -797,5 +798,165 @@ describe('taglessSearchQueryBuilder', () => {
     expect(result.query.bool.must).toEqual([
       { term: { documentCategory: 'article' } },
     ]);
+  });
+});
+
+describe('leadershipRecordSearchQueryBuilder', () => {
+  it('builds query with empty searchTags array', () => {
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
+
+    expect(result.query.bool).not.toHaveProperty('should');
+    expect(result.query.bool).not.toHaveProperty('minimum_should_match');
+    expect(result.query.bool.must).toEqual([]);
+  });
+
+  it('builds query with single search tag using wildcard', () => {
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: ['Team Alpha'],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
+
+    expect('should' in result.query.bool && result.query.bool.should).toEqual([
+      {
+        wildcard: {
+          'displayName.keyword': {
+            value: '*team alpha*',
+            case_insensitive: true,
+          },
+        },
+      },
+    ]);
+    expect(
+      'minimum_should_match' in result.query.bool &&
+        result.query.bool.minimum_should_match,
+    ).toBe(1);
+  });
+
+  it('converts search tags to lowercase in wildcard pattern', () => {
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: ['UPPERCASE Team'],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
+
+    expect('should' in result.query.bool && result.query.bool.should).toEqual([
+      {
+        wildcard: {
+          'displayName.keyword': {
+            value: '*uppercase team*',
+            case_insensitive: true,
+          },
+        },
+      },
+    ]);
+  });
+
+  it('builds query with multiple search tags', () => {
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: ['Team Alpha', 'Team Beta'],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
+
+    expect('should' in result.query.bool && result.query.bool.should).toEqual([
+      {
+        wildcard: {
+          'displayName.keyword': {
+            value: '*team alpha*',
+            case_insensitive: true,
+          },
+        },
+      },
+      {
+        wildcard: {
+          'displayName.keyword': {
+            value: '*team beta*',
+            case_insensitive: true,
+          },
+        },
+      },
+    ]);
+    expect(
+      'should' in result.query.bool && result.query.bool.should,
+    ).toHaveLength(2);
+  });
+
+  it('uses provided custom sort', () => {
+    const customSort = [
+      { workingGroupLeadershipRoleCount: { order: 'desc' as const } },
+    ];
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+      sort: customSort,
+    });
+
+    expect(result.sort).toEqual(customSort);
+  });
+
+  it('uses default sort when sort is undefined', () => {
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
+
+    expect(result.sort).toEqual([{ 'displayName.keyword': { order: 'asc' } }]);
+  });
+
+  it('calculates pagination correctly for page 0 size 10', () => {
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
+
+    expect(result.from).toBe(0);
+    expect(result.size).toBe(10);
+  });
+
+  it('calculates pagination correctly for page 3 size 20', () => {
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: [],
+      currentPage: 3,
+      pageSize: 20,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
+
+    expect(result.from).toBe(60);
+    expect(result.size).toBe(20);
+  });
+
+  it('has empty must clauses array', () => {
+    const result = leadershipRecordSearchQueryBuilder({
+      searchTags: ['Team Alpha'],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+    });
+
+    expect(result.query.bool.must).toEqual([]);
   });
 });

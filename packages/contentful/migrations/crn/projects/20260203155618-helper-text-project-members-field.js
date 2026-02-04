@@ -17,7 +17,6 @@ module.exports.down = (migration) => {
   contentTypes.editField('members').name('Members');
 
   contentTypes.changeFieldControl('members', 'builtin', 'entryLinksEditor', {
-    helpText:
-      '',
+    helpText: '',
   });
 };

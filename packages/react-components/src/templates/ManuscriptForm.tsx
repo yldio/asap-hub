@@ -32,6 +32,7 @@ import {
   useMemo,
   memo,
   Suspense,
+  useRef,
 } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { colors } from '..';
@@ -337,6 +338,7 @@ type ManuscriptFormProps = Omit<
     >;
     impact?: MultiSelectOptionsType;
     categories: MultiSelectOptionsType[];
+    onInvalid?: () => void;
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
@@ -393,7 +395,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   getShortDescriptionFromDescription,
   getImpactSuggestions,
   getCategorySuggestions,
-}) => {
+  onInvalid,
+}: ManuscriptFormProps) => {
+  const formRef = useRef<HTMLFormElement>(null);
   const usersWithoutTeamAdded = new Set();
   const firstAuthorsWithoutTeamAdded = new Set();
   const correspondingAuthorWithoutTeamAdded = new Set();
@@ -539,10 +543,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     clearErrors,
     resetField,
     trigger,
-    formState,
   } = methods;
 
-  const { isValid, errors } = formState;
   const watchType = watch('versions.0.type');
   const watchLifecycle = watch('versions.0.lifecycle');
 
@@ -950,8 +952,23 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     [watchLifecycle],
   );
 
+  const handleInvalid = async () => {
+    await trigger();
+    const scrollableContainer = formRef.current?.closest('main');
+    if (scrollableContainer) {
+      scrollableContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    onInvalid?.();
+  };
+
   return (
-    <form onSubmit={handleSubmit(handleSubmitConfirmation)}>
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit(handleSubmitConfirmation, handleInvalid)}
+      noValidate
+    >
       <Suspense fallback={<div>Loading modals...</div>}>
         <ManuscriptFormModals
           isSubmitting={isSubmitting}
@@ -1844,14 +1861,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               <Button
                 primary
                 noMargin
-                enabled={
-                  isValid &&
-                  Object.keys(errors).length === 0 &&
-                  !isSubmitting &&
-                  !isUploadingManuscriptFile &&
-                  !isUploadingKeyResourceTable &&
-                  !isUploadingAdditionalFiles
-                }
+                enabled={!isSubmitting}
                 preventDefault={false}
               >
                 Submit

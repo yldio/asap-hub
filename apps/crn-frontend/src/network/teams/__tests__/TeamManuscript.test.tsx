@@ -171,3 +171,32 @@ it('generates the short description based on the current description', async () 
     ).toHaveValue('test generated short description 1');
   });
 });
+
+it('calls setFormType with server validation error when form validation fails on submit', async () => {
+  await renderPage();
+
+  // Wait for form to be fully loaded
+  await waitFor(() => {
+    expect(
+      screen.getByRole('textbox', { name: /Title of Manuscript/i }),
+    ).toBeInTheDocument();
+  });
+
+  // Clear the title field to trigger validation error
+  const titleInput = screen.getByRole('textbox', {
+    name: /Title of Manuscript/i,
+  });
+  await userEvent.clear(titleInput);
+
+  // Click submit button
+  const submitBtn = screen.getByRole('button', { name: /Submit/i });
+  await userEvent.click(submitBtn);
+
+  // Check that setFormType was called with server validation error
+  await waitFor(() => {
+    expect(mockSetFormType).toHaveBeenCalledWith({
+      type: 'server-validation-error',
+      accent: 'error',
+    });
+  });
+});

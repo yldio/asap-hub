@@ -266,8 +266,6 @@ it('shows default error toast when submitting with any other error', async () =>
     name: /Submit/,
   });
 
-  expect(submitButton).toBeEnabled();
-
   await user.click(submitButton);
 
   const confirmButton = await screen.findByRole('button', {

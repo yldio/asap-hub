@@ -113,6 +113,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   categories: [{ value: 'category-id-1', label: 'Category A' }],
   getImpactSuggestions: getImpactSuggestionsMock,
   getCategorySuggestions: getCategorySuggestionsMock,
+  onInvalid: jest.fn(),
 };
 
 beforeEach(() => {
@@ -159,6 +160,8 @@ it('displays error message when manuscript title is not unique', async () => {
   const submitBtn = await findByRole('button', { name: /Submit/ });
   await userEvent.click(submitBtn);
 
+  expect(defaultProps.onInvalid).not.toHaveBeenCalled();
+
   await waitFor(() => {
     const confirmBtn = screen.getByRole('button', {
       name: /Submit Manuscript/i,
@@ -176,5 +179,80 @@ it('displays error message when manuscript title is not unique', async () => {
     expect(container).toHaveTextContent(
       'A manuscript with this title has already been submitted for Team ASAP (SC1-000129-005-org-G-1). Please use the edit or resubmission button to update this manuscript.',
     );
+  });
+});
+
+it('calls onInvalid callback and scrolls to top when form validation fails', async () => {
+  const onInvalid = jest.fn();
+  const scrollToMock = jest.fn();
+  const originalScrollTo = window.scrollTo;
+  window.scrollTo = scrollToMock;
+
+  render(
+    <StaticRouter location="/">
+      <Suspense fallback={<div>Test Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          title="" // Empty title will trigger validation error
+          onInvalid={onInvalid}
+        />
+      </Suspense>
+    </StaticRouter>,
+  );
+
+  await waitFor(() => {
+    expect(screen.getByRole('button', { name: /Submit/ })).toBeInTheDocument();
+  });
+
+  const submitBtn = screen.getByRole('button', { name: /Submit/ });
+  await userEvent.click(submitBtn);
+
+  await waitFor(() => {
+    expect(onInvalid).toHaveBeenCalled();
+  });
+
+  await waitFor(() => {
+    expect(scrollToMock).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+  });
+
+  // Cleanup
+  window.scrollTo = originalScrollTo;
+});
+
+it('scrolls to top of scrollable container when form validation fails inside a main element', async () => {
+  const onInvalid = jest.fn();
+  const scrollToMock = jest.fn();
+
+  render(
+    <StaticRouter location="/">
+      <main data-testid="outer-main">
+        <Suspense fallback={<div>Test Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="" // Empty title will trigger validation error
+            onInvalid={onInvalid}
+          />
+        </Suspense>
+      </main>
+    </StaticRouter>,
+  );
+
+  await waitFor(() => {
+    expect(screen.getByRole('button', { name: /Submit/ })).toBeInTheDocument();
+  });
+
+  // Mock the scrollTo method on the outer main element
+  const mainElement = screen.getByTestId('outer-main');
+  mainElement.scrollTo = scrollToMock;
+
+  const submitBtn = screen.getByRole('button', { name: /Submit/ });
+  await userEvent.click(submitBtn);
+
+  await waitFor(() => {
+    expect(onInvalid).toHaveBeenCalled();
+  });
+
+  await waitFor(() => {
+    expect(scrollToMock).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
   });
 });

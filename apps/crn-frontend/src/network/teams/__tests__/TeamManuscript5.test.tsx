@@ -290,8 +290,6 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
     { timeout: 5000 },
   );
 
-  expect(submitButton).toBeEnabled();
-
   await user.click(submitButton);
 
   const confirmButton = await screen.findByRole('button', {

@@ -105,6 +105,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   categories: [{ value: 'category-id-1', label: 'Category A' }],
   getImpactSuggestions: getImpactSuggestionsMock,
   getCategorySuggestions: getCategorySuggestionsMock,
+  onInvalid: jest.fn(),
 };
 
 const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {
@@ -345,7 +346,8 @@ describe('Manuscript form', () => {
 
     const submitButton = getByRole('button', { name: /Submit/ });
 
-    expect(submitButton).not.toBeEnabled();
+    await userEvent.click(submitButton);
+    expect(defaultProps.onInvalid).toHaveBeenCalled();
   });
 
   it('should go back when cancel button is clicked', async () => {

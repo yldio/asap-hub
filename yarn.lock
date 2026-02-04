@@ -17364,6 +17364,7 @@ __metadata:
     rimraf: 3.0.2
     ts-node: 10.9.2
     turbo: ^1.11.3
+    turbo-linux-64: ^2.8.3
     typescript: 4.9.5
     uuid: 8.3.2
   dependenciesMeta:
@@ -39241,6 +39242,14 @@ __metadata:
 "turbo-linux-64@npm:1.13.4":
   version: 1.13.4
   resolution: "turbo-linux-64@npm:1.13.4"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"turbo-linux-64@npm:^2.8.3":
+  version: 2.8.3
+  resolution: "turbo-linux-64@npm:2.8.3"
+  checksum: f9572c57c54a83de93350a749a7f10def57292400f09e030a8a0382ae04f0069712400180ff31238eb9bef54688c0824f0e2dd7191990afa7c5d0b17206243e4
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard

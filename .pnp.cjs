@@ -10751,7 +10751,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "turbo-linux-64",\
-        "npm:1.13.4"\
+        "npm:2.8.3"\
       ],\
       [\
         "turbo-linux-arm64",\
@@ -11528,6 +11528,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:3.0.2"],\
             ["ts-node", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:10.9.2"],\
             ["turbo", "npm:1.13.4"],\
+            ["turbo-linux-64", "npm:2.8.3"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"],\
             ["uuid", "npm:8.3.2"]\
           ],\
@@ -39879,6 +39880,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:3.0.2"],\
             ["ts-node", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:10.9.2"],\
             ["turbo", "npm:1.13.4"],\
+            ["turbo-linux-64", "npm:2.8.3"],\
             ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"],\
             ["uuid", "npm:8.3.2"]\
           ],\
@@ -66730,6 +66732,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/unplugged/turbo-linux-64-npm-1.13.4-4470e0299e/node_modules/turbo-linux-64/",\
           "packageDependencies": [\
             ["turbo-linux-64", "npm:1.13.4"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:2.8.3", {\
+          "packageLocation": "./.yarn/unplugged/turbo-linux-64-npm-2.8.3-9cb18766ed/node_modules/turbo-linux-64/",\
+          "packageDependencies": [\
+            ["turbo-linux-64", "npm:2.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\

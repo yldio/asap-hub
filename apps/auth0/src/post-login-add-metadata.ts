@@ -103,6 +103,10 @@ export const onExecutePostLogin = async (
   api: Auth0PostLoginApi,
 ) => {
   try {
+    if (event.client.name === 'ASAP KR-Sync') {
+      console.log('Skipping metadata for ASAP KR-Sync');
+      return true;
+    }
     const [apiUrl, redirect_uri] = getApiUrls(event);
     console.log(
       `requesting metadata from ${apiUrl}/webhook/users/${event.user.user_id}`,

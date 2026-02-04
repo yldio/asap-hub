@@ -285,6 +285,10 @@ beforeEach(() => {
     getAnalyticsOSChampion: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
+    getAnalyticsLeadership: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+    getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
   });
 
   mockUseFlags.mockReturnValue({
@@ -687,6 +691,10 @@ describe('search', () => {
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     await renderPage('user', 'within-team');
@@ -748,6 +756,10 @@ describe('search', () => {
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     await renderPage('team', 'within-team');
@@ -834,6 +846,10 @@ describe('csv export', () => {
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     await renderPage('user', 'within-team');
@@ -907,6 +923,10 @@ describe('csv export', () => {
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     await renderPage('team', 'within-team');

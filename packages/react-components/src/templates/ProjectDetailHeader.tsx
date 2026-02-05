@@ -17,6 +17,7 @@ import { getStatusPillAccent } from '../organisms/ProjectCard';
 import PageInfoContainer from './PageInfoContainer';
 import Toast from '../organisms/Toast';
 import { groupTraineeProjectMembers } from '../utils';
+import { network } from '@asap-hub/routing';
 
 const headerStyles = css({
   display: 'flex',
@@ -154,7 +155,7 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
     'members' in project
       ? project.members?.map((member: ProjectMember) => ({
           ...member,
-          href: `/network/users/${member.id}`,
+          href: network({}).users({}).user({ userId: member.id }).$,
         }))
       : undefined;
 

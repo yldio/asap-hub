@@ -88,6 +88,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/gp2-server"\
       },\
       {\
+        "name": "@asap-hub/kr-sync-mock",\
+        "reference": "workspace:apps/kr-sync-mock"\
+      },\
+      {\
         "name": "@asap-hub/orcid-user-profile-script",\
         "reference": "workspace:apps/orcid-user-profile-script"\
       },\
@@ -303,6 +307,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/gp2-frontend", ["workspace:apps/gp2-frontend"]],\
       ["@asap-hub/gp2-messages", ["workspace:apps/gp2-messages"]],\
       ["@asap-hub/gp2-server", ["workspace:apps/gp2-server"]],\
+      ["@asap-hub/kr-sync-mock", ["workspace:apps/kr-sync-mock"]],\
       ["@asap-hub/message-templates", ["workspace:packages/message-templates"]],\
       ["@asap-hub/messages-common", ["workspace:packages/messages-common"]],\
       ["@asap-hub/model", ["workspace:packages/model"]],\
@@ -576,6 +581,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "workspace:apps/gp2-server"\
       ],\
       [\
+        "@asap-hub/kr-sync-mock",\
+        "workspace:apps/kr-sync-mock"\
+      ],\
+      [\
         "@asap-hub/message-templates",\
         "workspace:packages/message-templates"\
       ],\
@@ -626,6 +635,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "@asap-hub/validation",\
         "workspace:packages/validation"\
+      ],\
+      [\
+        "@auth0/auth0-auth-js",\
+        "npm:1.4.0"\
+      ],\
+      [\
+        "@auth0/auth0-react",\
+        "virtual:88c2b23838bd7644089bee59064328ac2f4665d8a7b2d01baaf420e487c1b2aa1532d3721d99c7cf6cef682d6772189318c0aaa170c8375a853f11688ffeaf30#npm:2.12.0"\
       ],\
       [\
         "@auth0/auth0-spa-js",\
@@ -5743,6 +5760,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:9519776a3bb42c66bbef070557b8b79d3f7d481f5b70db21129e24c90cd78aacb41f07fe9dd13fb87f8cf05b3a4fd7fcc0cbe97b1ca265773f9f568e08f05d02#npm:6.1.12"\
       ],\
       [\
+        "dpop",\
+        "npm:2.1.1"\
+      ],\
+      [\
         "dset",\
         "npm:3.1.4"\
       ],\
@@ -8518,6 +8539,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.9.0"\
       ],\
       [\
+        "oauth4webapi",\
+        "npm:3.8.3"\
+      ],\
+      [\
         "object-assign",\
         "npm:4.1.1"\
       ],\
@@ -8608,6 +8633,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "openai",\
         "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:4.104.0"\
+      ],\
+      [\
+        "openid-client",\
+        "npm:6.8.1"\
       ],\
       [\
         "optionator",\
@@ -13594,6 +13623,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@asap-hub/kr-sync-mock", [\
+        ["workspace:apps/kr-sync-mock", {\
+          "packageLocation": "./apps/kr-sync-mock/",\
+          "packageDependencies": [\
+            ["@asap-hub/kr-sync-mock", "workspace:apps/kr-sync-mock"],\
+            ["@auth0/auth0-react", "virtual:88c2b23838bd7644089bee59064328ac2f4665d8a7b2d01baaf420e487c1b2aa1532d3721d99c7cf6cef682d6772189318c0aaa170c8375a853f11688ffeaf30#npm:2.12.0"],\
+            ["@vitejs/plugin-react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:4.7.0"],\
+            ["react", "npm:18.3.1"],\
+            ["react-dom", "virtual:88c2b23838bd7644089bee59064328ac2f4665d8a7b2d01baaf420e487c1b2aa1532d3721d99c7cf6cef682d6772189318c0aaa170c8375a853f11688ffeaf30#npm:18.3.1"],\
+            ["typescript", "patch:typescript@npm%3A4.9.5#~builtin<compat/typescript>::version=4.9.5&hash=289587"],\
+            ["vite", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:5.4.21"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@asap-hub/message-templates", [\
         ["workspace:packages/message-templates", {\
           "packageLocation": "./packages/message-templates/",\
@@ -14515,6 +14559,44 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@auth0/auth0-auth-js", [\
+        ["npm:1.4.0", {\
+          "packageLocation": "./.yarn/cache/@auth0-auth0-auth-js-npm-1.4.0-6ecfb9963b-6266f133d8.zip/node_modules/@auth0/auth0-auth-js/",\
+          "packageDependencies": [\
+            ["@auth0/auth0-auth-js", "npm:1.4.0"],\
+            ["jose", "npm:6.1.3"],\
+            ["openid-client", "npm:6.8.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@auth0/auth0-react", [\
+        ["npm:2.12.0", {\
+          "packageLocation": "./.yarn/cache/@auth0-auth0-react-npm-2.12.0-8eb7b19996-78cab36457.zip/node_modules/@auth0/auth0-react/",\
+          "packageDependencies": [\
+            ["@auth0/auth0-react", "npm:2.12.0"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:88c2b23838bd7644089bee59064328ac2f4665d8a7b2d01baaf420e487c1b2aa1532d3721d99c7cf6cef682d6772189318c0aaa170c8375a853f11688ffeaf30#npm:2.12.0", {\
+          "packageLocation": "./.yarn/__virtual__/@auth0-auth0-react-virtual-233b4db094/0/cache/@auth0-auth0-react-npm-2.12.0-8eb7b19996-78cab36457.zip/node_modules/@auth0/auth0-react/",\
+          "packageDependencies": [\
+            ["@auth0/auth0-react", "virtual:88c2b23838bd7644089bee59064328ac2f4665d8a7b2d01baaf420e487c1b2aa1532d3721d99c7cf6cef682d6772189318c0aaa170c8375a853f11688ffeaf30#npm:2.12.0"],\
+            ["@auth0/auth0-spa-js", "npm:2.13.1"],\
+            ["@types/react", null],\
+            ["@types/react-dom", null],\
+            ["react", "npm:18.3.1"],\
+            ["react-dom", "virtual:88c2b23838bd7644089bee59064328ac2f4665d8a7b2d01baaf420e487c1b2aa1532d3721d99c7cf6cef682d6772189318c0aaa170c8375a853f11688ffeaf30#npm:18.3.1"]\
+          ],\
+          "packagePeers": [\
+            "@types/react-dom",\
+            "@types/react",\
+            "react-dom",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@auth0/auth0-spa-js", [\
         ["npm:1.22.6", {\
           "packageLocation": "./.yarn/cache/@auth0-auth0-spa-js-npm-1.22.6-8de050e7b5-0155025b82.zip/node_modules/@auth0/auth0-spa-js/",\
@@ -14527,6 +14609,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-text-encoding", "npm:1.0.6"],\
             ["promise-polyfill", "npm:8.3.0"],\
             ["unfetch", "npm:4.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:2.13.1", {\
+          "packageLocation": "./.yarn/cache/@auth0-auth0-spa-js-npm-2.13.1-5860e83e6c-4f164a19fb.zip/node_modules/@auth0/auth0-spa-js/",\
+          "packageDependencies": [\
+            ["@auth0/auth0-spa-js", "npm:2.13.1"],\
+            ["@auth0/auth0-auth-js", "npm:1.4.0"],\
+            ["browser-tabs-lock", "npm:1.3.0"],\
+            ["dpop", "npm:2.1.1"],\
+            ["es-cookie", "npm:1.3.2"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -45382,6 +45475,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["dpop", [\
+        ["npm:2.1.1", {\
+          "packageLocation": "./.yarn/cache/dpop-npm-2.1.1-d2dcb41e4d-919527254f.zip/node_modules/dpop/",\
+          "packageDependencies": [\
+            ["dpop", "npm:2.1.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["dset", [\
         ["npm:3.1.4", {\
           "packageLocation": "./.yarn/cache/dset-npm-3.1.4-f4959c71f7-9a7677e9ff.zip/node_modules/dset/",\
@@ -54050,6 +54152,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jose", "npm:5.10.0"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:6.1.3", {\
+          "packageLocation": "./.yarn/cache/jose-npm-6.1.3-52219fd645-7f51c7e77f.zip/node_modules/jose/",\
+          "packageDependencies": [\
+            ["jose", "npm:6.1.3"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["joycon", [\
@@ -57261,6 +57370,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["oauth4webapi", [\
+        ["npm:3.8.3", {\
+          "packageLocation": "./.yarn/cache/oauth4webapi-npm-3.8.3-39d38ecdce-66d5c8215a.zip/node_modules/oauth4webapi/",\
+          "packageDependencies": [\
+            ["oauth4webapi", "npm:3.8.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["object-assign", [\
         ["npm:4.1.1", {\
           "packageLocation": "./.yarn/cache/object-assign-npm-4.1.1-1004ad6dec-fcc6e4ea8c.zip/node_modules/object-assign/",\
@@ -57569,6 +57687,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/zod",\
             "ws",\
             "zod"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["openid-client", [\
+        ["npm:6.8.1", {\
+          "packageLocation": "./.yarn/cache/openid-client-npm-6.8.1-616ccc5934-05b2cdfe8d.zip/node_modules/openid-client/",\
+          "packageDependencies": [\
+            ["openid-client", "npm:6.8.1"],\
+            ["jose", "npm:6.1.3"],\
+            ["oauth4webapi", "npm:3.8.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -61414,6 +61543,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
             ["@types/react", "npm:18.3.12"],\
+            ["loose-envify", "npm:1.4.0"],\
+            ["react", "npm:18.3.1"],\
+            ["scheduler", "npm:0.23.2"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:88c2b23838bd7644089bee59064328ac2f4665d8a7b2d01baaf420e487c1b2aa1532d3721d99c7cf6cef682d6772189318c0aaa170c8375a853f11688ffeaf30#npm:18.3.1", {\
+          "packageLocation": "./.yarn/__virtual__/react-dom-virtual-f674a5a1db/0/cache/react-dom-npm-18.3.1-a805663f38-298954ecd8.zip/node_modules/react-dom/",\
+          "packageDependencies": [\
+            ["react-dom", "virtual:88c2b23838bd7644089bee59064328ac2f4665d8a7b2d01baaf420e487c1b2aa1532d3721d99c7cf6cef682d6772189318c0aaa170c8375a853f11688ffeaf30#npm:18.3.1"],\
+            ["@types/react", null],\
             ["loose-envify", "npm:1.4.0"],\
             ["react", "npm:18.3.1"],\
             ["scheduler", "npm:0.23.2"]\

@@ -1,4 +1,5 @@
 import { ProjectDetail, ProjectMember } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Display, Pill, Link, CopyButton, TabLink } from '../atoms';
 import { lead } from '../colors';
@@ -17,7 +18,6 @@ import { getStatusPillAccent } from '../organisms/ProjectCard';
 import PageInfoContainer from './PageInfoContainer';
 import Toast from '../organisms/Toast';
 import { groupTraineeProjectMembers } from '../utils';
-import { network } from '@asap-hub/routing';
 
 const headerStyles = css({
   display: 'flex',

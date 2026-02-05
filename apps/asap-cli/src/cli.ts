@@ -119,7 +119,13 @@ interface ProcessOpensearchPerformanceArguments {
   environment: string;
   opensearchUsername: string;
   opensearchPassword: string;
-  metric: 'all' | 'user-productivity';
+  metric:
+    | 'all'
+    | 'user-productivity'
+    | 'team-productivity'
+    | 'user-collaboration'
+    | 'team-collaboration'
+    | 'engagement';
 }
 
 // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-floating-promises
@@ -308,6 +314,7 @@ yargs(hideBin(process.argv))
             'team-productivity',
             'user-collaboration',
             'team-collaboration',
+            'engagement',
           ] as const,
           default: 'all' as const,
         }),

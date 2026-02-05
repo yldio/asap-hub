@@ -12,6 +12,7 @@ import {
   teamProductivityPerformanceMapping,
   userCollaborationPerformanceMapping,
   teamCollaborationPerformanceMapping,
+  engagementPerformanceMapping,
 } from './mappings';
 
 interface UserProductivityDocument {
@@ -150,6 +151,32 @@ interface TeamCollaborationPerformanceDocument {
   outputType: string;
 }
 
+interface EngagementPerformanceDocument {
+  events: PerformanceMetrics;
+  totalSpeakers: PerformanceMetrics;
+  uniqueAllRoles: PerformanceMetrics;
+  uniqueKeyPersonnel: PerformanceMetrics;
+  timeRange: string;
+}
+
+interface EngagementDocument {
+  eventCount: number;
+  totalSpeakerCount: number;
+  uniqueAllRolesCountPercentage: number;
+  uniqueKeyPersonnelCountPercentage: number;
+  timeRange: string;
+}
+
+interface EngagementHit {
+  _source?: {
+    eventCount?: number;
+    totalSpeakerCount?: number;
+    uniqueAllRolesCountPercentage?: number;
+    uniqueKeyPersonnelCountPercentage?: number;
+    timeRange?: string;
+  };
+}
+
 export interface ProcessPerformanceOptions {
   awsRegion: string;
   environment: string;
@@ -160,13 +187,15 @@ export interface ProcessPerformanceOptions {
     | 'user-productivity'
     | 'team-productivity'
     | 'user-collaboration'
-    | 'team-collaboration';
+    | 'team-collaboration'
+    | 'engagement';
 }
 
 const USER_PRODUCTIVITY_INDEX = 'user-productivity';
 const TEAM_PRODUCTIVITY_INDEX = 'team-productivity';
 const USER_COLLABORATION_INDEX = 'user-collaboration';
 const TEAM_COLLABORATION_INDEX = 'team-collaboration';
+const ENGAGEMENT_INDEX = 'engagement';
 const MAX_RESULTS = 10000;
 
 /**
@@ -760,6 +789,134 @@ export const processTeamCollaborationPerformance = async (
 };
 
 /**
+ * Maps a search hit to a EngagementDocument
+ */
+const mapEngagementHitToDocument = (
+  hit: EngagementHit,
+): EngagementDocument => ({
+  eventCount: hit._source?.eventCount ?? 0,
+  totalSpeakerCount: hit._source?.totalSpeakerCount ?? 0,
+  uniqueAllRolesCountPercentage:
+    hit._source?.uniqueAllRolesCountPercentage ?? 0,
+  uniqueKeyPersonnelCountPercentage:
+    hit._source?.uniqueKeyPersonnelCountPercentage ?? 0,
+  timeRange: hit._source?.timeRange ?? '',
+});
+
+/**
+ * Retrieves all engagement documents for a given time range
+ */
+const getAllEngagementDocuments = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+  timeRange: string,
+): Promise<EngagementDocument[]> => {
+  try {
+    const response = await client.search({
+      index: ENGAGEMENT_INDEX,
+      body: {
+        query: {
+          bool: {
+            must: [{ term: { timeRange } }],
+          },
+        },
+        size: MAX_RESULTS,
+      },
+    });
+
+    const hits = response.body.hits?.hits || [];
+    return hits.map(mapEngagementHitToDocument);
+  } catch (error) {
+    console.error('Failed to retrieve engagement documents', {
+      error,
+      timeRange,
+    });
+    throw error;
+  }
+};
+
+/**
+ * Processes engagement performance metrics for a single time range
+ */
+const processEngagementMetricsForTimeRange = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+  timeRange: string,
+): Promise<EngagementPerformanceDocument> => {
+  console.info(`Processing engagement performance metrics for ${timeRange}`);
+
+  const documents = await getAllEngagementDocuments(client, timeRange);
+
+  const events = getPerformanceMetrics(
+    documents.map((doc) => doc.eventCount),
+    true,
+  );
+
+  //   totalSpeakers: getPerformanceMetrics(
+  //   hits.map((hit) => hit.totalSpeakerCount),
+  // ),
+  // uniqueAllRoles: getPerformanceMetrics(
+  //   hits.map((hit) => hit.uniqueAllRolesCountPercentage),
+  // ),
+  // uniqueKeyPersonnel: getPerformanceMetrics(
+  //   hits.map((hit) => hit.uniqueKeyPersonnelCountPercentage),
+  // ),
+
+  const totalSpeakers = getPerformanceMetrics(
+    documents.map((doc) => doc.totalSpeakerCount),
+    true,
+  );
+
+  const uniqueAllRoles = getPerformanceMetrics(
+    documents.map((doc) => doc.uniqueAllRolesCountPercentage),
+    true,
+  );
+
+  const uniqueKeyPersonnel = getPerformanceMetrics(
+    documents.map((doc) => doc.uniqueKeyPersonnelCountPercentage),
+    true,
+  );
+
+  console.info(
+    `Processed engagement performance metrics for ${timeRange} (${documents.length} teams)`,
+  );
+
+  return {
+    events,
+    totalSpeakers,
+    uniqueAllRoles,
+    uniqueKeyPersonnel,
+    timeRange,
+  };
+};
+
+/**
+ * Processes engagement performance metrics for all time ranges
+ */
+export const processEngagementPerformance = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+): Promise<EngagementPerformanceDocument[]> => {
+  const results = await Promise.allSettled(
+    timeRanges.map((timeRange) =>
+      processEngagementMetricsForTimeRange(client, timeRange),
+    ),
+  );
+
+  const performanceDocuments: EngagementPerformanceDocument[] = [];
+
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      performanceDocuments.push(result.value);
+    } else {
+      console.error(
+        `Failed to process engagement performance metrics for ${timeRanges[index]}}`,
+        { error: result.reason },
+      );
+    }
+  });
+
+  return performanceDocuments;
+};
+
+/**
  * Main entry point for processing productivity performance metrics
  */
 export const processPerformance = async ({
@@ -907,6 +1064,42 @@ export const processPerformance = async ({
       console.info('Successfully indexed team-collaboration-performance data');
     } catch (error) {
       console.error('Failed to process team-collaboration-performance', {
+        error,
+      });
+      throw error;
+    }
+  }
+
+  if (metric === 'all' || metric === 'engagement') {
+    try {
+      console.info('Processing engagement-performance...');
+
+      await indexOpensearchData<EngagementPerformanceDocument>({
+        awsRegion,
+        stage: environment,
+        opensearchUsername,
+        opensearchPassword,
+        indexAlias: 'engagement-performance',
+        getData: async () => {
+          const client = await getClient(
+            awsRegion,
+            environment,
+            opensearchUsername,
+            opensearchPassword,
+          );
+
+          const documents = await processEngagementPerformance(client);
+
+          return {
+            documents,
+            mapping: engagementPerformanceMapping,
+          };
+        },
+      });
+
+      console.info('Successfully indexed engagement-performance data');
+    } catch (error) {
+      console.error('Failed to process engagement-performance', {
         error,
       });
       throw error;

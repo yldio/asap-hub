@@ -114,3 +114,21 @@ export const teamCollaborationPerformanceMapping = {
     outputType: { type: 'keyword' },
   },
 } as const;
+
+export const engagementPerformanceMapping = {
+  properties: {
+    events: {
+      properties: performanceRangeProperties,
+    },
+    totalSpeakers: {
+      properties: performanceRangeProperties,
+    },
+    uniqueAllRoles: {
+      properties: performanceRangeProperties,
+    },
+    uniqueKeyPersonnel: {
+      properties: performanceRangeProperties,
+    },
+    timeRange: { type: 'keyword' },
+  },
+} as const;

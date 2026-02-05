@@ -53,6 +53,7 @@ export const validMetrics = [
   'team-collaboration',
   'ig-leadership',
   'wg-leadership',
+  'engagement',
 ] as const;
 
 export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
@@ -374,6 +375,29 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
   },
   'wg-leadership': {
     indexAlias: 'wg-leadership',
+    mapping: {
+      properties: {
+        id: { type: 'text' },
+        displayName: {
+          type: 'text',
+          analyzer: 'ngram_analyzer',
+          search_analyzer: 'ngram_search_analyzer',
+          fields: {
+            keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
+            raw: { type: 'keyword' },
+          },
+        },
+        isInactive: { type: 'boolean' },
+        inactiveSince: { type: 'keyword' },
+        workingGroupLeadershipRoleCount: { type: 'integer' },
+        workingGroupPreviousLeadershipRoleCount: { type: 'integer' },
+        workingGroupMemberCount: { type: 'integer' },
+        workingGroupPreviousMemberCount: { type: 'integer' },
+      },
+    },
+  },
+  engagement: {
+    indexAlias: 'engagement',
     mapping: {
       properties: {
         id: { type: 'text' },

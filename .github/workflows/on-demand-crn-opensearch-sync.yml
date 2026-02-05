@@ -19,6 +19,7 @@ on:
           - team-collaboration
           - ig-leadership
           - wg-leadership
+          - engagement
           - all
       environment-name:
         required: true

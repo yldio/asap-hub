@@ -1,5 +1,6 @@
 import {
   AnalyticsTeamLeadershipDataObject,
+  EngagementDataObject,
   MeetingRepAttendanceDataObject,
   OSChampionDataObject,
   PreliminaryDataSharingDataObject,
@@ -56,6 +57,7 @@ export type MetricToObjectMap = {
   'team-collaboration': TeamCollaborationDataObject;
   'ig-leadership': IGLeadershipDataObject;
   'wg-leadership': WGLeadershipDataObject;
+  engagement: EngagementDataObject;
 };
 
 export type MetricObject<T extends Metrics> = MetricToObjectMap[T];

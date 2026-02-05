@@ -483,6 +483,54 @@ export const exportAnalyticsData = async <T extends Metrics>(
         } as ListResponse<MetricObject<T>>;
       }
 
+      case 'engagement': {
+        const fetchAllPagesForTimeRange = async (
+          timeRange: (typeof timeRanges)[number],
+        ): Promise<MetricObject<T>[]> => {
+          const items: MetricObject<T>[] = [];
+          let page = 1;
+          let total = 0;
+          let recordCount = 0;
+
+          do {
+            const response = (await analyticsController.fetchEngagement({
+              take: PAGE_SIZE,
+              skip: (page - 1) * PAGE_SIZE,
+              filter: { timeRange },
+            })) as ListResponse<MetricObject<T>>;
+
+            if (response) {
+              total = response.total;
+              page++;
+              recordCount += response.items.length;
+
+              const enrichedItems = response.items.map((item) => ({
+                ...item,
+                timeRange,
+              }));
+
+              items.push(...enrichedItems);
+            }
+          } while (total > recordCount);
+
+          return items;
+        };
+
+        const teamResultArrays = await mapLimit(
+          [...timeRanges],
+          MAX_CONCURRENT_COMBINATIONS,
+          async (range: (typeof timeRanges)[number]) =>
+            fetchAllPagesForTimeRange(range),
+        );
+
+        const items = teamResultArrays.flat();
+
+        return {
+          total: items.length,
+          items,
+        } as ListResponse<MetricObject<T>>;
+      }
+
       default:
         throw new Error(`Metric ${metric} not supported`);
     }

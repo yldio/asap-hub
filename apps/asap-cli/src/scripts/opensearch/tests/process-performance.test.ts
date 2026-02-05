@@ -13,6 +13,7 @@ import {
   processTeamCollaborationPerformance,
   processPerformance,
   ProcessPerformanceOptions,
+  processEngagementPerformance,
 } from '../process-performance';
 
 jest.mock('@asap-hub/server-common');
@@ -1231,6 +1232,43 @@ describe('processPerformance', () => {
       expect.objectContaining({ error: clientError }),
     );
   });
+
+  it('should handle errors for engagement and rethrow', async () => {
+    const indexError = new Error('Failed to index engagement data');
+    mockIndexOpensearchData.mockRejectedValue(indexError);
+
+    await expect(
+      processPerformance({
+        ...defaultOptions,
+        metric: 'engagement',
+      }),
+    ).rejects.toThrow(indexError);
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Failed to process engagement-performance',
+      { error: indexError },
+    );
+  });
+
+  it('should handle errors from getData function for engagement', async () => {
+    const clientError = new Error('Failed to get client for engagement');
+    mockGetClient.mockRejectedValue(clientError);
+    mockIndexOpensearchData.mockImplementation(async (options) => {
+      await options.getData();
+    });
+
+    await expect(
+      processPerformance({
+        ...defaultOptions,
+        metric: 'engagement',
+      }),
+    ).rejects.toThrow(clientError);
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Failed to process engagement-performance',
+      expect.objectContaining({ error: clientError }),
+    );
+  });
 });
 
 describe('processUserCollaborationPerformance', () => {
@@ -1802,5 +1840,165 @@ describe('processTeamCollaborationPerformance', () => {
     expect(mockGetPerformanceMetrics).toHaveBeenCalledWith([1], true); // Dataset acrossTeam
     expect(mockGetPerformanceMetrics).toHaveBeenCalledWith([0], true); // Lab Material acrossTeam
     expect(mockGetPerformanceMetrics).toHaveBeenCalledWith([2], true); // Protocol acrossTeam
+  });
+});
+
+describe('processEngagementPerformance', () => {
+  let mockClient: MockClient;
+  let consoleInfoSpy: jest.SpyInstance;
+  let consoleErrorSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation();
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+
+    const mockPerformanceMetrics: PerformanceMetrics = {
+      belowAverageMin: 0,
+      belowAverageMax: 1,
+      averageMin: 2,
+      averageMax: 4,
+      aboveAverageMin: 5,
+      aboveAverageMax: 10,
+    };
+
+    mockGetPerformanceMetrics.mockReturnValue(mockPerformanceMetrics);
+  });
+
+  afterEach(() => {
+    consoleInfoSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
+  });
+
+  it('should process engagement performance for all time ranges', async () => {
+    const mockHits = [
+      {
+        _source: {
+          eventCount: 4,
+          totalSpeakerCount: 3,
+          uniqueAllRolesCountPercentage: 100,
+          uniqueKeyPersonnelCountPercentage: 67,
+          timeRange: 'all',
+        },
+      },
+      {
+        _source: {
+          eventCount: 2,
+          totalSpeakerCount: 3,
+          uniqueAllRolesCountPercentage: 50,
+          uniqueKeyPersonnelCountPercentage: 25,
+          timeRange: 'all',
+        },
+      },
+    ];
+
+    mockClient = {
+      search: jest.fn().mockResolvedValue({
+        body: {
+          hits: { hits: mockHits },
+        },
+      }),
+    };
+
+    const results = await processEngagementPerformance(
+      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
+    );
+
+    expect(results).toHaveLength(5);
+
+    results.forEach((result) => {
+      expect(result).toHaveProperty('events');
+      expect(result).toHaveProperty('totalSpeakers');
+      expect(result).toHaveProperty('uniqueAllRoles');
+      expect(result).toHaveProperty('uniqueKeyPersonnel');
+      expect(result).toHaveProperty('timeRange');
+      expect(timeRanges).toContain(result.timeRange);
+    });
+
+    expect(mockGetPerformanceMetrics).toHaveBeenCalledTimes(20); // 5 time ranges x 4 performance metrics
+  });
+
+  it('should handle documents with missing fields gracefully', async () => {
+    const mockHits = [
+      {
+        _source: {
+          // Missing all optional fields
+        },
+      },
+      {
+        _source: {
+          eventCount: 5,
+          // Missing other fields
+        },
+      },
+      {
+        _source: {
+          eventCount: 3,
+          totalSpeakerCount: 3,
+          uniqueAllRolesCountPercentage: 100,
+          uniqueKeyPersonnelCountPercentage: 67,
+          timeRange: 'last-30-days',
+        },
+      },
+    ];
+
+    mockClient = {
+      search: jest.fn().mockResolvedValue({
+        body: {
+          hits: { hits: mockHits },
+        },
+      }),
+    };
+
+    const results = await processEngagementPerformance(
+      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
+    );
+
+    expect(results).toHaveLength(5);
+
+    // Verify metrics were calculated with default values
+    expect(mockGetPerformanceMetrics).toHaveBeenCalledWith(
+      expect.arrayContaining([0]),
+      true,
+    );
+  });
+
+  it('should log error and exclude failed combinations', async () => {
+    const searchError = new Error('Search failed');
+
+    mockClient = {
+      search: jest.fn().mockRejectedValue(searchError),
+    };
+
+    const results = await processEngagementPerformance(
+      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
+    );
+
+    // All combinations should fail, so results should be empty
+    expect(results).toHaveLength(0);
+
+    // Should log errors for each failed combination
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Failed to process engagement performance metrics for',
+      ),
+      expect.objectContaining({ error: searchError }),
+    );
+  });
+
+  it('should handle empty hits array', async () => {
+    mockClient = {
+      search: jest.fn().mockResolvedValue({
+        body: {
+          hits: { hits: [] },
+        },
+      }),
+    };
+
+    await processEngagementPerformance(
+      mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
+    );
+
+    expect(mockGetPerformanceMetrics).toHaveBeenCalledWith([], true);
   });
 });

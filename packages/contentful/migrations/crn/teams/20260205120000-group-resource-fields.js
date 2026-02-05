@@ -11,9 +11,15 @@ module.exports.up = (migration) => {
 
   // Move resource fields into the group
   teams.moveField('resourceTitle').toTheTopOfFieldGroup('resourceGroup');
-  teams.moveField('resourceDescription').toTheBottomOfFieldGroup('resourceGroup');
-  teams.moveField('resourceButtonCopy').toTheBottomOfFieldGroup('resourceGroup');
-  teams.moveField('resourceContactEmail').toTheBottomOfFieldGroup('resourceGroup');
+  teams
+    .moveField('resourceDescription')
+    .toTheBottomOfFieldGroup('resourceGroup');
+  teams
+    .moveField('resourceButtonCopy')
+    .toTheBottomOfFieldGroup('resourceGroup');
+  teams
+    .moveField('resourceContactEmail')
+    .toTheBottomOfFieldGroup('resourceGroup');
   teams.moveField('resourceLink').toTheBottomOfFieldGroup('resourceGroup');
 };
 

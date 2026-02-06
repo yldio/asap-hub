@@ -285,10 +285,18 @@ beforeEach(() => {
     getAnalyticsOSChampion: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
-    getAnalyticsLeadership: jest
+    getAnalyticsWorkingGroupLeadership: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
-    getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
+    getAnalyticsWorkingGroupLeadershipTagSuggestions: jest
+      .fn()
+      .mockResolvedValue([]),
+    getAnalyticsInterestGroupLeadership: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+    getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+      .fn()
+      .mockResolvedValue([]),
   });
 
   mockUseFlags.mockReturnValue({
@@ -691,10 +699,18 @@ describe('search', () => {
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadership: jest
+      getAnalyticsWorkingGroupLeadership: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsWorkingGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
+      getAnalyticsInterestGroupLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
     });
 
     await renderPage('user', 'within-team');
@@ -756,10 +772,18 @@ describe('search', () => {
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadership: jest
+      getAnalyticsWorkingGroupLeadership: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsWorkingGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
+      getAnalyticsInterestGroupLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
     });
 
     await renderPage('team', 'within-team');
@@ -846,10 +870,18 @@ describe('csv export', () => {
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadership: jest
+      getAnalyticsWorkingGroupLeadership: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsWorkingGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
+      getAnalyticsInterestGroupLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
     });
 
     await renderPage('user', 'within-team');
@@ -923,10 +955,18 @@ describe('csv export', () => {
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadership: jest
+      getAnalyticsWorkingGroupLeadership: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsWorkingGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
+      getAnalyticsInterestGroupLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
     });
 
     await renderPage('team', 'within-team');

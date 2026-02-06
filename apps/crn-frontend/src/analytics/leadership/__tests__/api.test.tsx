@@ -255,6 +255,86 @@ describe('getAnalyticsLeadership', () => {
       );
     });
 
+    it('should handle ig_current_leadership_asc sort', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        metric: 'interest-group',
+        sort: 'ig_current_leadership_asc',
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              interestGroupLeadershipRoleCount: {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('should handle ig_previous_leadership_desc sort', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        metric: 'interest-group',
+        sort: 'ig_previous_leadership_desc',
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              interestGroupPreviousLeadershipRoleCount: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('should handle ig_current_membership_asc sort', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        metric: 'interest-group',
+        sort: 'ig_current_membership_asc',
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              interestGroupMemberCount: {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('should handle ig_previous_membership_desc sort', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        metric: 'interest-group',
+        sort: 'ig_previous_membership_desc',
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              interestGroupPreviousMemberCount: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
     it('should pass currentPage and pageSize when provided', async () => {
       await getAnalyticsLeadership(opensearchClient, {
         ...defaultOptions,

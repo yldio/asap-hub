@@ -1,0 +1,41 @@
+name: Setup Teams Field Groups
+on:
+  workflow_dispatch:
+
+jobs:
+  setup_teams_field_groups:
+    runs-on: ubuntu-latest
+    environment: Production
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: Production
+      - name: Setup Teams Field Groups
+        run: |
+          yarn workspace @asap-hub/contentful setup-teams-field-groups
+        env:
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          CONTENTFUL_ENV_ID: Production
+
+  notify_failure:
+    runs-on: ubuntu-latest
+    needs: [setup_teams_field_groups]
+    if: ${{ failure() }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/slack/
+        with:
+          message: Setup teams field groups failed
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure

@@ -74,8 +74,28 @@ async function setupFieldGroups() {
     // Update the editor interface
     editorInterface.editorLayout = editorLayout;
 
+    // groupControls is required when editorLayout is present
+    // Top level groups MUST use widgetId: 'topLevelTab'
+    editorInterface.groupControls = [
+      {
+        groupId: RESOURCE_GROUP_ID,
+        widgetId: 'topLevelTab',
+        widgetNamespace: 'builtin',
+      },
+      {
+        groupId: 'default',
+        widgetId: 'topLevelTab',
+        widgetNamespace: 'builtin',
+      },
+    ];
+
     console.log('\n💾 Saving editor interface...');
     await editorInterface.update();
+
+    // Re-publish content type to force UI refresh (workaround for Contentful bug)
+    console.log('\n🔄 Re-publishing content type to refresh UI...');
+    const publishedContentType = await contentType.publish();
+    console.log(`   Content type version: ${publishedContentType.sys.version}`);
 
     console.log('\n✅ Field groups successfully configured!');
     console.log(

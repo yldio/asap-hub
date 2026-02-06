@@ -66,10 +66,11 @@ const Leadership: FC<Record<string, never>> = () => {
         },
       ),
       (paginationParams) => {
-        const useOpensearch =
-          isEnabled('OPENSEARCH_METRICS') && metric === 'working-group';
+        const useOpensearch = isEnabled('OPENSEARCH_METRICS');
         const fetcher = useOpensearch
-          ? opensearchMetrics.getAnalyticsLeadership
+          ? metric === 'working-group'
+            ? opensearchMetrics.getAnalyticsWorkingGroupLeadership
+            : opensearchMetrics.getAnalyticsInterestGroupLeadership
           : (params: AnalyticsSearchOptionsWithSort) =>
               getAnalyticsLeadership(client, params);
         return fetcher({
@@ -114,9 +115,12 @@ const Leadership: FC<Record<string, never>> = () => {
         value,
       }));
     }
-    if (isEnabled('OPENSEARCH_METRICS') && metric === 'working-group') {
-      const response =
-        await opensearchMetrics.getAnalyticsLeadershipTagSuggestions(tagQuery);
+    if (isEnabled('OPENSEARCH_METRICS')) {
+      const fetcher =
+        metric === 'working-group'
+          ? opensearchMetrics.getAnalyticsWorkingGroupLeadershipTagSuggestions
+          : opensearchMetrics.getAnalyticsInterestGroupLeadershipTagSuggestions;
+      const response = await fetcher(tagQuery);
       return response.map((value) => ({
         label: value,
         value,

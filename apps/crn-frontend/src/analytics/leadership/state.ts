@@ -150,7 +150,8 @@ export const useAnalyticsLeadership = (options: Options) => {
   const { isEnabled } = useFlags();
   const indexName = getAlgoliaIndexName(options.sort, 'team-leadership');
   const algoliaClient = useAnalyticsAlgolia(indexName).client;
-  const opensearchIndex: OpensearchIndex = 'wg-leadership';
+  const opensearchIndex: OpensearchIndex =
+    options.metric === 'interest-group' ? 'ig-leadership' : 'wg-leadership';
   const opensearchClient =
     useAnalyticsOpensearch<AnalyticsTeamLeadershipResponse>(
       opensearchIndex,
@@ -160,8 +161,7 @@ export const useAnalyticsLeadership = (options: Options) => {
     analyticsLeadershipState(options),
   );
   if (leadership === undefined) {
-    const useOpensearch =
-      isEnabled('OPENSEARCH_METRICS') && options.metric === 'working-group';
+    const useOpensearch = isEnabled('OPENSEARCH_METRICS');
     throw getAnalyticsLeadership(
       useOpensearch ? opensearchClient : algoliaClient,
       options as AnalyticsSearchOptionsWithSort,

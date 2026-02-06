@@ -48,6 +48,10 @@ export const getAnalyticsLeadership = async (
           wg_previous_leadership: 'workingGroupPreviousLeadershipRoleCount',
           wg_current_membership: 'workingGroupMemberCount',
           wg_previous_membership: 'workingGroupPreviousMemberCount',
+          ig_current_leadership: 'interestGroupLeadershipRoleCount',
+          ig_previous_leadership: 'interestGroupPreviousLeadershipRoleCount',
+          ig_current_membership: 'interestGroupMemberCount',
+          ig_previous_membership: 'interestGroupPreviousMemberCount',
         };
         const direction = sort.endsWith('_asc') ? 'asc' : 'desc';
         const baseSort = sort.replace(/_(asc|desc)$/, '');

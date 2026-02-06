@@ -79,7 +79,7 @@ export const useOpensearchMetrics = () => {
       return getPreprintCompliance(client, paginationParams);
     },
 
-    getAnalyticsLeadership(
+    getAnalyticsWorkingGroupLeadership(
       paginationParams: Parameters<typeof getAnalyticsLeadership>[1],
     ) {
       const client = new OpensearchClient<AnalyticsTeamLeadershipResponse>(
@@ -89,9 +89,27 @@ export const useOpensearchMetrics = () => {
       return getAnalyticsLeadership(client, paginationParams);
     },
 
-    getAnalyticsLeadershipTagSuggestions(tagQuery: string) {
+    getAnalyticsWorkingGroupLeadershipTagSuggestions(tagQuery: string) {
       const client = new OpensearchClient<AnalyticsTeamLeadershipResponse>(
         'wg-leadership',
+        authorization,
+      );
+      return client.getTagSuggestions(tagQuery, 'flat');
+    },
+
+    getAnalyticsInterestGroupLeadership(
+      paginationParams: Parameters<typeof getAnalyticsLeadership>[1],
+    ) {
+      const client = new OpensearchClient<AnalyticsTeamLeadershipResponse>(
+        'ig-leadership',
+        authorization,
+      );
+      return getAnalyticsLeadership(client, paginationParams);
+    },
+
+    getAnalyticsInterestGroupLeadershipTagSuggestions(tagQuery: string) {
+      const client = new OpensearchClient<AnalyticsTeamLeadershipResponse>(
+        'ig-leadership',
         authorization,
       );
       return client.getTagSuggestions(tagQuery, 'flat');

@@ -52,6 +52,7 @@ const queryBuilderByIndex: Record<
   'team-collaboration': teamRecordSearchQueryBuilder,
   'team-collaboration-performance': taglessSearchQueryBuilder,
   'wg-leadership': leadershipRecordSearchQueryBuilder,
+  'ig-leadership': leadershipRecordSearchQueryBuilder,
 };
 
 const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
@@ -69,6 +70,7 @@ const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
   'team-collaboration': teamRecordTagQueryBuilder,
   'team-collaboration-performance': unsupportedTagQueryBuilder,
   'wg-leadership': leadershipRecordTagQueryBuilder,
+  'ig-leadership': leadershipRecordTagQueryBuilder,
 };
 
 export class OpensearchClient<T> {

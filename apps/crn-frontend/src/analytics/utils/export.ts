@@ -325,7 +325,7 @@ export const downloadAnalyticsXLSX =
           async () => undefined,
           (paginationParams) =>
             opensearchMetricsFlag
-              ? opensearchMetrics.getAnalyticsLeadership({
+              ? opensearchMetrics.getAnalyticsWorkingGroupLeadership({
                   tags,
                   ...paginationParams,
                 })
@@ -340,10 +340,15 @@ export const downloadAnalyticsXLSX =
           'ig-leadership',
           async () => undefined,
           (paginationParams) =>
-            getAnalyticsLeadership(algoliaClient, {
-              tags,
-              ...paginationParams,
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getAnalyticsInterestGroupLeadership({
+                  tags,
+                  ...paginationParams,
+                })
+              : getAnalyticsLeadership(algoliaClient, {
+                  tags,
+                  ...paginationParams,
+                }),
           () => leadershipToCSV('interest-group'),
         ),
       engagement: () =>

@@ -53,7 +53,7 @@ export const validMetrics = [
   'team-collaboration',
   'ig-leadership',
   'wg-leadership',
-  'engagement',
+  'presenter-representation',
 ] as const;
 
 export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
@@ -396,8 +396,8 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
       },
     },
   },
-  engagement: {
-    indexAlias: 'engagement',
+  'presenter-representation': {
+    indexAlias: 'presenter-representation',
     mapping: {
       properties: {
         id: { type: 'text' },

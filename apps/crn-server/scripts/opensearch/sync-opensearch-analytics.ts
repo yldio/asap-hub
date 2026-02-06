@@ -483,7 +483,7 @@ export const exportAnalyticsData = async <T extends Metrics>(
         } as ListResponse<MetricObject<T>>;
       }
 
-      case 'engagement': {
+      case 'presenter-representation': {
         const fetchAllPagesForTimeRange = async (
           timeRange: (typeof timeRanges)[number],
         ): Promise<MetricObject<T>[]> => {

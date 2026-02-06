@@ -125,7 +125,7 @@ interface ProcessOpensearchPerformanceArguments {
     | 'team-productivity'
     | 'user-collaboration'
     | 'team-collaboration'
-    | 'engagement';
+    | 'presenter-representation';
 }
 
 // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-floating-promises
@@ -314,7 +314,7 @@ yargs(hideBin(process.argv))
             'team-productivity',
             'user-collaboration',
             'team-collaboration',
-            'engagement',
+            'presenter-representation',
           ] as const,
           default: 'all' as const,
         }),

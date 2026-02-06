@@ -19,7 +19,7 @@ on:
           - team-collaboration
           - ig-leadership
           - wg-leadership
-          - engagement
+          - presenter-representation
           - all
       environment-name:
         required: true

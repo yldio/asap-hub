@@ -12,7 +12,7 @@ import {
   teamProductivityPerformanceMapping,
   userCollaborationPerformanceMapping,
   teamCollaborationPerformanceMapping,
-  engagementPerformanceMapping,
+  presenterRepresentationPerformanceMapping,
 } from './mappings';
 
 interface UserProductivityDocument {
@@ -151,7 +151,7 @@ interface TeamCollaborationPerformanceDocument {
   outputType: string;
 }
 
-interface EngagementPerformanceDocument {
+interface PresenterRepresentationPerformanceDocument {
   events: PerformanceMetrics;
   totalSpeakers: PerformanceMetrics;
   uniqueAllRoles: PerformanceMetrics;
@@ -159,7 +159,7 @@ interface EngagementPerformanceDocument {
   timeRange: string;
 }
 
-interface EngagementDocument {
+interface PresenterRepresentationDocument {
   eventCount: number;
   totalSpeakerCount: number;
   uniqueAllRolesCountPercentage: number;
@@ -167,7 +167,7 @@ interface EngagementDocument {
   timeRange: string;
 }
 
-interface EngagementHit {
+interface PresenterRepresentationHit {
   _source?: {
     eventCount?: number;
     totalSpeakerCount?: number;
@@ -188,14 +188,14 @@ export interface ProcessPerformanceOptions {
     | 'team-productivity'
     | 'user-collaboration'
     | 'team-collaboration'
-    | 'engagement';
+    | 'presenter-representation';
 }
 
 const USER_PRODUCTIVITY_INDEX = 'user-productivity';
 const TEAM_PRODUCTIVITY_INDEX = 'team-productivity';
 const USER_COLLABORATION_INDEX = 'user-collaboration';
 const TEAM_COLLABORATION_INDEX = 'team-collaboration';
-const ENGAGEMENT_INDEX = 'engagement';
+const PRESENTER_REPRESENTATION_INDEX = 'presenter-representation';
 const MAX_RESULTS = 10000;
 
 /**
@@ -789,11 +789,11 @@ export const processTeamCollaborationPerformance = async (
 };
 
 /**
- * Maps a search hit to a EngagementDocument
+ * Maps a search hit to a PresenterRepresentationDocument
  */
-const mapEngagementHitToDocument = (
-  hit: EngagementHit,
-): EngagementDocument => ({
+const mapPresenterRepresentationHitToDocument = (
+  hit: PresenterRepresentationHit,
+): PresenterRepresentationDocument => ({
   eventCount: hit._source?.eventCount ?? 0,
   totalSpeakerCount: hit._source?.totalSpeakerCount ?? 0,
   uniqueAllRolesCountPercentage:
@@ -804,15 +804,15 @@ const mapEngagementHitToDocument = (
 });
 
 /**
- * Retrieves all engagement documents for a given time range
+ * Retrieves all presenter representation documents for a given time range
  */
-const getAllEngagementDocuments = async (
+const getAllPresenterRepresentationDocuments = async (
   client: Awaited<ReturnType<typeof getClient>>,
   timeRange: string,
-): Promise<EngagementDocument[]> => {
+): Promise<PresenterRepresentationDocument[]> => {
   try {
     const response = await client.search({
-      index: ENGAGEMENT_INDEX,
+      index: PRESENTER_REPRESENTATION_INDEX,
       body: {
         query: {
           bool: {
@@ -824,9 +824,9 @@ const getAllEngagementDocuments = async (
     });
 
     const hits = response.body.hits?.hits || [];
-    return hits.map(mapEngagementHitToDocument);
+    return hits.map(mapPresenterRepresentationHitToDocument);
   } catch (error) {
-    console.error('Failed to retrieve engagement documents', {
+    console.error('Failed to retrieve presenter representation documents', {
       error,
       timeRange,
     });
@@ -835,30 +835,25 @@ const getAllEngagementDocuments = async (
 };
 
 /**
- * Processes engagement performance metrics for a single time range
+ * Processes presenter representation performance metrics for a single time range
  */
-const processEngagementMetricsForTimeRange = async (
+const processPresenterRepresentationMetricsForTimeRange = async (
   client: Awaited<ReturnType<typeof getClient>>,
   timeRange: string,
-): Promise<EngagementPerformanceDocument> => {
-  console.info(`Processing engagement performance metrics for ${timeRange}`);
+): Promise<PresenterRepresentationPerformanceDocument> => {
+  console.info(
+    `Processing presenter representation performance metrics for ${timeRange}`,
+  );
 
-  const documents = await getAllEngagementDocuments(client, timeRange);
+  const documents = await getAllPresenterRepresentationDocuments(
+    client,
+    timeRange,
+  );
 
   const events = getPerformanceMetrics(
     documents.map((doc) => doc.eventCount),
     true,
   );
-
-  //   totalSpeakers: getPerformanceMetrics(
-  //   hits.map((hit) => hit.totalSpeakerCount),
-  // ),
-  // uniqueAllRoles: getPerformanceMetrics(
-  //   hits.map((hit) => hit.uniqueAllRolesCountPercentage),
-  // ),
-  // uniqueKeyPersonnel: getPerformanceMetrics(
-  //   hits.map((hit) => hit.uniqueKeyPersonnelCountPercentage),
-  // ),
 
   const totalSpeakers = getPerformanceMetrics(
     documents.map((doc) => doc.totalSpeakerCount),
@@ -876,7 +871,7 @@ const processEngagementMetricsForTimeRange = async (
   );
 
   console.info(
-    `Processed engagement performance metrics for ${timeRange} (${documents.length} teams)`,
+    `Processed presenter representation performance metrics for ${timeRange} (${documents.length} teams)`,
   );
 
   return {
@@ -889,25 +884,25 @@ const processEngagementMetricsForTimeRange = async (
 };
 
 /**
- * Processes engagement performance metrics for all time ranges
+ * Processes presenter representation performance metrics for all time ranges
  */
-export const processEngagementPerformance = async (
+export const processPresenterRepresentationPerformance = async (
   client: Awaited<ReturnType<typeof getClient>>,
-): Promise<EngagementPerformanceDocument[]> => {
+): Promise<PresenterRepresentationPerformanceDocument[]> => {
   const results = await Promise.allSettled(
     timeRanges.map((timeRange) =>
-      processEngagementMetricsForTimeRange(client, timeRange),
+      processPresenterRepresentationMetricsForTimeRange(client, timeRange),
     ),
   );
 
-  const performanceDocuments: EngagementPerformanceDocument[] = [];
+  const performanceDocuments: PresenterRepresentationPerformanceDocument[] = [];
 
   results.forEach((result, index) => {
     if (result.status === 'fulfilled') {
       performanceDocuments.push(result.value);
     } else {
       console.error(
-        `Failed to process engagement performance metrics for ${timeRanges[index]}}`,
+        `Failed to process presenter representation performance metrics for ${timeRanges[index]}}`,
         { error: result.reason },
       );
     }
@@ -1070,16 +1065,16 @@ export const processPerformance = async ({
     }
   }
 
-  if (metric === 'all' || metric === 'engagement') {
+  if (metric === 'all' || metric === 'presenter-representation') {
     try {
-      console.info('Processing engagement-performance...');
+      console.info('Processing presenter-representation-performance...');
 
-      await indexOpensearchData<EngagementPerformanceDocument>({
+      await indexOpensearchData<PresenterRepresentationPerformanceDocument>({
         awsRegion,
         stage: environment,
         opensearchUsername,
         opensearchPassword,
-        indexAlias: 'engagement-performance',
+        indexAlias: 'presenter-representation-performance',
         getData: async () => {
           const client = await getClient(
             awsRegion,
@@ -1088,18 +1083,21 @@ export const processPerformance = async ({
             opensearchPassword,
           );
 
-          const documents = await processEngagementPerformance(client);
+          const documents =
+            await processPresenterRepresentationPerformance(client);
 
           return {
             documents,
-            mapping: engagementPerformanceMapping,
+            mapping: presenterRepresentationPerformanceMapping,
           };
         },
       });
 
-      console.info('Successfully indexed engagement-performance data');
+      console.info(
+        'Successfully indexed presenter-representation-performance data',
+      );
     } catch (error) {
-      console.error('Failed to process engagement-performance', {
+      console.error('Failed to process presenter-representation-performance', {
         error,
       });
       throw error;

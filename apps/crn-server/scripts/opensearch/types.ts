@@ -45,6 +45,8 @@ export type WGLeadershipDataObject = LeadershipBaseDataObject &
     | 'workingGroupPreviousMemberCount'
   >;
 
+export type PresenterRepresentationDataObject = EngagementDataObject;
+
 export type MetricToObjectMap = {
   'os-champion': OSChampionDataObject;
   'preliminary-data-sharing': PreliminaryDataSharingDataObject;
@@ -57,7 +59,7 @@ export type MetricToObjectMap = {
   'team-collaboration': TeamCollaborationDataObject;
   'ig-leadership': IGLeadershipDataObject;
   'wg-leadership': WGLeadershipDataObject;
-  engagement: EngagementDataObject;
+  'presenter-representation': PresenterRepresentationDataObject;
 };
 
 export type MetricObject<T extends Metrics> = MetricToObjectMap[T];

@@ -115,7 +115,7 @@ export const teamCollaborationPerformanceMapping = {
   },
 } as const;
 
-export const engagementPerformanceMapping = {
+export const presenterRepresentationPerformanceMapping = {
   properties: {
     events: {
       properties: performanceRangeProperties,

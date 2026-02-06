@@ -13,7 +13,7 @@ import {
   processTeamCollaborationPerformance,
   processPerformance,
   ProcessPerformanceOptions,
-  processEngagementPerformance,
+  processPresenterRepresentationPerformance,
 } from '../process-performance';
 
 jest.mock('@asap-hub/server-common');
@@ -565,7 +565,7 @@ describe('processPerformance', () => {
   it('should process both user and team productivity performance when metric is "all"', async () => {
     await processPerformance({ ...defaultOptions, metric: 'all' });
 
-    expect(mockIndexOpensearchData).toHaveBeenCalledTimes(4);
+    expect(mockIndexOpensearchData).toHaveBeenCalledTimes(5);
     expect(consoleInfoSpy).toHaveBeenCalledWith(
       'Processing user-productivity-performance...',
     );
@@ -577,6 +577,9 @@ describe('processPerformance', () => {
     );
     expect(consoleInfoSpy).toHaveBeenCalledWith(
       'Processing team-collaboration-performance...',
+    );
+    expect(consoleInfoSpy).toHaveBeenCalledWith(
+      'Processing presenter-representation-performance...',
     );
   });
 
@@ -1233,25 +1236,29 @@ describe('processPerformance', () => {
     );
   });
 
-  it('should handle errors for engagement and rethrow', async () => {
-    const indexError = new Error('Failed to index engagement data');
+  it('should handle errors for presenter-representation and rethrow', async () => {
+    const indexError = new Error(
+      'Failed to index presenter-representation data',
+    );
     mockIndexOpensearchData.mockRejectedValue(indexError);
 
     await expect(
       processPerformance({
         ...defaultOptions,
-        metric: 'engagement',
+        metric: 'presenter-representation',
       }),
     ).rejects.toThrow(indexError);
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Failed to process engagement-performance',
+      'Failed to process presenter-representation-performance',
       { error: indexError },
     );
   });
 
-  it('should handle errors from getData function for engagement', async () => {
-    const clientError = new Error('Failed to get client for engagement');
+  it('should handle errors from getData function for presenter-representation', async () => {
+    const clientError = new Error(
+      'Failed to get client for presenter-representation',
+    );
     mockGetClient.mockRejectedValue(clientError);
     mockIndexOpensearchData.mockImplementation(async (options) => {
       await options.getData();
@@ -1260,12 +1267,12 @@ describe('processPerformance', () => {
     await expect(
       processPerformance({
         ...defaultOptions,
-        metric: 'engagement',
+        metric: 'presenter-representation',
       }),
     ).rejects.toThrow(clientError);
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Failed to process engagement-performance',
+      'Failed to process presenter-representation-performance',
       expect.objectContaining({ error: clientError }),
     );
   });
@@ -1843,7 +1850,7 @@ describe('processTeamCollaborationPerformance', () => {
   });
 });
 
-describe('processEngagementPerformance', () => {
+describe('processPresenterRepresentationPerformance', () => {
   let mockClient: MockClient;
   let consoleInfoSpy: jest.SpyInstance;
   let consoleErrorSpy: jest.SpyInstance;
@@ -1870,7 +1877,7 @@ describe('processEngagementPerformance', () => {
     consoleErrorSpy.mockRestore();
   });
 
-  it('should process engagement performance for all time ranges', async () => {
+  it('should process presenter representation performance for all time ranges', async () => {
     const mockHits = [
       {
         _source: {
@@ -1900,7 +1907,7 @@ describe('processEngagementPerformance', () => {
       }),
     };
 
-    const results = await processEngagementPerformance(
+    const results = await processPresenterRepresentationPerformance(
       mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
     );
 
@@ -1950,7 +1957,7 @@ describe('processEngagementPerformance', () => {
       }),
     };
 
-    const results = await processEngagementPerformance(
+    const results = await processPresenterRepresentationPerformance(
       mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
     );
 
@@ -1970,7 +1977,7 @@ describe('processEngagementPerformance', () => {
       search: jest.fn().mockRejectedValue(searchError),
     };
 
-    const results = await processEngagementPerformance(
+    const results = await processPresenterRepresentationPerformance(
       mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
     );
 
@@ -1980,7 +1987,7 @@ describe('processEngagementPerformance', () => {
     // Should log errors for each failed combination
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       expect.stringContaining(
-        'Failed to process engagement performance metrics for',
+        'Failed to process presenter representation performance metrics for',
       ),
       expect.objectContaining({ error: searchError }),
     );
@@ -1995,7 +2002,7 @@ describe('processEngagementPerformance', () => {
       }),
     };
 
-    await processEngagementPerformance(
+    await processPresenterRepresentationPerformance(
       mockClient as unknown as Awaited<ReturnType<typeof getClient>>,
     );
 

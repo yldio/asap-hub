@@ -4,35 +4,38 @@ module.exports.description =
 module.exports.up = (migration) => {
   const teams = migration.editContentType('teams');
 
-  // Create a field group for resource-related fields
-  teams.createFieldGroup('resourceGroup', {
-    name: 'Resource Section',
-  });
+  // Edit the editor layout to create field groups (tabs)
+  teams.configureEditorLayout((editorLayout) => {
+    // Create a field group (tab) for resource-related fields
+    editorLayout.createFieldGroup('resourceGroup', {
+      name: 'Resource Section',
+    });
 
-  // Move resource fields into the group
-  teams.moveField('resourceTitle').toTheTopOfFieldGroup('resourceGroup');
-  teams
-    .moveField('resourceDescription')
-    .toTheBottomOfFieldGroup('resourceGroup');
-  teams
-    .moveField('resourceButtonCopy')
-    .toTheBottomOfFieldGroup('resourceGroup');
-  teams
-    .moveField('resourceContactEmail')
-    .toTheBottomOfFieldGroup('resourceGroup');
-  teams.moveField('resourceLink').toTheBottomOfFieldGroup('resourceGroup');
+    // Move resource fields into the group
+    editorLayout
+      .moveField('resourceTitle')
+      .toTheTopOfFieldGroup('resourceGroup');
+    editorLayout
+      .moveField('resourceDescription')
+      .toTheBottomOfFieldGroup('resourceGroup');
+    editorLayout
+      .moveField('resourceButtonCopy')
+      .toTheBottomOfFieldGroup('resourceGroup');
+    editorLayout
+      .moveField('resourceContactEmail')
+      .toTheBottomOfFieldGroup('resourceGroup');
+    editorLayout
+      .moveField('resourceLink')
+      .toTheBottomOfFieldGroup('resourceGroup');
+  });
 };
 
 module.exports.down = (migration) => {
   const teams = migration.editContentType('teams');
 
-  // Move fields out of the group (back to the root level)
-  teams.moveField('resourceTitle').toTheTop();
-  teams.moveField('resourceDescription').toTheTop();
-  teams.moveField('resourceButtonCopy').toTheTop();
-  teams.moveField('resourceContactEmail').toTheTop();
-  teams.moveField('resourceLink').toTheTop();
-
-  // Delete the field group
-  teams.deleteFieldGroup('resourceGroup');
+  // Edit the editor layout to remove the field group
+  teams.configureEditorLayout((editorLayout) => {
+    // Delete the field group (this will move fields back to default)
+    editorLayout.deleteFieldGroup('resourceGroup');
+  });
 };

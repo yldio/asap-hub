@@ -2,10 +2,8 @@ module.exports.description =
   'Group resource fields together in teams content model';
 
 module.exports.up = (migration) => {
-  const teams = migration.editContentType('teams');
-
   // Edit the editor layout to create field groups (tabs)
-  teams.configureEditorLayout((editorLayout) => {
+  migration.editEditorLayout('teams', (editorLayout) => {
     // Create a field group (tab) for resource-related fields
     editorLayout.createFieldGroup('resourceGroup', {
       name: 'Resource Section',
@@ -31,10 +29,8 @@ module.exports.up = (migration) => {
 };
 
 module.exports.down = (migration) => {
-  const teams = migration.editContentType('teams');
-
   // Edit the editor layout to remove the field group
-  teams.configureEditorLayout((editorLayout) => {
+  migration.editEditorLayout('teams', (editorLayout) => {
     // Delete the field group (this will move fields back to default)
     editorLayout.deleteFieldGroup('resourceGroup');
   });

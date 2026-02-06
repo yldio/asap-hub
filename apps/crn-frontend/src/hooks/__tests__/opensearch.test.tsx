@@ -1036,7 +1036,7 @@ describe('useOpensearchMetrics', () => {
     expect(authorizationCalls).toHaveLength(2);
   });
 
-  describe('getAnalyticsLeadership', () => {
+  describe('getAnalyticsWorkingGroupLeadership', () => {
     it('creates OpensearchClient with correct index and calls API method', async () => {
       const mockGetAnalyticsLeadership = jest
         .spyOn(leadershipApi, 'getAnalyticsLeadership')
@@ -1068,7 +1068,7 @@ describe('useOpensearchMetrics', () => {
         metric: 'working-group' as const,
       };
 
-      await result.current.getAnalyticsLeadership(paginationParams);
+      await result.current.getAnalyticsWorkingGroupLeadership(paginationParams);
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'wg-leadership',
@@ -1082,7 +1082,7 @@ describe('useOpensearchMetrics', () => {
     });
   });
 
-  describe('getAnalyticsLeadershipTagSuggestions', () => {
+  describe('getAnalyticsWorkingGroupLeadershipTagSuggestions', () => {
     it('creates OpensearchClient with correct index and calls getTagSuggestions', async () => {
       const mockGetTagSuggestions = jest.fn().mockResolvedValue(['Tag 1']);
       mockOpensearchClient.mockImplementation(
@@ -1111,10 +1111,103 @@ describe('useOpensearchMetrics', () => {
       const tagQuery = 'Tag';
 
       const suggestions =
-        await result.current.getAnalyticsLeadershipTagSuggestions(tagQuery);
+        await result.current.getAnalyticsWorkingGroupLeadershipTagSuggestions(
+          tagQuery,
+        );
 
       expect(mockOpensearchClient).toHaveBeenCalledWith(
         'wg-leadership',
+        expect.any(String),
+      );
+
+      expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
+      expect(suggestions).toEqual(['Tag 1']);
+    });
+  });
+
+  describe('getAnalyticsInterestGroupLeadership', () => {
+    it('creates OpensearchClient with correct index and calls API method', async () => {
+      const mockGetAnalyticsLeadership = jest
+        .spyOn(leadershipApi, 'getAnalyticsLeadership')
+        .mockResolvedValue({
+          items: [],
+          total: 0,
+        });
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const paginationParams = {
+        tags: [],
+        currentPage: 0,
+        pageSize: 10,
+        metric: 'interest-group' as const,
+      };
+
+      await result.current.getAnalyticsInterestGroupLeadership(
+        paginationParams,
+      );
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'ig-leadership',
+        expect.any(String),
+      );
+
+      expect(mockGetAnalyticsLeadership).toHaveBeenCalledWith(
+        expect.any(OpensearchClient),
+        paginationParams,
+      );
+    });
+  });
+
+  describe('getAnalyticsInterestGroupLeadershipTagSuggestions', () => {
+    it('creates OpensearchClient with correct index and calls getTagSuggestions', async () => {
+      const mockGetTagSuggestions = jest.fn().mockResolvedValue(['Tag 1']);
+      mockOpensearchClient.mockImplementation(
+        () =>
+          ({
+            getTagSuggestions: mockGetTagSuggestions,
+          }) as unknown as OpensearchClient<unknown>,
+      );
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const tagQuery = 'Tag';
+
+      const suggestions =
+        await result.current.getAnalyticsInterestGroupLeadershipTagSuggestions(
+          tagQuery,
+        );
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'ig-leadership',
         expect.any(String),
       );
 

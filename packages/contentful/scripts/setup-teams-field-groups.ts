@@ -45,46 +45,49 @@ async function setupFieldGroups() {
     // Create the editor layout with field groups
     console.log(`\n✨ Creating field group: "${RESOURCE_GROUP_NAME}"`);
 
-    // Build the editor layout
-    const editorLayout: any[] = [];
-
-    // Add the resource fields group
-    editorLayout.push({
-      groupId: RESOURCE_GROUP_ID,
-      name: RESOURCE_GROUP_NAME,
-      items: RESOURCE_FIELD_IDS.map((fieldId) => ({ fieldId })),
-    });
-
-    // Add remaining fields to a default group
+    // Get remaining fields (not in resource group)
     const remainingFieldIds = allFieldIds.filter(
       (fieldId) => !RESOURCE_FIELD_IDS.includes(fieldId),
     );
 
-    if (remainingFieldIds.length > 0) {
-      editorLayout.push({
-        groupId: 'default',
-        name: 'General',
-        items: remainingFieldIds.map((fieldId) => ({ fieldId })),
-      });
-      console.log(
-        `   Added ${remainingFieldIds.length} other fields to "General" group`,
-      );
-    }
+    // Build the editor layout with a single top-level tab containing a fieldset
+    // Structure: One tab with regular fields + a collapsible fieldset for resource fields
+    const editorLayout: any[] = [
+      {
+        groupId: 'content',
+        name: 'Content',
+        items: [
+          // Regular fields first
+          ...remainingFieldIds.map((fieldId) => ({ fieldId })),
+          // Resource fields as a nested fieldset group
+          {
+            groupId: RESOURCE_GROUP_ID,
+            name: RESOURCE_GROUP_NAME,
+            items: RESOURCE_FIELD_IDS.map((fieldId) => ({ fieldId })),
+          },
+        ],
+      },
+    ];
+
+    console.log(
+      `   ${remainingFieldIds.length} regular fields + "${RESOURCE_GROUP_NAME}" fieldset`,
+    );
 
     // Update the editor interface
     editorInterface.editorLayout = editorLayout;
 
-    // groupControls is required when editorLayout is present
-    // Top level groups MUST use widgetId: 'topLevelTab'
+    // groupControls defines how each group is rendered
+    // - Top level: topLevelTab
+    // - Nested groups: fieldset (collapsible section)
     editorInterface.groupControls = [
       {
-        groupId: RESOURCE_GROUP_ID,
+        groupId: 'content',
         widgetId: 'topLevelTab',
         widgetNamespace: 'builtin',
       },
       {
-        groupId: 'default',
-        widgetId: 'topLevelTab',
+        groupId: RESOURCE_GROUP_ID,
+        widgetId: 'fieldset',
         widgetNamespace: 'builtin',
       },
     ];
@@ -99,13 +102,10 @@ async function setupFieldGroups() {
 
     console.log('\n✅ Field groups successfully configured!');
     console.log(
-      `   Resource fields (${RESOURCE_FIELD_IDS.length}) are now in "${RESOURCE_GROUP_NAME}" tab`,
+      `   Resource fields (${RESOURCE_FIELD_IDS.length}) are now in "${RESOURCE_GROUP_NAME}" fieldset`,
     );
     console.log(
-      `   Other fields (${remainingFieldIds.length}) are in "General" tab`,
-    );
-    console.log(
-      '\n🎉 Done! Check your Contentful web app to see the new tabs.',
+      '\n🎉 Done! Check your Contentful web app to see the collapsible fieldset.',
     );
   } catch (error) {
     console.error('\n❌ Error setting up field groups:', error);

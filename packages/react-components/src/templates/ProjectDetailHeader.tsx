@@ -1,4 +1,5 @@
-import { ProjectDetail } from '@asap-hub/model';
+import { ProjectDetail, ProjectMember } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Display, Pill, Link, CopyButton, TabLink } from '../atoms';
 import { lead } from '../colors';
@@ -145,8 +146,18 @@ export const getTeamIcon = (project: ProjectDetail) => {
   return null;
 };
 
-const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
+type MemberWithHref = ProjectMember & { href: string };
+
+const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
   const { pointOfContactEmail, aboutHref } = project;
+
+  const membersWithHref =
+    'members' in project
+      ? project.members?.map((member: ProjectMember) => ({
+          ...member,
+          href: network({}).users({}).user({ userId: member.id }).$,
+        }))
+      : undefined;
 
   return (
     <>
@@ -303,18 +314,18 @@ const ProjectDetailHeader: React.FC<ProjectDetailHeaderProps> = (project) => {
 
             {project.projectType === 'Resource Project' &&
               !project.isTeamBased &&
-              project.members && (
+              membersWithHref && (
                 <div css={metadataRowStyles}>
                   <span css={iconStyles}>{getTeamIcon(project)}</span>
-                  <UsersList users={project.members} separator="•" noMargin />
+                  <UsersList users={membersWithHref} separator="•" noMargin />
                 </div>
               )}
 
             {project.projectType === 'Trainee Project' &&
+              membersWithHref &&
               (() => {
-                const { trainees, mentors } = groupTraineeProjectMembers(
-                  project.members,
-                );
+                const { trainees, mentors } =
+                  groupTraineeProjectMembers<MemberWithHref>(membersWithHref);
 
                 return (
                   <>

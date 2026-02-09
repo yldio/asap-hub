@@ -1,4 +1,5 @@
-import * as contentful from 'contentful-management';
+import { createClient } from 'contentful-management';
+import type { FieldGroupItem, GroupControl } from 'contentful-management';
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID!;
 const contentfulManagementAccessToken =
@@ -17,7 +18,7 @@ const RESOURCE_FIELD_IDS = [
   'resourceLink',
 ];
 
-const client = contentful.createClient({
+const client = createClient({
   accessToken: contentfulManagementAccessToken,
 });
 
@@ -52,7 +53,7 @@ async function setupFieldGroups() {
 
     // Build the editor layout with a single top-level tab containing a fieldset
     // Structure: One tab with regular fields + a collapsible fieldset for resource fields
-    const editorLayout: any[] = [
+    const editorLayout: FieldGroupItem[] = [
       {
         groupId: 'content',
         name: 'Content',
@@ -79,7 +80,7 @@ async function setupFieldGroups() {
     // groupControls defines how each group is rendered
     // - Top level: topLevelTab
     // - Nested groups: fieldset (collapsible section)
-    editorInterface.groupControls = [
+    const groupControls: GroupControl[] = [
       {
         groupId: 'content',
         widgetId: 'topLevelTab',
@@ -91,6 +92,8 @@ async function setupFieldGroups() {
         widgetNamespace: 'builtin',
       },
     ];
+
+    editorInterface.groupControls = groupControls;
 
     console.log('\n💾 Saving editor interface...');
     await editorInterface.update();

@@ -246,10 +246,6 @@ export type ListAnalyticsTeamLeadershipDataObject =
   ListResponse<AnalyticsTeamLeadershipDataObject>;
 
 export type AnalyticsTeamLeadershipResponse = AnalyticsTeamLeadershipDataObject;
-export type AnalyticsTeamLeadershipAlgoliaResponse =
-  AnalyticsTeamLeadershipDataObject & {
-    objectID: string;
-  };
 
 export type ListAnalyticsTeamLeadershipResponse =
   ListResponse<AnalyticsTeamLeadershipResponse>;

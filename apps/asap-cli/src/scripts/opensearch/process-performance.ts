@@ -902,7 +902,7 @@ export const processPresenterRepresentationPerformance = async (
       performanceDocuments.push(result.value);
     } else {
       console.error(
-        `Failed to process presenter representation performance metrics for ${timeRanges[index]}}`,
+        `Failed to process presenter representation performance metrics for ${timeRanges[index]}`,
         { error: result.reason },
       );
     }

@@ -486,8 +486,8 @@ export const exportAnalyticsData = async <T extends Metrics>(
       case 'presenter-representation': {
         const fetchAllPagesForTimeRange = async (
           timeRange: (typeof timeRanges)[number],
-        ): Promise<MetricObject<T>[]> => {
-          const items: MetricObject<T>[] = [];
+        ): Promise<MetricObject<'presenter-representation'>[]> => {
+          const items: MetricObject<'presenter-representation'>[] = [];
           let page = 1;
           let total = 0;
           let recordCount = 0;
@@ -497,7 +497,7 @@ export const exportAnalyticsData = async <T extends Metrics>(
               take: PAGE_SIZE,
               skip: (page - 1) * PAGE_SIZE,
               filter: { timeRange },
-            })) as ListResponse<MetricObject<T>>;
+            })) as ListResponse<MetricObject<'presenter-representation'>>;
 
             if (response) {
               total = response.total;
@@ -506,6 +506,7 @@ export const exportAnalyticsData = async <T extends Metrics>(
 
               const enrichedItems = response.items.map((item) => ({
                 ...item,
+                isInactive: !!item.inactiveSince,
                 timeRange,
               }));
 

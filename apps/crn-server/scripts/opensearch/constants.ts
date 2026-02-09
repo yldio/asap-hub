@@ -401,7 +401,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         id: { type: 'text' },
-        displayName: {
+        name: {
           type: 'text',
           analyzer: 'ngram_analyzer',
           search_analyzer: 'ngram_search_analyzer',
@@ -410,12 +410,18 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
             raw: { type: 'keyword' },
           },
         },
+        // TODO: Remove redundancy between `isInactive` and `inactiveSince`.
+        // Once Algolia is dropped, keep only one field across all OpenSearch team metrics.
         isInactive: { type: 'boolean' },
         inactiveSince: { type: 'keyword' },
-        workingGroupLeadershipRoleCount: { type: 'integer' },
-        workingGroupPreviousLeadershipRoleCount: { type: 'integer' },
-        workingGroupMemberCount: { type: 'integer' },
-        workingGroupPreviousMemberCount: { type: 'integer' },
+        memberCount: { type: 'integer' },
+        eventCount: { type: 'integer' },
+        totalSpeakerCount: { type: 'integer' },
+        uniqueAllRolesCount: { type: 'integer' },
+        uniqueAllRolesCountPercentage: { type: 'integer' },
+        uniqueKeyPersonnelCount: { type: 'integer' },
+        uniqueKeyPersonnelCountPercentage: { type: 'integer' },
+        timeRange: { type: 'keyword' },
       },
     },
   },

@@ -45,7 +45,9 @@ export type WGLeadershipDataObject = LeadershipBaseDataObject &
     | 'workingGroupPreviousMemberCount'
   >;
 
-export type PresenterRepresentationDataObject = EngagementDataObject;
+export type PresenterRepresentationDataObject = EngagementDataObject & {
+  isInactive: boolean;
+};
 
 export type MetricToObjectMap = {
   'os-champion': OSChampionDataObject;

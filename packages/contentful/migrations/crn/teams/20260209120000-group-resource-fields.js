@@ -21,7 +21,6 @@ module.exports.up = (migration) => {
     'builtin',
     'fieldset',
     {
-      helpText: 'Fields related to team resources',
       collapsedByDefault: false,
     },
   );

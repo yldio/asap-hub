@@ -394,7 +394,10 @@ jobs:
 
   crn-contentful-field-groups:
     needs: [crn-contentful-migrate]
-    # Run after migrations to set up field groups (editorLayout)
+    # Field groups (editorLayout) cannot be configured via the Contentful Migration API -
+    # they require the Management API. Additionally, when migrations publish a content type,
+    # the editorLayout can get reset. This job re-applies the field group configuration
+    # after migrations complete to ensure the Teams content type has the correct layout.
     if: ${{ (inputs.environment-name == 'Branch' && inputs.crn-contentful-env != 'Development' &&  inputs.crn-contentful-env !='Production') || inputs.environment-name != 'Branch' }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}

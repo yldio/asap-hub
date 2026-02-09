@@ -7,42 +7,35 @@ module.exports.up = (migration) => {
   // Create editor layout with field groups
   const editorLayout = teams.createEditorLayout();
 
+  // Editor layout requires at least 2 groups
+  // Create a main content group for general fields
+  editorLayout.createFieldGroup('content', {
+    name: 'Content',
+  });
+
   // Create a fieldset for resource fields
   editorLayout.createFieldGroup('resourceGroup', {
     name: 'Resource Section',
   });
 
-  // Change the field group control to be a collapsible fieldset
+  // Change the resource group control to be a collapsible fieldset
   editorLayout.changeFieldGroupControl('resourceGroup', 'builtin', 'fieldset', {
     helpText: 'Fields related to team resources',
     collapsedByDefault: false,
   });
 
-  // Move resource fields into the group
+  // Move resource fields into the resource group
+  editorLayout.moveField('resourceTitle').toTheTopOfFieldGroup('resourceGroup');
   editorLayout
-    .editFieldGroup('resourceGroup')
-    .moveField('resourceTitle')
-    .toTheTopOfFieldGroup();
-
-  editorLayout
-    .editFieldGroup('resourceGroup')
     .moveField('resourceDescription')
-    .toTheBottomOfFieldGroup();
-
+    .toTheBottomOfFieldGroup('resourceGroup');
   editorLayout
-    .editFieldGroup('resourceGroup')
     .moveField('resourceButtonCopy')
-    .toTheBottomOfFieldGroup();
-
+    .toTheBottomOfFieldGroup('resourceGroup');
   editorLayout
-    .editFieldGroup('resourceGroup')
     .moveField('resourceContactEmail')
-    .toTheBottomOfFieldGroup();
-
-  editorLayout
-    .editFieldGroup('resourceGroup')
-    .moveField('resourceLink')
-    .toTheBottomOfFieldGroup();
+    .toTheBottomOfFieldGroup('resourceGroup');
+  editorLayout.moveField('resourceLink').toTheBottomOfFieldGroup('resourceGroup');
 };
 
 module.exports.down = (migration) => {

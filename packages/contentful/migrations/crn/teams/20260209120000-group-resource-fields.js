@@ -3,28 +3,23 @@ module.exports.description =
 
 module.exports.up = (migration) => {
   const teams = migration.editContentType('teams');
-
-  // Create editor layout with field groups
   const editorLayout = teams.createEditorLayout();
 
-  // Editor layout requires at least 2 groups
-  // Create a main content group for general fields
-  editorLayout.createFieldGroup('content', {
-    name: 'Content',
-  });
+  // Top-level groups MUST be topLevelTab - this is Contentful's requirement
+  editorLayout.createFieldGroup('main', { name: 'Team Details' });
+  editorLayout.changeFieldGroupControl('main', 'builtin', 'topLevelTab');
 
-  // Create a fieldset for resource fields
-  editorLayout.createFieldGroup('resourceGroup', {
-    name: 'Resource Section',
-  });
-
-  // Change the resource group control to be a collapsible fieldset
+  // Create a nested fieldset INSIDE the main tab for resources
+  // Fieldsets can only exist nested inside a topLevelTab
+  editorLayout
+    .editFieldGroup('main')
+    .createFieldGroup('resourceGroup', { name: 'Resource Section' });
   editorLayout.changeFieldGroupControl('resourceGroup', 'builtin', 'fieldset', {
     helpText: 'Fields related to team resources',
     collapsedByDefault: false,
   });
 
-  // Move resource fields into the resource group
+  // Move resource fields into the nested fieldset
   editorLayout.moveField('resourceTitle').toTheTopOfFieldGroup('resourceGroup');
   editorLayout
     .moveField('resourceDescription')
@@ -35,7 +30,9 @@ module.exports.up = (migration) => {
   editorLayout
     .moveField('resourceContactEmail')
     .toTheBottomOfFieldGroup('resourceGroup');
-  editorLayout.moveField('resourceLink').toTheBottomOfFieldGroup('resourceGroup');
+  editorLayout
+    .moveField('resourceLink')
+    .toTheBottomOfFieldGroup('resourceGroup');
 };
 
 module.exports.down = (migration) => {

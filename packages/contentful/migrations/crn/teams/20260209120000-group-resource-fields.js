@@ -5,34 +5,43 @@ module.exports.up = (migration) => {
   const teams = migration.editContentType('teams');
   const editorLayout = teams.createEditorLayout();
 
-  // Top-level groups MUST be topLevelTab - this is Contentful's requirement
-  editorLayout.createFieldGroup('main', { name: 'Team Details' });
-  editorLayout.changeFieldGroupControl('main', 'builtin', 'topLevelTab');
+  // Create two top-level tabs (minimum 2 required)
+  editorLayout.createFieldGroup('content', { name: 'Content' });
+  editorLayout.changeFieldGroupControl('content', 'builtin', 'topLevelTab');
 
-  // Create a nested fieldset INSIDE the main tab for resources
-  // Fieldsets can only exist nested inside a topLevelTab
+  editorLayout.createFieldGroup('resources', { name: 'Resources' });
+  editorLayout.changeFieldGroupControl('resources', 'builtin', 'topLevelTab');
+
+  // Create nested fieldset inside resources tab
   editorLayout
-    .editFieldGroup('main')
-    .createFieldGroup('resourceGroup', { name: 'Resource Section' });
-  editorLayout.changeFieldGroupControl('resourceGroup', 'builtin', 'fieldset', {
-    helpText: 'Fields related to team resources',
-    collapsedByDefault: false,
-  });
+    .editFieldGroup('resources')
+    .createFieldGroup('resourceDetails', { name: 'Resource Details' });
+  editorLayout.changeFieldGroupControl(
+    'resourceDetails',
+    'builtin',
+    'fieldset',
+    {
+      helpText: 'Fields related to team resources',
+      collapsedByDefault: false,
+    },
+  );
 
   // Move resource fields into the nested fieldset
-  editorLayout.moveField('resourceTitle').toTheTopOfFieldGroup('resourceGroup');
+  editorLayout
+    .moveField('resourceTitle')
+    .toTheTopOfFieldGroup('resourceDetails');
   editorLayout
     .moveField('resourceDescription')
-    .toTheBottomOfFieldGroup('resourceGroup');
+    .toTheBottomOfFieldGroup('resourceDetails');
   editorLayout
     .moveField('resourceButtonCopy')
-    .toTheBottomOfFieldGroup('resourceGroup');
+    .toTheBottomOfFieldGroup('resourceDetails');
   editorLayout
     .moveField('resourceContactEmail')
-    .toTheBottomOfFieldGroup('resourceGroup');
+    .toTheBottomOfFieldGroup('resourceDetails');
   editorLayout
     .moveField('resourceLink')
-    .toTheBottomOfFieldGroup('resourceGroup');
+    .toTheBottomOfFieldGroup('resourceDetails');
 };
 
 module.exports.down = (migration) => {

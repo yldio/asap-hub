@@ -1,11 +1,19 @@
 name: Setup Teams Field Groups
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run against'
+        required: true
+        type: choice
+        options:
+          - Development
+          - Production
 
 jobs:
   setup_teams_field_groups:
     runs-on: ubuntu-latest
-    environment: Production
+    environment: ${{ inputs.environment }}
     container:
       image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
       credentials:
@@ -18,14 +26,14 @@ jobs:
         id: setup
         uses: ./.github/actions/setup-environment
         with:
-          environment-name: Production
+          environment-name: ${{ inputs.environment }}
       - name: Setup Teams Field Groups
         run: |
           yarn workspace @asap-hub/contentful setup-teams-field-groups
         env:
           CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
           CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
-          CONTENTFUL_ENV_ID: Production
+          CONTENTFUL_ENV_ID: ${{ inputs.environment }}
 
   notify_failure:
     runs-on: ubuntu-latest

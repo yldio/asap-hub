@@ -18,7 +18,6 @@ type TagUtilisation = {
   frequency: {
     user: number;
     event: number;
-    team: number;
     'working-group': number;
     'interest-group': number;
     project: number;
@@ -47,7 +46,6 @@ const fetchAllTagsWithCounts = async (
     counts: {
       user: number;
       event: number;
-      team: number;
       'working-group': number;
       'interest-group': number;
       project: number;
@@ -93,7 +91,6 @@ const fetchAllTagsWithCounts = async (
           counts: {
             user: linkedFrom.usersCollection?.total ?? 0,
             event: linkedFrom.eventsCollection?.total ?? 0,
-            team: linkedFrom.teamsCollection?.total ?? 0,
             'working-group': linkedFrom.workingGroupsCollection?.total ?? 0,
             'interest-group': linkedFrom.interestGroupsCollection?.total ?? 0,
             project: linkedFrom.projectsCollection?.total ?? 0,
@@ -136,7 +133,6 @@ export const exportTagsUtilisation = async (
     const totalCount =
       tag.counts.user +
       tag.counts.event +
-      tag.counts.team +
       tag.counts['working-group'] +
       tag.counts['interest-group'] +
       tag.counts.project +
@@ -152,7 +148,6 @@ export const exportTagsUtilisation = async (
       frequency: {
         user: tag.counts.user,
         event: tag.counts.event,
-        team: tag.counts.team,
         'working-group': tag.counts['working-group'],
         'interest-group': tag.counts['interest-group'],
         project: tag.counts.project,
@@ -175,7 +170,6 @@ export const exportTagsUtilisation = async (
     Types: tag.types ? tag.types.join('; ') : '',
     'User Count': tag.frequency.user,
     'Event Count': tag.frequency.event,
-    'Team Count': tag.frequency.team,
     'Working Group Count': tag.frequency['working-group'],
     'Interest Group Count': tag.frequency['interest-group'],
     'Project Count': tag.frequency.project,
@@ -197,7 +191,6 @@ export const exportTagsUtilisation = async (
     { wch: 30 }, // Types
     { wch: 12 }, // User Count
     { wch: 12 }, // Event Count
-    { wch: 12 }, // Team Count
     { wch: 20 }, // Working Group Count
     { wch: 20 }, // Interest Group Count
     { wch: 14 }, // Project Count

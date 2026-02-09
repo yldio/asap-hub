@@ -1,4 +1,5 @@
-module.exports.description = 'Group resource fields into a collapsible fieldset';
+module.exports.description =
+  'Group resource fields into a collapsible fieldset';
 
 module.exports.up = (migration) => {
   const teams = migration.editContentType('teams');
@@ -12,7 +13,7 @@ module.exports.up = (migration) => {
   });
 
   // Change the field group control to be a collapsible fieldset
-  teams.changeFieldGroupControl('resourceGroup', 'builtin', 'fieldset', {
+  editorLayout.changeFieldGroupControl('resourceGroup', 'builtin', 'fieldset', {
     helpText: 'Fields related to team resources',
     collapsedByDefault: false,
   });

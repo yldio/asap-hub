@@ -113,8 +113,10 @@ describe('downloadAnalyticsXLSX', () => {
     getTeamCollaboration: jest.fn(),
     getTeamCollaborationTagSuggestions: jest.fn(),
     getTeamCollaborationPerformance: jest.fn(),
-    getAnalyticsLeadership: jest.fn(),
-    getAnalyticsLeadershipTagSuggestions: jest.fn(),
+    getAnalyticsWorkingGroupLeadership: jest.fn(),
+    getAnalyticsWorkingGroupLeadershipTagSuggestions: jest.fn(),
+    getAnalyticsInterestGroupLeadership: jest.fn(),
+    getAnalyticsInterestGroupLeadershipTagSuggestions: jest.fn(),
   };
 
   beforeEach(() => {
@@ -1527,7 +1529,7 @@ describe('downloadAnalyticsXLSX', () => {
 
   it('should process wg-leadership with OpenSearch when flag is enabled', async () => {
     // Mock OpenSearch leadership response
-    mockOpensearchMetrics.getAnalyticsLeadership.mockResolvedValue({
+    mockOpensearchMetrics.getAnalyticsWorkingGroupLeadership.mockResolvedValue({
       items: [
         {
           ...teamLeadershipResponse,
@@ -1543,8 +1545,10 @@ describe('downloadAnalyticsXLSX', () => {
       opensearchMetricsFlag: true,
     })('current-year', new Set(['wg-leadership']) as Set<MetricExportKeys>);
 
-    // Verify getAnalyticsLeadership was called with correct parameters
-    expect(mockOpensearchMetrics.getAnalyticsLeadership).toHaveBeenCalledWith({
+    // Verify getAnalyticsWorkingGroupLeadership was called with correct parameters
+    expect(
+      mockOpensearchMetrics.getAnalyticsWorkingGroupLeadership,
+    ).toHaveBeenCalledWith({
       tags: [],
       currentPage: 0,
       pageSize: 200,
@@ -1568,6 +1572,62 @@ describe('downloadAnalyticsXLSX', () => {
       'workbook',
       'worksheet',
       'Working Groups',
+    );
+
+    // Verify workbook was written
+    expect(XLSX.writeFile).toHaveBeenCalledWith(
+      'workbook',
+      expect.stringContaining('crn-analytics-current-year'),
+    );
+  });
+
+  it('should process ig-leadership with OpenSearch when flag is enabled', async () => {
+    // Mock OpenSearch leadership response
+    mockOpensearchMetrics.getAnalyticsInterestGroupLeadership.mockResolvedValue(
+      {
+        items: [
+          {
+            ...teamLeadershipResponse,
+            id: 'team-leadership-1',
+          },
+        ],
+        total: 1,
+      },
+    );
+
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
+    })('current-year', new Set(['ig-leadership']) as Set<MetricExportKeys>);
+
+    // Verify getAnalyticsInterestGroupLeadership was called with correct parameters
+    expect(
+      mockOpensearchMetrics.getAnalyticsInterestGroupLeadership,
+    ).toHaveBeenCalledWith({
+      tags: [],
+      currentPage: 0,
+      pageSize: 200,
+    });
+
+    // Verify worksheet was created with transformed data
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([
+      {
+        Team: 'Team 1',
+        'Team Status': 'Active',
+        'Inactive Since': '',
+        'Currently in a leadership role': '5',
+        'Currently a member': '7',
+        'Previously in a leadership role': '6',
+        'Previously a member': '8',
+      },
+    ]);
+
+    // Verify worksheet was appended with correct sheet name
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Interest Groups',
     );
 
     // Verify workbook was written

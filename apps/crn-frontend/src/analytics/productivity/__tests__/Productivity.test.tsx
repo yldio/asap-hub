@@ -152,10 +152,18 @@ beforeEach(() => {
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
     getPreprintCompliance: jest.fn().mockResolvedValue({ items: [], total: 0 }),
-    getAnalyticsLeadership: jest
+    getAnalyticsWorkingGroupLeadership: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
-    getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
+    getAnalyticsWorkingGroupLeadershipTagSuggestions: jest
+      .fn()
+      .mockResolvedValue([]),
+    getAnalyticsInterestGroupLeadership: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+    getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+      .fn()
+      .mockResolvedValue([]),
     getAnalyticsOSChampion: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
@@ -742,10 +750,18 @@ describe('csv export', () => {
       getPreprintCompliance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadership: jest
+      getAnalyticsWorkingGroupLeadership: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsWorkingGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
+      getAnalyticsInterestGroupLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -891,10 +907,18 @@ describe('csv export', () => {
       getPreprintCompliance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadership: jest
+      getAnalyticsWorkingGroupLeadership: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsWorkingGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
+      getAnalyticsInterestGroupLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -995,10 +1019,18 @@ describe('tag suggestions', () => {
       getPreprintCompliance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadership: jest
+      getAnalyticsWorkingGroupLeadership: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsWorkingGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
+      getAnalyticsInterestGroupLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -1065,10 +1097,18 @@ describe('tag suggestions', () => {
       getPreprintCompliance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadership: jest
+      getAnalyticsWorkingGroupLeadership: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
-      getAnalyticsLeadershipTagSuggestions: jest.fn().mockResolvedValue([]),
+      getAnalyticsWorkingGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
+      getAnalyticsInterestGroupLeadership: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+        .fn()
+        .mockResolvedValue([]),
       getAnalyticsOSChampion: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),

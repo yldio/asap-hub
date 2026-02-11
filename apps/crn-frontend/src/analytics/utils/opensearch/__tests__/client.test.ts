@@ -650,6 +650,59 @@ describe('OpensearchClient', () => {
 
       expect(query.query.bool.must).toEqual([{ term: { timeRange: '30d' } }]);
     });
+
+    it.each`
+      index
+      ${'wg-leadership'}
+      ${'ig-leadership'}
+    `(
+      'uses leadership query builder with displayName wildcard for $index index',
+      async ({ index }) => {
+        const leadershipClient = new OpensearchClient<MockData>(
+          index,
+          'Bearer fake-token',
+        );
+        const requestSpy = jest
+          .spyOn(leadershipClient, 'request')
+          .mockResolvedValue({
+            hits: {
+              total: { value: 0 },
+              hits: [],
+            },
+          });
+
+        await leadershipClient.search({
+          searchTags: ['Team A'],
+          currentPage: 0,
+          pageSize: 10,
+          timeRange: 'all',
+          searchScope: 'flat',
+        });
+
+        expect(requestSpy).toHaveBeenCalledTimes(1);
+        const query = requestSpy.mock.calls[0]?.[0] as {
+          query: { bool: { should: unknown[] } };
+          sort?: unknown[];
+        };
+
+        expect(query).toHaveProperty('query.bool.should');
+        expect(query.query.bool.should).toEqual([
+          {
+            wildcard: {
+              'displayName.keyword': {
+                value: '*team a*',
+                case_insensitive: true,
+              },
+            },
+          },
+        ]);
+
+        expect(query).toHaveProperty('sort');
+        expect(query.sort).toEqual([
+          { 'displayName.keyword': { order: 'asc' } },
+        ]);
+      },
+    );
   });
 
   describe('getTagSuggestions with different indices', () => {

@@ -4,7 +4,6 @@ import {
   SearchResponse,
 } from '@algolia/client-search';
 import {
-  AnalyticsTeamLeadershipAlgoliaResponse,
   AnalyticsTeamLeadershipResponse,
   DocumentCategoryOption,
   EventResponse,
@@ -148,7 +147,7 @@ export type EntityResponses = {
     [WORKING_GROUP_ENTITY_TYPE]: gp2Model.WorkingGroupResponse;
   };
   [ANALYTICS]: {
-    [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipAlgoliaResponse;
+    [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipResponse;
 
     [TEAM_PRODUCTIVITY]: TeamProductivityResponse;
     [USER_PRODUCTIVITY]: UserProductivityResponse;

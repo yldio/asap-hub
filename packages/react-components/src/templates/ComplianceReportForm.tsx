@@ -240,23 +240,29 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 field: { value, onBlur, onChange },
                 fieldState: { error },
               }) => (
-                <LabeledTextField
-                  title="URL"
-                  subtitle={'(required)'}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  customValidationMessage={error?.message}
-                  value={value || ''}
-                  enabled={!isSubmitting}
-                  labelIndicator={<GlobeIcon />}
-                  placeholder="https://example.com"
-                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                    if (e.key === 'Tab' && !e.shiftKey && editorRef.current) {
-                      e.preventDefault(); // Stop default tab behavior
-                      editorRef.current.focus();
-                    }
-                  }}
-                />
+                <div
+                  css={css({
+                    marginTop: rem(48),
+                  })}
+                >
+                  <LabeledTextField
+                    title="URL"
+                    subtitle={'(required)'}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    customValidationMessage={error?.message}
+                    value={value || ''}
+                    enabled={!isSubmitting}
+                    labelIndicator={<GlobeIcon />}
+                    placeholder="https://example.com"
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                      if (e.key === 'Tab' && !e.shiftKey && editorRef.current) {
+                        e.preventDefault(); // Stop default tab behavior
+                        editorRef.current.focus();
+                      }
+                    }}
+                  />
+                </div>
               )}
             />
 
@@ -270,28 +276,34 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 field: { value, onBlur, onChange },
                 fieldState: { error },
               }) => (
-                <LabeledTextEditor
-                  ref={editorRef}
-                  title="Compliance Report Description"
-                  subtitle="(required)"
-                  tip={
-                    <span>
-                      Add a description to the compliance report. You can format
-                      your text by using markup language.
-                    </span>
-                  }
-                  customValidationMessage={error?.message}
-                  value={value || ''}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  required
-                  enabled={!isSubmitting}
-                  editorStyles={css({
-                    marginBlock: 0,
+                <div
+                  css={css({
+                    marginBlock: rem(48),
                   })}
-                  hasError={Boolean(error)}
-                  autofocus={false}
-                />
+                >
+                  <LabeledTextEditor
+                    ref={editorRef}
+                    title="Compliance Report Description"
+                    subtitle="(required)"
+                    tip={
+                      <span>
+                        Add a description to the compliance report. You can
+                        format your text by using markup language.
+                      </span>
+                    }
+                    customValidationMessage={error?.message}
+                    value={value || ''}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    required
+                    enabled={!isSubmitting}
+                    editorStyles={css({
+                      marginBlock: 0,
+                    })}
+                    hasError={Boolean(error)}
+                    autofocus={false}
+                  />
+                </div>
               )}
             />
 

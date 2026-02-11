@@ -8,7 +8,7 @@ import './index.css';
 const domain = import.meta.env.VITE_AUTH0_DOMAIN;
 const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID_KR_SYNC;
 
-console.log('Auth0 Config:', { domain, clientId });
+// console.log('Auth0 Config:', { domain, clientId });
 
 const rootElement = document.getElementById('root');
 if (rootElement) {

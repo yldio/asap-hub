@@ -42,9 +42,10 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
   useEffect(() => {
     window.scrollTo({ top: 0 });
 
-    if (!(state as { fromButton?: boolean })?.fromButton) {
-      pushFromHere(teamWorkspacePath, { replace: true });
-    }
+    const { fromButton } = (state as { fromButton?: boolean }) ?? {};
+    if (fromButton) return;
+
+    pushFromHere(teamWorkspacePath, { replace: true });
   }, [pushFromHere, state, teamWorkspacePath]);
 
   if (manuscript && manuscript.versions[0]) {

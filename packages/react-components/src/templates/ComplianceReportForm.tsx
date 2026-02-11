@@ -157,6 +157,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
     control,
     formState: { isSubmitting, isValid },
     watch,
+    trigger,
   } = methods;
 
   const selectedStatus = watch('status');
@@ -310,7 +311,10 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   enabled={true}
                   placeholder="Choose an option"
                   value={value ?? ''}
-                  onChange={onChange}
+                  onChange={async (e) => {
+                    onChange(e);
+                    await trigger('status');
+                  }}
                   onBlur={onBlur}
                   renderValue={(val: ManuscriptStatus) =>
                     val && <StatusBadge status={val} />

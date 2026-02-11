@@ -60,7 +60,7 @@ export const analyticsLeadershipState = selectorFamily<
   ListAnalyticsTeamLeadershipResponse | Error | undefined,
   StateOptionKeyData
 >({
-  key: 'teams',
+  key: 'analyticsTeamsLeadership',
   get:
     (options) =>
     ({ get }) => {
@@ -83,11 +83,18 @@ export const analyticsLeadershipState = selectorFamily<
         set(analyticsLeadershipIndexState(options), newTeams);
       } else {
         newTeams?.items.forEach((team) =>
-          set(analyticsLeadershipListState(team.id), team),
+          set(
+            analyticsLeadershipListState(team.id + JSON.stringify(options)),
+            team,
+          ),
         );
         set(analyticsLeadershipIndexState(options), {
           total: newTeams.total,
-          ids: newTeams.items.map((team) => team.id),
+          ids: [
+            ...new Set(
+              newTeams.items.map((team) => team.id + JSON.stringify(options)),
+            ),
+          ] as string[],
         });
       }
     },

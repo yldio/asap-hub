@@ -34,37 +34,28 @@ export const getAnalyticsLeadership = async (
   if (client instanceof OpensearchClient) {
     let opensearchSort: OpensearchSort[] | undefined;
     if (sort) {
-      if (sort === 'team_asc' || sort === 'team_desc') {
+      const fieldMap: Record<string, string> = {
+        team: 'displayName.keyword',
+        wg_current_leadership: 'workingGroupLeadershipRoleCount',
+        wg_previous_leadership: 'workingGroupPreviousLeadershipRoleCount',
+        wg_current_membership: 'workingGroupMemberCount',
+        wg_previous_membership: 'workingGroupPreviousMemberCount',
+        ig_current_leadership: 'interestGroupLeadershipRoleCount',
+        ig_previous_leadership: 'interestGroupPreviousLeadershipRoleCount',
+        ig_current_membership: 'interestGroupMemberCount',
+        ig_previous_membership: 'interestGroupPreviousMemberCount',
+      };
+      const direction = sort.endsWith('_asc') ? 'asc' : 'desc';
+      const baseSort = sort.replace(/_(asc|desc)$/, '');
+      const field = fieldMap[baseSort];
+      if (field) {
         opensearchSort = [
           {
-            'displayName.keyword': {
-              order: sort === 'team_asc' ? 'asc' : 'desc',
+            [field]: {
+              order: direction,
             },
           },
         ];
-      } else {
-        const fieldMap: Record<string, string> = {
-          wg_current_leadership: 'workingGroupLeadershipRoleCount',
-          wg_previous_leadership: 'workingGroupPreviousLeadershipRoleCount',
-          wg_current_membership: 'workingGroupMemberCount',
-          wg_previous_membership: 'workingGroupPreviousMemberCount',
-          ig_current_leadership: 'interestGroupLeadershipRoleCount',
-          ig_previous_leadership: 'interestGroupPreviousLeadershipRoleCount',
-          ig_current_membership: 'interestGroupMemberCount',
-          ig_previous_membership: 'interestGroupPreviousMemberCount',
-        };
-        const direction = sort.endsWith('_asc') ? 'asc' : 'desc';
-        const baseSort = sort.replace(/_(asc|desc)$/, '');
-        const field = fieldMap[baseSort];
-        if (field) {
-          opensearchSort = [
-            {
-              [field]: {
-                order: direction,
-              },
-            },
-          ];
-        }
       }
     }
 

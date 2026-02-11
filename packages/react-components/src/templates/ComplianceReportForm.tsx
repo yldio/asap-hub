@@ -32,7 +32,7 @@ const mainStyles = css({
 });
 
 const cardStyles = css({
-  padding: `${rem(32)} ${rem(24)} ${rem(16)}`,
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const contentStyles = css({

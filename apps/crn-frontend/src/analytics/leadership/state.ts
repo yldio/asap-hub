@@ -7,6 +7,7 @@ import {
   SortOSChampion,
 } from '@asap-hub/model';
 import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
+import { useFlags } from '@asap-hub/react-context';
 import {
   atomFamily,
   DefaultValue,
@@ -16,8 +17,10 @@ import {
 import {
   AnalyticsSearchOptions,
   getAnalyticsLeadership,
+  AnalyticsSearchOptionsWithSort,
   getAnalyticsOSChampion,
 } from './api';
+import { OpensearchIndex } from '../utils/opensearch/types';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getAlgoliaIndexName } from '../utils/state';
 import { useAnalyticsOpensearch } from '../../hooks';
@@ -29,7 +32,7 @@ type Options = AnalyticsSearchOptions & {
 type OSOptions = AnalyticsSearchOptionsWithFiltering<SortOSChampion>;
 type StateOptionKeyData = Pick<
   Options,
-  'currentPage' | 'pageSize' | 'sort' | 'tags'
+  'currentPage' | 'pageSize' | 'sort' | 'tags' | 'metric'
 >;
 
 type OSStateOptionKeyData = Pick<
@@ -57,7 +60,7 @@ export const analyticsLeadershipState = selectorFamily<
   ListAnalyticsTeamLeadershipResponse | Error | undefined,
   StateOptionKeyData
 >({
-  key: 'teams',
+  key: 'analyticsTeamsLeadership',
   get:
     (options) =>
     ({ get }) => {
@@ -80,11 +83,18 @@ export const analyticsLeadershipState = selectorFamily<
         set(analyticsLeadershipIndexState(options), newTeams);
       } else {
         newTeams?.items.forEach((team) =>
-          set(analyticsLeadershipListState(team.id), team),
+          set(
+            analyticsLeadershipListState(team.id + JSON.stringify(options)),
+            team,
+          ),
         );
         set(analyticsLeadershipIndexState(options), {
           total: newTeams.total,
-          ids: newTeams.items.map((team) => team.id),
+          ids: [
+            ...new Set(
+              newTeams.items.map((team) => team.id + JSON.stringify(options)),
+            ),
+          ] as string[],
         });
       }
     },
@@ -144,14 +154,25 @@ export const analyticsOSChampionState = selectorFamily<
 });
 
 export const useAnalyticsLeadership = (options: Options) => {
+  const { isEnabled } = useFlags();
   const indexName = getAlgoliaIndexName(options.sort, 'team-leadership');
   const algoliaClient = useAnalyticsAlgolia(indexName).client;
+  const opensearchIndex: OpensearchIndex = 'wg-leadership';
+  const opensearchClient =
+    useAnalyticsOpensearch<AnalyticsTeamLeadershipResponse>(
+      opensearchIndex,
+    ).client;
 
   const [leadership, setLeadership] = useRecoilState(
     analyticsLeadershipState(options),
   );
   if (leadership === undefined) {
-    throw getAnalyticsLeadership(algoliaClient, options)
+    const useOpensearch =
+      isEnabled('OPENSEARCH_METRICS') && options.metric === 'working-group';
+    throw getAnalyticsLeadership(
+      useOpensearch ? opensearchClient : algoliaClient,
+      options as AnalyticsSearchOptionsWithSort,
+    )
       .then(setLeadership)
       .catch(setLeadership);
   }

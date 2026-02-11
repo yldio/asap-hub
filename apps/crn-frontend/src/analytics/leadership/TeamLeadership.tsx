@@ -77,6 +77,7 @@ const TeamLeadershipContent: FC<TeamLeadershipProps> = ({
     sort,
     currentPage,
     pageSize,
+    metric,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);

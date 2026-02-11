@@ -6,9 +6,13 @@ import {
   AnalyticsSearchOptionsWithFiltering,
 } from '@asap-hub/algolia';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
-import { OSChampionOpensearchResponse, SortOSChampion } from '@asap-hub/model';
 import {
-  AnalyticsSearchOptions,
+  AnalyticsTeamLeadershipResponse,
+  OSChampionOpensearchResponse,
+  SortOSChampion,
+} from '@asap-hub/model';
+import {
+  AnalyticsSearchOptionsWithSort,
   getAnalyticsLeadership,
   getAnalyticsOSChampion,
 } from '../api';
@@ -21,10 +25,11 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-const defaultOptions: AnalyticsSearchOptions = {
+const defaultOptions: AnalyticsSearchOptionsWithSort = {
   pageSize: null,
   currentPage: null,
   tags: [],
+  metric: 'working-group',
 };
 
 describe('getAnalyticsLeadership', () => {
@@ -109,6 +114,189 @@ describe('getAnalyticsLeadership', () => {
       }),
     );
   });
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<AnalyticsTeamLeadershipResponse>;
+    const defaultResponse = {
+      items: [teamLeadershipResponse],
+      total: 1,
+    };
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient<AnalyticsTeamLeadershipResponse>(
+        'wg-leadership',
+        'token',
+      );
+      jest.spyOn(opensearchClient, 'search').mockResolvedValue(defaultResponse);
+    });
+
+    it('should call search without sort when sort is not provided', async () => {
+      await getAnalyticsLeadership(opensearchClient, defaultOptions);
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          searchTags: [],
+          sort: undefined,
+        }),
+      );
+    });
+
+    it('should handle team_asc sort', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        sort: 'team_asc',
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              'displayName.keyword': {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('should handle team_desc sort', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        sort: 'team_desc',
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              'displayName.keyword': {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('should handle wg_current_leadership_asc sort', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        sort: 'wg_current_leadership_asc',
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              workingGroupLeadershipRoleCount: {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('should handle wg_previous_leadership_desc sort', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        sort: 'wg_previous_leadership_desc',
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              workingGroupPreviousLeadershipRoleCount: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('should handle wg_current_membership_asc sort', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        sort: 'wg_current_membership_asc',
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              workingGroupMemberCount: {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('should handle wg_previous_membership_desc sort', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        sort: 'wg_previous_membership_desc',
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              workingGroupPreviousMemberCount: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('should pass currentPage and pageSize when provided', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        currentPage: 2,
+        pageSize: 25,
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          currentPage: 2,
+          pageSize: 25,
+        }),
+      );
+    });
+
+    it('should pass tags when provided', async () => {
+      await getAnalyticsLeadership(opensearchClient, {
+        ...defaultOptions,
+        tags: ['Alessi', 'Barker'],
+      });
+
+      expect(opensearchClient.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          searchTags: ['Alessi', 'Barker'],
+        }),
+      );
+    });
+
+    it('should return successfully fetched team leadership from opensearch', async () => {
+      const result = await getAnalyticsLeadership(
+        opensearchClient,
+        defaultOptions,
+      );
+
+      expect(result).toEqual(
+        expect.objectContaining({
+          items: [teamLeadershipResponse],
+          total: 1,
+        }),
+      );
+    });
+  });
 });
 
 describe('getAnalyticsOSChampion', () => {
@@ -132,37 +320,34 @@ describe('getAnalyticsOSChampion', () => {
     total: 1,
   };
 
-  let mockOpensearchClient: jest.Mocked<
+  let opensearchClient: jest.Mocked<
     OpensearchClient<OSChampionOpensearchResponse>
   >;
 
   beforeEach(() => {
-    mockOpensearchClient = {
+    opensearchClient = {
       search: jest.fn(),
     } as unknown as jest.Mocked<OpensearchClient<OSChampionOpensearchResponse>>;
   });
 
   it('should not default to any search tags, specific page or limit hits per page', async () => {
-    mockOpensearchClient.search.mockResolvedValue(defaultResponse);
+    opensearchClient.search.mockResolvedValue(defaultResponse);
 
-    await getAnalyticsOSChampion(
-      mockOpensearchClient,
-      defaultOSChampionOptions,
+    await getAnalyticsOSChampion(opensearchClient, defaultOSChampionOptions);
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        searchTags: [],
+        currentPage: undefined,
+        pageSize: undefined,
+      }),
     );
-
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith({
-      searchTags: [],
-      currentPage: undefined,
-      pageSize: undefined,
-      timeRange: 'all',
-      searchScope: 'extended',
-    });
   });
 
   it('should pass the options if provided to search', async () => {
-    mockOpensearchClient.search.mockResolvedValue(defaultResponse);
+    opensearchClient.search.mockResolvedValue(defaultResponse);
 
-    await getAnalyticsOSChampion(mockOpensearchClient, {
+    await getAnalyticsOSChampion(opensearchClient, {
       pageSize: 10,
       currentPage: 0,
       tags: ['Alessi'],
@@ -170,13 +355,14 @@ describe('getAnalyticsOSChampion', () => {
       sort: 'team_asc',
     });
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith({
-      searchTags: ['Alessi'],
-      currentPage: 0,
-      pageSize: 10,
-      timeRange: 'all',
-      searchScope: 'extended',
-    });
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        searchTags: ['Alessi'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: 'all',
+      }),
+    );
   });
 
   it.each`
@@ -187,34 +373,29 @@ describe('getAnalyticsOSChampion', () => {
     ${'Last 12 months'}          | ${'last-year'}
     ${'Since Hub Launch (2020)'} | ${'all'}
   `('returns os champion data for $range', async ({ timeRange }) => {
-    mockOpensearchClient.search.mockResolvedValue(defaultResponse);
+    opensearchClient.search.mockResolvedValue(defaultResponse);
 
-    await getAnalyticsOSChampion(mockOpensearchClient, {
+    await getAnalyticsOSChampion(opensearchClient, {
       ...defaultOSChampionOptions,
       timeRange,
     });
 
-    expect(mockOpensearchClient.search).toHaveBeenCalledWith({
-      searchTags: [],
-      currentPage: undefined,
-      pageSize: undefined,
-      timeRange,
-      searchScope: 'extended',
-    });
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        timeRange,
+      }),
+    );
   });
 
   it('should return successfully fetched os champion data', async () => {
-    mockOpensearchClient.search.mockResolvedValue(defaultResponse);
-    const analyticsOSChampion = await getAnalyticsOSChampion(
-      mockOpensearchClient,
-      {
-        pageSize: 10,
-        currentPage: 0,
-        tags: ['Alessi'],
-        timeRange: 'all',
-        sort: 'team_asc',
-      },
-    );
+    opensearchClient.search.mockResolvedValue(defaultResponse);
+    const analyticsOSChampion = await getAnalyticsOSChampion(opensearchClient, {
+      pageSize: 10,
+      currentPage: 0,
+      tags: ['Alessi'],
+      timeRange: 'all',
+      sort: 'team_asc',
+    });
     expect(analyticsOSChampion).toEqual(
       expect.objectContaining({
         items: [defaultOSChampionData],

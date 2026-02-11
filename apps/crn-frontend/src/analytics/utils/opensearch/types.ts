@@ -108,7 +108,8 @@ export type OpensearchIndex =
   | 'user-collaboration'
   | 'user-collaboration-performance'
   | 'team-collaboration'
-  | 'team-collaboration-performance';
+  | 'team-collaboration-performance'
+  | 'wg-leadership';
 
 export type ShouldClause =
   | {

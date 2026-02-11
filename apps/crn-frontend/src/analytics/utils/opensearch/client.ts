@@ -5,10 +5,12 @@ import {
   userWithTeamsRecordSearchQueryBuilder,
   teamRecordSearchQueryBuilder,
   taglessSearchQueryBuilder,
+  leadershipRecordSearchQueryBuilder,
 } from './query-builders';
 import { teamWithUsersRecordsTagQueryBuilder } from './tag-query-builders/team-with-users-records';
 import { userWithTeamsRecordsTagQueryBuilder } from './tag-query-builders/user-with-teams-records';
 import { teamRecordTagQueryBuilder } from './tag-query-builders/team-record';
+import { leadershipRecordTagQueryBuilder } from './tag-query-builders/leadership';
 import type {
   OpensearchHit,
   OpensearchHitsResponse,
@@ -49,6 +51,7 @@ const queryBuilderByIndex: Record<
   'user-collaboration-performance': taglessSearchQueryBuilder,
   'team-collaboration': teamRecordSearchQueryBuilder,
   'team-collaboration-performance': taglessSearchQueryBuilder,
+  'wg-leadership': leadershipRecordSearchQueryBuilder,
 };
 
 const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
@@ -65,6 +68,7 @@ const tagQueryBuilderByIndex: Record<OpensearchIndex, TagQueryBuilder> = {
   'user-collaboration-performance': unsupportedTagQueryBuilder,
   'team-collaboration': teamRecordTagQueryBuilder,
   'team-collaboration-performance': unsupportedTagQueryBuilder,
+  'wg-leadership': leadershipRecordTagQueryBuilder,
 };
 
 export class OpensearchClient<T> {

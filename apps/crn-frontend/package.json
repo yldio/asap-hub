@@ -42,7 +42,7 @@
     "react-error-boundary": "4.1.2",
     "react-hook-form": "7.53.2",
     "react-lottie": "^1.2.10",
-    "react-router-dom": "6.28.0",
+    "react-router-dom": "6.30.3",
     "recoil": "0.7.7",
     "stream": "npm:stream-browserify@3.0.0",
     "use-debounce": "8.0.4",

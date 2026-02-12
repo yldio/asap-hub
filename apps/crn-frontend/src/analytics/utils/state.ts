@@ -28,7 +28,8 @@ export const makeFlagBasedPerformanceHook =
       | 'user-productivity-performance'
       | 'team-productivity-performance'
       | 'user-collaboration-performance'
-      | 'team-collaboration-performance', // NOTE: Add more as we add new performance indexes to opensearch
+      | 'team-collaboration-performance'
+      | 'presenter-representation-performance', // NOTE: Add more as we add new performance indexes to opensearch
   ) =>
   (options: AnalyticsPerformanceOptions) => {
     const { isEnabled } = useFlags();

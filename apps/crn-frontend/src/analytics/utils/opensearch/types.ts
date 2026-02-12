@@ -94,6 +94,8 @@ type OpensearchScriptSort = {
 };
 
 export type OpensearchSort = OpensearchScriptSort | OpensearchPropertySort;
+export type OpensearchSortMap<T extends `${string}_asc` | `${string}_desc`> =
+  Record<T, OpensearchSort[]>;
 
 export type OpensearchIndex =
   | 'publication-compliance'
@@ -110,7 +112,9 @@ export type OpensearchIndex =
   | 'team-collaboration'
   | 'team-collaboration-performance'
   | 'wg-leadership'
-  | 'ig-leadership';
+  | 'ig-leadership'
+  | 'presenter-representation'
+  | 'presenter-representation-performance';
 
 export type ShouldClause =
   | {

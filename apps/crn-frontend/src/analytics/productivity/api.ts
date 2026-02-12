@@ -24,14 +24,9 @@ import {
 import {
   buildNormalizedStringSort,
   OpensearchClient,
-  OpensearchSort,
   SearchResult,
 } from '../utils/opensearch';
-
-type OpensearchSortMap<T extends `${string}_asc` | `${string}_desc`> = Record<
-  T,
-  OpensearchSort[]
->;
+import { OpensearchSortMap } from '../utils/opensearch/types';
 
 const userProductivyOpensearchSort: OpensearchSortMap<SortUserProductivity> = {
   user_asc: [

@@ -355,15 +355,25 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'engagement',
           () =>
-            getEngagementPerformance(algoliaClient, {
-              timeRange,
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getPresenterRepresentationPerformance({
+                  timeRange,
+                })
+              : getEngagementPerformance(algoliaClient, { timeRange }),
           (paginationParams) =>
-            getEngagement(algoliaClient, {
-              tags: [],
-              timeRange,
-              ...paginationParams,
-            }),
+            opensearchMetricsFlag
+              ? opensearchMetrics.getPresenterRepresentation({
+                  timeRange,
+                  sort,
+                  tags,
+                  ...paginationParams,
+                })
+              : getEngagement(algoliaClient, {
+                  tags,
+                  timeRange,
+                  sort,
+                  ...paginationParams,
+                }),
           (performance) => engagementToCSV(performance),
         ),
       'publication-compliance': () =>

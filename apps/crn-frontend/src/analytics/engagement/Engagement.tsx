@@ -4,20 +4,23 @@ import {
   EngagementType,
   LimitedTimeRangeOption,
   MeetingRepAttendanceResponse,
+  SortEngagement,
 } from '@asap-hub/model';
 import { AnalyticsEngagementPageBody } from '@asap-hub/react-components';
+import { useFlags } from '@asap-hub/react-context';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   useAnalytics,
-  useAnalyticsOpensearch,
+  useOpensearchMetrics,
   usePaginationParams,
   useSearch,
 } from '../../hooks';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { getEngagement, getMeetingRepAttendance } from './api';
+import { getEngagement } from './api';
 import { engagementToCSV, meetingRepAttendanceToCSV } from './export';
 import MeetingRepAttendance from './MeetingRepAttendance';
 import RepresentationOfPresenters from './RepresentationOfPresenters';
@@ -44,8 +47,12 @@ const Engagement = () => {
 
   const performance = useEngagementPerformanceValue({ timeRange });
   const { client } = useAnalyticsAlgolia();
-  const attendanceClient =
-    useAnalyticsOpensearch<MeetingRepAttendanceResponse>('attendance');
+  const { isEnabled } = useFlags();
+  const opensearchMetrics = useOpensearchMetrics();
+
+  const [presenterRepresentationSort, setPresenterRepresentationSort] =
+    useState<SortEngagement>('team_asc');
+
   const isAttendancePage = metric === 'attendance';
 
   const exportResults = () => {
@@ -58,7 +65,7 @@ const Engagement = () => {
           },
         ),
         (paginationParams) =>
-          getMeetingRepAttendance(attendanceClient.client, {
+          opensearchMetrics.getMeetingRepAttendance({
             tags,
             timeRange: timeRange as LimitedTimeRangeOption,
             ...paginationParams,
@@ -72,11 +79,19 @@ const Engagement = () => {
         header: true,
       }),
       (paginationParams) =>
-        getEngagement(client, {
-          timeRange,
-          tags,
-          ...paginationParams,
-        }),
+        isEnabled('OPENSEARCH_METRICS')
+          ? opensearchMetrics.getPresenterRepresentation({
+              sort: presenterRepresentationSort,
+              timeRange,
+              tags,
+              ...paginationParams,
+            })
+          : getEngagement(client, {
+              timeRange,
+              tags,
+              sort: presenterRepresentationSort,
+              ...paginationParams,
+            }),
       engagementToCSV(
         performance ?? {
           events: {
@@ -118,22 +133,23 @@ const Engagement = () => {
 
   const loadTags = async (tagQuery: string) => {
     if (isAttendancePage) {
-      const response = await attendanceClient.client.getTagSuggestions(
-        tagQuery,
-        'flat',
-      );
+      const response =
+        await opensearchMetrics.getMeetingRepAttendanceTagSuggestions(tagQuery);
 
       return response.map((value) => ({
         label: value,
         value,
       }));
     }
-    const searchedTags = await client.searchForTagValues(
-      ['engagement'],
-      tagQuery,
-      {},
-    );
-    return searchedTags.facetHits.map(({ value }) => ({
+    const tagResults = isEnabled('OPENSEARCH_METRICS')
+      ? await opensearchMetrics.getPresenterRepresentationTagSuggestions(
+          tagQuery,
+        )
+      : (
+          await client.searchForTagValues(['engagement'], tagQuery, {})
+        ).facetHits.map(({ value }) => value);
+
+    return tagResults.map((value) => ({
       label: value,
       value,
     }));
@@ -155,7 +171,12 @@ const Engagement = () => {
           timeRange={timeRange as LimitedTimeRangeOption}
         />
       ) : (
-        <RepresentationOfPresenters tags={tags} timeRange={timeRange} />
+        <RepresentationOfPresenters
+          setSort={setPresenterRepresentationSort}
+          sort={presenterRepresentationSort}
+          tags={tags}
+          timeRange={timeRange}
+        />
       )}
     </AnalyticsEngagementPageBody>
   );

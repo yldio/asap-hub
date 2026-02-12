@@ -1,6 +1,6 @@
 import {
   AnalyticsTeamLeadershipResponse,
-  ListEngagementAlgoliaResponse,
+  ListEngagementResponse,
   ListTeamCollaborationResponse,
   ListUserCollaborationResponse,
   PerformanceMetricByDocumentType,
@@ -254,7 +254,7 @@ export const userCollaborationPerformance: UserCollaborationPerformance = {
   },
 };
 
-export const listEngagementResponse: ListEngagementAlgoliaResponse = {
+export const listEngagementResponse: ListEngagementResponse = {
   total: 1,
   items: [
     {
@@ -268,7 +268,6 @@ export const listEngagementResponse: ListEngagementAlgoliaResponse = {
       uniqueAllRolesCountPercentage: 67,
       uniqueKeyPersonnelCount: 1,
       uniqueKeyPersonnelCountPercentage: 33,
-      objectID: 'engagement-algolia-id',
     },
   ],
 };

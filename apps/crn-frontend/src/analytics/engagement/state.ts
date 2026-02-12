@@ -1,13 +1,13 @@
 import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
-  EngagementAlgoliaResponse,
   EngagementPerformance,
-  ListEngagementAlgoliaResponse,
+  EngagementResponse,
+  ListEngagementResponse,
   ListMeetingRepAttendanceResponse,
   MeetingRepAttendanceDataObject,
   SortEngagement,
 } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import {
   atomFamily,
   DefaultValue,
@@ -20,10 +20,11 @@ import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { useAnalyticsOpensearch } from '../../hooks';
 import {
   getAlgoliaIndexName,
-  makePerformanceHook,
+  makeFlagBasedPerformanceHook,
   makePerformanceState,
 } from '../utils/state';
 import {
+  EngagementListOptions,
   getEngagement,
   getEngagementPerformance,
   getMeetingRepAttendance,
@@ -32,14 +33,14 @@ import {
 
 const analyticsEngagementIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  Pick<GetListOptions, 'currentPage' | 'pageSize'>
+  EngagementListOptions
 >({
   key: 'analyticsEngagementIndex',
   default: undefined,
 });
 
 export const analyticsEngagementListState = atomFamily<
-  EngagementAlgoliaResponse | undefined,
+  EngagementResponse | undefined,
   string
 >({
   key: 'analyticsEngagementList',
@@ -47,8 +48,8 @@ export const analyticsEngagementListState = atomFamily<
 });
 
 export const analyticsEngagementState = selectorFamily<
-  ListEngagementAlgoliaResponse | Error | undefined,
-  Pick<GetListOptions, 'currentPage' | 'pageSize'>
+  ListEngagementResponse | Error | undefined,
+  EngagementListOptions
 >({
   key: 'engagement',
   get:
@@ -56,7 +57,7 @@ export const analyticsEngagementState = selectorFamily<
     ({ get }) => {
       const index = get(analyticsEngagementIndexState(options));
       if (index === undefined || index instanceof Error) return index;
-      const teams: EngagementAlgoliaResponse[] = [];
+      const teams: EngagementResponse[] = [];
       for (const id of index.ids) {
         const team = get(analyticsEngagementListState(id));
         if (team === undefined) return undefined;
@@ -76,11 +77,18 @@ export const analyticsEngagementState = selectorFamily<
         set(analyticsEngagementIndexState(options), newEngagement);
       } else {
         newEngagement?.items.forEach((engagement) =>
-          set(analyticsEngagementListState(engagement.objectID), engagement),
+          set(
+            analyticsEngagementListState(
+              engagement.id + JSON.stringify(options),
+            ),
+            engagement,
+          ),
         );
         set(analyticsEngagementIndexState(options), {
           total: newEngagement.total,
-          ids: newEngagement.items.map((engagement) => engagement.objectID),
+          ids: newEngagement.items.map(
+            (engagement) => engagement.id + JSON.stringify(options),
+          ),
         });
       }
     },
@@ -89,15 +97,22 @@ export const analyticsEngagementState = selectorFamily<
 export const useAnalyticsEngagement = (
   options: AnalyticsSearchOptionsWithFiltering<SortEngagement>,
 ) => {
+  const { isEnabled } = useFlags();
   const indexName = getAlgoliaIndexName(options.sort, 'engagement');
 
-  const algoliaClient = useAnalyticsAlgolia(indexName);
+  const algoliaClient = useAnalyticsAlgolia(indexName).client;
+  const opensearchClient = useAnalyticsOpensearch<EngagementResponse>(
+    'presenter-representation',
+  ).client;
   const [engagement, setEngagement] = useRecoilState(
     analyticsEngagementState(options),
   );
 
   if (engagement === undefined) {
-    throw getEngagement(algoliaClient.client, options)
+    throw getEngagement(
+      isEnabled('OPENSEARCH_METRICS') ? opensearchClient : algoliaClient,
+      options,
+    )
       .then(setEngagement)
       .catch(setEngagement);
   }
@@ -111,9 +126,10 @@ export const engagementPerformanceState =
   makePerformanceState<EngagementPerformance>('analyticsEngagementPerformance');
 
 export const useEngagementPerformance =
-  makePerformanceHook<EngagementPerformance>(
+  makeFlagBasedPerformanceHook<EngagementPerformance>(
     engagementPerformanceState,
     getEngagementPerformance,
+    'presenter-representation-performance',
   );
 
 export const useEngagementPerformanceValue = (

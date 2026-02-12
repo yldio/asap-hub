@@ -48,6 +48,7 @@ import { DateTime } from 'luxon';
 import { sortMembers } from '../transformers';
 import { TeamDataProvider } from '../types/teams.data-provider.types';
 import { parseResearchTags } from './research-tag.data-provider';
+import { getCleanTools } from '../../utils/team';
 
 export type TeamByIdItem = NonNullable<
   NonNullable<FetchTeamByIdQuery['teams']>
@@ -746,17 +747,6 @@ export const parseContentfulGraphQlPublicTeam = (
     labs: [],
   };
 };
-
-const getCleanTools = (tools: TeamTool[]) =>
-  tools.map((tool) =>
-    Object.entries(tool).reduce(
-      (acc, [key, value]) =>
-        value?.trim && value?.trim() === ''
-          ? acc // deleted field
-          : { ...acc, [key]: value },
-      {} as TeamTool,
-    ),
-  );
 
 const createAndPublishTools = (environment: Environment, tools: TeamTool[]) =>
   Promise.all(

@@ -1,7 +1,10 @@
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { createListUserResponse } from '@asap-hub/fixtures';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import { User } from '@asap-hub/auth';
 import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
@@ -13,14 +16,26 @@ import { getUsers } from '../api';
 import { usersState } from '../state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
 jest.mock('../api');
 jest.mock('../../teams/api');
 jest.mock('../../interest-groups/api');
 jest.mock('../../working-groups/api');
 
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
 
-const renderUserList = async () => {
+const renderUserList = async (user: Partial<User> = {}) => {
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) => {
@@ -35,7 +50,7 @@ const renderUserList = async () => {
       }}
     >
       <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
+        <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter initialEntries={['/users']}>
               <Routes>
@@ -53,6 +68,10 @@ const renderUserList = async () => {
   );
   return result;
 };
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 it('renders a list of people when searching with algolia', async () => {
   const listUserResponse = createListUserResponse(2);
@@ -93,4 +112,29 @@ it('renders an algolia tagged result list and hit', async () => {
       "data-insights-query-id": "queryId",
     }
   `);
+});
+
+it('shows download button for Staff users', async () => {
+  mockGetUsers.mockResolvedValue(createListUserResponse(1));
+
+  const { queryByText } = await renderUserList({ role: 'Staff' });
+  expect(queryByText(/csv/i)).toBeInTheDocument();
+});
+
+it('does not show download button for non-Staff users', async () => {
+  mockGetUsers.mockResolvedValue(createListUserResponse(1));
+
+  const { queryByText } = await renderUserList({ role: 'Grantee' });
+  expect(queryByText(/csv/i)).not.toBeInTheDocument();
+});
+
+it('triggers export with correct parameters for Staff users', async () => {
+  mockGetUsers.mockResolvedValue(createListUserResponse(1));
+
+  const { getByText } = await renderUserList({ role: 'Staff' });
+  await userEvent.click(getByText(/csv/i));
+  expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+    expect.stringMatching(/People_\d+\.csv/),
+    expect.anything(),
+  );
 });

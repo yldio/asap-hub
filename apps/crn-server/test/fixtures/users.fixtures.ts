@@ -155,7 +155,9 @@ export const getUserResponse = (): UserResponse => ({
 export const getUserListItemDataObject = (): UserListItemDataObject => ({
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
   avatarUrl: `https://www.contentful.com/api/assets/asap-crn/contentful-asset-id`,
+  biography: 'some biography',
   city: 'London',
+  contactEmail: 'contact@example.com',
   country: 'United Kingdom',
   createdDate: '2020-09-23T20:45:22.000Z',
   degree: 'MPH',
@@ -181,6 +183,7 @@ export const getUserListItemDataObject = (): UserListItemDataObject => ({
   middleName: 'Edward',
   nickname: 'Iron Man',
   onboarded: true,
+  orcid: '0000-0001-8203-6901',
   role: 'Grantee',
   openScienceTeamMember: false,
   _tags: [
@@ -618,6 +621,8 @@ export const getContentfulGraphqlUserListItem = (
   avatar: {
     url: 'https://www.contentful.com/api/assets/asap-crn/contentful-asset-id',
   },
+  biography: 'some biography',
+  contactEmail: 'contact@example.com',
   onboarded: true,
   dismissedGettingStarted: false,
   createdDate: '2020-09-23T20:45:22.000Z',
@@ -642,6 +647,7 @@ export const getContentfulGraphqlUserListItem = (
   city: 'London',
   degree: 'MPH',
   role: 'Grantee',
+  orcid: '0000-0001-8203-6901',
   labsCollection: {
     items: [
       { sys: { id: 'cd7be4902' }, name: 'Brighton' },

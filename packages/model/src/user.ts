@@ -168,7 +168,9 @@ export type UserListItemDataObject = Pick<
   UserDataObject,
   | 'alumniSinceDate'
   | 'avatarUrl'
+  | 'biography'
   | 'city'
+  | 'contactEmail'
   | 'stateOrProvince'
   | 'country'
   | 'createdDate'
@@ -185,6 +187,7 @@ export type UserListItemDataObject = Pick<
   | 'middleName'
   | 'nickname'
   | 'onboarded'
+  | 'orcid'
   | 'role'
   | 'openScienceTeamMember'
   | 'tags'
@@ -324,7 +327,9 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
   const {
     alumniSinceDate,
     avatarUrl,
+    biography,
     city,
+    contactEmail,
     stateOrProvince,
     country,
     createdDate,
@@ -344,6 +349,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     middleName,
     nickname,
     onboarded,
+    orcid,
     role,
     openScienceTeamMember,
     teams,
@@ -352,7 +358,9 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
   return {
     alumniSinceDate,
     avatarUrl,
+    biography,
     city,
+    contactEmail,
     stateOrProvince,
     country,
     createdDate,
@@ -372,6 +380,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
     middleName,
     nickname,
     onboarded,
+    orcid,
     role,
     openScienceTeamMember,
     teams: teams.map((teamItem) => ({

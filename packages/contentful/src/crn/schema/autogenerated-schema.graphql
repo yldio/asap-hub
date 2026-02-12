@@ -2309,12 +2309,8 @@ type ExternalToolsLinkingCollections {
 }
 
 enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
   displayName_ASC
   displayName_DESC
-  grantId_ASC
-  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   resourceButtonCopy_ASC
@@ -2333,8 +2329,6 @@ enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
   teamType_ASC
   teamType_DESC
 }
@@ -4168,12 +4162,8 @@ type ManuscriptVersionsTeamsCollection {
 }
 
 enum ManuscriptVersionsTeamsCollectionOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
   displayName_ASC
   displayName_DESC
-  grantId_ASC
-  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   resourceButtonCopy_ASC
@@ -4192,8 +4182,6 @@ enum ManuscriptVersionsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
   teamType_ASC
   teamType_DESC
 }
@@ -4508,12 +4496,8 @@ type ManuscriptsTeamsCollection {
 }
 
 enum ManuscriptsTeamsCollectionOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
   displayName_ASC
   displayName_DESC
-  grantId_ASC
-  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   resourceButtonCopy_ASC
@@ -4532,8 +4516,6 @@ enum ManuscriptsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
   teamType_ASC
   teamType_DESC
 }
@@ -6298,7 +6280,6 @@ type ResearchOutputsLinkingCollections {
   projectsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ResearchOutputsCollection
   supplementGrantCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsSupplementGrantCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): SupplementGrantCollection
-  teamsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): TeamsCollection
 }
 
 enum ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder {
@@ -6421,37 +6402,6 @@ enum ResearchOutputsLinkingCollectionsSupplementGrantCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-}
-
-enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
-  displayName_ASC
-  displayName_DESC
-  grantId_ASC
-  grantId_DESC
-  inactiveSince_ASC
-  inactiveSince_DESC
-  resourceButtonCopy_ASC
-  resourceButtonCopy_DESC
-  resourceContactEmail_ASC
-  resourceContactEmail_DESC
-  resourceLink_ASC
-  resourceLink_DESC
-  resourceTitle_ASC
-  resourceTitle_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
-  teamType_ASC
-  teamType_DESC
 }
 
 type ResearchOutputsMethodsCollection {
@@ -6659,12 +6609,8 @@ type ResearchOutputsTeamsCollection {
 }
 
 enum ResearchOutputsTeamsCollectionOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
   displayName_ASC
   displayName_DESC
-  grantId_ASC
-  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   resourceButtonCopy_ASC
@@ -6683,8 +6629,6 @@ enum ResearchOutputsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
   teamType_ASC
   teamType_DESC
 }
@@ -6773,7 +6717,6 @@ type ResearchTagsLinkingCollections {
   newsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): NewsCollection
   projectsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ResearchOutputsCollection
-  teamsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): TeamsCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): TutorialsCollection
   usersCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): UsersCollection
   workingGroupsCollection(limit: Int = 100, locale: String, order: [ResearchTagsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
@@ -6940,37 +6883,6 @@ enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   type_DESC
   usedInAPublication_ASC
   usedInAPublication_DESC
-}
-
-enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
-  displayName_ASC
-  displayName_DESC
-  grantId_ASC
-  grantId_DESC
-  inactiveSince_ASC
-  inactiveSince_DESC
-  resourceButtonCopy_ASC
-  resourceButtonCopy_DESC
-  resourceContactEmail_ASC
-  resourceContactEmail_DESC
-  resourceLink_ASC
-  resourceLink_DESC
-  resourceTitle_ASC
-  resourceTitle_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
-  teamType_ASC
-  teamType_DESC
 }
 
 enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
@@ -7149,12 +7061,8 @@ type ResearchThemeLinkingCollections {
 }
 
 enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
   displayName_ASC
   displayName_DESC
-  grantId_ASC
-  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   resourceButtonCopy_ASC
@@ -7173,8 +7081,6 @@ enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
   teamType_ASC
   teamType_DESC
 }
@@ -7342,7 +7248,6 @@ input SupplementGrantFilter {
 type SupplementGrantLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
   projectsCollection(limit: Int = 100, locale: String, order: [SupplementGrantLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
-  teamsCollection(limit: Int = 100, locale: String, order: [SupplementGrantLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): TeamsCollection
 }
 
 enum SupplementGrantLinkingCollectionsProjectsCollectionOrder {
@@ -7372,37 +7277,6 @@ enum SupplementGrantLinkingCollectionsProjectsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-}
-
-enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
-  displayName_ASC
-  displayName_DESC
-  grantId_ASC
-  grantId_DESC
-  inactiveSince_ASC
-  inactiveSince_DESC
-  resourceButtonCopy_ASC
-  resourceButtonCopy_DESC
-  resourceContactEmail_ASC
-  resourceContactEmail_DESC
-  resourceLink_ASC
-  resourceLink_DESC
-  resourceTitle_ASC
-  resourceTitle_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
-  teamType_ASC
-  teamType_DESC
 }
 
 enum SupplementGrantOrder {
@@ -7642,26 +7516,18 @@ enum TeamMembershipOrder {
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams)"""
 type Teams implements Entry & _Node {
   _id: ID!
-  applicationNumber(locale: String, useFallbackLocale: Boolean): String
   contentfulMetadata: ContentfulMetadata!
   displayName(locale: String, useFallbackLocale: Boolean): String
-  grantId(locale: String, useFallbackLocale: Boolean): String
   inactiveSince(locale: String, useFallbackLocale: Boolean): DateTime
   linkedFrom(allowedLocales: [String]): TeamsLinkingCollections
-  projectSummary(locale: String, useFallbackLocale: Boolean): String
-  projectTitle(locale: String, useFallbackLocale: Boolean): String
-  proposal(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: ResearchOutputsFilter): ResearchOutputs
-  researchTagsCollection(limit: Int = 100, locale: String, order: [TeamsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResearchTagsFilter): TeamsResearchTagsCollection
   researchTheme(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: ResearchThemeFilter): ResearchTheme
   resourceButtonCopy(locale: String, useFallbackLocale: Boolean): String
   resourceContactEmail(locale: String, useFallbackLocale: Boolean): String
   resourceDescription(locale: String, useFallbackLocale: Boolean): String
   resourceLink(locale: String, useFallbackLocale: Boolean): String
   resourceTitle(locale: String, useFallbackLocale: Boolean): String
-  supplementGrant(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: SupplementGrantFilter): SupplementGrant
   sys: Sys!
   teamDescription(locale: String, useFallbackLocale: Boolean): String
-  teamId(locale: String, useFallbackLocale: Boolean): String
   teamType(locale: String, useFallbackLocale: Boolean): String
   toolsCollection(limit: Int = 100, locale: String, order: [TeamsToolsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ExternalToolsFilter): TeamsToolsCollection
 }
@@ -7676,13 +7542,6 @@ type TeamsCollection {
 input TeamsFilter {
   AND: [TeamsFilter]
   OR: [TeamsFilter]
-  applicationNumber: String
-  applicationNumber_contains: String
-  applicationNumber_exists: Boolean
-  applicationNumber_in: [String]
-  applicationNumber_not: String
-  applicationNumber_not_contains: String
-  applicationNumber_not_in: [String]
   contentfulMetadata: ContentfulMetadataFilter
   displayName: String
   displayName_contains: String
@@ -7691,13 +7550,6 @@ input TeamsFilter {
   displayName_not: String
   displayName_not_contains: String
   displayName_not_in: [String]
-  grantId: String
-  grantId_contains: String
-  grantId_exists: Boolean
-  grantId_in: [String]
-  grantId_not: String
-  grantId_not_contains: String
-  grantId_not_in: [String]
   inactiveSince: DateTime
   inactiveSince_exists: Boolean
   inactiveSince_gt: DateTime
@@ -7707,24 +7559,6 @@ input TeamsFilter {
   inactiveSince_lte: DateTime
   inactiveSince_not: DateTime
   inactiveSince_not_in: [DateTime]
-  projectSummary: String
-  projectSummary_contains: String
-  projectSummary_exists: Boolean
-  projectSummary_in: [String]
-  projectSummary_not: String
-  projectSummary_not_contains: String
-  projectSummary_not_in: [String]
-  projectTitle: String
-  projectTitle_contains: String
-  projectTitle_exists: Boolean
-  projectTitle_in: [String]
-  projectTitle_not: String
-  projectTitle_not_contains: String
-  projectTitle_not_in: [String]
-  proposal: cfResearchOutputsNestedFilter
-  proposal_exists: Boolean
-  researchTags: cfResearchTagsNestedFilter
-  researchTagsCollection_exists: Boolean
   researchTheme: cfResearchThemeNestedFilter
   researchTheme_exists: Boolean
   resourceButtonCopy: String
@@ -7762,8 +7596,6 @@ input TeamsFilter {
   resourceTitle_not: String
   resourceTitle_not_contains: String
   resourceTitle_not_in: [String]
-  supplementGrant: cfSupplementGrantNestedFilter
-  supplementGrant_exists: Boolean
   sys: SysFilter
   teamDescription: String
   teamDescription_contains: String
@@ -7772,13 +7604,6 @@ input TeamsFilter {
   teamDescription_not: String
   teamDescription_not_contains: String
   teamDescription_not_in: [String]
-  teamId: String
-  teamId_contains: String
-  teamId_exists: Boolean
-  teamId_in: [String]
-  teamId_not: String
-  teamId_not_contains: String
-  teamId_not_in: [String]
   teamType: String
   teamType_contains: String
   teamType_exists: Boolean
@@ -8065,12 +7890,8 @@ enum TeamsLinkingCollectionsTutorialsCollectionOrder {
 }
 
 enum TeamsOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
   displayName_ASC
   displayName_DESC
-  grantId_ASC
-  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   resourceButtonCopy_ASC
@@ -8089,32 +7910,8 @@ enum TeamsOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
   teamType_ASC
   teamType_DESC
-}
-
-type TeamsResearchTagsCollection {
-  items: [ResearchTags]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-enum TeamsResearchTagsCollectionOrder {
-  category_ASC
-  category_DESC
-  name_ASC
-  name_DESC
-  sys_firstPublishedAt_ASC
-  sys_firstPublishedAt_DESC
-  sys_id_ASC
-  sys_id_DESC
-  sys_publishedAt_ASC
-  sys_publishedAt_DESC
-  sys_publishedVersion_ASC
-  sys_publishedVersion_DESC
 }
 
 type TeamsToolsCollection {
@@ -8498,12 +8295,8 @@ type TutorialsTeamsCollection {
 }
 
 enum TutorialsTeamsCollectionOrder {
-  applicationNumber_ASC
-  applicationNumber_DESC
   displayName_ASC
   displayName_DESC
-  grantId_ASC
-  grantId_DESC
   inactiveSince_ASC
   inactiveSince_DESC
   resourceButtonCopy_ASC
@@ -8522,8 +8315,6 @@ enum TutorialsTeamsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  teamId_ASC
-  teamId_DESC
   teamType_ASC
   teamType_DESC
 }
@@ -11125,13 +10916,6 @@ input cfTeamMembershipNestedFilter {
 input cfTeamsNestedFilter {
   AND: [cfTeamsNestedFilter]
   OR: [cfTeamsNestedFilter]
-  applicationNumber: String
-  applicationNumber_contains: String
-  applicationNumber_exists: Boolean
-  applicationNumber_in: [String]
-  applicationNumber_not: String
-  applicationNumber_not_contains: String
-  applicationNumber_not_in: [String]
   contentfulMetadata: ContentfulMetadataFilter
   displayName: String
   displayName_contains: String
@@ -11140,13 +10924,6 @@ input cfTeamsNestedFilter {
   displayName_not: String
   displayName_not_contains: String
   displayName_not_in: [String]
-  grantId: String
-  grantId_contains: String
-  grantId_exists: Boolean
-  grantId_in: [String]
-  grantId_not: String
-  grantId_not_contains: String
-  grantId_not_in: [String]
   inactiveSince: DateTime
   inactiveSince_exists: Boolean
   inactiveSince_gt: DateTime
@@ -11156,22 +10933,6 @@ input cfTeamsNestedFilter {
   inactiveSince_lte: DateTime
   inactiveSince_not: DateTime
   inactiveSince_not_in: [DateTime]
-  projectSummary: String
-  projectSummary_contains: String
-  projectSummary_exists: Boolean
-  projectSummary_in: [String]
-  projectSummary_not: String
-  projectSummary_not_contains: String
-  projectSummary_not_in: [String]
-  projectTitle: String
-  projectTitle_contains: String
-  projectTitle_exists: Boolean
-  projectTitle_in: [String]
-  projectTitle_not: String
-  projectTitle_not_contains: String
-  projectTitle_not_in: [String]
-  proposal_exists: Boolean
-  researchTagsCollection_exists: Boolean
   researchTheme_exists: Boolean
   resourceButtonCopy: String
   resourceButtonCopy_contains: String
@@ -11208,7 +10969,6 @@ input cfTeamsNestedFilter {
   resourceTitle_not: String
   resourceTitle_not_contains: String
   resourceTitle_not_in: [String]
-  supplementGrant_exists: Boolean
   sys: SysFilter
   teamDescription: String
   teamDescription_contains: String
@@ -11217,13 +10977,6 @@ input cfTeamsNestedFilter {
   teamDescription_not: String
   teamDescription_not_contains: String
   teamDescription_not_in: [String]
-  teamId: String
-  teamId_contains: String
-  teamId_exists: Boolean
-  teamId_in: [String]
-  teamId_not: String
-  teamId_not_contains: String
-  teamId_not_in: [String]
   teamType: String
   teamType_contains: String
   teamType_exists: Boolean

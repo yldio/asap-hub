@@ -23,6 +23,9 @@ export const FETCH_TEAM_BY_ID = gql`
       resourceLink
       toolsCollection {
         items {
+          sys {
+            id
+          }
           name
           description
           url

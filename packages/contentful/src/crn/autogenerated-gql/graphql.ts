@@ -3280,12 +3280,8 @@ export type ExternalToolsLinkingCollectionsTeamsCollectionArgs = {
 };
 
 export enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
@@ -3304,8 +3300,6 @@ export enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TeamIdAsc = 'teamId_ASC',
-  TeamIdDesc = 'teamId_DESC',
   TeamTypeAsc = 'teamType_ASC',
   TeamTypeDesc = 'teamType_DESC',
 }
@@ -6010,12 +6004,8 @@ export type ManuscriptVersionsTeamsCollection = {
 };
 
 export enum ManuscriptVersionsTeamsCollectionOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
@@ -6034,8 +6024,6 @@ export enum ManuscriptVersionsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TeamIdAsc = 'teamId_ASC',
-  TeamIdDesc = 'teamId_DESC',
   TeamTypeAsc = 'teamType_ASC',
   TeamTypeDesc = 'teamType_DESC',
 }
@@ -6527,12 +6515,8 @@ export type ManuscriptsTeamsCollection = {
 };
 
 export enum ManuscriptsTeamsCollectionOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
@@ -6551,8 +6535,6 @@ export enum ManuscriptsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TeamIdAsc = 'teamId_ASC',
-  TeamIdDesc = 'teamId_DESC',
   TeamTypeAsc = 'teamType_ASC',
   TeamTypeDesc = 'teamType_DESC',
 }
@@ -10091,7 +10073,6 @@ export type ResearchOutputsLinkingCollections = {
   projectsCollection?: Maybe<ProjectsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   supplementGrantCollection?: Maybe<SupplementGrantCollection>;
-  teamsCollection?: Maybe<TeamsCollection>;
 };
 
 export type ResearchOutputsLinkingCollectionsEntryCollectionArgs = {
@@ -10146,17 +10127,6 @@ export type ResearchOutputsLinkingCollectionsSupplementGrantCollectionArgs = {
     Array<
       InputMaybe<ResearchOutputsLinkingCollectionsSupplementGrantCollectionOrder>
     >
-  >;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type ResearchOutputsLinkingCollectionsTeamsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<
-    Array<InputMaybe<ResearchOutputsLinkingCollectionsTeamsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -10283,37 +10253,6 @@ export enum ResearchOutputsLinkingCollectionsSupplementGrantCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-}
-
-export enum ResearchOutputsLinkingCollectionsTeamsCollectionOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
-  DisplayNameAsc = 'displayName_ASC',
-  DisplayNameDesc = 'displayName_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
-  InactiveSinceAsc = 'inactiveSince_ASC',
-  InactiveSinceDesc = 'inactiveSince_DESC',
-  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
-  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
-  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
-  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
-  ResourceLinkAsc = 'resourceLink_ASC',
-  ResourceLinkDesc = 'resourceLink_DESC',
-  ResourceTitleAsc = 'resourceTitle_ASC',
-  ResourceTitleDesc = 'resourceTitle_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TeamIdAsc = 'teamId_ASC',
-  TeamIdDesc = 'teamId_DESC',
-  TeamTypeAsc = 'teamType_ASC',
-  TeamTypeDesc = 'teamType_DESC',
 }
 
 export type ResearchOutputsMethodsCollection = {
@@ -10521,12 +10460,8 @@ export type ResearchOutputsTeamsCollection = {
 };
 
 export enum ResearchOutputsTeamsCollectionOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
@@ -10545,8 +10480,6 @@ export enum ResearchOutputsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TeamIdAsc = 'teamId_ASC',
-  TeamIdDesc = 'teamId_DESC',
   TeamTypeAsc = 'teamType_ASC',
   TeamTypeDesc = 'teamType_DESC',
 }
@@ -10659,7 +10592,6 @@ export type ResearchTagsLinkingCollections = {
   newsCollection?: Maybe<NewsCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
-  teamsCollection?: Maybe<TeamsCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
   usersCollection?: Maybe<UsersCollection>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
@@ -10726,17 +10658,6 @@ export type ResearchTagsLinkingCollectionsResearchOutputsCollectionArgs = {
     Array<
       InputMaybe<ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder>
     >
-  >;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type ResearchTagsLinkingCollectionsTeamsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<
-    Array<InputMaybe<ResearchTagsLinkingCollectionsTeamsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -10939,37 +10860,6 @@ export enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   TypeDesc = 'type_DESC',
   UsedInAPublicationAsc = 'usedInAPublication_ASC',
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
-}
-
-export enum ResearchTagsLinkingCollectionsTeamsCollectionOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
-  DisplayNameAsc = 'displayName_ASC',
-  DisplayNameDesc = 'displayName_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
-  InactiveSinceAsc = 'inactiveSince_ASC',
-  InactiveSinceDesc = 'inactiveSince_DESC',
-  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
-  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
-  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
-  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
-  ResourceLinkAsc = 'resourceLink_ASC',
-  ResourceLinkDesc = 'resourceLink_DESC',
-  ResourceTitleAsc = 'resourceTitle_ASC',
-  ResourceTitleDesc = 'resourceTitle_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TeamIdAsc = 'teamId_ASC',
-  TeamIdDesc = 'teamId_DESC',
-  TeamTypeAsc = 'teamType_ASC',
-  TeamTypeDesc = 'teamType_DESC',
 }
 
 export enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
@@ -11179,12 +11069,8 @@ export type ResearchThemeLinkingCollectionsTeamsCollectionArgs = {
 };
 
 export enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
@@ -11203,8 +11089,6 @@ export enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TeamIdAsc = 'teamId_ASC',
-  TeamIdDesc = 'teamId_DESC',
   TeamTypeAsc = 'teamType_ASC',
   TeamTypeDesc = 'teamType_DESC',
 }
@@ -11441,7 +11325,6 @@ export type SupplementGrantFilter = {
 export type SupplementGrantLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
-  teamsCollection?: Maybe<TeamsCollection>;
 };
 
 export type SupplementGrantLinkingCollectionsEntryCollectionArgs = {
@@ -11457,17 +11340,6 @@ export type SupplementGrantLinkingCollectionsProjectsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<SupplementGrantLinkingCollectionsProjectsCollectionOrder>>
-  >;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type SupplementGrantLinkingCollectionsTeamsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<
-    Array<InputMaybe<SupplementGrantLinkingCollectionsTeamsCollectionOrder>>
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -11501,37 +11373,6 @@ export enum SupplementGrantLinkingCollectionsProjectsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-}
-
-export enum SupplementGrantLinkingCollectionsTeamsCollectionOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
-  DisplayNameAsc = 'displayName_ASC',
-  DisplayNameDesc = 'displayName_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
-  InactiveSinceAsc = 'inactiveSince_ASC',
-  InactiveSinceDesc = 'inactiveSince_DESC',
-  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
-  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
-  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
-  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
-  ResourceLinkAsc = 'resourceLink_ASC',
-  ResourceLinkDesc = 'resourceLink_DESC',
-  ResourceTitleAsc = 'resourceTitle_ASC',
-  ResourceTitleDesc = 'resourceTitle_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TeamIdAsc = 'teamId_ASC',
-  TeamIdDesc = 'teamId_DESC',
-  TeamTypeAsc = 'teamType_ASC',
-  TeamTypeDesc = 'teamType_DESC',
 }
 
 export enum SupplementGrantOrder {
@@ -11828,44 +11669,24 @@ export enum TeamMembershipOrder {
 export type Teams = Entry &
   _Node & {
     _id: Scalars['ID'];
-    applicationNumber?: Maybe<Scalars['String']>;
     contentfulMetadata: ContentfulMetadata;
     displayName?: Maybe<Scalars['String']>;
-    grantId?: Maybe<Scalars['String']>;
     inactiveSince?: Maybe<Scalars['DateTime']>;
     linkedFrom?: Maybe<TeamsLinkingCollections>;
-    projectSummary?: Maybe<Scalars['String']>;
-    projectTitle?: Maybe<Scalars['String']>;
-    proposal?: Maybe<ResearchOutputs>;
-    researchTagsCollection?: Maybe<TeamsResearchTagsCollection>;
     researchTheme?: Maybe<ResearchTheme>;
     resourceButtonCopy?: Maybe<Scalars['String']>;
     resourceContactEmail?: Maybe<Scalars['String']>;
     resourceDescription?: Maybe<Scalars['String']>;
     resourceLink?: Maybe<Scalars['String']>;
     resourceTitle?: Maybe<Scalars['String']>;
-    supplementGrant?: Maybe<SupplementGrant>;
     sys: Sys;
     teamDescription?: Maybe<Scalars['String']>;
-    teamId?: Maybe<Scalars['String']>;
     teamType?: Maybe<Scalars['String']>;
     toolsCollection?: Maybe<TeamsToolsCollection>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsApplicationNumberArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
 export type TeamsDisplayNameArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsGrantIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -11879,37 +11700,6 @@ export type TeamsInactiveSinceArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
 export type TeamsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsProjectSummaryArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsProjectTitleArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsProposalArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<ResearchOutputsFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsResearchTagsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<Array<InputMaybe<TeamsResearchTagsCollectionOrder>>>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<ResearchTagsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
@@ -11951,21 +11741,7 @@ export type TeamsResourceTitleArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsSupplementGrantArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<SupplementGrantFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
 export type TeamsTeamDescriptionArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
-export type TeamsTeamIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -11997,13 +11773,6 @@ export type TeamsCollection = {
 export type TeamsFilter = {
   AND?: InputMaybe<Array<InputMaybe<TeamsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<TeamsFilter>>>;
-  applicationNumber?: InputMaybe<Scalars['String']>;
-  applicationNumber_contains?: InputMaybe<Scalars['String']>;
-  applicationNumber_exists?: InputMaybe<Scalars['Boolean']>;
-  applicationNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  applicationNumber_not?: InputMaybe<Scalars['String']>;
-  applicationNumber_not_contains?: InputMaybe<Scalars['String']>;
-  applicationNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   displayName?: InputMaybe<Scalars['String']>;
   displayName_contains?: InputMaybe<Scalars['String']>;
@@ -12012,13 +11781,6 @@ export type TeamsFilter = {
   displayName_not?: InputMaybe<Scalars['String']>;
   displayName_not_contains?: InputMaybe<Scalars['String']>;
   displayName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  grantId?: InputMaybe<Scalars['String']>;
-  grantId_contains?: InputMaybe<Scalars['String']>;
-  grantId_exists?: InputMaybe<Scalars['Boolean']>;
-  grantId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  grantId_not?: InputMaybe<Scalars['String']>;
-  grantId_not_contains?: InputMaybe<Scalars['String']>;
-  grantId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   inactiveSince?: InputMaybe<Scalars['DateTime']>;
   inactiveSince_exists?: InputMaybe<Scalars['Boolean']>;
   inactiveSince_gt?: InputMaybe<Scalars['DateTime']>;
@@ -12028,24 +11790,6 @@ export type TeamsFilter = {
   inactiveSince_lte?: InputMaybe<Scalars['DateTime']>;
   inactiveSince_not?: InputMaybe<Scalars['DateTime']>;
   inactiveSince_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  projectSummary?: InputMaybe<Scalars['String']>;
-  projectSummary_contains?: InputMaybe<Scalars['String']>;
-  projectSummary_exists?: InputMaybe<Scalars['Boolean']>;
-  projectSummary_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  projectSummary_not?: InputMaybe<Scalars['String']>;
-  projectSummary_not_contains?: InputMaybe<Scalars['String']>;
-  projectSummary_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  projectTitle?: InputMaybe<Scalars['String']>;
-  projectTitle_contains?: InputMaybe<Scalars['String']>;
-  projectTitle_exists?: InputMaybe<Scalars['Boolean']>;
-  projectTitle_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  projectTitle_not?: InputMaybe<Scalars['String']>;
-  projectTitle_not_contains?: InputMaybe<Scalars['String']>;
-  projectTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  proposal?: InputMaybe<CfResearchOutputsNestedFilter>;
-  proposal_exists?: InputMaybe<Scalars['Boolean']>;
-  researchTags?: InputMaybe<CfResearchTagsNestedFilter>;
-  researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   researchTheme?: InputMaybe<CfResearchThemeNestedFilter>;
   researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   resourceButtonCopy?: InputMaybe<Scalars['String']>;
@@ -12085,8 +11829,6 @@ export type TeamsFilter = {
   resourceTitle_not?: InputMaybe<Scalars['String']>;
   resourceTitle_not_contains?: InputMaybe<Scalars['String']>;
   resourceTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  supplementGrant?: InputMaybe<CfSupplementGrantNestedFilter>;
-  supplementGrant_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
   teamDescription?: InputMaybe<Scalars['String']>;
   teamDescription_contains?: InputMaybe<Scalars['String']>;
@@ -12095,13 +11837,6 @@ export type TeamsFilter = {
   teamDescription_not?: InputMaybe<Scalars['String']>;
   teamDescription_not_contains?: InputMaybe<Scalars['String']>;
   teamDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  teamId?: InputMaybe<Scalars['String']>;
-  teamId_contains?: InputMaybe<Scalars['String']>;
-  teamId_exists?: InputMaybe<Scalars['Boolean']>;
-  teamId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  teamId_not?: InputMaybe<Scalars['String']>;
-  teamId_not_contains?: InputMaybe<Scalars['String']>;
-  teamId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   teamType?: InputMaybe<Scalars['String']>;
   teamType_contains?: InputMaybe<Scalars['String']>;
   teamType_exists?: InputMaybe<Scalars['Boolean']>;
@@ -12519,12 +12254,8 @@ export enum TeamsLinkingCollectionsTutorialsCollectionOrder {
 }
 
 export enum TeamsOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
@@ -12543,32 +12274,8 @@ export enum TeamsOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TeamIdAsc = 'teamId_ASC',
-  TeamIdDesc = 'teamId_DESC',
   TeamTypeAsc = 'teamType_ASC',
   TeamTypeDesc = 'teamType_DESC',
-}
-
-export type TeamsResearchTagsCollection = {
-  items: Array<Maybe<ResearchTags>>;
-  limit: Scalars['Int'];
-  skip: Scalars['Int'];
-  total: Scalars['Int'];
-};
-
-export enum TeamsResearchTagsCollectionOrder {
-  CategoryAsc = 'category_ASC',
-  CategoryDesc = 'category_DESC',
-  NameAsc = 'name_ASC',
-  NameDesc = 'name_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
 export type TeamsToolsCollection = {
@@ -13106,12 +12813,8 @@ export type TutorialsTeamsCollection = {
 };
 
 export enum TutorialsTeamsCollectionOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
   InactiveSinceDesc = 'inactiveSince_DESC',
   ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
@@ -13130,8 +12833,6 @@ export enum TutorialsTeamsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TeamIdAsc = 'teamId_ASC',
-  TeamIdDesc = 'teamId_DESC',
   TeamTypeAsc = 'teamType_ASC',
   TeamTypeDesc = 'teamType_DESC',
 }
@@ -16505,13 +16206,6 @@ export type CfTeamMembershipNestedFilter = {
 export type CfTeamsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfTeamsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfTeamsNestedFilter>>>;
-  applicationNumber?: InputMaybe<Scalars['String']>;
-  applicationNumber_contains?: InputMaybe<Scalars['String']>;
-  applicationNumber_exists?: InputMaybe<Scalars['Boolean']>;
-  applicationNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  applicationNumber_not?: InputMaybe<Scalars['String']>;
-  applicationNumber_not_contains?: InputMaybe<Scalars['String']>;
-  applicationNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   displayName?: InputMaybe<Scalars['String']>;
   displayName_contains?: InputMaybe<Scalars['String']>;
@@ -16520,13 +16214,6 @@ export type CfTeamsNestedFilter = {
   displayName_not?: InputMaybe<Scalars['String']>;
   displayName_not_contains?: InputMaybe<Scalars['String']>;
   displayName_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  grantId?: InputMaybe<Scalars['String']>;
-  grantId_contains?: InputMaybe<Scalars['String']>;
-  grantId_exists?: InputMaybe<Scalars['Boolean']>;
-  grantId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  grantId_not?: InputMaybe<Scalars['String']>;
-  grantId_not_contains?: InputMaybe<Scalars['String']>;
-  grantId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   inactiveSince?: InputMaybe<Scalars['DateTime']>;
   inactiveSince_exists?: InputMaybe<Scalars['Boolean']>;
   inactiveSince_gt?: InputMaybe<Scalars['DateTime']>;
@@ -16536,22 +16223,6 @@ export type CfTeamsNestedFilter = {
   inactiveSince_lte?: InputMaybe<Scalars['DateTime']>;
   inactiveSince_not?: InputMaybe<Scalars['DateTime']>;
   inactiveSince_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  projectSummary?: InputMaybe<Scalars['String']>;
-  projectSummary_contains?: InputMaybe<Scalars['String']>;
-  projectSummary_exists?: InputMaybe<Scalars['Boolean']>;
-  projectSummary_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  projectSummary_not?: InputMaybe<Scalars['String']>;
-  projectSummary_not_contains?: InputMaybe<Scalars['String']>;
-  projectSummary_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  projectTitle?: InputMaybe<Scalars['String']>;
-  projectTitle_contains?: InputMaybe<Scalars['String']>;
-  projectTitle_exists?: InputMaybe<Scalars['Boolean']>;
-  projectTitle_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  projectTitle_not?: InputMaybe<Scalars['String']>;
-  projectTitle_not_contains?: InputMaybe<Scalars['String']>;
-  projectTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  proposal_exists?: InputMaybe<Scalars['Boolean']>;
-  researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   researchTheme_exists?: InputMaybe<Scalars['Boolean']>;
   resourceButtonCopy?: InputMaybe<Scalars['String']>;
   resourceButtonCopy_contains?: InputMaybe<Scalars['String']>;
@@ -16590,7 +16261,6 @@ export type CfTeamsNestedFilter = {
   resourceTitle_not?: InputMaybe<Scalars['String']>;
   resourceTitle_not_contains?: InputMaybe<Scalars['String']>;
   resourceTitle_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  supplementGrant_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
   teamDescription?: InputMaybe<Scalars['String']>;
   teamDescription_contains?: InputMaybe<Scalars['String']>;
@@ -16599,13 +16269,6 @@ export type CfTeamsNestedFilter = {
   teamDescription_not?: InputMaybe<Scalars['String']>;
   teamDescription_not_contains?: InputMaybe<Scalars['String']>;
   teamDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  teamId?: InputMaybe<Scalars['String']>;
-  teamId_contains?: InputMaybe<Scalars['String']>;
-  teamId_exists?: InputMaybe<Scalars['Boolean']>;
-  teamId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  teamId_not?: InputMaybe<Scalars['String']>;
-  teamId_not_contains?: InputMaybe<Scalars['String']>;
-  teamId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   teamType?: InputMaybe<Scalars['String']>;
   teamType_contains?: InputMaybe<Scalars['String']>;
   teamType_exists?: InputMaybe<Scalars['Boolean']>;
@@ -27160,7 +26823,6 @@ export type FetchTagsWithCountsQuery = {
             linkedFrom?: Maybe<{
               usersCollection?: Maybe<Pick<UsersCollection, 'total'>>;
               eventsCollection?: Maybe<Pick<EventsCollection, 'total'>>;
-              teamsCollection?: Maybe<Pick<TeamsCollection, 'total'>>;
               workingGroupsCollection?: Maybe<
                 Pick<WorkingGroupsCollection, 'total'>
               >;
@@ -27285,7 +26947,11 @@ export type FetchTeamByIdQuery = {
       researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
       toolsCollection?: Maybe<{
         items: Array<
-          Maybe<Pick<ExternalTools, 'name' | 'description' | 'url'>>
+          Maybe<
+            Pick<ExternalTools, 'name' | 'description' | 'url'> & {
+              sys: Pick<Sys, 'id'>;
+            }
+          >
         >;
       }>;
       linkedFrom?: Maybe<{
@@ -52031,26 +51697,6 @@ export const FetchTagsWithCountsDocument = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'teamsCollection' },
-                              arguments: [
-                                {
-                                  kind: 'Argument',
-                                  name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '1' },
-                                },
-                              ],
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'total' },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
                               name: {
                                 kind: 'Name',
                                 value: 'workingGroupsCollection',
@@ -52671,6 +52317,19 @@ export const FetchTeamByIdDocument = {
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'name' },

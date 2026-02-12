@@ -196,7 +196,10 @@ const ProjectMainPage: FC<{
             </Frame>
           }
         />
-        <Route index element={<Navigate to="overview" replace />} />
+        <Route
+          index
+          element={<Navigate to={projectRoute.overview({}).$} replace />}
+        />
       </Routes>
     </ProjectDetailPage>
   );

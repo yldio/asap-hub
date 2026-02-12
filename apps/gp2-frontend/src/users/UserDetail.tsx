@@ -217,7 +217,10 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
               </Frame>
             }
           />
-          <Route index element={<Navigate to="overview" replace />} />
+          <Route
+            index
+            element={<Navigate to={userRoute.overview({}).$} replace />}
+          />
         </Routes>
       </UserDetailPage>
     );

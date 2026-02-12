@@ -1,7 +1,10 @@
 import { WorkingGroupsPage } from '@asap-hub/gp2-components';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { lazy, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Frame from '../Frame';
+
+const { workingGroups } = gp2Routing;
 
 const loadWorkingGroupList = () =>
   import(/* webpackChunkName: "working-groups-list" */ './WorkingGroupList');
@@ -66,7 +69,10 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
         path=":workingGroupId/*"
         element={<WorkingGroupDetail currentTime={currentTime} />}
       />
-      <Route index element={<Navigate to="operational" replace />} />
+      <Route
+        index
+        element={<Navigate to={workingGroups({}).operational({}).$} replace />}
+      />
     </Routes>
   );
 };

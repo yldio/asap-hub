@@ -221,7 +221,12 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                       </Frame>
                     }
                   />
-                  <Route index element={<Navigate to="research" replace />} />
+                  <Route
+                    index
+                    element={
+                      <Navigate to={route({ userId }).research({}).$} replace />
+                    }
+                  />
                 </Routes>
               </>
             }

@@ -1,5 +1,6 @@
 import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NetworkPage, Paragraph } from '@asap-hub/react-components';
+import { network } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useSearch } from '../hooks';
@@ -224,7 +225,7 @@ const Network: FC<Record<string, never>> = () => {
           </Frame>
         }
       />
-      <Route index element={<Navigate to="users" replace />} />
+      <Route index element={<Navigate to={network({}).users({}).$} replace />} />
     </Routes>
   );
 };

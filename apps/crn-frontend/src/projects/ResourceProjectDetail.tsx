@@ -47,7 +47,7 @@ const ResourceProjectDetail: FC<Record<string, never>> = () => {
               />
             }
           />
-          <Route index element={<Navigate to="about" replace />} />
+          <Route index element={<Navigate to={route.about({}).$} replace />} />
         </Routes>
       </ProjectDetailPage>
     </Frame>

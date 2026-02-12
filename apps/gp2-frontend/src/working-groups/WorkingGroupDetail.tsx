@@ -211,7 +211,10 @@ const WorkingGroupMainPage: FC<{
             </Frame>
           }
         />
-        <Route index element={<Navigate to="overview" replace />} />
+        <Route
+          index
+          element={<Navigate to={workingGroupRoute.overview({}).$} replace />}
+        />
       </Routes>
     </WorkingGroupDetailPage>
   );

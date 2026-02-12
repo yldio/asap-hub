@@ -170,6 +170,7 @@ beforeEach(() => {
     getMeetingRepAttendance: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
+    getMeetingRepAttendanceTagSuggestions: jest.fn().mockResolvedValue([]),
     getPreliminaryDataSharing: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
@@ -179,6 +180,13 @@ beforeEach(() => {
     getTeamCollaboration: jest.fn().mockResolvedValue({ items: [], total: 0 }),
     getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
     getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+    getPresenterRepresentation: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+    getPresenterRepresentationPerformance: jest
+      .fn()
+      .mockResolvedValue(undefined),
+    getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
   });
   mockUseAnalyticsOpensearch.mockReturnValue({
     client: {} as OpensearchClient<unknown>, // Mock opensearch client (not used since flag is false)
@@ -768,6 +776,7 @@ describe('csv export', () => {
       getMeetingRepAttendance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendanceTagSuggestions: jest.fn().mockResolvedValue([]),
       getPreliminaryDataSharing: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -781,6 +790,13 @@ describe('csv export', () => {
         .mockResolvedValue({ items: [], total: 0 }),
       getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getPresenterRepresentation: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPresenterRepresentationPerformance: jest
+        .fn()
+        .mockResolvedValue(undefined),
+      getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     // Render the page
@@ -925,6 +941,7 @@ describe('csv export', () => {
       getMeetingRepAttendance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendanceTagSuggestions: jest.fn().mockResolvedValue([]),
       getPreliminaryDataSharing: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -938,6 +955,13 @@ describe('csv export', () => {
         .mockResolvedValue({ items: [], total: 0 }),
       getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getPresenterRepresentation: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPresenterRepresentationPerformance: jest
+        .fn()
+        .mockResolvedValue(undefined),
+      getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     // Render the page
@@ -1037,6 +1061,7 @@ describe('tag suggestions', () => {
       getMeetingRepAttendance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendanceTagSuggestions: jest.fn().mockResolvedValue([]),
       getPreliminaryDataSharing: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -1050,6 +1075,13 @@ describe('tag suggestions', () => {
         .mockResolvedValue({ items: [], total: 0 }),
       getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getPresenterRepresentation: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPresenterRepresentationPerformance: jest
+        .fn()
+        .mockResolvedValue(undefined),
+      getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     await renderPage(
@@ -1115,6 +1147,7 @@ describe('tag suggestions', () => {
       getMeetingRepAttendance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendanceTagSuggestions: jest.fn().mockResolvedValue([]),
       getPreliminaryDataSharing: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -1128,6 +1161,13 @@ describe('tag suggestions', () => {
         .mockResolvedValue({ items: [], total: 0 }),
       getTeamCollaborationTagSuggestions: jest.fn().mockResolvedValue([]),
       getTeamCollaborationPerformance: jest.fn().mockResolvedValue(undefined),
+      getPresenterRepresentation: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPresenterRepresentationPerformance: jest
+        .fn()
+        .mockResolvedValue(undefined),
+      getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     await renderPage(

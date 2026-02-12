@@ -7,10 +7,12 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   EngagementPerformance,
-  ListEngagementAlgoliaResponse,
+  EngagementResponse,
+  ListEngagementResponse,
   MeetingRepAttendanceResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
+import { useFlags } from '@asap-hub/react-context';
 import {
   render,
   screen,
@@ -26,7 +28,10 @@ import { OpensearchClient } from '../../utils/opensearch';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { useAnalyticsAlgolia } from '../../../hooks/algolia';
-import { useAnalyticsOpensearch } from '../../../hooks/opensearch';
+import {
+  useAnalyticsOpensearch,
+  useOpensearchMetrics,
+} from '../../../hooks/opensearch';
 import {
   getEngagement,
   getEngagementPerformance,
@@ -77,6 +82,12 @@ jest.mock('../../../hooks/algolia', () => ({
 
 jest.mock('../../../hooks/opensearch', () => ({
   useAnalyticsOpensearch: jest.fn(),
+  useOpensearchMetrics: jest.fn(),
+}));
+
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: jest.fn(),
 }));
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -113,14 +124,6 @@ const mockSearch = jest.fn() as jest.MockedFunction<
   AlgoliaSearchClient<'analytics'>['search']
 >;
 
-const mockGetTagSuggestions = jest.fn() as jest.MockedFunction<
-  OpensearchClient<MeetingRepAttendanceResponse>['getTagSuggestions']
->;
-
-const mockAttendanceSearch = jest.fn() as jest.MockedFunction<
-  OpensearchClient<MeetingRepAttendanceResponse>['search']
->;
-
 const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
   typeof useAnalyticsAlgolia
 >;
@@ -128,11 +131,26 @@ const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
 const mockUseAnalyticsOpensearch =
   useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
+const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
+  typeof useOpensearchMetrics
+>;
+
+const mockUseFlags = useFlags as jest.MockedFunction<typeof useFlags>;
+
+const engagementClient = new OpensearchClient<EngagementResponse>(
+  'presenter-representation',
+  'Bearer token',
+);
+const attendanceClient = new OpensearchClient<MeetingRepAttendanceResponse>(
+  'attendance',
+  'Bearer token',
+);
+
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
 >;
 
-const data: ListEngagementAlgoliaResponse = {
+const data: ListEngagementResponse = {
   total: 1,
   items: [
     {
@@ -146,7 +164,6 @@ const data: ListEngagementAlgoliaResponse = {
       uniqueAllRolesCountPercentage: 100,
       uniqueKeyPersonnelCount: 2,
       uniqueKeyPersonnelCountPercentage: 67,
-      objectID: 'engagement-algolia-id',
     },
   ],
 };
@@ -156,9 +173,17 @@ const mockAlgoliaClient = {
   search: mockSearch,
 };
 
-const mockOpensearchClient = {
-  getTagSuggestions: mockGetTagSuggestions,
-  search: mockAttendanceSearch,
+const defaultUseOpensearchMetricsResponse = {
+  getMeetingRepAttendance: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+  getMeetingRepAttendanceTagSuggestions: jest
+    .fn()
+    .mockResolvedValue(['Alessi', 'tag2']),
+  getPresenterRepresentation: jest
+    .fn()
+    .mockResolvedValue({ items: [], total: 0 }),
+  getPresenterRepresentationTagSuggestions: jest
+    .fn()
+    .mockResolvedValue(['Alessi', 'tag2']),
 };
 
 beforeEach(() => {
@@ -196,11 +221,27 @@ beforeEach(() => {
     ...engagementPerformance,
   });
 
-  mockUseAnalyticsOpensearch.mockReturnValue({
-    client:
-      mockOpensearchClient as unknown as OpensearchClient<MeetingRepAttendanceResponse>,
+  mockUseAnalyticsOpensearch.mockImplementation((index: string) => {
+    if (index === 'presenter-representation') {
+      return { client: engagementClient };
+    }
+    return { client: attendanceClient };
   });
-  mockOpensearchClient.getTagSuggestions.mockResolvedValue([]);
+
+  mockUseOpensearchMetrics.mockReturnValue(
+    defaultUseOpensearchMetricsResponse as unknown as ReturnType<
+      typeof useOpensearchMetrics
+    >,
+  );
+
+  mockUseFlags.mockReturnValue({
+    isEnabled: jest.fn().mockReturnValue(false),
+    reset: jest.fn(),
+    disable: jest.fn(),
+    setCurrentOverrides: jest.fn(),
+    setEnvironment: jest.fn(),
+    enable: jest.fn(),
+  });
 });
 
 const renderPage = async (path: string) => {
@@ -211,6 +252,9 @@ const renderPage = async (path: string) => {
           analyticsEngagementState({
             currentPage: 0,
             pageSize: 10,
+            tags: [],
+            timeRange: 'all',
+            sort: 'team_asc',
           }),
         );
       }}
@@ -320,30 +364,73 @@ describe('Engagement', () => {
     );
   });
 
-  describe('search', () => {
-    const getSearchBox = () => {
-      const searchContainer = screen.getByRole('search') as HTMLElement;
-      return within(searchContainer).getByRole('combobox') as HTMLInputElement;
-    };
-    it('allows typing in search queries', async () => {
-      await renderPage(
-        analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
-      );
-
-      const searchBox = getSearchBox();
-
-      await userEvent.type(searchBox, 'test123');
-      await waitFor(() => {
-        expect(searchBox.value).toEqual('test123');
-        expect(mockSearchForTagValues).toHaveBeenCalledWith(
-          ['engagement'],
-          'test123',
-          {},
-        );
-      });
+  it('uses opensearch for CSV export when OPENSEARCH_METRICS is enabled', async () => {
+    const mockGetPresenterRepresentationOS = jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 });
+    mockUseOpensearchMetrics.mockReturnValue({
+      ...defaultUseOpensearchMetricsResponse,
+      getPresenterRepresentation: mockGetPresenterRepresentationOS,
+    } as unknown as ReturnType<typeof useOpensearchMetrics>);
+    mockUseFlags.mockReturnValue({
+      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
     });
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
+    );
+
+    await userEvent.click(screen.getByText(/csv/i));
+    expect(mockGetPresenterRepresentationOS).toHaveBeenCalled();
+    expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+      expect.stringMatching(/engagement_\d+\.csv/),
+      expect.anything(),
+    );
   });
 
+  it('throws error when engagement state is an Error', async () => {
+    const error = new Error('Failed to fetch engagement data');
+    mockGetEngagement.mockRejectedValue(error);
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    let caughtError: Error | null = null;
+    errorCallback = (err) => {
+      caughtError = err;
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot>
+        <TestErrorBoundary>
+          <Suspense fallback="loading">{children}</Suspense>
+        </TestErrorBoundary>
+      </RecoilRoot>
+    );
+
+    renderHook(
+      () =>
+        useAnalyticsEngagement({
+          currentPage: 0,
+          pageSize: 10,
+          sort: 'team_asc',
+          timeRange: 'all',
+          tags: ['engagement'],
+        }),
+      { wrapper },
+    );
+
+    await waitFor(() => {
+      expect(caughtError?.message).toBe('Failed to fetch engagement data');
+    });
+
+    errorCallback = null;
+  });
+});
+
+describe('Attendance', () => {
   it('renders meeting rep attendance', async () => {
     await renderPage(
       analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
@@ -430,67 +517,83 @@ describe('Engagement', () => {
 
     errorCallback = null;
   });
+});
 
-  it('throws error when engagement state is an Error', async () => {
-    const error = new Error('Failed to fetch engagement data');
-    mockGetEngagement.mockRejectedValue(error);
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+describe('loadTags function', () => {
+  const getSearchBox = () => {
+    const searchContainer = screen.getByRole('search') as HTMLElement;
+    return within(searchContainer).getByRole('combobox') as HTMLInputElement;
+  };
+  it('loads tags from opensearch for attendance page', async () => {
+    const mockGetAttendanceSuggestionsOS = jest
+      .fn()
+      .mockResolvedValue(['team1', 'team2', 'team3']);
 
-    let caughtError: Error | null = null;
-    errorCallback = (err) => {
-      caughtError = err;
-    };
+    mockUseOpensearchMetrics.mockReturnValue({
+      ...defaultUseOpensearchMetricsResponse,
+      getMeetingRepAttendanceTagSuggestions: mockGetAttendanceSuggestionsOS,
+    } as unknown as ReturnType<typeof useOpensearchMetrics>);
 
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>
-        <TestErrorBoundary>
-          <Suspense fallback="loading">{children}</Suspense>
-        </TestErrorBoundary>
-      </RecoilRoot>
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
     );
 
-    renderHook(
-      () =>
-        useAnalyticsEngagement({
-          currentPage: 0,
-          pageSize: 10,
-          sort: 'team_asc',
-          timeRange: 'all',
-          tags: ['engagement'],
-        }),
-      { wrapper },
+    const searchBox = getSearchBox();
+    await userEvent.type(searchBox, 'test');
+
+    await waitFor(() =>
+      expect(mockGetAttendanceSuggestionsOS).toHaveBeenCalledWith('test'),
     );
-
-    await waitFor(() => {
-      expect(caughtError?.message).toBe('Failed to fetch engagement data');
-    });
-
-    errorCallback = null;
   });
 
-  describe('loadTags function', () => {
-    it('calls attendanceClient.getTagSuggestions and maps response correctly for attendance page', async () => {
-      const mockTagSuggestions = ['team1', 'team2', 'team3'];
-      mockGetTagSuggestions.mockResolvedValue(mockTagSuggestions);
+  it('loads tags from algolia for presenters page', async () => {
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
+    );
 
-      await renderPage(
-        analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
+    const searchBox = getSearchBox();
+
+    await userEvent.type(searchBox, 'test123');
+    await waitFor(() => {
+      expect(searchBox.value).toEqual('test123');
+      expect(mockSearchForTagValues).toHaveBeenCalledWith(
+        ['engagement'],
+        'test123',
+        {},
       );
-
-      const searchContainer = screen.getByRole('search') as HTMLElement;
-      const searchBox = within(searchContainer).getByRole(
-        'combobox',
-      ) as HTMLInputElement;
-
-      mockGetTagSuggestions.mockClear(); // Clear any previous calls
-      await userEvent.type(searchBox, 'test');
-
-      await waitFor(() => {
-        expect(mockGetTagSuggestions).toHaveBeenCalledWith('test', 'flat');
-      });
-
-      // May be called multiple times due to typing/debounce, verify at least once with correct params
-      expect(mockGetTagSuggestions).toHaveBeenCalled();
     });
+  });
+
+  it('loads tags from opensearch for presenters page when opensearch flag is on', async () => {
+    const mockGetPresenterSuggestionsOS = jest
+      .fn()
+      .mockResolvedValue(['team1', 'team2', 'team3']);
+
+    mockUseFlags.mockReturnValue({
+      isEnabled: jest
+        .fn()
+        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
+      reset: jest.fn(),
+      disable: jest.fn(),
+      setCurrentOverrides: jest.fn(),
+      setEnvironment: jest.fn(),
+      enable: jest.fn(),
+    });
+
+    mockUseOpensearchMetrics.mockReturnValue({
+      ...defaultUseOpensearchMetricsResponse,
+      getPresenterRepresentationTagSuggestions: mockGetPresenterSuggestionsOS,
+    } as unknown as ReturnType<typeof useOpensearchMetrics>);
+
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
+    );
+
+    const searchBox = getSearchBox();
+    await userEvent.type(searchBox, 'test');
+
+    await waitFor(() =>
+      expect(mockGetPresenterSuggestionsOS).toHaveBeenCalledWith('test'),
+    );
   });
 });

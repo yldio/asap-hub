@@ -87,6 +87,9 @@ describe('useOpensearchMetrics', () => {
       expect(result.current).toHaveProperty('getPreprintCompliance');
       expect(result.current).toHaveProperty('getAnalyticsOSChampion');
       expect(result.current).toHaveProperty('getMeetingRepAttendance');
+      expect(result.current).toHaveProperty(
+        'getMeetingRepAttendanceTagSuggestions',
+      );
       expect(result.current).toHaveProperty('getPreliminaryDataSharing');
       expect(result.current).toHaveProperty('getUserProductivity');
       expect(result.current).toHaveProperty(
@@ -108,6 +111,13 @@ describe('useOpensearchMetrics', () => {
         'getTeamCollaborationTagSuggestions',
       );
       expect(result.current).toHaveProperty('getTeamCollaborationPerformance');
+      expect(result.current).toHaveProperty('getPresenterRepresentation');
+      expect(result.current).toHaveProperty(
+        'getPresenterRepresentationTagSuggestions',
+      );
+      expect(result.current).toHaveProperty(
+        'getPresenterRepresentationPerformance',
+      );
     });
   });
 
@@ -988,6 +998,165 @@ describe('useOpensearchMetrics', () => {
       );
 
       expect(mockGetTeamCollaborationPerformance).toHaveBeenCalledWith(
+        expect.any(OpensearchClient),
+        paginationParams,
+      );
+    });
+  });
+
+  describe('getPresenterRepresentation*', () => {
+    it('creates OpensearchClient with presenter-representation index and calls getEngagement API method', async () => {
+      const mockGetEngagement = jest
+        .spyOn(engagementApi, 'getEngagement')
+        .mockResolvedValue({
+          items: [],
+          total: 0,
+        });
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const paginationParams = {
+        tags: ['Team Alpha'],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: '30d' as const,
+        sort: 'team_asc' as const,
+      };
+
+      await result.current.getPresenterRepresentation(paginationParams);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'presenter-representation',
+        expect.any(String),
+      );
+
+      expect(mockGetEngagement).toHaveBeenCalledWith(
+        expect.any(OpensearchClient),
+        paginationParams,
+      );
+    });
+
+    it('creates OpensearchClient with correct index and calls getTagSuggestions', async () => {
+      const mockGetTagSuggestions = jest.fn().mockResolvedValue(['Team Beta']);
+      mockOpensearchClient.mockImplementation(
+        () =>
+          ({
+            getTagSuggestions: mockGetTagSuggestions,
+          }) as unknown as OpensearchClient<unknown>,
+      );
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const tagQuery = 'Team';
+
+      const suggestions =
+        await result.current.getPresenterRepresentationTagSuggestions(tagQuery);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'presenter-representation',
+        expect.any(String),
+      );
+
+      expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
+      expect(suggestions).toEqual(['Team Beta']);
+    });
+
+    it('creates OpensearchClient with presenter-representation-performance index and calls getEngagementPerformance API method', async () => {
+      const mockGetEngagementPerformance = jest
+        .spyOn(engagementApi, 'getEngagementPerformance')
+        .mockResolvedValue({
+          events: {
+            belowAverageMin: 0,
+            belowAverageMax: 2,
+            averageMin: 2,
+            averageMax: 5,
+            aboveAverageMin: 5,
+            aboveAverageMax: 10,
+          },
+          totalSpeakers: {
+            belowAverageMin: 0,
+            belowAverageMax: 1,
+            averageMin: 1,
+            averageMax: 3,
+            aboveAverageMin: 3,
+            aboveAverageMax: 8,
+          },
+          uniqueAllRoles: {
+            belowAverageMin: 0,
+            belowAverageMax: 1,
+            averageMin: 1,
+            averageMax: 3,
+            aboveAverageMin: 3,
+            aboveAverageMax: 6,
+          },
+          uniqueKeyPersonnel: {
+            belowAverageMin: 0,
+            belowAverageMax: 1,
+            averageMin: 1,
+            averageMax: 2,
+            aboveAverageMin: 2,
+            aboveAverageMax: 5,
+          },
+        });
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const paginationParams = {
+        timeRange: '90d' as const,
+      };
+
+      await result.current.getPresenterRepresentationPerformance(
+        paginationParams,
+      );
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'presenter-representation-performance',
+        expect.any(String),
+      );
+
+      expect(mockGetEngagementPerformance).toHaveBeenCalledWith(
         expect.any(OpensearchClient),
         paginationParams,
       );

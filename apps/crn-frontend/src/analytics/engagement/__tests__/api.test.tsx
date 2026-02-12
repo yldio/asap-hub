@@ -4,7 +4,10 @@ import {
   createAlgoliaResponse,
 } from '@asap-hub/algolia';
 import { listEngagementResponse } from '@asap-hub/fixtures';
-import { MeetingRepAttendanceResponse } from '@asap-hub/model';
+import {
+  EngagementResponse,
+  MeetingRepAttendanceResponse,
+} from '@asap-hub/model';
 import nock from 'nock';
 
 import {
@@ -34,6 +37,7 @@ const defaultOptions: EngagementListOptions = {
   currentPage: 0,
   tags: [],
   timeRange: 'all',
+  sort: 'team_asc',
 };
 
 describe('getEngagement', () => {
@@ -44,6 +48,7 @@ describe('getEngagement', () => {
       createAlgoliaResponse<'analytics', 'engagement'>([
         {
           ...listEngagementResponse.items[0]!,
+          objectID: listEngagementResponse.items[0]!.id,
           __meta: { type: 'engagement' },
         },
       ]),
@@ -68,6 +73,377 @@ describe('getEngagement', () => {
         tagFilters: [['Alessi']],
       }),
     );
+  });
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<EngagementResponse>;
+    let searchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient(
+        'presenter-representation',
+        'Bearer test-token',
+      );
+      searchSpy = jest
+        .spyOn(opensearchClient, 'search')
+        .mockResolvedValue({ ...listEngagementResponse });
+    });
+
+    afterEach(() => {
+      searchSpy.mockRestore();
+    });
+
+    it('calls opensearch client with correct parameters', async () => {
+      await getEngagement(opensearchClient, defaultOptions);
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: 'all',
+        searchScope: 'flat',
+        sort: expect.any(Array),
+      });
+    });
+
+    it('passes tags to opensearch client', async () => {
+      const tags = ['Team Alpha', 'User Beta'];
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        tags,
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          searchTags: tags,
+        }),
+      );
+    });
+
+    it('passes pagination parameters to opensearch client', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        currentPage: 2,
+        pageSize: 20,
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          currentPage: 2,
+          pageSize: 20,
+        }),
+      );
+    });
+
+    it('passes time range to opensearch client', async () => {
+      const timeRange = '90d';
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        timeRange,
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          timeRange,
+        }),
+      );
+    });
+
+    it('applies team_asc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'team_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [{ 'name.keyword': { order: 'asc' } }],
+        }),
+      );
+    });
+
+    it('applies team_desc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'team_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [{ 'name.keyword': { order: 'desc' } }],
+        }),
+      );
+    });
+
+    it('applies members_asc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'members_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              memberCount: {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies members_desc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'members_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              memberCount: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies events_asc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'events_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              eventCount: { order: 'asc' },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies events_desc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'events_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              eventCount: { order: 'desc' },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies total_speakers_asc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'total_speakers_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              totalSpeakerCount: {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies total_speakers_desc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'total_speakers_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              totalSpeakerCount: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies unique_speakers_all_roles_asc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'unique_speakers_all_roles_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              uniqueAllRolesCount: {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies unique_speakers_all_roles_desc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'unique_speakers_all_roles_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              uniqueAllRolesCount: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies unique_speakers_all_roles_percentage_asc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'unique_speakers_all_roles_percentage_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              uniqueAllRolesCountPercentage: {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies unique_speakers_all_roles_percentage_desc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'unique_speakers_all_roles_percentage_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              uniqueAllRolesCountPercentage: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies unique_speakers_key_personnel_asc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'unique_speakers_key_personnel_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              uniqueKeyPersonnelCount: {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies unique_speakers_key_personnel_desc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'unique_speakers_key_personnel_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              uniqueKeyPersonnelCount: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies unique_speakers_key_personnel_percentage_asc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'unique_speakers_key_personnel_percentage_asc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              uniqueKeyPersonnelCountPercentage: {
+                order: 'asc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('applies unique_speakers_key_personnel_percentage_desc sort correctly', async () => {
+      await getEngagement(opensearchClient, {
+        ...defaultOptions,
+        sort: 'unique_speakers_key_personnel_percentage_desc',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sort: [
+            {
+              uniqueKeyPersonnelCountPercentage: {
+                order: 'desc',
+              },
+            },
+          ],
+        }),
+      );
+    });
+
+    it('returns the result from opensearch client', async () => {
+      searchSpy.mockResolvedValue(listEngagementResponse);
+
+      const result = await getEngagement(opensearchClient, defaultOptions);
+
+      expect(result).toEqual(listEngagementResponse);
+    });
   });
 });
 

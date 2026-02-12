@@ -1,4 +1,5 @@
-module.exports.description = 'Add Material Generation, Clinical, and Computational Model to Output types';
+module.exports.description =
+  'Add Material Generation, Clinical, and Computational Model to Output types';
 
 module.exports.up = (migration) => {
   const newTypes = [

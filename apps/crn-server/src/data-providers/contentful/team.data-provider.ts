@@ -319,28 +319,53 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
 
   async update(id: string, update: TeamUpdateDataObject): Promise<void> {
     const environment = await this.getRestClient();
-
-    const cleanTools = getCleanTools(update.tools);
-
-    const publishedTools = await createAndPublishTools(environment, cleanTools);
-
     const team = await environment.getEntry(id);
 
-    const previousToolsLinks = team.fields.tools
-      ? team.fields.tools['en-US']
-      : [];
+    const { tools, ...updateFields } = update;
 
-    const newToolsLinks = publishedTools.map((tool) => ({
-      sys: {
-        type: 'Link',
-        linkType: 'Entry',
-        id: tool.sys.id,
-      },
-    }));
+    if (tools) {
+      const cleanTools = getCleanTools(tools);
+      const incomingToolIds = cleanTools
+        .map((tool: TeamTool) => tool.id)
+        .filter((toolId): toolId is string => !!toolId);
 
-    await patchAndPublish(team, {
-      tools: [...previousToolsLinks, ...newToolsLinks],
-    });
+      const currentToolsLinks = team.fields.tools
+        ? team.fields.tools['en-US']
+        : [];
+      const currentToolIds = currentToolsLinks.map(
+        (link: { sys: { id: string } }) => link.sys.id,
+      );
+
+      const toolsToDelete = currentToolIds.filter(
+        (toolId: string) => !incomingToolIds.includes(toolId),
+      );
+
+      await Promise.all(
+        toolsToDelete.map(async (toolId: string) => {
+          const entry = await environment.getEntry(toolId);
+          await entry.unpublish();
+          await entry.delete();
+        }),
+      );
+
+      const publishedTools = await createAndPublishTools(
+        environment,
+        cleanTools,
+      );
+
+      await patchAndPublish(team, {
+        ...updateFields,
+        tools: publishedTools.map((tool: { sys: { id: string } }) => ({
+          sys: {
+            type: 'Link',
+            linkType: 'Entry',
+            id: tool.sys.id,
+          },
+        })),
+      });
+    } else {
+      await patchAndPublish(team, updateFields);
+    }
   }
 }
 
@@ -491,10 +516,12 @@ export const parseContentfulGraphQlTeam = (
       }
 
       const { name, url, description } = tool;
+      const id = tool.sys?.id;
 
       return [
         ...teamTools,
         {
+          id,
           name,
           url,
           description: description ?? undefined,
@@ -751,9 +778,15 @@ export const parseContentfulGraphQlPublicTeam = (
 const createAndPublishTools = (environment: Environment, tools: TeamTool[]) =>
   Promise.all(
     tools.map(async (tool) => {
-      const entry = await environment.createEntry('externalTools', {
-        fields: addLocaleToFields(tool),
-      });
+      const { id, ...toolFields } = tool;
+      const entry = id
+        ? await environment.getEntry(id).then((e) => {
+            e.fields = addLocaleToFields(toolFields);
+            return e.update();
+          })
+        : await environment.createEntry('externalTools', {
+            fields: addLocaleToFields(toolFields),
+          });
       return entry.publish();
     }),
   );

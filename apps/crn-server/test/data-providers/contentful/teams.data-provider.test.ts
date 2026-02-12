@@ -2792,11 +2792,6 @@ describe('Teams data provider', () => {
         url: 'http://www.youtube.com/abcde',
       };
 
-      const toolMock = getEntry({});
-      toolMock.sys.id = 'new-tool';
-      environmentMock.createEntry.mockResolvedValueOnce(toolMock);
-      toolMock.publish = jest.fn().mockResolvedValueOnce(toolMock);
-
       const teamMock = getEntry({
         tools: {
           'en-US': [
@@ -2818,12 +2813,35 @@ describe('Teams data provider', () => {
         },
       });
       environmentMock.getEntry.mockResolvedValueOnce(teamMock);
+
+      const oldTool1Mock = getEntry({});
+      oldTool1Mock.unpublish = jest.fn().mockResolvedValueOnce(oldTool1Mock);
+      oldTool1Mock.delete = jest.fn().mockResolvedValueOnce(undefined);
+      environmentMock.getEntry.mockResolvedValueOnce(oldTool1Mock);
+
+      const oldTool2Mock = getEntry({});
+      oldTool2Mock.unpublish = jest.fn().mockResolvedValueOnce(oldTool2Mock);
+      oldTool2Mock.delete = jest.fn().mockResolvedValueOnce(undefined);
+      environmentMock.getEntry.mockResolvedValueOnce(oldTool2Mock);
+
+      const toolMock = getEntry({});
+      toolMock.sys.id = 'new-tool';
+      environmentMock.createEntry.mockResolvedValueOnce(toolMock);
+      toolMock.publish = jest.fn().mockResolvedValueOnce(toolMock);
+
       const teamMockUpdated = getEntry({});
       teamMock.patch = jest.fn().mockResolvedValueOnce(teamMockUpdated);
 
       await teamDataProviderMock.update(teamId, { tools: [tool] });
 
       expect(environmentMock.getEntry).toHaveBeenCalledWith(teamId);
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('old-tool-1');
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('old-tool-2');
+      expect(oldTool1Mock.unpublish).toHaveBeenCalled();
+      expect(oldTool1Mock.delete).toHaveBeenCalled();
+      expect(oldTool2Mock.unpublish).toHaveBeenCalled();
+      expect(oldTool2Mock.delete).toHaveBeenCalled();
+
       expect(environmentMock.createEntry).toHaveBeenCalledWith(
         'externalTools',
         {
@@ -2840,20 +2858,6 @@ describe('Teams data provider', () => {
           path: '/fields/tools',
           value: {
             'en-US': [
-              {
-                sys: {
-                  id: 'old-tool-1',
-                  linkType: 'Entry',
-                  type: 'Link',
-                },
-              },
-              {
-                sys: {
-                  id: 'old-tool-2',
-                  linkType: 'Entry',
-                  type: 'Link',
-                },
-              },
               {
                 sys: {
                   id: 'new-tool',
@@ -2877,15 +2881,15 @@ describe('Teams data provider', () => {
         description: ' ',
       };
 
+      const teamMock = getEntry({});
+      environmentMock.getEntry.mockResolvedValueOnce(teamMock);
+
       const toolMock = getEntry({});
       environmentMock.createEntry.mockResolvedValueOnce(toolMock);
       toolMock.publish = jest.fn().mockResolvedValueOnce(toolMock);
 
-      const teamMock = getEntry({});
       const teamMockUpdated = getEntry({});
       teamMock.patch = jest.fn().mockResolvedValueOnce(teamMockUpdated);
-
-      environmentMock.getEntry.mockResolvedValueOnce(teamMock);
 
       await teamDataProviderMock.update(teamId, { tools: [tool] });
 
@@ -2917,6 +2921,54 @@ describe('Teams data provider', () => {
         },
       ]);
       expect(teamMockUpdated.publish).toHaveBeenCalled();
+    });
+
+    test('Should update an existing tool when id is provided', async () => {
+      const teamId = 'team-id-1';
+      const tool = {
+        id: 'existing-tool-id',
+        name: 'Updated Name',
+        description: 'Updated Description',
+        url: 'https://updated.com',
+      };
+
+      const teamMock = getEntry({});
+      environmentMock.getEntry.mockResolvedValueOnce(teamMock);
+
+      const toolEntryMock = getEntry({});
+      toolEntryMock.sys.id = tool.id;
+      toolEntryMock.update = jest.fn().mockResolvedValueOnce(toolEntryMock);
+      toolEntryMock.publish = jest.fn().mockResolvedValueOnce(toolEntryMock);
+      environmentMock.getEntry.mockResolvedValueOnce(toolEntryMock);
+
+      const teamMockUpdated = getEntry({});
+      teamMock.patch = jest.fn().mockResolvedValueOnce(teamMockUpdated);
+
+      await teamDataProviderMock.update(teamId, { tools: [tool] });
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(teamId);
+      expect(environmentMock.getEntry).toHaveBeenCalledWith(tool.id);
+      expect(toolEntryMock.update).toHaveBeenCalled();
+      expect(toolEntryMock.publish).toHaveBeenCalled();
+      expect(environmentMock.createEntry).not.toHaveBeenCalled();
+
+      expect(teamMock.patch).toHaveBeenCalledWith([
+        {
+          op: 'add',
+          path: '/fields/tools',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  id: tool.id,
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+      ]);
     });
   });
 });

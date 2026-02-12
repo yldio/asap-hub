@@ -12,6 +12,7 @@ import {
   ListPreliminaryDataSharingResponse,
   UserProductivityResponse,
   TeamProductivityResponse,
+  EngagementPerformance,
 } from '@asap-hub/model';
 
 export const teamLeadershipResponse: AnalyticsTeamLeadershipResponse = {
@@ -270,6 +271,41 @@ export const listEngagementResponse: ListEngagementResponse = {
       uniqueKeyPersonnelCountPercentage: 33,
     },
   ],
+};
+
+export const engagementPerformance: EngagementPerformance = {
+  events: {
+    aboveAverageMax: -1,
+    aboveAverageMin: -1,
+    averageMax: 0,
+    averageMin: 0,
+    belowAverageMax: -1,
+    belowAverageMin: -1,
+  },
+  totalSpeakers: {
+    aboveAverageMax: -1,
+    aboveAverageMin: -1,
+    averageMax: 0,
+    averageMin: 0,
+    belowAverageMax: -1,
+    belowAverageMin: -1,
+  },
+  uniqueAllRoles: {
+    aboveAverageMax: -1,
+    aboveAverageMin: -1,
+    averageMax: 0,
+    averageMin: 0,
+    belowAverageMax: -1,
+    belowAverageMin: -1,
+  },
+  uniqueKeyPersonnel: {
+    aboveAverageMax: -1,
+    aboveAverageMin: -1,
+    averageMax: 0,
+    averageMin: 0,
+    belowAverageMax: -1,
+    belowAverageMin: -1,
+  },
 };
 
 export const preliminaryDataSharingItem: PreliminaryDataSharingDataObject = {

@@ -115,6 +115,7 @@ export const getEngagementPerformance = async (
     options,
   );
 };
+
 export const getMeetingRepAttendance = async (
   opensearchClient: OpensearchClient<MeetingRepAttendanceResponse>,
   { tags, currentPage, pageSize, timeRange }: MeetingRepAttendanceOptions,

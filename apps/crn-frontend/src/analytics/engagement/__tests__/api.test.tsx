@@ -3,16 +3,21 @@ import {
   ClientSearchResponse,
   createAlgoliaResponse,
 } from '@asap-hub/algolia';
-import { listEngagementResponse } from '@asap-hub/fixtures';
+import {
+  engagementPerformance,
+  listEngagementResponse,
+} from '@asap-hub/fixtures';
 import {
   EngagementResponse,
   MeetingRepAttendanceResponse,
+  TimeRangeOption,
 } from '@asap-hub/model';
 import nock from 'nock';
 
 import {
   EngagementListOptions,
   getEngagement,
+  getEngagementPerformance,
   getMeetingRepAttendance,
   MeetingRepAttendanceOptions,
 } from '../api';
@@ -24,7 +29,9 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-type Search = () => Promise<ClientSearchResponse<'analytics', 'engagement'>>;
+type Search = () => Promise<
+  ClientSearchResponse<'analytics', 'engagement' | 'engagement-performance'>
+>;
 
 const search: jest.MockedFunction<Search> = jest.fn();
 
@@ -443,6 +450,122 @@ describe('getEngagement', () => {
       const result = await getEngagement(opensearchClient, defaultOptions);
 
       expect(result).toEqual(listEngagementResponse);
+    });
+  });
+});
+
+describe('getEngagementPerformance', () => {
+  beforeEach(() => {
+    search.mockReset();
+    search.mockResolvedValue(
+      createAlgoliaResponse<'analytics', 'engagement-performance'>([
+        {
+          ...engagementPerformance,
+          objectID: 'engagement-performance-1',
+          __meta: { type: 'engagement-performance', range: '30d' },
+        },
+      ]),
+    );
+  });
+
+  it('returns successfully fetched engagement performance', async () => {
+    const result = await getEngagementPerformance(algoliaSearchClient, {
+      timeRange: '30d',
+    });
+
+    expect(result).toEqual(expect.objectContaining(engagementPerformance));
+  });
+
+  it.each`
+    range                        | timeRange
+    ${'Last 30 days'}            | ${'30d'}
+    ${'Last 90 days'}            | ${'90d'}
+    ${'This year (Jan-Today)'}   | ${'current-year'}
+    ${'Last 12 months'}          | ${'last-year'}
+    ${'Since Hub Launch (2020)'} | ${'all'}
+  `(
+    'returns engagement performance for $range',
+    async ({ timeRange }: { timeRange: TimeRangeOption }) => {
+      await getEngagementPerformance(algoliaSearchClient, {
+        timeRange,
+      });
+
+      expect(search).toHaveBeenCalledWith(
+        ['engagement-performance'],
+        '',
+        expect.objectContaining({
+          filters: `(__meta.range:"${timeRange}")`,
+        }),
+      );
+    },
+  );
+
+  describe('with OpensearchClient', () => {
+    let opensearchClient: OpensearchClient<typeof engagementPerformance>;
+    let searchSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      opensearchClient = new OpensearchClient(
+        'presenter-representation-performance',
+        'Bearer test-token',
+      );
+      searchSpy = jest.spyOn(opensearchClient, 'search').mockResolvedValue({
+        items: [engagementPerformance],
+        total: 1,
+      });
+    });
+
+    afterEach(() => {
+      searchSpy.mockRestore();
+    });
+
+    it('calls opensearch client with correct parameters', async () => {
+      await getEngagementPerformance(opensearchClient, {
+        timeRange: '30d',
+      });
+
+      expect(searchSpy).toHaveBeenCalledWith({
+        searchTags: [],
+        timeRange: '30d',
+        searchScope: 'flat',
+        sort: [],
+      });
+    });
+
+    it.each`
+      range                        | timeRange
+      ${'Last 30 days'}            | ${'30d'}
+      ${'Last 90 days'}            | ${'90d'}
+      ${'This year (Jan-Today)'}   | ${'current-year'}
+      ${'Last 12 months'}          | ${'last-year'}
+      ${'Since Hub Launch (2020)'} | ${'all'}
+    `(
+      'returns engagement performance for $range',
+      async ({ timeRange }: { timeRange: TimeRangeOption }) => {
+        await getEngagementPerformance(opensearchClient, {
+          timeRange,
+        });
+
+        expect(searchSpy).toHaveBeenCalledWith({
+          searchTags: [],
+          timeRange,
+          searchScope: 'flat',
+          sort: [],
+        });
+      },
+    );
+
+    it('returns undefined when opensearch returns empty items', async () => {
+      searchSpy.mockResolvedValue({
+        items: [],
+        total: 0,
+      });
+
+      const result = await getEngagementPerformance(opensearchClient, {
+        timeRange: '30d',
+      });
+
+      expect(result).toBeUndefined();
     });
   });
 });

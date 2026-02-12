@@ -330,6 +330,51 @@ describe('useOpensearchMetrics', () => {
     });
   });
 
+  describe('getMeetingRepAttendanceTagSuggestions', () => {
+    afterEach(() => {
+      mockOpensearchClient.mockReset();
+    });
+
+    it('creates OpensearchClient with correct index and calls getTagSuggestions', async () => {
+      const mockGetTagSuggestions = jest.fn().mockResolvedValue(['Team Beta']);
+      mockOpensearchClient.mockImplementation(
+        () =>
+          ({
+            getTagSuggestions: mockGetTagSuggestions,
+          }) as unknown as OpensearchClient<unknown>,
+      );
+
+      const { result } = renderHook(() => useOpensearchMetrics(), {
+        wrapper: ({ children }) => (
+          <RecoilRoot>
+            <Suspense fallback="loading">
+              <Auth0Provider user={{ id: 'user-id' }}>
+                <WhenReady>{children}</WhenReady>
+              </Auth0Provider>
+            </Suspense>
+          </RecoilRoot>
+        ),
+      });
+
+      await waitFor(() => {
+        expect(result.current).toBeTruthy();
+      });
+
+      const tagQuery = 'Team';
+
+      const suggestions =
+        await result.current.getMeetingRepAttendanceTagSuggestions(tagQuery);
+
+      expect(mockOpensearchClient).toHaveBeenCalledWith(
+        'attendance',
+        expect.any(String),
+      );
+
+      expect(mockGetTagSuggestions).toHaveBeenCalledWith(tagQuery, 'flat');
+      expect(suggestions).toEqual(['Team Beta']);
+    });
+  });
+
   describe('getPreliminaryDataSharing', () => {
     it('creates OpensearchClient with correct index and calls API method', async () => {
       const mockGetPreliminaryDataSharing = jest

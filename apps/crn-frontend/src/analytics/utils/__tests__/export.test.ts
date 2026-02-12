@@ -4,6 +4,7 @@ import {
   createAlgoliaResponse,
 } from '@asap-hub/algolia';
 import {
+  engagementPerformance,
   listEngagementResponse,
   performanceByDocumentType,
   teamCollaborationPerformance,
@@ -272,38 +273,7 @@ describe('downloadAnalyticsXLSX', () => {
       .mockResolvedValue(
         createAlgoliaResponse<'analytics', 'engagement-performance'>([
           {
-            events: {
-              aboveAverageMax: -1,
-              aboveAverageMin: -1,
-              averageMax: 0,
-              averageMin: 0,
-              belowAverageMax: -1,
-              belowAverageMin: -1,
-            },
-            totalSpeakers: {
-              aboveAverageMax: -1,
-              aboveAverageMin: -1,
-              averageMax: 0,
-              averageMin: 0,
-              belowAverageMax: -1,
-              belowAverageMin: -1,
-            },
-            uniqueAllRoles: {
-              aboveAverageMax: -1,
-              aboveAverageMin: -1,
-              averageMax: 0,
-              averageMin: 0,
-              belowAverageMax: -1,
-              belowAverageMin: -1,
-            },
-            uniqueKeyPersonnel: {
-              aboveAverageMax: -1,
-              aboveAverageMin: -1,
-              averageMax: 0,
-              averageMin: 0,
-              belowAverageMax: -1,
-              belowAverageMin: -1,
-            },
+            ...engagementPerformance,
             objectID: '1',
             __meta: {
               type: 'engagement-performance',
@@ -1739,14 +1709,12 @@ describe('downloadAnalyticsXLSX', () => {
       },
     ]);
 
-    // Verify worksheet was appended with correct sheet name
     expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
       'workbook',
       'worksheet',
       'Speaker Diversity',
     );
 
-    // Verify workbook was written
     expect(XLSX.writeFile).toHaveBeenCalledWith(
       'workbook',
       expect.stringContaining('crn-analytics-30d'),

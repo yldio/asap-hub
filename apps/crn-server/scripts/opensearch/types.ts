@@ -1,5 +1,6 @@
 import {
   AnalyticsTeamLeadershipDataObject,
+  EngagementDataObject,
   MeetingRepAttendanceDataObject,
   OSChampionDataObject,
   PreliminaryDataSharingDataObject,
@@ -44,6 +45,10 @@ export type WGLeadershipDataObject = LeadershipBaseDataObject &
     | 'workingGroupPreviousMemberCount'
   >;
 
+export type PresenterRepresentationDataObject = EngagementDataObject & {
+  isInactive: boolean;
+};
+
 export type MetricToObjectMap = {
   'os-champion': OSChampionDataObject;
   'preliminary-data-sharing': PreliminaryDataSharingDataObject;
@@ -56,6 +61,7 @@ export type MetricToObjectMap = {
   'team-collaboration': TeamCollaborationDataObject;
   'ig-leadership': IGLeadershipDataObject;
   'wg-leadership': WGLeadershipDataObject;
+  'presenter-representation': PresenterRepresentationDataObject;
 };
 
 export type MetricObject<T extends Metrics> = MetricToObjectMap[T];

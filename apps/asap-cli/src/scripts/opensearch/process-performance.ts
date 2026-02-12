@@ -12,6 +12,7 @@ import {
   teamProductivityPerformanceMapping,
   userCollaborationPerformanceMapping,
   teamCollaborationPerformanceMapping,
+  presenterRepresentationPerformanceMapping,
 } from './mappings';
 
 interface UserProductivityDocument {
@@ -150,6 +151,32 @@ interface TeamCollaborationPerformanceDocument {
   outputType: string;
 }
 
+interface PresenterRepresentationPerformanceDocument {
+  events: PerformanceMetrics;
+  totalSpeakers: PerformanceMetrics;
+  uniqueAllRoles: PerformanceMetrics;
+  uniqueKeyPersonnel: PerformanceMetrics;
+  timeRange: string;
+}
+
+interface PresenterRepresentationDocument {
+  eventCount: number;
+  totalSpeakerCount: number;
+  uniqueAllRolesCountPercentage: number;
+  uniqueKeyPersonnelCountPercentage: number;
+  timeRange: string;
+}
+
+interface PresenterRepresentationHit {
+  _source?: {
+    eventCount?: number;
+    totalSpeakerCount?: number;
+    uniqueAllRolesCountPercentage?: number;
+    uniqueKeyPersonnelCountPercentage?: number;
+    timeRange?: string;
+  };
+}
+
 export interface ProcessPerformanceOptions {
   awsRegion: string;
   environment: string;
@@ -160,13 +187,15 @@ export interface ProcessPerformanceOptions {
     | 'user-productivity'
     | 'team-productivity'
     | 'user-collaboration'
-    | 'team-collaboration';
+    | 'team-collaboration'
+    | 'presenter-representation';
 }
 
 const USER_PRODUCTIVITY_INDEX = 'user-productivity';
 const TEAM_PRODUCTIVITY_INDEX = 'team-productivity';
 const USER_COLLABORATION_INDEX = 'user-collaboration';
 const TEAM_COLLABORATION_INDEX = 'team-collaboration';
+const PRESENTER_REPRESENTATION_INDEX = 'presenter-representation';
 const MAX_RESULTS = 10000;
 
 /**
@@ -760,6 +789,129 @@ export const processTeamCollaborationPerformance = async (
 };
 
 /**
+ * Maps a search hit to a PresenterRepresentationDocument
+ */
+const mapPresenterRepresentationHitToDocument = (
+  hit: PresenterRepresentationHit,
+): PresenterRepresentationDocument => ({
+  eventCount: hit._source?.eventCount ?? 0,
+  totalSpeakerCount: hit._source?.totalSpeakerCount ?? 0,
+  uniqueAllRolesCountPercentage:
+    hit._source?.uniqueAllRolesCountPercentage ?? 0,
+  uniqueKeyPersonnelCountPercentage:
+    hit._source?.uniqueKeyPersonnelCountPercentage ?? 0,
+  timeRange: hit._source?.timeRange ?? '',
+});
+
+/**
+ * Retrieves all presenter representation documents for a given time range
+ */
+const getAllPresenterRepresentationDocuments = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+  timeRange: string,
+): Promise<PresenterRepresentationDocument[]> => {
+  try {
+    const response = await client.search({
+      index: PRESENTER_REPRESENTATION_INDEX,
+      body: {
+        query: {
+          bool: {
+            must: [{ term: { timeRange } }],
+          },
+        },
+        size: MAX_RESULTS,
+      },
+    });
+
+    const hits = response.body.hits?.hits || [];
+    return hits.map(mapPresenterRepresentationHitToDocument);
+  } catch (error) {
+    console.error('Failed to retrieve presenter representation documents', {
+      error,
+      timeRange,
+    });
+    throw error;
+  }
+};
+
+/**
+ * Processes presenter representation performance metrics for a single time range
+ */
+const processPresenterRepresentationMetricsForTimeRange = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+  timeRange: string,
+): Promise<PresenterRepresentationPerformanceDocument> => {
+  console.info(
+    `Processing presenter representation performance metrics for ${timeRange}`,
+  );
+
+  const documents = await getAllPresenterRepresentationDocuments(
+    client,
+    timeRange,
+  );
+
+  const events = getPerformanceMetrics(
+    documents.map((doc) => doc.eventCount),
+    true,
+  );
+
+  const totalSpeakers = getPerformanceMetrics(
+    documents.map((doc) => doc.totalSpeakerCount),
+    true,
+  );
+
+  const uniqueAllRoles = getPerformanceMetrics(
+    documents.map((doc) => doc.uniqueAllRolesCountPercentage),
+    true,
+  );
+
+  const uniqueKeyPersonnel = getPerformanceMetrics(
+    documents.map((doc) => doc.uniqueKeyPersonnelCountPercentage),
+    true,
+  );
+
+  console.info(
+    `Processed presenter representation performance metrics for ${timeRange} (${documents.length} teams)`,
+  );
+
+  return {
+    events,
+    totalSpeakers,
+    uniqueAllRoles,
+    uniqueKeyPersonnel,
+    timeRange,
+  };
+};
+
+/**
+ * Processes presenter representation performance metrics for all time ranges
+ */
+export const processPresenterRepresentationPerformance = async (
+  client: Awaited<ReturnType<typeof getClient>>,
+): Promise<PresenterRepresentationPerformanceDocument[]> => {
+  const results = await Promise.allSettled(
+    timeRanges.map((timeRange) =>
+      processPresenterRepresentationMetricsForTimeRange(client, timeRange),
+    ),
+  );
+
+  const performanceDocuments: PresenterRepresentationPerformanceDocument[] = [];
+
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      performanceDocuments.push(result.value);
+    } else {
+      console.error(
+        `Failed to process presenter representation performance metrics for ${timeRanges[index]}`,
+        { error: result.reason },
+      );
+    }
+  });
+
+  return performanceDocuments;
+};
+
+/**
  * Main entry point for processing productivity performance metrics
  */
 export const processPerformance = async ({
@@ -907,6 +1059,45 @@ export const processPerformance = async ({
       console.info('Successfully indexed team-collaboration-performance data');
     } catch (error) {
       console.error('Failed to process team-collaboration-performance', {
+        error,
+      });
+      throw error;
+    }
+  }
+
+  if (metric === 'all' || metric === 'presenter-representation') {
+    try {
+      console.info('Processing presenter-representation-performance...');
+
+      await indexOpensearchData<PresenterRepresentationPerformanceDocument>({
+        awsRegion,
+        stage: environment,
+        opensearchUsername,
+        opensearchPassword,
+        indexAlias: 'presenter-representation-performance',
+        getData: async () => {
+          const client = await getClient(
+            awsRegion,
+            environment,
+            opensearchUsername,
+            opensearchPassword,
+          );
+
+          const documents =
+            await processPresenterRepresentationPerformance(client);
+
+          return {
+            documents,
+            mapping: presenterRepresentationPerformanceMapping,
+          };
+        },
+      });
+
+      console.info(
+        'Successfully indexed presenter-representation-performance data',
+      );
+    } catch (error) {
+      console.error('Failed to process presenter-representation-performance', {
         error,
       });
       throw error;

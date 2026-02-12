@@ -318,6 +318,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   name="Status"
                   title="Status"
                   subtitle="(required)"
+                  description="Select the status that will be shown after sharing the compliance report."
                   options={manuscriptStatusOptions}
                   required
                   enabled={true}

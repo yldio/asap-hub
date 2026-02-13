@@ -951,7 +951,7 @@ __metadata:
     react: 18.3.1
     react-app-polyfill: 3.0.0
     react-dom: 18.3.1
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
     typescript: 4.9.5
     vite: 5.4.21
     webpack: 5.104.1
@@ -1020,7 +1020,7 @@ __metadata:
     react-error-boundary: 4.1.2
     react-hook-form: 7.53.2
     react-lottie: ^1.2.10
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
     react-test-renderer: 18.3.1
     recoil: 0.7.7
     stream: "npm:stream-browserify@3.0.0"
@@ -1185,7 +1185,7 @@ __metadata:
     parse-data-url: 3.0.0
     postmark: ^4.0.5
     pump: 3.0.3
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
     serverless: 3.38.0
     serverless-esbuild: ^1.50.1
     serverless-http: 2.7.0
@@ -1312,7 +1312,7 @@ __metadata:
     react: 18.3.1
     react-dom: 18.3.1
     react-error-boundary: 4.1.2
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
     react-test-renderer: 18.3.1
     react-titled: 1.1.1
     streamsaver: 2.0.6
@@ -1324,7 +1324,7 @@ __metadata:
     "@sentry/react": ^8.0.0
     core-js: 3.34.0
     react-error-boundary: 4.1.2
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
   languageName: unknown
   linkType: soft
 
@@ -1359,7 +1359,7 @@ __metadata:
     react: 18.3.1
     react-app-polyfill: 3.0.0
     react-dom: 18.3.1
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
     typescript: 4.9.5
     util: 0.12.5
     vite: 5.4.21
@@ -1409,14 +1409,14 @@ __metadata:
     playwright-core: ^1.40.0
     react: 18.3.1
     react-dom: 18.3.1
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
     react-test-renderer: 18.3.1
   peerDependencies:
     "@asap-hub/react-context": "workspace:*"
     "@emotion/react": ^11
     react: ^18.3.0
     react-dom: ^18.3.0
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
   languageName: unknown
   linkType: soft
 
@@ -1473,7 +1473,7 @@ __metadata:
     react-app-polyfill: 3.0.0
     react-dom: 18.3.1
     react-error-boundary: 4.1.2
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
     react-test-renderer: 18.3.1
     recoil: 0.7.7
     serialize-error: 7.0.1
@@ -1597,7 +1597,7 @@ __metadata:
     openai: ^4.49.0
     p-throttle: 4.1.1
     parse-data-url: 3.0.0
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
     serverless: 3.38.0
     serverless-esbuild: ^1.50.1
     serverless-http: 2.7.0
@@ -1736,7 +1736,7 @@ __metadata:
     react-dom: 18.3.1
     react-hook-form: 7.53.2
     react-lottie: ^1.2.10
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
     react-select: 5.8.0
     react-test-renderer: 18.3.1
     regenerator-runtime: 0.14.1
@@ -1759,7 +1759,7 @@ __metadata:
     "@asap-hub/react-context": "*"
     react: ^18.3.0
     react-dom: ^18.3.0
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
   languageName: unknown
   linkType: soft
 
@@ -1797,12 +1797,12 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": 7.28.6
     "@types/qs": 6.14.0
-    qs: 6.14.2
-    react-router-dom: 6.30.3
-    typesafe-routes: 9.0.1
+    qs: 6.14.1
+    react-router: 7.13.0
+    typesafe-routes: 10.0.6
     typescript: 4.9.5
   peerDependencies:
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
   languageName: unknown
   linkType: soft
 
@@ -1942,7 +1942,7 @@ __metadata:
     eslint-plugin-storybook: ^9.1.13
     react: 18.3.1
     react-dom: 18.3.1
-    react-router-dom: 6.30.3
+    react-router: 7.13.0
     storybook: ^9.1.13
     storybook-addon-designs: 6.3.1
     typescript: 4.9.5
@@ -11929,13 +11929,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/router@npm:1.23.2":
-  version: 1.23.2
-  resolution: "@remix-run/router@npm:1.23.2"
-  checksum: 0f046e480372be17d14f88684435cd6af4c05ce842bd6094a549605dd5b8f0ab1e9a1e9d9e2faec9e4d5cd370d02179b456189192f06415e461bce44c28295d8
-  languageName: node
-  linkType: hard
-
 "@repeaterjs/repeater@npm:3.0.4":
   version: 3.0.4
   resolution: "@repeaterjs/repeater@npm:3.0.4"
@@ -20399,6 +20392,13 @@ __metadata:
   version: 0.4.2
   resolution: "cookie@npm:0.4.2"
   checksum: a00833c998bedf8e787b4c342defe5fa419abd96b32f4464f718b91022586b8f1bafbddd499288e75c037642493c83083da426c6a9080d309e3bd90fd11baa9b
+  languageName: node
+  linkType: hard
+
+"cookie@npm:^1.0.1":
+  version: 1.1.1
+  resolution: "cookie@npm:1.1.1"
+  checksum: e40c4ff817a73ec0a41413654ca9a71e6207bd6e511151bb1d307aef2903eb59771127a85474afe0e12a8982804f7b03cce0bda798b55c306aca9608b4b9acab
   languageName: node
   linkType: hard
 
@@ -35010,27 +35010,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.30.3":
-  version: 6.30.3
-  resolution: "react-router-dom@npm:6.30.3"
+"react-router@npm:7.13.0":
+  version: 7.13.0
+  resolution: "react-router@npm:7.13.0"
   dependencies:
-    "@remix-run/router": 1.23.2
-    react-router: 6.30.3
+    cookie: ^1.0.1
+    set-cookie-parser: ^2.6.0
   peerDependencies:
-    react: ">=16.8"
-    react-dom: ">=16.8"
-  checksum: 1f43ce47dd8cfc1bc728ea7b0cf10136416416491136726cda500aaea74da3c5dbcfcec24781bc390f6e8a4383ff72b8331b53887485e79dcb75387ffe5508c3
-  languageName: node
-  linkType: hard
-
-"react-router@npm:6.30.3":
-  version: 6.30.3
-  resolution: "react-router@npm:6.30.3"
-  dependencies:
-    "@remix-run/router": 1.23.2
-  peerDependencies:
-    react: ">=16.8"
-  checksum: b61e1a456b72ed35907dadc261d8572a65dd4caae008f7a85a6b09b437b1a4b90034fc7df0e418f1f01b73c2b8a8f6755d7fc0108b1ec3f2ed37f03a1e248513
+    react: ">=18"
+    react-dom: ">=18"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+  checksum: 3d6274556392fe83c6b30d8c761a45079613ba7ecb2c547031d37aea914b576c1fdea6f0a4bf72c4b2c526530510e7aa69b21f5290f08d52212bb239d72d6a50
   languageName: node
   linkType: hard
 
@@ -36919,6 +36911,13 @@ __metadata:
   version: 2.0.0
   resolution: "set-blocking@npm:2.0.0"
   checksum: 6e65a05f7cf7ebdf8b7c75b101e18c0b7e3dff4940d480efed8aad3a36a4005140b660fa1d804cb8bce911cac290441dc728084a30504d3516ac2ff7ad607b02
+  languageName: node
+  linkType: hard
+
+"set-cookie-parser@npm:^2.6.0":
+  version: 2.7.2
+  resolution: "set-cookie-parser@npm:2.7.2"
+  checksum: 9e1b09e7184079c81f9ba4d2db3222854adf4e6e4fe73982388367649386a93e7f9b979333ddeba22610706def93c2478f34c3324fe223528cb2c4c879a2c2d3
   languageName: node
   linkType: hard
 
@@ -39508,18 +39507,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typesafe-routes@npm:9.0.1":
-  version: 9.0.1
-  resolution: "typesafe-routes@npm:9.0.1"
+"typesafe-routes@npm:10.0.6":
+  version: 10.0.6
+  resolution: "typesafe-routes@npm:10.0.6"
   dependencies:
     "@types/qs": ^6.9.7
-    qs: ^6.10.3
+    qs: ^6.11.0
   peerDependencies:
-    typescript: ^4.1.0
+    typescript: ">=4.1.0"
   peerDependenciesMeta:
     react-router-dom:
       optional: true
-  checksum: 0e3a4b57213a9282d9576d6f35f08b34fe3164dffd166b1147521c3bad941965499154e72f758ea69e5122bdbc2502f561391f6f3077e1eb1c4c42ae84a061c3
+  checksum: 2e8160e3694507dcc8b1bf28d9a01e6ea6b9708587a0a1261a70af858ee3a6789bb0b53c39ad97029b1595a2e51104ed913d72e6537fd9b95fb72edf91cebfd7
   languageName: node
   linkType: hard
 

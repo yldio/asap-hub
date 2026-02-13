@@ -198,6 +198,7 @@ describe('useSearch', () => {
     });
   });
 
+  /* jscpd:ignore-start */
   describe('Tag Filters', () => {
     it('defaults to empty', () => {
       const { result } = renderHook(() => useSearch(), {
@@ -258,4 +259,5 @@ describe('useSearch', () => {
       expect(result.current.usePaginationParams.currentPage).toBe(0);
     });
   });
+  /* jscpd:ignore-end */
 });

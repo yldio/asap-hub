@@ -67,6 +67,7 @@ const nameHeaderStyles = css({
 const editPersonalInfoStyles = css({
   gridArea: 'edit-personal-info',
   justifySelf: 'end',
+  transform: 'translateX(2px)',
 });
 
 const personalInfoStyles = css({
@@ -81,6 +82,7 @@ const personalInfoStyles = css({
 
 const editContactStyles = css({
   gridArea: 'edit-contact-info',
+  transform: 'translateX(2px)',
 });
 const contactStyles = css({
   gridArea: 'contact',
@@ -240,7 +242,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           }
         >
           <div css={relativeAnchor}>
-            <div css={[containerStyles]}>
+            <div css={containerStyles}>
               <section css={personalInfoStyles}>
                 <div>
                   <div css={nameHeaderStyles}>
@@ -361,7 +363,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                   </Link>
                 </div>
               )}
-              <div css={[socialIconStyles]}>
+              <div css={socialIconStyles}>
                 <SocialIcons {...social} />
               </div>
             </div>

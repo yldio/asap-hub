@@ -31,7 +31,7 @@ const relativeAnchorStyles = css({
 const editButtonStyles = css({
   position: 'absolute',
   top: 0,
-  left: `calc(100% + ${rem(CARDS_GAP)})`,
+  left: `calc(100% + ${rem(CARDS_GAP)}  - ${rem(6.5)})`,
 
   [`@media (max-width: ${smallDesktopScreen.width - 1}px)`]: {
     top: 'unset',

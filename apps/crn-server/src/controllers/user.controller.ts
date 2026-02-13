@@ -126,7 +126,9 @@ export default class UserController {
       teams: user.teams,
       alumniSinceDate: user.alumniSinceDate,
       avatarUrl: user.avatarUrl,
+      biography: user.biography,
       city: user.city,
+      contactEmail: user.contactEmail,
       country: user.country,
       dismissedGettingStarted: !!user.dismissedGettingStarted,
       email: user.email,
@@ -140,6 +142,7 @@ export default class UserController {
       jobTitle: user.jobTitle,
       labs: user.labs,
       onboarded: typeof user.onboarded === 'boolean' ? user.onboarded : true,
+      orcid: user.orcid,
       role: user.role,
       degree: user.degree,
 

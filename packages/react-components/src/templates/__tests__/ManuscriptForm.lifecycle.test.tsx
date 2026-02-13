@@ -6,7 +6,7 @@ import {
 import { cleanup, render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import ManuscriptForm from '../ManuscriptForm';
 
 jest.setTimeout(30_000);

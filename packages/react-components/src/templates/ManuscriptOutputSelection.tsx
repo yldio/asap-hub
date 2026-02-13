@@ -2,7 +2,7 @@ import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, ReactElement, ReactNode } from 'react';
 import Lottie from 'react-lottie';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { components } from 'react-select';
 import {
   Button,

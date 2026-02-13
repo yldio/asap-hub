@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { Route, Routes } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { Route, Routes } from 'react-router';
+import { StaticRouter } from 'react-router';
 import { render } from '@testing-library/react';
 import {
   createCalendarResponse,

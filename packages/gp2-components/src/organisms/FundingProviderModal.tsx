@@ -1,7 +1,7 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { FormSection, LabeledTextArea } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import EditUserModal from './EditUserModal';
 
 type FundingProviderModalProps = Pick<gp2Model.UserResponse, 'fundingStreams'> &

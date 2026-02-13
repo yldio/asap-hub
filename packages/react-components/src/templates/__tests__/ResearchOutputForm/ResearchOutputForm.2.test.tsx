@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, useEffect } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import {
@@ -97,7 +97,7 @@ describe('on submit', () => {
     },
   ) => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <LocationCapture />
         <ResearchOutputForm
           {...defaultProps}
@@ -215,7 +215,7 @@ describe('on submit', () => {
     const documentType = 'Bioinformatics' as const;
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <LocationCapture />
         <ResearchOutputForm
           {...defaultProps}

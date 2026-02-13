@@ -1,5 +1,5 @@
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import ContentPage from '../ContentPage';
 
@@ -11,7 +11,7 @@ const boilerplateProps = {
 
 it('renders the content and the title', () => {
   const { getByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ContentPage {...boilerplateProps} />
     </MemoryRouter>,
   );
@@ -29,7 +29,7 @@ it('scrolls to the hash when it is present in the URL', async () => {
   document.body.appendChild(targetElement);
 
   render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/page#section']}>
+    <MemoryRouter initialEntries={['/page#section']}>
       <ContentPage {...boilerplateProps} />
     </MemoryRouter>,
   );

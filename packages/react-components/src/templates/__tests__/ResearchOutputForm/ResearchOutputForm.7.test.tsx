@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import {
   createResearchOutputResponse,
@@ -96,7 +96,7 @@ describe('on submit', () => {
     const researchTags = [{ id: '1', name: 'research tag 1' }];
 
     await render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}

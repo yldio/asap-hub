@@ -1,7 +1,7 @@
 import { WorkingGroupsPage } from '@asap-hub/gp2-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { lazy, useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router';
 import Frame from '../Frame';
 
 const { workingGroups } = gp2Routing;

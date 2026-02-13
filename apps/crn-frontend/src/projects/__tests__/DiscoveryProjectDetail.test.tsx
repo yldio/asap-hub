@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, screen, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
@@ -77,7 +77,7 @@ const renderDiscoveryProjectDetail = async (projectId: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[path]}>
+            <MemoryRouter initialEntries={[path]}>
               <Routes>
                 <Route
                   path={`${projects.template}/discovery/:projectId/*`}

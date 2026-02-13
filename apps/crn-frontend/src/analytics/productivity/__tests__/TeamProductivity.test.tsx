@@ -7,7 +7,7 @@ import { performanceByDocumentType } from '@asap-hub/fixtures';
 import { ListTeamProductivityResponse } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { getTeamProductivity, getTeamProductivityPerformance } from '../api';
@@ -82,7 +82,7 @@ const renderPage = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/analytics']}>
+            <MemoryRouter initialEntries={['/analytics']}>
               <TeamProductivity
                 sort="team_asc"
                 setSort={mockSetSort}

@@ -6,7 +6,7 @@ import {
   FormSection,
 } from '@asap-hub/react-components';
 import { ComponentProps, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { ContactSupport, UserPositions } from '../molecules';
 import EditUserModal from './EditUserModal';
 import UserExternalProfilesForm, { baseUrls } from './UserExternalProfilesForm';

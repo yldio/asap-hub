@@ -1,11 +1,11 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import EditUserModal from '../EditUserModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
+  render(<MemoryRouter>{children}</MemoryRouter>);
 
 describe('EditUserModal', () => {
   const defaultProps = {

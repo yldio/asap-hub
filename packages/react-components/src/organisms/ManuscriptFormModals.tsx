@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import Lottie from 'react-lottie';
 import { Button, crossIcon, Headline3, Modal, Paragraph } from '..';
 import { mobileScreen, rem } from '../pixels';

@@ -1,14 +1,12 @@
 import { ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { render, fireEvent } from '@testing-library/react';
 
 import Anchor from '../Anchor';
 
 // Wrapper component with future flags for RTL's wrapper option
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
-  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-    {children}
-  </MemoryRouter>
+  <MemoryRouter>{children}</MemoryRouter>
 );
 
 it('renders the text in an anchor', () => {
@@ -101,7 +99,7 @@ describe.each`
 describe('for an internal link with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const { getByRole } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+      <MemoryRouter initialEntries={['/']}>
         <Anchor
           href={`${window.location.protocol}//${window.location.host}/page?query#fragment`}
         >
@@ -117,7 +115,7 @@ describe('for an internal link with a router', () => {
     // Note: Smooth scrolling is now handled by the useScrollToHash hook in Layout,
     // not by the Anchor component. This test verifies navigation works correctly.
     const { getByRole } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+      <MemoryRouter initialEntries={['/']}>
         <Anchor href={`/#fragment`}>text</Anchor>
         <main id="fragment">text</main>
       </MemoryRouter>,

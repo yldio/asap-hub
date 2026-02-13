@@ -12,7 +12,7 @@ import {
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { useFlags } from '@asap-hub/react-context';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 

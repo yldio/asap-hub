@@ -11,7 +11,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
@@ -105,7 +105,6 @@ const renderPage = async (
       },
     ],
     {
-      future: { v7_relativeSplatPath: true },
       initialEntries: [initialPath],
     },
   );
@@ -119,7 +118,7 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <RouterProvider router={router} future={{ v7_startTransition: true }} />
+            <RouterProvider router={router} />
           </WhenReady>
         </Auth0Provider>
       </Suspense>

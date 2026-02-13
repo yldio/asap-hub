@@ -2,7 +2,7 @@ import { Frame, SearchFrame } from '@asap-hub/frontend-utils';
 import { NetworkPage, Paragraph } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router';
 import { useSearch } from '../hooks';
 import { useResearchThemes } from '../shared-state/shared-research';
 import InterestGroupProfile from './interest-groups/InterestGroupProfile';

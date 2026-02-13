@@ -1,7 +1,7 @@
 import { Loading } from '@asap-hub/react-components';
 import { useAuth0GP2 } from '@asap-hub/react-context';
 import { FC, ReactNode, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 interface CheckAuthProps {
   children: (state: { isAuthenticated: boolean }) => ReactNode;

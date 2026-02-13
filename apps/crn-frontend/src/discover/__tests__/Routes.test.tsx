@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router';
 import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import {
@@ -32,7 +32,7 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[{ pathname, search: query }]}>
+            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
               <RouterRoutes>
                 <Route path={`${discover.template}/*`} element={<Routes />} />
               </RouterRoutes>

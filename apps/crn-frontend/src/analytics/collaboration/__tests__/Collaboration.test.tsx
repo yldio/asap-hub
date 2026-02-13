@@ -29,7 +29,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import React, { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { OpensearchClient } from '../../utils/opensearch';
@@ -212,7 +212,7 @@ const renderPage = async (metric: string = 'user', type?: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[path]}>
+            <MemoryRouter initialEntries={[path]}>
               <Routes>
                 <Route
                   path="/analytics/collaboration/:metric/:type?"

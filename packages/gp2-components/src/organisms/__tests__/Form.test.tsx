@@ -9,8 +9,8 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, ReactNode } from 'react';
 import { ValidationErrorResponse } from '@asap-hub/model';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, useLocation } from 'react-router';
+import { StaticRouter } from 'react-router';
 import {
   Anchor,
   Button,
@@ -26,7 +26,7 @@ const renderWithProviders = (
   { initialEntries = ['/'] } = {},
 ) =>
   render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={initialEntries}>
+    <MemoryRouter initialEntries={initialEntries}>
       <NavigationBlockerProvider>{children}</NavigationBlockerProvider>
     </MemoryRouter>,
   );

@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { InnerToastContext } from '@asap-hub/react-context';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
@@ -75,7 +75,7 @@ describe('form buttons', () => {
   ) => {
     render(
       <InnerToastContext.Provider value={jest.fn()}>
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ResearchOutputForm
             {...defaultProps}
             versionAction={versionAction}

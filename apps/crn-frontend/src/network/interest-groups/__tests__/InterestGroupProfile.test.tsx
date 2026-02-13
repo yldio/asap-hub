@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -44,7 +44,7 @@ const renderGroupProfile = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            <MemoryRouter
               initialEntries={[
                 network({})
                   .interestGroups({})
@@ -210,7 +210,7 @@ it('renders the not-found page when the interest group is not found', async () =
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            <MemoryRouter
               initialEntries={[
                 network({})
                   .interestGroups({})

@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
@@ -33,7 +33,7 @@ const wrapper =
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[step]}>{children}</MemoryRouter>
+            <MemoryRouter initialEntries={[step]}>{children}</MemoryRouter>
           </WhenReady>
         </Auth0Provider>
       </Suspense>

@@ -1,5 +1,5 @@
 import { FC, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { format } from 'date-fns';
 import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import { analytics } from '@asap-hub/routing';

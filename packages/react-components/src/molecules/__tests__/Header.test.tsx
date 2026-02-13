@@ -1,4 +1,4 @@
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
@@ -12,7 +12,7 @@ it('renders an CRN logo', () => {
 
 it('links back to the home page', async () => {
   const { getByTitle, container } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/page']}>
+    <MemoryRouter initialEntries={['/page']}>
       <Routes>
         <Route path="/page" element={<Header />} />
         <Route path="/" element={<>home</>} />

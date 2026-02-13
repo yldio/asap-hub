@@ -1,8 +1,8 @@
 import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
-import { MemoryRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router';
+import { MemoryRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
 import ManuscriptForm from '../ManuscriptForm';
 
@@ -483,7 +483,7 @@ describe('ManuscriptForm URL Requirement', () => {
     'should set URL as $label for $lifecycle lifecycle - last',
     async ({ lifecycle, label }) => {
       const container = render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm {...defaultProps} lifecycle={lifecycle} />
           </Suspense>
@@ -511,7 +511,7 @@ describe('ManuscriptForm URL Requirement', () => {
     'should set URL as $label when selecting $lifecycle lifecycle',
     async ({ lifecycle, label }) => {
       const container = render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...defaultProps}

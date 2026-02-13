@@ -12,7 +12,7 @@ import {
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router';
 
 import { useEvents } from '../../events/state';
 import {

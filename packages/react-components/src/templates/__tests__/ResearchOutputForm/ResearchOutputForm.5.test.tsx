@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
@@ -66,8 +66,7 @@ describe('on submit', () => {
       const documentType = 'Bioinformatics' as const;
 
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-        >
+        <MemoryRouter>
           <ResearchOutputForm
             {...defaultProps}
             researchOutputData={initialResearchOutputData}
@@ -107,7 +106,7 @@ describe('on submit', () => {
     const documentType = 'Article' as const;
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      <MemoryRouter
         initialEntries={[
           network({}).teams({}).team({ teamId: 'TEAMID' }).createOutput({
             outputDocumentType: 'article',

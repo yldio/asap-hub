@@ -6,7 +6,7 @@ import {
   screen,
 } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { DiscoverResponse } from '@asap-hub/model';
 
@@ -39,7 +39,7 @@ const renderPage = async (user: Partial<User>) => {
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/about']}>
+            <MemoryRouter initialEntries={['/about']}>
               <Routes>
                 <Route path="/about/*" element={<About />} />
               </Routes>

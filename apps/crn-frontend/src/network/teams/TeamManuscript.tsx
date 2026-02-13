@@ -9,7 +9,7 @@ import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { ManuscriptHeader, usePushFromHere } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import { useSetRecoilState } from 'recoil';
 import {
   useAuthorSuggestions,

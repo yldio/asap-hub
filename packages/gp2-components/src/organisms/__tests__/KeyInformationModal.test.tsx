@@ -10,7 +10,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import KeyInformationModal from '../KeyInformationModal';
 
 describe('KeyInformationModal', () => {
@@ -33,7 +33,7 @@ describe('KeyInformationModal', () => {
     overrides: Partial<KeyInformationModalProps> = {},
   ) =>
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <KeyInformationModal {...defaultProps} {...overrides} />
       </MemoryRouter>,
     );

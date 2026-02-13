@@ -1,5 +1,5 @@
-import { StaticRouter } from 'react-router-dom/server';
-import { MemoryRouter } from 'react-router-dom';
+import { StaticRouter } from 'react-router';
+import { MemoryRouter } from 'react-router';
 import { render } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
@@ -8,7 +8,7 @@ import MainNavigation from '../MainNavigation';
 
 it('renders the navigation items', () => {
   const { getAllByRole } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <MainNavigation userOnboarded={true} />
     </MemoryRouter>,
   );
@@ -31,7 +31,7 @@ it('renders the navigation items', () => {
 
 it('renders the analytics menu item when allowed', () => {
   const { getByTitle } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <MainNavigation userOnboarded={true} canViewAnalytics={true} />
     </MemoryRouter>,
   );
@@ -85,7 +85,7 @@ describe('a navigation item', () => {
 
   it('is disabled when the current user is not onboarded', () => {
     const { getAllByRole } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <MainNavigation userOnboarded={false} />
       </MemoryRouter>,
     );

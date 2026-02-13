@@ -3,7 +3,7 @@ import {
   ForgotPasswordPage,
   PasswordResetEmailSentPage,
 } from '@asap-hub/react-components';
-import { useNavigate, Routes, Route, Navigate } from 'react-router-dom';
+import { useNavigate, Routes, Route, Navigate } from 'react-router';
 import {
   extractErrorMessage,
   WebAuthError,

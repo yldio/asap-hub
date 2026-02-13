@@ -11,7 +11,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { getResearchOutputs } from '../api';
@@ -31,7 +31,7 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[{ pathname, search: query }]}>
+            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
               <Routes>
                 <Route
                   path="/shared-research/*"

@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import {
   createResearchOutputResponse,
@@ -55,7 +55,7 @@ describe('on submit', () => {
     const documentType = 'Dataset';
     const type = 'Spectroscopy';
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -98,7 +98,7 @@ describe('on submit', () => {
     const researchTags = [researchTagMethodResponse];
     const documentType = 'Dataset';
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{

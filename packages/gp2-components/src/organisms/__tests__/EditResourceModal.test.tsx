@@ -3,7 +3,7 @@ import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import EditResourceModal from '../EditResourceModal';
 
 const { resource: resourceRoute } = gp2Routing;
@@ -18,7 +18,7 @@ const renderEditResourceModal = ({
   updateResources = jest.fn(),
 }: renderEditResourceModalProps = {}) => {
   render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[resourceRoute({ resourceIndex }).$]}>
+    <MemoryRouter initialEntries={[resourceRoute({ resourceIndex }).$]}>
       <Routes>
         <Route
           path={resourceRoute.template}

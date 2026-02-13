@@ -4,7 +4,7 @@ import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
 
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import Frame from './Frame';
 import { useUserById } from './users/state';
 

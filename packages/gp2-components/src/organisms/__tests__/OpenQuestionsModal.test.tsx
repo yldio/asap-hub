@@ -2,7 +2,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import OpenQuestionsModal from '../OpenQuestionsModal';
 
 describe('OpenQuestionsModal', () => {
@@ -17,7 +17,7 @@ describe('OpenQuestionsModal', () => {
     overrides: Partial<OpenQuestionsModalProps> = {},
   ) =>
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <OpenQuestionsModal {...defaultProps} {...overrides} />
       </MemoryRouter>,
     );

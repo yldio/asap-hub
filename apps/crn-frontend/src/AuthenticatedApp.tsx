@@ -14,7 +14,7 @@ import {
   tags,
 } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 
 import CheckOnboarded from './auth/CheckOnboarded';

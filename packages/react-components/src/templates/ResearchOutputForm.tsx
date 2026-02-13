@@ -13,7 +13,7 @@ import { ResearchOutputPermissions } from '@asap-hub/react-context';
 import { network, sharedResearch } from '@asap-hub/routing';
 import equal from 'fast-deep-equal';
 import React, { ComponentProps, useEffect, useState } from 'react';
-import { useMatch, useNavigate } from 'react-router-dom';
+import { useMatch, useNavigate } from 'react-router';
 
 import { OptionsType } from '../select';
 

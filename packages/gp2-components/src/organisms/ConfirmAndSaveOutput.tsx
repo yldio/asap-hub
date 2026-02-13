@@ -2,7 +2,7 @@ import { ReactNode, useState } from 'react';
 import { ConfirmModal as Modal, Link, mail } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/model';
 import { useNotificationContext } from '@asap-hub/react-context';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { EntityMappper } from '../templates/CreateOutputPage';
 import { GetWrappedOnSave } from './Form';

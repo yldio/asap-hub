@@ -8,7 +8,7 @@ import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { PreprintComplianceOpensearchResponse } from '@asap-hub/model';
 
@@ -101,7 +101,6 @@ const renderPage = async (path: string) => {
       },
     ],
     {
-      future: { v7_relativeSplatPath: true },
       initialEntries: [path],
     },
   );
@@ -111,10 +110,7 @@ const renderPage = async (path: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <RouterProvider
-              router={router}
-              future={{ v7_startTransition: true }}
-            />
+            <RouterProvider router={router} />
           </WhenReady>
         </Auth0Provider>
       </Suspense>
@@ -214,7 +210,6 @@ describe('OpenScience', () => {
         },
       ],
       {
-        future: { v7_relativeSplatPath: true },
         initialEntries: [
           analytics({})
             .openScience({})
@@ -228,10 +223,7 @@ describe('OpenScience', () => {
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
-              <RouterProvider
-                router={router}
-                future={{ v7_startTransition: true }}
-              />
+              <RouterProvider router={router} />
             </WhenReady>
           </Auth0Provider>
         </Suspense>

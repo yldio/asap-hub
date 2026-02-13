@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { mobileQuery } from '../layout';
 import { ContactSupport } from '../molecules';
 import EditUserModal from './EditUserModal';

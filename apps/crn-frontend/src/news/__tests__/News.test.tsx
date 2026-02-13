@@ -1,7 +1,7 @@
 import { RecoilRoot } from 'recoil';
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { NewsResponse } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 
@@ -32,7 +32,7 @@ const renderPage = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            <MemoryRouter
               initialEntries={[
                 news({}).article({ articleId: newsOrEvent.id }).$,
               ]}

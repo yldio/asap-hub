@@ -1,6 +1,6 @@
 import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import {
   render,
   waitFor,
@@ -78,7 +78,7 @@ const renderWithWrapper = (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            <MemoryRouter
               initialEntries={[
                 network({}).teams({}).team({ teamId: id }).workspace({}).$,
               ]}
@@ -594,7 +594,7 @@ describe('the edit tool dialog', () => {
         <Suspense fallback="loading">
           <Auth0Provider user={user as never}>
             <WhenReady>
-              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+              <MemoryRouter
                 initialEntries={[
                   network({})
                     .teams({})

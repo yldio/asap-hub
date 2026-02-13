@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { createWorkingGroupListResponse } from '@asap-hub/fixtures';
 import { WorkingGroupListResponse } from '@asap-hub/model';
 import {
@@ -43,7 +43,7 @@ const renderWorkingGroupList = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/working-groups/']}>
+            <MemoryRouter initialEntries={['/working-groups/']}>
               <Routes>
                 <Route
                   path="/working-groups"

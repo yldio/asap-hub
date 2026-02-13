@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { OnboardingPage } from '..';
 
 describe('OnboardingPage', () => {
@@ -10,7 +10,7 @@ describe('OnboardingPage', () => {
     isContinueEnabled: false,
   };
   const renderWithRouter = (children: ReactNode) =>
-    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
+    render(<MemoryRouter>{children}</MemoryRouter>);
 
   it('renders the header', () => {
     renderWithRouter(<OnboardingPage {...defaultProps} />);

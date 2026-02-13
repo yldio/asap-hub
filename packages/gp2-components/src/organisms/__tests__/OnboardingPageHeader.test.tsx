@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import OnboardingPageHeader from '../OnboardingPageHeader';
 
 const renderWithRouter = (children: ReactNode) =>
-  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
+  render(<MemoryRouter>{children}</MemoryRouter>);
 
 describe('OnboardingPageHeader', () => {
   it('renders the header title', () => {

@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/react-context';
 import { dashboard as dashboardRoute } from '@asap-hub/routing';
 import { FC, useState } from 'react';
-import { useMatch } from 'react-router-dom';
+import { useMatch } from 'react-router';
 
 import { usePrefetchCalendars } from '../events/calendar/state';
 import { CARD_VIEW_PAGE_SIZE } from '../hooks';

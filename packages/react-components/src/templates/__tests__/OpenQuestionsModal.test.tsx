@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { createUserResponse } from '@asap-hub/fixtures';
 
 import OpenQuestionsModal from '../OpenQuestionsModal';
@@ -12,7 +12,7 @@ const props: ComponentProps<typeof OpenQuestionsModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>{children}</MemoryRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 it('renders the title', () => {
   const { getByText } = renderModal(<OpenQuestionsModal {...props} />);
   expect(getByText('Open Questions', { selector: 'h3' })).toBeVisible();

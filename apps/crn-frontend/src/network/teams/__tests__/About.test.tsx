@@ -13,7 +13,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { network } from '@asap-hub/routing';
 
@@ -46,7 +46,7 @@ const renderTeamAbout = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            <MemoryRouter
               initialEntries={[
                 network({}).teams({}).team({ teamId }).about({}).$,
               ]}

@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router';
 import { useState } from 'react';
 import { NavigationBlockerProvider } from '../NavigationBlockerContext';
 import { useNavigationWarning } from '../useNavigationWarning';
@@ -50,7 +50,7 @@ describe('useNavigationWarning', () => {
     initialEntries = ['/first', '/test'],
   ) =>
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={initialEntries} initialIndex={1}>
+      <MemoryRouter initialEntries={initialEntries} initialIndex={1}>
         <NavigationBlockerProvider>{ui}</NavigationBlockerProvider>
       </MemoryRouter>,
     );

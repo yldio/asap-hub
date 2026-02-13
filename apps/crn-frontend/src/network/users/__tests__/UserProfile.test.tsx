@@ -18,7 +18,7 @@ import imageCompression from 'browser-image-compression';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { getEvents } from '../../../events/api';
 import { getResearchOutputs } from '../../../shared-research/api';
@@ -139,7 +139,7 @@ const renderUserProfile = async (
             auth0Overrides={auth0Overrides}
           >
             <WhenReady>
-              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+              <MemoryRouter
                 initialEntries={[
                   network({}).users({}).user({ userId: routeProfileId }).$,
                 ]}

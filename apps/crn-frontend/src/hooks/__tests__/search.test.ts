@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { searchQueryParam } from '@asap-hub/routing';
 import React, { ComponentProps } from 'react';
 
@@ -9,10 +9,13 @@ import { usePagination, usePaginationParams } from '../pagination';
 const createWrapper =
   (initialEntries: string[] = ['/']) =>
   ({ children }: ComponentProps<typeof MemoryRouter>) =>
-    React.createElement(MemoryRouter, {
-      future: { v7_startTransition: true, v7_relativeSplatPath: true },
-      initialEntries,
-    }, children);
+    React.createElement(
+      MemoryRouter,
+      {
+        initialEntries,
+      },
+      children,
+    );
 
 describe('useSearch', () => {
   describe('property searchQuery', () => {

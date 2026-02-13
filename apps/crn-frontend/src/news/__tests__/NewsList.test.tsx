@@ -5,7 +5,7 @@ import { fireEvent } from '@testing-library/dom';
 import { render, waitFor, renderHook } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactNode, Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -15,9 +15,7 @@ import NewsPage from '../Routes';
 import { newsIndexState } from '../state';
 
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
-  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-    {children}
-  </MemoryRouter>
+  <MemoryRouter>{children}</MemoryRouter>
 );
 
 jest.mock('../api');
@@ -47,7 +45,7 @@ const renderPage = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/news']}>
+            <MemoryRouter initialEntries={['/news']}>
               <Routes>
                 <Route path="/news/*" element={<NewsPage />} />
               </Routes>

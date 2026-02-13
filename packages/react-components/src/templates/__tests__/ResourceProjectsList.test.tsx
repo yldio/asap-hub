@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { ComponentProps } from 'react';
 
 import ResourceProjectsList from '../ResourceProjectsList';
@@ -56,7 +56,7 @@ const props: ComponentProps<typeof ResourceProjectsList> = {
 
 it('renders all resource projects', () => {
   render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ResourceProjectsList {...props} />
     </MemoryRouter>,
   );
@@ -66,7 +66,7 @@ it('renders all resource projects', () => {
 
 it('renders the correct number of project cards', () => {
   render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ResourceProjectsList {...props} />
     </MemoryRouter>,
   );
@@ -75,7 +75,7 @@ it('renders the correct number of project cards', () => {
 
 it('renders Resource Project type pill for each project', () => {
   render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ResourceProjectsList {...props} />
     </MemoryRouter>,
   );

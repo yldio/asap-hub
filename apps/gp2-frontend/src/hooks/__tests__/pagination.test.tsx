@@ -1,5 +1,5 @@
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router';
 import { ReactNode } from 'react';
 import { PAGE_SIZE, usePagination, usePaginationParams } from '../pagination';
 
@@ -7,9 +7,7 @@ const urlSearchParamsToObject = (queryString: string) =>
   Object.fromEntries(new URLSearchParams(queryString));
 
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
-  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-    {children}
-  </MemoryRouter>
+  <MemoryRouter>{children}</MemoryRouter>
 );
 
 describe('usePaginationParams', () => {
@@ -23,7 +21,7 @@ describe('usePaginationParams', () => {
 
   it('returns current page', () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=1']}>
+      <MemoryRouter initialEntries={['/?currentPage=1']}>
         {children}
       </MemoryRouter>
     );
@@ -35,7 +33,7 @@ describe('usePaginationParams', () => {
 
   it('removes pagination parameters from url after reset', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=2']}>
+      <MemoryRouter initialEntries={['/?currentPage=2']}>
         {children}
       </MemoryRouter>
     );
@@ -81,7 +79,7 @@ describe('usePagination', () => {
 
   it('redirects if page is out of bounds', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=10']}>
+      <MemoryRouter initialEntries={['/?currentPage=10']}>
         {children}
       </MemoryRouter>
     );
@@ -104,7 +102,7 @@ describe('usePagination', () => {
 
   it('generates hrefs', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=3']}>
+      <MemoryRouter initialEntries={['/?currentPage=3']}>
         {children}
       </MemoryRouter>
     );
@@ -127,7 +125,7 @@ describe('usePagination', () => {
 
   it('generates hrefs one level deep', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/test?currentPage=3']}>
+      <MemoryRouter initialEntries={['/test?currentPage=3']}>
         {children}
       </MemoryRouter>
     );
@@ -150,7 +148,7 @@ describe('usePagination', () => {
 
   it('preserves other query parameters', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=3&searchQuery=123']}>
+      <MemoryRouter initialEntries={['/?currentPage=3&searchQuery=123']}>
         {children}
       </MemoryRouter>
     );
@@ -173,7 +171,7 @@ describe('usePagination', () => {
 
   it('does not return a link for the current page', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=3']}>
+      <MemoryRouter initialEntries={['/?currentPage=3']}>
         {children}
       </MemoryRouter>
     );

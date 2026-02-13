@@ -3,7 +3,7 @@ import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { events } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -34,7 +34,7 @@ const renderEventsPage = (pathname = events({}).$, search?: string) =>
     >
       <Auth0Provider user={{}}>
         <WhenReady>
-          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[{ pathname, search }]}>
+          <MemoryRouter initialEntries={[{ pathname, search }]}>
             <Routes>
               <Route path={`${events.template}/*`} element={<Events />} />
             </Routes>

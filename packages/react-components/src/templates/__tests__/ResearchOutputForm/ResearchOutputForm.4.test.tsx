@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import {
   createResearchOutputResponse,
@@ -67,7 +67,7 @@ describe('on submit', () => {
     const researchTags = [researchTagSubtypeResponse];
 
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -115,7 +115,7 @@ describe('on submit', () => {
   it('can submit published date', async () => {
     const { documentType } = initialResearchOutputData;
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={initialResearchOutputData}
@@ -159,7 +159,7 @@ describe('on submit', () => {
     const documentType = 'Lab Material' as const;
     const type = 'Animal Model';
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{

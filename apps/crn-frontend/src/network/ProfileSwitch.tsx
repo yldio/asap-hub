@@ -1,5 +1,5 @@
 import { ComponentProps, FC, lazy, ReactElement } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router';
 
 import { NoEvents } from '@asap-hub/react-components';
 import { events } from '@asap-hub/routing';

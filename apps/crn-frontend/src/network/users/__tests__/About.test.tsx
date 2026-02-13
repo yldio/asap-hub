@@ -7,7 +7,7 @@ import { network } from '@asap-hub/routing';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactNode, Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import About from '../About';
@@ -25,7 +25,7 @@ const renderWithWrapper =
         <Suspense fallback="loading">
           <Auth0Provider user={{ id: currentUserId }}>
             <WhenReady>
-              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+              <MemoryRouter
                 initialEntries={[
                   network({}).users({}).user({ userId }).about({}).$,
                 ]}

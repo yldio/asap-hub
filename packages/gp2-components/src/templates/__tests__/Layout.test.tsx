@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import Layout from '../Layout';
 
 describe('Layout', () => {
@@ -12,7 +12,7 @@ describe('Layout', () => {
   };
   it('renders the header', async () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <Layout {...props}>Content</Layout>
       </MemoryRouter>,
     );
@@ -22,7 +22,7 @@ describe('Layout', () => {
   });
   it('renders the content', () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <Layout {...props}>Content</Layout>
       </MemoryRouter>,
     );
@@ -31,7 +31,7 @@ describe('Layout', () => {
 
   it('renders and toggles the open and close menu button', async () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <Layout {...props}>Content</Layout>
       </MemoryRouter>,
     );
@@ -49,7 +49,7 @@ describe('Layout', () => {
 
   it('closes the drawer when clicking the overlay', async () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <Layout {...props}>Content</Layout>
       </MemoryRouter>,
     );
@@ -61,7 +61,7 @@ describe('Layout', () => {
 
   it('closes the drawer on navigation', async () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+      <MemoryRouter initialEntries={['/']}>
         <Layout {...props}>Content</Layout>
       </MemoryRouter>,
     );
@@ -80,7 +80,7 @@ describe('Layout', () => {
 
   it('scrolls to top between page navigations', async () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+      <MemoryRouter initialEntries={['/']}>
         <Layout {...props}>Content</Layout>
       </MemoryRouter>,
     );

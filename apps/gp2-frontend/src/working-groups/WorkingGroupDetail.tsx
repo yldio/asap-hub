@@ -17,7 +17,7 @@ import {
   Routes,
   useParams,
   useNavigate,
-} from 'react-router-dom';
+} from 'react-router';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';

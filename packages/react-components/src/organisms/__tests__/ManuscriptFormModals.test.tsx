@@ -1,13 +1,13 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import ManuscriptFormModals from '../ManuscriptFormModals';
 
 // Mock useNavigate
 const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => {
-  const actual = jest.requireActual('react-router-dom');
+jest.mock('react-router', () => {
+  const actual = jest.requireActual('react-router');
   return {
     ...actual,
     useNavigate: () => mockNavigate,
@@ -21,7 +21,7 @@ describe('ManuscriptFormModals', () => {
 
   it('renders nothing when modal is null', () => {
     const { container } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ManuscriptFormModals
           modal={null}
           setModal={jest.fn}
@@ -36,7 +36,7 @@ describe('ManuscriptFormModals', () => {
   describe('submit modal', () => {
     it('renders submit modal with correct content', () => {
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'submit'}
             setModal={jest.fn}
@@ -65,7 +65,7 @@ describe('ManuscriptFormModals', () => {
       const handleSubmit = jest.fn();
       const user = userEvent.setup();
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'submit'}
             setModal={jest.fn}
@@ -82,7 +82,7 @@ describe('ManuscriptFormModals', () => {
 
     it('disables submit button when isSubmitting is true', () => {
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'submit'}
             setModal={jest.fn}
@@ -99,7 +99,7 @@ describe('ManuscriptFormModals', () => {
 
     it('shows loading animation when isSubmitting is true', () => {
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'submit'}
             setModal={jest.fn}
@@ -122,7 +122,7 @@ describe('ManuscriptFormModals', () => {
       const setModal = jest.fn();
       const user = userEvent.setup();
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'submit'}
             setModal={setModal}
@@ -144,7 +144,7 @@ describe('ManuscriptFormModals', () => {
       const setModal = jest.fn();
       const user = userEvent.setup();
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'submit'}
             setModal={setModal}
@@ -161,7 +161,7 @@ describe('ManuscriptFormModals', () => {
   describe('cancel modal', () => {
     it('renders default cancellation title and description', () => {
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'cancel'}
             setModal={jest.fn}
@@ -182,7 +182,7 @@ describe('ManuscriptFormModals', () => {
 
     it('renders edit cancellation title and description when isEditMode is true', () => {
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'cancel'}
             setModal={jest.fn}
@@ -206,7 +206,7 @@ describe('ManuscriptFormModals', () => {
       const setModal = jest.fn();
       const user = userEvent.setup();
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'cancel'}
             setModal={setModal}
@@ -224,7 +224,7 @@ describe('ManuscriptFormModals', () => {
 
     it('shows correct cancel button text when isEditMode is true', () => {
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'cancel'}
             setModal={jest.fn}
@@ -243,7 +243,7 @@ describe('ManuscriptFormModals', () => {
       const setModal = jest.fn();
       const user = userEvent.setup();
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'cancel'}
             setModal={setModal}
@@ -265,7 +265,7 @@ describe('ManuscriptFormModals', () => {
       const setModal = jest.fn();
       const user = userEvent.setup();
       render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ManuscriptFormModals
             modal={'cancel'}
             setModal={setModal}

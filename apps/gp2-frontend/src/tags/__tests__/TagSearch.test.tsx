@@ -5,7 +5,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import {
   AlgoliaSearchClient,
@@ -45,7 +45,7 @@ const renderPage = async (tags = []) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/tags?tag=test']}>
+            <MemoryRouter initialEntries={['/tags?tag=test']}>
               <TagSearch />
             </MemoryRouter>
           </WhenReady>

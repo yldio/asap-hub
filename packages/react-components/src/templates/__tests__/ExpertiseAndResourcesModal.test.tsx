@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
@@ -17,7 +17,7 @@ const props: ComponentProps<typeof ExpertiseAndResourcesModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>{children}</MemoryRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 it('renders the title', () => {
   const { getByText } = renderModal(<ExpertiseAndResourcesModal {...props} />);
   expect(

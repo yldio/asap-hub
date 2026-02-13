@@ -5,7 +5,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { Auth0Provider, WhenReady } from '../auth/test-utils';

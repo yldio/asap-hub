@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import UserNavigation from '../UserNavigation';
 
@@ -29,7 +29,7 @@ const props: ComponentProps<typeof UserNavigation> = {
 
 it('renders the bottom links', () => {
   const { getByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <UserNavigation {...props} />
     </MemoryRouter>,
   );
@@ -40,7 +40,7 @@ it('renders the bottom links', () => {
 
 it('applies the passed href', () => {
   const { getAllByRole } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <UserNavigation {...props} userProfileHref="/profile" />
     </MemoryRouter>,
   );
@@ -53,7 +53,7 @@ it('applies the passed href', () => {
 
 it('renders the associations sections', () => {
   const { getByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <UserNavigation {...props} />
     </MemoryRouter>,
   );
@@ -70,7 +70,7 @@ it('renders the associations sections', () => {
 
 it('does not render the associations sections for missing associations', () => {
   const { queryByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <UserNavigation {...props} interestGroups={[]} workingGroups={[]} />
     </MemoryRouter>,
   );
@@ -81,7 +81,7 @@ it('does not render the associations sections for missing associations', () => {
 
 it('does not render the associations sections if associations are not active', () => {
   const { queryByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <UserNavigation
         {...props}
         interestGroups={[
@@ -108,7 +108,7 @@ it('does not render the associations sections if associations are not active', (
 
 it('does only renders associations which are active', () => {
   const { queryByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <UserNavigation
         {...props}
         interestGroups={[
@@ -135,7 +135,7 @@ it('does only renders associations which are active', () => {
 describe('Project icons', () => {
   it('renders MY PROJECTS section when projects are provided', () => {
     const { getByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <UserNavigation
           {...props}
           projects={[
@@ -155,7 +155,7 @@ describe('Project icons', () => {
 
   it('does not render MY PROJECTS section when projects array is empty', () => {
     const { queryByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <UserNavigation {...props} projects={[]} />
       </MemoryRouter>,
     );
@@ -165,7 +165,7 @@ describe('Project icons', () => {
 
   it('does not render MY PROJECTS section when projects is undefined', () => {
     const { queryByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <UserNavigation {...props} />
       </MemoryRouter>,
     );
@@ -175,7 +175,7 @@ describe('Project icons', () => {
 
   it('renders Discovery Project icon for Discovery Project type', () => {
     const { getByTitle } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <UserNavigation
           {...props}
           projects={[
@@ -194,7 +194,7 @@ describe('Project icons', () => {
 
   it('renders Resource Project icon for Resource Project type', () => {
     const { getByTitle } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <UserNavigation
           {...props}
           projects={[
@@ -213,7 +213,7 @@ describe('Project icons', () => {
 
   it('renders Trainee Project icon for Trainee Project type', () => {
     const { getByTitle } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <UserNavigation
           {...props}
           projects={[
@@ -232,7 +232,7 @@ describe('Project icons', () => {
 
   it('renders correct icons for multiple projects of different types', () => {
     const { getByTitle, getByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <UserNavigation
           {...props}
           projects={[

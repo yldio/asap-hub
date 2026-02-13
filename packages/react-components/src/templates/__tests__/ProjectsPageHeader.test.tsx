@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router';
+import { StaticRouter } from 'react-router';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
@@ -64,7 +64,7 @@ describe('dynamic project type descriptions', () => {
 describe('tab navigation', () => {
   it('renders all three project type tabs', () => {
     const { getByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ProjectsPageHeader {...props} />
       </MemoryRouter>,
     );

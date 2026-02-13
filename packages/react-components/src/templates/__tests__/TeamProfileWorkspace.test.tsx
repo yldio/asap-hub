@@ -10,7 +10,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React, { ComponentProps } from 'react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 import TeamProfileWorkspace from '../TeamProfileWorkspace';
 
@@ -62,13 +62,10 @@ const renderWithRouter = (component: React.ReactElement) => {
       },
     ],
     {
-      future: { v7_relativeSplatPath: true },
       initialEntries: ['/'],
     },
   );
-  return render(
-    <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-  );
+  return render(<RouterProvider router={router} />);
 };
 
 it('renders the team workspace page', () => {
@@ -412,13 +409,10 @@ describe('compliance section', () => {
         },
       ],
       {
-        future: { v7_relativeSplatPath: true },
         initialEntries: ['/'],
       },
     );
-    const { getByRole } = render(
-      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-    );
+    const { getByRole } = render(<RouterProvider router={router} />);
 
     await userEvent.click(getByRole('button', { name: /submit manuscript/i }));
 

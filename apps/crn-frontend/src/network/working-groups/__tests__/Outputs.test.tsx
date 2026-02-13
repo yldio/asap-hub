@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, waitFor } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import {
@@ -80,7 +80,7 @@ const renderOutputs = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            <MemoryRouter
               initialEntries={[
                 {
                   pathname: network({})

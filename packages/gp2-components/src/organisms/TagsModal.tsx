@@ -5,7 +5,7 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { ContactSupport } from '../molecules';
 import EditUserModal from './EditUserModal';
 

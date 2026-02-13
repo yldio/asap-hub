@@ -7,7 +7,7 @@ import { ManuscriptVersion } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import ManuscriptVersionCard from '../ManuscriptVersionCard';
 
 const originalScrollHeightDescriptor = Object.getOwnPropertyDescriptor(
@@ -79,7 +79,7 @@ it('displays quick checks when present', async () => {
   };
   const user = userEvent.setup();
   const { getByText, queryByText, getByLabelText, rerender } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard {...props} />
     </MemoryRouter>,
   );
@@ -104,7 +104,7 @@ it('displays quick checks when present', async () => {
   };
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard {...props} version={updatedVersion} />
     </MemoryRouter>,
   );
@@ -140,7 +140,7 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
 
   const user = userEvent.setup();
   const screen = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={{
@@ -169,7 +169,7 @@ it('displays createdBy as fallback for updatedBy when updatedBy is well defined'
 describe('edit', () => {
   it('does not display the edit button when isManuscriptContributor is false', () => {
     const { queryByLabelText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ManuscriptVersionCard {...props} isManuscriptContributor={false} />
       </MemoryRouter>,
     );
@@ -178,7 +178,7 @@ describe('edit', () => {
 
   it('does not display the edit button when isActiveVersion is false', () => {
     const { queryByLabelText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ManuscriptVersionCard {...props} isActiveVersion={false} />
       </MemoryRouter>,
     );
@@ -188,7 +188,7 @@ describe('edit', () => {
   it('navigates to edit form page when clicking on edit button', async () => {
     const user = userEvent.setup();
     const { getByLabelText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ManuscriptVersionCard
           {...props}
           isActiveVersion
@@ -206,7 +206,7 @@ describe('edit', () => {
 it('displays Additional Information section when present', async () => {
   const user = userEvent.setup();
   const { getByRole, queryByRole, rerender, getByLabelText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard {...props} />
     </MemoryRouter>,
   );
@@ -216,7 +216,7 @@ it('displays Additional Information section when present', async () => {
   ).not.toBeInTheDocument();
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={{ ...baseVersion, otherDetails: 'Necessary info' }}
@@ -232,7 +232,7 @@ it('displays Additional Information section when present', async () => {
 it('renders a divider between fields in Additional Information section and files section', async () => {
   const user = userEvent.setup();
   const { queryAllByRole, getByLabelText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={{
@@ -257,7 +257,7 @@ it.each`
 `(`displays field $field when present`, async ({ field, title, newValue }) => {
   const user = userEvent.setup();
   const { getByLabelText, getByText, queryByText, rerender } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard {...props} />
     </MemoryRouter>,
   );
@@ -270,7 +270,7 @@ it.each`
   };
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard {...props} version={updatedVersion} />
     </MemoryRouter>,
   );
@@ -291,7 +291,7 @@ it('builds the correct href for doi fields', async () => {
 
   const user = userEvent.setup();
   const { getByText, getByLabelText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={{
@@ -317,7 +317,7 @@ it('builds the correct href for doi fields', async () => {
 it('renders manuscript main file details and download link', async () => {
   const user = userEvent.setup();
   const { getByText, getByLabelText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={{
@@ -344,7 +344,7 @@ it('renders manuscript main file details and download link', async () => {
 it('renders key resource table file details and download link', async () => {
   const user = userEvent.setup();
   const { getAllByText, getByText, getByLabelText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={{
@@ -375,7 +375,7 @@ it('renders key resource table file details and download link', async () => {
 it('renders additional files details and download link when provided', async () => {
   const user = userEvent.setup();
   const { getAllByText, getByText, getByLabelText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={{
@@ -409,7 +409,7 @@ it('renders additional files details and download link when provided', async () 
 it('displays compliance report section when present', async () => {
   const user = userEvent.setup();
   const { getByLabelText, queryByRole } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard {...props} />
     </MemoryRouter>,
   );
@@ -421,7 +421,7 @@ it('displays compliance report section when present', async () => {
 
 it('displays compliance report when complianceReport is provided', () => {
   const { getByRole } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={{
@@ -443,7 +443,7 @@ it('displays manuscript description', async () => {
   mockScrollHeight(100);
   const { getByRole, rerender, getByText, queryByRole, getByLabelText } =
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ManuscriptVersionCard
           {...props}
           version={{
@@ -459,7 +459,7 @@ it('displays manuscript description', async () => {
 
   mockScrollHeight(300);
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={{
@@ -505,7 +505,7 @@ it('does not display edit button by default', async () => {
 
   const user = userEvent.setup();
   const { getByText, queryByRole, getByLabelText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={updatedVersion}
@@ -553,7 +553,7 @@ it('does not display reply button if isActiveVersion is false', async () => {
 
   const user = userEvent.setup();
   const { getByText, queryByRole, getByLabelText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <ManuscriptVersionCard
         {...props}
         version={updatedVersion}

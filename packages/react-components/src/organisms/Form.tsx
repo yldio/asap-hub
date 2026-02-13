@@ -2,7 +2,7 @@ import { ValidationErrorResponse } from '@asap-hub/model';
 import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { useNavigationWarning } from '../navigation';
 

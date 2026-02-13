@@ -6,7 +6,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getWorkingGroupNetwork } from '../api';
@@ -20,7 +20,7 @@ const renderWorkingGroupsList = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[gp2Routing.workingGroups({}).$]}>
+            <MemoryRouter initialEntries={[gp2Routing.workingGroups({}).$]}>
               <Routes>
                 <Route
                   path={gp2Routing.workingGroups.template}

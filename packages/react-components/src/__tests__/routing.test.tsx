@@ -1,5 +1,9 @@
-import { MemoryRouter, useNavigate, useLocation } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import {
+  MemoryRouter,
+  useNavigate,
+  useLocation,
+  StaticRouter,
+} from 'react-router';
 import { renderHook, waitFor } from '@testing-library/react';
 import { searchQueryParam } from '@asap-hub/routing';
 import { ReactNode, useEffect, act } from 'react';
@@ -72,7 +76,7 @@ describe('usePushFromPathname', () => {
   it('pushes a history entry if currently on given page', async () => {
     currentPathname = null;
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
+      <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
       </MemoryRouter>
@@ -95,7 +99,7 @@ describe('usePushFromPathname', () => {
   it('does not push a history entry if currently on a different page', async () => {
     currentPathname = null;
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
+      <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
       </MemoryRouter>
@@ -119,7 +123,7 @@ describe('usePushFromPathname', () => {
   it('navigates with a number (go back/forward)', async () => {
     currentPathname = null;
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/page1', '/page2', '/current']}>
+      <MemoryRouter initialEntries={['/page1', '/page2', '/current']}>
         <LocationCapture />
         {children}
       </MemoryRouter>
@@ -143,7 +147,7 @@ describe('usePushFromPathname', () => {
     currentPathname = null;
     currentLocation = null;
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
+      <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
       </MemoryRouter>
@@ -168,7 +172,7 @@ describe('usePushFromPathname', () => {
   it('navigates with an object containing only pathname', async () => {
     currentPathname = null;
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
+      <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
       </MemoryRouter>
@@ -191,7 +195,7 @@ describe('usePushFromPathname', () => {
   it('navigates with options parameter (replace)', async () => {
     currentPathname = null;
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
+      <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
       </MemoryRouter>
@@ -219,7 +223,7 @@ describe('usePushFromPathname', () => {
   it('does not navigate with number if currently on a different page', async () => {
     currentPathname = null;
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
+      <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
       </MemoryRouter>
@@ -249,7 +253,7 @@ describe('usePushFromPathname', () => {
   it('does not navigate with object if currently on a different page', async () => {
     currentPathname = null;
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
+      <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
       </MemoryRouter>
@@ -275,7 +279,7 @@ describe('usePushFromHere', () => {
   it('pushes a history entry if still on the same page', async () => {
     currentPathname = null;
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
+      <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         {children}
       </MemoryRouter>
@@ -299,7 +303,7 @@ describe('usePushFromHere', () => {
     currentPathname = null;
     navigateToPath = null;
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
+      <MemoryRouter initialEntries={['/current']}>
         <LocationCapture />
         <NavigationHelper />
         {children}
@@ -343,7 +347,7 @@ describe('useScrollToHash', () => {
     document.body.appendChild(targetElement);
 
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/page#section']}>{children}</MemoryRouter>
+      <MemoryRouter initialEntries={['/page#section']}>{children}</MemoryRouter>
     );
 
     renderHook(() => useScrollToHash(), { wrapper });
@@ -370,7 +374,7 @@ describe('useScrollToHash', () => {
     document.body.appendChild(targetElement);
 
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/page']}>{children}</MemoryRouter>
+      <MemoryRouter initialEntries={['/page']}>{children}</MemoryRouter>
     );
 
     renderHook(() => useScrollToHash(), { wrapper });
@@ -387,7 +391,7 @@ describe('useScrollToHash', () => {
 
   it('does not throw if element does not exist', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/page#nonexistent']}>
+      <MemoryRouter initialEntries={['/page#nonexistent']}>
         {children}
       </MemoryRouter>
     );

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router';
 import { sharedResearch } from '@asap-hub/routing';
 
 import SharedResearchOutput from '../SharedResearchOutput';
@@ -19,7 +19,7 @@ const LocationCapture = () => {
 };
 
 const renderWithRouter = (component: React.ReactElement) =>
-  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{component}</MemoryRouter>);
+  render(<MemoryRouter>{component}</MemoryRouter>);
 
 const props: ComponentProps<typeof SharedResearchOutput> = {
   ...createResearchOutputResponse(),
@@ -73,7 +73,7 @@ describe('Grant Documents', () => {
     expect(queryByTitle('Edit')).toBeNull();
 
     rerender(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputPermissionsContext.Provider
           value={{
             canEditResearchOutput: false,
@@ -88,7 +88,7 @@ describe('Grant Documents', () => {
     expect(queryByTitle('Edit')).toBeNull();
 
     rerender(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputPermissionsContext.Provider
           value={{
             canEditResearchOutput: true,
@@ -119,7 +119,7 @@ describe('Grant Documents', () => {
     expect(queryByTitle('Duplicate')).toBeNull();
 
     rerender(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputPermissionsContext.Provider
           value={{
             canEditResearchOutput: false,
@@ -135,7 +135,7 @@ describe('Grant Documents', () => {
     expect(queryByTitle('Duplicate')).toBeNull();
 
     rerender(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputPermissionsContext.Provider
           value={{
             canEditResearchOutput: true,
@@ -188,7 +188,7 @@ describe('Not Grant Documents', () => {
     );
     expect(queryByText(/access instructions/i)).not.toBeInTheDocument();
     rerender(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <SharedResearchOutput
           {...props}
           documentType="Article"
@@ -317,7 +317,7 @@ describe('Not Grant Documents', () => {
       expect(queryByText(/Related Research/i)).not.toBeInTheDocument();
 
       rerender(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <SharedResearchOutput
             {...props}
             documentType="Article"
@@ -373,7 +373,7 @@ describe('footer', () => {
     );
     expect(queryByText(/contact/i)).not.toBeInTheDocument();
     rerender(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <SharedResearchOutput {...props} contactEmails={['blah@gmail.com']} />
       </MemoryRouter>,
     );
@@ -737,7 +737,7 @@ describe('the ready for pm review button', () => {
   describe('displays the request review modal', () => {
     it('and renders with the correct text fields for a team research output', () => {
       const { getByText, getAllByText } = render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ResearchOutputPermissionsContext.Provider
             value={{
               canEditResearchOutput: false,
@@ -770,7 +770,7 @@ describe('the ready for pm review button', () => {
     });
     it('and renders with the correct text fields for a working group research output', () => {
       const { getByText } = render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ResearchOutputPermissionsContext.Provider
             value={{
               canEditResearchOutput: false,
@@ -806,7 +806,7 @@ describe('the ready for pm review button', () => {
     describe('and has the correct actions on the  buttons', () => {
       it('closes the modal correctly', () => {
         const { getByText, queryByText } = render(
-          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <MemoryRouter>
             <ResearchOutputPermissionsContext.Provider
               value={{
                 canEditResearchOutput: false,
@@ -837,7 +837,7 @@ describe('the ready for pm review button', () => {
       it('and requests a review from a PM on the right button', async () => {
         const requestReviewFn = jest.fn();
         const { getByText, getAllByText } = render(
-          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <MemoryRouter>
             <ResearchOutputPermissionsContext.Provider
               value={{
                 canEditResearchOutput: false,
@@ -961,7 +961,7 @@ describe('the switch to draft button', () => {
   describe('displays the switch to draft modal', () => {
     it('and renders with the correct text fields for a team research output', () => {
       const { getByText, getAllByText } = render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ResearchOutputPermissionsContext.Provider
             value={{
               canEditResearchOutput: false,
@@ -995,7 +995,7 @@ describe('the switch to draft button', () => {
     });
     it('and renders with the correct text fields for a working group research output', () => {
       const { getByText } = render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ResearchOutputPermissionsContext.Provider
             value={{
               canEditResearchOutput: false,
@@ -1032,7 +1032,7 @@ describe('the switch to draft button', () => {
     describe('and has the correct actions on the buttons', () => {
       it('closes the modal correctly', () => {
         const { getByText, queryByText } = render(
-          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <MemoryRouter>
             <ResearchOutputPermissionsContext.Provider
               value={{
                 canEditResearchOutput: false,
@@ -1062,7 +1062,7 @@ describe('the switch to draft button', () => {
       it('and switches back into draft', async () => {
         const switchToDraft = jest.fn();
         const { getByText, getAllByText } = render(
-          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <MemoryRouter>
             <ResearchOutputPermissionsContext.Provider
               value={{
                 canEditResearchOutput: false,
@@ -1157,7 +1157,7 @@ describe('the publish button', () => {
   describe('displays the publish modal', () => {
     it('and renders with the correct text fields for a team research output', () => {
       const { getByText, getByRole } = render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ResearchOutputPermissionsContext.Provider
             value={{
               canPublishResearchOutput: true,
@@ -1190,7 +1190,7 @@ describe('the publish button', () => {
     });
     it('and renders with the correct text fields for a working group research output', () => {
       const { getByText } = render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <ResearchOutputPermissionsContext.Provider
             value={{
               canPublishResearchOutput: true,
@@ -1223,7 +1223,7 @@ describe('the publish button', () => {
     describe('and has the correct actions on the buttons', () => {
       it('closes the modal correctly', () => {
         const { getByText, queryByText } = render(
-          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <MemoryRouter>
             <ResearchOutputPermissionsContext.Provider
               value={{
                 canPublishResearchOutput: true,
@@ -1252,7 +1252,7 @@ describe('the publish button', () => {
       it('publishes a research output', async () => {
         const publishOutput = jest.fn();
         const { getByText } = render(
-          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <MemoryRouter>
             <ResearchOutputPermissionsContext.Provider
               value={{
                 canPublishResearchOutput: true,
@@ -1290,7 +1290,7 @@ describe('displayNoNewManuscriptVersionModal', () => {
   it('renders the modal when there is no new manuscript version', async () => {
     const user = userEvent.setup();
     const { getByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputPermissionsContext.Provider
           value={{
             canVersionResearchOutput: true,
@@ -1320,7 +1320,7 @@ describe('displayNoNewManuscriptVersionModal', () => {
   it('closes the modal on clicking cancel', async () => {
     const user = userEvent.setup();
     const { getByText, queryByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ResearchOutputPermissionsContext.Provider
           value={{
             canVersionResearchOutput: true,
@@ -1354,7 +1354,7 @@ describe('displayNoNewManuscriptVersionModal', () => {
   it('navigates to team workspace on clicking Go to Compliance Area', async () => {
     const user = userEvent.setup();
     const { getByText, queryByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      <MemoryRouter
         initialEntries={[
           sharedResearch({}).researchOutput({ researchOutputId: props.id }).$,
         ]}
@@ -1396,7 +1396,7 @@ it('navigates to version creation page if there is a new manuscript version', as
   const user = userEvent.setup();
   const checkForNewVersion = jest.fn().mockResolvedValue(true);
   const { getByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    <MemoryRouter
       initialEntries={[
         sharedResearch({}).researchOutput({ researchOutputId: props.id }).$,
       ]}

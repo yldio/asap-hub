@@ -1,7 +1,7 @@
 import { CRNTagSearchEntitiesListArray } from '@asap-hub/algolia';
 import { render, RenderResult } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { WhenReady, Auth0Provider } from '../../auth/test-utils';
@@ -14,7 +14,7 @@ const renderTags = async (): Promise<RenderResult> =>
       <Auth0Provider user={{}}>
         <WhenReady>
           <Suspense fallback="Loading...">
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+            <MemoryRouter initialEntries={['/']}>
               <Routes>
                 <Route
                   path="/"

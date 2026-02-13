@@ -1,4 +1,4 @@
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import { UserNavigation } from '@asap-hub/react-components';
 
 import { select } from './knobs';

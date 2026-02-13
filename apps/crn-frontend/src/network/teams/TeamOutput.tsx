@@ -32,7 +32,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { mapManuscriptVersionToResearchOutput } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {

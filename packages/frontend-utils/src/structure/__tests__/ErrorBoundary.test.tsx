@@ -1,4 +1,4 @@
-import { createMemoryRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider, Outlet } from 'react-router';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
@@ -24,12 +24,10 @@ describe('error boundary', () => {
           children: [{ path: '/', element: <Throw /> }],
         },
       ],
-      { future: { v7_relativeSplatPath: true } },
+      {},
     );
 
-    const { container } = render(
-      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-    );
+    const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('oops');
   });
 
@@ -50,12 +48,10 @@ describe('error boundary', () => {
           children: [{ path: '/', element: <Throw /> }],
         },
       ],
-      { future: { v7_relativeSplatPath: true } },
+      {},
     );
 
-    const { container } = render(
-      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-    );
+    const { container } = render(<RouterProvider router={router} />);
     expect(container).not.toHaveTextContent('oops');
     expect(container).toHaveTextContent('Something went wrong');
     expect(container).toHaveTextContent(
@@ -79,12 +75,10 @@ describe('error boundary', () => {
           ],
         },
       ],
-      { future: { v7_relativeSplatPath: true }, initialEntries: ['/throw'] },
+      { initialEntries: ['/throw'] },
     );
 
-    const { container } = render(
-      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-    );
+    const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('oops');
 
     await router.navigate('/home');
@@ -109,12 +103,10 @@ describe('sentry error boundary', () => {
           children: [{ path: '/', element: <Throw /> }],
         },
       ],
-      { future: { v7_relativeSplatPath: true } },
+      {},
     );
 
-    const { container } = render(
-      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-    );
+    const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('oops');
   });
 
@@ -134,12 +126,10 @@ describe('sentry error boundary', () => {
           children: [{ path: '/', element: <Throw /> }],
         },
       ],
-      { future: { v7_relativeSplatPath: true } },
+      {},
     );
 
-    const { container } = render(
-      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-    );
+    const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('Something went wrong');
     expect(container).toHaveTextContent(
       'There was a problem with your request',

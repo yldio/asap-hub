@@ -1,4 +1,4 @@
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';
 
@@ -13,7 +13,7 @@ it('renders a heading', () => {
 
 it('links back to sign in', async () => {
   const { getByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/email-sent']}>
+    <MemoryRouter initialEntries={['/email-sent']}>
       <Routes>
         <Route
           path="/email-sent"

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { createMemoryRouter, RouterProvider } from 'react-router';
+import { StaticRouter } from 'react-router';
 import PublishModal from '../PublishModal';
 
 describe('PublishModal', () => {
@@ -29,13 +29,10 @@ describe('PublishModal', () => {
         },
       ],
       {
-        future: { v7_relativeSplatPath: true },
         initialEntries: ['/'],
       },
     );
-    render(
-      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
-    );
+    render(<RouterProvider router={router} />);
     const saveButton = screen.getByRole('button', { name: 'Publish' });
     await userEvent.click(saveButton);
     await waitFor(() => {

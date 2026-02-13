@@ -3,7 +3,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import BiographyModal from '../BiographyModal';
 
 describe('BiographyModal', () => {

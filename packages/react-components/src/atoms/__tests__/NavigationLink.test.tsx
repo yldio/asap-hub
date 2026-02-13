@@ -2,8 +2,8 @@ import { ReactNode, useEffect } from 'react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { ThemeProvider } from '@emotion/react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, useLocation } from 'react-router';
+import { StaticRouter } from 'react-router';
 import { activePrimaryBackgroundColorDefault } from '../../button';
 import { color, pine } from '../../colors';
 import NavigationLink from '../NavigationLink';
@@ -20,9 +20,7 @@ const LocationCapture = () => {
 
 // Wrapper component with future flags for RTL's wrapper option
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
-  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-    {children}
-  </MemoryRouter>
+  <MemoryRouter>{children}</MemoryRouter>
 );
 
 describe.each`
@@ -103,7 +101,7 @@ describe('with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     currentPathname = null;
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+      <MemoryRouter initialEntries={['/']}>
         <LocationCapture />
         <NavigationLink href="/location" icon={<svg />}>
           Text
@@ -116,7 +114,7 @@ describe('with a router', () => {
 
   it('triggers a full page navigation on click of an external link', () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <NavigationLink href="http://example.com/" icon={<svg />}>
           Text
         </NavigationLink>
@@ -128,7 +126,7 @@ describe('with a router', () => {
   it('default route is not always highlighted as selected', () => {
     currentPathname = null;
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/location']}>
+      <MemoryRouter initialEntries={['/location']}>
         <LocationCapture />
         <NavigationLink href="/" icon={<svg />}>
           Default
@@ -189,7 +187,7 @@ describe('without a router (external link with matching pathname)', () => {
     // This triggers the non-router path (lines 132-149) where active is calculated
     // based on window.location.pathname comparison
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <NavigationLink href="http://example.com/test" icon={<svg />}>
           Active Link
         </NavigationLink>
@@ -234,7 +232,7 @@ describe('with ThemeProvider', () => {
 
   it('uses default colors when no theme whas provided', () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <NavigationLink href="http://example.com/" icon={<svg />}>
           Text
         </NavigationLink>
@@ -256,7 +254,7 @@ describe('with ThemeProvider', () => {
       },
     };
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ThemeProvider theme={theme}>
           <NavigationLink href="http://example.com/" icon={<svg />}>
             Text

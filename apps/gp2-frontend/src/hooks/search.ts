@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import { useDebounce } from 'use-debounce';
 
 type Filter = {

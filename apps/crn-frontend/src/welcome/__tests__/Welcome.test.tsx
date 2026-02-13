@@ -4,7 +4,7 @@ import { ToastContext } from '@asap-hub/react-context';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { API_BASE_URL } from '../../config';
 import Welcome from '../Welcome';
@@ -36,7 +36,7 @@ describe('the welcome page', () => {
     render(
       <authTestUtils.UserAuth0Provider>
         <ToastContext.Provider value={mockToast}>
-          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/42/']}>
+          <MemoryRouter initialEntries={['/42/']}>
             <Routes>
               <Route path="/:code/" element={<Welcome />} />
             </Routes>

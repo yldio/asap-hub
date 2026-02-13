@@ -5,7 +5,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { PAGE_SIZE, useSearch } from '../../hooks';
@@ -36,7 +36,7 @@ const renderList = async (props: EventListProps, searchQuery = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/events']}>
+            <MemoryRouter initialEntries={['/events']}>
               <EventDirectory {...props} />
             </MemoryRouter>
           </WhenReady>

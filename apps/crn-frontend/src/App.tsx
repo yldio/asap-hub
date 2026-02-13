@@ -9,7 +9,7 @@ import {
   useNavigationType,
   createRoutesFromChildren,
   matchRoutes,
-} from 'react-router-dom';
+} from 'react-router';
 
 import { Frame, useCookieConsent } from '@asap-hub/frontend-utils';
 import {
@@ -123,7 +123,7 @@ const App: FC<Record<string, never>> = () => {
         <AuthProvider>
           <SentryAuth0 />
           <BrowserRouter
-            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+           
           >
             <NavigationBlockerProvider>
               <Frame title={null}>

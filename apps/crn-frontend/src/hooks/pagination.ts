@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import { viewParam, listViewValue } from '@asap-hub/routing';
 
 const CURRENT_PAGE_PARAM = 'currentPage';

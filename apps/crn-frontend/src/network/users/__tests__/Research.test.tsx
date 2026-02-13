@@ -7,7 +7,7 @@ import {
   waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import {
   createListInterestGroupResponse,
   createUserResponse,
@@ -37,7 +37,7 @@ const renderResearch = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: currentUserId }}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            <MemoryRouter
               initialEntries={[
                 network({}).users({}).user({ userId: user.id }).research({}).$,
               ]}

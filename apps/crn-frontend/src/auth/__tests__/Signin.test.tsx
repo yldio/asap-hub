@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { generateKeyPairSync } from 'crypto';
 import { sign } from 'jsonwebtoken';
 import { useEffect } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, useLocation } from 'react-router';
+import { StaticRouter } from 'react-router';
 
 import nock from 'nock';
 
@@ -188,7 +188,7 @@ describe('after a failed flow', () => {
       });
 
       result = render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        <MemoryRouter
           initialEntries={[
             '/?search&state=state&error=access_denied&error_description=Forbidden',
           ]}
@@ -230,7 +230,7 @@ describe('after a failed flow', () => {
   describe('for an alumni error', () => {
     beforeEach(() => {
       result = render(
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        <MemoryRouter
           initialEntries={[
             '/?search&state=state&error=access_denied&error_description=alumni-user-access-denied',
           ]}

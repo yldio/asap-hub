@@ -20,7 +20,7 @@ import {
   useNavigationType,
   createRoutesFromChildren,
   matchRoutes,
-} from 'react-router-dom';
+} from 'react-router';
 
 import CheckAuth from './auth/CheckAuth';
 import Logout from './auth/Logout';
@@ -121,7 +121,7 @@ const App: FC<Record<string, never>> = () => {
           <AuthProvider>
             <SentryAuth0 />
             <BrowserRouter
-              future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+             
             >
               <NavigationBlockerProvider>
                 <Frame title={null}>

@@ -1,5 +1,5 @@
 import { searchQueryParam } from '@asap-hub/routing';
-import { useNavigate, useLocation, NavigateFunction } from 'react-router-dom';
+import { useNavigate, useLocation, NavigateFunction } from 'react-router';
 import { useRef, useEffect } from 'react';
 
 export const useScrollToHash = (): void => {

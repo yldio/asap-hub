@@ -5,8 +5,8 @@ import {
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router';
+import { StaticRouter } from 'react-router';
 import { NavigationBlockerProvider } from '@asap-hub/react-components';
 import ResourceModal from '../ResourceModal';
 
@@ -73,7 +73,7 @@ describe('ResourceModal', () => {
     props: Partial<ComponentProps<typeof ResourceModal>> = {},
   ) => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <NavigationBlockerProvider>
           <ResourceModal {...defaultProps} {...props} />
         </NavigationBlockerProvider>

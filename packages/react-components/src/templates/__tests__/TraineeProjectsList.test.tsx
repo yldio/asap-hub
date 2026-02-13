@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { ComponentProps } from 'react';
 
 import TraineeProjectsList from '../TraineeProjectsList';
@@ -79,7 +79,7 @@ const props: ComponentProps<typeof TraineeProjectsList> = {
 
 it('renders all trainee projects', () => {
   render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <TraineeProjectsList {...props} />
     </MemoryRouter>,
   );
@@ -89,7 +89,7 @@ it('renders all trainee projects', () => {
 
 it('renders the correct number of project cards', () => {
   render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <TraineeProjectsList {...props} />
     </MemoryRouter>,
   );
@@ -98,7 +98,7 @@ it('renders the correct number of project cards', () => {
 
 it('renders Trainee Project type pill for each project', () => {
   render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <MemoryRouter>
       <TraineeProjectsList {...props} />
     </MemoryRouter>,
   );

@@ -1,5 +1,5 @@
 import { OpenQuestionsModal } from '@asap-hub/react-components';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 
 export default {
   title: 'Templates / User Profile / Open Questions Modal',

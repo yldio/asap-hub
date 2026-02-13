@@ -1,6 +1,6 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { ReactNode, Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, waitFor, screen, renderHook } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import {
@@ -16,9 +16,7 @@ import { getTutorials } from '../api';
 import { tutorialsListState } from '../state';
 
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
-  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-    {children}
-  </MemoryRouter>
+  <MemoryRouter>{children}</MemoryRouter>
 );
 
 jest.mock('../api');
@@ -51,7 +49,7 @@ const renderTutorials = async (searchQuery = '') => {
       >
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/guides-tutorials/tutorials']}>
+            <MemoryRouter initialEntries={['/guides-tutorials/tutorials']}>
               <Routes>
                 <Route
                   path="/guides-tutorials/tutorials"

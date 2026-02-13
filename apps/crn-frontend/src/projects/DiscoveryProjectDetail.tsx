@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Navigate, Route, Routes, useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useParams } from 'react-router';
 import { Frame } from '@asap-hub/frontend-utils';
 import {
   ProjectDetailPage,

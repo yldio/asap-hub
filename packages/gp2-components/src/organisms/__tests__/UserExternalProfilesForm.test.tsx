@@ -1,12 +1,12 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ComponentProps, ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import UserExternalProfilesForm from '../UserExternalProfilesForm';
 
 const renderWithRouter = (children: ReactNode) =>
-  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
+  render(<MemoryRouter>{children}</MemoryRouter>);
 
 describe('UserExternalProfilesForm', () => {
   beforeEach(jest.resetAllMocks);

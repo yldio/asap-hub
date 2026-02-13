@@ -2,7 +2,7 @@ import {
   CRNTagSearchEntities,
   CRNTagSearchEntitiesListArray,
 } from '@asap-hub/algolia';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
 import { Frame } from '@asap-hub/frontend-utils';
 

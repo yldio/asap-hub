@@ -1,5 +1,5 @@
 import { parse } from 'qs';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router';
 import { RouteNode } from 'typesafe-routes';
 import * as gp2 from './gp2';
 

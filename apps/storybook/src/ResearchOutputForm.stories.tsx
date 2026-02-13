@@ -6,7 +6,7 @@ import {
 import { researchOutputDocumentTypeToType } from '@asap-hub/model';
 import { ResearchOutputForm } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 
 import { boolean } from './knobs';
 

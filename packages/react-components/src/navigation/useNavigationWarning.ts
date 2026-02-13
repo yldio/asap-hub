@@ -3,7 +3,7 @@ import {
   NavigateFunction,
   useNavigate,
   NavigateOptions,
-} from 'react-router-dom';
+} from 'react-router';
 import { useNavigationBlocker } from './NavigationBlockerContext';
 
 type UseNavigationWarningOptions = {

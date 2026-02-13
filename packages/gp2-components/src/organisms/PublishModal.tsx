@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { ComponentProps } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import EditUserModal from './EditUserModal';
 
 type PublishModalProps = Pick<

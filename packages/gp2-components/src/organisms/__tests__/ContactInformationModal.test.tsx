@@ -3,7 +3,7 @@ import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import ContactInformationModal from '../ContactInformationModal';
 
 describe('ContactInformationModal', () => {
@@ -24,7 +24,7 @@ describe('ContactInformationModal', () => {
     overrides: Partial<ContactInformationModalProps> = {},
   ) =>
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <ContactInformationModal {...defaultProps} {...overrides} />
       </MemoryRouter>,
     );

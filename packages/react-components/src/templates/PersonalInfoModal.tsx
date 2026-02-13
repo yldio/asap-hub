@@ -1,6 +1,6 @@
 import { UserDegree, UserPatchRequest } from '@asap-hub/model';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import {
   FormSection,
   LabeledDropdown,

@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { ComponentProps, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
@@ -93,7 +93,7 @@ const renderDiscoveryProjects = (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <MemoryRouter>
               <DiscoveryProjects
                 {...props}
                 debouncedSearchQuery={searchQuery}

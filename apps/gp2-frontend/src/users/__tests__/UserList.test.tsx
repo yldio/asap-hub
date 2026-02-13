@@ -6,7 +6,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { PAGE_SIZE } from '../../hooks';
@@ -76,7 +76,7 @@ const renderUserList = async ({
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/users/']}>
+            <MemoryRouter initialEntries={['/users/']}>
               <Routes>
                 <Route
                   path="/users"

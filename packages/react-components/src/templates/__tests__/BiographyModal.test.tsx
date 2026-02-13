@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import BiographyModal from '../BiographyModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>{children}</MemoryRouter>);
+  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
 
 it('renders a form to edit the biography', () => {
   const { getByRole } = renderModal(<BiographyModal backHref="#" />);

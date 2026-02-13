@@ -12,7 +12,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
 import React, { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import {
@@ -236,7 +236,7 @@ const renderPage = async (metric = 'working-group') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[getPath(metric)]}>
+            <MemoryRouter initialEntries={[getPath(metric)]}>
               <Routes>
                 <Route
                   path="/analytics/leadership/:metric"
@@ -717,7 +717,7 @@ describe('error handling', () => {
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
-                <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[getPath('working-group')]}>
+                <MemoryRouter initialEntries={[getPath('working-group')]}>
                   <Routes>
                     <Route
                       path="/analytics/leadership/:metric"
@@ -773,7 +773,7 @@ describe('error handling', () => {
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
-                <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[getPath('working-group')]}>
+                <MemoryRouter initialEntries={[getPath('working-group')]}>
                   <Routes>
                     <Route
                       path="/analytics/leadership/:metric"
@@ -852,7 +852,7 @@ describe('error handling', () => {
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
-              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[getPath('working-group')]}>
+              <MemoryRouter initialEntries={[getPath('working-group')]}>
                 <Routes>
                   <Route
                     path="/analytics/leadership/:metric"

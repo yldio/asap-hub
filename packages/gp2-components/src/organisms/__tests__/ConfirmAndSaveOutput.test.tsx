@@ -4,7 +4,7 @@ import { Button } from '@asap-hub/react-components';
 import { NotificationContext } from '@asap-hub/react-context';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 import {
   ConfirmAndSaveOutput,
@@ -27,7 +27,6 @@ describe('ConfirmAndSaveOutput', () => {
         },
       ],
       {
-        future: { v7_relativeSplatPath: true },
         initialEntries: ['/'],
       },
     );
@@ -40,7 +39,7 @@ describe('ConfirmAndSaveOutput', () => {
           removeNotification: jest.fn(),
         }}
       >
-        <RouterProvider router={router} future={{ v7_startTransition: true }} />
+        <RouterProvider router={router} />
       </NotificationContext.Provider>
     );
   };
@@ -213,10 +212,10 @@ describe('ConfirmAndSaveOutput', () => {
             ),
           },
         ],
-        { future: { v7_relativeSplatPath: true }, initialEntries: ['/outputs/new'] },
+        { initialEntries: ['/outputs/new'] },
       );
 
-      render(<RouterProvider router={router} future={{ v7_startTransition: true }} />);
+      render(<RouterProvider router={router} />);
       return { router };
     };
 

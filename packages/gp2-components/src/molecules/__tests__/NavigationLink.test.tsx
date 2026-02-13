@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import NavigationLink from '../NavigationLink';
 
 describe('NavigationLink', () => {
   it('renders the icon', () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <NavigationLink href="/" icon={<svg />} />
       </MemoryRouter>,
     );
@@ -13,7 +13,7 @@ describe('NavigationLink', () => {
   });
   it('renders the children', () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <NavigationLink href="/">Network</NavigationLink>
       </MemoryRouter>,
     );

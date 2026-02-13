@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/react-context';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
-import { Route, Routes, useLocation, useMatch } from 'react-router-dom';
+import { Route, Routes, useLocation, useMatch } from 'react-router';
 
 import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { useEffect, useState } from 'react';

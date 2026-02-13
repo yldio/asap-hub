@@ -11,8 +11,8 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
+import { StaticRouter } from 'react-router';
 import ManuscriptForm from '../ManuscriptForm';
 
 type FindByRole = (
@@ -360,7 +360,7 @@ describe('Manuscript form', () => {
     };
 
     const { findByText, getByRole } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/another-url', '/form']}>
+      <MemoryRouter initialEntries={['/another-url', '/form']}>
         <LocationCapture />
         <Routes>
           <Route

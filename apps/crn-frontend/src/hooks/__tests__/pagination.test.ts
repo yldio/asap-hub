@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router';
 import { createElement, ReactNode } from 'react';
 
 import {
@@ -15,15 +15,16 @@ const urlSearchParamsToObject = (queryString: string) =>
 const createWrapper =
   (initialEntries: string[]) =>
   ({ children }: { children: ReactNode }) =>
-    createElement(MemoryRouter, {
-      future: { v7_startTransition: true, v7_relativeSplatPath: true },
-      initialEntries,
-    }, children);
+    createElement(
+      MemoryRouter,
+      {
+        initialEntries,
+      },
+      children,
+    );
 
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) =>
-  createElement(MemoryRouter, {
-    future: { v7_startTransition: true, v7_relativeSplatPath: true },
-  }, children);
+  createElement(MemoryRouter, {}, children);
 
 describe('usePaginationParams', () => {
   it('returns default page, page size and view', () => {

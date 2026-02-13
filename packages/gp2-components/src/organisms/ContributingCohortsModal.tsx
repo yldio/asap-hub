@@ -8,7 +8,7 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps, useState, Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { addIcon, binIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import EditUserModal from './EditUserModal';

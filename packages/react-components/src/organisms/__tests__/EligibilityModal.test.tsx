@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import EligibilityModal from '../EligibilityModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
+  render(<MemoryRouter>{children}</MemoryRouter>);
 
 describe('EligibilityModal', () => {
   const defaultProps: ComponentProps<typeof EligibilityModal> = {

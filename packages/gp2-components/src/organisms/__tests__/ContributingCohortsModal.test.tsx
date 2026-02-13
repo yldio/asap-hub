@@ -4,7 +4,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import ContributingCohortsModal from '../ContributingCohortsModal';
 
 describe('ContributingCohortsModal', () => {

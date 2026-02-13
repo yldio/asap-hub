@@ -2,8 +2,8 @@ import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { act, render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, ReactNode } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, useLocation } from 'react-router';
+import { StaticRouter } from 'react-router';
 import { Anchor, Button } from '../../atoms';
 import { NavigationBlockerProvider } from '../../navigation';
 import Form from '../Form';
@@ -22,7 +22,7 @@ const renderFormWithMemoryRouter = (
   { initialEntries = ['/'] } = {},
 ) =>
   render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={initialEntries}>
+    <MemoryRouter initialEntries={initialEntries}>
       <NavigationBlockerProvider>{children}</NavigationBlockerProvider>
     </MemoryRouter>,
   );

@@ -1,5 +1,5 @@
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { render, waitFor, screen } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
@@ -84,7 +84,7 @@ const renderOnboardable = (onboarded: boolean) => (
     <Suspense fallback="loading">
       <Auth0Provider user={{ id: onboardableUser.id, onboarded }}>
         <WhenReady>
-          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+          <MemoryRouter
             initialEntries={[
               network({})
                 .users({})

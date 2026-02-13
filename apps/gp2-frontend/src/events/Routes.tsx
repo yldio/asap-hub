@@ -1,5 +1,5 @@
 import { FC, lazy, useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router';
 
 import { EventsPage } from '@asap-hub/gp2-components';
 import { gp2 } from '@asap-hub/routing';

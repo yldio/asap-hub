@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import ToolModal from '../ToolModal';
 
@@ -14,7 +14,7 @@ const props: ComponentProps<typeof ToolModal> = {
 };
 it('renders the title', () => {
   const { getByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} title="ModalTitle" />
     </MemoryRouter>,
   );
@@ -23,7 +23,7 @@ it('renders the title', () => {
 
 it('indicates which fields are required or optional', () => {
   const { getByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} title="ModalTitle" />
     </MemoryRouter>,
   );
@@ -39,7 +39,7 @@ it('indicates which fields are required or optional', () => {
 
 it('renders default values into inputs', () => {
   const { queryAllByRole } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal
         {...props}
         name="LinkName"
@@ -60,7 +60,7 @@ it('renders default values into inputs', () => {
 
 it('allows url with https protocol', () => {
   const { getByLabelText, queryByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} />
     </MemoryRouter>,
     {},
@@ -74,7 +74,7 @@ it('allows url with https protocol', () => {
 });
 it('allows url with http protocol', () => {
   const { getByLabelText, queryByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} />
     </MemoryRouter>,
     {},
@@ -95,7 +95,7 @@ it('allows url with http protocol', () => {
 
 it('does not allow any other uri scheme', async () => {
   const { getByLabelText, findByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} />
     </MemoryRouter>,
   );
@@ -119,7 +119,7 @@ it('does not allow any other uri scheme', async () => {
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
   const { getByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal
         {...props}
         name="toolName"
@@ -149,7 +149,7 @@ it('disables the form elements while submitting', async () => {
       resolveSubmit = resolve;
     });
   const { getByText } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
+    <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} onSave={handleSave} />
     </MemoryRouter>,
   );

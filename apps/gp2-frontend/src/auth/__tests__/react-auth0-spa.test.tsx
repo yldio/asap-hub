@@ -1,5 +1,5 @@
 import { act, render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { Link } from '@asap-hub/react-components';
 import userEvent from '@testing-library/user-event';
 import { RecoilRoot } from 'recoil';
@@ -26,7 +26,7 @@ it('Checks auth0 is still logged in when changing pages', async () => {
   const { getByRole, findByText } = render(
     <RecoilRoot>
       <Auth0Provider>
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <MemoryRouter>
           <CheckAuth>
             {({ isAuthenticated }) => (
               <>Authenticated: {isAuthenticated ? 'true' : 'false'}</>

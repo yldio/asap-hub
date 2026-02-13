@@ -1,7 +1,7 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
@@ -30,7 +30,7 @@ const renderPage = async () => {
       <RecoilRoot>
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/tags?tag=test']}>
+            <MemoryRouter initialEntries={['/tags?tag=test']}>
               <Routes>
                 <Route path={'/tags/*'} element={<TagRoutes />} />
               </Routes>

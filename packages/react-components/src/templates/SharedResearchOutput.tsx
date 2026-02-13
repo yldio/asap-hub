@@ -2,7 +2,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { Card, Headline2, Link, Markdown } from '../atoms';
 import { createMailTo, mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';

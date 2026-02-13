@@ -8,7 +8,7 @@ import {
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router';
 import { useSetRecoilState } from 'recoil';
 import {
   refreshTeamState,

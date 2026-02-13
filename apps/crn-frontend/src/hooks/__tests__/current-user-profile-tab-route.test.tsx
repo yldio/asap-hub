@@ -2,7 +2,7 @@ import { User } from '@asap-hub/auth';
 import { network } from '@asap-hub/routing';
 import { renderHook, waitFor } from '@testing-library/react';
 import React, { ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider } from '../../auth/test-utils';
@@ -10,9 +10,7 @@ import { refreshUserState } from '../../network/users/state';
 import { useCurrentUserProfileTabRoute } from '../current-user-profile-tab-route';
 
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
-  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-    {children}
-  </MemoryRouter>
+  <MemoryRouter>{children}</MemoryRouter>
 );
 
 it('returns undefined when not logged in', () => {
@@ -36,7 +34,7 @@ const wrapper =
       }}
     >
       <Auth0Provider user={user}>
-        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[currentRoute]}>{children}</MemoryRouter>
+        <MemoryRouter initialEntries={[currentRoute]}>{children}</MemoryRouter>
       </Auth0Provider>
     </RecoilRoot>
   );

@@ -1,6 +1,6 @@
 import { gp2 as gp2Validation } from '@asap-hub/validation';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { useUserById } from '../users/state';
 
 const { isUserOnboardable } = gp2Validation;

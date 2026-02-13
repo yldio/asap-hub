@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import UserNavigation from '../UserNavigation';
 
 describe('UserNavigation', () => {
@@ -13,7 +13,7 @@ describe('UserNavigation', () => {
 
   it('opens user menu when clicked', async () => {
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <UserNavigation {...props} />
       </MemoryRouter>,
     );

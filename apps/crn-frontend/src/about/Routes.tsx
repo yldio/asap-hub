@@ -1,7 +1,7 @@
 import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
 import { AboutPage } from '@asap-hub/react-components';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 const loadAbout = () => import(/* webpackChunkName: "about" */ './About');
 

@@ -1,7 +1,7 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import UserPositions from '../UserPositions';
 
 describe('UserPositions', () => {
@@ -20,7 +20,7 @@ describe('UserPositions', () => {
 
   const renderUserPositions = (overrides: Partial<UserPositionsProps> = {}) =>
     render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MemoryRouter>
         <UserPositions {...defaultProps} {...overrides} />
       </MemoryRouter>,
     );

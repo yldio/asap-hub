@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { createListUserResponse } from '@asap-hub/fixtures';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { User } from '@asap-hub/auth';
@@ -52,7 +52,7 @@ const renderUserList = async (user: Partial<User> = {}) => {
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/users']}>
+            <MemoryRouter initialEntries={['/users']}>
               <Routes>
                 <Route path="/users" element={<UserList />} />
               </Routes>

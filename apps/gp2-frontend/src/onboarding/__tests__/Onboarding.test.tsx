@@ -8,7 +8,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { gp2 } from '@asap-hub/model';
 
@@ -26,7 +26,7 @@ const renderOnboarding = async (id: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{ onboarded: false, id }}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+            <MemoryRouter
               initialEntries={[gp2Routing.onboarding({}).coreDetails({}).$]}
             >
               <Onboarding />

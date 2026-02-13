@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter } from 'react-router';
+import { StaticRouter } from 'react-router';
 import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { network } from '@asap-hub/routing';
@@ -30,7 +30,7 @@ it('renders the header', () => {
 
 it('alters the search placeholder based on the tab', () => {
   const { getByRole, rerender } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).discoveryTeams({}).$]}>
+    <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
       <NetworkPageHeader {...props} page="discovery-teams" />
     </MemoryRouter>,
   );
@@ -39,7 +39,7 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).resourceTeams({}).$]}>
+    <MemoryRouter initialEntries={[network({}).resourceTeams({}).$]}>
       <NetworkPageHeader {...props} page="resource-teams" />
     </MemoryRouter>,
   );
@@ -48,7 +48,7 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).users({}).$]}>
+    <MemoryRouter initialEntries={[network({}).users({}).$]}>
       <NetworkPageHeader {...props} page="users" />
     </MemoryRouter>,
   );
@@ -57,7 +57,7 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).interestGroups({}).$]}>
+    <MemoryRouter initialEntries={[network({}).interestGroups({}).$]}>
       <NetworkPageHeader {...props} page="interest-groups" />
     </MemoryRouter>,
   );
@@ -66,7 +66,7 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter an interest group, keyword, …"`);
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).workingGroups({}).$]}>
+    <MemoryRouter initialEntries={[network({}).workingGroups({}).$]}>
       <NetworkPageHeader {...props} page="working-groups" />
     </MemoryRouter>,
   );
@@ -77,35 +77,35 @@ it('alters the search placeholder based on the tab', () => {
 
 it('shows the filter in all the tabs (discovery-teams, resource-teams, groups, working-groups and users)', () => {
   const { getByText, queryByText, rerender } = render(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).discoveryTeams({}).$]}>
+    <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
       <NetworkPageHeader {...props} page="discovery-teams" />
     </MemoryRouter>,
   );
   expect(queryByText(/filters/i)).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).resourceTeams({}).$]}>
+    <MemoryRouter initialEntries={[network({}).resourceTeams({}).$]}>
       <NetworkPageHeader {...props} page="resource-teams" />
     </MemoryRouter>,
   );
   expect(getByText(/filters/i)).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).interestGroups({}).$]}>
+    <MemoryRouter initialEntries={[network({}).interestGroups({}).$]}>
       <NetworkPageHeader {...props} page="interest-groups" />
     </MemoryRouter>,
   );
   expect(getByText(/filters/i)).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).workingGroups({}).$]}>
+    <MemoryRouter initialEntries={[network({}).workingGroups({}).$]}>
       <NetworkPageHeader {...props} page="working-groups" />
     </MemoryRouter>,
   );
   expect(getByText(/filters/i)).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).users({}).$]}>
+    <MemoryRouter initialEntries={[network({}).users({}).$]}>
       <NetworkPageHeader {...props} page="users" />
     </MemoryRouter>,
   );
@@ -237,7 +237,7 @@ describe('Data Manager filter', () => {
   it('removes the Data Manager filter when the flag is disabled', () => {
     mockIsEnabled.mockReturnValueOnce(false);
     const { queryByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).users({}).$]}>
+      <MemoryRouter initialEntries={[network({}).users({}).$]}>
         <NetworkPageHeader {...props} page="users" />
       </MemoryRouter>,
     );
@@ -247,7 +247,7 @@ describe('Data Manager filter', () => {
   it('shows the Data Manager filter when the flag is enabled', () => {
     mockIsEnabled.mockReturnValueOnce(true);
     const { getByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).users({}).$]}>
+      <MemoryRouter initialEntries={[network({}).users({}).$]}>
         <NetworkPageHeader {...props} page="users" />
       </MemoryRouter>,
     );
@@ -262,7 +262,7 @@ describe('Research Theme Filters', () => {
       { id: '2', name: 'Theme 2' },
     ];
     const { getByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).discoveryTeams({}).$]}>
+      <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
         <NetworkPageHeader
           {...props}
           page="discovery-teams"
@@ -277,7 +277,7 @@ describe('Research Theme Filters', () => {
 
   it('renders only the title when researchThemes are empty', () => {
     const { getByText, queryByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).discoveryTeams({}).$]}>
+      <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
         <NetworkPageHeader
           {...props}
           page="discovery-teams"
@@ -291,7 +291,7 @@ describe('Research Theme Filters', () => {
 
   it('renders only the title when researchThemes are undefined', () => {
     const { getByText, queryByText } = render(
-      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[network({}).discoveryTeams({}).$]}>
+      <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
         <NetworkPageHeader {...props} page="discovery-teams" />
       </MemoryRouter>,
     );

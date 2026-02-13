@@ -3,7 +3,7 @@ import { gp2 } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
@@ -27,7 +27,7 @@ const renderRoutes = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/events']}>
+            <MemoryRouter initialEntries={['/events']}>
               <RouterRoutes>
                 <Route path="/events/*" element={<Routes />} />
               </RouterRoutes>
@@ -65,7 +65,9 @@ describe('Routes', () => {
     mockGetCalendars.mockResolvedValue(gp2.createListCalendarResponse());
     await renderRoutes();
     await waitFor(() =>
-      expect(screen.getByRole('heading', { name: 'Events' })).toBeInTheDocument(),
+      expect(
+        screen.getByRole('heading', { name: 'Events' }),
+      ).toBeInTheDocument(),
     );
   });
 
@@ -92,7 +94,9 @@ describe('Routes', () => {
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(0));
     await renderRoutes();
 
-    const upcomingEventsLink = await screen.findByRole('link', { name: /upcoming/i });
+    const upcomingEventsLink = await screen.findByRole('link', {
+      name: /upcoming/i,
+    });
     const pastEventsLink = await screen.findByRole('link', { name: /past/i });
 
     expect(upcomingEventsLink).toBeVisible();

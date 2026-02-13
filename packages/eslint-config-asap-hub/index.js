@@ -58,6 +58,7 @@ module.exports = {
     'no-nested-ternary': 'off',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-floating-promises': 'error',
+    'no-void': ['error', { allowAsStatement: true }],
 
     'lines-between-class-members': 'off',
 

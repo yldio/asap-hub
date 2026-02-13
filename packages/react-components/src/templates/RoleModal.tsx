@@ -63,7 +63,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
           responsibilities: newResponsibilities.trim(),
           reachOut: newReachOut.trim(),
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       description={`Tell the network what role you play in your team and your main research goals by completing this part of your profile. (Note: if you need to change any locked fields, please contact ASAP)`}
     >

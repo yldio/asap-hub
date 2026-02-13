@@ -46,7 +46,7 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
                 backHref={onboarding({}).coreDetails({}).$}
                 onSave={async (patchedUser) => {
                   await patchUser(patchedUser);
-                  navigate(onboarding({}).coreDetails({}).$);
+                  void navigate(onboarding({}).coreDetails({}).$);
                 }}
               />
             }
@@ -60,7 +60,7 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
                 backHref={onboarding({}).coreDetails({}).$}
                 onSave={async (patchedUser) => {
                   await patchUser(patchedUser);
-                  navigate(onboarding({}).coreDetails({}).$);
+                  void navigate(onboarding({}).coreDetails({}).$);
                 }}
               />
             }

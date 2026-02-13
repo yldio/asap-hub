@@ -37,7 +37,7 @@ const Engagement = () => {
   const metric = (metricParam ?? 'presenters') as EngagementType;
 
   const setMetric = (newMetric: EngagementType) => {
-    navigate(
+    void navigate(
       analytics({}).engagement({}).metric({
         metric: newMetric,
       }).$,

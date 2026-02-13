@@ -137,7 +137,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const checkForNewerManuscriptVersion = async () => {
     const hasNewerVersion = await checkForNewVersion();
     if (hasNewerVersion) {
-      navigate(
+      void navigate(
         sharedResearch({})
           .researchOutput({ researchOutputId: id })
           .versionResearchOutput({}).$,
@@ -228,7 +228,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             confirmText="Go to Compliance Area"
             onSave={() => {
               setDisplayNoNewManuscriptVersionModal(false);
-              navigate(
+              void navigate(
                 network({})
                   .teams({})
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

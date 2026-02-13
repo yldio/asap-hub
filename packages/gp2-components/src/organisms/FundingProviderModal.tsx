@@ -31,7 +31,7 @@ const FundingProviderModal: React.FC<FundingProviderModalProps> = ({
         await onSave({
           fundingStreams: newFundingProvider,
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       backHref={backHref}
       dirty={checkDirty()}

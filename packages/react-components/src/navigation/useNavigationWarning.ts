@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import {
-  NavigateFunction,
-  useNavigate,
-  NavigateOptions,
-} from 'react-router';
+import { NavigateFunction, useNavigate, NavigateOptions } from 'react-router';
 import { useNavigationBlocker } from './NavigationBlockerContext';
 
 type UseNavigationWarningOptions = {
@@ -127,10 +123,10 @@ export const useNavigationWarning = ({
           // usually -1 ("Go back"), this translates to -2 most of the time.
           window.history.go(to - 1);
         } else {
-          navigate(to);
+          void navigate(to);
         }
       } else {
-        navigate(to, options as NavigateOptions);
+        void navigate(to, options as NavigateOptions);
       }
     },
     [navigate, requestNavigation],

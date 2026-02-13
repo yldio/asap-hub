@@ -13,7 +13,7 @@ export const usePaginationParams = () => {
   const resetPagination = () => {
     const resetPaginationSearchParams = new URLSearchParams(location.search);
     resetPaginationSearchParams.delete('currentPage');
-    navigate({ search: resetPaginationSearchParams.toString() } as never, {
+    void navigate({ search: resetPaginationSearchParams.toString() } as never, {
       replace: true,
     });
   };
@@ -54,7 +54,7 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (numberOfItems && currentPage > lastAllowedPage)
-      navigate(
+      void navigate(
         {
           search: renderPageHref(lastAllowedPage),
         } as never,

@@ -104,7 +104,7 @@ export const ConfirmAndSaveOutput = ({
       // Force navigation immediately to prevent React 18 batching from unmounting
       // the component before the Form's useEffect can navigate.
       // See https://asaphub.atlassian.net/browse/ASAP-1319
-      navigate(path(output.id));
+      void navigate(path(output.id));
     }
     return output;
   };

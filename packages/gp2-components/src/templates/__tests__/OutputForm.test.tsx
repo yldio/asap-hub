@@ -12,8 +12,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactNode, useEffect } from 'react';
-import { MemoryRouter, useLocation } from 'react-router';
-import { StaticRouter } from 'react-router';
+import { MemoryRouter, useLocation, StaticRouter } from 'react-router';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 

@@ -45,7 +45,7 @@ const Leadership: FC<Record<string, never>> = () => {
   const [teamSort, setTeamSort] =
     useState<SortLeadershipAndMembership>('team_asc');
   const setMetric = (newMetric: MetricOption) => {
-    navigate(analytics({}).leadership({}).metric({ metric: newMetric }).$);
+    void navigate(analytics({}).leadership({}).metric({ metric: newMetric }).$);
   };
 
   const { tags, setTags } = useSearch();

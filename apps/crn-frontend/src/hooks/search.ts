@@ -19,7 +19,9 @@ export const useSearch = () => {
     resetPagination(newUrlParams);
     newUrlParams.delete(paramName);
     values.forEach((v) => newUrlParams.append(paramName, v));
-    navigate({ search: newUrlParams.toString() } as never, { replace: true });
+    void navigate({ search: newUrlParams.toString() } as never, {
+      replace: true,
+    });
   };
 
   const toggleFilter = (filter: string) => {
@@ -42,7 +44,9 @@ export const useSearch = () => {
       ? newUrlParams.set(searchQueryParam, newSearchQuery)
       : newUrlParams.delete(searchQueryParam);
 
-    navigate({ search: newUrlParams.toString() } as never, { replace: true });
+    void navigate({ search: newUrlParams.toString() } as never, {
+      replace: true,
+    });
   };
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 400);

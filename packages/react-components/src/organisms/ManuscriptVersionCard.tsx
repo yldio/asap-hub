@@ -227,7 +227,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
 
   const handleEditManuscript = () => {
     if (editManuscriptRoute) {
-      navigate(editManuscriptRoute);
+      void navigate(editManuscriptRoute);
     }
   };
 

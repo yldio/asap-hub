@@ -258,7 +258,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               setSelectedVersion={setManuscriptVersion}
               onImportManuscript={async () => {
                 if (selectedManuscriptVersion?.version?.researchOutputId) {
-                  navigate(
+                  void navigate(
                     sharedResearch({})
                       .researchOutput({
                         researchOutputId:

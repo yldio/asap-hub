@@ -6,8 +6,7 @@ import {
   waitFor,
 } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import { createMemoryRouter, RouterProvider } from 'react-router';
-import { StaticRouter } from 'react-router';
+import { createMemoryRouter, RouterProvider, StaticRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
 import ComplianceReportForm from '../ComplianceReportForm';
 

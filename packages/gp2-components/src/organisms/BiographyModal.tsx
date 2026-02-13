@@ -25,7 +25,7 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
         await onSave({
           biography: newBiography,
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       backHref={backHref}
       dirty={newBiography !== biography}

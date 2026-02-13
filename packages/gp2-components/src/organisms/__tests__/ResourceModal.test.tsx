@@ -5,8 +5,7 @@ import {
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router';
-import { StaticRouter } from 'react-router';
+import { MemoryRouter, StaticRouter } from 'react-router';
 import { NavigationBlockerProvider } from '@asap-hub/react-components';
 import ResourceModal from '../ResourceModal';
 

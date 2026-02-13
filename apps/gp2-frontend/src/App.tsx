@@ -120,9 +120,7 @@ const App: FC<Record<string, never>> = () => {
           />
           <AuthProvider>
             <SentryAuth0 />
-            <BrowserRouter
-             
-            >
+            <BrowserRouter>
               <NavigationBlockerProvider>
                 <Frame title={null}>
                   <SentryRoutes>

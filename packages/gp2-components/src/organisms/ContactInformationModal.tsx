@@ -69,7 +69,7 @@ const ContactInformationModal: React.FC<ContactInformationModalProps> = ({
             number: newNumber || undefined,
           },
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       backHref={backHref}
       dirty={checkDirty()}

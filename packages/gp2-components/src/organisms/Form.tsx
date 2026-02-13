@@ -47,7 +47,7 @@ const Form = <T extends void | Record<string, unknown>>({
 
   useEffect(() => {
     if (status === 'hasSaved' && redirectOnSave) {
-      pushFromHere(redirectOnSave);
+      void pushFromHere(redirectOnSave);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, redirectOnSave, dirty]);
@@ -111,9 +111,9 @@ const Form = <T extends void | Record<string, unknown>>({
     setStatus('initial');
     // In React Router v6, location.key is always set, so we check history.length instead
     if (window.history.length > 1) {
-      blockedNavigate(-1);
+      void blockedNavigate(-1);
     } else {
-      blockedNavigate('/');
+      void blockedNavigate('/');
     }
   };
 

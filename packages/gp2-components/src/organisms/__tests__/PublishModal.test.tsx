@@ -1,7 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryRouter, RouterProvider } from 'react-router';
-import { StaticRouter } from 'react-router';
+import { createMemoryRouter, RouterProvider, StaticRouter } from 'react-router';
 import PublishModal from '../PublishModal';
 
 describe('PublishModal', () => {

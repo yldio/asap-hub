@@ -75,7 +75,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
       description="Share the research questions that interest you and drive your work (up to five). This will give other members a good sense of the kinds of problems that you’re interested in solving."
       onSave={async () => {
         await onSave({ questions: newQuestions.filter(Boolean) });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       backHref={backHref}
       dirty={checkDirty()}

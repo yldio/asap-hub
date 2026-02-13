@@ -73,7 +73,7 @@ const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
 
   const handleCancelManuscriptSubmission = () => {
     clearModal();
-    navigate(-1);
+    void navigate(-1);
   };
 
   return modal ? (

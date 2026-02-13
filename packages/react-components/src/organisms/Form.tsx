@@ -54,7 +54,7 @@ const Form = <T extends void | Record<string, unknown>>({
 
   useEffect(() => {
     if (status === 'hasSaved' && redirectOnSaveRef.current) {
-      navigate(redirectOnSaveRef.current);
+      void navigate(redirectOnSaveRef.current);
     }
   }, [status, navigate]);
 
@@ -106,9 +106,9 @@ const Form = <T extends void | Record<string, unknown>>({
   const onCancel = () => {
     setStatus('initial');
     if (window.history.length > 1) {
-      blockedNavigate(-1);
+      void blockedNavigate(-1);
     } else {
-      blockedNavigate('/');
+      void blockedNavigate('/');
     }
   };
 

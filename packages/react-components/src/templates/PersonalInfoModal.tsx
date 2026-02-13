@@ -92,7 +92,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             }).map(([key, value]) => [key, value.trim()]),
           ),
         );
-        navigate(backHref);
+        void navigate(backHref);
       }}
     >
       {({ isSaving }) => (

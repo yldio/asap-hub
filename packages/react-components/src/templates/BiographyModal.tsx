@@ -26,7 +26,7 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
       backHref={backHref}
       onSave={async () => {
         await onSave(newBiography);
-        navigate(backHref);
+        void navigate(backHref);
       }}
     >
       {({ isSaving }) => (

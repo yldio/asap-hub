@@ -52,7 +52,7 @@ const EditModal: React.FC<EditModalProps> = ({
   useEffect(() => {
     if (status === 'hasSaved') {
       setStatus('initial');
-      historyPush(backHref);
+      void historyPush(backHref);
     }
   }, [status, backHref, historyPush]);
 

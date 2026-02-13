@@ -86,7 +86,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
       // but GP2 unmounts the whole app when the user's data is refreshed, causing the form to be unmounted
       // when it needs to perform the navigation.
       // So, this is a workaround that forces the navigation immediately after saving.
-      navigate(backToUserDetails);
+      void navigate(backToUserDetails);
     },
   };
 

@@ -63,7 +63,7 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
             newExpertiseAndResourceDescription || undefined,
           tagIds: newTags.map(({ id }) => id),
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
     >
       {({ isSaving }) => (

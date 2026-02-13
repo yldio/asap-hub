@@ -101,7 +101,7 @@ const ContributingCohortsModal: React.FC<ContributingCohortsModalProps> = ({
         await onSave({
           contributingCohorts: cleanCohorts,
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       backHref={backHref}
       dirty={checkDirty()}

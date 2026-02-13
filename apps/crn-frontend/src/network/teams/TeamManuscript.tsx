@@ -73,7 +73,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
     const path = network({}).teams({}).team({ teamId }).workspace({}).$;
     setFormType({ type: 'manuscript', accent: 'successLarge' });
     setRefreshTeamState((value) => value + 1);
-    pushFromHere(path);
+    void pushFromHere(path);
   };
 
   const onError = (error: ManuscriptError | Error) => {

@@ -35,7 +35,9 @@ const OpenScience: FC<Record<string, never>> = () => {
   const isPreprintCompliancePage = metric === 'preprint-compliance';
 
   const setMetric = (newMetric: MetricOption) => {
-    navigate(analytics({}).openScience({}).metric({ metric: newMetric }).$);
+    void navigate(
+      analytics({}).openScience({}).metric({ metric: newMetric }).$,
+    );
   };
 
   const { timeRange } = useAnalytics();

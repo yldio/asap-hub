@@ -9,8 +9,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, ReactNode } from 'react';
 import { ValidationErrorResponse } from '@asap-hub/model';
-import { MemoryRouter, useLocation } from 'react-router';
-import { StaticRouter } from 'react-router';
+import { MemoryRouter, useLocation, StaticRouter } from 'react-router';
 import {
   Anchor,
   Button,

@@ -121,7 +121,6 @@ const renderPage = async (
         <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter
-              future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[
                 {
                   pathname: initialPath ?? defaultInitialPath,

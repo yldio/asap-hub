@@ -79,7 +79,7 @@ export const useComplianceSearch = () => {
       params.append('status', status);
     }
 
-    navigate({ search: params.toString() } as never, { replace: true });
+    void navigate({ search: params.toString() } as never, { replace: true });
   };
 
   const setSearchQuery = (newSearchQuery: string) => {
@@ -89,7 +89,9 @@ export const useComplianceSearch = () => {
       ? newUrlParams.set(searchQueryParam, newSearchQuery)
       : newUrlParams.delete(searchQueryParam);
 
-    navigate({ search: newUrlParams.toString() } as never, { replace: true });
+    void navigate({ search: newUrlParams.toString() } as never, {
+      replace: true,
+    });
   };
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 600);

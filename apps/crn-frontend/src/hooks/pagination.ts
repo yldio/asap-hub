@@ -26,7 +26,7 @@ export const usePaginationParams = () => {
     }
     const params = new URLSearchParams(location.search);
     params.delete(CURRENT_PAGE_PARAM);
-    navigate({ search: params.toString() } as never, { replace: true });
+    void navigate({ search: params.toString() } as never, { replace: true });
   };
 
   // Build view params only when accessed (lazy computation)
@@ -84,7 +84,7 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
   // eslint-disable-next-line no-restricted-syntax
   useEffect(() => {
     if (numberOfItems && currentPage > lastAllowedPage)
-      navigate(
+      void navigate(
         {
           search: renderPageHref(lastAllowedPage),
         } as never,

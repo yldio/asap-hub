@@ -20,7 +20,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ onSave, backHref }) => {
         await onSave({
           onboarded: true,
         });
-        navigate('/');
+        void navigate('/');
       }}
       backHref={backHref}
       dirty={false}

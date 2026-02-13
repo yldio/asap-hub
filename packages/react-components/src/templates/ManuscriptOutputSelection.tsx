@@ -161,7 +161,7 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
   const navigate = useNavigate();
 
   const handleCancel = () => {
-    navigate(-1);
+    void navigate(-1);
   };
 
   const renderManuscriptImport = () => {

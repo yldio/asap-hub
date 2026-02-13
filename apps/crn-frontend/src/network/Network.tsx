@@ -225,7 +225,10 @@ const Network: FC<Record<string, never>> = () => {
           </Frame>
         }
       />
-      <Route index element={<Navigate to={network({}).users({}).$} replace />} />
+      <Route
+        index
+        element={<Navigate to={network({}).users({}).$} replace />}
+      />
     </Routes>
   );
 };

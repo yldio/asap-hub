@@ -181,7 +181,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   };
 
   const handleGoToManuscriptForm = () => {
-    navigate(manuscriptRoute);
+    void navigate(manuscriptRoute);
   };
 
   const contactPM = getActiveProjectManager(members);

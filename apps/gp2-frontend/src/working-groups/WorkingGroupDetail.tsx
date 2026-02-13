@@ -11,13 +11,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useMemo } from 'react';
-import {
-  Navigate,
-  Route,
-  Routes,
-  useParams,
-  useNavigate,
-} from 'react-router';
+import { Navigate, Route, Routes, useParams, useNavigate } from 'react-router';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -110,7 +104,7 @@ const WorkingGroupMainPage: FC<{
     wpResources: gp2Model.Resource[],
   ) => {
     const result = await update(wpResources);
-    navigate(resourcesRoute.$);
+    void navigate(resourcesRoute.$);
     return result;
   };
 

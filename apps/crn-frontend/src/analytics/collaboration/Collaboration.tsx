@@ -101,7 +101,7 @@ const Collaboration = () => {
     } else {
       newType = type || 'within-team';
     }
-    navigate(
+    void navigate(
       analytics({}).collaboration({}).collaborationPath({
         metric: newMetric,
         type: newType,
@@ -116,7 +116,7 @@ const Collaboration = () => {
       setTeamSort('team_asc');
       setTeamSortingDirection(teamCollaborationInitialSortingDirection);
     }
-    navigate(
+    void navigate(
       analytics({})
         .collaboration({})
         .collaborationPath({ metric, type: newType }).$,

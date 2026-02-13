@@ -161,7 +161,7 @@ const KeyInformationModal: React.FC<KeyInformationModalProps> = ({
           ),
           ...(newOrcid ? { orcid: newOrcid } : {}),
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       backHref={backHref}
       dirty={isDirty}

@@ -38,7 +38,7 @@ const TagsModal: React.FC<TagsModalProps> = ({
         await onSave({
           tags: newTags.map(({ id }) => ({ id })),
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       backHref={backHref}
       dirty={checkDirty()}

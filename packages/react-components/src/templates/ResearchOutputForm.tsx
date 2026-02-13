@@ -490,7 +490,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                 // Force navigation immediately to prevent React 18 batching from
                 // letting useNavigationWarning cleanup interfere with the redirect.
                 // See https://asaphub.atlassian.net/browse/ASAP-1319
-                navigate(redirectPath);
+                void navigate(redirectPath);
               }
               return researchOutput;
             })();

@@ -45,7 +45,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
     const { fromButton } = (state as { fromButton?: boolean }) ?? {};
     if (fromButton) return;
 
-    pushFromHere(teamWorkspacePath, { replace: true });
+    void pushFromHere(teamWorkspacePath, { replace: true });
   }, [pushFromHere, state, teamWorkspacePath]);
 
   if (manuscript && manuscript.versions[0]) {
@@ -55,7 +55,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
         accent: 'successLarge',
       });
       setRefreshTeamState((value) => value + 1);
-      pushFromHere(teamWorkspacePath, { replace: true });
+      void pushFromHere(teamWorkspacePath, { replace: true });
     };
 
     return (

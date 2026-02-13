@@ -27,13 +27,13 @@ export const engagementToCSV =
     'Unique Speakers (All Roles): Value': data.uniqueAllRolesCount,
     'Unique Speakers (All Roles): Percentage': `${data.uniqueAllRolesCountPercentage}%`,
     'Unique Speakers (All Roles): Average': utils.getPerformanceText(
-      data.uniqueAllRolesCount,
+      data.uniqueAllRolesCountPercentage,
       performance.uniqueAllRoles,
     ),
     'Unique Speakers (Key Personnel): Value': data.uniqueKeyPersonnelCount,
     'Unique Speakers (Key Personnel): Percentage': `${data.uniqueKeyPersonnelCountPercentage}%`,
     'Unique Speakers (Key Personnel): Average': utils.getPerformanceText(
-      data.uniqueKeyPersonnelCount,
+      data.uniqueKeyPersonnelCountPercentage,
       performance.uniqueKeyPersonnel,
     ),
   });

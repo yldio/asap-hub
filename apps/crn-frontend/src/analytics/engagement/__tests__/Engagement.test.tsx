@@ -390,6 +390,15 @@ describe('Engagement', () => {
       expect.stringMatching(/engagement_\d+\.csv/),
       expect.anything(),
     );
+
+    expect(mockGetPresenterRepresentationOS).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: 'team_asc',
+        tags: [],
+        timeRange: 'all',
+        pageSize: 200,
+      }),
+    );
   });
 
   it('throws error when engagement state is an Error', async () => {

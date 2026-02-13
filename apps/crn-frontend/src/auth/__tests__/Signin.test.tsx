@@ -188,7 +188,7 @@ describe('after a failed flow', () => {
       });
 
       result = render(
-        <MemoryRouter
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
           initialEntries={[
             '/?search&state=state&error=access_denied&error_description=Forbidden',
           ]}
@@ -230,7 +230,7 @@ describe('after a failed flow', () => {
   describe('for an alumni error', () => {
     beforeEach(() => {
       result = render(
-        <MemoryRouter
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
           initialEntries={[
             '/?search&state=state&error=access_denied&error_description=alumni-user-access-denied',
           ]}

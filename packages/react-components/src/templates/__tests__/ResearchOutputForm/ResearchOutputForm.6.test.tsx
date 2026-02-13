@@ -55,7 +55,7 @@ describe('on submit', () => {
     const documentType = 'Dataset';
     const type = 'Spectroscopy';
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -98,7 +98,7 @@ describe('on submit', () => {
     const researchTags = [researchTagMethodResponse];
     const documentType = 'Dataset';
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{

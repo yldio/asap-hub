@@ -35,7 +35,7 @@ const renderPage = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/about']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/about']}>
               <Routes>
                 <Route path={`${about.template}/*`} element={<About />} />
               </Routes>

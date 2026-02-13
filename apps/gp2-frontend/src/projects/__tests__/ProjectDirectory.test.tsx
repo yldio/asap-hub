@@ -45,7 +45,7 @@ const renderProjectsList = async (searchQuery = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[gp2Routing.projects({}).$]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[gp2Routing.projects({}).$]}>
               <Routes>
                 <Route
                   path={gp2Routing.projects.template}

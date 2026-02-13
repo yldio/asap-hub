@@ -26,7 +26,10 @@ describe('ConfirmAndSaveOutput', () => {
           element: children,
         },
       ],
-      { initialEntries: ['/'] },
+      {
+        future: { v7_relativeSplatPath: true },
+        initialEntries: ['/'],
+      },
     );
 
     return (
@@ -37,7 +40,7 @@ describe('ConfirmAndSaveOutput', () => {
           removeNotification: jest.fn(),
         }}
       >
-        <RouterProvider router={router} />
+        <RouterProvider router={router} future={{ v7_startTransition: true }} />
       </NotificationContext.Provider>
     );
   };
@@ -210,10 +213,10 @@ describe('ConfirmAndSaveOutput', () => {
             ),
           },
         ],
-        { initialEntries: ['/outputs/new'] },
+        { future: { v7_relativeSplatPath: true }, initialEntries: ['/outputs/new'] },
       );
 
-      render(<RouterProvider router={router} />);
+      render(<RouterProvider router={router} future={{ v7_startTransition: true }} />);
       return { router };
     };
 

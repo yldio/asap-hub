@@ -136,7 +136,7 @@ it('renders the Analytics route when user has Staff role', async () => {
     <RecoilRoot>
       <authTestUtils.UserAuth0Provider>
         <authTestUtils.UserLoggedIn user={{}}>
-          <MemoryRouter initialEntries={['/analytics']}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/analytics']}>
             <Suspense fallback="loading">
               <AuthenticatedApp />
             </Suspense>
@@ -155,7 +155,7 @@ it('renders the application layout correctly', async () => {
     <RecoilRoot>
       <authTestUtils.UserAuth0Provider>
         <authTestUtils.UserLoggedIn user={{}}>
-          <MemoryRouter>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <Suspense fallback="loading">
               <AuthenticatedApp />
             </Suspense>
@@ -201,7 +201,7 @@ it('shows Projects in navigation', async () => {
     <RecoilRoot>
       <authTestUtils.UserAuth0Provider>
         <authTestUtils.UserLoggedIn user={{}}>
-          <MemoryRouter>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <Suspense fallback="loading">
               <AuthenticatedApp />
             </Suspense>
@@ -254,7 +254,7 @@ describe('User projects in navigation', () => {
       <RecoilRoot>
         <authTestUtils.UserAuth0Provider>
           <authTestUtils.UserLoggedIn user={{}}>
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <Suspense fallback="loading">
                 <AuthenticatedApp />
               </Suspense>
@@ -282,7 +282,7 @@ describe('User projects in navigation', () => {
       <RecoilRoot>
         <authTestUtils.UserAuth0Provider>
           <authTestUtils.UserLoggedIn user={{}}>
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <Suspense fallback="loading">
                 <AuthenticatedApp />
               </Suspense>
@@ -311,7 +311,7 @@ describe('User projects in navigation', () => {
       <RecoilRoot>
         <authTestUtils.UserAuth0Provider>
           <authTestUtils.UserLoggedIn user={{}}>
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <Suspense fallback="loading">
                 <AuthenticatedApp />
               </Suspense>
@@ -340,7 +340,7 @@ describe('User projects in navigation', () => {
       <RecoilRoot>
         <authTestUtils.UserAuth0Provider>
           <authTestUtils.UserLoggedIn user={{}}>
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <Suspense fallback="loading">
                 <AuthenticatedApp />
               </Suspense>
@@ -372,7 +372,7 @@ describe('User projects in navigation', () => {
       <RecoilRoot>
         <authTestUtils.UserAuth0Provider>
           <authTestUtils.UserLoggedIn user={{}}>
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <Suspense fallback="loading">
                 <AuthenticatedApp />
               </Suspense>

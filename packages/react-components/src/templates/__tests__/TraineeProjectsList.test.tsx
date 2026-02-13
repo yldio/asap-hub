@@ -79,7 +79,7 @@ const props: ComponentProps<typeof TraineeProjectsList> = {
 
 it('renders all trainee projects', () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <TraineeProjectsList {...props} />
     </MemoryRouter>,
   );
@@ -89,7 +89,7 @@ it('renders all trainee projects', () => {
 
 it('renders the correct number of project cards', () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <TraineeProjectsList {...props} />
     </MemoryRouter>,
   );
@@ -98,7 +98,7 @@ it('renders the correct number of project cards', () => {
 
 it('renders Trainee Project type pill for each project', () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <TraineeProjectsList {...props} />
     </MemoryRouter>,
   );

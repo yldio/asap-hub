@@ -5,7 +5,7 @@ import ListControls from '../ListControls';
 
 it('passes through links', () => {
   const { getAllByText, getByText, getByRole } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ListControls
         cardViewHref="/card?123"
         listViewHref="/list?321"
@@ -23,7 +23,7 @@ it('passes through links', () => {
 
 it('indicates which option is selected', () => {
   const { getByRole, rerender } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ListControls
         cardViewHref="/card?123"
         listViewHref="/list?321"

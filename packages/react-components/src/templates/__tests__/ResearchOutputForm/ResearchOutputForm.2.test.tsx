@@ -97,7 +97,7 @@ describe('on submit', () => {
     },
   ) => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <LocationCapture />
         <ResearchOutputForm
           {...defaultProps}
@@ -215,7 +215,7 @@ describe('on submit', () => {
     const documentType = 'Bioinformatics' as const;
 
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <LocationCapture />
         <ResearchOutputForm
           {...defaultProps}

@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import UserExternalProfilesForm from '../UserExternalProfilesForm';
 
 const renderWithRouter = (children: ReactNode) =>
-  render(<MemoryRouter>{children}</MemoryRouter>);
+  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
 
 describe('UserExternalProfilesForm', () => {
   beforeEach(jest.resetAllMocks);

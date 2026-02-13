@@ -33,7 +33,7 @@ describe('KeyInformationModal', () => {
     overrides: Partial<KeyInformationModalProps> = {},
   ) =>
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <KeyInformationModal {...defaultProps} {...overrides} />
       </MemoryRouter>,
     );

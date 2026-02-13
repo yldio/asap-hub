@@ -28,7 +28,7 @@ const renderNews = async ({ user = {} }: { user?: Partial<gp2Auth.User> }) => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/news']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/news']}>
               <RouterRoutes>
                 <Route path="/news/*" element={<Routes />} />
               </RouterRoutes>

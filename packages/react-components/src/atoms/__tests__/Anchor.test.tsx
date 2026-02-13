@@ -1,7 +1,15 @@
+import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, fireEvent } from '@testing-library/react';
 
 import Anchor from '../Anchor';
+
+// Wrapper component with future flags for RTL's wrapper option
+const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
+  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    {children}
+  </MemoryRouter>
+);
 
 it('renders the text in an anchor', () => {
   const { getByText } = render(<Anchor href="/">text</Anchor>);
@@ -10,7 +18,7 @@ it('renders the text in an anchor', () => {
 
 describe.each`
   contextDescription    | wrapper
-  ${'with a router'}    | ${MemoryRouter}
+  ${'with a router'}    | ${MemoryRouterWithFuture}
   ${'without a router'} | ${undefined}
 `('$contextDescription', ({ wrapper }) => {
   describe.each`
@@ -73,7 +81,7 @@ describe('for an external link', () => {
 
 describe.each`
   description           | wrapper
-  ${'with a router'}    | ${MemoryRouter}
+  ${'with a router'}    | ${MemoryRouterWithFuture}
   ${'without a router'} | ${undefined}
 `('for an internal link $description to /', ({ wrapper }) => {
   it('does not set the anchor target', () => {
@@ -93,7 +101,7 @@ describe.each`
 describe('for an internal link with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const { getByRole } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <Anchor
           href={`${window.location.protocol}//${window.location.host}/page?query#fragment`}
         >
@@ -109,7 +117,7 @@ describe('for an internal link with a router', () => {
     // Note: Smooth scrolling is now handled by the useScrollToHash hook in Layout,
     // not by the Anchor component. This test verifies navigation works correctly.
     const { getByRole } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <Anchor href={`/#fragment`}>text</Anchor>
         <main id="fragment">text</main>
       </MemoryRouter>,

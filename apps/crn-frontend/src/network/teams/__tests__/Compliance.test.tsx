@@ -98,7 +98,7 @@ const renderCompliancePage = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname: '/' }]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[{ pathname: '/' }]}>
               <ManuscriptToastProvider>
                 <Routes>
                   <Route

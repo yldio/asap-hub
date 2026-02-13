@@ -77,7 +77,7 @@ const renderDiscoveryProjectDetail = async (projectId: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[path]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[path]}>
               <Routes>
                 <Route
                   path={`${projects.template}/discovery/:projectId/*`}

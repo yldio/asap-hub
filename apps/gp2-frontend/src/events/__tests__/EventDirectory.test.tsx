@@ -36,7 +36,7 @@ const renderList = async (props: EventListProps, searchQuery = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/events']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/events']}>
               <EventDirectory {...props} />
             </MemoryRouter>
           </WhenReady>

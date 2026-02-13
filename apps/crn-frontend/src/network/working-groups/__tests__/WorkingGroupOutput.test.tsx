@@ -238,7 +238,9 @@ const renderPage = async ({
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter initialEntries={initialEntries}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+              initialEntries={initialEntries}
+            >
               <LocationCapture />
               <Routes>
                 <Route

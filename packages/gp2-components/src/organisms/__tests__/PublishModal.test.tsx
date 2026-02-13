@@ -28,9 +28,14 @@ describe('PublishModal', () => {
           element: <PublishModal {...defaultProps} onSave={onSave} />,
         },
       ],
-      { initialEntries: ['/'] },
+      {
+        future: { v7_relativeSplatPath: true },
+        initialEntries: ['/'],
+      },
     );
-    render(<RouterProvider router={router} />);
+    render(
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
+    );
     const saveButton = screen.getByRole('button', { name: 'Publish' });
     await userEvent.click(saveButton);
     await waitFor(() => {

@@ -115,7 +115,7 @@ const renderComponent = async (path: string, user = defaultUser) => {
       <Auth0Provider user={user}>
         <WhenReady>
           <Suspense fallback="Loading...">
-            <MemoryRouter initialEntries={[path]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[path]}>
               <Routes>
                 <Route path="/prev" element={<div>Previous Page</div>} />
                 <Route

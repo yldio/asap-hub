@@ -20,7 +20,7 @@ const props: ComponentProps<typeof RoleModal> = {
 
 it('renders the title', () => {
   const { getByText } = render(
-    <MemoryRouter initialEntries={['/']}>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
       <RoleModal {...props} />
     </MemoryRouter>,
   );
@@ -29,7 +29,7 @@ it('renders the title', () => {
 
 it('renders teams and lan names into inputs', async () => {
   const { getByLabelText, getAllByLabelText } = render(
-    <MemoryRouter initialEntries={['/']}>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
       <RoleModal
         {...props}
         researchInterests={undefined}
@@ -59,7 +59,7 @@ it('renders teams and lan names into inputs', async () => {
 describe('User Role', () => {
   it('indicates which fields are required or optional', () => {
     const { getByText } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <RoleModal {...props} />
       </MemoryRouter>,
     );
@@ -74,7 +74,7 @@ describe('User Role', () => {
   it('triggers the save function', async () => {
     const mockSaveFn = jest.fn();
     const { getByText, getByDisplayValue } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <RoleModal
           {...props}
           reachOut={undefined}
@@ -106,7 +106,7 @@ describe('User Role', () => {
       });
 
     render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <RoleModal
           {...props}
           researchInterests="researchInterests"
@@ -132,7 +132,7 @@ describe('User Role', () => {
     const consoleMock = mockActErrorsInConsole();
 
     const { getByLabelText, findByText } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <RoleModal {...props} researchInterests="" />
       </MemoryRouter>,
     );
@@ -150,7 +150,7 @@ describe('User Role', () => {
     const consoleMock = mockActErrorsInConsole();
 
     const { getByLabelText, findByText } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <RoleModal {...props} responsibilities="abc" researchInterests="123" />
       </MemoryRouter>,
     );
@@ -168,7 +168,7 @@ describe('Staff Role', () => {
   it('triggers the save function', async () => {
     const mockSaveFn = jest.fn();
     const { getByText, getByLabelText } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <RoleModal
           {...props}
           role="Staff"
@@ -202,7 +202,7 @@ describe('Staff Role', () => {
       });
 
     const { getByText } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <RoleModal
           {...props}
           role="Staff"

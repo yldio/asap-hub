@@ -100,6 +100,7 @@ const renderWorkingGroupProfile = async (
       },
     ],
     {
+      future: { v7_relativeSplatPath: true },
       initialEntries: [initialPath],
     },
   );
@@ -113,7 +114,10 @@ const renderWorkingGroupProfile = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <RouterProvider router={router} />
+            <RouterProvider
+              router={router}
+              future={{ v7_startTransition: true }}
+            />
           </WhenReady>
         </Auth0Provider>
       </Suspense>

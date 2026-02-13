@@ -50,7 +50,7 @@ describe('useNavigationWarning', () => {
     initialEntries = ['/first', '/test'],
   ) =>
     render(
-      <MemoryRouter initialEntries={initialEntries} initialIndex={1}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={initialEntries} initialIndex={1}>
         <NavigationBlockerProvider>{ui}</NavigationBlockerProvider>
       </MemoryRouter>,
     );

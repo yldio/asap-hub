@@ -54,7 +54,7 @@ beforeEach(() => jest.resetAllMocks());
 describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
   it('goes back when closed', async () => {
     const { findByText, findByTitle } = renderWithRoot(
-      <MemoryRouter initialEntries={[route({}).$]}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[route({}).$]}>
         <Routes>
           <Route path={aboutPath} element={<>Profile</>} />
           <Route
@@ -73,7 +73,7 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
 
   it('goes back when saved', async () => {
     const { findByText } = renderWithRoot(
-      <MemoryRouter initialEntries={[route({}).$]}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[route({}).$]}>
         <Routes>
           <Route path={aboutPath} element={<>Profile</>} />
           <Route
@@ -101,7 +101,7 @@ describe('the personal info modal', () => {
     mockLoadInstitutionOptions.mockResolvedValue(['ExampleInst']);
     const { findByDisplayValue, findByText } = renderWithRoot(
       <Auth0Provider user={{ id }}>
-        <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[editPersonalInfo({}).$]}>
           <Routes>
             <Route
               path={`${aboutPath}/*`}
@@ -134,7 +134,7 @@ describe('the personal info modal', () => {
       queryByDisplayValue,
     } = renderWithRoot(
       <Auth0Provider user={{ id }}>
-        <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[editPersonalInfo({}).$]}>
           <Routes>
             <Route
               path={`${aboutPath}/*`}
@@ -175,7 +175,7 @@ describe('the personal info modal', () => {
 describe('the contact info modal', () => {
   it('passes user data to contact info modal', async () => {
     const { findByDisplayValue } = renderWithRoot(
-      <MemoryRouter initialEntries={[editContactInfo({}).$]}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[editContactInfo({}).$]}>
         <Routes>
           <Route
             path={`${aboutPath}/*`}
@@ -196,7 +196,7 @@ describe('the contact info modal', () => {
   });
   it('uses the contact email as the email value', async () => {
     const { findByLabelText } = renderWithRoot(
-      <MemoryRouter initialEntries={[editContactInfo({}).$]}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[editContactInfo({}).$]}>
         <Routes>
           <Route
             path={`${aboutPath}/*`}
@@ -227,7 +227,7 @@ describe('the contact info modal', () => {
       queryByText,
       queryByDisplayValue,
     } = renderWithRoot(
-      <MemoryRouter initialEntries={[`/profile${editContactInfo.template}`]}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[`/profile${editContactInfo.template}`]}>
         <Routes>
           <Route
             path="/profile/*"
@@ -266,7 +266,7 @@ describe('the contact info modal', () => {
 describe('the onboarded modal', () => {
   it('saves changes', async () => {
     const { findByText } = renderWithRoot(
-      <MemoryRouter initialEntries={[`/profile${editOnboarded.template}`]}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[`/profile${editOnboarded.template}`]}>
         <Routes>
           <Route
             path="/profile/*"
@@ -357,7 +357,7 @@ describe('the onboarded modal', () => {
           <Suspense fallback="loading">
             <Auth0Provider user={currentUser} auth0Overrides={auth0Overrides}>
               <WhenReady>
-                <MemoryRouter
+                <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
                   initialEntries={[ownProfileRoute.editOnboarded({}).$]}
                 >
                   <LocationDisplay />

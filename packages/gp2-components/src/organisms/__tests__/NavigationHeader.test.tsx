@@ -14,7 +14,7 @@ describe('NavigationHeader', () => {
   };
   it('renders the gp2 logo', () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <NavigationHeader {...props} />
       </MemoryRouter>,
     );
@@ -25,7 +25,7 @@ describe('NavigationHeader', () => {
 
   it('renders a menu button if menuShown prop is false', () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <NavigationHeader {...props} />
       </MemoryRouter>,
     );
@@ -33,7 +33,7 @@ describe('NavigationHeader', () => {
   });
   it('renders a close button if menuShown prop is true', () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <NavigationHeader {...props} menuShown={true} />
       </MemoryRouter>,
     );
@@ -42,7 +42,7 @@ describe('NavigationHeader', () => {
   it('calls onMenuToggle when the menu toggle button is clicked', async () => {
     const onMenuToggle = jest.fn();
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <NavigationHeader {...props} onToggleMenu={onMenuToggle} />
       </MemoryRouter>,
     );

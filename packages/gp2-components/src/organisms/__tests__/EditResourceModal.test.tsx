@@ -18,7 +18,7 @@ const renderEditResourceModal = ({
   updateResources = jest.fn(),
 }: renderEditResourceModalProps = {}) => {
   render(
-    <MemoryRouter initialEntries={[resourceRoute({ resourceIndex }).$]}>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[resourceRoute({ resourceIndex }).$]}>
       <Routes>
         <Route
           path={resourceRoute.template}

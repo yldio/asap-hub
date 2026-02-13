@@ -11,7 +11,7 @@ describe('useBackHref', () => {
 
   it('returns null if there is no last location', () => {
     const { container } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <Routes>
           <Route path="/" element={<ShowBackHref />} />
         </Routes>
@@ -22,7 +22,7 @@ describe('useBackHref', () => {
 
   it('returns the last location from state if available', () => {
     const { container } = render(
-      <MemoryRouter
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
         initialEntries={[
           { pathname: '/last', search: '?q', hash: '#f' },
           {
@@ -41,7 +41,7 @@ describe('useBackHref', () => {
 
   it('returns null if state.from is not available', () => {
     const { container } = render(
-      <MemoryRouter initialEntries={['/comp']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/comp']}>
         <Routes>
           <Route path="/comp" element={<ShowBackHref />} />
         </Routes>
@@ -94,7 +94,7 @@ describe('useBackHref', () => {
       });
 
       const { container } = render(
-        <MemoryRouter initialEntries={['/current']}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
           <Routes>
             <Route path="/current" element={<ShowBackHref />} />
           </Routes>
@@ -111,7 +111,7 @@ describe('useBackHref', () => {
       });
 
       const { container } = render(
-        <MemoryRouter initialEntries={['/current']}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
           <Routes>
             <Route path="/current" element={<ShowBackHref />} />
           </Routes>
@@ -137,7 +137,7 @@ describe('useBackHref', () => {
       });
 
       const { container } = render(
-        <MemoryRouter initialEntries={['/current']}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
           <Routes>
             <Route path="/current" element={<ShowBackHref />} />
           </Routes>
@@ -154,7 +154,7 @@ describe('useBackHref', () => {
       });
 
       const { container } = render(
-        <MemoryRouter initialEntries={['/current']}>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/current']}>
           <Routes>
             <Route path="/current" element={<ShowBackHref />} />
           </Routes>
@@ -171,7 +171,7 @@ describe('useBackHref', () => {
       });
 
       const { container } = render(
-        <MemoryRouter
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
           initialEntries={[
             {
               pathname: '/current',

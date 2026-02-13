@@ -66,7 +66,8 @@ describe('on submit', () => {
       const documentType = 'Bioinformatics' as const;
 
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        >
           <ResearchOutputForm
             {...defaultProps}
             researchOutputData={initialResearchOutputData}
@@ -106,7 +107,7 @@ describe('on submit', () => {
     const documentType = 'Article' as const;
 
     render(
-      <MemoryRouter
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
         initialEntries={[
           network({}).teams({}).team({ teamId: 'TEAMID' }).createOutput({
             outputDocumentType: 'article',

@@ -50,7 +50,7 @@ const renderProjectDetail = async ({
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: userId, role, projects }}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[
                 route || gp2Routing.projects({}).project({ projectId: id }).$,
               ]}
@@ -130,7 +130,7 @@ describe('ProjectDetail', () => {
     project.members = [projectMember];
     mockGetProject.mockResolvedValueOnce(project);
     await renderProjectDetail({ id: project.id });
-    expect(screen.getByText(/project Members/i)).toBeVisible();
+    expect(await screen.findByText(/project Members/i)).toBeVisible();
   });
 
   describe('resources', () => {
@@ -370,10 +370,9 @@ describe('ProjectDetail', () => {
         [...project.resources!, { title, type }],
         expect.anything(),
       );
-      await waitFor(() =>
-        expect(
-          screen.queryByRole('heading', { name: /Add Resource/i }),
-        ).not.toBeInTheDocument(),
+      await waitForElementToBeRemoved(
+        () => screen.queryByRole('heading', { name: /Add Resource/i }),
+        { timeout: 10000 },
       );
     });
 
@@ -421,10 +420,9 @@ describe('ProjectDetail', () => {
         [resources[0], { ...resources[1], title }, resources[2]],
         expect.anything(),
       );
-      await waitFor(() =>
-        expect(
-          screen.queryByRole('heading', { name: /Edit Resource/i }),
-        ).not.toBeInTheDocument(),
+      await waitForElementToBeRemoved(
+        () => screen.queryByRole('heading', { name: /Edit Resource/i }),
+        { timeout: 10000 },
       );
     });
   });

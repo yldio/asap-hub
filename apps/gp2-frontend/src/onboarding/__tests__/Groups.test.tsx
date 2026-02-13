@@ -24,7 +24,7 @@ const renderGroups = async (id: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{ onboarded: false, id }}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[gp2Routing.onboarding({}).groups({}).$]}
             >
               <Routes>

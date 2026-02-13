@@ -84,7 +84,7 @@ const renderOnboardable = (onboarded: boolean) => (
     <Suspense fallback="loading">
       <Auth0Provider user={{ id: onboardableUser.id, onboarded }}>
         <WhenReady>
-          <MemoryRouter
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
             initialEntries={[
               network({})
                 .users({})

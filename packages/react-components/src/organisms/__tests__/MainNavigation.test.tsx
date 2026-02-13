@@ -8,7 +8,7 @@ import MainNavigation from '../MainNavigation';
 
 it('renders the navigation items', () => {
   const { getAllByRole } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <MainNavigation userOnboarded={true} />
     </MemoryRouter>,
   );
@@ -31,7 +31,7 @@ it('renders the navigation items', () => {
 
 it('renders the analytics menu item when allowed', () => {
   const { getByTitle } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <MainNavigation userOnboarded={true} canViewAnalytics={true} />
     </MemoryRouter>,
   );
@@ -85,7 +85,7 @@ describe('a navigation item', () => {
 
   it('is disabled when the current user is not onboarded', () => {
     const { getAllByRole } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <MainNavigation userOnboarded={false} />
       </MemoryRouter>,
     );

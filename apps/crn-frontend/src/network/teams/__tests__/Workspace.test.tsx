@@ -78,7 +78,7 @@ const renderWithWrapper = (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[
                 network({}).teams({}).team({ teamId: id }).workspace({}).$,
               ]}
@@ -594,7 +594,7 @@ describe('the edit tool dialog', () => {
         <Suspense fallback="loading">
           <Auth0Provider user={user as never}>
             <WhenReady>
-              <MemoryRouter
+              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
                 initialEntries={[
                   network({})
                     .teams({})

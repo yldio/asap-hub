@@ -23,7 +23,7 @@ const team = {
 
 it('renders an association section with all the details', () => {
   const { getByText, getByRole } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <UserNavigationAssociationSection
         association={[{ ...interestGroup, name: 'group 1', href: '/abc' }]}
         userOnboarded={true}
@@ -42,7 +42,7 @@ it('renders an association section with all the details', () => {
 
 it('renders only active associations', () => {
   const { getByText, queryByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <UserNavigationAssociationSection
         association={[
           { ...interestGroup, name: 'group 1', href: '/abc', active: true },
@@ -60,7 +60,7 @@ it('renders only active associations', () => {
 
 it('disables the navigation link based on user onboarded', () => {
   const { getByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <UserNavigationAssociationSection
         association={[
           { ...interestGroup, name: 'group 1', href: '/abc', active: true },
@@ -79,7 +79,7 @@ it('disables the navigation link based on user onboarded', () => {
 
 it('renders a association section with the correct icon', () => {
   const { getByTitle, rerender } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <UserNavigationAssociationSection
         association={[workingGroup]}
         userOnboarded={true}
@@ -90,7 +90,7 @@ it('renders a association section with the correct icon', () => {
   expect(getByTitle('Working Groups')).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <UserNavigationAssociationSection
         association={[team]}
         userOnboarded={true}
@@ -101,7 +101,7 @@ it('renders a association section with the correct icon', () => {
   expect(getByTitle('Team')).toBeInTheDocument();
 
   rerender(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <UserNavigationAssociationSection
         association={[team]}
         userOnboarded={true}

@@ -12,40 +12,50 @@ const Throw: React.FC<Record<string, never>> = () => {
 
 describe('error boundary', () => {
   it('catches child errors', () => {
-    const router = createMemoryRouter([
-      {
-        path: '/',
-        element: (
-          <ErrorBoundary disableSentryReporting={true}>
-            <Outlet />
-          </ErrorBoundary>
-        ),
-        children: [{ path: '/', element: <Throw /> }],
-      },
-    ]);
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: (
+            <ErrorBoundary disableSentryReporting={true}>
+              <Outlet />
+            </ErrorBoundary>
+          ),
+          children: [{ path: '/', element: <Throw /> }],
+        },
+      ],
+      { future: { v7_relativeSplatPath: true } },
+    );
 
-    const { container } = render(<RouterProvider router={router} />);
+    const { container } = render(
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
+    );
     expect(container).toHaveTextContent('oops');
   });
 
   it('Overrides title and description when error thrown', () => {
-    const router = createMemoryRouter([
-      {
-        path: '/',
-        element: (
-          <ErrorBoundary
-            disableSentryReporting={true}
-            title="Something went wrong"
-            description="There was a problem with your request"
-          >
-            <Outlet />
-          </ErrorBoundary>
-        ),
-        children: [{ path: '/', element: <Throw /> }],
-      },
-    ]);
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: (
+            <ErrorBoundary
+              disableSentryReporting={true}
+              title="Something went wrong"
+              description="There was a problem with your request"
+            >
+              <Outlet />
+            </ErrorBoundary>
+          ),
+          children: [{ path: '/', element: <Throw /> }],
+        },
+      ],
+      { future: { v7_relativeSplatPath: true } },
+    );
 
-    const { container } = render(<RouterProvider router={router} />);
+    const { container } = render(
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
+    );
     expect(container).not.toHaveTextContent('oops');
     expect(container).toHaveTextContent('Something went wrong');
     expect(container).toHaveTextContent(
@@ -69,10 +79,12 @@ describe('error boundary', () => {
           ],
         },
       ],
-      { initialEntries: ['/throw'] },
+      { future: { v7_relativeSplatPath: true }, initialEntries: ['/throw'] },
     );
 
-    const { container } = render(<RouterProvider router={router} />);
+    const { container } = render(
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
+    );
     expect(container).toHaveTextContent('oops');
 
     await router.navigate('/home');
@@ -85,39 +97,49 @@ describe('error boundary', () => {
 });
 describe('sentry error boundary', () => {
   it('catches child errors', () => {
-    const router = createMemoryRouter([
-      {
-        path: '/',
-        element: (
-          <ErrorBoundary>
-            <Outlet />
-          </ErrorBoundary>
-        ),
-        children: [{ path: '/', element: <Throw /> }],
-      },
-    ]);
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: (
+            <ErrorBoundary>
+              <Outlet />
+            </ErrorBoundary>
+          ),
+          children: [{ path: '/', element: <Throw /> }],
+        },
+      ],
+      { future: { v7_relativeSplatPath: true } },
+    );
 
-    const { container } = render(<RouterProvider router={router} />);
+    const { container } = render(
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
+    );
     expect(container).toHaveTextContent('oops');
   });
 
   it('Overrides title and description when error thrown', () => {
-    const router = createMemoryRouter([
-      {
-        path: '/',
-        element: (
-          <ErrorBoundary
-            title="Something went wrong"
-            description="There was a problem with your request"
-          >
-            <Outlet />
-          </ErrorBoundary>
-        ),
-        children: [{ path: '/', element: <Throw /> }],
-      },
-    ]);
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: (
+            <ErrorBoundary
+              title="Something went wrong"
+              description="There was a problem with your request"
+            >
+              <Outlet />
+            </ErrorBoundary>
+          ),
+          children: [{ path: '/', element: <Throw /> }],
+        },
+      ],
+      { future: { v7_relativeSplatPath: true } },
+    );
 
-    const { container } = render(<RouterProvider router={router} />);
+    const { container } = render(
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
+    );
     expect(container).toHaveTextContent('Something went wrong');
     expect(container).toHaveTextContent(
       'There was a problem with your request',

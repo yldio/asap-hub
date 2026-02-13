@@ -14,7 +14,7 @@ const renderTags = async (): Promise<RenderResult> =>
       <Auth0Provider user={{}}>
         <WhenReady>
           <Suspense fallback="Loading...">
-            <MemoryRouter initialEntries={['/']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
               <Routes>
                 <Route
                   path="/"

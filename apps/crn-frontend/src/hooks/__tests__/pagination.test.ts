@@ -15,12 +15,20 @@ const urlSearchParamsToObject = (queryString: string) =>
 const createWrapper =
   (initialEntries: string[]) =>
   ({ children }: { children: ReactNode }) =>
-    createElement(MemoryRouter, { initialEntries }, children);
+    createElement(MemoryRouter, {
+      future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      initialEntries,
+    }, children);
+
+const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) =>
+  createElement(MemoryRouter, {
+    future: { v7_startTransition: true, v7_relativeSplatPath: true },
+  }, children);
 
 describe('usePaginationParams', () => {
   it('returns default page, page size and view', () => {
     const { result } = renderHook(() => usePaginationParams(), {
-      wrapper: MemoryRouter,
+      wrapper: MemoryRouterWithFuture,
     });
     expect(result.current.currentPage).toBe(0);
     expect(result.current.pageSize).toBe(CARD_VIEW_PAGE_SIZE);
@@ -89,14 +97,14 @@ describe('usePaginationParams', () => {
 describe('usePagination', () => {
   it('returns the correct number of pages', () => {
     const { result } = renderHook(() => usePagination(31, 10), {
-      wrapper: MemoryRouter,
+      wrapper: MemoryRouterWithFuture,
     });
     expect(result.current.numberOfPages).toBe(4);
   });
 
   it('handles no items', () => {
     const { result } = renderHook(() => usePagination(0, 10), {
-      wrapper: MemoryRouter,
+      wrapper: MemoryRouterWithFuture,
     });
     expect(result.current.numberOfPages).toBe(1);
   });

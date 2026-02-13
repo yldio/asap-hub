@@ -175,7 +175,7 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <MemoryRouter>
+              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <LocationCapture />
                 {children}
               </MemoryRouter>
@@ -284,7 +284,10 @@ describe('OutputForm', () => {
           type: 'success',
         }),
       );
-      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      // Wait for navigation to complete with deferred transitions
+      await waitFor(() => {
+        expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      });
     },
   );
 
@@ -309,7 +312,7 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <LocationCapture />
               {children}
             </MemoryRouter>
@@ -371,7 +374,7 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <LocationCapture />
               {children}
             </MemoryRouter>
@@ -447,7 +450,7 @@ describe('OutputForm', () => {
               removeNotification: jest.fn(),
             }}
           >
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <LocationCapture />
               {children}
             </MemoryRouter>
@@ -544,7 +547,7 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <MemoryRouter>
+              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <LocationCapture />
                 {children}
               </MemoryRouter>
@@ -569,7 +572,10 @@ describe('OutputForm', () => {
           type: 'success',
         }),
       );
-      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      // Wait for navigation to complete with deferred transitions
+      await waitFor(() => {
+        expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      });
     });
   });
 
@@ -629,7 +635,7 @@ describe('OutputForm', () => {
                 removeNotification: jest.fn(),
               }}
             >
-              <MemoryRouter>
+              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <LocationCapture />
                 {children}
               </MemoryRouter>
@@ -659,7 +665,10 @@ describe('OutputForm', () => {
           }),
         );
       });
-      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      // Wait for navigation to complete with deferred transitions
+      await waitFor(() => {
+        expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      });
     });
   });
 
@@ -1268,7 +1277,7 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <MemoryRouter>
+              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <LocationCapture />
                 {children}
               </MemoryRouter>
@@ -1330,7 +1339,7 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <MemoryRouter>
+              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <LocationCapture />
                 {children}
               </MemoryRouter>
@@ -1384,7 +1393,7 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <MemoryRouter>
+              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <LocationCapture />
                 {children}
               </MemoryRouter>
@@ -1447,7 +1456,7 @@ describe('OutputForm', () => {
                 removeNotification,
               }}
             >
-              <MemoryRouter>
+              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <LocationCapture />
                 {children}
               </MemoryRouter>
@@ -1536,7 +1545,7 @@ describe('OutputForm', () => {
         />,
         {
           wrapper: ({ children }) => (
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <LocationCapture />
               {children}
             </MemoryRouter>
@@ -1600,7 +1609,7 @@ describe('OutputForm', () => {
         />,
         {
           wrapper: ({ children }) => (
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <LocationCapture />
               {children}
             </MemoryRouter>

@@ -8,7 +8,10 @@ import { useComplianceSearch } from '../useComplianceSearch';
 const createWrapper =
   (initialEntries: string[] = ['/']) =>
   ({ children }: ComponentProps<typeof MemoryRouter>) =>
-    React.createElement(MemoryRouter, { initialEntries }, children);
+    React.createElement(MemoryRouter, {
+      future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      initialEntries,
+    }, children);
 
 describe('useComplianceSearch', () => {
   it('returns default values when no URL params are present', () => {

@@ -96,7 +96,7 @@ describe('on submit', () => {
     const researchTags = [{ id: '1', name: 'research tag 1' }];
 
     await render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}

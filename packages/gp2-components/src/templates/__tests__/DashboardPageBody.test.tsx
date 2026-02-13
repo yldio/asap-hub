@@ -24,7 +24,7 @@ describe('DashboardPageBody', () => {
   });
   it('should render GP2 Hub Stats', () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <DashboardPageBody
           canPublish={true}
           reminders={[]}
@@ -48,7 +48,7 @@ describe('DashboardPageBody', () => {
 
   it('should render Latest News if there is a news item', () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <DashboardPageBody
           canPublish={true}
           reminders={[]}
@@ -70,7 +70,7 @@ describe('DashboardPageBody', () => {
   describe('Announcements', () => {
     it('hides the card if there are no announcements', () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -92,7 +92,7 @@ describe('DashboardPageBody', () => {
 
     it('should render announcements if there is an announcement', () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -131,7 +131,7 @@ describe('DashboardPageBody', () => {
       `$description when canPublish is $canPublish`,
       ({ canPublish, selector }) => {
         render(
-          <MemoryRouter>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <DashboardPageBody
               canPublish={canPublish}
               reminders={[]}
@@ -156,7 +156,7 @@ describe('DashboardPageBody', () => {
   describe('Tools and tutorials', () => {
     it('should not render tools and tutorials if there is no guide', () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -180,7 +180,7 @@ describe('DashboardPageBody', () => {
 
     it('should render tools and tutorials if there is a guide', () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -222,7 +222,7 @@ describe('DashboardPageBody', () => {
   describe('Upcoming Events', () => {
     it('should render no events if there is no upcoming event items', () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -247,7 +247,7 @@ describe('DashboardPageBody', () => {
 
     it('should render with events if there is an upcoming event item', async () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -281,7 +281,7 @@ describe('DashboardPageBody', () => {
 
     it('should render View All if there are more than 3 upcoming event items', () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -320,7 +320,7 @@ describe('DashboardPageBody', () => {
   describe('Latest Users', () => {
     it('should render users if there is a latest user item', async () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -360,7 +360,7 @@ describe('DashboardPageBody', () => {
 
     it('should render View All', () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -395,7 +395,7 @@ describe('DashboardPageBody', () => {
         customTitle: 'TestEvent',
       }).items;
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -423,7 +423,7 @@ describe('DashboardPageBody', () => {
 
     it('should render View All if there are more than 3 past event items', () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -456,7 +456,7 @@ describe('DashboardPageBody', () => {
   describe('Recent Outputs', () => {
     it('should render outputs if there is any', async () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}
@@ -504,7 +504,7 @@ describe('DashboardPageBody', () => {
 
     it('should render View All', () => {
       render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <DashboardPageBody
             canPublish={true}
             reminders={[]}

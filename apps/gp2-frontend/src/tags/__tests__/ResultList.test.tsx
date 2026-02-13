@@ -41,7 +41,7 @@ const renderList = async (props: ResultListProps, tag?: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[tag ? `/tags?tag=${tag}` : '/tags']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[tag ? `/tags?tag=${tag}` : '/tags']}>
               <ResultList {...props} />
             </MemoryRouter>
           </WhenReady>

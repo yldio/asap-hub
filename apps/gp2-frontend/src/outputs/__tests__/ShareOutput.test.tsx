@@ -63,7 +63,7 @@ const renderShareOutput = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[path]} initialIndex={1}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[path]} initialIndex={1}>
               <Routes>
                 <Route
                   path={

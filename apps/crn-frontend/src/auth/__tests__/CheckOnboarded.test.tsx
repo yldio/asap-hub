@@ -68,7 +68,7 @@ describe('an unauthenticated user', () => {
         <ErrorBoundary fallbackRender={({ error }) => <>{error.toString()}</>}>
           <Auth0Provider user={undefined}>
             <WhenReady>
-              <MemoryRouter>
+              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <CheckOnboarded>text</CheckOnboarded>
               </MemoryRouter>
             </WhenReady>
@@ -86,7 +86,7 @@ describe('an authenticated and onboarded user', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: true }}>
           <WhenReady>
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <CheckOnboarded>text</CheckOnboarded>
             </MemoryRouter>
           </WhenReady>
@@ -101,7 +101,7 @@ describe('an authenticated and onboarded user', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: true }}>
           <WhenReady>
-            <MemoryRouter initialEntries={[ownProfilePath]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[ownProfilePath]}>
               <NavigationHelper />
               <CheckOnboarded>
                 <Routes>
@@ -138,7 +138,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <MemoryRouter initialEntries={[ownProfilePath]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[ownProfilePath]}>
               <NavigationHelper />
               <LocationDisplay />
               <CheckOnboarded>profile</CheckOnboarded>
@@ -161,7 +161,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <MemoryRouter initialEntries={[dashboardPath]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[dashboardPath]}>
               <LocationDisplay />
               <CheckOnboarded>
                 <Routes>
@@ -192,7 +192,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <MemoryRouter initialEntries={[foreignProfilePath]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[foreignProfilePath]}>
               <LocationDisplay />
               <CheckOnboarded>
                 <Routes>
@@ -222,7 +222,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <MemoryRouter initialEntries={[anotherPagePath]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[anotherPagePath]}>
               <LocationDisplay />
               <CheckOnboarded>
                 <Routes>
@@ -252,7 +252,7 @@ describe('an authenticated user in onboarding', () => {
       <RecoilRoot>
         <Auth0Provider user={{ ...user, onboarded: false }}>
           <WhenReady>
-            <MemoryRouter initialEntries={[ownProfilePath]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[ownProfilePath]}>
               <NavigationHelper />
               <CheckOnboarded>profile page</CheckOnboarded>
             </MemoryRouter>

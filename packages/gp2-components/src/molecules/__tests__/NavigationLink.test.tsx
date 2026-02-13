@@ -5,7 +5,7 @@ import NavigationLink from '../NavigationLink';
 describe('NavigationLink', () => {
   it('renders the icon', () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <NavigationLink href="/" icon={<svg />} />
       </MemoryRouter>,
     );
@@ -13,7 +13,7 @@ describe('NavigationLink', () => {
   });
   it('renders the children', () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <NavigationLink href="/">Network</NavigationLink>
       </MemoryRouter>,
     );

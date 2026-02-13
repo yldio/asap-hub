@@ -49,7 +49,7 @@ const renderTeamList = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[route]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[route]}>
               <Routes>
                 <Route
                   path={route}

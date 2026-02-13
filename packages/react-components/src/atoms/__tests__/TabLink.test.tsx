@@ -1,12 +1,20 @@
+import { ReactNode } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import TabLink from '../TabLink';
 
+// Wrapper component with future flags for RTL's wrapper option
+const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
+  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    {children}
+  </MemoryRouter>
+);
+
 describe.each`
   description           | wrapper
-  ${'with a router'}    | ${MemoryRouter}
+  ${'with a router'}    | ${MemoryRouterWithFuture}
   ${'without a router'} | ${undefined}
 `('$description', ({ wrapper }) => {
   it('renders a link with the given text', () => {
@@ -43,7 +51,7 @@ describe.each`
 describe('with a router', () => {
   it('does not trigger a full page navigation on click', () => {
     const { getByRole } = render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
         <TabLink href="/">Text</TabLink>
       </MemoryRouter>,
     );

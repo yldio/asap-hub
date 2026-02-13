@@ -24,7 +24,7 @@ const renderPage = async (pageId: string = 'privacy-notice') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <Content pageId={pageId} />
             </MemoryRouter>
           </WhenReady>

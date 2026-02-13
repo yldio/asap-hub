@@ -11,7 +11,7 @@ const boilerplateProps = {
 
 it('renders the content and the title', () => {
   const { getByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ContentPage {...boilerplateProps} />
     </MemoryRouter>,
   );
@@ -29,7 +29,7 @@ it('scrolls to the hash when it is present in the URL', async () => {
   document.body.appendChild(targetElement);
 
   render(
-    <MemoryRouter initialEntries={['/page#section']}>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/page#section']}>
       <ContentPage {...boilerplateProps} />
     </MemoryRouter>,
   );

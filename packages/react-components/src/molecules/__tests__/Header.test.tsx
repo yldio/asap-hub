@@ -12,7 +12,7 @@ it('renders an CRN logo', () => {
 
 it('links back to the home page', async () => {
   const { getByTitle, container } = render(
-    <MemoryRouter initialEntries={['/page']}>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/page']}>
       <Routes>
         <Route path="/page" element={<Header />} />
         <Route path="/" element={<>home</>} />

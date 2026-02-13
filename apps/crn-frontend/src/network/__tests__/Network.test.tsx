@@ -103,7 +103,7 @@ const renderNetworkPage = async (pathname: string, query = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[{ pathname, search: query }]}>
               <Routes>
                 <Route path={`${network.template}/*`} element={<Network />} />
               </Routes>
@@ -247,7 +247,7 @@ it('allows selection of group filters', async () => {
   expect(checkbox).not.toBeChecked();
 
   await userEvent.click(checkbox);
-  expect(checkbox).toBeChecked();
+  await waitFor(() => expect(checkbox).toBeChecked());
   await waitFor(() =>
     expect(mockGetGroups).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -266,7 +266,7 @@ it('allows selection of working group filters', async () => {
   expect(checkbox).not.toBeChecked();
 
   await userEvent.click(checkbox);
-  expect(checkbox).toBeChecked();
+  await waitFor(() => expect(screen.getByLabelText('Complete')).toBeChecked());
   await waitFor(() =>
     expect(mockGetWorkingGroups).toHaveBeenLastCalledWith(
       expect.anything(),
@@ -289,7 +289,7 @@ describe.each([
     expect(checkbox).not.toBeChecked();
 
     await userEvent.click(checkbox);
-    expect(checkbox).toBeChecked();
+    await waitFor(() => expect(checkbox).toBeChecked());
     await waitFor(() =>
       expect(mockGetAlgoliaTeams).toHaveBeenLastCalledWith(
         expect.anything(),

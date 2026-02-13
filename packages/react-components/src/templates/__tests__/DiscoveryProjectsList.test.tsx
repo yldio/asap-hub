@@ -44,7 +44,7 @@ const props: ComponentProps<typeof DiscoveryProjectsList> = {
 
 it('renders all discovery projects', () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <DiscoveryProjectsList {...props} />
     </MemoryRouter>,
   );
@@ -54,7 +54,7 @@ it('renders all discovery projects', () => {
 
 it('renders the correct number of project cards', () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <DiscoveryProjectsList {...props} />
     </MemoryRouter>,
   );
@@ -63,7 +63,7 @@ it('renders the correct number of project cards', () => {
 
 it('renders Discovery Project type pill for each project', () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <DiscoveryProjectsList {...props} />
     </MemoryRouter>,
   );

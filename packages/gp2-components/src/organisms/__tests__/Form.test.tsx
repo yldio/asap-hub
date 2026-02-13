@@ -26,7 +26,7 @@ const renderWithProviders = (
   { initialEntries = ['/'] } = {},
 ) =>
   render(
-    <MemoryRouter initialEntries={initialEntries}>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={initialEntries}>
       <NavigationBlockerProvider>{children}</NavigationBlockerProvider>
     </MemoryRouter>,
   );

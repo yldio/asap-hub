@@ -32,7 +32,7 @@ const renderPage = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[
                 news({}).article({ articleId: newsOrEvent.id }).$,
               ]}

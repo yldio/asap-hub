@@ -24,7 +24,7 @@ describe('ContactInformationModal', () => {
     overrides: Partial<ContactInformationModalProps> = {},
   ) =>
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ContactInformationModal {...defaultProps} {...overrides} />
       </MemoryRouter>,
     );

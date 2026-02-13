@@ -39,7 +39,7 @@ const renderPage = async (user: Partial<User>) => {
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/about']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/about']}>
               <Routes>
                 <Route path="/about/*" element={<About />} />
               </Routes>

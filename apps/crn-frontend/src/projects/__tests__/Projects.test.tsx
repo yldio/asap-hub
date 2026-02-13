@@ -157,7 +157,7 @@ const renderProjectsPage = async (pathname: string, query = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[{ pathname, search: query }]}>
               <Routes>
                 <Route path={`${projects.template}/*`} element={<Projects />} />
               </Routes>

@@ -13,7 +13,7 @@ it('renders a heading', () => {
 
 it('links back to sign in', async () => {
   const { getByText } = render(
-    <MemoryRouter initialEntries={['/email-sent']}>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/email-sent']}>
       <Routes>
         <Route
           path="/email-sent"

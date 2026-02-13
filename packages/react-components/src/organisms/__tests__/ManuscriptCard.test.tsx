@@ -127,7 +127,7 @@ beforeEach(() => {
 it('displays manuscript version card when expanded', async () => {
   const userActions = userEvent.setup({ delay: null });
   const { getByText, queryByText, getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard {...props} />
     </MemoryRouter>,
   );
@@ -145,7 +145,7 @@ it('displays manuscript version card when expanded', async () => {
 it('displays share compliance report button if user has permission', async () => {
   const userActions = userEvent.setup({ delay: null });
   const { queryByRole, getByRole, rerender, getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard {...props} />
     </MemoryRouter>,
   );
@@ -156,7 +156,7 @@ it('displays share compliance report button if user has permission', async () =>
   ).not.toBeInTheDocument();
 
   rerender(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard {...props} isComplianceReviewer />
     </MemoryRouter>,
   );
@@ -176,7 +176,7 @@ it('displays submit revised manuscript button if user is an author', async () =>
   ];
 
   const { getByRole, getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard
         {...props}
         useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -209,7 +209,7 @@ it('shows tooltip on hover over disabled Submit Revised Manuscript button when n
   ];
 
   const { getByRole, getByTestId, findByRole, queryByRole } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard
         {...props}
         useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -255,7 +255,7 @@ it('displays submit revised manuscript button if user is team Lead PI', async ()
     ] as UserTeam[],
   };
   const { getByRole, getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard
         {...props}
         useManuscriptById={useManuscriptByIdWithReport}
@@ -273,7 +273,7 @@ it('displays submit revised manuscript button if user is team Lead PI', async ()
 it('displays submit revised manuscript button if user is team project manager', async () => {
   const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard
         {...props}
         useManuscriptById={useManuscriptByIdWithReport}
@@ -297,7 +297,7 @@ it('displays submit revised manuscript button if user is a PI on a manuscript la
     },
   ];
   const { getByRole, getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard
         {...props}
         useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -323,7 +323,7 @@ it('displays submit revised manuscript button if user is a PI on a manuscript la
 it('redirects to compliance report form when user clicks on share compliance report button', async () => {
   const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route
           path="*"
@@ -358,7 +358,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
   ];
 
   const { getByRole, getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route
           path="*"
@@ -398,7 +398,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
 it('displays the confirmation modal when isComplianceReviewer is true and the user tries to change the manuscript status to a different one than it has started', async () => {
   const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId, getByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard {...props} isComplianceReviewer />
     </MemoryRouter>,
   );
@@ -413,7 +413,7 @@ it('displays the confirmation modal when isComplianceReviewer is true and the us
 it('does not display confirmation modal when isComplianceReviewer is true but the user tries to select the same manuscript status it is currently', async () => {
   const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId, queryByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard
         {...props}
         isComplianceReviewer
@@ -439,7 +439,7 @@ it('does not display confirmation modal when isComplianceReviewer is true but th
 
 it('does not allow to change the manuscript status if isComplianceReviewer is false', () => {
   const { getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard {...props} />
     </MemoryRouter>,
   );
@@ -454,7 +454,7 @@ it('calls onUpdateManuscript when user confirms status change', async () => {
   const onUpdateManuscript = jest.fn();
 
   const { getByRole, getByTestId, queryByRole } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard
         {...props}
         isComplianceReviewer
@@ -497,7 +497,7 @@ it.each`
     const onUpdateManuscript = jest.fn();
     cleanup();
     const { getByTestId } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ManuscriptCard
           {...props}
           useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -535,7 +535,7 @@ it.each`
     });
     cleanup();
     const { getByTestId, queryByRole, findByRole, findByText } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ManuscriptCard
           {...props}
           useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -584,7 +584,7 @@ it.each`
 it('disables submit compliance report button when there is an existing compliance report', async () => {
   const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard
         {...props}
         isComplianceReviewer
@@ -623,7 +623,7 @@ it('displays show more/show less when there are more than three manuscript versi
     },
   ];
   const { getByRole, getByTestId } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ManuscriptCard
         {...props}
         useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -659,7 +659,7 @@ it.each`
   'does not display submit compliance report if team isActiveTeam is $isActiveTeam and status is $status',
   async ({ status, isActiveTeam }) => {
     const { queryByRole } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ManuscriptCard
           {...props}
           useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -690,7 +690,7 @@ describe('Tabs', () => {
   it('displays the manuscript and reports tab as active by default', async () => {
     const userActions = userEvent.setup({ delay: null });
     const { getByRole, getByTestId } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ManuscriptCard {...props} />
       </MemoryRouter>,
     );
@@ -705,7 +705,7 @@ describe('Tabs', () => {
   it('displays the tab as active when the user clicks on the tab', async () => {
     const userActions = userEvent.setup({ delay: null });
     const { getByRole, getByTestId } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ManuscriptCard {...props} />
       </MemoryRouter>,
     );
@@ -739,7 +739,7 @@ describe('Tabs', () => {
       asapAffiliationIncludedDetails: 'Reason',
     };
     const { getByLabelText, getByRole, getByTestId } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ManuscriptCard
           {...props}
           useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -803,7 +803,7 @@ describe('Discussion Notification', () => {
   it('displays the notification dot when there is at least one unread discussion', async () => {
     const userActions = userEvent.setup({ delay: null });
     const { getByLabelText, getByTitle, getByTestId } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ManuscriptCard
           {...props}
           useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -832,7 +832,7 @@ describe('Discussion Notification', () => {
 
   it('does not display the notification dot when there are no unread discussions', () => {
     const { queryByTitle } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ManuscriptCard
           {...props}
           useManuscriptById={useManuscriptById.mockImplementation(() => [
@@ -858,7 +858,7 @@ describe('Discussion Notification', () => {
 
   it('does not display the notification dot when there are no discussions', () => {
     const { queryByTitle } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ManuscriptCard
           {...props}
           useManuscriptById={useManuscriptById.mockImplementation(() => [

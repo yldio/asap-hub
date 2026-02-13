@@ -41,7 +41,7 @@ const renderInterestGroupList = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/interest-groups/']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/interest-groups/']}>
               <Routes>
                 <Route
                   path="/interest-groups"

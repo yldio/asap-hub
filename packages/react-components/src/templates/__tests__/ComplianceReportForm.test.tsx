@@ -270,10 +270,16 @@ it('should go back when cancel button is clicked', async () => {
         element: <div>Another page</div>,
       },
     ],
-    { initialEntries: ['/another-url', '/form'], initialIndex: 1 },
+    {
+      future: { v7_relativeSplatPath: true },
+      initialEntries: ['/another-url', '/form'],
+      initialIndex: 1,
+    },
   );
 
-  const { getByRole } = render(<RouterProvider router={router} />);
+  const { getByRole } = render(
+    <RouterProvider router={router} future={{ v7_startTransition: true }} />,
+  );
 
   const cancelButton = getByRole('button', {
     name: /cancel/i,

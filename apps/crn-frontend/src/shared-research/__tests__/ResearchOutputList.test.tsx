@@ -49,7 +49,7 @@ const renderResearchOutputList = async (searchQuery = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/shared-research']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/shared-research']}>
               <Routes>
                 <Route
                   path="/shared-research"

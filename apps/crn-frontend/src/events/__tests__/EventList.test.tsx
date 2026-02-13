@@ -36,7 +36,7 @@ const renderEventsListPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname: '/' }]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[{ pathname: '/' }]}>
               <Routes>
                 <Route
                   path="/"

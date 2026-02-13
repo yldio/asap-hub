@@ -35,7 +35,7 @@ const renderDashboard = async ({
       <RecoilRoot>
         <Auth0Provider user={{ ...user, role: 'Network Collaborator' }}>
           <WhenReady>
-            <MemoryRouter>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <Dashboard />
             </MemoryRouter>
           </WhenReady>

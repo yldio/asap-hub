@@ -1,5 +1,5 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { Suspense } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { render, waitFor, screen, renderHook } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
@@ -14,6 +14,12 @@ import TutorialList from '../TutorialList';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getTutorials } from '../api';
 import { tutorialsListState } from '../state';
+
+const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
+  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    {children}
+  </MemoryRouter>
+);
 
 jest.mock('../api');
 
@@ -45,7 +51,7 @@ const renderTutorials = async (searchQuery = '') => {
       >
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/guides-tutorials/tutorials']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/guides-tutorials/tutorials']}>
               <Routes>
                 <Route
                   path="/guides-tutorials/tutorials"
@@ -126,10 +132,7 @@ it('renders a paginated list of tutorials', async () => {
       usePagination: usePagination(numberOfItems, pageSize),
     }),
     {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [`/guides-tutorials/tutorials`],
-      },
+      wrapper: MemoryRouterWithFuture,
     },
   );
 

@@ -56,7 +56,7 @@ const props: ComponentProps<typeof ResourceProjectsList> = {
 
 it('renders all resource projects', () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ResourceProjectsList {...props} />
     </MemoryRouter>,
   );
@@ -66,7 +66,7 @@ it('renders all resource projects', () => {
 
 it('renders the correct number of project cards', () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ResourceProjectsList {...props} />
     </MemoryRouter>,
   );
@@ -75,7 +75,7 @@ it('renders the correct number of project cards', () => {
 
 it('renders Resource Project type pill for each project', () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ResourceProjectsList {...props} />
     </MemoryRouter>,
   );

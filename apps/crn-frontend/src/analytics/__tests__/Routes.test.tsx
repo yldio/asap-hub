@@ -166,7 +166,7 @@ const renderPage = async (path: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname: path }]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[{ pathname: path }]}>
               <Routes>
                 <Route
                   path={`${analytics.template}/*`}

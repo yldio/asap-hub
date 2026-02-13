@@ -30,7 +30,7 @@ const renderPage = async () => {
       <RecoilRoot>
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/tags?tag=test']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/tags?tag=test']}>
               <Routes>
                 <Route path={'/tags/*'} element={<TagRoutes />} />
               </Routes>

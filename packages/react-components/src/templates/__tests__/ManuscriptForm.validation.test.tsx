@@ -483,7 +483,7 @@ describe('ManuscriptForm URL Requirement', () => {
     'should set URL as $label for $lifecycle lifecycle - last',
     async ({ lifecycle, label }) => {
       const container = render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm {...defaultProps} lifecycle={lifecycle} />
           </Suspense>
@@ -511,7 +511,7 @@ describe('ManuscriptForm URL Requirement', () => {
     'should set URL as $label when selecting $lifecycle lifecycle',
     async ({ lifecycle, label }) => {
       const container = render(
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
               {...defaultProps}

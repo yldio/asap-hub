@@ -73,7 +73,7 @@ const renderPage = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/analytics']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/analytics']}>
               <OSChampion tags={[]} sort="team_asc" setSort={mockSetSort} />
             </MemoryRouter>
           </WhenReady>

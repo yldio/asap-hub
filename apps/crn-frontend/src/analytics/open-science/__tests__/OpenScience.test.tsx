@@ -101,6 +101,7 @@ const renderPage = async (path: string) => {
       },
     ],
     {
+      future: { v7_relativeSplatPath: true },
       initialEntries: [path],
     },
   );
@@ -110,7 +111,10 @@ const renderPage = async (path: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <RouterProvider router={router} />
+            <RouterProvider
+              router={router}
+              future={{ v7_startTransition: true }}
+            />
           </WhenReady>
         </Auth0Provider>
       </Suspense>
@@ -210,6 +214,7 @@ describe('OpenScience', () => {
         },
       ],
       {
+        future: { v7_relativeSplatPath: true },
         initialEntries: [
           analytics({})
             .openScience({})
@@ -223,7 +228,10 @@ describe('OpenScience', () => {
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
-              <RouterProvider router={router} />
+              <RouterProvider
+                router={router}
+                future={{ v7_startTransition: true }}
+              />
             </WhenReady>
           </Auth0Provider>
         </Suspense>

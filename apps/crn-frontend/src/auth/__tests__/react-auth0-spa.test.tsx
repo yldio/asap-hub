@@ -26,7 +26,7 @@ it('Checks auth0 is still logged in when changing pages', async () => {
   const { getByRole, findByText } = render(
     <RecoilRoot>
       <Auth0Provider>
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <CheckAuth>
             {({ isAuthenticated }) => (
               <>Authenticated: {isAuthenticated ? 'true' : 'false'}</>

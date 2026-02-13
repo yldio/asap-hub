@@ -9,7 +9,10 @@ import { usePagination, usePaginationParams } from '../pagination';
 const createWrapper =
   (initialEntries: string[] = ['/']) =>
   ({ children }: ComponentProps<typeof MemoryRouter>) =>
-    React.createElement(MemoryRouter, { initialEntries }, children);
+    React.createElement(MemoryRouter, {
+      future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      initialEntries,
+    }, children);
 
 describe('useSearch', () => {
   describe('property searchQuery', () => {

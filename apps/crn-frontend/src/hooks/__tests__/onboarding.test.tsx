@@ -40,7 +40,7 @@ const wrapper =
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[
                 network({})
                   .users({})

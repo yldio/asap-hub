@@ -89,7 +89,7 @@ describe('on submit 2', () => {
     },
   ) => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}

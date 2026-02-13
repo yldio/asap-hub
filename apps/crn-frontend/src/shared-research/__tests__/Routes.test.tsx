@@ -31,7 +31,7 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[{ pathname, search: query }]}>
               <Routes>
                 <Route
                   path="/shared-research/*"
@@ -64,7 +64,7 @@ describe('the shared research listing page', () => {
     expect(checkbox).not.toBeChecked();
 
     await userEvent.click(checkbox);
-    expect(checkbox).toBeChecked();
+    await waitFor(() => expect(checkbox).toBeChecked());
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),
       expect.objectContaining({ filters: new Set(['Grant Document']) }),
@@ -79,7 +79,7 @@ describe('the shared research listing page', () => {
 
     await userEvent.click(screen.getByText('Filters'));
     const checkbox = screen.getByLabelText('Grant Document');
-    expect(checkbox).toBeChecked();
+    await waitFor(() => expect(checkbox).toBeChecked());
 
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),

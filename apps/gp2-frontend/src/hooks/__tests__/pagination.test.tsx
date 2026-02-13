@@ -6,10 +6,16 @@ import { PAGE_SIZE, usePagination, usePaginationParams } from '../pagination';
 const urlSearchParamsToObject = (queryString: string) =>
   Object.fromEntries(new URLSearchParams(queryString));
 
+const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
+  <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    {children}
+  </MemoryRouter>
+);
+
 describe('usePaginationParams', () => {
   it('returns default page, page size and view', () => {
     const { result } = renderHook(() => usePaginationParams(), {
-      wrapper: MemoryRouter,
+      wrapper: MemoryRouterWithFuture,
     });
     expect(result.current.currentPage).toBe(0);
     expect(result.current.pageSize).toBe(PAGE_SIZE);
@@ -17,7 +23,7 @@ describe('usePaginationParams', () => {
 
   it('returns current page', () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter initialEntries={['/?currentPage=1']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=1']}>
         {children}
       </MemoryRouter>
     );
@@ -29,7 +35,7 @@ describe('usePaginationParams', () => {
 
   it('removes pagination parameters from url after reset', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter initialEntries={['/?currentPage=2']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=2']}>
         {children}
       </MemoryRouter>
     );
@@ -61,21 +67,21 @@ describe('usePaginationParams', () => {
 describe('usePagination', () => {
   it('returns the correct number of pages', () => {
     const { result } = renderHook(() => usePagination(31, 10), {
-      wrapper: MemoryRouter,
+      wrapper: MemoryRouterWithFuture,
     });
     expect(result.current.numberOfPages).toBe(4);
   });
 
   it('handles no items', () => {
     const { result } = renderHook(() => usePagination(0, 10), {
-      wrapper: MemoryRouter,
+      wrapper: MemoryRouterWithFuture,
     });
     expect(result.current.numberOfPages).toBe(1);
   });
 
   it('redirects if page is out of bounds', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter initialEntries={['/?currentPage=10']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=10']}>
         {children}
       </MemoryRouter>
     );
@@ -98,7 +104,7 @@ describe('usePagination', () => {
 
   it('generates hrefs', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter initialEntries={['/?currentPage=3']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=3']}>
         {children}
       </MemoryRouter>
     );
@@ -121,7 +127,7 @@ describe('usePagination', () => {
 
   it('generates hrefs one level deep', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter initialEntries={['/test?currentPage=3']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/test?currentPage=3']}>
         {children}
       </MemoryRouter>
     );
@@ -144,7 +150,7 @@ describe('usePagination', () => {
 
   it('preserves other query parameters', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter initialEntries={['/?currentPage=3&searchQuery=123']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=3&searchQuery=123']}>
         {children}
       </MemoryRouter>
     );
@@ -167,7 +173,7 @@ describe('usePagination', () => {
 
   it('does not return a link for the current page', async () => {
     const wrapper = ({ children }: { children: ReactNode }) => (
-      <MemoryRouter initialEntries={['/?currentPage=3']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/?currentPage=3']}>
         {children}
       </MemoryRouter>
     );

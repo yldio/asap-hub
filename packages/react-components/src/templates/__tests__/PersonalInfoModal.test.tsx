@@ -14,7 +14,7 @@ const props: ComponentProps<typeof PersonalInfoModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
+  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>{children}</MemoryRouter>);
 
 it('renders the title', async () => {
   renderModal(

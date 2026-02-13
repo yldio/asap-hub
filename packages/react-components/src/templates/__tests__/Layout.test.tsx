@@ -22,7 +22,7 @@ it('renders CRN logo', async () => {
     .mockImplementation(() => {});
 
   const { getByTitle } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout {...props} />
     </MemoryRouter>,
   );
@@ -35,7 +35,7 @@ it('renders CRN logo', async () => {
 
 it('renders the main navigation', async () => {
   const { getAllByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout {...props} />
     </MemoryRouter>,
   );
@@ -44,7 +44,7 @@ it('renders the main navigation', async () => {
 
 it('renders the user navigation', async () => {
   const { getAllByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout {...props} />
     </MemoryRouter>,
   );
@@ -53,7 +53,7 @@ it('renders the user navigation', async () => {
 
 it('renders the content', async () => {
   const { getByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout {...props}>Content</Layout>
     </MemoryRouter>,
   );
@@ -62,7 +62,7 @@ it('renders the content', async () => {
 
 it('renders a menu button that toggles the drawer', async () => {
   const { getByLabelText, queryByTitle } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout {...props} />
     </MemoryRouter>,
   );
@@ -77,7 +77,7 @@ it('renders a menu button that toggles the drawer', async () => {
 
 it('renders a user menu button that toggles the drawer', async () => {
   const { getByLabelText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout {...props} />
     </MemoryRouter>,
   );
@@ -92,7 +92,7 @@ it('renders a user menu button that toggles the drawer', async () => {
 
 it('closes the drawer when clicking the overlay', async () => {
   const { getByLabelText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout {...props} />
     </MemoryRouter>,
   );
@@ -104,7 +104,7 @@ it('closes the drawer when clicking the overlay', async () => {
 
 it('closes the drawer on navigation', async () => {
   const { getByLabelText, getAllByText } = render(
-    <MemoryRouter initialEntries={['/']}>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
       <Layout {...props} />
     </MemoryRouter>,
   );
@@ -121,7 +121,7 @@ it('closes the drawer on navigation', async () => {
 
 it('scrolls to top between page navigations', async () => {
   const { getByRole, getAllByText } = render(
-    <MemoryRouter initialEntries={['/']}>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>
       <Layout {...props} />
     </MemoryRouter>,
   );
@@ -132,7 +132,7 @@ it('scrolls to top between page navigations', async () => {
 
 it('displays onboarding footer', async () => {
   const { getByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout
         {...props}
         onboardModalHref={'/example'}

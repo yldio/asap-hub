@@ -21,7 +21,7 @@ describe('UserMenu', () => {
 
   it('renders the navigation items', () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserMenu {...props} />
       </MemoryRouter>,
     );
@@ -39,7 +39,7 @@ describe('UserMenu', () => {
   it('verifies the my profile button is clickable', async () => {
     const closeUserMenu = jest.fn();
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserMenu {...props} closeUserMenu={closeUserMenu} />
       </MemoryRouter>,
     );
@@ -64,7 +64,7 @@ describe('UserMenu', () => {
       },
     ];
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserMenu {...props} projects={projects} />
       </MemoryRouter>,
     );
@@ -87,7 +87,7 @@ describe('UserMenu', () => {
       },
     ];
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserMenu
           {...props}
           projects={projects}
@@ -131,7 +131,7 @@ describe('UserMenu', () => {
       },
     ];
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserMenu {...props} projects={projects} />
       </MemoryRouter>,
     );
@@ -162,7 +162,7 @@ describe('UserMenu', () => {
       },
     ];
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserMenu {...props} workingGroups={workingGroups} />
       </MemoryRouter>,
     );
@@ -185,7 +185,7 @@ describe('UserMenu', () => {
       },
     ];
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserMenu
           {...props}
           workingGroups={workingGroups}
@@ -212,7 +212,7 @@ describe('UserMenu', () => {
   it('closes when the user clicks outside the User Menu', () => {
     const closeUserMenu = jest.fn();
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <h1>Title</h1>
         <UserMenu {...props} closeUserMenu={closeUserMenu} />{' '}
       </MemoryRouter>,
@@ -223,7 +223,7 @@ describe('UserMenu', () => {
 
   it('renders the bottom links', () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserMenu {...props} />
       </MemoryRouter>,
     );

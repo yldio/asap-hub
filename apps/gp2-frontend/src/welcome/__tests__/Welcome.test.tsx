@@ -38,7 +38,7 @@ describe('the welcome page', () => {
     render(
       <authTestUtils.UserAuth0Provider>
         <ToastContext.Provider value={mockToast}>
-          <MemoryRouter initialEntries={['/42/']}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/42/']}>
             <Routes>
               <Route path="/:code/" element={<Welcome />} />
             </Routes>

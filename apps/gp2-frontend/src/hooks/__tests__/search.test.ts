@@ -9,7 +9,10 @@ import { usePagination, usePaginationParams } from '../pagination';
 
 const createWrapper = (initialEntries: string[] = ['/']) => {
   const Wrapper = ({ children }: { children: ReactNode }) =>
-    createElement(MemoryRouter, { initialEntries }, children);
+    createElement(MemoryRouter, {
+      future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      initialEntries,
+    }, children);
   return Wrapper;
 };
 

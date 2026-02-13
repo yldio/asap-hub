@@ -11,7 +11,10 @@ const renderUseAnalytics = (
     wrapper: ({ children }) =>
       React.createElement(
         MemoryRouter,
-        { initialEntries: [`/${search}`] },
+        {
+          future: { v7_startTransition: true, v7_relativeSplatPath: true },
+          initialEntries: [`/${search}`],
+        },
         children,
       ),
   });

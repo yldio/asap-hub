@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import OnboardingPageHeader from '../OnboardingPageHeader';
 
 const renderWithRouter = (children: ReactNode) =>
-  render(<MemoryRouter>{children}</MemoryRouter>);
+  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
 
 describe('OnboardingPageHeader', () => {
   it('renders the header title', () => {

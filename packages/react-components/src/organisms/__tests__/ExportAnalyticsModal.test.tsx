@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import ExportAnalyticsModal from '../ExportAnalyticsModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<MemoryRouter>{children}</MemoryRouter>);
+  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
 
 describe('ExportAnalyticsModal', () => {
   const defaultProps: ComponentProps<typeof ExportAnalyticsModal> = {

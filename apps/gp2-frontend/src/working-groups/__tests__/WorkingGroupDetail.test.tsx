@@ -52,7 +52,7 @@ const renderWorkingGroupDetail = async ({
       <Suspense fallback="loading">
         <Auth0Provider user={{ id: userId, role }}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[
                 route ||
                   gp2Routing
@@ -151,7 +151,7 @@ describe('WorkingGroupDetail', () => {
     workingGroup.members = [workingGroupMember];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     await renderWorkingGroupDetail({ id: workingGroup.id });
-    expect(screen.getByText(/Working Group Members/i)).toBeVisible();
+    expect(await screen.findByText(/Working Group Members/i)).toBeVisible();
   });
 
   describe('resources', () => {

@@ -75,7 +75,7 @@ describe('on submit 3', () => {
 
     // setup
     await render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={researchOutputData}

@@ -17,7 +17,7 @@ const props: ComponentProps<typeof ExpertiseAndResourcesModal> = {
 };
 
 const renderModal = (children: React.ReactNode) =>
-  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
+  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>{children}</MemoryRouter>);
 it('renders the title', () => {
   const { getByText } = renderModal(<ExpertiseAndResourcesModal {...props} />);
   expect(

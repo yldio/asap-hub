@@ -20,7 +20,7 @@ const renderCalendars = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/events/calendar']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/events/calendar']}>
               <Calendars />
             </MemoryRouter>
           </WhenReady>

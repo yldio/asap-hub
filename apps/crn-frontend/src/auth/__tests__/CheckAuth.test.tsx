@@ -7,7 +7,7 @@ import CheckAuth from '../CheckAuth';
 
 it('renders a loading indicator while Auth0 is initializing', async () => {
   const { getByText, queryByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Suspense fallback="suspended">
         <authTestUtils.UserAuth0Provider>
           <CheckAuth>{() => 'content'}</CheckAuth>
@@ -22,7 +22,7 @@ it('renders a loading indicator while Auth0 is initializing', async () => {
 
 it('renders a sign in page if the user is not authenticated', async () => {
   const { findByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <authTestUtils.UserAuth0Provider>
         <CheckAuth>
           {({ isAuthenticated }) => (isAuthenticated ? 'secure' : 'Sign in')}
@@ -35,7 +35,7 @@ it('renders a sign in page if the user is not authenticated', async () => {
 
 it('renders the children if the user is authenticated', async () => {
   const { findByText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <authTestUtils.UserAuth0Provider>
         <authTestUtils.UserLoggedIn user={{}}>
           <CheckAuth>

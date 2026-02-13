@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import EditUserModal from '../EditUserModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<MemoryRouter>{children}</MemoryRouter>);
+  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
 
 describe('EditUserModal', () => {
   const defaultProps = {
@@ -45,7 +45,7 @@ describe('EditUserModal', () => {
     );
 
     rerender(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <EditUserModal {...defaultProps} buttonText="Publish" />
       </MemoryRouter>,
     );

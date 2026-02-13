@@ -34,7 +34,7 @@ const renderEventsPage = (pathname = events({}).$, search?: string) =>
     >
       <Auth0Provider user={{}}>
         <WhenReady>
-          <MemoryRouter initialEntries={[{ pathname, search }]}>
+          <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[{ pathname, search }]}>
             <Routes>
               <Route path={`${events.template}/*`} element={<Events />} />
             </Routes>

@@ -8,7 +8,7 @@ import ContactInfoModal from '../ContactInfoModal';
 import { mockActErrorsInConsole } from '../../test-utils';
 
 const renderModal = (children: ReactNode) =>
-  render(<MemoryRouter initialEntries={['/']}>{children}</MemoryRouter>);
+  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/']}>{children}</MemoryRouter>);
 it('renders a form to edit the contact info', () => {
   const { getByText } = renderModal(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,

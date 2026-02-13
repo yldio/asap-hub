@@ -5,7 +5,7 @@ import MainNavigation from '../MainNavigation';
 describe('MainNavigation', () => {
   it('renders the navigation items', () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <MainNavigation />
       </MemoryRouter>,
     );

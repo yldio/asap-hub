@@ -45,7 +45,7 @@ const renderPage = async (searchQuery = '') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/news']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/news']}>
               <Routes>
                 <Route path="/news/*" element={<NewsPage />} />
               </Routes>

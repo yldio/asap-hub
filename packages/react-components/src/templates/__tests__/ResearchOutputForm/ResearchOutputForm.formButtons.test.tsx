@@ -75,7 +75,7 @@ describe('form buttons', () => {
   ) => {
     render(
       <InnerToastContext.Provider value={jest.fn()}>
-        <MemoryRouter>
+        <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <ResearchOutputForm
             {...defaultProps}
             versionAction={versionAction}

@@ -55,7 +55,7 @@ describe('on submit', () => {
     const type = 'Model System';
 
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -111,7 +111,7 @@ describe('on submit', () => {
     const researchTags = [researchTagEnvironmentResponse];
 
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{

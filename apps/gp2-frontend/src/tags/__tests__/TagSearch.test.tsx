@@ -45,7 +45,7 @@ const renderPage = async (tags = []) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/tags?tag=test']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/tags?tag=test']}>
               <TagSearch />
             </MemoryRouter>
           </WhenReady>

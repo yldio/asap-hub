@@ -236,7 +236,7 @@ const renderPage = async (metric = 'working-group') => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[getPath(metric)]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[getPath(metric)]}>
               <Routes>
                 <Route
                   path="/analytics/leadership/:metric"
@@ -285,7 +285,10 @@ it('switches to interest group data', async () => {
   await userEvent.click(input);
   await userEvent.click(screen.getByText(label));
 
-  expect(screen.getAllByText(label).length).toBe(2);
+  // Wait for navigation and content to render with deferred transitions
+  await waitFor(() => {
+    expect(screen.getAllByText(label).length).toBe(2);
+  });
 });
 
 it('switches to open science champion data', async () => {
@@ -714,7 +717,7 @@ describe('error handling', () => {
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
-                <MemoryRouter initialEntries={[getPath('working-group')]}>
+                <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[getPath('working-group')]}>
                   <Routes>
                     <Route
                       path="/analytics/leadership/:metric"
@@ -770,7 +773,7 @@ describe('error handling', () => {
           <Suspense fallback="loading">
             <Auth0Provider user={{}}>
               <WhenReady>
-                <MemoryRouter initialEntries={[getPath('working-group')]}>
+                <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[getPath('working-group')]}>
                   <Routes>
                     <Route
                       path="/analytics/leadership/:metric"
@@ -849,7 +852,7 @@ describe('error handling', () => {
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>
-              <MemoryRouter initialEntries={[getPath('working-group')]}>
+              <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[getPath('working-group')]}>
                 <Routes>
                   <Route
                     path="/analytics/leadership/:metric"

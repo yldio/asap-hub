@@ -13,7 +13,7 @@ describe('UserNavigation', () => {
 
   it('opens user menu when clicked', async () => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserNavigation {...props} />
       </MemoryRouter>,
     );

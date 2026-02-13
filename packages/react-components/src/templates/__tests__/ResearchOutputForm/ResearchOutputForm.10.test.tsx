@@ -21,7 +21,7 @@ afterEach(() => {
 
 it('displays impact and category fields when document type is Article', async () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ResearchOutputForm {...defaultProps} documentType="Article" />
     </MemoryRouter>,
   );
@@ -38,7 +38,7 @@ it.each(notArticleDocumentTypes)(
   'does not display impact and category fields when document type is %s',
   async (documentType) => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm {...defaultProps} documentType={documentType} />
       </MemoryRouter>,
     );
@@ -50,7 +50,7 @@ it.each(notArticleDocumentTypes)(
 
 it('renders impact input and does not throw when getImpactSuggestions is noop', async () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ResearchOutputForm
         {...defaultProps}
         documentType="Article"
@@ -71,7 +71,7 @@ it('renders impact input and does not throw when getImpactSuggestions is noop', 
 
 it('renders category input and does not throw when getCategorySuggestions is noop', async () => {
   render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ResearchOutputForm
         {...defaultProps}
         documentType="Article"

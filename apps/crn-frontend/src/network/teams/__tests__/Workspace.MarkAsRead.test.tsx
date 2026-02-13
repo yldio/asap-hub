@@ -35,7 +35,7 @@ const renderWithWrapper = (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[
                 network({}).teams({}).team({ teamId: id }).workspace({}).$,
               ]}

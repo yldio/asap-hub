@@ -44,7 +44,7 @@ const renderGroupProfile = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[
                 network({})
                   .interestGroups({})
@@ -87,7 +87,9 @@ it('deep links to the teams section', async () => {
   expect(anchor).toBeVisible();
   const { hash } = new URL(anchor!.href, globalThis.location.href);
 
-  expect(container.querySelector(hash)).toHaveTextContent(/teams/i);
+  await waitFor(() =>
+    expect(container.querySelector(hash)).toHaveTextContent(/teams/i),
+  );
 });
 
 it('does not count inactive teams in the count', async () => {
@@ -208,7 +210,7 @@ it('renders the not-found page when the interest group is not found', async () =
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[
                 network({})
                   .interestGroups({})

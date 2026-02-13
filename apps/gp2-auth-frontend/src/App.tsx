@@ -11,7 +11,7 @@ const App: React.FC<Record<string, never>> = () => {
   const [email, setEmail] = useState('');
   const hubUrl = getHubUrlFromRedirect();
   return (
-    <HashRouter>
+    <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Theme>
         <BasicLayout logoHref={hubUrl}>
           <Routes>

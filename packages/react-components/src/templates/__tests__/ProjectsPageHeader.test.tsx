@@ -64,7 +64,7 @@ describe('dynamic project type descriptions', () => {
 describe('tab navigation', () => {
   it('renders all three project type tabs', () => {
     const { getByText } = render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ProjectsPageHeader {...props} />
       </MemoryRouter>,
     );

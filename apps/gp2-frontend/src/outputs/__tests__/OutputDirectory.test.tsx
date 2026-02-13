@@ -65,7 +65,7 @@ const renderOutputDirectory = async ({
           user={{ role: isAdministrator ? 'Administrator' : undefined }}
         >
           <WhenReady>
-            <MemoryRouter initialEntries={['/outputs/']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/outputs/']}>
               <Routes>
                 <Route path="/outputs" element={<OutputDirectory />} />
               </Routes>

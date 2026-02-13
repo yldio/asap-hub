@@ -10,7 +10,7 @@ describe('OnboardingPage', () => {
     isContinueEnabled: false,
   };
   const renderWithRouter = (children: ReactNode) =>
-    render(<MemoryRouter>{children}</MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
 
   it('renders the header', () => {
     renderWithRouter(<OnboardingPage {...defaultProps} />);

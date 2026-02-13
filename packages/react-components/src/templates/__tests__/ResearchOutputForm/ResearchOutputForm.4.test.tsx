@@ -67,7 +67,7 @@ describe('on submit', () => {
     const researchTags = [researchTagSubtypeResponse];
 
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{
@@ -115,7 +115,7 @@ describe('on submit', () => {
   it('can submit published date', async () => {
     const { documentType } = initialResearchOutputData;
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={initialResearchOutputData}
@@ -159,7 +159,7 @@ describe('on submit', () => {
     const documentType = 'Lab Material' as const;
     const type = 'Animal Model';
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ResearchOutputForm
           {...defaultProps}
           researchOutputData={{

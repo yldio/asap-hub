@@ -22,7 +22,7 @@ beforeEach(() => {
 
 it('renders the email in an input field', () => {
   const { getByLabelText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ForgotPassword email="john.doe@example.com" setEmail={() => {}} />
     </MemoryRouter>,
   );
@@ -32,7 +32,7 @@ it('renders the email in an input field', () => {
 it('emits email change events', async () => {
   const handleEmailChange = jest.fn();
   const { getByLabelText } = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ForgotPassword email="" setEmail={handleEmailChange} />
     </MemoryRouter>,
   );
@@ -45,7 +45,7 @@ it('emits email change events', async () => {
 
 it('has a button to go back in browser history', async () => {
   const { getByText } = render(
-    <MemoryRouter
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       initialEntries={['/prev', '/forgot-password']}
       initialIndex={1}
     >
@@ -67,7 +67,7 @@ describe('when clicking the reset button', () => {
   let result!: RenderResult;
   beforeEach(() => {
     result = render(
-      <MemoryRouter initialEntries={['/forgot-password']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/forgot-password']}>
         <Routes>
           <Route
             path="/forgot-password/*"

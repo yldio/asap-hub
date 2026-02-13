@@ -360,7 +360,7 @@ describe('Manuscript form', () => {
     };
 
     const { findByText, getByRole } = render(
-      <MemoryRouter initialEntries={['/another-url', '/form']}>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/another-url', '/form']}>
         <LocationCapture />
         <Routes>
           <Route

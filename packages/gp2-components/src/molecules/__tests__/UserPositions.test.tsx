@@ -20,7 +20,7 @@ describe('UserPositions', () => {
 
   const renderUserPositions = (overrides: Partial<UserPositionsProps> = {}) =>
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <UserPositions {...defaultProps} {...overrides} />
       </MemoryRouter>,
     );

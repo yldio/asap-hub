@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom';
 import EligibilityModal from '../EligibilityModal';
 
 const renderModal = (children: ReactNode) =>
-  render(<MemoryRouter>{children}</MemoryRouter>);
+  render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</MemoryRouter>);
 
 describe('EligibilityModal', () => {
   const defaultProps: ComponentProps<typeof EligibilityModal> = {

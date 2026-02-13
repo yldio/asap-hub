@@ -86,7 +86,7 @@ const renderOutputs = async (
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[
                 {
                   pathname: network({})
@@ -163,7 +163,7 @@ it('calls getResearchOutputs with the right arguments', async () => {
   expect(checkbox).not.toBeChecked();
 
   await userEvent.click(checkbox);
-  expect(checkbox).toBeChecked();
+  await waitFor(() => expect(checkbox).toBeChecked());
 
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(

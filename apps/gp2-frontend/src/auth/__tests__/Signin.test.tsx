@@ -205,7 +205,7 @@ describe('after a failed flow', () => {
     });
 
     result = render(
-      <MemoryRouter
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
         initialEntries={[
           '/?search&state=state&error=access_denied&error_description=Forbidden',
         ]}

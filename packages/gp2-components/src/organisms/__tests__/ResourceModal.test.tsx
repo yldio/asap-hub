@@ -73,7 +73,7 @@ describe('ResourceModal', () => {
     props: Partial<ComponentProps<typeof ResourceModal>> = {},
   ) => {
     render(
-      <MemoryRouter>
+      <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <NavigationBlockerProvider>
           <ResourceModal {...defaultProps} {...props} />
         </NavigationBlockerProvider>

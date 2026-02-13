@@ -74,7 +74,7 @@ mockGetDraftResearchOutputs.mockResolvedValue({
 
 const renderDashboard = async (user: Partial<User>) => {
   const result = render(
-    <MemoryRouter>
+    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Suspense fallback="loading">
         <RecoilRoot
           initializeState={({ set }) => {

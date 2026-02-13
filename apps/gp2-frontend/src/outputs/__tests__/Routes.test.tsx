@@ -28,7 +28,7 @@ const renderRoutes = async () => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/outputs']}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={['/outputs']}>
               <Routes>
                 <Route path="/outputs/*" element={<OutputRoutes />} />
               </Routes>

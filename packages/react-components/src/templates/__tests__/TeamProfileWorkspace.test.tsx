@@ -61,9 +61,14 @@ const renderWithRouter = (component: React.ReactElement) => {
         element: component,
       },
     ],
-    { initialEntries: ['/'] },
+    {
+      future: { v7_relativeSplatPath: true },
+      initialEntries: ['/'],
+    },
   );
-  return render(<RouterProvider router={router} />);
+  return render(
+    <RouterProvider router={router} future={{ v7_startTransition: true }} />,
+  );
 };
 
 it('renders the team workspace page', () => {
@@ -406,9 +411,14 @@ describe('compliance section', () => {
           element: <TeamProfileWorkspace {...team} tools={[]} />,
         },
       ],
-      { initialEntries: ['/'] },
+      {
+        future: { v7_relativeSplatPath: true },
+        initialEntries: ['/'],
+      },
     );
-    const { getByRole } = render(<RouterProvider router={router} />);
+    const { getByRole } = render(
+      <RouterProvider router={router} future={{ v7_startTransition: true }} />,
+    );
 
     await userEvent.click(getByRole('button', { name: /submit manuscript/i }));
 

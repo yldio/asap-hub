@@ -212,7 +212,7 @@ const renderPage = async (metric: string = 'user', type?: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[path]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[path]}>
               <Routes>
                 <Route
                   path="/analytics/collaboration/:metric/:type?"
@@ -378,7 +378,7 @@ describe('user collaboration', () => {
       });
     await renderPage('user', 'within-team');
 
-    expect(screen.getByText('300')).toBeVisible();
+    await waitFor(() => expect(screen.getByText('300')).toBeVisible());
     expect(screen.queryByText('100')).not.toBeInTheDocument();
 
     const categoryButton = screen.getByRole('button', {
@@ -390,7 +390,7 @@ describe('user collaboration', () => {
       expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
     );
 
-    expect(screen.getByText('100')).toBeVisible();
+    await waitFor(() => expect(screen.getByText('100')).toBeVisible());
     expect(screen.queryByText('300')).not.toBeInTheDocument();
   });
 
@@ -475,7 +475,7 @@ describe('team collaboration', () => {
       });
     await renderPage('team', 'within-team');
 
-    expect(screen.getByText('100')).toBeVisible();
+    await waitFor(() => expect(screen.getByText('100')).toBeVisible());
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
     const outputTypeButton = screen.getByRole('button', {
@@ -487,7 +487,7 @@ describe('team collaboration', () => {
       expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
     );
 
-    expect(screen.getByText('50')).toBeVisible();
+    await waitFor(() => expect(screen.getByText('50')).toBeVisible());
     expect(screen.queryByText('100')).not.toBeInTheDocument();
   });
 

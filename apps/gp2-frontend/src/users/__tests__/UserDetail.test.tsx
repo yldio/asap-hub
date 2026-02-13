@@ -43,7 +43,7 @@ const renderUserDetail = async (id: string) => {
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
               initialEntries={[gp2Routing.users({}).user({ userId: id }).$]}
             >
               <Routes>
@@ -117,7 +117,7 @@ describe('UserDetail', () => {
 
       await renderUserDetail(user.id);
 
-      expect(screen.getByRole('heading', { name: /biography/i })).toBeVisible();
+      expect(await screen.findByRole('heading', { name: /biography/i })).toBeVisible();
       expect(screen.getByRole('heading', { name: /Tags/i })).toBeVisible();
       expect(
         screen.getByRole('heading', { name: /Contact details/i }),
@@ -134,9 +134,13 @@ describe('UserDetail', () => {
 
       await renderUserDetail(user.id);
 
-      expect(
-        screen.queryByLabelText(/upload.+avatar/i),
-      ).not.toBeInTheDocument();
+      // Wait for content to render before checking what's not present
+      await screen.findByRole('banner');
+      await waitFor(() => {
+        expect(
+          screen.queryByLabelText(/upload.+avatar/i),
+        ).not.toBeInTheDocument();
+      });
     });
   });
   describe('own profile', () => {
@@ -158,6 +162,14 @@ describe('UserDetail', () => {
       mockGetUser.mockResolvedValueOnce(user);
 
       await renderUserDetail(user.id);
+
+      // Wait for content to render with deferred transitions - use longer timeout for complex component
+      await waitFor(
+        () => {
+          expect(screen.getAllByRole('link', { name: 'Edit Edit' }).length).toBe(7);
+        },
+        { timeout: 10000 },
+      );
 
       const editButtons = screen.getAllByRole('link', {
         name: 'Edit Edit',
@@ -187,6 +199,11 @@ describe('UserDetail', () => {
 
       await renderUserDetail(user.id);
 
+      // Wait for content to render with deferred transitions
+      await waitFor(() => {
+        expect(screen.getAllByRole('link', { name: 'Edit Edit' }).length).toBe(4);
+      });
+
       const editButtons = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
@@ -204,8 +221,9 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      // Wait for content to render with deferred transitions
+      expect(await screen.findByLabelText(/edit.+avatar/i)).toBeVisible();
       expect(screen.getByLabelText(/upload.+avatar/i)).not.toBeVisible();
-      expect(screen.getByLabelText(/edit.+avatar/i)).toBeVisible();
     });
     it('saves the key information modal', async () => {
       const user = gp2Fixtures.createUserResponse({
@@ -213,6 +231,10 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      // Wait for content to render with deferred transitions
+      await waitFor(() => {
+        expect(screen.getAllByRole('link', { name: 'Edit Edit' }).length).toBeGreaterThan(0);
+      });
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       const [keyInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
@@ -236,6 +258,13 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      // Wait for content to render with deferred transitions - need at least 2 buttons
+      await waitFor(
+        () => {
+          expect(screen.getAllByRole('link', { name: 'Edit Edit' }).length).toBeGreaterThanOrEqual(2);
+        },
+        { timeout: 10000 },
+      );
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       const [, contactInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
@@ -265,6 +294,13 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      // Wait for content to render with deferred transitions - need at least 3 buttons
+      await waitFor(
+        () => {
+          expect(screen.getAllByRole('link', { name: 'Edit Edit' }).length).toBeGreaterThanOrEqual(3);
+        },
+        { timeout: 10000 },
+      );
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       const [, , tagsEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
@@ -290,6 +326,13 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      // Wait for content to render with deferred transitions - need at least 4 buttons
+      await waitFor(
+        () => {
+          expect(screen.getAllByRole('link', { name: 'Edit Edit' }).length).toBeGreaterThanOrEqual(4);
+        },
+        { timeout: 10000 },
+      );
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       const [, , , biographyEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
@@ -313,6 +356,13 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      // Wait for content to render with deferred transitions - need at least 5 buttons
+      await waitFor(
+        () => {
+          expect(screen.getAllByRole('link', { name: 'Edit Edit' }).length).toBeGreaterThanOrEqual(5);
+        },
+        { timeout: 10000 },
+      );
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       const [, , , , questionsEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
@@ -337,6 +387,13 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      // Wait for content to render with deferred transitions - need at least 6 buttons
+      await waitFor(
+        () => {
+          expect(screen.getAllByRole('link', { name: 'Edit Edit' }).length).toBeGreaterThanOrEqual(6);
+        },
+        { timeout: 10000 },
+      );
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       const [, , , , , fundingStreamsEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
@@ -367,6 +424,13 @@ describe('UserDetail', () => {
         contributingCohortResponse,
       );
       await renderUserDetail(user.id);
+      // Wait for content to render with deferred transitions - need at least 6 buttons
+      await waitFor(
+        () => {
+          expect(screen.getAllByRole('link', { name: 'Edit Edit' }).length).toBeGreaterThanOrEqual(6);
+        },
+        { timeout: 10000 },
+      );
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       const [, , , , , contributingCohortsEditButton] = screen.getAllByRole(
         'link',
@@ -410,6 +474,10 @@ describe('UserDetail', () => {
         .mockResolvedValueOnce(createEventListAlgoliaResponse(1))
         .mockResolvedValueOnce(createEventListAlgoliaResponse(1));
       await renderUserDetail(user.id);
+      // Wait for content to render with deferred transitions
+      await waitFor(() => {
+        expect(screen.getAllByRole('link', { name: 'Edit Edit' }).length).toBeGreaterThan(0);
+      });
       const [keyInformationEditButton] = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });

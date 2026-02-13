@@ -1464,7 +1464,7 @@ async function renderPage({
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter initialEntries={[initialPath]}>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }} initialEntries={[initialPath]}>
               <LocationCapture />
               <Routes>
                 <Route

@@ -264,13 +264,14 @@ const formatComplianceData = (entries: GroupedEntries) => {
       );
       const submittingTeamId = manuscriptFields.teams?.['en-US']?.[0]?.sys.id;
       const projectMembershipId = projectMembershipEntries.find(
+        // find the first project membership with the submitting team linked. since each team should have one project membership
         (pmEntry) =>
           pmEntry.fields.projectMember?.['en-US']?.sys.id === submittingTeamId,
       )?.sys.id;
 
       const submittingProject = projectEntries.find(
         (projectEntry) =>
-          // find a project with the first project membership being the
+          // find the project the project membership belongs to
           projectEntry.fields.members?.['en-US']?.[0]?.sys.id ===
           projectMembershipId,
       )?.fields;

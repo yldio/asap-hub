@@ -2,13 +2,13 @@ import { render } from '@testing-library/react';
 
 import BasicLayout from '../BasicLayout';
 
-it('renders an ASAP logo', () => {
+it('renders an CRN logo', () => {
   const { getByTitle, getByRole } = render(<BasicLayout>Content</BasicLayout>);
-  expect(getByTitle('ASAP Logo')).toBeInTheDocument();
+  expect(getByTitle('CRN Logo')).toBeInTheDocument();
   expect(getByRole('link')).toHaveAttribute('href', '/');
 });
 
-it('renders an ASAP logo with specified href', () => {
+it('renders an CRN logo with specified href', () => {
   const { getByRole } = render(
     <BasicLayout logoHref={'http://google.com'}>Content</BasicLayout>,
   );

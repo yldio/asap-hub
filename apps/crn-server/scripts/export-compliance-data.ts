@@ -262,11 +262,7 @@ const formatComplianceData = (entries: GroupedEntries) => {
           complianceReport.fields.manuscriptVersion['en-US'].sys.id ===
           versionLink.sys.id,
       );
-      const submittingTeamId = teamEntries.find(
-        (teamEntry) =>
-          teamEntry.sys.id === manuscriptFields.teams?.['en-US']?.[0]?.sys.id,
-      )?.sys.id;
-
+      const submittingTeamId = manuscriptFields.teams?.['en-US']?.[0]?.sys.id;
       const projectMembershipId = projectMembershipEntries.find(
         (pmEntry) =>
           pmEntry.fields.projectMember?.['en-US']?.sys.id === submittingTeamId,

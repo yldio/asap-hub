@@ -91,6 +91,7 @@ beforeEach(() => {
 const renderPage = async (
   user: ComponentProps<typeof Auth0Provider>['user'] = {},
   initialPath?: string,
+  state?: unknown,
 ) => {
   const createComplianceReportPath =
     network.template +
@@ -119,7 +120,14 @@ const renderPage = async (
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
-            <MemoryRouter initialEntries={[initialPath ?? defaultInitialPath]}>
+            <MemoryRouter
+              initialEntries={[
+                {
+                  pathname: initialPath ?? defaultInitialPath,
+                  state: state ?? { fromButton: true },
+                },
+              ]}
+            >
               <LocationCapture />
               <Routes>
                 <Route
@@ -149,6 +157,16 @@ it('renders compliance report form page', async () => {
     'Share the compliance report associated with this manuscript.',
   );
   expect(container).toHaveTextContent('Title of Manuscript');
+});
+
+it('redirects to workspace if fromButton state is missing', async () => {
+  await renderPage({}, undefined, {});
+
+  await waitFor(() => {
+    expect(currentLocation?.pathname).toBe(
+      `/network/teams/${teamId}/workspace`,
+    );
+  });
 });
 
 it('can publish a form when the data is valid and navigates to team workspace', async () => {

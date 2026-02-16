@@ -270,7 +270,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     .resubmitManuscript({ manuscriptId: id }).$;
 
   const handleShareComplianceReport = () => {
-    navigate(complianceReportRoute);
+    navigate(complianceReportRoute, { state: { fromButton: true } });
   };
 
   const handleResubmitManuscript = () => {

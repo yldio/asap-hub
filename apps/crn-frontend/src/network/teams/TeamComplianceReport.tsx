@@ -8,7 +8,7 @@ import {
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import {
   refreshTeamState,
@@ -28,24 +28,34 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
   const { setFormType } = useManuscriptToast();
 
   const pushFromHere = usePushFromHere();
+  const { state } = useLocation();
 
   const setRefreshTeamState = useSetRecoilState(refreshTeamState(teamId));
   const form = useForm();
   const createComplianceReport = usePostComplianceReport();
 
+  const teamWorkspacePath = network({})
+    .teams({})
+    .team({ teamId })
+    .workspace({}).$;
+
   useEffect(() => {
     window.scrollTo({ top: 0 });
-  }, []);
+
+    const { fromButton } = (state as { fromButton?: boolean }) ?? {};
+    if (fromButton) return;
+
+    pushFromHere(teamWorkspacePath, { replace: true });
+  }, [pushFromHere, state, teamWorkspacePath]);
 
   if (manuscript && manuscript.versions[0]) {
     const onSuccess = () => {
-      const path = network({}).teams({}).team({ teamId }).workspace({}).$;
       setFormType({
         type: 'compliance-report',
         accent: 'successLarge',
       });
       setRefreshTeamState((value) => value + 1);
-      pushFromHere(path);
+      pushFromHere(teamWorkspacePath, { replace: true });
     };
 
     return (

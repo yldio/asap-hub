@@ -32,7 +32,7 @@ const mainStyles = css({
 });
 
 const cardStyles = css({
-  padding: `${rem(32)} ${rem(24)} ${rem(16)}`,
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const contentStyles = css({
@@ -157,6 +157,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
     control,
     formState: { isSubmitting, isValid },
     watch,
+    trigger,
   } = methods;
 
   const selectedStatus = watch('status');
@@ -239,23 +240,29 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 field: { value, onBlur, onChange },
                 fieldState: { error },
               }) => (
-                <LabeledTextField
-                  title="URL"
-                  subtitle={'(required)'}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  customValidationMessage={error?.message}
-                  value={value || ''}
-                  enabled={!isSubmitting}
-                  labelIndicator={<GlobeIcon />}
-                  placeholder="https://example.com"
-                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                    if (e.key === 'Tab' && !e.shiftKey && editorRef.current) {
-                      e.preventDefault(); // Stop default tab behavior
-                      editorRef.current.focus();
-                    }
-                  }}
-                />
+                <div
+                  css={css({
+                    marginTop: rem(48),
+                  })}
+                >
+                  <LabeledTextField
+                    title="URL"
+                    subtitle={'(required)'}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    customValidationMessage={error?.message}
+                    value={value || ''}
+                    enabled={!isSubmitting}
+                    labelIndicator={<GlobeIcon />}
+                    placeholder="https://example.com"
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                      if (e.key === 'Tab' && !e.shiftKey && editorRef.current) {
+                        e.preventDefault(); // Stop default tab behavior
+                        editorRef.current.focus();
+                      }
+                    }}
+                  />
+                </div>
               )}
             />
 
@@ -269,28 +276,34 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 field: { value, onBlur, onChange },
                 fieldState: { error },
               }) => (
-                <LabeledTextEditor
-                  ref={editorRef}
-                  title="Compliance Report Description"
-                  subtitle="(required)"
-                  tip={
-                    <span>
-                      Add a description to the compliance report. You can format
-                      your text by using markup language.
-                    </span>
-                  }
-                  customValidationMessage={error?.message}
-                  value={value || ''}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  required
-                  enabled={!isSubmitting}
-                  editorStyles={css({
-                    marginBlock: 0,
+                <div
+                  css={css({
+                    marginBlock: rem(48),
                   })}
-                  hasError={Boolean(error)}
-                  autofocus={false}
-                />
+                >
+                  <LabeledTextEditor
+                    ref={editorRef}
+                    title="Compliance Report Description"
+                    subtitle="(required)"
+                    tip={
+                      <span>
+                        Add a description to the compliance report. You can
+                        format your text by using markup language.
+                      </span>
+                    }
+                    customValidationMessage={error?.message}
+                    value={value || ''}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    required
+                    enabled={!isSubmitting}
+                    editorStyles={css({
+                      marginBlock: 0,
+                    })}
+                    hasError={Boolean(error)}
+                    autofocus={false}
+                  />
+                </div>
               )}
             />
 
@@ -305,12 +318,16 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   name="Status"
                   title="Status"
                   subtitle="(required)"
+                  description="Select the status that will be shown after sharing the compliance report."
                   options={manuscriptStatusOptions}
                   required
                   enabled={true}
                   placeholder="Choose an option"
                   value={value ?? ''}
-                  onChange={onChange}
+                  onChange={async (e) => {
+                    onChange(e);
+                    await trigger('status');
+                  }}
                   onBlur={onBlur}
                   renderValue={(val: ManuscriptStatus) =>
                     val && <StatusBadge status={val} />

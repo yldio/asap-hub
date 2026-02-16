@@ -446,3 +446,16 @@ it('should show "closed (other)" modal when compliant status is selected', async
 
   expect(compliantModal).toBeInTheDocument();
 });
+
+it('renders the status subtext', async () => {
+  render(
+    <StaticRouter location="/">
+      <ComplianceReportForm {...defaultProps} />
+    </StaticRouter>,
+  );
+  expect(
+    screen.getByText(
+      /Select the status that will be shown after sharing the compliance report./i,
+    ),
+  ).toBeVisible();
+});

@@ -26,7 +26,7 @@ const mockGetTutorialById = getTutorialById as jest.MockedFunction<
   typeof getTutorialById
 >;
 
-const renderDiscoverPage = async (pathname: string, query = '') => {
+const renderDiscoverPage = (pathname: string, query = '') => {
   const { container } = render(
     <RecoilRoot>
       <Suspense fallback="loading">
@@ -42,15 +42,12 @@ const renderDiscoverPage = async (pathname: string, query = '') => {
       </Suspense>
     </RecoilRoot>,
   );
-  await waitFor(() =>
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
 
   return container;
 };
 
 it('redirects to the guides page when the index page accessed', async () => {
-  await renderDiscoverPage(discover({}).$);
+  renderDiscoverPage(discover({}).$);
   expect(
     await screen.findByText(/Guides/i, {
       selector: 'h2',
@@ -59,19 +56,18 @@ it('redirects to the guides page when the index page accessed', async () => {
 });
 
 it('renders tutorials list page when the tutorials tab is selected', async () => {
-  await renderDiscoverPage(discover({}).$);
-
   mockGetTutorials.mockResolvedValue(createListTutorialsResponse(1));
 
-  const tutorialsAnchorTab = screen.getByText(/Tutorials/i, { selector: 'p' });
+  renderDiscoverPage(discover({}).$);
+
+  const tutorialsAnchorTab = await screen.findByText(/Tutorials/i, {
+    selector: 'p',
+  });
 
   expect(tutorialsAnchorTab).toBeVisible();
   expect(screen.queryByText(/Explore our tutorials/i)).not.toBeInTheDocument();
 
   await userEvent.click(tutorialsAnchorTab);
-  await waitFor(() =>
-    expect(screen.queryByText(/Loading/i)).not.toBeInTheDocument(),
-  );
 
   expect(
     await screen.findByText(/Explore our tutorials/i, { selector: 'p' }),
@@ -88,9 +84,9 @@ it('allows search on tutorials list', async () => {
     })),
   });
 
-  await renderDiscoverPage(discover({}).tutorials({}).$);
+  renderDiscoverPage(discover({}).tutorials({}).$);
 
-  await userEvent.type(screen.getByRole('searchbox'), 'Tutorial 1');
+  await userEvent.type(await screen.findByRole('searchbox'), 'Tutorial 1');
 
   await waitFor(() =>
     expect(mockGetTutorials).toHaveBeenCalledWith(
@@ -129,7 +125,7 @@ it('renders tutorial page when user clicks tutorial card title', async () => {
     })),
   });
   mockGetTutorialById.mockResolvedValue(tutorial);
-  await renderDiscoverPage(discover({}).tutorials({}).$);
+  renderDiscoverPage(discover({}).tutorials({}).$);
   const tutorialCardTitle = (await screen.findByText(/First Tutorial Title/i, {
     selector: 'a',
   })) as HTMLAnchorElement;

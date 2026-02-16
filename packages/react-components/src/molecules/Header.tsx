@@ -1,20 +1,25 @@
 import { css } from '@emotion/react';
 
-import { asapPaddedImage, asapPaddedWhiteImage } from '../images';
-import { asapLogoMobile } from '../icons';
-import { paper } from '../colors';
 import { Link } from '../atoms';
-import { mobileScreen } from '../pixels';
+import { paper } from '../colors';
+import { crnLogoFull, crnLogoFullWhite, crnLogoMobile } from '../icons';
+import { contentSidePaddingWithNavigation } from '../layout';
+import { mobileScreen, rem } from '../pixels';
 
 const height = '72px';
 
-const containerStyles = css({
-  height,
-  flexGrow: 1,
-  boxSizing: 'border-box',
-  display: 'flex',
-  justifyContent: 'center',
-});
+const containerStyles = (logoAlignment: 'center' | 'left') =>
+  css({
+    height,
+    flexGrow: 1,
+    boxSizing: 'border-box',
+    display: 'flex',
+    justifyContent: logoAlignment === 'center' ? 'center' : 'flex-start',
+    padding:
+      logoAlignment === 'left'
+        ? `${rem(0)} ${contentSidePaddingWithNavigation()}`
+        : undefined,
+  });
 const containerOpaqueStyles = css({
   backgroundColor: paper.rgb,
 });
@@ -23,6 +28,7 @@ const logoStyles = css({
   height,
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'center',
   svg: {
     height: '32px',
   },
@@ -44,22 +50,26 @@ type HeaderProps = {
   readonly enabled?: boolean;
   readonly transparent?: boolean;
   readonly logoHref?: string;
+  readonly logoAlignment?: 'center' | 'left';
 };
 
 const Header: React.FC<HeaderProps> = ({
   enabled = true,
   transparent = false,
   logoHref = '/',
+  logoAlignment = 'center',
 }) => (
-  <header css={[containerStyles, transparent || containerOpaqueStyles]}>
+  <header
+    css={[containerStyles(logoAlignment), transparent || containerOpaqueStyles]}
+  >
     <Link href={enabled ? logoHref : undefined}>
       <div css={logoDesktopStyles}>
         <span css={logoStyles}>
-          {transparent ? asapPaddedWhiteImage : asapPaddedImage}
+          {transparent ? crnLogoFullWhite : crnLogoFull}
         </span>
       </div>
       <div css={logoMobileStyles}>
-        <span css={logoStyles}>{asapLogoMobile}</span>
+        <span css={logoStyles}>{crnLogoMobile}</span>
       </div>
     </Link>
   </header>

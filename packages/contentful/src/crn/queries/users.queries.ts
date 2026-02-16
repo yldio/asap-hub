@@ -528,6 +528,8 @@ export const FETCH_USER_BY_ID_FOR_ALGOLIA_LIST = gql`
       sys {
         id
       }
+      biography
+      contactEmail
       firstName
       middleName
       lastName
@@ -536,6 +538,7 @@ export const FETCH_USER_BY_ID_FOR_ALGOLIA_LIST = gql`
       alumniSinceDate
       createdDate
       openScienceTeamMember
+      orcid
       avatar {
         url
       }

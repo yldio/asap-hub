@@ -28826,6 +28826,8 @@ export type FetchUserByIdForAlgoliaListQuery = {
   users?: Maybe<
     Pick<
       Users,
+      | 'biography'
+      | 'contactEmail'
       | 'firstName'
       | 'middleName'
       | 'lastName'
@@ -28834,6 +28836,7 @@ export type FetchUserByIdForAlgoliaListQuery = {
       | 'alumniSinceDate'
       | 'createdDate'
       | 'openScienceTeamMember'
+      | 'orcid'
       | 'country'
       | 'city'
       | 'stateOrProvince'
@@ -56558,6 +56561,11 @@ export const FetchUserByIdForAlgoliaListDocument = {
                     ],
                   },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'contactEmail' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'middleName' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
@@ -56572,6 +56580,7 @@ export const FetchUserByIdForAlgoliaListDocument = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'openScienceTeamMember' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'avatar' },

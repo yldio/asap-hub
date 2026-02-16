@@ -28457,7 +28457,9 @@ export type FetchUserByIdQuery = {
 export type UserListItemContentFragment = Pick<
   Users,
   | 'alumniSinceDate'
+  | 'biography'
   | 'city'
+  | 'contactEmail'
   | 'stateOrProvince'
   | 'country'
   | 'createdDate'
@@ -28473,6 +28475,7 @@ export type UserListItemContentFragment = Pick<
   | 'dismissedGettingStarted'
   | 'role'
   | 'openScienceTeamMember'
+  | 'orcid'
 > & {
   avatar?: Maybe<Pick<Asset, 'url'>>;
   sys: Pick<Sys, 'id'>;
@@ -28515,7 +28518,9 @@ export type FetchUsersQuery = {
           Pick<
             Users,
             | 'alumniSinceDate'
+            | 'biography'
             | 'city'
+            | 'contactEmail'
             | 'stateOrProvince'
             | 'country'
             | 'createdDate'
@@ -28531,6 +28536,7 @@ export type FetchUsersQuery = {
             | 'dismissedGettingStarted'
             | 'role'
             | 'openScienceTeamMember'
+            | 'orcid'
           > & {
             avatar?: Maybe<Pick<Asset, 'url'>>;
             sys: Pick<Sys, 'id'>;
@@ -28585,7 +28591,9 @@ export type FetchUsersByTeamIdQuery = {
                   Pick<
                     Users,
                     | 'alumniSinceDate'
+                    | 'biography'
                     | 'city'
+                    | 'contactEmail'
                     | 'stateOrProvince'
                     | 'country'
                     | 'createdDate'
@@ -28601,6 +28609,7 @@ export type FetchUsersByTeamIdQuery = {
                     | 'dismissedGettingStarted'
                     | 'role'
                     | 'openScienceTeamMember'
+                    | 'orcid'
                   > & {
                     avatar?: Maybe<Pick<Asset, 'url'>>;
                     sys: Pick<Sys, 'id'>;
@@ -28663,7 +28672,9 @@ export type FetchUsersByTeamMembershipIdQuery = {
                   Pick<
                     Users,
                     | 'alumniSinceDate'
+                    | 'biography'
                     | 'city'
+                    | 'contactEmail'
                     | 'stateOrProvince'
                     | 'country'
                     | 'createdDate'
@@ -28679,6 +28690,7 @@ export type FetchUsersByTeamMembershipIdQuery = {
                     | 'dismissedGettingStarted'
                     | 'role'
                     | 'openScienceTeamMember'
+                    | 'orcid'
                   > & {
                     avatar?: Maybe<Pick<Asset, 'url'>>;
                     sys: Pick<Sys, 'id'>;
@@ -28743,7 +28755,9 @@ export type FetchUsersByLabIdQuery = {
                       Pick<
                         Users,
                         | 'alumniSinceDate'
+                        | 'biography'
                         | 'city'
+                        | 'contactEmail'
                         | 'stateOrProvince'
                         | 'country'
                         | 'createdDate'
@@ -28759,6 +28773,7 @@ export type FetchUsersByLabIdQuery = {
                         | 'dismissedGettingStarted'
                         | 'role'
                         | 'openScienceTeamMember'
+                        | 'orcid'
                       > & {
                         avatar?: Maybe<Pick<Asset, 'url'>>;
                         sys: Pick<Sys, 'id'>;
@@ -28815,6 +28830,8 @@ export type FetchUserByIdForAlgoliaListQuery = {
   users?: Maybe<
     Pick<
       Users,
+      | 'biography'
+      | 'contactEmail'
       | 'firstName'
       | 'middleName'
       | 'lastName'
@@ -28823,6 +28840,7 @@ export type FetchUserByIdForAlgoliaListQuery = {
       | 'alumniSinceDate'
       | 'createdDate'
       | 'openScienceTeamMember'
+      | 'orcid'
       | 'country'
       | 'city'
       | 'stateOrProvince'
@@ -38061,7 +38079,9 @@ export const UserListItemContentFragmentDoc = {
               ],
             },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
           { kind: 'Field', name: { kind: 'Name', value: 'city' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'contactEmail' } },
           { kind: 'Field', name: { kind: 'Name', value: 'stateOrProvince' } },
           { kind: 'Field', name: { kind: 'Name', value: 'country' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdDate' } },
@@ -38154,6 +38174,7 @@ export const UserListItemContentFragmentDoc = {
             kind: 'Field',
             name: { kind: 'Name', value: 'openScienceTeamMember' },
           },
+          { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'researchTagsCollection' },
@@ -56557,6 +56578,11 @@ export const FetchUserByIdForAlgoliaListDocument = {
                     ],
                   },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'contactEmail' },
+                },
                 { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'middleName' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
@@ -56571,6 +56597,7 @@ export const FetchUserByIdForAlgoliaListDocument = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'openScienceTeamMember' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'orcid' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'avatar' },

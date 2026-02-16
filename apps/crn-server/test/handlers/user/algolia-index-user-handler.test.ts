@@ -48,6 +48,9 @@ describe('User index handler', () => {
       data: {
         ...user,
         avatarUrl: undefined,
+        biography: 'some bio',
+        contactEmail: 'T@rdy.io',
+        orcid: '123-456-789',
       },
       type: 'user',
     });

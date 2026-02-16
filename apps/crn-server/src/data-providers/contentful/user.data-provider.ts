@@ -709,7 +709,9 @@ export const parseContentfulGraphQlUserListItem = (
   return {
     alumniSinceDate: item.alumniSinceDate,
     avatarUrl: item.avatar?.url ?? undefined,
+    biography: item.biography ?? undefined,
     city: item.city ?? undefined,
+    contactEmail: item.contactEmail ?? undefined,
     stateOrProvince: item.stateOrProvince ?? undefined,
     country: item.country ?? undefined,
     createdDate: item.createdDate,
@@ -730,6 +732,7 @@ export const parseContentfulGraphQlUserListItem = (
     middleName: item.middleName ?? undefined,
     nickname: item.nickname ?? undefined,
     onboarded: typeof item.onboarded === 'boolean' ? item.onboarded : true,
+    orcid: item.orcid ?? undefined,
     role: item.role && isUserRole(item.role) ? item.role : 'Guest',
     openScienceTeamMember: !!item.openScienceTeamMember,
     teams: userTeams,

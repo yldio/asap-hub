@@ -690,6 +690,9 @@ describe('User data provider', () => {
 
         const userResponse = getUserListItemDataObject();
         userResponse.avatarUrl = undefined;
+        userResponse.biography = 'some bio';
+        userResponse.contactEmail = 'T@rdy.io';
+        userResponse.orcid = '123-456-789';
         expect(result).toEqual({
           total: 1,
           items: [userResponse],
@@ -760,6 +763,9 @@ describe('User data provider', () => {
 
         const userResponse = getUserListItemDataObject();
         userResponse.avatarUrl = undefined;
+        userResponse.biography = 'some bio';
+        userResponse.contactEmail = 'T@rdy.io';
+        userResponse.orcid = '123-456-789';
         expect(result).toEqual({
           total: 1,
           items: [userResponse],

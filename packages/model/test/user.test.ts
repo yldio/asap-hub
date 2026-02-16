@@ -87,7 +87,9 @@ describe('User', () => {
         ],
         alumniSinceDate: undefined,
         avatarUrl: undefined,
+        biography: undefined,
         city: 'Toronto',
+        contactEmail: undefined,
         country: 'Canada',
         createdDate: '2020-09-07T17:36:54Z',
         degree: undefined,
@@ -102,8 +104,13 @@ describe('User', () => {
         lastName: 'Doe',
         fullDisplayName: 'Jane Doe',
         membershipStatus: undefined,
+        middleName: undefined,
+        nickname: undefined,
         onboarded: true,
+        openScienceTeamMember: undefined,
+        orcid: '0000-0001-8203-6901',
         role: 'Grantee',
+        stateOrProvince: undefined,
         teams: [
           {
             displayName: 'Alessi',

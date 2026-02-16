@@ -29,6 +29,7 @@ export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   teams: [],
   labs: [],
   _tags: [],
+  orcid: '0000-0001-8203-6901',
 };
 
 type FixtureOptions = {

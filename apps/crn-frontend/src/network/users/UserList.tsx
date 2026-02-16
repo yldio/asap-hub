@@ -1,6 +1,13 @@
+import { UserListItemResponse } from '@asap-hub/model';
 import { NetworkPeople } from '@asap-hub/react-components';
+import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
+import { format } from 'date-fns';
 
 import { useUsers } from './state';
+import { getUsers } from './api';
+import { userToCSV, MAX_ALGOLIA_RESULTS } from './export';
+import { useAlgolia } from '../../hooks/algolia';
 import {
   usePaginationParams,
   usePagination,
@@ -20,6 +27,8 @@ const UserList: React.FC<UserListProps> = ({
   filters = new Set(),
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const user = useCurrentUserCRN();
+  const { client } = useAlgolia();
 
   const result = useUsers({
     searchQuery,
@@ -58,6 +67,26 @@ const UserList: React.FC<UserListProps> = ({
     result.total,
     pageSize,
   );
+
+  const isStaff = user?.role === 'Staff';
+
+  const exportResults = isStaff
+    ? () =>
+        resultsToStream<UserListItemResponse>(
+          createCsvFileStream(`People_${format(new Date(), 'MMddyy')}.csv`, {
+            header: true,
+          }),
+          (paginationParams) =>
+            getUsers(client, {
+              filters,
+              searchQuery,
+              ...paginationParams,
+            }),
+          userToCSV,
+          MAX_ALGOLIA_RESULTS,
+        )
+    : undefined;
+
   return (
     <NetworkPeople
       algoliaIndexName={result.algoliaIndexName}
@@ -67,6 +96,7 @@ const UserList: React.FC<UserListProps> = ({
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
+      exportResults={exportResults}
     />
   );
 };

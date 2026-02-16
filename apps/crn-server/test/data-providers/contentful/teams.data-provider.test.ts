@@ -2970,27 +2970,5 @@ describe('Teams data provider', () => {
         },
       ]);
     });
-
-    test('Should update the team when tools is not provided', async () => {
-      const teamId = 'team-id-1';
-      const updateData = { displayName: 'Updated Team Name' };
-
-      const teamMock = getEntry({});
-      environmentMock.getEntry.mockResolvedValueOnce(teamMock);
-      const teamMockUpdated = getEntry({});
-      teamMock.patch = jest.fn().mockResolvedValueOnce(teamMockUpdated);
-
-      await teamDataProviderMock.update(teamId, updateData as any);
-
-      expect(environmentMock.getEntry).toHaveBeenCalledWith(teamId);
-      expect(teamMock.patch).toHaveBeenCalledWith([
-        {
-          op: 'add',
-          path: '/fields/displayName',
-          value: { 'en-US': updateData.displayName },
-        },
-      ]);
-      expect(teamMockUpdated.publish).toHaveBeenCalled();
-    });
   });
 });

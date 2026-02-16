@@ -363,8 +363,6 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
           },
         })),
       });
-    } else {
-      await patchAndPublish(team, updateFields);
     }
   }
 }

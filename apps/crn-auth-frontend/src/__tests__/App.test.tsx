@@ -33,7 +33,7 @@ describe('Auth Frontend App', () => {
     // HashRouter's Navigate component runs asynchronously in React Router 6
     // Use findByRole to wait for navigation to complete
     expect(
-      await screen.findByRole('heading', { name: /Sign in to the ASAP Hub/i }),
+      await screen.findByRole('heading', { name: /Sign in to the CRN Hub/i }),
     ).toBeInTheDocument();
   });
 });

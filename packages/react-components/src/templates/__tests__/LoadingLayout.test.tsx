@@ -6,9 +6,9 @@ import LoadingLayout, {
   LoadingContentHeader,
 } from '../LoadingLayout';
 
-it('renders the asap logo', async () => {
+it('renders the CRN logo', async () => {
   render(<LoadingLayout />);
-  expect(screen.getByTitle('ASAP Logo')).toBeInTheDocument();
+  expect(screen.getByTitle('CRN Logo')).toBeInTheDocument();
 });
 
 it('renders LoadingContentHeader', async () => {

@@ -126,9 +126,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                     'Are you sure you want to delete this team tool from your team page? This cannot be undone.',
                   )
                 ) {
-                  await patchTeam({
-                    tools: team.tools.filter((_, i) => toolIndex !== i),
-                  }).catch(() => {
+                  const tools = team.tools.filter((_, i) => i !== toolIndex);
+                  await patchTeam({ tools }).catch(() => {
                     toast('Something went wrong. Please try again.');
                   });
                 }
@@ -151,9 +150,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
               title="Add Link"
               backHref={route.$}
               onSave={(data: TeamTool) =>
-                patchTeam({
-                  tools: [...(team.tools ?? []), data],
-                })
+                patchTeam({ tools: [...team.tools, data] })
               }
             />
           }
@@ -189,11 +186,11 @@ const EditTool: React.FC<{
       {...tool}
       title="Edit Link"
       backHref={network({}).teams({}).team({ teamId }).workspace({}).$}
-      onSave={(data: TeamTool) =>
-        patchTeam({
-          tools: Object.assign([], tools, { [toolIndex]: data }),
-        })
-      }
+      onSave={(data: TeamTool) => {
+        const newTools = [...tools];
+        newTools[parseInt(toolIndex, 10)] = data;
+        return patchTeam({ tools: newTools });
+      }}
     />
   );
 };

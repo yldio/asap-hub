@@ -15,6 +15,7 @@ type ToolModalProps = Partial<TeamTool> & {
 
 const ToolModal: React.FC<ToolModalProps> = ({
   title,
+  id,
   url = '',
   description = '',
   name = '',
@@ -35,6 +36,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
       showHeadingSave
       onSave={() =>
         onSave({
+          id,
           name: newName,
           url: newUrl,
           description: newDescription,

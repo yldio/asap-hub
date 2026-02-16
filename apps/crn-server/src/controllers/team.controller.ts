@@ -8,6 +8,7 @@ import {
   TeamTool,
 } from '@asap-hub/model';
 import { TeamDataProvider } from '../data-providers/types/teams.data-provider.types';
+import { getCleanTools } from '../utils/team';
 
 type FetchTeamOptions = {
   showTools: boolean;
@@ -21,17 +22,8 @@ export default class TeamController {
   }
 
   async update(id: string, tools: TeamTool[]): Promise<TeamResponse> {
-    const cleanUpdate = tools.map((tool) =>
-      Object.entries(tool).reduce(
-        (acc, [key, value]) =>
-          value?.trim && value?.trim() === ''
-            ? acc // deleted field
-            : { ...acc, [key]: value },
-        {} as TeamTool,
-      ),
-    );
-
-    await this.teamDataProvider.update(id, { tools: cleanUpdate });
+    const cleanTools = getCleanTools(tools);
+    await this.teamDataProvider.update(id, { tools: cleanTools });
 
     return this.fetchById(id);
   }

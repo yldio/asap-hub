@@ -1,4 +1,4 @@
-import { TeamPatchRequest } from '@asap-hub/model';
+import { TeamPatchRequest, TeamTool } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 
@@ -23,21 +23,24 @@ export const validateTeamParameters = validateInput(
   },
 );
 
+const teamToolSchema: JSONSchemaType<TeamTool> = {
+  type: 'object',
+  properties: {
+    id: { type: 'string', nullable: true },
+    name: { type: 'string' },
+    url: { type: 'string' },
+    description: { type: 'string', nullable: true },
+  },
+  required: ['name', 'url'],
+  additionalProperties: false,
+};
+
 const teamPatchRequestValidationSchema: JSONSchemaType<TeamPatchRequest> = {
   type: 'object',
   properties: {
     tools: {
       type: 'array',
-      items: {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-          name: { type: 'string' },
-          url: { type: 'string' },
-          description: { type: 'string', nullable: true },
-        },
-        required: ['name', 'url'],
-      },
+      items: teamToolSchema,
       nullable: true,
     },
   },

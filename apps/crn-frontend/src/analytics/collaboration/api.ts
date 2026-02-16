@@ -27,9 +27,9 @@ import {
 import {
   buildNormalizedStringSort,
   OpensearchClient,
-  OpensearchSort,
   SearchResult,
 } from '../utils/opensearch';
+import { OpensearchSortMap } from '../utils/opensearch/types';
 
 export type CollaborationListOptions = Pick<
   GetListOptions,
@@ -39,9 +39,6 @@ export type CollaborationListOptions = Pick<
   documentCategory?: DocumentCategoryOption;
   outputType?: OutputTypeOption;
 };
-
-type OpensearchSortMap<T extends `${string}_asc` | `${string}_desc` | string> =
-  Record<T, OpensearchSort[]>;
 
 const userCollaborationOpensearchSort: OpensearchSortMap<SortUserCollaboration> =
   {

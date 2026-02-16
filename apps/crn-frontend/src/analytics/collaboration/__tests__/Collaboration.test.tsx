@@ -272,6 +272,7 @@ beforeEach(() => {
     getMeetingRepAttendance: jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 }),
+    getMeetingRepAttendanceTagSuggestions: jest.fn().mockResolvedValue([]),
     getPreprintCompliance: jest.fn().mockResolvedValue({ items: [], total: 0 }),
     getPublicationCompliance: jest
       .fn()
@@ -297,6 +298,13 @@ beforeEach(() => {
     getAnalyticsInterestGroupLeadershipTagSuggestions: jest
       .fn()
       .mockResolvedValue([]),
+    getPresenterRepresentation: jest
+      .fn()
+      .mockResolvedValue({ items: [], total: 0 }),
+    getPresenterRepresentationPerformance: jest
+      .fn()
+      .mockResolvedValue(undefined),
+    getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
   });
 
   mockUseFlags.mockReturnValue({
@@ -684,6 +692,7 @@ describe('search', () => {
       getMeetingRepAttendance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendanceTagSuggestions: jest.fn().mockResolvedValue([]),
       getPreprintCompliance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -711,6 +720,13 @@ describe('search', () => {
       getAnalyticsInterestGroupLeadershipTagSuggestions: jest
         .fn()
         .mockResolvedValue([]),
+      getPresenterRepresentation: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPresenterRepresentationPerformance: jest
+        .fn()
+        .mockResolvedValue(undefined),
+      getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     await renderPage('user', 'within-team');
@@ -757,6 +773,7 @@ describe('search', () => {
       getMeetingRepAttendance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendanceTagSuggestions: jest.fn().mockResolvedValue([]),
       getPreprintCompliance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -784,6 +801,13 @@ describe('search', () => {
       getAnalyticsInterestGroupLeadershipTagSuggestions: jest
         .fn()
         .mockResolvedValue([]),
+      getPresenterRepresentation: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPresenterRepresentationPerformance: jest
+        .fn()
+        .mockResolvedValue(undefined),
+      getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     await renderPage('team', 'within-team');
@@ -855,6 +879,7 @@ describe('csv export', () => {
       getMeetingRepAttendance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendanceTagSuggestions: jest.fn().mockResolvedValue([]),
       getPreprintCompliance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -882,6 +907,13 @@ describe('csv export', () => {
       getAnalyticsInterestGroupLeadershipTagSuggestions: jest
         .fn()
         .mockResolvedValue([]),
+      getPresenterRepresentation: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPresenterRepresentationPerformance: jest
+        .fn()
+        .mockResolvedValue(undefined),
+      getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     await renderPage('user', 'within-team');
@@ -940,6 +972,7 @@ describe('csv export', () => {
       getMeetingRepAttendance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
+      getMeetingRepAttendanceTagSuggestions: jest.fn().mockResolvedValue([]),
       getPreprintCompliance: jest
         .fn()
         .mockResolvedValue({ items: [], total: 0 }),
@@ -967,6 +1000,13 @@ describe('csv export', () => {
       getAnalyticsInterestGroupLeadershipTagSuggestions: jest
         .fn()
         .mockResolvedValue([]),
+      getPresenterRepresentation: jest
+        .fn()
+        .mockResolvedValue({ items: [], total: 0 }),
+      getPresenterRepresentationPerformance: jest
+        .fn()
+        .mockResolvedValue(undefined),
+      getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
     });
 
     await renderPage('team', 'within-team');

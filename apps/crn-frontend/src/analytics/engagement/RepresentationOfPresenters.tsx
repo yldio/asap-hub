@@ -10,7 +10,7 @@ import {
   LoadingContentBodyTable,
   RepresentationOfPresentersTable,
 } from '@asap-hub/react-components';
-import { FC, Suspense, useState } from 'react';
+import { Dispatch, FC, SetStateAction, Suspense, useState } from 'react';
 
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsEngagement, useEngagementPerformance } from './state';
@@ -18,14 +18,15 @@ import { useAnalyticsEngagement, useEngagementPerformance } from './state';
 interface RepresentationOfPresentersProps {
   tags: string[];
   timeRange: TimeRangeOption;
+  sort: SortEngagement;
+  setSort: Dispatch<SetStateAction<SortEngagement>>;
 }
 
 const RepresentationOfPresentersContent: FC<
   RepresentationOfPresentersProps
-> = ({ tags, timeRange }) => {
+> = ({ setSort, sort, tags, timeRange }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
-  const [sort, setSort] = useState<SortEngagement>('team_asc');
   const [sortingDirection, setSortingDirection] =
     useState<EngagementSortingDirection>(engagementInitialSortingDirection);
 
@@ -78,11 +79,18 @@ const RepresentationOfPresentersContent: FC<
 };
 
 const RepresentationOfPresenters: FC<RepresentationOfPresentersProps> = ({
+  setSort,
+  sort,
   tags,
   timeRange,
 }) => (
   <Suspense fallback={<LoadingContentBodyTable />}>
-    <RepresentationOfPresentersContent tags={tags} timeRange={timeRange} />
+    <RepresentationOfPresentersContent
+      setSort={setSort}
+      sort={sort}
+      tags={tags}
+      timeRange={timeRange}
+    />
   </Suspense>
 );
 

@@ -13,6 +13,8 @@ import {
   UserCollaborationPerformance,
   AnalyticsTeamLeadershipResponse,
   OSChampionOpensearchResponse,
+  EngagementResponse,
+  EngagementPerformance,
 } from '@asap-hub/model';
 import { useRecoilValue } from 'recoil';
 import {
@@ -28,7 +30,11 @@ import {
   getTeamCollaborationPerformance,
   getPreliminaryDataSharing,
 } from '../analytics/collaboration/api';
-import { getMeetingRepAttendance } from '../analytics/engagement/api';
+import {
+  getEngagement,
+  getEngagementPerformance,
+  getMeetingRepAttendance,
+} from '../analytics/engagement/api';
 import {
   getAnalyticsLeadership,
   getAnalyticsOSChampion,
@@ -132,6 +138,14 @@ export const useOpensearchMetrics = () => {
         authorization,
       );
       return getMeetingRepAttendance(client, paginationParams);
+    },
+
+    getMeetingRepAttendanceTagSuggestions(tagQuery: string) {
+      const client = new OpensearchClient<MeetingRepAttendanceResponse>(
+        'attendance',
+        authorization,
+      );
+      return client.getTagSuggestions(tagQuery, 'flat');
     },
 
     getPreliminaryDataSharing(
@@ -256,6 +270,33 @@ export const useOpensearchMetrics = () => {
         authorization,
       );
       return getTeamCollaborationPerformance(client, paginationParams);
+    },
+    getPresenterRepresentation(
+      paginationParams: Parameters<typeof getEngagement>[1],
+    ) {
+      const client = new OpensearchClient<EngagementResponse>(
+        'presenter-representation',
+        authorization,
+      );
+      return getEngagement(client, paginationParams);
+    },
+
+    getPresenterRepresentationTagSuggestions(tagQuery: string) {
+      const client = new OpensearchClient<EngagementResponse>(
+        'presenter-representation',
+        authorization,
+      );
+      return client.getTagSuggestions(tagQuery, 'flat');
+    },
+
+    getPresenterRepresentationPerformance(
+      paginationParams: Parameters<typeof getEngagementPerformance>[1],
+    ) {
+      const client = new OpensearchClient<EngagementPerformance>(
+        'presenter-representation-performance',
+        authorization,
+      );
+      return getEngagementPerformance(client, paginationParams);
     },
   } as const;
 };

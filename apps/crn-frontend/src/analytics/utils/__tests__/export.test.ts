@@ -4,6 +4,7 @@ import {
   createAlgoliaResponse,
 } from '@asap-hub/algolia';
 import {
+  engagementPerformance,
   listEngagementResponse,
   performanceByDocumentType,
   teamCollaborationPerformance,
@@ -106,6 +107,7 @@ describe('downloadAnalyticsXLSX', () => {
     getPreprintCompliance: jest.fn(),
     getAnalyticsOSChampion: jest.fn(),
     getMeetingRepAttendance: jest.fn(),
+    getMeetingRepAttendanceTagSuggestions: jest.fn(),
     getPreliminaryDataSharing: jest.fn(),
     getUserCollaboration: jest.fn(),
     getUserCollaborationTagSuggestions: jest.fn(),
@@ -117,6 +119,9 @@ describe('downloadAnalyticsXLSX', () => {
     getAnalyticsWorkingGroupLeadershipTagSuggestions: jest.fn(),
     getAnalyticsInterestGroupLeadership: jest.fn(),
     getAnalyticsInterestGroupLeadershipTagSuggestions: jest.fn(),
+    getPresenterRepresentation: jest.fn(),
+    getPresenterRepresentationPerformance: jest.fn(),
+    getPresenterRepresentationTagSuggestions: jest.fn(),
   };
 
   beforeEach(() => {
@@ -257,6 +262,7 @@ describe('downloadAnalyticsXLSX', () => {
         createAlgoliaResponse<'analytics', 'engagement'>([
           {
             ...listEngagementResponse.items[0]!,
+            objectID: listEngagementResponse.items[0]!.id,
             __meta: { type: 'engagement' },
           },
         ]),
@@ -267,38 +273,7 @@ describe('downloadAnalyticsXLSX', () => {
       .mockResolvedValue(
         createAlgoliaResponse<'analytics', 'engagement-performance'>([
           {
-            events: {
-              aboveAverageMax: -1,
-              aboveAverageMin: -1,
-              averageMax: 0,
-              averageMin: 0,
-              belowAverageMax: -1,
-              belowAverageMin: -1,
-            },
-            totalSpeakers: {
-              aboveAverageMax: -1,
-              aboveAverageMin: -1,
-              averageMax: 0,
-              averageMin: 0,
-              belowAverageMax: -1,
-              belowAverageMin: -1,
-            },
-            uniqueAllRoles: {
-              aboveAverageMax: -1,
-              aboveAverageMin: -1,
-              averageMax: 0,
-              averageMin: 0,
-              belowAverageMax: -1,
-              belowAverageMin: -1,
-            },
-            uniqueKeyPersonnel: {
-              aboveAverageMax: -1,
-              aboveAverageMin: -1,
-              averageMax: 0,
-              averageMin: 0,
-              belowAverageMax: -1,
-              belowAverageMin: -1,
-            },
+            ...engagementPerformance,
             objectID: '1',
             __meta: {
               type: 'engagement-performance',
@@ -1634,6 +1609,115 @@ describe('downloadAnalyticsXLSX', () => {
     expect(XLSX.writeFile).toHaveBeenCalledWith(
       'workbook',
       expect.stringContaining('crn-analytics-current-year'),
+    );
+  });
+
+  it('should process engagement with OpenSearch when flag is enabled', async () => {
+    mockOpensearchMetrics.getPresenterRepresentationPerformance.mockResolvedValue(
+      {
+        events: {
+          belowAverageMin: 0,
+          belowAverageMax: 2,
+          averageMin: 2,
+          averageMax: 5,
+          aboveAverageMin: 5,
+          aboveAverageMax: 10,
+        },
+        totalSpeakers: {
+          belowAverageMin: 0,
+          belowAverageMax: 1,
+          averageMin: 1,
+          averageMax: 3,
+          aboveAverageMin: 3,
+          aboveAverageMax: 8,
+        },
+        uniqueAllRoles: {
+          belowAverageMin: 0,
+          belowAverageMax: 10,
+          averageMin: 11,
+          averageMax: 80,
+          aboveAverageMin: 81,
+          aboveAverageMax: 100,
+        },
+        uniqueKeyPersonnel: {
+          belowAverageMin: 0,
+          belowAverageMax: 10,
+          averageMin: 11,
+          averageMax: 80,
+          aboveAverageMin: 81,
+          aboveAverageMax: 100,
+        },
+      },
+    );
+
+    mockOpensearchMetrics.getPresenterRepresentation.mockResolvedValue({
+      items: [
+        {
+          id: 'team-1',
+          name: 'Team Alpha',
+          inactiveSince: null,
+          memberCount: 1,
+          eventCount: 4,
+          totalSpeakerCount: 3,
+          uniqueAllRolesCount: 3,
+          uniqueAllRolesCountPercentage: 100,
+          uniqueKeyPersonnelCount: 2,
+          uniqueKeyPersonnelCountPercentage: 67,
+        },
+      ],
+      total: 1,
+    });
+
+    await downloadAnalyticsXLSX({
+      algoliaClient: algoliaSearchClient,
+      opensearchMetrics: mockOpensearchMetrics,
+      opensearchMetricsFlag: true,
+    })('30d', new Set(['engagement']) as Set<MetricExportKeys>);
+
+    expect(
+      mockOpensearchMetrics.getPresenterRepresentationPerformance,
+    ).toHaveBeenCalledWith({
+      timeRange: '30d',
+    });
+
+    expect(
+      mockOpensearchMetrics.getPresenterRepresentation,
+    ).toHaveBeenCalledWith({
+      timeRange: '30d',
+      sort: 'team_asc',
+      tags: [],
+      currentPage: 0,
+      pageSize: 200,
+    });
+
+    expect(XLSX.utils.json_to_sheet).toHaveBeenCalledWith([
+      {
+        Team: 'Team Alpha',
+        'Team Status': 'Active',
+        'Inactive Since': '',
+        Members: 1,
+        'Events: Value': 4,
+        'Events: Average': 'Average',
+        'Total Speakers: Value': 3,
+        'Total Speakers: Average': 'Average',
+        'Unique Speakers (All Roles): Value': 3,
+        'Unique Speakers (All Roles): Percentage': '100%',
+        'Unique Speakers (All Roles): Average': 'Above',
+        'Unique Speakers (Key Personnel): Value': 2,
+        'Unique Speakers (Key Personnel): Percentage': '67%',
+        'Unique Speakers (Key Personnel): Average': 'Average',
+      },
+    ]);
+
+    expect(XLSX.utils.book_append_sheet).toHaveBeenCalledWith(
+      'workbook',
+      'worksheet',
+      'Speaker Diversity',
+    );
+
+    expect(XLSX.writeFile).toHaveBeenCalledWith(
+      'workbook',
+      expect.stringContaining('crn-analytics-30d'),
     );
   });
 });

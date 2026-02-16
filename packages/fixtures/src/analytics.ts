@@ -1,6 +1,6 @@
 import {
   AnalyticsTeamLeadershipResponse,
-  ListEngagementAlgoliaResponse,
+  ListEngagementResponse,
   ListTeamCollaborationResponse,
   ListUserCollaborationResponse,
   PerformanceMetricByDocumentType,
@@ -12,6 +12,7 @@ import {
   ListPreliminaryDataSharingResponse,
   UserProductivityResponse,
   TeamProductivityResponse,
+  EngagementPerformance,
 } from '@asap-hub/model';
 
 export const teamLeadershipResponse: AnalyticsTeamLeadershipResponse = {
@@ -254,7 +255,7 @@ export const userCollaborationPerformance: UserCollaborationPerformance = {
   },
 };
 
-export const listEngagementResponse: ListEngagementAlgoliaResponse = {
+export const listEngagementResponse: ListEngagementResponse = {
   total: 1,
   items: [
     {
@@ -268,9 +269,43 @@ export const listEngagementResponse: ListEngagementAlgoliaResponse = {
       uniqueAllRolesCountPercentage: 67,
       uniqueKeyPersonnelCount: 1,
       uniqueKeyPersonnelCountPercentage: 33,
-      objectID: 'engagement-algolia-id',
     },
   ],
+};
+
+export const engagementPerformance: EngagementPerformance = {
+  events: {
+    aboveAverageMax: -1,
+    aboveAverageMin: -1,
+    averageMax: 0,
+    averageMin: 0,
+    belowAverageMax: -1,
+    belowAverageMin: -1,
+  },
+  totalSpeakers: {
+    aboveAverageMax: -1,
+    aboveAverageMin: -1,
+    averageMax: 0,
+    averageMin: 0,
+    belowAverageMax: -1,
+    belowAverageMin: -1,
+  },
+  uniqueAllRoles: {
+    aboveAverageMax: -1,
+    aboveAverageMin: -1,
+    averageMax: 0,
+    averageMin: 0,
+    belowAverageMax: -1,
+    belowAverageMin: -1,
+  },
+  uniqueKeyPersonnel: {
+    aboveAverageMax: -1,
+    aboveAverageMin: -1,
+    averageMax: 0,
+    averageMin: 0,
+    belowAverageMax: -1,
+    belowAverageMin: -1,
+  },
 };
 
 export const preliminaryDataSharingItem: PreliminaryDataSharingDataObject = {

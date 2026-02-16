@@ -1,14 +1,14 @@
-import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 
-import { EmailPasswordSignin, SsoButtons } from '../organisms';
 import { Display, Divider, Paragraph } from '../atoms';
+import { EmailPasswordSignin, SsoButtons } from '../organisms';
 import {
-  mobileScreen,
-  largeDesktopScreen,
-  vminLinearCalc,
   formTargetWidth,
+  largeDesktopScreen,
+  mobileScreen,
   rem,
+  vminLinearCalc,
 } from '../pixels';
 
 const styles = css({
@@ -35,7 +35,7 @@ const Signin: React.FC<SigninProps> = ({
 
   onGoogleSignin,
   onOrcidSignin,
-  appName = 'ASAP Hub',
+  appName = 'CRN Hub',
   ...props
 }) => (
   <article css={styles}>

@@ -32,7 +32,6 @@ export { default as crnReportIcon } from './crnReport';
 export { default as crnLogoFullWhite } from './crn-logo-full-white';
 export { default as crnLogoFull } from './crn-logo-full';
 export { default as crnLogoMobile } from './crn-logo-mobile';
-export { default as crnLogo } from './crn-logo-mobile';
 export { default as crossIcon } from './cross';
 export { default as crossInCircleIcon } from './cross-in-circle';
 export { default as crossSmallIcon } from './cross-small';

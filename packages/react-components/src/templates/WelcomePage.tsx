@@ -11,7 +11,7 @@ import { noop } from '../utils';
 
 const defaultValues = {
   signup: {
-    title: 'Join the ASAP Hub',
+    title: 'Join the CRN Hub',
     content: 'Activate your account and start exploring the ASAP CRN Network.',
     buttonText: 'Activate account',
     footer: () => (
@@ -23,7 +23,7 @@ const defaultValues = {
     ),
   },
   welcome: {
-    title: 'Welcome to the ASAP Hub',
+    title: 'Welcome to the CRN Hub',
     content:
       'A private, invite-only network where the ASAP CRN community collaborates.',
     buttonText: 'Sign in',

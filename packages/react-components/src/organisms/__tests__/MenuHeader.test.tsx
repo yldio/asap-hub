@@ -5,7 +5,7 @@ import MenuHeader from '../MenuHeader';
 
 it('renders the header', () => {
   const { getByTitle } = render(<MenuHeader />);
-  expect(getByTitle('ASAP Logo')).toBeInTheDocument();
+  expect(getByTitle('CRN Logo')).toBeInTheDocument();
 });
 
 it('triggers the menu toggle event', async () => {

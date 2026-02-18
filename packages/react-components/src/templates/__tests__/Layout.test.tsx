@@ -15,7 +15,7 @@ const props: ComponentProps<typeof Layout> = {
   aboutHref: '/about',
 };
 
-it('renders an ASAP logo', async () => {
+it('renders CRN logo', async () => {
   // Suppress console.error for known React Router v6 migration issue with isActive prop
   const consoleError = jest
     .spyOn(console, 'error')
@@ -27,7 +27,7 @@ it('renders an ASAP logo', async () => {
     </MemoryRouter>,
   );
   await waitFor(() => {
-    expect(getByTitle('ASAP Logo')).toBeInTheDocument();
+    expect(getByTitle('CRN Logo')).toBeInTheDocument();
   });
 
   consoleError.mockRestore();

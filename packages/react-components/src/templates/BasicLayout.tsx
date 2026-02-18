@@ -27,7 +27,7 @@ interface BasicLayoutProps {
 }
 const BasicLayout: React.FC<BasicLayoutProps> = ({ children, logoHref }) => (
   <article css={styles}>
-    <Header logoHref={logoHref} />
+    <Header logoHref={logoHref} logoAlignment="left" />
     <main css={contentStyles}>{children}</main>
   </article>
 );

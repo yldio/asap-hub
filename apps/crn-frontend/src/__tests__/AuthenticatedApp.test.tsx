@@ -175,7 +175,7 @@ it('renders the application layout correctly', async () => {
     expect(getByText('Interest Group One')).toBeInTheDocument();
   });
 
-  expect(getByText('ASAP Logo')).toBeInTheDocument();
+  expect(getByText('CRN Logo')).toBeInTheDocument();
   expect(getByText('Shared Research')).toBeInTheDocument();
   expect(getByText('Calendar & Events')).toBeInTheDocument();
   expect(getByText('Guides & Tutorials')).toBeInTheDocument();

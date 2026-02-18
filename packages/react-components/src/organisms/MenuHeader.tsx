@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 
-import { noop } from '../utils';
-import { MenuButton, Header } from '../molecules';
-import { crossQuery } from '../layout';
 import { steel } from '../colors';
+import { crossQuery } from '../layout';
+import { Header, MenuButton } from '../molecules';
+import { noop } from '../utils';
 
 const menuButtonWidth = 72;
 
@@ -11,7 +11,7 @@ export const styles = css({
   display: 'flex',
   [crossQuery]: {
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
 });
 
@@ -43,7 +43,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({
     <div css={[menuButtonStyles]}>
       <MenuButton open={menuOpen} onClick={() => onToggleMenu()} />
     </div>
-    <Header enabled={enabled} />
+    <Header enabled={enabled} logoAlignment="center" />
   </div>
 );
 export default MenuHeader;

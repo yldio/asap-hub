@@ -5,9 +5,9 @@ import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Header from '../Header';
 
-it('renders an ASAP logo', () => {
+it('renders an CRN logo', () => {
   const { getByTitle } = render(<Header />);
-  expect(getByTitle('ASAP Logo')).toBeInTheDocument();
+  expect(getByTitle('CRN Logo')).toBeInTheDocument();
 });
 
 it('links back to the home page', async () => {
@@ -20,19 +20,19 @@ it('links back to the home page', async () => {
     </MemoryRouter>,
   );
 
-  await userEvent.click(getByTitle('ASAP Logo'));
+  await userEvent.click(getByTitle('CRN Logo'));
   expect(container).toHaveTextContent('home');
 });
 
 it('does not render an opaque background when set to transparent', () => {
   const { getByTitle, rerender } = render(<Header />);
   expect(
-    findParentWithStyle(getByTitle('ASAP Logo'), 'backgroundColor')
+    findParentWithStyle(getByTitle('CRN Logo'), 'backgroundColor')
       ?.backgroundColor,
   ).toMatchInlineSnapshot(`"rgb(255, 255, 255)"`);
 
   rerender(<Header transparent />);
-  expect(findParentWithStyle(getByTitle('ASAP Logo'), 'backgroundColor')).toBe(
+  expect(findParentWithStyle(getByTitle('CRN Logo'), 'backgroundColor')).toBe(
     null,
   );
 });

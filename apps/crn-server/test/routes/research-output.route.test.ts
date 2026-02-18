@@ -596,7 +596,7 @@ describe('/research-outputs/ route', () => {
         ${'Article'}        | ${validAccession} | ${400}
         ${'Article'}        | ${noIdentifier}   | ${201}
         ${'Bioinformatics'} | ${validDOI}       | ${201}
-        ${'Bioinformatics'} | ${validRRID}      | ${400}
+        ${'Bioinformatics'} | ${validRRID}      | ${201}
         ${'Bioinformatics'} | ${validAccession} | ${400}
         ${'Bioinformatics'} | ${noIdentifier}   | ${201}
         ${'Lab Material'}   | ${validDOI}       | ${201}
@@ -1785,7 +1785,7 @@ describe('/research-outputs/ route', () => {
         ${'Article'}        | ${validAccession} | ${400}
         ${'Article'}        | ${noIdentifier}   | ${200}
         ${'Bioinformatics'} | ${validDOI}       | ${200}
-        ${'Bioinformatics'} | ${validRRID}      | ${400}
+        ${'Bioinformatics'} | ${validRRID}      | ${200}
         ${'Bioinformatics'} | ${validAccession} | ${400}
         ${'Bioinformatics'} | ${noIdentifier}   | ${200}
         ${'Lab Material'}   | ${validDOI}       | ${200}

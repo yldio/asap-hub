@@ -47,7 +47,7 @@ describe('the welcome page', () => {
 
   it('renders a headline', async () => {
     const { findByRole } = await renderWelcome();
-    expect((await findByRole('heading')).textContent).toMatch(/asap hub/i);
+    expect((await findByRole('heading')).textContent).toMatch(/crn hub/i);
   });
 
   it('renders one button', async () => {

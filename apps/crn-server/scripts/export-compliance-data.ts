@@ -102,22 +102,28 @@ const getComplianceData = async (filePath: string) => {
             isPublishedEntry(entry) && res.complianceReportEntries.push(entry);
             break;
           case 'teams':
-            res.teamEntries.push(entry);
+            isPublishedEntry(entry) && res.teamEntries.push(entry);
             break;
           case 'users':
-            res.userEntries.push(entry);
+            isPublishedEntry(entry) && res.userEntries.push(entry);
             break;
           case 'externalAuthors':
-            res.externalAuthorEntries.push(entry);
+            isPublishedEntry(entry) && res.externalAuthorEntries.push(entry);
             break;
           case 'labs':
-            res.labEntries.push(entry);
+            isPublishedEntry(entry) && res.labEntries.push(entry);
             break;
           case 'impact':
-            res.impactEntries.push(entry);
+            isPublishedEntry(entry) && res.impactEntries.push(entry);
             break;
           case 'category':
-            res.categoryEntries.push(entry);
+            isPublishedEntry(entry) && res.categoryEntries.push(entry);
+            break;
+          case 'projects':
+            isPublishedEntry(entry) && res.projectEntries.push(entry);
+            break;
+          case 'projectMembership':
+            isPublishedEntry(entry) && res.projectMembershipEntries.push(entry);
             break;
         }
         return res;
@@ -132,6 +138,8 @@ const getComplianceData = async (filePath: string) => {
         labEntries: [] as Entry[],
         impactEntries: [] as Entry[],
         categoryEntries: [] as Entry[],
+        projectEntries: [] as Entry[],
+        projectMembershipEntries: [] as Entry[],
       },
     );
 
@@ -152,6 +160,8 @@ type GroupedEntries = {
   complianceReportEntries: Entry[];
   impactEntries: Entry[];
   categoryEntries: Entry[];
+  projectEntries: Entry[];
+  projectMembershipEntries: Entry[];
   assets: { id: string; url: string }[];
 };
 
@@ -167,6 +177,8 @@ const formatComplianceData = (entries: GroupedEntries) => {
     complianceReportEntries,
     impactEntries,
     categoryEntries,
+    projectEntries,
+    projectMembershipEntries,
     assets,
   } = entries;
 
@@ -250,9 +262,18 @@ const formatComplianceData = (entries: GroupedEntries) => {
           complianceReport.fields.manuscriptVersion['en-US'].sys.id ===
           versionLink.sys.id,
       );
-      const submittingTeam = teamEntries.find(
-        (teamEntry) =>
-          teamEntry.sys.id === manuscriptFields.teams['en-US'][0].sys.id,
+      const submittingTeamId = manuscriptFields.teams?.['en-US']?.[0]?.sys.id;
+      const projectMembershipId = projectMembershipEntries.find(
+        // find the first project membership with the submitting team linked. since each team should have one project membership
+        (pmEntry) =>
+          pmEntry.fields.projectMember?.['en-US']?.sys.id === submittingTeamId,
+      )?.sys.id;
+
+      const submittingProject = projectEntries.find(
+        (projectEntry) =>
+          // find the project the project membership belongs to
+          projectEntry.fields.members?.['en-US']?.[0]?.sys.id ===
+          projectMembershipId,
       )?.fields;
 
       formattedData.push({
@@ -263,8 +284,8 @@ const formatComplianceData = (entries: GroupedEntries) => {
             count: versionFields?.count['en-US'] || '',
             lifecycle: versionFields?.lifecycle['en-US'] || '',
           },
-          teamIdCode: submittingTeam?.teamId?.['en-US'] || '',
-          grantId: submittingTeam?.grantId?.['en-US'] || '',
+          teamIdCode: submittingProject?.projectId?.['en-US'] || '',
+          grantId: submittingProject?.grantId?.['en-US'] || '',
           manuscriptCount: manuscriptFields.count?.['en-US'] || '',
         }),
         url: manuscriptFields.url?.['en-US'] || '',

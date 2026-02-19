@@ -1,4 +1,5 @@
-module.exports.description = 'Add External Tools field to Projects content model';
+module.exports.description =
+  'Add External Tools field to Projects content model';
 
 module.exports.up = (migration) => {
   const projects = migration.editContentType('projects');

@@ -39153,13 +39153,7 @@ export const FetchAnalyticsTeamLeadershipDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'ListValue',
-                  values: [
-                    { kind: 'EnumValue', value: 'displayName_ASC' },
-                    { kind: 'EnumValue', value: 'sys_id_ASC' },
-                  ],
-                },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -39927,13 +39921,7 @@ export const FetchUserProductivityDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'ListValue',
-                  values: [
-                    { kind: 'EnumValue', value: 'firstName_ASC' },
-                    { kind: 'EnumValue', value: 'sys_id_ASC' },
-                  ],
-                },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -40267,13 +40255,7 @@ export const FetchTeamProductivityDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'ListValue',
-                  values: [
-                    { kind: 'EnumValue', value: 'displayName_ASC' },
-                    { kind: 'EnumValue', value: 'sys_id_ASC' },
-                  ],
-                },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -40433,13 +40415,7 @@ export const FetchUserTotalResearchOutputsDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'ListValue',
-                  values: [
-                    { kind: 'EnumValue', value: 'firstName_ASC' },
-                    { kind: 'EnumValue', value: 'sys_id_ASC' },
-                  ],
-                },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -40685,13 +40661,7 @@ export const FetchUserResearchOutputsDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'ListValue',
-                  values: [
-                    { kind: 'EnumValue', value: 'firstName_ASC' },
-                    { kind: 'EnumValue', value: 'sys_id_ASC' },
-                  ],
-                },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -40931,13 +40901,7 @@ export const FetchTeamCollaborationDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'ListValue',
-                  values: [
-                    { kind: 'EnumValue', value: 'displayName_ASC' },
-                    { kind: 'EnumValue', value: 'sys_id_ASC' },
-                  ],
-                },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -41207,13 +41171,7 @@ export const FetchEngagementDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'ListValue',
-                  values: [
-                    { kind: 'EnumValue', value: 'displayName_ASC' },
-                    { kind: 'EnumValue', value: 'sys_id_ASC' },
-                  ],
-                },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -41669,13 +41627,7 @@ export const FetchOsChampionDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'ListValue',
-                  values: [
-                    { kind: 'EnumValue', value: 'displayName_ASC' },
-                    { kind: 'EnumValue', value: 'sys_id_ASC' },
-                  ],
-                },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -41986,13 +41938,7 @@ export const FetchPreliminaryDataSharingDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'ListValue',
-                  values: [
-                    { kind: 'EnumValue', value: 'displayName_ASC' },
-                    { kind: 'EnumValue', value: 'sys_id_ASC' },
-                  ],
-                },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -42193,13 +42139,7 @@ export const FetchAttendanceDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: {
-                  kind: 'ListValue',
-                  values: [
-                    { kind: 'EnumValue', value: 'displayName_ASC' },
-                    { kind: 'EnumValue', value: 'sys_id_ASC' },
-                  ],
-                },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',

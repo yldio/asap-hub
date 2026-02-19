@@ -1,10 +1,10 @@
 import { Layout } from '@asap-hub/gp2-components';
-import { NotFoundPage } from '@asap-hub/react-components';
+import { Loading, NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Route } from '@asap-hub/routing';
 
-import { FC, lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router';
+import { FC, Suspense, lazy, useEffect } from 'react';
+import { Route, Routes, useLocation } from 'react-router';
 import Frame from './Frame';
 import { useUserById } from './users/state';
 
@@ -49,6 +49,10 @@ const News = lazy(loadNews);
 const Tags = lazy(loadTags);
 
 const OnboardedApp: FC<Record<string, never>> = () => {
+  const location = useLocation();
+  // Show the general page loader only when the first part of the pathname changes "/network", "/shared-research", etc.
+  // Sub routes ("/network/users/:userId") need to add the "key" property to the `Router` handling that sub-path.
+  const topLevelRoute = location.pathname.split('/')[1] || '';
   const user = useCurrentUserGP2();
 
   // eslint-disable-next-line no-restricted-syntax
@@ -72,81 +76,83 @@ const OnboardedApp: FC<Record<string, never>> = () => {
   return (
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     <Layout userId={user!.id} projects={projects} workingGroups={workingGroups}>
-      <Routes>
-        <Route
-          index
-          element={
-            <Frame title="Dashboard">
-              <Dashboard />
-            </Frame>
-          }
-        />
-        <Route
-          path={`${usersRoute.template}/*`}
-          element={
-            <Frame title="Users">
-              <Users />
-            </Frame>
-          }
-        />
-        <Route
-          path={`${workingGroupsRoute.template}/*`}
-          element={
-            <Frame title="Working Groups">
-              <WorkingGroups />
-            </Frame>
-          }
-        />
-        <Route
-          path={`${projectsRoute.template}/*`}
-          element={
-            <Frame title="Projects">
-              <Projects />
-            </Frame>
-          }
-        />
-        <Route
-          path={`${eventsRoute.template}/*`}
-          element={
-            <Frame title="Events">
-              <Events />
-            </Frame>
-          }
-        />
-        <Route
-          path={`${outputsRoute.template}/*`}
-          element={
-            <Frame title="Outputs">
-              <Outputs />
-            </Frame>
-          }
-        />
-        <Route
-          path={`${newsRoute.template}/*`}
-          element={
-            <Frame title="News">
-              <News />
-            </Frame>
-          }
-        />
-        <Route
-          path={`${tagsRoute.template}/*`}
-          element={
-            <Frame title="Tags">
-              <Tags />
-            </Frame>
-          }
-        />
+      <Suspense key={topLevelRoute} fallback={<Loading />}>
+        <Routes>
+          <Route
+            index
+            element={
+              <Frame title="Dashboard">
+                <Dashboard />
+              </Frame>
+            }
+          />
+          <Route
+            path={`${usersRoute.template}/*`}
+            element={
+              <Frame title="Users">
+                <Users />
+              </Frame>
+            }
+          />
+          <Route
+            path={`${workingGroupsRoute.template}/*`}
+            element={
+              <Frame title="Working Groups">
+                <WorkingGroups />
+              </Frame>
+            }
+          />
+          <Route
+            path={`${projectsRoute.template}/*`}
+            element={
+              <Frame title="Projects">
+                <Projects />
+              </Frame>
+            }
+          />
+          <Route
+            path={`${eventsRoute.template}/*`}
+            element={
+              <Frame title="Events">
+                <Events />
+              </Frame>
+            }
+          />
+          <Route
+            path={`${outputsRoute.template}/*`}
+            element={
+              <Frame title="Outputs">
+                <Outputs />
+              </Frame>
+            }
+          />
+          <Route
+            path={`${newsRoute.template}/*`}
+            element={
+              <Frame title="News">
+                <News />
+              </Frame>
+            }
+          />
+          <Route
+            path={`${tagsRoute.template}/*`}
+            element={
+              <Frame title="Tags">
+                <Tags />
+              </Frame>
+            }
+          />
 
-        <Route
-          path="*"
-          element={
-            <Frame title="Not Found">
-              <NotFoundPage />
-            </Frame>
-          }
-        />
-      </Routes>
+          <Route
+            path="*"
+            element={
+              <Frame title="Not Found">
+                <NotFoundPage />
+              </Frame>
+            }
+          />
+        </Routes>
+      </Suspense>
     </Layout>
   );
 };

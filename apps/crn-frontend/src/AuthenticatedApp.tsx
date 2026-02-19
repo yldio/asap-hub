@@ -1,5 +1,10 @@
 import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
-import { Layout, Loading, NotFoundPage } from '@asap-hub/react-components';
+import {
+  Layout,
+  Loading,
+  LoadingContentHeader,
+  NotFoundPage,
+} from '@asap-hub/react-components';
 import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   about,
@@ -13,8 +18,8 @@ import {
   sharedResearch,
   tags,
 } from '@asap-hub/routing';
-import { FC, lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router';
+import { FC, Suspense, lazy, useEffect } from 'react';
+import { Route, Routes, useLocation } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 
 import CheckOnboarded from './auth/CheckOnboarded';
@@ -82,6 +87,10 @@ const AuthenticatedApp: FC<{
       .then(loadTags);
   }, []);
 
+  const location = useLocation();
+  // Show the general page loader only when the first part of the pathname changes "/network", "/shared-research", etc.
+  // Sub routes ("/network/users/:userId") need to add the "key" property to the `Router` handling that sub-path.
+  const topLevelRoute = location.pathname.split('/')[1] || '';
   const user = useCurrentUserCRN();
   const tabRoute = useCurrentUserProfileTabRoute();
   const canViewAnalytics = user?.role === 'Staff';
@@ -154,107 +163,109 @@ const AuthenticatedApp: FC<{
           >
             <ProjectsBanner />
             <CheckOnboarded>
-              <Routes>
-                <Route
-                  path={dashboard.template}
-                  element={
-                    <Frame title="Dashboard">
-                      <Dashboard />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path={dashboard({}).dismissGettingStarted({}).$}
-                  element={
-                    <Frame title="Dashboard">
-                      <Dashboard />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path={`${discover.template}/*`}
-                  element={
-                    <Frame title="Guides & Tutorials">
-                      <Discover />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path={`${about.template}/*`}
-                  element={
-                    <Frame title="About ASAP">
-                      <About />
-                    </Frame>
-                  }
-                />
-                {canViewAnalytics && (
+              <Suspense key={topLevelRoute} fallback={<LoadingContentHeader />}>
+                <Routes>
                   <Route
-                    path={`${analytics.template}/*`}
+                    path={dashboard.template}
                     element={
-                      <Frame title="Analytics">
-                        <Analytics />
+                      <Frame title="Dashboard">
+                        <Dashboard />
                       </Frame>
                     }
                   />
-                )}
-                <Route
-                  path={`${news.template}/*`}
-                  element={
-                    <Frame title="News">
-                      <News />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path={`${network.template}/*`}
-                  element={
-                    <Frame title={null}>
-                      <Network />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path={`${sharedResearch.template}/*`}
-                  element={
-                    <Frame title="Shared Research">
-                      <SharedResearch />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path={`${projects.template}/*`}
-                  element={
-                    <Frame title={null}>
-                      <Projects />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path={`${events.template}/*`}
-                  element={
-                    <Frame title={null}>
-                      <Events />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path={`${tags.template}/*`}
-                  element={
-                    <Frame title="Tags">
-                      <Tags />
-                    </Frame>
-                  }
-                />
+                  <Route
+                    path={dashboard({}).dismissGettingStarted({}).$}
+                    element={
+                      <Frame title="Dashboard">
+                        <Dashboard />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path={`${discover.template}/*`}
+                    element={
+                      <Frame title="Guides & Tutorials">
+                        <Discover />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path={`${about.template}/*`}
+                    element={
+                      <Frame title="About ASAP">
+                        <About />
+                      </Frame>
+                    }
+                  />
+                  {canViewAnalytics && (
+                    <Route
+                      path={`${analytics.template}/*`}
+                      element={
+                        <Frame title="Analytics">
+                          <Analytics />
+                        </Frame>
+                      }
+                    />
+                  )}
+                  <Route
+                    path={`${news.template}/*`}
+                    element={
+                      <Frame title="News">
+                        <News />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path={`${network.template}/*`}
+                    element={
+                      <Frame title={null}>
+                        <Network />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path={`${sharedResearch.template}/*`}
+                    element={
+                      <Frame title="Shared Research">
+                        <SharedResearch />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path={`${projects.template}/*`}
+                    element={
+                      <Frame title={null}>
+                        <Projects />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path={`${events.template}/*`}
+                    element={
+                      <Frame title={null}>
+                        <Events />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path={`${tags.template}/*`}
+                    element={
+                      <Frame title="Tags">
+                        <Tags />
+                      </Frame>
+                    }
+                  />
 
-                <Route
-                  path="*"
-                  element={
-                    <Frame title="Not Found">
-                      <NotFoundPage />
-                    </Frame>
-                  }
-                />
-              </Routes>
+                  <Route
+                    path="*"
+                    element={
+                      <Frame title="Not Found">
+                        <NotFoundPage />
+                      </Frame>
+                    }
+                  />
+                </Routes>
+              </Suspense>
             </CheckOnboarded>
           </Layout>
         );

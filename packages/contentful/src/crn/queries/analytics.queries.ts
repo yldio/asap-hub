@@ -4,7 +4,11 @@ import { gql } from 'graphql-tag';
 
 export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
   query FetchAnalyticsTeamLeadership($limit: Int, $skip: Int) {
-    teamsCollection(order: [displayName_ASC, sys_id_ASC], limit: $limit, skip: $skip) {
+    teamsCollection(
+      order: [displayName_ASC, sys_id_ASC]
+      limit: $limit
+      skip: $skip
+    ) {
       total
       items {
         sys {
@@ -96,7 +100,11 @@ export const FETCH_ANALYTICS_TEAM_LEADERSHIP = gql`
 
 export const FETCH_USER_PRODUCTIVITY = gql`
   query FetchUserProductivity($limit: Int, $skip: Int) {
-    usersCollection(order: [firstName_ASC, sys_id_ASC], limit: $limit, skip: $skip) {
+    usersCollection(
+      order: [firstName_ASC, sys_id_ASC]
+      limit: $limit
+      skip: $skip
+    ) {
       total
       items {
         sys {
@@ -149,7 +157,11 @@ export const FETCH_USER_PRODUCTIVITY = gql`
 
 export const FETCH_TEAM_PRODUCTIVITY = gql`
   query FetchTeamProductivity($limit: Int, $skip: Int) {
-    teamsCollection(order: [displayName_ASC, sys_id_ASC], limit: $limit, skip: $skip) {
+    teamsCollection(
+      order: [displayName_ASC, sys_id_ASC]
+      limit: $limit
+      skip: $skip
+    ) {
       total
       items {
         sys {
@@ -175,7 +187,11 @@ export const FETCH_TEAM_PRODUCTIVITY = gql`
 
 export const FETCH_USER_TOTAL_RESEARCH_OUTPUTS = gql`
   query FetchUserTotalResearchOutputs($skip: Int) {
-    usersCollection(order: [firstName_ASC, sys_id_ASC], limit: 1000, skip: $skip) {
+    usersCollection(
+      order: [firstName_ASC, sys_id_ASC]
+      limit: 1000
+      skip: $skip
+    ) {
       total
       items {
         sys {
@@ -256,7 +272,11 @@ export const FETCH_USER_RESEARCH_OUTPUTS = gql`
 
 export const FETCH_TEAM_COLLABORATION = gql`
   query FetchTeamCollaboration($limit: Int, $skip: Int) {
-    teamsCollection(order: [displayName_ASC, sys_id_ASC], limit: $limit, skip: $skip) {
+    teamsCollection(
+      order: [displayName_ASC, sys_id_ASC]
+      limit: $limit
+      skip: $skip
+    ) {
       total
       items {
         sys {
@@ -361,7 +381,11 @@ export const FETCH_ENGAGEMENT = gql`
 
 export const FETCH_OS_CHAMPION = gql`
   query FetchOsChampion($limit: Int, $skip: Int, $dateFilter: DateTime) {
-    teamsCollection(order: [displayName_ASC, sys_id_ASC], limit: $limit, skip: $skip) {
+    teamsCollection(
+      order: [displayName_ASC, sys_id_ASC]
+      limit: $limit
+      skip: $skip
+    ) {
       total
       items {
         sys {
@@ -405,7 +429,11 @@ export const FETCH_OS_CHAMPION = gql`
 
 export const FETCH_PRELIMINARY_DATA_SHARING = gql`
   query FetchPreliminaryDataSharing($limit: Int, $skip: Int) {
-    teamsCollection(order: [displayName_ASC, sys_id_ASC], limit: $limit, skip: $skip) {
+    teamsCollection(
+      order: [displayName_ASC, sys_id_ASC]
+      limit: $limit
+      skip: $skip
+    ) {
       total
       items {
         sys {
@@ -435,7 +463,11 @@ export const FETCH_PRELIMINARY_DATA_SHARING = gql`
 
 export const FETCH_ATTENDANCE = gql`
   query FetchAttendance($limit: Int, $skip: Int) {
-    teamsCollection(order: [displayName_ASC, sys_id_ASC], limit: $limit, skip: $skip) {
+    teamsCollection(
+      order: [displayName_ASC, sys_id_ASC]
+      limit: $limit
+      skip: $skip
+    ) {
       total
       items {
         sys {

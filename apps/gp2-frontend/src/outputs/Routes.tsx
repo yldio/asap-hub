@@ -1,8 +1,8 @@
 import { OutputsPage } from '@asap-hub/gp2-components';
-import { NotFoundPage } from '@asap-hub/react-components';
+import { Loading, NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
-import { FC, lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router';
+import { FC, Suspense, lazy, useEffect } from 'react';
+import { Route, Routes, useLocation } from 'react-router';
 import Frame from '../Frame';
 import OutputDetail from './OutputDetail';
 
@@ -17,26 +17,33 @@ const Outputs: FC<Record<string, never>> = () => {
     loadOutputDirectory();
   }, []);
 
+  const { pathname, search } = useLocation();
+  const params = new URLSearchParams(search);
+  params.delete('searchQuery');
+  const frameKey = params.toString();
+
   return (
-    <Routes>
-      <Route
-        index
-        element={
-          <Frame title="Outputs">
-            <OutputsPage>
-              <Frame title="Outputs">
-                <OutputDirectory />
-              </Frame>
-            </OutputsPage>
-          </Frame>
-        }
-      />
-      <Route
-        path={`${gp2.outputs({}).output.template}/*`}
-        element={<OutputDetail />}
-      />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <Suspense key={pathname} fallback={<Loading />}>
+      <Routes>
+        <Route
+          index
+          element={
+            <Frame title="Outputs">
+              <OutputsPage>
+                <Frame key={frameKey} title="Outputs">
+                  <OutputDirectory />
+                </Frame>
+              </OutputsPage>
+            </Frame>
+          }
+        />
+        <Route
+          path={`${gp2.outputs({}).output.template}/*`}
+          element={<OutputDetail />}
+        />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Suspense>
   );
 };
 

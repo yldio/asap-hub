@@ -8,6 +8,7 @@ import {
   OSChampionTable,
 } from '@asap-hub/react-components';
 import { Dispatch, SetStateAction, Suspense, useState } from 'react';
+import { useLocation } from 'react-router';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsOSChampion } from './state';
 
@@ -52,10 +53,13 @@ const OSChampionContent: React.FC<OSChampionProps> = ({
   );
 };
 
-const OSChampion: React.FC<OSChampionProps> = ({ sort, setSort, tags }) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <OSChampionContent sort={sort} setSort={setSort} tags={tags} />
-  </Suspense>
-);
+const OSChampion: React.FC<OSChampionProps> = ({ sort, setSort, tags }) => {
+  const { search } = useLocation();
+  return (
+    <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <OSChampionContent sort={sort} setSort={setSort} tags={tags} />
+    </Suspense>
+  );
+};
 
 export default OSChampion;

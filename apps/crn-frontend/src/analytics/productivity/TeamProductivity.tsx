@@ -8,6 +8,7 @@ import {
   TeamProductivityTable,
 } from '@asap-hub/react-components';
 import { Dispatch, FC, SetStateAction, Suspense, useState } from 'react';
+import { useLocation } from 'react-router';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsTeamProductivity,
@@ -59,10 +60,13 @@ const TeamProductivityContent: FC<TeamProductivityProps> = ({
   );
 };
 
-const TeamProductivity: FC<TeamProductivityProps> = (props) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <TeamProductivityContent {...props} />
-  </Suspense>
-);
+const TeamProductivity: FC<TeamProductivityProps> = (props) => {
+  const { search } = useLocation();
+  return (
+    <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <TeamProductivityContent {...props} />
+    </Suspense>
+  );
+};
 
 export default TeamProductivity;

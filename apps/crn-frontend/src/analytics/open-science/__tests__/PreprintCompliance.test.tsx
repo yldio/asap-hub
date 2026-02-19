@@ -1,6 +1,7 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import React, { Suspense } from 'react';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import {
   ListPreprintComplianceOpensearchResponse,
@@ -71,15 +72,17 @@ describe('PreprintCompliance', () => {
   });
   it('renders preprint compliance correctly', async () => {
     render(
-      <RecoilRoot>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <PreprintCompliance tags={[]} />
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </RecoilRoot>,
+      <MemoryRouter>
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <PreprintCompliance tags={[]} />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {

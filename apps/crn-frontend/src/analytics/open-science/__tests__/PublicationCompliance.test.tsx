@@ -2,6 +2,7 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { ListPublicationComplianceOpensearchResponse } from '@asap-hub/model';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
+import { MemoryRouter } from 'react-router';
 import {
   DefaultValue,
   RecoilRoot,
@@ -40,15 +41,17 @@ mockConsoleError();
 describe('PublicationCompliance', () => {
   it('renders publication compliance correctly', async () => {
     render(
-      <RecoilRoot>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <PublicationCompliance tags={[]} />
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </RecoilRoot>,
+      <MemoryRouter>
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <PublicationCompliance tags={[]} />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {

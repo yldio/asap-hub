@@ -11,7 +11,14 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useMemo } from 'react';
-import { Navigate, Route, Routes, useParams, useNavigate } from 'react-router';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+  useNavigate,
+} from 'react-router';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -97,6 +104,7 @@ const WorkingGroupMainPage: FC<{
   const edit = isAdministrator ? editRoute.$ : undefined;
   const resources = resourcesRoute.$;
 
+  const { pathname } = useLocation();
   const update = usePutWorkingGroupResources(workingGroupId);
   const navigate = useNavigate();
 
@@ -117,7 +125,7 @@ const WorkingGroupMainPage: FC<{
       upcomingTotal={upcomingEvents?.total || 0}
       pastTotal={pastEvents?.total || 0}
     >
-      <Routes>
+      <Routes key={pathname}>
         <Route
           path="overview"
           element={

@@ -1,8 +1,8 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { SharedResearchPage } from '@asap-hub/react-components';
+import { Loading, SharedResearchPage } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
-import { FC, lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router';
+import { FC, Suspense, lazy, useEffect } from 'react';
+import { Route, Routes, useLocation } from 'react-router';
 
 import { useSearch } from '../hooks';
 
@@ -30,31 +30,35 @@ const SharedResearch: FC<Record<string, never>> = () => {
     debouncedSearchQuery,
   } = useSearch();
 
+  const { pathname } = useLocation();
+
   return (
-    <Routes>
-      <Route
-        index
-        element={
-          <SharedResearchPage
-            onChangeSearch={setSearchQuery}
-            searchQuery={searchQuery}
-            onChangeFilter={toggleFilter}
-            filters={filters}
-          >
-            <SearchFrame title={null}>
-              <ResearchOutputList
-                searchQuery={debouncedSearchQuery}
-                filters={filters}
-              />
-            </SearchFrame>
-          </SharedResearchPage>
-        }
-      />
-      <Route
-        path={`${sharedResearch({}).researchOutput.template}/*`}
-        element={<ResearchOutput />}
-      />
-    </Routes>
+    <Suspense key={pathname} fallback={<Loading />}>
+      <Routes>
+        <Route
+          index
+          element={
+            <SharedResearchPage
+              onChangeSearch={setSearchQuery}
+              searchQuery={searchQuery}
+              onChangeFilter={toggleFilter}
+              filters={filters}
+            >
+              <SearchFrame title={null}>
+                <ResearchOutputList
+                  searchQuery={debouncedSearchQuery}
+                  filters={filters}
+                />
+              </SearchFrame>
+            </SharedResearchPage>
+          }
+        />
+        <Route
+          path={`${sharedResearch({}).researchOutput.template}/*`}
+          element={<ResearchOutput />}
+        />
+      </Routes>
+    </Suspense>
   );
 };
 

@@ -80,6 +80,11 @@ export const useNavigationWarning = ({
         return;
       }
 
+      // Mark as intentional so the next popstate (triggered by history.go)
+      // is skipped. Without this, React Router 7's startTransition keeps the
+      // component mounted during navigation, causing the popstate listener
+      // to fire again and creating an infinite confirm loop.
+      intentionalNavigationRef.current = true;
       window.history.go(-2); // User confirmed, go back the dummy entry plus a additional one.
     };
 

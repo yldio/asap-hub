@@ -4308,7 +4308,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],\
       [\
         "ajv",\
-        "npm:8.11.0"\
+        "npm:8.18.0"\
       ],\
       [\
         "ajv-formats",\
@@ -12811,7 +12811,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/uuid", "npm:8.3.4"],\
             ["@types/yargs", "npm:17.0.5"],\
             ["@yarnpkg/pnpify", "npm:3.1.8"],\
-            ["ajv", "npm:8.11.0"],\
+            ["ajv", "npm:8.18.0"],\
             ["ajv-formats", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"],\
             ["algoliasearch", "npm:4.25.3"],\
             ["apicache", "npm:1.6.3"],\
@@ -13546,7 +13546,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/uuid", "npm:8.3.4"],\
             ["@types/yargs", "npm:17.0.5"],\
             ["@yarnpkg/pnpify", "npm:3.1.8"],\
-            ["ajv", "npm:8.11.0"],\
+            ["ajv", "npm:8.18.0"],\
             ["algoliasearch", "npm:4.25.3"],\
             ["apicache", "npm:1.6.3"],\
             ["apr-intercept", "npm:3.0.4"],\
@@ -13634,7 +13634,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@asap-hub/model", "workspace:packages/model"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["ajv", "npm:8.11.0"]\
+            ["ajv", "npm:8.18.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -14369,7 +14369,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/supertest", "npm:2.0.16"],\
             ["@types/through2-concurrent", "npm:2.0.4"],\
             ["@types/uuid", "npm:8.3.4"],\
-            ["ajv", "npm:8.11.0"],\
+            ["ajv", "npm:8.18.0"],\
             ["ajv-formats", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"],\
             ["apr-intercept", "npm:3.0.4"],\
             ["async", "npm:3.2.6"],\
@@ -39172,21 +39172,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
-        ["npm:8.11.0", {\
-          "packageLocation": "./.yarn/cache/ajv-npm-8.11.0-83d029789c-5e0ff22680.zip/node_modules/ajv/",\
-          "packageDependencies": [\
-            ["ajv", "npm:8.11.0"],\
-            ["fast-deep-equal", "npm:3.1.3"],\
-            ["json-schema-traverse", "npm:1.0.0"],\
-            ["require-from-string", "npm:2.0.2"],\
-            ["uri-js", "npm:4.4.1"]\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["npm:8.17.1", {\
           "packageLocation": "./.yarn/cache/ajv-npm-8.17.1-12ade7edc6-1797bf242c.zip/node_modules/ajv/",\
           "packageDependencies": [\
             ["ajv", "npm:8.17.1"],\
+            ["fast-deep-equal", "npm:3.1.3"],\
+            ["fast-uri", "npm:3.1.0"],\
+            ["json-schema-traverse", "npm:1.0.0"],\
+            ["require-from-string", "npm:2.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:8.18.0", {\
+          "packageLocation": "./.yarn/cache/ajv-npm-8.18.0-6e5e062765-bcdf6c7b04.zip/node_modules/ajv/",\
+          "packageDependencies": [\
+            ["ajv", "npm:8.18.0"],\
             ["fast-deep-equal", "npm:3.1.3"],\
             ["fast-uri", "npm:3.1.0"],\
             ["json-schema-traverse", "npm:1.0.0"],\
@@ -39221,7 +39221,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["ajv-formats", "virtual:bfa088acc101ea26831982283906dbb87c2cea499bbf1e9c0fe343ca4c0a27a44a37d60de0fd1bdfd5180b91275cf2a65a8915ade505084dc9974f3c1f67d9dc#npm:2.1.1"],\
             ["@types/ajv", null],\
-            ["ajv", "npm:8.11.0"]\
+            ["ajv", "npm:8.18.0"]\
           ],\
           "packagePeers": [\
             "@types/ajv",\

@@ -12,7 +12,7 @@ import {
 } from '@asap-hub/model';
 import { MetricOption } from '@asap-hub/react-components';
 import { OpensearchClient } from '../utils/opensearch/client';
-import { OpensearchSort } from '../utils/opensearch/types';
+import { OpensearchSort, OpensearchSortMap } from '../utils/opensearch/types';
 
 export type AnalyticsSearchOptions = {
   metric?: MetricOption;
@@ -83,6 +83,13 @@ export const getAnalyticsLeadership = async (
   };
 };
 
+const osChampionOpensearchSort: OpensearchSortMap<SortOSChampion> = {
+  team_asc: [{ 'teamName.keyword': { order: 'asc' } }],
+  team_desc: [{ 'teamName.keyword': { order: 'desc' } }],
+  os_champion_awards_asc: [{ teamAwardsCount: { order: 'asc' } }],
+  os_champion_awards_desc: [{ teamAwardsCount: { order: 'desc' } }],
+};
+
 export const getAnalyticsOSChampion = async (
   opensearchClient: OpensearchClient<OSChampionOpensearchResponse>,
   {
@@ -90,6 +97,7 @@ export const getAnalyticsOSChampion = async (
     currentPage,
     pageSize,
     timeRange,
+    sort,
   }: AnalyticsSearchOptionsWithFiltering<SortOSChampion>,
 ): Promise<ListOSChampionOpensearchResponse | undefined> =>
   opensearchClient.search({
@@ -98,4 +106,5 @@ export const getAnalyticsOSChampion = async (
     pageSize: pageSize ?? undefined,
     timeRange,
     searchScope: 'extended',
+    sort: sort ? osChampionOpensearchSort[sort] : undefined,
   });

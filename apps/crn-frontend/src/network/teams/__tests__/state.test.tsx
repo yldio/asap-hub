@@ -13,6 +13,7 @@ import {
 import { authorizationState, auth0State } from '../../../auth/state';
 import {
   getManuscript,
+  patchTeam,
   updateDiscussion,
   createDiscussion,
   createPreprintResearchOutput,
@@ -21,6 +22,7 @@ import * as stateModule from '../state';
 import {
   patchedTeamState,
   teamState,
+  usePatchTeamById,
   useReplyToDiscussion,
   useUploadManuscriptFileViaPresignedUrl,
 } from '../state';
@@ -36,6 +38,7 @@ jest.mock('../api', () => ({
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
   createDiscussion: jest.fn(),
   createPreprintResearchOutput: jest.fn(),
+  patchTeam: jest.fn(),
   getTeam: jest.fn().mockResolvedValue(undefined),
 }));
 
@@ -742,5 +745,71 @@ describe('usePostPreprintResearchOutput', () => {
     });
 
     expect(response).toEqual(mockResearchOutputResponse);
+  });
+});
+
+describe('usePatchTeamById', () => {
+  beforeEach(() => {
+    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
+      if (state === authorizationState) {
+        return mockAuthorization;
+      }
+      return undefined;
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('calls patchTeam and updates the team state', async () => {
+    const initialTeam: TeamDataObject = {
+      ...teamMock,
+      manuscripts: [],
+    };
+
+    const updatedTeam: TeamDataObject = {
+      ...initialTeam,
+      tools: [{ name: 'Slack', url: 'https://slack.com' }],
+    };
+
+    const patch = { tools: [{ name: 'Slack', url: 'https://slack.com' }] };
+    (patchTeam as jest.Mock).mockResolvedValueOnce(updatedTeam);
+
+    const initializeState = ({ set }: MutableSnapshot) => {
+      set(auth0State, {
+        getTokenSilently: jest.fn().mockResolvedValue('mock-token'),
+      } as never);
+      set(patchedTeamState(teamId), initialTeam);
+    };
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot initializeState={initializeState}>{children}</RecoilRoot>
+    );
+
+    const { result } = renderHook(
+      () => {
+        const patchFn = usePatchTeamById(teamId);
+        const [team] = useRecoilState(teamState(teamId));
+        return { patchFn, team };
+      },
+      { wrapper },
+    );
+
+    // Wait for initial state to be set
+    await waitFor(() => {
+      expect(result.current.team).toEqual(initialTeam);
+    });
+
+    await act(async () => {
+      await result.current.patchFn(patch);
+    });
+
+    expect(patchTeam).toHaveBeenCalledWith(teamId, patch, mockAuthorization);
+
+    // Verify state was updated
+    await waitFor(() => {
+      expect(result.current.team).toEqual(updatedTeam);
+    });
   });
 });

@@ -3,7 +3,7 @@ import {
   ManuscriptVersionOption,
 } from '@asap-hub/react-components';
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 
 export default {
   title: 'Templates / Manuscript Output Selection',

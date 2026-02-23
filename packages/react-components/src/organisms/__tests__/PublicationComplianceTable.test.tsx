@@ -97,10 +97,7 @@ describe('PublicationComplianceTable', () => {
   it('handles sorting when team header button is clicked', () => {
     const mockSetSort = jest.fn();
     render(
-      <PublicationComplianceTable
-        {...defaultProps}
-        setSort={mockSetSort}
-      />,
+      <PublicationComplianceTable {...defaultProps} setSort={mockSetSort} />,
     );
 
     const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
@@ -134,10 +131,7 @@ describe('PublicationComplianceTable', () => {
   it('handles sorting for publications column', () => {
     const mockSetSort = jest.fn();
     render(
-      <PublicationComplianceTable
-        {...defaultProps}
-        setSort={mockSetSort}
-      />,
+      <PublicationComplianceTable {...defaultProps} setSort={mockSetSort} />,
     );
 
     const publicationsHeader = screen.getByRole('columnheader', {
@@ -152,10 +146,7 @@ describe('PublicationComplianceTable', () => {
   it('handles sorting for datasets column', () => {
     const mockSetSort = jest.fn();
     render(
-      <PublicationComplianceTable
-        {...defaultProps}
-        setSort={mockSetSort}
-      />,
+      <PublicationComplianceTable {...defaultProps} setSort={mockSetSort} />,
     );
 
     const datasetsHeader = screen.getByRole('columnheader', {
@@ -170,10 +161,7 @@ describe('PublicationComplianceTable', () => {
   it('handles sorting for protocols column', () => {
     const mockSetSort = jest.fn();
     render(
-      <PublicationComplianceTable
-        {...defaultProps}
-        setSort={mockSetSort}
-      />,
+      <PublicationComplianceTable {...defaultProps} setSort={mockSetSort} />,
     );
 
     const protocolsHeader = screen.getByRole('columnheader', {
@@ -188,10 +176,7 @@ describe('PublicationComplianceTable', () => {
   it('handles sorting for code column', () => {
     const mockSetSort = jest.fn();
     render(
-      <PublicationComplianceTable
-        {...defaultProps}
-        setSort={mockSetSort}
-      />,
+      <PublicationComplianceTable {...defaultProps} setSort={mockSetSort} />,
     );
 
     const codeHeader = screen.getByRole('columnheader', { name: /Code/ });
@@ -204,10 +189,7 @@ describe('PublicationComplianceTable', () => {
   it('handles sorting for lab materials column', () => {
     const mockSetSort = jest.fn();
     render(
-      <PublicationComplianceTable
-        {...defaultProps}
-        setSort={mockSetSort}
-      />,
+      <PublicationComplianceTable {...defaultProps} setSort={mockSetSort} />,
     );
 
     const labMaterialsHeader = screen.getByRole('columnheader', {

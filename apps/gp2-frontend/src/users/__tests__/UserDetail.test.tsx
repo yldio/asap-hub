@@ -11,7 +11,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -117,7 +117,9 @@ describe('UserDetail', () => {
 
       await renderUserDetail(user.id);
 
-      expect(screen.getByRole('heading', { name: /biography/i })).toBeVisible();
+      expect(
+        await screen.findByRole('heading', { name: /biography/i }),
+      ).toBeVisible();
       expect(screen.getByRole('heading', { name: /Tags/i })).toBeVisible();
       expect(
         screen.getByRole('heading', { name: /Contact details/i }),
@@ -134,21 +136,51 @@ describe('UserDetail', () => {
 
       await renderUserDetail(user.id);
 
-      expect(
-        screen.queryByLabelText(/upload.+avatar/i),
-      ).not.toBeInTheDocument();
+      // Wait for content to render before checking what's not present
+      await screen.findByRole('banner');
+      await waitFor(() => {
+        expect(
+          screen.queryByLabelText(/upload.+avatar/i),
+        ).not.toBeInTheDocument();
+      });
     });
   });
   describe('own profile', () => {
     let consoleWarnSpy: jest.SpyInstance;
+    let consoleErrorSpy: jest.SpyInstance;
 
     beforeEach(() => {
       consoleWarnSpy = mockNavigateWarningsInConsole();
+      // Suppress jsdom "Not implemented: navigation" errors triggered by void navigate()
+      // eslint-disable-next-line no-console
+      const originalConsoleError = console.error;
+      consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation((...args: unknown[]) => {
+          const message = args[0]?.toString() || '';
+          if (message.includes('Not implemented: navigation')) {
+            return;
+          }
+          originalConsoleError.apply(console, args);
+        });
     });
 
     afterEach(() => {
       consoleWarnSpy.mockRestore();
+      consoleErrorSpy.mockRestore();
     });
+
+    const getEditLinkByHref = (pathSegment: string) => {
+      const links = screen.getAllByRole('link', { name: 'Edit Edit' });
+      const link = links.find(
+        (el) => el.getAttribute('href')?.includes(pathSegment),
+      );
+      if (!link)
+        throw new Error(
+          `No edit link found with href containing "${pathSegment}"`,
+        );
+      return link;
+    };
 
     it('renders edit buttons for each section', async () => {
       const user = gp2Fixtures.createUserResponse({
@@ -159,12 +191,16 @@ describe('UserDetail', () => {
 
       await renderUserDetail(user.id);
 
+      // Wait for the last section heading to ensure all sections have rendered
+      await screen.findByRole('heading', {
+        name: /contributing cohort studies/i,
+      });
+
       const editButtons = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
 
-      expect(editButtons.length).toBe(7);
-
+      expect(editButtons).toHaveLength(7);
       expect(editButtons.map((button) => button.getAttribute('href'))).toEqual([
         '/users/testuserid/overview/edit-key-info',
         '/users/testuserid/overview/edit-contact-info',
@@ -187,6 +223,11 @@ describe('UserDetail', () => {
 
       await renderUserDetail(user.id);
 
+      // Wait for the last section heading to ensure all sections have rendered
+      await screen.findByRole('heading', {
+        name: /contributing cohort studies/i,
+      });
+
       const editButtons = screen.getAllByRole('link', {
         name: 'Edit Edit',
       });
@@ -195,8 +236,8 @@ describe('UserDetail', () => {
         name: 'Optional Add',
       });
 
-      expect(editButtons.length).toBe(4);
-      expect(addButtons.length).toBe(3);
+      expect(editButtons).toHaveLength(4);
+      expect(addButtons).toHaveLength(3);
     });
     it('renders the upload avatar button', async () => {
       const user = gp2Fixtures.createUserResponse({
@@ -204,8 +245,9 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      // Wait for content to render with deferred transitions
+      expect(await screen.findByLabelText(/edit.+avatar/i)).toBeVisible();
       expect(screen.getByLabelText(/upload.+avatar/i)).not.toBeVisible();
-      expect(screen.getByLabelText(/edit.+avatar/i)).toBeVisible();
     });
     it('saves the key information modal', async () => {
       const user = gp2Fixtures.createUserResponse({
@@ -213,11 +255,10 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      await screen.findByRole('heading', { name: /contact details/i });
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      const [keyInformationEditButton] = screen.getAllByRole('link', {
-        name: 'Edit Edit',
-      });
-      await userEvent.click(keyInformationEditButton!);
+
+      await userEvent.click(getEditLinkByHref('edit-key-info'));
       expect(await screen.findByRole('dialog')).toBeVisible();
       await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
@@ -236,11 +277,10 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      await screen.findByRole('heading', { name: /contact details/i });
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      const [, contactInformationEditButton] = screen.getAllByRole('link', {
-        name: 'Edit Edit',
-      });
-      await userEvent.click(contactInformationEditButton!);
+
+      await userEvent.click(getEditLinkByHref('edit-contact-info'));
       expect(await screen.findByRole('dialog')).toBeVisible();
       await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
@@ -265,11 +305,10 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      await screen.findByRole('heading', { name: /tags/i });
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      const [, , tagsEditButton] = screen.getAllByRole('link', {
-        name: 'Edit Edit',
-      });
-      await userEvent.click(tagsEditButton!);
+
+      await userEvent.click(getEditLinkByHref('edit-tags'));
       expect(await screen.findByRole('dialog')).toBeVisible();
       await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
@@ -290,11 +329,10 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      await screen.findByRole('heading', { name: /biography/i });
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      const [, , , biographyEditButton] = screen.getAllByRole('link', {
-        name: 'Edit Edit',
-      });
-      await userEvent.click(biographyEditButton!);
+
+      await userEvent.click(getEditLinkByHref('edit-biography'));
       expect(await screen.findByRole('dialog')).toBeVisible();
       await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
@@ -313,11 +351,10 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      await screen.findByRole('heading', { name: /open questions/i });
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      const [, , , , questionsEditButton] = screen.getAllByRole('link', {
-        name: 'Edit Edit',
-      });
-      await userEvent.click(questionsEditButton!);
+
+      await userEvent.click(getEditLinkByHref('edit-questions'));
       expect(await screen.findByRole('dialog')).toBeVisible();
       await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
@@ -337,11 +374,10 @@ describe('UserDetail', () => {
       });
       mockGetUser.mockResolvedValueOnce(user);
       await renderUserDetail(user.id);
+      await screen.findByRole('heading', { name: /financial disclosures/i });
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      const [, , , , , fundingStreamsEditButton] = screen.getAllByRole('link', {
-        name: 'Edit Edit',
-      });
-      await userEvent.click(fundingStreamsEditButton!);
+
+      await userEvent.click(getEditLinkByHref('edit-funding-streams'));
       expect(await screen.findByRole('dialog')).toBeVisible();
       await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
@@ -358,8 +394,16 @@ describe('UserDetail', () => {
       const user = gp2Fixtures.createUserResponse({
         id: 'testuserid',
         contributingCohorts: [
-          { contributingCohortId: '7', name: 'AGPDS', role: 'Investigator' },
-          { contributingCohortId: '11', name: 'S3', role: 'Co-Investigator' },
+          {
+            contributingCohortId: '7',
+            name: 'AGPDS',
+            role: 'Investigator',
+          },
+          {
+            contributingCohortId: '11',
+            name: 'S3',
+            role: 'Co-Investigator',
+          },
         ],
       });
       mockGetUser.mockResolvedValueOnce(user);
@@ -367,14 +411,12 @@ describe('UserDetail', () => {
         contributingCohortResponse,
       );
       await renderUserDetail(user.id);
+      await screen.findByRole('heading', {
+        name: /contributing cohort studies/i,
+      });
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-      const [, , , , , contributingCohortsEditButton] = screen.getAllByRole(
-        'link',
-        {
-          name: 'Edit Edit',
-        },
-      );
-      await userEvent.click(contributingCohortsEditButton!);
+
+      await userEvent.click(getEditLinkByHref('edit-contributing-cohorts'));
       expect(await screen.findByRole('dialog')).toBeVisible();
       await userEvent.click(screen.getByRole('button', { name: 'Save' }));
       await waitFor(() => {
@@ -405,17 +447,13 @@ describe('UserDetail', () => {
         id: 'testuserid',
       });
       mockGetUser.mockResolvedValueOnce(user);
-      // Mock both upcoming and past events calls
       mockGetEvents
         .mockResolvedValueOnce(createEventListAlgoliaResponse(1))
         .mockResolvedValueOnce(createEventListAlgoliaResponse(1));
       await renderUserDetail(user.id);
-      const [keyInformationEditButton] = screen.getAllByRole('link', {
-        name: 'Edit Edit',
-      });
-      await user$.click(keyInformationEditButton!);
+      await screen.findByRole('heading', { name: /contact details/i });
 
-      // Wait for dialog to be visible first
+      await user$.click(getEditLinkByHref('edit-key-info'));
       await screen.findByRole('dialog');
 
       const institutionField =

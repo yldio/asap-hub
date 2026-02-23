@@ -1,7 +1,13 @@
-import { MemoryRouter } from 'react-router-dom';
+import { ReactNode } from 'react';
+import { MemoryRouter } from 'react-router';
 import { render, fireEvent } from '@testing-library/react';
 
 import Anchor from '../Anchor';
+
+// Wrapper component with future flags for RTL's wrapper option
+const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
+  <MemoryRouter>{children}</MemoryRouter>
+);
 
 it('renders the text in an anchor', () => {
   const { getByText } = render(<Anchor href="/">text</Anchor>);
@@ -10,7 +16,7 @@ it('renders the text in an anchor', () => {
 
 describe.each`
   contextDescription    | wrapper
-  ${'with a router'}    | ${MemoryRouter}
+  ${'with a router'}    | ${MemoryRouterWithFuture}
   ${'without a router'} | ${undefined}
 `('$contextDescription', ({ wrapper }) => {
   describe.each`
@@ -73,7 +79,7 @@ describe('for an external link', () => {
 
 describe.each`
   description           | wrapper
-  ${'with a router'}    | ${MemoryRouter}
+  ${'with a router'}    | ${MemoryRouterWithFuture}
   ${'without a router'} | ${undefined}
 `('for an internal link $description to /', ({ wrapper }) => {
   it('does not set the anchor target', () => {

@@ -18,7 +18,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import UserMenu from '../molecules/UserMenu';
 import { NavigationHeader } from '../organisms';
 import colors from './colors';

@@ -15,9 +15,10 @@ import {
   Navigate,
   Route,
   Routes,
+  useLocation,
   useParams,
   useNavigate,
-} from 'react-router-dom';
+} from 'react-router';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
 import Frame from '../Frame';
@@ -103,6 +104,7 @@ const WorkingGroupMainPage: FC<{
   const edit = isAdministrator ? editRoute.$ : undefined;
   const resources = resourcesRoute.$;
 
+  const { pathname } = useLocation();
   const update = usePutWorkingGroupResources(workingGroupId);
   const navigate = useNavigate();
 
@@ -110,7 +112,7 @@ const WorkingGroupMainPage: FC<{
     wpResources: gp2Model.Resource[],
   ) => {
     const result = await update(wpResources);
-    navigate(resourcesRoute.$);
+    void navigate(resourcesRoute.$);
     return result;
   };
 
@@ -123,7 +125,7 @@ const WorkingGroupMainPage: FC<{
       upcomingTotal={upcomingEvents?.total || 0}
       pastTotal={pastEvents?.total || 0}
     >
-      <Routes>
+      <Routes key={pathname}>
         <Route
           path="overview"
           element={
@@ -211,7 +213,10 @@ const WorkingGroupMainPage: FC<{
             </Frame>
           }
         />
-        <Route index element={<Navigate to="overview" replace />} />
+        <Route
+          index
+          element={<Navigate to={workingGroupRoute.overview({}).$} replace />}
+        />
       </Routes>
     </WorkingGroupDetailPage>
   );

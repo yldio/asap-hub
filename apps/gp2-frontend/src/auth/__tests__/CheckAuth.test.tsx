@@ -1,7 +1,7 @@
 import { authTestUtils } from '@asap-hub/gp2-components';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import CheckAuth from '../CheckAuth';
 

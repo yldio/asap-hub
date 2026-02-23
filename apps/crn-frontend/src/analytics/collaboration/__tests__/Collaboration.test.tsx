@@ -29,7 +29,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { when } from 'jest-when';
 import React, { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { OpensearchClient } from '../../utils/opensearch';
@@ -378,7 +378,7 @@ describe('user collaboration', () => {
       });
     await renderPage('user', 'within-team');
 
-    expect(screen.getByText('300')).toBeVisible();
+    await waitFor(() => expect(screen.getByText('300')).toBeVisible());
     expect(screen.queryByText('100')).not.toBeInTheDocument();
 
     const categoryButton = screen.getByRole('button', {
@@ -390,7 +390,7 @@ describe('user collaboration', () => {
       expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
     );
 
-    expect(screen.getByText('100')).toBeVisible();
+    await waitFor(() => expect(screen.getByText('100')).toBeVisible());
     expect(screen.queryByText('300')).not.toBeInTheDocument();
   });
 
@@ -475,7 +475,7 @@ describe('team collaboration', () => {
       });
     await renderPage('team', 'within-team');
 
-    expect(screen.getByText('100')).toBeVisible();
+    await waitFor(() => expect(screen.getByText('100')).toBeVisible());
     expect(screen.queryByText('50')).not.toBeInTheDocument();
 
     const outputTypeButton = screen.getByRole('button', {
@@ -487,7 +487,7 @@ describe('team collaboration', () => {
       expect(screen.getAllByText(/Co-Production/)).toHaveLength(2),
     );
 
-    expect(screen.getByText('50')).toBeVisible();
+    await waitFor(() => expect(screen.getByText('50')).toBeVisible());
     expect(screen.queryByText('100')).not.toBeInTheDocument();
   });
 

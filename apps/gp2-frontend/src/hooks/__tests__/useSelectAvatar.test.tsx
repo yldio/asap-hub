@@ -9,7 +9,7 @@ import imageCompression from 'browser-image-compression';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getUser, postUserAvatar } from '../../users/api';

@@ -3,7 +3,7 @@ import { UserResponse } from '@asap-hub/model';
 import { BiographyModal, UserProfileAbout } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import { usePatchUserById } from './state';
 

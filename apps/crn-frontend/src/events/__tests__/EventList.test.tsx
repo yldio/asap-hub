@@ -2,7 +2,7 @@ import { createListEventResponse } from '@asap-hub/fixtures';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { refreshCalendarsState } from '../calendar/state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';

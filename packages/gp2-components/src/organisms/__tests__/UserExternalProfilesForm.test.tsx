@@ -1,7 +1,7 @@
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ComponentProps, ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import UserExternalProfilesForm from '../UserExternalProfilesForm';
 

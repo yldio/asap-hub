@@ -9,6 +9,7 @@ import {
   SharingPrelimFindingsTable,
 } from '@asap-hub/react-components';
 import { Dispatch, FC, SetStateAction, Suspense, useState } from 'react';
+import { useLocation } from 'react-router';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsSharingPrelimFindings } from './state';
 
@@ -54,10 +55,13 @@ const SharingPreliminaryFindingsTableContent: FC<
 
 const SharingPreliminaryFindings: FC<SharingPreliminaryFindingsProps> = (
   props,
-) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <SharingPreliminaryFindingsTableContent {...props} />
-  </Suspense>
-);
+) => {
+  const { search } = useLocation();
+  return (
+    <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <SharingPreliminaryFindingsTableContent {...props} />
+    </Suspense>
+  );
+};
 
 export default SharingPreliminaryFindings;

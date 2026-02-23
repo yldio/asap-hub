@@ -1,14 +1,20 @@
 import { DEFAULT_COMPLETED_STATUS } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
 import { act, renderHook } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import React, { ComponentProps } from 'react';
 import { useComplianceSearch } from '../useComplianceSearch';
 
 const createWrapper =
   (initialEntries: string[] = ['/']) =>
   ({ children }: ComponentProps<typeof MemoryRouter>) =>
-    React.createElement(MemoryRouter, { initialEntries }, children);
+    React.createElement(
+      MemoryRouter,
+      {
+        initialEntries,
+      },
+      children,
+    );
 
 describe('useComplianceSearch', () => {
   it('returns default values when no URL params are present', () => {

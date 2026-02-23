@@ -11,7 +11,7 @@ import { useFlags } from '@asap-hub/react-context';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import {
   useAnalytics,
@@ -37,7 +37,7 @@ const Engagement = () => {
   const metric = (metricParam ?? 'presenters') as EngagementType;
 
   const setMetric = (newMetric: EngagementType) => {
-    navigate(
+    void navigate(
       analytics({}).engagement({}).metric({
         metric: newMetric,
       }).$,

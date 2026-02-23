@@ -20,7 +20,7 @@ import {
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { ArticleIcon } from '../icons';
 import { mobileQuery } from '../layout';
 import GuideDescription from '../molecules/GuideDescription';

@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { network } from '@asap-hub/routing';
 import React, { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { UserResponse } from '@asap-hub/model';
 import { createUserResponse } from '@asap-hub/fixtures';
 

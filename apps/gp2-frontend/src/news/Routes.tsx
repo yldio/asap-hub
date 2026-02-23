@@ -2,7 +2,7 @@ import { NewsPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { lazy, useEffect } from 'react';
 
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import Frame from '../Frame';
 
 const loadNewsDirectory = () =>

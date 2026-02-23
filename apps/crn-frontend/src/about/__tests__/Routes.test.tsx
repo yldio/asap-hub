@@ -6,7 +6,7 @@ import {
 } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { DiscoverResponse } from '@asap-hub/model';
 import { about } from '@asap-hub/routing';

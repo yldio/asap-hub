@@ -20,7 +20,7 @@ import {
   useNavigationType,
   createRoutesFromChildren,
   matchRoutes,
-} from 'react-router-dom';
+} from 'react-router';
 
 import CheckAuth from './auth/CheckAuth';
 import Logout from './auth/Logout';

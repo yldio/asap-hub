@@ -1,6 +1,5 @@
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, StaticRouter } from 'react-router';
 import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { network } from '@asap-hub/routing';

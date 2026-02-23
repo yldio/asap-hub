@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -163,7 +163,7 @@ it('calls getResearchOutputs with the right arguments', async () => {
   expect(checkbox).not.toBeChecked();
 
   await userEvent.click(checkbox);
-  expect(checkbox).toBeChecked();
+  await waitFor(() => expect(checkbox).toBeChecked());
 
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
@@ -184,11 +184,12 @@ it('triggers export with the same parameters and custom file name', async () => 
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(2),
   });
-  const { getByRole, getByText, getByLabelText } = await renderOutputs(
-    searchQuery,
-    filters,
-    { ...createTeamResponse(), id: teamId, displayName: 'example team 123' },
-  );
+  const { getByRole, getByText, getByLabelText, findByText } =
+    await renderOutputs(searchQuery, filters, {
+      ...createTeamResponse(),
+      id: teamId,
+      displayName: 'example team 123',
+    });
   await userEvent.type(getByRole('searchbox'), searchQuery);
   await userEvent.click(getByText('Filters'));
   await userEvent.click(getByLabelText('Grant Document'));
@@ -202,8 +203,9 @@ it('triggers export with the same parameters and custom file name', async () => 
     }),
   );
 
+  const csvButton = await findByText(/csv/i);
   await act(async () => {
-    await userEvent.click(getByText(/csv/i));
+    await userEvent.click(csvButton);
   });
   await waitFor(() => {
     expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(

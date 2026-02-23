@@ -6,7 +6,7 @@ import {
 import { analytics } from '@asap-hub/routing';
 import { useFlags } from '@asap-hub/react-context';
 import { lazy, useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router';
 import { useAnalyticsAlgolia } from '../hooks/algolia';
 import { useOpensearchMetrics } from '../hooks/opensearch';
 

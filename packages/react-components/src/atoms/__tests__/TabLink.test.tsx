@@ -1,12 +1,18 @@
+import { ReactNode } from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import TabLink from '../TabLink';
 
+// Wrapper component with future flags for RTL's wrapper option
+const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
+  <MemoryRouter>{children}</MemoryRouter>
+);
+
 describe.each`
   description           | wrapper
-  ${'with a router'}    | ${MemoryRouter}
+  ${'with a router'}    | ${MemoryRouterWithFuture}
   ${'without a router'} | ${undefined}
 `('$description', ({ wrapper }) => {
   it('renders a link with the given text', () => {

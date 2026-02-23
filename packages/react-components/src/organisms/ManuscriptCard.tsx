@@ -13,7 +13,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css, Theme } from '@emotion/react';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { DiscussionsTab } from '.';
 import {
   Button,
@@ -270,11 +270,11 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     .resubmitManuscript({ manuscriptId: id }).$;
 
   const handleShareComplianceReport = () => {
-    navigate(complianceReportRoute, { state: { fromButton: true } });
+    void navigate(complianceReportRoute, { state: { fromButton: true } });
   };
 
   const handleResubmitManuscript = () => {
-    navigate(resubmitManuscriptRoute);
+    void navigate(resubmitManuscriptRoute);
   };
 
   const handleStatusClick = (statusItem: ManuscriptStatus) => {

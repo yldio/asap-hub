@@ -7,7 +7,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import {
   article,
   AssociationList,
@@ -227,7 +227,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
 
   const handleEditManuscript = () => {
     if (editManuscriptRoute) {
-      navigate(editManuscriptRoute);
+      void navigate(editManuscriptRoute);
     }
   };
 

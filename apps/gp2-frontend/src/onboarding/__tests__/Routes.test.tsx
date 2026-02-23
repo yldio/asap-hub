@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import OnboardingRoutes from '../Routes';
 

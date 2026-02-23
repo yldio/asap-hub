@@ -1,5 +1,5 @@
 import { act, render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { Link } from '@asap-hub/react-components';
 import userEvent from '@testing-library/user-event';
 import { RecoilRoot } from 'recoil';

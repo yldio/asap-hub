@@ -10,7 +10,7 @@ import {
 } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { getUserProductivity, getUserProductivityPerformance } from '../api';

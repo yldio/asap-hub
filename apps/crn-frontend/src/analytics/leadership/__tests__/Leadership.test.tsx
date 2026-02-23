@@ -12,7 +12,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import { when } from 'jest-when';
 import userEvent from '@testing-library/user-event';
 import React, { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import {
@@ -285,7 +285,10 @@ it('switches to interest group data', async () => {
   await userEvent.click(input);
   await userEvent.click(screen.getByText(label));
 
-  expect(screen.getAllByText(label).length).toBe(2);
+  // Wait for navigation and content to render with deferred transitions
+  await waitFor(() => {
+    expect(screen.getAllByText(label).length).toBe(2);
+  });
 });
 
 it('switches to open science champion data', async () => {

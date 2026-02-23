@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { gp2 as gp2Routing, logout } from '@asap-hub/routing';
 import userEvent from '@testing-library/user-event';
 import UserMenu from '../UserMenu';

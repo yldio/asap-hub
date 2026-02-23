@@ -1,7 +1,7 @@
 import { useState, Fragment } from 'react';
 import { css } from '@emotion/react';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { noop } from '../utils';
 import {
   LabeledTextField,
@@ -63,7 +63,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
           responsibilities: newResponsibilities.trim(),
           reachOut: newReachOut.trim(),
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       description={`Tell the network what role you play in your team and your main research goals by completing this part of your profile. (Note: if you need to change any locked fields, please contact ASAP)`}
     >

@@ -10,7 +10,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React, { ComponentProps } from 'react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 import TeamProfileWorkspace from '../TeamProfileWorkspace';
 
@@ -61,7 +61,9 @@ const renderWithRouter = (component: React.ReactElement) => {
         element: component,
       },
     ],
-    { initialEntries: ['/'] },
+    {
+      initialEntries: ['/'],
+    },
   );
   return render(<RouterProvider router={router} />);
 };
@@ -406,7 +408,9 @@ describe('compliance section', () => {
           element: <TeamProfileWorkspace {...team} tools={[]} />,
         },
       ],
-      { initialEntries: ['/'] },
+      {
+        initialEntries: ['/'],
+      },
     );
     const { getByRole } = render(<RouterProvider router={router} />);
 

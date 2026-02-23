@@ -2,7 +2,7 @@ import { ReactNode, useState } from 'react';
 import { ConfirmModal as Modal, Link, mail } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/model';
 import { useNotificationContext } from '@asap-hub/react-context';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { EntityMappper } from '../templates/CreateOutputPage';
 import { GetWrappedOnSave } from './Form';
@@ -104,7 +104,7 @@ export const ConfirmAndSaveOutput = ({
       // Force navigation immediately to prevent React 18 batching from unmounting
       // the component before the Form's useEffect can navigate.
       // See https://asaphub.atlassian.net/browse/ASAP-1319
-      navigate(path(output.id));
+      void navigate(path(output.id));
     }
     return output;
   };

@@ -3,7 +3,7 @@ import {
   OutputTypeOption,
   TimeRangeOption,
 } from '@asap-hub/model';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 type UseAnalyticsOptions = {
   defaultTimeRange?: TimeRangeOption;

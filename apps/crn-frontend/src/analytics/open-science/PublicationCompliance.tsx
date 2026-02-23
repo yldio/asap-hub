@@ -1,4 +1,5 @@
 import { FC, Suspense } from 'react';
+import { useLocation } from 'react-router';
 import {
   PublicationComplianceTable,
   LoadingContentBodyTable,
@@ -44,10 +45,13 @@ const PublicationComplianceContent: FC<PublicationComplianceProps> = ({
   );
 };
 
-const PublicationCompliance: FC<PublicationComplianceProps> = ({ tags }) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <PublicationComplianceContent tags={tags} />
-  </Suspense>
-);
+const PublicationCompliance: FC<PublicationComplianceProps> = ({ tags }) => {
+  const { search } = useLocation();
+  return (
+    <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <PublicationComplianceContent tags={tags} />
+    </Suspense>
+  );
+};
 
 export default PublicationCompliance;

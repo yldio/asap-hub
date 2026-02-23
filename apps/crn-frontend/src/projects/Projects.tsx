@@ -1,5 +1,6 @@
-import { FC, lazy, useEffect } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { FC, Suspense, lazy, useEffect } from 'react';
+import { Navigate, Route, Routes, useLocation } from 'react-router';
+import { Loading } from '@asap-hub/react-components';
 import { projects } from '@asap-hub/routing';
 import { useSearch } from '../hooks';
 
@@ -40,63 +41,70 @@ const Projects: FC<Record<string, never>> = () => {
     toggleFilter,
   } = useSearch();
 
-  return (
-    <Routes>
-      {/* Project Detail Routes - must come before list routes */}
-      <Route
-        path="discovery/:projectId/*"
-        element={<DiscoveryProjectDetail />}
-      />
-      <Route path="resource/:projectId/*" element={<ResourceProjectDetail />} />
-      <Route path="trainee/:projectId/*" element={<TraineeProjectDetail />} />
+  const { pathname } = useLocation();
 
-      {/* Project List Routes */}
-      <Route
-        path={projects({}).discoveryProjects.template}
-        element={
-          <DiscoveryProjects
-            searchQuery={searchQuery}
-            debouncedSearchQuery={debouncedSearchQuery}
-            onChangeSearchQuery={setSearchQuery}
-            filters={filters}
-            onChangeFilter={toggleFilter}
-          />
-        }
-      />
-      <Route
-        path={projects({}).resourceProjects.template}
-        element={
-          <ResourceProjects
-            searchQuery={searchQuery}
-            debouncedSearchQuery={debouncedSearchQuery}
-            onChangeSearchQuery={setSearchQuery}
-            filters={filters}
-            onChangeFilter={toggleFilter}
-          />
-        }
-      />
-      <Route
-        path={projects({}).traineeProjects.template}
-        element={
-          <TraineeProjects
-            searchQuery={searchQuery}
-            debouncedSearchQuery={debouncedSearchQuery}
-            onChangeSearchQuery={setSearchQuery}
-            filters={filters}
-            onChangeFilter={toggleFilter}
-          />
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <Navigate
-            to={projects.template + projects({}).discoveryProjects.template}
-            replace
-          />
-        }
-      />
-    </Routes>
+  return (
+    <Suspense key={pathname} fallback={<Loading />}>
+      <Routes>
+        {/* Project Detail Routes - must come before list routes */}
+        <Route
+          path="discovery/:projectId/*"
+          element={<DiscoveryProjectDetail />}
+        />
+        <Route
+          path="resource/:projectId/*"
+          element={<ResourceProjectDetail />}
+        />
+        <Route path="trainee/:projectId/*" element={<TraineeProjectDetail />} />
+
+        {/* Project List Routes */}
+        <Route
+          path={projects({}).discoveryProjects.template}
+          element={
+            <DiscoveryProjects
+              searchQuery={searchQuery}
+              debouncedSearchQuery={debouncedSearchQuery}
+              onChangeSearchQuery={setSearchQuery}
+              filters={filters}
+              onChangeFilter={toggleFilter}
+            />
+          }
+        />
+        <Route
+          path={projects({}).resourceProjects.template}
+          element={
+            <ResourceProjects
+              searchQuery={searchQuery}
+              debouncedSearchQuery={debouncedSearchQuery}
+              onChangeSearchQuery={setSearchQuery}
+              filters={filters}
+              onChangeFilter={toggleFilter}
+            />
+          }
+        />
+        <Route
+          path={projects({}).traineeProjects.template}
+          element={
+            <TraineeProjects
+              searchQuery={searchQuery}
+              debouncedSearchQuery={debouncedSearchQuery}
+              onChangeSearchQuery={setSearchQuery}
+              filters={filters}
+              onChangeFilter={toggleFilter}
+            />
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to={projects.template + projects({}).discoveryProjects.template}
+              replace
+            />
+          }
+        />
+      </Routes>
+    </Suspense>
   );
 };
 

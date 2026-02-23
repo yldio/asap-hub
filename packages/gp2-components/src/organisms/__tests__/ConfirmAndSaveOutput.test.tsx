@@ -4,7 +4,7 @@ import { Button } from '@asap-hub/react-components';
 import { NotificationContext } from '@asap-hub/react-context';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 
 import {
   ConfirmAndSaveOutput,
@@ -26,7 +26,9 @@ describe('ConfirmAndSaveOutput', () => {
           element: children,
         },
       ],
-      { initialEntries: ['/'] },
+      {
+        initialEntries: ['/'],
+      },
     );
 
     return (

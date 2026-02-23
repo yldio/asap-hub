@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router';
 import { BasicLayout } from '@asap-hub/react-components';
 import { getHubUrlFromRedirect } from '@asap-hub/auth-frontend-utils';
 

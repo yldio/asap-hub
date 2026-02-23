@@ -11,7 +11,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { getResearchOutputs } from '../api';
@@ -64,7 +64,7 @@ describe('the shared research listing page', () => {
     expect(checkbox).not.toBeChecked();
 
     await userEvent.click(checkbox);
-    expect(checkbox).toBeChecked();
+    await waitFor(() => expect(checkbox).toBeChecked());
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),
       expect.objectContaining({ filters: new Set(['Grant Document']) }),
@@ -79,7 +79,7 @@ describe('the shared research listing page', () => {
 
     await userEvent.click(screen.getByText('Filters'));
     const checkbox = screen.getByLabelText('Grant Document');
-    expect(checkbox).toBeChecked();
+    await waitFor(() => expect(checkbox).toBeChecked());
 
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),

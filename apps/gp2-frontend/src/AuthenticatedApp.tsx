@@ -8,7 +8,7 @@ import {
   useNotificationContext,
 } from '@asap-hub/react-context';
 import { FC, lazy, useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 import { auth0State } from './auth/state';
 import Frame from './Frame';

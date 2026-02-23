@@ -11,6 +11,7 @@ import {
   UserCollaborationTable,
 } from '@asap-hub/react-components';
 import { Dispatch, FC, SetStateAction, Suspense } from 'react';
+import { useLocation } from 'react-router';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsUserCollaboration,
@@ -114,10 +115,13 @@ const UserCollaborationContent: FC<CollaborationProps> = ({
   );
 };
 
-const UserCollaboration: FC<CollaborationProps> = (props) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <UserCollaborationContent {...props} />
-  </Suspense>
-);
+const UserCollaboration: FC<CollaborationProps> = (props) => {
+  const { search } = useLocation();
+  return (
+    <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <UserCollaborationContent {...props} />
+    </Suspense>
+  );
+};
 
 export default UserCollaboration;

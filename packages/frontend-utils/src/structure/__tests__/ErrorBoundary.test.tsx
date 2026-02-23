@@ -1,4 +1,4 @@
-import { createMemoryRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider, Outlet } from 'react-router';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
@@ -12,38 +12,44 @@ const Throw: React.FC<Record<string, never>> = () => {
 
 describe('error boundary', () => {
   it('catches child errors', () => {
-    const router = createMemoryRouter([
-      {
-        path: '/',
-        element: (
-          <ErrorBoundary disableSentryReporting={true}>
-            <Outlet />
-          </ErrorBoundary>
-        ),
-        children: [{ path: '/', element: <Throw /> }],
-      },
-    ]);
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: (
+            <ErrorBoundary disableSentryReporting={true}>
+              <Outlet />
+            </ErrorBoundary>
+          ),
+          children: [{ path: '/', element: <Throw /> }],
+        },
+      ],
+      {},
+    );
 
     const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('oops');
   });
 
   it('Overrides title and description when error thrown', () => {
-    const router = createMemoryRouter([
-      {
-        path: '/',
-        element: (
-          <ErrorBoundary
-            disableSentryReporting={true}
-            title="Something went wrong"
-            description="There was a problem with your request"
-          >
-            <Outlet />
-          </ErrorBoundary>
-        ),
-        children: [{ path: '/', element: <Throw /> }],
-      },
-    ]);
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: (
+            <ErrorBoundary
+              disableSentryReporting={true}
+              title="Something went wrong"
+              description="There was a problem with your request"
+            >
+              <Outlet />
+            </ErrorBoundary>
+          ),
+          children: [{ path: '/', element: <Throw /> }],
+        },
+      ],
+      {},
+    );
 
     const { container } = render(<RouterProvider router={router} />);
     expect(container).not.toHaveTextContent('oops');
@@ -85,37 +91,43 @@ describe('error boundary', () => {
 });
 describe('sentry error boundary', () => {
   it('catches child errors', () => {
-    const router = createMemoryRouter([
-      {
-        path: '/',
-        element: (
-          <ErrorBoundary>
-            <Outlet />
-          </ErrorBoundary>
-        ),
-        children: [{ path: '/', element: <Throw /> }],
-      },
-    ]);
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: (
+            <ErrorBoundary>
+              <Outlet />
+            </ErrorBoundary>
+          ),
+          children: [{ path: '/', element: <Throw /> }],
+        },
+      ],
+      {},
+    );
 
     const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('oops');
   });
 
   it('Overrides title and description when error thrown', () => {
-    const router = createMemoryRouter([
-      {
-        path: '/',
-        element: (
-          <ErrorBoundary
-            title="Something went wrong"
-            description="There was a problem with your request"
-          >
-            <Outlet />
-          </ErrorBoundary>
-        ),
-        children: [{ path: '/', element: <Throw /> }],
-      },
-    ]);
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: (
+            <ErrorBoundary
+              title="Something went wrong"
+              description="There was a problem with your request"
+            >
+              <Outlet />
+            </ErrorBoundary>
+          ),
+          children: [{ path: '/', element: <Throw /> }],
+        },
+      ],
+      {},
+    );
 
     const { container } = render(<RouterProvider router={router} />);
     expect(container).toHaveTextContent('Something went wrong');

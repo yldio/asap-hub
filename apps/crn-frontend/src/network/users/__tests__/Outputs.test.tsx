@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
@@ -151,7 +151,7 @@ it('calls getResearchOutputs with the right arguments', async () => {
   expect(checkbox).not.toBeChecked();
 
   await userEvent.click(checkbox);
-  expect(checkbox).toBeChecked();
+  await waitFor(() => expect(checkbox).toBeChecked());
 
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {

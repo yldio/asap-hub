@@ -6,7 +6,7 @@ import {
   within,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getCalendars } from '../api';

@@ -2,7 +2,7 @@ import { gp2 as gp2Auth } from '@asap-hub/auth';
 import { gp2 } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {

@@ -8,7 +8,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { gp2 } from '@asap-hub/model';
 

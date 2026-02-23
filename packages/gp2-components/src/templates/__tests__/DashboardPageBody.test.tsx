@@ -1,11 +1,11 @@
 import { gp2 } from '@asap-hub/fixtures';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter, useNavigate } from 'react-router-dom';
+import { MemoryRouter, useNavigate } from 'react-router';
 import DashboardPageBody from '../DashboardPageBody';
 
-// Mock react-router-dom's useNavigate
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+// Mock react-router's useNavigate
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: jest.fn(),
 }));
 

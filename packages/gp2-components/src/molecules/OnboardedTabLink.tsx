@@ -1,7 +1,7 @@
 import { pixels, useBlockedClick } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router';
 import { onboardingCompletedIcon, onboardingDisabledIcon } from '../icons';
 
 import { mobileQuery } from '../layout';

@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';

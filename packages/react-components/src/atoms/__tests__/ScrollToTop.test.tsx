@@ -1,5 +1,5 @@
 import { render, waitFor } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import ScrollToTop from '../ScrollToTop';
 
 beforeEach(() => {

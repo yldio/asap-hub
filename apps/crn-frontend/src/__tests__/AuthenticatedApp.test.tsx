@@ -1,8 +1,7 @@
 import { authTestUtils } from '@asap-hub/react-components';
 import { cleanup, render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, StaticRouter } from 'react-router';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import nock from 'nock';
 

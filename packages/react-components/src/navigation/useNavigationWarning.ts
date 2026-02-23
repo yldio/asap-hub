@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import {
-  NavigateFunction,
-  useNavigate,
-  NavigateOptions,
-} from 'react-router-dom';
+import { NavigateFunction, useNavigate, NavigateOptions } from 'react-router';
 import { useNavigationBlocker } from './NavigationBlockerContext';
 
 type UseNavigationWarningOptions = {
@@ -84,6 +80,11 @@ export const useNavigationWarning = ({
         return;
       }
 
+      // Mark as intentional so the next popstate (triggered by history.go)
+      // is skipped. Without this, React Router 7's startTransition keeps the
+      // component mounted during navigation, causing the popstate listener
+      // to fire again and creating an infinite confirm loop.
+      intentionalNavigationRef.current = true;
       window.history.go(-2); // User confirmed, go back the dummy entry plus a additional one.
     };
 
@@ -127,10 +128,10 @@ export const useNavigationWarning = ({
           // usually -1 ("Go back"), this translates to -2 most of the time.
           window.history.go(to - 1);
         } else {
-          navigate(to);
+          void navigate(to);
         }
       } else {
-        navigate(to, options as NavigateOptions);
+        void navigate(to, options as NavigateOptions);
       }
     },
     [navigate, requestNavigation],

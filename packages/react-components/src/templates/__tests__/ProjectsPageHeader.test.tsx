@@ -1,6 +1,5 @@
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, StaticRouter } from 'react-router';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';

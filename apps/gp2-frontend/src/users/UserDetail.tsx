@@ -14,7 +14,13 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect, useMemo } from 'react';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router';
 import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import EventsList from '../events/EventsList';
 import { useUpcomingAndPastEvents } from '../events/state';
@@ -74,6 +80,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { avatarSaving, onImageSelect } = useSelectAvatar(currentUser!.id);
 
+  const { pathname } = useLocation();
   const { items: allTags } = useTags();
   const navigate = useNavigate();
 
@@ -86,7 +93,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
       // but GP2 unmounts the whole app when the user's data is refreshed, causing the form to be unmounted
       // when it needs to perform the navigation.
       // So, this is a workaround that forces the navigation immediately after saving.
-      navigate(backToUserDetails);
+      void navigate(backToUserDetails);
     },
   };
 
@@ -111,7 +118,7 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
         onImageSelect={isOwnProfile ? onImageSelect : undefined}
         {...user}
       >
-        <Routes>
+        <Routes key={pathname}>
           <Route
             path="overview/*"
             element={
@@ -217,7 +224,10 @@ const UserDetail: FC<UserDetailProps> = ({ currentTime }) => {
               </Frame>
             }
           />
-          <Route index element={<Navigate to="overview" replace />} />
+          <Route
+            index
+            element={<Navigate to={userRoute.overview({}).$} replace />}
+          />
         </Routes>
       </UserDetailPage>
     );

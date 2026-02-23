@@ -1,7 +1,7 @@
 import { gp2 } from '@asap-hub/model';
 import { LabeledTextArea } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import EditUserModal from './EditUserModal';
 
 type BiographyModalProps = Pick<gp2.UserResponse, 'biography'> &
@@ -25,7 +25,7 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
         await onSave({
           biography: newBiography,
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       backHref={backHref}
       dirty={newBiography !== biography}

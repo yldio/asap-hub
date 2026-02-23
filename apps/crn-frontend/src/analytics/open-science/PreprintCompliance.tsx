@@ -1,4 +1,5 @@
 import { FC, Suspense } from 'react';
+import { useLocation } from 'react-router';
 import {
   PreprintComplianceTable,
   LoadingContentBodyTable,
@@ -38,10 +39,13 @@ const PreprintComplianceContent: FC<PreprintComplianceProps> = ({ tags }) => {
   );
 };
 
-const PreprintCompliance: FC<PreprintComplianceProps> = ({ tags }) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <PreprintComplianceContent tags={tags} />
-  </Suspense>
-);
+const PreprintCompliance: FC<PreprintComplianceProps> = ({ tags }) => {
+  const { search } = useLocation();
+  return (
+    <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <PreprintComplianceContent tags={tags} />
+    </Suspense>
+  );
+};
 
 export default PreprintCompliance;

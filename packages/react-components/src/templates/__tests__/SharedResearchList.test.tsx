@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 
 import SharedResearchList from '../SharedResearchList';
 

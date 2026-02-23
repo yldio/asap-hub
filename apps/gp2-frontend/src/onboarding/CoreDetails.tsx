@@ -6,7 +6,7 @@ import {
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router';
 import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import { useSelectAvatar } from '../hooks/useSelectAvatar';
 import countryCodesSuggestions from '../users/country-codes-suggestions';
@@ -46,7 +46,7 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
                 backHref={onboarding({}).coreDetails({}).$}
                 onSave={async (patchedUser) => {
                   await patchUser(patchedUser);
-                  navigate(onboarding({}).coreDetails({}).$);
+                  void navigate(onboarding({}).coreDetails({}).$);
                 }}
               />
             }
@@ -60,7 +60,7 @@ const CoreDetails: React.FC<Record<string, never>> = () => {
                 backHref={onboarding({}).coreDetails({}).$}
                 onSave={async (patchedUser) => {
                   await patchUser(patchedUser);
-                  navigate(onboarding({}).coreDetails({}).$);
+                  void navigate(onboarding({}).coreDetails({}).$);
                 }}
               />
             }

@@ -8,7 +8,7 @@ import {
   lazy,
   ReactNode,
 } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { css } from '@emotion/react';
 import { tags } from '@asap-hub/routing';
 

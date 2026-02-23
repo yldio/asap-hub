@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css, Theme } from '@emotion/react';
 import { PropsWithChildren } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router';
 import { activePrimaryStyles } from '../button';
 import { charcoal, lead, silver } from '../colors';
 import { useBlockedClick } from '../navigation';

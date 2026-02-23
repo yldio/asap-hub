@@ -11,7 +11,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Stringifier } from 'csv-stringify';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { getPresignedUrl } from '../../../shared-api/files';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';

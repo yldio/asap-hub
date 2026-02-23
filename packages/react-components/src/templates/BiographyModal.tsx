@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { FormSection, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
@@ -26,7 +26,7 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
       backHref={backHref}
       onSave={async () => {
         await onSave(newBiography);
-        navigate(backHref);
+        void navigate(backHref);
       }}
     >
       {({ isSaving }) => (

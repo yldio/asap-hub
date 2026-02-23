@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { ComponentType, ReactNode } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { css, Theme } from '@emotion/react';
 
 import { layoutStyles } from '../text';

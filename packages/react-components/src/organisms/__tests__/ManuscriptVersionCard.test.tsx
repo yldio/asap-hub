@@ -7,7 +7,7 @@ import { ManuscriptVersion } from '@asap-hub/model';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import ManuscriptVersionCard from '../ManuscriptVersionCard';
 
 const originalScrollHeightDescriptor = Object.getOwnPropertyDescriptor(

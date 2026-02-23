@@ -2,7 +2,7 @@ import { User } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { logout, network, staticPages } from '@asap-hub/routing';
 import { ReactNode, useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router';
 
 interface CheckOnboardedProps {
   children: ReactNode;

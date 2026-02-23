@@ -1,5 +1,6 @@
 import { FC, lazy } from 'react';
 import { render, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
 import Frame, {
@@ -118,9 +119,11 @@ describe('the skeleton frames', () => {
 
   it('renders skeleton screen for the search', async () => {
     const { container } = render(
-      <SearchFrame title={null}>
-        <Suspend />
-      </SearchFrame>,
+      <MemoryRouter>
+        <SearchFrame title={null}>
+          <Suspend />
+        </SearchFrame>
+      </MemoryRouter>,
     );
     expect(container.querySelectorAll('div[class*="animation"]')).toHaveLength(
       3,

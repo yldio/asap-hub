@@ -32,7 +32,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { mapManuscriptVersionToResearchOutput } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
@@ -258,7 +258,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
               setSelectedVersion={setManuscriptVersion}
               onImportManuscript={async () => {
                 if (selectedManuscriptVersion?.version?.researchOutputId) {
-                  navigate(
+                  void navigate(
                     sharedResearch({})
                       .researchOutput({
                         researchOutputId:

@@ -11,7 +11,7 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import { usePatchUserById } from './state';
 import InterestGroupsCard from './interest-groups/InterestGroupsCard';

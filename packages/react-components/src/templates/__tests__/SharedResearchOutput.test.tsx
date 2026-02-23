@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
 import { researchOutputDocumentTypes } from '@asap-hub/model';
-import { MemoryRouter, useLocation } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router';
 import { sharedResearch } from '@asap-hub/routing';
 
 import SharedResearchOutput from '../SharedResearchOutput';

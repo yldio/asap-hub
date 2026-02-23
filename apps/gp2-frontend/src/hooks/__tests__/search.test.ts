@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { searchQueryParam } from '@asap-hub/routing';
 import { waitFor } from '@testing-library/dom';
 import { createElement, ReactNode } from 'react';

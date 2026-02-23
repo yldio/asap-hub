@@ -2,9 +2,9 @@ import {
   CRNTagSearchEntities,
   CRNTagSearchEntitiesListArray,
 } from '@asap-hub/algolia';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { NotFoundPage, TagsPage } from '@asap-hub/react-components';
-import { Frame } from '@asap-hub/frontend-utils';
+import { SearchFrame } from '@asap-hub/frontend-utils';
 
 import Tags from './TagsList';
 import { useAlgolia } from '../hooks/algolia';
@@ -56,9 +56,9 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
             filterOptions={[{ title: 'AREAS' }, ...options]}
             onChangeFilter={toggleFilter}
           >
-            <Frame title="Search">
+            <SearchFrame title="Search">
               <Tags entities={entities} />
-            </Frame>
+            </SearchFrame>
           </TagsPage>
         }
       />

@@ -10,7 +10,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
@@ -151,7 +151,7 @@ describe('WorkingGroupDetail', () => {
     workingGroup.members = [workingGroupMember];
     mockGetWorkingGroup.mockResolvedValueOnce(workingGroup);
     await renderWorkingGroupDetail({ id: workingGroup.id });
-    expect(screen.getByText(/Working Group Members/i)).toBeVisible();
+    expect(await screen.findByText(/Working Group Members/i)).toBeVisible();
   });
 
   describe('resources', () => {

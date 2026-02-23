@@ -1,7 +1,7 @@
 import { CRNTagSearchEntitiesListArray } from '@asap-hub/algolia';
 import { render, RenderResult } from '@testing-library/react';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { WhenReady, Auth0Provider } from '../../auth/test-utils';

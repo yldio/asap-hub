@@ -5,7 +5,7 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { ComponentProps, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { ContactSupport } from '../molecules';
 import EditUserModal from './EditUserModal';
 
@@ -38,7 +38,7 @@ const TagsModal: React.FC<TagsModalProps> = ({
         await onSave({
           tags: newTags.map(({ id }) => ({ id })),
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
       backHref={backHref}
       dirty={checkDirty()}

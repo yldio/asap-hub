@@ -1,6 +1,6 @@
 import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import {
   render,
   waitFor,

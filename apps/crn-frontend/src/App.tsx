@@ -9,7 +9,7 @@ import {
   useNavigationType,
   createRoutesFromChildren,
   matchRoutes,
-} from 'react-router-dom';
+} from 'react-router';
 
 import { Frame, useCookieConsent } from '@asap-hub/frontend-utils';
 import {

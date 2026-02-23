@@ -1,7 +1,8 @@
+import { SearchFrame } from '@asap-hub/frontend-utils';
 import { TagSearchPage } from '@asap-hub/gp2-components';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import Frame from '../Frame';
 
 const loadTagSearch = () =>
@@ -22,9 +23,9 @@ const Tags: FC<Record<string, never>> = () => {
         element={
           <Frame title="Tags Search">
             <TagSearchPage>
-              <Frame title="Tags Search">
+              <SearchFrame title="Tags Search">
                 <TagSearch />
-              </Frame>
+              </SearchFrame>
             </TagSearchPage>
           </Frame>
         }

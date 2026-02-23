@@ -1,7 +1,8 @@
 import {
   PublicationComplianceResponse,
-  // PublicationComplianceSortingDirection,
-  // SortPublicationCompliance,
+  PublicationComplianceSortingDirection,
+  SortPublicationCompliance,
+  publicationComplianceInitialSortingDirection,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -13,8 +14,8 @@ import { borderRadius } from '../card';
 import { charcoal, lead, neutral200, steel } from '../colors';
 import {
   InactiveBadgeIcon,
-  // AlphabeticalSortingIcon,
-  // NumericalSortingIcon,
+  AlphabeticalSortingIcon,
+  NumericalSortingIcon,
 } from '../icons';
 import { rem } from '../pixels';
 import { getPerformanceMoodIcon } from '../utils';
@@ -102,218 +103,322 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
+const buttonStyles = css({
+  width: rem(24),
+  margin: 0,
+  padding: 0,
+  border: 'none',
+  backgroundColor: 'unset',
+  cursor: 'pointer',
+  alignSelf: 'center',
+});
+
 type PublicationComplianceTableProps = ComponentProps<typeof PageControls> & {
   data: PublicationComplianceResponse[];
-  // setSort: React.Dispatch<React.SetStateAction<SortPublicationCompliance>>; // TODO: add these back post MVP
-  // setSortingDirection: React.Dispatch<
-  //   React.SetStateAction<PublicationComplianceSortingDirection>
-  // >;
-  // sort: SortPublicationCompliance;
-  // sortingDirection: PublicationComplianceSortingDirection;
+  setSort: React.Dispatch<React.SetStateAction<SortPublicationCompliance>>;
+  setSortingDirection: React.Dispatch<
+    React.SetStateAction<PublicationComplianceSortingDirection>
+  >;
+  sort: SortPublicationCompliance;
+  sortingDirection: PublicationComplianceSortingDirection;
 };
 
 const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
   data,
-  // sort, // TODO: add these back post MVP
-  // setSort,
-  // sortingDirection,
-  // setSortingDirection,
+  sort,
+  setSort,
+  sortingDirection,
+  setSortingDirection,
   ...pageControlProps
-}) => (
-  // const handleSort = (sortKey: SortPublicationCompliance) => { // TODO: add these back post MVP
-  //   const newDirection =
-  //     sort === sortKey && sortingDirection === 'asc' ? 'desc' : 'asc';
-  //   setSortingDirection(newDirection);
-  //   setSort(sortKey);
-  // };
+}) => {
+  const isTeamSortActive = sort.includes('team');
+  const isPublicationsSortActive = sort.includes('publications');
+  const isDatasetsSortActive = sort.includes('datasets');
+  const isProtocolsSortActive = sort.includes('protocols');
+  const isCodeSortActive = sort.includes('code');
+  const isLabMaterialsSortActive = sort.includes('lab_materials');
 
-  // const getSortIcon = (sortKey: SortPublicationCompliance) => { // TODO: add these back post MVP
-  //   const isActive = sort === sortKey;
+  const getNewSortDirection = (
+    isActive: boolean,
+    currentDirection: 'asc' | 'desc',
+    defaultDirection: 'asc' | 'desc',
+  ): 'asc' | 'desc' => {
+    if (!isActive) return defaultDirection;
+    return currentDirection === 'asc' ? 'desc' : 'asc';
+  };
 
-  //   // Use AlphabeticalSortingIcon for team column (alphabetical)
-  //   if (sortKey.startsWith('team_')) {
-  //     return <AlphabeticalSortingIcon active={isActive} description="" />;
-  //   }
+  const handleTeamSort = () => {
+    const newDirection = getNewSortDirection(
+      isTeamSortActive,
+      sortingDirection.team,
+      'asc',
+    );
+    setSort(`team_${newDirection}`);
+    setSortingDirection({
+      ...publicationComplianceInitialSortingDirection,
+      team: newDirection,
+    });
+  };
 
-  //   // Use NumericalSortingDescIcon for numerical columns
-  //   return <NumericalSortingIcon active={isActive} description="" />;
-  // };
+  const handlePublicationsSort = () => {
+    const newDirection = getNewSortDirection(
+      isPublicationsSortActive,
+      sortingDirection.publications,
+      'desc',
+    );
+    setSort(`publications_${newDirection}`);
+    setSortingDirection({
+      ...publicationComplianceInitialSortingDirection,
+      publications: newDirection,
+    });
+  };
 
-  <>
-    <StaticPerformanceCard legend="Percentage is calculated as total research outputs shared across all publications divided by total research outputs identified across all publications." />
-    <Card padding={false}>
-      <div css={container}>
-        <table
-          css={{
-            width: '100%',
-            tableLayout: 'fixed',
-            borderCollapse: 'collapse',
-          }}
-        >
-          <colgroup>
-            <col css={{ width: '16.67%' }} />
-            <col css={{ width: '16.67%' }} />
-            <col css={{ width: '16.67%' }} />
-            <col css={{ width: '16.67%' }} />
-            <col css={{ width: '16.67%' }} />
-            <col css={{ width: '16.67%' }} />
-          </colgroup>
-          <thead>
-            <tr>
-              <th css={titleStyles} className={'team'}>
-                <span
-                  css={headerStyles}
-                  // onClick={() => handleSort('team_asc')}
-                >
-                  Team
-                  {/* {getSortIcon('team_asc')} */}
-                </span>
-              </th>
-              <th css={titleStyles} className={'publications'}>
-                <span
-                  css={headerStyles}
-                  // onClick={() => handleSort('publications_asc')}
-                >
-                  Publications
-                  {/* {getSortIcon('publications_asc')} */}
-                </span>
-              </th>
-              <th css={titleStyles} className={'datasets'}>
-                <span
-                  css={headerStyles}
-                  // onClick={() => handleSort('datasets_asc')}
-                >
-                  Datasets
-                  {/* {getSortIcon('datasets_asc')} */}
-                </span>
-              </th>
-              <th css={titleStyles} className={'protocols'}>
-                <span
-                  css={headerStyles}
-                  // onClick={() => handleSort('protocols_asc')}
-                >
-                  Protocols
-                  {/* {getSortIcon('protocols_asc')} */}
-                </span>
-              </th>
-              <th css={titleStyles} className={'code'}>
-                <span
-                  css={headerStyles}
-                  // onClick={() => handleSort('code_asc')}
-                >
-                  Code
-                  {/* {getSortIcon('code_asc')} */}
-                </span>
-              </th>
-              <th css={titleStyles}>
-                <span
-                  css={headerStyles}
-                  // onClick={() => handleSort('lab_materials_asc')}
-                >
-                  Lab Materials
-                  {/* {getSortIcon('lab_materials_asc')} */}
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row) => (
-              <tr key={row.teamId} css={rowStyles}>
-                <td className={'team'}>
-                  <p css={iconStyles}>
-                    <span>
-                      <Link
-                        href={
-                          network({})
-                            .teams({})
-                            .team({ teamId: row.teamId ?? '' }).$
-                        }
-                      >
-                        {row.teamName}
-                      </Link>
-                    </span>
-                    {row.isTeamInactive && <InactiveBadgeIcon />}
-                  </p>
-                </td>
-                <td className={'publications'}>
-                  <p css={iconStyles}>
-                    <span css={valueStyles}>
-                      {row.overallCompliance === null
-                        ? 'N/A'
-                        : `${row.overallCompliance}%`}
-                    </span>
-                    {getPerformanceMoodIcon(
-                      row.overallCompliance ?? 0,
-                      row.overallCompliance === null,
-                    )}
-                  </p>
-                </td>
-                <td className={'datasets'}>
-                  <p css={iconStyles}>
-                    <span css={valueStyles}>
-                      {row.datasetsPercentage === null ||
-                      row.datasetsRanking === 'LIMITED DATA'
-                        ? 'N/A'
-                        : `${row.datasetsPercentage}%`}
-                    </span>
-                    {getPerformanceMoodIcon(
-                      row.datasetsPercentage ?? 0,
-                      row.datasetsRanking === 'LIMITED DATA',
-                    )}
-                  </p>
-                </td>
-                <td className={'protocols'}>
-                  <p css={iconStyles}>
-                    <span css={valueStyles}>
-                      {row.protocolsPercentage === null ||
-                      row.protocolsRanking === 'LIMITED DATA'
-                        ? 'N/A'
-                        : `${row.protocolsPercentage}%`}
-                    </span>
-                    {getPerformanceMoodIcon(
-                      row.protocolsPercentage ?? 0,
-                      row.protocolsRanking === 'LIMITED DATA',
-                    )}
-                  </p>
-                </td>
-                <td className={'code'}>
-                  <p css={iconStyles}>
-                    <span css={valueStyles}>
-                      {row.codePercentage === null ||
-                      row.codeRanking === 'LIMITED DATA'
-                        ? 'N/A'
-                        : `${row.codePercentage}%`}
-                    </span>
-                    {getPerformanceMoodIcon(
-                      row.codePercentage ?? 0,
-                      row.codeRanking === 'LIMITED DATA',
-                    )}
-                  </p>
-                </td>
-                <td>
-                  <p css={iconStyles}>
-                    <span css={valueStyles}>
-                      {row.labMaterialsPercentage === null ||
-                      row.labMaterialsRanking === 'LIMITED DATA'
-                        ? 'N/A'
-                        : `${row.labMaterialsPercentage}%`}
-                    </span>
-                    {getPerformanceMoodIcon(
-                      row.labMaterialsPercentage ?? 0,
-                      row.labMaterialsRanking === 'LIMITED DATA',
-                    )}
-                  </p>
-                </td>
+  const handleDatasetsSort = () => {
+    const newDirection = getNewSortDirection(
+      isDatasetsSortActive,
+      sortingDirection.datasets,
+      'desc',
+    );
+    setSort(`datasets_${newDirection}`);
+    setSortingDirection({
+      ...publicationComplianceInitialSortingDirection,
+      datasets: newDirection,
+    });
+  };
+
+  const handleProtocolsSort = () => {
+    const newDirection = getNewSortDirection(
+      isProtocolsSortActive,
+      sortingDirection.protocols,
+      'desc',
+    );
+    setSort(`protocols_${newDirection}`);
+    setSortingDirection({
+      ...publicationComplianceInitialSortingDirection,
+      protocols: newDirection,
+    });
+  };
+
+  const handleCodeSort = () => {
+    const newDirection = getNewSortDirection(
+      isCodeSortActive,
+      sortingDirection.code,
+      'desc',
+    );
+    setSort(`code_${newDirection}`);
+    setSortingDirection({
+      ...publicationComplianceInitialSortingDirection,
+      code: newDirection,
+    });
+  };
+
+  const handleLabMaterialsSort = () => {
+    const newDirection = getNewSortDirection(
+      isLabMaterialsSortActive,
+      sortingDirection.labMaterials,
+      'desc',
+    );
+    setSort(`lab_materials_${newDirection}`);
+    setSortingDirection({
+      ...publicationComplianceInitialSortingDirection,
+      labMaterials: newDirection,
+    });
+  };
+
+  return (
+    <>
+      <StaticPerformanceCard legend="Percentage is calculated as total research outputs shared across all publications divided by total research outputs identified across all publications." />
+      <Card padding={false}>
+        <div css={container}>
+          <table
+            css={{
+              width: '100%',
+              tableLayout: 'fixed',
+              borderCollapse: 'collapse',
+            }}
+          >
+            <colgroup>
+              <col css={{ width: '16.67%' }} />
+              <col css={{ width: '16.67%' }} />
+              <col css={{ width: '16.67%' }} />
+              <col css={{ width: '16.67%' }} />
+              <col css={{ width: '16.67%' }} />
+              <col css={{ width: '16.67%' }} />
+            </colgroup>
+            <thead>
+              <tr>
+                <th css={titleStyles} className={'team'}>
+                  <span css={headerStyles}>
+                    Team
+                    <button css={buttonStyles} onClick={handleTeamSort}>
+                      <AlphabeticalSortingIcon
+                        active={isTeamSortActive}
+                        ascending={sortingDirection.team === 'asc'}
+                      />
+                    </button>
+                  </span>
+                </th>
+                <th css={titleStyles} className={'publications'}>
+                  <span css={headerStyles}>
+                    Publications
+                    <button css={buttonStyles} onClick={handlePublicationsSort}>
+                      <NumericalSortingIcon
+                        active={isPublicationsSortActive}
+                        ascending={sortingDirection.publications === 'asc'}
+                        description={'Publications'}
+                      />
+                    </button>
+                  </span>
+                </th>
+                <th css={titleStyles} className={'datasets'}>
+                  <span css={headerStyles}>
+                    Datasets
+                    <button css={buttonStyles} onClick={handleDatasetsSort}>
+                      <NumericalSortingIcon
+                        active={isDatasetsSortActive}
+                        ascending={sortingDirection.datasets === 'asc'}
+                        description={'Datasets'}
+                      />
+                    </button>
+                  </span>
+                </th>
+                <th css={titleStyles} className={'protocols'}>
+                  <span css={headerStyles}>
+                    Protocols
+                    <button css={buttonStyles} onClick={handleProtocolsSort}>
+                      <NumericalSortingIcon
+                        active={isProtocolsSortActive}
+                        ascending={sortingDirection.protocols === 'asc'}
+                        description={'Protocols'}
+                      />
+                    </button>
+                  </span>
+                </th>
+                <th css={titleStyles} className={'code'}>
+                  <span css={headerStyles}>
+                    Code
+                    <button css={buttonStyles} onClick={handleCodeSort}>
+                      <NumericalSortingIcon
+                        active={isCodeSortActive}
+                        ascending={sortingDirection.code === 'asc'}
+                        description={'Code'}
+                      />
+                    </button>
+                  </span>
+                </th>
+                <th css={titleStyles}>
+                  <span css={headerStyles}>
+                    Lab Materials
+                    <button css={buttonStyles} onClick={handleLabMaterialsSort}>
+                      <NumericalSortingIcon
+                        active={isLabMaterialsSortActive}
+                        ascending={sortingDirection.labMaterials === 'asc'}
+                        description={'Lab Materials'}
+                      />
+                    </button>
+                  </span>
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Card>
-    <section css={pageControlsStyles}>
-      <PageControls {...pageControlProps} />
-    </section>
-  </>
-);
+            </thead>
+            <tbody>
+              {data.map((row) => (
+                <tr key={row.teamId} css={rowStyles}>
+                  <td className={'team'}>
+                    <p css={iconStyles}>
+                      <span>
+                        <Link
+                          href={
+                            network({})
+                              .teams({})
+                              .team({ teamId: row.teamId ?? '' }).$
+                          }
+                        >
+                          {row.teamName}
+                        </Link>
+                      </span>
+                      {row.isTeamInactive && <InactiveBadgeIcon />}
+                    </p>
+                  </td>
+                  <td className={'publications'}>
+                    <p css={iconStyles}>
+                      <span css={valueStyles}>
+                        {row.overallCompliance === null
+                          ? 'N/A'
+                          : `${row.overallCompliance}%`}
+                      </span>
+                      {getPerformanceMoodIcon(
+                        row.overallCompliance ?? 0,
+                        row.overallCompliance === null,
+                      )}
+                    </p>
+                  </td>
+                  <td className={'datasets'}>
+                    <p css={iconStyles}>
+                      <span css={valueStyles}>
+                        {row.datasetsPercentage === null ||
+                        row.datasetsRanking === 'LIMITED DATA'
+                          ? 'N/A'
+                          : `${row.datasetsPercentage}%`}
+                      </span>
+                      {getPerformanceMoodIcon(
+                        row.datasetsPercentage ?? 0,
+                        row.datasetsRanking === 'LIMITED DATA',
+                      )}
+                    </p>
+                  </td>
+                  <td className={'protocols'}>
+                    <p css={iconStyles}>
+                      <span css={valueStyles}>
+                        {row.protocolsPercentage === null ||
+                        row.protocolsRanking === 'LIMITED DATA'
+                          ? 'N/A'
+                          : `${row.protocolsPercentage}%`}
+                      </span>
+                      {getPerformanceMoodIcon(
+                        row.protocolsPercentage ?? 0,
+                        row.protocolsRanking === 'LIMITED DATA',
+                      )}
+                    </p>
+                  </td>
+                  <td className={'code'}>
+                    <p css={iconStyles}>
+                      <span css={valueStyles}>
+                        {row.codePercentage === null ||
+                        row.codeRanking === 'LIMITED DATA'
+                          ? 'N/A'
+                          : `${row.codePercentage}%`}
+                      </span>
+                      {getPerformanceMoodIcon(
+                        row.codePercentage ?? 0,
+                        row.codeRanking === 'LIMITED DATA',
+                      )}
+                    </p>
+                  </td>
+                  <td>
+                    <p css={iconStyles}>
+                      <span css={valueStyles}>
+                        {row.labMaterialsPercentage === null ||
+                        row.labMaterialsRanking === 'LIMITED DATA'
+                          ? 'N/A'
+                          : `${row.labMaterialsPercentage}%`}
+                      </span>
+                      {getPerformanceMoodIcon(
+                        row.labMaterialsPercentage ?? 0,
+                        row.labMaterialsRanking === 'LIMITED DATA',
+                      )}
+                    </p>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+      <section css={pageControlsStyles}>
+        <PageControls {...pageControlProps} />
+      </section>
+    </>
+  );
+};
 
 export default PublicationComplianceTable;

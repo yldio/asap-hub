@@ -4,6 +4,7 @@ import ProjectController from '../controllers/project.controller';
 import {
   validateProjectFetchParameters,
   validateProjectParameters,
+  validateProjectPatchRequest,
 } from '../validation/project.validation';
 
 export const projectRouteFactory = (
@@ -70,6 +71,18 @@ export const projectRouteFactory = (
       const { projectId } = validateProjectParameters(req.params);
 
       const result = await projectController.fetchById(projectId);
+
+      res.json(result);
+    },
+  );
+
+  projectRoutes.patch<{ projectId: string }>(
+    '/project/:projectId',
+    async (req, res) => {
+      const { projectId } = validateProjectParameters(req.params);
+      const { tools } = validateProjectPatchRequest(req.body);
+
+      const result = await projectController.update(projectId, tools);
 
       res.json(result);
     },

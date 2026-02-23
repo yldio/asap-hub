@@ -10,7 +10,12 @@ import type {
 } from '@asap-hub/model';
 
 import type { ProjectListOptions } from '../api';
-import { projectsState, useProjectById, useProjects, usePatchProjectById } from '../state';
+import {
+  projectsState,
+  useProjectById,
+  useProjects,
+  usePatchProjectById,
+} from '../state';
 import { auth0State } from '../../auth/state';
 
 jest.mock('../../hooks/algolia', () => ({
@@ -364,7 +369,6 @@ describe('projects state hooks', () => {
     });
 
     it('preserves detail cache when list cache is cleared', async () => {
-
       const detailProject: ProjectDetail = {
         id: 'project-1',
         title: 'Detail Project',
@@ -479,10 +483,10 @@ describe('projects state hooks', () => {
       // Pre-populate project state so the hook doesn't suspend
       const initializeState = ({ set }: MutableSnapshot) => {
         set(auth0State, { getTokenSilently } as never);
-        set(
-          projectsState(defaultOptions),
-          { total: 1, items: [initialProject as unknown as ProjectResponse] },
-        );
+        set(projectsState(defaultOptions), {
+          total: 1,
+          items: [initialProject as unknown as ProjectResponse],
+        });
       };
 
       const { result } = renderHook(
@@ -495,7 +499,9 @@ describe('projects state hooks', () => {
 
       // Wait for the hook to settle (useProjectById fetches via API)
       mockGetProject.mockResolvedValueOnce(initialProject);
-      await waitFor(() => expect(result.current.project).toEqual(initialProject));
+      await waitFor(() =>
+        expect(result.current.project).toEqual(initialProject),
+      );
 
       await act(async () => {
         await result.current.patchFn(patch);

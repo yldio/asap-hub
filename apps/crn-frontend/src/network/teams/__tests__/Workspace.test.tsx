@@ -25,12 +25,7 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 
-import {
-  patchTeam,
-  updateManuscript,
-  createDiscussion,
-  getManuscript,
-} from '../api';
+import { updateManuscript, createDiscussion, getManuscript } from '../api';
 
 import Workspace from '../Workspace';
 import {
@@ -471,7 +466,7 @@ describe('a tool', () => {
       />,
       user,
     );
-    let resolvePatchProject!: () => void;
+    let resolvePatchProject!: (value?: unknown) => void;
     mockPatchProject.mockImplementation(
       () =>
         new Promise((resolve) => {

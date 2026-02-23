@@ -697,7 +697,27 @@ export type SortPublicationCompliance =
   | 'lab_materials_asc'
   | 'lab_materials_desc';
 
-export type PublicationComplianceSortingDirection = 'asc' | 'desc';
+export type PublicationComplianceFields =
+  | 'team'
+  | 'publications'
+  | 'datasets'
+  | 'protocols'
+  | 'code'
+  | 'labMaterials';
+
+export type PublicationComplianceSortingDirection = {
+  [key in PublicationComplianceFields]: SortingDirection;
+};
+
+export const publicationComplianceInitialSortingDirection: PublicationComplianceSortingDirection =
+  {
+    team: ascending,
+    publications: descending,
+    datasets: descending,
+    protocols: descending,
+    code: descending,
+    labMaterials: descending,
+  };
 
 export type PublicationComplianceDataObject = {
   teamId: string;

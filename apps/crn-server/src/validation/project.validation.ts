@@ -1,4 +1,4 @@
-import { ProjectStatus, ProjectType } from '@asap-hub/model';
+import { ProjectStatus, ProjectTool, ProjectType } from '@asap-hub/model';
 import {
   fetchOptionsValidationSchema,
   validateInput,
@@ -80,5 +80,43 @@ export const validateProjectParameters = validateInput(
   {
     skipNull: false,
     coerce: true,
+  },
+);
+
+type ProjectPatchRequest = {
+  tools: ProjectTool[];
+};
+
+const projectToolSchema: JSONSchemaType<ProjectTool> = {
+  type: 'object',
+  properties: {
+    id: { type: 'string', nullable: true },
+    name: { type: 'string' },
+    url: { type: 'string' },
+    description: { type: 'string', nullable: true },
+  },
+  required: ['name', 'url'],
+  additionalProperties: false,
+};
+
+const projectPatchRequestValidationSchema: JSONSchemaType<ProjectPatchRequest> =
+  {
+    type: 'object',
+    properties: {
+      tools: {
+        type: 'array',
+        items: projectToolSchema,
+        nullable: true,
+      },
+    },
+    required: ['tools'],
+    additionalProperties: false,
+  };
+
+export const validateProjectPatchRequest = validateInput(
+  projectPatchRequestValidationSchema,
+  {
+    skipNull: true,
+    coerce: false,
   },
 );

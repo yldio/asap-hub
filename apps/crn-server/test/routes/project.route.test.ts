@@ -133,7 +133,8 @@ describe('project routes', () => {
     const tools = [{ name: 'Slack', url: 'https://slack.com' }];
 
     it('calls update with the project id and tools and returns the result', async () => {
-      const updated = getExpectedDiscoveryProject() as unknown as ProjectResponse;
+      const updated =
+        getExpectedDiscoveryProject() as unknown as ProjectResponse;
       projectControllerMock.update.mockResolvedValueOnce(updated);
 
       const response = await supertest(app)

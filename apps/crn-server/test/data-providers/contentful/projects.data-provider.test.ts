@@ -440,8 +440,18 @@ describe('parseContentfulProject - tools parsing', () => {
     const result = parseContentfulProject(item as never);
 
     expect(result.tools).toEqual([
-      { id: 'tool-1', name: 'Slack', url: 'https://slack.com', description: 'Team communication' },
-      { id: 'tool-2', name: 'GitHub', url: 'https://github.com', description: undefined },
+      {
+        id: 'tool-1',
+        name: 'Slack',
+        url: 'https://slack.com',
+        description: 'Team communication',
+      },
+      {
+        id: 'tool-2',
+        name: 'GitHub',
+        url: 'https://github.com',
+        description: undefined,
+      },
     ]);
   });
 
@@ -462,9 +472,24 @@ describe('parseContentfulProject - tools parsing', () => {
       toolsCollection: {
         items: [
           null,
-          { sys: { id: 'tool-no-url' }, name: 'No URL', url: null, description: null },
-          { sys: { id: 'tool-no-name' }, name: null, url: 'https://example.com', description: null },
-          { sys: { id: 'tool-valid' }, name: 'Valid', url: 'https://valid.com', description: null },
+          {
+            sys: { id: 'tool-no-url' },
+            name: 'No URL',
+            url: null,
+            description: null,
+          },
+          {
+            sys: { id: 'tool-no-name' },
+            name: null,
+            url: 'https://example.com',
+            description: null,
+          },
+          {
+            sys: { id: 'tool-valid' },
+            name: 'Valid',
+            url: 'https://valid.com',
+            description: null,
+          },
         ],
       },
     };
@@ -472,7 +497,12 @@ describe('parseContentfulProject - tools parsing', () => {
     const result = parseContentfulProject(item as never);
 
     expect(result.tools).toEqual([
-      { id: 'tool-valid', name: 'Valid', url: 'https://valid.com', description: undefined },
+      {
+        id: 'tool-valid',
+        name: 'Valid',
+        url: 'https://valid.com',
+        description: undefined,
+      },
     ]);
   });
 });
@@ -499,7 +529,9 @@ describe('ProjectContentfulDataProvider - update', () => {
   it('throws when REST client is not configured', async () => {
     await expect(
       dataProviderWithoutRestClient.update('project-1', { tools: [] }),
-    ).rejects.toThrow('REST client not configured for ProjectContentfulDataProvider');
+    ).rejects.toThrow(
+      'REST client not configured for ProjectContentfulDataProvider',
+    );
   });
 
   it('creates a new tool when no id is provided', async () => {

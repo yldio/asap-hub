@@ -10,7 +10,9 @@ describe('getCleanProjectTools', () => {
   });
 
   it('removes description when it is an empty string', () => {
-    const tools = [{ name: 'Slack', url: 'https://slack.com', description: '' }];
+    const tools = [
+      { name: 'Slack', url: 'https://slack.com', description: '' },
+    ];
 
     expect(getCleanProjectTools(tools)).toEqual([
       { name: 'Slack', url: 'https://slack.com' },
@@ -18,7 +20,9 @@ describe('getCleanProjectTools', () => {
   });
 
   it('removes description when it is whitespace only', () => {
-    const tools = [{ name: 'Slack', url: 'https://slack.com', description: '   ' }];
+    const tools = [
+      { name: 'Slack', url: 'https://slack.com', description: '   ' },
+    ];
 
     expect(getCleanProjectTools(tools)).toEqual([
       { name: 'Slack', url: 'https://slack.com' },
@@ -26,9 +30,7 @@ describe('getCleanProjectTools', () => {
   });
 
   it('keeps id when present', () => {
-    const tools = [
-      { id: 'tool-1', name: 'GitHub', url: 'https://github.com' },
-    ];
+    const tools = [{ id: 'tool-1', name: 'GitHub', url: 'https://github.com' }];
 
     expect(getCleanProjectTools(tools)).toEqual(tools);
   });

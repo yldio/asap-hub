@@ -160,7 +160,9 @@ describe('Project Controller', () => {
       expect(projectDataProviderMock.update).toHaveBeenCalledWith(project.id, {
         tools,
       });
-      expect(projectDataProviderMock.fetchById).toHaveBeenCalledWith(project.id);
+      expect(projectDataProviderMock.fetchById).toHaveBeenCalledWith(
+        project.id,
+      );
       expect(result).toEqual(project);
     });
 

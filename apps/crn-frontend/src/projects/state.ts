@@ -2,18 +2,22 @@ import {
   ListProjectResponse,
   ProjectDetail,
   ProjectResponse,
+  ProjectTool,
 } from '@asap-hub/model';
 import {
   atomFamily,
   DefaultValue,
   selectorFamily,
   useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
 } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
   getProject,
   getProjects,
+  patchProject,
   ProjectListOptions,
   toListProjectResponse,
 } from './api';
@@ -120,3 +124,11 @@ export const useProjects = (options: ProjectListOptions) => {
 // No need to reset since list data doesn't pollute this cache
 export const useProjectById = (id: string) =>
   useRecoilState(projectState(id))[0];
+
+export const usePatchProjectById = (id: string) => {
+  const authorization = useRecoilValue(authorizationState);
+  const setProject = useSetRecoilState(projectState(id));
+  return async (patch: { tools: ProjectTool[] }) => {
+    setProject(await patchProject(id, patch, authorization));
+  };
+};

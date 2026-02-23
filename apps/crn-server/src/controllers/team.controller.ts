@@ -21,6 +21,7 @@ export default class TeamController {
     this.teamDataProvider = teamDataProvider;
   }
 
+  // TODO: Remove this function once we have migrated all tools to projects
   async update(id: string, tools: TeamTool[]): Promise<TeamResponse> {
     const cleanTools = getCleanTools(tools);
     await this.teamDataProvider.update(id, { tools: cleanTools });

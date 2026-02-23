@@ -6,7 +6,7 @@ import {
   ToolModal,
 } from '@asap-hub/react-components';
 import {
-  TeamTool,
+  ProjectTool,
   TeamResponse,
   ManuscriptPutRequest,
   DiscussionRequest,
@@ -20,10 +20,10 @@ import {
   useIsComplianceReviewer,
   useManuscriptById,
   useMarkDiscussionAsRead,
-  usePatchTeamById,
   usePutManuscript,
   useReplyToDiscussion,
 } from './state';
+import { usePatchProjectById, useProjectById } from '../../projects/state';
 import { useEligibilityReason } from './useEligibilityReason';
 import { useManuscriptToast } from './useManuscriptToast';
 
@@ -36,7 +36,9 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const isComplianceReviewer = useIsComplianceReviewer();
 
   const [deleting, setDeleting] = useState(false);
-  const patchTeam = usePatchTeamById(team.id);
+  const patchProject = usePatchProjectById(team.linkedProjectId ?? '');
+  const project = useProjectById(team.linkedProjectId ?? '');
+  const projectTools = project?.tools ?? [];
   const updateManuscript = usePutManuscript();
   const createDiscussion = useCreateDiscussion();
   const replyToDiscussion = useReplyToDiscussion();
@@ -111,7 +113,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
         {...team}
         isTeamMember={isTeamMember}
         setEligibilityReasons={setEligibilityReasons}
-        tools={team.tools}
+        tools={projectTools}
         onUpdateManuscript={(
           manuscriptId: string,
           payload: ManuscriptPutRequest,
@@ -126,10 +128,12 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                     'Are you sure you want to delete this team tool from your team page? This cannot be undone.',
                   )
                 ) {
-                  const tools = team.tools.filter((_, i) => i !== toolIndex);
-                  await patchTeam({ tools }).catch(() => {
-                    toast('Something went wrong. Please try again.');
-                  });
+                  const tools = projectTools.filter((_, i) => i !== toolIndex);
+                  await patchProject({ tools: tools as ProjectTool[] }).catch(
+                    () => {
+                      toast('Something went wrong. Please try again.');
+                    },
+                  );
                 }
                 setDeleting(false);
               }
@@ -149,8 +153,10 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
             <ToolModal
               title="Add Link"
               backHref={route.$}
-              onSave={(data: TeamTool) =>
-                patchTeam({ tools: [...team.tools, data] })
+              onSave={(data: ProjectTool) =>
+                patchProject({
+                  tools: [...(projectTools as ProjectTool[]), data],
+                })
               }
             />
           }
@@ -159,7 +165,13 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           path={`${route.tools.template}${
             route.tools({}).tool.template
           }`.replace(/^\//, '')}
-          element={<EditTool teamId={team.id} tools={team.tools} />}
+          element={
+            <EditTool
+              teamId={team.id}
+              projectId={team.linkedProjectId ?? ''}
+              tools={projectTools as ProjectTool[]}
+            />
+          }
         />
       </Routes>
     </>
@@ -168,14 +180,15 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
 
 const EditTool: React.FC<{
   readonly teamId: TeamResponse['id'];
-  readonly tools: ReadonlyArray<TeamTool>;
-}> = ({ teamId, tools }) => {
+  readonly projectId: string;
+  readonly tools: ReadonlyArray<ProjectTool>;
+}> = ({ teamId, projectId, tools }) => {
   const { toolIndex } = useRouteParams(
     network({}).teams({}).team({ teamId }).workspace({}).tools({}).tool,
   );
   const tool = tools[parseInt(toolIndex, 10)];
 
-  const patchTeam = usePatchTeamById(teamId);
+  const patchProject = usePatchProjectById(projectId);
 
   if (!tool) {
     return <NotFoundPage />;
@@ -186,10 +199,10 @@ const EditTool: React.FC<{
       {...tool}
       title="Edit Link"
       backHref={network({}).teams({}).team({ teamId }).workspace({}).$}
-      onSave={(data: TeamTool) => {
+      onSave={(data: ProjectTool) => {
         const newTools = [...tools];
         newTools[parseInt(toolIndex, 10)] = data;
-        return patchTeam({ tools: newTools });
+        return patchProject({ tools: newTools });
       }}
     />
   );

@@ -1,6 +1,13 @@
 import { ListResponse } from './common';
 import { TeamDataObject } from './team';
 
+export type ProjectTool = {
+  id?: string;
+  name: string;
+  description?: string;
+  url: string;
+};
+
 export type ProjectStatus = 'Active' | 'Completed' | 'Closed';
 
 export const projectTypes = [
@@ -43,6 +50,7 @@ export type BaseProject = {
   readonly researchTags?: ReadonlyArray<ResearchTag>;
   readonly originalGrant?: string;
   readonly supplementGrantDescription?: string;
+  readonly tools?: ReadonlyArray<ProjectTool>;
 };
 
 export type ProjectMemberTeam = {

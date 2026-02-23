@@ -1,5 +1,6 @@
 import { TeamTool } from '@asap-hub/model';
 
+// TODO: Remove this function once we have migrated all tools to projects
 export const getCleanTools = (tools: TeamTool[]): TeamTool[] =>
   tools.map((tool) =>
     Object.entries(tool).reduce(

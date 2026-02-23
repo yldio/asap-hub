@@ -1,4 +1,6 @@
 import {
+  addLocaleToFields,
+  Environment,
   FETCH_PROJECTS,
   FETCH_PROJECTS_BY_MEMBERSHIP_ID,
   FETCH_PROJECTS_BY_TEAM_ID,
@@ -15,6 +17,7 @@ import {
   FetchProjectsQuery,
   FetchProjectsQueryVariables,
   GraphQLClient,
+  patchAndPublish,
   ProjectsOrder,
 } from '@asap-hub/contentful';
 import {
@@ -29,6 +32,7 @@ import {
   ProjectDetailDataObject,
   ProjectMember,
   ProjectStatus,
+  ProjectTool,
   ProjectType,
   ResearchTag,
   ResourceProject,
@@ -39,11 +43,13 @@ import {
   ProjectStatusRank,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import { getCleanProjectTools } from '../../utils/project';
 import logger from '../../utils/logger';
 
 import {
   FetchProjectsOptions,
   ProjectDataProvider,
+  ProjectUpdateDataObject,
 } from '../types/projects.data-provider.types';
 
 // Type guards for Contentful GraphQL responses
@@ -156,6 +162,23 @@ export const parseContentfulProject = (
     types: tag.types ? cleanArray(tag.types) : undefined,
   }));
 
+  const tools: ProjectTool[] = cleanArray(
+    item.toolsCollection?.items || [],
+  ).reduce((acc: ProjectTool[], tool) => {
+    if (!tool || !tool.name || !tool.url) {
+      return acc;
+    }
+    return [
+      ...acc,
+      {
+        id: tool.sys?.id,
+        name: tool.name,
+        url: tool.url,
+        description: tool.description ?? undefined,
+      },
+    ];
+  }, []);
+
   const baseProject = {
     id: item.sys.id,
     title: item.title,
@@ -172,6 +195,7 @@ export const parseContentfulProject = (
     projectType: item.projectType as ProjectType,
     originalGrant: item.originalGrant || '',
     supplementGrantDescription: item.supplementGrant?.description || '',
+    tools: tools.length > 0 ? tools : undefined,
   };
 
   const members = cleanArray(item.membersCollection?.items || []);
@@ -380,8 +404,32 @@ export const parseContentfulProjectDetail = (
   }
 };
 
+const createAndPublishProjectTools = (
+  environment: Environment,
+  tools: ProjectTool[],
+) =>
+  Promise.all(
+    tools.map(async (tool) => {
+      const { id, ...toolFields } = tool;
+      const entry = id
+        ? await environment
+            .getEntry(id)
+            .then((e: Awaited<ReturnType<typeof environment.getEntry>>) => {
+              e.fields = addLocaleToFields(toolFields);
+              return e.update();
+            })
+        : await environment.createEntry('externalTools', {
+            fields: addLocaleToFields(toolFields),
+          });
+      return entry.publish();
+    }),
+  );
+
 export class ProjectContentfulDataProvider implements ProjectDataProvider {
-  constructor(private contentfulClient: GraphQLClient) {}
+  constructor(
+    private contentfulClient: GraphQLClient,
+    private getRestClient?: () => Promise<Environment>,
+  ) {}
 
   async fetchById(id: string): Promise<ProjectDataObject | null> {
     try {
@@ -540,6 +588,56 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       total: uniqueProjects.length,
       items: paginatedItems.map(parseContentfulProject),
     };
+  }
+
+  async update(id: string, update: ProjectUpdateDataObject): Promise<void> {
+    if (!this.getRestClient) {
+      throw new Error(
+        'REST client not configured for ProjectContentfulDataProvider',
+      );
+    }
+    const environment = await this.getRestClient();
+    const project = await environment.getEntry(id);
+
+    const { tools } = update;
+    const cleanTools = getCleanProjectTools(tools);
+    const incomingToolIds = cleanTools
+      .map((tool: ProjectTool) => tool.id)
+      .filter((toolId): toolId is string => !!toolId);
+
+    const currentToolsLinks = project.fields.tools
+      ? project.fields.tools['en-US']
+      : [];
+    const currentToolIds = currentToolsLinks.map(
+      (link: { sys: { id: string } }) => link.sys.id,
+    );
+
+    const toolsToDelete = currentToolIds.filter(
+      (toolId: string) => !incomingToolIds.includes(toolId),
+    );
+
+    await Promise.all(
+      toolsToDelete.map(async (toolId: string) => {
+        const entry = await environment.getEntry(toolId);
+        await entry.unpublish();
+        await entry.delete();
+      }),
+    );
+
+    const publishedTools = await createAndPublishProjectTools(
+      environment,
+      cleanTools,
+    );
+
+    await patchAndPublish(project, {
+      tools: publishedTools.map((tool: { sys: { id: string } }) => ({
+        sys: {
+          type: 'Link',
+          linkType: 'Entry',
+          id: tool.sys.id,
+        },
+      })),
+    });
   }
 
   async fetchByUserId(

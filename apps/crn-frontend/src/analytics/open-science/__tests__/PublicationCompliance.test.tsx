@@ -3,7 +3,13 @@ import {
   ListPublicationComplianceOpensearchResponse,
   SortPublicationCompliance,
 } from '@asap-hub/model';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { Suspense } from 'react';
 import { MemoryRouter, useNavigate } from 'react-router';
 import {
@@ -467,7 +473,9 @@ describe('PublicationCompliance', () => {
 
     render(
       <MemoryRouter
-        initialEntries={['/analytics/open-science/publication-compliance?sort=publications_desc']}
+        initialEntries={[
+          '/analytics/open-science/publication-compliance?sort=publications_desc',
+        ]}
       >
         <RecoilRoot>
           <Suspense fallback="loading">

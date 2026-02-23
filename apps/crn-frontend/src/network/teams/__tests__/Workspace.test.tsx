@@ -11,7 +11,6 @@ import {
   renderHook,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TeamResponse } from '@asap-hub/model';
 import {
   createTeamManuscriptResponse,
   createTeamResponse,
@@ -69,8 +68,6 @@ jest.mock('../../../projects/state', () => ({
   useProjectById: jest.fn().mockReturnValue(undefined),
   usePatchProjectById: jest.fn().mockReturnValue(jest.fn()),
 }));
-
-const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
 
 const id = '42';
 const manuscriptId = 'manuscript_0';

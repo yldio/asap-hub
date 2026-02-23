@@ -3,7 +3,7 @@ import express from 'express';
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
 import { NotFoundError } from '@asap-hub/errors';
-import { ListProjectDataObject } from '@asap-hub/model';
+import { ListProjectDataObject, ProjectResponse } from '@asap-hub/model';
 
 import { projectRouteFactory } from '../../src/routes/project.route';
 import {
@@ -15,10 +15,12 @@ import ProjectController from '../../src/controllers/project.controller';
 const projectControllerMock = {
   fetch: jest.fn(),
   fetchById: jest.fn(),
+  update: jest.fn(),
 } as unknown as jest.Mocked<ProjectController>;
 
 const createApp = () => {
   const app = express();
+  app.use(express.json());
   app.use(projectRouteFactory(projectControllerMock));
   app.use(
     (
@@ -122,6 +124,47 @@ describe('project routes', () => {
       );
 
       const response = await supertest(app).get('/project/missing');
+
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe('PATCH /project/:projectId', () => {
+    const tools = [{ name: 'Slack', url: 'https://slack.com' }];
+
+    it('calls update with the project id and tools and returns the result', async () => {
+      const updated = getExpectedDiscoveryProject() as unknown as ProjectResponse;
+      projectControllerMock.update.mockResolvedValueOnce(updated);
+
+      const response = await supertest(app)
+        .patch('/project/discovery-1')
+        .send({ tools });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(updated);
+      expect(projectControllerMock.update).toHaveBeenCalledWith(
+        'discovery-1',
+        tools,
+      );
+    });
+
+    it('returns 400 for an invalid request body', async () => {
+      const response = await supertest(app)
+        .patch('/project/discovery-1')
+        .send({ tools: [{ name: 'Missing URL' }] });
+
+      expect(response.status).toBe(400);
+      expect(projectControllerMock.update).not.toHaveBeenCalled();
+    });
+
+    it('maps not found errors to a 404 response', async () => {
+      projectControllerMock.update.mockRejectedValueOnce(
+        new NotFoundError(undefined, 'project missing'),
+      );
+
+      const response = await supertest(app)
+        .patch('/project/missing')
+        .send({ tools });
 
       expect(response.status).toBe(404);
     });

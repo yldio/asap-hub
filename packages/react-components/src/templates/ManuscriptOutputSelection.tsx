@@ -223,15 +223,6 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
                 </div>
               </components.Option>
             ),
-            Input: (props) => (
-              <components.Input
-                {...props}
-                innerRef={props.innerRef}
-                style={{
-                  ...props.style,
-                }}
-              />
-            ),
           }}
           onChange={(version: ManuscriptVersionOption) => {
             setSelectedVersion(version ?? undefined);

@@ -71,11 +71,8 @@ const PublicationComplianceContent: FC<
     sort: SortPublicationCompliance;
     setSort: React.Dispatch<React.SetStateAction<SortPublicationCompliance>>;
     sortingDirection: PublicationComplianceSortingDirection;
-    setSortingDirection: React.Dispatch<
-      React.SetStateAction<PublicationComplianceSortingDirection>
-    >;
   }
-> = ({ tags, sort, setSort, sortingDirection, setSortingDirection }) => {
+> = ({ tags, sort, setSort, sortingDirection }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { timeRange } = useAnalytics();
 
@@ -96,7 +93,6 @@ const PublicationComplianceContent: FC<
       numberOfPages={numberOfPages}
       renderPageHref={renderPageHref}
       setSort={setSort}
-      setSortingDirection={setSortingDirection}
       sort={sort}
       sortingDirection={sortingDirection}
     />
@@ -120,13 +116,6 @@ const PublicationCompliance: FC<PublicationComplianceProps> = ({ tags }) => {
     [navigate, search, sort],
   );
 
-  const setSortingDirection = useCallback(
-    (_value: React.SetStateAction<PublicationComplianceSortingDirection>) => {
-      // Direction is derived from sort URL param; no-op here
-    },
-    [],
-  );
-
   return (
     <Suspense key={search} fallback={<LoadingContentBodyTable />}>
       <PublicationComplianceContent
@@ -134,7 +123,6 @@ const PublicationCompliance: FC<PublicationComplianceProps> = ({ tags }) => {
         sort={sort}
         setSort={setSort}
         sortingDirection={sortingDirection}
-        setSortingDirection={setSortingDirection}
       />
     </Suspense>
   );

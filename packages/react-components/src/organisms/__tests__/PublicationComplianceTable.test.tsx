@@ -36,7 +36,6 @@ describe('PublicationComplianceTable', () => {
     sort: 'team_asc' as SortPublicationCompliance,
     setSort: jest.fn(),
     sortingDirection: publicationComplianceInitialSortingDirection,
-    setSortingDirection: jest.fn(),
   };
 
   beforeEach(() => {
@@ -97,13 +96,10 @@ describe('PublicationComplianceTable', () => {
 
   it('handles sorting when team header button is clicked', () => {
     const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
-
     render(
       <PublicationComplianceTable
         {...defaultProps}
         setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
       />,
     );
 
@@ -112,16 +108,10 @@ describe('PublicationComplianceTable', () => {
     fireEvent.click(sortButton!);
 
     expect(mockSetSort).toHaveBeenCalledWith('team_desc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith({
-      ...publicationComplianceInitialSortingDirection,
-      team: 'desc',
-    });
   });
 
   it('toggles sorting direction when same header is clicked twice', () => {
     const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
-
     render(
       <PublicationComplianceTable
         {...defaultProps}
@@ -131,7 +121,6 @@ describe('PublicationComplianceTable', () => {
           team: 'asc',
         }}
         setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
       />,
     );
 
@@ -140,21 +129,14 @@ describe('PublicationComplianceTable', () => {
     fireEvent.click(sortButton!);
 
     expect(mockSetSort).toHaveBeenCalledWith('team_desc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith({
-      ...publicationComplianceInitialSortingDirection,
-      team: 'desc',
-    });
   });
 
   it('handles sorting for publications column', () => {
     const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
-
     render(
       <PublicationComplianceTable
         {...defaultProps}
         setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
       />,
     );
 
@@ -165,21 +147,14 @@ describe('PublicationComplianceTable', () => {
     fireEvent.click(sortButton!);
 
     expect(mockSetSort).toHaveBeenCalledWith('publications_desc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith({
-      ...publicationComplianceInitialSortingDirection,
-      publications: 'desc',
-    });
   });
 
   it('handles sorting for datasets column', () => {
     const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
-
     render(
       <PublicationComplianceTable
         {...defaultProps}
         setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
       />,
     );
 
@@ -190,21 +165,14 @@ describe('PublicationComplianceTable', () => {
     fireEvent.click(sortButton!);
 
     expect(mockSetSort).toHaveBeenCalledWith('datasets_desc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith({
-      ...publicationComplianceInitialSortingDirection,
-      datasets: 'desc',
-    });
   });
 
   it('handles sorting for protocols column', () => {
     const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
-
     render(
       <PublicationComplianceTable
         {...defaultProps}
         setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
       />,
     );
 
@@ -215,21 +183,14 @@ describe('PublicationComplianceTable', () => {
     fireEvent.click(sortButton!);
 
     expect(mockSetSort).toHaveBeenCalledWith('protocols_desc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith({
-      ...publicationComplianceInitialSortingDirection,
-      protocols: 'desc',
-    });
   });
 
   it('handles sorting for code column', () => {
     const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
-
     render(
       <PublicationComplianceTable
         {...defaultProps}
         setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
       />,
     );
 
@@ -238,21 +199,14 @@ describe('PublicationComplianceTable', () => {
     fireEvent.click(sortButton!);
 
     expect(mockSetSort).toHaveBeenCalledWith('code_desc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith({
-      ...publicationComplianceInitialSortingDirection,
-      code: 'desc',
-    });
   });
 
   it('handles sorting for lab materials column', () => {
     const mockSetSort = jest.fn();
-    const mockSetSortingDirection = jest.fn();
-
     render(
       <PublicationComplianceTable
         {...defaultProps}
         setSort={mockSetSort}
-        setSortingDirection={mockSetSortingDirection}
       />,
     );
 
@@ -263,10 +217,6 @@ describe('PublicationComplianceTable', () => {
     fireEvent.click(sortButton!);
 
     expect(mockSetSort).toHaveBeenCalledWith('lab_materials_desc');
-    expect(mockSetSortingDirection).toHaveBeenCalledWith({
-      ...publicationComplianceInitialSortingDirection,
-      labMaterials: 'desc',
-    });
   });
 
   it('renders performance icons correctly', () => {

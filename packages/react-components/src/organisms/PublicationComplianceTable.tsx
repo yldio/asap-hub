@@ -2,7 +2,6 @@ import {
   PublicationComplianceResponse,
   PublicationComplianceSortingDirection,
   SortPublicationCompliance,
-  publicationComplianceInitialSortingDirection,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -116,9 +115,6 @@ const buttonStyles = css({
 type PublicationComplianceTableProps = ComponentProps<typeof PageControls> & {
   data: PublicationComplianceResponse[];
   setSort: React.Dispatch<React.SetStateAction<SortPublicationCompliance>>;
-  setSortingDirection: React.Dispatch<
-    React.SetStateAction<PublicationComplianceSortingDirection>
-  >;
   sort: SortPublicationCompliance;
   sortingDirection: PublicationComplianceSortingDirection;
 };
@@ -128,7 +124,6 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
   sort,
   setSort,
   sortingDirection,
-  setSortingDirection,
   ...pageControlProps
 }) => {
   const isTeamSortActive = sort.includes('team');
@@ -154,10 +149,6 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
       'asc',
     );
     setSort(`team_${newDirection}`);
-    setSortingDirection({
-      ...publicationComplianceInitialSortingDirection,
-      team: newDirection,
-    });
   };
 
   const handlePublicationsSort = () => {
@@ -167,10 +158,6 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
       'desc',
     );
     setSort(`publications_${newDirection}`);
-    setSortingDirection({
-      ...publicationComplianceInitialSortingDirection,
-      publications: newDirection,
-    });
   };
 
   const handleDatasetsSort = () => {
@@ -180,10 +167,6 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
       'desc',
     );
     setSort(`datasets_${newDirection}`);
-    setSortingDirection({
-      ...publicationComplianceInitialSortingDirection,
-      datasets: newDirection,
-    });
   };
 
   const handleProtocolsSort = () => {
@@ -193,10 +176,6 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
       'desc',
     );
     setSort(`protocols_${newDirection}`);
-    setSortingDirection({
-      ...publicationComplianceInitialSortingDirection,
-      protocols: newDirection,
-    });
   };
 
   const handleCodeSort = () => {
@@ -206,10 +185,6 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
       'desc',
     );
     setSort(`code_${newDirection}`);
-    setSortingDirection({
-      ...publicationComplianceInitialSortingDirection,
-      code: newDirection,
-    });
   };
 
   const handleLabMaterialsSort = () => {
@@ -219,10 +194,6 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
       'desc',
     );
     setSort(`lab_materials_${newDirection}`);
-    setSortingDirection({
-      ...publicationComplianceInitialSortingDirection,
-      labMaterials: newDirection,
-    });
   };
 
   return (

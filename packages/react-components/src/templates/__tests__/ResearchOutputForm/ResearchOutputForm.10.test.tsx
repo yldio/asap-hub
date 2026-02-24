@@ -1,7 +1,7 @@
 import { researchOutputDocumentTypes } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { defaultProps } from '../../test-utils/research-output-form';

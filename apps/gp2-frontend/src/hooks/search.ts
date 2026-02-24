@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import { useDebounce } from 'use-debounce';
 
 type Filter = {
@@ -31,7 +31,9 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
     newUrlParams.delete('tag');
     newUrlParams.delete('currentPage');
     newTags.forEach((v) => newUrlParams.append('tag', v));
-    navigate({ search: newUrlParams.toString() } as never, { replace: true });
+    void navigate({ search: newUrlParams.toString() } as never, {
+      replace: true,
+    });
   };
 
   const searchQuery = currentUrlParams.get(searchQueryParam) || '';
@@ -47,11 +49,13 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
       ? currentFilters.splice(filterIndex, 1)
       : currentFilters.push(filter);
     currentFilters.forEach((f) => newUrlParams.append(filterName, f));
-    navigate({ search: newUrlParams.toString() } as never, { replace: true });
+    void navigate({ search: newUrlParams.toString() } as never, {
+      replace: true,
+    });
   };
 
   const changeLocation = (pathname: string) => {
-    navigate({ pathname, search: currentUrlParams.toString() } as never);
+    void navigate({ pathname, search: currentUrlParams.toString() } as never);
   };
 
   const updateFilters = (pathname: string, updatedFilters: Filter) => {
@@ -66,7 +70,7 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
       });
     });
 
-    navigate({ pathname, search: newUrlParams.toString() } as never);
+    void navigate({ pathname, search: newUrlParams.toString() } as never);
   };
 
   const setSearchQuery = (newSearchQuery: string) => {
@@ -76,7 +80,9 @@ export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
       : newUrlParams.delete(searchQueryParam);
     newUrlParams.delete('currentPage');
 
-    navigate({ search: newUrlParams.toString() } as never, { replace: true });
+    void navigate({ search: newUrlParams.toString() } as never, {
+      replace: true,
+    });
   };
 
   const [debouncedSearchQuery] = useDebounce(searchQuery, 400);

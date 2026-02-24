@@ -1,5 +1,9 @@
-import { MemoryRouter, useNavigate, useLocation } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import {
+  MemoryRouter,
+  useNavigate,
+  useLocation,
+  StaticRouter,
+} from 'react-router';
 import { renderHook, waitFor } from '@testing-library/react';
 import { searchQueryParam } from '@asap-hub/routing';
 import { ReactNode, useEffect, act } from 'react';
@@ -84,7 +88,7 @@ describe('usePushFromPathname', () => {
     });
 
     act(() => {
-      current('/new');
+      void current('/new');
     });
 
     await waitFor(() => {
@@ -107,7 +111,7 @@ describe('usePushFromPathname', () => {
     });
 
     act(() => {
-      current('/new');
+      void current('/new');
     });
 
     // Should not navigate, so location should still be /current
@@ -131,7 +135,7 @@ describe('usePushFromPathname', () => {
     });
 
     act(() => {
-      current(-1); // Go back
+      void current(-1); // Go back
     });
 
     await waitFor(() => {
@@ -155,7 +159,11 @@ describe('usePushFromPathname', () => {
     });
 
     act(() => {
-      current({ pathname: '/new', search: '?query=test', hash: '#section' });
+      void current({
+        pathname: '/new',
+        search: '?query=test',
+        hash: '#section',
+      });
     });
 
     await waitFor(() => {
@@ -180,7 +188,7 @@ describe('usePushFromPathname', () => {
     });
 
     act(() => {
-      current({ pathname: '/new' });
+      void current({ pathname: '/new' });
     });
 
     await waitFor(() => {
@@ -208,7 +216,7 @@ describe('usePushFromPathname', () => {
     });
 
     act(() => {
-      current('/new', { replace: true });
+      void current('/new', { replace: true });
     });
 
     await waitFor(() => {
@@ -236,7 +244,7 @@ describe('usePushFromPathname', () => {
     });
 
     act(() => {
-      current(-1);
+      void current(-1);
     });
 
     // Should not navigate because we're on /current, not /wrong
@@ -261,7 +269,7 @@ describe('usePushFromPathname', () => {
     });
 
     act(() => {
-      current({ pathname: '/new', search: '?query=test' });
+      void current({ pathname: '/new', search: '?query=test' });
     });
 
     // Should not navigate, so location should still be /current
@@ -287,7 +295,7 @@ describe('usePushFromHere', () => {
     });
 
     act(() => {
-      current('/new');
+      void current('/new');
     });
 
     await waitFor(() => {
@@ -313,7 +321,7 @@ describe('usePushFromHere', () => {
     const pushFromCurrent = result.current;
 
     act(() => {
-      navigateToPath?.('/elsewhere');
+      void navigateToPath?.('/elsewhere');
     });
 
     await waitFor(() => {
@@ -324,7 +332,7 @@ describe('usePushFromHere', () => {
     // it's a function "bound" to `/current`, so calling it when we're at `/elsewhere`
     // should not navigate.
     act(() => {
-      pushFromCurrent('/new');
+      void pushFromCurrent('/new');
     });
 
     // Location should still be /elsewhere because the function was "bound" to /current

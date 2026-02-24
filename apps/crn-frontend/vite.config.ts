@@ -49,7 +49,7 @@ export default defineConfig({
       ),
     },
     // Ensure peer dependencies are resolved from the app's node_modules
-    dedupe: ['react', 'react-dom', 'react-router-dom'],
+    dedupe: ['react', 'react-dom', 'react-router'],
   },
   build: {
     sourcemap: true,

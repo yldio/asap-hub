@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import React, { ComponentProps, useState } from 'react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import { ManuscriptDataObject } from '@asap-hub/model';
 
 import ProjectProfileWorkspace from '../ProjectProfileWorkspace';

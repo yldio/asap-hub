@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { ConfirmModal } from '@asap-hub/react-components';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 
 import { text } from './knobs';
 

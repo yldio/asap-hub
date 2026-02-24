@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { createListTeamResponse } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import {

@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 import ToolModal from '../ToolModal';
 

@@ -4,7 +4,7 @@ import { ToastContext } from '@asap-hub/react-context';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import nock from 'nock';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { API_BASE_URL } from '../../config';
 import Welcome from '../Welcome';

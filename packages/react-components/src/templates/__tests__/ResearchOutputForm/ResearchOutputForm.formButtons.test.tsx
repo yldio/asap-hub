@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { InnerToastContext } from '@asap-hub/react-context';
 
 import { createResearchOutputResponse } from '@asap-hub/fixtures';

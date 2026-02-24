@@ -15,7 +15,7 @@ import {
   Routes,
   useLocation,
   useNavigate,
-} from 'react-router-dom';
+} from 'react-router';
 import { RecoilRoot } from 'recoil';
 import CheckOnboarded, { navigationPromptHandler } from '../CheckOnboarded';
 import { Auth0Provider, WhenReady } from '../test-utils';

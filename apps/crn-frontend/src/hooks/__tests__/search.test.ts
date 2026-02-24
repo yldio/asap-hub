@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { searchQueryParam } from '@asap-hub/routing';
 import React, { ComponentProps } from 'react';
 
@@ -9,7 +9,13 @@ import { usePagination, usePaginationParams } from '../pagination';
 const createWrapper =
   (initialEntries: string[] = ['/']) =>
   ({ children }: ComponentProps<typeof MemoryRouter>) =>
-    React.createElement(MemoryRouter, { initialEntries }, children);
+    React.createElement(
+      MemoryRouter,
+      {
+        initialEntries,
+      },
+      children,
+    );
 
 describe('useSearch', () => {
   describe('property searchQuery', () => {
@@ -192,6 +198,7 @@ describe('useSearch', () => {
     });
   });
 
+  /* jscpd:ignore-start */
   describe('Tag Filters', () => {
     it('defaults to empty', () => {
       const { result } = renderHook(() => useSearch(), {
@@ -252,4 +259,5 @@ describe('useSearch', () => {
       expect(result.current.usePaginationParams.currentPage).toBe(0);
     });
   });
+  /* jscpd:ignore-end */
 });

@@ -1,7 +1,7 @@
 import { Frame } from '@asap-hub/frontend-utils';
 import { UtilityBar, WelcomePage } from '@asap-hub/react-components';
 import { useAuth0CRN } from '@asap-hub/react-context';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 
 const Signin: React.FC<Record<string, never>> = () => {
   const { loginWithRedirect } = useAuth0CRN();
@@ -41,7 +41,7 @@ const Signin: React.FC<Record<string, never>> = () => {
             newSearchParams.delete('state');
             newSearchParams.delete('error');
             newSearchParams.delete('error_description');
-            navigate({ search: newSearchParams.toString() } as never, {
+            void navigate({ search: newSearchParams.toString() } as never, {
               replace: true,
             });
           }}

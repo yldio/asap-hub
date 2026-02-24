@@ -1,7 +1,17 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { ListPublicationComplianceOpensearchResponse } from '@asap-hub/model';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import {
+  ListPublicationComplianceOpensearchResponse,
+  SortPublicationCompliance,
+} from '@asap-hub/model';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { Suspense } from 'react';
+import { MemoryRouter, useNavigate } from 'react-router';
 import {
   DefaultValue,
   RecoilRoot,
@@ -15,6 +25,7 @@ import {
   publicationComplianceState,
   useAnalyticsPublicationCompliance,
 } from '../state';
+import { getPublicationCompliance } from '../api';
 
 jest.mock('../api', () => ({
   getPublicationCompliance: jest.fn().mockResolvedValue({
@@ -35,20 +46,35 @@ jest.mock('../../../hooks', () => ({
   }),
 }));
 
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: jest.fn(),
+}));
+
 mockConsoleError();
 
+const mockNavigate = jest.fn();
+const mockUseNavigate = useNavigate as jest.MockedFunction<typeof useNavigate>;
+
 describe('PublicationCompliance', () => {
+  beforeEach(() => {
+    mockNavigate.mockClear();
+    mockUseNavigate.mockReturnValue(mockNavigate);
+  });
+
   it('renders publication compliance correctly', async () => {
     render(
-      <RecoilRoot>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <PublicationCompliance tags={[]} />
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </RecoilRoot>,
+      <MemoryRouter>
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <PublicationCompliance tags={[]} />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      </MemoryRouter>,
     );
 
     await waitFor(() => {
@@ -399,6 +425,267 @@ describe('PublicationCompliance', () => {
     act(() => {
       setState(fakeData);
     });
+    await waitFor(() => {
+      expect(capturedValue).toEqual(fakeData);
+    });
+  });
+
+  it('passes sort parameter to API when sorting changes', async () => {
+    const mockGetPublicationCompliance = getPublicationCompliance as jest.Mock;
+    mockGetPublicationCompliance.mockResolvedValue({
+      items: [],
+      total: 0,
+    });
+
+    render(
+      <MemoryRouter>
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <PublicationCompliance tags={[]} />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Publications')).toBeInTheDocument();
+    });
+
+    // Verify initial API call with default sort
+    expect(mockGetPublicationCompliance).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        sort: 'team_asc',
+      }),
+    );
+  });
+
+  it('reads valid sort from URL and passes it to API', async () => {
+    const mockGetPublicationCompliance = getPublicationCompliance as jest.Mock;
+    mockGetPublicationCompliance.mockResolvedValue({
+      items: [],
+      total: 0,
+    });
+
+    render(
+      <MemoryRouter
+        initialEntries={[
+          '/analytics/open-science/publication-compliance?sort=publications_desc',
+        ]}
+      >
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <PublicationCompliance tags={[]} />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Publications')).toBeInTheDocument();
+    });
+
+    expect(mockGetPublicationCompliance).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        sort: 'publications_desc',
+      }),
+    );
+  });
+
+  it('calls navigate with new sort and replace when column sort button is clicked', async () => {
+    const mockGetPublicationCompliance = getPublicationCompliance as jest.Mock;
+    mockGetPublicationCompliance.mockResolvedValue({
+      items: [],
+      total: 0,
+    });
+
+    render(
+      <MemoryRouter>
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <PublicationCompliance tags={[]} />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Publications')).toBeInTheDocument();
+    });
+
+    const publicationsHeader = screen.getByRole('columnheader', {
+      name: /Publications/,
+    });
+    const sortButton = publicationsHeader.querySelector('button');
+    fireEvent.click(sortButton!);
+
+    expect(mockNavigate).toHaveBeenCalledWith(
+      { search: 'sort=publications_desc' } as never,
+      { replace: true },
+    );
+  });
+
+  it.each<SortPublicationCompliance>([
+    'team_asc',
+    'team_desc',
+    'publications_asc',
+    'publications_desc',
+    'datasets_asc',
+    'datasets_desc',
+    'protocols_asc',
+    'protocols_desc',
+    'code_asc',
+    'code_desc',
+    'lab_materials_asc',
+    'lab_materials_desc',
+  ])('handles sort option %s in state', async (sort) => {
+    const stateOptions = {
+      currentPage: 0,
+      pageSize: 10,
+      sort,
+      tags: [] as string[],
+      timeRange: 'all' as const,
+    };
+
+    let capturedValue:
+      | ListPublicationComplianceOpensearchResponse
+      | Error
+      | undefined;
+    let setState: SetterOrUpdater<
+      ListPublicationComplianceOpensearchResponse | Error | undefined
+    > = () => {};
+
+    const TestComponent = () => {
+      const [value, setValue] = useRecoilState(
+        publicationComplianceState(stateOptions),
+      );
+      capturedValue = value;
+      setState = setValue;
+      return null;
+    };
+
+    render(
+      <RecoilRoot>
+        <TestComponent />
+      </RecoilRoot>,
+    );
+
+    const fakeData = {
+      total: 1,
+      items: [
+        {
+          objectID: 'team-123',
+          teamId: 'team-123',
+          teamName: 'Team 123',
+          isTeamInactive: false,
+          overallCompliance: 85,
+          ranking: 'ADEQUATE',
+          datasetsPercentage: 90,
+          datasetsRanking: 'OUTSTANDING',
+          protocolsPercentage: 80,
+          protocolsRanking: 'ADEQUATE',
+          codePercentage: 75,
+          codeRanking: 'NEEDS IMPROVEMENT',
+          labMaterialsPercentage: 95,
+          labMaterialsRanking: 'OUTSTANDING',
+          numberOfPublications: 10,
+          numberOfOutputs: 50,
+          numberOfDatasets: 20,
+          numberOfProtocols: 15,
+          numberOfCode: 10,
+          numberOfLabMaterials: 5,
+          timeRange: 'all' as const,
+        },
+      ],
+    };
+
+    act(() => {
+      setState(fakeData);
+    });
+
+    await waitFor(() => {
+      expect(capturedValue).toEqual(fakeData);
+    });
+  });
+
+  it('handles sorting with tags filter', async () => {
+    const stateOptions = {
+      currentPage: 0,
+      pageSize: 10,
+      sort: 'publications_desc' as const,
+      tags: ['tag1', 'tag2'] as string[],
+      timeRange: 'all' as const,
+    };
+
+    let capturedValue:
+      | ListPublicationComplianceOpensearchResponse
+      | Error
+      | undefined;
+    let setState: SetterOrUpdater<
+      ListPublicationComplianceOpensearchResponse | Error | undefined
+    > = () => {};
+
+    const TestComponent = () => {
+      const [value, setValue] = useRecoilState(
+        publicationComplianceState(stateOptions),
+      );
+      capturedValue = value;
+      setState = setValue;
+      return null;
+    };
+
+    render(
+      <RecoilRoot>
+        <TestComponent />
+      </RecoilRoot>,
+    );
+
+    const fakeData = {
+      total: 1,
+      items: [
+        {
+          objectID: 'team-123',
+          teamId: 'team-123',
+          teamName: 'Team 123',
+          isTeamInactive: false,
+          overallCompliance: 85,
+          ranking: 'ADEQUATE',
+          datasetsPercentage: 90,
+          datasetsRanking: 'OUTSTANDING',
+          protocolsPercentage: 80,
+          protocolsRanking: 'ADEQUATE',
+          codePercentage: 75,
+          codeRanking: 'NEEDS IMPROVEMENT',
+          labMaterialsPercentage: 95,
+          labMaterialsRanking: 'OUTSTANDING',
+          numberOfPublications: 10,
+          numberOfOutputs: 50,
+          numberOfDatasets: 20,
+          numberOfProtocols: 15,
+          numberOfCode: 10,
+          numberOfLabMaterials: 5,
+          timeRange: 'all' as const,
+        },
+      ],
+    };
+
+    act(() => {
+      setState(fakeData);
+    });
+
     await waitFor(() => {
       expect(capturedValue).toEqual(fakeData);
     });

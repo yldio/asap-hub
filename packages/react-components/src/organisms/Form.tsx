@@ -2,7 +2,7 @@ import { ValidationErrorResponse } from '@asap-hub/model';
 import { InnerToastContext, ToastContext } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { useNavigationWarning } from '../navigation';
 
@@ -54,7 +54,7 @@ const Form = <T extends void | Record<string, unknown>>({
 
   useEffect(() => {
     if (status === 'hasSaved' && redirectOnSaveRef.current) {
-      navigate(redirectOnSaveRef.current);
+      void navigate(redirectOnSaveRef.current);
     }
   }, [status, navigate]);
 
@@ -106,9 +106,9 @@ const Form = <T extends void | Record<string, unknown>>({
   const onCancel = () => {
     setStatus('initial');
     if (window.history.length > 1) {
-      blockedNavigate(-1);
+      void blockedNavigate(-1);
     } else {
-      blockedNavigate('/');
+      void blockedNavigate('/');
     }
   };
 

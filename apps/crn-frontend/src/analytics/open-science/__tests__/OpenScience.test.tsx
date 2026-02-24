@@ -8,7 +8,7 @@ import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { PreprintComplianceOpensearchResponse } from '@asap-hub/model';
 

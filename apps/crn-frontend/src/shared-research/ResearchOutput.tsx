@@ -1,5 +1,6 @@
 import { Frame, useBackHref } from '@asap-hub/frontend-utils';
 import {
+  Loading,
   NotFoundPage,
   ScrollToTop,
   SharedResearchOutput,
@@ -11,10 +12,10 @@ import {
 } from '@asap-hub/react-context';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 import { isResearchOutputWorkingGroup } from '@asap-hub/validation';
-import { Route, Routes, useLocation, useMatch } from 'react-router-dom';
+import { Route, Routes, useLocation, useMatch } from 'react-router';
 
 import { ManuscriptVersionResponse } from '@asap-hub/model';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useLatestManuscriptVersionByManuscriptId } from '../network/teams/state';
 import TeamOutput from '../network/teams/TeamOutput';
 import WorkingGroupOutput from '../network/working-groups/WorkingGroupOutput';
@@ -33,7 +34,8 @@ const ResearchOutput: React.FC = () => {
   );
 
   const publishedNow = !!publishedNowMatch;
-  const urlSearchParams = new URLSearchParams(useLocation().search);
+  const location = useLocation();
+  const urlSearchParams = new URLSearchParams(location.search);
   const researchOutputData = useResearchOutputById(researchOutputId);
 
   const backHref = useBackHref() ?? sharedResearch({}).$;
@@ -131,68 +133,70 @@ const ResearchOutput: React.FC = () => {
 
     return (
       <ResearchOutputPermissionsContext.Provider value={permissions}>
-        <Routes>
-          <Route index element={renderResearchOutputView()} />
-          <Route
-            path={
-              sharedResearch({}).researchOutput({ researchOutputId })
-                .researchOutputPublished.template
-            }
-            element={renderResearchOutputView()}
-          />
-          {permissions.canVersionResearchOutput && (
+        <Suspense key={location.pathname} fallback={<Loading />}>
+          <Routes>
+            <Route index element={renderResearchOutputView()} />
             <Route
               path={
                 sharedResearch({}).researchOutput({ researchOutputId })
-                  .versionResearchOutput.template
+                  .researchOutputPublished.template
               }
-              element={
-                isLinkedToWorkingGroup ? (
-                  <WorkingGroupOutput
-                    workingGroupId={researchOutputData.workingGroups[0]?.id}
-                    researchOutputData={researchOutputData}
-                    versionAction={'create'}
-                  />
-                ) : (
-                  researchOutputData.teams[0]?.id && (
-                    <TeamOutput
-                      teamId={researchOutputData.teams[0]?.id}
+              element={renderResearchOutputView()}
+            />
+            {permissions.canVersionResearchOutput && (
+              <Route
+                path={
+                  sharedResearch({}).researchOutput({ researchOutputId })
+                    .versionResearchOutput.template
+                }
+                element={
+                  isLinkedToWorkingGroup ? (
+                    <WorkingGroupOutput
+                      workingGroupId={researchOutputData.workingGroups[0]?.id}
                       researchOutputData={researchOutputData}
-                      latestManuscriptVersion={latestManuscriptVersion}
                       versionAction={'create'}
                     />
+                  ) : (
+                    researchOutputData.teams[0]?.id && (
+                      <TeamOutput
+                        teamId={researchOutputData.teams[0]?.id}
+                        researchOutputData={researchOutputData}
+                        latestManuscriptVersion={latestManuscriptVersion}
+                        versionAction={'create'}
+                      />
+                    )
                   )
-                )
-              }
-            />
-          )}
-          {permissions.canEditResearchOutput && (
-            <Route
-              path={
-                sharedResearch({}).researchOutput({ researchOutputId })
-                  .editResearchOutput.template
-              }
-              element={
-                isLinkedToWorkingGroup ? (
-                  <WorkingGroupOutput
-                    workingGroupId={researchOutputData.workingGroups[0]?.id}
-                    researchOutputData={researchOutputData}
-                    versionAction={'edit'}
-                  />
-                ) : (
-                  researchOutputData.teams[0]?.id && (
-                    <TeamOutput
-                      teamId={researchOutputData.teams[0].id}
+                }
+              />
+            )}
+            {permissions.canEditResearchOutput && (
+              <Route
+                path={
+                  sharedResearch({}).researchOutput({ researchOutputId })
+                    .editResearchOutput.template
+                }
+                element={
+                  isLinkedToWorkingGroup ? (
+                    <WorkingGroupOutput
+                      workingGroupId={researchOutputData.workingGroups[0]?.id}
                       researchOutputData={researchOutputData}
                       versionAction={'edit'}
                     />
+                  ) : (
+                    researchOutputData.teams[0]?.id && (
+                      <TeamOutput
+                        teamId={researchOutputData.teams[0].id}
+                        researchOutputData={researchOutputData}
+                        versionAction={'edit'}
+                      />
+                    )
                   )
-                )
-              }
-            />
-          )}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+                }
+              />
+            )}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </ResearchOutputPermissionsContext.Provider>
     );
   }

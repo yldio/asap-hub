@@ -9,6 +9,7 @@ import {
   MeetingRepAttendanceTable,
 } from '@asap-hub/react-components';
 import { FC, Suspense, useState } from 'react';
+import { useLocation } from 'react-router';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsMeetingRepAttendance } from './state';
 
@@ -54,10 +55,13 @@ const MeetingRepAttendanceContent: FC<MeetingRepAttendanceProps> = ({
 const MeetingRepAttendance: FC<MeetingRepAttendanceProps> = ({
   tags,
   timeRange,
-}) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <MeetingRepAttendanceContent tags={tags} timeRange={timeRange} />
-  </Suspense>
-);
+}) => {
+  const { search } = useLocation();
+  return (
+    <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <MeetingRepAttendanceContent tags={tags} timeRange={timeRange} />
+    </Suspense>
+  );
+};
 
 export default MeetingRepAttendance;

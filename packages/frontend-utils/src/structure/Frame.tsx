@@ -1,4 +1,5 @@
 import React, { Suspense, ComponentProps, ReactNode } from 'react';
+import { useLocation } from 'react-router';
 import { Titled } from 'react-titled';
 import {
   Loading,
@@ -46,17 +47,23 @@ const DefaultFrame: React.FC<FrameBoundaryProps> = ({
 
 export const SearchFrame: React.FC<
   Omit<FrameBoundaryProps, 'boundaryProps'>
-> = ({ children, title, fallback = <Loading /> }) => (
-  <ErrorBoundary
-    title={'Something went wrong'}
-    description={'There was a problem with your search, please try again.'}
-    error={new Error()}
-  >
-    <Frame title={title} fallback={<LoadingContentBody />}>
-      {children}
-    </Frame>
-  </ErrorBoundary>
-);
+> = ({ children, title, fallback = <Loading /> }) => {
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  params.delete('searchQuery');
+  const frameKey = params.toString();
+  return (
+    <ErrorBoundary
+      title={'Something went wrong'}
+      description={'There was a problem with your search, please try again.'}
+      error={new Error()}
+    >
+      <Frame key={frameKey} title={title} fallback={<LoadingContentBody />}>
+        {children}
+      </Frame>
+    </ErrorBoundary>
+  );
+};
 
 export const SkeletonHeaderFrame: React.FC<
   Omit<FrameBoundaryProps, 'fallback'>

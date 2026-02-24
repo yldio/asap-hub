@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import { createIdentifierField } from '../../../utils/research-output-form';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { defaultProps } from '../../test-utils/research-output-form';

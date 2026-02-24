@@ -1,6 +1,6 @@
 import { gp2 } from '@asap-hub/model';
 import { ComponentProps } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import EditUserModal from './EditUserModal';
 
 type PublishModalProps = Pick<
@@ -20,7 +20,7 @@ const PublishModal: React.FC<PublishModalProps> = ({ onSave, backHref }) => {
         await onSave({
           onboarded: true,
         });
-        navigate('/');
+        void navigate('/');
       }}
       backHref={backHref}
       dirty={false}

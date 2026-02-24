@@ -4,8 +4,8 @@ import { NewsFrequency } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, waitFor, renderHook } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { ReactNode, Suspense } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -13,6 +13,10 @@ import { usePagination, usePaginationParams } from '../../hooks';
 import { getNews } from '../api';
 import NewsPage from '../Routes';
 import { newsIndexState } from '../state';
+
+const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
+  <MemoryRouter>{children}</MemoryRouter>
+);
 
 jest.mock('../api');
 
@@ -94,10 +98,7 @@ it('renders a paginated list of news', async () => {
       usePagination: usePagination(numberOfItems, pageSize),
     }),
     {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: [`/news`],
-      },
+      wrapper: MemoryRouterWithFuture,
     },
   );
 

@@ -1,6 +1,6 @@
 import { render, waitFor, within } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
 import { createMessage } from '@asap-hub/fixtures';
 import {

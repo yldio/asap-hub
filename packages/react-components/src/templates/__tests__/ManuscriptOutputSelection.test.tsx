@@ -1,11 +1,12 @@
 import { ManuscriptLifecycle, ManuscriptType } from '@asap-hub/model';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import ManuscriptOutputSelection from '../ManuscriptOutputSelection';
 
-// Mock react-router-dom
-jest.mock('react-router-dom', () => ({
+// Mock react-router
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: jest.fn(),
 }));
 

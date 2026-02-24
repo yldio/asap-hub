@@ -1,7 +1,11 @@
 import { WorkingGroupsPage } from '@asap-hub/gp2-components';
-import { lazy, useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Loading } from '@asap-hub/react-components';
+import { gp2 as gp2Routing } from '@asap-hub/routing';
+import { Suspense, lazy, useEffect, useState } from 'react';
+import { Navigate, Route, Routes, useLocation } from 'react-router';
 import Frame from '../Frame';
+
+const { workingGroups } = gp2Routing;
 
 const loadWorkingGroupList = () =>
   import(/* webpackChunkName: "working-groups-list" */ './WorkingGroupList');
@@ -20,54 +24,62 @@ const RoutesComponent: React.FC<Record<string, never>> = () => {
   }, []);
 
   const [currentTime] = useState(new Date());
+  const { pathname } = useLocation();
   return (
-    <Routes>
-      <Route
-        path="operational"
-        element={
-          <WorkingGroupsPage>
-            <Frame title="Working Groups">
-              <WorkingGroupList role={'operational'} />
-            </Frame>
-          </WorkingGroupsPage>
-        }
-      />
-      <Route
-        path="support"
-        element={
-          <WorkingGroupsPage>
-            <Frame title="Working Groups">
-              <WorkingGroupList role={'support'} />
-            </Frame>
-          </WorkingGroupsPage>
-        }
-      />
-      <Route
-        path="complex-disease"
-        element={
-          <WorkingGroupsPage>
-            <Frame title="Working Groups">
-              <WorkingGroupList role={'complexDisease'} />
-            </Frame>
-          </WorkingGroupsPage>
-        }
-      />
-      <Route
-        path="monogenic"
-        element={
-          <WorkingGroupsPage>
-            <Frame title="Working Groups">
-              <WorkingGroupList role={'monogenic'} />
-            </Frame>
-          </WorkingGroupsPage>
-        }
-      />
-      <Route
-        path=":workingGroupId/*"
-        element={<WorkingGroupDetail currentTime={currentTime} />}
-      />
-      <Route index element={<Navigate to="operational" replace />} />
-    </Routes>
+    <Suspense key={pathname} fallback={<Loading />}>
+      <Routes>
+        <Route
+          path="operational"
+          element={
+            <WorkingGroupsPage>
+              <Frame title="Working Groups">
+                <WorkingGroupList role={'operational'} />
+              </Frame>
+            </WorkingGroupsPage>
+          }
+        />
+        <Route
+          path="support"
+          element={
+            <WorkingGroupsPage>
+              <Frame title="Working Groups">
+                <WorkingGroupList role={'support'} />
+              </Frame>
+            </WorkingGroupsPage>
+          }
+        />
+        <Route
+          path="complex-disease"
+          element={
+            <WorkingGroupsPage>
+              <Frame title="Working Groups">
+                <WorkingGroupList role={'complexDisease'} />
+              </Frame>
+            </WorkingGroupsPage>
+          }
+        />
+        <Route
+          path="monogenic"
+          element={
+            <WorkingGroupsPage>
+              <Frame title="Working Groups">
+                <WorkingGroupList role={'monogenic'} />
+              </Frame>
+            </WorkingGroupsPage>
+          }
+        />
+        <Route
+          path=":workingGroupId/*"
+          element={<WorkingGroupDetail currentTime={currentTime} />}
+        />
+        <Route
+          index
+          element={
+            <Navigate to={workingGroups({}).operational({}).$} replace />
+          }
+        />
+      </Routes>
+    </Suspense>
   );
 };
 

@@ -11,7 +11,7 @@ import {
 import { cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, useEffect } from 'react';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import ManuscriptCard from '../ManuscriptCard';
 
 let currentLocation: { pathname: string; search: string } | null = null;

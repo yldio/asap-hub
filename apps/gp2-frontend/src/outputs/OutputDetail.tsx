@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/react-context';
 import { gp2 as gp2Routing, useRouteParams } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import Frame from '../Frame';
 import { useOutputById } from './state';
 

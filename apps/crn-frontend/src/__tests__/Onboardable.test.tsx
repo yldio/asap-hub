@@ -1,5 +1,5 @@
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { render, waitFor, screen } from '@testing-library/react';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';

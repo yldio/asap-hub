@@ -12,7 +12,7 @@ import {
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import imageCompression from 'browser-image-compression';
 import { ComponentProps, FC, lazy, useContext, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router';
 
 import { useEvents } from '../../events/state';
 import {
@@ -63,6 +63,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
     userId,
   });
 
+  const { pathname } = useLocation();
   const toast = useContext(ToastContext);
 
   const isOwnProfile = currentUser?.id === user?.id;
@@ -134,7 +135,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
           <UserProfilePage {...profilePageProps}>
             {
               <>
-                <Routes>
+                <Routes key={pathname}>
                   <Route
                     path="research/*"
                     element={
@@ -221,7 +222,12 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
                       </Frame>
                     }
                   />
-                  <Route index element={<Navigate to="research" replace />} />
+                  <Route
+                    index
+                    element={
+                      <Navigate to={route({ userId }).research({}).$} replace />
+                    }
+                  />
                 </Routes>
               </>
             }

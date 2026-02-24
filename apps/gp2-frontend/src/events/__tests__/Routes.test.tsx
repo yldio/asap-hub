@@ -3,7 +3,7 @@ import { gp2 } from '@asap-hub/fixtures';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { createEventListAlgoliaResponse } from '../../__fixtures__/algolia';
@@ -64,15 +64,21 @@ describe('Routes', () => {
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(1));
     mockGetCalendars.mockResolvedValue(gp2.createListCalendarResponse());
     await renderRoutes();
-    expect(screen.getByRole('heading', { name: 'Events' })).toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.getByRole('heading', { name: 'Events' }),
+      ).toBeInTheDocument(),
+    );
   });
 
   it('renders the Calendar page as default when Upcoming Events is disabled', async () => {
     mockGetCalendars.mockResolvedValue(gp2.createListCalendarResponse());
     await renderRoutes();
-    expect(
-      screen.getByRole('link', { name: /subscribe to calendar/i }),
-    ).toBeVisible();
+    await waitFor(() =>
+      expect(
+        screen.getByRole('link', { name: /subscribe to calendar/i }),
+      ).toBeVisible(),
+    );
   });
 
   it('renders error message when the request is not a 2XX', async () => {
@@ -80,7 +86,7 @@ describe('Routes', () => {
     mockGetCalendars.mockResolvedValue(gp2.createListCalendarResponse());
 
     await renderRoutes();
-    expect(mockGetEvents).toHaveBeenCalled();
+    await waitFor(() => expect(mockGetEvents).toHaveBeenCalled());
     expect(await screen.findByText(/Something went wrong/i)).toBeVisible();
   });
 
@@ -88,14 +94,18 @@ describe('Routes', () => {
     mockGetEvents.mockResolvedValue(createEventListAlgoliaResponse(0));
     await renderRoutes();
 
-    const upcomingEventsLink = screen.getByRole('link', { name: /upcoming/i });
-    const pastEventsLink = screen.getByRole('link', { name: /past/i });
+    const upcomingEventsLink = await screen.findByRole('link', {
+      name: /upcoming/i,
+    });
+    const pastEventsLink = await screen.findByRole('link', { name: /past/i });
 
     expect(upcomingEventsLink).toBeVisible();
     expect(pastEventsLink).toBeVisible();
 
     await userEvent.click(upcomingEventsLink);
-    expect(screen.getByText('No upcoming events available.')).toBeVisible();
+    await waitFor(() =>
+      expect(screen.getByText('No upcoming events available.')).toBeVisible(),
+    );
 
     await userEvent.click(pastEventsLink);
     expect(await screen.findByText('No past events available.')).toBeVisible();

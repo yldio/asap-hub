@@ -5,7 +5,7 @@ import {
 import { DiscoverPage, TutorialsPage } from '@asap-hub/react-components';
 import { discover } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router';
 import { useSearch } from '../hooks';
 
 const loadGuides = () =>

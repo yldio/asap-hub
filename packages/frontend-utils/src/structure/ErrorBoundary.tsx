@@ -1,6 +1,6 @@
 import { ReactNode, ComponentProps } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { ErrorCard } from '@asap-hub/react-components';
 import { ErrorBoundary as SentryErrorBoundary } from '@sentry/react';
 

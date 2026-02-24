@@ -12,8 +12,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReactNode, useEffect } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, useLocation, StaticRouter } from 'react-router';
 import { createIdentifierField } from '../../utils';
 import OutputForm, { getPublishDateValidationMessage } from '../OutputForm';
 
@@ -284,7 +283,10 @@ describe('OutputForm', () => {
           type: 'success',
         }),
       );
-      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      // Wait for navigation to complete with deferred transitions
+      await waitFor(() => {
+        expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      });
     },
   );
 
@@ -569,7 +571,10 @@ describe('OutputForm', () => {
           type: 'success',
         }),
       );
-      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      // Wait for navigation to complete with deferred transitions
+      await waitFor(() => {
+        expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      });
     });
   });
 
@@ -659,7 +664,10 @@ describe('OutputForm', () => {
           }),
         );
       });
-      expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      // Wait for navigation to complete with deferred transitions
+      await waitFor(() => {
+        expect(currentLocation?.pathname).toEqual(`/outputs/ro0`);
+      });
     });
   });
 

@@ -4,7 +4,7 @@ import {
   UserPatchRequest,
   UserResponse,
 } from '@asap-hub/model';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { FormSection, LabeledMultiSelect, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
@@ -63,7 +63,7 @@ const ExpertiseAndResourcesModal: React.FC<ExpertiseAndResourcesModalProps> = ({
             newExpertiseAndResourceDescription || undefined,
           tagIds: newTags.map(({ id }) => id),
         });
-        navigate(backHref);
+        void navigate(backHref);
       }}
     >
       {({ isSaving }) => (

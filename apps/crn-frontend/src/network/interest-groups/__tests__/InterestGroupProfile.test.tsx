@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -87,7 +87,9 @@ it('deep links to the teams section', async () => {
   expect(anchor).toBeVisible();
   const { hash } = new URL(anchor!.href, globalThis.location.href);
 
-  expect(container.querySelector(hash)).toHaveTextContent(/teams/i);
+  await waitFor(() =>
+    expect(container.querySelector(hash)).toHaveTextContent(/teams/i),
+  );
 });
 
 it('does not count inactive teams in the count', async () => {

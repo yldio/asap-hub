@@ -11,6 +11,7 @@ import {
   RepresentationOfPresentersTable,
 } from '@asap-hub/react-components';
 import { Dispatch, FC, SetStateAction, Suspense, useState } from 'react';
+import { useLocation } from 'react-router';
 
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsEngagement, useEngagementPerformance } from './state';
@@ -83,15 +84,18 @@ const RepresentationOfPresenters: FC<RepresentationOfPresentersProps> = ({
   sort,
   tags,
   timeRange,
-}) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <RepresentationOfPresentersContent
-      setSort={setSort}
-      sort={sort}
-      tags={tags}
-      timeRange={timeRange}
-    />
-  </Suspense>
-);
+}) => {
+  const { search } = useLocation();
+  return (
+    <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <RepresentationOfPresentersContent
+        setSort={setSort}
+        sort={sort}
+        tags={tags}
+        timeRange={timeRange}
+      />
+    </Suspense>
+  );
+};
 
 export default RepresentationOfPresenters;

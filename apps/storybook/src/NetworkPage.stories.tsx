@@ -1,4 +1,4 @@
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import { NetworkPage, Paragraph } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 

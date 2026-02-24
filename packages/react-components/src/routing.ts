@@ -1,5 +1,5 @@
 import { searchQueryParam } from '@asap-hub/routing';
-import { useNavigate, useLocation, NavigateFunction } from 'react-router-dom';
+import { useNavigate, useLocation, NavigateFunction } from 'react-router';
 import { useRef, useEffect } from 'react';
 
 export const useScrollToHash = (): void => {
@@ -62,12 +62,12 @@ export const usePushFromPathname = (pathname: string): NavigateFunction => {
       // Check current location at call time via ref
       if (locationRef.current.pathname === pathname) {
         if (typeof to === 'number') {
-          navigate(to);
+          void navigate(to);
         } else if (typeof to === 'string') {
-          navigate(to, options);
+          void navigate(to, options);
         } else {
           const path = `${to.pathname || ''}${to.search || ''}${to.hash || ''}`;
-          navigate(path, options);
+          void navigate(path, options);
         }
       }
     },

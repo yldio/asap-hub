@@ -7,7 +7,7 @@ import {
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUserGP2 } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { useContributingCohorts } from '../shared/state';
 
 import { usePatchUserById, useUserById } from '../users/state';

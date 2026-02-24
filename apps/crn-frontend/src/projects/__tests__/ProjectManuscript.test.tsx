@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router';
 import { render, screen, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';

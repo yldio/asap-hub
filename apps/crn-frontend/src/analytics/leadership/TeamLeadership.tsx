@@ -8,6 +8,7 @@ import {
   LoadingContentBodyTable,
 } from '@asap-hub/react-components';
 import { Dispatch, FC, SetStateAction, Suspense, useState } from 'react';
+import { useLocation } from 'react-router';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { useAnalyticsLeadership } from './state';
 
@@ -97,10 +98,13 @@ const TeamLeadershipContent: FC<TeamLeadershipProps> = ({
   );
 };
 
-const TeamLeadership: FC<TeamLeadershipProps> = (props) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <TeamLeadershipContent {...props} />
-  </Suspense>
-);
+const TeamLeadership: FC<TeamLeadershipProps> = (props) => {
+  const { search } = useLocation();
+  return (
+    <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <TeamLeadershipContent {...props} />
+    </Suspense>
+  );
+};
 
 export default TeamLeadership;

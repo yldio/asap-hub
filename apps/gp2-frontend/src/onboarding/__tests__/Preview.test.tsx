@@ -16,7 +16,7 @@ import imageCompression from 'browser-image-compression';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';

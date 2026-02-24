@@ -1,7 +1,7 @@
 import { NotFoundPage } from '@asap-hub/react-components';
 import { gp2 } from '@asap-hub/routing';
 import { lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import Frame from '../Frame';
 import Onboarding from './Onboarding';
 

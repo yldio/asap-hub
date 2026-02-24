@@ -1,6 +1,6 @@
 import { UserDegree, UserPatchRequest } from '@asap-hub/model';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import {
   FormSection,
   LabeledDropdown,
@@ -92,7 +92,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             }).map(([key, value]) => [key, value.trim()]),
           ),
         );
-        navigate(backHref);
+        void navigate(backHref);
       }}
     >
       {({ isSaving }) => (

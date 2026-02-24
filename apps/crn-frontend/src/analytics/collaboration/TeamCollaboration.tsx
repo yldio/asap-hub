@@ -9,6 +9,7 @@ import {
   TeamCollaborationTable,
 } from '@asap-hub/react-components';
 import { FC, Suspense } from 'react';
+import { useLocation } from 'react-router';
 import { useAnalytics, usePagination, usePaginationParams } from '../../hooks';
 import {
   useAnalyticsTeamCollaboration,
@@ -80,10 +81,13 @@ const TeamCollaborationContent: FC<
 
 const TeamCollaboration: FC<
   CollaborationProps<SortTeamCollaboration, TeamCollaborationSortingDirection>
-> = (props) => (
-  <Suspense fallback={<LoadingContentBodyTable />}>
-    <TeamCollaborationContent {...props} />
-  </Suspense>
-);
+> = (props) => {
+  const { search } = useLocation();
+  return (
+    <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <TeamCollaborationContent {...props} />
+    </Suspense>
+  );
+};
 
 export default TeamCollaboration;

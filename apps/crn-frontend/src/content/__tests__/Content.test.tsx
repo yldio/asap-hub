@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, waitFor, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { createPageResponse } from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 

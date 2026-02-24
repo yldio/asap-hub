@@ -26,7 +26,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { editorRef } from '@asap-hub/react-components';
 import { Suspense, useEffect } from 'react';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
 import {

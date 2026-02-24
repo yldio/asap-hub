@@ -3,7 +3,7 @@ import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import {
   Button,
@@ -181,7 +181,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   };
 
   const handleGoToManuscriptForm = () => {
-    navigate(manuscriptRoute);
+    void navigate(manuscriptRoute);
   };
 
   const contactPM = getActiveProjectManager(members);

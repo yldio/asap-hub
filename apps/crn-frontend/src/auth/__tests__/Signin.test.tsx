@@ -3,8 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { generateKeyPairSync } from 'crypto';
 import { sign } from 'jsonwebtoken';
 import { useEffect } from 'react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, useLocation, StaticRouter } from 'react-router';
 
 import nock from 'nock';
 

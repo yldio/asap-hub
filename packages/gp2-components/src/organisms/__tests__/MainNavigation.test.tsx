@@ -1,5 +1,5 @@
 import { screen, render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import MainNavigation from '../MainNavigation';
 
 describe('MainNavigation', () => {

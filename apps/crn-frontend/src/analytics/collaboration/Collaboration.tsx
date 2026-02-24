@@ -22,7 +22,7 @@ import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 
 import {
   useAnalytics,
@@ -101,7 +101,7 @@ const Collaboration = () => {
     } else {
       newType = type || 'within-team';
     }
-    navigate(
+    void navigate(
       analytics({}).collaboration({}).collaborationPath({
         metric: newMetric,
         type: newType,
@@ -116,7 +116,7 @@ const Collaboration = () => {
       setTeamSort('team_asc');
       setTeamSortingDirection(teamCollaborationInitialSortingDirection);
     }
-    navigate(
+    void navigate(
       analytics({})
         .collaboration({})
         .collaborationPath({ metric, type: newType }).$,

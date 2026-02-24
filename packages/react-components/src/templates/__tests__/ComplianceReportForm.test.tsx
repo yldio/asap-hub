@@ -6,8 +6,7 @@ import {
   waitFor,
 } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { createMemoryRouter, RouterProvider, StaticRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
 import ComplianceReportForm from '../ComplianceReportForm';
 
@@ -270,7 +269,10 @@ it('should go back when cancel button is clicked', async () => {
         element: <div>Another page</div>,
       },
     ],
-    { initialEntries: ['/another-url', '/form'], initialIndex: 1 },
+    {
+      initialEntries: ['/another-url', '/form'],
+      initialIndex: 1,
+    },
   );
 
   const { getByRole } = render(<RouterProvider router={router} />);

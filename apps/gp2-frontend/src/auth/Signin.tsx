@@ -7,7 +7,7 @@ import {
   mail,
 } from '@asap-hub/react-components';
 import { useAuth0GP2 } from '@asap-hub/react-context';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 import Frame from '../Frame';
 
 const { INVITE_SUPPORT_EMAIL } = mail;
@@ -69,7 +69,7 @@ const Signin: React.FC<Record<string, never>> = () => {
             newSearchParams.delete('state');
             newSearchParams.delete('error');
             newSearchParams.delete('error_description');
-            navigate({ search: newSearchParams.toString() } as never, {
+            void navigate({ search: newSearchParams.toString() } as never, {
               replace: true,
             });
           }}

@@ -1,17 +1,21 @@
 import { User } from '@asap-hub/auth';
 import { network } from '@asap-hub/routing';
 import { renderHook, waitFor } from '@testing-library/react';
-import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import React, { ReactNode } from 'react';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider } from '../../auth/test-utils';
 import { refreshUserState } from '../../network/users/state';
 import { useCurrentUserProfileTabRoute } from '../current-user-profile-tab-route';
 
+const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
+  <MemoryRouter>{children}</MemoryRouter>
+);
+
 it('returns undefined when not logged in', () => {
   const { result } = renderHook(() => useCurrentUserProfileTabRoute(), {
-    wrapper: MemoryRouter,
+    wrapper: MemoryRouterWithFuture,
   });
   expect(result.current).toBe(undefined);
 });

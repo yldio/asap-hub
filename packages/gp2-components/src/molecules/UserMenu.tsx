@@ -11,7 +11,7 @@ import {
   pixels,
 } from '@asap-hub/react-components';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 import { projectIcon, userIcon, workingGroupIcon } from '../icons';
 import { nonMobileQuery } from '../layout';
 

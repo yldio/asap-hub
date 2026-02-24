@@ -2,7 +2,7 @@ import { ManuscriptVersionResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, ReactElement, ReactNode } from 'react';
 import Lottie from 'react-lottie';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { components } from 'react-select';
 import {
   Button,
@@ -161,7 +161,7 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
   const navigate = useNavigate();
 
   const handleCancel = () => {
-    navigate(-1);
+    void navigate(-1);
   };
 
   const renderManuscriptImport = () => {
@@ -222,15 +222,6 @@ const ManuscriptOutputSelection: React.FC<ManuscriptOutputSelectionProps> = ({
                   )}
                 </div>
               </components.Option>
-            ),
-            Input: (props) => (
-              <components.Input
-                {...props}
-                innerRef={props.innerRef}
-                style={{
-                  ...props.style,
-                }}
-              />
             ),
           }}
           onChange={(version: ManuscriptVersionOption) => {

@@ -1,8 +1,11 @@
-import { SkeletonBodyFrame as Frame } from '@asap-hub/frontend-utils';
+import {
+  SearchFrame,
+  SkeletonBodyFrame as Frame,
+} from '@asap-hub/frontend-utils';
 import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 import { FC, lazy, useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import { useSearch } from '../hooks';
 
@@ -37,9 +40,9 @@ const News: FC<Record<string, never>> = () => {
             filters={filters}
             onChangeFilter={toggleFilter}
           >
-            <Frame title={null}>
+            <SearchFrame title={null}>
               <NewsList filters={filters} searchQuery={debouncedSearchQuery} />
-            </Frame>
+            </SearchFrame>
           </NewsPage>
         }
       />

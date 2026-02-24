@@ -2,7 +2,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { Card, Headline2, Link, Markdown } from '../atoms';
 import { createMailTo, mailToSupport, TECH_SUPPORT_EMAIL } from '../mail';
@@ -137,7 +137,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const checkForNewerManuscriptVersion = async () => {
     const hasNewerVersion = await checkForNewVersion();
     if (hasNewerVersion) {
-      navigate(
+      void navigate(
         sharedResearch({})
           .researchOutput({ researchOutputId: id })
           .versionResearchOutput({}).$,
@@ -228,7 +228,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             confirmText="Go to Compliance Area"
             onSave={() => {
               setDisplayNoNewManuscriptVersionModal(false);
-              navigate(
+              void navigate(
                 network({})
                   .teams({})
                   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

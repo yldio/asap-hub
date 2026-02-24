@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { useAnalytics } from '../analytics';
 
 const renderUseAnalytics = (
@@ -11,7 +11,9 @@ const renderUseAnalytics = (
     wrapper: ({ children }) =>
       React.createElement(
         MemoryRouter,
-        { initialEntries: [`/${search}`] },
+        {
+          initialEntries: [`/${search}`],
+        },
         children,
       ),
   });

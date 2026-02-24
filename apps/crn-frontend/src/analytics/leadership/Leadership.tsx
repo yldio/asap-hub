@@ -12,7 +12,7 @@ import {
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { useFlags } from '@asap-hub/react-context';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
@@ -45,7 +45,7 @@ const Leadership: FC<Record<string, never>> = () => {
   const [teamSort, setTeamSort] =
     useState<SortLeadershipAndMembership>('team_asc');
   const setMetric = (newMetric: MetricOption) => {
-    navigate(analytics({}).leadership({}).metric({ metric: newMetric }).$);
+    void navigate(analytics({}).leadership({}).metric({ metric: newMetric }).$);
   };
 
   const { tags, setTags } = useSearch();

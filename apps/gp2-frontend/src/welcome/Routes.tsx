@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { welcome } from '@asap-hub/routing';
 

@@ -1,7 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { createMemoryRouter, RouterProvider, StaticRouter } from 'react-router';
 import PublishModal from '../PublishModal';
 
 describe('PublishModal', () => {
@@ -28,7 +27,9 @@ describe('PublishModal', () => {
           element: <PublishModal {...defaultProps} onSave={onSave} />,
         },
       ],
-      { initialEntries: ['/'] },
+      {
+        initialEntries: ['/'],
+      },
     );
     render(<RouterProvider router={router} />);
     const saveButton = screen.getByRole('button', { name: 'Publish' });

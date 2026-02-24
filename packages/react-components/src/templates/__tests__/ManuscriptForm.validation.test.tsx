@@ -1,8 +1,7 @@
 import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
-import { MemoryRouter } from 'react-router-dom';
+import { StaticRouter, MemoryRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
 import ManuscriptForm from '../ManuscriptForm';
 

@@ -1,4 +1,4 @@
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import { ExpertiseAndResourcesModal } from '@asap-hub/react-components';
 
 import { array, text } from './knobs';

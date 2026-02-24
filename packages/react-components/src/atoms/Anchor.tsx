@@ -1,5 +1,5 @@
 import { AnchorHTMLAttributes } from 'react';
-import { Link, LinkProps } from 'react-router-dom';
+import { Link, LinkProps } from 'react-router';
 import { css } from '@emotion/react';
 
 import { isInternalLink } from '../utils';

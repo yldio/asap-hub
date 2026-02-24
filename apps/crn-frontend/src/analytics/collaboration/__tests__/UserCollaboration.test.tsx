@@ -7,7 +7,7 @@ import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { render, waitFor } from '@testing-library/react';
 import { userCollaborationPerformance } from '@asap-hub/fixtures';
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
 import { getUserCollaboration, getUserCollaborationPerformance } from '../api';

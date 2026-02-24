@@ -20,7 +20,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import Network from '../Network';
 import { getAlgoliaTeams } from '../teams/api';
@@ -247,7 +247,7 @@ it('allows selection of group filters', async () => {
   expect(checkbox).not.toBeChecked();
 
   await userEvent.click(checkbox);
-  expect(checkbox).toBeChecked();
+  await waitFor(() => expect(checkbox).toBeChecked());
   await waitFor(() =>
     expect(mockGetGroups).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -266,7 +266,7 @@ it('allows selection of working group filters', async () => {
   expect(checkbox).not.toBeChecked();
 
   await userEvent.click(checkbox);
-  expect(checkbox).toBeChecked();
+  await waitFor(() => expect(screen.getByLabelText('Complete')).toBeChecked());
   await waitFor(() =>
     expect(mockGetWorkingGroups).toHaveBeenLastCalledWith(
       expect.anything(),
@@ -289,7 +289,7 @@ describe.each([
     expect(checkbox).not.toBeChecked();
 
     await userEvent.click(checkbox);
-    expect(checkbox).toBeChecked();
+    await waitFor(() => expect(checkbox).toBeChecked());
     await waitFor(() =>
       expect(mockGetAlgoliaTeams).toHaveBeenLastCalledWith(
         expect.anything(),

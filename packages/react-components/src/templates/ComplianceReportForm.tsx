@@ -11,7 +11,7 @@ import { urlExpression } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import React, { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Button, Card, Paragraph } from '../atoms';
 import { GlobeIcon } from '../icons';
 import { defaultPageLayoutPaddingStyle } from '../layout';

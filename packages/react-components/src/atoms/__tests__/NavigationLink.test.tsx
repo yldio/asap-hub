@@ -1,9 +1,8 @@
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 import { ThemeProvider } from '@emotion/react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter, useLocation } from 'react-router-dom';
-import { StaticRouter } from 'react-router-dom/server';
+import { MemoryRouter, useLocation, StaticRouter } from 'react-router';
 import { activePrimaryBackgroundColorDefault } from '../../button';
 import { color, pine } from '../../colors';
 import NavigationLink from '../NavigationLink';
@@ -18,10 +17,15 @@ const LocationCapture = () => {
   return null;
 };
 
+// Wrapper component with future flags for RTL's wrapper option
+const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
+  <MemoryRouter>{children}</MemoryRouter>
+);
+
 describe.each`
   description           | wrapper
   ${'with a router'}    | ${StaticRouter}
-  ${'without a router'} | ${MemoryRouter}
+  ${'without a router'} | ${MemoryRouterWithFuture}
 `('$description', ({ wrapper }) => {
   it('renders a link with the given text', () => {
     render(

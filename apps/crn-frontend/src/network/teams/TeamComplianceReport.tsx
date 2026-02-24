@@ -8,7 +8,7 @@ import {
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router';
 import { useSetRecoilState } from 'recoil';
 import {
   refreshTeamState,
@@ -45,7 +45,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
     const { fromButton } = (state as { fromButton?: boolean }) ?? {};
     if (fromButton) return;
 
-    pushFromHere(teamWorkspacePath, { replace: true });
+    void pushFromHere(teamWorkspacePath, { replace: true });
   }, [pushFromHere, state, teamWorkspacePath]);
 
   if (manuscript && manuscript.versions[0]) {
@@ -55,7 +55,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
         accent: 'successLarge',
       });
       setRefreshTeamState((value) => value + 1);
-      pushFromHere(teamWorkspacePath, { replace: true });
+      void pushFromHere(teamWorkspacePath, { replace: true });
     };
 
     return (

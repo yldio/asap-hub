@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { sharedResearch } from '@asap-hub/routing';
 import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
 import * as flags from '@asap-hub/flags';

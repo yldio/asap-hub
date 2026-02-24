@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router';
 import {
   PersonalInfoModal,
   ContactInfoModal,
@@ -68,7 +68,7 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
               confirmText="Publish Profile"
               onSave={async () => {
                 await patchUser({ onboarded: true });
-                navigate(backHref);
+                void navigate(backHref);
               }}
             />
           </Frame>

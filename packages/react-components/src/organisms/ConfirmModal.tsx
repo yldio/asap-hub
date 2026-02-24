@@ -138,7 +138,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                   setStatus('hasSaved');
                   const redirect = successHref ?? backHref;
                   if (redirect) {
-                    historyPush(redirect);
+                    void historyPush(redirect);
                   }
                 } catch (e) {
                   setStatus('hasError');

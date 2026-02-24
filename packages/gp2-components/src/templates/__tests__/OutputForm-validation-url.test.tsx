@@ -2,7 +2,7 @@ import { mockActWarningsInConsole } from '@asap-hub/dom-test-utils';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 import OutputForm from '../OutputForm';
 
 describe('OutputForm', () => {

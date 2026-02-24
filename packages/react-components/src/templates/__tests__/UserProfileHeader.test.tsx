@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router-dom/server';
+import { StaticRouter } from 'react-router';
 
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

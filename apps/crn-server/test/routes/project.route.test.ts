@@ -18,9 +18,17 @@ const projectControllerMock = {
   update: jest.fn(),
 } as unknown as jest.Mocked<ProjectController>;
 
-const createApp = () => {
+const createApp = (loggedInUser?: { teams: { id: string }[] }) => {
   const app = express();
   app.use(express.json());
+  if (loggedInUser) {
+    app.use(
+      (req: express.Request, _res: express.Response, next: express.NextFunction) => {
+        req.loggedInUser = loggedInUser as express.Request['loggedInUser'];
+        next();
+      },
+    );
+  }
   app.use(projectRouteFactory(projectControllerMock));
   app.use(
     (
@@ -44,7 +52,8 @@ const createApp = () => {
 };
 
 describe('project routes', () => {
-  const app = createApp();
+  // discovery project has teamId: 'team-1'
+  const app = createApp({ teams: [{ id: 'team-1' }] });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -133,8 +142,10 @@ describe('project routes', () => {
     const tools = [{ name: 'Slack', url: 'https://slack.com' }];
 
     it('calls update with the project id and tools and returns the result', async () => {
+      const project = getExpectedDiscoveryProject();
       const updated =
         getExpectedDiscoveryProject() as unknown as ProjectResponse;
+      projectControllerMock.fetchById.mockResolvedValueOnce(project);
       projectControllerMock.update.mockResolvedValueOnce(updated);
 
       const response = await supertest(app)
@@ -149,6 +160,34 @@ describe('project routes', () => {
       );
     });
 
+    it('returns 403 when the user does not belong to the project team', async () => {
+      const project = getExpectedDiscoveryProject(); // teamId: 'team-1'
+      projectControllerMock.fetchById.mockResolvedValueOnce(project);
+
+      const appWithOtherTeam = createApp({ teams: [{ id: 'other-team' }] });
+      const response = await supertest(appWithOtherTeam)
+        .patch('/project/discovery-1')
+        .send({ tools });
+
+      expect(response.status).toBe(403);
+      expect(projectControllerMock.update).not.toHaveBeenCalled();
+    });
+
+    it('returns 403 when the project has no teamId', async () => {
+      const project = getExpectedDiscoveryProject();
+      const projectWithoutTeam = { ...project, teamId: undefined };
+      projectControllerMock.fetchById.mockResolvedValueOnce(
+        projectWithoutTeam as unknown as ProjectResponse,
+      );
+
+      const response = await supertest(app)
+        .patch('/project/discovery-1')
+        .send({ tools });
+
+      expect(response.status).toBe(403);
+      expect(projectControllerMock.update).not.toHaveBeenCalled();
+    });
+
     it('returns 400 for an invalid request body', async () => {
       const response = await supertest(app)
         .patch('/project/discovery-1')
@@ -159,7 +198,7 @@ describe('project routes', () => {
     });
 
     it('maps not found errors to a 404 response', async () => {
-      projectControllerMock.update.mockRejectedValueOnce(
+      projectControllerMock.fetchById.mockRejectedValueOnce(
         new NotFoundError(undefined, 'project missing'),
       );
 

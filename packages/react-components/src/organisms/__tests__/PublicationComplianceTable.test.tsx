@@ -107,6 +107,29 @@ describe('PublicationComplianceTable', () => {
     expect(mockSetSort).toHaveBeenCalledWith('team_desc');
   });
 
+  it('toggles sorting direction from desc to asc when active sort is clicked', () => {
+    const mockSetSort = jest.fn();
+    render(
+      <PublicationComplianceTable
+        {...defaultProps}
+        sort="publications_desc"
+        sortingDirection={{
+          ...publicationComplianceInitialSortingDirection,
+          publications: 'desc',
+        }}
+        setSort={mockSetSort}
+      />,
+    );
+
+    const publicationsHeader = screen.getByRole('columnheader', {
+      name: /Publications/,
+    });
+    const sortButton = publicationsHeader.querySelector('button');
+    fireEvent.click(sortButton!);
+
+    expect(mockSetSort).toHaveBeenCalledWith('publications_asc');
+  });
+
   it('toggles sorting direction when same header is clicked twice', () => {
     const mockSetSort = jest.fn();
     render(

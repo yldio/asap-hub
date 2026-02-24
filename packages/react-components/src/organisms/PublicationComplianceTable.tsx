@@ -133,68 +133,42 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
   const isCodeSortActive = sort.includes('code');
   const isLabMaterialsSortActive = sort.includes('lab_materials');
 
-  const getNewSortDirection = (
-    isActive: boolean,
-    currentDirection: 'asc' | 'desc',
-    defaultDirection: 'asc' | 'desc',
-  ): 'asc' | 'desc' => {
-    if (!isActive) return defaultDirection;
-    return currentDirection === 'asc' ? 'desc' : 'asc';
-  };
+  const createSortHandler =
+    (
+      sortKeyFragment: string,
+      directionKey: keyof PublicationComplianceSortingDirection, // This param exists purely because of the inconsistency in the model types (lab_materials → labMaterials).
+      defaultDirection: 'asc' | 'desc',
+    ) =>
+    () => {
+      const isActive = sort.includes(sortKeyFragment);
+      const newDirection = isActive
+        ? sortingDirection[directionKey] === 'asc'
+          ? 'desc'
+          : 'asc'
+        : defaultDirection;
+      setSort(
+        `${sortKeyFragment}_${newDirection}` as SortPublicationCompliance,
+      );
+    };
 
-  const handleTeamSort = () => {
-    const newDirection = getNewSortDirection(
-      isTeamSortActive,
-      sortingDirection.team,
-      'asc',
-    );
-    setSort(`team_${newDirection}`);
-  };
-
-  const handlePublicationsSort = () => {
-    const newDirection = getNewSortDirection(
-      isPublicationsSortActive,
-      sortingDirection.publications,
-      'desc',
-    );
-    setSort(`publications_${newDirection}`);
-  };
-
-  const handleDatasetsSort = () => {
-    const newDirection = getNewSortDirection(
-      isDatasetsSortActive,
-      sortingDirection.datasets,
-      'desc',
-    );
-    setSort(`datasets_${newDirection}`);
-  };
-
-  const handleProtocolsSort = () => {
-    const newDirection = getNewSortDirection(
-      isProtocolsSortActive,
-      sortingDirection.protocols,
-      'desc',
-    );
-    setSort(`protocols_${newDirection}`);
-  };
-
-  const handleCodeSort = () => {
-    const newDirection = getNewSortDirection(
-      isCodeSortActive,
-      sortingDirection.code,
-      'desc',
-    );
-    setSort(`code_${newDirection}`);
-  };
-
-  const handleLabMaterialsSort = () => {
-    const newDirection = getNewSortDirection(
-      isLabMaterialsSortActive,
-      sortingDirection.labMaterials,
-      'desc',
-    );
-    setSort(`lab_materials_${newDirection}`);
-  };
+  const handleTeamSort = createSortHandler('team', 'team', 'asc');
+  const handlePublicationsSort = createSortHandler(
+    'publications',
+    'publications',
+    'desc',
+  );
+  const handleDatasetsSort = createSortHandler('datasets', 'datasets', 'desc');
+  const handleProtocolsSort = createSortHandler(
+    'protocols',
+    'protocols',
+    'desc',
+  );
+  const handleCodeSort = createSortHandler('code', 'code', 'desc');
+  const handleLabMaterialsSort = createSortHandler(
+    'lab_materials',
+    'labMaterials',
+    'desc',
+  );
 
   return (
     <>

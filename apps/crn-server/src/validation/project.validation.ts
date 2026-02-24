@@ -91,8 +91,8 @@ const projectToolSchema: JSONSchemaType<ProjectTool> = {
   type: 'object',
   properties: {
     id: { type: 'string', nullable: true },
-    name: { type: 'string' },
-    url: { type: 'string' },
+    name: { type: 'string', minLength: 1, pattern: '\\S' },
+    url: { type: 'string', minLength: 1, pattern: '\\S' },
     description: { type: 'string', nullable: true },
   },
   required: ['name', 'url'],
@@ -106,7 +106,7 @@ const projectPatchRequestValidationSchema: JSONSchemaType<ProjectPatchRequest> =
       tools: {
         type: 'array',
         items: projectToolSchema,
-        nullable: true,
+        nullable: false,
       },
     },
     required: ['tools'],

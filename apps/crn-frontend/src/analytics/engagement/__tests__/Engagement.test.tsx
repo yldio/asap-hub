@@ -525,7 +525,7 @@ describe('Attendance', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole('heading', { name: /Meeting Rep Attendance/i }),
+        screen.getByRole('heading', { name: /Meeting Rep Attendancess/i }),
       ).toBeVisible();
     });
 

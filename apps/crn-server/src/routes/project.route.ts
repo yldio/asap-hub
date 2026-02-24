@@ -7,7 +7,6 @@ import {
   validateProjectParameters,
   validateProjectPatchRequest,
 } from '../validation/project.validation';
-import logger from '../utils/logger';
 
 export const projectRouteFactory = (
   projectController: ProjectController,
@@ -87,7 +86,10 @@ export const projectRouteFactory = (
       const project = await projectController.fetchById(projectId);
       const teamId = 'teamId' in project ? project.teamId : undefined;
 
-      if (!teamId || !req.loggedInUser!.teams.find(({ id }) => id === teamId)) {
+      if (
+        !teamId ||
+        !req.loggedInUser?.teams?.find(({ id }) => id === teamId)
+      ) {
         throw Boom.forbidden();
       }
 

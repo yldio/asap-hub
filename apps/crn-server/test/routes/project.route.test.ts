@@ -23,7 +23,11 @@ const createApp = (loggedInUser?: { teams: { id: string }[] }) => {
   app.use(express.json());
   if (loggedInUser) {
     app.use(
-      (req: express.Request, _res: express.Response, next: express.NextFunction) => {
+      (
+        req: express.Request,
+        _res: express.Response,
+        next: express.NextFunction,
+      ) => {
         req.loggedInUser = loggedInUser as express.Request['loggedInUser'];
         next();
       },

@@ -10,6 +10,17 @@ import type {
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import ResourceProjectDetail from '../ResourceProjectDetail';
 
+jest.mock('../../network/teams/state', () => ({
+  useIsComplianceReviewer: jest.fn(() => false),
+  usePutManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
+  useCreateDiscussion: jest.fn(() => jest.fn().mockResolvedValue('disc-1')),
+  useReplyToDiscussion: jest.fn(() => jest.fn().mockResolvedValue(undefined)),
+  useMarkDiscussionAsRead: jest
+    .fn()
+    .mockReturnValue(jest.fn().mockResolvedValue(undefined)),
+  useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
+}));
+
 const mockResourceProject: ResourceProjectDetailType = {
   id: 'resource-1',
   title: 'Resource Project 1',
@@ -69,13 +80,17 @@ jest.mock('../state', () => {
   };
 });
 
-const renderResourceProjectDetail = async (projectId: string) => {
-  const path = `${projects.template}/resource/${projectId}/about`;
+const renderResourceProjectDetail = async (
+  projectId: string,
+  user: Record<string, unknown> = {},
+  subPath = 'about',
+) => {
+  const path = `${projects.template}/resource/${projectId}/${subPath}`;
 
   render(
     <RecoilRoot>
       <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
+        <Auth0Provider user={user}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
               <Routes>
@@ -128,5 +143,36 @@ describe('ResourceProjectDetail', () => {
     expect(heading.textContent).toMatch(
       /Sorry! We can.+t seem to find that page/,
     );
+  });
+
+  it('renders Workspace tab when user is a project member and flag is enabled', async () => {
+    const memberUser = {
+      projects: [{ id: 'resource-1' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderResourceProjectDetail('resource-1', memberUser);
+    expect(screen.getByText('Workspace')).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('does not render Workspace tab when flag is disabled', async () => {
+    await renderResourceProjectDetail('resource-1');
+    expect(screen.queryByText('Workspace')).not.toBeInTheDocument();
+  });
+
+  it('renders workspace route with Compliance Review heading', async () => {
+    const memberUser = {
+      projects: [{ id: 'resource-1' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderResourceProjectDetail('resource-1', memberUser, 'workspace');
+    expect(
+      await screen.findByRole('heading', { name: 'Compliance Review' }),
+    ).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });
 });

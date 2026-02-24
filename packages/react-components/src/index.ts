@@ -300,6 +300,7 @@ export {
   ProjectDetailAbout,
   ProjectDetailHeader,
   ProjectDetailPage,
+  ProjectProfileWorkspace,
   ProjectsPage,
   ProjectsPageHeader,
   ResearchOutputForm,

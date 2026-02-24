@@ -1,7 +1,9 @@
 import {
   MeetingRepAttendanceResponse,
   meetingRepAttendanceInitialSortingDirection,
+  SortMeetingRepAttendance,
 } from '@asap-hub/model';
+import { fireEvent } from '@testing-library/dom';
 import { render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import MeetingRepAttendanceTable from '../MeetingRepAttendanceTable';
@@ -16,10 +18,9 @@ describe('MeetingRepAttendanceTable', () => {
   const defaultProps: ComponentProps<typeof MeetingRepAttendanceTable> = {
     ...pageControlsProps,
     data: [],
-    sort: 'team_asc',
+    sort: 'team_asc' as SortMeetingRepAttendance,
     setSort: jest.fn(),
     sortingDirection: meetingRepAttendanceInitialSortingDirection,
-    setSortingDirection: jest.fn(),
   };
 
   const mockTeamData: MeetingRepAttendanceResponse = {
@@ -56,11 +57,80 @@ describe('MeetingRepAttendanceTable', () => {
     render(<MeetingRepAttendanceTable {...defaultProps} />);
 
     expect(
-      screen.getByRole('columnheader', { name: 'Team' }),
+      screen.getByRole('columnheader', { name: /Team/ }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('columnheader', { name: 'Attendance' }),
+      screen.getByRole('columnheader', { name: /Attendance/ }),
     ).toBeInTheDocument();
+  });
+
+  it('renders sort buttons in Team and Attendance headers', () => {
+    render(<MeetingRepAttendanceTable {...defaultProps} />);
+    const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
+    const attendanceHeader = screen.getByRole('columnheader', {
+      name: /Attendance/,
+    });
+    expect(teamHeader.querySelector('button')).toBeInTheDocument();
+    expect(attendanceHeader.querySelector('button')).toBeInTheDocument();
+  });
+
+  it('handles sorting when team header button is clicked', () => {
+    const mockSetSort = jest.fn();
+    render(
+      <MeetingRepAttendanceTable {...defaultProps} setSort={mockSetSort} />,
+    );
+    const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
+    const sortButton = teamHeader.querySelector('button');
+    fireEvent.click(sortButton!);
+
+    expect(mockSetSort).toHaveBeenCalledWith('team_desc');
+  });
+
+  it('handles sorting when Attendance header button is clicked', () => {
+    const mockSetSort = jest.fn();
+    render(
+      <MeetingRepAttendanceTable {...defaultProps} setSort={mockSetSort} />,
+    );
+    const attendanceHeader = screen.getByRole('columnheader', {
+      name: /Attendance/,
+    });
+    const sortButton = attendanceHeader.querySelector('button');
+    fireEvent.click(sortButton!);
+
+    expect(mockSetSort).toHaveBeenCalledWith('attendance_percentage_desc');
+  });
+
+  it('toggles team sort direction when team column is already active', () => {
+    const mockSetSort = jest.fn();
+    const { rerender } = render(
+      <MeetingRepAttendanceTable
+        {...defaultProps}
+        sort="team_asc"
+        setSort={mockSetSort}
+        sortingDirection={{
+          ...meetingRepAttendanceInitialSortingDirection,
+          team: 'asc',
+        }}
+      />,
+    );
+    const teamHeader = screen.getByRole('columnheader', { name: /Team/ });
+    const sortButton = teamHeader.querySelector('button');
+    fireEvent.click(sortButton!);
+
+    expect(mockSetSort).toHaveBeenCalledWith('team_desc');
+    rerender(
+      <MeetingRepAttendanceTable
+        {...defaultProps}
+        sort="team_desc"
+        setSort={mockSetSort}
+        sortingDirection={{
+          ...meetingRepAttendanceInitialSortingDirection,
+          team: 'desc',
+        }}
+      />,
+    );
+    fireEvent.click(sortButton!);
+    expect(mockSetSort).toHaveBeenCalledWith('team_asc');
   });
 
   it('renders multiple teams correctly', () => {
@@ -114,17 +184,12 @@ describe('MeetingRepAttendanceTable', () => {
   `(
     'renders correctly with $description sorting',
     ({ sort, sortingDirection }) => {
-      const setSort = jest.fn();
-      const setSortingDirection = jest.fn();
-
       render(
         <MeetingRepAttendanceTable
           {...defaultProps}
           data={[mockTeamData, mockInactiveTeamData]}
           sort={sort}
-          setSort={setSort}
           sortingDirection={sortingDirection}
-          setSortingDirection={setSortingDirection}
         />,
       );
 

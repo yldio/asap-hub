@@ -404,6 +404,7 @@ describe('search', () => {
           pageSize: 10,
           timeRange: 'all',
           searchScope: 'extended',
+          sort: [{ 'teamName.keyword': { order: 'asc' } }],
         }),
       );
     });
@@ -638,6 +639,7 @@ it('renders data for different time ranges', async () => {
       },
     ],
   };
+  const defaultSort = [{ 'teamName.keyword': { order: 'asc' as const } }];
   when(mockOSChampionSearch)
     .calledWith({
       searchTags: [],
@@ -645,6 +647,7 @@ it('renders data for different time ranges', async () => {
       pageSize: 10,
       timeRange: 'all',
       searchScope: 'extended',
+      sort: defaultSort,
     })
     .mockResolvedValue({ items: [osChampionResponse], total: 1 });
   when(mockOSChampionSearch)
@@ -654,6 +657,7 @@ it('renders data for different time ranges', async () => {
       pageSize: 10,
       timeRange: '30d',
       searchScope: 'extended',
+      sort: defaultSort,
     })
     .mockResolvedValue({
       items: [

@@ -6,7 +6,6 @@ import {
   ProjectResponse,
   ProjectTool,
 } from '@asap-hub/model';
-import { getCleanProjectTools } from '../utils/project';
 import { ProjectDataProvider } from '../data-providers/types/projects.data-provider.types';
 
 type FetchProjectsOptions = {
@@ -63,8 +62,7 @@ export default class ProjectController {
   }
 
   async update(id: string, tools: ProjectTool[]): Promise<ProjectResponse> {
-    const cleanTools = getCleanProjectTools(tools);
-    await this.projectDataProvider.update(id, { tools: cleanTools });
+    await this.projectDataProvider.update(id, { tools });
     return this.fetchById(id);
   }
 }

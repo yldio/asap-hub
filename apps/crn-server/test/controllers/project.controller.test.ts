@@ -150,7 +150,7 @@ describe('Project Controller', () => {
       { name: 'Slack', url: 'https://slack.com', description: 'Team chat' },
     ];
 
-    it('calls the data provider update with cleaned tools and returns the updated project', async () => {
+    it('calls the data provider update with tools and returns the updated project', async () => {
       const project = getExpectedDiscoveryProject();
       projectDataProviderMock.update.mockResolvedValueOnce(undefined);
       projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
@@ -164,20 +164,6 @@ describe('Project Controller', () => {
         project.id,
       );
       expect(result).toEqual(project);
-    });
-
-    it('strips tools with blank description before passing to the data provider', async () => {
-      const project = getExpectedDiscoveryProject();
-      projectDataProviderMock.update.mockResolvedValueOnce(undefined);
-      projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
-
-      await controller.update(project.id, [
-        { name: 'Slack', url: 'https://slack.com', description: '   ' },
-      ]);
-
-      expect(projectDataProviderMock.update).toHaveBeenCalledWith(project.id, {
-        tools: [{ name: 'Slack', url: 'https://slack.com' }],
-      });
     });
 
     it('throws NotFoundError when the project does not exist after update', async () => {

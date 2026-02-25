@@ -13,8 +13,9 @@ jest.setTimeout(60000);
 
 const projectId = 'proj-1';
 
+const mockUseManuscriptById = jest.fn(() => [undefined, jest.fn()]);
 jest.mock('../../network/teams/state', () => ({
-  useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
+  useManuscriptById: (...args: unknown[]) => mockUseManuscriptById(...args),
   usePostManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
   usePutManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
   useResubmitManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
@@ -263,6 +264,68 @@ describe('ProjectManuscript', () => {
           author: { id: 'author-1', displayName: 'Test Author' },
           label: 'Test Author',
           value: 'author-1',
+        },
+      ]);
+    });
+  });
+
+  describe('with existing manuscript data', () => {
+    it('maps categories, teams, labs, and authors to select options', async () => {
+      mockUseManuscriptById.mockReturnValueOnce([
+        {
+          id: 'manuscript-1',
+          impact: { id: 'impact-1', name: 'High Impact' },
+          categories: [{ id: 'cat-1', name: 'Genetics' }],
+          versions: [
+            {
+              teams: [
+                { id: 'team-1', displayName: 'Team Alpha' },
+                { id: 'team-2', displayName: 'Team Beta' },
+              ],
+              labs: [
+                {
+                  id: 'lab-1',
+                  name: 'Lab One',
+                  labPITeamIds: ['team-1'],
+                },
+              ],
+              firstAuthors: [
+                { id: 'auth-1', displayName: 'Author One' },
+              ],
+              correspondingAuthor: [
+                { id: 'auth-2', displayName: 'Author Two' },
+              ],
+              additionalAuthors: [
+                { id: 'auth-3', displayName: 'Author Three' },
+              ],
+            },
+          ],
+        },
+        jest.fn(),
+      ]);
+
+      await renderPage();
+
+      expect(capturedFormProps.selectedTeams).toEqual([
+        { value: 'team-1', label: 'Team Alpha', isFixed: true },
+        { value: 'team-2', label: 'Team Beta', isFixed: false },
+      ]);
+      expect(capturedFormProps.selectedLabs).toEqual([
+        {
+          value: 'lab-1',
+          label: 'Lab One',
+          labPITeamIds: ['team-1'],
+          isFixed: false,
+        },
+      ]);
+      expect(capturedFormProps.categories).toEqual([
+        { value: 'cat-1', label: 'Genetics' },
+      ]);
+      expect(capturedFormProps.firstAuthors).toEqual([
+        {
+          author: { id: 'auth-1', displayName: 'Author One' },
+          label: 'Author One',
+          value: 'auth-1',
         },
       ]);
     });

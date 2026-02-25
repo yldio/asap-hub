@@ -24,9 +24,7 @@ describe('projects routes', () => {
       .discoveryProject({ projectId: 'p1' })
       .workspace({})
       .editManuscript({ manuscriptId: 'm1' }).$;
-    expect(path).toBe(
-      '/projects/discovery/p1/workspace/edit-manuscript/m1',
-    );
+    expect(path).toBe('/projects/discovery/p1/workspace/edit-manuscript/m1');
   });
 
   it('generates discovery project resubmit manuscript route', () => {
@@ -63,9 +61,7 @@ describe('projects routes', () => {
       .resourceProject({ projectId: 'p2' })
       .workspace({})
       .editManuscript({ manuscriptId: 'm1' }).$;
-    expect(path).toBe(
-      '/projects/resource/p2/workspace/edit-manuscript/m1',
-    );
+    expect(path).toBe('/projects/resource/p2/workspace/edit-manuscript/m1');
   });
 
   it('generates resource project resubmit manuscript route', () => {
@@ -74,9 +70,7 @@ describe('projects routes', () => {
       .resourceProject({ projectId: 'p2' })
       .workspace({})
       .resubmitManuscript({ manuscriptId: 'm1' }).$;
-    expect(path).toBe(
-      '/projects/resource/p2/workspace/resubmit-manuscript/m1',
-    );
+    expect(path).toBe('/projects/resource/p2/workspace/resubmit-manuscript/m1');
   });
 
   it('generates trainee project workspace route', () => {
@@ -102,9 +96,7 @@ describe('projects routes', () => {
       .traineeProject({ projectId: 'p3' })
       .workspace({})
       .editManuscript({ manuscriptId: 'm1' }).$;
-    expect(path).toBe(
-      '/projects/trainee/p3/workspace/edit-manuscript/m1',
-    );
+    expect(path).toBe('/projects/trainee/p3/workspace/edit-manuscript/m1');
   });
 
   it('generates trainee project resubmit manuscript route', () => {
@@ -113,8 +105,6 @@ describe('projects routes', () => {
       .traineeProject({ projectId: 'p3' })
       .workspace({})
       .resubmitManuscript({ manuscriptId: 'm1' }).$;
-    expect(path).toBe(
-      '/projects/trainee/p3/workspace/resubmit-manuscript/m1',
-    );
+    expect(path).toBe('/projects/trainee/p3/workspace/resubmit-manuscript/m1');
   });
 });

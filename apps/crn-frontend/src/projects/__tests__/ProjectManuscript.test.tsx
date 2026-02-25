@@ -289,9 +289,7 @@ describe('ProjectManuscript', () => {
                   labPITeamIds: ['team-1'],
                 },
               ],
-              firstAuthors: [
-                { id: 'auth-1', displayName: 'Author One' },
-              ],
+              firstAuthors: [{ id: 'auth-1', displayName: 'Author One' }],
               correspondingAuthor: [
                 { id: 'auth-2', displayName: 'Author Two' },
               ],

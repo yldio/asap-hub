@@ -26,6 +26,7 @@ type EditModalProps = Pick<
   ) => ReactNode;
   description?: string | ReactNode;
   showHeadingSave?: boolean;
+  disableNavigationWarning?: boolean;
 };
 const EditModal: React.FC<EditModalProps> = ({
   dirty,
@@ -36,6 +37,7 @@ const EditModal: React.FC<EditModalProps> = ({
   onSave,
   showHeadingSave = false,
   description,
+  disableNavigationWarning = false,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const historyPush = usePushFromHere();
@@ -74,9 +76,10 @@ const EditModal: React.FC<EditModalProps> = ({
   };
 
   const shouldWarn =
-    status === 'isSaving' ||
-    status === 'hasError' ||
-    (status === 'initial' && dirty);
+    !disableNavigationWarning &&
+    (status === 'isSaving' ||
+      status === 'hasError' ||
+      (status === 'initial' && dirty));
 
   useNavigationWarning({
     shouldBlock: shouldWarn,

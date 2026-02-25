@@ -56,7 +56,7 @@ jest.mock('@asap-hub/react-components', () => ({
   ProjectProfileWorkspace: (props: CapturedProps) => {
     capturedProps = props;
     return (
-      <div>
+      <>
         <h2>Compliance Review</h2>
         {props.isProjectMember && (
           <>
@@ -76,7 +76,7 @@ jest.mock('@asap-hub/react-components', () => ({
               This project has not submitted a manuscript for compliance review.
             </p>
           )}
-      </div>
+      </>
     );
   },
 }));

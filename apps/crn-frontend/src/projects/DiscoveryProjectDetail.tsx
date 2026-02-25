@@ -27,6 +27,7 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
   const { isEnabled } = useFlags();
   const user = useCurrentUserCRN();
   const isStaff = user?.role === 'Staff';
+  const { hash: targetManuscript } = useLocation();
 
   if (!projectDetail) {
     return <NotFoundPage />;
@@ -45,7 +46,6 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
   const showWorkspace =
     isEnabled('PROJECT_WORKSPACE') && (isProjectMember || isStaff);
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
-  const { hash: targetManuscript } = useLocation();
 
   return (
     <Frame title={projectDetail?.title || ''}>

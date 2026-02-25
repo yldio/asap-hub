@@ -13,9 +13,9 @@ jest.setTimeout(60000);
 
 const projectId = 'proj-1';
 
-const mockUseManuscriptById = jest.fn(() => [undefined, jest.fn()]);
+const mockUseManuscriptById = jest.fn((_id?: string) => [undefined, jest.fn()]);
 jest.mock('../../network/teams/state', () => ({
-  useManuscriptById: (...args: unknown[]) => mockUseManuscriptById(...args),
+  useManuscriptById: (id: string) => mockUseManuscriptById(id),
   usePostManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
   usePutManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
   useResubmitManuscript: jest.fn(() => jest.fn().mockResolvedValue({})),
@@ -363,7 +363,7 @@ describe('ProjectManuscript', () => {
           ],
         },
         jest.fn(),
-      ]);
+      ] as any);
 
       await renderPage();
 

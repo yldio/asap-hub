@@ -11,7 +11,11 @@ import { PageControls } from '..';
 import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, lead, neutral200, steel } from '../colors';
-import { InactiveBadgeIcon } from '../icons';
+import {
+  AlphabeticalSortingIcon,
+  InactiveBadgeIcon,
+  NumericalSortingIcon,
+} from '../icons';
 import { rem } from '../pixels';
 import { getPerformanceMoodIcon } from '../utils';
 import StaticPerformanceCard from './StaticPerformanceCard';
@@ -43,6 +47,24 @@ const headerStyles = css({
   display: 'flex',
   columnGap: rem(8),
   alignItems: 'start',
+  '&:hover': {
+    opacity: 0.7,
+  },
+  '& svg': {
+    flexShrink: 0,
+    width: '24px',
+    height: '24px',
+  },
+});
+
+const buttonStyles = css({
+  width: rem(24),
+  margin: 0,
+  padding: 0,
+  border: 'none',
+  backgroundColor: 'unset',
+  cursor: 'pointer',
+  alignSelf: 'center',
 });
 
 const rowStyles = css({
@@ -80,9 +102,6 @@ const pageControlsStyles = css({
 type MeetingRepAttendanceTableProps = ComponentProps<typeof PageControls> & {
   data: MeetingRepAttendanceResponse[];
   setSort: React.Dispatch<React.SetStateAction<SortMeetingRepAttendance>>;
-  setSortingDirection: React.Dispatch<
-    React.SetStateAction<MeetingRepAttendanceSortingDirection>
-  >;
   sort: SortMeetingRepAttendance;
   sortingDirection: MeetingRepAttendanceSortingDirection;
 };
@@ -92,76 +111,132 @@ const MeetingRepAttendanceTable: React.FC<MeetingRepAttendanceTableProps> = ({
   sort,
   setSort,
   sortingDirection,
-  setSortingDirection,
   ...pageControlProps
-}) => (
-  <>
-    <StaticPerformanceCard />
-    <Card padding={false}>
-      <div css={container}>
-        <table
-          css={{
-            width: '100%',
-            tableLayout: 'fixed',
-            borderCollapse: 'collapse',
-          }}
-        >
-          <colgroup>
-            <col css={{ width: '50%' }} />
-            <col css={{ width: '50%' }} />
-          </colgroup>
-          <thead>
-            <tr>
-              <th css={titleStyles} className={'team'}>
-                <span css={headerStyles}>Team</span>
-              </th>
-              <th css={titleStyles}>
-                <span css={headerStyles}>
-                  <span>Attendance</span>
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row) => (
-              <tr key={row.teamId} css={rowStyles}>
-                <td className={'team'}>
-                  <p css={iconStyles}>
-                    <span>
-                      <Link
-                        href={
-                          network({}).teams({}).team({ teamId: row.teamId }).$
+}) => {
+  const isTeamSortActive = sort.includes('team');
+  const isAttendanceSortActive = sort.includes('attendance_percentage');
+
+  const getNewSortDirection = (
+    isActive: boolean,
+    currentDirection: 'asc' | 'desc',
+    defaultDirection: 'asc' | 'desc',
+  ): 'asc' | 'desc' => {
+    if (!isActive) return defaultDirection;
+    return currentDirection === 'asc' ? 'desc' : 'asc';
+  };
+
+  const handleTeamSort = () => {
+    const newDirection = getNewSortDirection(
+      isTeamSortActive,
+      sortingDirection.team,
+      'asc',
+    );
+    setSort(`team_${newDirection}`);
+  };
+
+  const handleAttendanceSort = () => {
+    const newDirection = getNewSortDirection(
+      isAttendanceSortActive,
+      sortingDirection.attendancePercentage,
+      'desc',
+    );
+    setSort(`attendance_percentage_${newDirection}`);
+  };
+
+  return (
+    <>
+      <StaticPerformanceCard />
+      <Card padding={false}>
+        <div css={container}>
+          <table
+            css={{
+              width: '100%',
+              tableLayout: 'fixed',
+              borderCollapse: 'collapse',
+            }}
+          >
+            <colgroup>
+              <col css={{ width: '50%' }} />
+              <col css={{ width: '50%' }} />
+            </colgroup>
+            <thead>
+              <tr>
+                <th css={titleStyles} className={'team'} scope="col">
+                  <span css={headerStyles}>
+                    Team
+                    <button
+                      type="button"
+                      css={buttonStyles}
+                      onClick={handleTeamSort}
+                    >
+                      <AlphabeticalSortingIcon
+                        active={isTeamSortActive}
+                        ascending={sortingDirection.team === 'asc'}
+                      />
+                    </button>
+                  </span>
+                </th>
+                <th css={titleStyles} scope="col">
+                  <span css={headerStyles}>
+                    <span>Attendance</span>
+                    <button
+                      type="button"
+                      css={buttonStyles}
+                      onClick={handleAttendanceSort}
+                    >
+                      <NumericalSortingIcon
+                        active={isAttendanceSortActive}
+                        ascending={
+                          sortingDirection.attendancePercentage === 'asc'
                         }
-                      >
-                        {row.teamName}
-                      </Link>
-                    </span>
-                    {row.isTeamInactive && <InactiveBadgeIcon />}
-                  </p>
-                </td>
-                <td>
-                  <p css={iconStyles}>
-                    <span css={valueStyles}>
-                      {row.attendancePercentage === null || row.limitedData
-                        ? 'N/A'
-                        : `${row.attendancePercentage}%`}
-                    </span>
-                    {getPerformanceMoodIcon(
-                      row.attendancePercentage,
-                      row.limitedData,
-                    )}
-                  </p>
-                </td>
+                        description="Attendance"
+                      />
+                    </button>
+                  </span>
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Card>
-    <section css={pageControlsStyles}>
-      <PageControls {...pageControlProps} />
-    </section>
-  </>
-);
+            </thead>
+            <tbody>
+              {data.map((row) => (
+                <tr key={row.teamId} css={rowStyles}>
+                  <td className={'team'}>
+                    <p css={iconStyles}>
+                      <span>
+                        <Link
+                          href={
+                            network({}).teams({}).team({ teamId: row.teamId }).$
+                          }
+                        >
+                          {row.teamName}
+                        </Link>
+                      </span>
+                      {row.isTeamInactive && <InactiveBadgeIcon />}
+                    </p>
+                  </td>
+                  <td>
+                    <p css={iconStyles}>
+                      <span css={valueStyles}>
+                        {row.attendancePercentage === null || row.limitedData
+                          ? 'N/A'
+                          : `${row.attendancePercentage}%`}
+                      </span>
+                      {getPerformanceMoodIcon(
+                        row.attendancePercentage,
+                        row.limitedData,
+                      )}
+                    </p>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+      <section css={pageControlsStyles}>
+        <PageControls {...pageControlProps} />
+      </section>
+    </>
+  );
+};
 
 export default MeetingRepAttendanceTable;

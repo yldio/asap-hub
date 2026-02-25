@@ -143,6 +143,60 @@ const renderPage = async (
   });
 };
 
+const renderEditPage = async (manuscriptId = 'ms-1') => {
+  const routeTemplate =
+    projects.template +
+    projects({}).discoveryProjects.template +
+    projects({}).discoveryProjects({}).discoveryProject.template +
+    projects({}).discoveryProjects({}).discoveryProject({ projectId }).workspace
+      .template +
+    projects({})
+      .discoveryProjects({})
+      .discoveryProject({ projectId })
+      .workspace({}).editManuscript.template;
+
+  const initialEntry = projects({})
+    .discoveryProjects({})
+    .discoveryProject({ projectId })
+    .workspace({})
+    .editManuscript({ manuscriptId }).$;
+
+  const router = createMemoryRouter(
+    [
+      {
+        path: routeTemplate,
+        element: (
+          <ManuscriptToastProvider>
+            <EligibilityReasonProvider>
+              <ProjectManuscript
+                projectId={projectId}
+                projectType="discovery"
+              />
+            </EligibilityReasonProvider>
+          </ManuscriptToastProvider>
+        ),
+      },
+    ],
+    { initialEntries: [initialEntry] },
+  );
+
+  render(
+    <RecoilRoot>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <RouterProvider router={router} />
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
+
+  await waitFor(() => {
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+  });
+};
+
 describe('ProjectManuscript', () => {
   it('renders the manuscript form page', async () => {
     await renderPage();
@@ -267,6 +321,15 @@ describe('ProjectManuscript', () => {
         },
       ]);
     });
+  });
+
+  it('renders the edit manuscript page with manuscriptId from URL params', async () => {
+    mockUseManuscriptById.mockReturnValueOnce([undefined, jest.fn()]);
+    await renderEditPage('ms-1');
+    await waitFor(() => {
+      expect(screen.getByText(/what are you sharing/i)).toBeInTheDocument();
+    });
+    expect(mockUseManuscriptById).toHaveBeenCalledWith('ms-1');
   });
 
   describe('with existing manuscript data', () => {

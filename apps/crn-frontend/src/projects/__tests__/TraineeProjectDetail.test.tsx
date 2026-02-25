@@ -21,6 +21,23 @@ jest.mock('../../network/teams/state', () => ({
   useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
 }));
 
+const mockEditToolHref = jest.fn();
+jest.mock('../ProjectWorkspace', () => ({
+  __esModule: true,
+  default: (props: Record<string, never>) => {
+    if (typeof props.editToolHref === 'function') {
+      mockEditToolHref.mockImplementation(props.editToolHref);
+      mockEditToolHref(0);
+    }
+    return <h3>Compliance Review</h3>;
+  },
+}));
+
+jest.mock('../ProjectManuscript', () => ({
+  __esModule: true,
+  default: () => <div data-testid="mock-manuscript-form">Manuscript Form</div>,
+}));
+
 const mockTraineeProject: TraineeProjectDetailType = {
   id: 'trainee-1',
   title: 'Trainee Project 1',
@@ -37,6 +54,7 @@ const mockTraineeProject: TraineeProjectDetailType = {
       displayName: 'Taylor Trainer',
       firstName: 'Taylor',
       lastName: 'Trainer',
+      email: 'contact@example.com',
       role: 'Trainee Project - Mentor',
     },
   ],
@@ -168,6 +186,36 @@ describe('TraineeProjectDetail', () => {
     await renderTraineeProjectDetail('trainee-1', memberUser, 'workspace');
     expect(
       await screen.findByRole('heading', { name: 'Compliance Review' }),
+    ).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('renders Workspace tab for Staff users even without project membership', async () => {
+    const staffUser = {
+      projects: [],
+      role: 'Staff',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderTraineeProjectDetail('trainee-1', staffUser);
+    expect(screen.getByText('Workspace')).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('renders create manuscript route via lazy loading', async () => {
+    const memberUser = {
+      projects: [{ id: 'trainee-1' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderTraineeProjectDetail(
+      'trainee-1',
+      memberUser,
+      'workspace/create-manuscript',
+    );
+    expect(
+      await screen.findByTestId('mock-manuscript-form'),
     ).toBeInTheDocument();
     document.cookie =
       'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';

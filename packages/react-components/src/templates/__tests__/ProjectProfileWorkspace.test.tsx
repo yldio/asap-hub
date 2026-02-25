@@ -1,4 +1,10 @@
-import { render } from '@testing-library/react';
+import {
+  getByText as getChildByText,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React, { ComponentProps, useState } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { ManuscriptDataObject } from '@asap-hub/model';
@@ -389,6 +395,131 @@ describe('ProjectProfileWorkspace', () => {
       expect(
         queryByRole('heading', { name: 'Project Contact Email' }),
       ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Eligibility Modal', () => {
+    it('renders eligibility modal when user clicks on Submit Manuscript', async () => {
+      const mockSetEligibilityReasons = jest.fn();
+      const { container, getByRole } = renderWithRouter(
+        <ProjectProfileWorkspace
+          {...defaultProps}
+          isProjectMember={true}
+          isActiveProject={true}
+          setEligibilityReasons={mockSetEligibilityReasons}
+          createManuscriptHref="/workspace/create-manuscript"
+        />,
+      );
+
+      expect(container).not.toHaveTextContent(
+        'Do you need to submit a manuscript?',
+      );
+
+      await userEvent.click(
+        getByRole('button', { name: /Submit Manuscript/i }),
+      );
+
+      expect(container).toHaveTextContent(
+        'Do you need to submit a manuscript?',
+      );
+    });
+
+    it('hides the eligibility modal when user clicks on Cancel', async () => {
+      const mockSetEligibilityReasons = jest.fn();
+      const { container, getByRole } = renderWithRouter(
+        <ProjectProfileWorkspace
+          {...defaultProps}
+          isProjectMember={true}
+          isActiveProject={true}
+          setEligibilityReasons={mockSetEligibilityReasons}
+          createManuscriptHref="/workspace/create-manuscript"
+        />,
+      );
+
+      await userEvent.click(
+        getByRole('button', { name: /Submit Manuscript/i }),
+      );
+
+      expect(container).toHaveTextContent(
+        'Do you need to submit a manuscript?',
+      );
+
+      await userEvent.click(getByRole('button', { name: /cancel/i }));
+
+      expect(container).not.toHaveTextContent(
+        'Do you need to submit a manuscript?',
+      );
+    });
+
+    it('navigates to manuscript form when user completes eligibility modal', async () => {
+      const mockSetEligibilityReasons = jest.fn();
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/*',
+            element: (
+              <ProjectProfileWorkspace
+                {...defaultProps}
+                isProjectMember={true}
+                isActiveProject={true}
+                setEligibilityReasons={mockSetEligibilityReasons}
+                createManuscriptHref="/workspace/create-manuscript"
+              />
+            ),
+          },
+        ],
+        { initialEntries: ['/'] },
+      );
+      const { getByRole } = render(<RouterProvider router={router} />);
+
+      await userEvent.click(
+        getByRole('button', { name: /Submit Manuscript/i }),
+      );
+
+      await userEvent.click(screen.getByText(/Yes/i));
+      await userEvent.click(
+        screen.getByText(
+          'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
+        ),
+      );
+      await userEvent.click(screen.getByText(/Continue/i));
+
+      await waitFor(() => {
+        expect(router.state.location.pathname).toBe(
+          '/workspace/create-manuscript',
+        );
+      });
+    });
+  });
+
+  describe('Tool actions', () => {
+    it('calls onDeleteTool with correct index when delete is clicked', async () => {
+      jest.spyOn(console, 'error').mockImplementation();
+      const handleDeleteTool = jest.fn();
+      const { getByText } = renderWithRouter(
+        <ProjectProfileWorkspace
+          {...defaultProps}
+          isProjectMember={true}
+          tools={[
+            {
+              name: 'Signal',
+              description: 'Our chat tool',
+              url: 'https://signal.group/our',
+            },
+            {
+              name: 'Discord',
+              description: 'Our call tool',
+              url: 'https://discord.gg/our',
+            },
+          ]}
+          onDeleteTool={handleDeleteTool}
+        />,
+      );
+      const discordCard = getByText('Discord').closest('li')!;
+
+      await userEvent.click(getChildByText(discordCard, /delete/i));
+
+      await waitFor(() => expect(handleDeleteTool).toHaveBeenCalledWith(1));
     });
   });
 });

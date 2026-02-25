@@ -86,11 +86,6 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
           .traineeProjects({})
           .traineeProject({ projectId })
           .workspace({}).$;
-      default:
-        return projectRoutes
-          .discoveryProjects({})
-          .discoveryProject({ projectId })
-          .workspace({}).$;
     }
   };
 

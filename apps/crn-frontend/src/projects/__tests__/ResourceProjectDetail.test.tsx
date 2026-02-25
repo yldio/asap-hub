@@ -21,6 +21,23 @@ jest.mock('../../network/teams/state', () => ({
   useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
 }));
 
+const mockEditToolHref = jest.fn();
+jest.mock('../ProjectWorkspace', () => ({
+  __esModule: true,
+  default: (props: Record<string, never>) => {
+    if (typeof props.editToolHref === 'function') {
+      mockEditToolHref.mockImplementation(props.editToolHref);
+      mockEditToolHref(0);
+    }
+    return <h3>Compliance Review</h3>;
+  },
+}));
+
+jest.mock('../ProjectManuscript', () => ({
+  __esModule: true,
+  default: () => <div data-testid="mock-manuscript-form">Manuscript Form</div>,
+}));
+
 const mockResourceProject: ResourceProjectDetailType = {
   id: 'resource-1',
   title: 'Resource Project 1',
@@ -39,6 +56,16 @@ const mockResourceProject: ResourceProjectDetailType = {
   originalGrant: 'Original Grant',
   originalGrantProposalId: 'proposal-1',
   contactEmail: 'contact@example.com',
+  members: [
+    {
+      id: 'member-1',
+      displayName: 'John Member',
+      firstName: 'John',
+      lastName: 'Member',
+      email: 'contact@example.com',
+      role: 'Resource Project - Co-PI',
+    },
+  ],
   fundedTeam: {
     id: 'team-1',
     displayName: 'Resource Team',
@@ -46,6 +73,30 @@ const mockResourceProject: ResourceProjectDetailType = {
     researchTheme: 'Theme One',
     teamDescription: 'Team description',
   },
+};
+
+const mockResourceProjectCollabContact: ResourceProjectDetailType = {
+  ...mockResourceProject,
+  id: 'resource-collab',
+  members: [
+    {
+      id: 'member-1',
+      displayName: 'John Member',
+      firstName: 'John',
+      lastName: 'Member',
+      email: 'other@example.com',
+      role: 'Resource Project - Co-PI',
+    },
+  ],
+  collaborators: [
+    {
+      id: 'collab-1',
+      displayName: 'Jane Collaborator',
+      firstName: 'Jane',
+      lastName: 'Collaborator',
+      email: 'contact@example.com',
+    },
+  ],
 };
 
 const mockDiscoveryProject: DiscoveryProject = {
@@ -67,6 +118,9 @@ jest.mock('../state', () => {
   const useProjectById = jest.fn((id: string) => {
     if (id === 'resource-1') {
       return mockResourceProject;
+    }
+    if (id === 'resource-collab') {
+      return mockResourceProjectCollabContact;
     }
     if (id === 'discovery-1') {
       return mockDiscoveryProject;
@@ -171,6 +225,54 @@ describe('ResourceProjectDetail', () => {
     await renderResourceProjectDetail('resource-1', memberUser, 'workspace');
     expect(
       await screen.findByRole('heading', { name: 'Compliance Review' }),
+    ).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('renders Workspace tab for Staff users even without project membership', async () => {
+    const staffUser = {
+      projects: [],
+      role: 'Staff',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderResourceProjectDetail('resource-1', staffUser);
+    expect(screen.getByText('Workspace')).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('resolves contactName from collaborators when no member matches contactEmail', async () => {
+    const memberUser = {
+      projects: [{ id: 'resource-collab' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderResourceProjectDetail(
+      'resource-collab',
+      memberUser,
+      'workspace',
+    );
+    expect(
+      await screen.findByRole('heading', { name: 'Compliance Review' }),
+    ).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('renders create manuscript route via lazy loading', async () => {
+    const memberUser = {
+      projects: [{ id: 'resource-1' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderResourceProjectDetail(
+      'resource-1',
+      memberUser,
+      'workspace/create-manuscript',
+    );
+    expect(
+      await screen.findByTestId('mock-manuscript-form'),
     ).toBeInTheDocument();
     document.cookie =
       'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';

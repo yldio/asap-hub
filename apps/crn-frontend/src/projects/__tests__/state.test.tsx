@@ -517,5 +517,65 @@ describe('projects state hooks', () => {
         expect(result.current.project).toEqual(updatedProject);
       });
     });
+
+    it('uses patch tools when API returns fewer tools (e.g. read-after-write delay)', async () => {
+      const initialProject: ProjectDetail = {
+        id: 'project-1',
+        title: 'Original Project',
+        status: 'Active',
+        statusRank: 1,
+        projectType: 'Discovery Project',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        researchTheme: '',
+        teamName: '',
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Team 1',
+          teamType: 'Discovery Team',
+          researchTheme: '',
+        },
+      };
+
+      const patch = {
+        tools: [{ name: 'Slack', url: 'https://slack.com' }],
+      };
+      // API returns project without tools (e.g. stale read after PATCH)
+      const apiResponse = { ...initialProject, tools: undefined };
+
+      const getTokenSilently = jest.fn().mockResolvedValue('token-abc');
+      mockPatchProject.mockResolvedValueOnce(apiResponse);
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+        set(projectsState(defaultOptions), {
+          total: 1,
+          items: [initialProject as unknown as ProjectResponse],
+        });
+      };
+
+      const { result } = renderHook(
+        () => ({
+          patchFn: usePatchProjectById('project-1'),
+          project: useProjectById('project-1'),
+        }),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      mockGetProject.mockResolvedValueOnce(initialProject);
+      await waitFor(() =>
+        expect(result.current.project).toEqual(initialProject),
+      );
+
+      await act(async () => {
+        await result.current.patchFn(patch);
+      });
+
+      await waitFor(() => {
+        expect(result.current.project?.tools).toEqual(patch.tools);
+      });
+    });
   });
 });

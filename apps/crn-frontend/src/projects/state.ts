@@ -129,6 +129,14 @@ export const usePatchProjectById = (id: string) => {
   const authorization = useRecoilValue(authorizationState);
   const setProject = useSetRecoilState(projectState(id));
   return async (patch: { tools: ProjectTool[] }) => {
-    setProject(await patchProject(id, patch, authorization));
+    const updated = await patchProject(id, patch, authorization);
+    // Defensive: if the API returns fewer tools than we sent (e.g. read-after-write
+    // delay or caching when fetching the project right after PATCH), use the patch
+    // so the UI shows what was just saved.
+    const tools =
+      (updated.tools?.length ?? 0) >= patch.tools.length
+        ? updated.tools
+        : patch.tools;
+    setProject({ ...updated, tools });
   };
 };

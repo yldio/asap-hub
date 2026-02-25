@@ -203,6 +203,22 @@ describe('ProjectProfileWorkspace', () => {
           ),
         ).toBeInTheDocument();
       });
+
+      it('renders empty state for collaborator section when collaborationManuscripts is undefined', () => {
+        const { getByText } = renderWithRouter(
+          <ProjectProfileWorkspace
+            {...defaultProps}
+            isTeamBased={true}
+            isProjectMember={true}
+            collaborationManuscripts={undefined}
+          />,
+        );
+        expect(
+          getByText(
+            'Your project has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
+          ),
+        ).toBeInTheDocument();
+      });
     });
 
     describe('user-based projects', () => {
@@ -451,6 +467,43 @@ describe('ProjectProfileWorkspace', () => {
       );
     });
 
+    it('does not navigate when createManuscriptHref is not provided', async () => {
+      const mockSetEligibilityReasons = jest.fn();
+      const router = createMemoryRouter(
+        [
+          {
+            path: '/*',
+            element: (
+              <ProjectProfileWorkspace
+                {...defaultProps}
+                isProjectMember={true}
+                isActiveProject={true}
+                setEligibilityReasons={mockSetEligibilityReasons}
+              />
+            ),
+          },
+        ],
+        { initialEntries: ['/'] },
+      );
+      const { getByRole } = render(<RouterProvider router={router} />);
+
+      await userEvent.click(
+        getByRole('button', { name: /Submit Manuscript/i }),
+      );
+
+      await userEvent.click(screen.getByText(/Yes/i));
+      await userEvent.click(
+        screen.getByText(
+          'The manuscript resulted from a pivot stemming from the findings of the ASAP-funded proposal.',
+        ),
+      );
+      await userEvent.click(screen.getByText(/Continue/i));
+
+      await waitFor(() => {
+        expect(router.state.location.pathname).toBe('/');
+      });
+    });
+
     it('navigates to manuscript form when user completes eligibility modal', async () => {
       const mockSetEligibilityReasons = jest.fn();
       const router = createMemoryRouter(
@@ -490,6 +543,28 @@ describe('ProjectProfileWorkspace', () => {
         );
       });
     });
+  });
+
+  it('defaults isActiveProject to true when not provided', () => {
+    const propsWithoutIsActive = { ...defaultProps };
+    delete (propsWithoutIsActive as Partial<typeof defaultProps>)
+      .isActiveProject;
+    const { container } = renderWithRouter(
+      <ProjectProfileWorkspace {...propsWithoutIsActive} />,
+    );
+    expect(container).toHaveTextContent('Compliance Review');
+  });
+
+  it('passes isTargetManuscript when targetManuscriptId matches', () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    renderWithRouter(
+      <ProjectProfileWorkspace
+        {...defaultProps}
+        manuscripts={['manuscript-1']}
+        targetManuscriptId="manuscript-1"
+      />,
+    );
+    expect(screen.getByTestId('team-manuscripts')).toBeInTheDocument();
   });
 
   describe('Tool actions', () => {

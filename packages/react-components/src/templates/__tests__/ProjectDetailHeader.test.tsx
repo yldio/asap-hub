@@ -2,6 +2,12 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ProjectDetail, ProjectType } from '@asap-hub/model';
 import ProjectDetailHeader, { getTeamIcon } from '../ProjectDetailHeader';
 
+const mockIsEnabled = jest.fn();
+
+jest.mock('@asap-hub/react-context', () => ({
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
 const baseProject = {
   id: 'project-1',
   title: 'Test Project',
@@ -129,6 +135,10 @@ describe('getTeamIcon', () => {
 });
 
 describe('ProjectDetailHeader', () => {
+  beforeEach(() => {
+    mockIsEnabled.mockReturnValue(false);
+  });
+
   const mockDiscoveryProject: ProjectDetail = {
     ...baseProject,
     projectType: 'Discovery Project',
@@ -625,6 +635,43 @@ describe('ProjectDetailHeader', () => {
 
       expect(getByText(/Jan 2023/)).toBeInTheDocument();
       expect(getByText(/Present/)).toBeInTheDocument();
+    });
+  });
+
+  describe('Workspace tab', () => {
+    it('renders Workspace tab when flag is enabled and workspaceHref is provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          workspaceHref="/projects/discovery/1/workspace"
+        />,
+      );
+      expect(screen.getByText('Workspace')).toBeInTheDocument();
+    });
+
+    it('does not render Workspace tab when flag is disabled', () => {
+      mockIsEnabled.mockReturnValue(false);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          workspaceHref="/projects/discovery/1/workspace"
+        />,
+      );
+      expect(screen.queryByText('Workspace')).not.toBeInTheDocument();
+    });
+
+    it('does not render Workspace tab when workspaceHref is not provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+        />,
+      );
+      expect(screen.queryByText('Workspace')).not.toBeInTheDocument();
     });
   });
 });

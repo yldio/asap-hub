@@ -5,7 +5,7 @@ import {
   getExpectedProjectList,
   getExpectedDiscoveryProject,
 } from '../fixtures/projects.fixtures';
-import type { ProjectType, ProjectStatus } from '@asap-hub/model';
+import type { ProjectTool, ProjectType, ProjectStatus } from '@asap-hub/model';
 
 describe('Project Controller', () => {
   const projectDataProviderMock = getDataProviderMock();
@@ -141,6 +141,37 @@ describe('Project Controller', () => {
       expect(projectDataProviderMock.fetchByUserId).toHaveBeenCalledWith(
         'user-1',
         { take: 5, skip: 15 },
+      );
+    });
+  });
+
+  describe('update', () => {
+    const tools: ProjectTool[] = [
+      { name: 'Slack', url: 'https://slack.com', description: 'Team chat' },
+    ];
+
+    it('calls the data provider update with tools and returns the updated project', async () => {
+      const project = getExpectedDiscoveryProject();
+      projectDataProviderMock.update.mockResolvedValueOnce(undefined);
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
+
+      const result = await controller.update(project.id, tools);
+
+      expect(projectDataProviderMock.update).toHaveBeenCalledWith(project.id, {
+        tools,
+      });
+      expect(projectDataProviderMock.fetchById).toHaveBeenCalledWith(
+        project.id,
+      );
+      expect(result).toEqual(project);
+    });
+
+    it('throws NotFoundError when the project does not exist after update', async () => {
+      projectDataProviderMock.update.mockResolvedValueOnce(undefined);
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(null);
+
+      await expect(controller.update('missing-id', tools)).rejects.toThrow(
+        NotFoundError,
       );
     });
   });

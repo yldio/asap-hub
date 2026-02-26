@@ -212,6 +212,14 @@ const transformRecords = (
     };
   }
 
+  // type 'project' // moved up here for order to have better type inference
+  if ('projectType' in record && 'tags' in record) {
+    return {
+      ...payload,
+      _tags: record.tags,
+    };
+  }
+
   // type 'interest-group'
   if ('tools' in record) {
     return {
@@ -230,14 +238,6 @@ const transformRecords = (
 
   // type 'news'
   if ('frequency' in record) {
-    return {
-      ...payload,
-      _tags: record.tags,
-    };
-  }
-
-  // type 'project'
-  if ('projectType' in record && 'tags' in record) {
     return {
       ...payload,
       _tags: record.tags,

@@ -11,7 +11,6 @@ import {
   renderHook,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TeamResponse } from '@asap-hub/model';
 import {
   createTeamManuscriptResponse,
   createTeamResponse,
@@ -26,12 +25,7 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 
-import {
-  patchTeam,
-  updateManuscript,
-  createDiscussion,
-  getManuscript,
-} from '../api';
+import { updateManuscript, createDiscussion, getManuscript } from '../api';
 
 import Workspace from '../Workspace';
 import {
@@ -41,6 +35,7 @@ import {
 } from '../state';
 import { useManuscriptToast } from '../useManuscriptToast';
 import { ManuscriptToastContext } from '../ManuscriptToastProvider';
+import { useProjectById, usePatchProjectById } from '../../../projects/state';
 
 jest.setTimeout(60000);
 jest.mock('../api', () => ({
@@ -64,7 +59,10 @@ jest.mock('../useManuscriptToast', () => ({
   useManuscriptToast: jest.fn(),
 }));
 
-const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
+jest.mock('../../../projects/state', () => ({
+  useProjectById: jest.fn().mockReturnValue(undefined),
+  usePatchProjectById: jest.fn().mockReturnValue(jest.fn()),
+}));
 
 const id = '42';
 const manuscriptId = 'manuscript_0';
@@ -114,7 +112,10 @@ const user = {
 const mockReplyToDiscussion = jest.fn();
 const mockSetFormType = jest.fn();
 const mockMarkDiscussionAsRead = jest.fn();
+const mockPatchProject = jest.fn();
 beforeEach(() => {
+  (usePatchProjectById as jest.Mock).mockReturnValue(mockPatchProject);
+  (useProjectById as jest.Mock).mockReturnValue(undefined);
   (useManuscriptToast as jest.Mock).mockImplementation(() => ({
     setFormType: mockSetFormType,
   }));
@@ -389,60 +390,45 @@ describe('Manuscript', () => {
 describe('a tool', () => {
   const { mockConfirm } = mockAlert();
 
+  const myTool = {
+    name: 'My Tool',
+    description: 'A nice tool',
+    url: 'https://example.com/tool',
+  };
+  const myOtherTool = {
+    name: 'My other tool',
+    description: 'Also a nice tool',
+    url: 'https://example.com/tool2',
+  };
+
   it('can be deleted', async () => {
     mockConfirm.mockReturnValue(true);
+    (useProjectById as jest.Mock).mockReturnValue({ tools: [myTool] });
     // Use a deferred promise to control when the delete completes
-    let resolveDelete: (value: TeamResponse) => void;
-    const deletePromise = new Promise<TeamResponse>((resolve) => {
+    let resolveDelete!: () => void;
+    const deletePromise = new Promise<void>((resolve) => {
       resolveDelete = resolve;
     });
-    mockPatchTeam.mockReturnValue(deletePromise);
+    mockPatchProject.mockReturnValue(deletePromise);
 
     const { findByText } = renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [
-            {
-              name: 'My Tool',
-              description: 'A nice tool',
-              url: 'https://example.com/tool',
-            },
-          ],
-        }}
-      />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [myTool] }} />,
       user,
     );
     await userEvent.click(await findByText(/delete/i));
     // Now we should see "Deleting..." while the promise is pending
     await findByText(/deleting/i);
-    expect(mockPatchTeam).toHaveBeenLastCalledWith(
-      id,
-      { tools: [] },
-      expect.anything(),
-    );
+    expect(mockPatchProject).toHaveBeenLastCalledWith({ tools: [] });
     // Resolve the promise to complete the delete
     await act(async () => {
-      resolveDelete!(createTeamResponse());
+      resolveDelete();
     });
   });
 
   it('is not deleted when rejecting the confirm prompt', async () => {
+    (useProjectById as jest.Mock).mockReturnValue({ tools: [myTool] });
     const { findByText } = renderWithWrapper(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [
-            {
-              name: 'My Tool',
-              description: 'A nice tool',
-              url: 'https://example.com/tool',
-            },
-          ],
-        }}
-      />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [myTool] }} />,
       user,
     );
 
@@ -450,74 +436,52 @@ describe('a tool', () => {
     await userEvent.click(await findByText(/delete/i));
     await findByText(/delete/i);
 
-    expect(mockPatchTeam).not.toHaveBeenCalled();
+    expect(mockPatchProject).not.toHaveBeenCalled();
   });
 
   it('warns when its deletion failed', async () => {
     const mockToast = jest.fn();
+    (useProjectById as jest.Mock).mockReturnValue({ tools: [myTool] });
+    mockPatchProject.mockRejectedValue(new Error('Nope'));
+
     const { findByText } = renderWithWrapper(
       <ToastContext.Provider value={mockToast}>
-        <Workspace
-          team={{
-            ...createTeamResponse(),
-            id,
-            tools: [
-              {
-                name: 'My Tool',
-                description: 'A nice tool',
-                url: 'https://example.com/tool',
-              },
-            ],
-          }}
-        />
+        <Workspace team={{ ...createTeamResponse(), id, tools: [myTool] }} />
       </ToastContext.Provider>,
       user,
     );
 
-    mockPatchTeam.mockRejectedValue(new Error('Nope'));
     await userEvent.click(await findByText(/delete/i));
 
     await waitFor(() => expect(mockToast).toHaveBeenCalled());
   });
 
   it('can not be deleted while another tool is being deleted', async () => {
+    (useProjectById as jest.Mock).mockReturnValue({
+      tools: [myTool, myOtherTool],
+    });
     const { queryByText, findByText, findAllByText } = renderWithWrapper(
       <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [
-            {
-              name: 'My Tool',
-              description: 'A nice tool',
-              url: 'https://example.com/tool',
-            },
-            {
-              name: 'My other tool',
-              description: 'Also a nice tool',
-              url: 'https://example.com/tool2',
-            },
-          ],
-        }}
+        team={{ ...createTeamResponse(), id, tools: [myTool, myOtherTool] }}
       />,
       user,
     );
-    let resolvePatchTeam!: (team: TeamResponse) => void;
-    mockPatchTeam.mockImplementation(
+    let resolvePatchProject!: (value?: unknown) => void;
+    mockPatchProject.mockImplementation(
       () =>
         new Promise((resolve) => {
-          resolvePatchTeam = resolve;
+          resolvePatchProject = resolve;
         }),
     );
 
     await userEvent.click((await findAllByText(/delete/i))[0]!);
     await findByText(/deleting/i);
-    mockPatchTeam.mockClear();
+    mockPatchProject.mockClear();
 
     await userEvent.click(await findByText(/delete/i));
-    expect(mockPatchTeam).not.toHaveBeenCalled();
+    expect(mockPatchProject).not.toHaveBeenCalled();
 
-    resolvePatchTeam(createTeamResponse());
+    resolvePatchProject();
     await waitFor(() =>
       expect(queryByText(/deleting/i)).not.toBeInTheDocument(),
     );
@@ -557,19 +521,15 @@ describe('the add tool dialog', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('tool')).not.toBeInTheDocument();
     });
-    expect(mockPatchTeam).toHaveBeenLastCalledWith(
-      id,
-      {
-        tools: [
-          {
-            name: 'tool',
-            description: 'description',
-            url: 'http://example.com/tool',
-          },
-        ],
-      },
-      expect.any(String),
-    );
+    expect(mockPatchProject).toHaveBeenLastCalledWith({
+      tools: [
+        {
+          name: 'tool',
+          description: 'description',
+          url: 'http://example.com/tool',
+        },
+      ],
+    });
   });
 });
 
@@ -577,16 +537,16 @@ describe('the edit tool dialog', () => {
   it('renders not found page when tool index is invalid', async () => {
     jest.spyOn(console, 'error').mockImplementation();
 
+    const tool = {
+      name: 'tool',
+      description: 'desc',
+      url: 'http://example.com/tool',
+    };
+    (useProjectById as jest.Mock).mockReturnValue({ tools: [tool] });
     const teamWithTools = {
       ...createTeamResponse(),
       id,
-      tools: [
-        {
-          name: 'tool',
-          description: 'desc',
-          url: 'http://example.com/tool',
-        },
-      ],
+      tools: [tool],
     };
 
     render(
@@ -633,21 +593,15 @@ describe('the edit tool dialog', () => {
 
   // TODO: React Router v6 migration - skipped due to: timing issues with finding close button title
   it('goes back when closed', async () => {
+    const tool = {
+      name: 'tool',
+      description: 'desc',
+      url: 'http://example.com/tool',
+    };
+    (useProjectById as jest.Mock).mockReturnValue({ tools: [tool] });
     const { getByText, queryByTitle, findByText, findByTitle } =
       renderWithWrapper(
-        <Workspace
-          team={{
-            ...createTeamResponse(),
-            id,
-            tools: [
-              {
-                name: 'tool',
-                description: 'desc',
-                url: 'http://example.com/tool',
-              },
-            ],
-          }}
-        />,
+        <Workspace team={{ ...createTeamResponse(), id, tools: [tool] }} />,
         user,
       );
     await userEvent.click(await findByText(/edit/i, { selector: 'li *' }));
@@ -657,25 +611,21 @@ describe('the edit tool dialog', () => {
   });
 
   it('saves the changes and goes back', async () => {
+    const tool1 = {
+      name: 'tool 1',
+      description: 'description',
+      url: 'http://example.com/tool-1',
+    };
+    const tool2 = {
+      name: 'tool 2',
+      description: 'description',
+      url: 'http://example.com/tool-2',
+    };
+    (useProjectById as jest.Mock).mockReturnValue({ tools: [tool1, tool2] });
     const { queryByText, queryByDisplayValue, findByText, findByLabelText } =
       renderWithWrapper(
         <Workspace
-          team={{
-            ...createTeamResponse(),
-            id,
-            tools: [
-              {
-                name: 'tool 1',
-                description: 'description',
-                url: 'http://example.com/tool-1',
-              },
-              {
-                name: 'tool 2',
-                description: 'description',
-                url: 'http://example.com/tool-2',
-              },
-            ],
-          }}
+          team={{ ...createTeamResponse(), id, tools: [tool1, tool2] }}
         />,
         user,
       );
@@ -690,20 +640,16 @@ describe('the edit tool dialog', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('tool 2 new')).not.toBeInTheDocument();
     });
-    expect(mockPatchTeam).toHaveBeenLastCalledWith(
-      id,
-      {
-        tools: [
-          expect.objectContaining({ name: 'tool 1' }),
-          {
-            name: 'tool 2 new',
-            description: 'description new',
-            url: 'http://example.com/tool-2-new',
-          },
-        ],
-      },
-      expect.any(String),
-    );
+    expect(mockPatchProject).toHaveBeenLastCalledWith({
+      tools: [
+        expect.objectContaining({ name: 'tool 1' }),
+        {
+          name: 'tool 2 new',
+          description: 'description new',
+          url: 'http://example.com/tool-2-new',
+        },
+      ],
+    });
   });
 });
 

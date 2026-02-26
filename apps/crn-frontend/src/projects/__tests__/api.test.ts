@@ -1,10 +1,11 @@
 import type { AlgoliaClient } from '@asap-hub/algolia';
 import { BackendError } from '@asap-hub/frontend-utils';
-import type { ProjectResponse } from '@asap-hub/model';
+import type { ProjectDetail, ProjectResponse } from '@asap-hub/model';
 
 import {
   getProject,
   getProjects,
+  patchProject,
   ProjectListOptions,
   toListProjectResponse,
 } from '../api';
@@ -164,6 +165,65 @@ describe('projects api', () => {
         items: [{ id: '1' }, { id: '2' }],
         algoliaQueryId: 'query-id',
         algoliaIndexName: 'projects-index',
+      });
+    });
+  });
+
+  describe('patchProject', () => {
+    const mockFetch = jest.fn();
+    const patch = { tools: [{ name: 'Slack', url: 'https://slack.com' }] };
+
+    beforeEach(() => {
+      (global as unknown as { fetch: typeof fetch }).fetch = mockFetch as never;
+    });
+
+    it('makes an authorized PATCH request and returns the updated project', async () => {
+      const updated = { id: '1' } as ProjectDetail;
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue(updated),
+      });
+
+      const result = await patchProject('1', patch, 'Bearer token');
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://api.example.com/project/1',
+        expect.objectContaining({
+          method: 'PATCH',
+          headers: expect.objectContaining({ authorization: 'Bearer token' }),
+          body: JSON.stringify(patch),
+        }),
+      );
+      expect(result).toEqual(updated);
+    });
+
+    it('throws BackendError when the response is not ok', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Server Error',
+        json: jest.fn().mockResolvedValue({ message: 'boom' }),
+      });
+
+      await expect(patchProject('1', patch, 'Bearer token')).rejects.toThrow(
+        'Failed to update project with id 1. Expected status 2xx. Received status 500 Server Error.',
+      );
+    });
+
+    it('throws BackendError when the response body cannot be parsed', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Server Error',
+        json: jest.fn().mockRejectedValue(new Error('parse failure')),
+      });
+
+      const promise = patchProject('1', patch, 'Bearer token');
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: undefined,
+        statusCode: 500,
       });
     });
   });

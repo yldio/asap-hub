@@ -117,6 +117,13 @@ describe('EditModal', () => {
       // Should still be on /edit
       expect(screen.getByTestId('location')).toHaveTextContent('/edit');
     });
+
+    it('does not prompt when dirty if disableNavigationWarning is true', async () => {
+      renderModal(<EditModal {...props} dirty disableNavigationWarning />);
+
+      await userEvent.click(screen.getByTitle(/close/i));
+      expect(window.confirm).not.toHaveBeenCalled();
+    });
   });
 
   describe('when saving', () => {

@@ -10,7 +10,12 @@ import type {
 } from '@asap-hub/model';
 
 import type { ProjectListOptions } from '../api';
-import { projectsState, useProjectById, useProjects } from '../state';
+import {
+  projectsState,
+  useProjectById,
+  useProjects,
+  usePatchProjectById,
+} from '../state';
 import { auth0State } from '../../auth/state';
 
 jest.mock('../../hooks/algolia', () => ({
@@ -20,6 +25,7 @@ jest.mock('../../hooks/algolia', () => ({
 jest.mock('../api', () => ({
   getProjects: jest.fn(),
   getProject: jest.fn(),
+  patchProject: jest.fn(),
   toListProjectResponse: jest.fn(),
 }));
 
@@ -29,6 +35,7 @@ const { useAlgolia } = jest.requireMock('../../hooks/algolia') as jest.Mocked<
 const {
   getProjects: mockGetProjects,
   getProject: mockGetProject,
+  patchProject: mockPatchProject,
   toListProjectResponse: mockToListProjectResponse,
 } = jest.requireMock('../api') as jest.Mocked<typeof import('../api')>;
 
@@ -439,6 +446,136 @@ describe('projects state hooks', () => {
       expect(detailResult.current).toEqual(detailProject);
       // getProject should only be called once (the initial fetch, not after clearing list)
       expect(mockGetProject).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('usePatchProjectById', () => {
+    it('calls patchProject with the correct arguments and updates the project state', async () => {
+      const initialProject: ProjectDetail = {
+        id: 'project-1',
+        title: 'Original Project',
+        status: 'Active',
+        statusRank: 1,
+        projectType: 'Discovery Project',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        researchTheme: '',
+        teamName: '',
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Team 1',
+          teamType: 'Discovery Team',
+          researchTheme: '',
+        },
+      };
+
+      const updatedProject: ProjectDetail = {
+        ...initialProject,
+        tools: [{ name: 'Slack', url: 'https://slack.com' }],
+      };
+
+      const patch = { tools: [{ name: 'Slack', url: 'https://slack.com' }] };
+      const getTokenSilently = jest.fn().mockResolvedValue('token-abc');
+      mockPatchProject.mockResolvedValueOnce(updatedProject);
+
+      // Pre-populate project state so the hook doesn't suspend
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+        set(projectsState(defaultOptions), {
+          total: 1,
+          items: [initialProject as unknown as ProjectResponse],
+        });
+      };
+
+      const { result } = renderHook(
+        () => ({
+          patchFn: usePatchProjectById('project-1'),
+          project: useProjectById('project-1'),
+        }),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      // Wait for the hook to settle (useProjectById fetches via API)
+      mockGetProject.mockResolvedValueOnce(initialProject);
+      await waitFor(() =>
+        expect(result.current.project).toEqual(initialProject),
+      );
+
+      await act(async () => {
+        await result.current.patchFn(patch);
+      });
+
+      expect(mockPatchProject).toHaveBeenCalledWith(
+        'project-1',
+        patch,
+        'Bearer token-abc',
+      );
+
+      await waitFor(() => {
+        expect(result.current.project).toEqual(updatedProject);
+      });
+    });
+
+    it('uses patch tools when API returns fewer tools (e.g. read-after-write delay)', async () => {
+      const initialProject: ProjectDetail = {
+        id: 'project-1',
+        title: 'Original Project',
+        status: 'Active',
+        statusRank: 1,
+        projectType: 'Discovery Project',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        researchTheme: '',
+        teamName: '',
+        fundedTeam: {
+          id: 'team-1',
+          displayName: 'Team 1',
+          teamType: 'Discovery Team',
+          researchTheme: '',
+        },
+      };
+
+      const patch = {
+        tools: [{ name: 'Slack', url: 'https://slack.com' }],
+      };
+      // API returns project without tools (e.g. stale read after PATCH)
+      const apiResponse = { ...initialProject, tools: undefined };
+
+      const getTokenSilently = jest.fn().mockResolvedValue('token-abc');
+      mockPatchProject.mockResolvedValueOnce(apiResponse);
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+        set(projectsState(defaultOptions), {
+          total: 1,
+          items: [initialProject as unknown as ProjectResponse],
+        });
+      };
+
+      const { result } = renderHook(
+        () => ({
+          patchFn: usePatchProjectById('project-1'),
+          project: useProjectById('project-1'),
+        }),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      mockGetProject.mockResolvedValueOnce(initialProject);
+      await waitFor(() =>
+        expect(result.current.project).toEqual(initialProject),
+      );
+
+      await act(async () => {
+        await result.current.patchFn(patch);
+      });
+
+      await waitFor(() => {
+        expect(result.current.project?.tools).toEqual(patch.tools);
+      });
     });
   });
 });

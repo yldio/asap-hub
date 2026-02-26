@@ -4,6 +4,7 @@ import {
   FetchProjectsFilter,
   ListProjectResponse,
   ProjectResponse,
+  ProjectTool,
 } from '@asap-hub/model';
 import { ProjectDataProvider } from '../data-providers/types/projects.data-provider.types';
 
@@ -58,5 +59,10 @@ export default class ProjectController {
     options: FetchPaginationOptions,
   ): Promise<ListProjectResponse> {
     return this.projectDataProvider.fetchByUserId(userId, options);
+  }
+
+  async update(id: string, tools: ProjectTool[]): Promise<ProjectResponse> {
+    await this.projectDataProvider.update(id, { tools });
+    return this.fetchById(id);
   }
 }

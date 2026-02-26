@@ -2305,7 +2305,37 @@ input ExternalToolsFilter {
 
 type ExternalToolsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [ExternalToolsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
   teamsCollection(limit: Int = 100, locale: String, order: [ExternalToolsLinkingCollectionsTeamsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): TeamsCollection
+}
+
+enum ExternalToolsLinkingCollectionsProjectsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  endDate_ASC
+  endDate_DESC
+  googleDriveLink_ASC
+  googleDriveLink_DESC
+  grantId_ASC
+  grantId_DESC
+  projectId_ASC
+  projectId_DESC
+  projectType_ASC
+  projectType_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
@@ -5368,6 +5398,7 @@ type Projects implements Entry & _Node {
   supplementGrant(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: SupplementGrantFilter): SupplementGrant
   sys: Sys!
   title(locale: String, useFallbackLocale: Boolean): String
+  toolsCollection(limit: Int = 100, locale: String, order: [ProjectsToolsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ExternalToolsFilter): ProjectsToolsCollection
 }
 
 type ProjectsCollection {
@@ -5475,6 +5506,8 @@ input ProjectsFilter {
   title_not: String
   title_not_contains: String
   title_not_in: [String]
+  tools: cfExternalToolsNestedFilter
+  toolsCollection_exists: Boolean
 }
 
 type ProjectsLinkingCollections {
@@ -5576,6 +5609,30 @@ enum ProjectsResearchTagsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+type ProjectsToolsCollection {
+  items: [ExternalTools]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ProjectsToolsCollectionOrder {
+  description_ASC
+  description_DESC
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  url_ASC
+  url_DESC
 }
 
 """The 'Quality' type represents quality as whole numeric values between `1` and `100`."""

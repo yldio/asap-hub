@@ -204,7 +204,7 @@ const researchOutputPostRequestValidationSchema: JSONSchemaType<ResearchOutputPo
       'published',
     ],
     additionalProperties: false,
-  };
+  } as unknown as JSONSchemaType<ResearchOutputPostRequest>;
 
 const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPutRequest> =
   {
@@ -350,7 +350,7 @@ const researchOutputPutRequestValidationSchema: JSONSchemaType<ResearchOutputPut
       'keywords',
     ],
     additionalProperties: false,
-  };
+  } as unknown as JSONSchemaType<ResearchOutputPutRequest>;
 
 export const validateResearchOutputPostRequestParameters = validateInput(
   researchOutputPostRequestValidationSchema,

@@ -66,6 +66,7 @@ export const teamRouteFactory = (
     },
   );
 
+  // TODO: Remove this route once we have migrated all tools to projects
   teamRoutes.patch<{ teamId: string }>(
     '/teams/:teamId',
     async (req, res: Response<TeamResponse>) => {

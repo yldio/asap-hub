@@ -305,8 +305,12 @@ const formatComplianceData = (entries: GroupedEntries) => {
           : '',
         description: versionFields?.description?.['en-US'] || '',
         shortDescription: versionFields?.shortDescription?.['en-US'] || '',
-        teams: getLinkedTeamNames(versionFields?.teams['en-US']),
-        firstAuthors: getLinkedAuthors(versionFields?.firstAuthors['en-US']),
+        teams: versionFields?.teams
+          ? getLinkedTeamNames(versionFields?.teams['en-US'])
+          : '',
+        firstAuthors: versionFields?.firstAuthors
+          ? getLinkedAuthors(versionFields?.firstAuthors['en-US'])
+          : '',
         labs: versionFields?.labs
           ? getLinkedLabNames(versionFields?.labs['en-US'])
           : '',

@@ -348,11 +348,13 @@ export class TeamContentfulDataProvider implements TeamDataProvider {
         }),
       );
 
+      // TODO: Remove this function once we have migrated all tools to projects
       const publishedTools = await createAndPublishTools(
         environment,
         cleanTools,
       );
 
+      // TODO: Remove this function once we have migrated all tools to projects
       await patchAndPublish(team, {
         ...updateFields,
         tools: publishedTools.map((tool: { sys: { id: string } }) => ({
@@ -507,6 +509,7 @@ export const parseContentfulGraphQlTeam = (
   linkedProject?: TeamProjectItem | null,
 ): TeamDataObject => {
   const teamId = item.sys.id;
+  // TODO: Remove this function once we have migrated all tools to projects
   const tools = (item.toolsCollection?.items || []).reduce(
     (teamTools: TeamTool[], tool) => {
       if (!tool || !tool.name || !tool.url) {
@@ -674,6 +677,7 @@ export const parseContentfulGraphQlTeam = (
     projectStatus: (linkedProject?.status as ProjectStatus) ?? undefined,
     lastModifiedDate: new Date(item.sys.publishedAt).toISOString(),
     tags: parseResearchTags(linkedProject?.researchTagsCollection?.items || []),
+    // TODO: Remove this field once we have migrated all tools to projects
     tools,
     supplementGrant: getSupplementGrant(),
     ...parseManuscripts(),
@@ -773,6 +777,7 @@ export const parseContentfulGraphQlPublicTeam = (
   };
 };
 
+// TODO: Remove this function once we have migrated all tools to projects
 const createAndPublishTools = (environment: Environment, tools: TeamTool[]) =>
   Promise.all(
     tools.map(async (tool) => {

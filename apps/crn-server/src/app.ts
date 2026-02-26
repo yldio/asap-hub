@@ -313,7 +313,10 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const projectDataProvider =
     libs.projectDataProvider ||
-    new ProjectContentfulDataProvider(contentfulGraphQLClient);
+    new ProjectContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
 
   const labDataProvider =
     libs.labDataProvider ||

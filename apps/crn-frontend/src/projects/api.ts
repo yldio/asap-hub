@@ -8,6 +8,7 @@ import {
   ListProjectResponse,
   ProjectDetail,
   ProjectStatus,
+  ProjectTool,
   ProjectType,
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
@@ -90,6 +91,30 @@ export const toListProjectResponse = (
   algoliaQueryId: response.queryID,
   algoliaIndexName: response.index,
 });
+
+export const patchProject = async (
+  id: string,
+  patch: { tools: ProjectTool[] },
+  authorization: string,
+): Promise<ProjectDetail> => {
+  const resp = await fetch(`${API_BASE_URL}/project/${id}`, {
+    method: 'PATCH',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(patch),
+  });
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to update project with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+  return resp.json();
+};
 
 export const getProject = async (
   id: string,

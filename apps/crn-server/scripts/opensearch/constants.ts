@@ -80,7 +80,9 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         teamId: { type: 'text' },
-        teamName: textWithNgramKeyword(),
+        teamName: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+        }),
         isTeamInactive: { type: 'boolean' },
         teamAwardsCount: { type: 'integer' },
         users: {

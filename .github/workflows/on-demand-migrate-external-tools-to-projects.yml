@@ -1,0 +1,54 @@
+name: Migrate external tools to projects
+on:
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        required: true
+        description: The environment name
+        type: choice
+        options:
+          - Branch
+          - Development
+          - Production
+      contentful-env:
+        required: true
+        type: string
+        description: Choose the Contentful environment to run the migration against
+
+jobs:
+  migrate_external_tools_to_projects:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+      - name: Run External Tools to Projects Migration
+        run: |
+          yarn workspace @asap-hub/contentful migrate-external-tools-to-projects
+        env:
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+          CONTENTFUL_ENV_ID: ${{ inputs.contentful-env }}
+
+  notify_failure:
+    runs-on: ubuntu-latest
+    needs: [migrate_external_tools_to_projects]
+    if: ${{ failure() && inputs.environment-name=='Production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/slack/
+        with:
+          message: External tools to projects migration failed
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          status: failure

@@ -34,6 +34,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
       }
       backHref={backHref}
       showHeadingSave
+      disableNavigationWarning
       onSave={() =>
         onSave({
           id,

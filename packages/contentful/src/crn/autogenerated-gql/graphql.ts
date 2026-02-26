@@ -3257,12 +3257,24 @@ export type ExternalToolsFilter = {
 
 export type ExternalToolsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
   teamsCollection?: Maybe<TeamsCollection>;
 };
 
 export type ExternalToolsLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ExternalToolsLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ExternalToolsLinkingCollectionsProjectsCollectionOrder>>
+  >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -3278,6 +3290,35 @@ export type ExternalToolsLinkingCollectionsTeamsCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
+
+export enum ExternalToolsLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   DisplayNameAsc = 'displayName_ASC',
@@ -7749,6 +7790,7 @@ export type Projects = Entry &
     supplementGrant?: Maybe<SupplementGrant>;
     sys: Sys;
     title?: Maybe<Scalars['String']>;
+    toolsCollection?: Maybe<ProjectsToolsCollection>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
@@ -7879,6 +7921,17 @@ export type ProjectsTitleArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsToolsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsToolsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ExternalToolsFilter>;
+};
+
 export type ProjectsCollection = {
   items: Array<Maybe<Projects>>;
   limit: Scalars['Int'];
@@ -7984,6 +8037,8 @@ export type ProjectsFilter = {
   title_not?: InputMaybe<Scalars['String']>;
   title_not_contains?: InputMaybe<Scalars['String']>;
   title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  tools?: InputMaybe<CfExternalToolsNestedFilter>;
+  toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ProjectsLinkingCollections = {
@@ -8093,6 +8148,30 @@ export enum ProjectsResearchTagsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type ProjectsToolsCollection = {
+  items: Array<Maybe<ExternalTools>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum ProjectsToolsCollectionOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
 }
 
 export type Query = {
@@ -24824,6 +24903,15 @@ export type ProjectsContentDataFragment = Pick<
       >;
     }
   >;
+  toolsCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<ExternalTools, 'name' | 'description' | 'url'> & {
+          sys: Pick<Sys, 'id'>;
+        }
+      >
+    >;
+  }>;
   milestonesCollection?: Maybe<
     Pick<ProjectsMilestonesCollection, 'total'> & {
       items: Array<
@@ -24923,6 +25011,15 @@ export type FetchProjectsQuery = {
                 >;
               }
             >;
+            toolsCollection?: Maybe<{
+              items: Array<
+                Maybe<
+                  Pick<ExternalTools, 'name' | 'description' | 'url'> & {
+                    sys: Pick<Sys, 'id'>;
+                  }
+                >
+              >;
+            }>;
             milestonesCollection?: Maybe<
               Pick<ProjectsMilestonesCollection, 'total'> & {
                 items: Array<
@@ -25018,6 +25115,15 @@ export type FetchProjectByIdQuery = {
           >;
         }
       >;
+      toolsCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<ExternalTools, 'name' | 'description' | 'url'> & {
+              sys: Pick<Sys, 'id'>;
+            }
+          >
+        >;
+      }>;
       milestonesCollection?: Maybe<
         Pick<ProjectsMilestonesCollection, 'total'> & {
           items: Array<
@@ -25125,6 +25231,16 @@ export type FetchProjectsByTeamIdQuery = {
                             >;
                           }
                         >;
+                        toolsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                ExternalTools,
+                                'name' | 'description' | 'url'
+                              > & { sys: Pick<Sys, 'id'> }
+                            >
+                          >;
+                        }>;
                         milestonesCollection?: Maybe<
                           Pick<ProjectsMilestonesCollection, 'total'> & {
                             items: Array<
@@ -25248,6 +25364,16 @@ export type FetchProjectsByUserIdQuery = {
                             >;
                           }
                         >;
+                        toolsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<
+                                ExternalTools,
+                                'name' | 'description' | 'url'
+                              > & { sys: Pick<Sys, 'id'> }
+                            >
+                          >;
+                        }>;
                         milestonesCollection?: Maybe<
                           Pick<ProjectsMilestonesCollection, 'total'> & {
                             items: Array<
@@ -25364,6 +25490,15 @@ export type FetchProjectsByMembershipIdQuery = {
                     >;
                   }
                 >;
+                toolsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<
+                      Pick<ExternalTools, 'name' | 'description' | 'url'> & {
+                        sys: Pick<Sys, 'id'>;
+                      }
+                    >
+                  >;
+                }>;
                 milestonesCollection?: Maybe<
                   Pick<ProjectsMilestonesCollection, 'total'> & {
                     items: Array<
@@ -34410,6 +34545,43 @@ export const ProjectsContentDataFragmentDoc = {
           },
           {
             kind: 'Field',
+            name: { kind: 'Name', value: 'toolsCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'milestonesCollection' },
             arguments: [
               {
@@ -38981,7 +39153,7 @@ export const FetchAnalyticsTeamLeadershipDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'displayName_ASC' },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -39749,7 +39921,7 @@ export const FetchUserProductivityDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'firstName_ASC' },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -40083,7 +40255,7 @@ export const FetchTeamProductivityDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'displayName_ASC' },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -40243,7 +40415,7 @@ export const FetchUserTotalResearchOutputsDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'firstName_ASC' },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -40489,7 +40661,7 @@ export const FetchUserResearchOutputsDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'firstName_ASC' },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -40729,7 +40901,7 @@ export const FetchTeamCollaborationDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'displayName_ASC' },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -40999,7 +41171,7 @@ export const FetchEngagementDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'displayName_ASC' },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -41455,7 +41627,7 @@ export const FetchOsChampionDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'displayName_ASC' },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -41766,7 +41938,7 @@ export const FetchPreliminaryDataSharingDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'displayName_ASC' },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',
@@ -41967,7 +42139,7 @@ export const FetchAttendanceDocument = {
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'order' },
-                value: { kind: 'EnumValue', value: 'displayName_ASC' },
+                value: { kind: 'EnumValue', value: 'sys_id_ASC' },
               },
               {
                 kind: 'Argument',

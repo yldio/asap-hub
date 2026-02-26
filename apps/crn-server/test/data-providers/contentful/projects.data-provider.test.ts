@@ -1,5 +1,7 @@
 import { ProjectsOrder } from '@asap-hub/contentful';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
+import { getEntry } from '../../fixtures/contentful.fixtures';
 import {
   ProjectContentfulDataProvider,
   parseContentfulProject,
@@ -10,6 +12,7 @@ import {
   type ProjectMembershipItem,
 } from '../../../src/data-providers/contentful/project.data-provider';
 import { TraineeProject, TraineeProjectDetail } from '@asap-hub/model';
+import { Environment } from '@asap-hub/contentful';
 import {
   getExpectedDiscoveryProject,
   getExpectedDiscoveryProjectDetail,
@@ -409,6 +412,261 @@ describe('ProjectContentfulDataProvider', () => {
 
     // When no user members exist, members array should be empty
     expect(result.members).toHaveLength(0);
+  });
+});
+
+describe('parseContentfulProject - tools parsing', () => {
+  it('parses tools from toolsCollection', () => {
+    const item = {
+      ...getDiscoveryProjectGraphqlItem(),
+      toolsCollection: {
+        items: [
+          {
+            sys: { id: 'tool-1' },
+            name: 'Slack',
+            url: 'https://slack.com',
+            description: 'Team communication',
+          },
+          {
+            sys: { id: 'tool-2' },
+            name: 'GitHub',
+            url: 'https://github.com',
+            description: null,
+          },
+        ],
+      },
+    };
+
+    const result = parseContentfulProject(item as never);
+
+    expect(result.tools).toEqual([
+      {
+        id: 'tool-1',
+        name: 'Slack',
+        url: 'https://slack.com',
+        description: 'Team communication',
+      },
+      {
+        id: 'tool-2',
+        name: 'GitHub',
+        url: 'https://github.com',
+        description: undefined,
+      },
+    ]);
+  });
+
+  it('returns undefined for tools when toolsCollection is empty', () => {
+    const item = {
+      ...getDiscoveryProjectGraphqlItem(),
+      toolsCollection: { items: [] },
+    };
+
+    const result = parseContentfulProject(item as never);
+
+    expect(result.tools).toBeUndefined();
+  });
+
+  it('filters out tools missing name or url', () => {
+    const item = {
+      ...getDiscoveryProjectGraphqlItem(),
+      toolsCollection: {
+        items: [
+          null,
+          {
+            sys: { id: 'tool-no-url' },
+            name: 'No URL',
+            url: null,
+            description: null,
+          },
+          {
+            sys: { id: 'tool-no-name' },
+            name: null,
+            url: 'https://example.com',
+            description: null,
+          },
+          {
+            sys: { id: 'tool-valid' },
+            name: 'Valid',
+            url: 'https://valid.com',
+            description: null,
+          },
+        ],
+      },
+    };
+
+    const result = parseContentfulProject(item as never);
+
+    expect(result.tools).toEqual([
+      {
+        id: 'tool-valid',
+        name: 'Valid',
+        url: 'https://valid.com',
+        description: undefined,
+      },
+    ]);
+  });
+});
+
+describe('ProjectContentfulDataProvider - update', () => {
+  const contentfulClientMock = getContentfulGraphqlClientMock();
+  const environmentMock = getContentfulEnvironmentMock();
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
+
+  const dataProvider = new ProjectContentfulDataProvider(
+    contentfulClientMock,
+    contentfulRestClientMock,
+  );
+
+  const dataProviderWithoutRestClient = new ProjectContentfulDataProvider(
+    contentfulClientMock,
+  );
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('throws when REST client is not configured', async () => {
+    await expect(
+      dataProviderWithoutRestClient.update('project-1', { tools: [] }),
+    ).rejects.toThrow(
+      'REST client not configured for ProjectContentfulDataProvider',
+    );
+  });
+
+  it('creates a new tool when no id is provided', async () => {
+    const projectId = 'project-1';
+    const tool = {
+      name: 'Slack',
+      url: 'https://slack.com',
+      description: 'Team communication',
+    };
+
+    const projectMock = getEntry({});
+    environmentMock.getEntry.mockResolvedValueOnce(projectMock);
+
+    const toolMock = getEntry({});
+    environmentMock.createEntry.mockResolvedValueOnce(toolMock);
+    toolMock.publish = jest.fn().mockResolvedValueOnce(toolMock);
+
+    const projectMockUpdated = getEntry({});
+    projectMock.patch = jest.fn().mockResolvedValueOnce(projectMockUpdated);
+
+    await dataProvider.update(projectId, { tools: [tool] });
+
+    expect(environmentMock.getEntry).toHaveBeenCalledWith(projectId);
+    expect(environmentMock.createEntry).toHaveBeenCalledWith('externalTools', {
+      fields: {
+        name: { 'en-US': tool.name },
+        url: { 'en-US': tool.url },
+        description: { 'en-US': tool.description },
+      },
+    });
+    expect(projectMockUpdated.publish).toHaveBeenCalled();
+  });
+
+  it('updates an existing tool when id is provided', async () => {
+    const projectId = 'project-1';
+    const tool = {
+      id: 'existing-tool-id',
+      name: 'Updated Slack',
+      url: 'https://slack.com/updated',
+      description: 'Updated description',
+    };
+
+    const projectMock = getEntry({});
+    environmentMock.getEntry.mockResolvedValueOnce(projectMock);
+
+    const toolEntryMock = getEntry({});
+    toolEntryMock.sys.id = tool.id;
+    toolEntryMock.update = jest.fn().mockResolvedValueOnce(toolEntryMock);
+    toolEntryMock.publish = jest.fn().mockResolvedValueOnce(toolEntryMock);
+    environmentMock.getEntry.mockResolvedValueOnce(toolEntryMock);
+
+    const projectMockUpdated = getEntry({});
+    projectMock.patch = jest.fn().mockResolvedValueOnce(projectMockUpdated);
+
+    await dataProvider.update(projectId, { tools: [tool] });
+
+    expect(environmentMock.getEntry).toHaveBeenCalledWith(projectId);
+    expect(environmentMock.getEntry).toHaveBeenCalledWith(tool.id);
+    expect(toolEntryMock.update).toHaveBeenCalled();
+    expect(toolEntryMock.publish).toHaveBeenCalled();
+    expect(environmentMock.createEntry).not.toHaveBeenCalled();
+  });
+
+  it('deletes tools that are no longer in the incoming list', async () => {
+    const projectId = 'project-1';
+    const tool = {
+      name: 'New Tool',
+      url: 'https://new-tool.com',
+    };
+
+    const projectMock = getEntry({
+      tools: {
+        'en-US': [
+          { sys: { id: 'old-tool-1', linkType: 'Entry', type: 'Link' } },
+          { sys: { id: 'old-tool-2', linkType: 'Entry', type: 'Link' } },
+        ],
+      },
+    });
+    environmentMock.getEntry.mockResolvedValueOnce(projectMock);
+
+    const oldTool1Mock = getEntry({});
+    oldTool1Mock.unpublish = jest.fn().mockResolvedValueOnce(oldTool1Mock);
+    oldTool1Mock.delete = jest.fn().mockResolvedValueOnce(undefined);
+    environmentMock.getEntry.mockResolvedValueOnce(oldTool1Mock);
+
+    const oldTool2Mock = getEntry({});
+    oldTool2Mock.unpublish = jest.fn().mockResolvedValueOnce(oldTool2Mock);
+    oldTool2Mock.delete = jest.fn().mockResolvedValueOnce(undefined);
+    environmentMock.getEntry.mockResolvedValueOnce(oldTool2Mock);
+
+    const toolMock = getEntry({});
+    toolMock.sys.id = 'new-tool';
+    environmentMock.createEntry.mockResolvedValueOnce(toolMock);
+    toolMock.publish = jest.fn().mockResolvedValueOnce(toolMock);
+
+    const projectMockUpdated = getEntry({});
+    projectMock.patch = jest.fn().mockResolvedValueOnce(projectMockUpdated);
+
+    await dataProvider.update(projectId, { tools: [tool] });
+
+    expect(environmentMock.getEntry).toHaveBeenCalledWith('old-tool-1');
+    expect(environmentMock.getEntry).toHaveBeenCalledWith('old-tool-2');
+    expect(oldTool1Mock.unpublish).toHaveBeenCalled();
+    expect(oldTool1Mock.delete).toHaveBeenCalled();
+    expect(oldTool2Mock.unpublish).toHaveBeenCalled();
+    expect(oldTool2Mock.delete).toHaveBeenCalled();
+    expect(projectMockUpdated.publish).toHaveBeenCalled();
+  });
+
+  it('strips blank description from tool payload', async () => {
+    const projectId = 'project-1';
+    const tool = {
+      name: 'Clean Tool',
+      url: 'https://clean.com',
+      description: '   ',
+    };
+
+    const projectMock = getEntry({});
+    environmentMock.getEntry.mockResolvedValueOnce(projectMock);
+
+    const toolMock = getEntry({});
+    environmentMock.createEntry.mockResolvedValueOnce(toolMock);
+    toolMock.publish = jest.fn().mockResolvedValueOnce(toolMock);
+
+    const projectMockUpdated = getEntry({});
+    projectMock.patch = jest.fn().mockResolvedValueOnce(projectMockUpdated);
+
+    await dataProvider.update(projectId, { tools: [tool] });
+
+    expect(environmentMock.createEntry).toHaveBeenCalledWith('externalTools', {
+      fields: {
+        name: { 'en-US': tool.name },
+        url: { 'en-US': tool.url },
+      },
+    });
   });
 });
 

@@ -6,6 +6,7 @@ import {
 } from '../config';
 import { ProjectContentfulDataProvider } from '../data-providers/contentful/project.data-provider';
 import { ProjectDataProvider } from '../data-providers/types/projects.data-provider.types';
+import { getContentfulRestClientFactory } from './clients.dependencies';
 
 export const getProjectDataProvider = (): ProjectDataProvider => {
   const contentfulGraphQLClient = getContentfulGraphQLClient({
@@ -14,5 +15,8 @@ export const getProjectDataProvider = (): ProjectDataProvider => {
     environment: contentfulEnvId,
   });
 
-  return new ProjectContentfulDataProvider(contentfulGraphQLClient);
+  return new ProjectContentfulDataProvider(
+    contentfulGraphQLClient,
+    getContentfulRestClientFactory,
+  );
 };

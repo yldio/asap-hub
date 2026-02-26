@@ -24,6 +24,11 @@ jest.mock('../useManuscriptToast', () => ({
   useManuscriptToast: jest.fn(),
 }));
 
+jest.mock('../../../projects/state', () => ({
+  useProjectById: jest.fn().mockReturnValue(undefined),
+  usePatchProjectById: jest.fn().mockReturnValue(jest.fn()),
+}));
+
 const id = '42';
 
 const renderWithWrapper = (

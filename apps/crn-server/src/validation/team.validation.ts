@@ -22,7 +22,7 @@ export const validateTeamParameters = validateInput(
     coerce: false,
   },
 );
-
+// TODO: Remove this schema once we have migrated all tools to projects
 const teamToolSchema: JSONSchemaType<TeamTool> = {
   type: 'object',
   properties: {
@@ -35,6 +35,7 @@ const teamToolSchema: JSONSchemaType<TeamTool> = {
   additionalProperties: false,
 };
 
+// TODO: Remove this validation schema once we have migrated all tools to projects
 const teamPatchRequestValidationSchema: JSONSchemaType<TeamPatchRequest> = {
   type: 'object',
   properties: {
@@ -46,8 +47,9 @@ const teamPatchRequestValidationSchema: JSONSchemaType<TeamPatchRequest> = {
   },
   required: ['tools'],
   additionalProperties: false,
-};
+} as unknown as JSONSchemaType<TeamPatchRequest>;
 
+// TODO: Remove this validation once we have migrated all tools to projects
 export const validateTeamPatchRequest = validateInput(
   teamPatchRequestValidationSchema,
   {

@@ -106,6 +106,11 @@ jest.mock('../state', () => ({
   useManuscriptById: jest.fn(),
 }));
 
+jest.mock('../../../projects/state', () => ({
+  useProjectById: jest.fn().mockReturnValue(undefined),
+  usePatchProjectById: jest.fn().mockReturnValue(jest.fn()),
+}));
+
 const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
 >;

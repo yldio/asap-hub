@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { FetchProjectsFilter } from '@asap-hub/model';
+import Boom from '@hapi/boom';
 import ProjectController from '../controllers/project.controller';
 import {
   validateProjectFetchParameters,
   validateProjectParameters,
+  validateProjectPatchRequest,
 } from '../validation/project.validation';
 
 export const projectRouteFactory = (
@@ -70,6 +72,28 @@ export const projectRouteFactory = (
       const { projectId } = validateProjectParameters(req.params);
 
       const result = await projectController.fetchById(projectId);
+
+      res.json(result);
+    },
+  );
+
+  projectRoutes.patch<{ projectId: string }>(
+    '/project/:projectId',
+    async (req, res) => {
+      const { projectId } = validateProjectParameters(req.params);
+      const { tools } = validateProjectPatchRequest(req.body);
+
+      const project = await projectController.fetchById(projectId);
+      const teamId = 'teamId' in project ? project.teamId : undefined;
+
+      if (
+        !teamId ||
+        !req.loggedInUser?.teams?.find(({ id }) => id === teamId)
+      ) {
+        throw Boom.forbidden();
+      }
+
+      const result = await projectController.update(projectId, tools);
 
       res.json(result);
     },

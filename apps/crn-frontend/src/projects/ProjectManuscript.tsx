@@ -68,7 +68,7 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
 
   const pushFromHere = usePushFromHere();
 
-  const getWorkspacePath = () => {
+  const getWorkspacePath = (): string => {
     const projectRoutes = projects({});
     switch (projectType) {
       case 'discovery':
@@ -92,7 +92,7 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
   const onSuccess = () => {
     const path = getWorkspacePath();
     setFormType({ type: 'manuscript', accent: 'successLarge' });
-    pushFromHere(path);
+    void pushFromHere(path);
   };
 
   const onError = (error: ManuscriptError | Error) => {

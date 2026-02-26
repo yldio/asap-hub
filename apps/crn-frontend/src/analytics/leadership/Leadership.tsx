@@ -3,7 +3,6 @@ import {
   AnalyticsTeamLeadershipResponse,
   OSChampionOpensearchResponse,
   SortLeadershipAndMembership,
-  SortOSChampion,
 } from '@asap-hub/model';
 import {
   AnalyticsLeadershipPageBody,
@@ -12,7 +11,7 @@ import {
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import { useFlags } from '@asap-hub/react-context';
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
@@ -29,19 +28,18 @@ import {
   getAnalyticsOSChampion,
 } from './api';
 import { leadershipToCSV, osChampionToCSV } from './export';
-import OSChampion from './OSChampion';
+import OSChampion, { getOSChampionSortFromSearch } from './OSChampion';
 import TeamLeadership from './TeamLeadership';
 
 const Leadership: FC<Record<string, never>> = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { metric: metricParam } = useParams<{
     metric: MetricOption;
   }>();
   const metric = (metricParam ?? 'working-group') as MetricOption;
   const { currentPage } = usePaginationParams();
 
-  const [osChampionSort, setOsChampionSort] =
-    useState<SortOSChampion>('team_asc');
   const [teamSort, setTeamSort] =
     useState<SortLeadershipAndMembership>('team_asc');
   const setMetric = (newMetric: MetricOption) => {
@@ -95,7 +93,7 @@ const Leadership: FC<Record<string, never>> = () => {
         getAnalyticsOSChampion(osChampionClient.client, {
           tags,
           timeRange,
-          sort: osChampionSort,
+          sort: getOSChampionSortFromSearch(location.search),
           ...paginationParams,
         }),
       osChampionToCSV,
@@ -149,11 +147,7 @@ const Leadership: FC<Record<string, never>> = () => {
       currentPage={currentPage}
     >
       {isOSChampionPage ? (
-        <OSChampion
-          tags={tags}
-          sort={osChampionSort}
-          setSort={setOsChampionSort}
-        />
+        <OSChampion tags={tags} />
       ) : (
         <TeamLeadership
           tags={tags}

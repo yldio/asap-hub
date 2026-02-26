@@ -116,9 +116,23 @@ export const getEngagementPerformance = async (
   );
 };
 
+const meetingRepAttendanceOpensearchSort: OpensearchSortMap<SortMeetingRepAttendance> =
+  {
+    team_asc: [{ 'teamName.keyword': { order: 'asc' } }],
+    team_desc: [{ 'teamName.keyword': { order: 'desc' } }],
+    attendance_percentage_asc: [
+      { limitedData: { order: 'desc' } },
+      { attendancePercentage: { order: 'asc', missing: '_last' } },
+    ],
+    attendance_percentage_desc: [
+      { attendancePercentage: { order: 'desc', missing: '_last' } },
+      { limitedData: { order: 'asc' } },
+    ],
+  };
+
 export const getMeetingRepAttendance = async (
   opensearchClient: OpensearchClient<MeetingRepAttendanceResponse>,
-  { tags, currentPage, pageSize, timeRange }: MeetingRepAttendanceOptions,
+  { tags, currentPage, pageSize, timeRange, sort }: MeetingRepAttendanceOptions,
 ): Promise<ListMeetingRepAttendanceResponse | undefined> =>
   opensearchClient.search({
     searchTags: tags,
@@ -126,4 +140,5 @@ export const getMeetingRepAttendance = async (
     pageSize: pageSize ?? undefined,
     timeRange,
     searchScope: 'flat',
+    sort: sort ? meetingRepAttendanceOpensearchSort[sort] : undefined,
   });

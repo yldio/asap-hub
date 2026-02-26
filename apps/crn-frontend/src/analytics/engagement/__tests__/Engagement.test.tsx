@@ -21,7 +21,9 @@ import {
   renderHook,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { fireEvent } from '@testing-library/dom';
 import React, { Suspense } from 'react';
+import * as ReactRouter from 'react-router';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { OpensearchClient } from '../../utils/opensearch';
@@ -488,6 +490,57 @@ describe('Attendance', () => {
       expect.stringMatching(/engagement_attendance_\d+\.csv/),
       expect.anything(),
     );
+  });
+
+  it('reads valid sort from URL and passes it to API', async () => {
+    await renderPage(
+      `${
+        analytics({}).engagement({}).metric({ metric: 'attendance' }).$
+      }?sort=attendance_percentage_desc`,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: /Meeting Rep Attendance/i }),
+      ).toBeVisible();
+    });
+
+    expect(mockGetMeetingRepAttendance).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        sort: 'attendance_percentage_desc',
+      }),
+    );
+  });
+
+  it('calls navigate with new sort and replace when column sort button is clicked', async () => {
+    const mockNavigate = jest.fn();
+    const useNavigateSpy = jest
+      .spyOn(ReactRouter, 'useNavigate')
+      .mockReturnValue(mockNavigate);
+
+    await renderPage(
+      analytics({}).engagement({}).metric({ metric: 'attendance' }).$,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: /Meeting Rep Attendance/i }),
+      ).toBeVisible();
+    });
+
+    const attendanceHeader = await screen.findByRole('columnheader', {
+      name: /Attendance/,
+    });
+    const sortButton = attendanceHeader.querySelector('button');
+    fireEvent.click(sortButton!);
+
+    expect(mockNavigate).toHaveBeenCalledWith(
+      { search: 'sort=attendance_percentage_desc' } as never,
+      { replace: true },
+    );
+
+    useNavigateSpy.mockRestore();
   });
 
   it('throws error when fails to fetch attendance data', async () => {

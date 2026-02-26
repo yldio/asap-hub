@@ -441,6 +441,37 @@ describe('getAnalyticsOSChampion', () => {
         currentPage: 0,
         pageSize: 10,
         timeRange: 'all',
+        sort: [{ 'teamName.keyword': { order: 'asc' } }],
+      }),
+    );
+  });
+
+  it('should pass sort clause to opensearch when sort is team_desc', async () => {
+    opensearchClient.search.mockResolvedValue(defaultResponse);
+
+    await getAnalyticsOSChampion(opensearchClient, {
+      ...defaultOSChampionOptions,
+      sort: 'team_desc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [{ 'teamName.keyword': { order: 'desc' } }],
+      }),
+    );
+  });
+
+  it('should pass sort clause to opensearch when sort is os_champion_awards_desc', async () => {
+    opensearchClient.search.mockResolvedValue(defaultResponse);
+
+    await getAnalyticsOSChampion(opensearchClient, {
+      ...defaultOSChampionOptions,
+      sort: 'os_champion_awards_desc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [{ teamAwardsCount: { order: 'desc' } }],
       }),
     );
   });

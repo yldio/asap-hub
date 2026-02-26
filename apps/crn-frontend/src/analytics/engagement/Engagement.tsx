@@ -1,4 +1,4 @@
-import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
+import { createCsvFileStream, resultsToStream } from '@asap-hub/frontend-utils';
 import {
   EngagementResponse,
   EngagementType,
@@ -11,7 +11,7 @@ import { useFlags } from '@asap-hub/react-context';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 import {
   useAnalytics,
@@ -22,13 +22,16 @@ import {
 import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { getEngagement } from './api';
 import { engagementToCSV, meetingRepAttendanceToCSV } from './export';
-import MeetingRepAttendance from './MeetingRepAttendance';
+import MeetingRepAttendance, {
+  getMeetingRepAttendanceSortFromSearch,
+} from './MeetingRepAttendance';
 import RepresentationOfPresenters from './RepresentationOfPresenters';
 import { useEngagementPerformanceValue } from './state';
 
 const Engagement = () => {
   const { currentPage } = usePaginationParams();
   const navigate = useNavigate();
+  const { search } = useLocation();
   const { timeRange } = useAnalytics();
 
   const { metric: metricParam } = useParams<{
@@ -69,7 +72,7 @@ const Engagement = () => {
             tags,
             timeRange: timeRange as LimitedTimeRangeOption,
             ...paginationParams,
-            sort: 'team_asc',
+            sort: getMeetingRepAttendanceSortFromSearch(search),
           }),
         meetingRepAttendanceToCSV,
         200,

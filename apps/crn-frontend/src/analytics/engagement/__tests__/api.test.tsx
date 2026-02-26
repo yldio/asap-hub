@@ -615,6 +615,7 @@ describe('getMeetingRepAttendance', () => {
       pageSize: undefined,
       timeRange: 'all',
       searchScope: 'flat',
+      sort: [{ 'teamName.keyword': { order: 'asc' } }],
     });
   });
 
@@ -635,7 +636,50 @@ describe('getMeetingRepAttendance', () => {
       pageSize: 10,
       timeRange: 'all',
       searchScope: 'flat',
+      sort: [{ 'teamName.keyword': { order: 'asc' } }],
     });
+  });
+
+  it('passes sort clauses to search for each sort option', async () => {
+    mockOpensearchClient.search.mockResolvedValue(defaultResponse);
+
+    await getMeetingRepAttendance(mockOpensearchClient, {
+      ...defaultAttendanceOptions,
+      sort: 'team_desc',
+    });
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [{ 'teamName.keyword': { order: 'desc' } }],
+      }),
+    );
+
+    mockOpensearchClient.search.mockClear();
+    await getMeetingRepAttendance(mockOpensearchClient, {
+      ...defaultAttendanceOptions,
+      sort: 'attendance_percentage_asc',
+    });
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          { limitedData: { order: 'desc' } },
+          { attendancePercentage: { order: 'asc', missing: '_last' } },
+        ],
+      }),
+    );
+
+    mockOpensearchClient.search.mockClear();
+    await getMeetingRepAttendance(mockOpensearchClient, {
+      ...defaultAttendanceOptions,
+      sort: 'attendance_percentage_desc',
+    });
+    expect(mockOpensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          { attendancePercentage: { order: 'desc', missing: '_last' } },
+          { limitedData: { order: 'asc' } },
+        ],
+      }),
+    );
   });
 
   it.each`
@@ -659,6 +703,7 @@ describe('getMeetingRepAttendance', () => {
       pageSize: undefined,
       timeRange,
       searchScope: 'flat',
+      sort: [{ 'teamName.keyword': { order: 'asc' } }],
     });
   });
 

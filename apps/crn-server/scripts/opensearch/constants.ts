@@ -41,6 +41,24 @@ export const PUBLICATION_COMPLIANCE_HEADER_MAPPINGS = {
   'RESEARCH OUTPUT COMPLIANCE - # lab materials': 'numberOfLabMaterials',
 } as const;
 
+/** Reusable text field with ngram analyzer and keyword subfield. Optional normalizer and/or raw subfield. */
+const textWithNgramKeyword = (options?: {
+  normalizer?: string;
+  raw?: boolean;
+}) =>
+  ({
+    type: 'text',
+    analyzer: 'ngram_analyzer',
+    search_analyzer: 'ngram_search_analyzer',
+    fields: {
+      keyword: {
+        type: 'keyword',
+        ...(options?.normalizer && { normalizer: options.normalizer }),
+      },
+      ...(options?.raw && { raw: { type: 'keyword' } as const }),
+    },
+  }) as const;
+
 export const validMetrics = [
   'os-champion',
   'preliminary-data-sharing',
@@ -62,28 +80,14 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         teamId: { type: 'text' },
-        teamName: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword' },
-          },
-        },
+        teamName: textWithNgramKeyword(),
         isTeamInactive: { type: 'boolean' },
         teamAwardsCount: { type: 'integer' },
         users: {
           type: 'nested',
           properties: {
             id: { type: 'text' },
-            name: {
-              type: 'text',
-              analyzer: 'ngram_analyzer',
-              search_analyzer: 'ngram_search_analyzer',
-              fields: {
-                keyword: { type: 'keyword' },
-              },
-            },
+            name: textWithNgramKeyword(),
             awardsCount: { type: 'integer' },
           },
         },
@@ -96,14 +100,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         teamId: { type: 'text' },
-        teamName: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword' },
-          },
-        },
+        teamName: textWithNgramKeyword(),
         isTeamInactive: { type: 'boolean' },
         percentShared: { type: 'integer' },
         limitedData: { type: 'boolean' },
@@ -116,14 +113,9 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         teamId: { type: 'text' },
-        teamName: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword' },
-          },
-        },
+        teamName: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+        }),
         isTeamInactive: { type: 'boolean' },
         attendancePercentage: { type: 'integer' },
         limitedData: { type: 'boolean' },
@@ -136,14 +128,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         teamId: { type: 'text' },
-        teamName: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword' },
-          },
-        },
+        teamName: textWithNgramKeyword(),
         isTeamInactive: { type: 'boolean' },
         numberOfPreprints: { type: 'integer' },
         numberOfPublications: { type: 'integer' },
@@ -158,14 +143,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         teamId: { type: 'text' },
-        teamName: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword' },
-          },
-        },
+        teamName: textWithNgramKeyword(),
         isTeamInactive: { type: 'boolean' },
         overallCompliance: { type: 'integer' },
         ranking: { type: 'text' },
@@ -192,27 +170,13 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         id: { type: 'text' },
-        name: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword' },
-          },
-        },
+        name: textWithNgramKeyword(),
         isAlumni: { type: 'boolean' },
         teams: {
           type: 'nested',
           properties: {
             id: { type: 'text' },
-            name: {
-              type: 'text',
-              analyzer: 'ngram_analyzer',
-              search_analyzer: 'ngram_search_analyzer',
-              fields: {
-                keyword: { type: 'keyword' },
-              },
-            },
+            name: textWithNgramKeyword(),
             role: { type: 'keyword' },
             isTeamInactive: { type: 'boolean' },
             isUserInactiveOnTeam: { type: 'boolean' },
@@ -231,15 +195,10 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         id: { type: 'text' },
-        name: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
-            raw: { type: 'keyword' }, // For display in aggregations, preserves original case
-          },
-        },
+        name: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+          raw: true,
+        }),
         isInactive: { type: 'boolean' },
         Article: { type: 'integer' },
         Bioinformatics: { type: 'integer' },
@@ -256,32 +215,16 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         id: { type: 'text' },
-        name: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword' },
-          },
-        },
+        name: textWithNgramKeyword(),
         isAlumni: { type: 'boolean' },
         alumniSince: { type: 'keyword' },
         teams: {
           type: 'nested',
           properties: {
             id: { type: 'text' },
-            team: {
-              type: 'text',
-              analyzer: 'ngram_analyzer',
-              search_analyzer: 'ngram_search_analyzer',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  normalizer: 'lowercase_normalizer',
-                },
-                // raw: { type: 'keyword' },
-              },
-            },
+            team: textWithNgramKeyword({
+              normalizer: 'lowercase_normalizer',
+            }),
             role: { type: 'keyword' },
             teamInactiveSince: { type: 'keyword' },
             teamMembershipInactiveSince: { type: 'keyword' },
@@ -301,15 +244,10 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         id: { type: 'text' },
-        name: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
-            raw: { type: 'keyword' },
-          },
-        },
+        name: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+          raw: true,
+        }),
         isInactive: { type: 'boolean' },
         inactiveSince: { type: 'keyword' },
         Article: { type: 'integer' },
@@ -326,17 +264,9 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
           type: 'nested',
           properties: {
             id: { type: 'text' },
-            name: {
-              type: 'text',
-              analyzer: 'ngram_analyzer',
-              search_analyzer: 'ngram_search_analyzer',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  normalizer: 'lowercase_normalizer',
-                },
-              },
-            },
+            name: textWithNgramKeyword({
+              normalizer: 'lowercase_normalizer',
+            }),
             isInactive: { type: 'boolean' },
             Article: { type: 'integer' },
             Bioinformatics: { type: 'integer' },
@@ -355,15 +285,10 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         id: { type: 'text' },
-        displayName: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
-            raw: { type: 'keyword' },
-          },
-        },
+        displayName: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+          raw: true,
+        }),
         isInactive: { type: 'boolean' },
         inactiveSince: { type: 'keyword' },
         interestGroupLeadershipRoleCount: { type: 'integer' },
@@ -378,15 +303,10 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         id: { type: 'text' },
-        displayName: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
-            raw: { type: 'keyword' },
-          },
-        },
+        displayName: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+          raw: true,
+        }),
         isInactive: { type: 'boolean' },
         inactiveSince: { type: 'keyword' },
         workingGroupLeadershipRoleCount: { type: 'integer' },
@@ -401,15 +321,10 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         id: { type: 'text' },
-        name: {
-          type: 'text',
-          analyzer: 'ngram_analyzer',
-          search_analyzer: 'ngram_search_analyzer',
-          fields: {
-            keyword: { type: 'keyword', normalizer: 'lowercase_normalizer' },
-            raw: { type: 'keyword' },
-          },
-        },
+        name: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+          raw: true,
+        }),
         // TODO: Remove redundancy between `isInactive` and `inactiveSince`.
         // Once Algolia is dropped, keep only one field across all OpenSearch team metrics.
         isInactive: { type: 'boolean' },

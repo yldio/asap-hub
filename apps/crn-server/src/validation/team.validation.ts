@@ -47,7 +47,7 @@ const teamPatchRequestValidationSchema: JSONSchemaType<TeamPatchRequest> = {
   },
   required: ['tools'],
   additionalProperties: false,
-};
+} as unknown as JSONSchemaType<TeamPatchRequest>;
 
 // TODO: Remove this validation once we have migrated all tools to projects
 export const validateTeamPatchRequest = validateInput(

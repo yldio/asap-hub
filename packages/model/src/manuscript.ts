@@ -722,7 +722,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
     },
     required: ['title', 'teamId', 'versions'],
     additionalProperties: false,
-  };
+  } as unknown as JSONSchemaType<ManuscriptPostRequest>;
 
 export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
   {

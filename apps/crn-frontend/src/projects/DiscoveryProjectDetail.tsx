@@ -22,8 +22,9 @@ type DiscoveryProjectDetailParams = {
 };
 
 const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
-  const { projectId } = useParams<DiscoveryProjectDetailParams>();
-  const projectDetail = useProjectById(projectId ?? '');
+  const { projectId: rawProjectId } = useParams<DiscoveryProjectDetailParams>();
+  const projectId = rawProjectId ?? '';
+  const projectDetail = useProjectById(projectId);
   const { isEnabled } = useFlags();
   const user = useCurrentUserCRN();
   const isStaff = user?.role === 'Staff';
@@ -40,7 +41,7 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
 
   const route = projects({})
     .discoveryProjects({})
-    .discoveryProject({ projectId: projectId ?? '' });
+    .discoveryProject({ projectId });
 
   const isProjectMember = !!user?.projects.find(({ id }) => id === projectId);
   const showWorkspace =
@@ -48,7 +49,7 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
 
   return (
-    <Frame title={projectDetail?.title || ''}>
+    <Frame title={projectDetail.title || ''}>
       <ManuscriptToastProvider>
         <EligibilityReasonProvider>
           <ProjectDetailPage
@@ -66,7 +67,7 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
                   element={
                     <Frame title="Create Manuscript">
                       <ProjectManuscript
-                        projectId={projectId ?? ''}
+                        projectId={projectId}
                         projectType="discovery"
                       />
                     </Frame>
@@ -81,7 +82,7 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
                   element={
                     <Frame title="Edit Manuscript">
                       <ProjectManuscript
-                        projectId={projectId ?? ''}
+                        projectId={projectId}
                         projectType="discovery"
                       />
                     </Frame>
@@ -96,7 +97,7 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
                   element={
                     <Frame title="Resubmit Manuscript">
                       <ProjectManuscript
-                        projectId={projectId ?? ''}
+                        projectId={projectId}
                         projectType="discovery"
                         resubmitManuscript
                       />
@@ -120,7 +121,7 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
                   path="workspace"
                   element={
                     <ProjectWorkspace
-                      id={projectId ?? ''}
+                      id={projectId}
                       isProjectMember={isProjectMember}
                       isTeamBased={true}
                       manuscripts={[]}

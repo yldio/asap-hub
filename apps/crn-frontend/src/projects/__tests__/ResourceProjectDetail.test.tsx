@@ -75,6 +75,14 @@ const mockResourceProject: ResourceProjectDetailType = {
   },
 };
 
+const mockResourceProjectNoContact: ResourceProjectDetailType = {
+  ...mockResourceProject,
+  id: 'resource-no-contact',
+  contactEmail: '',
+  members: [],
+  collaborators: [],
+};
+
 const mockResourceProjectCollabContact: ResourceProjectDetailType = {
   ...mockResourceProject,
   id: 'resource-collab',
@@ -118,6 +126,9 @@ jest.mock('../state', () => {
   const useProjectById = jest.fn((id: string) => {
     if (id === 'resource-1') {
       return mockResourceProject;
+    }
+    if (id === 'resource-no-contact') {
+      return mockResourceProjectNoContact;
     }
     if (id === 'resource-collab') {
       return mockResourceProjectCollabContact;
@@ -270,6 +281,60 @@ describe('ResourceProjectDetail', () => {
       'resource-1',
       memberUser,
       'workspace/create-manuscript',
+    );
+    expect(
+      await screen.findByTestId('mock-manuscript-form'),
+    ).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('renders edit manuscript route via lazy loading', async () => {
+    const memberUser = {
+      projects: [{ id: 'resource-1' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderResourceProjectDetail(
+      'resource-1',
+      memberUser,
+      'workspace/edit-manuscript/ms-1',
+    );
+    expect(
+      await screen.findByTestId('mock-manuscript-form'),
+    ).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('renders workspace when project has no contactEmail', async () => {
+    const memberUser = {
+      projects: [{ id: 'resource-no-contact' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderResourceProjectDetail(
+      'resource-no-contact',
+      memberUser,
+      'workspace',
+    );
+    expect(
+      await screen.findByRole('heading', { name: 'Compliance Review' }),
+    ).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('renders resubmit manuscript route via lazy loading', async () => {
+    const memberUser = {
+      projects: [{ id: 'resource-1' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderResourceProjectDetail(
+      'resource-1',
+      memberUser,
+      'workspace/resubmit-manuscript/ms-1',
     );
     expect(
       await screen.findByTestId('mock-manuscript-form'),

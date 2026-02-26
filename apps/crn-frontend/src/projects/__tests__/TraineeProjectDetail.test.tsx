@@ -63,6 +63,13 @@ const mockTraineeProject: TraineeProjectDetailType = {
   contactEmail: 'contact@example.com',
 };
 
+const mockTraineeProjectNoContact: TraineeProjectDetailType = {
+  ...mockTraineeProject,
+  id: 'trainee-no-contact',
+  contactEmail: '',
+  members: [],
+};
+
 const mockDiscoveryProject: DiscoveryProject = {
   id: 'discovery-1',
   title: 'Discovery Project 1',
@@ -82,6 +89,9 @@ jest.mock('../state', () => {
   const useProjectById = jest.fn((id: string) => {
     if (id === 'trainee-1') {
       return mockTraineeProject;
+    }
+    if (id === 'trainee-no-contact') {
+      return mockTraineeProjectNoContact;
     }
     if (id === 'discovery-1') {
       return mockDiscoveryProject;
@@ -213,6 +223,60 @@ describe('TraineeProjectDetail', () => {
       'trainee-1',
       memberUser,
       'workspace/create-manuscript',
+    );
+    expect(
+      await screen.findByTestId('mock-manuscript-form'),
+    ).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('renders edit manuscript route via lazy loading', async () => {
+    const memberUser = {
+      projects: [{ id: 'trainee-1' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderTraineeProjectDetail(
+      'trainee-1',
+      memberUser,
+      'workspace/edit-manuscript/ms-1',
+    );
+    expect(
+      await screen.findByTestId('mock-manuscript-form'),
+    ).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('renders workspace when project has no contactEmail', async () => {
+    const memberUser = {
+      projects: [{ id: 'trainee-no-contact' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderTraineeProjectDetail(
+      'trainee-no-contact',
+      memberUser,
+      'workspace',
+    );
+    expect(
+      await screen.findByRole('heading', { name: 'Compliance Review' }),
+    ).toBeInTheDocument();
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
+  it('renders resubmit manuscript route via lazy loading', async () => {
+    const memberUser = {
+      projects: [{ id: 'trainee-1' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderTraineeProjectDetail(
+      'trainee-1',
+      memberUser,
+      'workspace/resubmit-manuscript/ms-1',
     );
     expect(
       await screen.findByTestId('mock-manuscript-form'),

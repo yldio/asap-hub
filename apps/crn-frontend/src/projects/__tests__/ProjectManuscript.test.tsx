@@ -88,6 +88,7 @@ afterEach(() => {
 const renderPage = async (
   projectType: 'discovery' | 'resource' | 'trainee' = 'discovery',
   resubmit = false,
+  user: Record<string, unknown> = {},
 ) => {
   const routeTemplate =
     projects.template +
@@ -129,7 +130,7 @@ const renderPage = async (
   render(
     <RecoilRoot>
       <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
+        <Auth0Provider user={user}>
           <WhenReady>
             <RouterProvider router={router} />
           </WhenReady>
@@ -330,6 +331,17 @@ describe('ProjectManuscript', () => {
       expect(screen.getByText(/what are you sharing/i)).toBeInTheDocument();
     });
     expect(mockUseManuscriptById).toHaveBeenCalledWith('ms-1');
+  });
+
+  it('falls back to empty teamId when user has no teams', async () => {
+    await renderPage('discovery', false, { teams: [] });
+    await waitFor(() => {
+      expect(screen.getByText(/what are you sharing/i)).toBeInTheDocument();
+    });
+    expect(capturedFormProps.teamId).toBe('');
+    expect(capturedFormProps.selectedTeams).toEqual([
+      { value: '', label: '', isFixed: true },
+    ]);
   });
 
   describe('with existing manuscript data', () => {

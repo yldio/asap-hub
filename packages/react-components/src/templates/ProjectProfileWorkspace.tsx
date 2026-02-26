@@ -173,7 +173,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
 
   const handleGoToManuscriptForm = () => {
     if (createManuscriptHref) {
-      navigate(createManuscriptHref);
+      void navigate(createManuscriptHref);
     }
   };
 

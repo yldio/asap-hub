@@ -363,7 +363,7 @@ describe('ProjectManuscript', () => {
           ],
         },
         jest.fn(),
-      ] as any);
+      ] as unknown);
 
       await renderPage();
 

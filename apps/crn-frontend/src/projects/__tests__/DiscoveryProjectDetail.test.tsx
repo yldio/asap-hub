@@ -70,6 +70,8 @@ const mockDiscoveryProject: DiscoveryProjectDetailType = {
     researchTheme: 'Theme One',
     teamDescription: 'Team description',
   },
+  manuscripts: [],
+  collaborationManuscripts: [],
 };
 
 const mockDiscoveryProjectNoContact: DiscoveryProjectDetailType = {

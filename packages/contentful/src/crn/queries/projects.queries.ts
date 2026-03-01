@@ -146,6 +146,34 @@ export const FETCH_PROJECT_BY_ID = gql`
   query FetchProjectById($id: String!) {
     projects(id: $id) {
       ...ProjectsContentData
+      membersCollection(limit: 100) {
+        items {
+          projectMember {
+            ... on Teams {
+              linkedFrom {
+                manuscriptsCollection(
+                  limit: 20
+                  order: sys_firstPublishedAt_DESC
+                ) {
+                  items {
+                    sys {
+                      id
+                    }
+                    status
+                    teamsCollection(limit: 1) {
+                      items {
+                        sys {
+                          id
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 `;

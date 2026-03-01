@@ -271,6 +271,59 @@ export const parseContentfulProject = (
   }
 };
 
+// Manuscript sorting by status priority (same logic as team data provider)
+type ManuscriptRef = {
+  sys: { id: string };
+  status?: string | null;
+  teamsCollection?: {
+    items: Array<{ sys: { id: string } } | null>;
+  } | null;
+};
+
+const MANUSCRIPT_STATUS_PRIORITY: Record<string, number> = {
+  Compliant: 1,
+  'Closed (other)': 2,
+};
+
+const sortManuscriptRefs = (manuscripts: ManuscriptRef[]) =>
+  [...manuscripts].sort((a, b) => {
+    const aPriority = MANUSCRIPT_STATUS_PRIORITY[a.status || ''] ?? 0;
+    const bPriority = MANUSCRIPT_STATUS_PRIORITY[b.status || ''] ?? 0;
+    return aPriority - bPriority;
+  });
+
+// Parse manuscripts from the funded team's linkedFrom data
+export const parseProjectManuscripts = (
+  members: ProjectMembershipItem[],
+): { manuscripts: string[]; collaborationManuscripts: string[] } => {
+  const team = members.find((m) => m.projectMember?.__typename === 'Teams');
+  const teamMember = team?.projectMember;
+
+  if (!teamMember || teamMember.__typename !== 'Teams') {
+    return { manuscripts: [], collaborationManuscripts: [] };
+  }
+
+  const teamId = teamMember.sys.id;
+  const allManuscripts = cleanArray(
+    teamMember.linkedFrom?.manuscriptsCollection?.items,
+  ) as ManuscriptRef[];
+
+  const teamManuscripts = allManuscripts.filter(
+    (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id === teamId,
+  );
+
+  const collaborationManuscripts = allManuscripts.filter(
+    (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id !== teamId,
+  );
+
+  return {
+    manuscripts: sortManuscriptRefs(teamManuscripts).map((m) => m.sys.id),
+    collaborationManuscripts: sortManuscriptRefs(
+      collaborationManuscripts,
+    ).map((m) => m.sys.id),
+  };
+};
+
 // Parse Contentful project to ProjectDetail format with all additional fields
 export const parseContentfulProjectDetail = (
   item: ProjectItem,
@@ -305,6 +358,9 @@ export const parseContentfulProjectDetail = (
 
   const members = cleanArray(item.membersCollection?.items || []);
 
+  // Parse manuscripts from the funded team
+  const manuscriptData = parseProjectManuscripts(members);
+
   switch (projectType) {
     case 'Discovery Project': {
       const team = members.find((m) => m.projectMember?.__typename === 'Teams');
@@ -332,6 +388,7 @@ export const parseContentfulProjectDetail = (
           milestones: milestones.length > 0 ? milestones : undefined,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
+          ...manuscriptData,
         } as DiscoveryProjectDetail;
       }
 
@@ -341,6 +398,7 @@ export const parseContentfulProjectDetail = (
         originalGrantProposalId,
         supplementGrant,
         milestones: milestones.length > 0 ? milestones : undefined,
+        ...manuscriptData,
       } as DiscoveryProjectDetail;
     }
 
@@ -369,6 +427,7 @@ export const parseContentfulProjectDetail = (
           milestones: milestones.length > 0 ? milestones : undefined,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
+          ...manuscriptData,
         } as ResourceProjectDetail;
       }
 
@@ -383,6 +442,7 @@ export const parseContentfulProjectDetail = (
         supplementGrant,
         milestones: milestones.length > 0 ? milestones : undefined,
         members: userMembers.length > 0 ? userMembers : undefined,
+        ...manuscriptData,
       } as ResourceProjectDetail;
     }
 
@@ -395,6 +455,7 @@ export const parseContentfulProjectDetail = (
         supplementGrant,
         milestones: milestones.length > 0 ? milestones : undefined,
         members: allMembers,
+        ...manuscriptData,
       } as TraineeProjectDetail;
     }
 

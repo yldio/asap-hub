@@ -61,6 +61,8 @@ const mockTraineeProject: TraineeProjectDetailType = {
   originalGrant: 'Original Grant',
   originalGrantProposalId: 'proposal-1',
   contactEmail: 'contact@example.com',
+  manuscripts: [],
+  collaborationManuscripts: [],
 };
 
 const mockTraineeProjectNoContact: TraineeProjectDetailType = {

@@ -408,6 +408,8 @@ export const getExpectedDiscoveryProjectDetail = () => ({
   originalGrant: '',
   originalGrantProposalId: undefined,
   supplementGrant: undefined,
+  manuscripts: [],
+  collaborationManuscripts: [],
 });
 
 // Expected Discovery Project detail with all detail fields populated (milestones, grants, teamDescription)
@@ -452,6 +454,8 @@ export const getExpectedDiscoveryProjectDetailWithAllFields = () => ({
       displayName: 'Alex (Al) Smith',
     },
   ],
+  manuscripts: [],
+  collaborationManuscripts: [],
 });
 
 export const getExpectedDiscoveryProjectWithoutTeam = (): DiscoveryProject => ({

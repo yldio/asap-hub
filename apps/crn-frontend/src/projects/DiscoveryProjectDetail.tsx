@@ -124,9 +124,11 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
                       id={projectId}
                       isProjectMember={isProjectMember}
                       isTeamBased={true}
-                      manuscripts={[]}
-                      collaborationManuscripts={[]}
-                      tools={[]}
+                      manuscripts={projectDetail.manuscripts || []}
+                      collaborationManuscripts={
+                        projectDetail.collaborationManuscripts || []
+                      }
+                      tools={projectDetail.tools || []}
                       lastModifiedDate={new Date().toISOString()}
                       contactEmail={projectDetail.contactEmail || undefined}
                       contactName={

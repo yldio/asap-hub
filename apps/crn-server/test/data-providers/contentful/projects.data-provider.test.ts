@@ -9,6 +9,7 @@ import {
   parseProjectUserMember,
   parseProjectTeamMember,
   processTraineeProjectMembers,
+  parseProjectManuscripts,
   type ProjectMembershipItem,
 } from '../../../src/data-providers/contentful/project.data-provider';
 import { TraineeProject, TraineeProjectDetail } from '@asap-hub/model';
@@ -926,6 +927,149 @@ describe('processTraineeProjectMembers', () => {
   });
 });
 
+describe('parseProjectManuscripts', () => {
+  it('separates team manuscripts from collaboration manuscripts', () => {
+    const members = [
+      {
+        sys: { id: 'membership-1' },
+        role: 'Lead',
+        projectMember: {
+          __typename: 'Teams' as const,
+          sys: { id: 'team-1' },
+          displayName: 'Team One',
+          inactiveSince: null,
+          researchTheme: null,
+          teamDescription: null,
+          linkedFrom: {
+            manuscriptsCollection: {
+              items: [
+                {
+                  sys: { id: 'ms-1' },
+                  status: null,
+                  teamsCollection: {
+                    items: [{ sys: { id: 'team-1' } }],
+                  },
+                },
+                {
+                  sys: { id: 'ms-2' },
+                  status: null,
+                  teamsCollection: {
+                    items: [{ sys: { id: 'other-team' } }],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    ] as unknown as ProjectMembershipItem[];
+
+    const result = parseProjectManuscripts(members);
+
+    expect(result.manuscripts).toEqual(['ms-1']);
+    expect(result.collaborationManuscripts).toEqual(['ms-2']);
+  });
+
+  it('sorts manuscripts by status priority (Compliant and Closed after others)', () => {
+    const members = [
+      {
+        sys: { id: 'membership-1' },
+        role: 'Lead',
+        projectMember: {
+          __typename: 'Teams' as const,
+          sys: { id: 'team-1' },
+          displayName: 'Team One',
+          inactiveSince: null,
+          researchTheme: null,
+          teamDescription: null,
+          linkedFrom: {
+            manuscriptsCollection: {
+              items: [
+                {
+                  sys: { id: 'ms-compliant' },
+                  status: 'Compliant',
+                  teamsCollection: {
+                    items: [{ sys: { id: 'team-1' } }],
+                  },
+                },
+                {
+                  sys: { id: 'ms-active' },
+                  status: 'Review',
+                  teamsCollection: {
+                    items: [{ sys: { id: 'team-1' } }],
+                  },
+                },
+                {
+                  sys: { id: 'ms-closed' },
+                  status: 'Closed (other)',
+                  teamsCollection: {
+                    items: [{ sys: { id: 'team-1' } }],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    ] as unknown as ProjectMembershipItem[];
+
+    const result = parseProjectManuscripts(members);
+
+    expect(result.manuscripts).toEqual([
+      'ms-active',
+      'ms-compliant',
+      'ms-closed',
+    ]);
+  });
+
+  it('returns empty arrays when no team member exists', () => {
+    const members = [
+      {
+        sys: { id: 'membership-1' },
+        role: 'Researcher',
+        projectMember: {
+          __typename: 'Users' as const,
+          sys: { id: 'user-1' },
+          firstName: 'Alex',
+          nickname: '',
+          lastName: 'Smith',
+          email: 'alex@example.com',
+          onboarded: true,
+          avatar: { url: null },
+          alumniSinceDate: undefined,
+        },
+      },
+    ] as unknown as ProjectMembershipItem[];
+
+    const result = parseProjectManuscripts(members);
+
+    expect(result.manuscripts).toEqual([]);
+    expect(result.collaborationManuscripts).toEqual([]);
+  });
+
+  it('returns empty arrays when team has no linkedFrom data', () => {
+    const members = [
+      {
+        sys: { id: 'membership-1' },
+        role: 'Lead',
+        projectMember: {
+          __typename: 'Teams' as const,
+          sys: { id: 'team-1' },
+          displayName: 'Team One',
+          inactiveSince: null,
+          researchTheme: null,
+          teamDescription: null,
+        },
+      },
+    ] as unknown as ProjectMembershipItem[];
+
+    const result = parseProjectManuscripts(members);
+
+    expect(result.manuscripts).toEqual([]);
+    expect(result.collaborationManuscripts).toEqual([]);
+  });
+});
+
 describe('parseContentfulProjectDetail', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -1285,6 +1429,112 @@ describe('parseContentfulProjectDetail', () => {
     });
     expect(result).not.toHaveProperty('fundedTeam');
     expect(result).not.toHaveProperty('collaborators');
+  });
+
+  it('parses Discovery Project detail with team and collaboration manuscripts', () => {
+    const discoveryItem = {
+      ...getDiscoveryProjectDetailGraphqlItem({
+        originalGrant: '',
+        proposalId: null,
+        supplementGrant: null,
+        milestones: [],
+        teamDescription: null,
+      }),
+      membersCollection: {
+        total: 2,
+        items: [
+          {
+            sys: { id: 'membership-discovery-team' },
+            role: 'Lead Investigator',
+            projectMember: {
+              __typename: 'Teams' as const,
+              sys: { id: 'team-1' },
+              displayName: 'Discovery Team',
+              inactiveSince: '2025-01-01',
+              researchTheme: { name: 'Theme One' },
+              teamDescription: null,
+              linkedFrom: {
+                manuscriptsCollection: {
+                  items: [
+                    {
+                      sys: { id: 'ms-team-1' },
+                      status: null,
+                      teamsCollection: {
+                        items: [{ sys: { id: 'team-1' } }],
+                      },
+                    },
+                    {
+                      sys: { id: 'ms-team-2' },
+                      status: 'Compliant',
+                      teamsCollection: {
+                        items: [{ sys: { id: 'team-1' } }],
+                      },
+                    },
+                    {
+                      sys: { id: 'ms-collab-1' },
+                      status: null,
+                      teamsCollection: {
+                        items: [{ sys: { id: 'other-team' } }],
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+          {
+            sys: { id: 'membership-discovery-user' },
+            role: 'Researcher',
+            projectMember: {
+              __typename: 'Users' as const,
+              sys: { id: 'user-1' },
+              firstName: 'Alex',
+              nickname: 'Al',
+              lastName: 'Smith',
+              email: 'alex@example.com',
+              onboarded: true,
+              avatar: { url: 'https://example.com/alex.png' },
+              alumniSinceDate: undefined,
+            },
+          },
+        ],
+      },
+    };
+
+    const result = parseContentfulProjectDetail(discoveryItem as never);
+
+    // Compliant manuscript should be sorted after non-status manuscripts
+    expect(result.manuscripts).toEqual(['ms-team-1', 'ms-team-2']);
+    expect(result.collaborationManuscripts).toEqual(['ms-collab-1']);
+  });
+
+  it('returns empty manuscript arrays when project has no team member', () => {
+    const discoveryItemWithoutTeam = {
+      ...getDiscoveryProjectWithoutTeamGraphqlItem(),
+      ...getOriginalGrantFields({ proposalId: null }),
+      supplementGrant: null,
+      milestonesCollection: { total: 0, items: [] },
+    };
+
+    const result = parseContentfulProjectDetail(discoveryItemWithoutTeam);
+
+    expect(result.manuscripts).toEqual([]);
+    expect(result.collaborationManuscripts).toEqual([]);
+  });
+
+  it('returns empty manuscript arrays when team has no linkedFrom data', () => {
+    const discoveryItem = getDiscoveryProjectDetailGraphqlItem({
+      originalGrant: '',
+      proposalId: null,
+      supplementGrant: null,
+      milestones: [],
+      teamDescription: null,
+    });
+
+    const result = parseContentfulProjectDetail(discoveryItem);
+
+    expect(result.manuscripts).toEqual([]);
+    expect(result.collaborationManuscripts).toEqual([]);
   });
 
   it('throws when parseContentfulProjectDetail encounters an unknown project type', () => {

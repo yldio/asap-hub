@@ -119,10 +119,12 @@ const TraineeProjectDetail: FC<Record<string, never>> = () => {
                     <ProjectWorkspace
                       id={projectId}
                       isProjectMember={isProjectMember}
-                      isTeamBased={false}
-                      manuscripts={[]}
-                      collaborationManuscripts={[]}
-                      tools={[]}
+                      isTeamBased={true}
+                      manuscripts={projectDetail.manuscripts || []}
+                      collaborationManuscripts={
+                        projectDetail.collaborationManuscripts || []
+                      }
+                      tools={projectDetail.tools || []}
                       lastModifiedDate={new Date().toISOString()}
                       contactEmail={projectDetail.contactEmail || undefined}
                       contactName={

@@ -73,6 +73,8 @@ const mockResourceProject: ResourceProjectDetailType = {
     researchTheme: 'Theme One',
     teamDescription: 'Team description',
   },
+  manuscripts: [],
+  collaborationManuscripts: [],
 };
 
 const mockResourceProjectNoContact: ResourceProjectDetailType = {

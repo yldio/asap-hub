@@ -140,6 +140,8 @@ export type DiscoveryProjectDetail = DiscoveryProject & {
   readonly milestones?: ReadonlyArray<Milestone>;
   readonly fundedTeam: FundedTeam;
   readonly collaborators?: ReadonlyArray<ProjectMember>;
+  readonly manuscripts?: ReadonlyArray<string>;
+  readonly collaborationManuscripts?: ReadonlyArray<string>;
 };
 
 export type ResourceProjectDetail = ResourceProject & {
@@ -148,12 +150,16 @@ export type ResourceProjectDetail = ResourceProject & {
   readonly milestones?: ReadonlyArray<Milestone>;
   readonly fundedTeam?: FundedTeam;
   readonly collaborators?: ReadonlyArray<ProjectMember>;
+  readonly manuscripts?: ReadonlyArray<string>;
+  readonly collaborationManuscripts?: ReadonlyArray<string>;
 };
 
 export type TraineeProjectDetail = TraineeProject & {
   readonly originalGrantProposalId?: string;
   readonly supplementGrant?: SupplementGrantInfo;
   readonly milestones?: ReadonlyArray<Milestone>;
+  readonly manuscripts?: ReadonlyArray<string>;
+  readonly collaborationManuscripts?: ReadonlyArray<string>;
 };
 
 export type ProjectDetail =

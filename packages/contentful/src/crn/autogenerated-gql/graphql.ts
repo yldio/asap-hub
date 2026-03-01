@@ -25149,6 +25149,22 @@ export type FetchProjectByIdQuery = {
                     > & {
                         sys: Pick<Sys, 'id'>;
                         researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
+                        linkedFrom?: Maybe<{
+                          manuscriptsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<Manuscripts, 'status'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                  teamsCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<{ sys: Pick<Sys, 'id'> }>
+                                    >;
+                                  }>;
+                                }
+                              >
+                            >;
+                          }>;
+                        }>;
                       })
                   | ({ __typename: 'Users' } & Pick<
                       Users,

@@ -453,7 +453,7 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
       {
         ...version,
         teams: ['team-1'],
-        labs: [],
+        labs: ['lab-1'],
         description: '',
         authors: [{ userId: 'author-1' }],
         ...getQuickCheckDetailsText(version),

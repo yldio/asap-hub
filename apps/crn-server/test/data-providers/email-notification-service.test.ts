@@ -63,6 +63,14 @@ describe('Email Notification Service', () => {
       __typename: 'Users',
       email: 'fiona.first@email.com',
     },
+    {
+      __typename: 'ExternalAuthors',
+      email: 'second.external@email.com',
+    },
+    {
+      __typename: 'Users',
+      email: 'connor.corresponding@email.com',
+    },
   ];
 
   test('Should not send email notification if environment is not production and no notification list', async () => {

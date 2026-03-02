@@ -641,100 +641,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     }
   };
 
-  // const validateCorrespondingAuthor = () => {
-  //   const correspondingAuthorValue = watch(
-  //     'versions.0.correspondingAuthor',
-  //   ) as unknown as AuthorSelectOption;
-  //   const teams = watch('versions.0.teams');
-  //   const teamFormIds = teams.map((team) => team.value);
-
-  //   correspondingAuthorWithoutTeamAdded.clear();
-
-  //   if (
-  //     correspondingAuthorValue &&
-  //     'author' in correspondingAuthorValue &&
-  //     correspondingAuthorValue.author &&
-  //     'teams' in correspondingAuthorValue.author &&
-  //     correspondingAuthorValue.author.teams.length > 0 &&
-  //     correspondingAuthorValue.author.teams.every(
-  //       (team) => !teamFormIds.includes(team.id),
-  //     )
-  //   ) {
-  //     correspondingAuthorWithoutTeamAdded.add(correspondingAuthorValue.label);
-  //     usersWithoutTeamAdded.add(correspondingAuthorValue.label);
-  //   }
-
-  //   if (correspondingAuthorWithoutTeamAdded.size > 0) {
-  //     setError('versions.0.correspondingAuthor', {
-  //       message: `The following corresponding author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
-  //         correspondingAuthorWithoutTeamAdded,
-  //       )
-  //         .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-  //         .join('\n')}`,
-  //     });
-  //   } else {
-  //     clearErrors('versions.0.correspondingAuthor');
-  //   }
-  // };
-
-  // const validateAdditionalAuthors = () => {
-  //   const additionalAuthorsValues = watch('versions.0.additionalAuthors');
-  //   const teams = watch('versions.0.teams');
-  //   const teamFormIds = teams.map((team) => team.value);
-
-  //   additionalAuthorsWithoutTeamAdded.clear();
-  //   additionalAuthorsValues
-  //     .filter((algoliaAuthor) => {
-  //       if (
-  //         'author' in algoliaAuthor &&
-  //         algoliaAuthor.author &&
-  //         'teams' in algoliaAuthor.author
-  //       ) {
-  //         return (
-  //           algoliaAuthor.author.teams.length > 0 &&
-  //           algoliaAuthor.author.teams.every(
-  //             (team) => !teamFormIds.includes(team.id),
-  //           )
-  //         );
-  //       }
-  //       return false;
-  //     })
-  //     .forEach((author) => {
-  //       additionalAuthorsWithoutTeamAdded.add(author.label);
-  //       usersWithoutTeamAdded.add(author.label);
-  //     });
-
-  //   if (additionalAuthorsWithoutTeamAdded.size > 0) {
-  //     setError('versions.0.additionalAuthors', {
-  //       message: `The following additional author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
-  //         additionalAuthorsWithoutTeamAdded,
-  //       )
-  //         .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-  //         .join('\n')}`,
-  //     });
-  //   } else {
-  //     clearErrors('versions.0.additionalAuthors');
-  //   }
-  // };
-
   const validateTeams = () => {
     usersWithoutTeamAdded.clear();
     validateAuthors();
-    // validateCorrespondingAuthor();
-    // validateAdditionalAuthors();
     validateLabPiTeams();
-
-    // const contributorsErrorMessage = `The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added.\n${Array.from(
-    //   usersWithoutTeamAdded,
-    // )
-    //   .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-    //   .join('\n')}`;
-
-    // const labErrorMessage = `The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added.\n${Array.from(
-    //   labsWithoutTeamAdded,
-    // )
-    //   .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
-    //   .join('\n')}`;
 
     if (usersWithoutTeamAdded.size === 0 && labsWithoutTeamAdded.size === 0) {
       clearErrors('versions.0.teams');
@@ -744,13 +654,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     ) {
       setError('versions.0.teams', { message: ' ' });
     }
-    //  else if (usersWithoutTeamAdded.size > 0) {
-    //   setError('versions.0.teams', {
-    //     message: contributorsErrorMessage,
-    //   });
-    // } else if (labsWithoutTeamAdded.size > 0) {
-    //   setError('versions.0.teams', { message: labErrorMessage });
-    // }
   };
 
   const commonManuscriptAuthorProps = {
@@ -1648,7 +1551,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 name="versions.0.labs"
                 control={control}
                 rules={{
-                  required: 'Please add at least one lab.', // check with Elena the error here
+                  required: 'Please add at least one lab.',
                 }}
                 render={({
                   field: { value, onChange },

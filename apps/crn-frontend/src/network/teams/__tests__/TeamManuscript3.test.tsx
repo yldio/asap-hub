@@ -230,6 +230,12 @@ it('shows server validation error toast and a message when submitting with dupli
     'jane@doe.com{enter}',
   );
 
+  await user.click(screen.getByRole('combobox', { name: /Labs/i }));
+  await waitFor(() => {
+    expect(screen.getByText('Lab 1')).toBeVisible();
+  });
+  await user.click(screen.getByText('Lab 1'));
+
   // Quick checks
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });
   const yesButtons = within(quickChecks).getAllByText('Yes');

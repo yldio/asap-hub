@@ -234,7 +234,7 @@ describe('Reminders data provider', () => {
         },
       );
 
-      test('first author of the manuscript should see manuscript created reminders', async () => {
+      test('author of the manuscript should see manuscript created reminders', async () => {
         mockContentfulGraphqlResponse();
 
         const result = await remindersDataProvider.fetch({
@@ -276,9 +276,7 @@ describe('Reminders data provider', () => {
         items: [
           getManuscriptVersion({
             count: 1,
-            firstAuthorIds: ['first-author-user'],
-            additionalAuthorIds: [],
-            correspondingAuthorIds: [],
+            authorIds: ['first-author-user'],
             createdById: 'user-who-created-manuscript',
             createdByFirstName: 'Jane',
             createdByLastName: 'Doe',
@@ -286,9 +284,7 @@ describe('Reminders data provider', () => {
           }),
           getManuscriptVersion({
             count: 2,
-            firstAuthorIds: ['first-author-user'],
-            additionalAuthorIds: ['additional-author-user'],
-            correspondingAuthorIds: [],
+            authorIds: ['first-author-user'],
             createdById: 'user-who-resubmitted-manuscript',
             createdByFirstName: 'John',
             createdByLastName: 'Doe',
@@ -398,21 +394,8 @@ describe('Reminders data provider', () => {
         expect(result.items).toEqual([expectedReminder]);
       });
 
-      test('first author of the manuscript should see manuscript resubmitted reminder', async () => {
+      test('author of the manuscript should see manuscript resubmitted reminder', async () => {
         const userId = 'first-author-user';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
-
-        mockContentfulGraphqlResponse(manuscriptResubmitted);
-
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual([expectedReminder]);
-      });
-
-      test('the additional author of the manuscript should see manuscript resubmitted reminder', async () => {
-        const userId = 'additional-author-user';
         const fetchRemindersOptions: FetchRemindersOptions = {
           userId,
           timezone,
@@ -536,39 +519,12 @@ describe('Reminders data provider', () => {
         },
       );
 
-      test('first author of the manuscript should see manuscript status updated reminders', async () => {
+      test('author of the manuscript should see manuscript status updated reminders', async () => {
         const userId = 'first-author-user';
         const fetchRemindersOptions: FetchRemindersOptions = {
           userId,
           timezone,
         };
-
-        mockContentfulGraphqlResponse(manuscriptStatusUpdated);
-
-        const result = await remindersDataProvider.fetch(fetchRemindersOptions);
-        expect(result.items).toEqual(
-          expect.arrayContaining([expectedReminder]),
-        );
-      });
-
-      test('the corresponding author of the manuscript should see manuscript status updated reminders', async () => {
-        const userId = 'corresponding-author-user';
-        const fetchRemindersOptions: FetchRemindersOptions = {
-          userId,
-          timezone,
-        };
-
-        manuscriptStatusUpdated!.versionsCollection!.items[0]!.correspondingAuthorCollection =
-          {
-            items: [
-              {
-                __typename: 'Users',
-                sys: {
-                  id: userId,
-                },
-              },
-            ],
-          };
 
         mockContentfulGraphqlResponse(manuscriptStatusUpdated);
 
@@ -733,13 +689,7 @@ describe('Reminders data provider', () => {
           items: [
             {
               count: 1,
-              additionalAuthorsCollection: {
-                items: [],
-              },
-              correspondingAuthorCollection: {
-                items: [],
-              },
-              firstAuthorsCollection: {
+              authorsCollection: {
                 items: [
                   {
                     __typename: 'Users',
@@ -759,25 +709,12 @@ describe('Reminders data provider', () => {
             },
             {
               count: 2,
-              correspondingAuthorCollection: {
-                items: [],
-              },
-              firstAuthorsCollection: {
+              authorsCollection: {
                 items: [
                   {
                     __typename: 'Users',
                     sys: {
                       id: 'first-author-user',
-                    },
-                  },
-                ],
-              },
-              additionalAuthorsCollection: {
-                items: [
-                  {
-                    __typename: 'Users',
-                    sys: {
-                      id: 'additional-author-user',
                     },
                   },
                 ],

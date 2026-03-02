@@ -98,9 +98,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   labMaterialsRegistered: 'Yes',
   availabilityStatement: 'Yes',
   description: 'Some description',
-  firstAuthors: [],
-  correspondingAuthor: [],
-  additionalAuthors: [],
+  authors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
   isOpenScienceTeamMember: false,
@@ -111,6 +109,16 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
 };
 
 describe('ManuscriptForm team validation', () => {
+  const authorsErrorRegex =
+    /The following author\(s\) do not have a team listed as a contributor\. Add at least one of their teams, or contact support if they don’t belong to any\./;
+  const labsErrorRegex =
+    /The following lab\(s\) do not list their correspondent PI's team as a contributor\. At least one of the PI teams they are associated with must be added to the Teams field\./;
+
+  const authorsErrorMessage =
+    'The following author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.';
+  const labsErrorMessage =
+    "The following lab(s) do not list their correspondent PI's team as a contributor. At least one of the PI teams they are associated with must be added to the Teams field.";
+
   it('displays error message when labPI team is not among selected teams and hide it when team is selected', async () => {
     render(
       <StaticRouter location="/">
@@ -135,20 +143,16 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.tab();
 
     // Error message for the team input
-    expect(
-      screen.getByText(
-        /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
-      ),
-    ).toBeVisible();
+    // expect(
+    //   screen.getByText(
+    //     /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
+    //   ),
+    // ).toBeVisible();
 
     // Error message for the lab input
-    expect(
-      screen.getByText(
-        /The following lab\(s\) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above./,
-      ),
-    ).toBeVisible();
+    expect(screen.getByText(labsErrorRegex)).toBeVisible();
 
-    expect(screen.getAllByText(/•.*Lab One/i).length).toBe(2);
+    expect(screen.getAllByText(/•.*Lab One/i).length).toBe(1);
 
     await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
     await waitFor(() => {
@@ -157,158 +161,115 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.click(screen.getByText('Team A'));
     await userEvent.tab();
 
-    expect(
-      screen.queryByText(
-        /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
-      ),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByText(
-        /The following lab\(s\) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above./,
-      ),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(labsErrorRegex)).not.toBeInTheDocument();
 
     expect(screen.queryByText(/•.*Lab One/i)).not.toBeInTheDocument();
   });
 
-  it.each`
-    authorType                | label                     | errorMessage
-    ${'first author'}         | ${/First Author/}         | ${/The following first author\(s\) do not have a team listed as a contributor/i}
-    ${'corresponding author'} | ${/Corresponding Author/} | ${/The following corresponding author\(s\) do not have a team listed as a contributor/i}
-    ${'additional author'}    | ${/Additional Author/}    | ${/The following additional author\(s\) do not have a team listed as a contributor/i}
-  `(
-    'displays error message when $authorType team is not among selected teams and hide it when team is selected',
-    async ({ label, errorMessage }) => {
-      render(
-        <StaticRouter location="/">
-          <Suspense fallback={<div>Loading...</div>}>
-            <ManuscriptForm
-              {...defaultProps}
-              getTeamSuggestions={getTeamSuggestionsMock}
-              getLabSuggestions={getLabSuggestionsMock}
-              getAuthorSuggestions={getAuthorSuggestionsMock}
-            />
-          </Suspense>
-        </StaticRouter>,
-      );
+  it('displays error message when $authorType team is not among selected teams and hide it when team is selected', async () => {
+    render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            getTeamSuggestions={getTeamSuggestionsMock}
+            getLabSuggestions={getLabSuggestionsMock}
+            getAuthorSuggestions={getAuthorSuggestionsMock}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
 
-      await waitFor(() => {
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
-      });
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
 
-      await userEvent.click(screen.getByLabelText(label));
-      await waitFor(() =>
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-      );
+    await userEvent.click(screen.getByLabelText(/Authors/));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
 
-      await userEvent.click(screen.getByText('Author A'));
-      await userEvent.tab();
+    await userEvent.click(screen.getByText('Author A'));
+    await userEvent.tab();
 
-      // Error message for the team input
-      expect(
-        screen.getByText(
-          /The following contributor\(s\) do not have a team listed above/i,
-        ),
-      ).toBeVisible();
+    // Error message for the author input
+    expect(screen.getByText(authorsErrorRegex)).toBeVisible();
 
-      // Error message for the author input
-      expect(screen.getByText(errorMessage)).toBeVisible();
+    expect(screen.getAllByText(/•.*Author A/i).length).toBe(1);
 
-      expect(screen.getAllByText(/•.*Author A/i).length).toBe(2);
+    await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
+    await waitFor(() => {
+      expect(screen.getByText('Team A')).toBeVisible();
+    });
+    await userEvent.click(screen.getByText('Team A'));
+    await userEvent.tab();
 
-      await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
-      await waitFor(() => {
-        expect(screen.getByText('Team A')).toBeVisible();
-      });
-      await userEvent.click(screen.getByText('Team A'));
-      await userEvent.tab();
+    expect(screen.queryByText(authorsErrorRegex)).not.toBeInTheDocument();
+    expect(screen.queryByText(/•.*Author A/i)).not.toBeInTheDocument();
+  });
 
-      expect(
-        screen.queryByText(
-          /The following contributor\(s\) do not have a team listed above/i,
-        ),
-      ).not.toBeInTheDocument();
-      expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
-      expect(screen.queryByText(/•.*Author A/i)).not.toBeInTheDocument();
-    },
-  );
-
-  it.each`
-    authorType                | label
-    ${'first author'}         | ${/First Author/}
-    ${'corresponding author'} | ${/Corresponding Author/}
-    ${'additional author'}    | ${/Additional Author/}
-  `(
-    'do not display error message when $authorType does not have a team',
-
-    async ({ label }) => {
-      jest.spyOn(console, 'error').mockImplementation();
-      const getAuthorSuggestionsWithoutTeamMock = jest.fn().mockResolvedValue([
-        {
-          label: 'Author A',
-          value: 'author-a',
-          id: 'author-a',
-          displayName: 'Author A',
-          author: {
-            firstName: 'Author',
-            lastName: 'A',
-            teams: [],
-            __meta: {
-              type: 'user',
-            },
+  it('does not display error message when author does not have a team', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const getAuthorSuggestionsWithoutTeamMock = jest.fn().mockResolvedValue([
+      {
+        label: 'Author A',
+        value: 'author-a',
+        id: 'author-a',
+        displayName: 'Author A',
+        author: {
+          firstName: 'Author',
+          lastName: 'A',
+          teams: [],
+          __meta: {
+            type: 'user',
           },
         },
-        {
-          label: 'Author B',
-          value: 'author-b',
-          id: 'author-b',
-          displayName: 'Author B',
-          author: {
-            firstName: 'Author',
-            lastName: 'B',
-            teams: [],
-            __meta: {
-              type: 'user',
-            },
+      },
+      {
+        label: 'Author B',
+        value: 'author-b',
+        id: 'author-b',
+        displayName: 'Author B',
+        author: {
+          firstName: 'Author',
+          lastName: 'B',
+          teams: [],
+          __meta: {
+            type: 'user',
           },
         },
-      ]);
+      },
+    ]);
 
-      render(
-        <StaticRouter location="/">
-          <Suspense fallback={<div>Loading...</div>}>
-            <ManuscriptForm
-              {...defaultProps}
-              getTeamSuggestions={getTeamSuggestionsMock}
-              getLabSuggestions={getLabSuggestionsMock}
-              getAuthorSuggestions={getAuthorSuggestionsWithoutTeamMock}
-            />
-          </Suspense>
-        </StaticRouter>,
-      );
+    render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            getTeamSuggestions={getTeamSuggestionsMock}
+            getLabSuggestions={getLabSuggestionsMock}
+            getAuthorSuggestions={getAuthorSuggestionsWithoutTeamMock}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
 
-      await waitFor(() => {
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
-      });
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
 
-      await userEvent.click(screen.getByLabelText(label));
-      await waitFor(() =>
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-      );
+    await userEvent.click(screen.getByLabelText(/Authors/));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
 
-      await userEvent.click(screen.getByText('Author A'));
-      await userEvent.tab();
+    await userEvent.click(screen.getByText('Author A'));
+    await userEvent.tab();
 
-      expect(
-        screen.queryByText(
-          /The following contributor\(s\) do not have a team listed above/i,
-        ),
-      ).not.toBeInTheDocument();
-      expect(
-        screen.queryByText(/do not have a team listed as a contributor/i),
-      ).not.toBeInTheDocument();
-    },
-  );
+    expect(
+      screen.queryByText(/do not have a team listed as a contributor/i),
+    ).not.toBeInTheDocument();
+  });
 
   it('when there are missing teams for both lab and author, the error is displayed and hidden accordingly', async () => {
     const consoleErrorSpy = mockActWarningsInConsole('error');
@@ -336,7 +297,7 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.click(screen.getByText('Lab One'));
     await userEvent.tab();
 
-    await userEvent.click(screen.getByLabelText(/First Author/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -344,19 +305,9 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.click(screen.getByText('Author B'));
     await userEvent.tab();
 
-    const firstAuthorErrorMessage =
-      'The following first author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Author B';
+    expect(container).toHaveTextContent(`${authorsErrorMessage} • Author B`);
 
-    const labErrorMessage =
-      "The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Lab One";
-
-    expect(container).toHaveTextContent(
-      "The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added. • Author B The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added. • Lab One",
-    );
-
-    expect(container).toHaveTextContent(firstAuthorErrorMessage);
-
-    expect(container).toHaveTextContent(labErrorMessage);
+    expect(container).toHaveTextContent(`${labsErrorMessage} • Lab One`);
 
     await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
     await waitFor(() => {
@@ -365,13 +316,11 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.click(screen.getByText('Team B'));
     await userEvent.tab();
 
-    expect(container).toHaveTextContent(
-      "The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Lab One",
+    expect(container).not.toHaveTextContent(
+      `${authorsErrorMessage} • Author B`,
     );
 
-    expect(container).not.toHaveTextContent(firstAuthorErrorMessage);
-
-    expect(container).toHaveTextContent(labErrorMessage);
+    expect(container).toHaveTextContent(`${labsErrorMessage} • Lab One`);
 
     await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
     await waitFor(() => {
@@ -380,14 +329,16 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.click(screen.getByText('Team A'));
     await userEvent.tab();
 
-    expect(container).not.toHaveTextContent(firstAuthorErrorMessage);
+    expect(container).not.toHaveTextContent(
+      `${authorsErrorMessage} • Author B`,
+    );
 
-    expect(container).not.toHaveTextContent(labErrorMessage);
+    expect(container).not.toHaveTextContent(`${labsErrorMessage} • Lab One`);
 
     consoleErrorSpy.mockRestore();
   });
 
-  it('when two authors without team selected and a lab without team selected are added, when one of the authors is removed, the authors error still flags the remainingauthor', async () => {
+  it('when two authors without team selected and a lab without team selected are added, when one of the authors is removed, the authors error still flags the remaining author', async () => {
     jest.spyOn(console, 'error').mockImplementation();
     const getLabWithUniqueTeamSuggestionsMock = jest
       .fn()
@@ -412,7 +363,7 @@ describe('ManuscriptForm team validation', () => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByLabelText(/First Author/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -420,7 +371,7 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.click(screen.getByText('Author A'));
     await userEvent.tab();
 
-    await userEvent.click(screen.getByLabelText(/First Author/i));
+    await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
@@ -436,23 +387,17 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.tab();
 
     expect(container).toHaveTextContent(
-      "The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added. • Author A • Author B The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added. • Lab One",
+      `${authorsErrorMessage} • Author A • Author B`,
     );
 
     expect(container).toHaveTextContent(
-      'The following first author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Author A • Author B',
-    );
-
-    expect(container).toHaveTextContent(
-      "The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Lab One",
+      "The following lab(s) do not list their correspondent PI's team as a contributor. At least one of the PI teams they are associated with must be added to the Teams field. • Lab One",
     );
 
     await userEvent.click(screen.getAllByLabelText('Remove Author A')[0]!);
     await userEvent.tab();
 
-    expect(container).toHaveTextContent(
-      'The following first author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above. • Author B',
-    );
+    expect(container).toHaveTextContent(`${authorsErrorMessage} • Author B`);
 
     expect(container).not.toHaveTextContent(
       'Please select at least one author.',

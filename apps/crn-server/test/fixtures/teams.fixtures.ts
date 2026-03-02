@@ -44,15 +44,8 @@ export const getContentfulGraphql = (teamById = false, teamId?: string) => ({
     getContentfulGraphqlManuscriptVersions(teamId).items[0]?.teamsCollection,
   ManuscriptVersionsLabsCollection: () =>
     getContentfulGraphqlManuscriptVersions(teamId).items[0]?.labsCollection,
-  ManuscriptVersionsFirstAuthorsCollection: () =>
-    getContentfulGraphqlManuscriptVersions(teamId).items[0]
-      ?.firstAuthorsCollection,
-  ManuscriptVersionsCorrespondingAuthorCollection: () =>
-    getContentfulGraphqlManuscriptVersions(teamId).items[0]
-      ?.correspondingAuthorCollection,
-  ManuscriptVersionsAdditionalAuthorsCollection: () =>
-    getContentfulGraphqlManuscriptVersions(teamId).items[0]
-      ?.additionalAuthorsCollection,
+  ManuscriptVersionsAuthorsCollection: () =>
+    getContentfulGraphqlManuscriptVersions(teamId).items[0]?.authorsCollection,
   Projects: () => getContentfulGraphqlProjectsCollection().items[0],
   ResearchTags: () =>
     getContentfulGraphqlProjectsCollection().items[0]?.researchTagsCollection

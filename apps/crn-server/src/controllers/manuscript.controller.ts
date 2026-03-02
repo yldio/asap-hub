@@ -206,9 +206,7 @@ export default class ManuscriptController {
   ) => {
     const { authors, ...versionData } = version;
 
-    const authorsValues = await this.mapAuthorsPostRequestToId(
-      authors ?? [],
-    );
+    const authorsValues = await this.mapAuthorsPostRequestToId(authors ?? []);
 
     const getValidAuthorIds = (authorIds: (string | null)[]) =>
       authorIds.filter((id): id is string => id !== null);
@@ -246,14 +244,9 @@ export default class ManuscriptController {
     }
 
     if ('versions' in manuscriptData && manuscriptData.versions?.[0]) {
-      const {
-        authors,
-        ...versionData
-      } = manuscriptData.versions[0];
+      const { authors, ...versionData } = manuscriptData.versions[0];
 
-      const authorsValues = await this.mapAuthorsPostRequestToId(
-        authors ?? [],
-      );
+      const authorsValues = await this.mapAuthorsPostRequestToId(authors ?? []);
 
       const getValidAuthorIds = (authorIds: (string | null)[]) =>
         authorIds.filter((authorId): authorId is string => authorId !== null);

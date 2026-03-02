@@ -85,7 +85,7 @@ export const getContentfulManuscriptVersion = (
   lifecycle,
   count,
   url: 'http://example.com',
-  firstAuthorsCollection: {
+  authorsCollection: {
     items: [
       {
         __typename: 'Users',

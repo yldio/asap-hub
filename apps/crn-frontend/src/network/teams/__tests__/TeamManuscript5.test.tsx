@@ -198,7 +198,7 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
 
   const manuscript = createManuscriptResponse();
   manuscript.versions[0]!.lifecycle = 'Preprint';
-  manuscript.versions[0]!.firstAuthors = [
+  manuscript.versions[0]!.authors = [
     {
       label: 'Author 1',
       value: 'author-1',
@@ -325,7 +325,7 @@ it('files are not prefilled on manuscript resubmit', async () => {
 
   const manuscript = createManuscriptResponse();
   manuscript.versions[0]!.lifecycle = 'Preprint';
-  manuscript.versions[0]!.firstAuthors = [
+  manuscript.versions[0]!.authors = [
     {
       label: 'Author 1',
       value: 'author-1',

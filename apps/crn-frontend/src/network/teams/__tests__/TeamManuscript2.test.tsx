@@ -220,8 +220,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
     'Some short description',
   );
 
-  // First authors
-  await user.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+  await user.type(screen.getByLabelText(/Authors/i), 'Jane Doe');
 
   // External author email
   await user.click(screen.getByText(/Non CRN/i));
@@ -342,16 +341,14 @@ it('can publish a form when the data is valid and navigates to team workspace', 
             labs: [],
             description: 'Some description',
             shortDescription: 'Some short description',
-            firstAuthors: [
+            authors: [
               {
                 externalAuthorEmail: 'jane@doe.com',
                 externalAuthorName: 'Jane Doe',
                 externalAuthorId: undefined,
               },
             ],
-            additionalAuthors: [],
             additionalFiles: undefined,
-            correspondingAuthor: undefined,
             otherDetails: undefined,
             preprintDoi: undefined,
             publicationDoi: undefined,

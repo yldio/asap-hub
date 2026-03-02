@@ -550,18 +550,14 @@ export const getResearchOutputSwitchToDraftWorkingGroupReminder =
 
 export const getManuscriptVersion = ({
   count,
-  firstAuthorIds,
-  additionalAuthorIds,
-  correspondingAuthorIds,
+  authorIds,
   createdById,
   createdByFirstName,
   createdByLastName,
   labPI = 'lab-pi-id',
 }: {
   count: number;
-  firstAuthorIds: string[];
-  additionalAuthorIds: string[];
-  correspondingAuthorIds: string[];
+  authorIds: string[];
   createdById: string;
   createdByFirstName: string;
   createdByLastName: string;
@@ -574,24 +570,8 @@ export const getManuscriptVersion = ({
   >['items'][number]
 > => ({
   count,
-  additionalAuthorsCollection: {
-    items: additionalAuthorIds.map((id) => ({
-      __typename: 'Users',
-      sys: {
-        id,
-      },
-    })),
-  },
-  correspondingAuthorCollection: {
-    items: correspondingAuthorIds.map((id) => ({
-      __typename: 'Users',
-      sys: {
-        id,
-      },
-    })),
-  },
-  firstAuthorsCollection: {
-    items: firstAuthorIds.map((id) => ({
+  authorsCollection: {
+    items: authorIds.map((id) => ({
       __typename: 'Users',
       sys: {
         id,
@@ -657,9 +637,7 @@ export const getContentfulReminderManuscriptCollectionItem = (): NonNullable<
     items: [
       getManuscriptVersion({
         count: 1,
-        firstAuthorIds: ['first-author-user'],
-        additionalAuthorIds: [],
-        correspondingAuthorIds: [],
+        authorIds: ['first-author-user'],
         createdById: 'user-who-created-manuscript',
         createdByFirstName: 'Jane',
         createdByLastName: 'Doe',

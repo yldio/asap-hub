@@ -49,7 +49,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,
   selectedTeams: [{ value: '1', label: 'One Team', isFixed: true }],
-  selectedLabs: [],
+  selectedLabs: [{ value: 'lab-1', label: 'Lab One', isFixed: false }],
   handleFileUpload: jest.fn(() =>
     Promise.resolve({
       id: '123',
@@ -69,7 +69,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   labMaterialsRegistered: 'Yes',
   availabilityStatement: 'Yes',
   description: 'Some description',
-  firstAuthors: [
+  authors: [
     {
       label: 'Author 1',
       value: 'author-1',
@@ -77,8 +77,6 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
       displayName: 'Author 1',
     } as AuthorResponse & AuthorSelectOption,
   ],
-  correspondingAuthor: [],
-  additionalAuthors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
   isOpenScienceTeamMember: false,

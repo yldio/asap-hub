@@ -509,7 +509,7 @@ describe('Manuscript', () => {
           labs: [],
           description: '',
           shortDescription: '',
-          firstAuthors: [],
+          authors: [],
         },
       ],
     };
@@ -1054,7 +1054,7 @@ describe('Manuscript', () => {
           labs: [],
           description: '',
           shortDescription: '',
-          firstAuthors: [],
+          authors: [],
         },
       ],
     };

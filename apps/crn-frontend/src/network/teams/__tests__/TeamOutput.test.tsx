@@ -859,7 +859,7 @@ it('hides changelog input when editing a research output with no version history
   ).not.toBeInTheDocument();
 });
 
-describe('when MANUSCRIPT_OUTPUTS flag is enabled', () => {
+describe('manuscript outputs flow', () => {
   const manuscriptImportLabelText = 'Import from compliance';
 
   describe('preprint automatically created', () => {

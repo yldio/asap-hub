@@ -214,9 +214,7 @@ describe('/manuscripts/ route', () => {
           teams: ['team-1'],
           labs: [],
           description: '',
-          firstAuthors: [],
-          correspondingAuthor: [],
-          additionalAuthors: [],
+          authors: [],
         });
 
         const response = await supertest(app)

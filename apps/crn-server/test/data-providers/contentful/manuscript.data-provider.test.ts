@@ -118,15 +118,8 @@ describe('Manuscripts Contentful Data Provider', () => {
         getContentfulGraphqlManuscriptVersions().items[0]?.teamsCollection,
       ManuscriptVersionsLabsCollection: () =>
         getContentfulGraphqlManuscriptVersions().items[0]?.labsCollection,
-      ManuscriptVersionsFirstAuthorsCollection: () =>
-        getContentfulGraphqlManuscriptVersions().items[0]
-          ?.firstAuthorsCollection,
-      ManuscriptVersionsCorrespondingAuthorCollection: () =>
-        getContentfulGraphqlManuscriptVersions().items[0]
-          ?.correspondingAuthorCollection,
-      ManuscriptVersionsAdditionalAuthorsCollection: () =>
-        getContentfulGraphqlManuscriptVersions().items[0]
-          ?.additionalAuthorsCollection,
+      ManuscriptVersionsAuthorsCollection: () =>
+        getContentfulGraphqlManuscriptVersions().items[0]?.authorsCollection,
       Teams: () => ({
         sys: { id: 'team-1' },
         displayName: 'Team A',
@@ -172,7 +165,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       description: { 'en-US': 'nice description' },
       shortDescription: { 'en-US': 'A good short description' },
       labs: { 'en-US': [] },
-      firstAuthors: {
+      authors: {
         'en-US': [
           {
             sys: {
@@ -184,9 +177,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         ],
       },
-      correspondingAuthor: { 'en-US': [] },
       count: { 'en-US': 1 },
-      additionalAuthors: { 'en-US': [] },
       teams: {
         'en-US': [
           {
@@ -497,13 +488,12 @@ describe('Manuscripts Contentful Data Provider', () => {
         const manuscript = getContentfulGraphqlManuscript() as NonNullable<
           NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
         >;
-        manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items =
-          [
-            {
-              __typename: 'Users',
-              email: 'fiona.first@email.com',
-            },
-          ];
+        manuscript.versionsCollection!.items[0]!.authorsCollection!.items = [
+          {
+            __typename: 'Users',
+            email: 'fiona.first@email.com',
+          },
+        ];
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscripts: manuscript,
@@ -548,7 +538,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       const manuscript = getContentfulGraphqlManuscript() as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
-      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
+      manuscript.versionsCollection!.items[0]!.authorsCollection!.items = [
         {
           __typename: 'Users',
           email: 'fiona.first@email.com',
@@ -644,12 +634,11 @@ describe('Manuscripts Contentful Data Provider', () => {
               lifecycle: 'Preprint',
               type: 'Original Research',
               teams: ['team-1', 'team-2'],
+              labs: ['lab-1'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
               shortDescription: 'A good short description',
-              firstAuthors: ['author-1'],
-              correspondingAuthor: ['author-2'],
-              additionalAuthors: ['external-1'],
+              authors: ['author-1'],
               keyResourceTable: {
                 filename: 'manuscript.csv',
                 url: 'https://example.com/manuscript.csv',
@@ -822,42 +811,12 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
           {
             op: 'add',
-            path: '/fields/firstAuthors',
+            path: '/fields/authors',
             value: {
               'en-US': [
                 {
                   sys: {
                     id: 'author-1',
-                    linkType: 'Entry',
-                    type: 'Link',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            op: 'add',
-            path: '/fields/correspondingAuthor',
-            value: {
-              'en-US': [
-                {
-                  sys: {
-                    id: 'author-2',
-                    linkType: 'Entry',
-                    type: 'Link',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            op: 'add',
-            path: '/fields/additionalAuthors',
-            value: {
-              'en-US': [
-                {
-                  sys: {
-                    id: 'external-1',
                     linkType: 'Entry',
                     type: 'Link',
                   },
@@ -941,11 +900,10 @@ describe('Manuscripts Contentful Data Provider', () => {
               type: 'Original Research',
               shortDescription: 'A good short description',
               teams: ['team-1', 'team-2'],
+              labs: ['lab-1'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
-              firstAuthors: ['author-1'],
-              correspondingAuthor: ['author-2'],
-              additionalAuthors: ['external-1'],
+              authors: ['author-1'],
               keyResourceTable: {
                 filename: 'manuscript.csv',
                 url: 'https://example.com/manuscript.csv',
@@ -1024,12 +982,11 @@ describe('Manuscripts Contentful Data Provider', () => {
               lifecycle: 'Preprint',
               type: 'Original Research',
               teams: ['team-1'],
+              labs: ['lab-1'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
               shortDescription: 'A good short description',
-              firstAuthors: ['author-1'],
-              correspondingAuthor: ['author-2'],
-              additionalAuthors: ['external-1'],
+              authors: ['author-1'],
             },
           ],
         },
@@ -1236,7 +1193,7 @@ describe('Manuscripts Contentful Data Provider', () => {
 
     test('returns authors', async () => {
       const manuscript = getContentfulGraphqlManuscript();
-      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
+      manuscript.versionsCollection!.items[0]!.authorsCollection!.items = [
         {
           __typename: 'Users',
           sys: {
@@ -1258,60 +1215,12 @@ describe('Manuscripts Contentful Data Provider', () => {
         },
       ];
 
-      manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection!.items =
-        [
-          {
-            __typename: 'Users',
-            sys: {
-              id: 'corresponding-id-1',
-            },
-            avatar: null,
-            firstName: 'Connor',
-            lastName: 'Corresponding',
-            nickname: null,
-            email: 'connor.corresponding@email.com',
-          },
-        ];
-
-      manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection!.items =
-        [
-          {
-            __typename: 'Users',
-            sys: {
-              id: 'additional-id-1',
-            },
-            avatar: null,
-            firstName: 'Adele',
-            lastName: 'Additional',
-            nickname: null,
-            email: 'adele.additional@email.com',
-            teamsCollection: {
-              items: [
-                {
-                  team: { sys: { id: 'team-adele-1' } },
-                },
-                {
-                  team: { sys: { id: 'team-adele-2' } },
-                },
-              ],
-            },
-          },
-          {
-            __typename: 'ExternalAuthors',
-            sys: {
-              id: 'external-id-1',
-            },
-            name: 'Second External',
-            email: 'second.external@email.com',
-          },
-        ];
-
       contentfulGraphqlClientMock.request.mockResolvedValue({
         manuscripts: manuscript,
       });
 
       const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
-      expect(result!.versions[0]!.firstAuthors).toEqual([
+      expect(result!.versions[0]!.authors).toEqual([
         {
           avatarUrl: undefined,
           displayName: 'Fiona First',
@@ -1324,35 +1233,6 @@ describe('Manuscripts Contentful Data Provider', () => {
         {
           displayName: 'First External',
           email: 'first.external@email.com',
-          id: 'external-id-1',
-        },
-      ]);
-
-      expect(result!.versions[0]!.correspondingAuthor).toEqual([
-        {
-          avatarUrl: undefined,
-          displayName: 'Connor Corresponding',
-          email: 'connor.corresponding@email.com',
-          firstName: 'Connor',
-          id: 'corresponding-id-1',
-          lastName: 'Corresponding',
-          teams: [],
-        },
-      ]);
-
-      expect(result!.versions[0]!.additionalAuthors).toEqual([
-        {
-          avatarUrl: undefined,
-          displayName: 'Adele Additional',
-          email: 'adele.additional@email.com',
-          firstName: 'Adele',
-          id: 'additional-id-1',
-          lastName: 'Additional',
-          teams: [{ id: 'team-adele-1' }, { id: 'team-adele-2' }],
-        },
-        {
-          displayName: 'Second External',
-          email: 'second.external@email.com',
           id: 'external-id-1',
         },
       ]);

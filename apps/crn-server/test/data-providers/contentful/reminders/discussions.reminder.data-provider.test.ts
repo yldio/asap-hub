@@ -235,7 +235,7 @@ describe('Reminders data provider', () => {
         },
       );
 
-      test('first author of the related manuscript should see discussion started reminders', async () => {
+      test('author of the related manuscript should see discussion started reminders', async () => {
         const userId = 'first-author-user';
         const fetchRemindersOptions: FetchRemindersOptions = {
           userId,
@@ -418,7 +418,7 @@ describe('Reminders data provider', () => {
         },
       );
 
-      test('first author of the manuscript should see discussion replied to reminders', async () => {
+      test('author of the manuscript should see discussion replied to reminders', async () => {
         const userId = 'first-author-user';
         const fetchRemindersOptions: FetchRemindersOptions = {
           userId,

@@ -65,7 +65,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,
   selectedTeams: [{ value: '1', label: 'One Team', isFixed: true }],
-  selectedLabs: [],
+  selectedLabs: [{ value: 'lab-1', label: 'Lab One', isFixed: false }],
   handleFileUpload: jest.fn(() =>
     Promise.resolve({
       id: '123',
@@ -86,7 +86,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   availabilityStatement: 'Yes',
   description: 'Some description',
   shortDescription: 'A good short description',
-  firstAuthors: [
+  authors: [
     {
       label: 'Author 1',
       value: 'author-1',
@@ -94,8 +94,6 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
       displayName: 'Author 1',
     } as AuthorResponse & AuthorSelectOption,
   ],
-  correspondingAuthor: [],
-  additionalAuthors: [],
   onError: jest.fn(),
   clearFormToast: jest.fn(),
   isOpenScienceTeamMember: false,
@@ -118,224 +116,224 @@ const submitForm = async ({ findByRole }: { findByRole: FindByRole }) => {
 };
 
 describe('authors', () => {
-  it.each`
-    section                   | submittedValue
-    ${/Corresponding Author/} | ${{ correspondingAuthor: { userId: 'author-1' } }}
-    ${/Additional Authors/}   | ${{ additionalAuthors: [{ userId: 'author-1' }] }}
-  `(
-    'submits an existing internal author in $section',
-    async ({ section, submittedValue }) => {
-      const onCreate = jest.fn();
+  it('submits an existing internal author in Authors section', async () => {
+    const onCreate = jest.fn();
 
-      const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
-        {
-          author: {
-            id: 'author-1',
-            firstName: 'Author',
-            lastName: 'One',
-            displayName: 'Author One',
-            __meta: {
-              type: 'user',
-            },
+    const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
+      {
+        author: {
+          id: 'author-1',
+          firstName: 'Author',
+          lastName: 'One',
+          displayName: 'Author One',
+          __meta: {
+            type: 'user',
           },
-          label: 'Author One',
-          value: 'author-1',
         },
-      ]);
+        label: 'Author One',
+        value: 'author-1',
+      },
+    ]);
 
-      const { getByText, findByRole, findByLabelText } = render(
-        <StaticRouter location="/">
-          <Suspense fallback={<div>Loading...</div>}>
-            <ManuscriptForm
-              {...defaultProps}
-              title="manuscript title"
-              onCreate={onCreate}
-              type="Original Research"
-              lifecycle="Publication"
-              url="http://example.com"
-              preprintDoi="10.4444/test"
-              publicationDoi="10.4467/test"
-              manuscriptFile={{
-                id: '123',
-                url: 'https://test-url',
-                filename: 'abc.jpeg',
-              }}
-              keyResourceTable={{
-                id: '124',
-                url: 'https://test-url',
-                filename: 'abc.jpeg',
-              }}
-              getAuthorSuggestions={getAuthorSuggestionsMock}
-            />
-          </Suspense>
-        </StaticRouter>,
+    const { getByText, findByRole, findByLabelText } = render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            onCreate={onCreate}
+            type="Original Research"
+            lifecycle="Publication"
+            url="http://example.com"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            manuscriptFile={{
+              id: '123',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            keyResourceTable={{
+              id: '124',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            getAuthorSuggestions={getAuthorSuggestionsMock}
+            authors={[]}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    const sectionInput = await findByLabelText(/Authors/, undefined, {
+      timeout: 10000,
+    });
+
+    await userEvent.click(sectionInput);
+    await userEvent.click(getByText('Author One'));
+
+    await submitForm({ findByRole });
+    await waitFor(() => {
+      expect(onCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          versions: [
+            expect.objectContaining({ authors: [{ userId: 'author-1' }] }),
+          ],
+        }),
       );
+    });
+  });
 
-      const sectionInput = await findByLabelText(section, undefined, {
-        timeout: 10000,
-      });
+  it('submits an existing external author in Authors section', async () => {
+    const onCreate = jest.fn();
 
-      await userEvent.click(sectionInput);
-      await userEvent.click(getByText('Author One'));
-
-      await submitForm({ findByRole });
-      await waitFor(() => {
-        expect(onCreate).toHaveBeenCalledWith(
-          expect.objectContaining({
-            versions: [expect.objectContaining(submittedValue)],
-          }),
-        );
-      });
-    },
-  );
-
-  it.each`
-    section                   | submittedValue
-    ${/Corresponding Author/} | ${{ correspondingAuthor: { externalAuthorEmail: 'external@author.com', externalAuthorId: 'external-author-1', externalAuthorName: 'External Author One' } }}
-    ${/Additional Authors/}   | ${{ additionalAuthors: [{ externalAuthorEmail: 'external@author.com', externalAuthorId: 'external-author-1', externalAuthorName: 'External Author One' }] }}
-  `(
-    'submits an existing external author in $section',
-    async ({ section, submittedValue }) => {
-      const onCreate = jest.fn();
-
-      const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
-        {
-          author: {
-            id: 'external-author-1',
-            displayName: 'External Author One',
-            __meta: {
-              type: 'external-author',
-            },
+    const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
+      {
+        author: {
+          id: 'external-author-1',
+          displayName: 'External Author One',
+          __meta: {
+            type: 'external-author',
           },
-          label: 'External Author One',
-          value: 'external-author-1',
         },
-      ]);
+        label: 'External Author One',
+        value: 'external-author-1',
+      },
+    ]);
 
-      const { getByLabelText, getByText, findByRole, findByLabelText } = render(
-        <StaticRouter location="/">
-          <Suspense fallback={<div>Loading...</div>}>
-            <ManuscriptForm
-              {...defaultProps}
-              title="manuscript title"
-              onCreate={onCreate}
-              type="Original Research"
-              lifecycle="Publication"
-              url="http://example.com"
-              preprintDoi="10.4444/test"
-              publicationDoi="10.4467/test"
-              manuscriptFile={{
-                id: '123',
-                url: 'https://test-url',
-                filename: 'abc.jpeg',
-              }}
-              keyResourceTable={{
-                id: '124',
-                url: 'https://test-url',
-                filename: 'abc.jpeg',
-              }}
-              getAuthorSuggestions={getAuthorSuggestionsMock}
-            />
-          </Suspense>
-        </StaticRouter>,
+    const { getByLabelText, getByText, findByRole, findByLabelText } = render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            onCreate={onCreate}
+            type="Original Research"
+            lifecycle="Publication"
+            url="http://example.com"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            manuscriptFile={{
+              id: '123',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            keyResourceTable={{
+              id: '124',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            getAuthorSuggestions={getAuthorSuggestionsMock}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    // Wait for the form section to be ready - findByLabelText waits for the element to appear
+    // This avoids race conditions with Suspense fallbacks in CI environments
+    const sectionInput = await findByLabelText(/Authors/);
+    await userEvent.click(sectionInput);
+    await userEvent.click(getByText(/External Author One \(Non CRN\)/));
+    await userEvent.type(
+      getByLabelText(/External Author One Email/i),
+      'external@author.com',
+    );
+
+    await submitForm({ findByRole });
+
+    await waitFor(() => {
+      expect(onCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          versions: [
+            expect.objectContaining({
+              authors: [
+                {
+                  externalAuthorEmail: 'external@author.com',
+                  externalAuthorId: 'external-author-1',
+                  externalAuthorName: 'External Author One',
+                },
+              ],
+            }),
+          ],
+        }),
       );
+    });
+  });
 
-      // Wait for the form section to be ready - findByLabelText waits for the element to appear
-      // This avoids race conditions with Suspense fallbacks in CI environments
-      const sectionInput = await findByLabelText(section);
-      await userEvent.click(sectionInput);
-      await userEvent.click(getByText(/External Author One \(Non CRN\)/));
-      await userEvent.type(
-        getByLabelText(/External Author One Email/i),
-        'external@author.com',
-      );
+  it('submits a non existing external author in Authors section', async () => {
+    const onCreate = jest.fn();
 
-      await submitForm({ findByRole });
-
-      await waitFor(() => {
-        expect(onCreate).toHaveBeenCalledWith(
-          expect.objectContaining({
-            versions: [expect.objectContaining(submittedValue)],
-          }),
-        );
-      });
-    },
-  );
-
-  it.each`
-    section                     | submittedValue
-    ${/Corresponding Author/}   | ${{ correspondingAuthor: { externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' } }}
-    ${/Additional Authors/}     | ${{ additionalAuthors: [{ externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' }] }}
-    ${/First Author Full Name/} | ${{ firstAuthors: [{ externalAuthorEmail: 'jane@doe.com', externalAuthorName: 'Jane Doe' }] }}
-  `(
-    'submits a non existing external author in $section',
-    async ({ section, submittedValue }) => {
-      const onCreate = jest.fn();
-
-      const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
-        {
-          author: {
-            id: 'author-1',
-            firstName: 'Author',
-            lastName: 'One',
-            displayName: 'Author One',
-            __meta: {
-              type: 'user',
-            },
+    const getAuthorSuggestionsMock = jest.fn().mockResolvedValue([
+      {
+        author: {
+          id: 'author-1',
+          firstName: 'Author',
+          lastName: 'One',
+          displayName: 'Author One',
+          __meta: {
+            type: 'user',
           },
-          label: 'Author One',
-          value: 'author-1',
         },
-      ]);
+        label: 'Author One',
+        value: 'author-1',
+      },
+    ]);
 
-      const { getByLabelText, getByText, findByRole, findByLabelText } = render(
-        <StaticRouter location="/">
-          <Suspense fallback={<div>Loading...</div>}>
-            <ManuscriptForm
-              {...defaultProps}
-              title="manuscript title"
-              onCreate={onCreate}
-              type="Original Research"
-              lifecycle="Publication"
-              url="http://example.com"
-              preprintDoi="10.4444/test"
-              publicationDoi="10.4467/test"
-              manuscriptFile={{
-                id: '123',
-                url: 'https://test-url',
-                filename: 'abc.jpeg',
-              }}
-              keyResourceTable={{
-                id: '124',
-                url: 'https://test-url',
-                filename: 'abc.jpeg',
-              }}
-              getAuthorSuggestions={getAuthorSuggestionsMock}
-            />
-          </Suspense>
-        </StaticRouter>,
+    const { getByLabelText, getByText, findByRole, findByLabelText } = render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            onCreate={onCreate}
+            type="Original Research"
+            lifecycle="Publication"
+            url="http://example.com"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            manuscriptFile={{
+              id: '123',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            keyResourceTable={{
+              id: '124',
+              url: 'https://test-url',
+              filename: 'abc.jpeg',
+            }}
+            getAuthorSuggestions={getAuthorSuggestionsMock}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    // Wait for the form section to be ready - findByLabelText waits for the element to appear
+    // This avoids race conditions with Suspense fallbacks in CI environments
+    const sectionInput = await findByLabelText(/Authors/);
+
+    await userEvent.type(sectionInput, 'Jane Doe');
+
+    await userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
+    await userEvent.type(getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
+
+    await submitForm({ findByRole });
+
+    await waitFor(() => {
+      expect(onCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          versions: [
+            expect.objectContaining({
+              authors: [
+                {
+                  externalAuthorEmail: 'jane@doe.com',
+                  externalAuthorName: 'Jane Doe',
+                },
+              ],
+            }),
+          ],
+        }),
       );
-
-      // Wait for the form section to be ready - findByLabelText waits for the element to appear
-      // This avoids race conditions with Suspense fallbacks in CI environments
-      const sectionInput = await findByLabelText(section);
-
-      await userEvent.type(sectionInput, 'Jane Doe');
-
-      await userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
-      await userEvent.type(getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
-
-      await submitForm({ findByRole });
-
-      await waitFor(() => {
-        expect(onCreate).toHaveBeenCalledWith(
-          expect.objectContaining({
-            versions: [expect.objectContaining(submittedValue)],
-          }),
-        );
-      });
-    },
-  );
+    });
+  });
 });
 
 describe('preprintDoi', () => {
@@ -1234,7 +1232,6 @@ it('calls onUpdate when form is updated', async () => {
         {
           acknowledgedGrantNumber: 'Yes',
           acknowledgedGrantNumberDetails: '',
-          additionalAuthors: [],
           additionalFiles: undefined,
           asapAffiliationIncluded: 'Yes',
           asapAffiliationIncludedDetails: '',
@@ -1242,12 +1239,11 @@ it('calls onUpdate when form is updated', async () => {
           availabilityStatementDetails: '',
           codeDeposited: 'Yes',
           codeDepositedDetails: '',
-          correspondingAuthor: undefined,
           datasetsDeposited: 'Yes',
           datasetsDepositedDetails: '',
           description: 'Some description',
           shortDescription: 'A good short description',
-          firstAuthors: [],
+          authors: [],
           keyResourceTable: {
             filename: 'test.csv',
             id: '124',
@@ -1255,7 +1251,7 @@ it('calls onUpdate when form is updated', async () => {
           },
           labMaterialsRegistered: 'Yes',
           labMaterialsRegisteredDetails: '',
-          labs: [],
+          labs: ['lab-1'],
           lifecycle: 'Draft Manuscript (prior to Publication)',
           manuscriptFile: {
             filename: 'test.pdf',
@@ -1359,7 +1355,6 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
         {
           acknowledgedGrantNumber: 'Yes',
           acknowledgedGrantNumberDetails: '',
-          additionalAuthors: [],
           additionalFiles: undefined,
           asapAffiliationIncluded: 'Yes',
           asapAffiliationIncludedDetails: '',
@@ -1367,12 +1362,11 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
           availabilityStatementDetails: '',
           codeDeposited: 'Yes',
           codeDepositedDetails: '',
-          correspondingAuthor: undefined,
           datasetsDeposited: 'Yes',
           datasetsDepositedDetails: '',
           description: 'Some description',
           shortDescription: 'A good short description',
-          firstAuthors: [],
+          authors: [],
           keyResourceTable: {
             filename: 'keyresource.csv',
             id: 'some-id',
@@ -1380,7 +1374,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
           },
           labMaterialsRegistered: 'Yes',
           labMaterialsRegisteredDetails: '',
-          labs: [],
+          labs: ['lab-1'],
           lifecycle: 'Draft Manuscript (prior to Publication)',
           manuscriptFile: {
             filename: 'manuscript.pdf',

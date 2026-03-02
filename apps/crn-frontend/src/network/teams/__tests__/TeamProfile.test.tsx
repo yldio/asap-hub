@@ -425,7 +425,7 @@ it('displays manuscript success toast message and user can dismiss toast', async
   await user.type(categoryInput, 'My Cat');
   await user.click(screen.getByText(/^My Category$/i));
 
-  fireEvent.change(screen.getByLabelText(/First Authors/i), {
+  fireEvent.change(screen.getByLabelText(/Authors/i), {
     target: { value: 'Jane Doe' },
   });
 

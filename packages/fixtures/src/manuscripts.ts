@@ -66,9 +66,7 @@ export const createManuscriptResponse = (
         },
       ],
       labs: [{ name: 'Lab 1', id: 'lab-1' }],
-      firstAuthors: [],
-      correspondingAuthor: [],
-      additionalAuthors: [],
+      authors: [],
     },
   ],
 });

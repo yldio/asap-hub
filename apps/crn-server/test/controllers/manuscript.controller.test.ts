@@ -187,11 +187,6 @@ describe('Manuscript controller', () => {
         email: 'external@one.com',
       };
 
-      const externalAuthor2 = {
-        name: 'External Two',
-        email: 'external@two.com',
-      };
-
       manuscriptDataProviderMock.create.mockResolvedValueOnce(manuscriptId);
       manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
         getManuscriptResponse(),
@@ -201,22 +196,14 @@ describe('Manuscript controller', () => {
         .calledWith(externalAuthor1)
         .mockResolvedValue('external-1');
 
-      when(externalAuthorDataProviderMock.create)
-        .calledWith(externalAuthor2)
-        .mockResolvedValue('external-2');
-
       const payload = getManuscriptCreateControllerDataObject();
-      payload.versions[0]!.firstAuthors = [
+      payload.versions[0]!.authors = [
         { userId: 'author-1' },
         {
           externalAuthorName: externalAuthor1.name,
           externalAuthorEmail: externalAuthor1.email,
         },
       ];
-      payload.versions[0]!.correspondingAuthor = {
-        externalAuthorName: externalAuthor2.name,
-        externalAuthorEmail: externalAuthor2.email,
-      };
 
       const result = await manuscriptController.create(payload);
 
@@ -227,17 +214,12 @@ describe('Manuscript controller', () => {
         externalAuthor1,
       );
 
-      expect(externalAuthorDataProviderMock.create).toHaveBeenNthCalledWith(
-        2,
-        externalAuthor2,
-      );
       expect(manuscriptDataProviderMock.create).toHaveBeenCalledWith({
         ...getManuscriptCreateDataObject(),
         versions: [
           {
             ...getManuscriptCreateDataObject().versions[0],
-            firstAuthors: ['author-1', 'external-1'],
-            correspondingAuthor: ['external-2'],
+            authors: ['author-1', 'external-1'],
           },
         ],
       });
@@ -254,7 +236,7 @@ describe('Manuscript controller', () => {
       );
 
       const payload = getManuscriptCreateControllerDataObject();
-      payload.versions[0]!.firstAuthors = [
+      payload.versions[0]!.authors = [
         {
           userId: 'author-1',
         },
@@ -279,7 +261,7 @@ describe('Manuscript controller', () => {
         versions: [
           {
             ...getManuscriptCreateDataObject().versions[0],
-            firstAuthors: ['author-1', 'existing-external-1'],
+            authors: ['author-1', 'existing-external-1'],
           },
         ],
       });
@@ -294,7 +276,7 @@ describe('Manuscript controller', () => {
       externalAuthorDataProviderMock.create.mockResolvedValueOnce('external-1');
 
       const payload = getManuscriptCreateControllerDataObject();
-      payload.versions[0]!.firstAuthors = [
+      payload.versions[0]!.authors = [
         {
           userId: 'author-1',
         },
@@ -312,7 +294,7 @@ describe('Manuscript controller', () => {
         versions: [
           {
             ...getManuscriptCreateDataObject().versions[0],
-            firstAuthors: ['author-1'],
+            authors: ['author-1'],
           },
         ],
       });
@@ -564,18 +546,11 @@ describe('Manuscript controller', () => {
               lifecycle: 'Preprint',
               type: 'Original Research',
               teams: ['team-1'],
+              labs: ['lab-1'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
               shortDescription: 'A good short description',
-              firstAuthors: [{ userId: 'author-1' }],
-              correspondingAuthor: { userId: 'author-2' },
-              additionalAuthors: [
-                {
-                  externalAuthorId: 'external-1',
-                  externalAuthorName: 'External One',
-                  externalAuthorEmail: 'external@one.com',
-                },
-              ],
+              authors: [{ userId: 'author-1' }],
             },
           ],
         },
@@ -591,6 +566,7 @@ describe('Manuscript controller', () => {
               lifecycle: 'Preprint',
               type: 'Original Research',
               teams: ['team-1'],
+              labs: ['lab-1'],
               manuscriptFile: {
                 filename: 'manuscript.pdf',
                 id: 'file-id',
@@ -598,9 +574,7 @@ describe('Manuscript controller', () => {
               },
               description: 'edited description',
               shortDescription: 'A good short description',
-              firstAuthors: ['author-1'],
-              correspondingAuthor: ['author-2'],
-              additionalAuthors: ['external-1'],
+              authors: ['author-1'],
             },
           ],
         },
@@ -612,48 +586,6 @@ describe('Manuscript controller', () => {
         {
           email: 'external@one.com',
         },
-      );
-    });
-
-    test('Should update the manuscript version when corresponding author and additional authors are empty', async () => {
-      const manuscriptId = 'manuscript-id-1';
-      manuscriptDataProviderMock.fetchById.mockResolvedValue(
-        getManuscriptResponse(),
-      );
-      manuscriptDataProviderMock.update.mockResolvedValueOnce();
-
-      const result = await manuscriptController.update(
-        manuscriptId,
-        {
-          versions: [
-            {
-              lifecycle: 'Preprint',
-              type: 'Original Research',
-              teams: ['team-1'],
-              manuscriptFile: getManuscriptFileResponse(),
-              description: 'edited description',
-              shortDescription: 'A good short description',
-              firstAuthors: [{ userId: 'author-1' }],
-              correspondingAuthor: undefined,
-              additionalAuthors: [],
-            },
-          ],
-        },
-        'user-id',
-      );
-
-      expect(result).toEqual(getManuscriptResponse());
-      expect(manuscriptDataProviderMock.update).toHaveBeenCalledWith(
-        manuscriptId,
-        {
-          versions: [
-            expect.objectContaining({
-              correspondingAuthor: [],
-              additionalAuthors: [],
-            }),
-          ],
-        },
-        'user-id',
       );
     });
 

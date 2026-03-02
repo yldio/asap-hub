@@ -909,33 +909,13 @@ describe('/research-outputs/ route', () => {
               { id: 'team-1', displayName: 'Test 1', inactiveSince: undefined },
             ],
             labs: [{ id: 'lab-1', name: 'Lab 1' }],
-            firstAuthors: [
+            authors: [
               {
                 id: 'author-1',
                 displayName: 'Author 1',
                 email: 'author1@example.com',
                 firstName: 'Author',
                 lastName: '1',
-                avatarUrl: undefined,
-              },
-            ],
-            correspondingAuthor: [
-              {
-                id: 'author-2',
-                displayName: 'Author 2',
-                email: 'author2@example.com',
-                firstName: 'Author',
-                lastName: '2',
-                avatarUrl: undefined,
-              },
-            ],
-            additionalAuthors: [
-              {
-                id: 'author-3',
-                displayName: 'Author 3',
-                email: 'author3@example.com',
-                firstName: 'Author',
-                lastName: '3',
                 avatarUrl: undefined,
               },
             ],
@@ -1028,9 +1008,7 @@ describe('/research-outputs/ route', () => {
                 },
               ],
               labs: [{ id: 'lab-1', name: 'Lab 1' }],
-              firstAuthors: [],
-              correspondingAuthor: [],
-              additionalAuthors: [],
+              authors: [],
             },
           ],
         });
@@ -1173,9 +1151,7 @@ describe('/research-outputs/ route', () => {
                 },
               ],
               labs: [],
-              firstAuthors: [],
-              correspondingAuthor: [],
-              additionalAuthors: [],
+              authors: [],
             },
           ],
         });
@@ -1241,9 +1217,7 @@ describe('/research-outputs/ route', () => {
               },
               teams: [],
               labs: [],
-              firstAuthors: [],
-              correspondingAuthor: [],
-              additionalAuthors: [],
+              authors: [],
             },
           ],
         });
@@ -1271,138 +1245,6 @@ describe('/research-outputs/ route', () => {
           }),
         );
       });
-
-      const author1 = {
-        id: 'author-1',
-        displayName: 'Author 1',
-        email: 'author1@example.com',
-        firstName: 'Author',
-        lastName: '1',
-        avatarUrl: undefined,
-      };
-      const author2 = {
-        id: 'author-2',
-        displayName: 'Author 2',
-        email: 'author2@example.com',
-        firstName: 'Author',
-        lastName: '2',
-        avatarUrl: undefined,
-      };
-      const author3 = {
-        id: 'author-3',
-        displayName: 'Author 3',
-        email: 'author3@example.com',
-        firstName: 'Author',
-        lastName: '3',
-        avatarUrl: undefined,
-      };
-
-      test.each([
-        {
-          testName: 'Should handle manuscript with no firstAuthors correctly',
-          firstAuthors: [],
-          correspondingAuthor: [author2],
-          additionalAuthors: [author3],
-          expectedAuthors: [{ userId: 'author-2' }, { userId: 'author-3' }],
-        },
-        {
-          testName:
-            'Should handle manuscript with empty correspondingAuthor correctly',
-          firstAuthors: [author1],
-          correspondingAuthor: [],
-          additionalAuthors: [author3],
-          expectedAuthors: [{ userId: 'author-1' }, { userId: 'author-3' }],
-        },
-        {
-          testName:
-            'Should handle manuscript with empty additionalAuthors correctly',
-          firstAuthors: [author1],
-          correspondingAuthor: [author2],
-          additionalAuthors: [],
-          expectedAuthors: [{ userId: 'author-1' }, { userId: 'author-2' }],
-        },
-      ])(
-        '$testName',
-        async ({
-          firstAuthors,
-          correspondingAuthor,
-          additionalAuthors,
-          expectedAuthors,
-        }) => {
-          const manuscriptWithEmptyAuthors = getManuscriptResponse({
-            versions: [
-              {
-                id: 'version-1',
-                lifecycle: 'Preprint',
-                type: 'Original Research',
-                description: 'A good description',
-                shortDescription: 'A good short description',
-                count: 1,
-                createdBy: {
-                  id: 'user-id-1',
-                  firstName: 'John',
-                  lastName: 'Doe',
-                  displayName: 'John Doe',
-                  teams: [{ id: 'team-1', name: 'Team 1' }],
-                },
-                updatedBy: {
-                  id: 'user-id-1',
-                  firstName: 'John',
-                  lastName: 'Doe',
-                  displayName: 'John Doe',
-                  teams: [{ id: 'team-1', name: 'Team 1' }],
-                },
-                createdDate: '2020-09-23T20:45:22.000Z',
-                publishedAt: '2020-09-23T20:45:22.000Z',
-                manuscriptFile: {
-                  filename: 'manuscript.pdf',
-                  url: 'https://example.com/manuscript.pdf',
-                  id: 'file-id',
-                },
-                keyResourceTable: {
-                  filename: 'manuscript.csv',
-                  url: 'https://example.com/manuscript.csv',
-                  id: 'file-table-id',
-                },
-                teams: [
-                  {
-                    id: 'team-1',
-                    displayName: 'Test 1',
-                    inactiveSince: undefined,
-                  },
-                ],
-                labs: [{ id: 'lab-1', name: 'Lab 1' }],
-                firstAuthors,
-                correspondingAuthor,
-                additionalAuthors,
-              },
-            ],
-          });
-
-          manuscriptControllerMock.fetchById.mockResolvedValueOnce(
-            manuscriptWithEmptyAuthors,
-          );
-          manuscriptControllerMock.getResearchOutputLinked.mockResolvedValueOnce(
-            null,
-          );
-          researchOutputControllerMock.create.mockResolvedValueOnce(
-            researchOutputResponse,
-          );
-
-          const response = await supertest(app)
-            .post('/research-outputs/preprint')
-            .send({ manuscriptId: 'manuscript-id-1' });
-
-          expect(response.status).toBe(201);
-          expect(researchOutputControllerMock.create).toHaveBeenCalledWith(
-            expect.objectContaining({
-              authors: expectedAuthors,
-              labs: ['lab-1'],
-              teams: ['team-1'],
-            }),
-          );
-        },
-      );
 
       test('Should handle manuscript with categories correctly', async () => {
         const manuscriptWithCategories = getManuscriptResponse({

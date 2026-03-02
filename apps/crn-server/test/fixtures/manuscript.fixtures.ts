@@ -59,9 +59,7 @@ export const getManuscriptDataObject = (
         { id: 'team-1', displayName: 'Test 1', inactiveSince: undefined },
       ],
       labs: [{ id: 'lab-1', name: 'Lab 1' }],
-      firstAuthors: [],
-      correspondingAuthor: [],
-      additionalAuthors: [],
+      authors: [],
     },
   ],
   ...data,
@@ -160,13 +158,7 @@ export const getContentfulGraphqlManuscriptVersions = (
           },
         ],
       },
-      firstAuthorsCollection: {
-        items: [],
-      },
-      correspondingAuthorCollection: {
-        items: [],
-      },
-      additionalAuthorsCollection: {
+      authorsCollection: {
         items: [],
       },
       createdBy: {
@@ -463,9 +455,7 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
         teams: ['team-1'],
         labs: [],
         description: '',
-        firstAuthors: [{ userId: 'author-1' }],
-        correspondingAuthor: undefined,
-        additionalAuthors: [],
+        authors: [{ userId: 'author-1' }],
         ...getQuickCheckDetailsText(version),
       },
     ],
@@ -476,17 +466,14 @@ export const getManuscriptCreateControllerDataObject =
   (): ManuscriptCreateControllerDataObject => {
     const { versions, ...rest } = getManuscriptCreateDataObject();
 
-    const { firstAuthors, correspondingAuthor, additionalAuthors, ...version } =
-      versions[0]!;
+    const { authors, ...version } = versions[0]!;
 
     return {
       ...rest,
       versions: [
         {
           ...version,
-          firstAuthors: [{ userId: 'author-1' }],
-          correspondingAuthor: undefined,
-          additionalAuthors: [],
+          authors: [{ userId: 'author-1' }],
         },
       ],
     };
@@ -514,9 +501,7 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
         teams: ['team-1', 'team-2'],
         labs: [],
         description: 'nice description',
-        firstAuthors: ['author-1'],
-        correspondingAuthor: [],
-        additionalAuthors: [],
+        authors: ['author-1'],
         ...getQuickCheckDetailsText(version),
       },
     ],

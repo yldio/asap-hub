@@ -58,28 +58,12 @@ describe('Email Notification Service', () => {
     NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
   >;
   manuscript.assignedUsersCollection = assignedUsers;
-  manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
+  manuscript.versionsCollection!.items[0]!.authorsCollection!.items = [
     {
       __typename: 'Users',
       email: 'fiona.first@email.com',
     },
   ];
-
-  manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection!.items =
-    [
-      {
-        __typename: 'Users',
-        email: 'connor.corresponding@email.com',
-      },
-    ];
-
-  manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection!.items =
-    [
-      {
-        __typename: 'ExternalAuthors',
-        email: 'second.external@email.com',
-      },
-    ];
 
   test('Should not send email notification if environment is not production and no notification list', async () => {
     mockEnvironmentGetter.mockReturnValueOnce('development');
@@ -423,12 +407,7 @@ describe('Email Notification Service', () => {
           },
         },
       ];
-      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection =
-        undefined;
-      manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection =
-        undefined;
-      manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection =
-        undefined;
+      manuscript.versionsCollection!.items[0]!.authorsCollection = undefined;
 
       const recipients = 'active.pm@example.com,lead.pi@example.com';
 
@@ -508,12 +487,7 @@ describe('Email Notification Service', () => {
           },
         },
       ];
-      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection =
-        undefined;
-      manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection =
-        undefined;
-      manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection =
-        undefined;
+      manuscript.versionsCollection!.items[0]!.authorsCollection = undefined;
 
       const recipients = 'active.pi@example.com';
 

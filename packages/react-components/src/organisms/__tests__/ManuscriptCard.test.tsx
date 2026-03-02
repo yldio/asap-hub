@@ -171,7 +171,7 @@ it('displays submit revised manuscript button if user is an author', async () =>
   const manuscriptVersions = [
     {
       ...mockVersionWithReport,
-      firstAuthors: [user],
+      authors: [user],
     },
   ];
 
@@ -203,7 +203,7 @@ it('shows tooltip on hover over disabled Submit Revised Manuscript button when n
   const manuscriptVersions = [
     {
       ...mockVersion,
-      firstAuthors: [user],
+      authors: [user],
       complianceReport: undefined,
     },
   ];
@@ -353,7 +353,7 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
   const manuscriptVersions = [
     {
       ...mockVersionWithReport,
-      firstAuthors: [user],
+      authors: [user],
     },
   ];
 

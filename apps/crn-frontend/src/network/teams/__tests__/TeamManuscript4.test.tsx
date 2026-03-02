@@ -213,8 +213,7 @@ it('shows default error toast when submitting with any other error', async () =>
     'Some short description',
   );
 
-  // First authors
-  await user.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
+  await user.type(screen.getByLabelText(/Authors/i), 'Jane Doe');
 
   // External author email
   await user.click(screen.getByText(/Non CRN/i));

@@ -21,9 +21,9 @@ const defaultProps: Omit<
   'control' | 'getValues' | 'trigger'
 > = {
   isMultiSelect: true,
-  fieldName: 'firstAuthors',
-  fieldTitle: 'First Authors',
-  fieldDescription: 'Add the first authors of the manuscript',
+  fieldName: 'authors',
+  fieldTitle: 'Authors',
+  fieldDescription: 'Add the authors of the manuscript',
   fieldEmailDescription: 'Provide their email',
   getAuthorSuggestions,
   isSubmitting: false,

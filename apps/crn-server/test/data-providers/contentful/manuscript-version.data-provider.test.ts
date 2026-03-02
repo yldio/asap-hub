@@ -35,8 +35,8 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       ManuscriptsCategoriesCollection: () => ({
         ...getContentfulManuscript().categoriesCollection,
       }),
-      ManuscriptVersionsFirstAuthorsCollection: () => ({
-        ...getContentfulManuscriptVersion()?.firstAuthorsCollection,
+      ManuscriptVersionsAuthorsCollection: () => ({
+        ...getContentfulManuscriptVersion()?.authorsCollection,
       }),
       ManuscriptVersionsLabsCollection: () => ({
         ...getContentfulManuscriptVersion()?.labsCollection,
@@ -117,7 +117,7 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       const authorId = 'first-author-1';
       const version = {
         ...getContentfulManuscriptVersion(1, 'Preprint'),
-        firstAuthorsCollection: {
+        authorsCollection: {
           items: [
             {
               __typename: 'Users',
@@ -129,10 +129,6 @@ describe('Manuscript Versions Contentful Data Provider', () => {
               email: 'author1@gmail.com',
               nickname: 'one',
             },
-          ],
-        },
-        correspondingAuthorCollection: {
-          items: [
             {
               __typename: 'Users',
               sys: {

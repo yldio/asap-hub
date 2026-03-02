@@ -89,9 +89,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
   const {
     teams: manuscriptTeams,
     labs: manuscriptLabs,
-    firstAuthors: manuscriptFirstAuthors,
-    correspondingAuthor: manuscriptCorrespondingAuthor,
-    additionalAuthors: manuscriptAdditionalAuthors,
+    authors: manuscriptAuthors,
     ...manuscriptVersion
   } = manuscript?.versions[0] || {};
 
@@ -172,13 +170,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           url={manuscript?.url}
           impact={selectedImpact}
           categories={selectedCategories}
-          firstAuthors={convertAuthorsToSelectOptions(manuscriptFirstAuthors)}
-          correspondingAuthor={convertAuthorsToSelectOptions(
-            manuscriptCorrespondingAuthor,
-          )}
-          additionalAuthors={convertAuthorsToSelectOptions(
-            manuscriptAdditionalAuthors,
-          )}
+          authors={convertAuthorsToSelectOptions(manuscriptAuthors)}
           resubmitManuscript={resubmitManuscript}
           clearFormToast={() => {
             setFormType({ type: '', accent: 'successLarge' });

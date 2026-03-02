@@ -146,9 +146,7 @@ export type ManuscriptVersion = {
   createdDate: string;
   publishedAt: string;
   complianceReport?: ComplianceReportDataObject;
-  firstAuthors: AuthorResponse[];
-  correspondingAuthor: AuthorResponse[];
-  additionalAuthors: AuthorResponse[];
+  authors: AuthorResponse[];
 };
 
 export const manuscriptFormFieldsMapping: Record<
@@ -165,9 +163,7 @@ export const manuscriptFormFieldsMapping: Record<
         | 'id'
         | 'publishedAt'
         | 'updatedBy'
-        | 'firstAuthors'
-        | 'correspondingAuthor'
-        | 'additionalAuthors'
+        | 'authors'
         | 'versionUID'
       >
     >
@@ -405,10 +401,8 @@ export type ManuscriptPostCreateRequest = Pick<
     availabilityStatementDetails?: string;
 
     teams: string[];
-    labs?: string[];
-    firstAuthors: ManuscriptPostAuthor[];
-    correspondingAuthor?: ManuscriptPostAuthor;
-    additionalAuthors?: ManuscriptPostAuthor[];
+    labs: string[];
+    authors: ManuscriptPostAuthor[];
     url?: string;
   }[];
   notificationList?: string;
@@ -453,11 +447,9 @@ export type ManuscriptUpdateDataObject =
       Omit<ManuscriptPostRequest, 'versions'> & {
         versions: (Omit<
           ManuscriptPostRequest['versions'][number],
-          'firstAuthors' | 'correspondingAuthor' | 'additionalAuthors'
+          'authors'
         > & {
-          firstAuthors: string[];
-          correspondingAuthor: string[];
-          additionalAuthors: string[];
+          authors: string[];
         })[];
       }
     >;
@@ -517,12 +509,8 @@ export type ManuscriptFormData = Pick<
 
     teams: MultiselectOption[];
     labs: MultiselectOption[];
-    firstAuthors: AuthorSelectOption[];
-    firstAuthorsEmails: AuthorEmailField[];
-    correspondingAuthor: AuthorSelectOption[];
-    correspondingAuthorEmails: AuthorEmailField[];
-    additionalAuthors: AuthorSelectOption[];
-    additionalAuthorsEmails: AuthorEmailField[];
+    authors: AuthorSelectOption[];
+    authorsEmails: AuthorEmailField[];
   })[];
 };
 
@@ -542,13 +530,8 @@ export type ManuscriptCreateDataObject = Omit<
   'versions'
 > & {
   userId: string;
-  versions: (Omit<
-    ManuscriptPostRequest['versions'][number],
-    'firstAuthors' | 'correspondingAuthor' | 'additionalAuthors'
-  > & {
-    firstAuthors: string[];
-    correspondingAuthor: string[];
-    additionalAuthors: string[];
+  versions: (Omit<ManuscriptPostRequest['versions'][number], 'authors'> & {
+    authors: string[];
   })[];
   notificationList?: string;
 };
@@ -622,56 +605,9 @@ export const manuscriptVersionSchema = {
     availabilityStatementDetails: { type: 'string', nullable: true },
 
     teams: { type: 'array', minItems: 1, items: { type: 'string' } },
-    labs: { type: 'array', nullable: true, items: { type: 'string' } },
-    firstAuthors: {
+    labs: { type: 'array', minItems: 1, items: { type: 'string' } },
+    authors: {
       type: 'array',
-      items: {
-        oneOf: [
-          {
-            type: 'object',
-            properties: {
-              userId: { type: 'string' },
-            },
-            required: ['userId'],
-          },
-          {
-            type: 'object',
-            properties: {
-              externalAuthorId: { type: 'string', nullable: true },
-              externalAuthorName: { type: 'string' },
-              externalAuthorEmail: { type: 'string' },
-            },
-            required: ['externalAuthorName', 'externalAuthorEmail'],
-          },
-        ],
-      },
-    },
-    correspondingAuthor: {
-      type: 'object',
-      nullable: true,
-      oneOf: [
-        {
-          type: 'object',
-          properties: {
-            userId: { type: 'string' },
-          },
-          required: ['userId'],
-        },
-        {
-          type: 'object',
-          properties: {
-            externalAuthorId: { type: 'string', nullable: true },
-            externalAuthorName: { type: 'string' },
-            externalAuthorEmail: { type: 'string' },
-          },
-          required: ['externalAuthorName', 'externalAuthorEmail'],
-        },
-      ],
-    },
-    additionalAuthors: {
-      type: 'array',
-      nullable: true,
-
       items: {
         oneOf: [
           {

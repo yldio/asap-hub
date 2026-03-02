@@ -1526,21 +1526,11 @@ const isManuscriptAuthor = (
   userId: string,
 ): boolean => {
   if (!manuscriptVersion) return false;
-  const isFirstAuthor = manuscriptVersion?.firstAuthorsCollection?.items.some(
+  const isAuthor = manuscriptVersion?.authorsCollection?.items.some(
     (author) => author?.__typename === 'Users' && author?.sys?.id === userId,
   );
 
-  const isAdditionalAuthor =
-    !!manuscriptVersion?.additionalAuthorsCollection?.items.some(
-      (author) => author?.__typename === 'Users' && author?.sys?.id === userId,
-    );
-
-  const isCorrespondingAuthor =
-    !!manuscriptVersion?.correspondingAuthorCollection?.items.some(
-      (author) => author?.__typename === 'Users' && author?.sys?.id === userId,
-    );
-
-  return isFirstAuthor || isAdditionalAuthor || isCorrespondingAuthor;
+  return !!isAuthor;
 };
 
 const isManuscriptProjectManagerOrLeadPI = (

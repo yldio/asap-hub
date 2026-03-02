@@ -208,16 +208,8 @@ export const researchOutputRouteFactory = (
       return res.status(200).json(researchOutputLinked);
     }
 
-    const authors = Array.from(
-      new Set([
-        ...preprintManuscriptVersion.firstAuthors.map((author) => author.id),
-        ...preprintManuscriptVersion.correspondingAuthor.map(
-          (author) => author.id,
-        ),
-        ...preprintManuscriptVersion.additionalAuthors.map(
-          (author) => author.id,
-        ),
-      ]),
+    const authors = preprintManuscriptVersion.authors.map(
+      (author) => author.id,
     );
 
     const researchOutput = await researchOutputController.create({

@@ -152,16 +152,7 @@ const showMoreContainerStyles = css({
 });
 
 type VersionUserProps = {
-  version:
-    | Pick<
-        ManuscriptVersion,
-        | 'teams'
-        | 'firstAuthors'
-        | 'correspondingAuthor'
-        | 'additionalAuthors'
-        | 'labs'
-      >
-    | undefined;
+  version: Pick<ManuscriptVersion, 'teams' | 'authors' | 'labs'> | undefined;
   user: User | null;
 };
 
@@ -213,11 +204,7 @@ const canUpdateManuscript = ({ version, user }: VersionUserProps) =>
   user?.openScienceTeamMember ||
   !!isManuscriptLead({ version, user }) ||
   !!isManuscriptAuthor({
-    authors: [
-      ...(version?.firstAuthors || []),
-      ...(version?.correspondingAuthor || []),
-      ...(version?.additionalAuthors || []),
-    ],
+    authors: [...(version?.authors || [])],
     user,
   }) ||
   !!isManuscriptLabPi({ labs: version?.labs, user });

@@ -137,11 +137,9 @@ const parseGraphQLManucriptVersion = (
     team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
       ?.projectsCollection?.items[0];
 
-  const manuscriptAuthors = cleanArray([
-    ...(latestVersion?.firstAuthorsCollection?.items || []),
-    ...(latestVersion?.correspondingAuthorCollection?.items || []),
-    ...(latestVersion?.additionalAuthorsCollection?.items || []),
-  ]);
+  const manuscriptAuthors = cleanArray(
+    latestVersion?.authorsCollection?.items,
+  );
   const uniqueAuthors = Array.from(
     new Map(
       manuscriptAuthors.map((manuscriptAuthor) => [

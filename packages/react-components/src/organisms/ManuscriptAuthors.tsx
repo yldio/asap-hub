@@ -14,7 +14,7 @@ type ManuscriptAuthorsProps = {
   control: Control<ManuscriptFormData>;
   fieldDescription: string;
   fieldEmailDescription: string;
-  fieldName: 'firstAuthors' | 'correspondingAuthor' | 'additionalAuthors';
+  fieldName: 'authors';
   fieldTitle: string;
   getAuthorSuggestions: NonNullable<
     ComponentProps<typeof AuthorSelect>['loadOptions']
@@ -194,7 +194,7 @@ const ManuscriptAuthors = ({
             name={`versions.0.${fieldName}Emails.${index}.email`}
             control={control}
             rules={{
-              required: 'Email is required',
+              required: 'Email is required for non-CRN authors.',
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
                 message: 'Please enter a valid email.',

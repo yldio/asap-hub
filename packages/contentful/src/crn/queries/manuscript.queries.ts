@@ -176,73 +176,7 @@ export const manuscriptContentQueryFragment = gql`
             }
           }
         }
-        firstAuthorsCollection(limit: 15) {
-          items {
-            __typename
-            ... on ExternalAuthors {
-              sys {
-                id
-              }
-              name
-              email
-            }
-            ... on Users {
-              sys {
-                id
-              }
-              avatar {
-                url
-              }
-              firstName
-              lastName
-              nickname
-              email
-              teamsCollection(limit: 3) {
-                items {
-                  team {
-                    sys {
-                      id
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        additionalAuthorsCollection(limit: 15) {
-          items {
-            __typename
-            ... on ExternalAuthors {
-              sys {
-                id
-              }
-              name
-              email
-            }
-            ... on Users {
-              sys {
-                id
-              }
-              avatar {
-                url
-              }
-              firstName
-              lastName
-              nickname
-              email
-              teamsCollection(limit: 3) {
-                items {
-                  team {
-                    sys {
-                      id
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        correspondingAuthorCollection(limit: 1) {
+        authorsCollection(limit: 35) {
           items {
             __typename
             ... on ExternalAuthors {
@@ -504,29 +438,7 @@ export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
               }
             }
           }
-          firstAuthorsCollection(limit: 15) {
-            items {
-              __typename
-              ... on ExternalAuthors {
-                email
-              }
-              ... on Users {
-                email
-              }
-            }
-          }
-          additionalAuthorsCollection(limit: 15) {
-            items {
-              __typename
-              ... on ExternalAuthors {
-                email
-              }
-              ... on Users {
-                email
-              }
-            }
-          }
-          correspondingAuthorCollection(limit: 1) {
+          authorsCollection(limit: 35) {
             items {
               __typename
               ... on ExternalAuthors {

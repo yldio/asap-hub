@@ -248,14 +248,8 @@ export class EmailNotificationService {
       (discussionDetails?.id && isDiscussionCreatedAction)
     ) {
       const contributingAuthors = [
-        ...(versionData.firstAuthorsCollection?.items.map(
-          (firstAuthor) => firstAuthor?.email,
-        ) || []),
-        ...(versionData.additionalAuthorsCollection?.items.map(
-          (additionalAuthor) => additionalAuthor?.email,
-        ) || []),
-        ...(versionData.correspondingAuthorCollection?.items.map(
-          (correspondingAuthor) => correspondingAuthor?.email,
+        ...(versionData.authorsCollection?.items.map(
+          (author) => author?.email,
         ) || []),
       ];
 

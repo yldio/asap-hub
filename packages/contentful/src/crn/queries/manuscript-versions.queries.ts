@@ -58,37 +58,7 @@ const versionsContentQueryFragment = gql`
         displayName
       }
     }
-    firstAuthorsCollection(limit: 15) {
-      items {
-        __typename
-        ... on ExternalAuthors {
-          sys {
-            id
-          }
-          name
-          orcid
-        }
-        ... on Users {
-          ...UserAuthorsContent
-        }
-      }
-    }
-    additionalAuthorsCollection(limit: 15) {
-      items {
-        __typename
-        ... on ExternalAuthors {
-          sys {
-            id
-          }
-          name
-          orcid
-        }
-        ... on Users {
-          ...UserAuthorsContent
-        }
-      }
-    }
-    correspondingAuthorCollection(limit: 1) {
+    authorsCollection(limit: 35) {
       items {
         __typename
         ... on ExternalAuthors {

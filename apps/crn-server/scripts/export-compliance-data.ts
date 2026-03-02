@@ -43,9 +43,7 @@ type ManuscriptVersionExport = {
   labMaterialsRegisteredDetails?: string;
   availabilityStatement?: string;
   availabilityStatementDetails?: string;
-  firstAuthors: string;
-  correspondingAuthor?: string;
-  additionalAuthors?: string;
+  authors: string;
   assignedUsers?: string;
   labs?: string;
   complianceReportUrl?: string;
@@ -308,17 +306,11 @@ const formatComplianceData = (entries: GroupedEntries) => {
         teams: versionFields?.teams
           ? getLinkedTeamNames(versionFields?.teams['en-US'])
           : '',
-        firstAuthors: versionFields?.firstAuthors
-          ? getLinkedAuthors(versionFields?.firstAuthors['en-US'])
+        authors: versionFields?.authors
+          ? getLinkedAuthors(versionFields?.authors['en-US'])
           : '',
         labs: versionFields?.labs
           ? getLinkedLabNames(versionFields?.labs['en-US'])
-          : '',
-        correspondingAuthor: versionFields?.correspondingAuthor
-          ? getLinkedAuthors(versionFields?.correspondingAuthor['en-US'])
-          : '',
-        additionalAuthors: versionFields?.additionalAuthors
-          ? getLinkedAuthors(versionFields?.additionalAuthors['en-US'])
           : '',
         status: manuscriptFields.status['en-US'] || '',
         acknowledgedGrantNumber:

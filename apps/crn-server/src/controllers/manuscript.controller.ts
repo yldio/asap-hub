@@ -204,22 +204,10 @@ export default class ManuscriptController {
   private getManuscriptVersionData = async (
     version: ManuscriptCreateControllerDataObject['versions'][number],
   ) => {
-    const {
-      firstAuthors,
-      correspondingAuthor,
-      additionalAuthors,
-      ...versionData
-    } = version;
+    const { authors, ...versionData } = version;
 
-    const firstAuthorsValues = await this.mapAuthorsPostRequestToId(
-      firstAuthors ?? [],
-    );
-    const correspondingAuthorValues = correspondingAuthor
-      ? await this.mapAuthorsPostRequestToId([correspondingAuthor])
-      : [];
-
-    const additionalAuthorsValues = await this.mapAuthorsPostRequestToId(
-      additionalAuthors ?? [],
+    const authorsValues = await this.mapAuthorsPostRequestToId(
+      authors ?? [],
     );
 
     const getValidAuthorIds = (authorIds: (string | null)[]) =>
@@ -227,9 +215,7 @@ export default class ManuscriptController {
 
     return {
       ...versionData,
-      firstAuthors: getValidAuthorIds(firstAuthorsValues),
-      correspondingAuthor: getValidAuthorIds(correspondingAuthorValues),
-      additionalAuthors: getValidAuthorIds(additionalAuthorsValues),
+      authors: getValidAuthorIds(authorsValues),
     };
   };
 
@@ -261,21 +247,12 @@ export default class ManuscriptController {
 
     if ('versions' in manuscriptData && manuscriptData.versions?.[0]) {
       const {
-        firstAuthors,
-        correspondingAuthor,
-        additionalAuthors,
+        authors,
         ...versionData
       } = manuscriptData.versions[0];
 
-      const firstAuthorsValues = await this.mapAuthorsPostRequestToId(
-        firstAuthors ?? [],
-      );
-      const correspondingAuthorValues = correspondingAuthor
-        ? await this.mapAuthorsPostRequestToId([correspondingAuthor])
-        : [];
-
-      const additionalAuthorsValues = await this.mapAuthorsPostRequestToId(
-        additionalAuthors ?? [],
+      const authorsValues = await this.mapAuthorsPostRequestToId(
+        authors ?? [],
       );
 
       const getValidAuthorIds = (authorIds: (string | null)[]) =>
@@ -288,9 +265,7 @@ export default class ManuscriptController {
           versions: [
             {
               ...versionData,
-              firstAuthors: getValidAuthorIds(firstAuthorsValues),
-              correspondingAuthor: getValidAuthorIds(correspondingAuthorValues),
-              additionalAuthors: getValidAuthorIds(additionalAuthorsValues),
+              authors: getValidAuthorIds(authorsValues),
             },
           ],
         },

@@ -146,9 +146,7 @@ type OptionalVersionFields = Array<
     | 'updatedBy'
     | 'createdDate'
     | 'publishedAt'
-    | 'firstAuthors'
-    | 'correspondingAuthor'
-    | 'additionalAuthors'
+    | 'authors'
     | 'versionUID'
   >
 >;
@@ -325,9 +323,7 @@ type ManuscriptFormProps = Omit<
     getAuthorSuggestions: NonNullable<
       ComponentProps<AuthorSelectType>['loadOptions']
     >;
-    firstAuthors?: AuthorSelectOption[];
-    correspondingAuthor?: AuthorSelectOption[];
-    additionalAuthors?: AuthorSelectOption[];
+    authors?: AuthorSelectOption[];
     onError: (error: ManuscriptError | Error) => void;
     clearFormToast: () => void;
     getImpactSuggestions: (
@@ -387,9 +383,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   getAuthorSuggestions,
   description,
   shortDescription,
-  firstAuthors,
-  correspondingAuthor,
-  additionalAuthors,
+  authors,
   resubmitManuscript = false,
   clearFormToast,
   getShortDescriptionFromDescription,
@@ -399,9 +393,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 }: ManuscriptFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   const usersWithoutTeamAdded = new Set();
-  const firstAuthorsWithoutTeamAdded = new Set();
-  const correspondingAuthorWithoutTeamAdded = new Set();
-  const additionalAuthorsWithoutTeamAdded = new Set();
+  const authorsWithoutTeamAdded = new Set();
   const labsWithoutTeamAdded = new Set();
 
   const [impactOtions, setImpactOptions] = useState<
@@ -515,12 +507,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           labs: selectedLabs || [],
           description: description || '',
           shortDescription: shortDescription || '',
-          firstAuthors: firstAuthors || [],
-          firstAuthorsEmails: [],
-          correspondingAuthor: correspondingAuthor || [],
-          correspondingAuthorEmails: [],
-          additionalAuthors: additionalAuthors || [],
-          additionalAuthorsEmails: [],
+          authors: authors || [],
+          authorsEmails: [],
         },
       ],
     },
@@ -598,7 +586,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       });
 
     if (labsWithoutTeamAdded.size > 0) {
-      const labErrorMessage = `The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
+      const labErrorMessage = `The following lab(s) do not list their correspondent PI's team as a contributor. At least one of the PI teams they are associated with must be added to the Teams field.\n${Array.from(
         labsWithoutTeamAdded,
       )
         .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
@@ -612,14 +600,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     }
   };
 
-  const validateFirstAuthors = () => {
-    const firstAuthorsValues = watch('versions.0.firstAuthors');
+  const validateAuthors = () => {
+    const authorsValues = watch('versions.0.authors');
     const teamsValues = watch('versions.0.teams');
     const teamFormIds = teamsValues.map((team) => team.value);
 
-    firstAuthorsWithoutTeamAdded.clear();
+    authorsWithoutTeamAdded.clear();
 
-    firstAuthorsValues
+    authorsValues
       .filter((algoliaAuthor) => {
         if (
           'author' in algoliaAuthor &&
@@ -636,134 +624,133 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         return false;
       })
       .forEach((author) => {
-        firstAuthorsWithoutTeamAdded.add(author.label);
+        authorsWithoutTeamAdded.add(author.label);
         usersWithoutTeamAdded.add(author.label);
       });
 
-    if (firstAuthorsWithoutTeamAdded.size > 0) {
-      setError('versions.0.firstAuthors', {
-        message: `The following first author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
-          firstAuthorsWithoutTeamAdded,
+    if (authorsWithoutTeamAdded.size > 0) {
+      setError('versions.0.authors', {
+        message: `The following author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.\n${Array.from(
+          authorsWithoutTeamAdded,
         )
           .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
           .join('\n')}`,
       });
     } else {
-      clearErrors('versions.0.firstAuthors');
+      clearErrors('versions.0.authors');
     }
   };
 
-  const validateCorrespondingAuthor = () => {
-    const correspondingAuthorValue = watch(
-      'versions.0.correspondingAuthor',
-    ) as unknown as AuthorSelectOption;
-    const teams = watch('versions.0.teams');
-    const teamFormIds = teams.map((team) => team.value);
+  // const validateCorrespondingAuthor = () => {
+  //   const correspondingAuthorValue = watch(
+  //     'versions.0.correspondingAuthor',
+  //   ) as unknown as AuthorSelectOption;
+  //   const teams = watch('versions.0.teams');
+  //   const teamFormIds = teams.map((team) => team.value);
 
-    correspondingAuthorWithoutTeamAdded.clear();
+  //   correspondingAuthorWithoutTeamAdded.clear();
 
-    if (
-      correspondingAuthorValue &&
-      'author' in correspondingAuthorValue &&
-      correspondingAuthorValue.author &&
-      'teams' in correspondingAuthorValue.author &&
-      correspondingAuthorValue.author.teams.length > 0 &&
-      correspondingAuthorValue.author.teams.every(
-        (team) => !teamFormIds.includes(team.id),
-      )
-    ) {
-      correspondingAuthorWithoutTeamAdded.add(correspondingAuthorValue.label);
-      usersWithoutTeamAdded.add(correspondingAuthorValue.label);
-    }
+  //   if (
+  //     correspondingAuthorValue &&
+  //     'author' in correspondingAuthorValue &&
+  //     correspondingAuthorValue.author &&
+  //     'teams' in correspondingAuthorValue.author &&
+  //     correspondingAuthorValue.author.teams.length > 0 &&
+  //     correspondingAuthorValue.author.teams.every(
+  //       (team) => !teamFormIds.includes(team.id),
+  //     )
+  //   ) {
+  //     correspondingAuthorWithoutTeamAdded.add(correspondingAuthorValue.label);
+  //     usersWithoutTeamAdded.add(correspondingAuthorValue.label);
+  //   }
 
-    if (correspondingAuthorWithoutTeamAdded.size > 0) {
-      setError('versions.0.correspondingAuthor', {
-        message: `The following corresponding author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
-          correspondingAuthorWithoutTeamAdded,
-        )
-          .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-          .join('\n')}`,
-      });
-    } else {
-      clearErrors('versions.0.correspondingAuthor');
-    }
-  };
+  //   if (correspondingAuthorWithoutTeamAdded.size > 0) {
+  //     setError('versions.0.correspondingAuthor', {
+  //       message: `The following corresponding author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
+  //         correspondingAuthorWithoutTeamAdded,
+  //       )
+  //         .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
+  //         .join('\n')}`,
+  //     });
+  //   } else {
+  //     clearErrors('versions.0.correspondingAuthor');
+  //   }
+  // };
 
-  const validateAdditionalAuthors = () => {
-    const additionalAuthorsValues = watch('versions.0.additionalAuthors');
-    const teams = watch('versions.0.teams');
-    const teamFormIds = teams.map((team) => team.value);
+  // const validateAdditionalAuthors = () => {
+  //   const additionalAuthorsValues = watch('versions.0.additionalAuthors');
+  //   const teams = watch('versions.0.teams');
+  //   const teamFormIds = teams.map((team) => team.value);
 
-    additionalAuthorsWithoutTeamAdded.clear();
-    additionalAuthorsValues
-      .filter((algoliaAuthor) => {
-        if (
-          'author' in algoliaAuthor &&
-          algoliaAuthor.author &&
-          'teams' in algoliaAuthor.author
-        ) {
-          return (
-            algoliaAuthor.author.teams.length > 0 &&
-            algoliaAuthor.author.teams.every(
-              (team) => !teamFormIds.includes(team.id),
-            )
-          );
-        }
-        return false;
-      })
-      .forEach((author) => {
-        additionalAuthorsWithoutTeamAdded.add(author.label);
-        usersWithoutTeamAdded.add(author.label);
-      });
+  //   additionalAuthorsWithoutTeamAdded.clear();
+  //   additionalAuthorsValues
+  //     .filter((algoliaAuthor) => {
+  //       if (
+  //         'author' in algoliaAuthor &&
+  //         algoliaAuthor.author &&
+  //         'teams' in algoliaAuthor.author
+  //       ) {
+  //         return (
+  //           algoliaAuthor.author.teams.length > 0 &&
+  //           algoliaAuthor.author.teams.every(
+  //             (team) => !teamFormIds.includes(team.id),
+  //           )
+  //         );
+  //       }
+  //       return false;
+  //     })
+  //     .forEach((author) => {
+  //       additionalAuthorsWithoutTeamAdded.add(author.label);
+  //       usersWithoutTeamAdded.add(author.label);
+  //     });
 
-    if (additionalAuthorsWithoutTeamAdded.size > 0) {
-      setError('versions.0.additionalAuthors', {
-        message: `The following additional author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
-          additionalAuthorsWithoutTeamAdded,
-        )
-          .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-          .join('\n')}`,
-      });
-    } else {
-      clearErrors('versions.0.additionalAuthors');
-    }
-  };
+  //   if (additionalAuthorsWithoutTeamAdded.size > 0) {
+  //     setError('versions.0.additionalAuthors', {
+  //       message: `The following additional author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
+  //         additionalAuthorsWithoutTeamAdded,
+  //       )
+  //         .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
+  //         .join('\n')}`,
+  //     });
+  //   } else {
+  //     clearErrors('versions.0.additionalAuthors');
+  //   }
+  // };
 
   const validateTeams = () => {
     usersWithoutTeamAdded.clear();
-    validateFirstAuthors();
-    validateCorrespondingAuthor();
-    validateAdditionalAuthors();
+    validateAuthors();
+    // validateCorrespondingAuthor();
+    // validateAdditionalAuthors();
     validateLabPiTeams();
 
-    const contributorsErrorMessage = `The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added.\n${Array.from(
-      usersWithoutTeamAdded,
-    )
-      .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-      .join('\n')}`;
+    // const contributorsErrorMessage = `The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added.\n${Array.from(
+    //   usersWithoutTeamAdded,
+    // )
+    //   .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
+    //   .join('\n')}`;
 
-    const labErrorMessage = `The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added.\n${Array.from(
-      labsWithoutTeamAdded,
-    )
-      .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
-      .join('\n')}`;
+    // const labErrorMessage = `The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added.\n${Array.from(
+    //   labsWithoutTeamAdded,
+    // )
+    //   .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
+    //   .join('\n')}`;
 
     if (usersWithoutTeamAdded.size === 0 && labsWithoutTeamAdded.size === 0) {
       clearErrors('versions.0.teams');
     } else if (
-      usersWithoutTeamAdded.size > 0 &&
+      usersWithoutTeamAdded.size > 0 ||
       labsWithoutTeamAdded.size > 0
     ) {
-      setError('versions.0.teams', {
-        message: `${contributorsErrorMessage}\n\n${labErrorMessage}`,
-      });
-    } else if (usersWithoutTeamAdded.size > 0) {
-      setError('versions.0.teams', {
-        message: contributorsErrorMessage,
-      });
-    } else if (labsWithoutTeamAdded.size > 0) {
-      setError('versions.0.teams', { message: labErrorMessage });
+      setError('versions.0.teams', { message: ' ' });
     }
+    //  else if (usersWithoutTeamAdded.size > 0) {
+    //   setError('versions.0.teams', {
+    //     message: contributorsErrorMessage,
+    //   });
+    // } else if (labsWithoutTeamAdded.size > 0) {
+    //   setError('versions.0.teams', { message: labErrorMessage });
+    // }
   };
 
   const commonManuscriptAuthorProps = {
@@ -820,12 +807,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     const urlValue = data.url || undefined;
 
     if (versionData?.type && versionData.lifecycle) {
-      const {
-        firstAuthorsEmails,
-        correspondingAuthorEmails,
-        additionalAuthorsEmails,
-        ...requestVersionData
-      } = versionData;
+      const { authorsEmails, ...requestVersionData } = versionData;
 
       const versionDataPayload = {
         publicationDoi: versionData?.publicationDoi || undefined,
@@ -836,18 +818,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         ...getSubmittingQuickChecks(versionData),
         teams: versionData.teams.map((team) => team.value),
         labs: versionData.labs.map((lab) => lab.value),
-        firstAuthors: getPostAuthors(
-          versionData.firstAuthors,
-          firstAuthorsEmails,
-        ),
-        correspondingAuthor: getPostAuthors(
-          versionData.correspondingAuthor,
-          correspondingAuthorEmails,
-        )?.[0],
-        additionalAuthors: getPostAuthors(
-          versionData.additionalAuthors,
-          additionalAuthorsEmails,
-        ),
+        authors: getPostAuthors(versionData.authors, authorsEmails),
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         manuscriptFile: versionData.manuscriptFile!,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -1666,16 +1637,19 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               <ManuscriptAuthors
                 isMultiSelect
                 isRequired
-                fieldName="firstAuthors"
-                fieldTitle="First Author Full Name"
-                fieldDescription="Add the name of the first author(s). First authors will receive updates. First authors who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
-                fieldEmailDescription="Provide a valid email address for the Non-CRN first author."
+                fieldName="authors"
+                fieldTitle="Authors Full Name"
+                fieldDescription="Add the name of the author(s). Authors will receive updates. Authors who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
+                fieldEmailDescription="Provide a valid email address for the Non-CRN author."
                 {...commonManuscriptAuthorProps}
               />
 
               <Controller
                 name="versions.0.labs"
                 control={control}
+                rules={{
+                  required: 'Please add at least one lab.', // check with Elena the error here
+                }}
                 render={({
                   field: { value, onChange },
                   fieldState: { error },
@@ -1683,7 +1657,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   <LabeledMultiSelect
                     title="Labs"
                     description="Add ASAP labs that contributed to this manuscript. Only labs whose PI is part of the CRN will appear. PIs for each listed lab will receive an update on this manuscript. In addition, they will be able to edit the manuscript metadata and can submit a new version of the manuscript."
-                    subtitle="(optional)"
+                    subtitle="(required)"
                     enabled={!isSubmitting}
                     placeholder="Start typing..."
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -1704,7 +1678,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 )}
               />
 
-              <ManuscriptAuthors
+              {/* <ManuscriptAuthors
                 fieldName="correspondingAuthor"
                 fieldTitle="Corresponding Author"
                 fieldDescription="Add the corresponding author. The corresponding author will receive updates. Corresponding Author who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
@@ -1719,7 +1693,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 fieldDescription="Add the names of any additional authors who should receive updates. These additional authors, who are active on the CRN Hub, will be able to edit the manuscript metadata and can submit a new version of the manuscript."
                 fieldEmailDescription="Provide a valid email address for the Non-CRN additional author."
                 {...commonManuscriptAuthorProps}
-              />
+              /> */}
             </FormCard>
           </Suspense>
           {watchType && watchLifecycle && (

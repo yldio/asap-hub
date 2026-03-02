@@ -103,7 +103,7 @@ const getModalContent = (
     confirm: {
       title: 'Share compliance report?',
       content:
-        'If you elect to share the compliance report, all associated team members (First Author(s), PM, PIs, Corresponding Author and Additional Authors) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
+        'If you elect to share the compliance report, all associated team members (Author(s), PM and PIs) will receive a reminder on the CRN Hub and an email to notify them that this report is now available.',
       confirmButtonText: 'Share Compliance Report',
       confirmButtonStyle: 'primary' as const,
     },

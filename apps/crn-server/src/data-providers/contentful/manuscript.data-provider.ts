@@ -237,9 +237,7 @@ export class ManuscriptContentfulDataProvider
           ...version,
           count: versionCount,
           teams: getLinkEntities(version.teams),
-          firstAuthors: getLinkEntities(version.firstAuthors),
-          correspondingAuthor: getLinkEntities(version.correspondingAuthor),
-          additionalAuthors: getLinkEntities(version.additionalAuthors),
+          authors: getLinkEntities(version.authors),
           labs: version?.labs?.length ? getLinkEntities(version.labs) : [],
           manuscriptFile: getLinkAsset(version.manuscriptFile.id),
           keyResourceTable: version.keyResourceTable
@@ -433,9 +431,7 @@ export class ManuscriptContentfulDataProvider
         ...version,
         teams: getLinkEntities(version.teams),
         labs: version?.labs?.length ? getLinkEntities(version.labs) : [],
-        firstAuthors: getLinkEntities(version.firstAuthors),
-        correspondingAuthor: getLinkEntities(version.correspondingAuthor),
-        additionalAuthors: getLinkEntities(version.additionalAuthors),
+        authors: getLinkEntities(version.authors),
         manuscriptFile: getLinkAsset(version.manuscriptFile.id),
         keyResourceTable: version.keyResourceTable
           ? getLinkAsset(version.keyResourceTable.id)
@@ -590,30 +586,13 @@ type ManuscriptVersionItem = NonNullable<
   >['items'][number]
 >;
 
-type FirstAuthorItem = NonNullable<
-  NonNullable<ManuscriptVersionItem['firstAuthorsCollection']>['items'][number]
->;
-
-type CorrespondingAuthorItem = NonNullable<
-  NonNullable<
-    ManuscriptVersionItem['correspondingAuthorCollection']
-  >['items'][number]
->;
-
-type AdditionalAuthorItem = NonNullable<
-  NonNullable<
-    ManuscriptVersionItem['additionalAuthorsCollection']
-  >['items'][number]
+type AuthorItem = NonNullable<
+  NonNullable<ManuscriptVersionItem['authorsCollection']>['items'][number]
 >;
 
 type ManuscriptUser = NonNullable<ManuscriptVersionItem['createdBy']>;
 
-const parseGraphqlAuthor = (
-  authorItems:
-    | FirstAuthorItem[]
-    | CorrespondingAuthorItem[]
-    | AdditionalAuthorItem[],
-) =>
+const parseGraphqlAuthor = (authorItems: AuthorItem[]) =>
   authorItems.map((author) => {
     if (author.__typename === 'Users') {
       return {
@@ -797,19 +776,9 @@ export const parseGraphqlManuscriptVersion = (
         version?.linkedFrom?.complianceReportsCollection?.items[0],
         version?.count || 0,
       ),
-      firstAuthors: parseGraphqlAuthor(
-        (version?.firstAuthorsCollection?.items || []).filter(
-          (author): author is FirstAuthorItem => author !== null,
-        ),
-      ),
-      additionalAuthors: parseGraphqlAuthor(
-        (version?.additionalAuthorsCollection?.items || []).filter(
-          (author): author is AdditionalAuthorItem => author !== null,
-        ),
-      ),
-      correspondingAuthor: parseGraphqlAuthor(
-        (version?.correspondingAuthorCollection?.items || []).filter(
-          (author): author is CorrespondingAuthorItem => author !== null,
+      authors: parseGraphqlAuthor(
+        (version?.authorsCollection?.items || []).filter(
+          (author): author is AuthorItem => author !== null,
         ),
       ),
     }))

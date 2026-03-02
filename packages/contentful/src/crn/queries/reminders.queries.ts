@@ -54,27 +54,7 @@ export const FETCH_REMINDERS = gql`
               firstName
               lastName
             }
-            firstAuthorsCollection(limit: 10) {
-              items {
-                __typename
-                ... on Users {
-                  sys {
-                    id
-                  }
-                }
-              }
-            }
-            additionalAuthorsCollection(limit: 10) {
-              items {
-                __typename
-                ... on Users {
-                  sys {
-                    id
-                  }
-                }
-              }
-            }
-            correspondingAuthorCollection(limit: 10) {
+            authorsCollection(limit: 30) {
               items {
                 __typename
                 ... on Users {
@@ -307,27 +287,7 @@ export const manuscriptsCollectionQueryFragment = gql`
               displayName
             }
           }
-          firstAuthorsCollection(limit: 10) {
-            items {
-              __typename
-              ... on Users {
-                sys {
-                  id
-                }
-              }
-            }
-          }
-          additionalAuthorsCollection(limit: 10) {
-            items {
-              __typename
-              ... on Users {
-                sys {
-                  id
-                }
-              }
-            }
-          }
-          correspondingAuthorCollection(limit: 10) {
+          authorsCollection(limit: 30) {
             items {
               __typename
               ... on Users {

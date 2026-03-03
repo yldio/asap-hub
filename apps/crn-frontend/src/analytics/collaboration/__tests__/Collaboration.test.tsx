@@ -202,10 +202,16 @@ const teamData: ListTeamCollaborationResponse = {
   ],
 };
 
-const renderPage = async (metric: string = 'user', type?: string) => {
-  const path = analytics({})
+const renderPage = async (
+  metric: string = 'user',
+  type?: string,
+  search?: string,
+) => {
+  const basePath = analytics({})
     .collaboration({})
     .collaborationPath(type !== undefined ? { metric, type } : { metric }).$;
+
+  const path = search ? `${basePath}?${search}` : basePath;
 
   const result = render(
     <RecoilRoot>
@@ -519,6 +525,75 @@ describe('sharing prelim findings', () => {
     expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
 
     expect(screen.queryByText('Type')).not.toBeInTheDocument();
+  });
+
+  it('uses team_asc as the default sort when no sort query param is set', async () => {
+    await renderPage('sharing-prelim-findings', undefined);
+
+    await waitFor(() => {
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+    });
+
+    const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
+    expect(options.sort).toBe('team_asc');
+  });
+
+  it('uses the sort value from the URL query param when provided', async () => {
+    await renderPage(
+      'sharing-prelim-findings',
+      undefined,
+      'sort=percent_shared_desc',
+    );
+
+    await waitFor(() => {
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+    });
+
+    const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
+    expect(options.sort).toBe('percent_shared_desc');
+  });
+
+  it('falls back to team_asc when the URL sort value is invalid', async () => {
+    await renderPage(
+      'sharing-prelim-findings',
+      undefined,
+      'sort=invalid_sort_value',
+    );
+
+    await waitFor(() => {
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+    });
+
+    const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
+    expect(options.sort).toBe('team_asc');
+  });
+
+  it('resets pagination to the first page when changing sort', async () => {
+    await renderPage(
+      'sharing-prelim-findings',
+      undefined,
+      'currentPage=2&sort=team_asc',
+    );
+
+    await waitFor(() => {
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+    });
+
+    mockGetPreliminaryDataSharing.mockClear();
+
+    await screen.findByText('Percent Shared');
+    const button = await screen.findByRole('button', {
+      name: /sort by percent shared/i,
+    });
+    await userEvent.click(button);
+
+    await waitFor(() => {
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+    });
+
+    const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
+    expect(options.currentPage).toBe(0);
+    expect(options.sort).toBe('team_asc');
   });
 
   it('sets default time range to last 12 months', async () => {

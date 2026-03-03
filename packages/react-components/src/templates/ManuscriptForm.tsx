@@ -1580,23 +1580,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   />
                 )}
               />
-
-              {/* <ManuscriptAuthors
-                fieldName="correspondingAuthor"
-                fieldTitle="Corresponding Author"
-                fieldDescription="Add the corresponding author. The corresponding author will receive updates. Corresponding Author who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
-                fieldEmailDescription="Provide a valid email address for the Non-CRN corresponding author."
-                {...commonManuscriptAuthorProps}
-              />
-
-              <ManuscriptAuthors
-                isMultiSelect
-                fieldName="additionalAuthors"
-                fieldTitle="Additional Authors"
-                fieldDescription="Add the names of any additional authors who should receive updates. These additional authors, who are active on the CRN Hub, will be able to edit the manuscript metadata and can submit a new version of the manuscript."
-                fieldEmailDescription="Provide a valid email address for the Non-CRN additional author."
-                {...commonManuscriptAuthorProps}
-              /> */}
             </FormCard>
           </Suspense>
           {watchType && watchLifecycle && (

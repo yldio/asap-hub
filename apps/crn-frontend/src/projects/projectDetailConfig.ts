@@ -22,8 +22,7 @@ export const discoveryConfig: ProjectDetailConfig = {
   getIsTeamBased: () => true,
   getContactName: (pd) =>
     pd.projectType === 'Discovery Project'
-      ? pd.collaborators?.find((m) => m.email === pd.contactEmail)
-          ?.displayName
+      ? pd.collaborators?.find((m) => m.email === pd.contactEmail)?.displayName
       : undefined,
 };
 
@@ -37,8 +36,7 @@ export const resourceConfig: ProjectDetailConfig = {
   getContactName: (pd) =>
     pd.projectType === 'Resource Project'
       ? pd.members?.find((m) => m.email === pd.contactEmail)?.displayName ||
-        pd.collaborators?.find((m) => m.email === pd.contactEmail)
-          ?.displayName
+        pd.collaborators?.find((m) => m.email === pd.contactEmail)?.displayName
       : undefined,
 };
 

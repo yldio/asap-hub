@@ -224,6 +224,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                         <ManuscriptCard
                           id={manuscriptId}
                           user={user}
+                          // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
                           teamId={id}
                           isComplianceReviewer={isComplianceReviewer}
                           onUpdateManuscript={onUpdateManuscript}
@@ -262,6 +263,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                         <ManuscriptCard
                           id={manuscriptId}
                           user={user}
+                          // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
                           teamId={id}
                           isComplianceReviewer={isComplianceReviewer}
                           isActiveTeam={isActiveProject}
@@ -289,6 +291,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                 <ManuscriptCard
                   id={manuscriptId}
                   user={user}
+                  // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
                   teamId={id}
                   isComplianceReviewer={isComplianceReviewer}
                   onUpdateManuscript={onUpdateManuscript}

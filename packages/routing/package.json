@@ -10,9 +10,7 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
-    "watch:babel": "../../scripts/build-babel.sh watch",
-    "test": "WORKSPACE_PATH=packages/routing yarn workspace asap-hub test:workspace",
-    "test:coverage": "WORKSPACE_PATH=packages/routing; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
+    "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "7.28.6",
@@ -25,7 +23,6 @@
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
-    "@types/jest": "29.5.14",
     "@types/qs": "6.14.0",
     "react-router": "7.13.0"
   }

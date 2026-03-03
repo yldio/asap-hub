@@ -20,7 +20,6 @@ const defaultProps: Omit<
   ComponentProps<typeof ManuscriptAuthors>,
   'control' | 'getValues' | 'trigger'
 > = {
-  isMultiSelect: true,
   fieldName: 'authors',
   fieldTitle: 'Authors',
   fieldDescription: 'Add the authors of the manuscript',
@@ -188,7 +187,7 @@ it.each([true, false])(
 
 describe('Multiple Option Selection', () => {
   it('should allow more than one author when is isMultiSelect is true', async () => {
-    render(<ManuscriptAuthorsComponent />);
+    render(<ManuscriptAuthorsComponent isMultiSelect />);
 
     await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
@@ -212,7 +211,7 @@ describe('Multiple Option Selection', () => {
   });
 
   it('when user removes internal author, the external author email input field does not disappear', async () => {
-    render(<ManuscriptAuthorsComponent />);
+    render(<ManuscriptAuthorsComponent isMultiSelect />);
 
     await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>
@@ -241,8 +240,8 @@ describe('Multiple Option Selection', () => {
 });
 
 describe('Single Option Selection', () => {
-  it('should allow only one author when is isMultiSelect is false', async () => {
-    render(<ManuscriptAuthorsComponent isMultiSelect={false} />);
+  it('should allow only one author when is isMultiSelect is false (default)', async () => {
+    render(<ManuscriptAuthorsComponent />);
 
     await userEvent.click(screen.getByLabelText(/Authors/i));
     await waitFor(() =>

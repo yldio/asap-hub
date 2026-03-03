@@ -1204,6 +1204,16 @@ describe('Manuscripts Contentful Data Provider', () => {
           lastName: 'First',
           nickname: null,
           email: 'fiona.first@email.com',
+          teamsCollection: {
+            items: [
+              {
+                team: { sys: { id: 'team-fiona-1' } },
+              },
+              {
+                team: { sys: { id: 'team-fiona-2' } },
+              },
+            ],
+          },
         },
         {
           __typename: 'ExternalAuthors',
@@ -1228,7 +1238,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           firstName: 'Fiona',
           id: 'user-id-1',
           lastName: 'First',
-          teams: [],
+          teams: [{ id: 'team-fiona-1' }, { id: 'team-fiona-2' }],
         },
         {
           displayName: 'First External',

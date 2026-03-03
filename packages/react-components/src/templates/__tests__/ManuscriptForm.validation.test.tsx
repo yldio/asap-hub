@@ -142,13 +142,6 @@ describe('ManuscriptForm team validation', () => {
     await userEvent.click(screen.getByText('Lab One'));
     await userEvent.tab();
 
-    // Error message for the team input
-    // expect(
-    //   screen.getByText(
-    //     /The following lab\(s\) do not have the correspondent PI's team listed as contributors\. At least one of the teams the PI belongs to must be added./,
-    //   ),
-    // ).toBeVisible();
-
     // Error message for the lab input
     expect(screen.getByText(labsErrorRegex)).toBeVisible();
 
@@ -166,7 +159,7 @@ describe('ManuscriptForm team validation', () => {
     expect(screen.queryByText(/•.*Lab One/i)).not.toBeInTheDocument();
   });
 
-  it('displays error message when $authorType team is not among selected teams and hide it when team is selected', async () => {
+  it('displays error message when authors team is not among selected teams and hide it when team is selected', async () => {
     render(
       <StaticRouter location="/">
         <Suspense fallback={<div>Loading...</div>}>

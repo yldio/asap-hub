@@ -172,55 +172,28 @@ const optionalVersionFields: OptionalVersionFields = [
 ];
 
 export const getPostAuthors = (
-  authorSelectOptions: AuthorSelectOption[] | AuthorSelectOption,
+  authorSelectOptions: AuthorSelectOption[],
   authorEmailFields: AuthorEmailField[],
 ): ManuscriptPostAuthor[] => {
-  if (
-    Array.isArray(authorSelectOptions) &&
-    authorSelectOptions.length &&
-    Array.isArray(authorEmailFields)
-  ) {
-    const users = authorSelectOptions.reduce(
-      (internalAuthors: { userId: string }[], { value, author }) => {
-        if (author && isInternalUser(author)) {
-          internalAuthors.push({ userId: value });
-        }
-        return internalAuthors;
-      },
-      [],
-    );
+  const users = authorSelectOptions.reduce(
+    (internalAuthors: { userId: string }[], { value, author }) => {
+      if (author && isInternalUser(author)) {
+        internalAuthors.push({ userId: value });
+      }
+      return internalAuthors;
+    },
+    [],
+  );
 
-    const externalUsers = (authorEmailFields || []).map(
-      ({ id, name, email }) => ({
-        externalAuthorId: id,
-        externalAuthorName: name,
-        externalAuthorEmail: email,
-      }),
-    );
+  const externalUsers = (authorEmailFields || []).map(
+    ({ id, name, email }) => ({
+      externalAuthorId: id,
+      externalAuthorName: name,
+      externalAuthorEmail: email,
+    }),
+  );
 
-    return [...users, ...externalUsers];
-  }
-
-  if (
-    authorSelectOptions &&
-    !Array.isArray(authorSelectOptions) &&
-    // eslint-disable-next-line no-underscore-dangle
-    authorSelectOptions.author?.__meta.type === 'user'
-  ) {
-    return [{ userId: authorSelectOptions.value }];
-  }
-
-  if (authorEmailFields[0]) {
-    return [
-      {
-        externalAuthorId: authorEmailFields[0].id,
-        externalAuthorName: authorEmailFields[0].name,
-        externalAuthorEmail: authorEmailFields[0].email,
-      },
-    ];
-  }
-
-  return [];
+  return [...users, ...externalUsers];
 };
 
 const getQuickCheckDescription = (quickCheck: QuickCheck) => {

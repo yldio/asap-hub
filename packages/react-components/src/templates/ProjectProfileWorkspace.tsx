@@ -18,7 +18,7 @@ import { formatDateAndTime } from '../date';
 import { plusIcon } from '../icons';
 import { createMailTo, mailToSupport } from '../mail';
 import { EligibilityModal, ToolCard } from '../organisms';
-import DiscussionCard from '../organisms/DiscussionCard';
+import type DiscussionCard from '../organisms/DiscussionCard';
 import ManuscriptCard from '../organisms/ManuscriptCard';
 import { mobileScreen, rem } from '../pixels';
 
@@ -28,7 +28,6 @@ const containerStyles = css({
 });
 
 const newToolStyles = css({
-  gridArea: 'contact',
   display: 'flex',
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     display: 'block',
@@ -76,24 +75,24 @@ const toolContainerStyles = css({
 
 const projectMemberCopy = {
   manuscriptSubmissions:
-    'The following manuscripts were submitted by your project for compliance review.',
+    'The following manuscripts were submitted by your team for a compliance review.',
   manuscriptCollaborations:
-    'The following manuscripts were submitted by another project for compliance review. Your project has been listed as a contributor to the manuscript.',
+    'The following manuscripts were submitted by another project for compliance review. Your team has been listed as a contributor to the manuscript.',
   noManuscriptSubmissions:
-    'Your project has not submitted a manuscript for compliance review.',
+    'Your team has not submitted a manuscript for compliance review.',
   noManuscriptCollaborations:
-    'Your project has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
+    'Your team has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
 };
 
 const hubStaffCopy = {
   manuscriptSubmissions:
-    'The following manuscripts were submitted by this project for compliance review.',
+    'The following manuscripts were submitted by this team for a compliance review.',
   manuscriptCollaborations:
-    'The following manuscripts were submitted by another project for compliance review. This project has been listed as a contributor to the manuscript.',
+    'The following manuscripts were submitted by another project for compliance review. This team has been listed as a contributor to the manuscript.',
   noManuscriptSubmissions:
-    'This project has not submitted a manuscript for compliance review.',
+    'This team has not submitted a manuscript for compliance review.',
   noManuscriptCollaborations:
-    'This project has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
+    'This team has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
 };
 
 type ProjectProfileWorkspaceProps = Pick<
@@ -210,7 +209,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
             reports.
           </Paragraph>
         </div>
-        {isTeamBased && (
+        {isTeamBased ? (
           <>
             <div data-testid="team-manuscripts" css={manuscriptsGroupStyles}>
               <Subtitle noMargin>Team Submission</Subtitle>
@@ -283,6 +282,28 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
               )}
             </div>
           </>
+        ) : (
+          <div data-testid="project-manuscripts" css={manuscriptsGroupStyles}>
+            {manuscripts.map((manuscriptId) => (
+              <div key={manuscriptId}>
+                <ManuscriptCard
+                  id={manuscriptId}
+                  user={user}
+                  teamId={id}
+                  isComplianceReviewer={isComplianceReviewer}
+                  onUpdateManuscript={onUpdateManuscript}
+                  isActiveTeam={isActiveProject}
+                  createDiscussion={createDiscussion}
+                  useManuscriptById={useManuscriptById}
+                  onReplyToDiscussion={onReplyToDiscussion}
+                  onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                  {...(manuscriptId === targetManuscriptId
+                    ? { isTargetManuscript: true }
+                    : {})}
+                />
+              </div>
+            ))}
+          </div>
         )}
       </Card>
 

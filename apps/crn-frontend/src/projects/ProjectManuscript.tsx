@@ -10,6 +10,7 @@ import { ManuscriptHeader, usePushFromHere } from '@asap-hub/react-components';
 import { projects } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
+import { useSetRecoilState } from 'recoil';
 import {
   useAuthorSuggestions,
   useCategorySuggestions,
@@ -25,8 +26,9 @@ import {
   useResubmitManuscript,
   useUploadManuscriptFileViaPresignedUrl,
 } from '../network/teams/state';
-import { useEligibilityReason } from './useEligibilityReason';
-import { useManuscriptToast } from './useManuscriptToast';
+import { useEligibilityReason } from '../network/teams/useEligibilityReason';
+import { useManuscriptToast } from '../network/teams/useManuscriptToast';
+import { refreshProjectState } from './state';
 
 const loadManuscriptForm = () =>
   import(
@@ -45,10 +47,14 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
   projectType,
   resubmitManuscript = false,
 }) => {
+  const setRefreshProjectState = useSetRecoilState(
+    refreshProjectState(projectId),
+  );
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
   const [manuscript] = useManuscriptById(manuscriptId ?? '');
 
   const user = useCurrentUserCRN();
+  // TODO: retrieve teamId and teamDisplayName from the project's funded team
   const teamId = user?.teams[0]?.id ?? '';
   const teamDisplayName = user?.teams[0]?.displayName ?? '';
 
@@ -93,6 +99,7 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
   const onSuccess = () => {
     const path = getWorkspacePath();
     setFormType({ type: 'manuscript', accent: 'successLarge' });
+    setRefreshProjectState((value) => value + 1);
     void pushFromHere(path);
   };
 

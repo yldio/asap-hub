@@ -25,7 +25,7 @@ jest.mock('../../network/teams/state', () => ({
   useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
 }));
 
-jest.mock('../useManuscriptToast', () => ({
+jest.mock('../../network/teams/useManuscriptToast', () => ({
   useManuscriptToast: jest.fn(() => ({
     setFormType: mockSetFormType,
   })),
@@ -55,29 +55,7 @@ jest.mock('@asap-hub/react-components', () => ({
   __esModule: true,
   ProjectProfileWorkspace: (props: CapturedProps) => {
     capturedProps = props;
-    return (
-      <>
-        <h2>Compliance Review</h2>
-        {props.isProjectMember && (
-          <>
-            <h3>Collaboration Tools (Project Only)</h3>
-            <a href={props.toolsHref as string}>Add Collaboration Tools</a>
-          </>
-        )}
-        {props.isTeamBased && (
-          <>
-            <h4>Team Submission</h4>
-            <h4>Collaborator Submission</h4>
-          </>
-        )}
-        {!props.isProjectMember &&
-          (props.manuscripts as string[])?.length === 0 && (
-            <p>
-              This project has not submitted a manuscript for compliance review.
-            </p>
-          )}
-      </>
-    );
+    return <div data-testid="project-profile-workspace" />;
   },
 }));
 
@@ -142,57 +120,28 @@ afterEach(() => {
 });
 
 describe('ProjectWorkspace', () => {
-  it('renders the workspace with Compliance Review heading', async () => {
+  it('renders the ProjectProfileWorkspace component', async () => {
     await renderProjectWorkspace();
-    expect(
-      screen.getByRole('heading', { name: 'Compliance Review' }),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId('project-profile-workspace')).toBeInTheDocument();
   });
 
-  it('renders Collaboration Tools section for project members', async () => {
-    await renderProjectWorkspace({ isProjectMember: true });
-    expect(
-      screen.getByRole('heading', {
-        name: 'Collaboration Tools (Project Only)',
-      }),
-    ).toBeInTheDocument();
-  });
-
-  it('does not render Collaboration Tools section for non-project members', async () => {
-    await renderProjectWorkspace({ isProjectMember: false });
-    expect(
-      screen.queryByRole('heading', {
-        name: 'Collaboration Tools (Project Only)',
-      }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('renders team-based submission sections when isTeamBased is true', async () => {
-    await renderProjectWorkspace({ isTeamBased: true });
-    expect(screen.getByText('Team Submission')).toBeInTheDocument();
-    expect(screen.getByText('Collaborator Submission')).toBeInTheDocument();
-  });
-
-  it('does not render team submission sections when isTeamBased is false', async () => {
-    await renderProjectWorkspace({ isTeamBased: false });
-    expect(screen.queryByText('Team Submission')).not.toBeInTheDocument();
-    expect(
-      screen.queryByText('Collaborator Submission'),
-    ).not.toBeInTheDocument();
-  });
-
-  it('renders empty state text when no manuscripts exist', async () => {
-    await renderProjectWorkspace({ manuscripts: [], isProjectMember: false });
-    expect(
-      screen.getByText(
-        'This project has not submitted a manuscript for compliance review.',
-      ),
-    ).toBeInTheDocument();
-  });
-
-  it('renders Add Collaboration Tools button for project members', async () => {
-    await renderProjectWorkspace({ isProjectMember: true });
-    expect(screen.getByText('Add Collaboration Tools')).toBeInTheDocument();
+  it('passes correct props to ProjectProfileWorkspace', async () => {
+    await renderProjectWorkspace({
+      id: 'proj-1',
+      isProjectMember: true,
+      isTeamBased: true,
+      manuscripts: [],
+      tools: [],
+    });
+    expect(capturedProps.id).toBe('proj-1');
+    expect(capturedProps.isProjectMember).toBe(true);
+    expect(capturedProps.isTeamBased).toBe(true);
+    expect(capturedProps.manuscripts).toEqual([]);
+    expect(capturedProps.tools).toEqual([]);
+    expect(capturedProps.setEligibilityReasons).toBeDefined();
+    expect(capturedProps.useManuscriptById).toBeDefined();
+    expect(capturedProps.onUpdateManuscript).toBeDefined();
+    expect(capturedProps.isComplianceReviewer).toBe(false);
   });
 
   describe('handleUpdateManuscript', () => {

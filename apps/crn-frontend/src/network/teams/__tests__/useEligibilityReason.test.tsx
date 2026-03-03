@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { ReactNode } from 'react';
 
 import { useEligibilityReason } from '../useEligibilityReason';
-import { EligibilityReasonProvider } from '../../network/teams/EligibilityReasonProvider';
+import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 
 describe('useEligibilityReason', () => {
   it('returns eligibilityReasons and setEligibilityReasons when used within provider', () => {

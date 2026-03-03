@@ -5,7 +5,7 @@ import { useManuscriptToast } from '../useManuscriptToast';
 import {
   ManuscriptToastContext,
   ManuscriptToastProvider,
-} from '../../network/teams/ManuscriptToastProvider';
+} from '../ManuscriptToastProvider';
 
 describe('useManuscriptToast', () => {
   it('returns setFormType when used within ManuscriptToastProvider', () => {

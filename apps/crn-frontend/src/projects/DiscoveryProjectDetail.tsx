@@ -65,12 +65,10 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
                     route.workspace({}).createManuscript.template
                   }`}
                   element={
-                    <Frame title="Create Manuscript">
-                      <ProjectManuscript
-                        projectId={projectId}
-                        projectType="discovery"
-                      />
-                    </Frame>
+                    <ProjectManuscript
+                      projectId={projectId}
+                      projectType="discovery"
+                    />
                   }
                 />
               )}
@@ -80,12 +78,10 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
                     route.workspace({}).editManuscript.template
                   }`}
                   element={
-                    <Frame title="Edit Manuscript">
-                      <ProjectManuscript
-                        projectId={projectId}
-                        projectType="discovery"
-                      />
-                    </Frame>
+                    <ProjectManuscript
+                      projectId={projectId}
+                      projectType="discovery"
+                    />
                   }
                 />
               )}
@@ -95,13 +91,11 @@ const DiscoveryProjectDetail: FC<Record<string, never>> = () => {
                     route.workspace({}).resubmitManuscript.template
                   }`}
                   element={
-                    <Frame title="Resubmit Manuscript">
-                      <ProjectManuscript
-                        projectId={projectId}
-                        projectType="discovery"
-                        resubmitManuscript
-                      />
-                    </Frame>
+                    <ProjectManuscript
+                      projectId={projectId}
+                      projectType="discovery"
+                      resubmitManuscript
+                    />
                   }
                 />
               )}

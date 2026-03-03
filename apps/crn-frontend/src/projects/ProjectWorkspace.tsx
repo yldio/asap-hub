@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { ManuscriptPutRequest, DiscussionRequest } from '@asap-hub/model';
+import { DiscussionRequest } from '@asap-hub/model';
 import { ProjectProfileWorkspace } from '@asap-hub/react-components';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
@@ -10,8 +10,8 @@ import {
   usePutManuscript,
   useReplyToDiscussion,
 } from '../network/teams/state';
-import { useEligibilityReason } from './useEligibilityReason';
-import { useManuscriptToast } from './useManuscriptToast';
+import { useEligibilityReason } from '../network/teams/useEligibilityReason';
+import { useManuscriptToast } from '../network/teams/useManuscriptToast';
 
 type ProjectWorkspaceProps = Omit<
   React.ComponentProps<typeof ProjectProfileWorkspace>,
@@ -32,11 +32,6 @@ const ProjectWorkspace: FC<ProjectWorkspaceProps> = (props) => {
   const replyToDiscussion = useReplyToDiscussion();
   const markDiscussionAsRead = useMarkDiscussionAsRead();
   const { setFormType } = useManuscriptToast();
-
-  const handleUpdateManuscript = (
-    manuscriptId: string,
-    payload: ManuscriptPutRequest,
-  ) => updateManuscript(manuscriptId, payload);
 
   const handleCreateDiscussion = async (
     manuscriptId: string,
@@ -95,7 +90,7 @@ const ProjectWorkspace: FC<ProjectWorkspaceProps> = (props) => {
       setEligibilityReasons={setEligibilityReasons}
       isComplianceReviewer={isComplianceReviewer}
       useManuscriptById={useManuscriptById}
-      onUpdateManuscript={handleUpdateManuscript}
+      onUpdateManuscript={updateManuscript}
       createDiscussion={handleCreateDiscussion}
       onReplyToDiscussion={handleReplyToDiscussion}
       onMarkDiscussionAsRead={handleMarkDiscussionAsRead}

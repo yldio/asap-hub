@@ -132,7 +132,7 @@ describe('ProjectProfileWorkspace', () => {
         );
         expect(
           getByText(
-            'Your project has not submitted a manuscript for compliance review.',
+            'Your team has not submitted a manuscript for compliance review.',
           ),
         ).toBeInTheDocument();
       });
@@ -147,7 +147,7 @@ describe('ProjectProfileWorkspace', () => {
         );
         expect(
           getByText(
-            'Your project has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
+            'Your team has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
           ),
         ).toBeInTheDocument();
       });
@@ -162,12 +162,12 @@ describe('ProjectProfileWorkspace', () => {
         );
         expect(
           getByText(
-            'This project has not submitted a manuscript for compliance review.',
+            'This team has not submitted a manuscript for compliance review.',
           ),
         ).toBeInTheDocument();
         expect(
           getByText(
-            'This project has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
+            'This team has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
           ),
         ).toBeInTheDocument();
       });
@@ -183,7 +183,7 @@ describe('ProjectProfileWorkspace', () => {
         );
         expect(
           getByText(
-            'The following manuscripts were submitted by your project for compliance review.',
+            'The following manuscripts were submitted by your team for a compliance review.',
           ),
         ).toBeInTheDocument();
       });
@@ -199,7 +199,7 @@ describe('ProjectProfileWorkspace', () => {
         );
         expect(
           getByText(
-            /submitted by another project for compliance review. Your project has been listed as a contributor/,
+            /submitted by another project for compliance review. Your team has been listed as a contributor/,
           ),
         ).toBeInTheDocument();
       });
@@ -215,7 +215,7 @@ describe('ProjectProfileWorkspace', () => {
         );
         expect(
           getByText(
-            'Your project has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
+            'Your team has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
           ),
         ).toBeInTheDocument();
       });

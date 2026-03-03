@@ -63,12 +63,10 @@ const TraineeProjectDetail: FC<Record<string, never>> = () => {
                     route.workspace({}).createManuscript.template
                   }`}
                   element={
-                    <Frame title="Create Manuscript">
-                      <ProjectManuscript
-                        projectId={projectId}
-                        projectType="trainee"
-                      />
-                    </Frame>
+                    <ProjectManuscript
+                      projectId={projectId}
+                      projectType="trainee"
+                    />
                   }
                 />
               )}
@@ -78,12 +76,10 @@ const TraineeProjectDetail: FC<Record<string, never>> = () => {
                     route.workspace({}).editManuscript.template
                   }`}
                   element={
-                    <Frame title="Edit Manuscript">
-                      <ProjectManuscript
-                        projectId={projectId}
-                        projectType="trainee"
-                      />
-                    </Frame>
+                    <ProjectManuscript
+                      projectId={projectId}
+                      projectType="trainee"
+                    />
                   }
                 />
               )}
@@ -93,13 +89,11 @@ const TraineeProjectDetail: FC<Record<string, never>> = () => {
                     route.workspace({}).resubmitManuscript.template
                   }`}
                   element={
-                    <Frame title="Resubmit Manuscript">
-                      <ProjectManuscript
-                        projectId={projectId}
-                        projectType="trainee"
-                        resubmitManuscript
-                      />
-                    </Frame>
+                    <ProjectManuscript
+                      projectId={projectId}
+                      projectType="trainee"
+                      resubmitManuscript
+                    />
                   }
                 />
               )}

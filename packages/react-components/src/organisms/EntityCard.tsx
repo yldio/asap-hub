@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
 import { Anchor, Card, Ellipsis, Link, Pill } from '../atoms';
-import { fern } from '../colors';
+import { fern, lead } from '../colors';
 import { googleDriveIcon } from '../icons';
 import { LinkHeadline, TagList } from '../molecules';
 import { mobileScreen, rem } from '../pixels';
@@ -38,7 +38,7 @@ const textStyles = css({
 });
 
 const plainTextStyles = css({
-  color: 'rgb(77, 100, 107)',
+  color: lead.rgb,
 });
 
 const tagsContainerStyles = css({
@@ -150,11 +150,7 @@ const EntityCard: React.FC<CardWrapperProps> = ({
                 );
               }
 
-              return href ? (
-                <Anchor href={href}>{ellipsisContent}</Anchor>
-              ) : (
-                <span css={plainTextStyles}>{ellipsisContent}</span>
-              );
+              return <span css={plainTextStyles}>{ellipsisContent}</span>;
             })()}
           </div>
         )}

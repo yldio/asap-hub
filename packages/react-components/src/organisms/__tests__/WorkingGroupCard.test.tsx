@@ -44,14 +44,12 @@ it('renders the working group name linking to the working group', () => {
   );
 });
 
-it('renders the working group shortText linking to the working group', () => {
+it('renders the working group shortText as plain text', () => {
   const { getByText } = render(
     <WorkingGroupCard {...props} id="42" shortText="test description" />,
   );
-  expect(getByText('test description').closest('a')).toHaveAttribute(
-    'href',
-    expect.stringMatching(/42$/),
-  );
+  expect(getByText('test description').closest('a')).not.toBeInTheDocument();
+  expect(getByText('test description').closest('span')).toBeInTheDocument();
 });
 
 it('renders the state tag for a complete working group and displays the correct background color', () => {

@@ -37,13 +37,13 @@ jest.mock('../../shared-state', () => ({
 }));
 
 const mockSetFormType = jest.fn();
-jest.mock('../useManuscriptToast', () => ({
+jest.mock('../../network/teams/useManuscriptToast', () => ({
   useManuscriptToast: jest.fn(() => ({
     setFormType: mockSetFormType,
   })),
 }));
 
-jest.mock('../useEligibilityReason', () => ({
+jest.mock('../../network/teams/useEligibilityReason', () => ({
   useEligibilityReason: jest.fn(() => ({
     eligibilityReasons: new Set(),
   })),

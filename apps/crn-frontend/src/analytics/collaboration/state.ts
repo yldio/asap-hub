@@ -306,6 +306,7 @@ export const useAnalyticsSharingPrelimFindings = (
       pageSize: options.pageSize,
       tags: options.tags,
       timeRange: options.timeRange,
+      sort: options.sort,
     }),
   );
 
@@ -315,6 +316,7 @@ export const useAnalyticsSharingPrelimFindings = (
       pageSize: options.pageSize,
       tags: options.tags,
       timeRange: options.timeRange,
+      sort: options.sort,
     })
       .then(setPreliminaryDataSharing)
       .catch(setPreliminaryDataSharing);

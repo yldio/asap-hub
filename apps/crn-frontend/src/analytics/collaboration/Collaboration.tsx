@@ -22,7 +22,7 @@ import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 import {
   useAnalytics,
@@ -57,6 +57,7 @@ type CollaborationType = 'within-team' | 'across-teams' | undefined;
 
 const Collaboration = () => {
   const navigate = useNavigate();
+  const { search } = useLocation();
 
   const { isEnabled } = useFlags();
   const { metric: metricParam, type: typeParam } = useParams<{
@@ -78,8 +79,40 @@ const Collaboration = () => {
   const { currentPage } = usePaginationParams();
   const [userSort, setUserSort] = useState<SortUserCollaboration>('user_asc');
   const [teamSort, setTeamSort] = useState<SortTeamCollaboration>('team_asc');
-  const [teamPrelimSharingSort, setTeamPrelimSharingSort] =
-    useState<SortSharingPrelimFindings>('team_asc');
+  const searchParams = new URLSearchParams(search);
+  const sortParam = searchParams.get(
+    'sort',
+  ) as SortSharingPrelimFindings | null;
+
+  const teamPrelimSharingSort: SortSharingPrelimFindings =
+    sortParam &&
+    [
+      'team_asc',
+      'team_desc',
+      'percent_shared_asc',
+      'percent_shared_desc',
+    ].includes(sortParam)
+      ? sortParam
+      : 'team_asc';
+
+  const setTeamPrelimSharingSort: React.Dispatch<
+    React.SetStateAction<SortSharingPrelimFindings>
+  > = (value) => {
+    const currentSort = teamPrelimSharingSort;
+    const newSort =
+      typeof value === 'function' ? value(currentSort) : value ?? 'team_asc';
+
+    const params = new URLSearchParams(search);
+    params.set('sort', newSort);
+    params.delete('currentPage');
+
+    void navigate(
+      {
+        search: params.toString(),
+      },
+      { replace: true },
+    );
+  };
   const [userSortingDirection, setUserSortingDirection] =
     useState<UserCollaborationSortingDirection>(
       userCollaborationInitialSortingDirection,

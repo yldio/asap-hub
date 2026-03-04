@@ -191,6 +191,7 @@ const Collaboration = () => {
           getPreliminaryDataSharing(preliminaryDataSharingClient.client, {
             tags,
             timeRange: timeRange as LimitedTimeRangeOption,
+            sort: teamPrelimSharingSort,
             ...paginationParams,
           }),
         preliminaryDataSharingToCSV,

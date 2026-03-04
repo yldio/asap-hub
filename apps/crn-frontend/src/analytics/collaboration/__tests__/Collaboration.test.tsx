@@ -640,6 +640,21 @@ describe('sharing prelim findings', () => {
     );
   });
 
+  it('exports sharing preliminary findings with the current sort applied', async () => {
+    await renderPage(
+      'sharing-prelim-findings',
+      undefined,
+      'sort=percent_shared_desc',
+    );
+    mockGetPreliminaryDataSharing.mockClear();
+    await userEvent.click(screen.getByText(/csv/i));
+    await waitFor(() => {
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+    });
+    const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
+    expect(options.sort).toBe('percent_shared_desc');
+  });
+
   it('throws error when preliminary data sharing fails', async () => {
     const error = new Error('API Error');
     mockGetPreliminaryDataSharing.mockRejectedValue(error);

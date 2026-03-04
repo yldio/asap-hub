@@ -404,6 +404,8 @@ export const getExpectedDiscoveryProjectDetail = () => ({
     researchTheme: 'Theme One',
     teamDescription: undefined,
   },
+  manuscripts: [],
+  collaborationManuscripts: [],
   milestones: undefined,
   originalGrant: '',
   originalGrantProposalId: undefined,

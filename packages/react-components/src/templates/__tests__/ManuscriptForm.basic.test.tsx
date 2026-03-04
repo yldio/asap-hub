@@ -514,7 +514,7 @@ describe('Manuscript form', () => {
     categoryInput.blur();
 
     await waitFor(() => {
-      expect(getByText(/Please add at least one category/i)).toBeVisible();
+      expect(getByText(/This field is required/i)).toBeVisible();
     });
     await userEvent.type(categoryInput, 'Category');
     await userEvent.click(getByText('Category A'));
@@ -543,7 +543,7 @@ describe('Manuscript form', () => {
     impactInput.blur();
 
     await waitFor(() => {
-      expect(getByText(/Please add at least one impact/i)).toBeVisible();
+      expect(getByText(/This field is required/i)).toBeVisible();
     });
 
     // --- Type invalid impact ---

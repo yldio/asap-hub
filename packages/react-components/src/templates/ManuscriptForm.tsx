@@ -855,37 +855,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             />
 
             <Controller
-              name="url"
-              control={control}
-              rules={{
-                required: isURLRequired ? 'Please enter a URL.' : false,
-                pattern: {
-                  value: new RegExp(urlExpression),
-                  message: 'Please enter a valid URL, starting with http://',
-                },
-              }}
-              render={({
-                field: { value, onChange, onBlur },
-                fieldState: { error },
-              }) => (
-                <LabeledTextField
-                  title="URL"
-                  subtitle={isURLRequired ? '(required)' : '(optional)'}
-                  value={value ?? ''}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  enabled={!isSubmitting}
-                  customValidationMessage={error?.message}
-                  labelIndicator={<GlobeIcon />}
-                  placeholder="https://example.com"
-                />
-              )}
-            />
-            <Controller
               name="versions.0.type"
               control={control}
               rules={{
-                required: 'Please select a type.',
+                required: 'This field is required.',
               }}
               render={({
                 field: { value, onChange, onBlur },
@@ -923,7 +896,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   name="versions.0.lifecycle"
                   control={control}
                   rules={{
-                    required: 'Please select an option.',
+                    required: 'This field is required.',
                   }}
                   render={({
                     field: { value, onChange, onBlur },
@@ -962,6 +935,34 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               </Suspense>
             )}
 
+            <Controller
+              name="url"
+              control={control}
+              rules={{
+                required: isURLRequired ? 'Please enter a URL.' : false,
+                pattern: {
+                  value: new RegExp(urlExpression),
+                  message: 'Please enter a valid URL, starting with http://.',
+                },
+              }}
+              render={({
+                field: { value, onChange, onBlur },
+                fieldState: { error },
+              }) => (
+                <LabeledTextField
+                  title="URL"
+                  subtitle={isURLRequired ? '(required)' : '(optional)'}
+                  value={value ?? ''}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  enabled={!isSubmitting}
+                  customValidationMessage={error?.message}
+                  labelIndicator={<GlobeIcon />}
+                  placeholder="https://example.com"
+                />
+              )}
+            />
+
             {watchType &&
               watchLifecycle &&
               manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
@@ -974,11 +975,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     rules={{
                       pattern: {
                         value: /^10\.\d{4}.*$/,
-                        message: 'Your preprint DOI must start with 10.',
+                        message: 'Please enter a valid DOI starting with “10.”',
                       },
                       required:
                         watchLifecycle === 'Preprint' &&
-                        'Please enter a Preprint DOI',
+                        'Please enter a Preprint DOI.',
                     }}
                     render={({
                       field: { value, onChange, onBlur },
@@ -1019,9 +1020,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     rules={{
                       pattern: {
                         value: /^10\.\d{4}.*$/,
-                        message: 'Your publication DOI must start with 10.',
+                        message: 'Please enter a valid DOI starting with “10.”',
                       },
-                      required: 'Please enter a Publication DOI',
+                      required: 'Please enter a Publication DOI.',
                     }}
                     render={({
                       field: { value, onChange, onBlur },
@@ -1056,7 +1057,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     name="versions.0.otherDetails"
                     control={control}
                     rules={{
-                      required: 'Please provide details',
+                      required: 'Please enter the relevant details.',
                       maxLength: {
                         value: 256,
                         message: 'Details cannot exceed 256 characters.',
@@ -1092,7 +1093,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   name="impact"
                   control={control}
                   rules={{
-                    required: 'Please add at least one impact.',
+                    required: 'This field is required.',
                   }}
                   render={({
                     field: { value, onChange, onBlur },
@@ -1133,7 +1134,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   name="categories"
                   control={control}
                   rules={{
-                    required: 'Please add at least one category.',
+                    required: 'This field is required.',
                     validate: (value) => {
                       if (value.length > 2) {
                         return 'You can select up to two categories only.';
@@ -1149,7 +1150,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       title="Category"
                       description="Select up to two options that best describe the scientific category of this manuscript."
                       subtitle="(required)"
-                      placeholder="Start typing..."
+                      placeholder="Choose a category"
                       loadOptions={getCategorySuggestions}
                       isMulti={true}
                       onChange={(selectedOptions: MultiSelectOptionsType) => {
@@ -1176,7 +1177,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   name="versions.0.manuscriptFile"
                   control={control}
                   rules={{
-                    required: 'Please select a manuscript file.',
+                    required: 'Please upload the main manuscript file.',
                   }}
                   render={({ field: { value }, fieldState: { error } }) => (
                     <LabeledFileField
@@ -1244,7 +1245,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     name="versions.0.keyResourceTable"
                     control={control}
                     rules={{
-                      required: 'Please select a key resource table.',
+                      required: 'Please upload a key resource table.',
                     }}
                     render={({ field: { value }, fieldState: { error } }) => (
                       <LabeledFileField
@@ -1256,7 +1257,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                             CSV file and should outline the resources used and
                             generated in this study. The file size must not
                             exceed 100 MB. View guidance{' '}
-                            {<Link href={KRT_GUIDANCE_FILE}>here</Link>}.
+                            {<Link href={KRT_GUIDANCE_FILE}>here</Link>}. The
+                            file size must not exceed 100 MB.
                           </>
                         }
                         placeholder="Upload Key Resource Table"
@@ -1409,7 +1411,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 name="versions.0.description"
                 control={control}
                 rules={{
-                  required: 'Please enter the description.',
+                  required: 'Please enter a manuscript description.',
                 }}
                 render={({
                   field: { value, onChange, onBlur },
@@ -1443,7 +1445,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 name="versions.0.shortDescription"
                 control={control}
                 rules={{
-                  required: 'Please enter the short description.',
+                  required:
+                    'Please enter a short description or select Generate to create one.',
                   maxLength: {
                     value: 250,
                     message:

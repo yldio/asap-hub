@@ -392,9 +392,7 @@ describe('ManuscriptForm team validation', () => {
 
     expect(container).toHaveTextContent(`${authorsErrorMessage} • Author B`);
 
-    expect(container).not.toHaveTextContent(
-      'Please select at least one author.',
-    );
+    expect(container).not.toHaveTextContent('Please add at least one author.');
   });
 });
 

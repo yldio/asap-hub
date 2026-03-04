@@ -87,6 +87,19 @@ const sortProjectManuscripts = (manuscripts: ProjectManuscriptItem[]) => {
   });
 };
 
+const getManuscriptItemsFromTeamMember = (teamMember: {
+  sys: { id: string };
+}): ProjectManuscriptItem[] => {
+  const withLinkedFrom = teamMember as typeof teamMember & {
+    linkedFrom?: {
+      manuscriptsCollection?: { items: (ProjectManuscriptItem | null)[] };
+    };
+  };
+  return cleanArray(
+    withLinkedFrom.linkedFrom?.manuscriptsCollection?.items,
+  ) as ProjectManuscriptItem[];
+};
+
 const parseProjectManuscripts = (
   manuscriptItems: ProjectManuscriptItem[],
   teamId: string,
@@ -372,14 +385,7 @@ export const parseContentfulProjectDetail = (
           .map((m) => parseProjectUserMember(m));
 
         // Parse manuscripts from funded team's linkedFrom
-        const teamMemberWithManuscripts = teamMember as typeof teamMember & {
-          linkedFrom?: {
-            manuscriptsCollection?: { items: (ProjectManuscriptItem | null)[] };
-          };
-        };
-        const manuscriptItems = cleanArray(
-          teamMemberWithManuscripts.linkedFrom?.manuscriptsCollection?.items,
-        ) as ProjectManuscriptItem[];
+        const manuscriptItems = getManuscriptItemsFromTeamMember(teamMember);
         const { manuscripts, collaborationManuscripts } =
           parseProjectManuscripts(manuscriptItems, teamMember.sys?.id);
 
@@ -423,14 +429,7 @@ export const parseContentfulProjectDetail = (
           .map((m) => parseProjectUserMember(m));
 
         // Parse manuscripts from funded team's linkedFrom
-        const teamMemberWithManuscripts = teamMember as typeof teamMember & {
-          linkedFrom?: {
-            manuscriptsCollection?: { items: (ProjectManuscriptItem | null)[] };
-          };
-        };
-        const manuscriptItems = cleanArray(
-          teamMemberWithManuscripts.linkedFrom?.manuscriptsCollection?.items,
-        ) as ProjectManuscriptItem[];
+        const manuscriptItems = getManuscriptItemsFromTeamMember(teamMember);
         const { manuscripts, collaborationManuscripts } =
           parseProjectManuscripts(manuscriptItems, teamMember.sys?.id);
 

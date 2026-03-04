@@ -454,6 +454,8 @@ export const getExpectedDiscoveryProjectDetailWithAllFields = () => ({
       displayName: 'Alex (Al) Smith',
     },
   ],
+  manuscripts: [],
+  collaborationManuscripts: [],
 });
 
 export const getExpectedDiscoveryProjectWithoutTeam = (): DiscoveryProject => ({

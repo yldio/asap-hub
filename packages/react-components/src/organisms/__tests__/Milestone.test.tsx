@@ -5,18 +5,15 @@ import Milestone, { getMilestoneStatusAccent } from '../Milestone';
 
 const mockMilestone: MilestoneType = {
   id: '1',
-  title: 'Test Milestone',
   description: 'This is a test milestone description',
   status: 'Complete',
 };
 
 const longMilestone: MilestoneType = {
   id: '2',
-  title: 'Long Milestone',
   description:
     'This is a very long milestone description that exceeds the character limit and should be truncated with a Read More button to allow users to expand and see the full content.',
   status: 'In Progress',
-  link: 'https://example.com/milestone',
 };
 
 // Mock scrollHeight and clientHeight to simulate truncation
@@ -172,12 +169,8 @@ describe('Milestone', () => {
       expect(getMilestoneStatusAccent('Pending')).toBe('neutral');
     });
 
-    it('returns warning for Incomplete status', () => {
-      expect(getMilestoneStatusAccent('Incomplete')).toBe('warning');
-    });
-
-    it('returns error for Not Started status', () => {
-      expect(getMilestoneStatusAccent('Not Started')).toBe('error');
+    it('returns error for Terminated status', () => {
+      expect(getMilestoneStatusAccent('Terminated')).toBe('error');
     });
 
     it('returns default for unknown status', () => {

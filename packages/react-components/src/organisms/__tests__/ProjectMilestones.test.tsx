@@ -6,33 +6,28 @@ import ProjectMilestones from '../ProjectMilestones';
 const mockMilestones: Milestone[] = [
   {
     id: '1',
-    title: 'Milestone 1',
     description: 'First milestone',
     status: 'Complete',
   },
   {
     id: '2',
-    title: 'Milestone 2',
     description: 'Second milestone',
     status: 'In Progress',
   },
   {
     id: '3',
-    title: 'Milestone 3',
     description: 'Third milestone',
     status: 'Pending',
   },
   {
     id: '4',
-    title: 'Milestone 4',
     description: 'Fourth milestone',
-    status: 'Not Started',
+    status: 'Terminated',
   },
   {
     id: '5',
-    title: 'Milestone 5',
     description: 'Fifth milestone',
-    status: 'Incomplete',
+    status: 'Terminated',
   },
 ];
 

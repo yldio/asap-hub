@@ -108,15 +108,12 @@ export type MilestoneStatus =
   | 'Complete'
   | 'In Progress'
   | 'Pending'
-  | 'Incomplete'
-  | 'Not Started';
+  | 'Terminated';
 
 export type Milestone = {
   readonly id: string;
-  readonly title: string;
   readonly description: string;
   readonly status: MilestoneStatus;
-  readonly link?: string;
 };
 
 // Grant information types

@@ -26,8 +26,6 @@ import {
   DiscoveryProjectDetail,
   FundedTeam,
   ListProjectDataObject,
-  Milestone,
-  MilestoneStatus,
   ProjectDataObject,
   ProjectDetailDataObject,
   ProjectMember,
@@ -278,15 +276,6 @@ export const parseContentfulProjectDetail = (
   const baseProject = parseContentfulProject(item);
   const { projectType } = baseProject;
 
-  // Parse milestones
-  const milestones: Milestone[] = cleanArray(
-    item.milestonesCollection?.items || [],
-  ).map((milestone) => ({
-    id: milestone.sys.id,
-    description: milestone.description || '',
-    status: (milestone.status || 'Pending') as MilestoneStatus,
-  }));
-
   // Parse original grant
   const originalGrantProposalId = item.proposal?.sys.id || undefined;
 
@@ -327,7 +316,6 @@ export const parseContentfulProjectDetail = (
           ...baseProject,
           originalGrantProposalId,
           supplementGrant,
-          milestones: milestones.length > 0 ? milestones : undefined,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
         } as DiscoveryProjectDetail;
@@ -338,7 +326,6 @@ export const parseContentfulProjectDetail = (
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
-        milestones: milestones.length > 0 ? milestones : undefined,
       } as DiscoveryProjectDetail;
     }
 
@@ -364,7 +351,6 @@ export const parseContentfulProjectDetail = (
           ...baseProject,
           originalGrantProposalId,
           supplementGrant,
-          milestones: milestones.length > 0 ? milestones : undefined,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
         } as ResourceProjectDetail;
@@ -379,7 +365,6 @@ export const parseContentfulProjectDetail = (
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
-        milestones: milestones.length > 0 ? milestones : undefined,
         members: userMembers.length > 0 ? userMembers : undefined,
       } as ResourceProjectDetail;
     }
@@ -391,7 +376,6 @@ export const parseContentfulProjectDetail = (
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
-        milestones: milestones.length > 0 ? milestones : undefined,
         members: allMembers,
       } as TraineeProjectDetail;
     }

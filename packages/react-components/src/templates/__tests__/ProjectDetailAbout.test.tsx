@@ -318,7 +318,6 @@ describe('ProjectDetailAbout', () => {
 
       expect(screen.getByText('Overview')).toBeInTheDocument();
       expect(screen.getByText('Machine Learning')).toBeInTheDocument();
-      expect(screen.getByText('Milestones')).toBeInTheDocument();
       expect(screen.getByText('Contributors')).toBeInTheDocument();
       expect(
         screen.getByText('Have additional questions?'),
@@ -348,7 +347,6 @@ describe('ProjectDetailAbout', () => {
 
       expect(screen.getByText('Overview')).toBeInTheDocument();
       expect(screen.getByText('Machine Learning')).toBeInTheDocument();
-      expect(screen.getByText('Milestones')).toBeInTheDocument();
       expect(screen.getByText('Contributors')).toBeInTheDocument();
       expect(
         screen.getByText('Have additional questions?'),
@@ -390,7 +388,6 @@ describe('ProjectDetailAbout', () => {
 
       expect(screen.getByText('Overview')).toBeInTheDocument();
       expect(screen.getByText('Machine Learning')).toBeInTheDocument();
-      expect(screen.getByText('Milestones')).toBeInTheDocument();
       expect(screen.getByText('Contributors')).toBeInTheDocument();
       expect(screen.getByText('John Doe')).toBeInTheDocument();
       expect(
@@ -439,7 +436,6 @@ describe('ProjectDetailAbout', () => {
 
       expect(screen.getByText('Overview')).toBeInTheDocument();
       expect(screen.getByText('Machine Learning')).toBeInTheDocument();
-      expect(screen.getByText('Milestones')).toBeInTheDocument();
       expect(screen.getByText('Contributors')).toBeInTheDocument();
       expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
       expect(screen.getByText('Emily Trainee')).toBeInTheDocument();

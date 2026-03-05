@@ -596,6 +596,54 @@ describe('sharing prelim findings', () => {
     expect(options.sort).toBe('team_asc');
   });
 
+  it('updates the sort param in the URL when a sort button is clicked', async () => {
+    await renderPage('sharing-prelim-findings', undefined, 'sort=team_asc');
+
+    await waitFor(() => {
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+    });
+
+    mockGetPreliminaryDataSharing.mockClear();
+
+    const button = await screen.findByRole('button', {
+      name: /sort by percent shared/i,
+    });
+    await userEvent.click(button);
+
+    await waitFor(() => {
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+    });
+
+    const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
+    expect(options.sort).toBe('percent_shared_desc');
+  });
+
+  it('toggles percent shared sort from desc to asc when clicked again', async () => {
+    await renderPage(
+      'sharing-prelim-findings',
+      undefined,
+      'sort=percent_shared_desc',
+    );
+
+    await waitFor(() => {
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+    });
+
+    mockGetPreliminaryDataSharing.mockClear();
+
+    const button = await screen.findByRole('button', {
+      name: /sort by percent shared/i,
+    });
+    await userEvent.click(button);
+
+    await waitFor(() => {
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+    });
+
+    const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
+    expect(options.sort).toBe('percent_shared_asc');
+  });
+
   it('sets default time range to last 12 months', async () => {
     await renderPage('sharing-prelim-findings', undefined);
 

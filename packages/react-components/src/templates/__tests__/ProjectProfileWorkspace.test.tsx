@@ -108,68 +108,26 @@ describe('ProjectProfileWorkspace', () => {
     });
 
     describe('team-based projects', () => {
-      it('renders Team Submission section', () => {
-        const { getByText } = renderWithRouter(
+      it('does not render Team Submission and Collaborator Submission sections when no manuscripts exist', () => {
+        const { queryByText } = renderWithRouter(
           <ProjectProfileWorkspace {...defaultProps} isTeamBased={true} />,
+        );
+        expect(queryByText('Team Submission')).not.toBeInTheDocument();
+        expect(
+          queryByText('Collaborator Submission'),
+        ).not.toBeInTheDocument();
+      });
+
+      it('renders Team Submission and Collaborator Submission sections when manuscripts exist', () => {
+        const { getByText } = renderWithRouter(
+          <ProjectProfileWorkspace
+            {...defaultProps}
+            isTeamBased={true}
+            manuscripts={['manuscript-1']}
+          />,
         );
         expect(getByText('Team Submission')).toBeInTheDocument();
-      });
-
-      it('renders Collaborator Submission section', () => {
-        const { getByText } = renderWithRouter(
-          <ProjectProfileWorkspace {...defaultProps} isTeamBased={true} />,
-        );
         expect(getByText('Collaborator Submission')).toBeInTheDocument();
-      });
-
-      it('renders empty state copy for team submission when user is project member', () => {
-        const { getByText } = renderWithRouter(
-          <ProjectProfileWorkspace
-            {...defaultProps}
-            isTeamBased={true}
-            isProjectMember={true}
-          />,
-        );
-        expect(
-          getByText(
-            'Your team has not submitted a manuscript for compliance review.',
-          ),
-        ).toBeInTheDocument();
-      });
-
-      it('renders empty state copy for collaborator submission with "projects" mention when user is project member', () => {
-        const { getByText } = renderWithRouter(
-          <ProjectProfileWorkspace
-            {...defaultProps}
-            isTeamBased={true}
-            isProjectMember={true}
-          />,
-        );
-        expect(
-          getByText(
-            'Your team has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
-          ),
-        ).toBeInTheDocument();
-      });
-
-      it('renders staff copy when user is not a project member', () => {
-        const { getByText } = renderWithRouter(
-          <ProjectProfileWorkspace
-            {...defaultProps}
-            isTeamBased={true}
-            isProjectMember={false}
-          />,
-        );
-        expect(
-          getByText(
-            'This team has not submitted a manuscript for compliance review.',
-          ),
-        ).toBeInTheDocument();
-        expect(
-          getByText(
-            'This team has not been listed as a contributor on manuscripts that were submitted for compliance review by other projects.',
-          ),
-        ).toBeInTheDocument();
       });
 
       it('renders manuscript submission copy when manuscripts exist', () => {
@@ -204,12 +162,28 @@ describe('ProjectProfileWorkspace', () => {
         ).toBeInTheDocument();
       });
 
-      it('renders empty state for collaborator section when collaborationManuscripts is undefined', () => {
+      it('does not render submission sections when collaborationManuscripts is undefined and manuscripts is empty', () => {
+        const { queryByText } = renderWithRouter(
+          <ProjectProfileWorkspace
+            {...defaultProps}
+            isTeamBased={true}
+            isProjectMember={true}
+            collaborationManuscripts={undefined}
+          />,
+        );
+        expect(queryByText('Team Submission')).not.toBeInTheDocument();
+        expect(
+          queryByText('Collaborator Submission'),
+        ).not.toBeInTheDocument();
+      });
+
+      it('renders empty collaborator state when manuscripts exist but collaborationManuscripts is undefined', () => {
         const { getByText } = renderWithRouter(
           <ProjectProfileWorkspace
             {...defaultProps}
             isTeamBased={true}
             isProjectMember={true}
+            manuscripts={['manuscript-1']}
             collaborationManuscripts={undefined}
           />,
         );

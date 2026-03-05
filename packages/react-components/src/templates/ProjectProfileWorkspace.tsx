@@ -209,7 +209,8 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
             reports.
           </Paragraph>
         </div>
-        {isTeamBased ? (
+        {isTeamBased &&
+        (manuscripts.length > 0 || !!collaborationManuscripts?.length) ? (
           <>
             <div data-testid="team-manuscripts" css={manuscriptsGroupStyles}>
               <Subtitle noMargin>Team Submission</Subtitle>
@@ -284,7 +285,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
               )}
             </div>
           </>
-        ) : (
+        ) : !isTeamBased ? (
           <div data-testid="project-manuscripts" css={manuscriptsGroupStyles}>
             {manuscripts.map((manuscriptId) => (
               <div key={manuscriptId}>
@@ -307,7 +308,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
               </div>
             ))}
           </div>
-        )}
+        ) : null}
       </Card>
 
       {isProjectMember && (

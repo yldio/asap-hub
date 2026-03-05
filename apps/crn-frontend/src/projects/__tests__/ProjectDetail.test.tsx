@@ -25,11 +25,15 @@ jest.mock('../../network/teams/state', () => ({
 }));
 
 const mockEditToolHref = jest.fn();
+let lastWorkspaceProps: Record<string, unknown> = {};
 jest.mock('../ProjectWorkspace', () => ({
   __esModule: true,
-  default: (props: Record<string, never>) => {
+  default: (props: Record<string, unknown>) => {
+    lastWorkspaceProps = props;
     if (typeof props.editToolHref === 'function') {
-      mockEditToolHref.mockImplementation(props.editToolHref);
+      mockEditToolHref.mockImplementation(
+        props.editToolHref as (...args: unknown[]) => unknown,
+      );
       mockEditToolHref(0);
     }
     return <h3>Compliance Review</h3>;
@@ -477,9 +481,8 @@ describe('DiscoveryProjectDetail - specific', () => {
       memberUser,
       'workspace',
     );
-    expect(
-      await screen.findByRole('heading', { name: 'Compliance Review' }),
-    ).toBeInTheDocument();
+    await screen.findByRole('heading', { name: 'Compliance Review' });
+    expect(lastWorkspaceProps.contactName).toBe('Jane Contact');
     document.cookie =
       'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });
@@ -499,9 +502,8 @@ describe('ResourceProjectDetail - specific', () => {
       memberUser,
       'workspace',
     );
-    expect(
-      await screen.findByRole('heading', { name: 'Compliance Review' }),
-    ).toBeInTheDocument();
+    await screen.findByRole('heading', { name: 'Compliance Review' });
+    expect(lastWorkspaceProps.contactName).toBe('Jane Collaborator');
     document.cookie =
       'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });

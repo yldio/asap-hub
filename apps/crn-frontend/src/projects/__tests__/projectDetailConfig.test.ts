@@ -114,7 +114,11 @@ describe('resourceConfig', () => {
       projectType: 'Discovery Project' as const,
       researchTheme: 'Theme',
       teamName: 'Team A',
-      fundedTeam: { id: 'team-1', displayName: 'Team A', teamType: 'Discovery Team' },
+      fundedTeam: {
+        id: 'team-1',
+        displayName: 'Team A',
+        teamType: 'Discovery Team',
+      },
     };
     expect(
       resourceConfig.getIsTeamBased(
@@ -151,7 +155,11 @@ describe('resourceConfig', () => {
       projectType: 'Discovery Project' as const,
       researchTheme: 'Theme',
       teamName: 'Team A',
-      fundedTeam: { id: 'team-1', displayName: 'Team A', teamType: 'Discovery Team' },
+      fundedTeam: {
+        id: 'team-1',
+        displayName: 'Team A',
+        teamType: 'Discovery Team',
+      },
     };
     expect(
       resourceConfig.getContactName(
@@ -201,7 +209,11 @@ describe('traineeConfig', () => {
       projectType: 'Discovery Project' as const,
       researchTheme: 'Theme',
       teamName: 'Team A',
-      fundedTeam: { id: 'team-1', displayName: 'Team A', teamType: 'Discovery Team' },
+      fundedTeam: {
+        id: 'team-1',
+        displayName: 'Team A',
+        teamType: 'Discovery Team',
+      },
     };
     expect(
       traineeConfig.getContactName(

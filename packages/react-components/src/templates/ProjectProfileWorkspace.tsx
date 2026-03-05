@@ -286,7 +286,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
               )}
             </div>
           </>
-        ) : !isTeamBased ? (
+        ) : !isTeamBased && manuscripts.length > 0 ? (
           <div data-testid="project-manuscripts" css={manuscriptsGroupStyles}>
             {manuscripts.map((manuscriptId) => (
               <div key={manuscriptId}>

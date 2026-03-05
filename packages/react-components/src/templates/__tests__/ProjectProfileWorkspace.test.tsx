@@ -219,6 +219,18 @@ describe('ProjectProfileWorkspace', () => {
         );
         expect(queryByText('Collaborator Submission')).not.toBeInTheDocument();
       });
+
+      it('renders manuscript cards when manuscripts exist', () => {
+        const { getByTestId } = renderWithRouter(
+          <ProjectProfileWorkspace
+            {...defaultProps}
+            isTeamBased={false}
+            manuscripts={['manuscript-1']}
+            targetManuscriptId="manuscript-1"
+          />,
+        );
+        expect(getByTestId('project-manuscripts')).toBeInTheDocument();
+      });
     });
   });
 

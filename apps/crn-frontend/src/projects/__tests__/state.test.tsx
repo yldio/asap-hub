@@ -246,13 +246,6 @@ describe('projects state hooks', () => {
         endDate: '2024-06-01',
         duration: '5 mos',
         originalGrant: 'Grant-123',
-        milestones: [
-          {
-            id: 'milestone-1',
-            description: 'Milestone 1 description',
-            status: 'Pending',
-          },
-        ],
         researchTheme: 'Theme 1',
         teamName: 'Team 1',
         fundedTeam: {

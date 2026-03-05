@@ -16,6 +16,7 @@ import {
   ListPreliminaryDataSharingResponse,
   OutputTypeOption,
   PreliminaryDataSharingDataObject,
+  SortSharingPrelimFindings,
   SortTeamCollaboration,
   SortUserCollaboration,
   TeamCollaborationPerformance,
@@ -378,7 +379,50 @@ export type PreliminaryDataSharingSearchOptions = {
   pageSize: number | null;
   tags: string[];
   timeRange: LimitedTimeRangeOption;
+  sort?: SortSharingPrelimFindings;
 };
+
+const preliminaryDataSharingOpensearchSort: OpensearchSortMap<SortSharingPrelimFindings> =
+  {
+    team_asc: [
+      buildNormalizedStringSort({
+        keyword: 'teamName.keyword',
+        order: 'asc',
+      }),
+    ],
+    team_desc: [
+      buildNormalizedStringSort({
+        keyword: 'teamName.keyword',
+        order: 'desc',
+      }),
+    ],
+    percent_shared_asc: [
+      {
+        limitedData: {
+          order: 'desc',
+        },
+      },
+      {
+        percentShared: {
+          order: 'asc',
+          missing: '_last',
+        },
+      },
+    ],
+    percent_shared_desc: [
+      {
+        percentShared: {
+          order: 'desc',
+          missing: '_last',
+        },
+      },
+      {
+        limitedData: {
+          order: 'asc',
+        },
+      },
+    ],
+  };
 
 export const getPreliminaryDataSharing = async (
   opensearchClient: OpensearchClient<PreliminaryDataSharingDataObject>,
@@ -387,6 +431,7 @@ export const getPreliminaryDataSharing = async (
     currentPage,
     pageSize,
     timeRange,
+    sort,
   }: PreliminaryDataSharingSearchOptions,
 ): Promise<ListPreliminaryDataSharingResponse | undefined> => {
   const response = await opensearchClient.search({
@@ -395,6 +440,7 @@ export const getPreliminaryDataSharing = async (
     pageSize: pageSize ?? undefined,
     timeRange,
     searchScope: 'flat',
+    sort: sort ? preliminaryDataSharingOpensearchSort[sort] : undefined,
   });
 
   return {

@@ -23,7 +23,7 @@ const validSortValues: SortPreprintCompliance[] = [
   'posted_prior_desc',
 ];
 
-const getSortFromSearch = (search: string): SortPreprintCompliance => {
+export const getPreprintComplianceSortFromSearch = (search: string): SortPreprintCompliance => {
   const params = new URLSearchParams(search);
   const sort = params.get(SORT_PARAM);
   if (sort && validSortValues.includes(sort as SortPreprintCompliance)) {
@@ -92,7 +92,7 @@ const PreprintComplianceContent: FC<
 const PreprintCompliance: FC<PreprintComplianceProps> = ({ tags }) => {
   const { search } = useLocation();
   const navigate = useNavigate();
-  const sort = getSortFromSearch(search);
+  const sort = getPreprintComplianceSortFromSearch(search);
   const sortingDirection = getSortingDirectionFromSort(sort);
   const setSort = useCallback(
     (value: React.SetStateAction<SortPreprintCompliance>) => {

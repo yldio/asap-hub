@@ -29,7 +29,7 @@ const validSortValues: SortPublicationCompliance[] = [
   'lab_materials_desc',
 ];
 
-const getSortFromSearch = (search: string): SortPublicationCompliance => {
+export const getPublicationComplianceSortFromSearch = (search: string): SortPublicationCompliance => {
   const params = new URLSearchParams(search);
   const sort = params.get(SORT_PARAM);
   if (sort && validSortValues.includes(sort as SortPublicationCompliance)) {
@@ -102,7 +102,7 @@ const PublicationComplianceContent: FC<
 const PublicationCompliance: FC<PublicationComplianceProps> = ({ tags }) => {
   const { search } = useLocation();
   const navigate = useNavigate();
-  const sort = getSortFromSearch(search);
+  const sort = getPublicationComplianceSortFromSearch(search);
   const sortingDirection = getSortingDirectionFromSort(sort);
 
   const setSort = useCallback(

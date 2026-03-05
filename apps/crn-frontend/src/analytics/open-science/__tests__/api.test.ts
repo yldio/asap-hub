@@ -37,6 +37,7 @@ describe('getPreprintCompliance', () => {
       pageSize: 20,
       timeRange: 'last-year',
       searchScope: 'flat',
+      sort: [{ 'teamName.keyword': { order: 'asc' } }],
     });
     expect(result).toEqual(mockResponse);
   });
@@ -65,6 +66,77 @@ describe('getPreprintCompliance', () => {
       pageSize: 10,
       timeRange: 'all',
       searchScope: 'flat',
+      sort: [{ 'teamName.keyword': { order: 'asc' } }],
+    });
+  });
+
+  it('maps posted_prior_desc sort correctly', async () => {
+    const mockResponse = {
+      items: [],
+      total: 0,
+    };
+
+    mockSearch.mockResolvedValue(mockResponse);
+
+    const options = {
+      tags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all' as const,
+      sort: 'posted_prior_desc' as const,
+    };
+
+    await getPreprintCompliance(mockOpensearchClient, options);
+
+    expect(mockSearch).toHaveBeenCalledWith({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+      sort: [
+        {
+          postedPriorPercentage: {
+            order: 'desc',
+            missing: '_last',
+          },
+        },
+      ],
+    });
+  });
+
+  it('maps posted_prior_asc sort correctly with missing values first', async () => {
+    const mockResponse = {
+      items: [],
+      total: 0,
+    };
+
+    mockSearch.mockResolvedValue(mockResponse);
+
+    const options = {
+      tags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all' as const,
+      sort: 'posted_prior_asc' as const,
+    };
+
+    await getPreprintCompliance(mockOpensearchClient, options);
+
+    expect(mockSearch).toHaveBeenCalledWith({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+      sort: [
+        {
+          postedPriorPercentage: {
+            order: 'asc',
+            missing: '_first',
+          },
+        },
+      ],
     });
   });
 

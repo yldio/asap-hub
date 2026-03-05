@@ -14,6 +14,7 @@ import {
   ListTeamCollaborationResponse,
   ListUserCollaborationResponse,
   PreliminaryDataSharingDataObject,
+  SortSharingPrelimFindings,
   SortTeamCollaboration,
   SortUserCollaboration,
 } from '@asap-hub/model';
@@ -71,6 +72,32 @@ jest.mock('@asap-hub/react-context', () => ({
   ...jest.requireActual('@asap-hub/react-context'),
   useFlags: jest.fn(),
 }));
+
+type SharingPreliminaryFindingsProps = React.ComponentProps<
+  (typeof import('../SharingPrelimFindings'))['default']
+>;
+
+jest.mock('../SharingPrelimFindings', () => {
+  const actual = jest.requireActual('../SharingPrelimFindings');
+  return {
+    ...actual,
+    __esModule: true,
+    default: (props: SharingPreliminaryFindingsProps) => {
+      const { setSort, ...rest } = props;
+      const wrappedSetSort: React.Dispatch<
+        React.SetStateAction<SortSharingPrelimFindings>
+      > = (value) => {
+        if (typeof value === 'string') {
+          setSort(() => value);
+        } else {
+          setSort(value);
+        }
+      };
+      const Actual = actual.default;
+      return <Actual {...rest} setSort={wrappedSetSort} />;
+    },
+  };
+});
 mockConsoleError();
 
 afterEach(() => {
@@ -575,25 +602,38 @@ describe('sharing prelim findings', () => {
       'currentPage=2&sort=team_asc',
     );
 
+    // Wait for BOTH the initial load (page 2) AND the usePagination
+    // auto-correction (page 0) to settle before clearing
     await waitFor(() => {
-      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+      const { calls } = mockGetPreliminaryDataSharing.mock;
+      expect(calls.some(([, opts]) => opts.currentPage === 0)).toBe(true);
     });
 
     mockGetPreliminaryDataSharing.mockClear();
 
     await screen.findByText('Percent Shared');
+
     const button = await screen.findByRole('button', {
       name: /sort by percent shared/i,
     });
     await userEvent.click(button);
 
     await waitFor(() => {
-      expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
+      expect(mockGetPreliminaryDataSharing).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          currentPage: 0,
+          sort: 'percent_shared_desc',
+        }),
+      );
     });
 
-    const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
+    const call = mockGetPreliminaryDataSharing.mock.calls.find(
+      ([, opts]) => opts.sort === 'percent_shared_desc',
+    )!;
+    const [, options] = call;
+    expect(options.sort).toBe('percent_shared_desc');
     expect(options.currentPage).toBe(0);
-    expect(options.sort).toBe('team_asc');
   });
 
   it('updates the sort param in the URL when a sort button is clicked', async () => {

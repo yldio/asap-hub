@@ -72,10 +72,8 @@ export const projectsContentQueryFragment = gql`
         sys {
           id
         }
-        title
         description
         status
-        externalLink
       }
     }
     membersCollection(limit: 100) {

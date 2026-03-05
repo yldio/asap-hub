@@ -283,10 +283,8 @@ export const parseContentfulProjectDetail = (
     item.milestonesCollection?.items || [],
   ).map((milestone) => ({
     id: milestone.sys.id,
-    title: milestone.title || '',
     description: milestone.description || '',
-    status: (milestone.status || 'Not Started') as MilestoneStatus,
-    link: milestone.externalLink || undefined,
+    status: (milestone.status || 'Pending') as MilestoneStatus,
   }));
 
   // Parse original grant

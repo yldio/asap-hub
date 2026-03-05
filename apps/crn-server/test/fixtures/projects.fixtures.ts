@@ -426,17 +426,13 @@ export const getExpectedDiscoveryProjectDetailWithAllFields = () => ({
   milestones: [
     {
       id: 'milestone-1',
-      title: 'Milestone 1',
       description: 'First milestone',
-      status: 'Completed',
-      link: 'https://example.com/milestone1',
+      status: 'Complete',
     },
     {
       id: 'milestone-2',
-      title: 'Milestone 2',
       description: 'Second milestone',
       status: 'In Progress',
-      link: undefined,
     },
   ],
   fundedTeam: {
@@ -676,10 +672,8 @@ export const getMilestoneGraphqlItem = (
   >,
 ) => ({
   sys: { id },
-  title: `Milestone ${id}`,
   description: `Milestone ${id} description`,
-  status: 'Not Started' as const,
-  externalLink: null,
+  status: 'Pending' as const,
   ...overrides,
 });
 

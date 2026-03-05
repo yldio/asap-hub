@@ -249,9 +249,8 @@ describe('projects state hooks', () => {
         milestones: [
           {
             id: 'milestone-1',
-            title: 'Milestone 1',
-            description: '',
-            status: 'Not Started',
+            description: 'Milestone 1 description',
+            status: 'Pending',
           },
         ],
         researchTheme: 'Theme 1',

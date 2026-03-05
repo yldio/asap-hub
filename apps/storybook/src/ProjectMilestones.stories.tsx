@@ -12,7 +12,6 @@ const createMilestone = (
   status: Milestone['status'],
 ): Milestone => ({
   id,
-  title: `Milestone ${id}`,
   description,
   status,
 });
@@ -43,8 +42,8 @@ export const WithMoreMilestones = () => (
       createMilestone('2', mediumDescription, 'In Progress'),
       createMilestone('3', longDescription, 'Pending'),
       createMilestone('4', shortDescription, 'Complete'),
-      createMilestone('5', mediumDescription, 'Incomplete'),
-      createMilestone('6', longDescription, 'Not Started'),
+      createMilestone('5', mediumDescription, 'Terminated'),
+      createMilestone('6', longDescription, 'Terminated'),
       createMilestone('7', shortDescription, 'Complete'),
       createMilestone('8', mediumDescription, 'In Progress'),
     ]}
@@ -57,8 +56,7 @@ export const AllStatuses = () => (
       createMilestone('1', 'This milestone is complete.', 'Complete'),
       createMilestone('2', 'This milestone is in progress.', 'In Progress'),
       createMilestone('3', 'This milestone is pending.', 'Pending'),
-      createMilestone('4', 'This milestone is incomplete.', 'Incomplete'),
-      createMilestone('5', 'This milestone has not started.', 'Not Started'),
+      createMilestone('4', 'This milestone is terminated.', 'Terminated'),
     ]}
   />
 );
@@ -107,8 +105,8 @@ export const CustomInitialDisplayCount = () => (
       createMilestone('2', mediumDescription, 'In Progress'),
       createMilestone('3', longDescription, 'Pending'),
       createMilestone('4', shortDescription, 'Complete'),
-      createMilestone('5', mediumDescription, 'Incomplete'),
-      createMilestone('6', longDescription, 'Not Started'),
+      createMilestone('5', mediumDescription, 'Terminated'),
+      createMilestone('6', longDescription, 'Terminated'),
     ]}
     initialDisplayCount={2}
   />

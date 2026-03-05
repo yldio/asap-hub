@@ -24916,10 +24916,7 @@ export type ProjectsContentDataFragment = Pick<
     Pick<ProjectsMilestonesCollection, 'total'> & {
       items: Array<
         Maybe<
-          Pick<
-            Milestones,
-            'title' | 'description' | 'status' | 'externalLink'
-          > & { sys: Pick<Sys, 'id'> }
+          Pick<Milestones, 'description' | 'status'> & { sys: Pick<Sys, 'id'> }
         >
       >;
     }
@@ -25024,10 +25021,9 @@ export type FetchProjectsQuery = {
               Pick<ProjectsMilestonesCollection, 'total'> & {
                 items: Array<
                   Maybe<
-                    Pick<
-                      Milestones,
-                      'title' | 'description' | 'status' | 'externalLink'
-                    > & { sys: Pick<Sys, 'id'> }
+                    Pick<Milestones, 'description' | 'status'> & {
+                      sys: Pick<Sys, 'id'>;
+                    }
                   >
                 >;
               }
@@ -25128,10 +25124,9 @@ export type FetchProjectByIdQuery = {
         Pick<ProjectsMilestonesCollection, 'total'> & {
           items: Array<
             Maybe<
-              Pick<
-                Milestones,
-                'title' | 'description' | 'status' | 'externalLink'
-              > & { sys: Pick<Sys, 'id'> }
+              Pick<Milestones, 'description' | 'status'> & {
+                sys: Pick<Sys, 'id'>;
+              }
             >
           >;
         }
@@ -25245,13 +25240,9 @@ export type FetchProjectsByTeamIdQuery = {
                           Pick<ProjectsMilestonesCollection, 'total'> & {
                             items: Array<
                               Maybe<
-                                Pick<
-                                  Milestones,
-                                  | 'title'
-                                  | 'description'
-                                  | 'status'
-                                  | 'externalLink'
-                                > & { sys: Pick<Sys, 'id'> }
+                                Pick<Milestones, 'description' | 'status'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
                               >
                             >;
                           }
@@ -25378,13 +25369,9 @@ export type FetchProjectsByUserIdQuery = {
                           Pick<ProjectsMilestonesCollection, 'total'> & {
                             items: Array<
                               Maybe<
-                                Pick<
-                                  Milestones,
-                                  | 'title'
-                                  | 'description'
-                                  | 'status'
-                                  | 'externalLink'
-                                > & { sys: Pick<Sys, 'id'> }
+                                Pick<Milestones, 'description' | 'status'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                }
                               >
                             >;
                           }
@@ -25503,10 +25490,9 @@ export type FetchProjectsByMembershipIdQuery = {
                   Pick<ProjectsMilestonesCollection, 'total'> & {
                     items: Array<
                       Maybe<
-                        Pick<
-                          Milestones,
-                          'title' | 'description' | 'status' | 'externalLink'
-                        > & { sys: Pick<Sys, 'id'> }
+                        Pick<Milestones, 'description' | 'status'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
                       >
                     >;
                   }
@@ -34613,7 +34599,6 @@ export const ProjectsContentDataFragmentDoc = {
                           ],
                         },
                       },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'description' },
@@ -34621,10 +34606,6 @@ export const ProjectsContentDataFragmentDoc = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'status' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'externalLink' },
                       },
                     ],
                   },

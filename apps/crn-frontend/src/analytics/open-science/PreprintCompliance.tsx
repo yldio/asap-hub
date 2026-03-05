@@ -23,7 +23,9 @@ const validSortValues: SortPreprintCompliance[] = [
   'posted_prior_desc',
 ];
 
-export const getPreprintComplianceSortFromSearch = (search: string): SortPreprintCompliance => {
+export const getPreprintComplianceSortFromSearch = (
+  search: string,
+): SortPreprintCompliance => {
   const params = new URLSearchParams(search);
   const sort = params.get(SORT_PARAM);
   if (sort && validSortValues.includes(sort as SortPreprintCompliance)) {

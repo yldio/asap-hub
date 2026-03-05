@@ -29,7 +29,9 @@ const validSortValues: SortPublicationCompliance[] = [
   'lab_materials_desc',
 ];
 
-export const getPublicationComplianceSortFromSearch = (search: string): SortPublicationCompliance => {
+export const getPublicationComplianceSortFromSearch = (
+  search: string,
+): SortPublicationCompliance => {
   const params = new URLSearchParams(search);
   const sort = params.get(SORT_PARAM);
   if (sort && validSortValues.includes(sort as SortPublicationCompliance)) {

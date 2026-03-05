@@ -21,20 +21,6 @@ const baseProject = {
     grantStartDate: '2023-01-01',
     grantEndDate: '2025-12-31',
   },
-  milestones: [
-    {
-      id: 'm1',
-      title: 'Milestone 1',
-      description: 'Complete initial research phase',
-      status: 'Complete' as const,
-    },
-    {
-      id: 'm2',
-      title: 'Milestone 2',
-      description: 'Analyze data and prepare interim report',
-      status: 'In Progress' as const,
-    },
-  ],
 };
 
 describe('ProjectDetailAbout', () => {
@@ -102,63 +88,7 @@ describe('ProjectDetailAbout', () => {
     });
   });
 
-  describe('Milestones Section', () => {
-    it('renders milestones when milestones array has items', () => {
-      const projectWithMilestones: ProjectDetail = {
-        ...baseProject,
-        projectType: 'Discovery Project',
-        researchTheme: 'Genetics',
-        teamName: 'Alpha Team',
-        fundedTeam: {
-          id: 'team-1',
-          displayName: 'Alpha Team',
-          teamType: 'Discovery Team',
-          researchTheme: 'Genetics',
-        },
-      };
-
-      render(<ProjectDetailAbout {...projectWithMilestones} />);
-      expect(screen.getByText('Milestones')).toBeInTheDocument();
-    });
-
-    it('does not render milestones section when milestones array is empty', () => {
-      const projectWithoutMilestones: ProjectDetail = {
-        ...baseProject,
-        milestones: [],
-        projectType: 'Discovery Project',
-        researchTheme: 'Genetics',
-        teamName: 'Alpha Team',
-        fundedTeam: {
-          id: 'team-1',
-          displayName: 'Alpha Team',
-          teamType: 'Discovery Team',
-          researchTheme: 'Genetics',
-        },
-      };
-
-      render(<ProjectDetailAbout {...projectWithoutMilestones} />);
-      expect(screen.queryByText('Milestones')).not.toBeInTheDocument();
-    });
-
-    it('does not render milestones section when milestones is undefined', () => {
-      const projectWithoutMilestones: ProjectDetail = {
-        ...baseProject,
-        milestones: undefined,
-        projectType: 'Discovery Project',
-        researchTheme: 'Genetics',
-        teamName: 'Alpha Team',
-        fundedTeam: {
-          id: 'team-1',
-          displayName: 'Alpha Team',
-          teamType: 'Discovery Team',
-          researchTheme: 'Genetics',
-        },
-      };
-
-      render(<ProjectDetailAbout {...projectWithoutMilestones} />);
-      expect(screen.queryByText('Milestones')).not.toBeInTheDocument();
-    });
-  });
+  // Milestones section has been removed from the Project detail page for CRN.
 
   describe('Contributors Section - Discovery Projects', () => {
     it('renders Contributors for Discovery projects', () => {
@@ -525,7 +455,6 @@ describe('ProjectDetailAbout', () => {
       const minimalProject: ProjectDetail = {
         ...baseProject,
         tags: [],
-        milestones: undefined,
         projectType: 'Discovery Project',
         researchTheme: 'Genetics',
         teamName: 'Alpha Team',
@@ -570,9 +499,8 @@ describe('ProjectDetailAbout', () => {
         />,
       );
 
-      // Verify all expected sections are present
+      // Verify all expected sections are present (milestones section removed from project detail)
       expect(screen.getByText('Overview')).toBeInTheDocument();
-      expect(screen.getByText('Milestones')).toBeInTheDocument();
       expect(screen.getByText('Contributors')).toBeInTheDocument();
       expect(
         screen.getByText('Have additional questions?'),

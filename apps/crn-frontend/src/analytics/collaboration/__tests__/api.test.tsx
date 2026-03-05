@@ -738,4 +738,35 @@ describe('getPreliminaryDataSharing', () => {
       searchScope: 'flat',
     });
   });
+
+  it('applies percent_shared_asc sort with limitedData first, then ascending percentage', async () => {
+    await getPreliminaryDataSharing(opensearchClient, {
+      currentPage: 0,
+      pageSize: 10,
+      tags: [],
+      timeRange: 'all',
+      sort: 'percent_shared_asc',
+    });
+
+    expect(mockSearch).toHaveBeenCalledWith({
+      searchTags: [],
+      currentPage: 0,
+      pageSize: 10,
+      timeRange: 'all',
+      searchScope: 'flat',
+      sort: [
+        {
+          limitedData: {
+            order: 'desc',
+          },
+        },
+        {
+          percentShared: {
+            order: 'asc',
+            missing: '_last',
+          },
+        },
+      ],
+    });
+  });
 });

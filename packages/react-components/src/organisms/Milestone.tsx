@@ -93,9 +93,7 @@ export const getMilestoneStatusAccent = (
       return 'info';
     case 'Pending':
       return 'neutral';
-    case 'Incomplete':
-      return 'warning';
-    case 'Not Started':
+    case 'Terminated':
       return 'error';
     default:
       return 'default';

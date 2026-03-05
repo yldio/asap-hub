@@ -12,7 +12,6 @@ const createMilestone = (
   status: Milestone['status'],
 ): Milestone => ({
   id,
-  title: `Milestone ${id}`,
   description,
   status,
 });
@@ -44,15 +43,9 @@ export const StatusPending = () => (
   />
 );
 
-export const StatusIncomplete = () => (
+export const StatusTerminated = () => (
   <MilestoneComponent
-    milestone={createMilestone('1', mediumDescription, 'Incomplete')}
-  />
-);
-
-export const StatusNotStarted = () => (
-  <MilestoneComponent
-    milestone={createMilestone('1', mediumDescription, 'Not Started')}
+    milestone={createMilestone('1', mediumDescription, 'Terminated')}
   />
 );
 

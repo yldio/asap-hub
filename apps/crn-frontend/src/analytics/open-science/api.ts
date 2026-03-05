@@ -48,10 +48,15 @@ const preprintComplianceOpensearchSort: OpensearchSortMap<SortPreprintCompliance
     ],
   };
 
-export const getPreprintCompliance = async (
-  opensearchClient: OpensearchClient<PreprintComplianceOpensearchResponse>,
-  options: AnalyticsSearchOptionsWithFiltering<SortPreprintCompliance>,
-): Promise<ListPreprintComplianceOpensearchResponse | undefined> => {
+const searchCompliance = async <
+  TItem,
+  TSort extends `${string}_asc` | `${string}_desc`,
+  TListResponse,
+>(
+  opensearchClient: OpensearchClient<TItem>,
+  options: AnalyticsSearchOptionsWithFiltering<TSort>,
+  sortMap: OpensearchSortMap<TSort>,
+): Promise<TListResponse | undefined> => {
   const { tags, currentPage, pageSize, timeRange, sort } = options;
   return opensearchClient.search({
     searchTags: tags,
@@ -59,9 +64,19 @@ export const getPreprintCompliance = async (
     pageSize: pageSize ?? undefined,
     timeRange,
     searchScope: 'flat',
-    sort: sort ? preprintComplianceOpensearchSort[sort] : undefined,
-  });
+    sort: sort ? sortMap[sort] : undefined,
+  }) as Promise<TListResponse | undefined>;
 };
+
+export const getPreprintCompliance = async (
+  opensearchClient: OpensearchClient<PreprintComplianceOpensearchResponse>,
+  options: AnalyticsSearchOptionsWithFiltering<SortPreprintCompliance>,
+): Promise<ListPreprintComplianceOpensearchResponse | undefined> =>
+  searchCompliance<
+    PreprintComplianceOpensearchResponse,
+    SortPreprintCompliance,
+    ListPreprintComplianceOpensearchResponse
+  >(opensearchClient, options, preprintComplianceOpensearchSort);
 
 const publicationComplianceOpensearchSort: OpensearchSortMap<SortPublicationCompliance> =
   {
@@ -82,14 +97,9 @@ const publicationComplianceOpensearchSort: OpensearchSortMap<SortPublicationComp
 export const getPublicationCompliance = async (
   opensearchClient: OpensearchClient<PublicationComplianceOpensearchResponse>,
   options: AnalyticsSearchOptionsWithFiltering<SortPublicationCompliance>,
-): Promise<ListPublicationComplianceOpensearchResponse | undefined> => {
-  const { tags, currentPage, pageSize, timeRange, sort } = options;
-  return opensearchClient.search({
-    searchTags: tags,
-    currentPage: currentPage ?? undefined,
-    pageSize: pageSize ?? undefined,
-    timeRange,
-    searchScope: 'flat',
-    sort: sort ? publicationComplianceOpensearchSort[sort] : undefined,
-  });
-};
+): Promise<ListPublicationComplianceOpensearchResponse | undefined> =>
+  searchCompliance<
+    PublicationComplianceOpensearchResponse,
+    SortPublicationCompliance,
+    ListPublicationComplianceOpensearchResponse
+  >(opensearchClient, options, publicationComplianceOpensearchSort);

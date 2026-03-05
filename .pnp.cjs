@@ -14259,7 +14259,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/routing"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["@types/jest", "npm:29.5.14"],\
             ["@types/qs", "npm:6.14.0"],\
             ["@types/react-router", null],\
             ["qs", "npm:6.14.2"],\
@@ -14279,7 +14278,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["@types/jest", "npm:29.5.14"],\
             ["@types/qs", "npm:6.14.0"],\
             ["@types/react-router", null],\
             ["qs", "npm:6.14.2"],\
@@ -14299,7 +14297,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#workspace:packages/routing"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["@types/jest", "npm:29.5.14"],\
             ["@types/qs", "npm:6.14.0"],\
             ["@types/react-router", null],\
             ["qs", "npm:6.14.2"],\
@@ -14319,7 +14316,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/routing", "workspace:packages/routing"],\
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
             ["@babel/runtime-corejs3", "npm:7.28.6"],\
-            ["@types/jest", "npm:29.5.14"],\
             ["@types/qs", "npm:6.14.0"],\
             ["qs", "npm:6.14.2"],\
             ["react-router", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#npm:7.13.0"],\

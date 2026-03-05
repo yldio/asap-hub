@@ -205,8 +205,9 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
             )}
           </div>
           <Paragraph noMargin accent="lead">
-            This directory contains all manuscripts with their compliance
-            reports.
+            {manuscripts.length > 0 || !!collaborationManuscripts?.length
+              ? 'This directory contains all manuscripts with their compliance reports.'
+              : "Submit your manuscript to receive a report outlining where your work meets ASAP's Open Science Policy and where changes are needed for your work to be compliant."}
           </Paragraph>
         </div>
         {isTeamBased &&

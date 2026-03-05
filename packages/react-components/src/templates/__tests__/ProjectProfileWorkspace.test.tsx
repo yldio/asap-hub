@@ -57,9 +57,23 @@ describe('ProjectProfileWorkspace', () => {
       ).toBeInTheDocument();
     });
 
-    it('renders the compliance description', () => {
+    it('renders the invitation description when no manuscripts exist', () => {
       const { getByText } = renderWithRouter(
         <ProjectProfileWorkspace {...defaultProps} />,
+      );
+      expect(
+        getByText(
+          /Submit your manuscript to receive a report outlining where your work meets/,
+        ),
+      ).toBeInTheDocument();
+    });
+
+    it('renders the directory description when manuscripts exist', () => {
+      const { getByText } = renderWithRouter(
+        <ProjectProfileWorkspace
+          {...defaultProps}
+          manuscripts={['manuscript-1']}
+        />,
       );
       expect(
         getByText(
@@ -113,9 +127,7 @@ describe('ProjectProfileWorkspace', () => {
           <ProjectProfileWorkspace {...defaultProps} isTeamBased={true} />,
         );
         expect(queryByText('Team Submission')).not.toBeInTheDocument();
-        expect(
-          queryByText('Collaborator Submission'),
-        ).not.toBeInTheDocument();
+        expect(queryByText('Collaborator Submission')).not.toBeInTheDocument();
       });
 
       it('renders Team Submission and Collaborator Submission sections when manuscripts exist', () => {
@@ -172,9 +184,7 @@ describe('ProjectProfileWorkspace', () => {
           />,
         );
         expect(queryByText('Team Submission')).not.toBeInTheDocument();
-        expect(
-          queryByText('Collaborator Submission'),
-        ).not.toBeInTheDocument();
+        expect(queryByText('Collaborator Submission')).not.toBeInTheDocument();
       });
 
       it('renders empty collaborator state when manuscripts exist but collaborationManuscripts is undefined', () => {

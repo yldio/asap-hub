@@ -64,6 +64,27 @@ it('reports changes as date objects', async () => {
   );
 });
 
+it('handles clearing the date field', () => {
+  const handleChange = jest.fn<void, [Date | undefined]>();
+
+  render(
+    <LabeledDateField
+      title="Date"
+      value={new Date('2020-01-01')}
+      onChange={handleChange}
+    />,
+  );
+
+  fireEvent.change(screen.getByLabelText('Date'), {
+    target: { value: '' },
+  });
+
+  expect(handleChange).toHaveBeenCalled();
+
+  const [newDate] = handleChange.mock.calls.slice(-1)[0]!;
+  expect(newDate).toBeUndefined();
+});
+
 describe('Tests that the parseDateTostring function returns', () => {
   it('an empty string when the date is undefined', () => {
     expect(parseDateToString(undefined)).toBe('');

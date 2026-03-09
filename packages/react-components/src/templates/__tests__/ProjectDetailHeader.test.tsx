@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { disable, reset } from '@asap-hub/flags';
 import { ProjectDetail, ProjectType } from '@asap-hub/model';
 import ProjectDetailHeader, { getTeamIcon } from '../ProjectDetailHeader';
 
@@ -209,11 +210,16 @@ describe('ProjectDetailHeader', () => {
   };
 
   describe('Common elements', () => {
+    afterEach(() => {
+      reset();
+    });
+
     it('renders the project title', () => {
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(screen.getByText('Test Project')).toBeInTheDocument();
@@ -224,6 +230,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(screen.getByText('Active')).toBeInTheDocument();
@@ -234,11 +241,56 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       const aboutLink = screen.getByRole('link', { name: 'About' });
       expect(aboutLink).toBeInTheDocument();
       expect(aboutLink).toHaveAttribute('href', '/projects/discovery/1/about');
+    });
+
+    it('renders Milestones tab when feature flag is enabled and milestonesHref is provided', () => {
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+        />,
+      );
+      const milestonesLink = screen.getByRole('link', { name: 'Milestones' });
+      expect(milestonesLink).toBeInTheDocument();
+      expect(milestonesLink).toHaveAttribute(
+        'href',
+        '/projects/discovery/1/milestones',
+      );
+    });
+
+    it('does not render Milestones tab when feature flag is disabled', () => {
+      disable('PROJECT_MILESTONES');
+
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+        />,
+      );
+      expect(
+        screen.queryByRole('link', { name: 'Milestones' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render Milestones tab when milestonesHref is not provided', () => {
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+        />,
+      );
+      expect(
+        screen.queryByRole('link', { name: 'Milestones' }),
+      ).not.toBeInTheDocument();
     });
 
     it('renders or hides Contact button when point of contact email is provided and project status is Active or not', () => {
@@ -247,6 +299,7 @@ describe('ProjectDetailHeader', () => {
           {...mockDiscoveryProject}
           pointOfContactEmail="contact@example.com"
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(screen.getByText('Contact')).toBeInTheDocument();
@@ -256,6 +309,7 @@ describe('ProjectDetailHeader', () => {
           status="Closed"
           pointOfContactEmail="contact@example.com"
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(screen.queryByText('Contact')).not.toBeInTheDocument();
@@ -265,6 +319,7 @@ describe('ProjectDetailHeader', () => {
           status="Active"
           pointOfContactEmail={undefined}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(screen.queryByText('Contact')).not.toBeInTheDocument();
@@ -275,6 +330,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(screen.queryByText('Contact')).not.toBeInTheDocument();
@@ -294,6 +350,7 @@ describe('ProjectDetailHeader', () => {
           {...mockDiscoveryProject}
           pointOfContactEmail="test@example.com"
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
 
@@ -318,6 +375,7 @@ describe('ProjectDetailHeader', () => {
           {...mockDiscoveryProject}
           status="Closed"
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(
@@ -334,6 +392,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(screen.getByText('Discovery Project')).toBeInTheDocument();
@@ -344,6 +403,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(screen.getByText('Genetics')).toBeInTheDocument();
@@ -354,6 +414,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       const teamLink = screen.getByText('Alpha Team').closest('a');
@@ -369,6 +430,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...projectWithoutTeamId}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(screen.getByText('Alpha Team')).toBeInTheDocument();
@@ -396,6 +458,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockResourceTeamProject}
           aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
         />,
       );
       expect(screen.getByText('Resource Project')).toBeInTheDocument();
@@ -406,6 +469,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockResourceTeamProject}
           aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
         />,
       );
       expect(screen.getByText('Biobank')).toBeInTheDocument();
@@ -416,6 +480,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockResourceTeamProject}
           aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
         />,
       );
       const driveLink = screen.getByText('Access Drive').closest('a');
@@ -443,6 +508,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockResourceTeamProject}
           aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
         />,
       );
       expect(screen.getByText('Resource Team')).toBeInTheDocument();
@@ -453,6 +519,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockResourceTeamProject}
           aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
         />,
       );
       const teamLink = screen.getByText('Resource Team').closest('a');
@@ -468,6 +535,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...projectWithoutTeamId}
           aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
         />,
       );
       expect(screen.getByText('Resource Team')).toBeInTheDocument();
@@ -482,6 +550,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockResourceMemberProject}
           aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
         />,
       );
       expect(screen.getByText('John Doe')).toBeInTheDocument();
@@ -492,6 +561,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockResourceMemberProject}
           aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
         />,
       );
       expect(screen.queryByText('Access Drive')).not.toBeInTheDocument();
@@ -502,6 +572,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockResourceMemberProject}
           aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
         />,
       );
       const memberLink = screen.getByText('John Doe').closest('a');
@@ -515,6 +586,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockTraineeProject}
           aboutHref="/projects/trainee/1/about"
+          milestonesHref="/projects/trainee/1/milestones"
         />,
       );
       expect(screen.getByText('Trainee Project')).toBeInTheDocument();
@@ -525,6 +597,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockTraineeProject}
           aboutHref="/projects/trainee/1/about"
+          milestonesHref="/projects/trainee/1/milestones"
         />,
       );
       expect(screen.getByText('Emily Trainee')).toBeInTheDocument();
@@ -535,6 +608,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockTraineeProject}
           aboutHref="/projects/trainee/1/about"
+          milestonesHref="/projects/trainee/1/milestones"
         />,
       );
       expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
@@ -545,6 +619,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockTraineeProject}
           aboutHref="/projects/trainee/1/about"
+          milestonesHref="/projects/trainee/1/milestones"
         />,
       );
       const traineeLink = screen.getByText('Emily Trainee').closest('a');
@@ -580,6 +655,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...projectWithMultipleMentors}
           aboutHref="/projects/trainee/1/about"
+          milestonesHref="/projects/trainee/1/milestones"
         />,
       );
       expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
@@ -607,6 +683,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       // Check that dates are rendered
@@ -619,6 +696,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockTraineeProject}
           aboutHref="/projects/trainee/1/about"
+          milestonesHref="/projects/trainee/1/milestones"
         />,
       );
       expect(screen.getByText(/Jan 2023/)).toBeInTheDocument();
@@ -630,6 +708,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockResourceMemberProject}
           aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
         />,
       );
 

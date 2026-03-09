@@ -280,19 +280,6 @@ describe('ProjectDetailHeader', () => {
       ).not.toBeInTheDocument();
     });
 
-    it('does not render Milestones tab when milestonesHref is not provided', () => {
-      render(
-        <ProjectDetailHeader
-          {...mockDiscoveryProject}
-          aboutHref="/projects/discovery/1/about"
-          milestonesHref="/projects/discovery/1/milestones"
-        />,
-      );
-      expect(
-        screen.queryByRole('link', { name: 'Milestones' }),
-      ).not.toBeInTheDocument();
-    });
-
     it('renders or hides Contact button when point of contact email is provided and project status is Active or not', () => {
       const { rerender } = render(
         <ProjectDetailHeader

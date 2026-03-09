@@ -580,3 +580,33 @@ it('does not display reply button if isActiveVersion is false', async () => {
     expect(getByText(/Category Tag/i)).toBeVisible();
   });
 });
+
+describe('showTeamName', () => {
+  it('renders team names by default', async () => {
+    const user = userEvent.setup();
+    const { getByText, getByLabelText } = render(
+      <MemoryRouter>
+        <ManuscriptVersionCard {...props} />
+      </MemoryRouter>,
+    );
+    await user.click(getByLabelText('Expand Version'));
+
+    await waitFor(() => {
+      expect(getByText(/Team Team 1/)).toBeVisible();
+    });
+  });
+
+  it('hides team names when showTeamName is false', async () => {
+    const user = userEvent.setup();
+    const { queryByText, getByLabelText } = render(
+      <MemoryRouter>
+        <ManuscriptVersionCard {...props} showTeamName={false} />
+      </MemoryRouter>,
+    );
+    await user.click(getByLabelText('Expand Version'));
+
+    await waitFor(() => {
+      expect(queryByText(/Team Team 1/)).not.toBeInTheDocument();
+    });
+  });
+});

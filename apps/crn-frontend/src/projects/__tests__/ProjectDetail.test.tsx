@@ -486,6 +486,27 @@ describe('DiscoveryProjectDetail - specific', () => {
     document.cookie =
       'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });
+
+  it('passes manuscripts and collaborationManuscripts from projectDetail to workspace', async () => {
+    const memberUser = {
+      projects: [{ id: 'discovery-1' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderProjectDetail(
+      DiscoveryProjectDetail,
+      'discovery',
+      'discovery-1',
+      memberUser,
+      'workspace',
+    );
+    await screen.findByRole('heading', { name: 'Compliance Review' });
+    // mockDiscoveryProject doesn't have manuscripts fields → defaults to []
+    expect(lastWorkspaceProps.manuscripts).toEqual([]);
+    expect(lastWorkspaceProps.collaborationManuscripts).toEqual([]);
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
 });
 
 describe('ResourceProjectDetail - specific', () => {

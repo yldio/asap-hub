@@ -1276,6 +1276,227 @@ describe('parseContentfulProjectDetail', () => {
     expect(result).not.toHaveProperty('collaborators');
   });
 
+  it('parses Discovery Project detail with manuscripts from team linkedFrom', () => {
+    const discoveryItem = getDiscoveryProjectDetailGraphqlItem({
+      originalGrant: 'Grant',
+      proposalId: null,
+      supplementGrant: null,
+      milestones: [],
+      teamDescription: null,
+    });
+
+    // Add linkedFrom.manuscriptsCollection to team member
+    const teamMember = discoveryItem.membersCollection?.items?.find(
+      (m) => m?.projectMember?.__typename === 'Teams',
+    );
+    if (teamMember?.projectMember) {
+      (teamMember.projectMember as Record<string, unknown>).linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            {
+              sys: { id: 'manuscript-1' },
+              status: 'Review Compliance Report',
+              teamsCollection: {
+                items: [{ sys: { id: 'team-1' } }],
+              },
+            },
+            {
+              sys: { id: 'manuscript-2' },
+              status: 'Compliant',
+              teamsCollection: {
+                items: [{ sys: { id: 'team-1' } }],
+              },
+            },
+            {
+              sys: { id: 'manuscript-collab' },
+              status: 'Waiting for Report',
+              teamsCollection: {
+                items: [{ sys: { id: 'other-team' } }],
+              },
+            },
+          ],
+        },
+      };
+    }
+
+    const result = parseContentfulProjectDetail(discoveryItem);
+
+    // Team manuscripts sorted: non-closed first, then Compliant
+    expect(result).toMatchObject({
+      manuscripts: ['manuscript-1', 'manuscript-2'],
+      collaborationManuscripts: ['manuscript-collab'],
+    });
+  });
+
+  it('sorts manuscripts with Compliant and Closed statuses last', () => {
+    const discoveryItem = getDiscoveryProjectDetailGraphqlItem({
+      originalGrant: 'Grant',
+      proposalId: null,
+      supplementGrant: null,
+      milestones: [],
+      teamDescription: null,
+    });
+
+    const teamMember = discoveryItem.membersCollection?.items?.find(
+      (m) => m?.projectMember?.__typename === 'Teams',
+    );
+    if (teamMember?.projectMember) {
+      (teamMember.projectMember as Record<string, unknown>).linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            {
+              sys: { id: 'ms-compliant' },
+              status: 'Compliant',
+              teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+            },
+            {
+              sys: { id: 'ms-active' },
+              status: 'Review Compliance Report',
+              teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+            },
+            {
+              sys: { id: 'ms-closed' },
+              status: 'Closed (other)',
+              teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+            },
+          ],
+        },
+      };
+    }
+
+    const result = parseContentfulProjectDetail(discoveryItem);
+
+    // Active (priority 0) first, then Compliant (1), then Closed (2)
+    expect(result).toMatchObject({
+      manuscripts: ['ms-active', 'ms-compliant', 'ms-closed'],
+    });
+  });
+
+  it('returns empty manuscript arrays when team has no linkedFrom manuscripts', () => {
+    const discoveryItem = getDiscoveryProjectDetailGraphqlItem({
+      originalGrant: 'Grant',
+      proposalId: null,
+      supplementGrant: null,
+      milestones: [],
+      teamDescription: null,
+    });
+
+    // No linkedFrom added to team member → defaults to empty
+    const result = parseContentfulProjectDetail(discoveryItem);
+
+    expect(result).toMatchObject({
+      manuscripts: [],
+      collaborationManuscripts: [],
+    });
+  });
+
+  it('parses Resource team-based project with manuscripts', () => {
+    const resourceItem = getResourceTeamProjectDetailGraphqlItem({
+      originalGrant: 'Grant',
+      proposalId: null,
+      supplementGrant: null,
+      milestones: [],
+      teamDescription: null,
+    });
+
+    const teamMember = resourceItem.membersCollection?.items?.find(
+      (m) => m?.projectMember?.__typename === 'Teams',
+    );
+    if (teamMember?.projectMember) {
+      (teamMember.projectMember as Record<string, unknown>).linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            {
+              sys: { id: 'resource-ms-1' },
+              status: 'Waiting for Report',
+              teamsCollection: {
+                items: [{ sys: { id: 'resource-team-main' } }],
+              },
+            },
+            {
+              sys: { id: 'resource-ms-collab' },
+              status: 'Review Compliance Report',
+              teamsCollection: {
+                items: [{ sys: { id: 'another-team' } }],
+              },
+            },
+          ],
+        },
+      };
+    }
+
+    const result = parseContentfulProjectDetail(resourceItem);
+
+    expect(result).toMatchObject({
+      manuscripts: ['resource-ms-1'],
+      collaborationManuscripts: ['resource-ms-collab'],
+    });
+  });
+
+  it('does not include manuscripts for Resource non-team-based projects', () => {
+    const resourceItem = getResourceIndividualProjectDetailGraphqlItem({
+      originalGrant: 'Grant',
+      proposalId: null,
+      supplementGrant: null,
+      milestones: [],
+    });
+
+    const result = parseContentfulProjectDetail(resourceItem);
+
+    expect(result).not.toHaveProperty('manuscripts');
+    expect(result).not.toHaveProperty('collaborationManuscripts');
+  });
+
+  it('does not include manuscripts for Trainee projects', () => {
+    const traineeItem = getTraineeProjectDetailGraphqlItem({
+      originalGrant: 'Grant',
+      proposalId: null,
+      supplementGrant: null,
+      milestones: [],
+    });
+
+    const result = parseContentfulProjectDetail(traineeItem);
+
+    expect(result).not.toHaveProperty('manuscripts');
+    expect(result).not.toHaveProperty('collaborationManuscripts');
+  });
+
+  it('filters out null manuscript items from linkedFrom', () => {
+    const discoveryItem = getDiscoveryProjectDetailGraphqlItem({
+      originalGrant: 'Grant',
+      proposalId: null,
+      supplementGrant: null,
+      milestones: [],
+      teamDescription: null,
+    });
+
+    const teamMember = discoveryItem.membersCollection?.items?.find(
+      (m) => m?.projectMember?.__typename === 'Teams',
+    );
+    if (teamMember?.projectMember) {
+      (teamMember.projectMember as Record<string, unknown>).linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            null,
+            {
+              sys: { id: 'valid-ms' },
+              status: 'Waiting for Report',
+              teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+            },
+            null,
+          ],
+        },
+      };
+    }
+
+    const result = parseContentfulProjectDetail(discoveryItem);
+
+    expect(result).toMatchObject({
+      manuscripts: ['valid-ms'],
+      collaborationManuscripts: [],
+    });
+  });
+
   it('throws when parseContentfulProjectDetail encounters an unknown project type', () => {
     const invalidItem = {
       ...getDiscoveryProjectDetailGraphqlItem({

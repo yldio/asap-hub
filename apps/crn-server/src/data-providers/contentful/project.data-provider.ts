@@ -271,6 +271,65 @@ export const parseContentfulProject = (
   }
 };
 
+// Manuscript parsing for team-based projects
+type ProjectManuscriptItem = {
+  sys: { id: string };
+  status?: string | null;
+  teamsCollection?: {
+    items: Array<{ sys: { id: string } } | null>;
+  } | null;
+};
+
+const sortProjectManuscripts = (manuscripts: ProjectManuscriptItem[]) => {
+  const STATUS_PRIORITY: Record<'Compliant' | 'Closed (other)', number> = {
+    Compliant: 1,
+    'Closed (other)': 2,
+  };
+  return [...manuscripts].sort((a, b) => {
+    const aPriority =
+      STATUS_PRIORITY[a.status as keyof typeof STATUS_PRIORITY] ?? 0;
+    const bPriority =
+      STATUS_PRIORITY[b.status as keyof typeof STATUS_PRIORITY] ?? 0;
+    return aPriority - bPriority;
+  });
+};
+
+const getManuscriptItemsFromTeamMember = (
+  teamMember: NonNullable<ProjectMembershipItem['projectMember']>,
+): ProjectManuscriptItem[] => {
+  const memberWithLinkedFrom = teamMember as typeof teamMember & {
+    linkedFrom?: {
+      manuscriptsCollection?: {
+        items: Array<ProjectManuscriptItem | null>;
+      };
+    };
+  };
+  return (
+    memberWithLinkedFrom.linkedFrom?.manuscriptsCollection?.items?.filter(
+      (i: ProjectManuscriptItem | null): i is ProjectManuscriptItem =>
+        i !== null,
+    ) ?? []
+  );
+};
+
+const parseProjectManuscripts = (
+  manuscriptItems: ProjectManuscriptItem[],
+  teamId: string,
+) => {
+  const teamManuscripts = manuscriptItems.filter(
+    (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id === teamId,
+  );
+  const collaborationManuscripts = manuscriptItems.filter(
+    (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id !== teamId,
+  );
+  return {
+    manuscripts: sortProjectManuscripts(teamManuscripts).map((m) => m.sys.id),
+    collaborationManuscripts: sortProjectManuscripts(
+      collaborationManuscripts,
+    ).map((m) => m.sys.id),
+  };
+};
+
 // Parse Contentful project to ProjectDetail format with all additional fields
 export const parseContentfulProjectDetail = (
   item: ProjectItem,
@@ -323,6 +382,11 @@ export const parseContentfulProjectDetail = (
           .filter((m) => m.projectMember?.__typename === 'Users')
           .map((m) => parseProjectUserMember(m));
 
+        // Parse manuscripts from team's linkedFrom
+        const manuscriptItems = getManuscriptItemsFromTeamMember(teamMember);
+        const { manuscripts, collaborationManuscripts } =
+          parseProjectManuscripts(manuscriptItems, teamMember.sys.id);
+
         return {
           ...baseProject,
           originalGrantProposalId,
@@ -330,6 +394,8 @@ export const parseContentfulProjectDetail = (
           milestones: milestones.length > 0 ? milestones : undefined,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
+          manuscripts,
+          collaborationManuscripts,
         } as DiscoveryProjectDetail;
       }
 
@@ -360,6 +426,11 @@ export const parseContentfulProjectDetail = (
           .filter((m) => m.projectMember?.__typename === 'Users')
           .map((m) => parseProjectUserMember(m));
 
+        // Parse manuscripts from team's linkedFrom
+        const manuscriptItems = getManuscriptItemsFromTeamMember(teamMember);
+        const { manuscripts, collaborationManuscripts } =
+          parseProjectManuscripts(manuscriptItems, teamMember.sys.id);
+
         return {
           ...baseProject,
           originalGrantProposalId,
@@ -367,6 +438,8 @@ export const parseContentfulProjectDetail = (
           milestones: milestones.length > 0 ? milestones : undefined,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
+          manuscripts,
+          collaborationManuscripts,
         } as ResourceProjectDetail;
       }
 

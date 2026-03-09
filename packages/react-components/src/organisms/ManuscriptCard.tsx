@@ -63,6 +63,7 @@ type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
       React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
     ];
     readonly isTargetManuscript?: boolean;
+    readonly showTeamName?: boolean;
   };
 
 const manuscriptContainerStyles = css({
@@ -236,6 +237,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   onReplyToDiscussion,
   onMarkDiscussionAsRead,
   isTargetManuscript = false,
+  showTeamName = true,
 }) => {
   const [tooltipHoverShown, setTooltipHoverShown] = useState<boolean>(false);
 
@@ -484,6 +486,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                         version={version}
                         teamId={teamId}
                         manuscriptId={id}
+                        showTeamName={showTeamName}
                         isActiveVersion={
                           isActiveManuscript &&
                           version.id === currentManuscriptVersion?.id

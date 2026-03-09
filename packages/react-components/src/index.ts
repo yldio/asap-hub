@@ -302,6 +302,7 @@ export {
   ProjectDetailAbout,
   ProjectDetailHeader,
   ProjectDetailPage,
+  ProjectDetailMilestones,
   ProjectProfileWorkspace,
   ProjectsPage,
   ProjectsPageHeader,

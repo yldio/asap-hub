@@ -18,11 +18,12 @@ const createProjectRoute = () => {
     {},
     { createManuscript, editManuscript, resubmitManuscript },
   );
+  const milestones = route('/milestones', {}, {});
 
   return route(
     '/:projectId',
     { projectId: stringParser },
-    { about, workspace },
+    { about, workspace, milestones },
   );
 };
 

@@ -112,12 +112,12 @@ describe('ManuscriptForm team validation', () => {
   const authorsErrorRegex =
     /The following author\(s\) do not have a team listed as a contributor\. Add at least one of their teams, or contact support if they don’t belong to any\./;
   const labsErrorRegex =
-    /The following lab\(s\) do not list their correspondent PI's team as a contributor\. At least one of the PI teams they are associated with must be added to the Teams field\./;
+    /The following lab\(s\) do not list their corresponding PI’s team as a contributor\. Please add at least one of their teams to the Teams field\./;
 
   const authorsErrorMessage =
     'The following author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.';
   const labsErrorMessage =
-    "The following lab(s) do not list their correspondent PI's team as a contributor. At least one of the PI teams they are associated with must be added to the Teams field.";
+    'The following lab(s) do not list their corresponding PI’s team as a contributor. Please add at least one of their teams to the Teams field.';
 
   it('displays error message when labPI team is not among selected teams and hide it when team is selected', async () => {
     render(
@@ -384,7 +384,7 @@ describe('ManuscriptForm team validation', () => {
     );
 
     expect(container).toHaveTextContent(
-      "The following lab(s) do not list their correspondent PI's team as a contributor. At least one of the PI teams they are associated with must be added to the Teams field. • Lab One",
+      'The following lab(s) do not list their corresponding PI’s team as a contributor. Please add at least one of their teams to the Teams field. • Lab One',
     );
 
     await userEvent.click(screen.getAllByLabelText('Remove Author A')[0]!);

@@ -559,7 +559,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       });
 
     if (labsWithoutTeamAdded.size > 0) {
-      const labErrorMessage = `The following lab(s) do not list their correspondent PI's team as a contributor. At least one of the PI teams they are associated with must be added to the Teams field.\n${Array.from(
+      const labErrorMessage = `The following lab(s) do not list their corresponding PI’s team as a contributor. Please add at least one of their teams to the Teams field.\n${Array.from(
         labsWithoutTeamAdded,
       )
         .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)

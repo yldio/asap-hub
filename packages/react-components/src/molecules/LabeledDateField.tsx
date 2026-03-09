@@ -59,7 +59,6 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
           id={id}
           value={parseDateToString(value)}
           onChange={(newDate) => {
-            console.log(newDate);
             onChange(newDate ? parseISO(newDate) : undefined);
           }}
           max={max ? format(max, 'yyyy-MM-dd') : undefined}

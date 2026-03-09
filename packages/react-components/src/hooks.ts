@@ -1,8 +1,10 @@
 import {
   useState,
   useEffect,
+  useCallback,
   DependencyList,
   useRef,
+  RefObject,
   MutableRefObject,
 } from 'react';
 
@@ -36,6 +38,44 @@ export const useIsMounted = (): MutableRefObject<boolean> => {
     [],
   );
   return isMounted;
+};
+
+/**
+ * Detects whether a text element is visually truncated
+ * and provides expand/collapse state. Re-checks on window resize.
+ *
+ * @param text - The text content being measured (triggers re-check when it changes)
+ */
+export const useTextTruncation = (
+  text: string,
+): {
+  ref: RefObject<HTMLDivElement>;
+  isExpanded: boolean;
+  needsExpansion: boolean;
+  toggle: () => void;
+} => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [needsExpansion, setNeedsExpansion] = useState(false);
+
+  const toggle = useCallback(() => setIsExpanded((v) => !v), []);
+
+  useEffect(() => {
+    if (isExpanded) {
+      return undefined;
+    }
+
+    const check = () => {
+      if (!ref.current) return;
+      setNeedsExpansion(ref.current.scrollHeight > ref.current.clientHeight);
+    };
+
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, [text, isExpanded]);
+
+  return { ref, isExpanded, needsExpansion, toggle };
 };
 
 /**

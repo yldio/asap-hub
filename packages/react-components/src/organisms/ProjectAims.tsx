@@ -5,7 +5,7 @@ import { Headline3, Card, Button, TabButton, Link, Paragraph } from '../atoms';
 import { TabNav } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { neutral1000, steel } from '../colors';
-import Aim, { AIM_COLUMN_GAP } from './Aim';
+import Aim, { AIM_COLUMN_GAP, AIM_TEMPLATE_COLUMNS } from './Aim';
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)} ${rem(16)} ${rem(24)}`,
@@ -18,7 +18,7 @@ const tabContainerStyles = css({
 
 const tableHeaderStyles = css({
   display: 'grid',
-  gridTemplateColumns: '48px 1fr 120px',
+  gridTemplateColumns: AIM_TEMPLATE_COLUMNS,
   gap: rem(AIM_COLUMN_GAP),
   marginBottom: rem(16),
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
@@ -96,11 +96,8 @@ const ProjectAims: FC<ProjectAimsProps> = ({
   }
 
   const isTabbedView = aims.length > 1;
-  const currentGrant = aims[activeTab];
-
-  if (!currentGrant) {
-    return null;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const currentGrant = aims[activeTab]!;
 
   return (
     <Card padding={false} title="Aims">

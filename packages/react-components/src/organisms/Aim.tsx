@@ -1,16 +1,26 @@
 import { Aim as AimType, AimStatus } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { FC, useState, useEffect, useRef } from 'react';
+import { FC, useState } from 'react';
 import { Pill } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
-import { lead, neutral1000, fern, info100, info500, steel } from '../colors';
+import { lead, info100, info500, steel } from '../colors';
 import { plusRectIcon, minusRectIcon } from '../icons';
+import { useTextTruncation } from '../hooks';
+import {
+  descriptionContainerStyles,
+  mobileLabelStyles,
+  clampedDescriptionStyles,
+  readMoreButtonStyles,
+  statusContainerStyles,
+  getStatusAccent,
+} from './shared-aim-milestones-styles';
 
+export const AIM_TEMPLATE_COLUMNS = `33px 1fr 120px`;
 export const AIM_COLUMN_GAP = 24;
 
 const aimRowStyles = css({
   display: 'grid',
-  gridTemplateColumns: '48px 1fr 120px',
+  gridTemplateColumns: AIM_TEMPLATE_COLUMNS,
   gap: rem(AIM_COLUMN_GAP),
   paddingBottom: rem(20),
   borderBottom: `1px solid ${steel.rgb}`,
@@ -33,7 +43,10 @@ const aimNumberContainerStyles = css({
   placeSelf: 'start',
   justifyContent: 'center',
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    gap: rem(16),
     justifyContent: 'flex-start',
+    flexFlow: 'column',
+    marginBottom: rem(24),
   },
 });
 
@@ -50,55 +63,6 @@ const aimNumberBadgeStyles = css({
   whiteSpace: 'nowrap',
 });
 
-const descriptionContainerStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: rem(4),
-  justifyContent: 'flex-start',
-});
-
-const mobileLabelStyles = css({
-  fontSize: rem(17),
-  fontWeight: 'bold',
-  color: neutral1000.rgb,
-  marginBottom: rem(8),
-  display: 'none',
-  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
-    display: 'block',
-  },
-});
-
-const descriptionStyles = (isExpanded: boolean) =>
-  css({
-    color: lead.rgb,
-    fontSize: rem(17),
-    lineHeight: rem(24),
-    margin: 0,
-    ...(isExpanded
-      ? {}
-      : {
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }),
-  });
-
-const readMoreButtonStyles = css({
-  background: 'none',
-  border: 'none',
-  color: fern.rgb,
-  cursor: 'pointer',
-  padding: 0,
-  fontSize: rem(17),
-  fontWeight: 400,
-  display: 'inline',
-  textAlign: 'left',
-  '&:hover': {
-    textDecoration: 'underline',
-  },
-});
-
 const articlesButtonStyles = css({
   display: 'flex',
   alignItems: 'center',
@@ -113,6 +77,10 @@ const articlesButtonStyles = css({
   '&:hover': {
     textDecoration: 'underline',
   },
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    marginTop: rem(24),
+    marginBottom: rem(24),
+  },
 });
 
 const articleIconStyles = css({
@@ -124,76 +92,18 @@ const articleIconStyles = css({
   },
 });
 
-const statusContainerStyles = css({
-  display: 'flex',
-  alignItems: 'flex-start',
-  justifyContent: 'flex-start',
-  paddingBlock: rem(4),
-  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
-    flexDirection: 'column',
-    paddingBlock: 0,
-  },
-});
-
-export const getAimStatusAccent = (
-  status: AimStatus,
-): 'success' | 'info' | 'neutral' | 'warning' | 'error' | 'default' => {
-  switch (status) {
-    case 'Complete':
-      return 'success';
-    case 'In Progress':
-      return 'info';
-    case 'Pending':
-      return 'neutral';
-    case 'Terminated':
-      return 'error';
-    default:
-      return 'default';
-  }
-};
+export const getAimStatusAccent = (status: AimStatus) =>
+  getStatusAccent(status);
 
 type AimProps = {
   aim: AimType;
 };
 
 const Aim: FC<AimProps> = ({ aim }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [needsExpansion, setNeedsExpansion] = useState(false);
+  const { ref, isExpanded, needsExpansion, toggle } = useTextTruncation(
+    aim.description,
+  );
   const [articlesExpanded, setArticlesExpanded] = useState(false);
-  const descriptionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const checkTruncation = () => {
-      if (descriptionRef.current) {
-        const wasExpanded = isExpanded;
-        if (wasExpanded) {
-          descriptionRef.current.style.display = '-webkit-box';
-          descriptionRef.current.style.webkitLineClamp = '2';
-          descriptionRef.current.style.webkitBoxOrient = 'vertical';
-          descriptionRef.current.style.overflow = 'hidden';
-        }
-
-        const isTruncated =
-          descriptionRef.current.scrollHeight >
-          descriptionRef.current.clientHeight;
-
-        if (wasExpanded) {
-          descriptionRef.current.style.display = '';
-          descriptionRef.current.style.webkitLineClamp = '';
-          descriptionRef.current.style.webkitBoxOrient = '';
-          descriptionRef.current.style.overflow = '';
-        }
-
-        setNeedsExpansion(isTruncated);
-      }
-    };
-
-    checkTruncation();
-    window.addEventListener('resize', checkTruncation);
-    return () => {
-      window.removeEventListener('resize', checkTruncation);
-    };
-  }, [aim.description, isExpanded]);
 
   return (
     <div css={aimRowStyles}>
@@ -203,15 +113,11 @@ const Aim: FC<AimProps> = ({ aim }) => {
       </div>
       <div css={descriptionContainerStyles}>
         <div css={mobileLabelStyles}>Description</div>
-        <div ref={descriptionRef} css={descriptionStyles(isExpanded)}>
+        <div ref={ref} css={clampedDescriptionStyles(isExpanded)}>
           {aim.description}
         </div>
         {needsExpansion && (
-          <button
-            css={readMoreButtonStyles}
-            onClick={() => setIsExpanded(!isExpanded)}
-            type="button"
-          >
+          <button css={readMoreButtonStyles} onClick={toggle} type="button">
             {isExpanded ? 'Read Less' : 'Read More'}
           </button>
         )}

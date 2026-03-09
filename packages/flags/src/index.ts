@@ -16,6 +16,7 @@ let overrides: Flags = {
   DATA_MANAGER_ROLE_ENABLED: false,
   PROJECT_WORKSPACE: false,
   PROJECT_AIMS: false,
+  PROJECT_MILESTONES: false,
 };
 
 const envDefaults: Record<string, boolean> = {

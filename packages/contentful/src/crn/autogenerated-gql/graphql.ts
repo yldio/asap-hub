@@ -35,6 +35,105 @@ export type Scalars = {
   Quality: any;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/aims) */
+export type Aims = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    description?: Maybe<Scalars['String']>;
+    linkedFrom?: Maybe<AimsLinkingCollections>;
+    milestonesCollection?: Maybe<AimsMilestonesCollection>;
+    sys: Sys;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/aims) */
+export type AimsDescriptionArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/aims) */
+export type AimsLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/aims) */
+export type AimsMilestonesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AimsMilestonesCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<MilestonesFilter>;
+};
+
+export type AimsCollection = {
+  items: Array<Maybe<Aims>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type AimsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<AimsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<AimsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  milestones?: InputMaybe<CfMilestonesNestedFilter>;
+  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type AimsLinkingCollections = {
+  entryCollection?: Maybe<EntryCollection>;
+};
+
+export type AimsLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AimsMilestonesCollection = {
+  items: Array<Maybe<Milestones>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum AimsMilestonesCollectionOrder {
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AimsOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements) */
 export type Announcements = Entry &
   _Node & {
@@ -6895,21 +6994,14 @@ export type Milestones = Entry &
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
     description?: Maybe<Scalars['String']>;
-    externalLink?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<MilestonesLinkingCollections>;
+    relatedArticlesCollection?: Maybe<MilestonesRelatedArticlesCollection>;
     status?: Maybe<Scalars['String']>;
     sys: Sys;
-    title?: Maybe<Scalars['String']>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
 export type MilestonesDescriptionArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
-export type MilestonesExternalLinkArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -6920,13 +7012,20 @@ export type MilestonesLinkedFromArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
-export type MilestonesStatusArgs = {
+export type MilestonesRelatedArticlesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<MilestonesRelatedArticlesCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchOutputsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
-export type MilestonesTitleArgs = {
+export type MilestonesStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -6949,13 +7048,8 @@ export type MilestonesFilter = {
   description_not?: InputMaybe<Scalars['String']>;
   description_not_contains?: InputMaybe<Scalars['String']>;
   description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  externalLink?: InputMaybe<Scalars['String']>;
-  externalLink_contains?: InputMaybe<Scalars['String']>;
-  externalLink_exists?: InputMaybe<Scalars['Boolean']>;
-  externalLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  externalLink_not?: InputMaybe<Scalars['String']>;
-  externalLink_not_contains?: InputMaybe<Scalars['String']>;
-  externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  relatedArticles?: InputMaybe<CfResearchOutputsNestedFilter>;
+  relatedArticlesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   status?: InputMaybe<Scalars['String']>;
   status_contains?: InputMaybe<Scalars['String']>;
   status_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6964,18 +7058,23 @@ export type MilestonesFilter = {
   status_not_contains?: InputMaybe<Scalars['String']>;
   status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  title?: InputMaybe<Scalars['String']>;
-  title_contains?: InputMaybe<Scalars['String']>;
-  title_exists?: InputMaybe<Scalars['Boolean']>;
-  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  title_not?: InputMaybe<Scalars['String']>;
-  title_not_contains?: InputMaybe<Scalars['String']>;
-  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type MilestonesLinkingCollections = {
+  aimsCollection?: Maybe<AimsCollection>;
   entryCollection?: Maybe<EntryCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
+};
+
+export type MilestonesLinkingCollectionsAimsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<MilestonesLinkingCollectionsAimsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type MilestonesLinkingCollectionsEntryCollectionArgs = {
@@ -6996,6 +7095,17 @@ export type MilestonesLinkingCollectionsProjectsCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
+
+export enum MilestonesLinkingCollectionsAimsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export enum MilestonesLinkingCollectionsProjectsCollectionOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
@@ -7027,10 +7137,6 @@ export enum MilestonesLinkingCollectionsProjectsCollectionOrder {
 }
 
 export enum MilestonesOrder {
-  DescriptionAsc = 'description_ASC',
-  DescriptionDesc = 'description_DESC',
-  ExternalLinkAsc = 'externalLink_ASC',
-  ExternalLinkDesc = 'externalLink_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -7041,8 +7147,58 @@ export enum MilestonesOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type MilestonesRelatedArticlesCollection = {
+  items: Array<Maybe<ResearchOutputs>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum MilestonesRelatedArticlesCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
@@ -8081,10 +8237,6 @@ export type ProjectsMilestonesCollection = {
 };
 
 export enum ProjectsMilestonesCollectionOrder {
-  DescriptionAsc = 'description_ASC',
-  DescriptionDesc = 'description_DESC',
-  ExternalLinkAsc = 'externalLink_ASC',
-  ExternalLinkDesc = 'externalLink_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -8095,8 +8247,6 @@ export enum ProjectsMilestonesCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TitleAsc = 'title_ASC',
-  TitleDesc = 'title_DESC',
 }
 
 export enum ProjectsOrder {
@@ -8177,6 +8327,8 @@ export enum ProjectsToolsCollectionOrder {
 export type Query = {
   _node?: Maybe<_Node>;
   _nodes: Array<Maybe<_Node>>;
+  aims?: Maybe<Aims>;
+  aimsCollection?: Maybe<AimsCollection>;
   announcements?: Maybe<Announcements>;
   announcementsCollection?: Maybe<AnnouncementsCollection>;
   asset?: Maybe<Asset>;
@@ -8290,6 +8442,23 @@ export type Query_NodesArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryAimsArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryAimsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AimsOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AimsFilter>;
 };
 
 export type QueryAnnouncementsArgs = {
@@ -10149,6 +10318,7 @@ export enum ResearchOutputsLabsCollectionOrder {
 export type ResearchOutputsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  milestonesCollection?: Maybe<MilestonesCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
   supplementGrantCollection?: Maybe<SupplementGrantCollection>;
@@ -10168,6 +10338,19 @@ export type ResearchOutputsLinkingCollectionsManuscriptsCollectionArgs = {
   order?: InputMaybe<
     Array<
       InputMaybe<ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder>
+    >
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ResearchOutputsLinkingCollectionsMilestonesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResearchOutputsLinkingCollectionsMilestonesCollectionOrder>
     >
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -10243,6 +10426,19 @@ export enum ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder {
   TitleDesc = 'title_DESC',
   UrlAsc = 'url_ASC',
   UrlDesc = 'url_DESC',
+}
+
+export enum ResearchOutputsLinkingCollectionsMilestonesCollectionOrder {
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
 export enum ResearchOutputsLinkingCollectionsProjectsCollectionOrder {
@@ -15753,13 +15949,7 @@ export type CfMilestonesNestedFilter = {
   description_not?: InputMaybe<Scalars['String']>;
   description_not_contains?: InputMaybe<Scalars['String']>;
   description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  externalLink?: InputMaybe<Scalars['String']>;
-  externalLink_contains?: InputMaybe<Scalars['String']>;
-  externalLink_exists?: InputMaybe<Scalars['Boolean']>;
-  externalLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  externalLink_not?: InputMaybe<Scalars['String']>;
-  externalLink_not_contains?: InputMaybe<Scalars['String']>;
-  externalLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  relatedArticlesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   status?: InputMaybe<Scalars['String']>;
   status_contains?: InputMaybe<Scalars['String']>;
   status_exists?: InputMaybe<Scalars['Boolean']>;
@@ -15768,13 +15958,6 @@ export type CfMilestonesNestedFilter = {
   status_not_contains?: InputMaybe<Scalars['String']>;
   status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  title?: InputMaybe<Scalars['String']>;
-  title_contains?: InputMaybe<Scalars['String']>;
-  title_exists?: InputMaybe<Scalars['Boolean']>;
-  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  title_not?: InputMaybe<Scalars['String']>;
-  title_not_contains?: InputMaybe<Scalars['String']>;
-  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CfNewsNestedFilter = {
@@ -17667,6 +17850,9 @@ export type FetchDashboardQuery = {
                       entries: {
                         inline: Array<
                           Maybe<
+                            | ({ __typename: 'Aims' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Announcements' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -17852,6 +18038,9 @@ export type FetchDashboardQuery = {
                       entries: {
                         inline: Array<
                           Maybe<
+                            | ({ __typename: 'Aims' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Announcements' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -18063,6 +18252,7 @@ export type FetchDiscoverQuery = {
               entries: {
                 inline: Array<
                   Maybe<
+                    | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Announcements' } & {
                         sys: Pick<Sys, 'id'>;
                       })
@@ -18397,6 +18587,7 @@ export type EventsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -18485,6 +18676,7 @@ export type EventsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -18573,6 +18765,7 @@ export type EventsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -18778,6 +18971,7 @@ export type FetchEventByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -18882,6 +19076,7 @@ export type FetchEventByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -18986,6 +19181,7 @@ export type FetchEventByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -19222,6 +19418,7 @@ export type FetchEventsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Announcements' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -19372,6 +19569,7 @@ export type FetchEventsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Announcements' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -19522,6 +19720,7 @@ export type FetchEventsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Announcements' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -19823,6 +20022,9 @@ export type FetchEventsByUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Aims' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Announcements' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -19994,6 +20196,9 @@ export type FetchEventsByUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Aims' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Announcements' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -20165,6 +20370,9 @@ export type FetchEventsByUserIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Aims' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Announcements' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -20512,6 +20720,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Aims' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Announcements' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -20683,6 +20894,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Aims' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Announcements' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -20854,6 +21068,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Aims' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Announcements' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -21201,6 +21418,9 @@ export type FetchEventsByTeamIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Aims' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Announcements' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -21372,6 +21592,9 @@ export type FetchEventsByTeamIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Aims' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Announcements' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -21543,6 +21766,9 @@ export type FetchEventsByTeamIdQuery = {
                               entries: {
                                 inline: Array<
                                   Maybe<
+                                    | ({ __typename: 'Aims' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Announcements' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -23054,6 +23280,7 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                     entries: {
                       inline: Array<
                         Maybe<
+                          | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                           | ({ __typename: 'Announcements' } & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -24215,6 +24442,7 @@ export type NewsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -24318,6 +24546,7 @@ export type FetchNewsByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -24452,6 +24681,7 @@ export type FetchNewsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Announcements' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -24617,6 +24847,7 @@ export type PageContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -24718,6 +24949,7 @@ export type FetchPagesQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Announcements' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -24912,15 +25144,6 @@ export type ProjectsContentDataFragment = Pick<
       >
     >;
   }>;
-  milestonesCollection?: Maybe<
-    Pick<ProjectsMilestonesCollection, 'total'> & {
-      items: Array<
-        Maybe<
-          Pick<Milestones, 'description' | 'status'> & { sys: Pick<Sys, 'id'> }
-        >
-      >;
-    }
-  >;
   membersCollection?: Maybe<
     Pick<ProjectsMembersCollection, 'total'> & {
       items: Array<
@@ -25017,17 +25240,6 @@ export type FetchProjectsQuery = {
                 >
               >;
             }>;
-            milestonesCollection?: Maybe<
-              Pick<ProjectsMilestonesCollection, 'total'> & {
-                items: Array<
-                  Maybe<
-                    Pick<Milestones, 'description' | 'status'> & {
-                      sys: Pick<Sys, 'id'>;
-                    }
-                  >
-                >;
-              }
-            >;
             membersCollection?: Maybe<
               Pick<ProjectsMembersCollection, 'total'> & {
                 items: Array<
@@ -25120,17 +25332,6 @@ export type FetchProjectByIdQuery = {
           >
         >;
       }>;
-      milestonesCollection?: Maybe<
-        Pick<ProjectsMilestonesCollection, 'total'> & {
-          items: Array<
-            Maybe<
-              Pick<Milestones, 'description' | 'status'> & {
-                sys: Pick<Sys, 'id'>;
-              }
-            >
-          >;
-        }
-      >;
       membersCollection?: Maybe<
         Pick<ProjectsMembersCollection, 'total'> & {
           items: Array<
@@ -25236,17 +25437,6 @@ export type FetchProjectsByTeamIdQuery = {
                             >
                           >;
                         }>;
-                        milestonesCollection?: Maybe<
-                          Pick<ProjectsMilestonesCollection, 'total'> & {
-                            items: Array<
-                              Maybe<
-                                Pick<Milestones, 'description' | 'status'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >
-                            >;
-                          }
-                        >;
                         membersCollection?: Maybe<
                           Pick<ProjectsMembersCollection, 'total'> & {
                             items: Array<
@@ -25365,17 +25555,6 @@ export type FetchProjectsByUserIdQuery = {
                             >
                           >;
                         }>;
-                        milestonesCollection?: Maybe<
-                          Pick<ProjectsMilestonesCollection, 'total'> & {
-                            items: Array<
-                              Maybe<
-                                Pick<Milestones, 'description' | 'status'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >
-                            >;
-                          }
-                        >;
                         membersCollection?: Maybe<
                           Pick<ProjectsMembersCollection, 'total'> & {
                             items: Array<
@@ -25486,17 +25665,6 @@ export type FetchProjectsByMembershipIdQuery = {
                     >
                   >;
                 }>;
-                milestonesCollection?: Maybe<
-                  Pick<ProjectsMilestonesCollection, 'total'> & {
-                    items: Array<
-                      Maybe<
-                        Pick<Milestones, 'description' | 'status'> & {
-                          sys: Pick<Sys, 'id'>;
-                        }
-                      >
-                    >;
-                  }
-                >;
                 membersCollection?: Maybe<
                   Pick<ProjectsMembersCollection, 'total'> & {
                     items: Array<
@@ -26078,6 +26246,7 @@ export type ResearchOutputsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -26337,6 +26506,7 @@ export type FetchResearchOutputByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -26628,6 +26798,7 @@ export type FetchResearchOutputsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Announcements' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -27450,6 +27621,7 @@ export type TutorialsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -27602,6 +27774,7 @@ export type FetchTutorialByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -27785,6 +27958,7 @@ export type FetchTutorialsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Announcements' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -29008,6 +29182,7 @@ export type WorkingGroupsContentFragment = Pick<
         entries: {
           inline: Array<
             Maybe<
+              | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -29195,6 +29370,7 @@ export type FetchWorkingGroupByIdQuery = {
             entries: {
               inline: Array<
                 Maybe<
+                  | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -29410,6 +29586,7 @@ export type FetchWorkingGroupsQuery = {
                   entries: {
                     inline: Array<
                       Maybe<
+                        | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Announcements' } & {
                             sys: Pick<Sys, 'id'>;
                           })
@@ -34560,53 +34737,6 @@ export const ProjectsContentDataFragmentDoc = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'milestonesCollection' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: { kind: 'IntValue', value: '20' },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'items' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'sys' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'description' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'status' },
-                      },
                     ],
                   },
                 },

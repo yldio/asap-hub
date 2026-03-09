@@ -4,7 +4,6 @@ import { rem } from '../pixels';
 import {
   ProfileExpertiseAndResources,
   ProjectDetailOverview,
-  ProjectMilestones,
   ProjectContributors,
 } from '../organisms';
 import { CtaCard } from '../molecules';
@@ -39,11 +38,6 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
           hideExpertiseAndResources
           tags={project.tags.map((tag) => ({ id: tag, name: tag }))}
         />
-      )}
-
-      {/* Milestones Section */}
-      {project.milestones && project.milestones.length > 0 && (
-        <ProjectMilestones milestones={project.milestones} />
       )}
 
       {/* Contributors Section */}

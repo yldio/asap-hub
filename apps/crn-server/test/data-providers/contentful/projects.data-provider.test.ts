@@ -1281,7 +1281,6 @@ describe('parseContentfulProjectDetail', () => {
       originalGrant: 'Grant',
       proposalId: null,
       supplementGrant: null,
-      milestones: [],
       teamDescription: null,
     });
 
@@ -1333,7 +1332,6 @@ describe('parseContentfulProjectDetail', () => {
       originalGrant: 'Grant',
       proposalId: null,
       supplementGrant: null,
-      milestones: [],
       teamDescription: null,
     });
 
@@ -1377,7 +1375,6 @@ describe('parseContentfulProjectDetail', () => {
       originalGrant: 'Grant',
       proposalId: null,
       supplementGrant: null,
-      milestones: [],
       teamDescription: null,
     });
 
@@ -1395,7 +1392,6 @@ describe('parseContentfulProjectDetail', () => {
       originalGrant: 'Grant',
       proposalId: null,
       supplementGrant: null,
-      milestones: [],
       teamDescription: null,
     });
 
@@ -1438,7 +1434,6 @@ describe('parseContentfulProjectDetail', () => {
       originalGrant: 'Grant',
       proposalId: null,
       supplementGrant: null,
-      milestones: [],
     });
 
     const result = parseContentfulProjectDetail(resourceItem);
@@ -1452,7 +1447,6 @@ describe('parseContentfulProjectDetail', () => {
       originalGrant: 'Grant',
       proposalId: null,
       supplementGrant: null,
-      milestones: [],
     });
 
     const result = parseContentfulProjectDetail(traineeItem);
@@ -1466,7 +1460,6 @@ describe('parseContentfulProjectDetail', () => {
       originalGrant: 'Grant',
       proposalId: null,
       supplementGrant: null,
-      milestones: [],
       teamDescription: null,
     });
 

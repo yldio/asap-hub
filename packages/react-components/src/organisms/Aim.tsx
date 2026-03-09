@@ -1,14 +1,17 @@
-import { Milestone as MilestoneType, MilestoneStatus } from '@asap-hub/model';
+import { Aim as AimType, AimStatus } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { FC, useState, useEffect, useRef } from 'react';
 import { Pill } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
-import { fern, lead, neutral1000, steel } from '../colors';
+import { lead, neutral1000, fern, info100, info500, steel } from '../colors';
+import { plusRectIcon, minusRectIcon } from '../icons';
 
-const milestoneRowStyles = css({
+export const AIM_COLUMN_GAP = 24;
+
+const aimRowStyles = css({
   display: 'grid',
-  gridTemplateColumns: '1fr 120px',
-  gap: rem(24),
+  gridTemplateColumns: '48px 1fr 120px',
+  gap: rem(AIM_COLUMN_GAP),
   paddingBottom: rem(20),
   borderBottom: `1px solid ${steel.rgb}`,
   marginBottom: rem(20),
@@ -21,6 +24,30 @@ const milestoneRowStyles = css({
     paddingBottom: 0,
     borderBottom: 'none',
   },
+});
+
+const aimNumberContainerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  alignSelf: 'start',
+  placeSelf: 'start',
+  justifyContent: 'center',
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    justifyContent: 'flex-start',
+  },
+});
+
+const aimNumberBadgeStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: info100.rgb,
+  color: info500.rgb,
+  fontSize: rem(14),
+  borderRadius: rem(12),
+  height: rem(24),
+  padding: `0 ${rem(8)}`,
+  whiteSpace: 'nowrap',
 });
 
 const descriptionContainerStyles = css({
@@ -72,6 +99,31 @@ const readMoreButtonStyles = css({
   },
 });
 
+const articlesButtonStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+  marginTop: rem(16),
+  color: lead.rgb,
+  fontSize: rem(17),
+  background: 'none',
+  border: 'none',
+  padding: 0,
+  cursor: 'pointer',
+  '&:hover': {
+    textDecoration: 'underline',
+  },
+});
+
+const articleIconStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  '& svg': {
+    width: rem(20),
+    height: rem(20),
+  },
+});
+
 const statusContainerStyles = css({
   display: 'flex',
   alignItems: 'flex-start',
@@ -83,8 +135,8 @@ const statusContainerStyles = css({
   },
 });
 
-export const getMilestoneStatusAccent = (
-  status: MilestoneStatus,
+export const getAimStatusAccent = (
+  status: AimStatus,
 ): 'success' | 'info' | 'neutral' | 'warning' | 'error' | 'default' => {
   switch (status) {
     case 'Complete':
@@ -100,34 +152,31 @@ export const getMilestoneStatusAccent = (
   }
 };
 
-type MilestoneProps = {
-  milestone: MilestoneType;
+type AimProps = {
+  aim: AimType;
 };
 
-const Milestone: FC<MilestoneProps> = ({ milestone }) => {
+const Aim: FC<AimProps> = ({ aim }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [needsExpansion, setNeedsExpansion] = useState(false);
+  const [articlesExpanded, setArticlesExpanded] = useState(false);
   const descriptionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkTruncation = () => {
       if (descriptionRef.current) {
-        // Temporarily force collapsed state to check if truncation occurs
         const wasExpanded = isExpanded;
         if (wasExpanded) {
-          // Temporarily collapse to check
           descriptionRef.current.style.display = '-webkit-box';
           descriptionRef.current.style.webkitLineClamp = '2';
           descriptionRef.current.style.webkitBoxOrient = 'vertical';
           descriptionRef.current.style.overflow = 'hidden';
         }
 
-        // Check if content is truncated by comparing scroll height with client height
         const isTruncated =
           descriptionRef.current.scrollHeight >
           descriptionRef.current.clientHeight;
 
-        // Restore expanded state if needed
         if (wasExpanded) {
           descriptionRef.current.style.display = '';
           descriptionRef.current.style.webkitLineClamp = '';
@@ -139,24 +188,23 @@ const Milestone: FC<MilestoneProps> = ({ milestone }) => {
       }
     };
 
-    // Check on mount and when description changes
     checkTruncation();
-
-    // Add resize listener to check when window is resized
     window.addEventListener('resize', checkTruncation);
-
-    // Cleanup
     return () => {
       window.removeEventListener('resize', checkTruncation);
     };
-  }, [milestone.description, isExpanded]);
+  }, [aim.description, isExpanded]);
 
   return (
-    <div css={milestoneRowStyles}>
+    <div css={aimRowStyles}>
+      <div css={aimNumberContainerStyles}>
+        <div css={mobileLabelStyles}>Aim</div>
+        <span css={aimNumberBadgeStyles}>#{aim.order}</span>
+      </div>
       <div css={descriptionContainerStyles}>
         <div css={mobileLabelStyles}>Description</div>
         <div ref={descriptionRef} css={descriptionStyles(isExpanded)}>
-          {milestone.description}
+          {aim.description}
         </div>
         {needsExpansion && (
           <button
@@ -167,15 +215,27 @@ const Milestone: FC<MilestoneProps> = ({ milestone }) => {
             {isExpanded ? 'Read Less' : 'Read More'}
           </button>
         )}
+        {aim.articleCount > 0 && (
+          <button
+            css={articlesButtonStyles}
+            onClick={() => setArticlesExpanded(!articlesExpanded)}
+            type="button"
+          >
+            <span css={articleIconStyles}>
+              {articlesExpanded ? minusRectIcon : plusRectIcon}
+            </span>
+            <span>Articles ({aim.articleCount})</span>
+          </button>
+        )}
       </div>
       <div css={statusContainerStyles}>
         <div css={mobileLabelStyles}>Status</div>
-        <Pill accent={getMilestoneStatusAccent(milestone.status)} noMargin>
-          {milestone.status}
+        <Pill accent={getAimStatusAccent(aim.status)} noMargin>
+          {aim.status}
         </Pill>
       </div>
     </div>
   );
 };
 
-export default Milestone;
+export default Aim;

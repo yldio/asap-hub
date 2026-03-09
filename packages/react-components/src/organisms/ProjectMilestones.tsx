@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { Headline3, Card, Button } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
-import { lead, neutral1000 } from '../colors';
+import { lead, neutral1000, steel } from '../colors';
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)} ${rem(16)} ${rem(24)}`,
@@ -49,7 +49,7 @@ const viewMoreContainerStyles = (hasMore: boolean) =>
   css({
     marginTop: hasMore ? rem(32) : 0,
     paddingTop: rem(16),
-    borderTop: hasMore ? `1px solid #E9ECEF` : 'none',
+    borderTop: hasMore ? `1px solid ${steel.rgb}` : 'none',
     textAlign: 'center',
   });
 

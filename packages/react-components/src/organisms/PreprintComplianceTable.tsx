@@ -1,7 +1,7 @@
 import {
   PreprintComplianceResponse,
-  // PreprintComplianceSortingDirection,
-  // SortPreprintCompliance,
+  PreprintComplianceSortingDirection,
+  SortPreprintCompliance,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -12,12 +12,12 @@ import { Card, Link } from '../atoms';
 import { borderRadius } from '../card';
 import { charcoal, lead, neutral200, steel } from '../colors';
 import {
+  AlphabeticalSortingIcon,
   InactiveBadgeIcon,
-  // AlphabeticalSortingIcon,
-  // NumericalSortingIcon,
+  NumericalSortingIcon,
 } from '../icons';
 import { rem } from '../pixels';
-import { getPerformanceMoodIcon } from '../utils/analytics';
+import { getPerformanceMoodIcon } from '../utils';
 import StaticPerformanceCard from './StaticPerformanceCard';
 
 const container = css({
@@ -93,134 +93,170 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
+const buttonStyles = css({
+  width: rem(24),
+  margin: 0,
+  padding: 0,
+  border: 'none',
+  backgroundColor: 'unset',
+  cursor: 'pointer',
+  alignSelf: 'center',
+});
+
 type PreprintComplianceTableProps = ComponentProps<typeof PageControls> & {
   data: PreprintComplianceResponse[];
-  // setSort: React.Dispatch<React.SetStateAction<SortPreprintCompliance>>; // TODO: add these back post MVP
-  // setSortingDirection: React.Dispatch<
-  //   React.SetStateAction<PreprintComplianceSortingDirection>
-  // >;
-  // sort: SortPreprintCompliance;
-  // sortingDirection: PreprintComplianceSortingDirection;
+  setSort: React.Dispatch<React.SetStateAction<SortPreprintCompliance>>;
+  sort: SortPreprintCompliance;
+  sortingDirection: PreprintComplianceSortingDirection;
 };
 
 const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
   data,
-  // sort, // TODO: add these back post MVP
-  // setSort,
-  // sortingDirection,
-  // setSortingDirection,
+  sort,
+  setSort,
+  sortingDirection,
   ...pageControlProps
-}) => (
-  // const handleSort = (sortKey: SortPreprintCompliance) => {
-  //   const newDirection =
-  //     sort === sortKey && sortingDirection === 'asc' ? 'desc' : 'asc';
-  //   setSortingDirection(newDirection);
-  //   setSort(sortKey);
-  // };
+}) => {
+  const isTeamSortActive = sort.includes('team');
+  const isPreprintsSortActive = sort.includes('number_of_preprints');
+  const isPostedPriorSortActive = sort.includes('posted_prior');
 
-  // const getSortIcon = (sortKey: SortPreprintCompliance) => {
-  //   const isActive = sort === sortKey;
+  const createSortHandler =
+    (
+      sortKeyFragment: string,
+      directionKey: keyof PreprintComplianceSortingDirection,
+      defaultDirection: 'asc' | 'desc',
+    ) =>
+    () => {
+      const isActive = sort.includes(sortKeyFragment);
+      const newDirection = isActive
+        ? sortingDirection[directionKey] === 'asc'
+          ? 'desc'
+          : 'asc'
+        : defaultDirection;
+      setSort(`${sortKeyFragment}_${newDirection}` as SortPreprintCompliance);
+    };
 
-  //   if (sortKey.startsWith('team_')) {
-  //     return <AlphabeticalSortingIcon active={isActive} description="" />;
-  //   }
+  const handleTeamSort = createSortHandler('team', 'team', 'asc');
+  const handleNumberOfPreprintsSort = createSortHandler(
+    'number_of_preprints',
+    'numberOfPreprints',
+    'desc',
+  );
+  const handlePostedPriorSort = createSortHandler(
+    'posted_prior',
+    'postedPriorPercentage',
+    'desc',
+  );
 
-  //   return <NumericalSortingIcon active={isActive} description="" />;
-  // };
-
-  <>
-    <StaticPerformanceCard />
-    <Card padding={false}>
-      <div css={container}>
-        <table
-          css={{
-            width: '100%',
-            tableLayout: 'fixed',
-            borderCollapse: 'collapse',
-          }}
-        >
-          <colgroup>
-            <col css={{ width: '33.33%' }} />
-            <col css={{ width: '33.33%' }} />
-            <col css={{ width: '33.33%' }} />
-          </colgroup>
-          <thead>
-            <tr>
-              <th css={titleStyles} className={'team'}>
-                <span
-                  css={headerStyles}
-                  // onClick={() => handleSort('team_asc')}
-                >
-                  Team
-                  {/* getSortIcon('team_asc') */}
-                </span>
-              </th>
-              <th css={titleStyles} className={'preprints'}>
-                <span
-                  css={headerStyles}
-                  // onClick={() => handleSort('preprints_asc')}
-                >
-                  Number of Preprints
-                  {/* getSortIcon('preprints_asc') */}
-                </span>
-              </th>
-              <th css={titleStyles}>
-                <span
-                  css={headerStyles}
-                  // onClick={() => handleSort('posted_prior_asc')}
-                >
-                  Posted Prior to Journal Submission
-                  {/* getSortIcon('posted_prior_asc') */}
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row, index) => (
-              <tr
-                key={row.teamId || `${row.teamName}-${index}`}
-                css={rowStyles}
-              >
-                <td className={'team'}>
-                  <p css={iconStyles}>
-                    <span>
-                      <Link
-                        href={
-                          network({}).teams({}).team({ teamId: row.teamId }).$
+  return (
+    <>
+      <StaticPerformanceCard />
+      <Card padding={false}>
+        <div css={container}>
+          <table
+            css={{
+              width: '100%',
+              tableLayout: 'fixed',
+              borderCollapse: 'collapse',
+            }}
+          >
+            <colgroup>
+              <col css={{ width: '33.33%' }} />
+              <col css={{ width: '33.33%' }} />
+              <col css={{ width: '33.33%' }} />
+            </colgroup>
+            <thead>
+              <tr>
+                <th css={titleStyles} className={'team'}>
+                  <span css={headerStyles}>
+                    Team
+                    <button css={buttonStyles} onClick={handleTeamSort}>
+                      <AlphabeticalSortingIcon
+                        active={isTeamSortActive}
+                        ascending={sortingDirection.team === 'asc'}
+                      />
+                    </button>
+                  </span>
+                </th>
+                <th css={titleStyles} className={'preprints'}>
+                  <span css={headerStyles}>
+                    Number of Preprints
+                    <button
+                      css={buttonStyles}
+                      onClick={handleNumberOfPreprintsSort}
+                    >
+                      <NumericalSortingIcon
+                        active={isPreprintsSortActive}
+                        ascending={sortingDirection.numberOfPreprints === 'asc'}
+                        description={'Number of Preprints'}
+                      />
+                    </button>
+                  </span>
+                </th>
+                <th css={titleStyles}>
+                  <span css={headerStyles}>
+                    Posted Prior to Journal Submission
+                    <button css={buttonStyles} onClick={handlePostedPriorSort}>
+                      <NumericalSortingIcon
+                        active={isPostedPriorSortActive}
+                        ascending={
+                          sortingDirection.postedPriorPercentage === 'asc'
                         }
-                      >
-                        {row.teamName}
-                      </Link>
-                    </span>
-                    {row.isTeamInactive && <InactiveBadgeIcon />}
-                  </p>
-                </td>
-                <td className={'preprints'}>
-                  <p>{row.numberOfPreprints}</p>
-                </td>
-                <td>
-                  <p css={iconStyles}>
-                    <span css={valueStyles}>
-                      {row.postedPriorPercentage === null
-                        ? 'N/A'
-                        : `${row.postedPriorPercentage}%`}
-                    </span>
-                    {getPerformanceMoodIcon(
-                      row.postedPriorPercentage,
-                      row.postedPriorPercentage === null,
-                    )}
-                  </p>
-                </td>
+                        description={'Posted Prior to Journal Submission'}
+                      />
+                    </button>
+                  </span>
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Card>
-    <section css={pageControlsStyles}>
-      <PageControls {...pageControlProps} />
-    </section>
-  </>
-);
+            </thead>
+            <tbody>
+              {data.map((row, index) => (
+                <tr
+                  key={row.teamId || `${row.teamName}-${index}`}
+                  css={rowStyles}
+                >
+                  <td className={'team'}>
+                    <p css={iconStyles}>
+                      <span>
+                        <Link
+                          href={
+                            network({}).teams({}).team({ teamId: row.teamId }).$
+                          }
+                        >
+                          {row.teamName}
+                        </Link>
+                      </span>
+                      {row.isTeamInactive && <InactiveBadgeIcon />}
+                    </p>
+                  </td>
+                  <td className={'preprints'}>
+                    <p>{row.numberOfPreprints}</p>
+                  </td>
+                  <td>
+                    <p css={iconStyles}>
+                      <span css={valueStyles}>
+                        {row.postedPriorPercentage === null
+                          ? 'N/A'
+                          : `${row.postedPriorPercentage}%`}
+                      </span>
+                      {getPerformanceMoodIcon(
+                        row.postedPriorPercentage,
+                        row.postedPriorPercentage === null,
+                      )}
+                    </p>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+      <section css={pageControlsStyles}>
+        <PageControls {...pageControlProps} />
+      </section>
+    </>
+  );
+};
 
 export default PreprintComplianceTable;

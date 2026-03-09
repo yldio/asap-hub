@@ -58,12 +58,15 @@ type GrantType = 'original' | 'supplement';
 type ProjectDetailMilestonesProps = {
   readonly milestones: ReadonlyArray<MilestoneType>;
   readonly seeAimsHref?: string;
-} & ComponentProps<typeof PageControls>;
+  // } & ComponentProps<typeof PageControls>; // TODO: Add this back when we have actual page controls props
+  readonly pageControlsProps?: ComponentProps<typeof PageControls>;
+};
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   milestones,
   seeAimsHref,
-  ...pageControlProps
+  // ...pageControlProps // TODO: Add this back when we have actual page controls props
+  pageControlsProps,
 }) => {
   const hasMilestones = milestones.length > 0;
   const [selectedGrantType, setSelectedGrantType] =
@@ -122,11 +125,11 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
         )}
       </div>
 
-      {hasMilestones && (
+      {hasMilestones && pageControlsProps && (
         <>
           <ProjectMilestones milestones={milestones} />
           <section css={pageControlsStyles}>
-            <PageControls {...pageControlProps} />
+            <PageControls {...pageControlsProps} />
           </section>
         </>
       )}

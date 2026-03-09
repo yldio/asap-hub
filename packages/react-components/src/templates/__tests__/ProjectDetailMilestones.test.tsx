@@ -24,7 +24,7 @@ const mockMilestones: Milestone[] = [
 
 describe('ProjectDetailMilestones', () => {
   it('renders empty state when there are no milestones', () => {
-    render(<ProjectDetailMilestones milestones={[]} {...pageControlsProps} />);
+    render(<ProjectDetailMilestones milestones={[]} />);
 
     expect(screen.getByText('Milestones')).toBeInTheDocument();
     expect(
@@ -51,7 +51,7 @@ describe('ProjectDetailMilestones', () => {
     render(
       <ProjectDetailMilestones
         milestones={mockMilestones}
-        {...pageControlsProps}
+        pageControlsProps={pageControlsProps}
       />,
     );
 

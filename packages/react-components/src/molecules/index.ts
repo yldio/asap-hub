@@ -1,6 +1,7 @@
 export { default as Accordion } from './Accordion';
 export { default as AgreeToTerms } from './AgreeToTerms';
 export { default as AnalyticsControls } from './AnalyticsControls';
+export { default as ArticlesList } from './ArticlesList';
 export { default as AssignedUsersAvatarList } from './AssignedUsersAvatarList';
 export { default as AssociationList } from './AssociationList';
 export { default as BackLink } from './BackLink';
@@ -79,6 +80,7 @@ export { default as UserProfilePersonalText } from './UserProfilePersonalText';
 export { default as UsersList } from './UsersList';
 export { default as UtilityBar } from './UtilityBar';
 export { default as WorkingGroupsList } from './WorkingGroupsList';
+export type { ArticleItem } from './ArticlesList';
 export type { ItemType } from './DropdownButton';
 export type { ReminderEntity } from './ReminderItem';
 export type { StatusType } from './StatusButton';

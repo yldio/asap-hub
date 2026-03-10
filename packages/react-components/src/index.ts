@@ -64,6 +64,7 @@ export * from './date';
 export { MessageLayout, WelcomeMessage } from './messages';
 export {
   Accordion,
+  ArticlesList,
   AssignedUsersAvatarList,
   AssociationList,
   BackLink,
@@ -346,7 +347,12 @@ export {
 } from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant, SwitchProps } from './atoms';
-export type { ItemType, StatusType, ReminderEntity } from './molecules';
+export type {
+  ArticleItem,
+  ItemType,
+  StatusType,
+  ReminderEntity,
+} from './molecules';
 export type {
   Association,
   AuthorOption,

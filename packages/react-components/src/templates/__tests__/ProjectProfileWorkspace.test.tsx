@@ -221,12 +221,25 @@ describe('ProjectProfileWorkspace', () => {
       });
 
       it('renders manuscript cards when manuscripts exist', () => {
+        jest.spyOn(console, 'error').mockImplementation();
         const { getByTestId } = renderWithRouter(
           <ProjectProfileWorkspace
             {...defaultProps}
             isTeamBased={false}
             manuscripts={['manuscript-1']}
             targetManuscriptId="manuscript-1"
+          />,
+        );
+        expect(getByTestId('project-manuscripts')).toBeInTheDocument();
+      });
+
+      it('renders manuscript cards without targetManuscriptId', () => {
+        jest.spyOn(console, 'error').mockImplementation();
+        const { getByTestId } = renderWithRouter(
+          <ProjectProfileWorkspace
+            {...defaultProps}
+            isTeamBased={false}
+            manuscripts={['manuscript-1']}
           />,
         );
         expect(getByTestId('project-manuscripts')).toBeInTheDocument();

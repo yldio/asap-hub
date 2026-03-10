@@ -1,15 +1,16 @@
 import type { ProjectDetail, ProjectType } from '@asap-hub/model';
 import { projects } from '@asap-hub/routing';
 
-const getProjectRoute = (projectId: string) =>
-  projects({}).discoveryProjects({}).discoveryProject({ projectId });
-
-type ProjectRoute = ReturnType<typeof getProjectRoute>;
-
 export type ProjectDetailConfig = {
   projectType: ProjectType;
   projectTypeKey: 'discovery' | 'resource' | 'trainee';
-  getRoute: (projectId: string) => ProjectRoute;
+  getRoute: (
+    projectId: string,
+  ) => ReturnType<
+    ReturnType<
+      ReturnType<typeof projects>['discoveryProjects']
+    >['discoveryProject']
+  >;
   getIsTeamBased: (projectDetail: ProjectDetail) => boolean;
   getContactName: (projectDetail: ProjectDetail) => string | undefined;
 };

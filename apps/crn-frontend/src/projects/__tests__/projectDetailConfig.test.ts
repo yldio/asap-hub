@@ -20,6 +20,23 @@ const baseProject = {
   contactEmail: 'jane@example.com',
 };
 
+describe('getRoute helpers', () => {
+  it('discoveryConfig.getRoute returns a route object', () => {
+    const route = discoveryConfig.getRoute('p-1');
+    expect(route).toBeDefined();
+  });
+
+  it('resourceConfig.getRoute returns a route object', () => {
+    const route = resourceConfig.getRoute('p-1');
+    expect(route).toBeDefined();
+  });
+
+  it('traineeConfig.getRoute returns a route object', () => {
+    const route = traineeConfig.getRoute('p-1');
+    expect(route).toBeDefined();
+  });
+});
+
 describe('discoveryConfig', () => {
   const discoveryProject: DiscoveryProjectDetail = {
     ...baseProject,

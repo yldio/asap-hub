@@ -103,14 +103,16 @@ const ProjectAims: FC<ProjectAimsProps> = ({
     <Card padding={false} title="Aims">
       <div css={contentStyles}>
         <Headline3 noMargin>Aims</Headline3>
-        <Paragraph noMargin accent="lead" styles={css({ marginTop: rem(24) })}>
+        <Paragraph
+          noMargin
+          accent="lead"
+          styles={css({ marginTop: rem(24), marginBottom: rem(32) })}
+        >
           View the core research objectives of this project. Progress toward
           each aim is tracked through related milestones, and associated
           articles are displayed as they are linked through those milestones.{' '}
           <Link href="#">See milestones</Link>
         </Paragraph>
-
-        <div style={{ marginTop: rem(32) }} />
 
         {isTabbedView && (
           <div css={tabContainerStyles}>

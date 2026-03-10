@@ -83,6 +83,12 @@ const AimsList: FC<{
   );
 };
 
+// The `TabNav` component comes with padding and margin in its inner components,
+// so we use a smaller margin when we render it.
+const MULTI_TAB_MARGIN = 12;
+// If we don't render the `TabNav`, this is the margin we want to use, both cases should look the same.
+const SINGLE_TAB_MARGIN = 32;
+
 const ProjectAims: FC<ProjectAimsProps> = ({
   aims,
   initialDisplayCount = 4,
@@ -106,7 +112,12 @@ const ProjectAims: FC<ProjectAimsProps> = ({
         <Paragraph
           noMargin
           accent="lead"
-          styles={css({ marginTop: rem(24), marginBottom: rem(32) })}
+          styles={css({
+            marginTop: rem(24),
+            marginBottom: rem(
+              isTabbedView ? MULTI_TAB_MARGIN : SINGLE_TAB_MARGIN,
+            ),
+          })}
         >
           View the core research objectives of this project. Progress toward
           each aim is tracked through related milestones, and associated

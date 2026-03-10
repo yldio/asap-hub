@@ -90,11 +90,17 @@ export const projectsState = selectorFamily<
     },
 });
 
+export const refreshProjectState = atomFamily<number, string>({
+  key: 'refreshProject',
+  default: 0,
+});
+
 const fetchProjectState = selectorFamily<ProjectDetail | undefined, string>({
   key: 'fetchProject',
   get:
     (id) =>
     async ({ get }) => {
+      get(refreshProjectState(id));
       const authorization = get(authorizationState);
       return getProject(id, authorization);
     },

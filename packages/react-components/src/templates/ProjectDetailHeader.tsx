@@ -1,4 +1,5 @@
 import { ProjectDetail, ProjectMember } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Display, Pill, Link, CopyButton, TabLink } from '../atoms';
@@ -128,6 +129,7 @@ const toastContainerStyles = css({
 type ProjectDetailHeaderProps = ProjectDetail & {
   readonly pointOfContactEmail?: string;
   readonly aboutHref: string;
+  readonly workspaceHref?: string;
 };
 
 export const getTeamIcon = (project: ProjectDetail) => {
@@ -149,7 +151,8 @@ export const getTeamIcon = (project: ProjectDetail) => {
 type MemberWithHref = ProjectMember & { href: string };
 
 const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
-  const { pointOfContactEmail, aboutHref } = project;
+  const { pointOfContactEmail, aboutHref, workspaceHref } = project;
+  const { isEnabled } = useFlags();
 
   const membersWithHref =
     'members' in project
@@ -175,6 +178,9 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
           nav={
             <TabNav>
               <TabLink href={aboutHref}>About</TabLink>
+              {isEnabled('PROJECT_WORKSPACE') && workspaceHref ? (
+                <TabLink href={workspaceHref}>Workspace</TabLink>
+              ) : null}
             </TabNav>
           }
         >

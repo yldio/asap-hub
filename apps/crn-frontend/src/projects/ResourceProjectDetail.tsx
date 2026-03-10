@@ -1,57 +1,6 @@
-import { FC } from 'react';
-import { Navigate, Route, Routes, useParams } from 'react-router';
-import { Frame } from '@asap-hub/frontend-utils';
-import {
-  ProjectDetailPage,
-  ProjectDetailAbout,
-  NotFoundPage,
-} from '@asap-hub/react-components';
-import { projects } from '@asap-hub/routing';
-import { useProjectById } from './state';
+import ProjectDetail from './ProjectDetail';
+import { resourceConfig } from './projectDetailConfig';
 
-type ResourceProjectDetailParams = {
-  projectId: string;
-};
-
-const ResourceProjectDetail: FC<Record<string, never>> = () => {
-  const { projectId } = useParams<ResourceProjectDetailParams>();
-  const projectDetail = useProjectById(projectId ?? '');
-
-  if (!projectDetail) {
-    return <NotFoundPage />;
-  }
-
-  // Ensure we're working with a ResourceProjectDetail
-  if (projectDetail.projectType !== 'Resource Project') {
-    return <NotFoundPage />;
-  }
-
-  const route = projects({})
-    .resourceProjects({})
-    .resourceProject({ projectId: projectId ?? '' });
-
-  return (
-    <Frame title={projectDetail?.title || ''}>
-      <ProjectDetailPage
-        {...projectDetail}
-        pointOfContactEmail={projectDetail.contactEmail || undefined}
-        aboutHref={route.about({}).$}
-      >
-        <Routes>
-          <Route
-            path="about"
-            element={
-              <ProjectDetailAbout
-                {...projectDetail}
-                pointOfContactEmail={projectDetail.contactEmail || undefined}
-              />
-            }
-          />
-          <Route index element={<Navigate to={route.about({}).$} replace />} />
-        </Routes>
-      </ProjectDetailPage>
-    </Frame>
-  );
-};
+const ResourceProjectDetail = () => <ProjectDetail config={resourceConfig} />;
 
 export default ResourceProjectDetail;

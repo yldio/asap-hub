@@ -21,6 +21,74 @@ directive @timeline(where: TimelineFilterInput!) on QUERY
 
 directive @typeIdentifier(contentTypeId: String) on OBJECT
 
+"""[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/aims)"""
+type Aims implements Entry & _Node {
+  _id: ID!
+  contentfulMetadata: ContentfulMetadata!
+  description(locale: String, useFallbackLocale: Boolean): String
+  linkedFrom(allowedLocales: [String]): AimsLinkingCollections
+  milestonesCollection(limit: Int = 100, locale: String, order: [AimsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MilestonesFilter): AimsMilestonesCollection
+  sys: Sys!
+}
+
+type AimsCollection {
+  items: [Aims]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+input AimsFilter {
+  AND: [AimsFilter]
+  OR: [AimsFilter]
+  contentfulMetadata: ContentfulMetadataFilter
+  description: String
+  description_contains: String
+  description_exists: Boolean
+  description_in: [String]
+  description_not: String
+  description_not_contains: String
+  description_not_in: [String]
+  milestones: cfMilestonesNestedFilter
+  milestonesCollection_exists: Boolean
+  sys: SysFilter
+}
+
+type AimsLinkingCollections {
+  entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+}
+
+type AimsMilestonesCollection {
+  items: [Milestones]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum AimsMilestonesCollectionOrder {
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum AimsOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/announcements)"""
 type Announcements implements Entry & _Node {
   _id: ID!
@@ -4779,11 +4847,10 @@ type Milestones implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
   description(locale: String, useFallbackLocale: Boolean): String
-  externalLink(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): MilestonesLinkingCollections
+  relatedArticlesCollection(limit: Int = 100, locale: String, order: [MilestonesRelatedArticlesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResearchOutputsFilter): MilestonesRelatedArticlesCollection
   status(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
-  title(locale: String, useFallbackLocale: Boolean): String
 }
 
 type MilestonesCollection {
@@ -4804,13 +4871,8 @@ input MilestonesFilter {
   description_not: String
   description_not_contains: String
   description_not_in: [String]
-  externalLink: String
-  externalLink_contains: String
-  externalLink_exists: Boolean
-  externalLink_in: [String]
-  externalLink_not: String
-  externalLink_not_contains: String
-  externalLink_not_in: [String]
+  relatedArticles: cfResearchOutputsNestedFilter
+  relatedArticlesCollection_exists: Boolean
   status: String
   status_contains: String
   status_exists: Boolean
@@ -4819,18 +4881,23 @@ input MilestonesFilter {
   status_not_contains: String
   status_not_in: [String]
   sys: SysFilter
-  title: String
-  title_contains: String
-  title_exists: Boolean
-  title_in: [String]
-  title_not: String
-  title_not_contains: String
-  title_not_in: [String]
 }
 
 type MilestonesLinkingCollections {
+  aimsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsAimsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): AimsCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
   projectsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+}
+
+enum MilestonesLinkingCollectionsAimsCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum MilestonesLinkingCollectionsProjectsCollectionOrder {
@@ -4863,10 +4930,6 @@ enum MilestonesLinkingCollectionsProjectsCollectionOrder {
 }
 
 enum MilestonesOrder {
-  description_ASC
-  description_DESC
-  externalLink_ASC
-  externalLink_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -4877,8 +4940,58 @@ enum MilestonesOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+type MilestonesRelatedArticlesCollection {
+  items: [ResearchOutputs]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum MilestonesRelatedArticlesCollectionOrder {
+  accession_ASC
+  accession_DESC
+  addedDate_ASC
+  addedDate_DESC
+  asapFunded_ASC
+  asapFunded_DESC
+  createdDate_ASC
+  createdDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  isInReview_ASC
+  isInReview_DESC
+  labCatalogNumber_ASC
+  labCatalogNumber_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  statusChangedAt_ASC
+  statusChangedAt_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
   title_ASC
   title_DESC
+  type_ASC
+  type_DESC
+  usedInAPublication_ASC
+  usedInAPublication_DESC
 }
 
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news)"""
@@ -5542,10 +5655,6 @@ type ProjectsMilestonesCollection {
 }
 
 enum ProjectsMilestonesCollectionOrder {
-  description_ASC
-  description_DESC
-  externalLink_ASC
-  externalLink_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -5556,8 +5665,6 @@ enum ProjectsMilestonesCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
-  title_ASC
-  title_DESC
 }
 
 enum ProjectsOrder {
@@ -5641,6 +5748,8 @@ scalar Quality
 type Query {
   _node(id: ID!, locale: String, preview: Boolean, useFallbackLocale: Boolean): _Node
   _nodes(ids: [ID!]!, locale: String, preview: Boolean, useFallbackLocale: Boolean): [_Node]!
+  aims(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Aims
+  aimsCollection(limit: Int = 100, locale: String, order: [AimsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: AimsFilter): AimsCollection
   announcements(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Announcements
   announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: AnnouncementsFilter): AnnouncementsCollection
   asset(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
@@ -6334,6 +6443,7 @@ enum ResearchOutputsLabsCollectionOrder {
 type ResearchOutputsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
   manuscriptsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ManuscriptsCollection
+  milestonesCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): MilestonesCollection
   projectsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ResearchOutputsCollection
   supplementGrantCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLinkingCollectionsSupplementGrantCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): SupplementGrantCollection
@@ -6370,6 +6480,19 @@ enum ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder {
   title_DESC
   url_ASC
   url_DESC
+}
+
+enum ResearchOutputsLinkingCollectionsMilestonesCollectionOrder {
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
 }
 
 enum ResearchOutputsLinkingCollectionsProjectsCollectionOrder {
@@ -10443,13 +10566,7 @@ input cfMilestonesNestedFilter {
   description_not: String
   description_not_contains: String
   description_not_in: [String]
-  externalLink: String
-  externalLink_contains: String
-  externalLink_exists: Boolean
-  externalLink_in: [String]
-  externalLink_not: String
-  externalLink_not_contains: String
-  externalLink_not_in: [String]
+  relatedArticlesCollection_exists: Boolean
   status: String
   status_contains: String
   status_exists: Boolean
@@ -10458,13 +10575,6 @@ input cfMilestonesNestedFilter {
   status_not_contains: String
   status_not_in: [String]
   sys: SysFilter
-  title: String
-  title_contains: String
-  title_exists: Boolean
-  title_in: [String]
-  title_not: String
-  title_not_contains: String
-  title_not_in: [String]
 }
 
 input cfNewsNestedFilter {

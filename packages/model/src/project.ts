@@ -134,7 +134,6 @@ export type SupplementGrantInfo = {
 export type DiscoveryProjectDetail = DiscoveryProject & {
   readonly originalGrantProposalId?: string;
   readonly supplementGrant?: SupplementGrantInfo;
-  readonly milestones?: ReadonlyArray<Milestone>;
   readonly fundedTeam: FundedTeam;
   readonly collaborators?: ReadonlyArray<ProjectMember>;
 };
@@ -142,7 +141,6 @@ export type DiscoveryProjectDetail = DiscoveryProject & {
 export type ResourceProjectDetail = ResourceProject & {
   readonly originalGrantProposalId?: string;
   readonly supplementGrant?: SupplementGrantInfo;
-  readonly milestones?: ReadonlyArray<Milestone>;
   readonly fundedTeam?: FundedTeam;
   readonly collaborators?: ReadonlyArray<ProjectMember>;
 };
@@ -150,7 +148,6 @@ export type ResourceProjectDetail = ResourceProject & {
 export type TraineeProjectDetail = TraineeProject & {
   readonly originalGrantProposalId?: string;
   readonly supplementGrant?: SupplementGrantInfo;
-  readonly milestones?: ReadonlyArray<Milestone>;
 };
 
 export type ProjectDetail =

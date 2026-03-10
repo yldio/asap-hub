@@ -8,18 +8,25 @@ const mockOpensearchClient = {
   search: mockSearch,
 } as unknown as OpensearchClient<PreprintComplianceOpensearchResponse>;
 
+const baseOptions = {
+  tags: [],
+  currentPage: 0,
+  pageSize: 10,
+  timeRange: 'all' as const,
+};
+
+const defaultResponse = {
+  items: [],
+  total: 0,
+};
+
 describe('getPreprintCompliance', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('calls opensearch client with correct parameters', async () => {
-    const mockResponse = {
-      items: [],
-      total: 0,
-    };
-
-    mockSearch.mockResolvedValue(mockResponse);
+    mockSearch.mockResolvedValue(defaultResponse);
 
     const options = {
       tags: ['tag1', 'tag2'],
@@ -37,27 +44,18 @@ describe('getPreprintCompliance', () => {
       pageSize: 20,
       timeRange: 'last-year',
       searchScope: 'flat',
+      sort: [{ 'teamName.keyword': { order: 'asc' } }],
     });
-    expect(result).toEqual(mockResponse);
+    expect(result).toEqual(defaultResponse);
   });
 
   it('handles empty tags array', async () => {
-    const mockResponse = {
-      items: [],
-      total: 0,
-    };
+    mockSearch.mockResolvedValue(defaultResponse);
 
-    mockSearch.mockResolvedValue(mockResponse);
-
-    const options = {
-      tags: [],
-      currentPage: 0,
-      pageSize: 10,
-      timeRange: 'all' as const,
-      sort: 'team_asc' as const,
-    };
-
-    await getPreprintCompliance(mockOpensearchClient, options);
+    await getPreprintCompliance(mockOpensearchClient, {
+      ...baseOptions,
+      sort: 'team_asc',
+    });
 
     expect(mockSearch).toHaveBeenCalledWith({
       searchTags: [],
@@ -65,21 +63,49 @@ describe('getPreprintCompliance', () => {
       pageSize: 10,
       timeRange: 'all',
       searchScope: 'flat',
+      sort: [{ 'teamName.keyword': { order: 'asc' } }],
     });
   });
+
+  it.each`
+    sortOption             | expectedSort
+    ${'posted_prior_desc'} | ${[{ postedPriorPercentage: { order: 'desc', missing: '_last' } }]}
+    ${'posted_prior_asc'}  | ${[{ postedPriorPercentage: { order: 'asc', missing: '_first' } }]}
+  `(
+    'maps $sortOption sort correctly',
+    async ({
+      sortOption,
+      expectedSort,
+    }: {
+      sortOption: 'posted_prior_desc' | 'posted_prior_asc';
+      expectedSort: unknown;
+    }) => {
+      mockSearch.mockResolvedValue(defaultResponse);
+
+      await getPreprintCompliance(mockOpensearchClient, {
+        ...baseOptions,
+        sort: sortOption,
+      });
+
+      expect(mockSearch).toHaveBeenCalledWith({
+        searchTags: [],
+        currentPage: 0,
+        pageSize: 10,
+        timeRange: 'all',
+        searchScope: 'flat',
+        sort: expectedSort,
+      });
+    },
+  );
 
   it('returns undefined when opensearch client returns undefined', async () => {
     mockSearch.mockResolvedValue(undefined);
 
-    const options = {
+    const result = await getPreprintCompliance(mockOpensearchClient, {
+      ...baseOptions,
       tags: ['tag1'],
-      currentPage: 0,
-      pageSize: 10,
-      timeRange: 'all' as const,
-      sort: 'team_asc' as const,
-    };
-
-    const result = await getPreprintCompliance(mockOpensearchClient, options);
+      sort: 'team_asc',
+    });
 
     expect(result).toBeUndefined();
   });

@@ -404,13 +404,12 @@ export const getExpectedDiscoveryProjectDetail = () => ({
     researchTheme: 'Theme One',
     teamDescription: undefined,
   },
-  milestones: undefined,
   originalGrant: '',
   originalGrantProposalId: undefined,
   supplementGrant: undefined,
 });
 
-// Expected Discovery Project detail with all detail fields populated (milestones, grants, teamDescription)
+// Expected Discovery Project detail with all detail fields populated (grants, teamDescription)
 export const getExpectedDiscoveryProjectDetailWithAllFields = () => ({
   ...getExpectedDiscoveryProject(),
   originalGrant: 'Original Grant Title',
@@ -423,18 +422,6 @@ export const getExpectedDiscoveryProjectDetailWithAllFields = () => ({
     grantStartDate: '2024-06-01',
     grantEndDate: '2025-06-01',
   },
-  milestones: [
-    {
-      id: 'milestone-1',
-      description: 'First milestone',
-      status: 'Complete',
-    },
-    {
-      id: 'milestone-2',
-      description: 'Second milestone',
-      status: 'In Progress',
-    },
-  ],
   fundedTeam: {
     id: 'team-1',
     displayName: 'Discovery Team',
@@ -663,20 +650,6 @@ export const getProjectEvent = (
   createEventBridgeEventMock(getUserContentfulWebhookDetail(id), eventType, id);
 
 // Reusable fixtures for project detail fields
-export const getMilestoneGraphqlItem = (
-  id: string,
-  overrides?: Partial<
-    NonNullable<
-      NonNullable<GraphQLProject['milestonesCollection']>['items'][number]
-    >
-  >,
-) => ({
-  sys: { id },
-  description: `Milestone ${id} description`,
-  status: 'Pending' as const,
-  ...overrides,
-});
-
 export const getOriginalGrantFields = (overrides?: {
   originalGrant?: string;
   proposalId?: string | null;
@@ -705,19 +678,11 @@ export const getSupplementGrantFields = (overrides?: {
     : null,
 });
 
-export const getMilestonesCollection = (
-  milestones: Array<ReturnType<typeof getMilestoneGraphqlItem> | null>,
-) => ({
-  total: milestones.filter(Boolean).length,
-  items: milestones,
-});
-
 // Project detail fixtures that extend base fixtures
 export const getDiscoveryProjectDetailGraphqlItem = (overrides?: {
   originalGrant?: string;
   proposalId?: string | null;
   supplementGrant?: ReturnType<typeof getSupplementGrantFields> | null;
-  milestones?: Array<ReturnType<typeof getMilestoneGraphqlItem> | null>;
   teamDescription?: string | null;
 }): NonNullable<FetchProjectByIdQuery['projects']> =>
   ({
@@ -727,12 +692,6 @@ export const getDiscoveryProjectDetailGraphqlItem = (overrides?: {
       proposalId: overrides?.proposalId,
     }),
     supplementGrant: overrides?.supplementGrant ?? null,
-    milestonesCollection: overrides?.milestones
-      ? getMilestonesCollection(overrides.milestones)
-      : {
-          total: 0,
-          items: [],
-        },
     membersCollection: {
       total: 2,
       items: [
@@ -771,7 +730,6 @@ export const getResourceTeamProjectDetailGraphqlItem = (overrides?: {
   originalGrant?: string;
   proposalId?: string | null;
   supplementGrant?: ReturnType<typeof getSupplementGrantFields> | null;
-  milestones?: Array<ReturnType<typeof getMilestoneGraphqlItem> | null>;
   teamDescription?: string | null;
 }): NonNullable<FetchProjectByIdQuery['projects']> =>
   ({
@@ -781,12 +739,6 @@ export const getResourceTeamProjectDetailGraphqlItem = (overrides?: {
       proposalId: overrides?.proposalId,
     }),
     supplementGrant: overrides?.supplementGrant ?? null,
-    milestonesCollection: overrides?.milestones
-      ? getMilestonesCollection(overrides.milestones)
-      : {
-          total: 0,
-          items: [],
-        },
     membersCollection: {
       total: 2,
       items: [
@@ -825,7 +777,6 @@ export const getResourceIndividualProjectDetailGraphqlItem = (overrides?: {
   originalGrant?: string;
   proposalId?: string | null;
   supplementGrant?: ReturnType<typeof getSupplementGrantFields> | null;
-  milestones?: Array<ReturnType<typeof getMilestoneGraphqlItem> | null>;
 }): NonNullable<FetchProjectByIdQuery['projects']> =>
   ({
     ...getResourceIndividualProjectGraphqlItem(),
@@ -834,12 +785,6 @@ export const getResourceIndividualProjectDetailGraphqlItem = (overrides?: {
       proposalId: overrides?.proposalId,
     }),
     supplementGrant: overrides?.supplementGrant ?? null,
-    milestonesCollection: overrides?.milestones
-      ? getMilestonesCollection(overrides.milestones)
-      : {
-          total: 0,
-          items: [],
-        },
     membersCollection: {
       total: 2,
       items: [
@@ -881,7 +826,6 @@ export const getTraineeProjectDetailGraphqlItem = (overrides?: {
   originalGrant?: string;
   proposalId?: string | null;
   supplementGrant?: ReturnType<typeof getSupplementGrantFields> | null;
-  milestones?: Array<ReturnType<typeof getMilestoneGraphqlItem> | null>;
 }): NonNullable<FetchProjectByIdQuery['projects']> =>
   ({
     ...getTraineeProjectGraphqlItem(),
@@ -890,12 +834,6 @@ export const getTraineeProjectDetailGraphqlItem = (overrides?: {
       proposalId: overrides?.proposalId,
     }),
     supplementGrant: overrides?.supplementGrant ?? null,
-    milestonesCollection: overrides?.milestones
-      ? getMilestonesCollection(overrides.milestones)
-      : {
-          total: 0,
-          items: [],
-        },
     membersCollection: {
       total: 2,
       items: [

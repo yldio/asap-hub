@@ -1,5 +1,5 @@
 import { FC, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import { format } from 'date-fns';
 import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
 import { analytics } from '@asap-hub/routing';
@@ -11,8 +11,12 @@ import {
   PublicationComplianceOpensearchResponse,
   PublicationComplianceResponse,
 } from '@asap-hub/model';
-import PreprintCompliance from './PreprintCompliance';
-import PublicationCompliance from './PublicationCompliance';
+import PreprintCompliance, {
+  getPreprintComplianceSortFromSearch,
+} from './PreprintCompliance';
+import PublicationCompliance, {
+  getPublicationComplianceSortFromSearch,
+} from './PublicationCompliance';
 import {
   useSearch,
   useAnalytics,
@@ -26,6 +30,7 @@ type MetricOption = 'preprint-compliance' | 'publication-compliance';
 
 const OpenScience: FC<Record<string, never>> = () => {
   const navigate = useNavigate();
+  const { search } = useLocation();
   const { metric: metricParam } = useParams<{
     metric: MetricOption;
   }>();
@@ -65,7 +70,7 @@ const OpenScience: FC<Record<string, never>> = () => {
             tags,
             timeRange: timeRange as LimitedTimeRangeOption,
             ...paginationParams,
-            sort: 'team_asc',
+            sort: getPreprintComplianceSortFromSearch(search),
           }),
         preprintComplianceToCSV,
       );
@@ -82,7 +87,7 @@ const OpenScience: FC<Record<string, never>> = () => {
           tags,
           timeRange: timeRange as LimitedTimeRangeOption,
           ...paginationParams,
-          sort: 'team_asc',
+          sort: getPublicationComplianceSortFromSearch(search),
         }),
       publicationComplianceToCSV,
     );
@@ -93,6 +98,7 @@ const OpenScience: FC<Record<string, never>> = () => {
     publicationClient.client,
     tags,
     timeRange,
+    search,
   ]);
 
   const tagClient = isPreprintCompliancePage

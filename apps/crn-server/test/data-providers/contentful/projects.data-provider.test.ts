@@ -35,10 +35,8 @@ import {
   getResourceTeamProjectDetailGraphqlItem,
   getResourceIndividualProjectDetailGraphqlItem,
   getTraineeProjectDetailGraphqlItem,
-  getMilestoneGraphqlItem,
   getSupplementGrantFields,
   getOriginalGrantFields,
-  getMilestonesCollection,
 } from '../../fixtures/projects.fixtures';
 
 describe('ProjectContentfulDataProvider', () => {
@@ -935,7 +933,7 @@ describe('parseContentfulProjectDetail', () => {
     jest.restoreAllMocks();
   });
 
-  it('parses Discovery Project detail with milestones, originalGrant, and supplementGrant', () => {
+  it('parses Discovery Project detail with originalGrant and supplementGrant', () => {
     const discoveryItem = getDiscoveryProjectDetailGraphqlItem({
       originalGrant: 'Original Grant Title',
       proposalId: 'proposal-1',
@@ -947,17 +945,6 @@ describe('parseContentfulProjectDetail', () => {
         endDate: '2025-06-01',
         proposalId: 'proposal-2',
       }),
-      milestones: [
-        getMilestoneGraphqlItem('milestone-1', {
-          description: 'First milestone',
-          status: 'Complete',
-        }),
-        getMilestoneGraphqlItem('milestone-2', {
-          description: 'Second milestone',
-          status: 'In Progress',
-        }),
-        null,
-      ],
       teamDescription: 'Team description for discovery',
     });
 
@@ -968,12 +955,11 @@ describe('parseContentfulProjectDetail', () => {
     );
   });
 
-  it('parses Discovery Project detail without milestones, supplementGrant, or teamDescription', () => {
+  it('parses Discovery Project detail without supplementGrant or teamDescription', () => {
     const discoveryItem = getDiscoveryProjectDetailGraphqlItem({
       originalGrant: 'Original Grant',
       proposalId: null,
       supplementGrant: null,
-      milestones: [],
       teamDescription: null,
     });
 
@@ -983,7 +969,6 @@ describe('parseContentfulProjectDetail', () => {
       originalGrant: 'Original Grant',
       originalGrantProposalId: undefined,
       supplementGrant: undefined,
-      milestones: undefined,
       fundedTeam: {
         teamDescription: undefined,
       },
@@ -1002,12 +987,6 @@ describe('parseContentfulProjectDetail', () => {
         endDate: '2025-01-01',
         proposalId: 'resource-proposal-2',
       }),
-      milestones: [
-        getMilestoneGraphqlItem('resource-milestone-1', {
-          description: 'Resource milestone description',
-          status: 'Pending',
-        }),
-      ],
       teamDescription: 'Resource team description',
     });
 
@@ -1025,13 +1004,6 @@ describe('parseContentfulProjectDetail', () => {
         grantStartDate: '2024-01-01',
         grantEndDate: '2025-01-01',
       },
-      milestones: [
-        {
-          id: 'resource-milestone-1',
-          description: 'Resource milestone description',
-          status: 'Pending',
-        },
-      ],
       fundedTeam: {
         id: 'resource-team-main',
         displayName: 'Resource Team',
@@ -1053,7 +1025,6 @@ describe('parseContentfulProjectDetail', () => {
       originalGrant: 'Individual Resource Grant',
       proposalId: 'individual-proposal-1',
       supplementGrant: null,
-      milestones: [],
     });
 
     const result = parseContentfulProjectDetail(resourceItem);
@@ -1064,7 +1035,6 @@ describe('parseContentfulProjectDetail', () => {
       originalGrant: 'Individual Resource Grant',
       originalGrantProposalId: 'individual-proposal-1',
       supplementGrant: undefined,
-      milestones: undefined,
       members: [
         {
           id: 'user-2',
@@ -1079,7 +1049,7 @@ describe('parseContentfulProjectDetail', () => {
     expect(result).not.toHaveProperty('fundedTeam');
   });
 
-  it('parses Trainee Project detail with milestones and grants', () => {
+  it('parses Trainee Project detail with grants', () => {
     const traineeItem = getTraineeProjectDetailGraphqlItem({
       originalGrant: 'Trainee Original Grant',
       proposalId: 'trainee-proposal-1',
@@ -1091,12 +1061,6 @@ describe('parseContentfulProjectDetail', () => {
         endDate: '2025-06-01',
         proposalId: 'trainee-proposal-2',
       }),
-      milestones: [
-        getMilestoneGraphqlItem('trainee-milestone-1', {
-          description: 'Trainee milestone description',
-          status: 'Complete',
-        }),
-      ],
     });
 
     const result = parseContentfulProjectDetail(
@@ -1115,13 +1079,6 @@ describe('parseContentfulProjectDetail', () => {
         grantStartDate: '2024-06-01',
         grantEndDate: '2025-06-01',
       },
-      milestones: [
-        {
-          id: 'trainee-milestone-1',
-          description: 'Trainee milestone description',
-          status: 'Complete',
-        },
-      ],
     });
 
     // Verify members are included and ordered correctly: trainees first, then mentors
@@ -1197,37 +1154,6 @@ describe('parseContentfulProjectDetail', () => {
     });
   });
 
-  it('handles empty milestones collection', () => {
-    const discoveryItem = getDiscoveryProjectDetailGraphqlItem({
-      originalGrant: 'Grant',
-      proposalId: null,
-      supplementGrant: null,
-      milestones: [],
-      teamDescription: null,
-    });
-
-    const result = parseContentfulProjectDetail(discoveryItem);
-
-    expect(result.milestones).toBeUndefined();
-  });
-
-  it('handles null milestones collection', () => {
-    const discoveryItem = {
-      ...getDiscoveryProjectDetailGraphqlItem({
-        originalGrant: 'Grant',
-        proposalId: null,
-        supplementGrant: null,
-        milestones: [],
-        teamDescription: null,
-      }),
-      milestonesCollection: null,
-    };
-
-    const result = parseContentfulProjectDetail(discoveryItem);
-
-    expect(result.milestones).toBeUndefined();
-  });
-
   it('parses Discovery Project detail fallback when no team member exists', () => {
     const discoveryItemWithoutTeam = {
       ...getDiscoveryProjectWithoutTeamGraphqlItem(),
@@ -1241,12 +1167,6 @@ describe('parseContentfulProjectDetail', () => {
         description: 'Supplement grant description',
         proposalId: 'supplement-proposal-no-team',
       }),
-      milestonesCollection: getMilestonesCollection([
-        getMilestoneGraphqlItem('milestone-no-team', {
-          description: 'Milestone without team description',
-          status: 'Complete',
-        }),
-      ]),
     };
 
     const result = parseContentfulProjectDetail(discoveryItemWithoutTeam);
@@ -1261,13 +1181,6 @@ describe('parseContentfulProjectDetail', () => {
         grantDescription: 'Supplement grant description',
         grantProposalId: 'supplement-proposal-no-team',
       },
-      milestones: [
-        {
-          id: 'milestone-no-team',
-          description: 'Milestone without team description',
-          status: 'Complete',
-        },
-      ],
       // Should not have fundedTeam or collaborators when no team exists
       researchTheme: '',
       teamName: '',
@@ -1282,7 +1195,6 @@ describe('parseContentfulProjectDetail', () => {
         originalGrant: 'Test Grant',
         proposalId: null,
         supplementGrant: null,
-        milestones: [],
         teamDescription: null,
       }),
       projectType: 'Unknown Project Type', // Invalid type

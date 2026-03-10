@@ -1,11 +1,13 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import React, { Suspense } from 'react';
-import { MemoryRouter } from 'react-router';
+import { fireEvent } from '@testing-library/dom';
+import { MemoryRouter, useNavigate } from 'react-router';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import {
   ListPreprintComplianceOpensearchResponse,
   PreprintComplianceOpensearchResponse,
+  SortPreprintCompliance,
 } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -57,13 +59,32 @@ jest.mock('../../../hooks', () => ({
   }),
 }));
 
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: jest.fn(),
+}));
+
 mockConsoleError();
 
 jest.spyOn(console, 'error').mockImplementation();
 
+const mockNavigate = jest.fn();
+const mockUseNavigate = useNavigate as jest.MockedFunction<typeof useNavigate>;
+
+const sortOptions: SortPreprintCompliance[] = [
+  'team_asc',
+  'team_desc',
+  'number_of_preprints_asc',
+  'number_of_preprints_desc',
+  'posted_prior_asc',
+  'posted_prior_desc',
+];
+
 describe('PreprintCompliance', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockNavigate.mockClear();
+    mockUseNavigate.mockReturnValue(mockNavigate);
     mockGetPreprintCompliance.mockResolvedValue({
       items: [],
       total: 0,
@@ -176,6 +197,215 @@ describe('PreprintCompliance', () => {
         timeRange: 'all',
       }),
     ).toThrow('test error');
+  });
+
+  it('passes sort parameter to API when sorting changes', async () => {
+    render(
+      <MemoryRouter>
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <PreprintCompliance tags={[]} />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      expect(mockGetPreprintCompliance).toHaveBeenCalled();
+    });
+
+    expect(mockGetPreprintCompliance).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        sort: 'team_asc',
+      }),
+    );
+  });
+
+  it('reads valid sort from URL and passes it to API', async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[
+          '/analytics/open-science/preprint-compliance?sort=posted_prior_desc',
+        ]}
+      >
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <PreprintCompliance tags={[]} />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      expect(mockGetPreprintCompliance).toHaveBeenCalled();
+    });
+
+    expect(mockGetPreprintCompliance).toHaveBeenCalledWith(
+      expect.any(Object),
+      expect.objectContaining({
+        sort: 'posted_prior_desc',
+      }),
+    );
+  });
+
+  it('calls navigate with new sort and replace when column sort button is clicked', async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[
+          '/analytics/open-science/preprint-compliance?currentPage=2&sort=team_asc',
+        ]}
+      >
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <PreprintCompliance tags={[]} />
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Number of Preprints')).toBeInTheDocument();
+    });
+
+    const header = screen.getByRole('columnheader', {
+      name: /Number of Preprints/,
+    });
+    const sortButton = header.querySelector('button');
+    fireEvent.click(sortButton!);
+
+    expect(mockNavigate).toHaveBeenCalledWith(
+      { search: 'sort=number_of_preprints_desc' } as never,
+      { replace: true },
+    );
+  });
+
+  it.each(sortOptions)('handles sort option %s in state', async (sort) => {
+    const stateOptions = {
+      currentPage: 0,
+      pageSize: 10,
+      sort,
+      tags: [] as string[],
+      timeRange: 'all' as const,
+    };
+
+    let capturedValue:
+      | ListPreprintComplianceOpensearchResponse
+      | Error
+      | undefined;
+    let setState: (
+      val: ListPreprintComplianceOpensearchResponse | Error | undefined,
+    ) => void = () => {};
+
+    const TestComponent = () => {
+      const [value, setValue] = useRecoilState(
+        preprintComplianceState(stateOptions),
+      );
+      capturedValue = value;
+      setState = setValue;
+      return null;
+    };
+
+    render(
+      <RecoilRoot>
+        <TestComponent />
+      </RecoilRoot>,
+    );
+
+    const fakeData: ListPreprintComplianceOpensearchResponse = {
+      total: 1,
+      items: [
+        {
+          objectID: 'team-123',
+          teamId: 'team-123',
+          teamName: 'Team 123',
+          isTeamInactive: false,
+          numberOfPreprints: 2,
+          numberOfPublications: 1,
+          ranking: 'ADEQUATE',
+          timeRange: 'all',
+          postedPriorPercentage: 50,
+        },
+      ],
+    };
+
+    act(() => {
+      setState(fakeData);
+    });
+
+    await waitFor(() => {
+      expect(capturedValue).toEqual(fakeData);
+    });
+  });
+
+  it('handles sorting with tags filter', async () => {
+    const stateOptions = {
+      currentPage: 0,
+      pageSize: 10,
+      sort: 'posted_prior_desc' as const,
+      tags: ['tag1', 'tag2'] as string[],
+      timeRange: 'all' as const,
+    };
+
+    let capturedValue:
+      | ListPreprintComplianceOpensearchResponse
+      | Error
+      | undefined;
+    let setState: (
+      val: ListPreprintComplianceOpensearchResponse | Error | undefined,
+    ) => void = () => {};
+
+    const TestComponent = () => {
+      const [value, setValue] = useRecoilState(
+        preprintComplianceState(stateOptions),
+      );
+      capturedValue = value;
+      setState = setValue;
+      return null;
+    };
+
+    render(
+      <RecoilRoot>
+        <TestComponent />
+      </RecoilRoot>,
+    );
+
+    const fakeData: ListPreprintComplianceOpensearchResponse = {
+      total: 1,
+      items: [
+        {
+          objectID: 'team-123',
+          teamId: 'team-123',
+          teamName: 'Team 123',
+          isTeamInactive: false,
+          numberOfPreprints: 10,
+          numberOfPublications: 8,
+          ranking: 'ADEQUATE',
+          timeRange: 'all',
+          postedPriorPercentage: 80,
+        },
+      ],
+    };
+
+    act(() => {
+      setState(fakeData);
+    });
+
+    await waitFor(() => {
+      expect(capturedValue).toEqual(fakeData);
+    });
   });
 });
 

@@ -73,6 +73,7 @@ const Leadership: FC<Record<string, never>> = () => {
               getAnalyticsLeadership(client, params);
         return fetcher({
           tags,
+          sort: teamSort,
           ...paginationParams,
         });
       },

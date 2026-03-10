@@ -66,16 +66,6 @@ export const projectsContentQueryFragment = gql`
         url
       }
     }
-    milestonesCollection(limit: 20) {
-      total
-      items {
-        sys {
-          id
-        }
-        description
-        status
-      }
-    }
     membersCollection(limit: 100) {
       total
       items {

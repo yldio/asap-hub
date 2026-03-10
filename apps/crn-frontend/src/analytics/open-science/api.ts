@@ -10,19 +10,73 @@ import {
 import { OpensearchClient } from '../utils/opensearch';
 import { OpensearchSortMap } from '../utils/opensearch/types';
 
-export const getPreprintCompliance = async (
-  opensearchClient: OpensearchClient<PreprintComplianceOpensearchResponse>,
-  options: AnalyticsSearchOptionsWithFiltering<SortPreprintCompliance>,
-): Promise<ListPreprintComplianceOpensearchResponse | undefined> => {
-  const { tags, currentPage, pageSize, timeRange } = options;
+const preprintComplianceOpensearchSort: OpensearchSortMap<SortPreprintCompliance> =
+  {
+    team_asc: [{ 'teamName.keyword': { order: 'asc' } }],
+    team_desc: [{ 'teamName.keyword': { order: 'desc' } }],
+    number_of_preprints_asc: [
+      {
+        numberOfPreprints: {
+          order: 'asc',
+          missing: '_last',
+        },
+      },
+    ],
+    number_of_preprints_desc: [
+      {
+        numberOfPreprints: {
+          order: 'desc',
+          missing: '_last',
+        },
+      },
+    ],
+    posted_prior_asc: [
+      {
+        postedPriorPercentage: {
+          order: 'asc',
+          missing: '_first',
+        },
+      },
+    ],
+    posted_prior_desc: [
+      {
+        postedPriorPercentage: {
+          order: 'desc',
+          missing: '_last',
+        },
+      },
+    ],
+  };
+
+const searchCompliance = async <
+  TItem,
+  TSort extends `${string}_asc` | `${string}_desc`,
+  TListResponse,
+>(
+  opensearchClient: OpensearchClient<TItem>,
+  options: AnalyticsSearchOptionsWithFiltering<TSort>,
+  sortMap: OpensearchSortMap<TSort>,
+): Promise<TListResponse | undefined> => {
+  const { tags, currentPage, pageSize, timeRange, sort } = options;
   return opensearchClient.search({
     searchTags: tags,
     currentPage: currentPage ?? undefined,
     pageSize: pageSize ?? undefined,
     timeRange,
     searchScope: 'flat',
-  });
+    sort: sort ? sortMap[sort] : undefined,
+  }) as Promise<TListResponse | undefined>;
 };
+
+export const getPreprintCompliance = async (
+  opensearchClient: OpensearchClient<PreprintComplianceOpensearchResponse>,
+  options: AnalyticsSearchOptionsWithFiltering<SortPreprintCompliance>,
+): Promise<ListPreprintComplianceOpensearchResponse | undefined> =>
+  searchCompliance<
+    PreprintComplianceOpensearchResponse,
+    SortPreprintCompliance,
+    ListPreprintComplianceOpensearchResponse
+  >(opensearchClient, options, preprintComplianceOpensearchSort);
 
 const publicationComplianceOpensearchSort: OpensearchSortMap<SortPublicationCompliance> =
   {
@@ -43,14 +97,9 @@ const publicationComplianceOpensearchSort: OpensearchSortMap<SortPublicationComp
 export const getPublicationCompliance = async (
   opensearchClient: OpensearchClient<PublicationComplianceOpensearchResponse>,
   options: AnalyticsSearchOptionsWithFiltering<SortPublicationCompliance>,
-): Promise<ListPublicationComplianceOpensearchResponse | undefined> => {
-  const { tags, currentPage, pageSize, timeRange, sort } = options;
-  return opensearchClient.search({
-    searchTags: tags,
-    currentPage: currentPage ?? undefined,
-    pageSize: pageSize ?? undefined,
-    timeRange,
-    searchScope: 'flat',
-    sort: sort ? publicationComplianceOpensearchSort[sort] : undefined,
-  });
-};
+): Promise<ListPublicationComplianceOpensearchResponse | undefined> =>
+  searchCompliance<
+    PublicationComplianceOpensearchResponse,
+    SortPublicationCompliance,
+    ListPublicationComplianceOpensearchResponse
+  >(opensearchClient, options, publicationComplianceOpensearchSort);

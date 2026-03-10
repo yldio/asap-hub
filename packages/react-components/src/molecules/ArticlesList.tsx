@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import { Button, Link } from '../atoms';
 import { article as articleIcon, minusRectIcon, plusRectIcon } from '../icons';
 import { rem } from '../pixels';
-import { neutral1000 } from '../colors';
+import { neutral900 } from '../colors';
 
 export type ArticleItem = {
   readonly id: string;
@@ -27,8 +27,8 @@ const iconButtonStyles = css({
 
 const titleStyles = css({
   fontSize: rem(17),
-  fontWeight: 700,
-  color: neutral1000.rgb,
+  color: neutral900.rgb,
+  lineHeight: rem(26),
 });
 
 const listWrapperStyles = (maxHeight: string, maxWidth?: string) =>

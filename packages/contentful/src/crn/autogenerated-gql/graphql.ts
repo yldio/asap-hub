@@ -93,6 +93,8 @@ export type AimsFilter = {
 
 export type AimsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  projectsCollection?: Maybe<ProjectsCollection>;
+  supplementGrantCollection?: Maybe<SupplementGrantCollection>;
 };
 
 export type AimsLinkingCollectionsEntryCollectionArgs = {
@@ -102,6 +104,72 @@ export type AimsLinkingCollectionsEntryCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
+
+export type AimsLinkingCollectionsProjectsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AimsLinkingCollectionsProjectsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AimsLinkingCollectionsSupplementGrantCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AimsLinkingCollectionsSupplementGrantCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export enum AimsLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AimsLinkingCollectionsSupplementGrantCollectionOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
 
 export type AimsMilestonesCollection = {
   items: Array<Maybe<Milestones>>;
@@ -5232,6 +5300,7 @@ export type ManuscriptVersions = Entry &
     additionalFilesCollection?: Maybe<AssetCollection>;
     asapAffiliationIncluded?: Maybe<Scalars['String']>;
     asapAffiliationIncludedDetails?: Maybe<Scalars['String']>;
+    authorsCollection?: Maybe<ManuscriptVersionsAuthorsCollection>;
     availabilityStatement?: Maybe<Scalars['String']>;
     availabilityStatementDetails?: Maybe<Scalars['String']>;
     codeDeposited?: Maybe<Scalars['String']>;
@@ -5308,6 +5377,16 @@ export type ManuscriptVersionsAsapAffiliationIncludedArgs = {
 export type ManuscriptVersionsAsapAffiliationIncludedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsAuthorsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ManuscriptVersionsAuthorsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -5551,6 +5630,36 @@ export type ManuscriptVersionsAdditionalAuthorsFilter = {
 
 export type ManuscriptVersionsAdditionalAuthorsItem = ExternalAuthors | Users;
 
+export type ManuscriptVersionsAuthorsCollection = {
+  items: Array<Maybe<ManuscriptVersionsAuthorsItem>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type ManuscriptVersionsAuthorsFilter = {
+  AND?: InputMaybe<Array<InputMaybe<ManuscriptVersionsAuthorsFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<ManuscriptVersionsAuthorsFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  email?: InputMaybe<Scalars['String']>;
+  email_contains?: InputMaybe<Scalars['String']>;
+  email_exists?: InputMaybe<Scalars['Boolean']>;
+  email_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  email_not?: InputMaybe<Scalars['String']>;
+  email_not_contains?: InputMaybe<Scalars['String']>;
+  email_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid?: InputMaybe<Scalars['String']>;
+  orcid_contains?: InputMaybe<Scalars['String']>;
+  orcid_exists?: InputMaybe<Scalars['Boolean']>;
+  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  orcid_not?: InputMaybe<Scalars['String']>;
+  orcid_not_contains?: InputMaybe<Scalars['String']>;
+  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type ManuscriptVersionsAuthorsItem = ExternalAuthors | Users;
+
 export type ManuscriptVersionsCollection = {
   items: Array<Maybe<ManuscriptVersions>>;
   limit: Scalars['Int'];
@@ -5638,6 +5747,8 @@ export type ManuscriptVersionsFilter = {
   asapAffiliationIncluded_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
+  authors?: InputMaybe<CfauthorsMultiTypeNestedFilter>;
+  authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   availabilityStatement?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails_contains?: InputMaybe<Scalars['String']>;
@@ -7063,7 +7174,6 @@ export type MilestonesFilter = {
 export type MilestonesLinkingCollections = {
   aimsCollection?: Maybe<AimsCollection>;
   entryCollection?: Maybe<EntryCollection>;
-  projectsCollection?: Maybe<ProjectsCollection>;
 };
 
 export type MilestonesLinkingCollectionsAimsCollectionArgs = {
@@ -7085,47 +7195,7 @@ export type MilestonesLinkingCollectionsEntryCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
-export type MilestonesLinkingCollectionsProjectsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<
-    Array<InputMaybe<MilestonesLinkingCollectionsProjectsCollectionOrder>>
-  >;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
 export enum MilestonesLinkingCollectionsAimsCollectionOrder {
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-}
-
-export enum MilestonesLinkingCollectionsProjectsCollectionOrder {
-  ApplicationNumberAsc = 'applicationNumber_ASC',
-  ApplicationNumberDesc = 'applicationNumber_DESC',
-  ContactEmailAsc = 'contactEmail_ASC',
-  ContactEmailDesc = 'contactEmail_DESC',
-  EndDateAsc = 'endDate_ASC',
-  EndDateDesc = 'endDate_DESC',
-  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
-  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
-  GrantIdAsc = 'grantId_ASC',
-  GrantIdDesc = 'grantId_DESC',
-  ProjectIdAsc = 'projectId_ASC',
-  ProjectIdDesc = 'projectId_DESC',
-  ProjectTypeAsc = 'projectType_ASC',
-  ProjectTypeDesc = 'projectType_DESC',
-  StartDateAsc = 'startDate_ASC',
-  StartDateDesc = 'startDate_DESC',
-  StatusAsc = 'status_ASC',
-  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7934,8 +8004,8 @@ export type Projects = Entry &
     grantId?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ProjectsLinkingCollections>;
     membersCollection?: Maybe<ProjectsMembersCollection>;
-    milestonesCollection?: Maybe<ProjectsMilestonesCollection>;
     originalGrant?: Maybe<Scalars['String']>;
+    originalGrantAimsCollection?: Maybe<ProjectsOriginalGrantAimsCollection>;
     projectId?: Maybe<Scalars['String']>;
     projectType?: Maybe<Scalars['String']>;
     proposal?: Maybe<ResearchOutputs>;
@@ -7996,20 +8066,22 @@ export type ProjectsMembersCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
-export type ProjectsMilestonesCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  order?: InputMaybe<Array<InputMaybe<ProjectsMilestonesCollectionOrder>>>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<MilestonesFilter>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
 export type ProjectsOriginalGrantArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsOriginalGrantAimsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ProjectsOriginalGrantAimsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AimsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
@@ -8138,9 +8210,9 @@ export type ProjectsFilter = {
   grantId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   members?: InputMaybe<CfProjectMembershipNestedFilter>;
   membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
-  milestones?: InputMaybe<CfMilestonesNestedFilter>;
-  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   originalGrant?: InputMaybe<Scalars['String']>;
+  originalGrantAims?: InputMaybe<CfAimsNestedFilter>;
+  originalGrantAimsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   originalGrant_contains?: InputMaybe<Scalars['String']>;
   originalGrant_exists?: InputMaybe<Scalars['Boolean']>;
   originalGrant_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -8229,26 +8301,6 @@ export enum ProjectsMembersCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
-export type ProjectsMilestonesCollection = {
-  items: Array<Maybe<Milestones>>;
-  limit: Scalars['Int'];
-  skip: Scalars['Int'];
-  total: Scalars['Int'];
-};
-
-export enum ProjectsMilestonesCollectionOrder {
-  StatusAsc = 'status_ASC',
-  StatusDesc = 'status_DESC',
-  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
-  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
-  SysIdAsc = 'sys_id_ASC',
-  SysIdDesc = 'sys_id_DESC',
-  SysPublishedAtAsc = 'sys_publishedAt_ASC',
-  SysPublishedAtDesc = 'sys_publishedAt_DESC',
-  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
-  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-}
-
 export enum ProjectsOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
   ApplicationNumberDesc = 'applicationNumber_DESC',
@@ -8268,6 +8320,24 @@ export enum ProjectsOrder {
   StartDateDesc = 'startDate_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type ProjectsOriginalGrantAimsCollection = {
+  items: Array<Maybe<Aims>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum ProjectsOriginalGrantAimsCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -11502,6 +11572,7 @@ export enum ResourceTypeOrder {
 export type SupplementGrant = Entry &
   _Node & {
     _id: Scalars['ID'];
+    aimsCollection?: Maybe<SupplementGrantAimsCollection>;
     contentfulMetadata: ContentfulMetadata;
     description?: Maybe<Scalars['String']>;
     endDate?: Maybe<Scalars['DateTime']>;
@@ -11511,6 +11582,17 @@ export type SupplementGrant = Entry &
     sys: Sys;
     title?: Maybe<Scalars['String']>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/supplementGrant) */
+export type SupplementGrantAimsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<SupplementGrantAimsCollectionOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AimsFilter>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/supplementGrant) */
 export type SupplementGrantDescriptionArgs = {
@@ -11549,6 +11631,24 @@ export type SupplementGrantTitleArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type SupplementGrantAimsCollection = {
+  items: Array<Maybe<Aims>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export enum SupplementGrantAimsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type SupplementGrantCollection = {
   items: Array<Maybe<SupplementGrant>>;
   limit: Scalars['Int'];
@@ -11559,6 +11659,8 @@ export type SupplementGrantCollection = {
 export type SupplementGrantFilter = {
   AND?: InputMaybe<Array<InputMaybe<SupplementGrantFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<SupplementGrantFilter>>>;
+  aims?: InputMaybe<CfAimsNestedFilter>;
+  aimsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
@@ -15204,6 +15306,21 @@ export type _Node = {
   _id: Scalars['ID'];
 };
 
+export type CfAimsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfAimsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfAimsNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  description?: InputMaybe<Scalars['String']>;
+  description_contains?: InputMaybe<Scalars['String']>;
+  description_exists?: InputMaybe<Scalars['Boolean']>;
+  description_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  description_not?: InputMaybe<Scalars['String']>;
+  description_not_contains?: InputMaybe<Scalars['String']>;
+  description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  milestonesCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+};
+
 export type CfAnnouncementsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfAnnouncementsNestedFilter>>>;
@@ -15729,6 +15846,7 @@ export type CfManuscriptVersionsNestedFilter = {
   asapAffiliationIncluded_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
+  authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   availabilityStatement?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails_contains?: InputMaybe<Scalars['String']>;
@@ -16403,6 +16521,7 @@ export type CfResourceTypeNestedFilter = {
 export type CfSupplementGrantNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfSupplementGrantNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfSupplementGrantNestedFilter>>>;
+  aimsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
@@ -45559,7 +45678,7 @@ export const FetchLabsDocument = {
                                 {
                                   kind: 'Argument',
                                   name: { kind: 'Name', value: 'limit' },
-                                  value: { kind: 'IntValue', value: '3' },
+                                  value: { kind: 'IntValue', value: '10' },
                                 },
                               ],
                               selectionSet: {

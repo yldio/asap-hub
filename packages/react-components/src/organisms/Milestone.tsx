@@ -147,15 +147,12 @@ const Milestone: FC<MilestoneProps> = ({ milestone }) => {
     <div css={milestoneRowStyles}>
       <div css={aimsColumnStyles}>
         <div css={mobileLabelStyles}>Aims</div>
-        {aimNumbers.length > 0 ? (
+        {aimNumbers.length > 0 &&
           aimNumbers.map((n) => (
             <span key={n} css={aimBadgeStyles}>
               #{n}
             </span>
-          ))
-        ) : (
-          <span css={[aimBadgeStyles, { opacity: 0.6 }]}>—</span>
-        )}
+          ))}
       </div>
       <div css={descriptionContainerStyles}>
         <div css={mobileLabelStyles}>Milestone</div>

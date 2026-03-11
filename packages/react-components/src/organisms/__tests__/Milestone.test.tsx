@@ -55,9 +55,10 @@ describe('Milestone', () => {
     expect(screen.getByText('#2')).toBeInTheDocument();
   });
 
-  it('renders em dash when aims is empty or missing', () => {
+  it('renders nothing in Aims column when aims is empty or missing', () => {
     render(<Milestone milestone={mockMilestone} />);
-    expect(screen.getByText('—')).toBeInTheDocument();
+    expect(screen.queryByText('—')).not.toBeInTheDocument();
+    expect(screen.queryByText('#1')).not.toBeInTheDocument();
   });
 
   it('does not render link when not provided', () => {

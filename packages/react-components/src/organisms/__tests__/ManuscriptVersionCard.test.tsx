@@ -581,24 +581,25 @@ it('does not display reply button if isActiveVersion is false', async () => {
   });
 });
 
-it('renders team name by default', async () => {
+it('renders user team name in Updated by and Created by by default', async () => {
   const user = userEvent.setup();
-  const { getByLabelText, getByText } = render(
+  const { getByLabelText, getAllByText } = render(
     <MemoryRouter>
       <ManuscriptVersionCard {...props} />
     </MemoryRouter>,
   );
   await user.click(getByLabelText('Expand Version'));
-  expect(getByText(/Team Team 1/)).toBeVisible();
+  expect(getAllByText('Team A').length).toBeGreaterThanOrEqual(2);
 });
 
-it('hides team name when showTeamName is false', async () => {
+it('hides user team name in Updated by and Created by when showTeamName is false', async () => {
   const user = userEvent.setup();
-  const { getByLabelText, queryByText } = render(
+  const { getByLabelText, queryByText, getByText } = render(
     <MemoryRouter>
       <ManuscriptVersionCard {...props} showTeamName={false} />
     </MemoryRouter>,
   );
   await user.click(getByLabelText('Expand Version'));
-  expect(queryByText(/Team Team 1/)).not.toBeInTheDocument();
+  expect(queryByText('Team A')).not.toBeInTheDocument();
+  expect(getByText(/Team 1/)).toBeInTheDocument();
 });

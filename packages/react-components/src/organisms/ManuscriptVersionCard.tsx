@@ -286,6 +286,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                         displayName={updatedByData.displayName}
                         userHref={updatedByData.userHref}
                         teams={updatedByData.teams}
+                        showTeamName={showTeamName}
                       />
                     </span>
                   </div>
@@ -330,13 +331,11 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                   marginBottom: rem(32),
                 }}
               >
-                {showTeamName && (
-                  <AssociationList
-                    type="Team"
-                    inline
-                    associations={version.teams}
-                  />
-                )}
+                <AssociationList
+                  type="Team"
+                  inline
+                  associations={version.teams}
+                />
                 <AssociationList
                   type="Lab"
                   inline
@@ -496,6 +495,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                     displayName={version.createdBy.displayName}
                     userHref={getUserHref(version.createdBy.id)}
                     teams={getTeams(version.createdBy.teams)}
+                    showTeamName={showTeamName}
                   />
                 </div>
               </Caption>

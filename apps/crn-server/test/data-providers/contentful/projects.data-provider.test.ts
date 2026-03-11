@@ -1218,28 +1218,26 @@ describe('parseContentfulProjectDetail', () => {
         (m) =>
           (m.projectMember as { __typename?: string }).__typename === 'Teams',
       );
-      if (team) {
-        (team.projectMember as Record<string, unknown>).linkedFrom = {
-          manuscriptsCollection: {
-            items: [
-              {
-                sys: { id: 'manuscript-1' },
-                status: 'Review Compliance Report',
-                teamsCollection: {
-                  items: [{ sys: { id: 'team-1' } }],
-                },
+      team!.projectMember.linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            {
+              sys: { id: 'manuscript-1' },
+              status: 'Review Compliance Report',
+              teamsCollection: {
+                items: [{ sys: { id: 'team-1' } }],
               },
-              {
-                sys: { id: 'manuscript-2' },
-                status: 'Waiting for Report',
-                teamsCollection: {
-                  items: [{ sys: { id: 'other-team' } }],
-                },
+            },
+            {
+              sys: { id: 'manuscript-2' },
+              status: 'Waiting for Report',
+              teamsCollection: {
+                items: [{ sys: { id: 'other-team' } }],
               },
-            ],
-          },
-        };
-      }
+            },
+          ],
+        },
+      };
 
       const result = parseContentfulProjectDetail(graphqlItem);
 
@@ -1261,29 +1259,27 @@ describe('parseContentfulProjectDetail', () => {
         (m) =>
           (m.projectMember as { __typename?: string }).__typename === 'Teams',
       );
-      if (team) {
-        (team.projectMember as Record<string, unknown>).linkedFrom = {
-          manuscriptsCollection: {
-            items: [
-              {
-                sys: { id: 'compliant-ms' },
-                status: 'Compliant',
-                teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
-              },
-              {
-                sys: { id: 'active-ms' },
-                status: 'Review Compliance Report',
-                teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
-              },
-              {
-                sys: { id: 'closed-ms' },
-                status: 'Closed (other)',
-                teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
-              },
-            ],
-          },
-        };
-      }
+      team!.projectMember.linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            {
+              sys: { id: 'compliant-ms' },
+              status: 'Compliant',
+              teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+            },
+            {
+              sys: { id: 'active-ms' },
+              status: 'Review Compliance Report',
+              teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+            },
+            {
+              sys: { id: 'closed-ms' },
+              status: 'Closed (other)',
+              teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+            },
+          ],
+        },
+      };
 
       const result = parseContentfulProjectDetail(graphqlItem);
 
@@ -1314,21 +1310,19 @@ describe('parseContentfulProjectDetail', () => {
         (m) =>
           (m.projectMember as { __typename?: string }).__typename === 'Teams',
       );
-      if (team) {
-        (team.projectMember as Record<string, unknown>).linkedFrom = {
-          manuscriptsCollection: {
-            items: [
-              {
-                sys: { id: 'resource-ms-1' },
-                status: 'Waiting for Report',
-                teamsCollection: {
-                  items: [{ sys: { id: 'resource-team-main' } }],
-                },
+      team!.projectMember.linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            {
+              sys: { id: 'resource-ms-1' },
+              status: 'Waiting for Report',
+              teamsCollection: {
+                items: [{ sys: { id: 'resource-team-main' } }],
               },
-            ],
-          },
-        };
-      }
+            },
+          ],
+        },
+      };
 
       const result = parseContentfulProjectDetail(graphqlItem);
 
@@ -1366,21 +1360,19 @@ describe('parseContentfulProjectDetail', () => {
         (m) =>
           (m.projectMember as { __typename?: string }).__typename === 'Teams',
       );
-      if (team) {
-        (team.projectMember as Record<string, unknown>).linkedFrom = {
-          manuscriptsCollection: {
-            items: [
-              null,
-              {
-                sys: { id: 'valid-ms' },
-                status: 'Waiting for Report',
-                teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
-              },
-              null,
-            ],
-          },
-        };
-      }
+      team!.projectMember.linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            null,
+            {
+              sys: { id: 'valid-ms' },
+              status: 'Waiting for Report',
+              teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+            },
+            null,
+          ],
+        },
+      };
 
       const result = parseContentfulProjectDetail(graphqlItem);
 

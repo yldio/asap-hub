@@ -51,6 +51,8 @@ export type BaseProject = {
   readonly originalGrant?: string;
   readonly supplementGrantDescription?: string;
   readonly tools?: ReadonlyArray<ProjectTool>;
+  readonly manuscripts?: string[];
+  readonly collaborationManuscripts?: string[];
 };
 
 export type ProjectMemberTeam = {
@@ -136,8 +138,6 @@ export type DiscoveryProjectDetail = DiscoveryProject & {
   readonly supplementGrant?: SupplementGrantInfo;
   readonly fundedTeam: FundedTeam;
   readonly collaborators?: ReadonlyArray<ProjectMember>;
-  readonly manuscripts?: string[];
-  readonly collaborationManuscripts?: string[];
 };
 
 export type ResourceProjectDetail = ResourceProject & {
@@ -145,8 +145,6 @@ export type ResourceProjectDetail = ResourceProject & {
   readonly supplementGrant?: SupplementGrantInfo;
   readonly fundedTeam?: FundedTeam;
   readonly collaborators?: ReadonlyArray<ProjectMember>;
-  readonly manuscripts?: string[];
-  readonly collaborationManuscripts?: string[];
 };
 
 export type TraineeProjectDetail = TraineeProject & {

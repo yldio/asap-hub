@@ -115,15 +115,9 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       id={projectId}
                       isProjectMember={isProjectMember}
                       isTeamBased={config.getIsTeamBased(projectDetail)}
-                      manuscripts={
-                        'manuscripts' in projectDetail
-                          ? projectDetail.manuscripts ?? []
-                          : []
-                      }
+                      manuscripts={projectDetail.manuscripts ?? []}
                       collaborationManuscripts={
-                        'collaborationManuscripts' in projectDetail
-                          ? projectDetail.collaborationManuscripts ?? []
-                          : []
+                        projectDetail.collaborationManuscripts ?? []
                       }
                       tools={[]}
                       // OOS: Wire lastModifiedDate from project tools data when backend is ready

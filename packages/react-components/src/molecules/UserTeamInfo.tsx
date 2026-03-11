@@ -31,6 +31,7 @@ type UserTeamInfoProps = Pick<
     href: string;
     name: string;
   }[];
+  showTeamName?: boolean;
 };
 
 const UserTeamInfo: FC<UserTeamInfoProps> = ({
@@ -38,29 +39,31 @@ const UserTeamInfo: FC<UserTeamInfoProps> = ({
   displayName,
   alumniSinceDate,
   teams,
+  showTeamName = true,
 }) => (
   <div css={userAndTeamContainerStyles}>
     <Link ellipsed href={userHref}>
       <span css={nameStyles}>{displayName}</span>
     </Link>
     {alumniSinceDate && <span css={iconStyles}>{alumniBadgeIcon}</span>}
-    {teams.length === 1 ? (
-      <span css={[teamStyles, nameStyles]}>
-        (
-        <Link ellipsed href={teams[0]?.href}>
-          <span css={nameStyles}>{teams[0]?.name}</span>
-        </Link>
-        )
-      </span>
-    ) : (
-      <span css={[teamStyles, nameStyles]}>
-        (
-        <Link ellipsed href={userHref}>
-          <span css={nameStyles}>Multiple teams</span>
-        </Link>
-        )
-      </span>
-    )}
+    {showTeamName &&
+      (teams.length === 1 ? (
+        <span css={[teamStyles, nameStyles]}>
+          (
+          <Link ellipsed href={teams[0]?.href}>
+            <span css={nameStyles}>{teams[0]?.name}</span>
+          </Link>
+          )
+        </span>
+      ) : (
+        <span css={[teamStyles, nameStyles]}>
+          (
+          <Link ellipsed href={userHref}>
+            <span css={nameStyles}>Multiple teams</span>
+          </Link>
+          )
+        </span>
+      ))}
   </div>
 );
 export default UserTeamInfo;

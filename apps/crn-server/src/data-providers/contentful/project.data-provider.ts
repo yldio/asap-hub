@@ -302,11 +302,8 @@ const getManuscriptItemsFromTeamMember = (
       };
     };
   };
-  return (
-    memberWithLinkedFrom.linkedFrom?.manuscriptsCollection?.items?.filter(
-      (i: ProjectManuscriptItem | null): i is ProjectManuscriptItem =>
-        i !== null,
-    ) ?? []
+  return cleanArray(
+    memberWithLinkedFrom.linkedFrom?.manuscriptsCollection?.items,
   );
 };
 

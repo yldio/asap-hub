@@ -118,6 +118,25 @@ export type Milestone = {
   readonly status: MilestoneStatus;
 };
 
+// NOTE: this is going to be inferred from the collection
+// of associated milestones in ticket https://asaphub.atlassian.net/browse/ASAP-1365
+// If redundant, we can remove it, and use MilestoneStatus instead (though AimMilestoneStatus
+// might be a better name)
+export type AimStatus = 'Complete' | 'In Progress' | 'Pending' | 'Terminated';
+
+export type Aim = {
+  readonly id: string;
+  readonly order: number; // feel free to remove this property if it can be inferred from the item's order in a given list
+  readonly description: string;
+  readonly status: AimStatus;
+  readonly articleCount: number;
+};
+
+export type ProjectAimsGrant = {
+  readonly grantTitle: string;
+  readonly aims: ReadonlyArray<Aim>;
+};
+
 // Grant information types
 export type OriginalGrantInfo = {
   readonly originalGrant: string;

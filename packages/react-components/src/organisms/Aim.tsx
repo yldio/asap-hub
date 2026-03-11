@@ -15,19 +15,17 @@ import {
   getStatusAccent,
 } from './shared-aim-milestones-styles';
 
-export const AIM_TEMPLATE_COLUMNS = `33px 1fr 120px`;
-export const AIM_COLUMN_GAP = 24;
-
 const aimRowStyles = css({
   display: 'grid',
-  gridTemplateColumns: AIM_TEMPLATE_COLUMNS,
-  gap: rem(AIM_COLUMN_GAP),
+  gridColumn: '1 / -1',
+  gridTemplateColumns: 'subgrid',
   paddingBottom: rem(20),
   borderBottom: `1px solid ${steel.rgb}`,
   marginBottom: rem(20),
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    gridColumn: 'auto',
     gridTemplateColumns: '1fr',
-    gap: rem(12),
+    gap: rem(24),
   },
   '&:last-child': {
     marginBottom: 0,
@@ -46,7 +44,6 @@ const aimNumberContainerStyles = css({
     gap: rem(16),
     justifyContent: 'flex-start',
     flexFlow: 'column',
-    marginBottom: rem(24),
   },
 });
 
@@ -79,7 +76,6 @@ const articlesButtonStyles = css({
   },
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
     marginTop: rem(24),
-    marginBottom: rem(24),
   },
 });
 

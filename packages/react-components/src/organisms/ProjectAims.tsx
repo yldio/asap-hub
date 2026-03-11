@@ -5,7 +5,7 @@ import { Headline3, Card, Button, TabButton, Link, Paragraph } from '../atoms';
 import { TabNav } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { neutral1000, steel } from '../colors';
-import Aim, { AIM_COLUMN_GAP, AIM_TEMPLATE_COLUMNS } from './Aim';
+import Aim from './Aim';
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)} ${rem(16)} ${rem(24)}`,
@@ -16,10 +16,19 @@ const tabContainerStyles = css({
   borderBottom: `1px solid ${steel.rgb}`,
 });
 
-const tableHeaderStyles = css({
+const aimsGridStyles = css({
   display: 'grid',
-  gridTemplateColumns: AIM_TEMPLATE_COLUMNS,
-  gap: rem(AIM_COLUMN_GAP),
+  gridTemplateColumns: `${rem(33)} 1fr auto`,
+  columnGap: rem(24),
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    gridTemplateColumns: '1fr',
+  },
+});
+
+const headerRowStyles = css({
+  display: 'grid',
+  gridColumn: '1 / -1',
+  gridTemplateColumns: 'subgrid',
   marginBottom: rem(16),
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
     display: 'none',
@@ -30,12 +39,6 @@ const headerLabelStyles = css({
   fontSize: rem(17),
   fontWeight: 'bold',
   color: neutral1000.rgb,
-});
-
-const aimsListStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 0,
 });
 
 const viewMoreContainerStyles = (hasMore: boolean) =>
@@ -62,12 +65,12 @@ const AimsList: FC<{
 
   return (
     <>
-      <div css={tableHeaderStyles}>
-        <div css={headerLabelStyles}>Aim</div>
-        <div css={headerLabelStyles}>Description</div>
-        <div css={headerLabelStyles}>Status</div>
-      </div>
-      <div css={aimsListStyles}>
+      <div css={aimsGridStyles}>
+        <div css={headerRowStyles}>
+          <div css={headerLabelStyles}>Aim</div>
+          <div css={headerLabelStyles}>Description</div>
+          <div css={headerLabelStyles}>Status</div>
+        </div>
         {displayedAims.map((aim) => (
           <Aim key={aim.id} aim={aim} />
         ))}

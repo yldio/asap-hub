@@ -55,11 +55,10 @@ describe('ProjectDetailMilestones', () => {
       />,
     );
 
-    // ProjectMilestones heading and description
-    expect(screen.getAllByText('Milestones').length).toBeGreaterThanOrEqual(1);
-    expect(
-      screen.getByText('The milestones of this project are:'),
-    ).toBeInTheDocument();
+    // Page heading and table column headers (header row + optional mobile labels per row)
+    expect(screen.getByText('Milestones')).toBeInTheDocument();
+    expect(screen.getAllByText('Aims').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Milestone').length).toBeGreaterThanOrEqual(1);
 
     // Milestone rows
     expect(screen.getByText('First milestone')).toBeInTheDocument();

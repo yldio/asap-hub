@@ -15,7 +15,7 @@ const containerStyles = css({
 });
 
 const descriptionSectionStyles = css({
-  maxWidth: rem(720),
+  // maxWidth: rem(720),
   display: 'block',
   '& > * + *': {
     marginTop: rem(16),

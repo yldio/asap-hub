@@ -42,6 +42,24 @@ describe('Milestone', () => {
     expect(screen.getByText('Complete')).toBeInTheDocument();
   });
 
+  it('renders aim badges from aims string', () => {
+    render(
+      <Milestone
+        milestone={{
+          ...mockMilestone,
+          aims: '1,2',
+        }}
+      />,
+    );
+    expect(screen.getByText('#1')).toBeInTheDocument();
+    expect(screen.getByText('#2')).toBeInTheDocument();
+  });
+
+  it('renders em dash when aims is empty or missing', () => {
+    render(<Milestone milestone={mockMilestone} />);
+    expect(screen.getByText('—')).toBeInTheDocument();
+  });
+
   it('does not render link when not provided', () => {
     render(<Milestone milestone={mockMilestone} />);
     expect(

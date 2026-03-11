@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react-vite';
 
 import { ArticlesList } from '@asap-hub/react-components';
-import type { ArticleItem } from '@asap-hub/react-components';
+import type { ArticleItem } from '@asap-hub/model';
 
 const sampleArticles: ArticleItem[] = [
   { id: '1', title: 'First article title', href: '#' },
@@ -19,10 +19,19 @@ const manyArticles: ArticleItem[] = Array.from({ length: 20 }, (_, i) => ({
   href: '#',
 }));
 
+const mockFetch =
+  (articles: ReadonlyArray<ArticleItem>, delayMs = 300) =>
+  (): Promise<ReadonlyArray<ArticleItem>> =>
+    new Promise((resolve) => {
+      setTimeout(() => resolve(articles), delayMs);
+    });
+
 const meta: Meta<typeof ArticlesList> = {
   component: ArticlesList,
   title: 'Molecules/ArticlesList',
   argTypes: {
+    aimId: { control: { type: 'text' } },
+    articlesCount: { control: { type: 'number' } },
     maxWidth: {
       control: { type: 'text' },
       description: 'Max width of the list container (e.g. "360px" or "20rem")',
@@ -45,46 +54,60 @@ type Story = StoryObj<typeof ArticlesList>;
 
 export const Default: Story = {
   args: {
-    articles: sampleArticles,
-    initiallyExpanded: true,
+    aimId: 'aim-1',
+    articlesCount: sampleArticles.length,
+    initiallyExpanded: false,
+    fetchArticles: mockFetch(sampleArticles),
   },
 };
 
-export const CollapsedByDefault: Story = {
+export const ExpandedWithArticles: Story = {
   args: {
-    articles: sampleArticles,
-    initiallyExpanded: false,
+    aimId: 'aim-1',
+    articlesCount: sampleArticles.length,
+    initiallyExpanded: true,
+    fetchArticles: mockFetch(sampleArticles),
   },
 };
 
 export const ManyArticles: Story = {
   args: {
-    articles: manyArticles,
-    initiallyExpanded: true,
+    aimId: 'aim-2',
+    articlesCount: manyArticles.length,
+    initiallyExpanded: false,
     listMaxHeight: '264px',
     maxWidth: '508px',
+    fetchArticles: mockFetch(manyArticles),
   },
 };
 
 export const SmallWidthList: Story = {
   args: {
-    articles: manyArticles,
-    initiallyExpanded: true,
+    aimId: 'aim-3',
+    articlesCount: manyArticles.length,
+    initiallyExpanded: false,
     listMaxHeight: '264px',
     maxWidth: '360px',
+    fetchArticles: mockFetch(manyArticles),
   },
 };
 
 export const EmptyList: Story = {
   args: {
-    articles: [],
-    initiallyExpanded: true,
+    aimId: 'aim-empty',
+    articlesCount: 0,
+    initiallyExpanded: false,
+    fetchArticles: mockFetch([]),
   },
 };
 
 export const SingleArticle: Story = {
   args: {
-    articles: [{ id: '1', title: 'Only one article in this list', href: '#' }],
-    initiallyExpanded: true,
+    aimId: 'aim-single',
+    articlesCount: 1,
+    initiallyExpanded: false,
+    fetchArticles: mockFetch([
+      { id: '1', title: 'Only one article in this list', href: '#' },
+    ]),
   },
 };

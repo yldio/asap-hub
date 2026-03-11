@@ -1,22 +1,25 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { css } from '@emotion/react';
+
+import type { ArticleItem } from '@asap-hub/model';
 
 import { Button, Link } from '../atoms';
 import { article as articleIcon, minusRectIcon, plusRectIcon } from '../icons';
 import { rem } from '../pixels';
 import { neutral900 } from '../colors';
-
-export type ArticleItem = {
-  readonly id: string;
-  readonly title: string;
-  readonly href: string;
-};
+import { noop } from '../utils';
 
 const headerStyles = css({
   display: 'flex',
   alignItems: 'center',
-  gap: rem(16),
+  flexWrap: 'wrap',
+  gap: rem(8),
   marginBottom: rem(8),
+});
+
+const separatorStyles = css({
+  color: neutral900.rgb,
+  fontSize: rem(17),
 });
 
 const iconButtonStyles = css({
@@ -87,35 +90,64 @@ const itemLinkStyles = css({
 });
 
 export type ArticlesListProps = {
-  readonly articles: ReadonlyArray<ArticleItem>;
+  readonly aimId: string;
+  readonly articlesCount: number;
   readonly initiallyExpanded?: boolean;
   readonly listMaxHeight?: string;
   readonly maxWidth?: string;
+  readonly fetchArticles?: (
+    aimId: string,
+  ) => Promise<ReadonlyArray<ArticleItem>>;
 };
 
 const ArticlesList: FC<ArticlesListProps> = ({
-  articles,
-  initiallyExpanded = true,
+  initiallyExpanded = false,
   listMaxHeight = rem(240),
   maxWidth = rem(408),
+  articlesCount = 0,
+  aimId,
+  fetchArticles = () => Promise.resolve([]),
 }) => {
   const [expanded, setExpanded] = useState(initiallyExpanded);
-  const count = articles.length;
+  const [articles, setArticles] = useState<ReadonlyArray<ArticleItem>>([]);
+
+  useEffect(() => {
+    if (initiallyExpanded && fetchArticles && articlesCount > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      fetchArticles(aimId).then(setArticles);
+    }
+  }, [aimId, initiallyExpanded, fetchArticles, articlesCount]);
 
   return (
     <div>
       <div css={headerStyles}>
         <Button
+          id={`articles-list-button-${aimId}`}
           aria-label={expanded ? 'Collapse articles' : 'Expand articles'}
           linkStyle
-          onClick={() => setExpanded(!expanded)}
+          onClick={async () => {
+            const nextExpanded = !expanded;
+            setExpanded(nextExpanded);
+            if (nextExpanded && fetchArticles) {
+              setArticles(await fetchArticles(aimId));
+            }
+          }}
           overrideStyles={iconButtonStyles}
         >
           <span>{expanded ? minusRectIcon : plusRectIcon}</span>
-          <span css={titleStyles}>Articles ({count})</span>
+          <span css={titleStyles}>Articles ({articlesCount})</span>
+        </Button>
+        <span css={separatorStyles}>•</span>
+        <Button
+          id={`articles-list-edit-${aimId}`}
+          linkStyle
+          onClick={noop} // TODO: Add edit action
+          overrideStyles={iconButtonStyles}
+        >
+          Edit
         </Button>
       </div>
-      {expanded && (
+      {expanded && articles?.length > 0 && (
         <div css={listWrapperStyles(listMaxHeight, maxWidth)}>
           <ul css={listStyles}>
             {articles.map(({ id, title, href }) => (

@@ -5,7 +5,7 @@ import { fern, lead, neutral1000 } from '../colors';
 export const descriptionContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(4),
+  gap: rem(12),
   justifyContent: 'flex-start',
 });
 

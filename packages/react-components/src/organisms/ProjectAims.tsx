@@ -1,4 +1,4 @@
-import { ProjectAimsGrant } from '@asap-hub/model';
+import { ArticleItem, ProjectAimsGrant } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { FC, useState } from 'react';
 import { Headline3, Card, Button, TabButton, Link, Paragraph } from '../atoms';
@@ -52,14 +52,25 @@ const viewMoreContainerStyles = (hasMore: boolean) =>
 type ProjectAimsProps = {
   aims: ReadonlyArray<ProjectAimsGrant>;
   initialDisplayCount?: number;
+  fetchArticles?: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
 };
+
+const noopFetchArticles = (): Promise<ReadonlyArray<ArticleItem>> =>
+  Promise.resolve([]);
 
 const AimsList: FC<{
   aims: ProjectAimsGrant['aims'];
   initialDisplayCount: number;
   showAll: boolean;
   onToggleShowAll: () => void;
-}> = ({ aims, initialDisplayCount, showAll, onToggleShowAll }) => {
+  fetchArticles: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
+}> = ({
+  aims,
+  initialDisplayCount,
+  showAll,
+  onToggleShowAll,
+  fetchArticles,
+}) => {
   const displayedAims = showAll ? aims : aims.slice(0, initialDisplayCount);
   const hasMore = aims.length > initialDisplayCount;
 
@@ -72,12 +83,16 @@ const AimsList: FC<{
           <div css={headerLabelStyles}>Status</div>
         </div>
         {displayedAims.map((aim) => (
-          <Aim key={aim.id} aim={aim} />
+          <Aim key={aim.id} aim={aim} fetchArticles={fetchArticles} />
         ))}
       </div>
       <div css={viewMoreContainerStyles(hasMore)}>
         {hasMore && (
-          <Button linkStyle onClick={onToggleShowAll}>
+          <Button
+            id="project-aims-toggle-show-all"
+            linkStyle
+            onClick={onToggleShowAll}
+          >
             {showAll ? 'View Less Aims' : 'View More Aims'}
           </Button>
         )}
@@ -95,6 +110,7 @@ const SINGLE_TAB_MARGIN = 32;
 const ProjectAims: FC<ProjectAimsProps> = ({
   aims,
   initialDisplayCount = 4,
+  fetchArticles = noopFetchArticles,
 }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [showAllByTab, setShowAllByTab] = useState<Record<number, boolean>>({});
@@ -154,6 +170,7 @@ const ProjectAims: FC<ProjectAimsProps> = ({
               [activeTab]: !prev[activeTab],
             }))
           }
+          fetchArticles={fetchArticles}
         />
       </div>
     </Card>

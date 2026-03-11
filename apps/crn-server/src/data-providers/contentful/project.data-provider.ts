@@ -419,10 +419,7 @@ export const parseContentfulProjectDetail = (
         const {
           manuscripts: resourceManuscripts,
           collaborationManuscripts: resourceCollaborationManuscripts,
-        } = parseProjectManuscripts(
-          resourceManuscriptItems,
-          teamMember.sys.id,
-        );
+        } = parseProjectManuscripts(resourceManuscriptItems, teamMember.sys.id);
 
         return {
           ...baseProject,

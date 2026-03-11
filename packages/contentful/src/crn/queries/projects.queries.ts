@@ -101,7 +101,10 @@ export const projectsContentQueryFragment = gql`
             }
             teamDescription
             linkedFrom {
-              manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
+              manuscriptsCollection(
+                limit: 20
+                order: sys_firstPublishedAt_DESC
+              ) {
                 items {
                   sys {
                     id

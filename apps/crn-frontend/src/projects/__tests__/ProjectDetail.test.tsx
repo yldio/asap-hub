@@ -63,6 +63,8 @@ const mockDiscoveryProject: DiscoveryProjectDetailType = {
   originalGrant: 'Original Grant',
   originalGrantProposalId: 'proposal-1',
   contactEmail: 'contact@example.com',
+  manuscripts: ['ms-1', 'ms-2'],
+  collaborationManuscripts: ['ms-3'],
   collaborators: [
     {
       id: 'collab-1',
@@ -86,6 +88,8 @@ const mockDiscoveryProjectNoContact: DiscoveryProjectDetailType = {
   id: 'discovery-no-contact',
   contactEmail: '',
   collaborators: [],
+  manuscripts: undefined,
+  collaborationManuscripts: undefined,
 };
 
 const mockResourceProject: ResourceProjectDetailType = {
@@ -106,6 +110,8 @@ const mockResourceProject: ResourceProjectDetailType = {
   originalGrant: 'Original Grant',
   originalGrantProposalId: 'proposal-1',
   contactEmail: 'contact@example.com',
+  manuscripts: ['ms-r1'],
+  collaborationManuscripts: ['ms-r2'],
   members: [
     {
       id: 'member-1',
@@ -468,6 +474,26 @@ describe.each(variants)(
 // --- Variant-specific tests ---
 
 describe('DiscoveryProjectDetail - specific', () => {
+  it('passes manuscripts and collaborationManuscripts to ProjectWorkspace', async () => {
+    const memberUser = {
+      projects: [{ id: 'discovery-1' }],
+      role: 'Grantee',
+    };
+    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    await renderProjectDetail(
+      DiscoveryProjectDetail,
+      'discovery',
+      'discovery-1',
+      memberUser,
+      'workspace',
+    );
+    await screen.findByRole('heading', { name: 'Compliance Review' });
+    expect(lastWorkspaceProps.manuscripts).toEqual(['ms-1', 'ms-2']);
+    expect(lastWorkspaceProps.collaborationManuscripts).toEqual(['ms-3']);
+    document.cookie =
+      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  });
+
   it('renders workspace with contact name from collaborators', async () => {
     const memberUser = {
       projects: [{ id: 'discovery-1' }],

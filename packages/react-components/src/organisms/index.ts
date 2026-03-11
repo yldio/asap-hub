@@ -46,6 +46,7 @@ export { default as ManuscriptHeader } from './ManuscriptHeader';
 export { default as ManuscriptVersionImportCard } from './ManuscriptVersionImportCard';
 export { default as MenuHeader } from './MenuHeader';
 export { default as MeetingRepAttendanceTable } from './MeetingRepAttendanceTable';
+export { default as Aim } from './Aim';
 export { default as Milestone } from './Milestone';
 export { default as NewsCard } from './NewsCard';
 export { default as NewsSection } from './NewsSection';
@@ -67,6 +68,7 @@ export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndRe
 export { default as ProjectCard } from './ProjectCard';
 export { default as ProjectContributors } from './ProjectContributors';
 export { default as ProjectDetailOverview } from './ProjectDetailOverview';
+export { default as ProjectAims } from './ProjectAims';
 export { default as ProjectMilestones } from './ProjectMilestones';
 export { default as ProjectProfileOverview } from './ProjectProfileOverview';
 export { default as QuestionsSection } from './QuestionsSection';

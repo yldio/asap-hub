@@ -1,22 +1,25 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Milestone as MilestoneType, MilestoneStatus } from '@asap-hub/model';
-import Milestone, { getMilestoneStatusAccent } from '../Milestone';
+import { Aim as AimType, AimStatus } from '@asap-hub/model';
+import Aim, { getAimStatusAccent } from '../Aim';
 
-const mockMilestone: MilestoneType = {
+const mockAim: AimType = {
   id: '1',
-  description: 'This is a test milestone description',
+  order: 1,
+  description: 'This is a test aim description',
   status: 'Complete',
+  articleCount: 0,
 };
 
-const longMilestone: MilestoneType = {
+const longAim: AimType = {
   id: '2',
+  order: 2,
   description:
-    'This is a very long milestone description that exceeds the character limit and should be truncated with a Read More button to allow users to expand and see the full content.',
+    'This is a very long aim description that exceeds the character limit and should be truncated with a Read More button to allow users to expand and see the full content of the aim.',
   status: 'In Progress',
+  articleCount: 3,
 };
 
-// Mock scrollHeight and clientHeight to simulate truncation
 const mockScrollHeight = (element: HTMLElement, scrollHeight: number) => {
   Object.defineProperty(element, 'scrollHeight', {
     configurable: true,
@@ -31,36 +34,32 @@ const mockClientHeight = (element: HTMLElement, clientHeight: number) => {
   });
 };
 
-describe('Milestone', () => {
-  it('renders milestone description', () => {
-    render(<Milestone milestone={mockMilestone} />);
-    expect(screen.getByText(mockMilestone.description)).toBeInTheDocument();
+describe('Aim', () => {
+  it('renders aim description', () => {
+    render(<Aim aim={mockAim} />);
+    expect(screen.getByText(mockAim.description)).toBeInTheDocument();
   });
 
-  it('renders milestone status pill', () => {
-    render(<Milestone milestone={mockMilestone} />);
+  it('renders aim order badge', () => {
+    render(<Aim aim={mockAim} />);
+    expect(screen.getByText('#1')).toBeInTheDocument();
+  });
+
+  it('renders aim status pill', () => {
+    render(<Aim aim={mockAim} />);
     expect(screen.getByText('Complete')).toBeInTheDocument();
   });
 
-  it('does not render link when not provided', () => {
-    render(<Milestone milestone={mockMilestone} />);
-    expect(
-      screen.queryByRole('link', { name: /view milestone/i }),
-    ).not.toBeInTheDocument();
-  });
-
   it('truncates long descriptions and shows Read More button', async () => {
-    const { container } = render(<Milestone milestone={longMilestone} />);
+    const { container } = render(<Aim aim={longAim} />);
 
-    // Find the description div and mock its dimensions to simulate truncation
     const descriptionDiv = container.querySelector(
       'div[class*="clampedDescriptionStyles"]',
     );
     if (descriptionDiv) {
       mockScrollHeight(descriptionDiv as HTMLElement, 100);
-      mockClientHeight(descriptionDiv as HTMLElement, 48); // 2 lines at 24px line-height
+      mockClientHeight(descriptionDiv as HTMLElement, 48);
 
-      // Trigger a window resize to force truncation check
       act(() => {
         window.dispatchEvent(new Event('resize'));
       });
@@ -77,9 +76,8 @@ describe('Milestone', () => {
   });
 
   it('expands description when Read More is clicked', async () => {
-    const { container } = render(<Milestone milestone={longMilestone} />);
+    const { container } = render(<Aim aim={longAim} />);
 
-    // Mock dimensions to simulate truncation
     const descriptionDiv = container.querySelector(
       'div[class*="clampedDescriptionStyles"]',
     );
@@ -108,14 +106,13 @@ describe('Milestone', () => {
       expect(
         screen.queryByRole('button', { name: /Read More/i }),
       ).not.toBeInTheDocument();
-      expect(screen.getByText(longMilestone.description)).toBeInTheDocument();
+      expect(screen.getByText(longAim.description)).toBeInTheDocument();
     });
   });
 
   it('collapses description when Read Less is clicked', async () => {
-    const { container } = render(<Milestone milestone={longMilestone} />);
+    const { container } = render(<Aim aim={longAim} />);
 
-    // Mock dimensions to simulate truncation
     const descriptionDiv = container.querySelector(
       'div[class*="clampedDescriptionStyles"]',
     );
@@ -134,8 +131,7 @@ describe('Milestone', () => {
       ).toBeInTheDocument();
     });
 
-    const readMoreButton = screen.getByRole('button', { name: /Read More/i });
-    await userEvent.click(readMoreButton);
+    await userEvent.click(screen.getByRole('button', { name: /Read More/i }));
 
     await waitFor(() => {
       expect(
@@ -143,8 +139,7 @@ describe('Milestone', () => {
       ).toBeInTheDocument();
     });
 
-    const readLessButton = screen.getByRole('button', { name: /Read Less/i });
-    await userEvent.click(readLessButton);
+    await userEvent.click(screen.getByRole('button', { name: /Read Less/i }));
 
     await waitFor(() => {
       expect(
@@ -156,27 +151,55 @@ describe('Milestone', () => {
     });
   });
 
-  describe('getMilestoneStatusAccent', () => {
+  it('shows articles button when articleCount is greater than 0', () => {
+    render(<Aim aim={longAim} />);
+    expect(
+      screen.getByRole('button', { name: /Articles \(3\)/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('does not show articles button when articleCount is 0', () => {
+    render(<Aim aim={mockAim} />);
+    expect(
+      screen.queryByRole('button', { name: /Articles/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('toggles articles button on click', async () => {
+    render(<Aim aim={longAim} />);
+
+    const articlesButton = screen.getByRole('button', {
+      name: /Articles \(3\)/i,
+    });
+    await userEvent.click(articlesButton);
+
+    // Button should still be present after click
+    expect(
+      screen.getByRole('button', { name: /Articles \(3\)/i }),
+    ).toBeInTheDocument();
+  });
+
+  describe('getAimStatusAccent', () => {
     it('returns success for Complete status', () => {
-      expect(getMilestoneStatusAccent('Complete')).toBe('success');
+      expect(getAimStatusAccent('Complete')).toBe('success');
     });
 
     it('returns info for In Progress status', () => {
-      expect(getMilestoneStatusAccent('In Progress')).toBe('info');
+      expect(getAimStatusAccent('In Progress')).toBe('info');
     });
 
     it('returns neutral for Pending status', () => {
-      expect(getMilestoneStatusAccent('Pending')).toBe('neutral');
+      expect(getAimStatusAccent('Pending')).toBe('neutral');
     });
 
     it('returns error for Terminated status', () => {
-      expect(getMilestoneStatusAccent('Terminated')).toBe('error');
+      expect(getAimStatusAccent('Terminated')).toBe('error');
     });
 
     it('returns default for unknown status', () => {
-      expect(
-        getMilestoneStatusAccent('Unknown' as unknown as MilestoneStatus),
-      ).toBe('default');
+      expect(getAimStatusAccent('Unknown' as unknown as AimStatus)).toBe(
+        'default',
+      );
     });
   });
 });

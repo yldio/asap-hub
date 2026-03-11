@@ -2,6 +2,12 @@ import { render, screen } from '@testing-library/react';
 import { ProjectDetail } from '@asap-hub/model';
 import ProjectDetailAbout from '../ProjectDetailAbout';
 
+const mockIsEnabled = jest.fn();
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
 const baseProject = {
   id: 'project-1',
   title: 'Test Project',
@@ -24,6 +30,10 @@ const baseProject = {
 };
 
 describe('ProjectDetailAbout', () => {
+  beforeEach(() => {
+    mockIsEnabled.mockReturnValue(false);
+  });
+
   describe('Overview Section', () => {
     it('always renders the overview section', () => {
       const discoveryProject: ProjectDetail = {
@@ -501,6 +511,37 @@ describe('ProjectDetailAbout', () => {
       expect(
         screen.getByText('Have additional questions?'),
       ).toBeInTheDocument();
+    });
+  });
+
+  describe('Aims Section', () => {
+    const discoveryProject: ProjectDetail = {
+      ...baseProject,
+      projectType: 'Discovery Project',
+      researchTheme: 'Genetics',
+      teamName: 'Alpha Team',
+      fundedTeam: {
+        id: 'team-1',
+        displayName: 'Alpha Team',
+        teamType: 'Discovery Team',
+        researchTheme: 'Genetics',
+      },
+    };
+
+    it('renders Aims section when PROJECT_AIMS flag is enabled', () => {
+      mockIsEnabled.mockImplementation(
+        (flag: string) => flag === 'PROJECT_AIMS',
+      );
+
+      render(<ProjectDetailAbout {...discoveryProject} />);
+      expect(screen.getByText('Aims')).toBeInTheDocument();
+    });
+
+    it('does not render Aims section when PROJECT_AIMS flag is disabled', () => {
+      mockIsEnabled.mockReturnValue(false);
+
+      render(<ProjectDetailAbout {...discoveryProject} />);
+      expect(screen.queryByText('Aims')).not.toBeInTheDocument();
     });
   });
 });

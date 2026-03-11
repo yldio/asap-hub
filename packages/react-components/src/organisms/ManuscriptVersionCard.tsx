@@ -41,6 +41,7 @@ type ManuscriptVersionCardProps = {
   categories?: ManuscriptCategory[];
   impact?: ManuscriptImpact;
   openDiscussionTab: () => void;
+  showTeamName?: boolean;
 };
 
 const toastStyles = css({
@@ -188,6 +189,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   categories,
   impact,
   openDiscussionTab,
+  showTeamName = true,
 }) => {
   const navigate = useNavigate();
 
@@ -328,11 +330,13 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                   marginBottom: rem(32),
                 }}
               >
-                <AssociationList
-                  type="Team"
-                  inline
-                  associations={version.teams}
-                />
+                {showTeamName && (
+                  <AssociationList
+                    type="Team"
+                    inline
+                    associations={version.teams}
+                  />
+                )}
                 <AssociationList
                   type="Lab"
                   inline

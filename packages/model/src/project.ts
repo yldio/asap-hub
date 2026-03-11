@@ -136,6 +136,8 @@ export type DiscoveryProjectDetail = DiscoveryProject & {
   readonly supplementGrant?: SupplementGrantInfo;
   readonly fundedTeam: FundedTeam;
   readonly collaborators?: ReadonlyArray<ProjectMember>;
+  readonly manuscripts?: string[];
+  readonly collaborationManuscripts?: string[];
 };
 
 export type ResourceProjectDetail = ResourceProject & {
@@ -143,6 +145,8 @@ export type ResourceProjectDetail = ResourceProject & {
   readonly supplementGrant?: SupplementGrantInfo;
   readonly fundedTeam?: FundedTeam;
   readonly collaborators?: ReadonlyArray<ProjectMember>;
+  readonly manuscripts?: string[];
+  readonly collaborationManuscripts?: string[];
 };
 
 export type TraineeProjectDetail = TraineeProject & {

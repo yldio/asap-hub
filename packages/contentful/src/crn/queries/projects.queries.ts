@@ -100,6 +100,23 @@ export const projectsContentQueryFragment = gql`
               name
             }
             teamDescription
+            linkedFrom {
+              manuscriptsCollection(limit: 20, order: sys_firstPublishedAt_DESC) {
+                items {
+                  sys {
+                    id
+                  }
+                  status
+                  teamsCollection(limit: 1) {
+                    items {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

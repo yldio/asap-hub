@@ -1205,6 +1205,192 @@ describe('parseContentfulProjectDetail', () => {
     );
   });
 
+  describe('parseContentfulProjectDetail - manuscripts', () => {
+    it('returns manuscripts and collaborationManuscripts for a Discovery project', () => {
+      const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
+      const teamMember = (graphqlItem as Record<string, unknown>)
+        .membersCollection as {
+        items: Array<{
+          projectMember: Record<string, unknown>;
+        }>;
+      };
+      const team = teamMember.items.find(
+        (m) =>
+          (m.projectMember as { __typename?: string }).__typename === 'Teams',
+      );
+      if (team) {
+        (team.projectMember as Record<string, unknown>).linkedFrom = {
+          manuscriptsCollection: {
+            items: [
+              {
+                sys: { id: 'manuscript-1' },
+                status: 'Review Compliance Report',
+                teamsCollection: {
+                  items: [{ sys: { id: 'team-1' } }],
+                },
+              },
+              {
+                sys: { id: 'manuscript-2' },
+                status: 'Waiting for Report',
+                teamsCollection: {
+                  items: [{ sys: { id: 'other-team' } }],
+                },
+              },
+            ],
+          },
+        };
+      }
+
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result).toMatchObject({
+        manuscripts: ['manuscript-1'],
+        collaborationManuscripts: ['manuscript-2'],
+      });
+    });
+
+    it('sorts manuscripts with Compliant and Closed (other) last', () => {
+      const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
+      const teamMember = (graphqlItem as Record<string, unknown>)
+        .membersCollection as {
+        items: Array<{
+          projectMember: Record<string, unknown>;
+        }>;
+      };
+      const team = teamMember.items.find(
+        (m) =>
+          (m.projectMember as { __typename?: string }).__typename === 'Teams',
+      );
+      if (team) {
+        (team.projectMember as Record<string, unknown>).linkedFrom = {
+          manuscriptsCollection: {
+            items: [
+              {
+                sys: { id: 'compliant-ms' },
+                status: 'Compliant',
+                teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+              },
+              {
+                sys: { id: 'active-ms' },
+                status: 'Review Compliance Report',
+                teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+              },
+              {
+                sys: { id: 'closed-ms' },
+                status: 'Closed (other)',
+                teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+              },
+            ],
+          },
+        };
+      }
+
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result).toMatchObject({
+        manuscripts: ['active-ms', 'compliant-ms', 'closed-ms'],
+      });
+    });
+
+    it('returns empty manuscripts when team has no linkedFrom', () => {
+      const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result).toMatchObject({
+        manuscripts: [],
+        collaborationManuscripts: [],
+      });
+    });
+
+    it('returns manuscripts for a Resource team-based project', () => {
+      const graphqlItem = getResourceTeamProjectDetailGraphqlItem();
+      const teamMember = (graphqlItem as Record<string, unknown>)
+        .membersCollection as {
+        items: Array<{
+          projectMember: Record<string, unknown>;
+        }>;
+      };
+      const team = teamMember.items.find(
+        (m) =>
+          (m.projectMember as { __typename?: string }).__typename === 'Teams',
+      );
+      if (team) {
+        (team.projectMember as Record<string, unknown>).linkedFrom = {
+          manuscriptsCollection: {
+            items: [
+              {
+                sys: { id: 'resource-ms-1' },
+                status: 'Waiting for Report',
+                teamsCollection: {
+                  items: [{ sys: { id: 'resource-team-main' } }],
+                },
+              },
+            ],
+          },
+        };
+      }
+
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result).toMatchObject({
+        manuscripts: ['resource-ms-1'],
+        collaborationManuscripts: [],
+      });
+    });
+
+    it('does not include manuscripts for Resource non-team-based projects', () => {
+      const graphqlItem = getResourceIndividualProjectDetailGraphqlItem();
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result).not.toHaveProperty('manuscripts');
+      expect(result).not.toHaveProperty('collaborationManuscripts');
+    });
+
+    it('does not include manuscripts for Trainee projects', () => {
+      const graphqlItem = getTraineeProjectDetailGraphqlItem();
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result).not.toHaveProperty('manuscripts');
+      expect(result).not.toHaveProperty('collaborationManuscripts');
+    });
+
+    it('filters out null manuscript items', () => {
+      const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
+      const teamMember = (graphqlItem as Record<string, unknown>)
+        .membersCollection as {
+        items: Array<{
+          projectMember: Record<string, unknown>;
+        }>;
+      };
+      const team = teamMember.items.find(
+        (m) =>
+          (m.projectMember as { __typename?: string }).__typename === 'Teams',
+      );
+      if (team) {
+        (team.projectMember as Record<string, unknown>).linkedFrom = {
+          manuscriptsCollection: {
+            items: [
+              null,
+              {
+                sys: { id: 'valid-ms' },
+                status: 'Waiting for Report',
+                teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+              },
+              null,
+            ],
+          },
+        };
+      }
+
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result).toMatchObject({
+        manuscripts: ['valid-ms'],
+        collaborationManuscripts: [],
+      });
+    });
+  });
+
   describe('ProjectContentfulDataProvider - fetch with projectMembershipId filter', () => {
     const contentfulClientMock = getContentfulGraphqlClientMock();
     const dataProvider = new ProjectContentfulDataProvider(

@@ -21,8 +21,14 @@ const headerStyles = css({
 
 const iconButtonStyles = css({
   display: 'inline-flex',
+  alignItems: 'center',
   padding: 0,
   minWidth: 'auto',
+  gap: rem(16),
+  textDecoration: 'none',
+  ':hover, :active, :focus': {
+    textDecoration: 'none',
+  },
 });
 
 const titleStyles = css({
@@ -106,8 +112,8 @@ const ArticlesList: FC<ArticlesListProps> = ({
           overrideStyles={iconButtonStyles}
         >
           <span>{expanded ? minusRectIcon : plusRectIcon}</span>
+          <span css={titleStyles}>Articles ({count})</span>
         </Button>
-        <span css={titleStyles}>Articles ({count})</span>
       </div>
       {expanded && (
         <div css={listWrapperStyles(listMaxHeight, maxWidth)}>

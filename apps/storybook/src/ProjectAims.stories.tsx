@@ -6,6 +6,8 @@ export default {
   component: ProjectAims,
 };
 
+const mockFetchArticles = () => Promise.resolve([]);
+
 const createAim = (
   id: string,
   order: number,
@@ -40,7 +42,9 @@ const originalGrant: ProjectAimsGrant = {
   aims: defaultAims,
 };
 
-export const Default = () => <ProjectAims aims={[originalGrant]} />;
+export const Default = () => (
+  <ProjectAims aims={[originalGrant]} fetchArticles={mockFetchArticles} />
+);
 
 export const WithSupplementGrant = () => {
   const supplementGrant: ProjectAimsGrant = {
@@ -52,7 +56,12 @@ export const WithSupplementGrant = () => {
       createAim('s4', 4, mediumDescription, 'Terminated', 2),
     ],
   };
-  return <ProjectAims aims={[supplementGrant, originalGrant]} />;
+  return (
+    <ProjectAims
+      aims={[supplementGrant, originalGrant]}
+      fetchArticles={mockFetchArticles}
+    />
+  );
 };
 
 export const AllStatuses = () => (
@@ -68,6 +77,7 @@ export const AllStatuses = () => (
         ],
       },
     ]}
+    fetchArticles={mockFetchArticles}
   />
 );
 
@@ -88,6 +98,7 @@ export const WithMoreAims = () => (
         ],
       },
     ]}
+    fetchArticles={mockFetchArticles}
   />
 );
 
@@ -99,6 +110,7 @@ export const SingleAim = () => (
         aims: [createAim('1', 1, mediumDescription, 'In Progress', 2)],
       },
     ]}
+    fetchArticles={mockFetchArticles}
   />
 );
 
@@ -115,6 +127,7 @@ export const LongDescriptions = () => (
         ],
       },
     ]}
+    fetchArticles={mockFetchArticles}
   />
 );
 
@@ -131,6 +144,7 @@ export const ShortDescriptions = () => (
         ],
       },
     ]}
+    fetchArticles={mockFetchArticles}
   />
 );
 
@@ -153,7 +167,12 @@ export const SupplementGrantWithMoreAims = () => {
       createAim('o2', 2, longDescription, 'In Progress', 0),
     ],
   };
-  return <ProjectAims aims={[supplementGrant, original]} />;
+  return (
+    <ProjectAims
+      aims={[supplementGrant, original]}
+      fetchArticles={mockFetchArticles}
+    />
+  );
 };
 
 export const RealWorldExample = () => (
@@ -200,5 +219,6 @@ export const RealWorldExample = () => (
         ],
       },
     ]}
+    fetchArticles={mockFetchArticles}
   />
 );

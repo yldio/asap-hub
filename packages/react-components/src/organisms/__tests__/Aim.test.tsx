@@ -1,7 +1,9 @@
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Aim as AimType, AimStatus } from '@asap-hub/model';
 import Aim, { getAimStatusAccent } from '../Aim';
+
+const mockFetchArticles = jest.fn(() => Promise.resolve([]));
 
 const mockAim: AimType = {
   id: '1',
@@ -20,162 +22,60 @@ const longAim: AimType = {
   articleCount: 3,
 };
 
-const mockScrollHeight = (element: HTMLElement, scrollHeight: number) => {
-  Object.defineProperty(element, 'scrollHeight', {
-    configurable: true,
-    value: scrollHeight,
-  });
-};
-
-const mockClientHeight = (element: HTMLElement, clientHeight: number) => {
-  Object.defineProperty(element, 'clientHeight', {
-    configurable: true,
-    value: clientHeight,
-  });
-};
+const defaultAimProps = { fetchArticles: mockFetchArticles };
 
 describe('Aim', () => {
   it('renders aim description', () => {
-    render(<Aim aim={mockAim} />);
+    render(<Aim aim={mockAim} {...defaultAimProps} />);
     expect(screen.getByText(mockAim.description)).toBeInTheDocument();
   });
 
   it('renders aim order badge', () => {
-    render(<Aim aim={mockAim} />);
+    render(<Aim aim={mockAim} {...defaultAimProps} />);
     expect(screen.getByText('#1')).toBeInTheDocument();
   });
 
   it('renders aim status pill', () => {
-    render(<Aim aim={mockAim} />);
+    render(<Aim aim={mockAim} {...defaultAimProps} />);
     expect(screen.getByText('Complete')).toBeInTheDocument();
   });
 
-  it('truncates long descriptions and shows Read More button', async () => {
-    const { container } = render(<Aim aim={longAim} />);
-
-    const descriptionDiv = container.querySelector(
-      'div[class*="clampedDescriptionStyles"]',
-    );
-    if (descriptionDiv) {
-      mockScrollHeight(descriptionDiv as HTMLElement, 100);
-      mockClientHeight(descriptionDiv as HTMLElement, 48);
-
-      act(() => {
-        window.dispatchEvent(new Event('resize'));
-      });
-    }
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Read More/i }),
-      ).toBeInTheDocument();
-    });
+  it('shows No articles added and Edit when articleCount is 0', () => {
+    render(<Aim aim={mockAim} {...defaultAimProps} />);
+    const noArticles = screen.getByText('No articles added');
+    expect(noArticles).toBeInTheDocument();
+    expect(noArticles).toHaveStyle({ fontStyle: 'italic' });
+    expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
+    expect(screen.queryByText(/Articles \(\d+\)/)).not.toBeInTheDocument();
     expect(
-      screen.queryByRole('button', { name: /Read Less/i }),
+      screen.queryByRole('button', {
+        name: /Expand articles|Collapse articles/i,
+      }),
     ).not.toBeInTheDocument();
   });
 
-  it('expands description when Read More is clicked', async () => {
-    const { container } = render(<Aim aim={longAim} />);
+  it('shows Articles list and Edit when articleCount is greater than 0', () => {
+    const { rerender } = render(<Aim aim={mockAim} {...defaultAimProps} />);
+    expect(screen.getByText('No articles added')).toBeInTheDocument();
 
-    const descriptionDiv = container.querySelector(
-      'div[class*="clampedDescriptionStyles"]',
-    );
-    if (descriptionDiv) {
-      mockScrollHeight(descriptionDiv as HTMLElement, 100);
-      mockClientHeight(descriptionDiv as HTMLElement, 48);
-
-      act(() => {
-        window.dispatchEvent(new Event('resize'));
-      });
-    }
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Read More/i }),
-      ).toBeInTheDocument();
-    });
-
-    const readMoreButton = screen.getByRole('button', { name: /Read More/i });
-    await userEvent.click(readMoreButton);
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Read Less/i }),
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByRole('button', { name: /Read More/i }),
-      ).not.toBeInTheDocument();
-      expect(screen.getByText(longAim.description)).toBeInTheDocument();
-    });
-  });
-
-  it('collapses description when Read Less is clicked', async () => {
-    const { container } = render(<Aim aim={longAim} />);
-
-    const descriptionDiv = container.querySelector(
-      'div[class*="clampedDescriptionStyles"]',
-    );
-    if (descriptionDiv) {
-      mockScrollHeight(descriptionDiv as HTMLElement, 100);
-      mockClientHeight(descriptionDiv as HTMLElement, 48);
-
-      act(() => {
-        window.dispatchEvent(new Event('resize'));
-      });
-    }
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Read More/i }),
-      ).toBeInTheDocument();
-    });
-
-    await userEvent.click(screen.getByRole('button', { name: /Read More/i }));
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Read Less/i }),
-      ).toBeInTheDocument();
-    });
-
-    await userEvent.click(screen.getByRole('button', { name: /Read Less/i }));
-
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /Read More/i }),
-      ).toBeInTheDocument();
-      expect(
-        screen.queryByRole('button', { name: /Read Less/i }),
-      ).not.toBeInTheDocument();
-    });
-  });
-
-  it('shows articles button when articleCount is greater than 0', () => {
-    render(<Aim aim={longAim} />);
+    rerender(<Aim aim={longAim} {...defaultAimProps} />);
+    expect(screen.getByText('Articles (3)')).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /Articles \(3\)/i }),
+      screen.getByRole('button', { name: 'Expand articles' }),
     ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
   });
 
-  it('does not show articles button when articleCount is 0', () => {
-    render(<Aim aim={mockAim} />);
-    expect(
-      screen.queryByRole('button', { name: /Articles/i }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('toggles articles button on click', async () => {
-    render(<Aim aim={longAim} />);
+  it('toggles articles section on click', async () => {
+    render(<Aim aim={longAim} {...defaultAimProps} />);
 
     const articlesButton = screen.getByRole('button', {
-      name: /Articles \(3\)/i,
+      name: 'Expand articles',
     });
     await userEvent.click(articlesButton);
 
-    // Button should still be present after click
     expect(
-      screen.getByRole('button', { name: /Articles \(3\)/i }),
+      screen.getByRole('button', { name: 'Collapse articles' }),
     ).toBeInTheDocument();
   });
 

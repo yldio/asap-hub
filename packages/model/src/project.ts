@@ -122,6 +122,12 @@ export type Milestone = {
 // might be a better name)
 export type AimStatus = 'Complete' | 'In Progress' | 'Pending' | 'Terminated';
 
+export type ArticleItem = {
+  readonly id: string;
+  readonly title: string;
+  readonly href: string;
+};
+
 export type Aim = {
   readonly id: string;
   readonly order: number; // feel free to remove this property if it can be inferred from the item's order in a given list

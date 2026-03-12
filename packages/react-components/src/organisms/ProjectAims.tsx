@@ -52,11 +52,8 @@ const viewMoreContainerStyles = (hasMore: boolean) =>
 type ProjectAimsProps = {
   aims: ReadonlyArray<ProjectAimsGrant>;
   initialDisplayCount?: number;
-  fetchArticles?: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
+  fetchArticles: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
 };
-
-const noopFetchArticles = (): Promise<ReadonlyArray<ArticleItem>> =>
-  Promise.resolve([]);
 
 const AimsList: FC<{
   aims: ProjectAimsGrant['aims'];
@@ -110,7 +107,7 @@ const SINGLE_TAB_MARGIN = 32;
 const ProjectAims: FC<ProjectAimsProps> = ({
   aims,
   initialDisplayCount = 4,
-  fetchArticles = noopFetchArticles,
+  fetchArticles,
 }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [showAllByTab, setShowAllByTab] = useState<Record<number, boolean>>({});

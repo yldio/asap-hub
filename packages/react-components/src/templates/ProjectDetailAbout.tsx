@@ -88,7 +88,7 @@ const styles = css({
 
 type ProjectDetailAboutProps = ProjectDetail & {
   readonly pointOfContactEmail?: string;
-  readonly fetchArticles?: (
+  readonly fetchArticles: (
     aimId: string,
   ) => Promise<ReadonlyArray<ArticleItem>>;
 };

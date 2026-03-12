@@ -3,6 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { ProjectAimsGrant } from '@asap-hub/model';
 import ProjectAims from '../ProjectAims';
 
+const mockFetchArticles = jest.fn(() => Promise.resolve([]));
+
 const mockSingleGrant: ProjectAimsGrant[] = [
   {
     grantTitle: 'Original Grant',
@@ -110,19 +112,29 @@ const mockMultipleGrants: ProjectAimsGrant[] = [
 
 describe('ProjectAims', () => {
   it('renders aims title', () => {
-    render(<ProjectAims aims={mockSingleGrant} />);
+    render(
+      <ProjectAims aims={mockSingleGrant} fetchArticles={mockFetchArticles} />,
+    );
     expect(screen.getByText('Aims')).toBeInTheDocument();
   });
 
   it('renders description paragraph', () => {
-    render(<ProjectAims aims={mockSingleGrant} />);
+    render(
+      <ProjectAims aims={mockSingleGrant} fetchArticles={mockFetchArticles} />,
+    );
     expect(
       screen.getByText(/View the core research objectives/),
     ).toBeInTheDocument();
   });
 
   it('renders initial display count of aims', () => {
-    render(<ProjectAims aims={mockSingleGrant} initialDisplayCount={3} />);
+    render(
+      <ProjectAims
+        aims={mockSingleGrant}
+        initialDisplayCount={3}
+        fetchArticles={mockFetchArticles}
+      />,
+    );
     expect(screen.getByText('First aim description')).toBeInTheDocument();
     expect(screen.getByText('Second aim description')).toBeInTheDocument();
     expect(screen.getByText('Third aim description')).toBeInTheDocument();
@@ -132,17 +144,35 @@ describe('ProjectAims', () => {
   });
 
   it('shows View More Aims button when there are more aims', () => {
-    render(<ProjectAims aims={mockSingleGrant} initialDisplayCount={3} />);
+    render(
+      <ProjectAims
+        aims={mockSingleGrant}
+        initialDisplayCount={3}
+        fetchArticles={mockFetchArticles}
+      />,
+    );
     expect(screen.getByText('View More Aims')).toBeInTheDocument();
   });
 
   it('does not show View More Aims button when all aims are displayed', () => {
-    render(<ProjectAims aims={mockSingleGrant} initialDisplayCount={10} />);
+    render(
+      <ProjectAims
+        aims={mockSingleGrant}
+        initialDisplayCount={10}
+        fetchArticles={mockFetchArticles}
+      />,
+    );
     expect(screen.queryByText('View More Aims')).not.toBeInTheDocument();
   });
 
   it('expands to show all aims when View More is clicked', async () => {
-    render(<ProjectAims aims={mockSingleGrant} initialDisplayCount={2} />);
+    render(
+      <ProjectAims
+        aims={mockSingleGrant}
+        initialDisplayCount={2}
+        fetchArticles={mockFetchArticles}
+      />,
+    );
 
     expect(screen.queryByText('Third aim description')).not.toBeInTheDocument();
 
@@ -160,7 +190,9 @@ describe('ProjectAims', () => {
   });
 
   it('uses default initialDisplayCount of 4', () => {
-    render(<ProjectAims aims={mockSingleGrant} />);
+    render(
+      <ProjectAims aims={mockSingleGrant} fetchArticles={mockFetchArticles} />,
+    );
     expect(screen.getByText('First aim description')).toBeInTheDocument();
     expect(screen.getByText('Fourth aim description')).toBeInTheDocument();
     expect(screen.queryByText('Fifth aim description')).not.toBeInTheDocument();
@@ -168,7 +200,9 @@ describe('ProjectAims', () => {
   });
 
   it('renders nothing when aims array is empty', () => {
-    const { container } = render(<ProjectAims aims={[]} />);
+    const { container } = render(
+      <ProjectAims aims={[]} fetchArticles={mockFetchArticles} />,
+    );
     expect(container.firstChild).toBeNull();
   });
 
@@ -179,6 +213,7 @@ describe('ProjectAims', () => {
           { grantTitle: 'Grant A', aims: [] },
           { grantTitle: 'Grant B', aims: [] },
         ]}
+        fetchArticles={mockFetchArticles}
       />,
     );
     expect(container.firstChild).toBeNull();
@@ -186,20 +221,32 @@ describe('ProjectAims', () => {
 
   describe('tabs', () => {
     it('does not render tab buttons for single grant', () => {
-      render(<ProjectAims aims={mockSingleGrant} />);
+      render(
+      <ProjectAims aims={mockSingleGrant} fetchArticles={mockFetchArticles} />,
+    );
       expect(
         screen.queryByRole('button', { name: /Original Grant/i }),
       ).not.toBeInTheDocument();
     });
 
     it('renders tab buttons for multiple grants', () => {
-      render(<ProjectAims aims={mockMultipleGrants} />);
+      render(
+      <ProjectAims
+        aims={mockMultipleGrants}
+        fetchArticles={mockFetchArticles}
+      />,
+    );
       expect(screen.getByText('Original Grant (5)')).toBeInTheDocument();
       expect(screen.getByText('Supplement Grant (2)')).toBeInTheDocument();
     });
 
     it('switches displayed aims when tab is clicked', async () => {
-      render(<ProjectAims aims={mockMultipleGrants} />);
+      render(
+      <ProjectAims
+        aims={mockMultipleGrants}
+        fetchArticles={mockFetchArticles}
+      />,
+    );
 
       // First tab is active by default
       expect(screen.getByText('Grant one aim alpha')).toBeInTheDocument();
@@ -214,7 +261,13 @@ describe('ProjectAims', () => {
     });
 
     it('maintains independent View More state per tab', async () => {
-      render(<ProjectAims aims={mockMultipleGrants} initialDisplayCount={2} />);
+      render(
+      <ProjectAims
+        aims={mockMultipleGrants}
+        initialDisplayCount={2}
+        fetchArticles={mockFetchArticles}
+      />,
+    );
 
       // Expand first tab
       expect(screen.queryByText('Grant one aim gamma')).not.toBeInTheDocument();

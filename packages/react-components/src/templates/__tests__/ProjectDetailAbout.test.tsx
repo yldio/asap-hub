@@ -8,6 +8,8 @@ jest.mock('@asap-hub/react-context', () => ({
   useFlags: () => ({ isEnabled: mockIsEnabled }),
 }));
 
+const mockFetchArticles = jest.fn(() => Promise.resolve([]));
+
 const baseProject = {
   id: 'project-1',
   title: 'Test Project',
@@ -27,6 +29,7 @@ const baseProject = {
     grantStartDate: '2023-01-01',
     grantEndDate: '2025-12-31',
   },
+  fetchArticles: mockFetchArticles,
 };
 
 describe('ProjectDetailAbout', () => {

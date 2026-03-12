@@ -95,7 +95,7 @@ export type ArticlesListProps = {
   readonly initiallyExpanded?: boolean;
   readonly listMaxHeight?: string;
   readonly maxWidth?: string;
-  readonly fetchArticles?: (
+  readonly fetchArticles: (
     aimId: string,
   ) => Promise<ReadonlyArray<ArticleItem>>;
 };
@@ -106,13 +106,13 @@ const ArticlesList: FC<ArticlesListProps> = ({
   maxWidth = rem(408),
   articlesCount = 0,
   aimId,
-  fetchArticles = () => Promise.resolve([]),
+  fetchArticles,
 }) => {
   const [expanded, setExpanded] = useState(initiallyExpanded);
   const [articles, setArticles] = useState<ReadonlyArray<ArticleItem>>([]);
 
   useEffect(() => {
-    if (initiallyExpanded && fetchArticles && articlesCount > 0) {
+    if (initiallyExpanded && articlesCount > 0) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       fetchArticles(aimId).then(setArticles);
     }
@@ -128,7 +128,7 @@ const ArticlesList: FC<ArticlesListProps> = ({
           onClick={async () => {
             const nextExpanded = !expanded;
             setExpanded(nextExpanded);
-            if (nextExpanded && fetchArticles) {
+            if (nextExpanded) {
               setArticles(await fetchArticles(aimId));
             }
           }}

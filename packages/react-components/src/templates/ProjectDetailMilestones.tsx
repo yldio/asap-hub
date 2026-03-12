@@ -11,12 +11,12 @@ import { neutral1000 } from '../colors';
 
 const containerStyles = css({
   display: 'grid',
-  rowGap: rem(56),
+  rowGap: rem(32),
 });
 
 const descriptionSectionStyles = css({
-  // maxWidth: rem(720),
   display: 'block',
+  marginTop: rem(24),
   '& > * + *': {
     marginTop: rem(16),
   },
@@ -49,7 +49,7 @@ const noMilestonesTextStyles = css({
 const pageControlsStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  paddingTop: rem(36),
+  paddingTop: rem(16),
   paddingBottom: rem(36),
 });
 

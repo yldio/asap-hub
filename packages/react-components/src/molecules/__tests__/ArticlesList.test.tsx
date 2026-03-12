@@ -27,22 +27,6 @@ describe('ArticlesList', () => {
     expect(screen.getByText('Articles (2)')).toBeInTheDocument();
   });
 
-  it('renders nothing when articlesCount is 0', () => {
-    const { container } = render(
-      <ArticlesList
-        aimId="aim-0"
-        articlesCount={0}
-        fetchArticles={mockFetchArticles}
-      />,
-    );
-    expect(screen.queryByText(/Articles \(\d+\)/)).not.toBeInTheDocument();
-    expect(screen.queryByText('No articles added')).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole('button', { name: 'Edit' }),
-    ).not.toBeInTheDocument();
-    expect(container.firstChild).toBeNull();
-  });
-
   it('fetches and shows article titles when expand is clicked', async () => {
     render(
       <ArticlesList

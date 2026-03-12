@@ -250,6 +250,9 @@ describe('ProjectDetailHeader', () => {
     });
 
     it('renders Milestones tab when feature flag is enabled and milestonesHref is provided', () => {
+      mockIsEnabled.mockImplementation(
+        (flag: string) => flag === 'PROJECT_MILESTONES',
+      );
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -711,6 +714,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
           workspaceHref="/projects/discovery/1/workspace"
         />,
       );
@@ -723,6 +727,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
           workspaceHref="/projects/discovery/1/workspace"
         />,
       );
@@ -735,6 +740,7 @@ describe('ProjectDetailHeader', () => {
         <ProjectDetailHeader
           {...mockDiscoveryProject}
           aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
         />,
       );
       expect(screen.queryByText('Workspace')).not.toBeInTheDocument();

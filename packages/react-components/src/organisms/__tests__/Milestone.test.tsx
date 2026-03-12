@@ -73,7 +73,7 @@ describe('Milestone', () => {
 
     // Find the description div and mock its dimensions to simulate truncation
     const descriptionDiv = container.querySelector(
-      'div[class*="clampedDescriptionStyles"]',
+      'div[class*="descriptionStyles"]',
     );
     if (descriptionDiv) {
       mockScrollHeight(descriptionDiv as HTMLElement, 100);
@@ -100,7 +100,7 @@ describe('Milestone', () => {
 
     // Mock dimensions to simulate truncation
     const descriptionDiv = container.querySelector(
-      'div[class*="clampedDescriptionStyles"]',
+      'div[class*="descriptionStyles"]',
     );
     if (descriptionDiv) {
       mockScrollHeight(descriptionDiv as HTMLElement, 100);
@@ -136,7 +136,7 @@ describe('Milestone', () => {
 
     // Mock dimensions to simulate truncation
     const descriptionDiv = container.querySelector(
-      'div[class*="clampedDescriptionStyles"]',
+      'div[class*="descriptionStyles"]',
     );
     if (descriptionDiv) {
       mockScrollHeight(descriptionDiv as HTMLElement, 100);

@@ -3753,7 +3753,6 @@ type ManuscriptVersions implements Entry & _Node {
   additionalFilesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): AssetCollection
   asapAffiliationIncluded(locale: String, useFallbackLocale: Boolean): String
   asapAffiliationIncludedDetails(locale: String, useFallbackLocale: Boolean): String
-  authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ManuscriptVersionsAuthorsFilter): ManuscriptVersionsAuthorsCollection
   availabilityStatement(locale: String, useFallbackLocale: Boolean): String
   availabilityStatementDetails(locale: String, useFallbackLocale: Boolean): String
   codeDeposited(locale: String, useFallbackLocale: Boolean): String
@@ -3818,36 +3817,6 @@ input ManuscriptVersionsAdditionalAuthorsFilter {
 }
 
 union ManuscriptVersionsAdditionalAuthorsItem = ExternalAuthors | Users
-
-type ManuscriptVersionsAuthorsCollection {
-  items: [ManuscriptVersionsAuthorsItem]!
-  limit: Int!
-  skip: Int!
-  total: Int!
-}
-
-input ManuscriptVersionsAuthorsFilter {
-  AND: [ManuscriptVersionsAuthorsFilter]
-  OR: [ManuscriptVersionsAuthorsFilter]
-  contentfulMetadata: ContentfulMetadataFilter
-  email: String
-  email_contains: String
-  email_exists: Boolean
-  email_in: [String]
-  email_not: String
-  email_not_contains: String
-  email_not_in: [String]
-  orcid: String
-  orcid_contains: String
-  orcid_exists: Boolean
-  orcid_in: [String]
-  orcid_not: String
-  orcid_not_contains: String
-  orcid_not_in: [String]
-  sys: SysFilter
-}
-
-union ManuscriptVersionsAuthorsItem = ExternalAuthors | Users
 
 type ManuscriptVersionsCollection {
   items: [ManuscriptVersions]!
@@ -3920,8 +3889,6 @@ input ManuscriptVersionsFilter {
   asapAffiliationIncluded_not: String
   asapAffiliationIncluded_not_contains: String
   asapAffiliationIncluded_not_in: [String]
-  authors: cfauthorsMultiTypeNestedFilter
-  authorsCollection_exists: Boolean
   availabilityStatement: String
   availabilityStatementDetails: String
   availabilityStatementDetails_contains: String
@@ -10455,7 +10422,6 @@ input cfManuscriptVersionsNestedFilter {
   asapAffiliationIncluded_not: String
   asapAffiliationIncluded_not_contains: String
   asapAffiliationIncluded_not_in: [String]
-  authorsCollection_exists: Boolean
   availabilityStatement: String
   availabilityStatementDetails: String
   availabilityStatementDetails_contains: String

@@ -222,8 +222,11 @@ describe('ProjectAims', () => {
   describe('tabs', () => {
     it('does not render tab buttons for single grant', () => {
       render(
-      <ProjectAims aims={mockSingleGrant} fetchArticles={mockFetchArticles} />,
-    );
+        <ProjectAims
+          aims={mockSingleGrant}
+          fetchArticles={mockFetchArticles}
+        />,
+      );
       expect(
         screen.queryByRole('button', { name: /Original Grant/i }),
       ).not.toBeInTheDocument();
@@ -231,22 +234,22 @@ describe('ProjectAims', () => {
 
     it('renders tab buttons for multiple grants', () => {
       render(
-      <ProjectAims
-        aims={mockMultipleGrants}
-        fetchArticles={mockFetchArticles}
-      />,
-    );
+        <ProjectAims
+          aims={mockMultipleGrants}
+          fetchArticles={mockFetchArticles}
+        />,
+      );
       expect(screen.getByText('Original Grant (5)')).toBeInTheDocument();
       expect(screen.getByText('Supplement Grant (2)')).toBeInTheDocument();
     });
 
     it('switches displayed aims when tab is clicked', async () => {
       render(
-      <ProjectAims
-        aims={mockMultipleGrants}
-        fetchArticles={mockFetchArticles}
-      />,
-    );
+        <ProjectAims
+          aims={mockMultipleGrants}
+          fetchArticles={mockFetchArticles}
+        />,
+      );
 
       // First tab is active by default
       expect(screen.getByText('Grant one aim alpha')).toBeInTheDocument();
@@ -262,12 +265,12 @@ describe('ProjectAims', () => {
 
     it('maintains independent View More state per tab', async () => {
       render(
-      <ProjectAims
-        aims={mockMultipleGrants}
-        initialDisplayCount={2}
-        fetchArticles={mockFetchArticles}
-      />,
-    );
+        <ProjectAims
+          aims={mockMultipleGrants}
+          initialDisplayCount={2}
+          fetchArticles={mockFetchArticles}
+        />,
+      );
 
       // Expand first tab
       expect(screen.queryByText('Grant one aim gamma')).not.toBeInTheDocument();

@@ -27,9 +27,13 @@ describe('aim-articles-state', () => {
     it('fetches articles for an aim, updates Recoil state, and returns the list', async () => {
       const { result } = renderHook(() => useFetchArticles(), { wrapper });
 
-      let resolvedArticles: readonly { id: string; title: string; href: string }[] = [];
+      let resolvedArticles: readonly {
+        id: string;
+        title: string;
+        href: string;
+      }[] = [];
       act(() => {
-        result.current('aim-1').then((articles) => {
+        void result.current('aim-1').then((articles) => {
           resolvedArticles = articles;
         });
       });
@@ -55,7 +59,7 @@ describe('aim-articles-state', () => {
 
       let resolvedArticles: readonly unknown[] = [];
       act(() => {
-        result.current('unknown-aim').then((articles) => {
+        void result.current('unknown-aim').then((articles) => {
           resolvedArticles = articles;
         });
       });
@@ -81,7 +85,7 @@ describe('aim-articles-state', () => {
       expect(result.current.articles).toBeUndefined();
 
       act(() => {
-        result.current.fetchArticles('aim-2');
+        void result.current.fetchArticles('aim-2');
       });
 
       await act(async () => {

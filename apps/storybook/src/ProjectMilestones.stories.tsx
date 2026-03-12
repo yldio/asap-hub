@@ -10,10 +10,12 @@ const createMilestone = (
   id: string,
   description: string,
   status: Milestone['status'],
+  aims?: string,
 ): Milestone => ({
   id,
   description,
   status,
+  ...(aims !== undefined && { aims }),
 });
 
 const shortDescription = 'Complete initial research and literature review.';
@@ -27,10 +29,10 @@ const longDescription =
 export const Default = () => (
   <ProjectMilestones
     milestones={[
-      createMilestone('1', longDescription, 'Complete'),
-      createMilestone('2', mediumDescription, 'In Progress'),
-      createMilestone('3', longDescription, 'Pending'),
-      createMilestone('4', shortDescription, 'Complete'),
+      createMilestone('1', longDescription, 'Complete', '1'),
+      createMilestone('2', mediumDescription, 'In Progress', '1,2'),
+      createMilestone('3', longDescription, 'Pending', '2'),
+      createMilestone('4', shortDescription, 'Complete', '2,3,4'),
     ]}
   />
 );
@@ -38,14 +40,14 @@ export const Default = () => (
 export const WithMoreMilestones = () => (
   <ProjectMilestones
     milestones={[
-      createMilestone('1', longDescription, 'Complete'),
-      createMilestone('2', mediumDescription, 'In Progress'),
-      createMilestone('3', longDescription, 'Pending'),
-      createMilestone('4', shortDescription, 'Complete'),
-      createMilestone('5', mediumDescription, 'Terminated'),
-      createMilestone('6', longDescription, 'Terminated'),
-      createMilestone('7', shortDescription, 'Complete'),
-      createMilestone('8', mediumDescription, 'In Progress'),
+      createMilestone('1', longDescription, 'Complete', '1'),
+      createMilestone('2', mediumDescription, 'In Progress', '1,2'),
+      createMilestone('3', longDescription, 'Pending', '2'),
+      createMilestone('4', shortDescription, 'Complete', '2,3'),
+      createMilestone('5', mediumDescription, 'Terminated', '2,3,4,5,6'),
+      createMilestone('6', longDescription, 'Terminated', '3'),
+      createMilestone('7', shortDescription, 'Complete', '3,5'),
+      createMilestone('8', mediumDescription, 'In Progress', '4'),
     ]}
   />
 );
@@ -53,10 +55,15 @@ export const WithMoreMilestones = () => (
 export const AllStatuses = () => (
   <ProjectMilestones
     milestones={[
-      createMilestone('1', 'This milestone is complete.', 'Complete'),
-      createMilestone('2', 'This milestone is in progress.', 'In Progress'),
-      createMilestone('3', 'This milestone is pending.', 'Pending'),
-      createMilestone('4', 'This milestone is terminated.', 'Terminated'),
+      createMilestone('1', 'This milestone is complete.', 'Complete', '1'),
+      createMilestone(
+        '2',
+        'This milestone is in progress.',
+        'In Progress',
+        '1,2',
+      ),
+      createMilestone('3', 'This milestone is pending.', 'Pending', '2'),
+      createMilestone('4', 'This milestone is terminated.', 'Terminated', '3'),
     ]}
   />
 );
@@ -64,10 +71,10 @@ export const AllStatuses = () => (
 export const ShortDescriptions = () => (
   <ProjectMilestones
     milestones={[
-      createMilestone('1', 'Complete literature review.', 'Complete'),
-      createMilestone('2', 'Analyze initial data.', 'In Progress'),
-      createMilestone('3', 'Prepare interim report.', 'Pending'),
-      createMilestone('4', 'Submit findings.', 'Complete'),
+      createMilestone('1', 'Complete literature review.', 'Complete', '1'),
+      createMilestone('2', 'Analyze initial data.', 'In Progress', '1,2'),
+      createMilestone('3', 'Prepare interim report.', 'Pending', '2'),
+      createMilestone('4', 'Submit findings.', 'Complete', '2,3'),
     ]}
   />
 );
@@ -75,40 +82,49 @@ export const ShortDescriptions = () => (
 export const LongDescriptions = () => (
   <ProjectMilestones
     milestones={[
-      createMilestone('1', longDescription, 'Complete'),
-      createMilestone('2', longDescription, 'In Progress'),
-      createMilestone('3', longDescription, 'Pending'),
-      createMilestone('4', longDescription, 'Complete'),
+      createMilestone('1', longDescription, 'Complete', '1'),
+      createMilestone('2', longDescription, 'In Progress', '1,2'),
+      createMilestone('3', longDescription, 'Pending', '2,3,4,5,6'),
+      createMilestone('4', longDescription, 'Complete', '3'),
     ]}
   />
 );
 
 export const SingleMilestone = () => (
   <ProjectMilestones
-    milestones={[createMilestone('1', mediumDescription, 'In Progress')]}
+    milestones={[createMilestone('1', mediumDescription, 'In Progress', '1')]}
+  />
+);
+
+export const WithEmptyAims = () => (
+  <ProjectMilestones
+    milestones={[
+      createMilestone('1', 'Milestone with aim 1.', 'Complete', '1'),
+      createMilestone('2', 'Milestone with no aims.', 'In Progress'),
+      createMilestone('3', 'Milestone with multiple aims.', 'Pending', '2,3,4'),
+    ]}
   />
 );
 
 export const TwoMilestones = () => (
   <ProjectMilestones
     milestones={[
-      createMilestone('1', longDescription, 'Complete'),
-      createMilestone('2', mediumDescription, 'In Progress'),
+      createMilestone('1', longDescription, 'Complete', '1'),
+      createMilestone('2', mediumDescription, 'In Progress', '1,2'),
     ]}
   />
 );
 
-export const CustomInitialDisplayCount = () => (
+export const SixMilestones = () => (
   <ProjectMilestones
     milestones={[
-      createMilestone('1', longDescription, 'Complete'),
-      createMilestone('2', mediumDescription, 'In Progress'),
-      createMilestone('3', longDescription, 'Pending'),
-      createMilestone('4', shortDescription, 'Complete'),
-      createMilestone('5', mediumDescription, 'Terminated'),
-      createMilestone('6', longDescription, 'Terminated'),
+      createMilestone('1', longDescription, 'Complete', '1'),
+      createMilestone('2', mediumDescription, 'In Progress', '1,2'),
+      createMilestone('3', longDescription, 'Pending', '2'),
+      createMilestone('4', shortDescription, 'Complete', '2,3,4,5,6'),
+      createMilestone('5', mediumDescription, 'Terminated', '3'),
+      createMilestone('6', longDescription, 'Terminated', '3,5'),
     ]}
-    initialDisplayCount={2}
   />
 );
 
@@ -119,26 +135,31 @@ export const RealWorldExample = () => (
         '1',
         'Complete comprehensive literature review and identify key research gaps in the field of neurodegenerative diseases.',
         'Complete',
+        '1',
       ),
       createMilestone(
         '2',
         'Recruit and enroll 500 study participants across 10 research sites, ensuring diverse demographic representation.',
         'In Progress',
+        '1,2',
       ),
       createMilestone(
         '3',
         'Establish data sharing protocols and create centralized database infrastructure for multi-site collaboration. This includes setting up secure data transfer mechanisms and ensuring HIPAA compliance.',
         'In Progress',
+        '2,3',
       ),
       createMilestone(
         '4',
         'Conduct preliminary statistical analysis of collected biomarker data and prepare interim findings report for steering committee review.',
         'Pending',
+        '2,3,4,5,6',
       ),
       createMilestone(
         '5',
         'Submit manuscript to peer-reviewed journal and present findings at international neuroscience conference.',
         'Pending',
+        '3',
       ),
     ]}
   />

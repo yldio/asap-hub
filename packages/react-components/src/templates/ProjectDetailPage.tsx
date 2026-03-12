@@ -6,6 +6,7 @@ type ProjectDetailPageProps = ProjectDetail & {
   readonly pointOfContactEmail?: string;
   readonly aboutHref: string;
   readonly workspaceHref?: string;
+  readonly milestonesHref: string;
   readonly children?: React.ReactNode;
 };
 
@@ -14,6 +15,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   aboutHref,
   workspaceHref,
   pointOfContactEmail,
+  milestonesHref,
   ...project
 }) => (
   <article>
@@ -22,6 +24,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
       pointOfContactEmail={pointOfContactEmail}
       aboutHref={aboutHref}
       workspaceHref={workspaceHref}
+      milestonesHref={milestonesHref}
     />
     <PageConstraints as="main">{children}</PageConstraints>
   </article>

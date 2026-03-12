@@ -4,6 +4,7 @@ import { Frame } from '@asap-hub/frontend-utils';
 import {
   ProjectDetailPage,
   ProjectDetailAbout,
+  ProjectDetailMilestones,
   NotFoundPage,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
@@ -11,6 +12,7 @@ import { useProjectById } from './state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
+import { mockMilestones } from './mock-milestones';
 import type { ProjectDetailConfig } from './projectDetailConfig';
 
 const loadProjectManuscript = () =>
@@ -44,6 +46,8 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const showWorkspace =
     isEnabled('PROJECT_WORKSPACE') && (isProjectMember || isStaff);
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
+  const isProjectMilestonesEnabled = isEnabled('PROJECT_MILESTONES');
+  const milestonesHref = route.milestones({}).$;
 
   return (
     <Frame title={projectDetail.title || ''}>
@@ -54,6 +58,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
             pointOfContactEmail={projectDetail.contactEmail || undefined}
             aboutHref={route.about({}).$}
             workspaceHref={workspaceHref}
+            milestonesHref={milestonesHref}
           >
             <Routes>
               {showWorkspace && (
@@ -105,6 +110,26 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       projectDetail.contactEmail || undefined
                     }
                   />
+                }
+              />
+              <Route
+                path="milestones"
+                element={
+                  isProjectMilestonesEnabled ? (
+                    <ProjectDetailMilestones
+                      milestones={mockMilestones}
+                      seeAimsHref={route.about({}).$}
+                      pageControlsProps={{
+                        numberOfPages: 1,
+                        currentPageIndex: 0,
+                        renderPageHref: (index: number) =>
+                          route.milestones({}).$ +
+                          (index > 0 ? `?page=${index + 1}` : ''),
+                      }}
+                    />
+                  ) : (
+                    <NotFoundPage />
+                  )
                 }
               />
               {showWorkspace && (

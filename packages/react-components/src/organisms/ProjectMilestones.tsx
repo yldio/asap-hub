@@ -1,25 +1,24 @@
 import { Milestone as MilestoneType } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { FC, useState } from 'react';
-import { Headline3, Card, Button } from '../atoms';
+import { FC } from 'react';
+import { Card } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
-import { lead, neutral1000, steel } from '../colors';
+import { neutral1000, steel } from '../colors';
 
 const contentStyles = css({
-  padding: `${rem(32)} ${rem(24)} ${rem(16)} ${rem(24)}`,
-});
-
-const descriptionStyles = css({
-  color: lead.rgb,
-  fontSize: rem(17),
-  marginBlock: rem(24),
+  padding: rem(24),
+  border: `1px solid ${steel.rgb}`,
+  borderRadius: rem(8),
 });
 
 const tableHeaderStyles = css({
   display: 'grid',
-  gridTemplateColumns: '1fr 120px',
+  gridTemplateColumns: '150px 1fr 120px',
+  gap: rem(24),
   marginBottom: rem(16),
+  paddingBottom: rem(16),
+  borderBottom: `1px solid ${steel.rgb}`,
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
     display: 'none',
   },
@@ -31,8 +30,13 @@ const headerLabelStyles = css({
   color: neutral1000.rgb,
 });
 
-const descriptionHeaderStyles = css({
+const aimsHeaderStyles = css({
+  flexShrink: 0,
+});
+
+const milestoneHeaderStyles = css({
   flex: 1,
+  minWidth: 0,
 });
 
 const statusHeaderStyles = css({
@@ -45,29 +49,11 @@ const milestonesListStyles = css({
   gap: 0,
 });
 
-const viewMoreContainerStyles = (hasMore: boolean) =>
-  css({
-    marginTop: hasMore ? rem(32) : 0,
-    paddingTop: rem(16),
-    borderTop: hasMore ? `1px solid ${steel.rgb}` : 'none',
-    textAlign: 'center',
-  });
-
 type ProjectMilestonesProps = {
   milestones: ReadonlyArray<MilestoneType>;
-  initialDisplayCount?: number;
 };
 
-const ProjectMilestones: FC<ProjectMilestonesProps> = ({
-  milestones,
-  initialDisplayCount = 4,
-}) => {
-  const [showAll, setShowAll] = useState(false);
-  const displayedMilestones = showAll
-    ? milestones
-    : milestones.slice(0, initialDisplayCount);
-  const hasMore = milestones.length > initialDisplayCount;
-
+const ProjectMilestones: FC<ProjectMilestonesProps> = ({ milestones }) => {
   if (!milestones.length) {
     return null;
   }
@@ -75,25 +61,15 @@ const ProjectMilestones: FC<ProjectMilestonesProps> = ({
   return (
     <Card padding={false}>
       <div css={contentStyles}>
-        <Headline3 noMargin>Milestones</Headline3>
-        <p css={descriptionStyles}>The milestones of this project are:</p>
         <div css={tableHeaderStyles}>
-          <div css={[headerLabelStyles, descriptionHeaderStyles]}>
-            Description
-          </div>
+          <div css={[headerLabelStyles, aimsHeaderStyles]}>Aims</div>
+          <div css={[headerLabelStyles, milestoneHeaderStyles]}>Milestone</div>
           <div css={[headerLabelStyles, statusHeaderStyles]}>Status</div>
         </div>
         <div css={milestonesListStyles}>
-          {displayedMilestones.map((milestone) => (
+          {milestones.map((milestone) => (
             <Milestone key={milestone.id} milestone={milestone} />
           ))}
-        </div>
-        <div css={viewMoreContainerStyles(hasMore)}>
-          {hasMore && (
-            <Button linkStyle onClick={() => setShowAll(!showAll)}>
-              {showAll ? `Show Less Milestones` : `Show More Milestones`}
-            </Button>
-          )}
         </div>
       </div>
     </Card>

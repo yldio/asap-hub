@@ -42,6 +42,25 @@ describe('Milestone', () => {
     expect(screen.getByText('Complete')).toBeInTheDocument();
   });
 
+  it('renders aim badges from aims string', () => {
+    render(
+      <Milestone
+        milestone={{
+          ...mockMilestone,
+          aims: '1,2',
+        }}
+      />,
+    );
+    expect(screen.getByText('#1')).toBeInTheDocument();
+    expect(screen.getByText('#2')).toBeInTheDocument();
+  });
+
+  it('renders nothing in Aims column when aims is empty or missing', () => {
+    render(<Milestone milestone={mockMilestone} />);
+    expect(screen.queryByText('—')).not.toBeInTheDocument();
+    expect(screen.queryByText('#1')).not.toBeInTheDocument();
+  });
+
   it('does not render link when not provided', () => {
     render(<Milestone milestone={mockMilestone} />);
     expect(
@@ -54,7 +73,7 @@ describe('Milestone', () => {
 
     // Find the description div and mock its dimensions to simulate truncation
     const descriptionDiv = container.querySelector(
-      'div[class*="clampedDescriptionStyles"]',
+      'div[class*="descriptionStyles"]',
     );
     if (descriptionDiv) {
       mockScrollHeight(descriptionDiv as HTMLElement, 100);
@@ -81,7 +100,7 @@ describe('Milestone', () => {
 
     // Mock dimensions to simulate truncation
     const descriptionDiv = container.querySelector(
-      'div[class*="clampedDescriptionStyles"]',
+      'div[class*="descriptionStyles"]',
     );
     if (descriptionDiv) {
       mockScrollHeight(descriptionDiv as HTMLElement, 100);
@@ -117,7 +136,7 @@ describe('Milestone', () => {
 
     // Mock dimensions to simulate truncation
     const descriptionDiv = container.querySelector(
-      'div[class*="clampedDescriptionStyles"]',
+      'div[class*="descriptionStyles"]',
     );
     if (descriptionDiv) {
       mockScrollHeight(descriptionDiv as HTMLElement, 100);

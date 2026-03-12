@@ -69,6 +69,7 @@ const mockVersion = {
   ...createManuscriptResponse().versions[0],
   type: 'Original Research',
   lifecycle: 'Preprint',
+  versionUID: 'DA1-000463-007-org-P-2',
 } as ManuscriptVersion;
 
 const mockVersionWithReport = {

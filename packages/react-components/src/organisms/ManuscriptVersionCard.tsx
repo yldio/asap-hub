@@ -169,7 +169,7 @@ const updatedByTextStyles = css({
   flexWrap: 'wrap',
   justifyContent: 'flex-end',
   alignSelf: 'flex-end',
-  gap: rem(2),
+  gap: rem(6),
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     justifyContent: 'flex-start',
@@ -490,7 +490,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                 <div css={userContainerStyles}>
                   Date created:
                   <span>{formatDate(new Date(version.createdDate))}</span>
-                  <span> · </span>
+                  <span> • </span>
                   Created by:
                   <UserTeamInfo
                     displayName={version.createdBy.displayName}

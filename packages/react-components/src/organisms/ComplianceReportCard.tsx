@@ -95,7 +95,7 @@ const addedByTextStyles = css({
   flexWrap: 'wrap',
   justifyContent: 'flex-end',
   alignSelf: 'flex-end',
-  gap: rem(2),
+  gap: rem(6),
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     justifyContent: 'flex-start',

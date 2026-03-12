@@ -21,7 +21,9 @@ import { mobileScreen, rem } from '../pixels';
 import { getTeams, getUserHref } from '../utils';
 
 export type ComplianceReportCardProps =
-  ComplianceReportResponse['complianceReport'];
+  ComplianceReportResponse['complianceReport'] & {
+    showTeamName?: boolean;
+  };
 
 const toastStyles = css({
   padding: `${rem(24)} ${rem(15)} `,
@@ -122,6 +124,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
   count,
   createdBy,
   createdDate,
+  showTeamName,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -154,6 +157,7 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                       displayName={createdBy.displayName}
                       userHref={getUserHref(createdBy.id)}
                       teams={getTeams(createdBy.teams)}
+                      showTeamName={showTeamName}
                     />
                   </span>
                 </div>

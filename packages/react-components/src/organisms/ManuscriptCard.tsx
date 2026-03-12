@@ -524,6 +524,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                     hasUpdateAccess || isComplianceReviewer
                   }
                   isActiveManuscript={isActiveManuscript}
+                  showTeamName={showTeamName}
                 />
               )}
             </div>

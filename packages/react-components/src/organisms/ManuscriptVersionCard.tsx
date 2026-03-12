@@ -256,6 +256,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
             count={version.count}
             manuscriptId={manuscriptId}
             versionId={version.id}
+            showTeamName={showTeamName}
           />
         )}
         <div css={toastStyles}>

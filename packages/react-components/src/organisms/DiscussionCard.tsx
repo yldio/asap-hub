@@ -153,6 +153,7 @@ interface DiscussionCardProps {
   ) => Promise<void>;
   isLast?: boolean;
   displayReplyButton?: boolean;
+  showTeamName?: boolean;
 }
 
 const DiscussionCard: React.FC<DiscussionCardProps> = ({
@@ -162,6 +163,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({
   onMarkDiscussionAsRead,
   isLast = false,
   displayReplyButton = false,
+  showTeamName,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -188,11 +190,13 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({
             discussion={discussion}
             onReplyToDiscussion={onReplyToDiscussion}
             displayReplyButton={displayReplyButton}
+            showTeamName={showTeamName}
           />
         ) : (
           <CollapsedView
             discussion={discussion}
             onExpand={() => setExpanded(true)}
+            showTeamName={showTeamName}
           />
         )}
       </span>
@@ -203,7 +207,8 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({
 const CollapsedView = ({
   discussion,
   onExpand,
-}: Pick<DiscussionCardProps, 'discussion'> & {
+  showTeamName,
+}: Pick<DiscussionCardProps, 'discussion' | 'showTeamName'> & {
   onExpand: () => void;
 }) => {
   const { replies } = discussion;
@@ -218,6 +223,7 @@ const CollapsedView = ({
           displayName={discussion.createdBy.displayName}
           userHref={getUserHref(discussion.createdBy.id)}
           teams={getTeams(discussion.createdBy.teams)}
+          showTeamName={showTeamName}
         />
       </span>
       <div css={lastUpdateStyles(!discussion.read)}>
@@ -247,6 +253,7 @@ const ExpandedView = ({
   discussion,
   onReplyToDiscussion,
   displayReplyButton,
+  showTeamName,
 }: Omit<DiscussionCardProps, 'onMarkDiscussionAsRead'>) => {
   const userHref = getUserHref(discussion.createdBy.id);
   const [displayReplyModal, setDisplayReplyModal] = useState<boolean>(false);
@@ -295,6 +302,7 @@ const ExpandedView = ({
               displayName={discussion.createdBy.displayName}
               userHref={userHref}
               teams={getTeams(discussion.createdBy.teams)}
+              showTeamName={showTeamName}
             />
             <span>•</span>
             <span>{formatDate(new Date(discussion.createdDate))}</span>
@@ -314,7 +322,7 @@ const ExpandedView = ({
         {hasReplies ? (
           <div css={replyContainerStyles}>
             {replies.map((reply, index) => (
-              <UserComment {...reply} key={index} />
+              <UserComment {...reply} showTeamName={showTeamName} key={index} />
             ))}
             {displayReplyButton && replyButton}
           </div>

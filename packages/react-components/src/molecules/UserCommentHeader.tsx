@@ -48,6 +48,7 @@ type UserCommentHeaderProps = Pick<
     name: string;
   }[];
   date: string;
+  showTeamName?: boolean;
 };
 
 const UserCommentHeader: FC<UserCommentHeaderProps> = ({
@@ -59,6 +60,7 @@ const UserCommentHeader: FC<UserCommentHeaderProps> = ({
   alumniSinceDate,
   teams,
   date,
+  showTeamName,
 }) => (
   <div css={containerStyles}>
     <div css={userContainerStyles}>
@@ -75,6 +77,7 @@ const UserCommentHeader: FC<UserCommentHeaderProps> = ({
           userHref={userHref}
           teams={teams}
           alumniSinceDate={alumniSinceDate}
+          showTeamName={showTeamName}
         />
       </div>
       <span> · </span>

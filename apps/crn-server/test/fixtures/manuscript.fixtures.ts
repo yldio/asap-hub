@@ -461,7 +461,7 @@ export const getManuscriptPostBody = (): ManuscriptPostRequest => {
       {
         ...version,
         teams: ['team-1'],
-        labs: [],
+        labs: ['lab-1'],
         description: '',
         firstAuthors: [{ userId: 'author-1' }],
         correspondingAuthor: undefined,

@@ -49,7 +49,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,
   selectedTeams: [{ value: '1', label: 'One Team', isFixed: true }],
-  selectedLabs: [],
+  selectedLabs: [{ value: 'lab-1', label: 'Lab One', isFixed: false }],
   handleFileUpload: jest.fn(() =>
     Promise.resolve({
       id: '123',

@@ -31,6 +31,8 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
   const [loading, setLoading] = useState(true);
   const [popupOpen, setPopupOpen] = useState(false);
 
+  // console.log({ user }); check the difference between the two users
+
   useEffect(() => {
     const initAuth0 = async () => {
       const auth0FromHook = new Auth0Client(initOptions);

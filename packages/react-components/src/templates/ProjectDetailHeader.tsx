@@ -181,12 +181,12 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
           nav={
             <TabNav>
               <TabLink href={aboutHref}>About</TabLink>
-              {isEnabled('PROJECT_WORKSPACE') && workspaceHref ? (
-                <TabLink href={workspaceHref}>Workspace</TabLink>
-              ) : null}
               {isProjectMilestonesEnabled && (
                 <TabLink href={milestonesHref}>Milestones</TabLink>
               )}
+              {isEnabled('PROJECT_WORKSPACE') && workspaceHref ? (
+                <TabLink href={workspaceHref}>Workspace</TabLink>
+              ) : null}
             </TabNav>
           }
         >

@@ -27,24 +27,13 @@ describe('aim-articles-state', () => {
     it('fetches articles for an aim, updates Recoil state, and returns the list', async () => {
       const { result } = renderHook(() => useFetchArticles(), { wrapper });
 
-      let resolvedArticles: readonly {
-        id: string;
-        title: string;
-        href: string;
-      }[] = [];
-      act(() => {
-        void result.current('aim-1').then((articles) => {
-          resolvedArticles = articles;
-        });
-      });
+      const fetchPromise = result.current('aim-1');
 
       await act(async () => {
         jest.runAllTimers();
       });
 
-      await act(async () => {
-        await Promise.resolve();
-      });
+      const resolvedArticles = await act(async () => fetchPromise);
 
       expect(resolvedArticles).toHaveLength(3);
       expect(resolvedArticles[0]).toMatchObject({
@@ -57,20 +46,13 @@ describe('aim-articles-state', () => {
     it('returns empty array and sets state for unknown aim id', async () => {
       const { result } = renderHook(() => useFetchArticles(), { wrapper });
 
-      let resolvedArticles: readonly unknown[] = [];
-      act(() => {
-        void result.current('unknown-aim').then((articles) => {
-          resolvedArticles = articles;
-        });
-      });
+      const fetchPromise = result.current('unknown-aim');
 
       await act(async () => {
         jest.runAllTimers();
       });
 
-      await act(async () => {
-        await Promise.resolve();
-      });
+      const resolvedArticles = await act(async () => fetchPromise);
 
       expect(resolvedArticles).toEqual([]);
     });
@@ -84,13 +66,13 @@ describe('aim-articles-state', () => {
 
       expect(result.current.articles).toBeUndefined();
 
-      act(() => {
-        void result.current.fetchArticles('aim-2');
-      });
+      const fetchPromise = result.current.fetchArticles('aim-2');
 
       await act(async () => {
         jest.runAllTimers();
       });
+
+      await act(async () => fetchPromise);
 
       await waitFor(() => {
         expect(result.current.articles).toHaveLength(1);

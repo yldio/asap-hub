@@ -85,11 +85,6 @@ jest.mock('../api', () => ({
     url: 'https://example.com/manuscript.pdf',
     id: 'file-id',
   }),
-  uploadManuscriptFile: jest.fn().mockResolvedValue({
-    filename: 'manuscript.pdf',
-    url: 'https://example.com/manuscript.pdf',
-    id: 'file-id',
-  }),
   createManuscript: jest
     .fn()
     .mockResolvedValue({ title: 'A manuscript', id: '1' }),

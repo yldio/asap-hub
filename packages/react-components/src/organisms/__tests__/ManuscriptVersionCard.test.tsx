@@ -1,5 +1,4 @@
 import {
-  createDiscussionResponse,
   createManuscriptResponse,
   getComplianceReportDataObject,
 } from '@asap-hub/fixtures';
@@ -474,30 +473,6 @@ it('displays manuscript description', async () => {
 });
 
 it('does not display edit button by default', async () => {
-  const asapAffiliationIncludedDetails = 'test discussion';
-  const commenter = {
-    id: 'commenter-id',
-    firstName: 'Connor',
-    lastName: 'Commenter',
-    displayName: 'Connor Commenter',
-    teams: [
-      {
-        id: 'team-commenter',
-        name: 'Team Commenter',
-      },
-    ],
-  };
-
-  const asapAffiliationIncludedDiscussion = createDiscussionResponse(
-    asapAffiliationIncludedDetails,
-  );
-  asapAffiliationIncludedDiscussion.message.createdBy = commenter;
-  asapAffiliationIncludedDiscussion.message.createdDate =
-    '2024-06-21T11:06:58.899Z';
-
-  const getDiscussion = jest.fn();
-  getDiscussion.mockReturnValueOnce(asapAffiliationIncludedDiscussion);
-
   const updatedVersion = {
     ...baseVersion,
     asapAffiliationIncludedDetails: 'test discussion',
@@ -522,30 +497,6 @@ it('does not display edit button by default', async () => {
 });
 
 it('does not display reply button if isActiveVersion is false', async () => {
-  const asapAffiliationIncludedDetails = 'test discussion';
-  const commenter = {
-    id: 'commenter-id',
-    firstName: 'Connor',
-    lastName: 'Commenter',
-    displayName: 'Connor Commenter',
-    teams: [
-      {
-        id: 'team-commenter',
-        name: 'Team Commenter',
-      },
-    ],
-  };
-
-  const asapAffiliationIncludedDiscussion = createDiscussionResponse(
-    asapAffiliationIncludedDetails,
-  );
-  asapAffiliationIncludedDiscussion.message.createdBy = commenter;
-  asapAffiliationIncludedDiscussion.message.createdDate =
-    '2024-06-21T11:06:58.899Z';
-
-  const getDiscussion = jest.fn();
-  getDiscussion.mockReturnValueOnce(asapAffiliationIncludedDiscussion);
-
   const updatedVersion = {
     ...baseVersion,
     asapAffiliationIncludedDetails: 'test discussion',

@@ -346,7 +346,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
             availabilityStatementDetails: '',
 
             teams: ['42'],
-            labs: [],
+            labs: ['lab-1'],
             description: 'Some description',
             shortDescription: 'Some short description',
             firstAuthors: [

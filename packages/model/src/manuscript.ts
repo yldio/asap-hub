@@ -405,7 +405,7 @@ export type ManuscriptPostCreateRequest = Pick<
     availabilityStatementDetails?: string;
 
     teams: string[];
-    labs?: string[];
+    labs: string[];
     firstAuthors: ManuscriptPostAuthor[];
     correspondingAuthor?: ManuscriptPostAuthor;
     additionalAuthors?: ManuscriptPostAuthor[];
@@ -622,7 +622,7 @@ export const manuscriptVersionSchema = {
     availabilityStatementDetails: { type: 'string', nullable: true },
 
     teams: { type: 'array', minItems: 1, items: { type: 'string' } },
-    labs: { type: 'array', nullable: true, items: { type: 'string' } },
+    labs: { type: 'array', minItems: 1, items: { type: 'string' } },
     firstAuthors: {
       type: 'array',
       items: {

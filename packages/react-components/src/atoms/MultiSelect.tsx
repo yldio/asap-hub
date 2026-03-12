@@ -267,7 +267,9 @@ const MultiSelect = <
         disabled={!enabled}
         hidden
       />
-      <div css={validationMessageStyles}>{validationMessage}</div>
+      {validationMessage?.trim() && (
+        <div css={validationMessageStyles}>{validationMessage}</div>
+      )}
     </div>
   );
 };

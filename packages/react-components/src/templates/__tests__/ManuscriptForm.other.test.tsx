@@ -65,7 +65,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,
   selectedTeams: [{ value: '1', label: 'One Team', isFixed: true }],
-  selectedLabs: [],
+  selectedLabs: [{ value: 'lab-1', label: 'Lab One', isFixed: false }],
   handleFileUpload: jest.fn(() =>
     Promise.resolve({
       id: '123',
@@ -1255,7 +1255,7 @@ it('calls onUpdate when form is updated', async () => {
           },
           labMaterialsRegistered: 'Yes',
           labMaterialsRegisteredDetails: '',
-          labs: [],
+          labs: ['lab-1'],
           lifecycle: 'Draft Manuscript (prior to Publication)',
           manuscriptFile: {
             filename: 'test.pdf',
@@ -1380,7 +1380,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
           },
           labMaterialsRegistered: 'Yes',
           labMaterialsRegisteredDetails: '',
-          labs: [],
+          labs: ['lab-1'],
           lifecycle: 'Draft Manuscript (prior to Publication)',
           manuscriptFile: {
             filename: 'manuscript.pdf',

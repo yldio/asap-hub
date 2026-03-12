@@ -91,7 +91,7 @@ const itemLinkStyles = css({
 
 export type ArticlesListProps = {
   readonly aimId: string;
-  readonly articlesCount: number;
+  readonly articlesCount?: number;
   readonly initiallyExpanded?: boolean;
   readonly listMaxHeight?: string;
   readonly maxWidth?: string;

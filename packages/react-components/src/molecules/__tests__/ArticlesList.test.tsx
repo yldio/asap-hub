@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ArticleItem } from '@asap-hub/model';
 
-import ArticlesList from '../ArticlesList';
+import ArticlesList, { type ArticlesListProps } from '../ArticlesList';
 
 const sampleArticles: ArticleItem[] = [
   { id: '1', title: 'First article', href: '/articles/1' },
@@ -14,6 +14,15 @@ describe('ArticlesList', () => {
   beforeEach(() => {
     mockFetchArticles.mockClear();
     mockFetchArticles.mockResolvedValue(sampleArticles);
+  });
+
+  it('uses default articlesCount of 0 when not provided', () => {
+    const props = {
+      aimId: 'aim-1',
+      fetchArticles: mockFetchArticles,
+    } as unknown as ArticlesListProps;
+    render(<ArticlesList {...props} />);
+    expect(screen.getByText('Articles (0)')).toBeInTheDocument();
   });
 
   it('displays the article count in the header', () => {

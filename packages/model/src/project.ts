@@ -143,11 +143,6 @@ export type Aim = {
   readonly articleCount: number;
 };
 
-export type ProjectAimsGrant = {
-  readonly grantTitle: string;
-  readonly aims: ReadonlyArray<Aim>;
-};
-
 // Grant information types
 export type OriginalGrantInfo = {
   readonly originalGrant: string;
@@ -160,27 +155,32 @@ export type SupplementGrantInfo = {
   readonly grantProposalId?: string;
   readonly grantStartDate?: string;
   readonly grantEndDate?: string;
+  readonly aims?: ReadonlyArray<Aim>;
 };
 
-// Extended project detail types
-export type DiscoveryProjectDetail = DiscoveryProject & {
+export type BaseProjectDetail = {
   readonly originalGrantProposalId?: string;
+  readonly originalGrantAims?: ReadonlyArray<Aim>;
   readonly supplementGrant?: SupplementGrantInfo;
-  readonly fundedTeam: FundedTeam;
+};
+
+type TeamCollaborators = {
   readonly collaborators?: ReadonlyArray<ProjectMember>;
 };
 
-export type ResourceProjectDetail = ResourceProject & {
-  readonly originalGrantProposalId?: string;
-  readonly supplementGrant?: SupplementGrantInfo;
-  readonly fundedTeam?: FundedTeam;
-  readonly collaborators?: ReadonlyArray<ProjectMember>;
-};
+export type DiscoveryProjectDetail = DiscoveryProject &
+  BaseProjectDetail &
+  TeamCollaborators & {
+    readonly fundedTeam: FundedTeam;
+  };
 
-export type TraineeProjectDetail = TraineeProject & {
-  readonly originalGrantProposalId?: string;
-  readonly supplementGrant?: SupplementGrantInfo;
-};
+export type ResourceProjectDetail = ResourceProject &
+  BaseProjectDetail &
+  TeamCollaborators & {
+    readonly fundedTeam?: FundedTeam;
+  };
+
+export type TraineeProjectDetail = TraineeProject & BaseProjectDetail;
 
 export type ProjectDetail =
   | DiscoveryProjectDetail

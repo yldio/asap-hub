@@ -194,13 +194,16 @@ const ManuscriptAuthors = ({
             name={`versions.0.${fieldName}Emails.${index}.email`}
             control={control}
             rules={{
-              required: 'Email is required',
+              required: 'Please add an email address for any non-CRN authors.',
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,
                 message: 'Please enter a valid email.',
               },
             }}
-            render={({ field: { value, onChange }, fieldState: { error } }) => (
+            render={({
+              field: { value, onChange, onBlur },
+              fieldState: { error },
+            }) => (
               <LabeledTextField
                 required
                 type="email"
@@ -214,6 +217,7 @@ const ManuscriptAuthors = ({
                   // eslint-disable-next-line @typescript-eslint/no-floating-promises
                   trigger(`versions.0.${fieldName}Emails.${index}.email`);
                 }}
+                onBlur={onBlur}
                 enabled={!isSubmitting}
               />
             )}

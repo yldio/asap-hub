@@ -2,7 +2,6 @@ import { ProjectDetail, ProjectMember } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import { useFlags } from '@asap-hub/react-context';
 import { Display, Pill, Link, CopyButton, TabLink } from '../atoms';
 import { lead } from '../colors';
 import {
@@ -153,7 +152,8 @@ export const getTeamIcon = (project: ProjectDetail) => {
 type MemberWithHref = ProjectMember & { href: string };
 
 const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
-  const { pointOfContactEmail, aboutHref, milestonesHref } = project;
+  const { pointOfContactEmail, aboutHref, workspaceHref, milestonesHref } =
+    project;
   const { isEnabled } = useFlags();
   const isProjectMilestonesEnabled = isEnabled('PROJECT_MILESTONES');
 

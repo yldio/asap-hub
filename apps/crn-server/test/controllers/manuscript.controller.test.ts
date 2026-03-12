@@ -564,6 +564,7 @@ describe('Manuscript controller', () => {
               lifecycle: 'Preprint',
               type: 'Original Research',
               teams: ['team-1'],
+              labs: ['lab-1'],
               manuscriptFile: getManuscriptFileResponse(),
               description: 'edited description',
               shortDescription: 'A good short description',
@@ -591,6 +592,7 @@ describe('Manuscript controller', () => {
               lifecycle: 'Preprint',
               type: 'Original Research',
               teams: ['team-1'],
+              labs: ['lab-1'],
               manuscriptFile: {
                 filename: 'manuscript.pdf',
                 id: 'file-id',

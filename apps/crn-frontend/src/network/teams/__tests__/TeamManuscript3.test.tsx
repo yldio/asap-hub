@@ -38,7 +38,9 @@ jest.mock('../api', () => ({
   resubmitManuscript: jest.fn().mockResolvedValue(null),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
   getTeam: jest.fn().mockResolvedValue({ id: teamId, displayName: 'Team A' }),
-  getLabs: jest.fn().mockResolvedValue([{ id: 'lab-1', name: 'Lab 1' }]),
+  getLabs: jest.fn().mockResolvedValue({
+    items: [{ id: 'lab-1', name: 'Lab 1', labPITeamIds: [teamId] }],
+  }),
   getTeams: jest
     .fn()
     .mockResolvedValue([{ id: teamId, displayName: 'Team A' }]),
@@ -230,6 +232,11 @@ it('shows server validation error toast and a message when submitting with dupli
     screen.getByLabelText(/Jane Doe Email/i),
     'jane@doe.com{enter}',
   );
+
+  const labsInput = screen.getByRole('combobox', { name: /Labs/i });
+  await user.type(labsInput, 'Lab');
+  const labOption = await screen.findByText(/Lab 1/i);
+  await user.click(labOption);
 
   // Quick checks
   const quickChecks = screen.getByRole('region', { name: /quick checks/i });

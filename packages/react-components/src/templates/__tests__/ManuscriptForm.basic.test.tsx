@@ -72,7 +72,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   getLabSuggestions: mockGetLabSuggestions,
   getTeamSuggestions,
   selectedTeams: [{ value: '1', label: 'One Team', isFixed: true }],
-  selectedLabs: [],
+  selectedLabs: [{ value: 'lab-1', label: 'Lab One', isFixed: false }],
   handleFileUpload: jest.fn(() =>
     Promise.resolve({
       id: '123',
@@ -214,7 +214,7 @@ describe('Manuscript form', () => {
             labMaterialsRegisteredDetails: '',
             availabilityStatementDetails: '',
             teams: ['1'],
-            labs: [],
+            labs: ['lab-1'],
             description: 'Some description',
             shortDescription: 'A good short description',
             firstAuthors: [],
@@ -517,7 +517,7 @@ describe('Manuscript form', () => {
     categoryInput.blur();
 
     await waitFor(() => {
-      expect(getByText(/Please add at least one category/i)).toBeVisible();
+      expect(getByText(/This field is required/i)).toBeVisible();
     });
     await userEvent.type(categoryInput, 'Category');
     await userEvent.click(getByText('Category A'));
@@ -546,7 +546,7 @@ describe('Manuscript form', () => {
     impactInput.blur();
 
     await waitFor(() => {
-      expect(getByText(/Please add at least one impact/i)).toBeVisible();
+      expect(getByText(/This field is required/i)).toBeVisible();
     });
 
     // --- Type invalid impact ---

@@ -21,6 +21,7 @@ import {
   ProjectsOrder,
 } from '@asap-hub/contentful';
 import {
+  Aim,
   DiscoveryProject,
   FetchPaginationOptions,
   DiscoveryProjectDetail,
@@ -60,6 +61,38 @@ type ProjectsCollectionItem = NonNullable<
 export type ProjectMembershipItem = NonNullable<
   NonNullable<ProjectItem['membersCollection']>['items'][number]
 >;
+
+type AimsCollectionItem = NonNullable<
+  NonNullable<ProjectItem['originalGrantAimsCollection']>['items'][number]
+>;
+
+export const parseContentfulAims = (
+  items: Array<AimsCollectionItem | null> | undefined,
+): Aim[] | undefined => {
+  if (!items) return undefined;
+
+  const aims = items
+    .filter(
+      (item): item is AimsCollectionItem =>
+        item !== null && !!item.description?.trim(),
+    )
+    .map(
+      (item, index) =>
+        ({
+          id: item.sys.id,
+          order: index + 1,
+          description: item.description?.trim() ?? '',
+          status: 'Pending',
+          // TODO: This needs to be inferred from the aggregation of articles in milestones.
+          // See EPIC ASAP-1337 (general Aims and Milestones description) and tickets
+          // - ASAP-1416
+          // - ASAP-1422
+          articleCount: 0,
+        }) satisfies Aim,
+    );
+
+  return aims.length > 0 ? aims : undefined;
+};
 
 // Parse project member from Contentful membership
 export const parseProjectUserMember = (
@@ -332,10 +365,16 @@ export const parseContentfulProjectDetail = (
   const baseProject = parseContentfulProject(item);
   const { projectType } = baseProject;
 
-  // Parse original grant
   const originalGrantProposalId = item.proposal?.sys.id || undefined;
 
-  // Parse supplement grant
+  const originalGrantAims = parseContentfulAims(
+    item.originalGrantAimsCollection?.items,
+  );
+
+  const supplementGrantAims = item.supplementGrant
+    ? parseContentfulAims(item.supplementGrant.aimsCollection?.items)
+    : undefined;
+
   const supplementGrant: SupplementGrantInfo | undefined = item.supplementGrant
     ? {
         grantTitle: item.supplementGrant.title || '',
@@ -343,6 +382,7 @@ export const parseContentfulProjectDetail = (
         grantProposalId: item.supplementGrant.proposal?.sys.id || undefined,
         grantStartDate: item.supplementGrant.startDate || undefined,
         grantEndDate: item.supplementGrant.endDate || undefined,
+        aims: supplementGrantAims,
       }
     : undefined;
 
@@ -377,6 +417,7 @@ export const parseContentfulProjectDetail = (
           ...baseProject,
           originalGrantProposalId,
           supplementGrant,
+          originalGrantAims,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
           manuscripts,
@@ -389,6 +430,7 @@ export const parseContentfulProjectDetail = (
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
+        originalGrantAims,
       } as DiscoveryProjectDetail;
     }
 
@@ -422,6 +464,7 @@ export const parseContentfulProjectDetail = (
           ...baseProject,
           originalGrantProposalId,
           supplementGrant,
+          originalGrantAims,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
           manuscripts: resourceManuscripts,
@@ -438,6 +481,7 @@ export const parseContentfulProjectDetail = (
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
+        originalGrantAims,
         members: userMembers.length > 0 ? userMembers : undefined,
       } as ResourceProjectDetail;
     }
@@ -449,6 +493,7 @@ export const parseContentfulProjectDetail = (
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
+        originalGrantAims,
         members: allMembers,
       } as TraineeProjectDetail;
     }

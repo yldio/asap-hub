@@ -136,13 +136,8 @@ export const usePatchProjectById = (id: string) => {
   const setProject = useSetRecoilState(projectState(id));
   return async (patch: { tools: ProjectTool[] }) => {
     const updated = await patchProject(id, patch, authorization);
-    // Defensive: if the API returns fewer tools than we sent (e.g. read-after-write
-    // delay or caching when fetching the project right after PATCH), use the patch
-    // so the UI shows what was just saved.
-    const tools =
-      (updated.tools?.length ?? 0) >= patch.tools.length
-        ? updated.tools
-        : patch.tools;
-    setProject({ ...updated, tools });
+    // Always use patch.tools for the UI since the API may return stale data
+    // due to Contentful's read-after-write delay.
+    setProject({ ...updated, tools: patch.tools });
   };
 };

@@ -1,17 +1,29 @@
-import { FC } from 'react';
-import { DiscussionRequest } from '@asap-hub/model';
-import { ProjectProfileWorkspace } from '@asap-hub/react-components';
-import { BackendError } from '@asap-hub/frontend-utils';
+import { FC, useState } from 'react';
+import { Route, Routes, useParams } from 'react-router';
+import { ProjectTool } from '@asap-hub/model';
 import {
-  useCreateDiscussion,
+  ConfirmModal,
+  NotFoundPage,
+  ProjectProfileWorkspace,
+  ToolModal,
+} from '@asap-hub/react-components';
+import {
   useIsComplianceReviewer,
   useManuscriptById,
-  useMarkDiscussionAsRead,
   usePutManuscript,
-  useReplyToDiscussion,
 } from '../network/teams/state';
+import { usePatchProjectById } from './state';
 import { useEligibilityReason } from '../network/teams/useEligibilityReason';
-import { useManuscriptToast } from '../network/teams/useManuscriptToast';
+import useDiscussionHandlers from '../network/teams/useDiscussionHandlers';
+
+type ProjectToolModalProps = Pick<
+  React.ComponentProps<typeof ToolModal>,
+  | 'nameFirst'
+  | 'urlTitle'
+  | 'urlDescription'
+  | 'descriptionDescription'
+  | 'saveButtonText'
+>;
 
 type ProjectWorkspaceProps = Omit<
   React.ComponentProps<typeof ProjectProfileWorkspace>,
@@ -22,78 +34,125 @@ type ProjectWorkspaceProps = Omit<
   | 'createDiscussion'
   | 'onReplyToDiscussion'
   | 'onMarkDiscussionAsRead'
->;
+  | 'onDeleteTool'
+> & {
+  readonly workspaceHref: string;
+};
 
-const ProjectWorkspace: FC<ProjectWorkspaceProps> = (props) => {
+const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({
+  workspaceHref,
+  ...props
+}) => {
   const { setEligibilityReasons } = useEligibilityReason();
   const isComplianceReviewer = useIsComplianceReviewer();
   const updateManuscript = usePutManuscript();
-  const createDiscussion = useCreateDiscussion();
-  const replyToDiscussion = useReplyToDiscussion();
-  const markDiscussionAsRead = useMarkDiscussionAsRead();
-  const { setFormType } = useManuscriptToast();
+  const {
+    handleCreateDiscussion,
+    handleReplyToDiscussion,
+    handleMarkDiscussionAsRead,
+  } = useDiscussionHandlers();
 
-  const handleCreateDiscussion = async (
-    manuscriptId: string,
-    title: string,
-    message: string,
-  ): Promise<string | undefined> => {
-    try {
-      const discussionId = await createDiscussion(manuscriptId, title, message);
-      setFormType({ type: 'discussion-started', accent: 'successLarge' });
-      return discussionId;
-    } catch (error: unknown) {
-      if (
-        error instanceof BackendError &&
-        (error as BackendError).response?.statusCode === 403
-      ) {
-        setFormType({ type: 'manuscript-status-error', accent: 'error' });
-      } else {
-        setFormType({ type: 'default-error', accent: 'error' });
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return undefined;
-    }
-  };
+  const [deleteToolIndex, setDeleteToolIndex] = useState<number | null>(null);
+  const patchProject = usePatchProjectById(props.id);
 
-  const handleReplyToDiscussion = async (
-    manuscriptId: string,
-    discussionId: string,
-    patch: DiscussionRequest,
-  ): Promise<void> => {
-    try {
-      await replyToDiscussion(manuscriptId, discussionId, patch);
-      setFormType({ type: 'reply-to-discussion', accent: 'successLarge' });
-    } catch (error: unknown) {
-      if (
-        error instanceof BackendError &&
-        (error as BackendError).response?.statusCode === 403
-      ) {
-        setFormType({ type: 'manuscript-status-error', accent: 'error' });
-      } else {
-        setFormType({ type: 'default-error', accent: 'error' });
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+  const projectTools = props.tools;
 
-  const handleMarkDiscussionAsRead = async (
-    manuscriptId: string,
-    discussionId: string,
-  ): Promise<void> => {
-    await markDiscussionAsRead(manuscriptId, discussionId);
+  const toolModalProps: ProjectToolModalProps = {
+    nameFirst: true,
+    urlTitle: 'URL',
+    urlDescription: '',
+    descriptionDescription:
+      'Explain the purpose of this tool and any important context.',
   };
 
   return (
-    <ProjectProfileWorkspace
-      {...props}
-      setEligibilityReasons={setEligibilityReasons}
-      isComplianceReviewer={isComplianceReviewer}
-      useManuscriptById={useManuscriptById}
-      onUpdateManuscript={updateManuscript}
-      createDiscussion={handleCreateDiscussion}
-      onReplyToDiscussion={handleReplyToDiscussion}
-      onMarkDiscussionAsRead={handleMarkDiscussionAsRead}
+    <>
+      {deleteToolIndex !== null && (
+        <ConfirmModal
+          title="Delete Collaboration Tool?"
+          description="This will remove the collaboration tool from this project. Project members will no longer be able to access it from this section. This action cannot be undone."
+          confirmText="Delete Tool"
+          cancelText="Cancel"
+          confirmButtonStyle="warning"
+          error="Something went wrong. Please try again."
+          onCancel={() => setDeleteToolIndex(null)}
+          onSave={async () => {
+            const tools = projectTools.filter((_, i) => i !== deleteToolIndex);
+            await patchProject({ tools: tools as ProjectTool[] });
+            setDeleteToolIndex(null);
+          }}
+        />
+      )}
+      <ProjectProfileWorkspace
+        {...props}
+        setEligibilityReasons={setEligibilityReasons}
+        isComplianceReviewer={isComplianceReviewer}
+        useManuscriptById={useManuscriptById}
+        onUpdateManuscript={updateManuscript}
+        createDiscussion={handleCreateDiscussion}
+        onReplyToDiscussion={handleReplyToDiscussion}
+        onMarkDiscussionAsRead={handleMarkDiscussionAsRead}
+        onDeleteTool={async (toolIndex) => setDeleteToolIndex(toolIndex)}
+      />
+      <Routes>
+        <Route
+          path="tools"
+          element={
+            <ToolModal
+              title="Add Collaboration Tool"
+              backHref={workspaceHref}
+              onSave={(data: ProjectTool) =>
+                patchProject({
+                  tools: [...(projectTools as ProjectTool[]), data],
+                })
+              }
+              {...toolModalProps}
+              saveButtonText="Add Tool"
+            />
+          }
+        />
+        <Route
+          path="tools/tool/:toolIndex"
+          element={
+            <EditTool
+              projectId={props.id}
+              tools={projectTools as ProjectTool[]}
+              workspaceHref={workspaceHref}
+              toolModalProps={toolModalProps}
+            />
+          }
+        />
+      </Routes>
+    </>
+  );
+};
+
+const EditTool: FC<{
+  readonly projectId: string;
+  readonly tools: ReadonlyArray<ProjectTool>;
+  readonly workspaceHref: string;
+  readonly toolModalProps: ProjectToolModalProps;
+}> = ({ projectId, tools, workspaceHref, toolModalProps }) => {
+  const { toolIndex } = useParams<{ toolIndex: string }>();
+  const tool = tools[parseInt(toolIndex ?? '0', 10)];
+  const patchProject = usePatchProjectById(projectId);
+
+  if (!tool) {
+    return <NotFoundPage />;
+  }
+
+  return (
+    <ToolModal
+      {...tool}
+      title="Edit Collaboration Tool"
+      backHref={workspaceHref}
+      onSave={(data: ProjectTool) => {
+        const newTools = [...tools];
+        newTools[parseInt(toolIndex ?? '0', 10)] = data;
+        return patchProject({ tools: newTools });
+      }}
+      {...toolModalProps}
+      saveButtonText="Save Changes"
     />
   );
 };

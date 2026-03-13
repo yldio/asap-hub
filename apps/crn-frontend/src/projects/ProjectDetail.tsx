@@ -109,27 +109,31 @@ const ProjectDetail: FC<Props> = ({ config }) => {
               />
               {showWorkspace && (
                 <Route
-                  path="workspace"
+                  path="workspace/*"
                   element={
                     <ProjectWorkspace
                       id={projectId}
                       isProjectMember={isProjectMember}
                       isTeamBased={config.getIsTeamBased(projectDetail)}
-                      // OOS: Wire manuscripts, collaborationManuscripts, and tools from project data when backend is ready
                       manuscripts={[]}
                       collaborationManuscripts={[]}
-                      tools={[]}
-                      // OOS: Wire lastModifiedDate from project tools data when backend is ready
+                      tools={projectDetail.tools ?? []}
                       lastModifiedDate={new Date().toISOString()}
                       contactEmail={projectDetail.contactEmail || undefined}
                       contactName={config.getContactName(projectDetail)}
-                      toolsHref={route.workspace({}).$}
-                      editToolHref={() => route.workspace({}).$}
+                      toolsHref={route.workspace({}).tools({}).$}
+                      editToolHref={(index) =>
+                        route
+                          .workspace({})
+                          .tools({})
+                          .tool({ toolIndex: `${index}` }).$
+                      }
                       isActiveProject={projectDetail.status === 'Active'}
                       createManuscriptHref={
                         route.workspace({}).createManuscript({}).$
                       }
                       targetManuscriptId={targetManuscript.slice(1)}
+                      workspaceHref={route.workspace({}).$}
                     />
                   }
                 />

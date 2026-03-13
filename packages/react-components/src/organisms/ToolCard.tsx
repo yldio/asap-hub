@@ -47,34 +47,32 @@ const ToolCard: React.FC<ToolCardProps> = ({
 
   editHref,
   onDelete,
-}) => {
-  return (
-    <Card>
-      <div css={containerStyle}>
-        <div css={logoIconStyle}>{getIconFromUrl(url) ?? placeholderIcon}</div>
-        <div css={{ flex: 1 }}>
-          <Anchor href={url}>
-            <Headline3 styleAsHeading={4}>{name}</Headline3>
-            <Paragraph accent="lead">{description}</Paragraph>
-          </Anchor>
-          <ol css={linksStyles}>
-            <li>
-              <Link href={editHref}>Edit Link</Link>
-            </li>
-            <li>
-              {onDelete ? (
-                <Button linkStyle onClick={onDelete}>
-                  Delete
-                </Button>
-              ) : (
-                'Delete'
-              )}
-            </li>
-          </ol>
-        </div>
+}) => (
+  <Card>
+    <div css={containerStyle}>
+      <div css={logoIconStyle}>{getIconFromUrl(url) ?? placeholderIcon}</div>
+      <div css={{ flex: 1 }}>
+        <Anchor href={url}>
+          <Headline3 styleAsHeading={4}>{name}</Headline3>
+          <Paragraph accent="lead">{description}</Paragraph>
+        </Anchor>
+        <ol css={linksStyles}>
+          <li>
+            <Link href={editHref}>Edit Link</Link>
+          </li>
+          <li>
+            {onDelete ? (
+              <Button linkStyle onClick={onDelete}>
+                Delete
+              </Button>
+            ) : (
+              'Delete'
+            )}
+          </li>
+        </ol>
       </div>
-    </Card>
-  );
-};
+    </div>
+  </Card>
+);
 
 export default ToolCard;

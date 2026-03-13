@@ -8,7 +8,9 @@ import { colors, ExpandableText } from '..';
 import { TextEditor } from '../atoms';
 import { rem } from '../pixels';
 
-type UserCommentProps = Message;
+type UserCommentProps = Message & {
+  showTeamName?: boolean;
+};
 
 const containerStyles = css({
   display: 'flex',
@@ -38,6 +40,7 @@ const UserComment: FC<UserCommentProps> = ({
   createdBy,
   createdDate,
   text,
+  showTeamName,
 }) => (
   <div css={containerStyles}>
     <UserCommentHeader
@@ -45,6 +48,7 @@ const UserComment: FC<UserCommentProps> = ({
       userHref={getUserHref(createdBy.id)}
       teams={getTeams(createdBy.teams)}
       date={createdDate}
+      showTeamName={showTeamName}
     />
     <div css={replyStyles}>
       <ExpandableText variant="arrow">

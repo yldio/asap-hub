@@ -580,3 +580,26 @@ it('does not display reply button if isActiveVersion is false', async () => {
     expect(getByText(/Category Tag/i)).toBeVisible();
   });
 });
+
+it('renders user team name in Updated by and Created by by default', async () => {
+  const user = userEvent.setup();
+  const { getByLabelText, getAllByText } = render(
+    <MemoryRouter>
+      <ManuscriptVersionCard {...props} />
+    </MemoryRouter>,
+  );
+  await user.click(getByLabelText('Expand Version'));
+  expect(getAllByText('Team A').length).toBeGreaterThanOrEqual(2);
+});
+
+it('hides user team name in Updated by and Created by when showTeamName is false', async () => {
+  const user = userEvent.setup();
+  const { getByLabelText, queryByText, getByText } = render(
+    <MemoryRouter>
+      <ManuscriptVersionCard {...props} showTeamName={false} />
+    </MemoryRouter>,
+  );
+  await user.click(getByLabelText('Expand Version'));
+  expect(queryByText('Team A')).not.toBeInTheDocument();
+  expect(getByText(/Team 1/)).toBeInTheDocument();
+});

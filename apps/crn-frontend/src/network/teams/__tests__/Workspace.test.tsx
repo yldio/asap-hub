@@ -470,11 +470,10 @@ describe('a tool', () => {
     // Second tool's delete button should not be rendered (onDeleteTool is undefined while deleting)
     // The remaining "Delete" texts are plain text, not buttons
     const deleteElements = await findAllByText(/delete/i);
-    for (const el of deleteElements) {
-      if (el.tagName === 'BUTTON') {
-        await userEvent.click(el);
-      }
-    }
+    const deleteButtons = deleteElements.filter(
+      (el) => el.tagName === 'BUTTON',
+    );
+    expect(deleteButtons).toHaveLength(0);
     expect(mockPatchProject).not.toHaveBeenCalled();
 
     await act(async () => {

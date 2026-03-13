@@ -9,23 +9,18 @@ import {
   ProjectTool,
   TeamResponse,
   ManuscriptPutRequest,
-  DiscussionRequest,
 } from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
 import { ToastContext, useCurrentUserCRN } from '@asap-hub/react-context';
-import { BackendError } from '@asap-hub/frontend-utils';
 
 import {
-  useCreateDiscussion,
   useIsComplianceReviewer,
   useManuscriptById,
-  useMarkDiscussionAsRead,
   usePutManuscript,
-  useReplyToDiscussion,
 } from './state';
 import { usePatchProjectById, useProjectById } from '../../projects/state';
 import { useEligibilityReason } from './useEligibilityReason';
-import { useManuscriptToast } from './useManuscriptToast';
+import useDiscussionHandlers from './useDiscussionHandlers';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
@@ -40,70 +35,16 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const project = useProjectById(team.linkedProjectId ?? '');
   const projectTools = project?.tools ?? [];
   const updateManuscript = usePutManuscript();
-  const createDiscussion = useCreateDiscussion();
-  const replyToDiscussion = useReplyToDiscussion();
-  const markDiscussionAsRead = useMarkDiscussionAsRead();
 
   const toast = useContext(ToastContext);
 
-  const { setFormType } = useManuscriptToast();
+  const {
+    handleCreateDiscussion,
+    handleReplyToDiscussion,
+    handleMarkDiscussionAsRead,
+  } = useDiscussionHandlers();
   const user = useCurrentUserCRN();
   const isTeamMember = !!user?.teams.find(({ id }) => team.id === id);
-
-  const handleMarkDiscussionAsRead = async (
-    manuscriptId: string,
-    discussionId: string,
-  ): Promise<void> => {
-    await markDiscussionAsRead(manuscriptId, discussionId);
-  };
-
-  const handleReplytoDiscussion = async (
-    manuscriptId: string,
-    discussionId: string,
-    patch: DiscussionRequest,
-  ): Promise<void> => {
-    try {
-      await replyToDiscussion(
-        manuscriptId,
-        discussionId,
-        patch as DiscussionRequest,
-      );
-      setFormType({ type: 'reply-to-discussion', accent: 'successLarge' });
-    } catch (error: unknown) {
-      if (
-        error instanceof BackendError &&
-        (error as BackendError).response?.statusCode === 403
-      ) {
-        setFormType({ type: 'manuscript-status-error', accent: 'error' });
-      } else {
-        setFormType({ type: 'default-error', accent: 'error' });
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleCreateDiscussion = async (
-    manuscriptId: string,
-    title: string,
-    message: string,
-  ): Promise<string | undefined> => {
-    try {
-      const discussionId = await createDiscussion(manuscriptId, title, message);
-      setFormType({ type: 'discussion-started', accent: 'successLarge' });
-      return discussionId;
-    } catch (error: unknown) {
-      if (
-        error instanceof BackendError &&
-        (error as BackendError).response?.statusCode === 403
-      ) {
-        setFormType({ type: 'manuscript-status-error', accent: 'error' });
-      } else {
-        setFormType({ type: 'default-error', accent: 'error' });
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return undefined;
-    }
-  };
 
   const { hash: targetManuscript } = useLocation();
 
@@ -141,7 +82,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
         isComplianceReviewer={isComplianceReviewer}
         createDiscussion={handleCreateDiscussion}
         useManuscriptById={useManuscriptById}
-        onReplyToDiscussion={handleReplytoDiscussion}
+        onReplyToDiscussion={handleReplyToDiscussion}
         onMarkDiscussionAsRead={handleMarkDiscussionAsRead}
         targetManuscriptId={targetManuscript.slice(1)}
         members={team.members ?? []}

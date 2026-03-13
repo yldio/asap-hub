@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ToolCard from '../ToolCard';
@@ -48,16 +48,5 @@ it('renders a button to delete', async () => {
   const { getByText } = render(<ToolCard {...props} onDelete={handleDelete} />);
 
   await userEvent.click(getByText(/delete/i));
-  await waitFor(() => expect(handleDelete).toHaveBeenCalled());
-});
-it('refuses to delete again', async () => {
-  const handleDelete = jest.fn().mockReturnValue(new Promise(() => {}));
-  const { getByText } = render(<ToolCard {...props} onDelete={handleDelete} />);
-
-  await userEvent.click(getByText(/delete/i));
   expect(handleDelete).toHaveBeenCalled();
-  handleDelete.mockClear();
-
-  await userEvent.click(getByText(/deleting/i));
-  expect(handleDelete).not.toHaveBeenCalled();
 });

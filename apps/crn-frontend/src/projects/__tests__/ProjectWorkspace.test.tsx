@@ -31,6 +31,13 @@ jest.mock('../../network/teams/useManuscriptToast', () => ({
   })),
 }));
 
+const mockPatchProject = jest.fn().mockResolvedValue({});
+
+jest.mock('../state', () => ({
+  ...jest.requireActual('../state'),
+  usePatchProjectById: jest.fn(() => mockPatchProject),
+}));
+
 type CapturedProps = Record<string, unknown> & {
   onUpdateManuscript: (id: string, payload: unknown) => Promise<unknown>;
   createDiscussion: (
@@ -57,6 +64,9 @@ jest.mock('@asap-hub/react-components', () => ({
     capturedProps = props;
     return <div data-testid="project-profile-workspace" />;
   },
+  ToolModal: () => <div data-testid="tool-modal" />,
+  NotFoundPage: () => <div data-testid="not-found" />,
+  ConfirmModal: () => <div data-testid="confirm-modal" />,
 }));
 
 const renderProjectWorkspace = async (
@@ -74,6 +84,7 @@ const renderProjectWorkspace = async (
     editToolHref: (i: number) => `/workspace/tools/${i}`,
     isActiveProject: true,
     createManuscriptHref: '/workspace/create-manuscript',
+    workspaceHref: '/projects/discovery/proj-1/workspace',
     ...overrides,
   };
 
@@ -87,7 +98,7 @@ const renderProjectWorkspace = async (
             >
               <Routes>
                 <Route
-                  path="/projects/discovery/:projectId/workspace"
+                  path="/projects/discovery/:projectId/workspace/*"
                   element={
                     <ManuscriptToastProvider>
                       <EligibilityReasonProvider>

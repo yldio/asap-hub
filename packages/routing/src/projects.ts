@@ -13,10 +13,12 @@ const createProjectRoute = () => {
     { manuscriptId: stringParser },
     {},
   );
+  const tool = route('/tool/:toolIndex', { toolIndex: stringParser }, {});
+  const tools = route('/tools', {}, { tool });
   const workspace = route(
     '/workspace',
     {},
-    { createManuscript, editManuscript, resubmitManuscript },
+    { createManuscript, editManuscript, resubmitManuscript, tools },
   );
 
   return route(

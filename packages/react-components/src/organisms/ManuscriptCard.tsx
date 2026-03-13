@@ -101,6 +101,7 @@ const iconStyles = css({
 const toastHeaderStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
+  gap: rem(32),
   alignItems: 'flex-start',
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     alignItems: 'flex-start',

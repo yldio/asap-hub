@@ -59,7 +59,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
         </Anchor>
         <ol css={linksStyles}>
           <li>
-            <Link href={editHref}>Edit Link</Link>
+            <Link href={editHref}>Edit</Link>
           </li>
           <li>
             {onDelete ? (

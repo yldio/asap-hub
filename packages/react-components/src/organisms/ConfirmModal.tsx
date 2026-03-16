@@ -10,6 +10,26 @@ import { Button, Headline3, Link, Paragraph } from '../atoms';
 import { paddingStyles } from '../card';
 import { Toast } from '.';
 import { usePushFromHere } from '../routing';
+import { colors } from '..';
+
+const confirmButtonContentStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+});
+
+const spinnerStyles = css({
+  '@keyframes confirmModalSpin': {
+    '0%': { transform: 'rotate(0deg)' },
+    '100%': { transform: 'rotate(360deg)' },
+  },
+  width: rem(16),
+  height: rem(16),
+  border: `${rem(2)} solid ${colors.neutral300.rgb}`,
+  borderTop: `${rem(2)} solid white`,
+  borderRadius: '50%',
+  animation: 'confirmModalSpin 1s linear infinite',
+});
 
 const headerStyles = css(paddingStyles, {
   paddingBottom: 0,
@@ -145,7 +165,10 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 }
               }}
             >
-              {confirmText}
+              <span css={confirmButtonContentStyles}>
+                {status === 'isSaving' && <div css={spinnerStyles} />}
+                {confirmText}
+              </span>
             </Button>
           </div>
         </div>

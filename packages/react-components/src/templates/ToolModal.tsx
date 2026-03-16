@@ -10,6 +10,26 @@ import { noop } from '../utils';
 import { EditModal } from '../organisms';
 import { GlobeIcon } from '../icons';
 import { mobileScreen, rem } from '../pixels';
+import { colors } from '..';
+
+const saveButtonContentStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+});
+
+const spinnerStyles = css({
+  '@keyframes toolModalSpin': {
+    '0%': { transform: 'rotate(0deg)' },
+    '100%': { transform: 'rotate(360deg)' },
+  },
+  width: rem(16),
+  height: rem(16),
+  border: `${rem(2)} solid ${colors.neutral300.rgb}`,
+  borderTop: `${rem(2)} solid white`,
+  borderRadius: '50%',
+  animation: 'toolModalSpin 1s linear infinite',
+});
 
 const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
 
@@ -99,7 +119,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
         const urlField = (
           <LabeledTextField
             title={urlTitle}
-            subtitle="(Required)"
+            subtitle="(required)"
             description={urlDescription}
             value={newUrl}
             onChange={setNewUrl}
@@ -115,7 +135,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
         const nameField = (
           <LabeledTextField
             title="Tool Name"
-            subtitle="(Required)"
+            subtitle="(required)"
             value={newName}
             onChange={setNewName}
             enabled={!isSaving}
@@ -138,7 +158,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
               )}
               <LabeledTextField
                 title="Description"
-                subtitle="(Optional)"
+                subtitle="(optional)"
                 description={descriptionDescription}
                 value={newDescription}
                 onChange={setNewDescription}
@@ -167,7 +187,10 @@ const ToolModal: React.FC<ToolModalProps> = ({
                       )
                     }
                   >
-                    {saveButtonText}
+                    <span css={saveButtonContentStyles}>
+                      {isSaving && <div css={spinnerStyles} />}
+                      {saveButtonText}
+                    </span>
                   </Button>
                 </div>
               </div>

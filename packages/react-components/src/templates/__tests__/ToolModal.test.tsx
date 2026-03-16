@@ -29,9 +29,9 @@ it('indicates which fields are required or optional', () => {
   );
 
   [
-    { title: 'Add URL', subtitle: 'Required' },
-    { title: 'Tool Name', subtitle: 'Required' },
-    { title: 'Description', subtitle: 'Optional' },
+    { title: 'Add URL', subtitle: 'required' },
+    { title: 'Tool Name', subtitle: 'required' },
+    { title: 'Description', subtitle: 'optional' },
   ].forEach(({ title, subtitle }) =>
     expect(getByText(title).nextSibling?.textContent).toContain(subtitle),
   );
@@ -238,13 +238,13 @@ it('triggers save via bottom button when saveButtonText is provided', async () =
   });
 });
 
-it('disables bottom buttons while submitting', async () => {
+it('disables bottom buttons and shows spinner while submitting', async () => {
   let resolveSubmit!: () => void;
   const handleSave = () =>
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  const { getByText } = render(
+  const { getByText, container } = render(
     <MemoryRouter initialEntries={['/']}>
       <ToolModal {...props} onSave={handleSave} saveButtonText="Add Tool" />
     </MemoryRouter>,
@@ -253,6 +253,9 @@ it('disables bottom buttons while submitting', async () => {
   await userEvent.click(getByText('Add Tool'));
 
   expect(getByText('Add Tool').closest('button')).toBeDisabled();
+  expect(
+    container.querySelector('[class*="spinnerStyles"]'),
+  ).toBeInTheDocument();
 
   act(resolveSubmit);
   await waitFor(() =>

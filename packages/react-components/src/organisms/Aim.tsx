@@ -1,19 +1,19 @@
-import { Aim as AimType, AimStatus } from '@asap-hub/model';
+import { Aim as AimType, AimStatus, ArticleItem } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { FC, useState } from 'react';
-import { Pill } from '../atoms';
+import { FC } from 'react';
+import { Button, Pill } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
-import { lead, info100, info500, steel } from '../colors';
-import { plusRectIcon, minusRectIcon } from '../icons';
+import { info100, info500, neutral900, steel } from '../colors';
 import { useTextTruncation } from '../hooks';
 import {
   descriptionContainerStyles,
   mobileLabelStyles,
   clampedDescriptionStyles,
-  readMoreButtonStyles,
   statusContainerStyles,
   getStatusAccent,
 } from './shared-aim-milestones-styles';
+import { ArticlesList } from '../molecules';
+import { noop } from '../utils';
 
 const aimRowStyles = css({
   display: 'grid',
@@ -31,6 +31,37 @@ const aimRowStyles = css({
     marginBottom: 0,
     paddingBottom: 0,
     borderBottom: 'none',
+  },
+});
+
+const noArticlesWrapperStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  gap: rem(12),
+});
+
+const noArticlesTextStyles = css({
+  fontStyle: 'italic',
+  fontSize: rem(17),
+  lineHeight: rem(26),
+  color: neutral900.rgb,
+});
+
+const noArticlesSeparatorStyles = css({
+  color: neutral900.rgb,
+  fontSize: rem(17),
+});
+
+const noArticlesEditButtonStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  padding: 0,
+  minWidth: 'auto',
+  gap: rem(16),
+  textDecoration: 'none',
+  ':hover, :active, :focus': {
+    textDecoration: 'none',
   },
 });
 
@@ -60,46 +91,16 @@ const aimNumberBadgeStyles = css({
   whiteSpace: 'nowrap',
 });
 
-const articlesButtonStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(8),
-  marginTop: rem(16),
-  color: lead.rgb,
-  fontSize: rem(17),
-  background: 'none',
-  border: 'none',
-  padding: 0,
-  cursor: 'pointer',
-  '&:hover': {
-    textDecoration: 'underline',
-  },
-  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
-    marginTop: rem(24),
-  },
-});
-
-const articleIconStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  '& svg': {
-    width: rem(20),
-    height: rem(20),
-  },
-});
-
 export const getAimStatusAccent = (status: AimStatus) =>
   getStatusAccent(status);
 
 type AimProps = {
   aim: AimType;
+  fetchArticles: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
 };
 
-const Aim: FC<AimProps> = ({ aim }) => {
-  const { ref, isExpanded, needsExpansion, toggle } = useTextTruncation(
-    aim.description,
-  );
-  const [articlesExpanded, setArticlesExpanded] = useState(false);
+const Aim: FC<AimProps> = ({ aim, fetchArticles }) => {
+  const { ref, isExpanded } = useTextTruncation(aim.description);
 
   return (
     <div css={aimRowStyles}>
@@ -112,22 +113,25 @@ const Aim: FC<AimProps> = ({ aim }) => {
         <div ref={ref} css={clampedDescriptionStyles(isExpanded)}>
           {aim.description}
         </div>
-        {needsExpansion && (
-          <button css={readMoreButtonStyles} onClick={toggle} type="button">
-            {isExpanded ? 'Read Less' : 'Read More'}
-          </button>
-        )}
-        {aim.articleCount > 0 && (
-          <button
-            css={articlesButtonStyles}
-            onClick={() => setArticlesExpanded(!articlesExpanded)}
-            type="button"
-          >
-            <span css={articleIconStyles}>
-              {articlesExpanded ? minusRectIcon : plusRectIcon}
-            </span>
-            <span>Articles ({aim.articleCount})</span>
-          </button>
+        {aim.articleCount === 0 ? (
+          <div css={noArticlesWrapperStyles}>
+            <span css={noArticlesTextStyles}>No articles added</span>
+            <span css={noArticlesSeparatorStyles}>•</span>
+            <Button
+              id={`aim-articles-edit-${aim.id}`}
+              linkStyle
+              onClick={noop}
+              overrideStyles={noArticlesEditButtonStyles}
+            >
+              Edit
+            </Button>
+          </div>
+        ) : (
+          <ArticlesList
+            aimId={aim.id}
+            articlesCount={aim.articleCount}
+            fetchArticles={fetchArticles}
+          />
         )}
       </div>
       <div css={statusContainerStyles}>

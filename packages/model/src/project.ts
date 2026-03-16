@@ -51,6 +51,8 @@ export type BaseProject = {
   readonly originalGrant?: string;
   readonly supplementGrantDescription?: string;
   readonly tools?: ReadonlyArray<ProjectTool>;
+  readonly manuscripts?: string[];
+  readonly collaborationManuscripts?: string[];
 };
 
 export type ProjectMemberTeam = {
@@ -121,6 +123,12 @@ export type Milestone = {
 // If redundant, we can remove it, and use MilestoneStatus instead (though AimMilestoneStatus
 // might be a better name)
 export type AimStatus = 'Complete' | 'In Progress' | 'Pending' | 'Terminated';
+
+export type ArticleItem = {
+  readonly id: string;
+  readonly title: string;
+  readonly href: string;
+};
 
 export type Aim = {
   readonly id: string;

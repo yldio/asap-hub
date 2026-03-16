@@ -235,6 +235,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                           useManuscriptById={useManuscriptById}
                           onReplyToDiscussion={onReplyToDiscussion}
                           onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                          showTeamName={false}
                           {...(manuscriptId === targetManuscriptId
                             ? { isTargetManuscript: true }
                             : {})}
@@ -274,6 +275,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                           useManuscriptById={useManuscriptById}
                           onReplyToDiscussion={onReplyToDiscussion}
                           onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                          showTeamName={false}
                         />
                       </div>
                     ))}
@@ -302,6 +304,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                   useManuscriptById={useManuscriptById}
                   onReplyToDiscussion={onReplyToDiscussion}
                   onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                  showTeamName={false}
                   {...(manuscriptId === targetManuscriptId
                     ? { isTargetManuscript: true }
                     : {})}

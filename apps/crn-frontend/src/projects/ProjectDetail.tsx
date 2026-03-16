@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import { useProjectById } from './state';
+import { useFetchArticles } from './aim-articles-state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
@@ -25,6 +26,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const { projectId: rawProjectId } = useParams<{ projectId: string }>();
   const projectId = rawProjectId ?? '';
   const projectDetail = useProjectById(projectId);
+  const fetchArticles = useFetchArticles();
   const { isEnabled } = useFlags();
   const user = useCurrentUserCRN();
   const isStaff = user?.role === 'Staff';
@@ -104,6 +106,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                     pointOfContactEmail={
                       projectDetail.contactEmail || undefined
                     }
+                    fetchArticles={fetchArticles}
                   />
                 }
               />
@@ -115,8 +118,10 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       id={projectId}
                       isProjectMember={isProjectMember}
                       isTeamBased={config.getIsTeamBased(projectDetail)}
-                      manuscripts={[]}
-                      collaborationManuscripts={[]}
+                      manuscripts={projectDetail.manuscripts ?? []}
+                      collaborationManuscripts={
+                        projectDetail.collaborationManuscripts ?? []
+                      }
                       tools={projectDetail.tools ?? []}
                       lastModifiedDate={new Date().toISOString()}
                       contactEmail={projectDetail.contactEmail || undefined}

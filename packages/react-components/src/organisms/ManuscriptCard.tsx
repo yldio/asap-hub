@@ -24,6 +24,7 @@ import {
   minusRectIcon,
   neutral900,
   NotificationDotIcon,
+  Pill,
   plusRectIcon,
   resubmitManuscriptIcon,
   StatusButton,
@@ -63,6 +64,7 @@ type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
       React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
     ];
     readonly isTargetManuscript?: boolean;
+    readonly showTeamName?: boolean;
   };
 
 const manuscriptContainerStyles = css({
@@ -81,7 +83,7 @@ const toastStyles = css({
   display: 'flex',
   padding: rem(16),
   borderRadius: `${rem(8)} ${rem(8)} 0 0`,
-  alignItems: 'center',
+  alignItems: 'flex-start',
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -93,13 +95,14 @@ const iconStyles = css({
   width: rem(24),
   height: rem(24),
   paddingRight: rem(12),
-  marginTop: rem(2),
+  marginTop: rem(1),
 });
 
 const toastHeaderStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
-  alignItems: 'center',
+  gap: rem(32),
+  alignItems: 'flex-start',
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     alignItems: 'flex-start',
   },
@@ -236,6 +239,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   onReplyToDiscussion,
   onMarkDiscussionAsRead,
   isTargetManuscript = false,
+  showTeamName,
 }) => {
   const [tooltipHoverShown, setTooltipHoverShown] = useState<boolean>(false);
 
@@ -348,21 +352,36 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           <span css={{ width: '100%' }}>
             <span css={toastHeaderStyles}>
               <Subtitle noMargin>{title}</Subtitle>
-              <StatusButton
-                buttonChildren={() => <span>{status}</span>}
-                canEdit={isComplianceReviewer && isActiveManuscript}
-                selectedStatusType={getReviewerStatusType(
-                  status as (typeof manuscriptStatus)[number],
-                )}
+              <span
+                css={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-end',
+                  flexShrink: 0,
+                  gap: rem(12),
+                }}
               >
-                {statusButtonOptions.map((statusItem) => ({
-                  item: statusItem,
-                  type: getReviewerStatusType(statusItem),
-                  onClick: () => {
-                    handleStatusClick(statusItem);
-                  },
-                }))}
-              </StatusButton>
+                <StatusButton
+                  buttonChildren={() => <span>{status}</span>}
+                  canEdit={isComplianceReviewer && isActiveManuscript}
+                  selectedStatusType={getReviewerStatusType(
+                    status as (typeof manuscriptStatus)[number],
+                  )}
+                >
+                  {statusButtonOptions.map((statusItem) => ({
+                    item: statusItem,
+                    type: getReviewerStatusType(statusItem),
+                    onClick: () => {
+                      handleStatusClick(statusItem);
+                    },
+                  }))}
+                </StatusButton>
+                {currentManuscriptVersion?.versionUID && (
+                  <Pill accent="blue">
+                    {currentManuscriptVersion.versionUID}
+                  </Pill>
+                )}
+              </span>
             </span>
           </span>
         </div>
@@ -374,7 +393,6 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                 display: 'flex',
                 gap: rem(32),
                 marginLeft: rem(55),
-                marginTop: rem(-4),
               }}
             >
               <button
@@ -499,6 +517,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                         }}
                         categories={manuscript?.categories || []}
                         impact={manuscript?.impact}
+                        showTeamName={showTeamName}
                       />
                     ))}
                   {versions.length > VERSION_LIMIT && (
@@ -521,6 +540,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                     hasUpdateAccess || isComplianceReviewer
                   }
                   isActiveManuscript={isActiveManuscript}
+                  showTeamName={showTeamName}
                 />
               )}
             </div>

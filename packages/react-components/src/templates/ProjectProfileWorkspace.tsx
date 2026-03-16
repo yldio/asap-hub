@@ -10,12 +10,13 @@ import {
   Card,
   Display,
   Headline2,
+  Headline3,
   Link,
   Paragraph,
   Subtitle,
 } from '../atoms';
 import { formatDateAndTime } from '../date';
-import { plusIcon } from '../icons';
+import { deskTopIcon, plusIcon } from '../icons';
 import { createMailTo, mailToSupport } from '../mail';
 import { EligibilityModal, ToolCard } from '../organisms';
 import type DiscussionCard from '../organisms/DiscussionCard';
@@ -26,6 +27,25 @@ const containerStyles = css({
   display: 'grid',
   gridRowGap: rem(36),
 });
+
+const desktopOnlyStyles = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+
+const mobileOnlyStyles = css({
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+
+const mobileContainerStyles = css({
+  padding: rem(18),
+  textAlign: 'center',
+  display: 'flex',
+});
+
 
 const newToolStyles = css({
   display: 'flex',
@@ -192,6 +212,23 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
           setEligibilityReasons={setEligibilityReasons}
         />
       )}
+      <div css={mobileOnlyStyles}>
+        <Card>
+          <header css={mobileContainerStyles}>
+            <div>{deskTopIcon}</div>
+            <Headline3>
+              <span>
+                Compliance area is only available on the desktop version.
+              </span>
+            </Headline3>
+            <Paragraph accent="lead">
+              To access all compliance features, please use the desktop version.
+              We apologize for any inconvenience this may cause.
+            </Paragraph>
+          </header>
+        </Card>
+      </div>
+      <div css={desktopOnlyStyles}>
       <Card overrideStyles={complianceCardContainerStyles}>
         <div css={complianceContainerStyles}>
           <div css={complianceHeaderStyles}>
@@ -314,6 +351,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
           </div>
         ) : null}
       </Card>
+      </div>
 
       {isProjectMember && (
         <Card>

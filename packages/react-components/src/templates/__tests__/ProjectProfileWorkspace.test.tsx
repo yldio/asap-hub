@@ -47,6 +47,17 @@ const renderWithRouter = (component: React.ReactElement) => {
 };
 
 describe('ProjectProfileWorkspace', () => {
+  describe('Mobile View', () => {
+    it('renders mobile compliance message', () => {
+      renderWithRouter(<ProjectProfileWorkspace {...defaultProps} />);
+      expect(
+        screen.getByText(
+          /Compliance area is only available on the desktop version/,
+        ),
+      ).toBeInTheDocument();
+    });
+  });
+
   describe('Compliance Review', () => {
     it('renders the Compliance Review heading', () => {
       const { getByRole } = renderWithRouter(

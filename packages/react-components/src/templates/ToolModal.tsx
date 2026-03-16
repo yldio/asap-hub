@@ -22,6 +22,7 @@ const buttonContainerStyles = css({
     gridTemplateRows: 'auto',
     justifyContent: 'flex-end',
   },
+  marginTop: rem(32),
 });
 
 const saveButtonStyles = css({

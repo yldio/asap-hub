@@ -33,6 +33,7 @@ const linksStyles = css({
   listStyle: 'none',
   margin: 0,
   padding: 0,
+  marginTop: rem(12),
 
   display: 'flex',
   '> *:not(:last-of-type)': {

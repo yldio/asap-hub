@@ -980,6 +980,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.28.6
     "@sentry/cli": ^2.20.3
     "@sentry/react": ^8.0.0
+    "@tanstack/react-query": ^5.90.21
     "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
     "@testing-library/react": 16.3.1
@@ -15029,6 +15030,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:5.90.20":
+  version: 5.90.20
+  resolution: "@tanstack/query-core@npm:5.90.20"
+  checksum: 47a94b3b8f9d68db6622183cbb2c0e7e79f2e71f4664e3b7b51f24fb77800188d919b5f35f522107518a2bcf7b345948e51b24c86e47c62fbaaa9788a9c61b40
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-query@npm:^4.3.9":
   version: 4.42.0
   resolution: "@tanstack/react-query@npm:4.42.0"
@@ -15045,6 +15053,17 @@ __metadata:
     react-native:
       optional: true
   checksum: d5492a1b8681c1270244d75ec613becbec47612b28308e678d339d1a3858f4c10d23a4761bf7dae476792daf8dc4fd50e27ea705c76998fda71b5acb5045d059
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.90.21":
+  version: 5.90.21
+  resolution: "@tanstack/react-query@npm:5.90.21"
+  dependencies:
+    "@tanstack/query-core": 5.90.20
+  peerDependencies:
+    react: ^18 || ^19
+  checksum: 229c693d0c19486042ec8bc4e584d3a434bde41aa33918f38c2aedc045b2f5cb11e02f48d9322b3c3af42d432906542719407a82e382d832bbf2eeb2099eccff
   languageName: node
   linkType: hard
 

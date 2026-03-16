@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { Card } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
-import { neutral1000, neutral200 } from '../colors';
+import { neutral1000, neutral200, steel } from '../colors';
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -62,7 +62,8 @@ const milestoneRowWrapperStyles = (index: number, isLast: boolean) =>
     paddingInline: rem(24),
     paddingTop: index === 0 ? 0 : rem(20),
     paddingBottom: rem(20),
-    ...(isLast ? { paddingBottom: rem(0) } : {}),
+    borderBottom: `1px solid ${steel.rgb}`,
+    ...(isLast ? { paddingBottom: rem(0), borderBottom: 'none' } : {}),
   });
 
 type ProjectMilestonesProps = {

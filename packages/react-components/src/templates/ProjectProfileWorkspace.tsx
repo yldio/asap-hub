@@ -46,7 +46,6 @@ const mobileContainerStyles = css({
   display: 'flex',
 });
 
-
 const newToolStyles = css({
   display: 'flex',
   [`@media (min-width: ${mobileScreen.max}px)`]: {
@@ -229,128 +228,133 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
         </Card>
       </div>
       <div css={desktopOnlyStyles}>
-      <Card overrideStyles={complianceCardContainerStyles}>
-        <div css={complianceContainerStyles}>
-          <div css={complianceHeaderStyles}>
-            <Display styleAsHeading={3}>Compliance Review</Display>
-            {isActiveProject && isProjectMember && (
-              <div css={css(manuscriptButtonStyles)}>
-                <Button onClick={handleShareManuscript} primary noMargin small>
-                  {plusIcon} Submit Manuscript
-                </Button>
-              </div>
-            )}
-          </div>
-          <Paragraph noMargin accent="lead">
-            {manuscripts.length > 0 || !!collaborationManuscripts?.length
-              ? 'This directory contains all manuscripts with their compliance reports.'
-              : "Submit your manuscript to receive a report outlining where your work meets ASAP's Open Science Policy and where changes are needed for your work to be compliant."}
-          </Paragraph>
-        </div>
-        {isTeamBased &&
-        (manuscripts.length > 0 || !!collaborationManuscripts?.length) ? (
-          <>
-            <div data-testid="team-manuscripts" css={manuscriptsGroupStyles}>
-              <Subtitle noMargin>Team Submission</Subtitle>
-              {manuscripts.length ? (
-                <>
-                  <Paragraph noMargin accent="lead">
-                    {manuscriptSubmissions}
-                  </Paragraph>
-                  <div>
-                    {manuscripts.map((manuscriptId) => (
-                      <div key={manuscriptId}>
-                        <ManuscriptCard
-                          id={manuscriptId}
-                          user={user}
-                          // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
-                          teamId={id}
-                          isComplianceReviewer={isComplianceReviewer}
-                          onUpdateManuscript={onUpdateManuscript}
-                          isActiveTeam={isActiveProject}
-                          createDiscussion={createDiscussion}
-                          useManuscriptById={useManuscriptById}
-                          onReplyToDiscussion={onReplyToDiscussion}
-                          onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                          showTeamName={false}
-                          {...(manuscriptId === targetManuscriptId
-                            ? { isTargetManuscript: true }
-                            : {})}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <Paragraph noMargin accent="lead">
-                  {noManuscriptSubmissions}
-                </Paragraph>
+        <Card overrideStyles={complianceCardContainerStyles}>
+          <div css={complianceContainerStyles}>
+            <div css={complianceHeaderStyles}>
+              <Display styleAsHeading={3}>Compliance Review</Display>
+              {isActiveProject && isProjectMember && (
+                <div css={css(manuscriptButtonStyles)}>
+                  <Button
+                    onClick={handleShareManuscript}
+                    primary
+                    noMargin
+                    small
+                  >
+                    {plusIcon} Submit Manuscript
+                  </Button>
+                </div>
               )}
             </div>
-            <div
-              data-testid="collaboration-manuscripts"
-              css={manuscriptsGroupStyles}
-            >
-              <Subtitle noMargin>Collaborator Submission</Subtitle>
-              {collaborationManuscripts?.length ? (
-                <>
-                  <Paragraph noMargin accent="lead">
-                    {manuscriptCollaborations}
-                  </Paragraph>
-                  <div>
-                    {collaborationManuscripts.map((manuscriptId) => (
-                      <div key={manuscriptId}>
-                        <ManuscriptCard
-                          id={manuscriptId}
-                          user={user}
-                          // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
-                          teamId={id}
-                          isComplianceReviewer={isComplianceReviewer}
-                          isActiveTeam={isActiveProject}
-                          onUpdateManuscript={onUpdateManuscript}
-                          createDiscussion={createDiscussion}
-                          useManuscriptById={useManuscriptById}
-                          onReplyToDiscussion={onReplyToDiscussion}
-                          onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                          showTeamName={false}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <Paragraph noMargin accent="lead">
-                  {noManuscriptCollaborations}
-                </Paragraph>
-              )}
-            </div>
-          </>
-        ) : !isTeamBased && manuscripts.length > 0 ? (
-          <div data-testid="project-manuscripts" css={manuscriptsGroupStyles}>
-            {manuscripts.map((manuscriptId) => (
-              <div key={manuscriptId}>
-                <ManuscriptCard
-                  id={manuscriptId}
-                  user={user}
-                  // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
-                  teamId={id}
-                  isComplianceReviewer={isComplianceReviewer}
-                  onUpdateManuscript={onUpdateManuscript}
-                  isActiveTeam={isActiveProject}
-                  createDiscussion={createDiscussion}
-                  useManuscriptById={useManuscriptById}
-                  onReplyToDiscussion={onReplyToDiscussion}
-                  onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                  showTeamName={false}
-                  {...(manuscriptId === targetManuscriptId
-                    ? { isTargetManuscript: true }
-                    : {})}
-                />
-              </div>
-            ))}
+            <Paragraph noMargin accent="lead">
+              {manuscripts.length > 0 || !!collaborationManuscripts?.length
+                ? 'This directory contains all manuscripts with their compliance reports.'
+                : "Submit your manuscript to receive a report outlining where your work meets ASAP's Open Science Policy and where changes are needed for your work to be compliant."}
+            </Paragraph>
           </div>
-        ) : null}
-      </Card>
+          {isTeamBased &&
+          (manuscripts.length > 0 || !!collaborationManuscripts?.length) ? (
+            <>
+              <div data-testid="team-manuscripts" css={manuscriptsGroupStyles}>
+                <Subtitle noMargin>Team Submission</Subtitle>
+                {manuscripts.length ? (
+                  <>
+                    <Paragraph noMargin accent="lead">
+                      {manuscriptSubmissions}
+                    </Paragraph>
+                    <div>
+                      {manuscripts.map((manuscriptId) => (
+                        <div key={manuscriptId}>
+                          <ManuscriptCard
+                            id={manuscriptId}
+                            user={user}
+                            // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
+                            teamId={id}
+                            isComplianceReviewer={isComplianceReviewer}
+                            onUpdateManuscript={onUpdateManuscript}
+                            isActiveTeam={isActiveProject}
+                            createDiscussion={createDiscussion}
+                            useManuscriptById={useManuscriptById}
+                            onReplyToDiscussion={onReplyToDiscussion}
+                            onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                            showTeamName={false}
+                            {...(manuscriptId === targetManuscriptId
+                              ? { isTargetManuscript: true }
+                              : {})}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <Paragraph noMargin accent="lead">
+                    {noManuscriptSubmissions}
+                  </Paragraph>
+                )}
+              </div>
+              <div
+                data-testid="collaboration-manuscripts"
+                css={manuscriptsGroupStyles}
+              >
+                <Subtitle noMargin>Collaborator Submission</Subtitle>
+                {collaborationManuscripts?.length ? (
+                  <>
+                    <Paragraph noMargin accent="lead">
+                      {manuscriptCollaborations}
+                    </Paragraph>
+                    <div>
+                      {collaborationManuscripts.map((manuscriptId) => (
+                        <div key={manuscriptId}>
+                          <ManuscriptCard
+                            id={manuscriptId}
+                            user={user}
+                            // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
+                            teamId={id}
+                            isComplianceReviewer={isComplianceReviewer}
+                            isActiveTeam={isActiveProject}
+                            onUpdateManuscript={onUpdateManuscript}
+                            createDiscussion={createDiscussion}
+                            useManuscriptById={useManuscriptById}
+                            onReplyToDiscussion={onReplyToDiscussion}
+                            onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                            showTeamName={false}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <Paragraph noMargin accent="lead">
+                    {noManuscriptCollaborations}
+                  </Paragraph>
+                )}
+              </div>
+            </>
+          ) : !isTeamBased && manuscripts.length > 0 ? (
+            <div data-testid="project-manuscripts" css={manuscriptsGroupStyles}>
+              {manuscripts.map((manuscriptId) => (
+                <div key={manuscriptId}>
+                  <ManuscriptCard
+                    id={manuscriptId}
+                    user={user}
+                    // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
+                    teamId={id}
+                    isComplianceReviewer={isComplianceReviewer}
+                    onUpdateManuscript={onUpdateManuscript}
+                    isActiveTeam={isActiveProject}
+                    createDiscussion={createDiscussion}
+                    useManuscriptById={useManuscriptById}
+                    onReplyToDiscussion={onReplyToDiscussion}
+                    onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                    showTeamName={false}
+                    {...(manuscriptId === targetManuscriptId
+                      ? { isTargetManuscript: true }
+                      : {})}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </Card>
       </div>
 
       {isProjectMember && (

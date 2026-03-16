@@ -78,7 +78,7 @@ const AimsList: FC<{
         <div css={headerRowStyles}>
           <div css={headerLabelStyles}>Aim</div>
           <div css={headerLabelStyles}>Description</div>
-          <div css={headerLabelStyles}>Status</div>
+          <div css={[headerLabelStyles, { paddingLeft: rem(8) }]}>Status</div>
         </div>
         {displayedAims.map((aim) => (
           <Aim key={aim.id} aim={aim} fetchArticles={fetchArticles} />

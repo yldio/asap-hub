@@ -3340,8 +3340,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.41.0"\
       ],\
       [\
+        "@tanstack/query-devtools",\
+        "npm:5.93.0"\
+      ],\
+      [\
         "@tanstack/react-query",\
         "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.90.21"\
+      ],\
+      [\
+        "@tanstack/react-query-devtools",\
+        "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.91.3"\
       ],\
       [\
         "@testing-library/dom",\
@@ -12650,6 +12658,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/cli", "npm:2.58.4"],\
             ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:8.55.0"],\
             ["@tanstack/react-query", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.90.21"],\
+            ["@tanstack/react-query-devtools", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.91.3"],\
             ["@testing-library/dom", "npm:10.4.1"],\
             ["@testing-library/jest-dom", "npm:6.9.1"],\
             ["@testing-library/react", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:16.3.1"],\
@@ -37271,6 +37280,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@tanstack/query-devtools", [\
+        ["npm:5.93.0", {\
+          "packageLocation": "./.yarn/cache/@tanstack-query-devtools-npm-5.93.0-5060d0acff-b7fbbb6f87.zip/node_modules/@tanstack/query-devtools/",\
+          "packageDependencies": [\
+            ["@tanstack/query-devtools", "npm:5.93.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@tanstack/react-query", [\
         ["npm:4.42.0", {\
           "packageLocation": "./.yarn/cache/@tanstack-react-query-npm-4.42.0-f9aa71b135-d5492a1b86.zip/node_modules/@tanstack/react-query/",\
@@ -37319,6 +37337,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/react",\
             "react-dom",\
             "react-native",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@tanstack/react-query-devtools", [\
+        ["npm:5.91.3", {\
+          "packageLocation": "./.yarn/cache/@tanstack-react-query-devtools-npm-5.91.3-fbaf406a7a-d48fbfdc76.zip/node_modules/@tanstack/react-query-devtools/",\
+          "packageDependencies": [\
+            ["@tanstack/react-query-devtools", "npm:5.91.3"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.91.3", {\
+          "packageLocation": "./.yarn/__virtual__/@tanstack-react-query-devtools-virtual-748bf27cc2/0/cache/@tanstack-react-query-devtools-npm-5.91.3-fbaf406a7a-d48fbfdc76.zip/node_modules/@tanstack/react-query-devtools/",\
+          "packageDependencies": [\
+            ["@tanstack/react-query-devtools", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.91.3"],\
+            ["@tanstack/query-devtools", "npm:5.93.0"],\
+            ["@tanstack/react-query", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.90.21"],\
+            ["@types/react", "npm:18.3.12"],\
+            ["@types/tanstack__react-query", null],\
+            ["react", "npm:18.3.1"]\
+          ],\
+          "packagePeers": [\
+            "@tanstack/react-query",\
+            "@types/react",\
+            "@types/tanstack__react-query",\
             "react"\
           ],\
           "linkType": "HARD"\

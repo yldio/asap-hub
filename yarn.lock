@@ -981,6 +981,7 @@ __metadata:
     "@sentry/cli": ^2.20.3
     "@sentry/react": ^8.0.0
     "@tanstack/react-query": 5.90.21
+    "@tanstack/react-query-devtools": ^5.91.3
     "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
     "@testing-library/react": 16.3.1
@@ -1444,7 +1445,7 @@ __metadata:
     "@babel/runtime-corejs3": 7.28.6
     "@sentry/cli": ^2.20.3
     "@sentry/react": ^8.0.0
-    "@tanstack/react-query": ^5.90.21
+    "@tanstack/react-query": 5.90.21
     "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
     "@testing-library/react": 16.3.1
@@ -15038,7 +15039,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:5.90.21, @tanstack/react-query@npm:^5.90.21":
+"@tanstack/query-devtools@npm:5.93.0":
+  version: 5.93.0
+  resolution: "@tanstack/query-devtools@npm:5.93.0"
+  checksum: b7fbbb6f87d7c73e8fc767108ebb753de15302b428e451a43ba6c4c16e535f0ac1102acb8328667c94464ed18dc369ea30ad21234435cbf6528f48f4d22e51a3
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query-devtools@npm:^5.91.3":
+  version: 5.91.3
+  resolution: "@tanstack/react-query-devtools@npm:5.91.3"
+  dependencies:
+    "@tanstack/query-devtools": 5.93.0
+  peerDependencies:
+    "@tanstack/react-query": ^5.90.20
+    react: ^18 || ^19
+  checksum: d48fbfdc76e30e652bb80aaad9f1cceec473242e7a8c6d4070bf689cfa9a6e10488cd1cadaaa558dba60cbf78059f4ee4759a626c8daaf713c21d7288430a0cd
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:5.90.21":
   version: 5.90.21
   resolution: "@tanstack/react-query@npm:5.90.21"
   dependencies:

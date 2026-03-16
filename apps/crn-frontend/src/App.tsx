@@ -11,6 +11,7 @@ import {
   matchRoutes,
 } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import { Frame, useCookieConsent } from '@asap-hub/frontend-utils';
 import {
@@ -208,6 +209,7 @@ const App: FC<Record<string, never>> = () => {
           ]}
         />
       </LogoProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };

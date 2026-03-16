@@ -116,6 +116,11 @@ export type Milestone = {
   readonly id: string;
   readonly description: string;
   readonly status: MilestoneStatus;
+  /**
+   * Optional comma-separated aim numbers for the Aims column (e.g. "1", "1,2", "2,3,4,5,6").
+   * Stored as string for OpenSearch sorting.
+   */
+  readonly aims?: string;
 };
 
 // NOTE: this is going to be inferred from the collection

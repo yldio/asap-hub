@@ -1,6 +1,7 @@
 import { Suspense, FC } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, screen, waitFor } from '@testing-library/react';
+import { enable, disable, reset } from '@asap-hub/flags';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
 import type {
@@ -80,6 +81,14 @@ const mockDiscoveryProject: DiscoveryProjectDetailType = {
     teamType: 'Discovery Team',
     researchTheme: 'Theme One',
     teamDescription: 'Team description',
+  },
+};
+
+const mockDiscoveryProjectWithSupplement: DiscoveryProjectDetailType = {
+  ...mockDiscoveryProject,
+  id: 'discovery-supplement',
+  supplementGrant: {
+    grantTitle: 'Supplement Grant Title',
   },
 };
 
@@ -163,6 +172,14 @@ const mockResourceProjectCollabContact: ResourceProjectDetailType = {
   ],
 };
 
+const mockResourceProjectWithSupplement: ResourceProjectDetailType = {
+  ...mockResourceProject,
+  id: 'resource-supplement',
+  supplementGrant: {
+    grantTitle: 'Supplement Grant Title',
+  },
+};
+
 const mockTraineeProject: TraineeProjectDetailType = {
   id: 'trainee-1',
   title: 'Trainee Project 1',
@@ -188,6 +205,14 @@ const mockTraineeProject: TraineeProjectDetailType = {
   contactEmail: 'contact@example.com',
 };
 
+const mockTraineeProjectWithSupplement: TraineeProjectDetailType = {
+  ...mockTraineeProject,
+  id: 'trainee-supplement',
+  supplementGrant: {
+    grantTitle: 'Supplement Grant Title',
+  },
+};
+
 const mockTraineeProjectNoContact: TraineeProjectDetailType = {
   ...mockTraineeProject,
   id: 'trainee-no-contact',
@@ -203,11 +228,14 @@ jest.mock('../state', () => ({
     const map: Record<string, unknown> = {
       'discovery-1': mockDiscoveryProject,
       'discovery-no-contact': mockDiscoveryProjectNoContact,
+      'discovery-supplement': mockDiscoveryProjectWithSupplement,
       'resource-1': mockResourceProject,
       'resource-no-contact': mockResourceProjectNoContact,
       'resource-collab': mockResourceProjectCollabContact,
+      'resource-supplement': mockResourceProjectWithSupplement,
       'trainee-1': mockTraineeProject,
       'trainee-no-contact': mockTraineeProjectNoContact,
+      'trainee-supplement': mockTraineeProjectWithSupplement,
     };
     return map[id];
   }),
@@ -258,6 +286,7 @@ type TestVariant = {
   mainProjectTitle: string;
   noContactProjectId: string;
   wrongTypeProjectId: string;
+  supplementProjectId: string;
 };
 
 const variants: TestVariant[] = [
@@ -269,6 +298,7 @@ const variants: TestVariant[] = [
     mainProjectTitle: 'Discovery Project 1',
     noContactProjectId: 'discovery-no-contact',
     wrongTypeProjectId: 'resource-1',
+    supplementProjectId: 'discovery-supplement',
   },
   {
     name: 'ResourceProjectDetail',
@@ -278,6 +308,7 @@ const variants: TestVariant[] = [
     mainProjectTitle: 'Resource Project 1',
     noContactProjectId: 'resource-no-contact',
     wrongTypeProjectId: 'discovery-1',
+    supplementProjectId: 'resource-supplement',
   },
   {
     name: 'TraineeProjectDetail',
@@ -287,6 +318,7 @@ const variants: TestVariant[] = [
     mainProjectTitle: 'Trainee Project 1',
     noContactProjectId: 'trainee-no-contact',
     wrongTypeProjectId: 'discovery-1',
+    supplementProjectId: 'trainee-supplement',
   },
 ];
 
@@ -296,6 +328,7 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.restoreAllMocks();
+  reset();
 });
 
 describe.each(variants)(
@@ -307,6 +340,7 @@ describe.each(variants)(
     mainProjectTitle,
     noContactProjectId,
     wrongTypeProjectId,
+    supplementProjectId,
   }) => {
     it('renders project detail page when project type matches', async () => {
       await renderProjectDetail(Component, routeKeyword, mainProjectId);
@@ -335,7 +369,7 @@ describe.each(variants)(
         projects: [{ id: mainProjectId }],
         role: 'Grantee',
       };
-      document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -343,11 +377,10 @@ describe.each(variants)(
         memberUser,
       );
       expect(screen.getByText('Workspace')).toBeInTheDocument();
-      document.cookie =
-        'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     });
 
     it('does not render Workspace tab when flag is disabled', async () => {
+      disable('PROJECT_WORKSPACE');
       await renderProjectDetail(Component, routeKeyword, mainProjectId);
       expect(screen.queryByText('Workspace')).not.toBeInTheDocument();
     });
@@ -357,7 +390,7 @@ describe.each(variants)(
         projects: [{ id: mainProjectId }],
         role: 'Grantee',
       };
-      document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -368,8 +401,6 @@ describe.each(variants)(
       expect(
         await screen.findByRole('heading', { name: 'Compliance Review' }),
       ).toBeInTheDocument();
-      document.cookie =
-        'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     });
 
     it('renders Workspace tab for Staff users even without project membership', async () => {
@@ -377,7 +408,7 @@ describe.each(variants)(
         projects: [],
         role: 'Staff',
       };
-      document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -385,8 +416,6 @@ describe.each(variants)(
         staffUser,
       );
       expect(screen.getByText('Workspace')).toBeInTheDocument();
-      document.cookie =
-        'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     });
 
     it('renders create manuscript route via lazy loading', async () => {
@@ -394,7 +423,7 @@ describe.each(variants)(
         projects: [{ id: mainProjectId }],
         role: 'Grantee',
       };
-      document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -405,8 +434,6 @@ describe.each(variants)(
       expect(
         await screen.findByTestId('mock-manuscript-form'),
       ).toBeInTheDocument();
-      document.cookie =
-        'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     });
 
     it('renders edit manuscript route via lazy loading', async () => {
@@ -414,7 +441,7 @@ describe.each(variants)(
         projects: [{ id: mainProjectId }],
         role: 'Grantee',
       };
-      document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -425,8 +452,6 @@ describe.each(variants)(
       expect(
         await screen.findByTestId('mock-manuscript-form'),
       ).toBeInTheDocument();
-      document.cookie =
-        'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     });
 
     it('renders workspace when project has no contactEmail', async () => {
@@ -434,7 +459,7 @@ describe.each(variants)(
         projects: [{ id: noContactProjectId }],
         role: 'Grantee',
       };
-      document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -445,8 +470,6 @@ describe.each(variants)(
       expect(
         await screen.findByRole('heading', { name: 'Compliance Review' }),
       ).toBeInTheDocument();
-      document.cookie =
-        'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     });
 
     it('renders resubmit manuscript route via lazy loading', async () => {
@@ -454,7 +477,7 @@ describe.each(variants)(
         projects: [{ id: mainProjectId }],
         role: 'Grantee',
       };
-      document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+      enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
@@ -465,8 +488,18 @@ describe.each(variants)(
       expect(
         await screen.findByTestId('mock-manuscript-form'),
       ).toBeInTheDocument();
-      document.cookie =
-        'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    });
+
+    it('renders milestones route and covers hasSupplementGrant logic', async () => {
+      enable('PROJECT_MILESTONES');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        supplementProjectId,
+        {},
+        'milestones',
+      );
+      expect(await screen.findByText('Supplement')).toBeInTheDocument();
     });
   },
 );
@@ -499,7 +532,7 @@ describe('DiscoveryProjectDetail - specific', () => {
       projects: [{ id: 'discovery-1' }],
       role: 'Grantee',
     };
-    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    enable('PROJECT_WORKSPACE');
     await renderProjectDetail(
       DiscoveryProjectDetail,
       'discovery',
@@ -509,8 +542,6 @@ describe('DiscoveryProjectDetail - specific', () => {
     );
     await screen.findByRole('heading', { name: 'Compliance Review' });
     expect(lastWorkspaceProps.contactName).toBe('Jane Contact');
-    document.cookie =
-      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });
 });
 
@@ -520,7 +551,7 @@ describe('ResourceProjectDetail - specific', () => {
       projects: [{ id: 'resource-collab' }],
       role: 'Grantee',
     };
-    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    enable('PROJECT_WORKSPACE');
     await renderProjectDetail(
       ResourceProjectDetail,
       'resource',
@@ -530,7 +561,5 @@ describe('ResourceProjectDetail - specific', () => {
     );
     await screen.findByRole('heading', { name: 'Compliance Review' });
     expect(lastWorkspaceProps.contactName).toBe('Jane Collaborator');
-    document.cookie =
-      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });
 });

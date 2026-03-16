@@ -4,7 +4,8 @@ export type Flag =
   | 'OPENSEARCH_METRICS'
   | 'DATA_MANAGER_ROLE_ENABLED'
   | 'PROJECT_WORKSPACE'
-  | 'PROJECT_AIMS';
+  | 'PROJECT_AIMS'
+  | 'PROJECT_MILESTONES';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
 let overrides: Flags = {
@@ -15,6 +16,7 @@ let overrides: Flags = {
   DATA_MANAGER_ROLE_ENABLED: false,
   PROJECT_WORKSPACE: false,
   PROJECT_AIMS: false,
+  PROJECT_MILESTONES: false,
 };
 
 const envDefaults: Record<string, boolean> = {

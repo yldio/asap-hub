@@ -37,7 +37,11 @@ const mockProject: ProjectDetail = {
 describe('ProjectDetailPage', () => {
   it('renders the project detail header', () => {
     render(
-      <ProjectDetailPage {...mockProject} aboutHref="/projects/1/about">
+      <ProjectDetailPage
+        {...mockProject}
+        aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
+      >
         <div>Test Content</div>
       </ProjectDetailPage>,
     );
@@ -47,7 +51,11 @@ describe('ProjectDetailPage', () => {
 
   it('renders children content in main section', () => {
     render(
-      <ProjectDetailPage {...mockProject} aboutHref="/projects/1/about">
+      <ProjectDetailPage
+        {...mockProject}
+        aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
+      >
         <div>Test Content</div>
       </ProjectDetailPage>,
     );
@@ -60,6 +68,7 @@ describe('ProjectDetailPage', () => {
       <ProjectDetailPage
         {...mockProject}
         aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
         pointOfContactEmail="contact@example.com"
       >
         <div>Test Content</div>
@@ -71,7 +80,11 @@ describe('ProjectDetailPage', () => {
 
   it('does not show contact button when no email provided', () => {
     render(
-      <ProjectDetailPage {...mockProject} aboutHref="/projects/1/about">
+      <ProjectDetailPage
+        {...mockProject}
+        aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
+      >
         <div>Test Content</div>
       </ProjectDetailPage>,
     );
@@ -81,7 +94,11 @@ describe('ProjectDetailPage', () => {
 
   it('renders article wrapper element', () => {
     const { container } = render(
-      <ProjectDetailPage {...mockProject} aboutHref="/projects/1/about">
+      <ProjectDetailPage
+        {...mockProject}
+        aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
+      >
         <div>Test Content</div>
       </ProjectDetailPage>,
     );
@@ -91,7 +108,11 @@ describe('ProjectDetailPage', () => {
 
   it('renders main element with children', () => {
     const { container } = render(
-      <ProjectDetailPage {...mockProject} aboutHref="/projects/1/about">
+      <ProjectDetailPage
+        {...mockProject}
+        aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
+      >
         <div>Test Content</div>
       </ProjectDetailPage>,
     );
@@ -103,7 +124,11 @@ describe('ProjectDetailPage', () => {
 
   it('passes aboutHref to ProjectDetailHeader', () => {
     render(
-      <ProjectDetailPage {...mockProject} aboutHref="/projects/1/about">
+      <ProjectDetailPage
+        {...mockProject}
+        aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
+      >
         <div>Test Content</div>
       </ProjectDetailPage>,
     );
@@ -117,6 +142,7 @@ describe('ProjectDetailPage', () => {
       <ProjectDetailPage
         {...mockProject}
         aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
         workspaceHref="/projects/1/workspace"
       >
         <div>Test Content</div>
@@ -125,5 +151,20 @@ describe('ProjectDetailPage', () => {
 
     const workspaceLink = screen.getByRole('link', { name: 'Workspace' });
     expect(workspaceLink).toHaveAttribute('href', '/projects/1/workspace');
+  });
+
+  it('passes milestonesHref to ProjectDetailHeader when provided', () => {
+    render(
+      <ProjectDetailPage
+        {...mockProject}
+        aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
+      >
+        <div>Test Content</div>
+      </ProjectDetailPage>,
+    );
+
+    const milestonesLink = screen.getByRole('link', { name: 'Milestones' });
+    expect(milestonesLink).toHaveAttribute('href', '/projects/1/milestones');
   });
 });

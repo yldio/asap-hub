@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { FC } from 'react';
 import { Pill } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
-import { steel, lead, neutral1000, info500 } from '../colors';
+import { steel, neutral1000, info100, info500, success500 } from '../colors';
 import { useTextTruncation } from '../hooks';
 
 function parseAimsString(aims: string | undefined): number[] {
@@ -16,8 +16,8 @@ function parseAimsString(aims: string | undefined): number[] {
 
 const milestoneRowStyles = css({
   display: 'grid',
-  gridTemplateColumns: '150px 1fr 120px',
-  gap: rem(24),
+  gridColumn: '1 / -1',
+  gridTemplateColumns: 'subgrid',
   paddingBottom: rem(20),
   borderBottom: `1px solid ${steel.rgb}`,
   marginBottom: rem(20),
@@ -45,13 +45,15 @@ const aimBadgeStyles = css({
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#E6F3F9',
+  backgroundColor: info100.rgb,
   color: info500.rgb,
   fontSize: rem(14),
+  padding: `${rem(2)} ${rem(6)}`,
+  lineHeight: rem(16),
   borderRadius: rem(24),
-  padding: `${rem(4)} ${rem(8)}`,
+  height: rem(24),
+  width: rem(32),
   whiteSpace: 'nowrap',
-  width: rem(30),
 });
 
 const descriptionContainerStyles = css({
@@ -60,6 +62,7 @@ const descriptionContainerStyles = css({
   gap: rem(4),
   justifyContent: 'flex-start',
   minWidth: 0,
+  color: neutral1000.rgb,
 });
 
 const mobileLabelStyles = css({
@@ -75,7 +78,7 @@ const mobileLabelStyles = css({
 
 const descriptionStyles = (isExpanded: boolean) =>
   css({
-    color: lead.rgb,
+    color: neutral1000.rgb,
     fontSize: rem(17),
     lineHeight: rem(24),
     margin: 0,
@@ -92,7 +95,7 @@ const descriptionStyles = (isExpanded: boolean) =>
 const readMoreButtonStyles = css({
   background: 'none',
   border: 'none',
-  color: '#00A650',
+  color: success500.rgb,
   cursor: 'pointer',
   padding: 0,
   fontSize: rem(17),

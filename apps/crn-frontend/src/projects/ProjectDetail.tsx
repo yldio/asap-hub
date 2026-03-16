@@ -119,6 +119,10 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                     <ProjectDetailMilestones
                       milestones={mockMilestones}
                       seeAimsHref={route.about({}).$}
+                      hasSupplementGrant={
+                        'supplementGrant' in projectDetail &&
+                        !!projectDetail.supplementGrant
+                      }
                       pageControlsProps={{
                         numberOfPages: 1,
                         currentPageIndex: 0,

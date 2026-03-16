@@ -4,21 +4,26 @@ import { FC } from 'react';
 import { Card } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
-import { neutral1000, steel } from '../colors';
+import { neutral1000, neutral200 } from '../colors';
 
 const contentStyles = css({
-  padding: rem(24),
-  border: `1px solid ${steel.rgb}`,
-  borderRadius: rem(8),
+  padding: `${rem(32)} ${rem(24)}`,
+});
+
+const milestonesGridStyles = css({
+  display: 'grid',
+  gridTemplateColumns: '150px 1fr auto',
+  columnGap: rem(24),
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    gridTemplateColumns: '1fr',
+  },
 });
 
 const tableHeaderStyles = css({
   display: 'grid',
-  gridTemplateColumns: '150px 1fr 120px',
-  gap: rem(24),
+  gridColumn: '1 / -1',
+  gridTemplateColumns: 'subgrid',
   marginBottom: rem(16),
-  paddingBottom: rem(16),
-  borderBottom: `1px solid ${steel.rgb}`,
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
     display: 'none',
   },
@@ -44,10 +49,21 @@ const statusHeaderStyles = css({
 });
 
 const milestonesListStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 0,
+  display: 'contents',
 });
+
+const milestoneRowWrapperStyles = (index: number, isLast: boolean) =>
+  css({
+    display: 'grid',
+    gridColumn: '1 / -1',
+    gridTemplateColumns: 'subgrid',
+    backgroundColor: index % 2 === 0 ? '#FFFFFF' : neutral200.rgb,
+    marginInline: rem(-24),
+    paddingInline: rem(24),
+    paddingTop: index === 0 ? 0 : rem(20),
+    paddingBottom: rem(20),
+    ...(isLast ? { paddingBottom: rem(0) } : {}),
+  });
 
 type ProjectMilestonesProps = {
   milestones: ReadonlyArray<MilestoneType>;
@@ -61,15 +77,27 @@ const ProjectMilestones: FC<ProjectMilestonesProps> = ({ milestones }) => {
   return (
     <Card padding={false}>
       <div css={contentStyles}>
-        <div css={tableHeaderStyles}>
-          <div css={[headerLabelStyles, aimsHeaderStyles]}>Aims</div>
-          <div css={[headerLabelStyles, milestoneHeaderStyles]}>Milestone</div>
-          <div css={[headerLabelStyles, statusHeaderStyles]}>Status</div>
-        </div>
-        <div css={milestonesListStyles}>
-          {milestones.map((milestone) => (
-            <Milestone key={milestone.id} milestone={milestone} />
-          ))}
+        <div css={milestonesGridStyles}>
+          <div css={tableHeaderStyles}>
+            <div css={[headerLabelStyles, aimsHeaderStyles]}>Aims</div>
+            <div css={[headerLabelStyles, milestoneHeaderStyles]}>
+              Milestone
+            </div>
+            <div css={[headerLabelStyles, statusHeaderStyles]}>Status</div>
+          </div>
+          <div css={milestonesListStyles}>
+            {milestones.map((milestone, index) => (
+              <div
+                key={milestone.id}
+                css={milestoneRowWrapperStyles(
+                  index,
+                  index === milestones.length - 1,
+                )}
+              >
+                <Milestone milestone={milestone} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </Card>

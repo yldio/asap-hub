@@ -4,7 +4,6 @@ import { Milestone as MilestoneType } from '@asap-hub/model';
 
 import { Headline3, Link, Paragraph } from '../atoms';
 import { LabeledDropdown, PageControls } from '../molecules';
-import { ExternalLinkIcon } from '../icons';
 import ProjectMilestones from '../organisms/ProjectMilestones';
 import { rem } from '../pixels';
 import { neutral1000 } from '../colors';
@@ -22,20 +21,13 @@ const descriptionSectionStyles = css({
   },
 });
 
-const seeAimsButtonContainerStyles = css({
-  marginTop: rem(16),
-});
-
-const seeAimsIconStyles = css({
-  display: 'inline-flex',
-  alignItems: 'center',
-  marginLeft: rem(8),
-});
-
 const aimsLinkTextStyles = css({
   display: 'inline-flex',
   alignItems: 'center',
   marginLeft: 0,
+  '&:hover': {
+    textDecoration: 'underline',
+  },
 });
 
 const noMilestonesTextStyles = css({
@@ -58,8 +50,8 @@ type GrantType = 'original' | 'supplement';
 type ProjectDetailMilestonesProps = {
   readonly milestones: ReadonlyArray<MilestoneType>;
   readonly seeAimsHref?: string;
-  // } & ComponentProps<typeof PageControls>; // TODO: Add this back when we have actual page controls props
   readonly pageControlsProps?: ComponentProps<typeof PageControls>;
+  readonly hasSupplementGrant?: boolean;
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
@@ -67,10 +59,12 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   seeAimsHref,
   // ...pageControlProps // TODO: Add this back when we have actual page controls props
   pageControlsProps,
+  hasSupplementGrant = false,
 }) => {
   const hasMilestones = milestones.length > 0;
-  const [selectedGrantType, setSelectedGrantType] =
-    useState<GrantType>('original');
+  const [selectedGrantType, setSelectedGrantType] = useState<GrantType>(
+    hasSupplementGrant ? 'supplement' : 'original',
+  );
 
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
@@ -92,6 +86,7 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
           },
         ]}
         onChange={setSelectedGrantType}
+        required={true}
       />
 
       <div css={descriptionSectionStyles}>
@@ -107,16 +102,9 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
           expected to be included. These articles are linked to their
           corresponding aims and are displayed in the Aims section.
         </Paragraph>
-        <div css={seeAimsButtonContainerStyles}>
-          <Link buttonStyle small href={seeAimsHref ?? '#'} noMargin>
-            <div css={aimsLinkTextStyles}>
-              See Aims
-              <span css={seeAimsIconStyles}>
-                <ExternalLinkIcon />
-              </span>
-            </div>
-          </Link>
-        </div>
+        <Link href={seeAimsHref ?? '#'} underlined>
+          <span css={aimsLinkTextStyles}>See Aims</span>
+        </Link>
         {!hasMilestones && (
           <Paragraph accent="lead" noMargin styles={noMilestonesTextStyles}>
             No milestones related to the {grantLabel} Grant have been added to

@@ -69,4 +69,22 @@ describe('ProjectDetailMilestones', () => {
     expect(screen.getByText('2')).toBeInTheDocument();
     expect(screen.getByText('3')).toBeInTheDocument();
   });
+
+  it('defaults to Supplement Grant when hasSupplementGrant is true', () => {
+    render(
+      <ProjectDetailMilestones milestones={[]} hasSupplementGrant={true} />,
+    );
+
+    expect(
+      screen.getByText(
+        /These milestones track progress toward the objectives of the Supplement Grant/,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'No milestones related to the Supplement Grant have been added to this project yet.',
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Supplement')).toBeInTheDocument();
+  });
 });

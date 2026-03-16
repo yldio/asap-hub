@@ -10,6 +10,7 @@ import {
   createRoutesFromChildren,
   matchRoutes,
 } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { Frame, useCookieConsent } from '@asap-hub/frontend-utils';
 import {
@@ -90,6 +91,7 @@ const Content = lazy(loadContent);
 const AuthenticatedApp = lazy(loadAuthenticatedApp);
 
 const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
+const queryClient = new QueryClient();
 
 const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides, setEnvironment, isEnabled } = useFlags();
@@ -113,99 +115,100 @@ const App: FC<Record<string, never>> = () => {
   }, [setCurrentOverrides, setEnvironment, isEnabled]);
 
   return (
-    <LogoProvider appName="CRN">
-      <Frame title="ASAP Hub">
-        <GoogleTagManager
-          containerId={GTM_CONTAINER_ID}
-          disabledTracking={!cookieData?.preferences.analytics}
-        />
-
-        <AuthProvider>
-          <SentryAuth0 />
-          <BrowserRouter>
-            <NavigationBlockerProvider>
-              <Frame title={null}>
-                <SentryRoutes>
-                  <Route
-                    path={`${welcome.template}/*`}
-                    element={
-                      <UtilityBar>
-                        <ToastStack>
-                          <Welcome />
-                        </ToastStack>
-                      </UtilityBar>
-                    }
-                  />
-                  <Route
-                    path={logout.template}
-                    element={
-                      <Frame title="Logout">
-                        <Logout />
-                      </Frame>
-                    }
-                  />
-                  <Route
-                    path={staticPages({}).terms.template}
-                    element={
-                      <BasicLayout>
-                        <Frame title={null}>
-                          <Content pageId="terms-and-conditions" />
+    <QueryClientProvider client={queryClient}>
+      <LogoProvider appName="CRN">
+        <Frame title="ASAP Hub">
+          <GoogleTagManager
+            containerId={GTM_CONTAINER_ID}
+            disabledTracking={!cookieData?.preferences.analytics}
+          />
+          <AuthProvider>
+            <SentryAuth0 />
+            <BrowserRouter>
+              <NavigationBlockerProvider>
+                <Frame title={null}>
+                  <SentryRoutes>
+                    <Route
+                      path={`${welcome.template}/*`}
+                      element={
+                        <UtilityBar>
+                          <ToastStack>
+                            <Welcome />
+                          </ToastStack>
+                        </UtilityBar>
+                      }
+                    />
+                    <Route
+                      path={logout.template}
+                      element={
+                        <Frame title="Logout">
+                          <Logout />
                         </Frame>
-                      </BasicLayout>
-                    }
-                  />
-                  <Route
-                    path={staticPages({}).privacyPolicy.template}
-                    element={
-                      <BasicLayout>
-                        <Frame title={null}>
-                          <Content pageId="privacy-notice" />
-                        </Frame>
-                      </BasicLayout>
-                    }
-                  />
-                  <Route
-                    path="*"
-                    element={
-                      <CheckAuth>
-                        {({ isAuthenticated }) =>
-                          !isAuthenticated ? (
-                            <Frame title={null}>
-                              <Signin />
-                            </Frame>
-                          ) : (
-                            <Frame title={null} fallback={<LoadingLayout />}>
-                              <AuthenticatedApp
-                                setIsOnboardable={setIsOnboardable}
-                              />
-                            </Frame>
-                          )
-                        }
-                      </CheckAuth>
-                    }
-                  />
-                </SentryRoutes>
-              </Frame>
-            </NavigationBlockerProvider>
-          </BrowserRouter>
-        </AuthProvider>
-      </Frame>
-      <CookiesModal
-        cookieData={cookieData}
-        onSaveCookiePreferences={onSaveCookiePreferences}
-        toggleCookieModal={toggleCookieModal}
-        showCookieModal={showCookieModal}
-        customStyles={[
-          {
-            '& .cookie-button': {
-              position: 'fixed',
-              left: '1em',
-              bottom: isOnboardable ? '7em' : '1em',
+                      }
+                    />
+                    <Route
+                      path={staticPages({}).terms.template}
+                      element={
+                        <BasicLayout>
+                          <Frame title={null}>
+                            <Content pageId="terms-and-conditions" />
+                          </Frame>
+                        </BasicLayout>
+                      }
+                    />
+                    <Route
+                      path={staticPages({}).privacyPolicy.template}
+                      element={
+                        <BasicLayout>
+                          <Frame title={null}>
+                            <Content pageId="privacy-notice" />
+                          </Frame>
+                        </BasicLayout>
+                      }
+                    />
+                    <Route
+                      path="*"
+                      element={
+                        <CheckAuth>
+                          {({ isAuthenticated }) =>
+                            !isAuthenticated ? (
+                              <Frame title={null}>
+                                <Signin />
+                              </Frame>
+                            ) : (
+                              <Frame title={null} fallback={<LoadingLayout />}>
+                                <AuthenticatedApp
+                                  setIsOnboardable={setIsOnboardable}
+                                />
+                              </Frame>
+                            )
+                          }
+                        </CheckAuth>
+                      }
+                    />
+                  </SentryRoutes>
+                </Frame>
+              </NavigationBlockerProvider>
+            </BrowserRouter>
+          </AuthProvider>
+        </Frame>
+        <CookiesModal
+          cookieData={cookieData}
+          onSaveCookiePreferences={onSaveCookiePreferences}
+          toggleCookieModal={toggleCookieModal}
+          showCookieModal={showCookieModal}
+          customStyles={[
+            {
+              '& .cookie-button': {
+                position: 'fixed',
+                left: '1em',
+                bottom: isOnboardable ? '7em' : '1em',
+              },
             },
-          },
-        ]}
-      />
-    </LogoProvider>
+          ]}
+        />
+      </LogoProvider>
+    </QueryClientProvider>
   );
 };
 

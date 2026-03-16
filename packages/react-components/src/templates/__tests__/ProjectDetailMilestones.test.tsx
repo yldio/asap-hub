@@ -70,6 +70,14 @@ describe('ProjectDetailMilestones', () => {
     expect(screen.getByText('3')).toBeInTheDocument();
   });
 
+  it('renders the mobile fallback page', () => {
+    render(<ProjectDetailMilestones milestones={[]} />);
+
+    expect(
+      screen.getByText(/Milestones are only available/, { selector: 'span' }),
+    ).toBeInTheDocument();
+  });
+
   it('defaults to Supplement Grant when hasSupplementGrant is true', () => {
     render(
       <ProjectDetailMilestones milestones={[]} hasSupplementGrant={true} />,

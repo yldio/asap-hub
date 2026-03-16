@@ -5,8 +5,9 @@ import { Milestone as MilestoneType } from '@asap-hub/model';
 import { Headline3, Link, Paragraph } from '../atoms';
 import { LabeledDropdown, PageControls } from '../molecules';
 import ProjectMilestones from '../organisms/ProjectMilestones';
-import { rem } from '../pixels';
+import { rem, mobileScreen } from '../pixels';
 import { neutral1000 } from '../colors';
+import MilestonesMobilePage from './MilestonesMobilePage';
 
 const containerStyles = css({
   display: 'grid',
@@ -45,6 +46,18 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
+const pageMobileStyles = css({
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+
+const pageDesktopStyles = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+
 type GrantType = 'original' | 'supplement';
 
 type ProjectDetailMilestonesProps = {
@@ -70,58 +83,65 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
 
   return (
-    <div css={containerStyles}>
-      <LabeledDropdown<GrantType>
-        title="Grant Type"
-        enabled={hasMilestones}
-        value={selectedGrantType}
-        options={[
-          {
-            label: 'Original',
-            value: 'original',
-          },
-          {
-            label: 'Supplement',
-            value: 'supplement',
-          },
-        ]}
-        onChange={setSelectedGrantType}
-        required={true}
-      />
+    <>
+      <div css={pageDesktopStyles}>
+        <div css={containerStyles}>
+          <LabeledDropdown<GrantType>
+            title="Grant Type"
+            enabled={hasMilestones}
+            value={selectedGrantType}
+            options={[
+              {
+                label: 'Original',
+                value: 'original',
+              },
+              {
+                label: 'Supplement',
+                value: 'supplement',
+              },
+            ]}
+            onChange={setSelectedGrantType}
+            required={true}
+          />
 
-      <div css={descriptionSectionStyles}>
-        <Headline3 noMargin>Milestones</Headline3>
-        <Paragraph accent="lead">
-          These milestones track progress toward the objectives of the{' '}
-          {grantLabel} Grant through defined deliverables and timelines. Each
-          milestone supports one or more related aims.
-        </Paragraph>
-        <Paragraph accent="lead">
-          Articles associated with a milestone may be added at any status. When
-          a milestone is marked as complete, the resulting article(s) are
-          expected to be included. These articles are linked to their
-          corresponding aims and are displayed in the Aims section.
-        </Paragraph>
-        <Link href={seeAimsHref ?? '#'} underlined>
-          <span css={aimsLinkTextStyles}>See Aims</span>
-        </Link>
-        {!hasMilestones && (
-          <Paragraph accent="lead" noMargin styles={noMilestonesTextStyles}>
-            No milestones related to the {grantLabel} Grant have been added to
-            this project yet.
-          </Paragraph>
-        )}
+          <div css={descriptionSectionStyles}>
+            <Headline3 noMargin>Milestones</Headline3>
+            <Paragraph accent="lead">
+              These milestones track progress toward the objectives of the{' '}
+              {grantLabel} Grant through defined deliverables and timelines.
+              Each milestone supports one or more related aims.
+            </Paragraph>
+            <Paragraph accent="lead">
+              Articles associated with a milestone may be added at any status.
+              When a milestone is marked as complete, the resulting article(s)
+              are expected to be included. These articles are linked to their
+              corresponding aims and are displayed in the Aims section.
+            </Paragraph>
+            <Link href={seeAimsHref ?? '#'} underlined>
+              <span css={aimsLinkTextStyles}>See Aims</span>
+            </Link>
+            {!hasMilestones && (
+              <Paragraph accent="lead" noMargin styles={noMilestonesTextStyles}>
+                No milestones related to the {grantLabel} Grant have been added
+                to this project yet.
+              </Paragraph>
+            )}
+          </div>
+
+          {hasMilestones && pageControlsProps && (
+            <>
+              <ProjectMilestones milestones={milestones} />
+              <section css={pageControlsStyles}>
+                <PageControls {...pageControlsProps} />
+              </section>
+            </>
+          )}
+        </div>
       </div>
-
-      {hasMilestones && pageControlsProps && (
-        <>
-          <ProjectMilestones milestones={milestones} />
-          <section css={pageControlsStyles}>
-            <PageControls {...pageControlsProps} />
-          </section>
-        </>
-      )}
-    </div>
+      <div css={pageMobileStyles}>
+        <MilestonesMobilePage />
+      </div>
+    </>
   );
 };
 

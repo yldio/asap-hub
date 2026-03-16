@@ -1,12 +1,19 @@
 import { render, screen } from '@testing-library/react';
-import { ProjectDetail } from '@asap-hub/model';
+import type { ArticleItem, ProjectDetail } from '@asap-hub/model';
 import ProjectDetailAbout from '../ProjectDetailAbout';
+
+/** ProjectDetail with required fetchArticles for ProjectDetailAbout props */
+type ProjectDetailWithFetch = ProjectDetail & {
+  fetchArticles: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
+};
 
 const mockIsEnabled = jest.fn();
 jest.mock('@asap-hub/react-context', () => ({
   ...jest.requireActual('@asap-hub/react-context'),
   useFlags: () => ({ isEnabled: mockIsEnabled }),
 }));
+
+const mockFetchArticles = jest.fn(() => Promise.resolve([]));
 
 const baseProject = {
   id: 'project-1',
@@ -27,6 +34,7 @@ const baseProject = {
     grantStartDate: '2023-01-01',
     grantEndDate: '2025-12-31',
   },
+  fetchArticles: mockFetchArticles,
 };
 
 describe('ProjectDetailAbout', () => {
@@ -36,7 +44,7 @@ describe('ProjectDetailAbout', () => {
 
   describe('Overview Section', () => {
     it('always renders the overview section', () => {
-      const discoveryProject: ProjectDetail = {
+      const discoveryProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Discovery Project',
         researchTheme: 'Genetics',
@@ -56,7 +64,7 @@ describe('ProjectDetailAbout', () => {
 
   describe('Tags Section', () => {
     it('renders tags when tags array has items', () => {
-      const projectWithTags: ProjectDetail = {
+      const projectWithTags: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Discovery Project',
         researchTheme: 'Genetics Theme',
@@ -76,7 +84,7 @@ describe('ProjectDetailAbout', () => {
     });
 
     it('does not render tags section when tags array is empty', () => {
-      const projectWithoutTags: ProjectDetail = {
+      const projectWithoutTags: ProjectDetailWithFetch = {
         ...baseProject,
         tags: [],
         projectType: 'Discovery Project',
@@ -102,7 +110,7 @@ describe('ProjectDetailAbout', () => {
 
   describe('Contributors Section - Discovery Projects', () => {
     it('renders Contributors for Discovery projects', () => {
-      const discoveryProject: ProjectDetail = {
+      const discoveryProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Discovery Project',
         researchTheme: 'Genetics',
@@ -122,7 +130,7 @@ describe('ProjectDetailAbout', () => {
 
   describe('Contributors Section - Resource Projects (Team-Based)', () => {
     it('renders Contributors for Resource team-based projects', () => {
-      const resourceTeamProject: ProjectDetail = {
+      const resourceTeamProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Resource Project',
         resourceType: 'Biobank',
@@ -140,7 +148,7 @@ describe('ProjectDetailAbout', () => {
     });
 
     it('does not render Contributors when fundedTeam is not provided', () => {
-      const resourceTeamProjectNoTeam: ProjectDetail = {
+      const resourceTeamProjectNoTeam: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Resource Project',
         resourceType: 'Biobank',
@@ -155,7 +163,7 @@ describe('ProjectDetailAbout', () => {
 
   describe('Contributors Section - Resource Projects (Not Team-Based)', () => {
     it('renders Contributors for Resource not team-based projects with members', () => {
-      const resourceMemberProject: ProjectDetail = {
+      const resourceMemberProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Resource Project',
         resourceType: 'Software Tool',
@@ -177,7 +185,7 @@ describe('ProjectDetailAbout', () => {
     });
 
     it('does not render Contributors when members is not provided', () => {
-      const resourceMemberProjectNoMembers: ProjectDetail = {
+      const resourceMemberProjectNoMembers: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Resource Project',
         resourceType: 'Software Tool',
@@ -192,7 +200,7 @@ describe('ProjectDetailAbout', () => {
 
   describe('Contributors Section - Trainee Projects', () => {
     it('renders Contributors for Trainee projects', () => {
-      const traineeProject: ProjectDetail = {
+      const traineeProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Trainee Project',
         members: [
@@ -224,7 +232,7 @@ describe('ProjectDetailAbout', () => {
 
   describe('Contact CTA Card', () => {
     it('renders Contact CTA when point of contact email is provided', () => {
-      const discoveryProject: ProjectDetail = {
+      const discoveryProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Discovery Project',
         researchTheme: 'Genetics',
@@ -251,7 +259,7 @@ describe('ProjectDetailAbout', () => {
     });
 
     it('does not render Contact CTA when no email is provided or status is not Active', () => {
-      const discoveryProject: ProjectDetail = {
+      const discoveryProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Discovery Project',
         researchTheme: 'Genetics',
@@ -280,7 +288,7 @@ describe('ProjectDetailAbout', () => {
     });
 
     it('renders Contact CTA with mailto link', () => {
-      const discoveryProject: ProjectDetail = {
+      const discoveryProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Discovery Project',
         researchTheme: 'Genetics',
@@ -306,7 +314,7 @@ describe('ProjectDetailAbout', () => {
 
   describe('Complete rendering for all project types', () => {
     it('renders all sections for a complete Discovery project', () => {
-      const completeDiscoveryProject: ProjectDetail = {
+      const completeDiscoveryProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Discovery Project',
         researchTheme: 'Genetics',
@@ -335,7 +343,7 @@ describe('ProjectDetailAbout', () => {
     });
 
     it('renders all sections for a complete Resource team-based project', () => {
-      const completeResourceProject: ProjectDetail = {
+      const completeResourceProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Resource Project',
         resourceType: 'Biobank',
@@ -364,7 +372,7 @@ describe('ProjectDetailAbout', () => {
     });
 
     it('renders all sections for a complete Resource not team-based project', () => {
-      const completeResourceMemberProject: ProjectDetail = {
+      const completeResourceMemberProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Resource Project',
         resourceType: 'Software Tool',
@@ -406,7 +414,7 @@ describe('ProjectDetailAbout', () => {
     });
 
     it('renders all sections for a complete Trainee project', () => {
-      const completeTraineeProject: ProjectDetail = {
+      const completeTraineeProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Trainee Project',
         members: [
@@ -458,7 +466,7 @@ describe('ProjectDetailAbout', () => {
 
   describe('Minimal project rendering', () => {
     it('renders only Overview when no optional sections are provided', () => {
-      const minimalProject: ProjectDetail = {
+      const minimalProject: ProjectDetailWithFetch = {
         ...baseProject,
         tags: [],
         projectType: 'Discovery Project',
@@ -485,7 +493,7 @@ describe('ProjectDetailAbout', () => {
 
   describe('Sections rendering', () => {
     it('renders all sections', () => {
-      const discoveryProject: ProjectDetail = {
+      const discoveryProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Discovery Project',
         researchTheme: 'Genetics',
@@ -515,7 +523,7 @@ describe('ProjectDetailAbout', () => {
   });
 
   describe('Aims Section', () => {
-    const discoveryProject: ProjectDetail = {
+    const discoveryProject: ProjectDetailWithFetch = {
       ...baseProject,
       projectType: 'Discovery Project',
       researchTheme: 'Genetics',

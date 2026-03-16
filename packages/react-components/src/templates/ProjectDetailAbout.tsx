@@ -1,4 +1,4 @@
-import { ProjectDetail, ProjectAimsGrant } from '@asap-hub/model';
+import { ArticleItem, ProjectDetail, ProjectAimsGrant } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { rem } from '../pixels';
@@ -88,10 +88,13 @@ const styles = css({
 
 type ProjectDetailAboutProps = ProjectDetail & {
   readonly pointOfContactEmail?: string;
+  readonly fetchArticles: (
+    aimId: string,
+  ) => Promise<ReadonlyArray<ArticleItem>>;
 };
 
 const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
-  const { pointOfContactEmail } = project;
+  const { pointOfContactEmail, fetchArticles } = project;
   const { isEnabled } = useFlags();
 
   return (
@@ -114,7 +117,9 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
       )}
 
       {/* Aims Section */}
-      {isEnabled('PROJECT_AIMS') && <ProjectAims aims={DUMMY_AIMS_DATA} />}
+      {isEnabled('PROJECT_AIMS') && (
+        <ProjectAims aims={DUMMY_AIMS_DATA} fetchArticles={fetchArticles} />
+      )}
 
       {/* Contributors Section */}
       {project.projectType === 'Discovery Project' && (

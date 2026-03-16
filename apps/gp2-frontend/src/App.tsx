@@ -22,6 +22,7 @@ import {
   matchRoutes,
 } from 'react-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import CheckAuth from './auth/CheckAuth';
 import Logout from './auth/Logout';
@@ -207,6 +208,7 @@ const App: FC<Record<string, never>> = () => {
           </Theme>
         </Frame>
       </LogoProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };

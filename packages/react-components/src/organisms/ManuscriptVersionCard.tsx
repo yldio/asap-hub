@@ -41,6 +41,7 @@ type ManuscriptVersionCardProps = {
   categories?: ManuscriptCategory[];
   impact?: ManuscriptImpact;
   openDiscussionTab: () => void;
+  showTeamName?: boolean;
 };
 
 const toastStyles = css({
@@ -168,7 +169,7 @@ const updatedByTextStyles = css({
   flexWrap: 'wrap',
   justifyContent: 'flex-end',
   alignSelf: 'flex-end',
-  gap: rem(2),
+  gap: rem(6),
 
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     justifyContent: 'flex-start',
@@ -188,6 +189,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   categories,
   impact,
   openDiscussionTab,
+  showTeamName = true,
 }) => {
   const navigate = useNavigate();
 
@@ -254,6 +256,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
             count={version.count}
             manuscriptId={manuscriptId}
             versionId={version.id}
+            showTeamName={showTeamName}
           />
         )}
         <div css={toastStyles}>
@@ -284,6 +287,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                         displayName={updatedByData.displayName}
                         userHref={updatedByData.userHref}
                         teams={updatedByData.teams}
+                        showTeamName={showTeamName}
                       />
                     </span>
                   </div>
@@ -486,12 +490,13 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                 <div css={userContainerStyles}>
                   Date created:
                   <span>{formatDate(new Date(version.createdDate))}</span>
-                  <span> · </span>
+                  <span> • </span>
                   Created by:
                   <UserTeamInfo
                     displayName={version.createdBy.displayName}
                     userHref={getUserHref(version.createdBy.id)}
                     teams={getTeams(version.createdBy.teams)}
+                    showTeamName={showTeamName}
                   />
                 </div>
               </Caption>

@@ -51,6 +51,8 @@ export type BaseProject = {
   readonly originalGrant?: string;
   readonly supplementGrantDescription?: string;
   readonly tools?: ReadonlyArray<ProjectTool>;
+  readonly manuscripts?: string[];
+  readonly collaborationManuscripts?: string[];
 };
 
 export type ProjectMemberTeam = {

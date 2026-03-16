@@ -738,10 +738,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
     if (usersWithoutTeamAdded.size === 0 && labsWithoutTeamAdded.size === 0) {
       clearErrors('versions.0.teams');
-    } else if (
-      usersWithoutTeamAdded.size > 0 ||
-      labsWithoutTeamAdded.size > 0
-    ) {
+    } else {
       setError('versions.0.teams', { message: ' ' });
     }
   };
@@ -1388,8 +1385,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           <>
                             The key resource table must be submitted as a single
                             CSV file and should outline the resources used and
-                            generated in this study. The file size must not
-                            exceed 100 MB. View guidance{' '}
+                            generated in this study. View guidance{' '}
                             {<Link href={KRT_GUIDANCE_FILE}>here</Link>}. The
                             file size must not exceed 100 MB.
                           </>

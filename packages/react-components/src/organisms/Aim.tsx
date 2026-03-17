@@ -9,6 +9,7 @@ import {
   descriptionContainerStyles,
   mobileLabelStyles,
   clampedDescriptionStyles,
+  readMoreButtonStyles,
   statusContainerStyles,
   getStatusAccent,
 } from './shared-aim-milestones-styles';
@@ -39,6 +40,10 @@ const noArticlesWrapperStyles = css({
   alignItems: 'center',
   flexWrap: 'wrap',
   gap: rem(12),
+});
+
+const articlesWrapperStyles = css({
+  marginTop: rem(4),
 });
 
 const noArticlesTextStyles = css({
@@ -100,7 +105,9 @@ type AimProps = {
 };
 
 const Aim: FC<AimProps> = ({ aim, fetchArticles }) => {
-  const { ref, isExpanded } = useTextTruncation(aim.description);
+  const { ref, isExpanded, needsExpansion, toggle } = useTextTruncation(
+    aim.description,
+  );
 
   return (
     <div css={aimRowStyles}>
@@ -113,26 +120,33 @@ const Aim: FC<AimProps> = ({ aim, fetchArticles }) => {
         <div ref={ref} css={clampedDescriptionStyles(isExpanded)}>
           {aim.description}
         </div>
-        {aim.articleCount === 0 ? (
-          <div css={noArticlesWrapperStyles}>
-            <span css={noArticlesTextStyles}>No articles added</span>
-            <span css={noArticlesSeparatorStyles}>•</span>
-            <Button
-              id={`aim-articles-edit-${aim.id}`}
-              linkStyle
-              onClick={noop}
-              overrideStyles={noArticlesEditButtonStyles}
-            >
-              Edit
-            </Button>
-          </div>
-        ) : (
-          <ArticlesList
-            aimId={aim.id}
-            articlesCount={aim.articleCount}
-            fetchArticles={fetchArticles}
-          />
+        {(needsExpansion || isExpanded) && (
+          <button type="button" css={readMoreButtonStyles} onClick={toggle}>
+            {isExpanded ? 'Read Less' : 'Read More'}
+          </button>
         )}
+        <div css={articlesWrapperStyles}>
+          {aim.articleCount === 0 ? (
+            <div css={noArticlesWrapperStyles}>
+              <span css={noArticlesTextStyles}>No articles added</span>
+              <span css={noArticlesSeparatorStyles}>•</span>
+              <Button
+                id={`aim-articles-edit-${aim.id}`}
+                linkStyle
+                onClick={noop}
+                overrideStyles={noArticlesEditButtonStyles}
+              >
+                Edit
+              </Button>
+            </div>
+          ) : (
+            <ArticlesList
+              aimId={aim.id}
+              articlesCount={aim.articleCount}
+              fetchArticles={fetchArticles}
+            />
+          )}
+        </div>
       </div>
       <div css={statusContainerStyles}>
         <div css={mobileLabelStyles}>Status</div>

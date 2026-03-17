@@ -358,6 +358,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
       </div>
 
       {isProjectMember && (
+        <div id="collaboration-tools">
         <Card>
           <Display styleAsHeading={3}>
             Collaboration Tools (Project Only)
@@ -400,6 +401,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
             on {formatDateAndTime(new Date(lastModifiedDate))}
           </Caption>
         </Card>
+        </div>
       )}
 
       {isProjectMember && contactEmail && (

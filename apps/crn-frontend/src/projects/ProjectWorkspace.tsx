@@ -80,6 +80,9 @@ const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({
             const tools = projectTools.filter((_, i) => i !== deleteToolIndex);
             await patchProject({ tools: tools as ProjectTool[] });
             setDeleteToolIndex(null);
+            document
+              .getElementById('collaboration-tools')
+              ?.scrollIntoView({ behavior: 'smooth' });
           }}
         />
       )}
@@ -100,7 +103,7 @@ const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({
           element={
             <ToolModal
               title="Add Collaboration Tool"
-              backHref={workspaceHref}
+              backHref={`${workspaceHref}#collaboration-tools`}
               onSave={(data: ProjectTool) =>
                 patchProject({
                   tools: [...(projectTools as ProjectTool[]), data],
@@ -145,7 +148,7 @@ const EditTool: FC<{
     <ToolModal
       {...tool}
       title="Edit Collaboration Tool"
-      backHref={workspaceHref}
+      backHref={`${workspaceHref}#collaboration-tools`}
       onSave={(data: ProjectTool) => {
         const newTools = [...tools];
         newTools[parseInt(toolIndex ?? '0', 10)] = data;

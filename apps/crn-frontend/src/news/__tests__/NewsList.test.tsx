@@ -1,18 +1,17 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createListNewsResponse } from '@asap-hub/fixtures';
-import { NewsFrequency } from '@asap-hub/model';
 import { fireEvent } from '@testing-library/dom';
 import { render, waitFor, renderHook } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ReactNode, Suspense } from 'react';
+import { ReactNode } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { usePagination, usePaginationParams } from '../../hooks';
 import { getNews } from '../api';
 import NewsPage from '../Routes';
-import { newsIndexState } from '../state';
 
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
   <MemoryRouter>{children}</MemoryRouter>
@@ -29,20 +28,12 @@ afterEach(() => {
 mockConsoleError();
 
 const renderPage = async () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) =>
-        reset(
-          newsIndexState({
-            currentPage: 0,
-            pageSize,
-            filters: new Set<NewsFrequency>(),
-            searchQuery: '',
-          }),
-        )
-      }
-    >
-      <Suspense fallback="loading">
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/news']}>
@@ -52,8 +43,8 @@ const renderPage = async () => {
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

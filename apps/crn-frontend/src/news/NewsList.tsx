@@ -1,4 +1,4 @@
-import { NewsPageBody } from '@asap-hub/react-components';
+import { Loading, NewsPageBody } from '@asap-hub/react-components';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useNews } from './state';
 
@@ -9,7 +9,11 @@ interface NewsListProps {
 
 const NewsList: React.FC<NewsListProps> = ({ searchQuery, filters }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const result = useNews({
+  const {
+    data: result,
+    isLoading,
+    error,
+  } = useNews({
     searchQuery,
     filters,
     currentPage,
@@ -17,9 +21,12 @@ const NewsList: React.FC<NewsListProps> = ({ searchQuery, filters }) => {
   });
 
   const { numberOfPages, renderPageHref } = usePagination(
-    result.total || 0,
+    result?.total || 0,
     pageSize,
   );
+
+  if (isLoading) return <Loading />;
+  if (error || !result) throw error;
 
   return (
     <NewsPageBody

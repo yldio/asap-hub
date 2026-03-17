@@ -598,7 +598,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       });
 
     if (labsWithoutTeamAdded.size > 0) {
-      const labErrorMessage = `The following lab(s) do not have the correspondent PI's team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
+      const labErrorMessage = `The following lab(s) do not list their corresponding PI’s team as a contributor. Please add at least one of their teams to the Teams field.\n${Array.from(
         labsWithoutTeamAdded,
       )
         .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
@@ -642,7 +642,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
     if (firstAuthorsWithoutTeamAdded.size > 0) {
       setError('versions.0.firstAuthors', {
-        message: `The following first author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
+        message: `The following first author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.\n${Array.from(
           firstAuthorsWithoutTeamAdded,
         )
           .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
@@ -678,7 +678,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
     if (correspondingAuthorWithoutTeamAdded.size > 0) {
       setError('versions.0.correspondingAuthor', {
-        message: `The following corresponding author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
+        message: `The following corresponding author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.\n${Array.from(
           correspondingAuthorWithoutTeamAdded,
         )
           .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
@@ -718,7 +718,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
     if (additionalAuthorsWithoutTeamAdded.size > 0) {
       setError('versions.0.additionalAuthors', {
-        message: `The following additional author(s) do not have a team listed as a contributor. At least one of the teams they belong to must be added to the teams section above.\n${Array.from(
+        message: `The following additional author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.\n${Array.from(
           additionalAuthorsWithoutTeamAdded,
         )
           .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
@@ -736,33 +736,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     validateAdditionalAuthors();
     validateLabPiTeams();
 
-    const contributorsErrorMessage = `The following contributor(s) do not have a team listed above. At least one of the teams they belong to must be added.\n${Array.from(
-      usersWithoutTeamAdded,
-    )
-      .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-      .join('\n')}`;
-
-    const labErrorMessage = `The following lab(s) do not have the correspondent PI's team listed as contributors. At least one of the teams the PI belongs to must be added.\n${Array.from(
-      labsWithoutTeamAdded,
-    )
-      .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
-      .join('\n')}`;
-
     if (usersWithoutTeamAdded.size === 0 && labsWithoutTeamAdded.size === 0) {
       clearErrors('versions.0.teams');
-    } else if (
-      usersWithoutTeamAdded.size > 0 &&
-      labsWithoutTeamAdded.size > 0
-    ) {
-      setError('versions.0.teams', {
-        message: `${contributorsErrorMessage}\n\n${labErrorMessage}`,
-      });
-    } else if (usersWithoutTeamAdded.size > 0) {
-      setError('versions.0.teams', {
-        message: contributorsErrorMessage,
-      });
-    } else if (labsWithoutTeamAdded.size > 0) {
-      setError('versions.0.teams', { message: labErrorMessage });
+    } else {
+      setError('versions.0.teams', { message: ' ' });
     }
   };
 
@@ -1008,37 +985,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             />
 
             <Controller
-              name="url"
-              control={control}
-              rules={{
-                required: isURLRequired ? 'Please enter a URL.' : false,
-                pattern: {
-                  value: new RegExp(urlExpression),
-                  message: 'Please enter a valid URL, starting with http://',
-                },
-              }}
-              render={({
-                field: { value, onChange, onBlur },
-                fieldState: { error },
-              }) => (
-                <LabeledTextField
-                  title="URL"
-                  subtitle={isURLRequired ? '(required)' : '(optional)'}
-                  value={value ?? ''}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  enabled={!isSubmitting}
-                  customValidationMessage={error?.message}
-                  labelIndicator={<GlobeIcon />}
-                  placeholder="https://example.com"
-                />
-              )}
-            />
-            <Controller
               name="versions.0.type"
               control={control}
               rules={{
-                required: 'Please select a type.',
+                required: 'This field is required.',
               }}
               render={({
                 field: { value, onChange, onBlur },
@@ -1076,7 +1026,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   name="versions.0.lifecycle"
                   control={control}
                   rules={{
-                    required: 'Please select an option.',
+                    required: 'This field is required.',
                   }}
                   render={({
                     field: { value, onChange, onBlur },
@@ -1115,6 +1065,34 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               </Suspense>
             )}
 
+            <Controller
+              name="url"
+              control={control}
+              rules={{
+                required: isURLRequired ? 'Please enter a URL.' : false,
+                pattern: {
+                  value: new RegExp(urlExpression),
+                  message: 'Please enter a valid URL, starting with http://',
+                },
+              }}
+              render={({
+                field: { value, onChange, onBlur },
+                fieldState: { error },
+              }) => (
+                <LabeledTextField
+                  title="URL"
+                  subtitle={isURLRequired ? '(required)' : '(optional)'}
+                  value={value ?? ''}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  enabled={!isSubmitting}
+                  customValidationMessage={error?.message}
+                  labelIndicator={<GlobeIcon />}
+                  placeholder="https://example.com"
+                />
+              )}
+            />
+
             {watchType &&
               watchLifecycle &&
               manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
@@ -1127,11 +1105,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     rules={{
                       pattern: {
                         value: /^10\.\d{4}.*$/,
-                        message: 'Your preprint DOI must start with 10.',
+                        message: 'Please enter a valid DOI starting with “10.”',
                       },
                       required:
                         watchLifecycle === 'Preprint' &&
-                        'Please enter a Preprint DOI',
+                        'Please enter a Preprint DOI.',
                     }}
                     render={({
                       field: { value, onChange, onBlur },
@@ -1172,9 +1150,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     rules={{
                       pattern: {
                         value: /^10\.\d{4}.*$/,
-                        message: 'Your publication DOI must start with 10.',
+                        message: 'Please enter a valid DOI starting with “10.”',
                       },
-                      required: 'Please enter a Publication DOI',
+                      required: 'Please enter a Publication DOI.',
                     }}
                     render={({
                       field: { value, onChange, onBlur },
@@ -1209,7 +1187,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     name="versions.0.otherDetails"
                     control={control}
                     rules={{
-                      required: 'Please provide details',
+                      required: 'Please enter the relevant details.',
                       maxLength: {
                         value: 256,
                         message: 'Details cannot exceed 256 characters.',
@@ -1245,7 +1223,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   name="impact"
                   control={control}
                   rules={{
-                    required: 'Please add at least one impact.',
+                    required: 'This field is required.',
                   }}
                   render={({
                     field: { value, onChange, onBlur },
@@ -1286,7 +1264,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   name="categories"
                   control={control}
                   rules={{
-                    required: 'Please add at least one category.',
+                    required: 'This field is required.',
                     validate: (value) => {
                       if (value.length > 2) {
                         return 'You can select up to two categories only.';
@@ -1302,7 +1280,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       title="Category"
                       description="Select up to two options that best describe the scientific category of this manuscript."
                       subtitle="(required)"
-                      placeholder="Start typing..."
+                      placeholder="Choose a category"
                       loadOptions={getCategorySuggestions}
                       isMulti={true}
                       onChange={(selectedOptions: MultiSelectOptionsType) => {
@@ -1329,7 +1307,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   name="versions.0.manuscriptFile"
                   control={control}
                   rules={{
-                    required: 'Please select a manuscript file.',
+                    required: 'Please upload the main manuscript file.',
                   }}
                   render={({ field: { value }, fieldState: { error } }) => (
                     <LabeledFileField
@@ -1397,7 +1375,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     name="versions.0.keyResourceTable"
                     control={control}
                     rules={{
-                      required: 'Please select a key resource table.',
+                      required: 'Please upload a key resource table.',
                     }}
                     render={({ field: { value }, fieldState: { error } }) => (
                       <LabeledFileField
@@ -1407,9 +1385,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           <>
                             The key resource table must be submitted as a single
                             CSV file and should outline the resources used and
-                            generated in this study. The file size must not
-                            exceed 100 MB. View guidance{' '}
-                            {<Link href={KRT_GUIDANCE_FILE}>here</Link>}.
+                            generated in this study. View guidance{' '}
+                            {<Link href={KRT_GUIDANCE_FILE}>here</Link>}. The
+                            file size must not exceed 100 MB.
                           </>
                         }
                         placeholder="Upload Key Resource Table"
@@ -1562,7 +1540,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 name="versions.0.description"
                 control={control}
                 rules={{
-                  required: 'Please enter the description.',
+                  required: 'Please enter a manuscript description.',
                 }}
                 render={({
                   field: { value, onChange, onBlur },
@@ -1596,7 +1574,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 name="versions.0.shortDescription"
                 control={control}
                 rules={{
-                  required: 'Please enter the short description.',
+                  required:
+                    'Please enter a short description or select Generate to create one.',
                   maxLength: {
                     value: 250,
                     message:
@@ -1676,6 +1655,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               <Controller
                 name="versions.0.labs"
                 control={control}
+                rules={{
+                  required: 'Please add at least one lab.',
+                }}
                 render={({
                   field: { value, onChange },
                   fieldState: { error },
@@ -1683,7 +1665,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   <LabeledMultiSelect
                     title="Labs"
                     description="Add ASAP labs that contributed to this manuscript. Only labs whose PI is part of the CRN will appear. PIs for each listed lab will receive an update on this manuscript. In addition, they will be able to edit the manuscript metadata and can submit a new version of the manuscript."
-                    subtitle="(optional)"
+                    subtitle="(required)"
                     enabled={!isSubmitting}
                     placeholder="Start typing..."
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

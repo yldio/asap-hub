@@ -19,6 +19,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ContextType, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import { getEvents } from '../../../events/api';
 import { getResearchOutputs } from '../../../shared-research/api';
@@ -126,38 +127,43 @@ const renderUserProfile = async (
 
   mockToast.mockClear();
 
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshUserState(userResponse.id), Math.random());
-      }}
-    >
-      <Suspense fallback="loading">
-        <ToastContext.Provider value={mockToast}>
-          <Auth0Provider
-            user={{ id: ownUserId, onboarded }}
-            auth0Overrides={auth0Overrides}
-          >
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[
-                  network({}).users({}).user({ userId: routeProfileId }).$,
-                ]}
-              >
-                <Routes>
-                  <Route
-                    path={`${network.template}${network({}).users.template}${
-                      network({}).users({}).user.template
-                    }/*`}
-                    element={<UserProfile currentTime={currentTime} />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </ToastContext.Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ set }) => {
+          set(refreshUserState(userResponse.id), Math.random());
+        }}
+      >
+        <Suspense fallback="loading">
+          <ToastContext.Provider value={mockToast}>
+            <Auth0Provider
+              user={{ id: ownUserId, onboarded }}
+              auth0Overrides={auth0Overrides}
+            >
+              <WhenReady>
+                <MemoryRouter
+                  initialEntries={[
+                    network({}).users({}).user({ userId: routeProfileId }).$,
+                  ]}
+                >
+                  <Routes>
+                    <Route
+                      path={`${network.template}${network({}).users.template}${
+                        network({}).users({}).user.template
+                      }/*`}
+                      element={<UserProfile currentTime={currentTime} />}
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </ToastContext.Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

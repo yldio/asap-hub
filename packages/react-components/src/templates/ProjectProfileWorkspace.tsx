@@ -359,48 +359,48 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
 
       {isProjectMember && (
         <div id="collaboration-tools">
-        <Card>
-          <Display styleAsHeading={3}>
-            Collaboration Tools (Project Only)
-          </Display>
-          <Paragraph accent="lead">
-            This directory contains the most important links for your
-            project&apos;s internally shared resources and what each link is
-            used for.
-          </Paragraph>
-          {!!tools.length && (
-            <ul css={toolContainerStyles}>
-              {tools.map((tool, index) => (
-                <li key={`tool-${index}`}>
-                  <ToolCard
-                    {...tool}
-                    editHref={editToolHref(index)}
-                    onDelete={onDeleteTool && (() => onDeleteTool(index))}
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
-          <div css={newToolStyles}>
-            <Link href={toolsHref} buttonStyle>
-              <span>Add Collaboration Tools</span>
-            </Link>
-          </div>
-          <Caption accent="lead" asParagraph>
-            Last edited
-            {lastModifiedBy && (
-              <>
-                {' by '}
-                {lastModifiedByHref ? (
-                  <Link href={lastModifiedByHref}>{lastModifiedBy}</Link>
-                ) : (
-                  lastModifiedBy
-                )}
-              </>
-            )}{' '}
-            on {formatDateAndTime(new Date(lastModifiedDate))}
-          </Caption>
-        </Card>
+          <Card>
+            <Display styleAsHeading={3}>
+              Collaboration Tools (Project Only)
+            </Display>
+            <Paragraph accent="lead">
+              This directory contains the most important links for your
+              project&apos;s internally shared resources and what each link is
+              used for.
+            </Paragraph>
+            {!!tools.length && (
+              <ul css={toolContainerStyles}>
+                {tools.map((tool, index) => (
+                  <li key={`tool-${index}`}>
+                    <ToolCard
+                      {...tool}
+                      editHref={editToolHref(index)}
+                      onDelete={onDeleteTool && (() => onDeleteTool(index))}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div css={newToolStyles}>
+              <Link href={toolsHref} buttonStyle>
+                <span>Add Collaboration Tools</span>
+              </Link>
+            </div>
+            <Caption accent="lead" asParagraph>
+              Last edited
+              {lastModifiedBy && (
+                <>
+                  {' by '}
+                  {lastModifiedByHref ? (
+                    <Link href={lastModifiedByHref}>{lastModifiedBy}</Link>
+                  ) : (
+                    lastModifiedBy
+                  )}
+                </>
+              )}{' '}
+              on {formatDateAndTime(new Date(lastModifiedDate))}
+            </Caption>
+          </Card>
         </div>
       )}
 

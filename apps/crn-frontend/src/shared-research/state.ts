@@ -2,7 +2,7 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
+import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   getUserRole,
   hasDuplicateResearchOutputPermission,
@@ -12,17 +12,7 @@ import {
   hasRequestForReviewPermission,
   hasShareResearchOutputPermission,
 } from '@asap-hub/validation';
-import { useCallback } from 'react';
-import {
-  atom,
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilCallback,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
 import { useAlgolia } from '../hooks/algolia';
 import {
   getDraftResearchOutputs,
@@ -31,167 +21,42 @@ import {
   ResearchOutputListOptions,
 } from './api';
 
-type RefreshResearchOutputListOptions = ResearchOutputListOptions & {
-  refreshToken: number;
+export const useResearchOutputById = (id: string) => {
+  const auth0 = useAuth0CRN();
+  const { data } = useSuspenseQuery({
+    queryKey: ['researchOutput', id],
+    queryFn: async () => {
+      const token = await auth0.getTokenSilently();
+      const result = await getResearchOutput(id, `Bearer ${token}`);
+      return result ?? null;
+    },
+  });
+  return data;
 };
-
-const researchOutputIndexState = atomFamily<
-  | {
-      ids: ReadonlyArray<string>;
-      total: number;
-      algoliaQueryId?: string;
-      algoliaIndexName?: string;
-    }
-  | Error
-  | undefined,
-  RefreshResearchOutputListOptions
->({
-  key: 'researchOutputIndex',
-  default: undefined,
-});
-
-export const refreshResearchOutputIndex = atom<number>({
-  key: 'refreshResearchOutputIndex',
-  default: 0,
-});
-
-export const researchOutputsState = selectorFamily<
-  ListResearchOutputResponse | Error | undefined,
-  ResearchOutputListOptions
->({
-  key: 'researchOutputs',
-  get:
-    (options) =>
-    ({ get }) => {
-      const refreshToken = get(refreshResearchOutputIndex);
-      const index = get(
-        researchOutputIndexState({
-          ...options,
-          refreshToken,
-        }),
-      );
-      if (index === undefined || index instanceof Error) return index;
-      const researchOutputs: ResearchOutputResponse[] = [];
-      for (const id of index.ids) {
-        const researchOutput = get(researchOutputListState(id));
-        if (researchOutput === undefined) return undefined;
-        researchOutputs.push(researchOutput);
-      }
-      return {
-        total: index.total,
-        items: researchOutputs,
-        algoliaQueryId: index.algoliaQueryId,
-        algoliaIndexName: index.algoliaIndexName,
-      };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, researchOutputs) => {
-      const refreshToken = get(refreshResearchOutputIndex);
-      const indexStateOptions = { ...options, refreshToken };
-      if (
-        researchOutputs === undefined ||
-        researchOutputs instanceof DefaultValue
-      ) {
-        reset(researchOutputIndexState(indexStateOptions));
-      } else if (researchOutputs instanceof Error) {
-        set(researchOutputIndexState(indexStateOptions), researchOutputs);
-      } else {
-        researchOutputs.items.forEach((output) =>
-          set(researchOutputListState(output.id), output),
-        );
-        set(researchOutputIndexState(indexStateOptions), {
-          total: researchOutputs.total,
-          ids: researchOutputs.items.map(({ id }) => id),
-          algoliaIndexName: researchOutputs.algoliaIndexName,
-          algoliaQueryId: researchOutputs.algoliaQueryId,
-        });
-      }
-    },
-});
-
-export const refreshResearchOutputState = atomFamily<number, string>({
-  key: 'refreshResearchOutput',
-  default: 0,
-});
-
-const fetchResearchOutputState = selectorFamily<
-  ResearchOutputResponse | undefined,
-  string
->({
-  key: 'fetchResearchOutput',
-  get:
-    (id) =>
-    async ({ get }) => {
-      get(refreshResearchOutputState(id));
-      const authorization = get(authorizationState);
-      return getResearchOutput(id, authorization);
-    },
-});
-export const researchOutputState = atomFamily<
-  ResearchOutputResponse | undefined,
-  string
->({
-  key: 'researchOutput',
-  default: fetchResearchOutputState,
-});
-
-export const researchOutputListState = atomFamily<
-  ResearchOutputResponse | undefined,
-  string
->({
-  key: 'researchOutputList',
-  default: researchOutputState,
-});
-
-export const useResearchOutputById = (id: string) =>
-  useRecoilValue(researchOutputState(id));
 
 export const useResearchOutputs = (options: ResearchOutputListOptions) => {
-  const [researchOutputs, setResearchOutputs] = useRecoilState(
-    researchOutputsState(options),
-  );
+  const auth0 = useAuth0CRN();
   const { client } = useAlgolia();
-  const authorization = useRecoilValue(authorizationState);
-  if (researchOutputs === undefined) {
-    throw (
-      options.draftsOnly
-        ? getDraftResearchOutputs(options, authorization)
-        : getResearchOutputs(client, options).then(
-            (data): ListResearchOutputResponse => ({
-              total: data.nbHits,
-              items: data.hits,
-              algoliaQueryId: data.queryID,
-              algoliaIndexName: data.index,
-            }),
-          )
-    )
-      .then(setResearchOutputs)
-      .catch(setResearchOutputs);
-  }
-  if (researchOutputs instanceof Error) {
-    throw researchOutputs;
-  }
-  return researchOutputs;
-};
-
-export const useSetResearchOutputItem = () => {
-  const [refresh, setRefresh] = useRecoilState(refreshResearchOutputIndex);
-  return useRecoilCallback(
-    ({ set }) =>
-      (researchOutput: ResearchOutputResponse) => {
-        setRefresh(refresh + 1);
-        set(researchOutputState(researchOutput.id), researchOutput);
-      },
-  );
-};
-
-export const useInvalidateResearchOutputIndex = () => {
-  const [refresh, setRefresh] = useRecoilState(refreshResearchOutputIndex);
-
-  return useCallback(() => {
-    setRefresh(refresh + 1);
-  }, [refresh, setRefresh]);
+  const { data } = useSuspenseQuery({
+    queryKey: [
+      'researchOutputs',
+      { ...options, filters: options.filters ? [...options.filters] : [] },
+    ],
+    queryFn: async (): Promise<ListResearchOutputResponse> => {
+      if (options.draftsOnly) {
+        const token = await auth0.getTokenSilently();
+        return getDraftResearchOutputs(options, `Bearer ${token}`);
+      }
+      const result = await getResearchOutputs(client, options);
+      return {
+        total: result.nbHits,
+        items: result.hits,
+        algoliaQueryId: result.queryID,
+        algoliaIndexName: result.index,
+      };
+    },
+  });
+  return data;
 };
 
 export const useCanShareResearchOutput = (
@@ -249,5 +114,21 @@ export const useResearchOutputPermissions = (
       originalAssociationUserRole,
     ),
     canRequestReview: hasRequestForReviewPermission(userRole),
+  };
+};
+
+/**
+ * Compatibility shim used by network/teams/state.ts which is not yet migrated.
+ * Updates the TanStack Query cache for a single research output and invalidates
+ * the list so it refetches. Remove once teams state is migrated.
+ */
+export const useSetResearchOutputItem = () => {
+  const queryClient = useQueryClient();
+  return async (researchOutput: ResearchOutputResponse) => {
+    queryClient.setQueryData(
+      ['researchOutput', researchOutput.id],
+      researchOutput,
+    );
+    await queryClient.invalidateQueries({ queryKey: ['researchOutputs'] });
   };
 };

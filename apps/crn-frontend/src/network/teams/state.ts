@@ -645,7 +645,7 @@ export const usePostPreprintResearchOutput = () => {
       manuscriptId,
       authorization,
     );
-    setResearchOutputItem(preprintResearchOutput);
+    await setResearchOutputItem(preprintResearchOutput);
     return preprintResearchOutput;
   };
 };

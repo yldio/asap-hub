@@ -7,6 +7,7 @@ import {
   createUserResponse,
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import userEvent from '@testing-library/user-event';
@@ -22,8 +23,7 @@ import {
   MAX_ALGOLIA_RESULTS,
   MAX_CONTENTFUL_RESULTS,
 } from '../../../shared-research/export';
-import { researchOutputsState } from '../../../shared-research/state';
-import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
+import { auth0State } from '../../../auth/state';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -55,63 +55,54 @@ const renderOutputs = async (
   draftOutputs = false,
 ) => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          researchOutputsState({
-            searchQuery: '',
-            filters: new Set<string>(),
-            workingGroupId: workingGroup.id,
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-          }),
-        );
-        reset(
-          researchOutputsState({
-            searchQuery: '',
-            filters: new Set<string>(),
-            workingGroupId: workingGroup.id,
-            currentPage: 0,
-            pageSize: MAX_ALGOLIA_RESULTS,
-          }),
-        );
-      }}
+    <QueryClientProvider
+      client={
+        new QueryClient({ defaultOptions: { queries: { retry: false } } })
+      }
     >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                {
-                  pathname: network({})
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: workingGroup.id })
-                    .outputs({}).$,
-                },
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={
-                    network({})
+      <RecoilRoot
+        initializeState={({ set }) =>
+          set(auth0State, {
+            getTokenSilently: jest.fn().mockResolvedValue('test_token'),
+          } as never)
+        }
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  {
+                    pathname: network({})
                       .workingGroups({})
                       .workingGroup({ workingGroupId: workingGroup.id })
-                      .outputs({}).$
-                  }
-                  element={
-                    <Outputs
-                      userAssociationMember={userAssociationMember}
-                      workingGroup={workingGroup}
-                      draftOutputs={draftOutputs}
-                    />
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+                      .outputs({}).$,
+                  },
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={
+                      network({})
+                        .workingGroups({})
+                        .workingGroup({ workingGroupId: workingGroup.id })
+                        .outputs({}).$
+                    }
+                    element={
+                      <Outputs
+                        userAssociationMember={userAssociationMember}
+                        workingGroup={workingGroup}
+                        draftOutputs={draftOutputs}
+                      />
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>
@@ -139,9 +130,9 @@ it('renders the no outputs component correctly for your own working group', asyn
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(0),
   });
-  const { getByText } = await renderOutputs(undefined, undefined, true);
+  const { findByText } = await renderOutputs(undefined, undefined, true);
   expect(
-    getByText('Your working group hasn’t shared any research yet!'),
+    await findByText('Your working group hasn\u2019t shared any research yet!'),
   ).toBeVisible();
 });
 
@@ -149,7 +140,7 @@ it('renders the no outputs component correctly for a different working group', a
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(0),
   });
-  const { getByText } = await renderOutputs(
+  const { findByText } = await renderOutputs(
     {
       ...createWorkingGroupResponse({}),
       members: [
@@ -162,7 +153,7 @@ it('renders the no outputs component correctly for a different working group', a
     { ...createUserResponse(), id: 'notGroupMember' },
   );
   expect(
-    getByText('This working group hasn’t shared any research yet!'),
+    await findByText('This working group hasn\u2019t shared any research yet!'),
   ).toBeVisible();
 });
 
@@ -202,7 +193,7 @@ it('triggers draft research output export with custom file name', async () => {
   mockGetDraftResearchOutputs.mockResolvedValue({
     ...createListResearchOutputResponse(2),
   });
-  const { getByText } = await renderOutputs(
+  const { findByText } = await renderOutputs(
     {
       ...createWorkingGroupResponse({}),
       id: workingGroupId,
@@ -213,7 +204,7 @@ it('triggers draft research output export with custom file name', async () => {
     true,
   );
 
-  await userEvent.click(getByText(/csv/i));
+  await userEvent.click(await findByText(/csv/i));
   await waitFor(() =>
     expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
       {

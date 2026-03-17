@@ -3,6 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -11,7 +12,6 @@ import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algo
 import { getResearchOutputs } from '../api';
 import { MAX_ALGOLIA_RESULTS } from '../export';
 import ResearchOutputList from '../ResearchOutputList';
-import { researchOutputsState } from '../state';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -33,34 +33,28 @@ const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
 >;
 
 const renderResearchOutputList = async (searchQuery = '') => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          researchOutputsState({
-            searchQuery,
-            currentPage: 0,
-            filters: new Set(),
-            pageSize: CARD_VIEW_PAGE_SIZE,
-          }),
-        );
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={['/shared-research']}>
-              <Routes>
-                <Route
-                  path="/shared-research"
-                  element={<ResearchOutputList />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={['/shared-research']}>
+                <Routes>
+                  <Route
+                    path="/shared-research"
+                    element={<ResearchOutputList />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

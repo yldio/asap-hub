@@ -31,6 +31,13 @@ jest.mock('../../network/teams/useManuscriptToast', () => ({
   })),
 }));
 
+const mockPatchProject = jest.fn().mockResolvedValue({});
+
+jest.mock('../state', () => ({
+  ...jest.requireActual('../state'),
+  usePatchProjectById: jest.fn(() => mockPatchProject),
+}));
+
 type CapturedProps = Record<string, unknown> & {
   onUpdateManuscript: (id: string, payload: unknown) => Promise<unknown>;
   createDiscussion: (
@@ -47,15 +54,27 @@ type CapturedProps = Record<string, unknown> & {
     manuscriptId: string,
     discussionId: string,
   ) => Promise<void>;
+  onDeleteTool: (toolIndex: number) => Promise<void>;
 };
 
 let capturedProps: CapturedProps;
+let capturedConfirmModalProps: Record<string, unknown>;
+let capturedToolModalProps: Record<string, unknown>;
 
 jest.mock('@asap-hub/react-components', () => ({
   __esModule: true,
   ProjectProfileWorkspace: (props: CapturedProps) => {
     capturedProps = props;
     return <div data-testid="project-profile-workspace" />;
+  },
+  ToolModal: (props: Record<string, unknown>) => {
+    capturedToolModalProps = props;
+    return <div data-testid="tool-modal" />;
+  },
+  NotFoundPage: () => <div data-testid="not-found" />,
+  ConfirmModal: (props: Record<string, unknown>) => {
+    capturedConfirmModalProps = props;
+    return <div data-testid="confirm-modal" />;
   },
 }));
 
@@ -74,6 +93,7 @@ const renderProjectWorkspace = async (
     editToolHref: (i: number) => `/workspace/tools/${i}`,
     isActiveProject: true,
     createManuscriptHref: '/workspace/create-manuscript',
+    workspaceHref: '/projects/discovery/proj-1/workspace',
     ...overrides,
   };
 
@@ -87,7 +107,7 @@ const renderProjectWorkspace = async (
             >
               <Routes>
                 <Route
-                  path="/projects/discovery/:projectId/workspace"
+                  path="/projects/discovery/:projectId/workspace/*"
                   element={
                     <ManuscriptToastProvider>
                       <EligibilityReasonProvider>
@@ -303,6 +323,375 @@ describe('ProjectWorkspace', () => {
         await capturedProps.onMarkDiscussionAsRead('ms-1', 'disc-1');
       });
       expect(mockMarkDiscussionAsRead).toHaveBeenCalledWith('ms-1', 'disc-1');
+    });
+  });
+
+  describe('onDeleteTool', () => {
+    it('shows ConfirmModal when onDeleteTool is called', async () => {
+      await renderProjectWorkspace({
+        tools: [{ name: 'Slack', url: 'https://slack.com', description: '' }],
+      });
+      expect(screen.queryByTestId('confirm-modal')).not.toBeInTheDocument();
+
+      await act(async () => {
+        await capturedProps.onDeleteTool(0);
+      });
+
+      expect(screen.getByTestId('confirm-modal')).toBeInTheDocument();
+    });
+
+    it('deletes tool and closes modal on confirm', async () => {
+      await renderProjectWorkspace({
+        tools: [
+          { name: 'Slack', url: 'https://slack.com', description: '' },
+          { name: 'Jira', url: 'https://jira.com', description: '' },
+        ],
+      });
+
+      await act(async () => {
+        await capturedProps.onDeleteTool(0);
+      });
+
+      await act(async () => {
+        await (capturedConfirmModalProps.onSave as () => Promise<void>)();
+      });
+
+      expect(mockPatchProject).toHaveBeenCalledWith({
+        tools: [{ name: 'Jira', url: 'https://jira.com', description: '' }],
+      });
+      expect(screen.queryByTestId('confirm-modal')).not.toBeInTheDocument();
+    });
+
+    it('closes modal on cancel without deleting', async () => {
+      await renderProjectWorkspace({
+        tools: [{ name: 'Slack', url: 'https://slack.com', description: '' }],
+      });
+
+      await act(async () => {
+        await capturedProps.onDeleteTool(0);
+      });
+      expect(screen.getByTestId('confirm-modal')).toBeInTheDocument();
+
+      act(() => {
+        (capturedConfirmModalProps.onCancel as () => void)();
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByTestId('confirm-modal')).not.toBeInTheDocument();
+      });
+      expect(mockPatchProject).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('tool routes', () => {
+    it('renders ToolModal on /tools route', async () => {
+      render(
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <MemoryRouter
+                  initialEntries={[
+                    '/projects/discovery/proj-1/workspace/tools',
+                  ]}
+                >
+                  <Routes>
+                    <Route
+                      path="/projects/discovery/:projectId/workspace/*"
+                      element={
+                        <ManuscriptToastProvider>
+                          <EligibilityReasonProvider>
+                            <ProjectWorkspace
+                              id="proj-1"
+                              isProjectMember
+                              isTeamBased
+                              manuscripts={[]}
+                              collaborationManuscripts={[]}
+                              tools={[]}
+                              lastModifiedDate={new Date().toISOString()}
+                              toolsHref="/workspace/tools"
+                              editToolHref={(i) => `/workspace/tools/tool/${i}`}
+                              isActiveProject
+                              createManuscriptHref="/workspace/create-manuscript"
+                              workspaceHref="/projects/discovery/proj-1/workspace"
+                            />
+                          </EligibilityReasonProvider>
+                        </ManuscriptToastProvider>
+                      }
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>,
+      );
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+      });
+
+      expect(screen.getByTestId('tool-modal')).toBeInTheDocument();
+      expect(capturedToolModalProps.title).toBe('Add Collaboration Tool');
+      expect(capturedToolModalProps.saveButtonText).toBe('Add Tool');
+    });
+
+    it('renders ToolModal for editing on /tools/tool/:toolIndex route', async () => {
+      render(
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <MemoryRouter
+                  initialEntries={[
+                    '/projects/discovery/proj-1/workspace/tools/tool/0',
+                  ]}
+                >
+                  <Routes>
+                    <Route
+                      path="/projects/discovery/:projectId/workspace/*"
+                      element={
+                        <ManuscriptToastProvider>
+                          <EligibilityReasonProvider>
+                            <ProjectWorkspace
+                              id="proj-1"
+                              isProjectMember
+                              isTeamBased
+                              manuscripts={[]}
+                              collaborationManuscripts={[]}
+                              tools={[
+                                {
+                                  name: 'Slack',
+                                  url: 'https://slack.com',
+                                  description: 'Team chat',
+                                },
+                              ]}
+                              lastModifiedDate={new Date().toISOString()}
+                              toolsHref="/workspace/tools"
+                              editToolHref={(i) => `/workspace/tools/tool/${i}`}
+                              isActiveProject
+                              createManuscriptHref="/workspace/create-manuscript"
+                              workspaceHref="/projects/discovery/proj-1/workspace"
+                            />
+                          </EligibilityReasonProvider>
+                        </ManuscriptToastProvider>
+                      }
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>,
+      );
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+      });
+
+      expect(screen.getByTestId('tool-modal')).toBeInTheDocument();
+      expect(capturedToolModalProps.title).toBe('Edit Collaboration Tool');
+      expect(capturedToolModalProps.saveButtonText).toBe('Save Changes');
+      expect(capturedToolModalProps.name).toBe('Slack');
+    });
+
+    it('renders NotFoundPage for invalid tool index', async () => {
+      render(
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <MemoryRouter
+                  initialEntries={[
+                    '/projects/discovery/proj-1/workspace/tools/tool/99',
+                  ]}
+                >
+                  <Routes>
+                    <Route
+                      path="/projects/discovery/:projectId/workspace/*"
+                      element={
+                        <ManuscriptToastProvider>
+                          <EligibilityReasonProvider>
+                            <ProjectWorkspace
+                              id="proj-1"
+                              isProjectMember
+                              isTeamBased
+                              manuscripts={[]}
+                              collaborationManuscripts={[]}
+                              tools={[
+                                {
+                                  name: 'Slack',
+                                  url: 'https://slack.com',
+                                  description: '',
+                                },
+                              ]}
+                              lastModifiedDate={new Date().toISOString()}
+                              toolsHref="/workspace/tools"
+                              editToolHref={(i) => `/workspace/tools/tool/${i}`}
+                              isActiveProject
+                              createManuscriptHref="/workspace/create-manuscript"
+                              workspaceHref="/projects/discovery/proj-1/workspace"
+                            />
+                          </EligibilityReasonProvider>
+                        </ManuscriptToastProvider>
+                      }
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>,
+      );
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+      });
+
+      expect(screen.getByTestId('not-found')).toBeInTheDocument();
+    });
+
+    it('calls patchProject with updated tool on edit save', async () => {
+      render(
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <MemoryRouter
+                  initialEntries={[
+                    '/projects/discovery/proj-1/workspace/tools/tool/0',
+                  ]}
+                >
+                  <Routes>
+                    <Route
+                      path="/projects/discovery/:projectId/workspace/*"
+                      element={
+                        <ManuscriptToastProvider>
+                          <EligibilityReasonProvider>
+                            <ProjectWorkspace
+                              id="proj-1"
+                              isProjectMember
+                              isTeamBased
+                              manuscripts={[]}
+                              collaborationManuscripts={[]}
+                              tools={[
+                                {
+                                  name: 'Slack',
+                                  url: 'https://slack.com',
+                                  description: '',
+                                },
+                              ]}
+                              lastModifiedDate={new Date().toISOString()}
+                              toolsHref="/workspace/tools"
+                              editToolHref={(i) => `/workspace/tools/tool/${i}`}
+                              isActiveProject
+                              createManuscriptHref="/workspace/create-manuscript"
+                              workspaceHref="/projects/discovery/proj-1/workspace"
+                            />
+                          </EligibilityReasonProvider>
+                        </ManuscriptToastProvider>
+                      }
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>,
+      );
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+      });
+
+      const updatedTool = {
+        name: 'Updated Slack',
+        url: 'https://slack.com/new',
+        description: 'Updated',
+      };
+
+      await act(async () => {
+        await (
+          capturedToolModalProps.onSave as (data: unknown) => Promise<void>
+        )(updatedTool);
+      });
+
+      expect(mockPatchProject).toHaveBeenCalledWith({
+        tools: [updatedTool],
+      });
+    });
+
+    it('calls patchProject with new tool on add save', async () => {
+      render(
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <MemoryRouter
+                  initialEntries={[
+                    '/projects/discovery/proj-1/workspace/tools',
+                  ]}
+                >
+                  <Routes>
+                    <Route
+                      path="/projects/discovery/:projectId/workspace/*"
+                      element={
+                        <ManuscriptToastProvider>
+                          <EligibilityReasonProvider>
+                            <ProjectWorkspace
+                              id="proj-1"
+                              isProjectMember
+                              isTeamBased
+                              manuscripts={[]}
+                              collaborationManuscripts={[]}
+                              tools={[
+                                {
+                                  name: 'Slack',
+                                  url: 'https://slack.com',
+                                  description: '',
+                                },
+                              ]}
+                              lastModifiedDate={new Date().toISOString()}
+                              toolsHref="/workspace/tools"
+                              editToolHref={(i) => `/workspace/tools/tool/${i}`}
+                              isActiveProject
+                              createManuscriptHref="/workspace/create-manuscript"
+                              workspaceHref="/projects/discovery/proj-1/workspace"
+                            />
+                          </EligibilityReasonProvider>
+                        </ManuscriptToastProvider>
+                      }
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>,
+      );
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+      });
+
+      const newTool = {
+        name: 'Jira',
+        url: 'https://jira.com',
+        description: 'Tracking',
+      };
+
+      await act(async () => {
+        await (
+          capturedToolModalProps.onSave as (data: unknown) => Promise<void>
+        )(newTool);
+      });
+
+      expect(mockPatchProject).toHaveBeenCalledWith({
+        tools: [
+          { name: 'Slack', url: 'https://slack.com', description: '' },
+          newTool,
+        ],
+      });
     });
   });
 });

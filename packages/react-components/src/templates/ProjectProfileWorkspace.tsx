@@ -10,12 +10,13 @@ import {
   Card,
   Display,
   Headline2,
+  Headline3,
   Link,
   Paragraph,
   Subtitle,
 } from '../atoms';
 import { formatDateAndTime } from '../date';
-import { plusIcon } from '../icons';
+import { deskTopIcon, plusIcon } from '../icons';
 import { createMailTo, mailToSupport } from '../mail';
 import { EligibilityModal, ToolCard } from '../organisms';
 import type DiscussionCard from '../organisms/DiscussionCard';
@@ -25,6 +26,24 @@ import { mobileScreen, rem } from '../pixels';
 const containerStyles = css({
   display: 'grid',
   gridRowGap: rem(36),
+});
+
+const desktopOnlyStyles = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+
+const mobileOnlyStyles = css({
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+
+const mobileContainerStyles = css({
+  padding: rem(18),
+  textAlign: 'center',
+  display: 'flex',
 });
 
 const newToolStyles = css({
@@ -192,172 +211,197 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
           setEligibilityReasons={setEligibilityReasons}
         />
       )}
-      <Card overrideStyles={complianceCardContainerStyles}>
-        <div css={complianceContainerStyles}>
-          <div css={complianceHeaderStyles}>
-            <Display styleAsHeading={3}>Compliance Review</Display>
-            {isActiveProject && isProjectMember && (
-              <div css={css(manuscriptButtonStyles)}>
-                <Button onClick={handleShareManuscript} primary noMargin small>
-                  {plusIcon} Submit Manuscript
-                </Button>
-              </div>
-            )}
-          </div>
-          <Paragraph noMargin accent="lead">
-            {manuscripts.length > 0 || !!collaborationManuscripts?.length
-              ? 'This directory contains all manuscripts with their compliance reports.'
-              : "Submit your manuscript to receive a report outlining where your work meets ASAP's Open Science Policy and where changes are needed for your work to be compliant."}
-          </Paragraph>
-        </div>
-        {isTeamBased &&
-        (manuscripts.length > 0 || !!collaborationManuscripts?.length) ? (
-          <>
-            <div data-testid="team-manuscripts" css={manuscriptsGroupStyles}>
-              <Subtitle noMargin>Team Submission</Subtitle>
-              {manuscripts.length ? (
-                <>
-                  <Paragraph noMargin accent="lead">
-                    {manuscriptSubmissions}
-                  </Paragraph>
-                  <div>
-                    {manuscripts.map((manuscriptId) => (
-                      <div key={manuscriptId}>
-                        <ManuscriptCard
-                          id={manuscriptId}
-                          user={user}
-                          // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
-                          teamId={id}
-                          isComplianceReviewer={isComplianceReviewer}
-                          onUpdateManuscript={onUpdateManuscript}
-                          isActiveTeam={isActiveProject}
-                          createDiscussion={createDiscussion}
-                          useManuscriptById={useManuscriptById}
-                          onReplyToDiscussion={onReplyToDiscussion}
-                          onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                          showTeamName={false}
-                          {...(manuscriptId === targetManuscriptId
-                            ? { isTargetManuscript: true }
-                            : {})}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <Paragraph noMargin accent="lead">
-                  {noManuscriptSubmissions}
-                </Paragraph>
+      <div css={mobileOnlyStyles}>
+        <Card>
+          <header css={mobileContainerStyles}>
+            <div>{deskTopIcon}</div>
+            <Headline3>
+              <span>
+                Compliance area is only available on the desktop version.
+              </span>
+            </Headline3>
+            <Paragraph accent="lead">
+              To access all compliance features, please use the desktop version.
+              We apologize for any inconvenience this may cause.
+            </Paragraph>
+          </header>
+        </Card>
+      </div>
+      <div css={desktopOnlyStyles}>
+        <Card overrideStyles={complianceCardContainerStyles}>
+          <div css={complianceContainerStyles}>
+            <div css={complianceHeaderStyles}>
+              <Display styleAsHeading={3}>Compliance Review</Display>
+              {isActiveProject && isProjectMember && (
+                <div css={css(manuscriptButtonStyles)}>
+                  <Button
+                    onClick={handleShareManuscript}
+                    primary
+                    noMargin
+                    small
+                  >
+                    {plusIcon} Submit Manuscript
+                  </Button>
+                </div>
               )}
             </div>
-            <div
-              data-testid="collaboration-manuscripts"
-              css={manuscriptsGroupStyles}
-            >
-              <Subtitle noMargin>Collaborator Submission</Subtitle>
-              {collaborationManuscripts?.length ? (
-                <>
-                  <Paragraph noMargin accent="lead">
-                    {manuscriptCollaborations}
-                  </Paragraph>
-                  <div>
-                    {collaborationManuscripts.map((manuscriptId) => (
-                      <div key={manuscriptId}>
-                        <ManuscriptCard
-                          id={manuscriptId}
-                          user={user}
-                          // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
-                          teamId={id}
-                          isComplianceReviewer={isComplianceReviewer}
-                          isActiveTeam={isActiveProject}
-                          onUpdateManuscript={onUpdateManuscript}
-                          createDiscussion={createDiscussion}
-                          useManuscriptById={useManuscriptById}
-                          onReplyToDiscussion={onReplyToDiscussion}
-                          onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                          showTeamName={false}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <Paragraph noMargin accent="lead">
-                  {noManuscriptCollaborations}
-                </Paragraph>
-              )}
-            </div>
-          </>
-        ) : !isTeamBased && manuscripts.length > 0 ? (
-          <div data-testid="project-manuscripts" css={manuscriptsGroupStyles}>
-            {manuscripts.map((manuscriptId) => (
-              <div key={manuscriptId}>
-                <ManuscriptCard
-                  id={manuscriptId}
-                  user={user}
-                  // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
-                  teamId={id}
-                  isComplianceReviewer={isComplianceReviewer}
-                  onUpdateManuscript={onUpdateManuscript}
-                  isActiveTeam={isActiveProject}
-                  createDiscussion={createDiscussion}
-                  useManuscriptById={useManuscriptById}
-                  onReplyToDiscussion={onReplyToDiscussion}
-                  onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                  showTeamName={false}
-                  {...(manuscriptId === targetManuscriptId
-                    ? { isTargetManuscript: true }
-                    : {})}
-                />
-              </div>
-            ))}
+            <Paragraph noMargin accent="lead">
+              {manuscripts.length > 0 || !!collaborationManuscripts?.length
+                ? 'This directory contains all manuscripts with their compliance reports.'
+                : "Submit your manuscript to receive a report outlining where your work meets ASAP's Open Science Policy and where changes are needed for your work to be compliant."}
+            </Paragraph>
           </div>
-        ) : null}
-      </Card>
+          {isTeamBased &&
+          (manuscripts.length > 0 || !!collaborationManuscripts?.length) ? (
+            <>
+              <div data-testid="team-manuscripts" css={manuscriptsGroupStyles}>
+                <Subtitle noMargin>Team Submission</Subtitle>
+                {manuscripts.length ? (
+                  <>
+                    <Paragraph noMargin accent="lead">
+                      {manuscriptSubmissions}
+                    </Paragraph>
+                    <div>
+                      {manuscripts.map((manuscriptId) => (
+                        <div key={manuscriptId}>
+                          <ManuscriptCard
+                            id={manuscriptId}
+                            user={user}
+                            // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
+                            teamId={id}
+                            isComplianceReviewer={isComplianceReviewer}
+                            onUpdateManuscript={onUpdateManuscript}
+                            isActiveTeam={isActiveProject}
+                            createDiscussion={createDiscussion}
+                            useManuscriptById={useManuscriptById}
+                            onReplyToDiscussion={onReplyToDiscussion}
+                            onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                            showTeamName={false}
+                            {...(manuscriptId === targetManuscriptId
+                              ? { isTargetManuscript: true }
+                              : {})}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <Paragraph noMargin accent="lead">
+                    {noManuscriptSubmissions}
+                  </Paragraph>
+                )}
+              </div>
+              <div
+                data-testid="collaboration-manuscripts"
+                css={manuscriptsGroupStyles}
+              >
+                <Subtitle noMargin>Collaborator Submission</Subtitle>
+                {collaborationManuscripts?.length ? (
+                  <>
+                    <Paragraph noMargin accent="lead">
+                      {manuscriptCollaborations}
+                    </Paragraph>
+                    <div>
+                      {collaborationManuscripts.map((manuscriptId) => (
+                        <div key={manuscriptId}>
+                          <ManuscriptCard
+                            id={manuscriptId}
+                            user={user}
+                            // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
+                            teamId={id}
+                            isComplianceReviewer={isComplianceReviewer}
+                            isActiveTeam={isActiveProject}
+                            onUpdateManuscript={onUpdateManuscript}
+                            createDiscussion={createDiscussion}
+                            useManuscriptById={useManuscriptById}
+                            onReplyToDiscussion={onReplyToDiscussion}
+                            onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                            showTeamName={false}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <Paragraph noMargin accent="lead">
+                    {noManuscriptCollaborations}
+                  </Paragraph>
+                )}
+              </div>
+            </>
+          ) : !isTeamBased && manuscripts.length > 0 ? (
+            <div data-testid="project-manuscripts" css={manuscriptsGroupStyles}>
+              {manuscripts.map((manuscriptId) => (
+                <div key={manuscriptId}>
+                  <ManuscriptCard
+                    id={manuscriptId}
+                    user={user}
+                    // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
+                    teamId={id}
+                    isComplianceReviewer={isComplianceReviewer}
+                    onUpdateManuscript={onUpdateManuscript}
+                    isActiveTeam={isActiveProject}
+                    createDiscussion={createDiscussion}
+                    useManuscriptById={useManuscriptById}
+                    onReplyToDiscussion={onReplyToDiscussion}
+                    onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                    showTeamName={false}
+                    {...(manuscriptId === targetManuscriptId
+                      ? { isTargetManuscript: true }
+                      : {})}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : null}
+        </Card>
+      </div>
 
       {isProjectMember && (
-        <Card>
-          <Display styleAsHeading={3}>
-            Collaboration Tools (Project Only)
-          </Display>
-          <Paragraph accent="lead">
-            This directory contains the most important links for your
-            project&apos;s internally shared resources and what each link is
-            used for.
-          </Paragraph>
-          {!!tools.length && (
-            <ul css={toolContainerStyles}>
-              {tools.map((tool, index) => (
-                <li key={`tool-${index}`}>
-                  <ToolCard
-                    {...tool}
-                    editHref={editToolHref(index)}
-                    onDelete={onDeleteTool && (() => onDeleteTool(index))}
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
-          <div css={newToolStyles}>
-            <Link href={toolsHref} buttonStyle>
-              <span>Add Collaboration Tools</span>
-            </Link>
-          </div>
-          <Caption accent="lead" asParagraph>
-            Last edited
-            {lastModifiedBy && (
-              <>
-                {' by '}
-                {lastModifiedByHref ? (
-                  <Link href={lastModifiedByHref}>{lastModifiedBy}</Link>
-                ) : (
-                  lastModifiedBy
-                )}
-              </>
-            )}{' '}
-            on {formatDateAndTime(new Date(lastModifiedDate))}
-          </Caption>
-        </Card>
+        <div id="collaboration-tools">
+          <Card>
+            <Display styleAsHeading={3}>
+              Collaboration Tools (Project Only)
+            </Display>
+            <Paragraph accent="lead">
+              This directory contains the most important links for your
+              project&apos;s internally shared resources and what each link is
+              used for.
+            </Paragraph>
+            {!!tools.length && (
+              <ul css={toolContainerStyles}>
+                {tools.map((tool, index) => (
+                  <li key={`tool-${index}`}>
+                    <ToolCard
+                      {...tool}
+                      editHref={editToolHref(index)}
+                      onDelete={onDeleteTool && (() => onDeleteTool(index))}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div css={newToolStyles}>
+              <Link href={toolsHref} buttonStyle>
+                <span>Add Collaboration Tools</span>
+              </Link>
+            </div>
+            <Caption accent="lead" asParagraph>
+              Last edited
+              {lastModifiedBy && (
+                <>
+                  {' by '}
+                  {lastModifiedByHref ? (
+                    <Link href={lastModifiedByHref}>{lastModifiedBy}</Link>
+                  ) : (
+                    lastModifiedBy
+                  )}
+                </>
+              )}{' '}
+              on {formatDateAndTime(new Date(lastModifiedDate))}
+            </Caption>
+          </Card>
+        </div>
       )}
 
       {isProjectMember && contactEmail && (

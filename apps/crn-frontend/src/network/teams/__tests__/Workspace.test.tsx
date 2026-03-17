@@ -404,25 +404,14 @@ describe('a tool', () => {
   it('can be deleted', async () => {
     mockConfirm.mockReturnValue(true);
     (useProjectById as jest.Mock).mockReturnValue({ tools: [myTool] });
-    // Use a deferred promise to control when the delete completes
-    let resolveDelete!: () => void;
-    const deletePromise = new Promise<void>((resolve) => {
-      resolveDelete = resolve;
-    });
-    mockPatchProject.mockReturnValue(deletePromise);
+    mockPatchProject.mockResolvedValue({});
 
     const { findByText } = renderWithWrapper(
       <Workspace team={{ ...createTeamResponse(), id, tools: [myTool] }} />,
       user,
     );
     await userEvent.click(await findByText(/delete/i));
-    // Now we should see "Deleting..." while the promise is pending
-    await findByText(/deleting/i);
     expect(mockPatchProject).toHaveBeenLastCalledWith({ tools: [] });
-    // Resolve the promise to complete the delete
-    await act(async () => {
-      resolveDelete();
-    });
   });
 
   it('is not deleted when rejecting the confirm prompt', async () => {
@@ -460,7 +449,7 @@ describe('a tool', () => {
     (useProjectById as jest.Mock).mockReturnValue({
       tools: [myTool, myOtherTool],
     });
-    const { queryByText, findByText, findAllByText } = renderWithWrapper(
+    const { findAllByText } = renderWithWrapper(
       <Workspace
         team={{ ...createTeamResponse(), id, tools: [myTool, myOtherTool] }}
       />,
@@ -474,17 +463,22 @@ describe('a tool', () => {
         }),
     );
 
+    // Click delete on the first tool — triggers window.confirm and starts deleting
     await userEvent.click((await findAllByText(/delete/i))[0]!);
-    await findByText(/deleting/i);
     mockPatchProject.mockClear();
 
-    await userEvent.click(await findByText(/delete/i));
+    // Second tool's delete button should not be rendered (onDeleteTool is undefined while deleting)
+    // The remaining "Delete" texts are plain text, not buttons
+    const deleteElements = await findAllByText(/delete/i);
+    const deleteButtons = deleteElements.filter(
+      (el) => el.tagName === 'BUTTON',
+    );
+    expect(deleteButtons).toHaveLength(0);
     expect(mockPatchProject).not.toHaveBeenCalled();
 
-    resolvePatchProject();
-    await waitFor(() =>
-      expect(queryByText(/deleting/i)).not.toBeInTheDocument(),
-    );
+    await act(async () => {
+      resolvePatchProject();
+    });
   });
 });
 

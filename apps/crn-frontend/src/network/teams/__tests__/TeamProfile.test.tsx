@@ -1,7 +1,7 @@
 import {
-  Auth0Provider,
-  WhenReady,
-} from '@asap-hub/crn-frontend/src/auth/test-utils';
+  Auth0ProviderForQuery as Auth0Provider,
+  WhenReadyForQuery as WhenReady,
+} from '@asap-hub/crn-frontend/src/auth/test-utils-tanstack';
 import {
   createListEventResponse,
   createListResearchOutputResponse,
@@ -24,14 +24,15 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
+import { auth0State } from '../../../auth/state';
 import { getEvents } from '../../../events/api';
 import {
   getDraftResearchOutputs,
   getResearchOutput,
   getResearchOutputs,
 } from '../../../shared-research/api';
-import { refreshResearchOutputState } from '../../../shared-research/state';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { createResearchOutput, getTeam } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
@@ -174,30 +175,38 @@ const renderPage = async (
   );
 
   const { container } = render(
-    <RecoilRoot
-      initializeState={({ set, reset }) => {
-        set(refreshTeamState(teamResponse.id), Math.random());
-        set(refreshResearchOutputState('123'), Math.random());
-        reset(
-          manuscriptsState({
-            currentPage: 0,
-            pageSize: 10,
-            requestedAPCCoverage: 'all',
-            completedStatus: 'show',
-            searchQuery: '',
-            selectedStatuses: [],
-          }),
-        );
-      }}
+    <QueryClientProvider
+      client={
+        new QueryClient({ defaultOptions: { queries: { retry: false } } })
+      }
     >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <RouterProvider router={router} />
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+      <RecoilRoot
+        initializeState={({ set, reset }) => {
+          set(refreshTeamState(teamResponse.id), Math.random());
+          set(auth0State, {
+            getTokenSilently: jest.fn().mockResolvedValue('test_token'),
+          } as never);
+          reset(
+            manuscriptsState({
+              currentPage: 0,
+              pageSize: 10,
+              requestedAPCCoverage: 'all',
+              completedStatus: 'show',
+              searchQuery: '',
+              selectedStatuses: [],
+            }),
+          );
+        }}
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <RouterProvider router={router} />
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   return { container, router };
@@ -666,7 +675,8 @@ describe('Create Compliance Report', () => {
     const teamResponse = createTeamResponse();
     const userResponse = createUserResponse({}, 1);
 
-    teamResponse.manuscripts = ['manuscript_0'];
+    const teamManuscript = createTeamManuscriptResponse();
+    teamResponse.manuscripts = [teamManuscript.id];
     userResponse.role = 'Staff';
     userResponse.openScienceTeamMember = true;
 
@@ -687,9 +697,9 @@ describe('Create Compliance Report', () => {
     );
 
     await userEvent.click(screen.getByTestId('collapsible-button'));
-    expect(
-      screen.getByRole('button', { name: /Share Compliance Report Icon/ }),
-    ).toBeInTheDocument();
+
+    expect(screen.getByTestId('status-button')).toBeInTheDocument();
+
     jest.useFakeTimers();
   });
 

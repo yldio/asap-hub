@@ -8,9 +8,12 @@ import {
 } from '@asap-hub/fixtures';
 import { TeamRole } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
+import { createCsvFileStream } from '@asap-hub/frontend-utils';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { RecoilRoot } from 'recoil';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import { auth0State } from '../../../auth/state';
 import Outputs from '../Outputs';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -18,12 +21,8 @@ import {
   getDraftResearchOutputs,
   getResearchOutputs,
 } from '../../../shared-research/api';
-import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
-import {
-  MAX_ALGOLIA_RESULTS,
-  MAX_CONTENTFUL_RESULTS,
-} from '../../../shared-research/export';
+import { MAX_CONTENTFUL_RESULTS } from '../../../shared-research/export';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -60,62 +59,54 @@ const renderOutputs = async (
   userAssociationMember = false,
   draftOutputs = false,
 ) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset: resetState }) => {
-        resetState(
-          researchOutputsState({
-            searchQuery,
-            filters,
-            teamId: team.id,
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-          }),
-        );
-        resetState(
-          researchOutputsState({
-            searchQuery,
-            filters,
-            teamId: team.id,
-            currentPage: 0,
-            pageSize: MAX_ALGOLIA_RESULTS,
-          }),
-        );
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                {
-                  pathname: network({})
-                    .teams({})
-                    .team({ teamId: team.id })
-                    .outputs({}).$,
-                },
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={
-                    network({}).teams({}).team({ teamId: team.id }).outputs({})
-                      .$
-                  }
-                  element={
-                    <Outputs
-                      userAssociationMember={userAssociationMember}
-                      draftOutputs={draftOutputs}
-                      team={team}
-                    />
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ set }) =>
+          set(auth0State, {
+            getTokenSilently: jest.fn().mockResolvedValue('test_token'),
+          } as never)
+        }
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  {
+                    pathname: network({})
+                      .teams({})
+                      .team({ teamId: team.id })
+                      .outputs({}).$,
+                  },
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={
+                      network({})
+                        .teams({})
+                        .team({ teamId: team.id })
+                        .outputs({}).$
+                    }
+                    element={
+                      <Outputs
+                        userAssociationMember={userAssociationMember}
+                        draftOutputs={draftOutputs}
+                        team={team}
+                      />
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>
@@ -231,7 +222,7 @@ it('triggers draft research output export with custom file name', async () => {
     ...createListResearchOutputResponse(2),
   });
 
-  const { getByText } = await renderOutputs(
+  const { findByText } = await renderOutputs(
     '',
     new Set(),
     {
@@ -243,7 +234,7 @@ it('triggers draft research output export with custom file name', async () => {
     true,
   );
 
-  await userEvent.click(getByText(/csv/i));
+  await userEvent.click(await findByText(/csv/i));
   await waitFor(() =>
     expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
       {
@@ -280,8 +271,8 @@ it('uses team pointOfContact for contact email', async () => {
     ],
   };
 
-  const { getByRole } = await renderOutputs('', new Set(), team);
-  expect(getByRole('link', { name: /contact the PM/i })).toHaveAttribute(
+  const { findByRole } = await renderOutputs('', new Set(), team);
+  expect(await findByRole('link', { name: /contact the PM/i })).toHaveAttribute(
     'href',
     'mailto:project@example.com',
   );

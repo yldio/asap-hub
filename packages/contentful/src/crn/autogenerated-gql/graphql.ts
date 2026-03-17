@@ -5300,7 +5300,6 @@ export type ManuscriptVersions = Entry &
     additionalFilesCollection?: Maybe<AssetCollection>;
     asapAffiliationIncluded?: Maybe<Scalars['String']>;
     asapAffiliationIncludedDetails?: Maybe<Scalars['String']>;
-    authorsCollection?: Maybe<ManuscriptVersionsAuthorsCollection>;
     availabilityStatement?: Maybe<Scalars['String']>;
     availabilityStatementDetails?: Maybe<Scalars['String']>;
     codeDeposited?: Maybe<Scalars['String']>;
@@ -5377,16 +5376,6 @@ export type ManuscriptVersionsAsapAffiliationIncludedArgs = {
 export type ManuscriptVersionsAsapAffiliationIncludedDetailsArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
-export type ManuscriptVersionsAuthorsCollectionArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  locale?: InputMaybe<Scalars['String']>;
-  preview?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<ManuscriptVersionsAuthorsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
@@ -5630,36 +5619,6 @@ export type ManuscriptVersionsAdditionalAuthorsFilter = {
 
 export type ManuscriptVersionsAdditionalAuthorsItem = ExternalAuthors | Users;
 
-export type ManuscriptVersionsAuthorsCollection = {
-  items: Array<Maybe<ManuscriptVersionsAuthorsItem>>;
-  limit: Scalars['Int'];
-  skip: Scalars['Int'];
-  total: Scalars['Int'];
-};
-
-export type ManuscriptVersionsAuthorsFilter = {
-  AND?: InputMaybe<Array<InputMaybe<ManuscriptVersionsAuthorsFilter>>>;
-  OR?: InputMaybe<Array<InputMaybe<ManuscriptVersionsAuthorsFilter>>>;
-  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
-  email?: InputMaybe<Scalars['String']>;
-  email_contains?: InputMaybe<Scalars['String']>;
-  email_exists?: InputMaybe<Scalars['Boolean']>;
-  email_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  email_not?: InputMaybe<Scalars['String']>;
-  email_not_contains?: InputMaybe<Scalars['String']>;
-  email_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  orcid?: InputMaybe<Scalars['String']>;
-  orcid_contains?: InputMaybe<Scalars['String']>;
-  orcid_exists?: InputMaybe<Scalars['Boolean']>;
-  orcid_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  orcid_not?: InputMaybe<Scalars['String']>;
-  orcid_not_contains?: InputMaybe<Scalars['String']>;
-  orcid_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  sys?: InputMaybe<SysFilter>;
-};
-
-export type ManuscriptVersionsAuthorsItem = ExternalAuthors | Users;
-
 export type ManuscriptVersionsCollection = {
   items: Array<Maybe<ManuscriptVersions>>;
   limit: Scalars['Int'];
@@ -5747,8 +5706,6 @@ export type ManuscriptVersionsFilter = {
   asapAffiliationIncluded_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
-  authors?: InputMaybe<CfauthorsMultiTypeNestedFilter>;
-  authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   availabilityStatement?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails_contains?: InputMaybe<Scalars['String']>;
@@ -15846,7 +15803,6 @@ export type CfManuscriptVersionsNestedFilter = {
   asapAffiliationIncluded_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['String']>>
   >;
-  authorsCollection_exists?: InputMaybe<Scalars['Boolean']>;
   availabilityStatement?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails?: InputMaybe<Scalars['String']>;
   availabilityStatementDetails_contains?: InputMaybe<Scalars['String']>;
@@ -25236,10 +25192,18 @@ export type ProjectsContentDataFragment = Pick<
 > & {
   sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
   proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+  originalGrantAimsCollection?: Maybe<{
+    items: Array<Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>>;
+  }>;
   supplementGrant?: Maybe<
     Pick<SupplementGrant, 'title' | 'description' | 'startDate' | 'endDate'> & {
       sys: Pick<Sys, 'id'>;
       proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+      aimsCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+        >;
+      }>;
     }
   >;
   resourceType?: Maybe<Pick<ResourceType, 'name'> & { sys: Pick<Sys, 'id'> }>;
@@ -25327,6 +25291,11 @@ export type FetchProjectsQuery = {
           > & {
             sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
             proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+            originalGrantAimsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
             supplementGrant?: Maybe<
               Pick<
                 SupplementGrant,
@@ -25334,6 +25303,11 @@ export type FetchProjectsQuery = {
               > & {
                 sys: Pick<Sys, 'id'>;
                 proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                aimsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+                  >;
+                }>;
               }
             >;
             resourceType?: Maybe<
@@ -25422,11 +25396,24 @@ export type FetchProjectByIdQuery = {
     > & {
       sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
       proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+      originalGrantAimsCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+        >;
+      }>;
       supplementGrant?: Maybe<
         Pick<
           SupplementGrant,
           'title' | 'description' | 'startDate' | 'endDate'
-        > & { sys: Pick<Sys, 'id'>; proposal?: Maybe<{ sys: Pick<Sys, 'id'> }> }
+        > & {
+          sys: Pick<Sys, 'id'>;
+          proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+          aimsCollection?: Maybe<{
+            items: Array<
+              Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+            >;
+          }>;
+        }
       >;
       resourceType?: Maybe<
         Pick<ResourceType, 'name'> & { sys: Pick<Sys, 'id'> }
@@ -25522,6 +25509,15 @@ export type FetchProjectsByTeamIdQuery = {
                           'id' | 'firstPublishedAt' | 'publishedAt'
                         >;
                         proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                        originalGrantAimsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<Aims, 'description'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >
+                          >;
+                        }>;
                         supplementGrant?: Maybe<
                           Pick<
                             SupplementGrant,
@@ -25529,6 +25525,15 @@ export type FetchProjectsByTeamIdQuery = {
                           > & {
                             sys: Pick<Sys, 'id'>;
                             proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                            aimsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Aims, 'description'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >
+                              >;
+                            }>;
                           }
                         >;
                         resourceType?: Maybe<
@@ -25640,6 +25645,15 @@ export type FetchProjectsByUserIdQuery = {
                           'id' | 'firstPublishedAt' | 'publishedAt'
                         >;
                         proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                        originalGrantAimsCollection?: Maybe<{
+                          items: Array<
+                            Maybe<
+                              Pick<Aims, 'description'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >
+                          >;
+                        }>;
                         supplementGrant?: Maybe<
                           Pick<
                             SupplementGrant,
@@ -25647,6 +25661,15 @@ export type FetchProjectsByUserIdQuery = {
                           > & {
                             sys: Pick<Sys, 'id'>;
                             proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                            aimsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Aims, 'description'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >
+                              >;
+                            }>;
                           }
                         >;
                         resourceType?: Maybe<
@@ -25752,6 +25775,11 @@ export type FetchProjectsByMembershipIdQuery = {
               > & {
                 sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
                 proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                originalGrantAimsCollection?: Maybe<{
+                  items: Array<
+                    Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+                  >;
+                }>;
                 supplementGrant?: Maybe<
                   Pick<
                     SupplementGrant,
@@ -25759,6 +25787,13 @@ export type FetchProjectsByMembershipIdQuery = {
                   > & {
                     sys: Pick<Sys, 'id'>;
                     proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
+                    aimsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }
+                        >
+                      >;
+                    }>;
                   }
                 >;
                 resourceType?: Maybe<
@@ -34717,6 +34752,48 @@ export const ProjectsContentDataFragmentDoc = {
           },
           {
             kind: 'Field',
+            name: { kind: 'Name', value: 'originalGrantAimsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'supplementGrant' },
             selectionSet: {
               kind: 'SelectionSet',
@@ -34750,6 +34827,48 @@ export const ProjectsContentDataFragmentDoc = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aimsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '20' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
                             },
                           ],
                         },

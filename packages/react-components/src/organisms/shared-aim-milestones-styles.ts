@@ -55,9 +55,11 @@ export const statusContainerStyles = css({
   alignItems: 'flex-start',
   justifyContent: 'flex-start',
   paddingBlock: rem(4),
+  paddingLeft: rem(8),
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
     flexDirection: 'column',
     paddingBlock: 0,
+    paddingLeft: 0,
     gap: rem(16),
   },
 });

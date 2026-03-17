@@ -8,6 +8,7 @@ import {
   parseContentfulProjectDetail,
   parseProjectUserMember,
   parseProjectTeamMember,
+  parseContentfulAims,
   processTraineeProjectMembers,
   type ProjectMembershipItem,
 } from '../../../src/data-providers/contentful/project.data-provider';
@@ -766,6 +767,98 @@ describe('parseProjectTeamMember', () => {
     expect(parseProjectTeamMember(membership)).toEqual({
       id: 'unknown-team-membership-teams-2',
       displayName: '',
+    });
+  });
+});
+
+describe('parseContentfulAims', () => {
+  it('returns undefined for undefined input', () => {
+    expect(parseContentfulAims(undefined)).toBeUndefined();
+  });
+
+  it('returns undefined for array of all null items', () => {
+    expect(parseContentfulAims([null, null])).toBeUndefined();
+  });
+
+  it('returns undefined for items with empty descriptions', () => {
+    expect(
+      parseContentfulAims([
+        { sys: { id: 'aim-1' }, description: '' },
+        { sys: { id: 'aim-2' }, description: '   ' },
+      ]),
+    ).toBeUndefined();
+  });
+
+  it('filters out null items and items with empty descriptions', () => {
+    const result = parseContentfulAims([
+      null,
+      { sys: { id: 'aim-1' }, description: '' },
+      { sys: { id: 'aim-2' }, description: 'Valid aim' },
+      null,
+      { sys: { id: 'aim-3' }, description: '   ' },
+      { sys: { id: 'aim-4' }, description: 'Another valid aim' },
+    ]);
+
+    expect(result).toHaveLength(2);
+    expect(result).toEqual([
+      expect.objectContaining({ id: 'aim-2', description: 'Valid aim' }),
+      expect.objectContaining({
+        id: 'aim-4',
+        description: 'Another valid aim',
+      }),
+    ]);
+  });
+
+  it('returns properly shaped aims with sequential order starting at 1', () => {
+    const result = parseContentfulAims([
+      { sys: { id: 'aim-1' }, description: 'First aim' },
+      { sys: { id: 'aim-2' }, description: 'Second aim' },
+      { sys: { id: 'aim-3' }, description: 'Third aim' },
+    ]);
+
+    expect(result).toEqual([
+      {
+        id: 'aim-1',
+        order: 1,
+        description: 'First aim',
+        status: 'Pending',
+        articleCount: 0,
+      },
+      {
+        id: 'aim-2',
+        order: 2,
+        description: 'Second aim',
+        status: 'Pending',
+        articleCount: 0,
+      },
+      {
+        id: 'aim-3',
+        order: 3,
+        description: 'Third aim',
+        status: 'Pending',
+        articleCount: 0,
+      },
+    ]);
+  });
+
+  it('trims whitespace from descriptions', () => {
+    const result = parseContentfulAims([
+      { sys: { id: 'aim-1' }, description: '  Padded aim  ' },
+    ]);
+
+    expect(result).toEqual([
+      expect.objectContaining({ description: 'Padded aim' }),
+    ]);
+  });
+
+  it('sets status to Pending and articleCount to 0 for all items', () => {
+    const result = parseContentfulAims([
+      { sys: { id: 'aim-1' }, description: 'Test aim' },
+    ]);
+
+    expect(result![0]).toMatchObject({
+      status: 'Pending',
+      articleCount: 0,
     });
   });
 });

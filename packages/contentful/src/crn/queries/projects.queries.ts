@@ -25,6 +25,14 @@ export const projectsContentQueryFragment = gql`
         id
       }
     }
+    originalGrantAimsCollection(limit: 20) {
+      items {
+        sys {
+          id
+        }
+        description
+      }
+    }
     supplementGrant {
       sys {
         id
@@ -36,6 +44,14 @@ export const projectsContentQueryFragment = gql`
       proposal {
         sys {
           id
+        }
+      }
+      aimsCollection(limit: 20) {
+        items {
+          sys {
+            id
+          }
+          description
         }
       }
     }

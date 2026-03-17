@@ -1,4 +1,4 @@
-import { ArticleItem, ProjectAimsGrant } from '@asap-hub/model';
+import { ArticleItem, Aim as AimType } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { FC, useState } from 'react';
 import { Headline3, Card, Button, TabButton, Link, Paragraph } from '../atoms';
@@ -50,13 +50,14 @@ const viewMoreContainerStyles = (hasMore: boolean) =>
   });
 
 type ProjectAimsProps = {
-  aims: ReadonlyArray<ProjectAimsGrant>;
+  originalGrantAims: ReadonlyArray<AimType>;
+  supplementGrantAims: ReadonlyArray<AimType>;
   initialDisplayCount?: number;
   fetchArticles: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
 };
 
 const AimsList: FC<{
-  aims: ProjectAimsGrant['aims'];
+  aims: ReadonlyArray<AimType>;
   initialDisplayCount: number;
   showAll: boolean;
   onToggleShowAll: () => void;
@@ -77,7 +78,7 @@ const AimsList: FC<{
         <div css={headerRowStyles}>
           <div css={headerLabelStyles}>Aim</div>
           <div css={headerLabelStyles}>Description</div>
-          <div css={headerLabelStyles}>Status</div>
+          <div css={[headerLabelStyles, { paddingLeft: rem(8) }]}>Status</div>
         </div>
         {displayedAims.map((aim) => (
           <Aim key={aim.id} aim={aim} fetchArticles={fetchArticles} />
@@ -101,25 +102,31 @@ const AimsList: FC<{
 // The `TabNav` component comes with padding and margin in its inner components,
 // so we use a smaller margin when we render it.
 const MULTI_TAB_MARGIN = 12;
-// If we don't render the `TabNav`, this is the margin we want to use, both cases should look the same.
+
+// If we don't render the `TabNav`, this is the margin we want to use, both cases should have the
+// same bottom spacing with the next component.
 const SINGLE_TAB_MARGIN = 32;
 
 const ProjectAims: FC<ProjectAimsProps> = ({
-  aims,
+  originalGrantAims,
+  supplementGrantAims,
   initialDisplayCount = 4,
   fetchArticles,
 }) => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [showAllByTab, setShowAllByTab] = useState<Record<number, boolean>>({});
+  const [activeTab, setActiveTab] = useState<
+    'supplementGrant' | 'originalGrant' | 'no-tabs'
+  >(supplementGrantAims.length > 0 ? 'supplementGrant' : 'no-tabs');
 
-  const allAimsEmpty = aims.every((grant) => grant.aims.length === 0);
-  if (!aims.length || allAimsEmpty) {
+  const [showAllByTab, setShowAllByTab] = useState<Record<string, boolean>>({});
+
+  if (originalGrantAims.length === 0 && supplementGrantAims.length === 0) {
     return null;
   }
 
-  const isTabbedView = aims.length > 1;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const currentGrant = aims[activeTab]!;
+  const currentList =
+    activeTab === 'supplementGrant' ? supplementGrantAims : originalGrantAims;
+
+  const isTabbedView = activeTab !== 'no-tabs';
 
   return (
     <Card padding={false} title="Aims">
@@ -144,21 +151,24 @@ const ProjectAims: FC<ProjectAimsProps> = ({
         {isTabbedView && (
           <div css={tabContainerStyles}>
             <TabNav>
-              {aims.map((grant, index) => (
-                <TabButton
-                  key={grant.grantTitle}
-                  active={index === activeTab}
-                  onClick={() => setActiveTab(index)}
-                >
-                  {grant.grantTitle} ({grant.aims.length})
-                </TabButton>
-              ))}
+              <TabButton
+                active={activeTab === 'supplementGrant'}
+                onClick={() => setActiveTab('supplementGrant')}
+              >
+                Supplement Grant ({supplementGrantAims.length})
+              </TabButton>
+              <TabButton
+                active={activeTab === 'originalGrant'}
+                onClick={() => setActiveTab('originalGrant')}
+              >
+                Original Grant ({originalGrantAims.length})
+              </TabButton>
             </TabNav>
           </div>
         )}
 
         <AimsList
-          aims={currentGrant.aims}
+          aims={currentList}
           initialDisplayCount={initialDisplayCount}
           showAll={!!showAllByTab[activeTab]}
           onToggleShowAll={() =>

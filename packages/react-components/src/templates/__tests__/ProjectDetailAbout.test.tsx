@@ -523,11 +523,20 @@ describe('ProjectDetailAbout', () => {
   });
 
   describe('Aims Section', () => {
-    const discoveryProject: ProjectDetailWithFetch = {
+    const projectWithAims: ProjectDetailWithFetch = {
       ...baseProject,
       projectType: 'Discovery Project',
       researchTheme: 'Genetics',
       teamName: 'Alpha Team',
+      originalGrantAims: [
+        {
+          id: 'aim-1',
+          order: 1,
+          description: 'Original aim one',
+          status: 'Complete',
+          articleCount: 1,
+        },
+      ],
       fundedTeam: {
         id: 'team-1',
         displayName: 'Alpha Team',
@@ -536,20 +545,64 @@ describe('ProjectDetailAbout', () => {
       },
     };
 
-    it('renders Aims section when PROJECT_AIMS flag is enabled', () => {
+    const projectWithBothAims: ProjectDetailWithFetch = {
+      ...baseProject,
+      projectType: 'Discovery Project',
+      researchTheme: 'Genetics',
+      teamName: 'Alpha Team',
+      originalGrantAims: [
+        {
+          id: 'aim-1',
+          order: 1,
+          description: 'Original aim one',
+          status: 'Complete',
+          articleCount: 1,
+        },
+      ],
+      supplementGrant: {
+        ...baseProject.supplementGrant!,
+        aims: [
+          {
+            id: 'aim-2',
+            order: 1,
+            description: 'Supplement aim one',
+            status: 'In Progress',
+            articleCount: 0,
+          },
+        ],
+      },
+      fundedTeam: {
+        id: 'team-1',
+        displayName: 'Alpha Team',
+        teamType: 'Discovery Team',
+        researchTheme: 'Genetics',
+      },
+    };
+
+    it('renders Aims section when PROJECT_AIMS flag is enabled and aims exist', () => {
       mockIsEnabled.mockImplementation(
         (flag: string) => flag === 'PROJECT_AIMS',
       );
 
-      render(<ProjectDetailAbout {...discoveryProject} />);
+      render(<ProjectDetailAbout {...projectWithAims} />);
       expect(screen.getByText('Aims')).toBeInTheDocument();
     });
 
     it('does not render Aims section when PROJECT_AIMS flag is disabled', () => {
       mockIsEnabled.mockReturnValue(false);
 
-      render(<ProjectDetailAbout {...discoveryProject} />);
+      render(<ProjectDetailAbout {...projectWithAims} />);
       expect(screen.queryByText('Aims')).not.toBeInTheDocument();
+    });
+
+    it('renders tabs with counts when both grant types have aims', () => {
+      mockIsEnabled.mockImplementation(
+        (flag: string) => flag === 'PROJECT_AIMS',
+      );
+
+      render(<ProjectDetailAbout {...projectWithBothAims} />);
+      expect(screen.getByText('Supplement Grant (1)')).toBeInTheDocument();
+      expect(screen.getByText('Original Grant (1)')).toBeInTheDocument();
     });
   });
 });

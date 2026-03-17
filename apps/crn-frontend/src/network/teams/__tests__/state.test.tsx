@@ -10,6 +10,7 @@ import {
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { authorizationState, auth0State } from '../../../auth/state';
 import {
   getManuscript,
@@ -674,8 +675,13 @@ describe('usePostPreprintResearchOutput', () => {
       mockResearchOutputResponse,
     );
 
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <RecoilRoot>{children}</RecoilRoot>
+      </QueryClientProvider>
     );
 
     const { result } = renderHook(
@@ -700,8 +706,13 @@ describe('usePostPreprintResearchOutput', () => {
     const mockError = new Error('Failed to create preprint research output');
     (createPreprintResearchOutput as jest.Mock).mockRejectedValue(mockError);
 
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <RecoilRoot>{children}</RecoilRoot>
+      </QueryClientProvider>
     );
 
     const { result } = renderHook(
@@ -728,8 +739,13 @@ describe('usePostPreprintResearchOutput', () => {
       mockResearchOutputResponse,
     );
 
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <RecoilRoot>{children}</RecoilRoot>
+      </QueryClientProvider>
     );
 
     const { result } = renderHook(

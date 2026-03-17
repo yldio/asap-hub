@@ -24,6 +24,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { Suspense, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import {
   createResearchOutput,
@@ -229,35 +230,40 @@ const renderPage = async ({
     network({}).workingGroups({}).workingGroup({ workingGroupId }).createOutput
       .template;
 
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshWorkingGroupState(workingGroupId), Math.random())
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter initialEntries={initialEntries}>
-              <LocationCapture />
-              <Routes>
-                <Route
-                  path={path}
-                  element={
-                    <WorkingGroupOutput
-                      workingGroupId={workingGroupId}
-                      researchOutputData={researchOutputData}
-                      versionAction={versionAction}
-                    />
-                  }
-                />
-                <Route path="*" element={<div>Redirected</div>} />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ set }) =>
+          set(refreshWorkingGroupState(workingGroupId), Math.random())
+        }
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter initialEntries={initialEntries}>
+                <LocationCapture />
+                <Routes>
+                  <Route
+                    path={path}
+                    element={
+                      <WorkingGroupOutput
+                        workingGroupId={workingGroupId}
+                        researchOutputData={researchOutputData}
+                        versionAction={versionAction}
+                      />
+                    }
+                  />
+                  <Route path="*" element={<div>Redirected</div>} />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };

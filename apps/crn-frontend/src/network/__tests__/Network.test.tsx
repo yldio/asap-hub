@@ -21,6 +21,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import Network from '../Network';
 import { getAlgoliaTeams } from '../teams/api';
@@ -98,20 +99,25 @@ mockGetWorkingGroups.mockResolvedValue(createWorkingGroupListResponse(1));
 mockGetWorkingGroup.mockResolvedValue(createWorkingGroupResponse());
 
 const renderNetworkPage = async (pathname: string, query = '') => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   const { container } = render(
-    <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Routes>
-                <Route path={`${network.template}/*`} element={<Network />} />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[{ pathname, search: query }]}>
+                <Routes>
+                  <Route path={`${network.template}/*`} element={<Network />} />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
 
   await waitForElementToBeRemoved(screen.queryByText(/loading/i), {

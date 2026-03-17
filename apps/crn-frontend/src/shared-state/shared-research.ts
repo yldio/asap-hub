@@ -15,6 +15,8 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { atom, selector, useRecoilValue } from 'recoil';
+import { useAuth0CRN } from '@asap-hub/react-context';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
@@ -31,10 +33,6 @@ import {
   getResourceTypes,
   getResearchOutputs,
 } from '../shared-research/api';
-import {
-  useInvalidateResearchOutputIndex,
-  useSetResearchOutputItem,
-} from '../shared-research/state';
 import { getEvents } from '../events/api';
 
 export function paramOutputDocumentTypeToResearchOutputDocumentType(
@@ -190,29 +188,48 @@ export const resourceTypesSelector = selector({
 export const useResourceTypes = () => useRecoilValue(resourceTypesSelector);
 
 export const usePostResearchOutput = () => {
-  const authorization = useRecoilValue(authorizationState);
-  const setResearchOutputItem = useSetResearchOutputItem();
-  return async (payload: ResearchOutputPostRequest) => {
-    const researchOutput = await createResearchOutput(payload, authorization);
-    setResearchOutputItem(researchOutput);
-    return researchOutput;
-  };
+  const auth0 = useAuth0CRN();
+  const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (payload: ResearchOutputPostRequest) => {
+      const token = await auth0.getTokenSilently();
+      return createResearchOutput(payload, `Bearer ${token}`);
+    },
+    onSuccess: async (researchOutput) => {
+      queryClient.setQueryData(
+        ['researchOutput', researchOutput.id],
+        researchOutput,
+      );
+      await queryClient.invalidateQueries({ queryKey: ['researchOutputs'] });
+    },
+  });
+  return mutateAsync;
 };
 
 export const usePutResearchOutput = (shouldInvalidate?: boolean) => {
-  const authorization = useRecoilValue(authorizationState);
-  const setResearchOutputItem = useSetResearchOutputItem();
-  const invalidateResearchOutputIndex = useInvalidateResearchOutputIndex();
-  return async (id: string, payload: ResearchOutputPutRequest) => {
-    const researchOutput = await updateTeamResearchOutput(
+  const auth0 = useAuth0CRN();
+  const queryClient = useQueryClient();
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({
       id,
       payload,
-      authorization,
-    );
-    setResearchOutputItem(researchOutput);
-    if (shouldInvalidate) {
-      invalidateResearchOutputIndex();
-    }
-    return researchOutput;
-  };
+    }: {
+      id: string;
+      payload: ResearchOutputPutRequest;
+    }) => {
+      const token = await auth0.getTokenSilently();
+      return updateTeamResearchOutput(id, payload, `Bearer ${token}`);
+    },
+    onSuccess: async (researchOutput) => {
+      queryClient.setQueryData(
+        ['researchOutput', researchOutput.id],
+        researchOutput,
+      );
+      if (shouldInvalidate) {
+        await queryClient.invalidateQueries({ queryKey: ['researchOutputs'] });
+      }
+    },
+  });
+  return (id: string, payload: ResearchOutputPutRequest) =>
+    mutateAsync({ id, payload });
 };

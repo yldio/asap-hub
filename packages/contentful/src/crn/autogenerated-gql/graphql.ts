@@ -25266,6 +25266,78 @@ export type CfuserMultiTypeNestedFilter = {
   sys?: InputMaybe<SysFilter>;
 };
 
+export type FetchProjectsWithAimsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+}>;
+
+export type FetchProjectsWithAimsQuery = {
+  projectsCollection?: Maybe<
+    Pick<ProjectsCollection, 'total'> & {
+      items: Array<
+        Maybe<{
+          originalGrantAimsCollection?: Maybe<{
+            items: Array<
+              Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+            >;
+          }>;
+          supplementGrant?: Maybe<{
+            aimsCollection?: Maybe<{
+              items: Array<
+                Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+              >;
+            }>;
+          }>;
+        }>
+      >;
+    }
+  >;
+};
+
+export type FetchAimsWithMilestonesQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+}>;
+
+export type FetchAimsWithMilestonesQuery = {
+  aimsCollection?: Maybe<
+    Pick<AimsCollection, 'total'> & {
+      items: Array<
+        Maybe<{
+          sys: Pick<Sys, 'id'>;
+          milestonesCollection?: Maybe<{
+            items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+          }>;
+        }>
+      >;
+    }
+  >;
+};
+
+export type FetchMilestonesQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+}>;
+
+export type FetchMilestonesQuery = {
+  milestonesCollection?: Maybe<
+    Pick<MilestonesCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<Milestones, 'description' | 'status'> & {
+            sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
+            relatedArticlesCollection?: Maybe<
+              Pick<MilestonesRelatedArticlesCollection, 'total'> & {
+                items: Array<Maybe<Pick<ResearchOutputs, 'doi'>>>;
+              }
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
 export type FetchAnalyticsTeamLeadershipQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
@@ -33477,6 +33549,22 @@ export type FetchProjectsQuery = {
                               researchTheme?: Maybe<
                                 Pick<ResearchTheme, 'name'>
                               >;
+                              linkedFrom?: Maybe<{
+                                manuscriptsCollection?: Maybe<{
+                                  items: Array<
+                                    Maybe<
+                                      Pick<Manuscripts, 'status'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                        teamsCollection?: Maybe<{
+                                          items: Array<
+                                            Maybe<{ sys: Pick<Sys, 'id'> }>
+                                          >;
+                                        }>;
+                                      }
+                                    >
+                                  >;
+                                }>;
+                              }>;
                             })
                         | ({ __typename: 'Users' } & Pick<
                             Users,
@@ -33698,6 +33786,27 @@ export type FetchProjectsByTeamIdQuery = {
                                           researchTheme?: Maybe<
                                             Pick<ResearchTheme, 'name'>
                                           >;
+                                          linkedFrom?: Maybe<{
+                                            manuscriptsCollection?: Maybe<{
+                                              items: Array<
+                                                Maybe<
+                                                  Pick<
+                                                    Manuscripts,
+                                                    'status'
+                                                  > & {
+                                                    sys: Pick<Sys, 'id'>;
+                                                    teamsCollection?: Maybe<{
+                                                      items: Array<
+                                                        Maybe<{
+                                                          sys: Pick<Sys, 'id'>;
+                                                        }>
+                                                      >;
+                                                    }>;
+                                                  }
+                                                >
+                                              >;
+                                            }>;
+                                          }>;
                                         })
                                     | ({ __typename: 'Users' } & Pick<
                                         Users,
@@ -33809,6 +33918,27 @@ export type FetchProjectsByUserIdQuery = {
                                           researchTheme?: Maybe<
                                             Pick<ResearchTheme, 'name'>
                                           >;
+                                          linkedFrom?: Maybe<{
+                                            manuscriptsCollection?: Maybe<{
+                                              items: Array<
+                                                Maybe<
+                                                  Pick<
+                                                    Manuscripts,
+                                                    'status'
+                                                  > & {
+                                                    sys: Pick<Sys, 'id'>;
+                                                    teamsCollection?: Maybe<{
+                                                      items: Array<
+                                                        Maybe<{
+                                                          sys: Pick<Sys, 'id'>;
+                                                        }>
+                                                      >;
+                                                    }>;
+                                                  }
+                                                >
+                                              >;
+                                            }>;
+                                          }>;
                                         })
                                     | ({ __typename: 'Users' } & Pick<
                                         Users,
@@ -33910,6 +34040,22 @@ export type FetchProjectsByMembershipIdQuery = {
                                   researchTheme?: Maybe<
                                     Pick<ResearchTheme, 'name'>
                                   >;
+                                  linkedFrom?: Maybe<{
+                                    manuscriptsCollection?: Maybe<{
+                                      items: Array<
+                                        Maybe<
+                                          Pick<Manuscripts, 'status'> & {
+                                            sys: Pick<Sys, 'id'>;
+                                            teamsCollection?: Maybe<{
+                                              items: Array<
+                                                Maybe<{ sys: Pick<Sys, 'id'> }>
+                                              >;
+                                            }>;
+                                          }
+                                        >
+                                      >;
+                                    }>;
+                                  }>;
                                 })
                             | ({ __typename: 'Users' } & Pick<
                                 Users,
@@ -48029,6 +48175,455 @@ export const WorkingGroupsContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<WorkingGroupsContentFragment, unknown>;
+export const FetchProjectsWithAimsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProjectsWithAims' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'projectsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'originalGrantAimsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '50' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'supplementGrant' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'aimsCollection' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '50' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sys' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'id',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'description',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchProjectsWithAimsQuery,
+  FetchProjectsWithAimsQueryVariables
+>;
+export const FetchAimsWithMilestonesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchAimsWithMilestones' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'aimsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'milestonesCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '50' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchAimsWithMilestonesQuery,
+  FetchAimsWithMilestonesQueryVariables
+>;
+export const FetchMilestonesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchMilestones' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'milestonesCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'skip' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'skip' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstPublishedAt' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'publishedAt' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'status' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'relatedArticlesCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '100' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'doi' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  FetchMilestonesQuery,
+  FetchMilestonesQueryVariables
+>;
 export const FetchAnalyticsTeamLeadershipDocument = {
   kind: 'Document',
   definitions: [

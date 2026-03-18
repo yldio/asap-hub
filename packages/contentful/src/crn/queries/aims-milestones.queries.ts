@@ -1,0 +1,75 @@
+/* istanbul ignore file */
+
+import { gql } from 'graphql-tag';
+
+export const FETCH_PROJECTS_WITH_AIMS = gql`
+  query FetchProjectsWithAims($limit: Int!, $skip: Int!) {
+    projectsCollection(limit: $limit, skip: $skip) {
+      total
+      items {
+        originalGrantAimsCollection(limit: 50) {
+          items {
+            sys {
+              id
+            }
+            description
+          }
+        }
+        supplementGrant {
+          aimsCollection(limit: 50) {
+            items {
+              sys {
+                id
+              }
+              description
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_AIMS_WITH_MILESTONES = gql`
+  query FetchAimsWithMilestones($limit: Int!, $skip: Int!) {
+    aimsCollection(limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        milestonesCollection(limit: 50) {
+          items {
+            sys {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_MILESTONES = gql`
+  query FetchMilestones($limit: Int!, $skip: Int!) {
+    milestonesCollection(limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+          firstPublishedAt
+          publishedAt
+        }
+        description
+        status
+        relatedArticlesCollection(limit: 100) {
+          total
+          items {
+            doi
+          }
+        }
+      }
+    }
+  }
+`;
+

@@ -380,7 +380,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onInvalid,
 }: ManuscriptFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
-  // const usersWithoutTeamAdded = new Set();
   const firstAuthorsWithoutTeamAdded = new Set();
   const correspondingAuthorWithoutTeamAdded = new Set();
   const additionalAuthorsWithoutTeamAdded = new Set();
@@ -1642,8 +1641,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       selectedOptions: MultiSelectOptionsType,
                     ) => {
                       onChange(selectedOptions);
-                      // Wait for React Hook Form state to update before validating
-                      // validateTeams();
+                      // trigger validations on related fields
                       await trigger([
                         'versions.0.labs',
                         'versions.0.firstAuthors',
@@ -1679,10 +1677,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 rules={{
                   validate: validateLabPiTeams,
                 }}
-                render={({
-                  field: { value, onChange, onBlur },
-                  fieldState: { error },
-                }) => (
+                render={({ field: { value }, fieldState: { error } }) => (
                   <LabeledMultiSelect
                     title="Labs"
                     description="Add ASAP labs that contributed to this manuscript. Only labs whose PI is part of the CRN will appear. PIs for each listed lab will receive an update on this manuscript. In addition, they will be able to edit the manuscript metadata and can submit a new version of the manuscript."

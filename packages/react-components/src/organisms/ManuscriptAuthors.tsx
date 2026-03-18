@@ -28,7 +28,6 @@ type ManuscriptAuthorsProps = {
   setValue: UseFormSetValue<ManuscriptFormData>;
   validate?: (
     authors: AuthorSelectOption[],
-    formValues: ManuscriptFormData,
   ) => true | string | Promise<true | string>;
 };
 
@@ -69,14 +68,7 @@ const ManuscriptAuthors = ({
       <Controller
         name={`versions.0.${fieldName}`}
         control={control}
-        rules={
-          { validate }
-          // isRequired
-          //   ? {
-          //       required: 'Please add at least one author.',
-          //     }
-          //   : {}
-        }
+        rules={{ validate }}
         render={({
           field: { value: authors, onChange },
           fieldState: { error },

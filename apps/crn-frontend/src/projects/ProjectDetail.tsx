@@ -48,7 +48,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const showWorkspace =
     isEnabled('PROJECT_WORKSPACE') && (isProjectMember || isStaff);
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
-  const isProjectMilestonesEnabled = isEnabled('PROJECT_MILESTONES');
+  const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
   const milestonesHref = route.milestones({}).$;
 
   return (

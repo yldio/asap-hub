@@ -47,7 +47,7 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
       )}
 
       {/* Aims Section */}
-      {isEnabled('PROJECT_AIMS') && (
+      {isEnabled('PROJECT_AIMS_AND_MILESTONES') && (
         <ProjectAims
           originalGrantAims={project.originalGrantAims ?? []}
           supplementGrantAims={project.supplementGrant?.aims ?? []}

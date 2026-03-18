@@ -204,25 +204,6 @@ export const getPostAuthors = (
     return [...users, ...externalUsers];
   }
 
-  if (
-    authorSelectOptions &&
-    !Array.isArray(authorSelectOptions) &&
-    // eslint-disable-next-line no-underscore-dangle
-    authorSelectOptions.author?.__meta.type === 'user'
-  ) {
-    return [{ userId: authorSelectOptions.value }];
-  }
-
-  if (authorEmailFields[0]) {
-    return [
-      {
-        externalAuthorId: authorEmailFields[0].id,
-        externalAuthorName: authorEmailFields[0].name,
-        externalAuthorEmail: authorEmailFields[0].email,
-      },
-    ];
-  }
-
   return [];
 };
 
@@ -585,11 +566,15 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     labsWithoutTeamAdded.clear();
     const hasTouchedLabs = touchedFields?.versions?.[0]?.labs;
 
+    // --- Required field check ---
+    // If no labs are selected and either the user has touched the field
+    // or the form is currently submitting, show a "required" error
     if ((!labs || labs.length === 0) && (hasTouchedLabs || formIsSubmitting)) {
       await trigger('versions.0.teams');
       return 'Please add at least one lab.';
     }
 
+    // If the user hasn’t touched the field and the form isn’t submitting, skip further validation
     if (!hasTouchedLabs && !formIsSubmitting) {
       return true;
     }
@@ -642,6 +627,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     firstAuthorsWithoutTeamAdded.clear();
 
     const hasTouchedFirstAuthors = touchedFields?.versions?.[0]?.firstAuthors;
+
+    // --- Required field check ---
+    // If no first authors are selected and either the user has touched the field
+    // or the form is currently submitting, show a "required" error
+
     if (
       selectedFirstAuthors.length === 0 &&
       (hasTouchedFirstAuthors || formIsSubmitting)
@@ -650,6 +640,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       return 'Please add at least one author.';
     }
 
+    // If the user hasn’t touched the field and the form isn’t submitting, skip further validation
     if (!hasTouchedFirstAuthors && !formIsSubmitting) {
       return true;
     }

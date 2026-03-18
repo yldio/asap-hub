@@ -98,88 +98,65 @@ const ManuscriptAuthors = ({
               newAuthors: OptionsType<AuthorOption> | AuthorOption | null,
             ) => {
               const normalizedAuthors = Array.isArray(newAuthors)
-                ? newAuthors // multi-select, already array
+                ? newAuthors
                 : newAuthors
-                  ? [newAuthors] // single-select, wrap in array
+                  ? [newAuthors]
                   : [];
-              if (isMultiSelect && Array.isArray(newAuthors)) {
-                const hasAuthorBeenAdded = Boolean(
-                  (newAuthors?.length ?? 0) > (authors?.length ?? 0),
+
+              const currentAuthors = authors || [];
+
+              const hasAdded = normalizedAuthors.length > currentAuthors.length;
+              const hasRemoved =
+                normalizedAuthors.length < currentAuthors.length;
+
+              const hasReplaced =
+                normalizedAuthors.length === currentAuthors.length &&
+                normalizedAuthors.length === 1 &&
+                normalizedAuthors[0]?.value !== currentAuthors[0]?.value;
+
+              // Handle newly added or replaced author
+              if (hasAdded || hasReplaced) {
+                const addedAuthor = normalizedAuthors.at(-1);
+                if (addedAuthor) {
+                  if (!addedAuthor.author) {
+                    append({ name: addedAuthor.label, email: '' });
+                  } else if (
+                    // eslint-disable-next-line no-underscore-dangle
+                    addedAuthor.author.__meta.type === 'external-author'
+                  ) {
+                    append({
+                      name: addedAuthor.label,
+                      email: '',
+                      id: addedAuthor.author.id,
+                    });
+                  }
+                }
+              }
+
+              // Handle removed or replaced author
+              if (hasRemoved || hasReplaced) {
+                const fieldValues = getValues(`versions.0.${fieldName}Emails`);
+
+                const externalAuthors = normalizedAuthors.filter(
+                  (item) => !item.author,
                 );
 
-                if (hasAuthorBeenAdded) {
-                  const lastAuthorAdded = newAuthors.at(-1);
-                  if (!lastAuthorAdded?.author) {
-                    append({
-                      name: lastAuthorAdded.label,
-                      email: '',
-                    });
-                  } else if (
-                    // eslint-disable-next-line no-underscore-dangle
-                    lastAuthorAdded.author.__meta.type === 'external-author'
-                  ) {
-                    append({
-                      name: lastAuthorAdded.label,
-                      email: '',
-                      id: lastAuthorAdded.author.id,
-                    });
-                  }
-                } else {
-                  const fieldValues = getValues(
-                    `versions.0.${fieldName}Emails`,
-                  );
+                const deletedIndex = fieldValues.findIndex(
+                  (item) =>
+                    !externalAuthors.some(
+                      (externalAuthor) => externalAuthor.label === item.name,
+                    ),
+                );
 
-                  const externalAuthors = newAuthors?.filter(
-                    (item) => !item.author,
-                  );
-
-                  const deletedAuthorIndex = fieldValues.findIndex(
-                    (item) =>
-                      !externalAuthors.some(
-                        (externalAuthor) => externalAuthor.label === item.name,
-                      ),
-                  );
-
-                  if (deletedAuthorIndex > -1) {
-                    remove(deletedAuthorIndex);
-                  }
+                if (deletedIndex > -1) {
+                  remove(deletedIndex);
                 }
-                // (
-                //   onChange as (
-                //     newValues: OptionsType<AuthorSelectOption>,
-                //   ) => void
-                // )(newAuthors);
-                setValue(`versions.0.${fieldName}`, newAuthors, {
-                  shouldValidate: true,
-                  shouldTouch: true,
-                });
-              } else {
-                if (newAuthors) {
-                  const lastAuthorAdded = newAuthors as AuthorSelectOption;
-                  if (!lastAuthorAdded?.author) {
-                    append({
-                      name: lastAuthorAdded.label,
-                      email: '',
-                    });
-                  } else if (
-                    // eslint-disable-next-line no-underscore-dangle
-                    lastAuthorAdded.author.__meta.type === 'external-author'
-                  ) {
-                    append({
-                      name: lastAuthorAdded.label,
-                      email: '',
-                      id: lastAuthorAdded.author.id,
-                    });
-                  }
-                } else {
-                  remove(0);
-                }
-
-                setValue(`versions.0.${fieldName}`, normalizedAuthors, {
-                  shouldValidate: true,
-                  shouldTouch: true,
-                });
               }
+
+              setValue(`versions.0.${fieldName}`, normalizedAuthors, {
+                shouldValidate: true,
+                shouldTouch: true,
+              });
 
               setTimeout(async () => {
                 await trigger(`versions.0.${fieldName}`);

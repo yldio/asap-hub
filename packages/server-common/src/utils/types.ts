@@ -37,7 +37,8 @@ export type OpensearchDataType =
   | 'object'
   | 'text'
   | 'keyword'
-  | 'nested';
+  | 'nested'
+  | 'date';
 
 export type OpensearchFieldMapping = {
   type?: OpensearchDataType;

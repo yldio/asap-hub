@@ -49,6 +49,21 @@ export type PresenterRepresentationDataObject = EngagementDataObject & {
   isInactive: boolean;
 };
 
+export type ProjectMilestonesDataObject = {
+  id: string;
+  description: string;
+  /** Comma-separated aim numbers in ascending order, e.g. "1", "1,2", "2,3,4". */
+  aimNumbersAsc: string;
+  /** Same aim numbers but reversed, for descending sort, e.g. "4,3,2". */
+  aimNumbersDesc: string;
+  status: string;
+  articleCount: number;
+  /** Comma-separated list of unique related article DOIs for this milestone. */
+  articlesDOI: string;
+  createdDate: string | null;
+  lastDate: string | null;
+};
+
 export type MetricToObjectMap = {
   'os-champion': OSChampionDataObject;
   'preliminary-data-sharing': PreliminaryDataSharingDataObject;
@@ -62,6 +77,7 @@ export type MetricToObjectMap = {
   'ig-leadership': IGLeadershipDataObject;
   'wg-leadership': WGLeadershipDataObject;
   'presenter-representation': PresenterRepresentationDataObject;
+  'project-milestones': ProjectMilestonesDataObject;
 };
 
 export type MetricObject<T extends Metrics> = MetricToObjectMap[T];

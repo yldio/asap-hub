@@ -27,6 +27,7 @@ import {
 import { exportLeadershipData } from './leadership';
 import { exportPreprintComplianceData } from './preprint-compliance';
 import { exportPublicationComplianceData } from './publication-compliance';
+import { exportMilestonesData } from './milestones';
 import type { MetricObject, Metrics } from './types';
 
 export const exportAnalyticsData = async <T extends Metrics>(
@@ -46,6 +47,10 @@ export const exportAnalyticsData = async <T extends Metrics>(
 
   if (metric === 'wg-leadership') {
     return exportLeadershipData('wg-leadership') as Promise<MetricObject<T>[]>;
+  }
+
+  if (metric === 'project-milestones') {
+    return exportMilestonesData() as Promise<MetricObject<T>[]>;
   }
 
   const analyticsController = new AnalyticsController(

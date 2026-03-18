@@ -24,26 +24,19 @@ export class AimsMilestonesContentfulDataProvider
   }): Promise<ListResponse<ProjectWithAimsDataObject>> {
     const { limit, skip } = options;
 
-    const result = await this.contentfulClient.rawRequest<
-      {
-        projectsCollection: {
-          total: number;
-          items: ProjectWithAimsDataObject[];
-        };
-      },
-      { limit: number; skip: number }
-    >(FETCH_PROJECTS_WITH_AIMS.loc?.source.body ?? '', {
-      limit,
-      skip,
-    });
-
-    const { projectsCollection } = result.data;
+    const { projectsCollection } = await this.contentfulClient.request<{
+      projectsCollection: {
+        total: number;
+        items: (ProjectWithAimsDataObject | null)[];
+      } | null;
+    }>(FETCH_PROJECTS_WITH_AIMS, { limit, skip });
 
     return {
       total: projectsCollection?.total || 0,
       items:
-        (projectsCollection?.items as unknown as ProjectWithAimsDataObject[]) ||
-        [],
+        (projectsCollection?.items?.filter(
+          Boolean,
+        ) as ProjectWithAimsDataObject[]) || [],
     };
   }
 
@@ -53,20 +46,19 @@ export class AimsMilestonesContentfulDataProvider
   }): Promise<ListResponse<AimWithMilestonesDataObject>> {
     const { limit, skip } = options;
 
-    const result = await this.contentfulClient.rawRequest<
-      {
-        aimsCollection: { total: number; items: AimWithMilestonesDataObject[] };
-      },
-      { limit: number; skip: number }
-    >(FETCH_AIMS_WITH_MILESTONES.loc?.source.body ?? '', { limit, skip });
-
-    const { aimsCollection } = result.data;
+    const { aimsCollection } = await this.contentfulClient.request<{
+      aimsCollection: {
+        total: number;
+        items: (AimWithMilestonesDataObject | null)[];
+      } | null;
+    }>(FETCH_AIMS_WITH_MILESTONES, { limit, skip });
 
     return {
       total: aimsCollection?.total || 0,
       items:
-        (aimsCollection?.items as unknown as AimWithMilestonesDataObject[]) ||
-        [],
+        (aimsCollection?.items?.filter(
+          Boolean,
+        ) as AimWithMilestonesDataObject[]) || [],
     };
   }
 
@@ -76,20 +68,19 @@ export class AimsMilestonesContentfulDataProvider
   }): Promise<ListResponse<MilestoneDataObject>> {
     const { limit, skip } = options;
 
-    const result = await this.contentfulClient.rawRequest<
-      { milestonesCollection: { total: number; items: MilestoneDataObject[] } },
-      { limit: number; skip: number }
-    >(FETCH_MILESTONES.loc?.source.body ?? '', {
-      limit,
-      skip,
-    });
-
-    const { milestonesCollection } = result.data;
+    const { milestonesCollection } = await this.contentfulClient.request<{
+      milestonesCollection: {
+        total: number;
+        items: (MilestoneDataObject | null)[];
+      } | null;
+    }>(FETCH_MILESTONES, { limit, skip });
 
     return {
       total: milestonesCollection?.total || 0,
       items:
-        (milestonesCollection?.items as unknown as MilestoneDataObject[]) || [],
+        (milestonesCollection?.items?.filter(
+          Boolean,
+        ) as MilestoneDataObject[]) || [],
     };
   }
 }

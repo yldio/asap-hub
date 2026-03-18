@@ -22,3 +22,4 @@ export * from './resource-types.data-provider.types';
 export * from './tutorials.data-provider.types';
 export * from './users.data-provider.types';
 export * from './working-groups.data-provider.types';
+export * from './aims-milestones.data-provider.types';

@@ -1,13 +1,14 @@
-import { AuthorAlgoliaResponse, ManuscriptFormData } from '@asap-hub/model';
+import { AuthorSelectOption, ManuscriptFormData } from '@asap-hub/model';
 import { ComponentProps, useEffect } from 'react';
 import {
   Control,
   Controller,
   useFieldArray,
   UseFormGetValues,
+  UseFormSetValue,
   UseFormTrigger,
 } from 'react-hook-form';
-import { LabeledTextField, MultiSelectOptionsType, OptionsType } from '..';
+import { LabeledTextField, OptionsType } from '..';
 import AuthorSelect, { AuthorOption } from './AuthorSelect';
 
 type ManuscriptAuthorsProps = {
@@ -24,12 +25,12 @@ type ManuscriptAuthorsProps = {
   isMultiSelect?: ComponentProps<typeof AuthorSelect>['isMulti'];
   isRequired?: boolean;
   trigger: UseFormTrigger<ManuscriptFormData>;
-  validate?: () => void;
+  setValue: UseFormSetValue<ManuscriptFormData>;
+  validate?: (
+    authors: AuthorSelectOption | AuthorSelectOption[] | null,
+    formValues: ManuscriptFormData,
+  ) => true | string | Promise<true | string>;
 };
-
-export type ManuscriptAuthorOption = {
-  author?: AuthorAlgoliaResponse;
-} & MultiSelectOptionsType;
 
 const ManuscriptAuthors = ({
   control,
@@ -41,6 +42,7 @@ const ManuscriptAuthors = ({
   getValues,
   isSubmitting,
   trigger,
+  setValue,
   validate,
   isMultiSelect = false,
   isRequired = false,
@@ -68,11 +70,12 @@ const ManuscriptAuthors = ({
         name={`versions.0.${fieldName}`}
         control={control}
         rules={
-          isRequired
-            ? {
-                required: 'Please add at least one author.',
-              }
-            : {}
+          { validate }
+          // isRequired
+          //   ? {
+          //       required: 'Please add at least one author.',
+          //     }
+          //   : {}
         }
         render={({
           field: { value: authors, onChange },
@@ -94,6 +97,11 @@ const ManuscriptAuthors = ({
             onChange={async (
               newAuthors: OptionsType<AuthorOption> | AuthorOption | null,
             ) => {
+              const normalizedAuthors = Array.isArray(newAuthors)
+                ? newAuthors // multi-select, already array
+                : newAuthors
+                  ? [newAuthors] // single-select, wrap in array
+                  : [];
               if (isMultiSelect && Array.isArray(newAuthors)) {
                 const hasAuthorBeenAdded = Boolean(
                   (newAuthors?.length ?? 0) > (authors?.length ?? 0),
@@ -136,14 +144,18 @@ const ManuscriptAuthors = ({
                     remove(deletedAuthorIndex);
                   }
                 }
-                (
-                  onChange as (
-                    newValues: OptionsType<ManuscriptAuthorOption>,
-                  ) => void
-                )(newAuthors);
+                // (
+                //   onChange as (
+                //     newValues: OptionsType<AuthorSelectOption>,
+                //   ) => void
+                // )(newAuthors);
+                setValue(`versions.0.${fieldName}`, newAuthors, {
+                  shouldValidate: true,
+                  shouldTouch: true,
+                });
               } else {
                 if (newAuthors) {
-                  const lastAuthorAdded = newAuthors as ManuscriptAuthorOption;
+                  const lastAuthorAdded = newAuthors as AuthorSelectOption;
                   if (!lastAuthorAdded?.author) {
                     append({
                       name: lastAuthorAdded.label,
@@ -163,22 +175,15 @@ const ManuscriptAuthors = ({
                   remove(0);
                 }
 
-                (
-                  onChange as (newValues: ManuscriptAuthorOption | null) => void
-                )(newAuthors as ManuscriptAuthorOption | null);
+                setValue(`versions.0.${fieldName}`, normalizedAuthors, {
+                  shouldValidate: true,
+                  shouldTouch: true,
+                });
               }
 
-              if (validate) {
-                // Trigger React Hook Form validation first to ensure state is updated
-                // Then run custom validation
+              setTimeout(async () => {
                 await trigger(`versions.0.${fieldName}`);
-                validate();
-              }
-            }}
-            onBlur={() => {
-              if (validate) {
-                validate();
-              }
+              }, 0);
             }}
             values={authors || []}
             noOptionsMessage={({ inputValue }) =>

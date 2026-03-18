@@ -43,6 +43,7 @@ import { ExternalLinkIcon, GlobeIcon } from '../icons';
 import { LabeledDropdownType } from '../molecules/LabeledDropdown';
 import { LabeledRadioButtonGroupType } from '../molecules/LabeledRadioButtonGroup';
 import { AuthorSelectType } from '../organisms/AuthorSelect';
+import { MultiSelectOnChange } from '../atoms/MultiSelect';
 
 const loadManuscriptAuthors = () =>
   import(
@@ -398,7 +399,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onInvalid,
 }: ManuscriptFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const usersWithoutTeamAdded = new Set();
+  // const usersWithoutTeamAdded = new Set();
   const firstAuthorsWithoutTeamAdded = new Set();
   const correspondingAuthorWithoutTeamAdded = new Set();
   const additionalAuthorsWithoutTeamAdded = new Set();
@@ -542,6 +543,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     setError,
     clearErrors,
     resetField,
+    formState: { touchedFields, isSubmitting: formIsSubmitting },
     trigger,
   } = methods;
 
@@ -575,13 +577,22 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     [setValue, selectedTeams, selectedLabs],
   );
 
-  const validateLabPiTeams = () => {
-    const labs = watch('versions.0.labs');
-    const teams = watch('versions.0.teams');
+  const validateLabPiTeams = async (labs: MultiSelectOptionsType[]) => {
+    const teams = getValues('versions.0.teams') || [];
 
     const teamFormIds = teams.map((team) => team.value);
 
     labsWithoutTeamAdded.clear();
+    const hasTouchedLabs = touchedFields?.versions?.[0]?.labs;
+
+    if ((!labs || labs.length === 0) && (hasTouchedLabs || formIsSubmitting)) {
+      await trigger('versions.0.teams');
+      return 'Please add at least one lab.';
+    }
+
+    if (!hasTouchedLabs && !formIsSubmitting) {
+      return true;
+    }
 
     labs
       .filter((lab) => {
@@ -597,27 +608,65 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         labsWithoutTeamAdded.add(lab.label);
       });
 
+    await trigger('versions.0.teams');
+
     if (labsWithoutTeamAdded.size > 0) {
       const labErrorMessage = `The following lab(s) do not list their corresponding PI’s team as a contributor. Please add at least one of their teams to the Teams field.\n${Array.from(
         labsWithoutTeamAdded,
       )
         .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
         .join('\n')}`;
-
-      setError('versions.0.labs', {
-        message: labErrorMessage,
-      });
-    } else {
-      clearErrors('versions.0.labs');
+      return labErrorMessage;
     }
+    return true;
   };
 
-  const validateFirstAuthors = () => {
-    const firstAuthorsValues = watch('versions.0.firstAuthors');
-    const teamsValues = watch('versions.0.teams');
+  const validateTeams = async () => {
+    // console.log('firstAuthorsWithoutTeamAdded ', firstAuthorsWithoutTeamAdded);
+    // console.log(
+    //   'correspondingAuthorWithoutTeamAdded ',
+    //   correspondingAuthorWithoutTeamAdded,
+    // );
+    // console.log(
+    //   'additionalAuthorsWithoutTeamAdded ',
+    //   additionalAuthorsWithoutTeamAdded,
+    // );
+    // console.log('labsWithoutTeamAdded ', labsWithoutTeamAdded);
+    if (
+      firstAuthorsWithoutTeamAdded.size === 0 &&
+      correspondingAuthorWithoutTeamAdded.size === 0 &&
+      additionalAuthorsWithoutTeamAdded.size === 0 &&
+      labsWithoutTeamAdded.size === 0
+    ) {
+      return true;
+    }
+    return ' ';
+  };
+
+  const validateFirstAuthors = async (
+    selectedFirstAuthors: AuthorSelectOption[] | AuthorSelectOption | null,
+  ) => {
+    const firstAuthorsValues = Array.isArray(selectedFirstAuthors)
+      ? selectedFirstAuthors
+      : (selectedFirstAuthors && [selectedFirstAuthors]) || [];
+
+    const teamsValues = getValues('versions.0.teams') || [];
     const teamFormIds = teamsValues.map((team) => team.value);
 
     firstAuthorsWithoutTeamAdded.clear();
+
+    const hasTouchedFirstAuthors = touchedFields?.versions?.[0]?.firstAuthors;
+    if (
+      firstAuthorsValues.length === 0 &&
+      (hasTouchedFirstAuthors || formIsSubmitting)
+    ) {
+      await trigger('versions.0.teams');
+      return 'Please add at least one author.';
+    }
+
+    if (!hasTouchedFirstAuthors && !formIsSubmitting) {
+      return true;
+    }
 
     firstAuthorsValues
       .filter((algoliaAuthor) => {
@@ -637,27 +686,32 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       })
       .forEach((author) => {
         firstAuthorsWithoutTeamAdded.add(author.label);
-        usersWithoutTeamAdded.add(author.label);
       });
+
+    await trigger('versions.0.teams');
 
     if (firstAuthorsWithoutTeamAdded.size > 0) {
-      setError('versions.0.firstAuthors', {
-        message: `The following first author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.\n${Array.from(
-          firstAuthorsWithoutTeamAdded,
-        )
-          .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-          .join('\n')}`,
-      });
-    } else {
-      clearErrors('versions.0.firstAuthors');
+      const firstAuthorErrorMessage = `The following first author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.\n${Array.from(
+        firstAuthorsWithoutTeamAdded,
+      )
+        .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
+        .join('\n')}`;
+      return firstAuthorErrorMessage;
     }
+    return true;
   };
 
-  const validateCorrespondingAuthor = () => {
-    const correspondingAuthorValue = watch(
-      'versions.0.correspondingAuthor',
-    ) as unknown as AuthorSelectOption;
-    const teams = watch('versions.0.teams');
+  const validateCorrespondingAuthor = async (
+    selectedCorrespondingAuthor:
+      | AuthorSelectOption[]
+      | AuthorSelectOption
+      | null,
+  ) => {
+    const correspondingAuthorValue = Array.isArray(selectedCorrespondingAuthor)
+      ? selectedCorrespondingAuthor[0]
+      : selectedCorrespondingAuthor || null;
+
+    const teams = getValues('versions.0.teams') || [];
     const teamFormIds = teams.map((team) => team.value);
 
     correspondingAuthorWithoutTeamAdded.clear();
@@ -673,28 +727,32 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       )
     ) {
       correspondingAuthorWithoutTeamAdded.add(correspondingAuthorValue.label);
-      usersWithoutTeamAdded.add(correspondingAuthorValue.label);
     }
 
+    await trigger('versions.0.teams');
     if (correspondingAuthorWithoutTeamAdded.size > 0) {
-      setError('versions.0.correspondingAuthor', {
-        message: `The following corresponding author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.\n${Array.from(
-          correspondingAuthorWithoutTeamAdded,
-        )
-          .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-          .join('\n')}`,
-      });
-    } else {
-      clearErrors('versions.0.correspondingAuthor');
+      const correspondingAuthorErrorMessage = `The following corresponding author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.\n${Array.from(
+        correspondingAuthorWithoutTeamAdded,
+      )
+        .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
+        .join('\n')}`;
+      return correspondingAuthorErrorMessage;
     }
+    return true;
   };
 
-  const validateAdditionalAuthors = () => {
-    const additionalAuthorsValues = watch('versions.0.additionalAuthors');
-    const teams = watch('versions.0.teams');
+  const validateAdditionalAuthors = async (
+    selectedAdditionalAuthors: AuthorSelectOption[] | AuthorSelectOption | null,
+  ) => {
+    const additionalAuthorsValues = Array.isArray(selectedAdditionalAuthors)
+      ? selectedAdditionalAuthors
+      : (selectedAdditionalAuthors && [selectedAdditionalAuthors]) || [];
+
+    const teams = getValues('versions.0.teams') || [];
     const teamFormIds = teams.map((team) => team.value);
 
     additionalAuthorsWithoutTeamAdded.clear();
+
     additionalAuthorsValues
       .filter((algoliaAuthor) => {
         if (
@@ -713,34 +771,19 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       })
       .forEach((author) => {
         additionalAuthorsWithoutTeamAdded.add(author.label);
-        usersWithoutTeamAdded.add(author.label);
       });
+
+    await trigger('versions.0.teams');
 
     if (additionalAuthorsWithoutTeamAdded.size > 0) {
-      setError('versions.0.additionalAuthors', {
-        message: `The following additional author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.\n${Array.from(
-          additionalAuthorsWithoutTeamAdded,
-        )
-          .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
-          .join('\n')}`,
-      });
-    } else {
-      clearErrors('versions.0.additionalAuthors');
+      const additionalAuthorsErrorMessage = `The following additional author(s) do not have a team listed as a contributor. Add at least one of their teams, or contact support if they don’t belong to any.\n${Array.from(
+        additionalAuthorsWithoutTeamAdded,
+      )
+        .map((author) => `${BIG_SPACE}•${BIG_SPACE}${author}`)
+        .join('\n')}`;
+      return additionalAuthorsErrorMessage;
     }
-  };
-
-  const validateTeams = () => {
-    usersWithoutTeamAdded.clear();
-    validateFirstAuthors();
-    validateCorrespondingAuthor();
-    validateAdditionalAuthors();
-    validateLabPiTeams();
-
-    if (usersWithoutTeamAdded.size === 0 && labsWithoutTeamAdded.size === 0) {
-      clearErrors('versions.0.teams');
-    } else {
-      setError('versions.0.teams', { message: ' ' });
-    }
+    return true;
   };
 
   const commonManuscriptAuthorProps = {
@@ -749,7 +792,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     getValues,
     isSubmitting,
     trigger,
-    validate: validateTeams,
+    setValue,
   };
 
   const getSubmittingQuickChecks = (
@@ -1613,6 +1656,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 control={control}
                 rules={{
                   required: 'Please add at least one team.',
+                  validate: validateTeams,
                 }}
                 render={({
                   field: { value, onChange },
@@ -1626,10 +1670,18 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     placeholder="Start typing..."
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     loadOptions={getTeamSuggestions!}
-                    onChange={(selectedOptions: MultiSelectOptionsType) => {
+                    onChange={async (
+                      selectedOptions: MultiSelectOptionsType,
+                    ) => {
                       onChange(selectedOptions);
                       // Wait for React Hook Form state to update before validating
-                      validateTeams();
+                      // validateTeams();
+                      await trigger([
+                        'versions.0.labs',
+                        'versions.0.firstAuthors',
+                        'versions.0.correspondingAuthor',
+                        'versions.0.additionalAuthors',
+                      ]);
                     }}
                     customValidationMessage={error?.message}
                     values={value}
@@ -1650,16 +1702,17 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 fieldDescription="Add the name of the first author(s). First authors will receive updates. First authors who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
                 fieldEmailDescription="Provide a valid email address for the Non-CRN first author."
                 {...commonManuscriptAuthorProps}
+                validate={validateFirstAuthors}
               />
 
               <Controller
                 name="versions.0.labs"
                 control={control}
                 rules={{
-                  required: 'Please add at least one lab.',
+                  validate: validateLabPiTeams,
                 }}
                 render={({
-                  field: { value, onChange },
+                  field: { value, onChange, onBlur },
                   fieldState: { error },
                 }) => (
                   <LabeledMultiSelect
@@ -1670,11 +1723,17 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                     placeholder="Start typing..."
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     loadOptions={getLabSuggestions!}
-                    onChange={(selectedOptions: MultiSelectOptionsType) => {
-                      onChange(selectedOptions);
-                      // Wait for React Hook Form state to update before validating
-                      setTimeout(() => validateTeams(), 0);
-                    }}
+                    onChange={
+                      ((selectedOptions: MultiSelectOptionsType[] | null) => {
+                        setValue('versions.0.labs', selectedOptions || [], {
+                          shouldValidate: true,
+                          shouldTouch: true,
+                        });
+                        setTimeout(async () => {
+                          await trigger('versions.0.labs');
+                        }, 0);
+                      }) as MultiSelectOnChange<MultiSelectOptionsType>
+                    }
                     values={value}
                     noOptionsMessage={({
                       inputValue,
@@ -1692,6 +1751,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 fieldDescription="Add the corresponding author. The corresponding author will receive updates. Corresponding Author who are active on the CRN Hub will be able to edit the manuscript metadata and can submit a new version of the manuscript."
                 fieldEmailDescription="Provide a valid email address for the Non-CRN corresponding author."
                 {...commonManuscriptAuthorProps}
+                validate={validateCorrespondingAuthor}
               />
 
               <ManuscriptAuthors
@@ -1701,6 +1761,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 fieldDescription="Add the names of any additional authors who should receive updates. These additional authors, who are active on the CRN Hub, will be able to edit the manuscript metadata and can submit a new version of the manuscript."
                 fieldEmailDescription="Provide a valid email address for the Non-CRN additional author."
                 {...commonManuscriptAuthorProps}
+                validate={validateAdditionalAuthors}
               />
             </FormCard>
           </Suspense>

@@ -18,7 +18,7 @@ getAuthorSuggestions.mockResolvedValue([
 
 const defaultProps: Omit<
   ComponentProps<typeof ManuscriptAuthors>,
-  'control' | 'getValues' | 'trigger'
+  'control' | 'getValues' | 'trigger' | 'setValue'
 > = {
   isMultiSelect: true,
   fieldName: 'firstAuthors',
@@ -32,7 +32,8 @@ const defaultProps: Omit<
 const ManuscriptAuthorsComponent = (
   props: Partial<ComponentProps<typeof ManuscriptAuthors>>,
 ) => {
-  const { control, getValues, trigger } = useForm<ManuscriptFormData>();
+  const { control, getValues, trigger, setValue } =
+    useForm<ManuscriptFormData>();
 
   return (
     <ManuscriptAuthors
@@ -40,6 +41,7 @@ const ManuscriptAuthorsComponent = (
       control={control}
       getValues={getValues}
       trigger={trigger}
+      setValue={setValue}
       {...props}
     />
   );

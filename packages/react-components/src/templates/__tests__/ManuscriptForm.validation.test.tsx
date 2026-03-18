@@ -161,6 +161,7 @@ describe('ManuscriptForm team validation', () => {
   `(
     'displays error message when $authorType team is not among selected teams and hide it when team is selected',
     async ({ label, errorMessage }) => {
+      const consoleErrorSpy = mockActWarningsInConsole('error');
       render(
         <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
@@ -200,6 +201,8 @@ describe('ManuscriptForm team validation', () => {
 
       expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
       expect(screen.queryByText(/•.*Author A/i)).not.toBeInTheDocument();
+
+      consoleErrorSpy.mockRestore();
     },
   );
 

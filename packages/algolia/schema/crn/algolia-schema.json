@@ -51,7 +51,9 @@
     "teamName",
     "members.displayName",
     "projectTitle",
-    "linkedProjectId"
+    "linkedProjectId",
+    "researchTheme",
+    "resourceType"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,

@@ -622,16 +622,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const validateTeams = async () => {
-    // console.log('firstAuthorsWithoutTeamAdded ', firstAuthorsWithoutTeamAdded);
-    // console.log(
-    //   'correspondingAuthorWithoutTeamAdded ',
-    //   correspondingAuthorWithoutTeamAdded,
-    // );
-    // console.log(
-    //   'additionalAuthorsWithoutTeamAdded ',
-    //   additionalAuthorsWithoutTeamAdded,
-    // );
-    // console.log('labsWithoutTeamAdded ', labsWithoutTeamAdded);
     if (
       firstAuthorsWithoutTeamAdded.size === 0 &&
       correspondingAuthorWithoutTeamAdded.size === 0 &&
@@ -644,12 +634,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const validateFirstAuthors = async (
-    selectedFirstAuthors: AuthorSelectOption[] | AuthorSelectOption | null,
+    selectedFirstAuthors: AuthorSelectOption[],
   ) => {
-    const firstAuthorsValues = Array.isArray(selectedFirstAuthors)
-      ? selectedFirstAuthors
-      : (selectedFirstAuthors && [selectedFirstAuthors]) || [];
-
     const teamsValues = getValues('versions.0.teams') || [];
     const teamFormIds = teamsValues.map((team) => team.value);
 
@@ -657,7 +643,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
     const hasTouchedFirstAuthors = touchedFields?.versions?.[0]?.firstAuthors;
     if (
-      firstAuthorsValues.length === 0 &&
+      selectedFirstAuthors.length === 0 &&
       (hasTouchedFirstAuthors || formIsSubmitting)
     ) {
       await trigger('versions.0.teams');
@@ -668,7 +654,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       return true;
     }
 
-    firstAuthorsValues
+    selectedFirstAuthors
       .filter((algoliaAuthor) => {
         if (
           'author' in algoliaAuthor &&
@@ -702,14 +688,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const validateCorrespondingAuthor = async (
-    selectedCorrespondingAuthor:
-      | AuthorSelectOption[]
-      | AuthorSelectOption
-      | null,
+    selectedCorrespondingAuthor: AuthorSelectOption[],
   ) => {
-    const correspondingAuthorValue = Array.isArray(selectedCorrespondingAuthor)
-      ? selectedCorrespondingAuthor[0]
-      : selectedCorrespondingAuthor || null;
+    const correspondingAuthorValue = selectedCorrespondingAuthor[0];
 
     const teams = getValues('versions.0.teams') || [];
     const teamFormIds = teams.map((team) => team.value);
@@ -742,18 +723,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const validateAdditionalAuthors = async (
-    selectedAdditionalAuthors: AuthorSelectOption[] | AuthorSelectOption | null,
+    selectedAdditionalAuthors: AuthorSelectOption[],
   ) => {
-    const additionalAuthorsValues = Array.isArray(selectedAdditionalAuthors)
-      ? selectedAdditionalAuthors
-      : (selectedAdditionalAuthors && [selectedAdditionalAuthors]) || [];
-
     const teams = getValues('versions.0.teams') || [];
     const teamFormIds = teams.map((team) => team.value);
 
     additionalAuthorsWithoutTeamAdded.clear();
 
-    additionalAuthorsValues
+    selectedAdditionalAuthors
       .filter((algoliaAuthor) => {
         if (
           'author' in algoliaAuthor &&

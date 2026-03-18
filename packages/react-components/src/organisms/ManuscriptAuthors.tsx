@@ -27,7 +27,7 @@ type ManuscriptAuthorsProps = {
   trigger: UseFormTrigger<ManuscriptFormData>;
   setValue: UseFormSetValue<ManuscriptFormData>;
   validate?: (
-    authors: AuthorSelectOption | AuthorSelectOption[] | null,
+    authors: AuthorSelectOption[],
     formValues: ManuscriptFormData,
   ) => true | string | Promise<true | string>;
 };

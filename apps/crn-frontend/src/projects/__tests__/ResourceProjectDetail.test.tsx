@@ -136,8 +136,8 @@ describe('ResourceProjectDetail', () => {
     ).toBe(true);
   });
 
-  it('does not allow accessing milestones route when PROJECT_MILESTONES flag is disabled', async () => {
-    disable('PROJECT_MILESTONES');
+  it('does not allow accessing milestones route when PROJECT_AIMS_AND_MILESTONES flag is disabled', async () => {
+    disable('PROJECT_AIMS_AND_MILESTONES');
     const path = `${projects.template}/resource/resource-1/milestones`;
 
     render(
@@ -167,8 +167,8 @@ describe('ResourceProjectDetail', () => {
     ).toBe(true);
   });
 
-  it('allows accessing milestones route when PROJECT_MILESTONES flag is enabled', async () => {
-    enable('PROJECT_MILESTONES');
+  it('allows accessing milestones route when PROJECT_AIMS_AND_MILESTONES flag is enabled', async () => {
+    enable('PROJECT_AIMS_AND_MILESTONES');
     const path = `${projects.template}/resource/resource-1/milestones`;
 
     render(

@@ -155,7 +155,7 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
   const { pointOfContactEmail, aboutHref, workspaceHref, milestonesHref } =
     project;
   const { isEnabled } = useFlags();
-  const isProjectMilestonesEnabled = isEnabled('PROJECT_MILESTONES');
+  const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
 
   const membersWithHref =
     'members' in project

@@ -251,7 +251,7 @@ describe('ProjectDetailHeader', () => {
 
     it('renders Milestones tab when feature flag is enabled and milestonesHref is provided', () => {
       mockIsEnabled.mockImplementation(
-        (flag: string) => flag === 'PROJECT_MILESTONES',
+        (flag: string) => flag === 'PROJECT_AIMS_AND_MILESTONES',
       );
       render(
         <ProjectDetailHeader
@@ -269,7 +269,7 @@ describe('ProjectDetailHeader', () => {
     });
 
     it('does not render Milestones tab when feature flag is disabled', () => {
-      disable('PROJECT_MILESTONES');
+      disable('PROJECT_AIMS_AND_MILESTONES');
 
       render(
         <ProjectDetailHeader

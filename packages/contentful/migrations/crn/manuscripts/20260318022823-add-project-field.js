@@ -17,6 +17,11 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false)
     .linkType('Entry');
+
+  manuscripts.changeFieldControl('project', 'builtin', 'entryLinkEditor', {
+    showLinkEntityAction: true,
+    showCreateEntityAction: false,
+  });
 };
 
 module.exports.down = (migration) => {

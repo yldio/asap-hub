@@ -64,6 +64,20 @@ export type ProjectMilestonesDataObject = {
   lastDate: string | null;
 };
 
+export type ProjectAimsDataObject = {
+  id: string;
+  description: string;
+  /** 'original' if the aim belongs to originalGrantAimsCollection, 'supplement' otherwise. */
+  grantType: string;
+  teamName: string;
+  status: string;
+  articleCount: number;
+  /** Comma-separated list of unique DOIs aggregated across all linked milestones. */
+  articlesDOI: string;
+  createdDate: string | null;
+  lastDate: string | null;
+};
+
 export type MetricToObjectMap = {
   'os-champion': OSChampionDataObject;
   'preliminary-data-sharing': PreliminaryDataSharingDataObject;
@@ -78,6 +92,8 @@ export type MetricToObjectMap = {
   'wg-leadership': WGLeadershipDataObject;
   'presenter-representation': PresenterRepresentationDataObject;
   'project-milestones': ProjectMilestonesDataObject;
+  // Aims metric (ASAP-1407 – Phase 2)
+  'project-aims': ProjectAimsDataObject;
 };
 
 export type MetricObject<T extends Metrics> = MetricToObjectMap[T];

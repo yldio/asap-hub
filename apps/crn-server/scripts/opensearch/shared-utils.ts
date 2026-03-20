@@ -71,3 +71,36 @@ export const readComplianceData = async (
 
   return rawData as Record<string, unknown>[];
 };
+
+type PagedResult<T> = {
+  total?: number;
+  items: T[];
+};
+
+export const paginate = async <T>(
+  fetchPage: (params: {
+    limit: number;
+    skip: number;
+  }) => Promise<PagedResult<T>>,
+  pageSize: number,
+): Promise<T[]> => {
+  const results: T[] = [];
+  let skip = 0;
+  let total = 0;
+
+  do {
+    const { total: pageTotal, items } = await fetchPage({
+      limit: pageSize,
+      skip,
+    });
+    total = pageTotal ?? 0;
+    results.push(...items);
+    skip += pageSize;
+  } while (skip < total);
+
+  if (results.length === 0) {
+    console.warn('paginate: no results returned for query.');
+  }
+
+  return results;
+};

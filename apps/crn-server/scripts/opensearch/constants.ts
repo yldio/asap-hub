@@ -73,6 +73,7 @@ export const validMetrics = [
   'wg-leadership',
   'presenter-representation',
   'project-milestones',
+  'project-aims',
 ] as const;
 
 export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
@@ -356,6 +357,28 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         }),
         aimNumbersAsc: { type: 'keyword' },
         aimNumbersDesc: { type: 'keyword' },
+        status: { type: 'keyword' },
+        articleCount: { type: 'integer' },
+        articlesDOI: { type: 'text' },
+        createdDate: { type: 'date' },
+        lastDate: { type: 'date' },
+      },
+    },
+  },
+  'project-aims': {
+    indexAlias: 'project-aims',
+    mapping: {
+      properties: {
+        id: { type: 'text' },
+        description: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+          raw: true,
+        }),
+        grantType: { type: 'keyword' },
+        teamName: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+          raw: true,
+        }),
         status: { type: 'keyword' },
         articleCount: { type: 'integer' },
         articlesDOI: { type: 'text' },

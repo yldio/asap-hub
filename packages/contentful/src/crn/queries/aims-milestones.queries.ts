@@ -50,6 +50,55 @@ export const FETCH_AIMS_WITH_MILESTONES = gql`
   }
 `;
 
+export const FETCH_PROJECTS_WITH_AIMS_DETAIL = gql`
+  query FetchProjectsWithAimsDetail($limit: Int!, $skip: Int!) {
+    projectsCollection(limit: $limit, skip: $skip) {
+      total
+      items {
+        sys {
+          id
+        }
+        status
+        membersCollection(limit: 50) {
+          items {
+            projectMember {
+              __typename
+              ... on Teams {
+                sys {
+                  id
+                }
+                displayName
+              }
+            }
+          }
+        }
+        originalGrantAimsCollection(limit: 50) {
+          items {
+            sys {
+              id
+              firstPublishedAt
+              publishedAt
+            }
+            description
+          }
+        }
+        supplementGrant {
+          aimsCollection(limit: 50) {
+            items {
+              sys {
+                id
+                firstPublishedAt
+                publishedAt
+              }
+              description
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const FETCH_MILESTONES = gql`
   query FetchMilestones($limit: Int!, $skip: Int!) {
     milestonesCollection(limit: $limit, skip: $skip) {
@@ -72,4 +121,3 @@ export const FETCH_MILESTONES = gql`
     }
   }
 `;
-

@@ -6,46 +6,15 @@ import type {
   MilestoneDataObject,
   ProjectWithAimsDataObject,
 } from '../../src/data-providers/types';
+import { paginate } from './shared-utils';
 
 const PROJECTS_PAGE_SIZE = 50;
 const AIMS_PAGE_SIZE = 100;
 const MILESTONES_PAGE_SIZE = 50;
 
-type PagedResult<T> = {
-  total?: number;
-  items: T[];
-};
-
-const paginate = async <T>(
-  fetchPage: (params: {
-    limit: number;
-    skip: number;
-  }) => Promise<PagedResult<T>>,
-  pageSize: number,
-): Promise<T[]> => {
-  const results: T[] = [];
-  let skip = 0;
-  let total = 0;
-
-  do {
-    const { total: pageTotal, items } = await fetchPage({
-      limit: pageSize,
-      skip,
-    });
-    total = pageTotal ?? 0;
-    results.push(...items);
-    skip += pageSize;
-  } while (skip < total);
-
-  if (results.length === 0) {
-    console.warn('paginate: no results returned for query.');
-  }
-
-  return results;
-};
-
-const buildAimOrderMap = async (): Promise<Map<string, number>> => {
-  const provider = getAimsMilestonesDataProvider();
+const buildAimOrderMap = async (
+  provider: ReturnType<typeof getAimsMilestonesDataProvider>,
+): Promise<Map<string, number>> => {
   const aimOrderMap = new Map<string, number>();
 
   console.log('Building aim order map from projects...');
@@ -83,13 +52,13 @@ const buildAimOrderMap = async (): Promise<Map<string, number>> => {
 };
 
 const buildMilestoneToAimNumbersMap = async (
+  provider: ReturnType<typeof getAimsMilestonesDataProvider>,
   aimOrderMap: Map<string, number>,
 ): Promise<Map<string, number[]>> => {
   const milestoneToAimNumberSets = new Map<string, Set<number>>();
 
   console.log('Building milestone to aim numbers map from aims...');
 
-  const provider = getAimsMilestonesDataProvider();
   const aims = await paginate<AimWithMilestonesDataObject>(
     (params) => provider.fetchAimsWithMilestones(params),
     AIMS_PAGE_SIZE,
@@ -123,8 +92,9 @@ const buildMilestoneToAimNumbersMap = async (
   return milestoneToAimNumbers;
 };
 
-const fetchAllMilestones = async (): Promise<MilestoneDataObject[]> => {
-  const provider = getAimsMilestonesDataProvider();
+const fetchAllMilestones = async (
+  provider: ReturnType<typeof getAimsMilestonesDataProvider>,
+): Promise<MilestoneDataObject[]> => {
   console.log('Fetching milestones from Contentful...');
 
   const milestones = await paginate<MilestoneDataObject>(
@@ -151,12 +121,16 @@ const buildAimNumbersStrings = (numbers: number[] | undefined) => {
 export const exportMilestonesData = async (): Promise<
   MetricObject<'project-milestones'>[]
 > => {
+  const provider = getAimsMilestonesDataProvider();
+
   const [aimOrderMap, milestones] = await Promise.all([
-    buildAimOrderMap(),
-    fetchAllMilestones(),
+    buildAimOrderMap(provider),
+    fetchAllMilestones(provider),
   ]);
-  const milestoneToAimNumbers =
-    await buildMilestoneToAimNumbersMap(aimOrderMap);
+  const milestoneToAimNumbers = await buildMilestoneToAimNumbersMap(
+    provider,
+    aimOrderMap,
+  );
 
   if (aimOrderMap.size === 0) {
     console.warn(

@@ -45,6 +45,7 @@ export const readMoreButtonStyles = css({
   fontWeight: 400,
   display: 'inline',
   textAlign: 'left',
+  marginTop: rem(4),
   '&:hover': {
     textDecoration: 'underline',
   },

@@ -117,14 +117,16 @@ const Aim: FC<AimProps> = ({ aim, fetchArticles }) => {
       </div>
       <div css={descriptionContainerStyles}>
         <div css={mobileLabelStyles}>Description</div>
-        <div ref={ref} css={clampedDescriptionStyles(isExpanded)}>
-          {aim.description}
+        <div>
+          <div ref={ref} css={clampedDescriptionStyles(isExpanded)}>
+            {aim.description}
+          </div>
+          {(needsExpansion || isExpanded) && (
+            <button type="button" css={readMoreButtonStyles} onClick={toggle}>
+              {isExpanded ? 'Read Less' : 'Read More'}
+            </button>
+          )}
         </div>
-        {(needsExpansion || isExpanded) && (
-          <button type="button" css={readMoreButtonStyles} onClick={toggle}>
-            {isExpanded ? 'Read Less' : 'Read More'}
-          </button>
-        )}
         <div css={articlesWrapperStyles}>
           {aim.articleCount === 0 ? (
             <div css={noArticlesWrapperStyles}>

@@ -353,5 +353,4 @@ describe('AimsMilestonesContentfulDataProvider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
   });
-
 });

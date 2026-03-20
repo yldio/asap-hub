@@ -89,10 +89,7 @@ const aimsWithMilestonesFixture = {
       {
         sys: { id: 'aim-1' },
         milestonesCollection: {
-          items: [
-            { sys: { id: 'ms-1' } },
-            { sys: { id: 'ms-2' } },
-          ],
+          items: [{ sys: { id: 'ms-1' } }, { sys: { id: 'ms-2' } }],
         },
       },
       {

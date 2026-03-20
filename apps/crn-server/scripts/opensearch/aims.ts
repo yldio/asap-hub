@@ -134,9 +134,10 @@ export const exportAimsData = async (): Promise<
           return;
         }
 
-        const { articleCount, articlesDOI } = aimArticleMap.get(
-          aim.sys.id,
-        ) ?? { articleCount: 0, articlesDOI: '' };
+        const { articleCount, articlesDOI } = aimArticleMap.get(aim.sys.id) ?? {
+          articleCount: 0,
+          articlesDOI: '',
+        };
 
         documents.push({
           id: aim.sys.id,

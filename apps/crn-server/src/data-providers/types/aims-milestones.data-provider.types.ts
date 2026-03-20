@@ -42,15 +42,52 @@ export type MilestoneDataObject = {
   } | null;
 };
 
-export type AimsMilestonesDataProvider = {
-  fetchProjectsWithAims: (
-    options: { limit: number; skip: number },
-  ) => Promise<ListResponse<ProjectWithAimsDataObject>>;
-  fetchAimsWithMilestones: (
-    options: { limit: number; skip: number },
-  ) => Promise<ListResponse<AimWithMilestonesDataObject>>;
-  fetchMilestones: (
-    options: { limit: number; skip: number },
-  ) => Promise<ListResponse<MilestoneDataObject>>;
+type AimDetailDataObject = {
+  sys: {
+    id: string;
+    firstPublishedAt?: string | null;
+    publishedAt?: string | null;
+  };
+  description?: string | null;
 };
 
+export type ProjectWithAimsDetailDataObject = {
+  sys: { id: string };
+  status?: string | null;
+  membersCollection?: {
+    items: Array<{
+      projectMember?: {
+        __typename: string;
+        sys?: { id: string };
+        displayName?: string | null;
+      } | null;
+    } | null>;
+  } | null;
+  originalGrantAimsCollection?: {
+    items: Array<AimDetailDataObject | null>;
+  } | null;
+  supplementGrant?: {
+    aimsCollection?: {
+      items: Array<AimDetailDataObject | null>;
+    } | null;
+  } | null;
+};
+
+export type AimsMilestonesDataProvider = {
+  fetchProjectsWithAims: (options: {
+    limit: number;
+    skip: number;
+  }) => Promise<ListResponse<ProjectWithAimsDataObject>>;
+  fetchProjectsWithAimsDetail: (options: {
+    limit: number;
+    skip: number;
+  }) => Promise<ListResponse<ProjectWithAimsDetailDataObject>>;
+  fetchAimsWithMilestones: (options: {
+    limit: number;
+    skip: number;
+  }) => Promise<ListResponse<AimWithMilestonesDataObject>>;
+  fetchMilestones: (options: {
+    limit: number;
+    skip: number;
+  }) => Promise<ListResponse<MilestoneDataObject>>;
+};

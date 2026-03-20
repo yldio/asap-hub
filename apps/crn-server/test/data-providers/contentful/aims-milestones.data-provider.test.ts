@@ -169,10 +169,7 @@ describe('AimsMilestonesContentfulDataProvider', () => {
               status: 'Completed',
               relatedArticlesCollection: {
                 total: 2,
-                items: [
-                  { doi: '10.1000/abc123' },
-                  { doi: '10.1000/def456' },
-                ],
+                items: [{ doi: '10.1000/abc123' }, { doi: '10.1000/def456' }],
               },
             },
           ],
@@ -251,4 +248,110 @@ describe('AimsMilestonesContentfulDataProvider', () => {
       });
     });
   });
+
+  describe('fetchProjectsWithAimsDetail', () => {
+    it('returns projects with status, team members, and nested aim/milestone/article data', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        projectsCollection: {
+          total: 1,
+          items: [
+            {
+              sys: { id: 'project-1' },
+              status: 'Active',
+              membersCollection: {
+                items: [
+                  {
+                    projectMember: {
+                      __typename: 'Teams',
+                      sys: { id: 'team-1' },
+                      displayName: 'Team Alpha',
+                    },
+                  },
+                ],
+              },
+              originalGrantAimsCollection: {
+                items: [
+                  {
+                    sys: {
+                      id: 'aim-1',
+                      firstPublishedAt: '2025-01-01T00:00:00.000Z',
+                      publishedAt: '2025-06-01T00:00:00.000Z',
+                    },
+                    description: 'First aim',
+                  },
+                ],
+              },
+              supplementGrant: null,
+            },
+          ],
+        },
+      });
+
+      const result = await dataProvider.fetchProjectsWithAimsDetail({
+        limit: 10,
+        skip: 0,
+      });
+
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          {
+            sys: { id: 'project-1' },
+            status: 'Active',
+            membersCollection: {
+              items: [
+                {
+                  projectMember: {
+                    __typename: 'Teams',
+                    sys: { id: 'team-1' },
+                    displayName: 'Team Alpha',
+                  },
+                },
+              ],
+            },
+            originalGrantAimsCollection: {
+              items: [
+                {
+                  sys: {
+                    id: 'aim-1',
+                    firstPublishedAt: '2025-01-01T00:00:00.000Z',
+                    publishedAt: '2025-06-01T00:00:00.000Z',
+                  },
+                  description: 'First aim',
+                },
+              ],
+            },
+            supplementGrant: null,
+          },
+        ],
+      });
+    });
+
+    it('passes limit and skip to the query', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        projectsCollection: { total: 0, items: [] },
+      });
+
+      await dataProvider.fetchProjectsWithAimsDetail({ limit: 25, skip: 50 });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({ limit: 25, skip: 50 }),
+      );
+    });
+
+    it('returns empty result when Contentful returns null collection', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        projectsCollection: null,
+      });
+
+      const result = await dataProvider.fetchProjectsWithAimsDetail({
+        limit: 10,
+        skip: 0,
+      });
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+  });
+
 });

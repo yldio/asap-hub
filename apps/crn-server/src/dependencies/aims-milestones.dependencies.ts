@@ -8,14 +8,12 @@ import {
 import { AimsMilestonesContentfulDataProvider } from '../data-providers/contentful/aims-milestones.data-provider';
 import { AimsMilestonesDataProvider } from '../data-providers/types';
 
-export const getAimsMilestonesDataProvider =
-  (): AimsMilestonesDataProvider => {
-    const contentfulGraphQLClient = getContentfulGraphQLClient({
-      space: contentfulSpaceId,
-      accessToken: contentfulAccessToken,
-      environment: contentfulEnvId,
-    });
+export const getAimsMilestonesDataProvider = (): AimsMilestonesDataProvider => {
+  const contentfulGraphQLClient = getContentfulGraphQLClient({
+    space: contentfulSpaceId,
+    accessToken: contentfulAccessToken,
+    environment: contentfulEnvId,
+  });
 
-    return new AimsMilestonesContentfulDataProvider(contentfulGraphQLClient);
-  };
-
+  return new AimsMilestonesContentfulDataProvider(contentfulGraphQLClient);
+};

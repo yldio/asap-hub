@@ -3,6 +3,7 @@ import {
   FETCH_AIMS_WITH_MILESTONES,
   FETCH_MILESTONES,
   FETCH_PROJECTS_WITH_AIMS,
+  FETCH_PROJECTS_WITH_AIMS_DETAIL,
   GraphQLClient,
 } from '@asap-hub/contentful';
 
@@ -11,6 +12,7 @@ import {
   AimsMilestonesDataProvider,
   MilestoneDataObject,
   ProjectWithAimsDataObject,
+  ProjectWithAimsDetailDataObject,
 } from '../types';
 
 export class AimsMilestonesContentfulDataProvider
@@ -37,6 +39,28 @@ export class AimsMilestonesContentfulDataProvider
         (projectsCollection?.items?.filter(
           Boolean,
         ) as ProjectWithAimsDataObject[]) || [],
+    };
+  }
+
+  async fetchProjectsWithAimsDetail(options: {
+    limit: number;
+    skip: number;
+  }): Promise<ListResponse<ProjectWithAimsDetailDataObject>> {
+    const { limit, skip } = options;
+
+    const { projectsCollection } = await this.contentfulClient.request<{
+      projectsCollection: {
+        total: number;
+        items: (ProjectWithAimsDetailDataObject | null)[];
+      } | null;
+    }>(FETCH_PROJECTS_WITH_AIMS_DETAIL, { limit, skip });
+
+    return {
+      total: projectsCollection?.total || 0,
+      items:
+        (projectsCollection?.items?.filter(
+          Boolean,
+        ) as ProjectWithAimsDetailDataObject[]) || [],
     };
   }
 

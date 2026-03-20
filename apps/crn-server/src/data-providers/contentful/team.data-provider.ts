@@ -41,6 +41,7 @@ import {
   TeamTool,
   TeamType,
   TeamUpdateDataObject,
+  isPIRole,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
@@ -384,14 +385,17 @@ export const parseContentfulGraphQlTeamListItem = (
         return [memberCount, labIdsSet];
       }
 
-      const { labsCollection } =
-        membership.linkedFrom?.usersCollection?.items[0] || {};
+      const user = membership.linkedFrom?.usersCollection?.items[0];
+      const userId = user?.sys?.id;
 
-      const memberLabIds = labsCollection?.items
-        .map((labItem) => labItem?.sys.id)
-        .filter((x): x is string => x !== undefined);
+      if (isPIRole(membership.role) && userId) {
+        const memberLabIds = user?.labsCollection?.items
+          .filter((labItem) => labItem?.labPi?.sys?.id === userId)
+          .map((labItem) => labItem?.sys.id)
+          .filter((x): x is string => x !== undefined);
 
-      memberLabIds?.forEach((labId) => labIdsSet.add(labId));
+        memberLabIds?.forEach((labId) => labIdsSet.add(labId));
+      }
 
       return [memberCount + 1, labIdsSet];
     },
@@ -601,11 +605,16 @@ export const parseContentfulGraphQlTeam = (
     [],
   );
 
-  const labCount = members
-    .flatMap((member) => member.labs || [])
+  const piLabs = members
+    .filter((member) => isPIRole(member.role))
+    .flatMap((member) =>
+      (member.labs || []).filter(
+        (lab) => lab.labPrincipalInvestigatorId === member.id,
+      ),
+    )
     .filter(
       (lab, index, labs) => labs.findIndex((l) => l.id === lab.id) === index,
-    ).length;
+    );
 
   const getSupplementGrant = (): TeamSupplementGrant | undefined => {
     if (!linkedProject?.supplementGrant) return undefined;
@@ -683,7 +692,6 @@ export const parseContentfulGraphQlTeam = (
     ...parseManuscripts(),
     projectSummary: linkedProject?.originalGrant ?? undefined,
     members: members.sort(sortMembers),
-    labCount,
     pointOfContact: linkedProject?.contactEmail ?? undefined,
     proposalURL: linkedProject?.proposal
       ? linkedProject.proposal.sys.id
@@ -697,11 +705,8 @@ export const parseContentfulGraphQlTeam = (
     resourceButtonCopy: item.resourceButtonCopy ?? undefined,
     resourceContactEmail: item.resourceContactEmail ?? undefined,
     resourceLink: item.resourceLink ?? undefined,
-    labs: members
-      .flatMap((member) => member.labs || [])
-      .filter(
-        (lab, index, labs) => labs.findIndex((l) => l.id === lab.id) === index,
-      ),
+    labs: piLabs,
+    labCount: piLabs.length,
   };
 };
 

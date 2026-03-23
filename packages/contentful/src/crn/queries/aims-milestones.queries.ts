@@ -7,6 +7,9 @@ export const FETCH_PROJECTS_WITH_AIMS = gql`
     projectsCollection(limit: $limit, skip: $skip) {
       total
       items {
+        sys {
+          id
+        }
         originalGrantAimsCollection(limit: 50) {
           items {
             sys {

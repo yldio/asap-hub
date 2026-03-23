@@ -350,7 +350,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'project-milestones',
     mapping: {
       properties: {
-        id: { type: 'text' },
+        id: { type: 'keyword' },
         description: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,
@@ -360,6 +360,8 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         status: { type: 'keyword' },
         articleCount: { type: 'integer' },
         articlesDOI: { type: 'text' },
+        projectId: { type: 'keyword' },
+        grantType: { type: 'keyword' },
         createdDate: { type: 'date' },
         lastDate: { type: 'date' },
       },
@@ -369,12 +371,13 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     indexAlias: 'project-aims',
     mapping: {
       properties: {
-        id: { type: 'text' },
+        id: { type: 'keyword' },
         description: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,
         }),
         grantType: { type: 'keyword' },
+        projectId: { type: 'keyword' },
         teamName: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
           raw: true,

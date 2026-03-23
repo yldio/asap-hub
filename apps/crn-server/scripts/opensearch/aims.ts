@@ -6,7 +6,7 @@ import type {
   MilestoneDataObject,
   ProjectWithAimsDetailDataObject,
 } from '../../src/data-providers/types';
-import { paginate } from './shared-utils';
+import { extractDOIs, paginate } from './shared-utils';
 
 const PROJECTS_PAGE_SIZE = 50;
 const AIMS_PAGE_SIZE = 100;
@@ -57,14 +57,9 @@ const buildAimArticleMap = async (
     if (!milestone?.sys?.id) return;
     const related = milestone.relatedArticlesCollection;
     const articleCount = related?.total ?? 0;
-    const doiSet = new Set<string>();
-    related?.items?.forEach((item) => {
-      const doi = item?.doi?.trim();
-      if (doi) doiSet.add(doi);
-    });
     milestoneArticleMap.set(milestone.sys.id, {
       articleCount,
-      articlesDOI: [...doiSet].join(','),
+      articlesDOI: extractDOIs(related?.items),
     });
   });
 
@@ -143,6 +138,7 @@ export const exportAimsData = async (): Promise<
           id: aim.sys.id,
           description: aim.description.trim(),
           grantType,
+          projectId: project.sys.id,
           teamName,
           status,
           articleCount,

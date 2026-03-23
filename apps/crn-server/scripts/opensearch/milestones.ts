@@ -6,16 +6,18 @@ import type {
   MilestoneDataObject,
   ProjectWithAimsDataObject,
 } from '../../src/data-providers/types';
-import { paginate } from './shared-utils';
+import { extractDOIs, paginate } from './shared-utils';
 
 const PROJECTS_PAGE_SIZE = 50;
 const AIMS_PAGE_SIZE = 100;
 const MILESTONES_PAGE_SIZE = 50;
 
+type AimMeta = { order: number; projectId: string; grantType: 'original' | 'supplement' };
+
 const buildAimOrderMap = async (
   provider: ReturnType<typeof getAimsMilestonesDataProvider>,
-): Promise<Map<string, number>> => {
-  const aimOrderMap = new Map<string, number>();
+): Promise<Map<string, AimMeta>> => {
+  const aimOrderMap = new Map<string, AimMeta>();
 
   console.log('Building aim order map from projects...');
 
@@ -25,8 +27,11 @@ const buildAimOrderMap = async (
   );
 
   projects.forEach((project) => {
+    const projectId = project.sys.id;
+
     const handleAimsCollection = (
       aimsCollection: ProjectWithAimsDataObject['originalGrantAimsCollection'],
+      grantType: 'original' | 'supplement',
     ) => {
       const aims = aimsCollection?.items ?? [];
       aims.forEach((aim, index) => {
@@ -38,26 +43,35 @@ const buildAimOrderMap = async (
 
         // Only set if not already present to keep the first-seen order
         if (!aimOrderMap.has(aim.sys.id)) {
-          aimOrderMap.set(aim.sys.id, index + 1);
+          aimOrderMap.set(aim.sys.id, { order: index + 1, projectId, grantType });
         }
       });
     };
 
-    handleAimsCollection(project.originalGrantAimsCollection);
-    handleAimsCollection(project.supplementGrant?.aimsCollection);
+    handleAimsCollection(project.originalGrantAimsCollection, 'original');
+    handleAimsCollection(project.supplementGrant?.aimsCollection, 'supplement');
   });
 
   console.log(`Aim order map built for ${aimOrderMap.size} aims.`);
   return aimOrderMap;
 };
 
-const buildMilestoneToAimNumbersMap = async (
-  provider: ReturnType<typeof getAimsMilestonesDataProvider>,
-  aimOrderMap: Map<string, number>,
-): Promise<Map<string, number[]>> => {
-  const milestoneToAimNumberSets = new Map<string, Set<number>>();
+type MilestoneMeta = {
+  aimNumbers: number[];
+  projectId: string;
+  grantType: string;
+};
 
-  console.log('Building milestone to aim numbers map from aims...');
+const buildMilestoneMetaMap = async (
+  provider: ReturnType<typeof getAimsMilestonesDataProvider>,
+  aimOrderMap: Map<string, AimMeta>,
+): Promise<Map<string, MilestoneMeta>> => {
+  const milestoneAccumulator = new Map<
+    string,
+    { aimNumbers: Set<number>; projectId: string; grantType: string }
+  >();
+
+  console.log('Building milestone meta map from aims...');
 
   const aims = await paginate<AimWithMilestonesDataObject>(
     (params) => provider.fetchAimsWithMilestones(params),
@@ -65,31 +79,35 @@ const buildMilestoneToAimNumbersMap = async (
   );
 
   aims.forEach((aim) => {
-    const order = aimOrderMap.get(aim.sys.id);
-    if (!order) return;
+    const meta = aimOrderMap.get(aim.sys.id);
+    if (!meta) return;
 
     const milestones = aim.milestonesCollection?.items ?? [];
     milestones.forEach((milestone) => {
       if (!milestone?.sys?.id) return;
-      const existing =
-        milestoneToAimNumberSets.get(milestone.sys.id) ?? new Set<number>();
-      existing.add(order);
-      milestoneToAimNumberSets.set(milestone.sys.id, existing);
+      const milestoneId = milestone.sys.id;
+
+      const acc = milestoneAccumulator.get(milestoneId) ?? {
+        aimNumbers: new Set<number>(),
+        projectId: meta.projectId,
+        grantType: meta.grantType,
+      };
+      acc.aimNumbers.add(meta.order);
+      milestoneAccumulator.set(milestoneId, acc);
     });
   });
 
-  const milestoneToAimNumbers = new Map<string, number[]>();
-  milestoneToAimNumberSets.forEach((orderSet, milestoneId) => {
-    milestoneToAimNumbers.set(
-      milestoneId,
-      [...orderSet].sort((a, b) => a - b),
-    );
+  const milestoneMetaMap = new Map<string, MilestoneMeta>();
+  milestoneAccumulator.forEach((acc, milestoneId) => {
+    milestoneMetaMap.set(milestoneId, {
+      aimNumbers: [...acc.aimNumbers].sort((a, b) => a - b),
+      projectId: acc.projectId,
+      grantType: acc.grantType,
+    });
   });
 
-  console.log(
-    `Milestone to aim numbers map built for ${milestoneToAimNumbers.size} milestones.`,
-  );
-  return milestoneToAimNumbers;
+  console.log(`Milestone meta map built for ${milestoneMetaMap.size} milestones.`);
+  return milestoneMetaMap;
 };
 
 const fetchAllMilestones = async (
@@ -127,10 +145,7 @@ export const exportMilestonesData = async (): Promise<
     buildAimOrderMap(provider),
     fetchAllMilestones(provider),
   ]);
-  const milestoneToAimNumbers = await buildMilestoneToAimNumbersMap(
-    provider,
-    aimOrderMap,
-  );
+  const milestoneMetaMap = await buildMilestoneMetaMap(provider, aimOrderMap);
 
   if (aimOrderMap.size === 0) {
     console.warn(
@@ -141,20 +156,13 @@ export const exportMilestonesData = async (): Promise<
   const documents: MetricObject<'project-milestones'>[] = milestones.map(
     (milestone) => {
       const milestoneId = milestone.sys.id;
-      const aimNumbers = milestoneToAimNumbers.get(milestoneId);
-      const { aimNumbersAsc, aimNumbersDesc } =
-        buildAimNumbersStrings(aimNumbers);
+      const meta = milestoneMetaMap.get(milestoneId);
+      const { aimNumbersAsc, aimNumbersDesc } = buildAimNumbersStrings(
+        meta?.aimNumbers,
+      );
 
       const related = milestone.relatedArticlesCollection;
       const articleCount = related?.total ?? 0;
-
-      const articlesDOISet = new Set<string>();
-      related?.items?.forEach((item) => {
-        const doi = item?.doi?.trim();
-        if (doi) {
-          articlesDOISet.add(doi);
-        }
-      });
 
       return {
         id: milestoneId,
@@ -163,7 +171,9 @@ export const exportMilestonesData = async (): Promise<
         aimNumbersDesc,
         status: milestone.status ?? '',
         articleCount,
-        articlesDOI: [...articlesDOISet].join(','),
+        articlesDOI: extractDOIs(related?.items),
+        projectId: meta?.projectId ?? '',
+        grantType: meta?.grantType ?? '',
         createdDate: milestone.sys.firstPublishedAt ?? null,
         lastDate: milestone.sys.publishedAt ?? null,
       };

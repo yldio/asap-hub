@@ -1,6 +1,7 @@
 import { ListResponse } from '@asap-hub/model';
 
 export type ProjectWithAimsDataObject = {
+  sys: { id: string };
   originalGrantAimsCollection?: {
     items: Array<{
       sys: { id: string };

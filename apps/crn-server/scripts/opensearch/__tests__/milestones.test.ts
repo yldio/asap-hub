@@ -28,6 +28,7 @@ const projectsFixture = {
     total: 1,
     items: [
       {
+        sys: { id: 'project-1' },
         originalGrantAimsCollection: {
           items: [
             { sys: { id: 'aim-1' }, description: 'Aim one' },
@@ -126,6 +127,8 @@ describe('exportMilestonesData', () => {
       aimNumbersAsc: '1,2',
       aimNumbersDesc: '2,1',
       articlesDOI: '10.1000/xyz123,10.1000/xyz456',
+      projectId: 'project-1',
+      grantType: 'original',
     });
   });
 

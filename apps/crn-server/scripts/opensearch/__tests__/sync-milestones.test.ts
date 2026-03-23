@@ -94,6 +94,8 @@ describe('Milestones sync integration', () => {
       expect(data.mapping.properties).toHaveProperty('status');
       expect(data.mapping.properties).toHaveProperty('articleCount');
       expect(data.mapping.properties).toHaveProperty('articlesDOI');
+      expect(data.mapping.properties).toHaveProperty('projectId');
+      expect(data.mapping.properties).toHaveProperty('grantType');
       expect(data.mapping.properties).toHaveProperty('createdDate');
       expect(data.mapping.properties).toHaveProperty('lastDate');
     }

@@ -242,6 +242,7 @@ describe('exportAimsData', () => {
       id: 'aim-1',
       description: 'First original aim',
       grantType: 'original',
+      projectId: 'project-1',
       teamName: 'Team Alpha',
       status: 'Active',
       articleCount: 3,

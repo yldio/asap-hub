@@ -60,6 +60,8 @@ export type ProjectMilestonesDataObject = {
   articleCount: number;
   /** Comma-separated list of unique related article DOIs for this milestone. */
   articlesDOI: string;
+  projectId: string;
+  grantType: string;
   createdDate: string | null;
   lastDate: string | null;
 };
@@ -69,6 +71,7 @@ export type ProjectAimsDataObject = {
   description: string;
   /** 'original' if the aim belongs to originalGrantAimsCollection, 'supplement' otherwise. */
   grantType: string;
+  projectId: string;
   teamName: string;
   status: string;
   articleCount: number;

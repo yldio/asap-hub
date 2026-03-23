@@ -1,13 +1,14 @@
-import { AuthorAlgoliaResponse, ManuscriptFormData } from '@asap-hub/model';
+import { AuthorSelectOption, ManuscriptFormData } from '@asap-hub/model';
 import { ComponentProps, useEffect } from 'react';
 import {
   Control,
   Controller,
   useFieldArray,
   UseFormGetValues,
+  UseFormSetValue,
   UseFormTrigger,
 } from 'react-hook-form';
-import { LabeledTextField, MultiSelectOptionsType, OptionsType } from '..';
+import { LabeledTextField, OptionsType } from '..';
 import AuthorSelect, { AuthorOption } from './AuthorSelect';
 
 type ManuscriptAuthorsProps = {
@@ -24,12 +25,11 @@ type ManuscriptAuthorsProps = {
   isMultiSelect?: ComponentProps<typeof AuthorSelect>['isMulti'];
   isRequired?: boolean;
   trigger: UseFormTrigger<ManuscriptFormData>;
-  validate?: () => void;
+  setValue: UseFormSetValue<ManuscriptFormData>;
+  validate?: (
+    authors: AuthorSelectOption[],
+  ) => true | string | Promise<true | string>;
 };
-
-export type ManuscriptAuthorOption = {
-  author?: AuthorAlgoliaResponse;
-} & MultiSelectOptionsType;
 
 const ManuscriptAuthors = ({
   control,
@@ -41,6 +41,7 @@ const ManuscriptAuthors = ({
   getValues,
   isSubmitting,
   trigger,
+  setValue,
   validate,
   isMultiSelect = false,
   isRequired = false,
@@ -67,13 +68,7 @@ const ManuscriptAuthors = ({
       <Controller
         name={`versions.0.${fieldName}`}
         control={control}
-        rules={
-          isRequired
-            ? {
-                required: 'Please add at least one author.',
-              }
-            : {}
-        }
+        rules={{ validate }}
         render={({
           field: { value: authors, onChange },
           fieldState: { error },
@@ -94,91 +89,70 @@ const ManuscriptAuthors = ({
             onChange={async (
               newAuthors: OptionsType<AuthorOption> | AuthorOption | null,
             ) => {
-              if (isMultiSelect && Array.isArray(newAuthors)) {
-                const hasAuthorBeenAdded = Boolean(
-                  (newAuthors?.length ?? 0) > (authors?.length ?? 0),
+              const normalizedAuthors = Array.isArray(newAuthors)
+                ? newAuthors
+                : newAuthors
+                  ? [newAuthors]
+                  : [];
+
+              const currentAuthors = authors || [];
+
+              const hasAdded = normalizedAuthors.length > currentAuthors.length;
+              const hasRemoved =
+                normalizedAuthors.length < currentAuthors.length;
+
+              const hasReplaced =
+                normalizedAuthors.length === currentAuthors.length &&
+                normalizedAuthors.length === 1 &&
+                normalizedAuthors[0]?.value !== currentAuthors[0]?.value;
+
+              // Handle newly added or replaced author
+              if (hasAdded || hasReplaced) {
+                const addedAuthor = normalizedAuthors.at(-1);
+                if (addedAuthor) {
+                  if (!addedAuthor.author) {
+                    append({ name: addedAuthor.label, email: '' });
+                  } else if (
+                    // eslint-disable-next-line no-underscore-dangle
+                    addedAuthor.author.__meta.type === 'external-author'
+                  ) {
+                    append({
+                      name: addedAuthor.label,
+                      email: '',
+                      id: addedAuthor.author.id,
+                    });
+                  }
+                }
+              }
+
+              // Handle removed or replaced author
+              if (hasRemoved || hasReplaced) {
+                const fieldValues = getValues(`versions.0.${fieldName}Emails`);
+
+                const externalAuthors = normalizedAuthors.filter(
+                  (item) => !item.author,
                 );
 
-                if (hasAuthorBeenAdded) {
-                  const lastAuthorAdded = newAuthors.at(-1);
-                  if (!lastAuthorAdded?.author) {
-                    append({
-                      name: lastAuthorAdded.label,
-                      email: '',
-                    });
-                  } else if (
-                    // eslint-disable-next-line no-underscore-dangle
-                    lastAuthorAdded.author.__meta.type === 'external-author'
-                  ) {
-                    append({
-                      name: lastAuthorAdded.label,
-                      email: '',
-                      id: lastAuthorAdded.author.id,
-                    });
-                  }
-                } else {
-                  const fieldValues = getValues(
-                    `versions.0.${fieldName}Emails`,
-                  );
+                const deletedIndex = fieldValues.findIndex(
+                  (item) =>
+                    !externalAuthors.some(
+                      (externalAuthor) => externalAuthor.label === item.name,
+                    ),
+                );
 
-                  const externalAuthors = newAuthors?.filter(
-                    (item) => !item.author,
-                  );
-
-                  const deletedAuthorIndex = fieldValues.findIndex(
-                    (item) =>
-                      !externalAuthors.some(
-                        (externalAuthor) => externalAuthor.label === item.name,
-                      ),
-                  );
-
-                  if (deletedAuthorIndex > -1) {
-                    remove(deletedAuthorIndex);
-                  }
+                if (deletedIndex > -1) {
+                  remove(deletedIndex);
                 }
-                (
-                  onChange as (
-                    newValues: OptionsType<ManuscriptAuthorOption>,
-                  ) => void
-                )(newAuthors);
-              } else {
-                if (newAuthors) {
-                  const lastAuthorAdded = newAuthors as ManuscriptAuthorOption;
-                  if (!lastAuthorAdded?.author) {
-                    append({
-                      name: lastAuthorAdded.label,
-                      email: '',
-                    });
-                  } else if (
-                    // eslint-disable-next-line no-underscore-dangle
-                    lastAuthorAdded.author.__meta.type === 'external-author'
-                  ) {
-                    append({
-                      name: lastAuthorAdded.label,
-                      email: '',
-                      id: lastAuthorAdded.author.id,
-                    });
-                  }
-                } else {
-                  remove(0);
-                }
-
-                (
-                  onChange as (newValues: ManuscriptAuthorOption | null) => void
-                )(newAuthors as ManuscriptAuthorOption | null);
               }
 
-              if (validate) {
-                // Trigger React Hook Form validation first to ensure state is updated
-                // Then run custom validation
+              setValue(`versions.0.${fieldName}`, normalizedAuthors, {
+                shouldValidate: true,
+                shouldTouch: true,
+              });
+
+              setTimeout(async () => {
                 await trigger(`versions.0.${fieldName}`);
-                validate();
-              }
-            }}
-            onBlur={() => {
-              if (validate) {
-                validate();
-              }
+              }, 0);
             }}
             values={authors || []}
             noOptionsMessage={({ inputValue }) =>

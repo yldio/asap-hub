@@ -347,7 +347,11 @@ describe('Manuscript form', () => {
   });
 
   it('does not submit when required values are missing', async () => {
-    const { getByRole } = await renderManuscriptForm(defaultProps);
+    const { getByRole } = await renderManuscriptForm({
+      ...defaultProps,
+      selectedLabs: [],
+      firstAuthors: [],
+    });
 
     const submitButton = getByRole('button', { name: /Submit/ });
 

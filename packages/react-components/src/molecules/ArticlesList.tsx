@@ -89,6 +89,10 @@ const itemLinkStyles = css({
   display: 'block',
 });
 
+const iconStyles = css({
+  display: 'flex',
+});
+
 export type ArticlesListProps = {
   readonly aimId: string;
   readonly articlesCount?: number;
@@ -134,7 +138,9 @@ const ArticlesList: FC<ArticlesListProps> = ({
           }}
           overrideStyles={iconButtonStyles}
         >
-          <span>{expanded ? minusRectIcon : plusRectIcon}</span>
+          <span css={iconStyles}>
+            {expanded ? minusRectIcon : plusRectIcon}
+          </span>
           <span css={titleStyles}>Articles ({articlesCount})</span>
         </Button>
         <span css={separatorStyles}>•</span>

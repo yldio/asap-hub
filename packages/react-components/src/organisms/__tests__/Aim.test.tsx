@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Aim as AimType, AimStatus } from '@asap-hub/model';
 import Aim, { getAimStatusAccent } from '../Aim';
@@ -23,6 +23,20 @@ const longAim: AimType = {
 };
 
 const defaultAimProps = { fetchArticles: mockFetchArticles };
+
+const mockScrollHeight = (element: HTMLElement, scrollHeight: number) => {
+  Object.defineProperty(element, 'scrollHeight', {
+    configurable: true,
+    value: scrollHeight,
+  });
+};
+
+const mockClientHeight = (element: HTMLElement, clientHeight: number) => {
+  Object.defineProperty(element, 'clientHeight', {
+    configurable: true,
+    value: clientHeight,
+  });
+};
 
 describe('Aim', () => {
   it('renders aim description', () => {
@@ -77,6 +91,97 @@ describe('Aim', () => {
     expect(
       screen.getByRole('button', { name: 'Collapse articles' }),
     ).toBeInTheDocument();
+  });
+
+  it('truncates long descriptions and shows Read More button', async () => {
+    render(<Aim aim={longAim} {...defaultAimProps} />);
+
+    const descriptionDiv = screen.getByText(longAim.description);
+    mockScrollHeight(descriptionDiv, 100);
+    mockClientHeight(descriptionDiv, 48);
+
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /Read More/i }),
+      ).toBeInTheDocument();
+    });
+    expect(
+      screen.queryByRole('button', { name: /Read Less/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('expands description when Read More is clicked', async () => {
+    render(<Aim aim={longAim} {...defaultAimProps} />);
+
+    const descriptionDiv = screen.getByText(longAim.description);
+    mockScrollHeight(descriptionDiv, 100);
+    mockClientHeight(descriptionDiv, 48);
+
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /Read More/i }),
+      ).toBeInTheDocument();
+    });
+
+    const readMoreButton = screen.getByRole('button', { name: /Read More/i });
+    await userEvent.click(readMoreButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /Read Less/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: /Read More/i }),
+      ).not.toBeInTheDocument();
+      expect(screen.getByText(longAim.description)).toBeInTheDocument();
+    });
+  });
+
+  it('collapses description when Read Less is clicked', async () => {
+    render(<Aim aim={longAim} {...defaultAimProps} />);
+
+    const descriptionDiv = screen.getByText(longAim.description);
+    mockScrollHeight(descriptionDiv, 100);
+    mockClientHeight(descriptionDiv, 48);
+
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /Read More/i }),
+      ).toBeInTheDocument();
+    });
+
+    const readMoreButton = screen.getByRole('button', { name: /Read More/i });
+    await userEvent.click(readMoreButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /Read Less/i }),
+      ).toBeInTheDocument();
+    });
+
+    const readLessButton = screen.getByRole('button', { name: /Read Less/i });
+    await userEvent.click(readLessButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /Read More/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: /Read Less/i }),
+      ).not.toBeInTheDocument();
+    });
   });
 
   describe('getAimStatusAccent', () => {

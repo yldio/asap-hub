@@ -75,7 +75,13 @@ export const readComplianceData = async (
 export const extractDOIs = (
   items: Array<{ doi?: string | null } | null> | undefined,
 ): string =>
-  [...new Set((items ?? []).map((item) => item?.doi?.trim()).filter(Boolean) as string[])].join(',');
+  [
+    ...new Set(
+      (items ?? [])
+        .map((item) => item?.doi?.trim())
+        .filter(Boolean) as string[],
+    ),
+  ].join(',');
 
 type PagedResult<T> = {
   total?: number;

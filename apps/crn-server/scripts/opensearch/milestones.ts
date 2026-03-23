@@ -12,7 +12,11 @@ const PROJECTS_PAGE_SIZE = 50;
 const AIMS_PAGE_SIZE = 100;
 const MILESTONES_PAGE_SIZE = 50;
 
-type AimMeta = { order: number; projectId: string; grantType: 'original' | 'supplement' };
+type AimMeta = {
+  order: number;
+  projectId: string;
+  grantType: 'original' | 'supplement';
+};
 
 const buildAimOrderMap = async (
   provider: ReturnType<typeof getAimsMilestonesDataProvider>,
@@ -43,7 +47,11 @@ const buildAimOrderMap = async (
 
         // Only set if not already present to keep the first-seen order
         if (!aimOrderMap.has(aim.sys.id)) {
-          aimOrderMap.set(aim.sys.id, { order: index + 1, projectId, grantType });
+          aimOrderMap.set(aim.sys.id, {
+            order: index + 1,
+            projectId,
+            grantType,
+          });
         }
       });
     };
@@ -106,7 +114,9 @@ const buildMilestoneMetaMap = async (
     });
   });
 
-  console.log(`Milestone meta map built for ${milestoneMetaMap.size} milestones.`);
+  console.log(
+    `Milestone meta map built for ${milestoneMetaMap.size} milestones.`,
+  );
   return milestoneMetaMap;
 };
 

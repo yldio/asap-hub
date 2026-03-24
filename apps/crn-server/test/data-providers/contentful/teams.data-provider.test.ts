@@ -715,7 +715,7 @@ describe('Teams data provider', () => {
     });
 
     describe('labs', () => {
-      test('should add a lab count to the team response', async () => {
+      test('should add a lab count for PI members whose labs they PI', async () => {
         const team = {
           ...getContentfulGraphqlTeam(),
           linkedFrom: {
@@ -723,7 +723,7 @@ describe('Teams data provider', () => {
               total: 1,
               items: [
                 {
-                  role: 'Project Manager',
+                  role: 'Lead PI (Core Leadership)',
                   inactiveSinceDate: null,
                   linkedFrom: {
                     usersCollection: {
@@ -733,8 +733,14 @@ describe('Teams data provider', () => {
                           ...getContentfulGraphqlTeamMembers(),
                           labsCollection: {
                             items: [
-                              { sys: { id: 'lab-1' } },
-                              { sys: { id: 'lab-2' } },
+                              {
+                                sys: { id: 'lab-1' },
+                                labPi: { sys: { id: 'user-id-1' } },
+                              },
+                              {
+                                sys: { id: 'lab-2' },
+                                labPi: { sys: { id: 'user-id-1' } },
+                              },
                             ],
                           },
                         },
@@ -769,7 +775,7 @@ describe('Teams data provider', () => {
               total: 1,
               items: [
                 {
-                  role: 'Project Manager',
+                  role: 'Co-PI (Core Leadership)',
                   inactiveSinceDate: null,
                   linkedFrom: {
                     usersCollection: {
@@ -778,7 +784,13 @@ describe('Teams data provider', () => {
                         {
                           ...getContentfulGraphqlTeamMembers(),
                           labsCollection: {
-                            items: [null, { sys: { id: 'lab-2' } }],
+                            items: [
+                              null,
+                              {
+                                sys: { id: 'lab-2' },
+                                labPi: { sys: { id: 'user-id-1' } },
+                              },
+                            ],
                           },
                         },
                       ],
@@ -812,7 +824,7 @@ describe('Teams data provider', () => {
               total: 2,
               items: [
                 {
-                  role: 'Key Personnel',
+                  role: 'Lead PI (Core Leadership)',
                   inactiveSinceDate: null,
                   linkedFrom: {
                     usersCollection: {
@@ -822,9 +834,14 @@ describe('Teams data provider', () => {
                           ...getContentfulGraphqlTeamMembers(),
                           labsCollection: {
                             items: [
-                              { sys: { id: 'lab-1' } },
-                              { sys: { id: 'lab-2' } },
-                              { sys: { id: 'lab-3' } },
+                              {
+                                sys: { id: 'lab-1' },
+                                labPi: { sys: { id: 'user-id-1' } },
+                              },
+                              {
+                                sys: { id: 'lab-2' },
+                                labPi: { sys: { id: 'user-id-1' } },
+                              },
                             ],
                           },
                         },
@@ -833,19 +850,25 @@ describe('Teams data provider', () => {
                   },
                 },
                 {
-                  role: 'Project Manager',
+                  role: 'Collaborating PI',
                   inactiveSinceDate: null,
                   linkedFrom: {
                     usersCollection: {
                       total: 1,
                       items: [
                         {
-                          ...getContentfulGraphqlTeamMembers(),
+                          sys: { id: 'user-id-2' },
+                          onboarded: true,
                           labsCollection: {
                             items: [
-                              { sys: { id: 'lab-1' } },
-                              { sys: { id: 'lab-2' } },
-                              { sys: { id: 'lab-4' } },
+                              {
+                                sys: { id: 'lab-1' },
+                                labPi: { sys: { id: 'user-id-2' } },
+                              },
+                              {
+                                sys: { id: 'lab-3' },
+                                labPi: { sys: { id: 'user-id-2' } },
+                              },
                             ],
                           },
                         },
@@ -867,7 +890,103 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetch({});
 
         expect(result).toEqual({
-          items: [expect.objectContaining({ labCount: 4 })],
+          items: [expect.objectContaining({ labCount: 3 })],
+          total: 1,
+        });
+      });
+      test('should not count labs from non-PI members', async () => {
+        const team = {
+          ...getContentfulGraphqlTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 1,
+              items: [
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          labsCollection: {
+                            items: [
+                              {
+                                sys: { id: 'lab-1' },
+                                labPi: { sys: { id: 'user-id-1' } },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamsCollection: {
+            total: 1,
+            items: [team],
+          },
+        });
+
+        const result = await teamDataProvider.fetch({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ labCount: 0 })],
+          total: 1,
+        });
+      });
+      test('should not count labs where PI member is not the lab PI', async () => {
+        const team = {
+          ...getContentfulGraphqlTeam(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 1,
+              items: [
+                {
+                  role: 'Lead PI (Core Leadership)',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          labsCollection: {
+                            items: [
+                              {
+                                sys: { id: 'lab-1' },
+                                labPi: { sys: { id: 'other-user' } },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          teamsCollection: {
+            total: 1,
+            items: [team],
+          },
+        });
+
+        const result = await teamDataProvider.fetch({});
+
+        expect(result).toEqual({
+          items: [expect.objectContaining({ labCount: 0 })],
           total: 1,
         });
       });
@@ -2093,12 +2212,12 @@ describe('Teams data provider', () => {
           {
             id: 'cd7be4902',
             name: 'Brighton',
-            labPrincipalInvestigatorId: undefined,
+            labPrincipalInvestigatorId: 'user-id-1',
           },
           {
             id: 'cd7be4903',
             name: 'Liverpool',
-            labPrincipalInvestigatorId: undefined,
+            labPrincipalInvestigatorId: 'user-id-1',
           },
         ]);
       });
@@ -2111,7 +2230,7 @@ describe('Teams data provider', () => {
               total: 1,
               items: [
                 {
-                  role: 'Project Manager',
+                  role: 'Lead PI (Core Leadership)',
                   inactiveSinceDate: null,
                   linkedFrom: {
                     usersCollection: {
@@ -2151,7 +2270,7 @@ describe('Teams data provider', () => {
               total: 2,
               items: [
                 {
-                  role: 'Project Manager',
+                  role: 'Lead PI (Core Leadership)',
                   inactiveSinceDate: null,
                   linkedFrom: {
                     usersCollection: {
@@ -2166,7 +2285,7 @@ describe('Teams data provider', () => {
                   },
                 },
                 {
-                  role: 'Project Manager',
+                  role: 'Co-PI (Core Leadership)',
                   inactiveSinceDate: null,
                   linkedFrom: {
                     usersCollection: {
@@ -2181,7 +2300,21 @@ describe('Teams data provider', () => {
                           lastName: 'Hardy',
                           avatar: null,
                           alumniSinceDate: null,
-                          labsCollection: getContentfulGraphqlTeamMemberLabs(),
+                          onboarded: true,
+                          labsCollection: {
+                            items: [
+                              {
+                                sys: { id: 'cd7be4902' },
+                                name: 'Brighton',
+                                labPi: { sys: { id: 'user-id-2' } },
+                              },
+                              {
+                                sys: { id: 'cd7be4903' },
+                                name: 'Liverpool',
+                                labPi: { sys: { id: 'user-id-2' } },
+                              },
+                            ],
+                          },
                         },
                       ],
                     },
@@ -2197,6 +2330,84 @@ describe('Teams data provider', () => {
         const result = await teamDataProvider.fetchById(id);
 
         expect(result?.labCount).toEqual(2);
+      });
+      test('should not include labs from non-PI members', async () => {
+        const id = 'some-id';
+        const teams = {
+          ...getContentfulGraphqlTeamById(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 1,
+              items: [
+                {
+                  role: 'Project Manager',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          labsCollection: getContentfulGraphqlTeamMemberLabs(),
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        mockFetchByIdGraphqlResponses(teams);
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result?.labCount).toEqual(0);
+        expect(result?.labs).toEqual([]);
+      });
+      test('should not include labs where PI member is not the lab PI', async () => {
+        const id = 'some-id';
+        const teams = {
+          ...getContentfulGraphqlTeamById(),
+          linkedFrom: {
+            teamMembershipCollection: {
+              total: 1,
+              items: [
+                {
+                  role: 'Lead PI (Core Leadership)',
+                  inactiveSinceDate: null,
+                  linkedFrom: {
+                    usersCollection: {
+                      total: 1,
+                      items: [
+                        {
+                          ...getContentfulGraphqlTeamMembers(),
+                          labsCollection: {
+                            items: [
+                              {
+                                sys: { id: 'cd7be4902' },
+                                name: 'Brighton',
+                                labPi: { sys: { id: 'other-user' } },
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        mockFetchByIdGraphqlResponses(teams);
+
+        const result = await teamDataProvider.fetchById(id);
+
+        expect(result?.labCount).toEqual(0);
+        expect(result?.labs).toEqual([]);
       });
     });
 

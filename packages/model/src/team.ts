@@ -4,12 +4,18 @@ import { ManuscriptResponse } from './manuscript';
 import { ProjectStatus, ProjectType } from './project';
 import { ResearchTagDataObject } from './research-tag';
 
-export const teamRole = [
+export const piRole = [
   'Lead PI (Core Leadership)',
   'Co-PI (Core Leadership)',
+  'Collaborating PI',
+] as const;
+
+export type TeamPIRole = (typeof piRole)[number];
+
+export const teamRole = [
+  ...piRole,
   'Project Manager',
   'Data Manager',
-  'Collaborating PI',
   'Key Personnel',
   'Scientific Advisory Board',
   'ASAP Staff',
@@ -19,6 +25,9 @@ export const teamRole = [
 const teamType = ['Discovery Team', 'Resource Team'] as const;
 
 export type TeamRole = (typeof teamRole)[number];
+
+export const isPIRole = (role: unknown): role is TeamPIRole =>
+  typeof role === 'string' && (piRole as readonly string[]).includes(role);
 
 export type TeamTool = {
   id?: string;

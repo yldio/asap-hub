@@ -418,8 +418,16 @@ export const getContentfulGraphqlTeamMembers = () => ({
 
 export const getContentfulGraphqlTeamMemberLabs = () => ({
   items: [
-    { sys: { id: 'cd7be4902' }, name: 'Brighton' },
-    { sys: { id: 'cd7be4903' }, name: 'Liverpool' },
+    {
+      sys: { id: 'cd7be4902' },
+      name: 'Brighton',
+      labPi: { sys: { id: 'user-id-1' } },
+    },
+    {
+      sys: { id: 'cd7be4903' },
+      name: 'Liverpool',
+      labPi: { sys: { id: 'user-id-1' } },
+    },
   ],
 });
 

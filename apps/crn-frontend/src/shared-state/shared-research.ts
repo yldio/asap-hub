@@ -203,6 +203,7 @@ export const usePostResearchOutput = () => {
   const auth0 = useAuth0CRN();
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
+    mutationKey: ['createResearchOutput'],
     mutationFn: async (payload: ResearchOutputPostRequest) => {
       const token = await auth0.getTokenSilently();
       return createResearchOutput(payload, `Bearer ${token}`);
@@ -222,6 +223,7 @@ export const usePutResearchOutput = (shouldInvalidate?: boolean) => {
   const auth0 = useAuth0CRN();
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation({
+    mutationKey: ['updateResearchOutput'],
     mutationFn: async ({
       id,
       payload,

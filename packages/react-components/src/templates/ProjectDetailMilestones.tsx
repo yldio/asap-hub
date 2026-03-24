@@ -1,11 +1,17 @@
 import { ComponentProps, useState } from 'react';
 import { css } from '@emotion/react';
-import { Milestone as MilestoneType } from '@asap-hub/model';
+import {
+  Aim,
+  Milestone as MilestoneType,
+  MilestoneCreateRequest,
+  GrantType,
+} from '@asap-hub/model';
 import type { ResearchOutputOption } from '../utils';
 
-import { Headline3, Link, Paragraph } from '../atoms';
+import { Button, Headline3, Link, Paragraph } from '../atoms';
 import { LabeledDropdown, PageControls } from '../molecules';
 import ProjectMilestones from '../organisms/ProjectMilestones';
+import MilestoneForm from '../organisms/MilestoneForm';
 import { rem, mobileScreen } from '../pixels';
 import { neutral1000 } from '../colors';
 import MilestonesMobilePage from './MilestonesMobilePage';
@@ -59,35 +65,50 @@ const pageDesktopStyles = css({
   },
 });
 
-type GrantType = 'original' | 'supplement';
+const addButtonContainerStyles = css({
+  display: 'flex',
+  justifyContent: 'flex-end',
+});
 
 type ProjectDetailMilestonesProps = {
   readonly milestones: ReadonlyArray<MilestoneType>;
   readonly seeAimsHref?: string;
   readonly pageControlsProps?: ComponentProps<typeof PageControls>;
   readonly hasSupplementGrant?: boolean;
-  readonly isLead: boolean;
-  readonly loadArticleOptions: (
+  readonly isLead?: boolean;
+  readonly loadArticleOptions?: (
     inputValue: string,
   ) => Promise<ResearchOutputOption[]>;
+  readonly originalGrantAims?: ReadonlyArray<Aim>;
+  readonly supplementGrantAims?: ReadonlyArray<Aim>;
+  readonly onCreateMilestone?: (
+    data: MilestoneCreateRequest,
+  ) => Promise<unknown>;
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   milestones,
   seeAimsHref,
-  // ...pageControlProps // TODO: Add this back when we have actual page controls props
   pageControlsProps,
   hasSupplementGrant = false,
-  isLead,
+  isLead = false,
   loadArticleOptions,
+  originalGrantAims = [],
+  supplementGrantAims = [],
+  onCreateMilestone,
 }) => {
   const hasMilestones = milestones.length > 0;
   const [selectedGrantType, setSelectedGrantType] = useState<GrantType>(
     hasSupplementGrant ? 'supplement' : 'original',
   );
+  const [showForm, setShowForm] = useState(false);
 
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
+
+  const formGrantType = hasSupplementGrant ? 'supplement' : selectedGrantType;
+  const formAims =
+    formGrantType === 'supplement' ? supplementGrantAims : originalGrantAims;
 
   return (
     <>
@@ -110,6 +131,14 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
             onChange={setSelectedGrantType}
             required={true}
           />
+
+          {isLead && onCreateMilestone && (
+            <div css={addButtonContainerStyles}>
+              <Button primary onClick={() => setShowForm(true)}>
+                Add New Milestone
+              </Button>
+            </div>
+          )}
 
           <div css={descriptionSectionStyles}>
             <Headline3 noMargin>Milestones</Headline3>
@@ -152,6 +181,17 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
       <div css={pageMobileStyles}>
         <MilestonesMobilePage />
       </div>
+      {showForm && onCreateMilestone && (
+        <MilestoneForm
+          grantType={formGrantType}
+          aims={formAims}
+          onSubmit={async (data) => {
+            await onCreateMilestone(data);
+            setShowForm(false);
+          }}
+          onCancel={() => setShowForm(false)}
+        />
+      )}
     </>
   );
 };

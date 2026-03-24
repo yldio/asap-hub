@@ -1,5 +1,6 @@
 import {
   ListProjectResponse,
+  MilestoneCreateRequest,
   ProjectDetail,
   ProjectResponse,
   ProjectTool,
@@ -15,6 +16,7 @@ import {
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
+  createMilestone,
   getProject,
   getProjects,
   patchProject,
@@ -140,4 +142,10 @@ export const usePatchProjectById = (id: string) => {
     // due to Contentful's read-after-write delay.
     setProject({ ...updated, tools: patch.tools });
   };
+};
+
+export const useCreateMilestone = (projectId: string) => {
+  const authorization = useRecoilValue(authorizationState);
+  return async (data: MilestoneCreateRequest) =>
+    createMilestone(projectId, data, authorization);
 };

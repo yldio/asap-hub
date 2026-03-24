@@ -1,20 +1,20 @@
 import { FC, lazy } from 'react';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Frame } from '@asap-hub/frontend-utils';
-import { isProjectLead } from '@asap-hub/model';
 import {
   ProjectDetailPage,
   ProjectDetailAbout,
   ProjectDetailMilestones,
   NotFoundPage,
 } from '@asap-hub/react-components';
+import { isProjectMilestoneLead } from '@asap-hub/model';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
-import { useProjectById } from './state';
+import { useProjectById, useCreateMilestone } from './state';
 import { useFetchArticles } from './aim-articles-state';
+import { useRelatedResearchSuggestions } from '../shared-state/shared-research';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
-import { mockMilestones, mockLoadArticleOptions } from './mock-milestones';
 import type { ProjectDetailConfig } from './projectDetailConfig';
 
 const loadProjectManuscript = () =>
@@ -34,6 +34,8 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const user = useCurrentUserCRN();
   const isStaff = user?.role === 'Staff';
   const { hash: targetManuscript } = useLocation();
+  const createMilestone = useCreateMilestone(projectId);
+  const getArticleSuggestions = useRelatedResearchSuggestions();
 
   if (!projectDetail) {
     return <NotFoundPage />;
@@ -46,12 +48,26 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const route = config.getRoute(projectId);
 
   const isProjectMember = !!user?.projects.find(({ id }) => id === projectId);
-  const isLead =
-    !!user && isProjectLead(user.id, user.teams ?? [], projectDetail);
   const showWorkspace =
     isEnabled('PROJECT_WORKSPACE') && (isProjectMember || isStaff);
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
   const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
+  const milestonesHref = route.milestones({}).$;
+
+  const isLead = user ? isProjectMilestoneLead(projectDetail, user) : false;
+
+  const hasSupplementGrant =
+    'supplementGrant' in projectDetail && !!projectDetail.supplementGrant;
+
+  const originalGrantAims =
+    'originalGrantAims' in projectDetail
+      ? projectDetail.originalGrantAims
+      : undefined;
+
+  const supplementGrantAims =
+    'supplementGrant' in projectDetail
+      ? projectDetail.supplementGrant?.aims
+      : undefined;
 
   return (
     <Frame title={projectDetail.title || ''}>
@@ -62,7 +78,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
             pointOfContactEmail={projectDetail.contactEmail || undefined}
             aboutHref={route.about({}).$}
             workspaceHref={workspaceHref}
-            milestonesHref={route.milestones({}).$}
+            milestonesHref={milestonesHref}
           >
             <Routes>
               {showWorkspace && (
@@ -114,7 +130,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       projectDetail.contactEmail || undefined
                     }
                     fetchArticles={fetchArticles}
-                    seeMilestonesHref={route.milestones({}).$}
+                    seeMilestonesHref={milestonesHref}
                   />
                 }
               />
@@ -123,14 +139,14 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                 element={
                   isProjectMilestonesEnabled ? (
                     <ProjectDetailMilestones
-                      milestones={mockMilestones}
+                      milestones={projectDetail.milestones ?? []}
                       seeAimsHref={route.about({}).$}
-                      hasSupplementGrant={
-                        'supplementGrant' in projectDetail &&
-                        !!projectDetail.supplementGrant
-                      }
+                      hasSupplementGrant={hasSupplementGrant}
                       isLead={isLead}
-                      loadArticleOptions={mockLoadArticleOptions}
+                      loadArticleOptions={getArticleSuggestions}
+                      originalGrantAims={originalGrantAims}
+                      supplementGrantAims={supplementGrantAims}
+                      onCreateMilestone={createMilestone}
                       pageControlsProps={{
                         numberOfPages: 1,
                         currentPageIndex: 0,

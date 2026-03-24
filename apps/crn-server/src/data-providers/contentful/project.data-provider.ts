@@ -28,6 +28,7 @@ import {
   DiscoveryProjectDetail,
   FundedTeam,
   ListProjectDataObject,
+  MilestoneCreateRequest,
   ProjectDataObject,
   ProjectDetailDataObject,
   ProjectMember,
@@ -820,6 +821,47 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
         },
       })),
     });
+  }
+
+  async createMilestone(data: Omit<MilestoneCreateRequest, 'grantType'>): Promise<string> {
+    if (!this.getRestClient) {
+      throw new Error('REST client not available');
+    }
+
+    const environment = await this.getRestClient();
+
+    const milestoneEntry = await environment.createEntry('milestones', {
+      fields: addLocaleToFields({
+        description: data.description,
+        status: data.status,
+        relatedArticles: data.relatedArticleIds?.length
+          ? data.relatedArticleIds.map((id: string) => ({
+              sys: { type: 'Link', linkType: 'Entry', id },
+            }))
+          : [],
+      }),
+    });
+    await milestoneEntry.publish();
+
+    for (const aimId of data.aimIds) {
+      const aimEntry = await environment.getEntry(aimId);
+      const currentMilestones =
+        aimEntry.fields.milestones?.['en-US'] || [];
+      await patchAndPublish(aimEntry, {
+        milestones: [
+          ...currentMilestones,
+          {
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id: milestoneEntry.sys.id,
+            },
+          },
+        ],
+      });
+    }
+
+    return milestoneEntry.sys.id;
   }
 
   async fetchByUserId(

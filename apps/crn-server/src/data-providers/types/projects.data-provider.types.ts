@@ -4,6 +4,7 @@ import {
   FetchPaginationOptions,
   FetchProjectsFilter,
   ListProjectDataObject,
+  MilestoneCreateRequest,
   ProjectDataObject,
   ProjectTool,
 } from '@asap-hub/model';
@@ -28,4 +29,5 @@ export type ProjectDataProvider = DataProvider<
     options: FetchPaginationOptions,
   ) => Promise<ListProjectDataObject>;
   update: (id: string, update: ProjectUpdateDataObject) => Promise<void>;
+  createMilestone: (data: Omit<MilestoneCreateRequest, 'grantType'>) => Promise<string>;
 };

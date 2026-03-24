@@ -143,8 +143,97 @@ export const projectsContentQueryFragment = gql`
   }
 `;
 
+export const projectsMinimalContentQueryFragment = gql`
+  fragment ProjectsMinimalContentData on Projects {
+    sys {
+      id
+      firstPublishedAt
+      publishedAt
+    }
+    title
+    projectId
+    grantId
+    originalGrant
+    projectType
+    status
+    startDate
+    endDate
+    applicationNumber
+    contactEmail
+    googleDriveLink
+    supplementGrant {
+      description
+    }
+    resourceType {
+      sys {
+        id
+      }
+      name
+    }
+    researchTagsCollection(limit: 20) {
+      total
+      items {
+        sys {
+          id
+        }
+        name
+        category
+        types
+      }
+    }
+    toolsCollection {
+      items {
+        sys {
+          id
+        }
+        name
+        description
+        url
+      }
+    }
+    membersCollection(limit: 100) {
+      total
+      items {
+        sys {
+          id
+        }
+        role
+        projectMember {
+          ... on Users {
+            __typename
+            sys {
+              id
+            }
+            firstName
+            nickname
+            lastName
+            email
+            onboarded
+            alumniSinceDate
+            avatar {
+              url
+            }
+          }
+          ... on Teams {
+            __typename
+            sys {
+              id
+            }
+            displayName
+            inactiveSince
+            researchTheme {
+              name
+            }
+            teamDescription
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const FETCH_PROJECTS = gql`
-  ${projectsContentQueryFragment}
+  ${projectsMinimalContentQueryFragment}
   query FetchProjects(
     $limit: Int
     $skip: Int
@@ -159,7 +248,7 @@ export const FETCH_PROJECTS = gql`
     ) {
       total
       items {
-        ...ProjectsContentData
+        ...ProjectsMinimalContentData
       }
     }
   }
@@ -177,7 +266,7 @@ export const FETCH_PROJECT_BY_ID = gql`
 // Fetches projects associated with a team via reverse lookup
 // Teams -> linkedFrom.projectMembershipCollection -> linkedFrom.projectsCollection
 export const FETCH_PROJECTS_BY_TEAM_ID = gql`
-  ${projectsContentQueryFragment}
+  ${projectsMinimalContentQueryFragment}
   query FetchProjectsByTeamId($teamId: String!, $limit: Int) {
     teams(id: $teamId) {
       linkedFrom {
@@ -187,7 +276,7 @@ export const FETCH_PROJECTS_BY_TEAM_ID = gql`
             linkedFrom {
               projectsCollection(limit: 1) {
                 items {
-                  ...ProjectsContentData
+                  ...ProjectsMinimalContentData
                 }
               }
             }
@@ -201,7 +290,7 @@ export const FETCH_PROJECTS_BY_TEAM_ID = gql`
 // Fetches projects associated with a user via reverse lookup
 // Users -> linkedFrom.projectMembershipCollection -> linkedFrom.projectsCollection
 export const FETCH_PROJECTS_BY_USER_ID = gql`
-  ${projectsContentQueryFragment}
+  ${projectsMinimalContentQueryFragment}
   query FetchProjectsByUserId($userId: String!, $limit: Int) {
     users(id: $userId) {
       linkedFrom {
@@ -211,7 +300,7 @@ export const FETCH_PROJECTS_BY_USER_ID = gql`
             linkedFrom {
               projectsCollection(limit: 1) {
                 items {
-                  ...ProjectsContentData
+                  ...ProjectsMinimalContentData
                 }
               }
             }
@@ -225,7 +314,7 @@ export const FETCH_PROJECTS_BY_USER_ID = gql`
 // Fetches projects that contain a specific project membership via reverse lookup
 // ProjectMembership -> linkedFrom.projectsCollection
 export const FETCH_PROJECTS_BY_MEMBERSHIP_ID = gql`
-  ${projectsContentQueryFragment}
+  ${projectsMinimalContentQueryFragment}
   query FetchProjectsByMembershipId($membershipId: String!, $limit: Int) {
     projectMembership(id: $membershipId) {
       sys {
@@ -235,7 +324,7 @@ export const FETCH_PROJECTS_BY_MEMBERSHIP_ID = gql`
         projectsCollection(limit: $limit) {
           total
           items {
-            ...ProjectsContentData
+            ...ProjectsMinimalContentData
           }
         }
       }

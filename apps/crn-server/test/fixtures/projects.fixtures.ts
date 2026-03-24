@@ -17,7 +17,66 @@ type GraphQLProject = NonNullable<
   NonNullable<FetchProjectsQuery['projectsCollection']>['items'][number]
 >;
 
+type GraphQLProjectById = NonNullable<
+  NonNullable<FetchProjectByIdQuery['projects']>
+>;
+
 export const getDiscoveryProjectGraphqlItem = (): GraphQLProject => ({
+  sys: { id: 'discovery-1' },
+  title: 'Discovery Project 1',
+  status: 'Completed',
+  startDate: '2024-01-01',
+  endDate: '2024-04-01',
+  projectType: 'Discovery Project',
+  resourceType: null,
+  googleDriveLink: null,
+  membersCollection: {
+    total: 3,
+    items: [
+      {
+        sys: { id: 'membership-discovery-team' },
+        role: 'Lead Investigator',
+        projectMember: {
+          __typename: 'Teams',
+          sys: { id: 'team-1' },
+          displayName: 'Discovery Team',
+          inactiveSince: '2025-01-01',
+          researchTheme: { name: 'Theme One' },
+        },
+      },
+      {
+        sys: { id: 'membership-discovery-user' },
+        role: 'Researcher',
+        projectMember: {
+          __typename: 'Users',
+          sys: { id: 'user-1' },
+          firstName: 'Alex',
+          nickname: 'Al',
+          lastName: 'Smith',
+          email: 'alex@example.com',
+          onboarded: true,
+          avatar: { url: 'https://example.com/alex.png' },
+          alumniSinceDate: undefined,
+        },
+      },
+      null,
+    ],
+  },
+  researchTagsCollection: {
+    total: 1,
+    items: [
+      {
+        sys: { id: 'tag-a' },
+        name: 'Tag A',
+        category: null,
+        types: null,
+      },
+      null,
+    ],
+  },
+});
+
+export const getDiscoveryProjectByIdGraphqlItem = (): GraphQLProjectById => ({
   sys: { id: 'discovery-1' },
   title: 'Discovery Project 1',
   status: 'Completed',
@@ -350,7 +409,7 @@ export const getProjectsGraphqlEmptyResponse = (): FetchProjectsQuery => ({
 });
 
 export const getProjectByIdGraphqlResponse = (): FetchProjectByIdQuery => ({
-  projects: getDiscoveryProjectGraphqlItem(),
+  projects: getDiscoveryProjectByIdGraphqlItem(),
 });
 
 export const getExpectedDiscoveryProject = (): DiscoveryProject => ({

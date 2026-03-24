@@ -43,6 +43,7 @@ export type Aims = Entry &
     description?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<AimsLinkingCollections>;
     milestonesCollection?: Maybe<AimsMilestonesCollection>;
+    milestonesCursorCollection?: Maybe<AimsMilestonesCursorCollection>;
     sys: Sys;
   };
 
@@ -68,11 +69,29 @@ export type AimsMilestonesCollectionArgs = {
   where?: InputMaybe<MilestonesFilter>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/aims) */
+export type AimsMilestonesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AimsMilestonesCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<MilestonesFilter>;
+};
+
 export type AimsCollection = {
   items: Array<Maybe<Aims>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type AimsCursorCollection = {
+  items: Array<Maybe<Aims>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type AimsFilter = {
@@ -93,8 +112,11 @@ export type AimsFilter = {
 
 export type AimsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
+  projectsCursorCollection?: Maybe<ProjectsCursorCollection>;
   supplementGrantCollection?: Maybe<SupplementGrantCollection>;
+  supplementGrantCursorCollection?: Maybe<SupplementGrantCursorCollection>;
 };
 
 export type AimsLinkingCollectionsEntryCollectionArgs = {
@@ -102,6 +124,15 @@ export type AimsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AimsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -116,6 +147,18 @@ export type AimsLinkingCollectionsProjectsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type AimsLinkingCollectionsProjectsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AimsLinkingCollectionsProjectsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type AimsLinkingCollectionsSupplementGrantCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -127,7 +170,50 @@ export type AimsLinkingCollectionsSupplementGrantCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type AimsLinkingCollectionsSupplementGrantCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<AimsLinkingCollectionsSupplementGrantCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum AimsLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AimsLinkingCollectionsProjectsCursorCollectionOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
   ApplicationNumberDesc = 'applicationNumber_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -171,6 +257,21 @@ export enum AimsLinkingCollectionsSupplementGrantCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum AimsLinkingCollectionsSupplementGrantCursorCollectionOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type AimsMilestonesCollection = {
   items: Array<Maybe<Milestones>>;
   limit: Scalars['Int'];
@@ -179,6 +280,25 @@ export type AimsMilestonesCollection = {
 };
 
 export enum AimsMilestonesCollectionOrder {
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type AimsMilestonesCursorCollection = {
+  items: Array<Maybe<Milestones>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum AimsMilestonesCursorCollectionOrder {
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -244,6 +364,12 @@ export type AnnouncementsCollection = {
   total: Scalars['Int'];
 };
 
+export type AnnouncementsCursorCollection = {
+  items: Array<Maybe<Announcements>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type AnnouncementsFilter = {
   AND?: InputMaybe<Array<InputMaybe<AnnouncementsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<AnnouncementsFilter>>>;
@@ -276,7 +402,9 @@ export type AnnouncementsFilter = {
 
 export type AnnouncementsLinkingCollections = {
   dashboardCollection?: Maybe<DashboardCollection>;
+  dashboardCursorCollection?: Maybe<DashboardCursorCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type AnnouncementsLinkingCollectionsDashboardCollectionArgs = {
@@ -290,6 +418,20 @@ export type AnnouncementsLinkingCollectionsDashboardCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type AnnouncementsLinkingCollectionsDashboardCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<AnnouncementsLinkingCollectionsDashboardCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type AnnouncementsLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -298,7 +440,27 @@ export type AnnouncementsLinkingCollectionsEntryCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type AnnouncementsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum AnnouncementsLinkingCollectionsDashboardCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AnnouncementsLinkingCollectionsDashboardCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -402,6 +564,12 @@ export type AssetCollection = {
   total: Scalars['Int'];
 };
 
+export type AssetCursorCollection = {
+  items: Array<Maybe<Asset>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type AssetFilter = {
   AND?: InputMaybe<Array<InputMaybe<AssetFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<AssetFilter>>>;
@@ -473,13 +641,21 @@ export type AssetFilter = {
 
 export type AssetLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  eventsCursorCollection?: Maybe<EventsCursorCollection>;
   iconCollection?: Maybe<IconCollection>;
+  iconCursorCollection?: Maybe<IconCursorCollection>;
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
+  interestGroupsCursorCollection?: Maybe<InterestGroupsCursorCollection>;
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
+  manuscriptVersionsCursorCollection?: Maybe<ManuscriptVersionsCursorCollection>;
   newsCollection?: Maybe<NewsCollection>;
+  newsCursorCollection?: Maybe<NewsCursorCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
+  tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
   usersCollection?: Maybe<UsersCollection>;
+  usersCursorCollection?: Maybe<UsersCursorCollection>;
 };
 
 export type AssetLinkingCollectionsEntryCollectionArgs = {
@@ -487,6 +663,15 @@ export type AssetLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AssetLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -498,11 +683,29 @@ export type AssetLinkingCollectionsEventsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type AssetLinkingCollectionsEventsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type AssetLinkingCollectionsIconCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AssetLinkingCollectionsIconCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -514,11 +717,29 @@ export type AssetLinkingCollectionsInterestGroupsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type AssetLinkingCollectionsInterestGroupsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type AssetLinkingCollectionsManuscriptVersionsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AssetLinkingCollectionsManuscriptVersionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -530,6 +751,15 @@ export type AssetLinkingCollectionsNewsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type AssetLinkingCollectionsNewsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type AssetLinkingCollectionsTutorialsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -538,11 +768,29 @@ export type AssetLinkingCollectionsTutorialsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type AssetLinkingCollectionsTutorialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type AssetLinkingCollectionsUsersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AssetLinkingCollectionsUsersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -606,6 +854,12 @@ export type AttendanceCollection = {
   total: Scalars['Int'];
 };
 
+export type AttendanceCursorCollection = {
+  items: Array<Maybe<Attendance>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type AttendanceFilter = {
   AND?: InputMaybe<Array<InputMaybe<AttendanceFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<AttendanceFilter>>>;
@@ -620,7 +874,9 @@ export type AttendanceFilter = {
 
 export type AttendanceLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  eventsCursorCollection?: Maybe<EventsCursorCollection>;
 };
 
 export type AttendanceLinkingCollectionsEntryCollectionArgs = {
@@ -628,6 +884,15 @@ export type AttendanceLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AttendanceLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -642,7 +907,68 @@ export type AttendanceLinkingCollectionsEventsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type AttendanceLinkingCollectionsEventsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AttendanceLinkingCollectionsEventsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum AttendanceLinkingCollectionsEventsCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export enum AttendanceLinkingCollectionsEventsCursorCollectionOrder {
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -739,6 +1065,12 @@ export type AwardsCollection = {
   total: Scalars['Int'];
 };
 
+export type AwardsCursorCollection = {
+  items: Array<Maybe<Awards>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type AwardsFilter = {
   AND?: InputMaybe<Array<InputMaybe<AwardsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<AwardsFilter>>>;
@@ -764,7 +1096,9 @@ export type AwardsFilter = {
 
 export type AwardsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   teamMembershipCollection?: Maybe<TeamMembershipCollection>;
+  teamMembershipCursorCollection?: Maybe<TeamMembershipCursorCollection>;
 };
 
 export type AwardsLinkingCollectionsEntryCollectionArgs = {
@@ -772,6 +1106,15 @@ export type AwardsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AwardsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -786,7 +1129,36 @@ export type AwardsLinkingCollectionsTeamMembershipCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type AwardsLinkingCollectionsTeamMembershipCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<AwardsLinkingCollectionsTeamMembershipCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum AwardsLinkingCollectionsTeamMembershipCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AwardsLinkingCollectionsTeamMembershipCursorCollectionOrder {
   InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
   InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
@@ -865,6 +1237,12 @@ export type CalendarsCollection = {
   total: Scalars['Int'];
 };
 
+export type CalendarsCursorCollection = {
+  items: Array<Maybe<Calendars>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type CalendarsFilter = {
   AND?: InputMaybe<Array<InputMaybe<CalendarsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CalendarsFilter>>>;
@@ -896,9 +1274,13 @@ export type CalendarsFilter = {
 
 export type CalendarsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  eventsCursorCollection?: Maybe<EventsCursorCollection>;
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
+  interestGroupsCursorCollection?: Maybe<InterestGroupsCursorCollection>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+  workingGroupsCursorCollection?: Maybe<WorkingGroupsCursorCollection>;
 };
 
 export type CalendarsLinkingCollectionsEntryCollectionArgs = {
@@ -906,6 +1288,15 @@ export type CalendarsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CalendarsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -920,6 +1311,18 @@ export type CalendarsLinkingCollectionsEventsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type CalendarsLinkingCollectionsEventsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<CalendarsLinkingCollectionsEventsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type CalendarsLinkingCollectionsInterestGroupsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -928,6 +1331,20 @@ export type CalendarsLinkingCollectionsInterestGroupsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CalendarsLinkingCollectionsInterestGroupsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<CalendarsLinkingCollectionsInterestGroupsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -942,7 +1359,70 @@ export type CalendarsLinkingCollectionsWorkingGroupsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type CalendarsLinkingCollectionsWorkingGroupsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<CalendarsLinkingCollectionsWorkingGroupsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum CalendarsLinkingCollectionsEventsCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export enum CalendarsLinkingCollectionsEventsCursorCollectionOrder {
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -1012,7 +1492,47 @@ export enum CalendarsLinkingCollectionsInterestGroupsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum CalendarsLinkingCollectionsInterestGroupsCursorCollectionOrder {
+  ActiveAsc = 'active_ASC',
+  ActiveDesc = 'active_DESC',
+  GoogleDriveAsc = 'googleDrive_ASC',
+  GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SlackAsc = 'slack_ASC',
+  SlackDesc = 'slack_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum CalendarsLinkingCollectionsWorkingGroupsCollectionOrder {
+  CompleteAsc = 'complete_ASC',
+  CompleteDesc = 'complete_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum CalendarsLinkingCollectionsWorkingGroupsCursorCollectionOrder {
   CompleteAsc = 'complete_ASC',
   CompleteDesc = 'complete_DESC',
   ExternalLinkAsc = 'externalLink_ASC',
@@ -1076,6 +1596,12 @@ export type CategoryCollection = {
   total: Scalars['Int'];
 };
 
+export type CategoryCursorCollection = {
+  items: Array<Maybe<Category>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type CategoryFilter = {
   AND?: InputMaybe<Array<InputMaybe<CategoryFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CategoryFilter>>>;
@@ -1092,8 +1618,11 @@ export type CategoryFilter = {
 
 export type CategoryLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  manuscriptsCursorCollection?: Maybe<ManuscriptsCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
 };
 
 export type CategoryLinkingCollectionsEntryCollectionArgs = {
@@ -1101,6 +1630,15 @@ export type CategoryLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CategoryLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1115,6 +1653,20 @@ export type CategoryLinkingCollectionsManuscriptsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type CategoryLinkingCollectionsManuscriptsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<CategoryLinkingCollectionsManuscriptsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type CategoryLinkingCollectionsResearchOutputsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -1123,6 +1675,20 @@ export type CategoryLinkingCollectionsResearchOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type CategoryLinkingCollectionsResearchOutputsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<CategoryLinkingCollectionsResearchOutputsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1159,7 +1725,85 @@ export enum CategoryLinkingCollectionsManuscriptsCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
+export enum CategoryLinkingCollectionsManuscriptsCursorCollectionOrder {
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export enum CategoryLinkingCollectionsResearchOutputsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum CategoryLinkingCollectionsResearchOutputsCursorCollectionOrder {
   AccessionAsc = 'accession_ASC',
   AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
@@ -1270,6 +1914,12 @@ export type ComplianceReportsCollection = {
   total: Scalars['Int'];
 };
 
+export type ComplianceReportsCursorCollection = {
+  items: Array<Maybe<ComplianceReports>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ComplianceReportsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ComplianceReportsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ComplianceReportsFilter>>>;
@@ -1297,6 +1947,7 @@ export type ComplianceReportsFilter = {
 
 export type ComplianceReportsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type ComplianceReportsLinkingCollectionsEntryCollectionArgs = {
@@ -1304,6 +1955,15 @@ export type ComplianceReportsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ComplianceReportsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1360,15 +2020,23 @@ export type ContentfulTag = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type CursorPages = {
+  next?: Maybe<Scalars['String']>;
+  prev?: Maybe<Scalars['String']>;
+};
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
 export type Dashboard = Entry &
   _Node & {
     _id: Scalars['ID'];
     announcementsCollection?: Maybe<DashboardAnnouncementsCollection>;
+    announcementsCursorCollection?: Maybe<DashboardAnnouncementsCursorCollection>;
     contentfulMetadata: ContentfulMetadata;
     linkedFrom?: Maybe<DashboardLinkingCollections>;
     newsCollection?: Maybe<DashboardNewsCollection>;
+    newsCursorCollection?: Maybe<DashboardNewsCursorCollection>;
     pagesCollection?: Maybe<DashboardPagesCollection>;
+    pagesCursorCollection?: Maybe<DashboardPagesCursorCollection>;
     sys: Sys;
   };
 
@@ -1379,6 +2047,20 @@ export type DashboardAnnouncementsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<DashboardAnnouncementsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AnnouncementsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
+export type DashboardAnnouncementsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<DashboardAnnouncementsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AnnouncementsFilter>;
 };
@@ -1400,12 +2082,36 @@ export type DashboardNewsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
+export type DashboardNewsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DashboardNewsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<NewsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
 export type DashboardPagesCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<Array<InputMaybe<DashboardPagesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<PagesFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/dashboard) */
+export type DashboardPagesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DashboardPagesCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<PagesFilter>;
 };
@@ -1434,11 +2140,40 @@ export enum DashboardAnnouncementsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type DashboardAnnouncementsCursorCollection = {
+  items: Array<Maybe<Announcements>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum DashboardAnnouncementsCursorCollectionOrder {
+  DeadlineAsc = 'deadline_ASC',
+  DeadlineDesc = 'deadline_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type DashboardCollection = {
   items: Array<Maybe<Dashboard>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type DashboardCursorCollection = {
+  items: Array<Maybe<Dashboard>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type DashboardFilter = {
@@ -1456,6 +2191,7 @@ export type DashboardFilter = {
 
 export type DashboardLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type DashboardLinkingCollectionsEntryCollectionArgs = {
@@ -1463,6 +2199,15 @@ export type DashboardLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type DashboardLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1474,6 +2219,31 @@ export type DashboardNewsCollection = {
 };
 
 export enum DashboardNewsCollectionOrder {
+  FrequencyAsc = 'frequency_ASC',
+  FrequencyDesc = 'frequency_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type DashboardNewsCursorCollection = {
+  items: Array<Maybe<News>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum DashboardNewsCursorCollectionOrder {
   FrequencyAsc = 'frequency_ASC',
   FrequencyDesc = 'frequency_DESC',
   LinkTextAsc = 'linkText_ASC',
@@ -1527,6 +2297,29 @@ export enum DashboardPagesCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type DashboardPagesCursorCollection = {
+  items: Array<Maybe<Pages>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum DashboardPagesCursorCollectionOrder {
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PathAsc = 'path_ASC',
+  PathDesc = 'path_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discover) */
 export type Discover = Entry &
   _Node & {
@@ -1535,8 +2328,10 @@ export type Discover = Entry &
     contentfulMetadata: ContentfulMetadata;
     linkedFrom?: Maybe<DiscoverLinkingCollections>;
     membersCollection?: Maybe<DiscoverMembersCollection>;
+    membersCursorCollection?: Maybe<DiscoverMembersCursorCollection>;
     membersTeam?: Maybe<Teams>;
     scientificAdvisoryBoardCollection?: Maybe<DiscoverScientificAdvisoryBoardCollection>;
+    scientificAdvisoryBoardCursorCollection?: Maybe<DiscoverScientificAdvisoryBoardCursorCollection>;
     sys: Sys;
   };
 
@@ -1563,6 +2358,18 @@ export type DiscoverMembersCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discover) */
+export type DiscoverMembersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DiscoverMembersCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discover) */
 export type DiscoverMembersTeamArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -1579,6 +2386,20 @@ export type DiscoverScientificAdvisoryBoardCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discover) */
+export type DiscoverScientificAdvisoryBoardCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<DiscoverScientificAdvisoryBoardCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<UsersFilter>;
 };
@@ -1630,6 +2451,12 @@ export type DiscoverCollection = {
   total: Scalars['Int'];
 };
 
+export type DiscoverCursorCollection = {
+  items: Array<Maybe<Discover>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type DiscoverFilter = {
   AND?: InputMaybe<Array<InputMaybe<DiscoverFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<DiscoverFilter>>>;
@@ -1648,6 +2475,7 @@ export type DiscoverFilter = {
 
 export type DiscoverLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type DiscoverLinkingCollectionsEntryCollectionArgs = {
@@ -1655,6 +2483,15 @@ export type DiscoverLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type DiscoverLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1666,6 +2503,87 @@ export type DiscoverMembersCollection = {
 };
 
 export enum DiscoverMembersCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
+export type DiscoverMembersCursorCollection = {
+  items: Array<Maybe<Users>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum DiscoverMembersCursorCollectionOrder {
   ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
@@ -1833,6 +2751,87 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   Website2Desc = 'website2_DESC',
 }
 
+export type DiscoverScientificAdvisoryBoardCursorCollection = {
+  items: Array<Maybe<Users>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
 export type Discussions = Entry &
   _Node & {
@@ -1841,7 +2840,9 @@ export type Discussions = Entry &
     linkedFrom?: Maybe<DiscussionsLinkingCollections>;
     message?: Maybe<Messages>;
     readByCollection?: Maybe<DiscussionsReadByCollection>;
+    readByCursorCollection?: Maybe<DiscussionsReadByCursorCollection>;
     repliesCollection?: Maybe<DiscussionsRepliesCollection>;
+    repliesCursorCollection?: Maybe<DiscussionsRepliesCursorCollection>;
     sys: Sys;
     title?: Maybe<Scalars['String']>;
   };
@@ -1871,12 +2872,38 @@ export type DiscussionsReadByCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
+export type DiscussionsReadByCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DiscussionsReadByCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
 export type DiscussionsRepliesCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<Array<InputMaybe<DiscussionsRepliesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<MessagesFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/discussions) */
+export type DiscussionsRepliesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<DiscussionsRepliesCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<MessagesFilter>;
 };
@@ -1892,6 +2919,12 @@ export type DiscussionsCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type DiscussionsCursorCollection = {
+  items: Array<Maybe<Discussions>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type DiscussionsFilter = {
@@ -1916,7 +2949,9 @@ export type DiscussionsFilter = {
 
 export type DiscussionsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  manuscriptsCursorCollection?: Maybe<ManuscriptsCursorCollection>;
 };
 
 export type DiscussionsLinkingCollectionsEntryCollectionArgs = {
@@ -1924,6 +2959,15 @@ export type DiscussionsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type DiscussionsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -1938,7 +2982,54 @@ export type DiscussionsLinkingCollectionsManuscriptsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type DiscussionsLinkingCollectionsManuscriptsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<DiscussionsLinkingCollectionsManuscriptsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
+export enum DiscussionsLinkingCollectionsManuscriptsCursorCollectionOrder {
   ApcAmountPaidAsc = 'apcAmountPaid_ASC',
   ApcAmountPaidDesc = 'apcAmountPaid_DESC',
   ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
@@ -2066,6 +3157,87 @@ export enum DiscussionsReadByCollectionOrder {
   Website2Desc = 'website2_DESC',
 }
 
+export type DiscussionsReadByCursorCollection = {
+  items: Array<Maybe<Users>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum DiscussionsReadByCursorCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
 export type DiscussionsRepliesCollection = {
   items: Array<Maybe<Messages>>;
   limit: Scalars['Int'];
@@ -2074,6 +3246,23 @@ export type DiscussionsRepliesCollection = {
 };
 
 export enum DiscussionsRepliesCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type DiscussionsRepliesCursorCollection = {
+  items: Array<Maybe<Messages>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum DiscussionsRepliesCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -2094,6 +3283,12 @@ export type EntryCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type EntryCursorCollection = {
+  items: Array<Maybe<Entry>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type EntryFilter = {
@@ -2153,6 +3348,12 @@ export type EventSpeakersCollection = {
   total: Scalars['Int'];
 };
 
+export type EventSpeakersCursorCollection = {
+  items: Array<Maybe<EventSpeakers>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type EventSpeakersFilter = {
   AND?: InputMaybe<Array<InputMaybe<EventSpeakersFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<EventSpeakersFilter>>>;
@@ -2166,7 +3367,9 @@ export type EventSpeakersFilter = {
 
 export type EventSpeakersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  eventsCursorCollection?: Maybe<EventsCursorCollection>;
 };
 
 export type EventSpeakersLinkingCollectionsEntryCollectionArgs = {
@@ -2174,6 +3377,15 @@ export type EventSpeakersLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type EventSpeakersLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -2188,7 +3400,70 @@ export type EventSpeakersLinkingCollectionsEventsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type EventSpeakersLinkingCollectionsEventsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<EventSpeakersLinkingCollectionsEventsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export enum EventSpeakersLinkingCollectionsEventsCursorCollectionOrder {
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -2276,6 +3551,7 @@ export type Events = Entry &
   _Node & {
     _id: Scalars['ID'];
     attendanceCollection?: Maybe<EventsAttendanceCollection>;
+    attendanceCursorCollection?: Maybe<EventsAttendanceCursorCollection>;
     calendar?: Maybe<Calendars>;
     contentfulMetadata: ContentfulMetadata;
     description?: Maybe<Scalars['String']>;
@@ -2294,11 +3570,14 @@ export type Events = Entry &
     notesPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
     notesUpdatedAt?: Maybe<Scalars['DateTime']>;
     preliminaryDataSharedCollection?: Maybe<EventsPreliminaryDataSharedCollection>;
+    preliminaryDataSharedCursorCollection?: Maybe<EventsPreliminaryDataSharedCursorCollection>;
     presentation?: Maybe<EventsPresentation>;
     presentationPermanentlyUnavailable?: Maybe<Scalars['Boolean']>;
     presentationUpdatedAt?: Maybe<Scalars['DateTime']>;
     researchTagsCollection?: Maybe<EventsResearchTagsCollection>;
+    researchTagsCursorCollection?: Maybe<EventsResearchTagsCursorCollection>;
     speakersCollection?: Maybe<EventsSpeakersCollection>;
+    speakersCursorCollection?: Maybe<EventsSpeakersCursorCollection>;
     startDate?: Maybe<Scalars['DateTime']>;
     startDateTimeZone?: Maybe<Scalars['String']>;
     status?: Maybe<Scalars['String']>;
@@ -2317,6 +3596,18 @@ export type EventsAttendanceCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<EventsAttendanceCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AttendanceFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
+export type EventsAttendanceCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<EventsAttendanceCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AttendanceFilter>;
 };
@@ -2432,6 +3723,20 @@ export type EventsPreliminaryDataSharedCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
+export type EventsPreliminaryDataSharedCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<EventsPreliminaryDataSharedCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<PreliminaryDataSharingFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
 export type EventsPresentationArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -2461,12 +3766,38 @@ export type EventsResearchTagsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
+export type EventsResearchTagsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<EventsResearchTagsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
 export type EventsSpeakersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<Array<InputMaybe<EventsSpeakersCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<EventSpeakersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/events) */
+export type EventsSpeakersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<EventsSpeakersCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<EventSpeakersFilter>;
 };
@@ -2540,11 +3871,36 @@ export enum EventsAttendanceCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type EventsAttendanceCursorCollection = {
+  items: Array<Maybe<Attendance>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum EventsAttendanceCursorCollectionOrder {
+  AttendedAsc = 'attended_ASC',
+  AttendedDesc = 'attended_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type EventsCollection = {
   items: Array<Maybe<Events>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type EventsCursorCollection = {
+  items: Array<Maybe<Events>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type EventsFilter = {
@@ -2713,8 +4069,11 @@ export type EventsFilter = {
 
 export type EventsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
+  tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
 };
 
 export type EventsLinkingCollectionsEntryCollectionArgs = {
@@ -2722,6 +4081,15 @@ export type EventsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type EventsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -2736,6 +4104,20 @@ export type EventsLinkingCollectionsResearchOutputsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type EventsLinkingCollectionsResearchOutputsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<EventsLinkingCollectionsResearchOutputsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type EventsLinkingCollectionsTutorialsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -2744,6 +4126,18 @@ export type EventsLinkingCollectionsTutorialsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type EventsLinkingCollectionsTutorialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<EventsLinkingCollectionsTutorialsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -2792,7 +4186,83 @@ export enum EventsLinkingCollectionsResearchOutputsCollectionOrder {
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
+export enum EventsLinkingCollectionsResearchOutputsCursorCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
 export enum EventsLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum EventsLinkingCollectionsTutorialsCursorCollectionOrder {
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AsapFundedAsc = 'asapFunded_ASC',
@@ -2932,6 +4402,25 @@ export enum EventsPreliminaryDataSharedCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type EventsPreliminaryDataSharedCursorCollection = {
+  items: Array<Maybe<PreliminaryDataSharing>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum EventsPreliminaryDataSharedCursorCollectionOrder {
+  PreliminaryDataSharedAsc = 'preliminaryDataShared_ASC',
+  PreliminaryDataSharedDesc = 'preliminaryDataShared_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type EventsPresentation = {
   json: Scalars['JSON'];
   links: EventsPresentationLinks;
@@ -2994,6 +4483,27 @@ export enum EventsResearchTagsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type EventsResearchTagsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum EventsResearchTagsCursorCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type EventsSpeakersCollection = {
   items: Array<Maybe<EventSpeakers>>;
   limit: Scalars['Int'];
@@ -3002,6 +4512,23 @@ export type EventsSpeakersCollection = {
 };
 
 export enum EventsSpeakersCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type EventsSpeakersCursorCollection = {
+  items: Array<Maybe<EventSpeakers>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum EventsSpeakersCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3094,6 +4621,12 @@ export type ExternalAuthorsCollection = {
   total: Scalars['Int'];
 };
 
+export type ExternalAuthorsCursorCollection = {
+  items: Array<Maybe<ExternalAuthors>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ExternalAuthorsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ExternalAuthorsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ExternalAuthorsFilter>>>;
@@ -3124,10 +4657,15 @@ export type ExternalAuthorsFilter = {
 
 export type ExternalAuthorsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
+  eventSpeakersCursorCollection?: Maybe<EventSpeakersCursorCollection>;
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
+  manuscriptVersionsCursorCollection?: Maybe<ManuscriptVersionsCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
+  tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
 };
 
 export type ExternalAuthorsLinkingCollectionsEntryCollectionArgs = {
@@ -3135,6 +4673,15 @@ export type ExternalAuthorsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ExternalAuthorsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -3151,6 +4698,21 @@ export type ExternalAuthorsLinkingCollectionsEventSpeakersCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ExternalAuthorsLinkingCollectionsEventSpeakersCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ExternalAuthorsLinkingCollectionsEventSpeakersCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export type ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionArgs =
   {
     limit?: InputMaybe<Scalars['Int']>;
@@ -3162,6 +4724,21 @@ export type ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionArgs =
     >;
     preview?: InputMaybe<Scalars['Boolean']>;
     skip?: InputMaybe<Scalars['Int']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
+export type ExternalAuthorsLinkingCollectionsManuscriptVersionsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ExternalAuthorsLinkingCollectionsManuscriptVersionsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
     useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
@@ -3178,6 +4755,21 @@ export type ExternalAuthorsLinkingCollectionsResearchOutputsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ExternalAuthorsLinkingCollectionsResearchOutputsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ExternalAuthorsLinkingCollectionsResearchOutputsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export type ExternalAuthorsLinkingCollectionsTutorialsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -3186,6 +4778,20 @@ export type ExternalAuthorsLinkingCollectionsTutorialsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ExternalAuthorsLinkingCollectionsTutorialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ExternalAuthorsLinkingCollectionsTutorialsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -3200,7 +4806,77 @@ export enum ExternalAuthorsLinkingCollectionsEventSpeakersCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum ExternalAuthorsLinkingCollectionsEventSpeakersCursorCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
+  AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
+  AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
+  AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
+  AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
+  CodeDepositedAsc = 'codeDeposited_ASC',
+  CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
+  DatasetsDepositedAsc = 'datasetsDeposited_ASC',
+  DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
+  LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
+  LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
+  LifecycleAsc = 'lifecycle_ASC',
+  LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
+  ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
+  ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
+  OtherDetailsAsc = 'otherDetails_ASC',
+  OtherDetailsDesc = 'otherDetails_DESC',
+  PreprintDoiAsc = 'preprintDoi_ASC',
+  PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
+  ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
+  ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
+  PublicationDoiAsc = 'publicationDoi_ASC',
+  PublicationDoiDesc = 'publicationDoi_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
+export enum ExternalAuthorsLinkingCollectionsManuscriptVersionsCursorCollectionOrder {
   AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
   AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
@@ -3304,7 +4980,83 @@ export enum ExternalAuthorsLinkingCollectionsResearchOutputsCollectionOrder {
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
+export enum ExternalAuthorsLinkingCollectionsResearchOutputsCursorCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
 export enum ExternalAuthorsLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum ExternalAuthorsLinkingCollectionsTutorialsCursorCollectionOrder {
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AsapFundedAsc = 'asapFunded_ASC',
@@ -3394,6 +5146,12 @@ export type ExternalToolsCollection = {
   total: Scalars['Int'];
 };
 
+export type ExternalToolsCursorCollection = {
+  items: Array<Maybe<ExternalTools>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ExternalToolsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ExternalToolsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ExternalToolsFilter>>>;
@@ -3424,8 +5182,11 @@ export type ExternalToolsFilter = {
 
 export type ExternalToolsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
+  projectsCursorCollection?: Maybe<ProjectsCursorCollection>;
   teamsCollection?: Maybe<TeamsCollection>;
+  teamsCursorCollection?: Maybe<TeamsCursorCollection>;
 };
 
 export type ExternalToolsLinkingCollectionsEntryCollectionArgs = {
@@ -3433,6 +5194,15 @@ export type ExternalToolsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ExternalToolsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -3447,6 +5217,20 @@ export type ExternalToolsLinkingCollectionsProjectsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ExternalToolsLinkingCollectionsProjectsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ExternalToolsLinkingCollectionsProjectsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type ExternalToolsLinkingCollectionsTeamsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -3458,7 +5242,48 @@ export type ExternalToolsLinkingCollectionsTeamsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ExternalToolsLinkingCollectionsTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ExternalToolsLinkingCollectionsTeamsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum ExternalToolsLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ExternalToolsLinkingCollectionsProjectsCursorCollectionOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
   ApplicationNumberDesc = 'applicationNumber_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -3512,6 +5337,31 @@ export enum ExternalToolsLinkingCollectionsTeamsCollectionOrder {
   TeamTypeDesc = 'teamType_DESC',
 }
 
+export enum ExternalToolsLinkingCollectionsTeamsCursorCollectionOrder {
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
+}
+
 export enum ExternalToolsOrder {
   DescriptionAsc = 'description_ASC',
   DescriptionDesc = 'description_DESC',
@@ -3535,6 +5385,7 @@ export type GuideCollections = Entry &
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
     guidesCollection?: Maybe<GuideCollectionsGuidesCollection>;
+    guidesCursorCollection?: Maybe<GuideCollectionsGuidesCursorCollection>;
     linkedFrom?: Maybe<GuideCollectionsLinkingCollections>;
     sys: Sys;
     title?: Maybe<Scalars['String']>;
@@ -3547,6 +5398,20 @@ export type GuideCollectionsGuidesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<GuideCollectionsGuidesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<GuidesFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guideCollections) */
+export type GuideCollectionsGuidesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<GuideCollectionsGuidesCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<GuidesFilter>;
 };
@@ -3567,6 +5432,12 @@ export type GuideCollectionsCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type GuideCollectionsCursorCollection = {
+  items: Array<Maybe<GuideCollections>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type GuideCollectionsFilter = {
@@ -3605,8 +5476,28 @@ export enum GuideCollectionsGuidesCollectionOrder {
   TitleDesc = 'title_DESC',
 }
 
+export type GuideCollectionsGuidesCursorCollection = {
+  items: Array<Maybe<Guides>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum GuideCollectionsGuidesCursorCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
 export type GuideCollectionsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type GuideCollectionsLinkingCollectionsEntryCollectionArgs = {
@@ -3614,6 +5505,15 @@ export type GuideCollectionsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type GuideCollectionsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -3679,6 +5579,12 @@ export type GuideContentCollection = {
   total: Scalars['Int'];
 };
 
+export type GuideContentCursorCollection = {
+  items: Array<Maybe<GuideContent>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type GuideContentFilter = {
   AND?: InputMaybe<Array<InputMaybe<GuideContentFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<GuideContentFilter>>>;
@@ -3716,7 +5622,9 @@ export type GuideContentFilter = {
 
 export type GuideContentLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   guidesCollection?: Maybe<GuidesCollection>;
+  guidesCursorCollection?: Maybe<GuidesCursorCollection>;
 };
 
 export type GuideContentLinkingCollectionsEntryCollectionArgs = {
@@ -3724,6 +5632,15 @@ export type GuideContentLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type GuideContentLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -3738,7 +5655,32 @@ export type GuideContentLinkingCollectionsGuidesCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type GuideContentLinkingCollectionsGuidesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<GuideContentLinkingCollectionsGuidesCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum GuideContentLinkingCollectionsGuidesCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum GuideContentLinkingCollectionsGuidesCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3773,6 +5715,7 @@ export type Guides = Entry &
   _Node & {
     _id: Scalars['ID'];
     contentCollection?: Maybe<GuidesContentCollection>;
+    contentCursorCollection?: Maybe<GuidesContentCursorCollection>;
     contentfulMetadata: ContentfulMetadata;
     icon?: Maybe<Icon>;
     linkedFrom?: Maybe<GuidesLinkingCollections>;
@@ -3787,6 +5730,18 @@ export type GuidesContentCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<GuidesContentCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<GuideContentFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/guides) */
+export type GuidesContentCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<GuidesContentCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<GuideContentFilter>;
 };
@@ -3841,6 +5796,35 @@ export enum GuidesContentCollectionOrder {
   TitleDesc = 'title_DESC',
 }
 
+export type GuidesContentCursorCollection = {
+  items: Array<Maybe<GuideContent>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum GuidesContentCursorCollectionOrder {
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkUrlAsc = 'linkURL_ASC',
+  LinkUrlDesc = 'linkURL_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export type GuidesCursorCollection = {
+  items: Array<Maybe<Guides>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type GuidesFilter = {
   AND?: InputMaybe<Array<InputMaybe<GuidesFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<GuidesFilter>>>;
@@ -3861,7 +5845,9 @@ export type GuidesFilter = {
 
 export type GuidesLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   guideCollectionsCollection?: Maybe<GuideCollectionsCollection>;
+  guideCollectionsCursorCollection?: Maybe<GuideCollectionsCursorCollection>;
 };
 
 export type GuidesLinkingCollectionsEntryCollectionArgs = {
@@ -3869,6 +5855,15 @@ export type GuidesLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type GuidesLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -3883,7 +5878,34 @@ export type GuidesLinkingCollectionsGuideCollectionsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type GuidesLinkingCollectionsGuideCollectionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<GuidesLinkingCollectionsGuideCollectionsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum GuidesLinkingCollectionsGuideCollectionsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum GuidesLinkingCollectionsGuideCollectionsCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -3945,6 +5967,12 @@ export type IconCollection = {
   total: Scalars['Int'];
 };
 
+export type IconCursorCollection = {
+  items: Array<Maybe<Icon>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type IconFilter = {
   AND?: InputMaybe<Array<InputMaybe<IconFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<IconFilter>>>;
@@ -3962,7 +5990,9 @@ export type IconFilter = {
 
 export type IconLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   guidesCollection?: Maybe<GuidesCollection>;
+  guidesCursorCollection?: Maybe<GuidesCursorCollection>;
 };
 
 export type IconLinkingCollectionsEntryCollectionArgs = {
@@ -3970,6 +6000,15 @@ export type IconLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type IconLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -3984,7 +6023,32 @@ export type IconLinkingCollectionsGuidesCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type IconLinkingCollectionsGuidesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<IconLinkingCollectionsGuidesCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum IconLinkingCollectionsGuidesCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum IconLinkingCollectionsGuidesCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -4134,6 +6198,12 @@ export type ImpactCollection = {
   total: Scalars['Int'];
 };
 
+export type ImpactCursorCollection = {
+  items: Array<Maybe<Impact>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ImpactFilter = {
   AND?: InputMaybe<Array<InputMaybe<ImpactFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ImpactFilter>>>;
@@ -4150,8 +6220,11 @@ export type ImpactFilter = {
 
 export type ImpactLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  manuscriptsCursorCollection?: Maybe<ManuscriptsCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
 };
 
 export type ImpactLinkingCollectionsEntryCollectionArgs = {
@@ -4159,6 +6232,15 @@ export type ImpactLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ImpactLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -4173,6 +6255,18 @@ export type ImpactLinkingCollectionsManuscriptsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ImpactLinkingCollectionsManuscriptsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ImpactLinkingCollectionsManuscriptsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type ImpactLinkingCollectionsResearchOutputsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -4181,6 +6275,20 @@ export type ImpactLinkingCollectionsResearchOutputsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ImpactLinkingCollectionsResearchOutputsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ImpactLinkingCollectionsResearchOutputsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -4217,7 +6325,85 @@ export enum ImpactLinkingCollectionsManuscriptsCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
+export enum ImpactLinkingCollectionsManuscriptsCursorCollectionOrder {
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export enum ImpactLinkingCollectionsResearchOutputsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum ImpactLinkingCollectionsResearchOutputsCursorCollectionOrder {
   AccessionAsc = 'accession_ASC',
   AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
@@ -4319,6 +6505,12 @@ export type InterestGroupLeadersCollection = {
   total: Scalars['Int'];
 };
 
+export type InterestGroupLeadersCursorCollection = {
+  items: Array<Maybe<InterestGroupLeaders>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type InterestGroupLeadersFilter = {
   AND?: InputMaybe<Array<InputMaybe<InterestGroupLeadersFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<InterestGroupLeadersFilter>>>;
@@ -4346,7 +6538,9 @@ export type InterestGroupLeadersFilter = {
 
 export type InterestGroupLeadersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
+  interestGroupsCursorCollection?: Maybe<InterestGroupsCursorCollection>;
 };
 
 export type InterestGroupLeadersLinkingCollectionsEntryCollectionArgs = {
@@ -4354,6 +6548,15 @@ export type InterestGroupLeadersLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type InterestGroupLeadersLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -4371,7 +6574,43 @@ export type InterestGroupLeadersLinkingCollectionsInterestGroupsCollectionArgs =
     useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
+export type InterestGroupLeadersLinkingCollectionsInterestGroupsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<InterestGroupLeadersLinkingCollectionsInterestGroupsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export enum InterestGroupLeadersLinkingCollectionsInterestGroupsCollectionOrder {
+  ActiveAsc = 'active_ASC',
+  ActiveDesc = 'active_DESC',
+  GoogleDriveAsc = 'googleDrive_ASC',
+  GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SlackAsc = 'slack_ASC',
+  SlackDesc = 'slack_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum InterestGroupLeadersLinkingCollectionsInterestGroupsCursorCollectionOrder {
   ActiveAsc = 'active_ASC',
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
@@ -4418,12 +6657,15 @@ export type InterestGroups = Entry &
     googleDrive?: Maybe<Scalars['String']>;
     lastUpdated?: Maybe<Scalars['DateTime']>;
     leadersCollection?: Maybe<InterestGroupsLeadersCollection>;
+    leadersCursorCollection?: Maybe<InterestGroupsLeadersCursorCollection>;
     linkedFrom?: Maybe<InterestGroupsLinkingCollections>;
     name?: Maybe<Scalars['String']>;
     researchTagsCollection?: Maybe<InterestGroupsResearchTagsCollection>;
+    researchTagsCursorCollection?: Maybe<InterestGroupsResearchTagsCursorCollection>;
     slack?: Maybe<Scalars['String']>;
     sys: Sys;
     teamsCollection?: Maybe<InterestGroupsTeamsCollection>;
+    teamsCursorCollection?: Maybe<InterestGroupsTeamsCursorCollection>;
     thumbnail?: Maybe<Asset>;
   };
 
@@ -4471,6 +6713,20 @@ export type InterestGroupsLeadersCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsLeadersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<InterestGroupsLeadersCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<InterestGroupLeadersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
 export type InterestGroupsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
@@ -4495,6 +6751,20 @@ export type InterestGroupsResearchTagsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsResearchTagsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<InterestGroupsResearchTagsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
 export type InterestGroupsSlackArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -4512,6 +6782,20 @@ export type InterestGroupsTeamsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
+export type InterestGroupsTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<InterestGroupsTeamsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<InterestGroupsTeamsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/interestGroups) */
 export type InterestGroupsThumbnailArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -4523,6 +6807,12 @@ export type InterestGroupsCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type InterestGroupsCursorCollection = {
+  items: Array<Maybe<InterestGroups>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type InterestGroupsFilter = {
@@ -4603,8 +6893,30 @@ export enum InterestGroupsLeadersCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type InterestGroupsLeadersCursorCollection = {
+  items: Array<Maybe<InterestGroupLeaders>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum InterestGroupsLeadersCursorCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type InterestGroupsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type InterestGroupsLinkingCollectionsEntryCollectionArgs = {
@@ -4612,6 +6924,15 @@ export type InterestGroupsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type InterestGroupsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -4644,6 +6965,27 @@ export type InterestGroupsResearchTagsCollection = {
 };
 
 export enum InterestGroupsResearchTagsCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type InterestGroupsResearchTagsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum InterestGroupsResearchTagsCursorCollectionOrder {
   CategoryAsc = 'category_ASC',
   CategoryDesc = 'category_DESC',
   NameAsc = 'name_ASC',
@@ -4717,6 +7059,27 @@ export enum InterestGroupsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type InterestGroupsTeamsCursorCollection = {
+  items: Array<Maybe<InterestGroupsTeams>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum InterestGroupsTeamsCursorCollectionOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type InterestGroupsTeamsFilter = {
   AND?: InputMaybe<Array<InputMaybe<InterestGroupsTeamsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<InterestGroupsTeamsFilter>>>;
@@ -4746,7 +7109,9 @@ export type InterestGroupsTeamsFilter = {
 
 export type InterestGroupsTeamsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
+  interestGroupsCursorCollection?: Maybe<InterestGroupsCursorCollection>;
 };
 
 export type InterestGroupsTeamsLinkingCollectionsEntryCollectionArgs = {
@@ -4754,6 +7119,15 @@ export type InterestGroupsTeamsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type InterestGroupsTeamsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -4771,7 +7145,43 @@ export type InterestGroupsTeamsLinkingCollectionsInterestGroupsCollectionArgs =
     useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
+export type InterestGroupsTeamsLinkingCollectionsInterestGroupsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<InterestGroupsTeamsLinkingCollectionsInterestGroupsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export enum InterestGroupsTeamsLinkingCollectionsInterestGroupsCollectionOrder {
+  ActiveAsc = 'active_ASC',
+  ActiveDesc = 'active_DESC',
+  GoogleDriveAsc = 'googleDrive_ASC',
+  GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SlackAsc = 'slack_ASC',
+  SlackDesc = 'slack_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum InterestGroupsTeamsLinkingCollectionsInterestGroupsCursorCollectionOrder {
   ActiveAsc = 'active_ASC',
   ActiveDesc = 'active_DESC',
   GoogleDriveAsc = 'googleDrive_ASC',
@@ -4844,6 +7254,12 @@ export type LabMembershipCollection = {
   total: Scalars['Int'];
 };
 
+export type LabMembershipCursorCollection = {
+  items: Array<Maybe<LabMembership>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type LabMembershipFilter = {
   AND?: InputMaybe<Array<InputMaybe<LabMembershipFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<LabMembershipFilter>>>;
@@ -4862,7 +7278,9 @@ export type LabMembershipFilter = {
 
 export type LabMembershipLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   usersCollection?: Maybe<UsersCollection>;
+  usersCursorCollection?: Maybe<UsersCursorCollection>;
 };
 
 export type LabMembershipLinkingCollectionsEntryCollectionArgs = {
@@ -4870,6 +7288,15 @@ export type LabMembershipLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type LabMembershipLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -4884,7 +7311,94 @@ export type LabMembershipLinkingCollectionsUsersCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type LabMembershipLinkingCollectionsUsersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<LabMembershipLinkingCollectionsUsersCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum LabMembershipLinkingCollectionsUsersCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
+export enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
@@ -5009,6 +7523,12 @@ export type LabsCollection = {
   total: Scalars['Int'];
 };
 
+export type LabsCursorCollection = {
+  items: Array<Maybe<Labs>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type LabsFilter = {
   AND?: InputMaybe<Array<InputMaybe<LabsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<LabsFilter>>>;
@@ -5027,10 +7547,15 @@ export type LabsFilter = {
 
 export type LabsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   labMembershipCollection?: Maybe<LabMembershipCollection>;
+  labMembershipCursorCollection?: Maybe<LabMembershipCursorCollection>;
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
+  manuscriptVersionsCursorCollection?: Maybe<ManuscriptVersionsCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
   usersCollection?: Maybe<UsersCollection>;
+  usersCursorCollection?: Maybe<UsersCursorCollection>;
 };
 
 export type LabsLinkingCollectionsEntryCollectionArgs = {
@@ -5038,6 +7563,15 @@ export type LabsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type LabsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -5052,6 +7586,18 @@ export type LabsLinkingCollectionsLabMembershipCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type LabsLinkingCollectionsLabMembershipCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<LabsLinkingCollectionsLabMembershipCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type LabsLinkingCollectionsManuscriptVersionsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -5060,6 +7606,20 @@ export type LabsLinkingCollectionsManuscriptVersionsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type LabsLinkingCollectionsManuscriptVersionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<LabsLinkingCollectionsManuscriptVersionsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -5074,6 +7634,20 @@ export type LabsLinkingCollectionsResearchOutputsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type LabsLinkingCollectionsResearchOutputsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<LabsLinkingCollectionsResearchOutputsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type LabsLinkingCollectionsUsersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -5085,7 +7659,32 @@ export type LabsLinkingCollectionsUsersCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type LabsLinkingCollectionsUsersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<LabsLinkingCollectionsUsersCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum LabsLinkingCollectionsLabMembershipCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum LabsLinkingCollectionsLabMembershipCursorCollectionOrder {
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -5157,7 +7756,111 @@ export enum LabsLinkingCollectionsManuscriptVersionsCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
+export enum LabsLinkingCollectionsManuscriptVersionsCursorCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
+  AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
+  AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
+  AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
+  AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
+  CodeDepositedAsc = 'codeDeposited_ASC',
+  CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
+  DatasetsDepositedAsc = 'datasetsDeposited_ASC',
+  DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
+  LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
+  LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
+  LifecycleAsc = 'lifecycle_ASC',
+  LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
+  ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
+  ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
+  OtherDetailsAsc = 'otherDetails_ASC',
+  OtherDetailsDesc = 'otherDetails_DESC',
+  PreprintDoiAsc = 'preprintDoi_ASC',
+  PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
+  ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
+  ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
+  PublicationDoiAsc = 'publicationDoi_ASC',
+  PublicationDoiDesc = 'publicationDoi_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export enum LabsLinkingCollectionsResearchOutputsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum LabsLinkingCollectionsResearchOutputsCursorCollectionOrder {
   AccessionAsc = 'accession_ASC',
   AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
@@ -5277,6 +7980,81 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   Website2Desc = 'website2_DESC',
 }
 
+export enum LabsLinkingCollectionsUsersCursorCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
 export enum LabsOrder {
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
@@ -5297,7 +8075,9 @@ export type ManuscriptVersions = Entry &
     acknowledgedGrantNumber?: Maybe<Scalars['String']>;
     acknowledgedGrantNumberDetails?: Maybe<Scalars['String']>;
     additionalAuthorsCollection?: Maybe<ManuscriptVersionsAdditionalAuthorsCollection>;
+    additionalAuthorsCursorCollection?: Maybe<ManuscriptVersionsAdditionalAuthorsCursorCollection>;
     additionalFilesCollection?: Maybe<AssetCollection>;
+    additionalFilesCursorCollection?: Maybe<AssetCursorCollection>;
     asapAffiliationIncluded?: Maybe<Scalars['String']>;
     asapAffiliationIncludedDetails?: Maybe<Scalars['String']>;
     availabilityStatement?: Maybe<Scalars['String']>;
@@ -5306,16 +8086,19 @@ export type ManuscriptVersions = Entry &
     codeDepositedDetails?: Maybe<Scalars['String']>;
     contentfulMetadata: ContentfulMetadata;
     correspondingAuthorCollection?: Maybe<ManuscriptVersionsCorrespondingAuthorCollection>;
+    correspondingAuthorCursorCollection?: Maybe<ManuscriptVersionsCorrespondingAuthorCursorCollection>;
     count?: Maybe<Scalars['Int']>;
     createdBy?: Maybe<Users>;
     datasetsDeposited?: Maybe<Scalars['String']>;
     datasetsDepositedDetails?: Maybe<Scalars['String']>;
     description?: Maybe<Scalars['String']>;
     firstAuthorsCollection?: Maybe<ManuscriptVersionsFirstAuthorsCollection>;
+    firstAuthorsCursorCollection?: Maybe<ManuscriptVersionsFirstAuthorsCursorCollection>;
     keyResourceTable?: Maybe<Asset>;
     labMaterialsRegistered?: Maybe<Scalars['String']>;
     labMaterialsRegisteredDetails?: Maybe<Scalars['String']>;
     labsCollection?: Maybe<ManuscriptVersionsLabsCollection>;
+    labsCursorCollection?: Maybe<ManuscriptVersionsLabsCursorCollection>;
     lifecycle?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ManuscriptVersionsLinkingCollections>;
     manuscriptFile?: Maybe<Asset>;
@@ -5330,6 +8113,7 @@ export type ManuscriptVersions = Entry &
     shortDescription?: Maybe<Scalars['String']>;
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptVersionsTeamsCollection>;
+    teamsCursorCollection?: Maybe<ManuscriptVersionsTeamsCursorCollection>;
     type?: Maybe<Scalars['String']>;
     updatedBy?: Maybe<Users>;
     url?: Maybe<Scalars['String']>;
@@ -5358,11 +8142,32 @@ export type ManuscriptVersionsAdditionalAuthorsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsAdditionalAuthorsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ManuscriptVersionsAdditionalAuthorsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsAdditionalFilesCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsAdditionalFilesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -5413,6 +8218,17 @@ export type ManuscriptVersionsCorrespondingAuthorCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsCorrespondingAuthorCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ManuscriptVersionsCorrespondingAuthorFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsCountArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -5455,6 +8271,17 @@ export type ManuscriptVersionsFirstAuthorsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsFirstAuthorsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ManuscriptVersionsFirstAuthorsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsKeyResourceTableArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -5480,6 +8307,20 @@ export type ManuscriptVersionsLabsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ManuscriptVersionsLabsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<LabsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsLabsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ManuscriptVersionsLabsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<LabsFilter>;
 };
@@ -5568,6 +8409,20 @@ export type ManuscriptVersionsTeamsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
+export type ManuscriptVersionsTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ManuscriptVersionsTeamsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TeamsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscriptVersions) */
 export type ManuscriptVersionsTypeArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -5592,6 +8447,12 @@ export type ManuscriptVersionsAdditionalAuthorsCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type ManuscriptVersionsAdditionalAuthorsCursorCollection = {
+  items: Array<Maybe<ManuscriptVersionsAdditionalAuthorsItem>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type ManuscriptVersionsAdditionalAuthorsFilter = {
@@ -5633,6 +8494,12 @@ export type ManuscriptVersionsCorrespondingAuthorCollection = {
   total: Scalars['Int'];
 };
 
+export type ManuscriptVersionsCorrespondingAuthorCursorCollection = {
+  items: Array<Maybe<ManuscriptVersionsCorrespondingAuthorItem>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ManuscriptVersionsCorrespondingAuthorFilter = {
   AND?: InputMaybe<
     Array<InputMaybe<ManuscriptVersionsCorrespondingAuthorFilter>>
@@ -5659,6 +8526,12 @@ export type ManuscriptVersionsCorrespondingAuthorFilter = {
 };
 
 export type ManuscriptVersionsCorrespondingAuthorItem = ExternalAuthors | Users;
+
+export type ManuscriptVersionsCursorCollection = {
+  items: Array<Maybe<ManuscriptVersions>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
 
 export type ManuscriptVersionsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptVersionsFilter>>>;
@@ -5913,6 +8786,12 @@ export type ManuscriptVersionsFirstAuthorsCollection = {
   total: Scalars['Int'];
 };
 
+export type ManuscriptVersionsFirstAuthorsCursorCollection = {
+  items: Array<Maybe<ManuscriptVersionsFirstAuthorsItem>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ManuscriptVersionsFirstAuthorsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ManuscriptVersionsFirstAuthorsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ManuscriptVersionsFirstAuthorsFilter>>>;
@@ -5956,12 +8835,36 @@ export enum ManuscriptVersionsLabsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type ManuscriptVersionsLabsCursorCollection = {
+  items: Array<Maybe<Labs>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ManuscriptVersionsLabsCursorCollectionOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ManuscriptVersionsLinkingCollections = {
   complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
+  complianceReportsCursorCollection?: Maybe<ComplianceReportsCursorCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  manuscriptsCursorCollection?: Maybe<ManuscriptsCursorCollection>;
   researchOutputVersionsCollection?: Maybe<ResearchOutputVersionsCollection>;
+  researchOutputVersionsCursorCollection?: Maybe<ResearchOutputVersionsCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
 };
 
 export type ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionArgs =
@@ -5978,11 +8881,35 @@ export type ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionArgs 
     useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
+export type ManuscriptVersionsLinkingCollectionsComplianceReportsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ManuscriptVersionsLinkingCollectionsComplianceReportsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export type ManuscriptVersionsLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ManuscriptVersionsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -5999,6 +8926,21 @@ export type ManuscriptVersionsLinkingCollectionsManuscriptsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ManuscriptVersionsLinkingCollectionsManuscriptsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ManuscriptVersionsLinkingCollectionsManuscriptsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export type ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCollectionArgs =
   {
     limit?: InputMaybe<Scalars['Int']>;
@@ -6010,6 +8952,21 @@ export type ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCollection
     >;
     preview?: InputMaybe<Scalars['Boolean']>;
     skip?: InputMaybe<Scalars['Int']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
+export type ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
     useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
@@ -6027,6 +8984,21 @@ export type ManuscriptVersionsLinkingCollectionsResearchOutputsCollectionArgs =
     useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
+export type ManuscriptVersionsLinkingCollectionsResearchOutputsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ManuscriptVersionsLinkingCollectionsResearchOutputsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
@@ -6040,7 +9012,53 @@ export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCollectionOrder
   UrlDesc = 'url_DESC',
 }
 
+export enum ManuscriptVersionsLinkingCollectionsComplianceReportsCursorCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
+export enum ManuscriptVersionsLinkingCollectionsManuscriptsCursorCollectionOrder {
   ApcAmountPaidAsc = 'apcAmountPaid_ASC',
   ApcAmountPaidDesc = 'apcAmountPaid_DESC',
   ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
@@ -6100,7 +9118,79 @@ export enum ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCollection
   TypeDesc = 'type_DESC',
 }
 
+export enum ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCursorCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
 export enum ManuscriptVersionsLinkingCollectionsResearchOutputsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum ManuscriptVersionsLinkingCollectionsResearchOutputsCursorCollectionOrder {
   AccessionAsc = 'accession_ASC',
   AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
@@ -6236,6 +9326,37 @@ export enum ManuscriptVersionsTeamsCollectionOrder {
   TeamTypeDesc = 'teamType_DESC',
 }
 
+export type ManuscriptVersionsTeamsCursorCollection = {
+  items: Array<Maybe<Teams>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ManuscriptVersionsTeamsCursorCollectionOrder {
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type Manuscripts = Entry &
   _Node & {
@@ -6245,24 +9366,30 @@ export type Manuscripts = Entry &
     apcCoverageRequestStatus?: Maybe<Scalars['String']>;
     apcRequested?: Maybe<Scalars['Boolean']>;
     assignedUsersCollection?: Maybe<ManuscriptsAssignedUsersCollection>;
+    assignedUsersCursorCollection?: Maybe<ManuscriptsAssignedUsersCursorCollection>;
     categoriesCollection?: Maybe<ManuscriptsCategoriesCollection>;
+    categoriesCursorCollection?: Maybe<ManuscriptsCategoriesCursorCollection>;
     contentfulMetadata: ContentfulMetadata;
     count?: Maybe<Scalars['Int']>;
     declinedReason?: Maybe<Scalars['String']>;
     discussionsCollection?: Maybe<ManuscriptsDiscussionsCollection>;
+    discussionsCursorCollection?: Maybe<ManuscriptsDiscussionsCursorCollection>;
     eligibilityReasons?: Maybe<Array<Maybe<Scalars['String']>>>;
     impact?: Maybe<Impact>;
     linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
     previousStatus?: Maybe<Scalars['String']>;
+    project?: Maybe<Projects>;
     relatedResearchOutput?: Maybe<ResearchOutputs>;
     status?: Maybe<Scalars['String']>;
     statusUpdatedAt?: Maybe<Scalars['DateTime']>;
     statusUpdatedBy?: Maybe<Users>;
     sys: Sys;
     teamsCollection?: Maybe<ManuscriptsTeamsCollection>;
+    teamsCursorCollection?: Maybe<ManuscriptsTeamsCursorCollection>;
     title?: Maybe<Scalars['String']>;
     url?: Maybe<Scalars['String']>;
     versionsCollection?: Maybe<ManuscriptsVersionsCollection>;
+    versionsCursorCollection?: Maybe<ManuscriptsVersionsCursorCollection>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
@@ -6303,12 +9430,40 @@ export type ManuscriptsAssignedUsersCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsAssignedUsersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ManuscriptsAssignedUsersCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsCategoriesCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<Array<InputMaybe<ManuscriptsCategoriesCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<CategoryFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsCategoriesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ManuscriptsCategoriesCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<CategoryFilter>;
 };
@@ -6337,6 +9492,20 @@ export type ManuscriptsDiscussionsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsDiscussionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ManuscriptsDiscussionsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsEligibilityReasonsArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -6359,6 +9528,14 @@ export type ManuscriptsLinkedFromArgs = {
 export type ManuscriptsPreviousStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsProjectArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ProjectsFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
@@ -6401,6 +9578,18 @@ export type ManuscriptsTeamsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ManuscriptsTeamsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TeamsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -6423,6 +9612,20 @@ export type ManuscriptsVersionsCollectionArgs = {
   where?: InputMaybe<ManuscriptVersionsFilter>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsVersionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ManuscriptsVersionsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ManuscriptVersionsFilter>;
+};
+
 export type ManuscriptsAssignedUsersCollection = {
   items: Array<Maybe<Users>>;
   limit: Scalars['Int'];
@@ -6431,6 +9634,87 @@ export type ManuscriptsAssignedUsersCollection = {
 };
 
 export enum ManuscriptsAssignedUsersCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
+export type ManuscriptsAssignedUsersCursorCollection = {
+  items: Array<Maybe<Users>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ManuscriptsAssignedUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
@@ -6525,11 +9809,36 @@ export enum ManuscriptsCategoriesCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type ManuscriptsCategoriesCursorCollection = {
+  items: Array<Maybe<Category>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ManuscriptsCategoriesCursorCollectionOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ManuscriptsCollection = {
   items: Array<Maybe<Manuscripts>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type ManuscriptsCursorCollection = {
+  items: Array<Maybe<Manuscripts>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type ManuscriptsDiscussionsCollection = {
@@ -6540,6 +9849,25 @@ export type ManuscriptsDiscussionsCollection = {
 };
 
 export enum ManuscriptsDiscussionsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export type ManuscriptsDiscussionsCursorCollection = {
+  items: Array<Maybe<Discussions>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ManuscriptsDiscussionsCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -6629,6 +9957,8 @@ export type ManuscriptsFilter = {
   previousStatus_not?: InputMaybe<Scalars['String']>;
   previousStatus_not_contains?: InputMaybe<Scalars['String']>;
   previousStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  project?: InputMaybe<CfProjectsNestedFilter>;
+  project_exists?: InputMaybe<Scalars['Boolean']>;
   relatedResearchOutput?: InputMaybe<CfResearchOutputsNestedFilter>;
   relatedResearchOutput_exists?: InputMaybe<Scalars['Boolean']>;
   status?: InputMaybe<Scalars['String']>;
@@ -6672,6 +10002,7 @@ export type ManuscriptsFilter = {
 
 export type ManuscriptsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type ManuscriptsLinkingCollectionsEntryCollectionArgs = {
@@ -6679,6 +10010,15 @@ export type ManuscriptsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ManuscriptsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -6723,6 +10063,37 @@ export type ManuscriptsTeamsCollection = {
 };
 
 export enum ManuscriptsTeamsCollectionOrder {
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
+}
+
+export type ManuscriptsTeamsCursorCollection = {
+  items: Array<Maybe<Teams>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ManuscriptsTeamsCursorCollectionOrder {
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
@@ -6813,6 +10184,71 @@ export enum ManuscriptsVersionsCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
+export type ManuscriptsVersionsCursorCollection = {
+  items: Array<Maybe<ManuscriptVersions>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ManuscriptsVersionsCursorCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
+  AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
+  AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
+  AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
+  AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
+  CodeDepositedAsc = 'codeDeposited_ASC',
+  CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
+  DatasetsDepositedAsc = 'datasetsDeposited_ASC',
+  DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
+  LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
+  LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
+  LifecycleAsc = 'lifecycle_ASC',
+  LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
+  ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
+  ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
+  OtherDetailsAsc = 'otherDetails_ASC',
+  OtherDetailsDesc = 'otherDetails_DESC',
+  PreprintDoiAsc = 'preprintDoi_ASC',
+  PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
+  ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
+  ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
+  PublicationDoiAsc = 'publicationDoi_ASC',
+  PublicationDoiDesc = 'publicationDoi_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/media) */
 export type Media = Entry &
   _Node & {
@@ -6841,6 +10277,12 @@ export type MediaCollection = {
   total: Scalars['Int'];
 };
 
+export type MediaCursorCollection = {
+  items: Array<Maybe<Media>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type MediaFilter = {
   AND?: InputMaybe<Array<InputMaybe<MediaFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<MediaFilter>>>;
@@ -6857,6 +10299,7 @@ export type MediaFilter = {
 
 export type MediaLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type MediaLinkingCollectionsEntryCollectionArgs = {
@@ -6864,6 +10307,15 @@ export type MediaLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type MediaLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -6917,6 +10369,12 @@ export type MessagesCollection = {
   total: Scalars['Int'];
 };
 
+export type MessagesCursorCollection = {
+  items: Array<Maybe<Messages>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type MessagesFilter = {
   AND?: InputMaybe<Array<InputMaybe<MessagesFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<MessagesFilter>>>;
@@ -6935,7 +10393,9 @@ export type MessagesFilter = {
 
 export type MessagesLinkingCollections = {
   discussionsCollection?: Maybe<DiscussionsCollection>;
+  discussionsCursorCollection?: Maybe<DiscussionsCursorCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type MessagesLinkingCollectionsDiscussionsCollectionArgs = {
@@ -6949,6 +10409,20 @@ export type MessagesLinkingCollectionsDiscussionsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type MessagesLinkingCollectionsDiscussionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<MessagesLinkingCollectionsDiscussionsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type MessagesLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -6957,7 +10431,29 @@ export type MessagesLinkingCollectionsEntryCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type MessagesLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum MessagesLinkingCollectionsDiscussionsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum MessagesLinkingCollectionsDiscussionsCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7016,6 +10512,12 @@ export type MigrationCollection = {
   total: Scalars['Int'];
 };
 
+export type MigrationCursorCollection = {
+  items: Array<Maybe<Migration>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type MigrationFilter = {
   AND?: InputMaybe<Array<InputMaybe<MigrationFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<MigrationFilter>>>;
@@ -7033,6 +10535,7 @@ export type MigrationFilter = {
 
 export type MigrationLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type MigrationLinkingCollectionsEntryCollectionArgs = {
@@ -7040,6 +10543,15 @@ export type MigrationLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type MigrationLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -7064,6 +10576,7 @@ export type Milestones = Entry &
     description?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<MilestonesLinkingCollections>;
     relatedArticlesCollection?: Maybe<MilestonesRelatedArticlesCollection>;
+    relatedArticlesCursorCollection?: Maybe<MilestonesRelatedArticlesCursorCollection>;
     status?: Maybe<Scalars['String']>;
     sys: Sys;
   };
@@ -7093,6 +10606,20 @@ export type MilestonesRelatedArticlesCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesRelatedArticlesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<MilestonesRelatedArticlesCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchOutputsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
 export type MilestonesStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -7103,6 +10630,12 @@ export type MilestonesCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type MilestonesCursorCollection = {
+  items: Array<Maybe<Milestones>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type MilestonesFilter = {
@@ -7130,7 +10663,9 @@ export type MilestonesFilter = {
 
 export type MilestonesLinkingCollections = {
   aimsCollection?: Maybe<AimsCollection>;
+  aimsCursorCollection?: Maybe<AimsCursorCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type MilestonesLinkingCollectionsAimsCollectionArgs = {
@@ -7144,6 +10679,18 @@ export type MilestonesLinkingCollectionsAimsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type MilestonesLinkingCollectionsAimsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<MilestonesLinkingCollectionsAimsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type MilestonesLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -7152,7 +10699,27 @@ export type MilestonesLinkingCollectionsEntryCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type MilestonesLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum MilestonesLinkingCollectionsAimsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum MilestonesLinkingCollectionsAimsCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7228,6 +10795,57 @@ export enum MilestonesRelatedArticlesCollectionOrder {
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
+export type MilestonesRelatedArticlesCursorCollection = {
+  items: Array<Maybe<ResearchOutputs>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum MilestonesRelatedArticlesCursorCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type News = Entry &
   _Node & {
@@ -7241,6 +10859,7 @@ export type News = Entry &
     shortText?: Maybe<Scalars['String']>;
     sys: Sys;
     tagsCollection?: Maybe<NewsTagsCollection>;
+    tagsCursorCollection?: Maybe<NewsTagsCursorCollection>;
     text?: Maybe<NewsText>;
     thumbnail?: Maybe<Asset>;
     title?: Maybe<Scalars['String']>;
@@ -7293,6 +10912,18 @@ export type NewsTagsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
+export type NewsTagsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<NewsTagsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/news) */
 export type NewsTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -7316,6 +10947,12 @@ export type NewsCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type NewsCursorCollection = {
+  items: Array<Maybe<News>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type NewsFilter = {
@@ -7377,7 +11014,9 @@ export type NewsFilter = {
 
 export type NewsLinkingCollections = {
   dashboardCollection?: Maybe<DashboardCollection>;
+  dashboardCursorCollection?: Maybe<DashboardCursorCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type NewsLinkingCollectionsDashboardCollectionArgs = {
@@ -7391,6 +11030,18 @@ export type NewsLinkingCollectionsDashboardCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type NewsLinkingCollectionsDashboardCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<NewsLinkingCollectionsDashboardCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type NewsLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -7399,7 +11050,27 @@ export type NewsLinkingCollectionsEntryCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type NewsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum NewsLinkingCollectionsDashboardCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum NewsLinkingCollectionsDashboardCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7437,6 +11108,27 @@ export type NewsTagsCollection = {
 };
 
 export enum NewsTagsCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type NewsTagsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum NewsTagsCursorCollectionOrder {
   CategoryAsc = 'category_ASC',
   CategoryDesc = 'category_DESC',
   NameAsc = 'name_ASC',
@@ -7554,6 +11246,12 @@ export type PagesCollection = {
   total: Scalars['Int'];
 };
 
+export type PagesCursorCollection = {
+  items: Array<Maybe<Pages>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type PagesFilter = {
   AND?: InputMaybe<Array<InputMaybe<PagesFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<PagesFilter>>>;
@@ -7601,7 +11299,9 @@ export type PagesFilter = {
 
 export type PagesLinkingCollections = {
   dashboardCollection?: Maybe<DashboardCollection>;
+  dashboardCursorCollection?: Maybe<DashboardCursorCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
 };
 
 export type PagesLinkingCollectionsDashboardCollectionArgs = {
@@ -7615,6 +11315,18 @@ export type PagesLinkingCollectionsDashboardCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type PagesLinkingCollectionsDashboardCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<PagesLinkingCollectionsDashboardCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type PagesLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -7623,7 +11335,27 @@ export type PagesLinkingCollectionsEntryCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type PagesLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum PagesLinkingCollectionsDashboardCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum PagesLinkingCollectionsDashboardCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -7728,6 +11460,12 @@ export type PreliminaryDataSharingCollection = {
   total: Scalars['Int'];
 };
 
+export type PreliminaryDataSharingCursorCollection = {
+  items: Array<Maybe<PreliminaryDataSharing>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type PreliminaryDataSharingFilter = {
   AND?: InputMaybe<Array<InputMaybe<PreliminaryDataSharingFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<PreliminaryDataSharingFilter>>>;
@@ -7742,7 +11480,9 @@ export type PreliminaryDataSharingFilter = {
 
 export type PreliminaryDataSharingLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  eventsCursorCollection?: Maybe<EventsCursorCollection>;
 };
 
 export type PreliminaryDataSharingLinkingCollectionsEntryCollectionArgs = {
@@ -7752,6 +11492,16 @@ export type PreliminaryDataSharingLinkingCollectionsEntryCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
+
+export type PreliminaryDataSharingLinkingCollectionsEntryCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
 
 export type PreliminaryDataSharingLinkingCollectionsEventsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
@@ -7766,7 +11516,71 @@ export type PreliminaryDataSharingLinkingCollectionsEventsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type PreliminaryDataSharingLinkingCollectionsEventsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<PreliminaryDataSharingLinkingCollectionsEventsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export enum PreliminaryDataSharingLinkingCollectionsEventsCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export enum PreliminaryDataSharingLinkingCollectionsEventsCursorCollectionOrder {
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -7864,6 +11678,12 @@ export type ProjectMembershipCollection = {
   total: Scalars['Int'];
 };
 
+export type ProjectMembershipCursorCollection = {
+  items: Array<Maybe<ProjectMembership>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ProjectMembershipFilter = {
   AND?: InputMaybe<Array<InputMaybe<ProjectMembershipFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ProjectMembershipFilter>>>;
@@ -7881,7 +11701,9 @@ export type ProjectMembershipFilter = {
 
 export type ProjectMembershipLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
+  projectsCursorCollection?: Maybe<ProjectsCursorCollection>;
 };
 
 export type ProjectMembershipLinkingCollectionsEntryCollectionArgs = {
@@ -7889,6 +11711,15 @@ export type ProjectMembershipLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ProjectMembershipLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -7905,7 +11736,50 @@ export type ProjectMembershipLinkingCollectionsProjectsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ProjectMembershipLinkingCollectionsProjectsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ProjectMembershipLinkingCollectionsProjectsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ProjectMembershipLinkingCollectionsProjectsCursorCollectionOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
   ApplicationNumberDesc = 'applicationNumber_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -7961,12 +11835,15 @@ export type Projects = Entry &
     grantId?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ProjectsLinkingCollections>;
     membersCollection?: Maybe<ProjectsMembersCollection>;
+    membersCursorCollection?: Maybe<ProjectsMembersCursorCollection>;
     originalGrant?: Maybe<Scalars['String']>;
     originalGrantAimsCollection?: Maybe<ProjectsOriginalGrantAimsCollection>;
+    originalGrantAimsCursorCollection?: Maybe<ProjectsOriginalGrantAimsCursorCollection>;
     projectId?: Maybe<Scalars['String']>;
     projectType?: Maybe<Scalars['String']>;
     proposal?: Maybe<ResearchOutputs>;
     researchTagsCollection?: Maybe<ProjectsResearchTagsCollection>;
+    researchTagsCursorCollection?: Maybe<ProjectsResearchTagsCursorCollection>;
     resourceType?: Maybe<ResourceType>;
     startDate?: Maybe<Scalars['DateTime']>;
     status?: Maybe<Scalars['String']>;
@@ -7974,6 +11851,7 @@ export type Projects = Entry &
     sys: Sys;
     title?: Maybe<Scalars['String']>;
     toolsCollection?: Maybe<ProjectsToolsCollection>;
+    toolsCursorCollection?: Maybe<ProjectsToolsCursorCollection>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
@@ -8023,6 +11901,18 @@ export type ProjectsMembersCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsMembersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsMembersCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ProjectMembershipFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
 export type ProjectsOriginalGrantArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -8037,6 +11927,20 @@ export type ProjectsOriginalGrantAimsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AimsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsOriginalGrantAimsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ProjectsOriginalGrantAimsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AimsFilter>;
 };
@@ -8068,6 +11972,20 @@ export type ProjectsResearchTagsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ProjectsResearchTagsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsResearchTagsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ProjectsResearchTagsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResearchTagsFilter>;
 };
@@ -8117,11 +12035,29 @@ export type ProjectsToolsCollectionArgs = {
   where?: InputMaybe<ExternalToolsFilter>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/projects) */
+export type ProjectsToolsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsToolsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ExternalToolsFilter>;
+};
+
 export type ProjectsCollection = {
   items: Array<Maybe<Projects>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type ProjectsCursorCollection = {
+  items: Array<Maybe<Projects>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type ProjectsFilter = {
@@ -8228,6 +12164,9 @@ export type ProjectsFilter = {
 
 export type ProjectsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
+  manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  manuscriptsCursorCollection?: Maybe<ManuscriptsCursorCollection>;
 };
 
 export type ProjectsLinkingCollectionsEntryCollectionArgs = {
@@ -8238,6 +12177,106 @@ export type ProjectsLinkingCollectionsEntryCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ProjectsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ProjectsLinkingCollectionsManuscriptsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ProjectsLinkingCollectionsManuscriptsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ProjectsLinkingCollectionsManuscriptsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ProjectsLinkingCollectionsManuscriptsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export enum ProjectsLinkingCollectionsManuscriptsCollectionOrder {
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
+export enum ProjectsLinkingCollectionsManuscriptsCursorCollectionOrder {
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export type ProjectsMembersCollection = {
   items: Array<Maybe<ProjectMembership>>;
   limit: Scalars['Int'];
@@ -8246,6 +12285,25 @@ export type ProjectsMembersCollection = {
 };
 
 export enum ProjectsMembersCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type ProjectsMembersCursorCollection = {
+  items: Array<Maybe<ProjectMembership>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ProjectsMembersCursorCollectionOrder {
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -8305,6 +12363,23 @@ export enum ProjectsOriginalGrantAimsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type ProjectsOriginalGrantAimsCursorCollection = {
+  items: Array<Maybe<Aims>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ProjectsOriginalGrantAimsCursorCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ProjectsResearchTagsCollection = {
   items: Array<Maybe<ResearchTags>>;
   limit: Scalars['Int'];
@@ -8313,6 +12388,27 @@ export type ProjectsResearchTagsCollection = {
 };
 
 export enum ProjectsResearchTagsCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type ProjectsResearchTagsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ProjectsResearchTagsCursorCollectionOrder {
   CategoryAsc = 'category_ASC',
   CategoryDesc = 'category_DESC',
   NameAsc = 'name_ASC',
@@ -8351,110 +12447,184 @@ export enum ProjectsToolsCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
+export type ProjectsToolsCursorCollection = {
+  items: Array<Maybe<ExternalTools>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ProjectsToolsCursorCollectionOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export type Query = {
   _node?: Maybe<_Node>;
   _nodes: Array<Maybe<_Node>>;
   aims?: Maybe<Aims>;
   aimsCollection?: Maybe<AimsCollection>;
+  aimsCursorCollection?: Maybe<AimsCursorCollection>;
   announcements?: Maybe<Announcements>;
   announcementsCollection?: Maybe<AnnouncementsCollection>;
+  announcementsCursorCollection?: Maybe<AnnouncementsCursorCollection>;
   asset?: Maybe<Asset>;
   assetCollection?: Maybe<AssetCollection>;
+  assetCursorCollection?: Maybe<AssetCursorCollection>;
   attendance?: Maybe<Attendance>;
   attendanceCollection?: Maybe<AttendanceCollection>;
+  attendanceCursorCollection?: Maybe<AttendanceCursorCollection>;
   awards?: Maybe<Awards>;
   awardsCollection?: Maybe<AwardsCollection>;
+  awardsCursorCollection?: Maybe<AwardsCursorCollection>;
   calendars?: Maybe<Calendars>;
   calendarsCollection?: Maybe<CalendarsCollection>;
+  calendarsCursorCollection?: Maybe<CalendarsCursorCollection>;
   category?: Maybe<Category>;
   categoryCollection?: Maybe<CategoryCollection>;
+  categoryCursorCollection?: Maybe<CategoryCursorCollection>;
   complianceReports?: Maybe<ComplianceReports>;
   complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
+  complianceReportsCursorCollection?: Maybe<ComplianceReportsCursorCollection>;
   dashboard?: Maybe<Dashboard>;
   dashboardCollection?: Maybe<DashboardCollection>;
+  dashboardCursorCollection?: Maybe<DashboardCursorCollection>;
   discover?: Maybe<Discover>;
   discoverCollection?: Maybe<DiscoverCollection>;
+  discoverCursorCollection?: Maybe<DiscoverCursorCollection>;
   discussions?: Maybe<Discussions>;
   discussionsCollection?: Maybe<DiscussionsCollection>;
+  discussionsCursorCollection?: Maybe<DiscussionsCursorCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventSpeakers?: Maybe<EventSpeakers>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
+  eventSpeakersCursorCollection?: Maybe<EventSpeakersCursorCollection>;
   events?: Maybe<Events>;
   eventsCollection?: Maybe<EventsCollection>;
+  eventsCursorCollection?: Maybe<EventsCursorCollection>;
   externalAuthors?: Maybe<ExternalAuthors>;
   externalAuthorsCollection?: Maybe<ExternalAuthorsCollection>;
+  externalAuthorsCursorCollection?: Maybe<ExternalAuthorsCursorCollection>;
   externalTools?: Maybe<ExternalTools>;
   externalToolsCollection?: Maybe<ExternalToolsCollection>;
+  externalToolsCursorCollection?: Maybe<ExternalToolsCursorCollection>;
   guideCollections?: Maybe<GuideCollections>;
   guideCollectionsCollection?: Maybe<GuideCollectionsCollection>;
+  guideCollectionsCursorCollection?: Maybe<GuideCollectionsCursorCollection>;
   guideContent?: Maybe<GuideContent>;
   guideContentCollection?: Maybe<GuideContentCollection>;
+  guideContentCursorCollection?: Maybe<GuideContentCursorCollection>;
   guides?: Maybe<Guides>;
   guidesCollection?: Maybe<GuidesCollection>;
+  guidesCursorCollection?: Maybe<GuidesCursorCollection>;
   icon?: Maybe<Icon>;
   iconCollection?: Maybe<IconCollection>;
+  iconCursorCollection?: Maybe<IconCursorCollection>;
   impact?: Maybe<Impact>;
   impactCollection?: Maybe<ImpactCollection>;
+  impactCursorCollection?: Maybe<ImpactCursorCollection>;
   interestGroupLeaders?: Maybe<InterestGroupLeaders>;
   interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
+  interestGroupLeadersCursorCollection?: Maybe<InterestGroupLeadersCursorCollection>;
   interestGroups?: Maybe<InterestGroups>;
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
+  interestGroupsCursorCollection?: Maybe<InterestGroupsCursorCollection>;
   interestGroupsTeams?: Maybe<InterestGroupsTeams>;
   interestGroupsTeamsCollection?: Maybe<InterestGroupsTeamsCollection>;
+  interestGroupsTeamsCursorCollection?: Maybe<InterestGroupsTeamsCursorCollection>;
   labMembership?: Maybe<LabMembership>;
   labMembershipCollection?: Maybe<LabMembershipCollection>;
+  labMembershipCursorCollection?: Maybe<LabMembershipCursorCollection>;
   labs?: Maybe<Labs>;
   labsCollection?: Maybe<LabsCollection>;
+  labsCursorCollection?: Maybe<LabsCursorCollection>;
   manuscriptVersions?: Maybe<ManuscriptVersions>;
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
+  manuscriptVersionsCursorCollection?: Maybe<ManuscriptVersionsCursorCollection>;
   manuscripts?: Maybe<Manuscripts>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  manuscriptsCursorCollection?: Maybe<ManuscriptsCursorCollection>;
   media?: Maybe<Media>;
   mediaCollection?: Maybe<MediaCollection>;
+  mediaCursorCollection?: Maybe<MediaCursorCollection>;
   messages?: Maybe<Messages>;
   messagesCollection?: Maybe<MessagesCollection>;
+  messagesCursorCollection?: Maybe<MessagesCursorCollection>;
   migration?: Maybe<Migration>;
   migrationCollection?: Maybe<MigrationCollection>;
+  migrationCursorCollection?: Maybe<MigrationCursorCollection>;
   milestones?: Maybe<Milestones>;
   milestonesCollection?: Maybe<MilestonesCollection>;
+  milestonesCursorCollection?: Maybe<MilestonesCursorCollection>;
   news?: Maybe<News>;
   newsCollection?: Maybe<NewsCollection>;
+  newsCursorCollection?: Maybe<NewsCursorCollection>;
   pages?: Maybe<Pages>;
   pagesCollection?: Maybe<PagesCollection>;
+  pagesCursorCollection?: Maybe<PagesCursorCollection>;
   preliminaryDataSharing?: Maybe<PreliminaryDataSharing>;
   preliminaryDataSharingCollection?: Maybe<PreliminaryDataSharingCollection>;
+  preliminaryDataSharingCursorCollection?: Maybe<PreliminaryDataSharingCursorCollection>;
   projectMembership?: Maybe<ProjectMembership>;
   projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
+  projectMembershipCursorCollection?: Maybe<ProjectMembershipCursorCollection>;
   projects?: Maybe<Projects>;
   projectsCollection?: Maybe<ProjectsCollection>;
+  projectsCursorCollection?: Maybe<ProjectsCursorCollection>;
   researchOutputVersions?: Maybe<ResearchOutputVersions>;
   researchOutputVersionsCollection?: Maybe<ResearchOutputVersionsCollection>;
+  researchOutputVersionsCursorCollection?: Maybe<ResearchOutputVersionsCursorCollection>;
   researchOutputs?: Maybe<ResearchOutputs>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
   researchTags?: Maybe<ResearchTags>;
   researchTagsCollection?: Maybe<ResearchTagsCollection>;
+  researchTagsCursorCollection?: Maybe<ResearchTagsCursorCollection>;
   researchTheme?: Maybe<ResearchTheme>;
   researchThemeCollection?: Maybe<ResearchThemeCollection>;
+  researchThemeCursorCollection?: Maybe<ResearchThemeCursorCollection>;
   resourceType?: Maybe<ResourceType>;
   resourceTypeCollection?: Maybe<ResourceTypeCollection>;
+  resourceTypeCursorCollection?: Maybe<ResourceTypeCursorCollection>;
   supplementGrant?: Maybe<SupplementGrant>;
   supplementGrantCollection?: Maybe<SupplementGrantCollection>;
+  supplementGrantCursorCollection?: Maybe<SupplementGrantCursorCollection>;
   teamMembership?: Maybe<TeamMembership>;
   teamMembershipCollection?: Maybe<TeamMembershipCollection>;
+  teamMembershipCursorCollection?: Maybe<TeamMembershipCursorCollection>;
   teams?: Maybe<Teams>;
   teamsCollection?: Maybe<TeamsCollection>;
+  teamsCursorCollection?: Maybe<TeamsCursorCollection>;
   tutorials?: Maybe<Tutorials>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
+  tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
   users?: Maybe<Users>;
   usersCollection?: Maybe<UsersCollection>;
+  usersCursorCollection?: Maybe<UsersCursorCollection>;
   workingGroupDeliverables?: Maybe<WorkingGroupDeliverables>;
   workingGroupDeliverablesCollection?: Maybe<WorkingGroupDeliverablesCollection>;
+  workingGroupDeliverablesCursorCollection?: Maybe<WorkingGroupDeliverablesCursorCollection>;
   workingGroupLeaders?: Maybe<WorkingGroupLeaders>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
+  workingGroupLeadersCursorCollection?: Maybe<WorkingGroupLeadersCursorCollection>;
   workingGroupMembers?: Maybe<WorkingGroupMembers>;
   workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
+  workingGroupMembersCursorCollection?: Maybe<WorkingGroupMembersCursorCollection>;
   workingGroups?: Maybe<WorkingGroups>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+  workingGroupsCursorCollection?: Maybe<WorkingGroupsCursorCollection>;
 };
 
 export type Query_NodeArgs = {
@@ -8488,6 +12658,17 @@ export type QueryAimsCollectionArgs = {
   where?: InputMaybe<AimsFilter>;
 };
 
+export type QueryAimsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AimsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AimsFilter>;
+};
+
 export type QueryAnnouncementsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8501,6 +12682,17 @@ export type QueryAnnouncementsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<AnnouncementsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AnnouncementsFilter>;
+};
+
+export type QueryAnnouncementsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AnnouncementsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AnnouncementsFilter>;
 };
@@ -8522,6 +12714,17 @@ export type QueryAssetCollectionArgs = {
   where?: InputMaybe<AssetFilter>;
 };
 
+export type QueryAssetCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AssetOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AssetFilter>;
+};
+
 export type QueryAttendanceArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8535,6 +12738,17 @@ export type QueryAttendanceCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<AttendanceOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AttendanceFilter>;
+};
+
+export type QueryAttendanceCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AttendanceOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AttendanceFilter>;
 };
@@ -8556,6 +12770,17 @@ export type QueryAwardsCollectionArgs = {
   where?: InputMaybe<AwardsFilter>;
 };
 
+export type QueryAwardsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AwardsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AwardsFilter>;
+};
+
 export type QueryCalendarsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8569,6 +12794,17 @@ export type QueryCalendarsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<CalendarsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<CalendarsFilter>;
+};
+
+export type QueryCalendarsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<CalendarsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<CalendarsFilter>;
 };
@@ -8590,6 +12826,17 @@ export type QueryCategoryCollectionArgs = {
   where?: InputMaybe<CategoryFilter>;
 };
 
+export type QueryCategoryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<CategoryOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<CategoryFilter>;
+};
+
 export type QueryComplianceReportsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8603,6 +12850,17 @@ export type QueryComplianceReportsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ComplianceReportsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ComplianceReportsFilter>;
+};
+
+export type QueryComplianceReportsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ComplianceReportsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ComplianceReportsFilter>;
 };
@@ -8624,6 +12882,17 @@ export type QueryDashboardCollectionArgs = {
   where?: InputMaybe<DashboardFilter>;
 };
 
+export type QueryDashboardCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DashboardOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DashboardFilter>;
+};
+
 export type QueryDiscoverArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8637,6 +12906,17 @@ export type QueryDiscoverCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<DiscoverOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscoverFilter>;
+};
+
+export type QueryDiscoverCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DiscoverOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<DiscoverFilter>;
 };
@@ -8658,12 +12938,34 @@ export type QueryDiscussionsCollectionArgs = {
   where?: InputMaybe<DiscussionsFilter>;
 };
 
+export type QueryDiscussionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<DiscussionsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<DiscussionsFilter>;
+};
+
 export type QueryEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<Array<InputMaybe<EntryOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<EntryFilter>;
+};
+
+export type QueryEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<EntryOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<EntryFilter>;
 };
@@ -8685,6 +12987,17 @@ export type QueryEventSpeakersCollectionArgs = {
   where?: InputMaybe<EventSpeakersFilter>;
 };
 
+export type QueryEventSpeakersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<EventSpeakersOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<EventSpeakersFilter>;
+};
+
 export type QueryEventsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8698,6 +13011,17 @@ export type QueryEventsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<EventsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<EventsFilter>;
+};
+
+export type QueryEventsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<EventsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<EventsFilter>;
 };
@@ -8719,6 +13043,17 @@ export type QueryExternalAuthorsCollectionArgs = {
   where?: InputMaybe<ExternalAuthorsFilter>;
 };
 
+export type QueryExternalAuthorsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ExternalAuthorsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ExternalAuthorsFilter>;
+};
+
 export type QueryExternalToolsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8732,6 +13067,17 @@ export type QueryExternalToolsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ExternalToolsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ExternalToolsFilter>;
+};
+
+export type QueryExternalToolsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ExternalToolsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ExternalToolsFilter>;
 };
@@ -8753,6 +13099,17 @@ export type QueryGuideCollectionsCollectionArgs = {
   where?: InputMaybe<GuideCollectionsFilter>;
 };
 
+export type QueryGuideCollectionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<GuideCollectionsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<GuideCollectionsFilter>;
+};
+
 export type QueryGuideContentArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8766,6 +13123,17 @@ export type QueryGuideContentCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<GuideContentOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<GuideContentFilter>;
+};
+
+export type QueryGuideContentCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<GuideContentOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<GuideContentFilter>;
 };
@@ -8787,6 +13155,17 @@ export type QueryGuidesCollectionArgs = {
   where?: InputMaybe<GuidesFilter>;
 };
 
+export type QueryGuidesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<GuidesOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<GuidesFilter>;
+};
+
 export type QueryIconArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8800,6 +13179,17 @@ export type QueryIconCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<IconOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<IconFilter>;
+};
+
+export type QueryIconCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<IconOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<IconFilter>;
 };
@@ -8821,6 +13211,17 @@ export type QueryImpactCollectionArgs = {
   where?: InputMaybe<ImpactFilter>;
 };
 
+export type QueryImpactCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ImpactOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ImpactFilter>;
+};
+
 export type QueryInterestGroupLeadersArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8834,6 +13235,17 @@ export type QueryInterestGroupLeadersCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<InterestGroupLeadersOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<InterestGroupLeadersFilter>;
+};
+
+export type QueryInterestGroupLeadersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<InterestGroupLeadersOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<InterestGroupLeadersFilter>;
 };
@@ -8855,6 +13267,17 @@ export type QueryInterestGroupsCollectionArgs = {
   where?: InputMaybe<InterestGroupsFilter>;
 };
 
+export type QueryInterestGroupsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<InterestGroupsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<InterestGroupsFilter>;
+};
+
 export type QueryInterestGroupsTeamsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8868,6 +13291,17 @@ export type QueryInterestGroupsTeamsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<InterestGroupsTeamsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<InterestGroupsTeamsFilter>;
+};
+
+export type QueryInterestGroupsTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<InterestGroupsTeamsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<InterestGroupsTeamsFilter>;
 };
@@ -8889,6 +13323,17 @@ export type QueryLabMembershipCollectionArgs = {
   where?: InputMaybe<LabMembershipFilter>;
 };
 
+export type QueryLabMembershipCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<LabMembershipOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<LabMembershipFilter>;
+};
+
 export type QueryLabsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8902,6 +13347,17 @@ export type QueryLabsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<LabsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<LabsFilter>;
+};
+
+export type QueryLabsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<LabsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<LabsFilter>;
 };
@@ -8923,6 +13379,17 @@ export type QueryManuscriptVersionsCollectionArgs = {
   where?: InputMaybe<ManuscriptVersionsFilter>;
 };
 
+export type QueryManuscriptVersionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ManuscriptVersionsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ManuscriptVersionsFilter>;
+};
+
 export type QueryManuscriptsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8936,6 +13403,17 @@ export type QueryManuscriptsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ManuscriptsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ManuscriptsFilter>;
+};
+
+export type QueryManuscriptsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ManuscriptsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ManuscriptsFilter>;
 };
@@ -8957,6 +13435,17 @@ export type QueryMediaCollectionArgs = {
   where?: InputMaybe<MediaFilter>;
 };
 
+export type QueryMediaCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<MediaOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<MediaFilter>;
+};
+
 export type QueryMessagesArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -8970,6 +13459,17 @@ export type QueryMessagesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<MessagesOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<MessagesFilter>;
+};
+
+export type QueryMessagesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<MessagesOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<MessagesFilter>;
 };
@@ -8991,6 +13491,17 @@ export type QueryMigrationCollectionArgs = {
   where?: InputMaybe<MigrationFilter>;
 };
 
+export type QueryMigrationCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<MigrationOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<MigrationFilter>;
+};
+
 export type QueryMilestonesArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9004,6 +13515,17 @@ export type QueryMilestonesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<MilestonesOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<MilestonesFilter>;
+};
+
+export type QueryMilestonesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<MilestonesOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<MilestonesFilter>;
 };
@@ -9025,6 +13547,17 @@ export type QueryNewsCollectionArgs = {
   where?: InputMaybe<NewsFilter>;
 };
 
+export type QueryNewsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<NewsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<NewsFilter>;
+};
+
 export type QueryPagesArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9038,6 +13571,17 @@ export type QueryPagesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<PagesOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<PagesFilter>;
+};
+
+export type QueryPagesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<PagesOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<PagesFilter>;
 };
@@ -9059,6 +13603,17 @@ export type QueryPreliminaryDataSharingCollectionArgs = {
   where?: InputMaybe<PreliminaryDataSharingFilter>;
 };
 
+export type QueryPreliminaryDataSharingCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<PreliminaryDataSharingOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<PreliminaryDataSharingFilter>;
+};
+
 export type QueryProjectMembershipArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9072,6 +13627,17 @@ export type QueryProjectMembershipCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ProjectMembershipOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ProjectMembershipFilter>;
+};
+
+export type QueryProjectMembershipCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectMembershipOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ProjectMembershipFilter>;
 };
@@ -9093,6 +13659,17 @@ export type QueryProjectsCollectionArgs = {
   where?: InputMaybe<ProjectsFilter>;
 };
 
+export type QueryProjectsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ProjectsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ProjectsFilter>;
+};
+
 export type QueryResearchOutputVersionsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9106,6 +13683,17 @@ export type QueryResearchOutputVersionsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ResearchOutputVersionsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchOutputVersionsFilter>;
+};
+
+export type QueryResearchOutputVersionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ResearchOutputVersionsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResearchOutputVersionsFilter>;
 };
@@ -9127,6 +13715,17 @@ export type QueryResearchOutputsCollectionArgs = {
   where?: InputMaybe<ResearchOutputsFilter>;
 };
 
+export type QueryResearchOutputsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ResearchOutputsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchOutputsFilter>;
+};
+
 export type QueryResearchTagsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9140,6 +13739,17 @@ export type QueryResearchTagsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ResearchTagsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+export type QueryResearchTagsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ResearchTagsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResearchTagsFilter>;
 };
@@ -9161,6 +13771,17 @@ export type QueryResearchThemeCollectionArgs = {
   where?: InputMaybe<ResearchThemeFilter>;
 };
 
+export type QueryResearchThemeCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ResearchThemeOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchThemeFilter>;
+};
+
 export type QueryResourceTypeArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9174,6 +13795,17 @@ export type QueryResourceTypeCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ResourceTypeOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResourceTypeFilter>;
+};
+
+export type QueryResourceTypeCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<ResourceTypeOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResourceTypeFilter>;
 };
@@ -9195,6 +13827,17 @@ export type QuerySupplementGrantCollectionArgs = {
   where?: InputMaybe<SupplementGrantFilter>;
 };
 
+export type QuerySupplementGrantCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<SupplementGrantOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<SupplementGrantFilter>;
+};
+
 export type QueryTeamMembershipArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9208,6 +13851,17 @@ export type QueryTeamMembershipCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<TeamMembershipOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TeamMembershipFilter>;
+};
+
+export type QueryTeamMembershipCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TeamMembershipOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TeamMembershipFilter>;
 };
@@ -9229,6 +13883,17 @@ export type QueryTeamsCollectionArgs = {
   where?: InputMaybe<TeamsFilter>;
 };
 
+export type QueryTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TeamsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TeamsFilter>;
+};
+
 export type QueryTutorialsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9242,6 +13907,17 @@ export type QueryTutorialsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<TutorialsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TutorialsFilter>;
+};
+
+export type QueryTutorialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TutorialsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TutorialsFilter>;
 };
@@ -9263,6 +13939,17 @@ export type QueryUsersCollectionArgs = {
   where?: InputMaybe<UsersFilter>;
 };
 
+export type QueryUsersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<UsersOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
+};
+
 export type QueryWorkingGroupDeliverablesArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9276,6 +13963,17 @@ export type QueryWorkingGroupDeliverablesCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<WorkingGroupDeliverablesOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<WorkingGroupDeliverablesFilter>;
+};
+
+export type QueryWorkingGroupDeliverablesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupDeliverablesOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupDeliverablesFilter>;
 };
@@ -9297,6 +13995,17 @@ export type QueryWorkingGroupLeadersCollectionArgs = {
   where?: InputMaybe<WorkingGroupLeadersFilter>;
 };
 
+export type QueryWorkingGroupLeadersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupLeadersOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<WorkingGroupLeadersFilter>;
+};
+
 export type QueryWorkingGroupMembersArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9314,6 +14023,17 @@ export type QueryWorkingGroupMembersCollectionArgs = {
   where?: InputMaybe<WorkingGroupMembersFilter>;
 };
 
+export type QueryWorkingGroupMembersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupMembersOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<WorkingGroupMembersFilter>;
+};
+
 export type QueryWorkingGroupsArgs = {
   id: Scalars['String'];
   locale?: InputMaybe<Scalars['String']>;
@@ -9327,6 +14047,17 @@ export type QueryWorkingGroupsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<WorkingGroupsOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<WorkingGroupsFilter>;
+};
+
+export type QueryWorkingGroupsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupsOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupsFilter>;
 };
@@ -9417,6 +14148,12 @@ export type ResearchOutputVersionsCollection = {
   total: Scalars['Int'];
 };
 
+export type ResearchOutputVersionsCursorCollection = {
+  items: Array<Maybe<ResearchOutputVersions>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ResearchOutputVersionsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ResearchOutputVersionsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ResearchOutputVersionsFilter>>>;
@@ -9486,7 +14223,9 @@ export type ResearchOutputVersionsFilter = {
 
 export type ResearchOutputVersionsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
 };
 
 export type ResearchOutputVersionsLinkingCollectionsEntryCollectionArgs = {
@@ -9496,6 +14235,16 @@ export type ResearchOutputVersionsLinkingCollectionsEntryCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
+
+export type ResearchOutputVersionsLinkingCollectionsEntryCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
 
 export type ResearchOutputVersionsLinkingCollectionsResearchOutputsCollectionArgs =
   {
@@ -9511,7 +14260,67 @@ export type ResearchOutputVersionsLinkingCollectionsResearchOutputsCollectionArg
     useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
+export type ResearchOutputVersionsLinkingCollectionsResearchOutputsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ResearchOutputVersionsLinkingCollectionsResearchOutputsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export enum ResearchOutputVersionsLinkingCollectionsResearchOutputsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum ResearchOutputVersionsLinkingCollectionsResearchOutputsCursorCollectionOrder {
   AccessionAsc = 'accession_ASC',
   AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
@@ -9592,7 +14401,9 @@ export type ResearchOutputs = Entry &
     adminNotes?: Maybe<Scalars['String']>;
     asapFunded?: Maybe<Scalars['String']>;
     authorsCollection?: Maybe<ResearchOutputsAuthorsCollection>;
+    authorsCursorCollection?: Maybe<ResearchOutputsAuthorsCursorCollection>;
     categoriesCollection?: Maybe<ResearchOutputsCategoriesCollection>;
+    categoriesCursorCollection?: Maybe<ResearchOutputsCategoriesCursorCollection>;
     changelog?: Maybe<Scalars['String']>;
     contentfulMetadata: ContentfulMetadata;
     createdBy?: Maybe<Users>;
@@ -9602,20 +14413,27 @@ export type ResearchOutputs = Entry &
     documentType?: Maybe<Scalars['String']>;
     doi?: Maybe<Scalars['String']>;
     environmentsCollection?: Maybe<ResearchOutputsEnvironmentsCollection>;
+    environmentsCursorCollection?: Maybe<ResearchOutputsEnvironmentsCursorCollection>;
     impact?: Maybe<Impact>;
     isInReview?: Maybe<Scalars['Boolean']>;
     keywordsCollection?: Maybe<ResearchOutputsKeywordsCollection>;
+    keywordsCursorCollection?: Maybe<ResearchOutputsKeywordsCursorCollection>;
     labCatalogNumber?: Maybe<Scalars['String']>;
     labsCollection?: Maybe<ResearchOutputsLabsCollection>;
+    labsCursorCollection?: Maybe<ResearchOutputsLabsCursorCollection>;
     lastUpdatedPartial?: Maybe<Scalars['DateTime']>;
     link?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ResearchOutputsLinkingCollections>;
     methodsCollection?: Maybe<ResearchOutputsMethodsCollection>;
+    methodsCursorCollection?: Maybe<ResearchOutputsMethodsCursorCollection>;
     organismsCollection?: Maybe<ResearchOutputsOrganismsCollection>;
+    organismsCursorCollection?: Maybe<ResearchOutputsOrganismsCursorCollection>;
     publishDate?: Maybe<Scalars['DateTime']>;
     relatedEventsCollection?: Maybe<ResearchOutputsRelatedEventsCollection>;
+    relatedEventsCursorCollection?: Maybe<ResearchOutputsRelatedEventsCursorCollection>;
     relatedManuscriptVersion?: Maybe<ManuscriptVersions>;
     relatedResearchCollection?: Maybe<ResearchOutputsRelatedResearchCollection>;
+    relatedResearchCursorCollection?: Maybe<ResearchOutputsRelatedResearchCursorCollection>;
     rrid?: Maybe<Scalars['String']>;
     sharingStatus?: Maybe<Scalars['String']>;
     shortDescription?: Maybe<Scalars['String']>;
@@ -9625,12 +14443,14 @@ export type ResearchOutputs = Entry &
     sys: Sys;
     tags?: Maybe<Array<Maybe<Scalars['String']>>>;
     teamsCollection?: Maybe<ResearchOutputsTeamsCollection>;
+    teamsCursorCollection?: Maybe<ResearchOutputsTeamsCursorCollection>;
     title?: Maybe<Scalars['String']>;
     type?: Maybe<Scalars['String']>;
     updatedBy?: Maybe<Users>;
     usageNotes?: Maybe<Scalars['String']>;
     usedInAPublication?: Maybe<Scalars['String']>;
     versionsCollection?: Maybe<ResearchOutputsVersionsCollection>;
+    versionsCursorCollection?: Maybe<ResearchOutputsVersionsCursorCollection>;
     workingGroup?: Maybe<WorkingGroups>;
   };
 
@@ -9669,6 +14489,17 @@ export type ResearchOutputsAuthorsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsAuthorsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchOutputsAuthorsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsCategoriesCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -9677,6 +14508,20 @@ export type ResearchOutputsCategoriesCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<CategoryFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsCategoriesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsCategoriesCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<CategoryFilter>;
 };
@@ -9739,6 +14584,20 @@ export type ResearchOutputsEnvironmentsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsEnvironmentsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsEnvironmentsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsImpactArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -9764,6 +14623,20 @@ export type ResearchOutputsKeywordsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsKeywordsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsKeywordsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsLabCatalogNumberArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -9776,6 +14649,20 @@ export type ResearchOutputsLabsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<ResearchOutputsLabsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<LabsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsLabsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsLabsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<LabsFilter>;
 };
@@ -9809,6 +14696,20 @@ export type ResearchOutputsMethodsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsMethodsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsMethodsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsOrganismsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -9817,6 +14718,20 @@ export type ResearchOutputsOrganismsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsOrganismsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsOrganismsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResearchTagsFilter>;
 };
@@ -9841,6 +14756,20 @@ export type ResearchOutputsRelatedEventsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsRelatedEventsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsRelatedEventsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<EventsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsRelatedManuscriptVersionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -9857,6 +14786,20 @@ export type ResearchOutputsRelatedResearchCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchOutputsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsRelatedResearchCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsRelatedResearchCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ResearchOutputsFilter>;
 };
@@ -9919,6 +14862,20 @@ export type ResearchOutputsTeamsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsTeamsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TeamsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -9962,6 +14919,20 @@ export type ResearchOutputsVersionsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsVersionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchOutputsVersionsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchOutputVersionsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsWorkingGroupArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -9974,6 +14945,12 @@ export type ResearchOutputsAuthorsCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type ResearchOutputsAuthorsCursorCollection = {
+  items: Array<Maybe<ResearchOutputsAuthorsItem>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type ResearchOutputsAuthorsFilter = {
@@ -10019,11 +14996,36 @@ export enum ResearchOutputsCategoriesCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type ResearchOutputsCategoriesCursorCollection = {
+  items: Array<Maybe<Category>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ResearchOutputsCategoriesCursorCollectionOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ResearchOutputsCollection = {
   items: Array<Maybe<ResearchOutputs>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type ResearchOutputsCursorCollection = {
+  items: Array<Maybe<ResearchOutputs>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type ResearchOutputsDescription = {
@@ -10074,6 +15076,27 @@ export type ResearchOutputsEnvironmentsCollection = {
 };
 
 export enum ResearchOutputsEnvironmentsCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type ResearchOutputsEnvironmentsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ResearchOutputsEnvironmentsCursorCollectionOrder {
   CategoryAsc = 'category_ASC',
   CategoryDesc = 'category_DESC',
   NameAsc = 'name_ASC',
@@ -10322,6 +15345,27 @@ export enum ResearchOutputsKeywordsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type ResearchOutputsKeywordsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ResearchOutputsKeywordsCursorCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ResearchOutputsLabsCollection = {
   items: Array<Maybe<Labs>>;
   limit: Scalars['Int'];
@@ -10342,13 +15386,38 @@ export enum ResearchOutputsLabsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type ResearchOutputsLabsCursorCollection = {
+  items: Array<Maybe<Labs>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ResearchOutputsLabsCursorCollectionOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ResearchOutputsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  manuscriptsCursorCollection?: Maybe<ManuscriptsCursorCollection>;
   milestonesCollection?: Maybe<MilestonesCollection>;
+  milestonesCursorCollection?: Maybe<MilestonesCursorCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
+  projectsCursorCollection?: Maybe<ProjectsCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
   supplementGrantCollection?: Maybe<SupplementGrantCollection>;
+  supplementGrantCursorCollection?: Maybe<SupplementGrantCursorCollection>;
 };
 
 export type ResearchOutputsLinkingCollectionsEntryCollectionArgs = {
@@ -10356,6 +15425,15 @@ export type ResearchOutputsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ResearchOutputsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -10372,6 +15450,20 @@ export type ResearchOutputsLinkingCollectionsManuscriptsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResearchOutputsLinkingCollectionsManuscriptsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResearchOutputsLinkingCollectionsManuscriptsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type ResearchOutputsLinkingCollectionsMilestonesCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -10385,6 +15477,20 @@ export type ResearchOutputsLinkingCollectionsMilestonesCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResearchOutputsLinkingCollectionsMilestonesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResearchOutputsLinkingCollectionsMilestonesCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type ResearchOutputsLinkingCollectionsProjectsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -10393,6 +15499,20 @@ export type ResearchOutputsLinkingCollectionsProjectsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ResearchOutputsLinkingCollectionsProjectsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResearchOutputsLinkingCollectionsProjectsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -10409,6 +15529,21 @@ export type ResearchOutputsLinkingCollectionsResearchOutputsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResearchOutputsLinkingCollectionsResearchOutputsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ResearchOutputsLinkingCollectionsResearchOutputsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export type ResearchOutputsLinkingCollectionsSupplementGrantCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -10422,7 +15557,55 @@ export type ResearchOutputsLinkingCollectionsSupplementGrantCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResearchOutputsLinkingCollectionsSupplementGrantCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ResearchOutputsLinkingCollectionsSupplementGrantCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export enum ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder {
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
+export enum ResearchOutputsLinkingCollectionsManuscriptsCursorCollectionOrder {
   ApcAmountPaidAsc = 'apcAmountPaid_ASC',
   ApcAmountPaidDesc = 'apcAmountPaid_DESC',
   ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
@@ -10468,7 +15651,49 @@ export enum ResearchOutputsLinkingCollectionsMilestonesCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum ResearchOutputsLinkingCollectionsMilestonesCursorCollectionOrder {
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum ResearchOutputsLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ResearchOutputsLinkingCollectionsProjectsCursorCollectionOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
   ApplicationNumberDesc = 'applicationNumber_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -10542,7 +15767,67 @@ export enum ResearchOutputsLinkingCollectionsResearchOutputsCollectionOrder {
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
+export enum ResearchOutputsLinkingCollectionsResearchOutputsCursorCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
 export enum ResearchOutputsLinkingCollectionsSupplementGrantCollectionOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ResearchOutputsLinkingCollectionsSupplementGrantCursorCollectionOrder {
   EndDateAsc = 'endDate_ASC',
   EndDateDesc = 'endDate_DESC',
   StartDateAsc = 'startDate_ASC',
@@ -10565,6 +15850,27 @@ export type ResearchOutputsMethodsCollection = {
 };
 
 export enum ResearchOutputsMethodsCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type ResearchOutputsMethodsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ResearchOutputsMethodsCursorCollectionOrder {
   CategoryAsc = 'category_ASC',
   CategoryDesc = 'category_DESC',
   NameAsc = 'name_ASC',
@@ -10646,6 +15952,27 @@ export enum ResearchOutputsOrganismsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type ResearchOutputsOrganismsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ResearchOutputsOrganismsCursorCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type ResearchOutputsRelatedEventsCollection = {
   items: Array<Maybe<Events>>;
   limit: Scalars['Int'];
@@ -10654,6 +15981,61 @@ export type ResearchOutputsRelatedEventsCollection = {
 };
 
 export enum ResearchOutputsRelatedEventsCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export type ResearchOutputsRelatedEventsCursorCollection = {
+  items: Array<Maybe<Events>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ResearchOutputsRelatedEventsCursorCollectionOrder {
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -10754,6 +16136,57 @@ export enum ResearchOutputsRelatedResearchCollectionOrder {
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
+export type ResearchOutputsRelatedResearchCursorCollection = {
+  items: Array<Maybe<ResearchOutputs>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ResearchOutputsRelatedResearchCursorCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
 export type ResearchOutputsTeamsCollection = {
   items: Array<Maybe<Teams>>;
   limit: Scalars['Int'];
@@ -10786,6 +16219,37 @@ export enum ResearchOutputsTeamsCollectionOrder {
   TeamTypeDesc = 'teamType_DESC',
 }
 
+export type ResearchOutputsTeamsCursorCollection = {
+  items: Array<Maybe<Teams>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ResearchOutputsTeamsCursorCollectionOrder {
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
+}
+
 export type ResearchOutputsVersionsCollection = {
   items: Array<Maybe<ResearchOutputVersions>>;
   limit: Scalars['Int'];
@@ -10794,6 +16258,39 @@ export type ResearchOutputsVersionsCollection = {
 };
 
 export enum ResearchOutputsVersionsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
+export type ResearchOutputsVersionsCursorCollection = {
+  items: Array<Maybe<ResearchOutputVersions>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum ResearchOutputsVersionsCursorCollectionOrder {
   AccessionAsc = 'accession_ASC',
   AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
@@ -10862,6 +16359,12 @@ export type ResearchTagsCollection = {
   total: Scalars['Int'];
 };
 
+export type ResearchTagsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ResearchTagsFilter = {
   AND?: InputMaybe<Array<InputMaybe<ResearchTagsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ResearchTagsFilter>>>;
@@ -10889,14 +16392,23 @@ export type ResearchTagsFilter = {
 
 export type ResearchTagsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventsCollection?: Maybe<EventsCollection>;
+  eventsCursorCollection?: Maybe<EventsCursorCollection>;
   interestGroupsCollection?: Maybe<InterestGroupsCollection>;
+  interestGroupsCursorCollection?: Maybe<InterestGroupsCursorCollection>;
   newsCollection?: Maybe<NewsCollection>;
+  newsCursorCollection?: Maybe<NewsCursorCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
+  projectsCursorCollection?: Maybe<ProjectsCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
+  tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
   usersCollection?: Maybe<UsersCollection>;
+  usersCursorCollection?: Maybe<UsersCursorCollection>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+  workingGroupsCursorCollection?: Maybe<WorkingGroupsCursorCollection>;
 };
 
 export type ResearchTagsLinkingCollectionsEntryCollectionArgs = {
@@ -10904,6 +16416,15 @@ export type ResearchTagsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ResearchTagsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -10915,6 +16436,18 @@ export type ResearchTagsLinkingCollectionsEventsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ResearchTagsLinkingCollectionsEventsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchTagsLinkingCollectionsEventsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -10931,6 +16464,20 @@ export type ResearchTagsLinkingCollectionsInterestGroupsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResearchTagsLinkingCollectionsInterestGroupsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResearchTagsLinkingCollectionsInterestGroupsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type ResearchTagsLinkingCollectionsNewsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -10942,6 +16489,18 @@ export type ResearchTagsLinkingCollectionsNewsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResearchTagsLinkingCollectionsNewsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchTagsLinkingCollectionsNewsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type ResearchTagsLinkingCollectionsProjectsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -10950,6 +16509,20 @@ export type ResearchTagsLinkingCollectionsProjectsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ResearchTagsLinkingCollectionsProjectsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResearchTagsLinkingCollectionsProjectsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -10966,6 +16539,21 @@ export type ResearchTagsLinkingCollectionsResearchOutputsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResearchTagsLinkingCollectionsResearchOutputsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<ResearchTagsLinkingCollectionsResearchOutputsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export type ResearchTagsLinkingCollectionsTutorialsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -10977,6 +16565,20 @@ export type ResearchTagsLinkingCollectionsTutorialsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResearchTagsLinkingCollectionsTutorialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResearchTagsLinkingCollectionsTutorialsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type ResearchTagsLinkingCollectionsUsersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -10985,6 +16587,18 @@ export type ResearchTagsLinkingCollectionsUsersCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ResearchTagsLinkingCollectionsUsersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchTagsLinkingCollectionsUsersCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -11001,7 +16615,70 @@ export type ResearchTagsLinkingCollectionsWorkingGroupsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResearchTagsLinkingCollectionsWorkingGroupsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResearchTagsLinkingCollectionsWorkingGroupsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum ResearchTagsLinkingCollectionsEventsCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
+export enum ResearchTagsLinkingCollectionsEventsCursorCollectionOrder {
   EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
   EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
   EndDateAsc = 'endDate_ASC',
@@ -11071,6 +16748,27 @@ export enum ResearchTagsLinkingCollectionsInterestGroupsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum ResearchTagsLinkingCollectionsInterestGroupsCursorCollectionOrder {
+  ActiveAsc = 'active_ASC',
+  ActiveDesc = 'active_DESC',
+  GoogleDriveAsc = 'googleDrive_ASC',
+  GoogleDriveDesc = 'googleDrive_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SlackAsc = 'slack_ASC',
+  SlackDesc = 'slack_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum ResearchTagsLinkingCollectionsNewsCollectionOrder {
   FrequencyAsc = 'frequency_ASC',
   FrequencyDesc = 'frequency_DESC',
@@ -11090,7 +16788,55 @@ export enum ResearchTagsLinkingCollectionsNewsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum ResearchTagsLinkingCollectionsNewsCursorCollectionOrder {
+  FrequencyAsc = 'frequency_ASC',
+  FrequencyDesc = 'frequency_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum ResearchTagsLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ResearchTagsLinkingCollectionsProjectsCursorCollectionOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
   ApplicationNumberDesc = 'applicationNumber_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -11164,7 +16910,83 @@ export enum ResearchTagsLinkingCollectionsResearchOutputsCollectionOrder {
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
+export enum ResearchTagsLinkingCollectionsResearchOutputsCursorCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
 export enum ResearchTagsLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum ResearchTagsLinkingCollectionsTutorialsCursorCollectionOrder {
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AsapFundedAsc = 'asapFunded_ASC',
@@ -11270,7 +17092,101 @@ export enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   Website2Desc = 'website2_DESC',
 }
 
+export enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
 export enum ResearchTagsLinkingCollectionsWorkingGroupsCollectionOrder {
+  CompleteAsc = 'complete_ASC',
+  CompleteDesc = 'complete_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum ResearchTagsLinkingCollectionsWorkingGroupsCursorCollectionOrder {
   CompleteAsc = 'complete_ASC',
   CompleteDesc = 'complete_DESC',
   ExternalLinkAsc = 'externalLink_ASC',
@@ -11332,6 +17248,12 @@ export type ResearchThemeCollection = {
   total: Scalars['Int'];
 };
 
+export type ResearchThemeCursorCollection = {
+  items: Array<Maybe<ResearchTheme>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ResearchThemeFilter = {
   AND?: InputMaybe<Array<InputMaybe<ResearchThemeFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ResearchThemeFilter>>>;
@@ -11348,7 +17270,9 @@ export type ResearchThemeFilter = {
 
 export type ResearchThemeLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   teamsCollection?: Maybe<TeamsCollection>;
+  teamsCursorCollection?: Maybe<TeamsCursorCollection>;
 };
 
 export type ResearchThemeLinkingCollectionsEntryCollectionArgs = {
@@ -11356,6 +17280,15 @@ export type ResearchThemeLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ResearchThemeLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -11370,7 +17303,44 @@ export type ResearchThemeLinkingCollectionsTeamsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResearchThemeLinkingCollectionsTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<ResearchThemeLinkingCollectionsTeamsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum ResearchThemeLinkingCollectionsTeamsCollectionOrder {
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
+}
+
+export enum ResearchThemeLinkingCollectionsTeamsCursorCollectionOrder {
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
@@ -11445,6 +17415,12 @@ export type ResourceTypeCollection = {
   total: Scalars['Int'];
 };
 
+export type ResourceTypeCursorCollection = {
+  items: Array<Maybe<ResourceType>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type ResourceTypeFilter = {
   AND?: InputMaybe<Array<InputMaybe<ResourceTypeFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ResourceTypeFilter>>>;
@@ -11461,7 +17437,9 @@ export type ResourceTypeFilter = {
 
 export type ResourceTypeLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
+  projectsCursorCollection?: Maybe<ProjectsCursorCollection>;
 };
 
 export type ResourceTypeLinkingCollectionsEntryCollectionArgs = {
@@ -11469,6 +17447,15 @@ export type ResourceTypeLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type ResourceTypeLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -11483,7 +17470,50 @@ export type ResourceTypeLinkingCollectionsProjectsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type ResourceTypeLinkingCollectionsProjectsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<ResourceTypeLinkingCollectionsProjectsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum ResourceTypeLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum ResourceTypeLinkingCollectionsProjectsCursorCollectionOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
   ApplicationNumberDesc = 'applicationNumber_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -11530,6 +17560,7 @@ export type SupplementGrant = Entry &
   _Node & {
     _id: Scalars['ID'];
     aimsCollection?: Maybe<SupplementGrantAimsCollection>;
+    aimsCursorCollection?: Maybe<SupplementGrantAimsCursorCollection>;
     contentfulMetadata: ContentfulMetadata;
     description?: Maybe<Scalars['String']>;
     endDate?: Maybe<Scalars['DateTime']>;
@@ -11547,6 +17578,20 @@ export type SupplementGrantAimsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<SupplementGrantAimsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AimsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/supplementGrant) */
+export type SupplementGrantAimsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<SupplementGrantAimsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AimsFilter>;
 };
@@ -11606,11 +17651,34 @@ export enum SupplementGrantAimsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type SupplementGrantAimsCursorCollection = {
+  items: Array<Maybe<Aims>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum SupplementGrantAimsCursorCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type SupplementGrantCollection = {
   items: Array<Maybe<SupplementGrant>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type SupplementGrantCursorCollection = {
+  items: Array<Maybe<SupplementGrant>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type SupplementGrantFilter = {
@@ -11658,7 +17726,9 @@ export type SupplementGrantFilter = {
 
 export type SupplementGrantLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
+  projectsCursorCollection?: Maybe<ProjectsCursorCollection>;
 };
 
 export type SupplementGrantLinkingCollectionsEntryCollectionArgs = {
@@ -11666,6 +17736,15 @@ export type SupplementGrantLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type SupplementGrantLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -11680,7 +17759,50 @@ export type SupplementGrantLinkingCollectionsProjectsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type SupplementGrantLinkingCollectionsProjectsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<SupplementGrantLinkingCollectionsProjectsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum SupplementGrantLinkingCollectionsProjectsCollectionOrder {
+  ApplicationNumberAsc = 'applicationNumber_ASC',
+  ApplicationNumberDesc = 'applicationNumber_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  GoogleDriveLinkAsc = 'googleDriveLink_ASC',
+  GoogleDriveLinkDesc = 'googleDriveLink_DESC',
+  GrantIdAsc = 'grantId_ASC',
+  GrantIdDesc = 'grantId_DESC',
+  ProjectIdAsc = 'projectId_ASC',
+  ProjectIdDesc = 'projectId_DESC',
+  ProjectTypeAsc = 'projectType_ASC',
+  ProjectTypeDesc = 'projectType_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum SupplementGrantLinkingCollectionsProjectsCursorCollectionOrder {
   ApplicationNumberAsc = 'applicationNumber_ASC',
   ApplicationNumberDesc = 'applicationNumber_DESC',
   ContactEmailAsc = 'contactEmail_ASC',
@@ -11785,6 +17907,7 @@ export type TeamMembership = Entry &
   _Node & {
     _id: Scalars['ID'];
     awardsCollection?: Maybe<TeamMembershipAwardsCollection>;
+    awardsCursorCollection?: Maybe<TeamMembershipAwardsCursorCollection>;
     contentfulMetadata: ContentfulMetadata;
     inactiveSinceDate?: Maybe<Scalars['DateTime']>;
     linkedFrom?: Maybe<TeamMembershipLinkingCollections>;
@@ -11800,6 +17923,20 @@ export type TeamMembershipAwardsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<TeamMembershipAwardsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AwardsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teamMembership) */
+export type TeamMembershipAwardsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamMembershipAwardsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AwardsFilter>;
 };
@@ -11851,11 +17988,38 @@ export enum TeamMembershipAwardsCollectionOrder {
   TypeDesc = 'type_DESC',
 }
 
+export type TeamMembershipAwardsCursorCollection = {
+  items: Array<Maybe<Awards>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum TeamMembershipAwardsCursorCollectionOrder {
+  DateAsc = 'date_ASC',
+  DateDesc = 'date_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+}
+
 export type TeamMembershipCollection = {
   items: Array<Maybe<TeamMembership>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type TeamMembershipCursorCollection = {
+  items: Array<Maybe<TeamMembership>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type TeamMembershipFilter = {
@@ -11887,7 +18051,9 @@ export type TeamMembershipFilter = {
 
 export type TeamMembershipLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   usersCollection?: Maybe<UsersCollection>;
+  usersCursorCollection?: Maybe<UsersCursorCollection>;
 };
 
 export type TeamMembershipLinkingCollectionsEntryCollectionArgs = {
@@ -11895,6 +18061,15 @@ export type TeamMembershipLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type TeamMembershipLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -11909,7 +18084,96 @@ export type TeamMembershipLinkingCollectionsUsersCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type TeamMembershipLinkingCollectionsUsersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<TeamMembershipLinkingCollectionsUsersCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
+  ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
+  ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
+  ActiveCampaignIdAsc = 'activeCampaignId_ASC',
+  ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLocationAsc = 'alumniLocation_ASC',
+  AlumniLocationDesc = 'alumniLocation_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
+  CityAsc = 'city_ASC',
+  CityDesc = 'city_DESC',
+  ContactEmailAsc = 'contactEmail_ASC',
+  ContactEmailDesc = 'contactEmail_DESC',
+  CountryAsc = 'country_ASC',
+  CountryDesc = 'country_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DegreeAsc = 'degree_ASC',
+  DegreeDesc = 'degree_DESC',
+  DismissedGettingStartedAsc = 'dismissedGettingStarted_ASC',
+  DismissedGettingStartedDesc = 'dismissedGettingStarted_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  FirstNameAsc = 'firstName_ASC',
+  FirstNameDesc = 'firstName_DESC',
+  GithubAsc = 'github_ASC',
+  GithubDesc = 'github_DESC',
+  GoogleScholarAsc = 'googleScholar_ASC',
+  GoogleScholarDesc = 'googleScholar_DESC',
+  InstitutionAsc = 'institution_ASC',
+  InstitutionDesc = 'institution_DESC',
+  LastNameAsc = 'lastName_ASC',
+  LastNameDesc = 'lastName_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkedInAsc = 'linkedIn_ASC',
+  LinkedInDesc = 'linkedIn_DESC',
+  MiddleNameAsc = 'middleName_ASC',
+  MiddleNameDesc = 'middleName_DESC',
+  NicknameAsc = 'nickname_ASC',
+  NicknameDesc = 'nickname_DESC',
+  OnboardedAsc = 'onboarded_ASC',
+  OnboardedDesc = 'onboarded_DESC',
+  OpenScienceTeamMemberAsc = 'openScienceTeamMember_ASC',
+  OpenScienceTeamMemberDesc = 'openScienceTeamMember_DESC',
+  OrcidLastModifiedDateAsc = 'orcidLastModifiedDate_ASC',
+  OrcidLastModifiedDateDesc = 'orcidLastModifiedDate_DESC',
+  OrcidLastSyncDateAsc = 'orcidLastSyncDate_ASC',
+  OrcidLastSyncDateDesc = 'orcidLastSyncDate_DESC',
+  OrcidAsc = 'orcid_ASC',
+  OrcidDesc = 'orcid_DESC',
+  ResearchGateAsc = 'researchGate_ASC',
+  ResearchGateDesc = 'researchGate_DESC',
+  ResearcherIdAsc = 'researcherId_ASC',
+  ResearcherIdDesc = 'researcherId_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  StateOrProvinceAsc = 'stateOrProvince_ASC',
+  StateOrProvinceDesc = 'stateOrProvince_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TwitterAsc = 'twitter_ASC',
+  TwitterDesc = 'twitter_DESC',
+  Website1Asc = 'website1_ASC',
+  Website1Desc = 'website1_DESC',
+  Website2Asc = 'website2_ASC',
+  Website2Desc = 'website2_DESC',
+}
+
+export enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtAsc = 'activeCampaignCreatedAt_ASC',
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
@@ -12017,6 +18281,7 @@ export type Teams = Entry &
     teamDescription?: Maybe<Scalars['String']>;
     teamType?: Maybe<Scalars['String']>;
     toolsCollection?: Maybe<TeamsToolsCollection>;
+    toolsCursorCollection?: Maybe<TeamsToolsCursorCollection>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
@@ -12097,11 +18362,29 @@ export type TeamsToolsCollectionArgs = {
   where?: InputMaybe<ExternalToolsFilter>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/teams) */
+export type TeamsToolsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TeamsToolsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ExternalToolsFilter>;
+};
+
 export type TeamsCollection = {
   items: Array<Maybe<Teams>>;
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type TeamsCursorCollection = {
+  items: Array<Maybe<Teams>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type TeamsFilter = {
@@ -12184,17 +18467,29 @@ export type TeamsFilter = {
 
 export type TeamsLinkingCollections = {
   attendanceCollection?: Maybe<AttendanceCollection>;
+  attendanceCursorCollection?: Maybe<AttendanceCursorCollection>;
   discoverCollection?: Maybe<DiscoverCollection>;
+  discoverCursorCollection?: Maybe<DiscoverCursorCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
+  eventSpeakersCursorCollection?: Maybe<EventSpeakersCursorCollection>;
   interestGroupsTeamsCollection?: Maybe<InterestGroupsTeamsCollection>;
+  interestGroupsTeamsCursorCollection?: Maybe<InterestGroupsTeamsCursorCollection>;
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
+  manuscriptVersionsCursorCollection?: Maybe<ManuscriptVersionsCursorCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  manuscriptsCursorCollection?: Maybe<ManuscriptsCursorCollection>;
   preliminaryDataSharingCollection?: Maybe<PreliminaryDataSharingCollection>;
+  preliminaryDataSharingCursorCollection?: Maybe<PreliminaryDataSharingCursorCollection>;
   projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
+  projectMembershipCursorCollection?: Maybe<ProjectMembershipCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
   teamMembershipCollection?: Maybe<TeamMembershipCollection>;
+  teamMembershipCursorCollection?: Maybe<TeamMembershipCursorCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
+  tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
 };
 
 export type TeamsLinkingCollectionsAttendanceCollectionArgs = {
@@ -12205,6 +18500,18 @@ export type TeamsLinkingCollectionsAttendanceCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type TeamsLinkingCollectionsAttendanceCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsAttendanceCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -12219,11 +18526,32 @@ export type TeamsLinkingCollectionsDiscoverCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type TeamsLinkingCollectionsDiscoverCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsDiscoverCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type TeamsLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type TeamsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -12238,6 +18566,18 @@ export type TeamsLinkingCollectionsEventSpeakersCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type TeamsLinkingCollectionsEventSpeakersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsEventSpeakersCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type TeamsLinkingCollectionsInterestGroupsTeamsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -12246,6 +18586,20 @@ export type TeamsLinkingCollectionsInterestGroupsTeamsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type TeamsLinkingCollectionsInterestGroupsTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<TeamsLinkingCollectionsInterestGroupsTeamsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -12260,6 +18614,20 @@ export type TeamsLinkingCollectionsManuscriptVersionsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type TeamsLinkingCollectionsManuscriptVersionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<TeamsLinkingCollectionsManuscriptVersionsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type TeamsLinkingCollectionsManuscriptsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -12268,6 +18636,18 @@ export type TeamsLinkingCollectionsManuscriptsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type TeamsLinkingCollectionsManuscriptsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsManuscriptsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -12284,6 +18664,21 @@ export type TeamsLinkingCollectionsPreliminaryDataSharingCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type TeamsLinkingCollectionsPreliminaryDataSharingCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<TeamsLinkingCollectionsPreliminaryDataSharingCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export type TeamsLinkingCollectionsProjectMembershipCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -12292,6 +18687,20 @@ export type TeamsLinkingCollectionsProjectMembershipCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type TeamsLinkingCollectionsProjectMembershipCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<TeamsLinkingCollectionsProjectMembershipCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -12306,6 +18715,20 @@ export type TeamsLinkingCollectionsResearchOutputsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type TeamsLinkingCollectionsResearchOutputsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<TeamsLinkingCollectionsResearchOutputsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type TeamsLinkingCollectionsTeamMembershipCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -12314,6 +18737,20 @@ export type TeamsLinkingCollectionsTeamMembershipCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type TeamsLinkingCollectionsTeamMembershipCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<TeamsLinkingCollectionsTeamMembershipCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -12328,7 +18765,32 @@ export type TeamsLinkingCollectionsTutorialsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type TeamsLinkingCollectionsTutorialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TeamsLinkingCollectionsTutorialsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum TeamsLinkingCollectionsAttendanceCollectionOrder {
+  AttendedAsc = 'attended_ASC',
+  AttendedDesc = 'attended_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum TeamsLinkingCollectionsAttendanceCursorCollectionOrder {
   AttendedAsc = 'attended_ASC',
   AttendedDesc = 'attended_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -12352,7 +18814,29 @@ export enum TeamsLinkingCollectionsDiscoverCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum TeamsLinkingCollectionsDiscoverCursorCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum TeamsLinkingCollectionsEventSpeakersCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum TeamsLinkingCollectionsEventSpeakersCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -12378,7 +18862,81 @@ export enum TeamsLinkingCollectionsInterestGroupsTeamsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum TeamsLinkingCollectionsInterestGroupsTeamsCursorCollectionOrder {
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum TeamsLinkingCollectionsManuscriptVersionsCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
+  AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
+  AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
+  AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
+  AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
+  CodeDepositedAsc = 'codeDeposited_ASC',
+  CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
+  DatasetsDepositedAsc = 'datasetsDeposited_ASC',
+  DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
+  LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
+  LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
+  LifecycleAsc = 'lifecycle_ASC',
+  LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
+  ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
+  ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
+  OtherDetailsAsc = 'otherDetails_ASC',
+  OtherDetailsDesc = 'otherDetails_DESC',
+  PreprintDoiAsc = 'preprintDoi_ASC',
+  PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
+  ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
+  ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
+  PublicationDoiAsc = 'publicationDoi_ASC',
+  PublicationDoiDesc = 'publicationDoi_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
+export enum TeamsLinkingCollectionsManuscriptVersionsCursorCollectionOrder {
   AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
   AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
@@ -12470,7 +19028,53 @@ export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
+export enum TeamsLinkingCollectionsManuscriptsCursorCollectionOrder {
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export enum TeamsLinkingCollectionsPreliminaryDataSharingCollectionOrder {
+  PreliminaryDataSharedAsc = 'preliminaryDataShared_ASC',
+  PreliminaryDataSharedDesc = 'preliminaryDataShared_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum TeamsLinkingCollectionsPreliminaryDataSharingCursorCollectionOrder {
   PreliminaryDataSharedAsc = 'preliminaryDataShared_ASC',
   PreliminaryDataSharedDesc = 'preliminaryDataShared_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -12496,7 +19100,65 @@ export enum TeamsLinkingCollectionsProjectMembershipCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum TeamsLinkingCollectionsProjectMembershipCursorCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum TeamsLinkingCollectionsResearchOutputsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum TeamsLinkingCollectionsResearchOutputsCursorCollectionOrder {
   AccessionAsc = 'accession_ASC',
   AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
@@ -12556,7 +19218,53 @@ export enum TeamsLinkingCollectionsTeamMembershipCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum TeamsLinkingCollectionsTeamMembershipCursorCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum TeamsLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum TeamsLinkingCollectionsTutorialsCursorCollectionOrder {
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AsapFundedAsc = 'asapFunded_ASC',
@@ -12636,6 +19344,29 @@ export enum TeamsToolsCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
+export type TeamsToolsCursorCollection = {
+  items: Array<Maybe<ExternalTools>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum TeamsToolsCursorCollectionOrder {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export type TimelineFilterInput = {
   /** Preview content starting from a given release date */
   release_lte?: InputMaybe<Scalars['String']>;
@@ -12650,6 +19381,7 @@ export type Tutorials = Entry &
     addedDate?: Maybe<Scalars['DateTime']>;
     asapFunded?: Maybe<Scalars['String']>;
     authorsCollection?: Maybe<TutorialsAuthorsCollection>;
+    authorsCursorCollection?: Maybe<TutorialsAuthorsCursorCollection>;
     contentfulMetadata: ContentfulMetadata;
     datePublished?: Maybe<Scalars['DateTime']>;
     lastUpdated?: Maybe<Scalars['DateTime']>;
@@ -12657,12 +19389,16 @@ export type Tutorials = Entry &
     linkText?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<TutorialsLinkingCollections>;
     relatedEventsCollection?: Maybe<TutorialsRelatedEventsCollection>;
+    relatedEventsCursorCollection?: Maybe<TutorialsRelatedEventsCursorCollection>;
     relatedTutorialsCollection?: Maybe<TutorialsRelatedTutorialsCollection>;
+    relatedTutorialsCursorCollection?: Maybe<TutorialsRelatedTutorialsCursorCollection>;
     sharingStatus?: Maybe<Scalars['String']>;
     shortText?: Maybe<Scalars['String']>;
     sys: Sys;
     tagsCollection?: Maybe<TutorialsTagsCollection>;
+    tagsCursorCollection?: Maybe<TutorialsTagsCursorCollection>;
     teamsCollection?: Maybe<TutorialsTeamsCollection>;
+    teamsCursorCollection?: Maybe<TutorialsTeamsCursorCollection>;
     text?: Maybe<TutorialsText>;
     thumbnail?: Maybe<Asset>;
     title?: Maybe<Scalars['String']>;
@@ -12687,6 +19423,17 @@ export type TutorialsAuthorsCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TutorialsAuthorsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsAuthorsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TutorialsAuthorsFilter>;
 };
@@ -12732,6 +19479,20 @@ export type TutorialsRelatedEventsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsRelatedEventsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TutorialsRelatedEventsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<EventsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
 export type TutorialsRelatedTutorialsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -12740,6 +19501,20 @@ export type TutorialsRelatedTutorialsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TutorialsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsRelatedTutorialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TutorialsRelatedTutorialsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TutorialsFilter>;
 };
@@ -12768,12 +19543,36 @@ export type TutorialsTagsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsTagsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TutorialsTagsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
 export type TutorialsTeamsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<Array<InputMaybe<TutorialsTeamsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TeamsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/tutorials) */
+export type TutorialsTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<TutorialsTeamsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<TeamsFilter>;
 };
@@ -12810,6 +19609,12 @@ export type TutorialsAuthorsCollection = {
   total: Scalars['Int'];
 };
 
+export type TutorialsAuthorsCursorCollection = {
+  items: Array<Maybe<TutorialsAuthorsItem>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type TutorialsAuthorsFilter = {
   AND?: InputMaybe<Array<InputMaybe<TutorialsAuthorsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<TutorialsAuthorsFilter>>>;
@@ -12838,6 +19643,12 @@ export type TutorialsCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type TutorialsCursorCollection = {
+  items: Array<Maybe<Tutorials>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type TutorialsFilter = {
@@ -12939,7 +19750,9 @@ export type TutorialsFilter = {
 
 export type TutorialsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
+  tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
 };
 
 export type TutorialsLinkingCollectionsEntryCollectionArgs = {
@@ -12947,6 +19760,15 @@ export type TutorialsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type TutorialsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -12961,7 +19783,50 @@ export type TutorialsLinkingCollectionsTutorialsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type TutorialsLinkingCollectionsTutorialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<TutorialsLinkingCollectionsTutorialsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum TutorialsLinkingCollectionsTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum TutorialsLinkingCollectionsTutorialsCursorCollectionOrder {
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AsapFundedAsc = 'asapFunded_ASC',
@@ -13079,6 +19944,61 @@ export enum TutorialsRelatedEventsCollectionOrder {
   VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
 }
 
+export type TutorialsRelatedEventsCursorCollection = {
+  items: Array<Maybe<Events>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum TutorialsRelatedEventsCursorCollectionOrder {
+  EndDateTimeZoneAsc = 'endDateTimeZone_ASC',
+  EndDateTimeZoneDesc = 'endDateTimeZone_DESC',
+  EndDateAsc = 'endDate_ASC',
+  EndDateDesc = 'endDate_DESC',
+  EventLinkAsc = 'eventLink_ASC',
+  EventLinkDesc = 'eventLink_DESC',
+  GoogleIdAsc = 'googleId_ASC',
+  GoogleIdDesc = 'googleId_DESC',
+  HiddenAsc = 'hidden_ASC',
+  HiddenDesc = 'hidden_DESC',
+  HideMeetingLinkAsc = 'hideMeetingLink_ASC',
+  HideMeetingLinkDesc = 'hideMeetingLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  MeetingLinkAsc = 'meetingLink_ASC',
+  MeetingLinkDesc = 'meetingLink_DESC',
+  MeetingMaterialsPermanentlyUnavailableAsc = 'meetingMaterialsPermanentlyUnavailable_ASC',
+  MeetingMaterialsPermanentlyUnavailableDesc = 'meetingMaterialsPermanentlyUnavailable_DESC',
+  NotesPermanentlyUnavailableAsc = 'notesPermanentlyUnavailable_ASC',
+  NotesPermanentlyUnavailableDesc = 'notesPermanentlyUnavailable_DESC',
+  NotesUpdatedAtAsc = 'notesUpdatedAt_ASC',
+  NotesUpdatedAtDesc = 'notesUpdatedAt_DESC',
+  PresentationPermanentlyUnavailableAsc = 'presentationPermanentlyUnavailable_ASC',
+  PresentationPermanentlyUnavailableDesc = 'presentationPermanentlyUnavailable_DESC',
+  PresentationUpdatedAtAsc = 'presentationUpdatedAt_ASC',
+  PresentationUpdatedAtDesc = 'presentationUpdatedAt_DESC',
+  StartDateTimeZoneAsc = 'startDateTimeZone_ASC',
+  StartDateTimeZoneDesc = 'startDateTimeZone_DESC',
+  StartDateAsc = 'startDate_ASC',
+  StartDateDesc = 'startDate_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  VideoRecordingPermanentlyUnavailableAsc = 'videoRecordingPermanentlyUnavailable_ASC',
+  VideoRecordingPermanentlyUnavailableDesc = 'videoRecordingPermanentlyUnavailable_DESC',
+  VideoRecordingUpdatedAtAsc = 'videoRecordingUpdatedAt_ASC',
+  VideoRecordingUpdatedAtDesc = 'videoRecordingUpdatedAt_DESC',
+}
+
 export type TutorialsRelatedTutorialsCollection = {
   items: Array<Maybe<Tutorials>>;
   limit: Scalars['Int'];
@@ -13087,6 +20007,43 @@ export type TutorialsRelatedTutorialsCollection = {
 };
 
 export enum TutorialsRelatedTutorialsCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export type TutorialsRelatedTutorialsCursorCollection = {
+  items: Array<Maybe<Tutorials>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum TutorialsRelatedTutorialsCursorCollectionOrder {
   AddedDateAsc = 'addedDate_ASC',
   AddedDateDesc = 'addedDate_DESC',
   AsapFundedAsc = 'asapFunded_ASC',
@@ -13139,6 +20096,27 @@ export enum TutorialsTagsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type TutorialsTagsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum TutorialsTagsCursorCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type TutorialsTeamsCollection = {
   items: Array<Maybe<Teams>>;
   limit: Scalars['Int'];
@@ -13147,6 +20125,37 @@ export type TutorialsTeamsCollection = {
 };
 
 export enum TutorialsTeamsCollectionOrder {
+  DisplayNameAsc = 'displayName_ASC',
+  DisplayNameDesc = 'displayName_DESC',
+  InactiveSinceAsc = 'inactiveSince_ASC',
+  InactiveSinceDesc = 'inactiveSince_DESC',
+  ResourceButtonCopyAsc = 'resourceButtonCopy_ASC',
+  ResourceButtonCopyDesc = 'resourceButtonCopy_DESC',
+  ResourceContactEmailAsc = 'resourceContactEmail_ASC',
+  ResourceContactEmailDesc = 'resourceContactEmail_DESC',
+  ResourceLinkAsc = 'resourceLink_ASC',
+  ResourceLinkDesc = 'resourceLink_DESC',
+  ResourceTitleAsc = 'resourceTitle_ASC',
+  ResourceTitleDesc = 'resourceTitle_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TeamTypeAsc = 'teamType_ASC',
+  TeamTypeDesc = 'teamType_DESC',
+}
+
+export type TutorialsTeamsCursorCollection = {
+  items: Array<Maybe<Teams>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum TutorialsTeamsCursorCollectionOrder {
   DisplayNameAsc = 'displayName_ASC',
   DisplayNameDesc = 'displayName_DESC',
   InactiveSinceAsc = 'inactiveSince_ASC',
@@ -13238,6 +20247,7 @@ export type Users = Entry &
     institution?: Maybe<Scalars['String']>;
     jobTitle?: Maybe<Scalars['String']>;
     labsCollection?: Maybe<UsersLabsCollection>;
+    labsCursorCollection?: Maybe<UsersLabsCursorCollection>;
     lastName?: Maybe<Scalars['String']>;
     lastUpdated?: Maybe<Scalars['DateTime']>;
     linkedFrom?: Maybe<UsersLinkingCollections>;
@@ -13245,6 +20255,7 @@ export type Users = Entry &
     middleName?: Maybe<Scalars['String']>;
     nickname?: Maybe<Scalars['String']>;
     oldLabsCollection?: Maybe<UsersOldLabsCollection>;
+    oldLabsCursorCollection?: Maybe<UsersOldLabsCursorCollection>;
     onboarded?: Maybe<Scalars['Boolean']>;
     openScienceTeamMember?: Maybe<Scalars['Boolean']>;
     orcid?: Maybe<Scalars['String']>;
@@ -13256,12 +20267,14 @@ export type Users = Entry &
     researchGate?: Maybe<Scalars['String']>;
     researchInterests?: Maybe<Scalars['String']>;
     researchTagsCollection?: Maybe<UsersResearchTagsCollection>;
+    researchTagsCursorCollection?: Maybe<UsersResearchTagsCursorCollection>;
     researcherId?: Maybe<Scalars['String']>;
     responsibilities?: Maybe<Scalars['String']>;
     role?: Maybe<Scalars['String']>;
     stateOrProvince?: Maybe<Scalars['String']>;
     sys: Sys;
     teamsCollection?: Maybe<UsersTeamsCollection>;
+    teamsCursorCollection?: Maybe<UsersTeamsCursorCollection>;
     twitter?: Maybe<Scalars['String']>;
     website1?: Maybe<Scalars['String']>;
     website2?: Maybe<Scalars['String']>;
@@ -13406,6 +20419,18 @@ export type UsersLabsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersLabsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<UsersLabsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<LabsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersLastNameArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -13447,6 +20472,18 @@ export type UsersOldLabsCollectionArgs = {
   order?: InputMaybe<Array<InputMaybe<UsersOldLabsCollectionOrder>>>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<LabMembershipFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersOldLabsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<UsersOldLabsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<LabMembershipFilter>;
 };
@@ -13523,6 +20560,18 @@ export type UsersResearchTagsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersResearchTagsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<UsersResearchTagsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersResearcherIdArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -13558,6 +20607,18 @@ export type UsersTeamsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersTeamsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<UsersTeamsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<TeamMembershipFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersTwitterArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -13580,6 +20641,12 @@ export type UsersCollection = {
   limit: Scalars['Int'];
   skip: Scalars['Int'];
   total: Scalars['Int'];
+};
+
+export type UsersCursorCollection = {
+  items: Array<Maybe<Users>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
 };
 
 export type UsersFilter = {
@@ -13907,22 +20974,56 @@ export enum UsersLabsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type UsersLabsCursorCollection = {
+  items: Array<Maybe<Labs>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum UsersLabsCursorCollectionOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type UsersLinkingCollections = {
   complianceReportsCollection?: Maybe<ComplianceReportsCollection>;
+  complianceReportsCursorCollection?: Maybe<ComplianceReportsCursorCollection>;
   discoverCollection?: Maybe<DiscoverCollection>;
+  discoverCursorCollection?: Maybe<DiscoverCursorCollection>;
   discussionsCollection?: Maybe<DiscussionsCollection>;
+  discussionsCursorCollection?: Maybe<DiscussionsCursorCollection>;
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventSpeakersCollection?: Maybe<EventSpeakersCollection>;
+  eventSpeakersCursorCollection?: Maybe<EventSpeakersCursorCollection>;
   interestGroupLeadersCollection?: Maybe<InterestGroupLeadersCollection>;
+  interestGroupLeadersCursorCollection?: Maybe<InterestGroupLeadersCursorCollection>;
   labsCollection?: Maybe<LabsCollection>;
+  labsCursorCollection?: Maybe<LabsCursorCollection>;
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
+  manuscriptVersionsCursorCollection?: Maybe<ManuscriptVersionsCursorCollection>;
   manuscriptsCollection?: Maybe<ManuscriptsCollection>;
+  manuscriptsCursorCollection?: Maybe<ManuscriptsCursorCollection>;
   messagesCollection?: Maybe<MessagesCollection>;
+  messagesCursorCollection?: Maybe<MessagesCursorCollection>;
   projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
+  projectMembershipCursorCollection?: Maybe<ProjectMembershipCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
+  tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
   workingGroupLeadersCollection?: Maybe<WorkingGroupLeadersCollection>;
+  workingGroupLeadersCursorCollection?: Maybe<WorkingGroupLeadersCursorCollection>;
   workingGroupMembersCollection?: Maybe<WorkingGroupMembersCollection>;
+  workingGroupMembersCursorCollection?: Maybe<WorkingGroupMembersCursorCollection>;
 };
 
 export type UsersLinkingCollectionsComplianceReportsCollectionArgs = {
@@ -13933,6 +21034,20 @@ export type UsersLinkingCollectionsComplianceReportsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsComplianceReportsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<UsersLinkingCollectionsComplianceReportsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -13947,6 +21062,18 @@ export type UsersLinkingCollectionsDiscoverCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type UsersLinkingCollectionsDiscoverCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsDiscoverCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type UsersLinkingCollectionsDiscussionsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -13958,11 +21085,32 @@ export type UsersLinkingCollectionsDiscussionsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type UsersLinkingCollectionsDiscussionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsDiscussionsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type UsersLinkingCollectionsEntryCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -13974,6 +21122,18 @@ export type UsersLinkingCollectionsEventSpeakersCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsEventSpeakersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsEventSpeakersCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -13990,6 +21150,20 @@ export type UsersLinkingCollectionsInterestGroupLeadersCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type UsersLinkingCollectionsInterestGroupLeadersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<UsersLinkingCollectionsInterestGroupLeadersCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type UsersLinkingCollectionsLabsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -13998,6 +21172,18 @@ export type UsersLinkingCollectionsLabsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsLabsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsLabsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -14012,6 +21198,20 @@ export type UsersLinkingCollectionsManuscriptVersionsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type UsersLinkingCollectionsManuscriptVersionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<UsersLinkingCollectionsManuscriptVersionsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type UsersLinkingCollectionsManuscriptsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -14020,6 +21220,18 @@ export type UsersLinkingCollectionsManuscriptsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsManuscriptsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsManuscriptsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -14034,6 +21246,18 @@ export type UsersLinkingCollectionsMessagesCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type UsersLinkingCollectionsMessagesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsMessagesCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type UsersLinkingCollectionsProjectMembershipCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -14042,6 +21266,20 @@ export type UsersLinkingCollectionsProjectMembershipCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsProjectMembershipCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<UsersLinkingCollectionsProjectMembershipCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -14056,6 +21294,20 @@ export type UsersLinkingCollectionsResearchOutputsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type UsersLinkingCollectionsResearchOutputsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<UsersLinkingCollectionsResearchOutputsCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type UsersLinkingCollectionsTutorialsCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -14064,6 +21316,18 @@ export type UsersLinkingCollectionsTutorialsCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsTutorialsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsTutorialsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -14078,6 +21342,20 @@ export type UsersLinkingCollectionsWorkingGroupLeadersCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type UsersLinkingCollectionsWorkingGroupLeadersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<UsersLinkingCollectionsWorkingGroupLeadersCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type UsersLinkingCollectionsWorkingGroupMembersCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
@@ -14089,7 +21367,34 @@ export type UsersLinkingCollectionsWorkingGroupMembersCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type UsersLinkingCollectionsWorkingGroupMembersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<
+      InputMaybe<UsersLinkingCollectionsWorkingGroupMembersCursorCollectionOrder>
+    >
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
 export enum UsersLinkingCollectionsComplianceReportsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
+export enum UsersLinkingCollectionsComplianceReportsCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -14113,7 +21418,31 @@ export enum UsersLinkingCollectionsDiscoverCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum UsersLinkingCollectionsDiscoverCursorCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum UsersLinkingCollectionsDiscussionsCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum UsersLinkingCollectionsDiscussionsCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -14137,7 +21466,33 @@ export enum UsersLinkingCollectionsEventSpeakersCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum UsersLinkingCollectionsEventSpeakersCursorCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum UsersLinkingCollectionsInterestGroupLeadersCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum UsersLinkingCollectionsInterestGroupLeadersCursorCollectionOrder {
   InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
   InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
@@ -14165,7 +21520,79 @@ export enum UsersLinkingCollectionsLabsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum UsersLinkingCollectionsLabsCursorCollectionOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum UsersLinkingCollectionsManuscriptVersionsCollectionOrder {
+  AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
+  AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
+  AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
+  AcknowledgedGrantNumberDesc = 'acknowledgedGrantNumber_DESC',
+  AsapAffiliationIncludedDetailsAsc = 'asapAffiliationIncludedDetails_ASC',
+  AsapAffiliationIncludedDetailsDesc = 'asapAffiliationIncludedDetails_DESC',
+  AsapAffiliationIncludedAsc = 'asapAffiliationIncluded_ASC',
+  AsapAffiliationIncludedDesc = 'asapAffiliationIncluded_DESC',
+  AvailabilityStatementDetailsAsc = 'availabilityStatementDetails_ASC',
+  AvailabilityStatementDetailsDesc = 'availabilityStatementDetails_DESC',
+  AvailabilityStatementAsc = 'availabilityStatement_ASC',
+  AvailabilityStatementDesc = 'availabilityStatement_DESC',
+  CodeDepositedDetailsAsc = 'codeDepositedDetails_ASC',
+  CodeDepositedDetailsDesc = 'codeDepositedDetails_DESC',
+  CodeDepositedAsc = 'codeDeposited_ASC',
+  CodeDepositedDesc = 'codeDeposited_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DatasetsDepositedDetailsAsc = 'datasetsDepositedDetails_ASC',
+  DatasetsDepositedDetailsDesc = 'datasetsDepositedDetails_DESC',
+  DatasetsDepositedAsc = 'datasetsDeposited_ASC',
+  DatasetsDepositedDesc = 'datasetsDeposited_DESC',
+  LabMaterialsRegisteredDetailsAsc = 'labMaterialsRegisteredDetails_ASC',
+  LabMaterialsRegisteredDetailsDesc = 'labMaterialsRegisteredDetails_DESC',
+  LabMaterialsRegisteredAsc = 'labMaterialsRegistered_ASC',
+  LabMaterialsRegisteredDesc = 'labMaterialsRegistered_DESC',
+  LifecycleAsc = 'lifecycle_ASC',
+  LifecycleDesc = 'lifecycle_DESC',
+  ManuscriptLicenseDetailsAsc = 'manuscriptLicenseDetails_ASC',
+  ManuscriptLicenseDetailsDesc = 'manuscriptLicenseDetails_DESC',
+  ManuscriptLicenseAsc = 'manuscriptLicense_ASC',
+  ManuscriptLicenseDesc = 'manuscriptLicense_DESC',
+  OriginalVersionIdAsc = 'originalVersionId_ASC',
+  OriginalVersionIdDesc = 'originalVersionId_DESC',
+  OtherDetailsAsc = 'otherDetails_ASC',
+  OtherDetailsDesc = 'otherDetails_DESC',
+  PreprintDoiAsc = 'preprintDoi_ASC',
+  PreprintDoiDesc = 'preprintDoi_DESC',
+  ProtocolsDepositedDetailsAsc = 'protocolsDepositedDetails_ASC',
+  ProtocolsDepositedDetailsDesc = 'protocolsDepositedDetails_DESC',
+  ProtocolsDepositedAsc = 'protocolsDeposited_ASC',
+  ProtocolsDepositedDesc = 'protocolsDeposited_DESC',
+  PublicationDoiAsc = 'publicationDoi_ASC',
+  PublicationDoiDesc = 'publicationDoi_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
+export enum UsersLinkingCollectionsManuscriptVersionsCursorCollectionOrder {
   AcknowledgedGrantNumberDetailsAsc = 'acknowledgedGrantNumberDetails_ASC',
   AcknowledgedGrantNumberDetailsDesc = 'acknowledgedGrantNumberDetails_DESC',
   AcknowledgedGrantNumberAsc = 'acknowledgedGrantNumber_ASC',
@@ -14257,7 +21684,51 @@ export enum UsersLinkingCollectionsManuscriptsCollectionOrder {
   UrlDesc = 'url_DESC',
 }
 
+export enum UsersLinkingCollectionsManuscriptsCursorCollectionOrder {
+  ApcAmountPaidAsc = 'apcAmountPaid_ASC',
+  ApcAmountPaidDesc = 'apcAmountPaid_DESC',
+  ApcAmountRequestedAsc = 'apcAmountRequested_ASC',
+  ApcAmountRequestedDesc = 'apcAmountRequested_DESC',
+  ApcCoverageRequestStatusAsc = 'apcCoverageRequestStatus_ASC',
+  ApcCoverageRequestStatusDesc = 'apcCoverageRequestStatus_DESC',
+  ApcRequestedAsc = 'apcRequested_ASC',
+  ApcRequestedDesc = 'apcRequested_DESC',
+  CountAsc = 'count_ASC',
+  CountDesc = 'count_DESC',
+  DeclinedReasonAsc = 'declinedReason_ASC',
+  DeclinedReasonDesc = 'declinedReason_DESC',
+  PreviousStatusAsc = 'previousStatus_ASC',
+  PreviousStatusDesc = 'previousStatus_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UrlAsc = 'url_ASC',
+  UrlDesc = 'url_DESC',
+}
+
 export enum UsersLinkingCollectionsMessagesCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum UsersLinkingCollectionsMessagesCursorCollectionOrder {
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -14281,7 +21752,65 @@ export enum UsersLinkingCollectionsProjectMembershipCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum UsersLinkingCollectionsProjectMembershipCursorCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum UsersLinkingCollectionsResearchOutputsCursorCollectionOrder {
   AccessionAsc = 'accession_ASC',
   AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
@@ -14357,7 +21886,55 @@ export enum UsersLinkingCollectionsTutorialsCollectionOrder {
   UsedInAPublicationDesc = 'usedInAPublication_DESC',
 }
 
+export enum UsersLinkingCollectionsTutorialsCursorCollectionOrder {
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  DatePublishedAsc = 'datePublished_ASC',
+  DatePublishedDesc = 'datePublished_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  LinkTextAsc = 'linkText_ASC',
+  LinkTextDesc = 'linkText_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  ShortTextAsc = 'shortText_ASC',
+  ShortTextDesc = 'shortText_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
 export enum UsersLinkingCollectionsWorkingGroupLeadersCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  WorkstreamRoleAsc = 'workstreamRole_ASC',
+  WorkstreamRoleDesc = 'workstreamRole_DESC',
+}
+
+export enum UsersLinkingCollectionsWorkingGroupLeadersCursorCollectionOrder {
   InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
   InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
@@ -14387,6 +21964,19 @@ export enum UsersLinkingCollectionsWorkingGroupMembersCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export enum UsersLinkingCollectionsWorkingGroupMembersCursorCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type UsersOldLabsCollection = {
   items: Array<Maybe<LabMembership>>;
   limit: Scalars['Int'];
@@ -14395,6 +21985,25 @@ export type UsersOldLabsCollection = {
 };
 
 export enum UsersOldLabsCollectionOrder {
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type UsersOldLabsCursorCollection = {
+  items: Array<Maybe<LabMembership>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum UsersOldLabsCursorCollectionOrder {
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -14504,6 +22113,27 @@ export enum UsersResearchTagsCollectionOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+export type UsersResearchTagsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum UsersResearchTagsCursorCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 export type UsersTeamsCollection = {
   items: Array<Maybe<TeamMembership>>;
   limit: Scalars['Int'];
@@ -14512,6 +22142,27 @@ export type UsersTeamsCollection = {
 };
 
 export enum UsersTeamsCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
+  RoleAsc = 'role_ASC',
+  RoleDesc = 'role_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type UsersTeamsCursorCollection = {
+  items: Array<Maybe<TeamMembership>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum UsersTeamsCursorCollectionOrder {
   InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
   InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
@@ -14561,6 +22212,12 @@ export type WorkingGroupDeliverablesCollection = {
   total: Scalars['Int'];
 };
 
+export type WorkingGroupDeliverablesCursorCollection = {
+  items: Array<Maybe<WorkingGroupDeliverables>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type WorkingGroupDeliverablesFilter = {
   AND?: InputMaybe<Array<InputMaybe<WorkingGroupDeliverablesFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<WorkingGroupDeliverablesFilter>>>;
@@ -14584,7 +22241,9 @@ export type WorkingGroupDeliverablesFilter = {
 
 export type WorkingGroupDeliverablesLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+  workingGroupsCursorCollection?: Maybe<WorkingGroupsCursorCollection>;
 };
 
 export type WorkingGroupDeliverablesLinkingCollectionsEntryCollectionArgs = {
@@ -14594,6 +22253,16 @@ export type WorkingGroupDeliverablesLinkingCollectionsEntryCollectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
+
+export type WorkingGroupDeliverablesLinkingCollectionsEntryCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
 
 export type WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCollectionArgs =
   {
@@ -14609,7 +22278,41 @@ export type WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCollectionArg
     useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   };
 
+export type WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export enum WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCollectionOrder {
+  CompleteAsc = 'complete_ASC',
+  CompleteDesc = 'complete_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum WorkingGroupDeliverablesLinkingCollectionsWorkingGroupsCursorCollectionOrder {
   CompleteAsc = 'complete_ASC',
   CompleteDesc = 'complete_DESC',
   ExternalLinkAsc = 'externalLink_ASC',
@@ -14692,6 +22395,12 @@ export type WorkingGroupLeadersCollection = {
   total: Scalars['Int'];
 };
 
+export type WorkingGroupLeadersCursorCollection = {
+  items: Array<Maybe<WorkingGroupLeaders>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type WorkingGroupLeadersFilter = {
   AND?: InputMaybe<Array<InputMaybe<WorkingGroupLeadersFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<WorkingGroupLeadersFilter>>>;
@@ -14726,7 +22435,9 @@ export type WorkingGroupLeadersFilter = {
 
 export type WorkingGroupLeadersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+  workingGroupsCursorCollection?: Maybe<WorkingGroupsCursorCollection>;
 };
 
 export type WorkingGroupLeadersLinkingCollectionsEntryCollectionArgs = {
@@ -14734,6 +22445,15 @@ export type WorkingGroupLeadersLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type WorkingGroupLeadersLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -14750,7 +22470,41 @@ export type WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type WorkingGroupLeadersLinkingCollectionsWorkingGroupsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<WorkingGroupLeadersLinkingCollectionsWorkingGroupsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export enum WorkingGroupLeadersLinkingCollectionsWorkingGroupsCollectionOrder {
+  CompleteAsc = 'complete_ASC',
+  CompleteDesc = 'complete_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum WorkingGroupLeadersLinkingCollectionsWorkingGroupsCursorCollectionOrder {
   CompleteAsc = 'complete_ASC',
   CompleteDesc = 'complete_DESC',
   ExternalLinkAsc = 'externalLink_ASC',
@@ -14823,6 +22577,12 @@ export type WorkingGroupMembersCollection = {
   total: Scalars['Int'];
 };
 
+export type WorkingGroupMembersCursorCollection = {
+  items: Array<Maybe<WorkingGroupMembers>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type WorkingGroupMembersFilter = {
   AND?: InputMaybe<Array<InputMaybe<WorkingGroupMembersFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<WorkingGroupMembersFilter>>>;
@@ -14843,7 +22603,9 @@ export type WorkingGroupMembersFilter = {
 
 export type WorkingGroupMembersLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   workingGroupsCollection?: Maybe<WorkingGroupsCollection>;
+  workingGroupsCursorCollection?: Maybe<WorkingGroupsCursorCollection>;
 };
 
 export type WorkingGroupMembersLinkingCollectionsEntryCollectionArgs = {
@@ -14851,6 +22613,15 @@ export type WorkingGroupMembersLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type WorkingGroupMembersLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -14867,7 +22638,41 @@ export type WorkingGroupMembersLinkingCollectionsWorkingGroupsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type WorkingGroupMembersLinkingCollectionsWorkingGroupsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<WorkingGroupMembersLinkingCollectionsWorkingGroupsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export enum WorkingGroupMembersLinkingCollectionsWorkingGroupsCollectionOrder {
+  CompleteAsc = 'complete_ASC',
+  CompleteDesc = 'complete_DESC',
+  ExternalLinkAsc = 'externalLink_ASC',
+  ExternalLinkDesc = 'externalLink_DESC',
+  LastUpdatedAsc = 'lastUpdated_ASC',
+  LastUpdatedDesc = 'lastUpdated_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+}
+
+export enum WorkingGroupMembersLinkingCollectionsWorkingGroupsCursorCollectionOrder {
   CompleteAsc = 'complete_ASC',
   CompleteDesc = 'complete_DESC',
   ExternalLinkAsc = 'externalLink_ASC',
@@ -14907,14 +22712,17 @@ export type WorkingGroups = Entry &
     complete?: Maybe<Scalars['Boolean']>;
     contentfulMetadata: ContentfulMetadata;
     deliverablesCollection?: Maybe<WorkingGroupsDeliverablesCollection>;
+    deliverablesCursorCollection?: Maybe<WorkingGroupsDeliverablesCursorCollection>;
     description?: Maybe<WorkingGroupsDescription>;
     externalLink?: Maybe<Scalars['String']>;
     lastUpdated?: Maybe<Scalars['DateTime']>;
     linkedFrom?: Maybe<WorkingGroupsLinkingCollections>;
     membersCollection?: Maybe<WorkingGroupsMembersCollection>;
+    membersCursorCollection?: Maybe<WorkingGroupsMembersCursorCollection>;
     shortText?: Maybe<Scalars['String']>;
     sys: Sys;
     tagsCollection?: Maybe<WorkingGroupsTagsCollection>;
+    tagsCursorCollection?: Maybe<WorkingGroupsTagsCursorCollection>;
     title?: Maybe<Scalars['String']>;
   };
 
@@ -14941,6 +22749,20 @@ export type WorkingGroupsDeliverablesCollectionArgs = {
   >;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<WorkingGroupDeliverablesFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsDeliverablesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<WorkingGroupsDeliverablesCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<WorkingGroupDeliverablesFilter>;
 };
@@ -14979,6 +22801,17 @@ export type WorkingGroupsMembersCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsMembersCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<WorkingGroupsMembersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
 export type WorkingGroupsShortTextArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -14996,6 +22829,18 @@ export type WorkingGroupsTagsCollectionArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
+export type WorkingGroupsTagsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<WorkingGroupsTagsCursorCollectionOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<ResearchTagsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/workingGroups) */
 export type WorkingGroupsTitleArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -15008,6 +22853,12 @@ export type WorkingGroupsCollection = {
   total: Scalars['Int'];
 };
 
+export type WorkingGroupsCursorCollection = {
+  items: Array<Maybe<WorkingGroups>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type WorkingGroupsDeliverablesCollection = {
   items: Array<Maybe<WorkingGroupDeliverables>>;
   limit: Scalars['Int'];
@@ -15016,6 +22867,25 @@ export type WorkingGroupsDeliverablesCollection = {
 };
 
 export enum WorkingGroupsDeliverablesCollectionOrder {
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type WorkingGroupsDeliverablesCursorCollection = {
+  items: Array<Maybe<WorkingGroupDeliverables>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum WorkingGroupsDeliverablesCursorCollectionOrder {
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -15121,7 +22991,9 @@ export type WorkingGroupsFilter = {
 
 export type WorkingGroupsLinkingCollections = {
   entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
   researchOutputsCollection?: Maybe<ResearchOutputsCollection>;
+  researchOutputsCursorCollection?: Maybe<ResearchOutputsCursorCollection>;
 };
 
 export type WorkingGroupsLinkingCollectionsEntryCollectionArgs = {
@@ -15129,6 +23001,15 @@ export type WorkingGroupsLinkingCollectionsEntryCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type WorkingGroupsLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -15145,7 +23026,67 @@ export type WorkingGroupsLinkingCollectionsResearchOutputsCollectionArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type WorkingGroupsLinkingCollectionsResearchOutputsCursorCollectionArgs =
+  {
+    limit?: InputMaybe<Scalars['Int']>;
+    locale?: InputMaybe<Scalars['String']>;
+    order?: InputMaybe<
+      Array<
+        InputMaybe<WorkingGroupsLinkingCollectionsResearchOutputsCursorCollectionOrder>
+      >
+    >;
+    pageNext?: InputMaybe<Scalars['String']>;
+    pagePrev?: InputMaybe<Scalars['String']>;
+    preview?: InputMaybe<Scalars['Boolean']>;
+    useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  };
+
 export enum WorkingGroupsLinkingCollectionsResearchOutputsCollectionOrder {
+  AccessionAsc = 'accession_ASC',
+  AccessionDesc = 'accession_DESC',
+  AddedDateAsc = 'addedDate_ASC',
+  AddedDateDesc = 'addedDate_DESC',
+  AsapFundedAsc = 'asapFunded_ASC',
+  AsapFundedDesc = 'asapFunded_DESC',
+  CreatedDateAsc = 'createdDate_ASC',
+  CreatedDateDesc = 'createdDate_DESC',
+  DocumentTypeAsc = 'documentType_ASC',
+  DocumentTypeDesc = 'documentType_DESC',
+  DoiAsc = 'doi_ASC',
+  DoiDesc = 'doi_DESC',
+  IsInReviewAsc = 'isInReview_ASC',
+  IsInReviewDesc = 'isInReview_DESC',
+  LabCatalogNumberAsc = 'labCatalogNumber_ASC',
+  LabCatalogNumberDesc = 'labCatalogNumber_DESC',
+  LastUpdatedPartialAsc = 'lastUpdatedPartial_ASC',
+  LastUpdatedPartialDesc = 'lastUpdatedPartial_DESC',
+  LinkAsc = 'link_ASC',
+  LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
+  RridAsc = 'rrid_ASC',
+  RridDesc = 'rrid_DESC',
+  SharingStatusAsc = 'sharingStatus_ASC',
+  SharingStatusDesc = 'sharingStatus_DESC',
+  StatusChangedAtAsc = 'statusChangedAt_ASC',
+  StatusChangedAtDesc = 'statusChangedAt_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC',
+  TypeAsc = 'type_ASC',
+  TypeDesc = 'type_DESC',
+  UsedInAPublicationAsc = 'usedInAPublication_ASC',
+  UsedInAPublicationDesc = 'usedInAPublication_DESC',
+}
+
+export enum WorkingGroupsLinkingCollectionsResearchOutputsCursorCollectionOrder {
   AccessionAsc = 'accession_ASC',
   AccessionDesc = 'accession_DESC',
   AddedDateAsc = 'addedDate_ASC',
@@ -15197,6 +23138,12 @@ export type WorkingGroupsMembersCollection = {
   total: Scalars['Int'];
 };
 
+export type WorkingGroupsMembersCursorCollection = {
+  items: Array<Maybe<WorkingGroupsMembersItem>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
 export type WorkingGroupsMembersFilter = {
   AND?: InputMaybe<Array<InputMaybe<WorkingGroupsMembersFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<WorkingGroupsMembersFilter>>>;
@@ -15245,6 +23192,27 @@ export type WorkingGroupsTagsCollection = {
 };
 
 export enum WorkingGroupsTagsCollectionOrder {
+  CategoryAsc = 'category_ASC',
+  CategoryDesc = 'category_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export type WorkingGroupsTagsCursorCollection = {
+  items: Array<Maybe<ResearchTags>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export enum WorkingGroupsTagsCursorCollectionOrder {
   CategoryAsc = 'category_ASC',
   CategoryDesc = 'category_DESC',
   NameAsc = 'name_ASC',
@@ -16159,6 +24127,101 @@ export type CfProjectMembershipNestedFilter = {
   role_not_contains?: InputMaybe<Scalars['String']>;
   role_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+};
+
+export type CfProjectsNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfProjectsNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfProjectsNestedFilter>>>;
+  applicationNumber?: InputMaybe<Scalars['String']>;
+  applicationNumber_contains?: InputMaybe<Scalars['String']>;
+  applicationNumber_exists?: InputMaybe<Scalars['Boolean']>;
+  applicationNumber_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  applicationNumber_not?: InputMaybe<Scalars['String']>;
+  applicationNumber_not_contains?: InputMaybe<Scalars['String']>;
+  applicationNumber_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contactEmail?: InputMaybe<Scalars['String']>;
+  contactEmail_contains?: InputMaybe<Scalars['String']>;
+  contactEmail_exists?: InputMaybe<Scalars['Boolean']>;
+  contactEmail_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contactEmail_not?: InputMaybe<Scalars['String']>;
+  contactEmail_not_contains?: InputMaybe<Scalars['String']>;
+  contactEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  endDate?: InputMaybe<Scalars['DateTime']>;
+  endDate_exists?: InputMaybe<Scalars['Boolean']>;
+  endDate_gt?: InputMaybe<Scalars['DateTime']>;
+  endDate_gte?: InputMaybe<Scalars['DateTime']>;
+  endDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  endDate_lt?: InputMaybe<Scalars['DateTime']>;
+  endDate_lte?: InputMaybe<Scalars['DateTime']>;
+  endDate_not?: InputMaybe<Scalars['DateTime']>;
+  endDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  googleDriveLink?: InputMaybe<Scalars['String']>;
+  googleDriveLink_contains?: InputMaybe<Scalars['String']>;
+  googleDriveLink_exists?: InputMaybe<Scalars['Boolean']>;
+  googleDriveLink_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  googleDriveLink_not?: InputMaybe<Scalars['String']>;
+  googleDriveLink_not_contains?: InputMaybe<Scalars['String']>;
+  googleDriveLink_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  grantId?: InputMaybe<Scalars['String']>;
+  grantId_contains?: InputMaybe<Scalars['String']>;
+  grantId_exists?: InputMaybe<Scalars['Boolean']>;
+  grantId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  grantId_not?: InputMaybe<Scalars['String']>;
+  grantId_not_contains?: InputMaybe<Scalars['String']>;
+  grantId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  membersCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  originalGrant?: InputMaybe<Scalars['String']>;
+  originalGrantAimsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  originalGrant_contains?: InputMaybe<Scalars['String']>;
+  originalGrant_exists?: InputMaybe<Scalars['Boolean']>;
+  originalGrant_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  originalGrant_not?: InputMaybe<Scalars['String']>;
+  originalGrant_not_contains?: InputMaybe<Scalars['String']>;
+  originalGrant_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectId?: InputMaybe<Scalars['String']>;
+  projectId_contains?: InputMaybe<Scalars['String']>;
+  projectId_exists?: InputMaybe<Scalars['Boolean']>;
+  projectId_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectId_not?: InputMaybe<Scalars['String']>;
+  projectId_not_contains?: InputMaybe<Scalars['String']>;
+  projectId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectType?: InputMaybe<Scalars['String']>;
+  projectType_contains?: InputMaybe<Scalars['String']>;
+  projectType_exists?: InputMaybe<Scalars['Boolean']>;
+  projectType_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  projectType_not?: InputMaybe<Scalars['String']>;
+  projectType_not_contains?: InputMaybe<Scalars['String']>;
+  projectType_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  proposal_exists?: InputMaybe<Scalars['Boolean']>;
+  researchTagsCollection_exists?: InputMaybe<Scalars['Boolean']>;
+  resourceType_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate?: InputMaybe<Scalars['DateTime']>;
+  startDate_exists?: InputMaybe<Scalars['Boolean']>;
+  startDate_gt?: InputMaybe<Scalars['DateTime']>;
+  startDate_gte?: InputMaybe<Scalars['DateTime']>;
+  startDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  startDate_lt?: InputMaybe<Scalars['DateTime']>;
+  startDate_lte?: InputMaybe<Scalars['DateTime']>;
+  startDate_not?: InputMaybe<Scalars['DateTime']>;
+  startDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  status?: InputMaybe<Scalars['String']>;
+  status_contains?: InputMaybe<Scalars['String']>;
+  status_exists?: InputMaybe<Scalars['Boolean']>;
+  status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  status_not?: InputMaybe<Scalars['String']>;
+  status_not_contains?: InputMaybe<Scalars['String']>;
+  status_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  supplementGrant_exists?: InputMaybe<Scalars['Boolean']>;
+  sys?: InputMaybe<SysFilter>;
+  title?: InputMaybe<Scalars['String']>;
+  title_contains?: InputMaybe<Scalars['String']>;
+  title_exists?: InputMaybe<Scalars['Boolean']>;
+  title_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  title_not?: InputMaybe<Scalars['String']>;
+  title_not_contains?: InputMaybe<Scalars['String']>;
+  title_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  toolsCollection_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CfResearchOutputVersionsNestedFilter = {
@@ -25240,6 +33303,91 @@ export type ProjectsContentDataFragment = Pick<
                 > & {
                     sys: Pick<Sys, 'id'>;
                     researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
+                    linkedFrom?: Maybe<{
+                      manuscriptsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            Pick<Manuscripts, 'status'> & {
+                              sys: Pick<Sys, 'id'>;
+                              teamsCollection?: Maybe<{
+                                items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
+                              }>;
+                            }
+                          >
+                        >;
+                      }>;
+                    }>;
+                  })
+              | ({ __typename: 'Users' } & Pick<
+                  Users,
+                  | 'firstName'
+                  | 'nickname'
+                  | 'lastName'
+                  | 'email'
+                  | 'onboarded'
+                  | 'alumniSinceDate'
+                > & {
+                    sys: Pick<Sys, 'id'>;
+                    avatar?: Maybe<Pick<Asset, 'url'>>;
+                  })
+            >;
+          }
+        >
+      >;
+    }
+  >;
+};
+
+export type ProjectsMinimalContentDataFragment = Pick<
+  Projects,
+  | 'title'
+  | 'projectId'
+  | 'grantId'
+  | 'originalGrant'
+  | 'projectType'
+  | 'status'
+  | 'startDate'
+  | 'endDate'
+  | 'applicationNumber'
+  | 'contactEmail'
+  | 'googleDriveLink'
+> & {
+  sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
+  supplementGrant?: Maybe<Pick<SupplementGrant, 'description'>>;
+  resourceType?: Maybe<Pick<ResourceType, 'name'> & { sys: Pick<Sys, 'id'> }>;
+  researchTagsCollection?: Maybe<
+    Pick<ProjectsResearchTagsCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<ResearchTags, 'name' | 'category' | 'types'> & {
+            sys: Pick<Sys, 'id'>;
+          }
+        >
+      >;
+    }
+  >;
+  toolsCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        Pick<ExternalTools, 'name' | 'description' | 'url'> & {
+          sys: Pick<Sys, 'id'>;
+        }
+      >
+    >;
+  }>;
+  membersCollection?: Maybe<
+    Pick<ProjectsMembersCollection, 'total'> & {
+      items: Array<
+        Maybe<
+          Pick<ProjectMembership, 'role'> & {
+            sys: Pick<Sys, 'id'>;
+            projectMember?: Maybe<
+              | ({ __typename: 'Teams' } & Pick<
+                  Teams,
+                  'displayName' | 'inactiveSince' | 'teamDescription'
+                > & {
+                    sys: Pick<Sys, 'id'>;
+                    researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
                   })
               | ({ __typename: 'Users' } & Pick<
                   Users,
@@ -25290,26 +33438,7 @@ export type FetchProjectsQuery = {
             | 'googleDriveLink'
           > & {
             sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
-            proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-            originalGrantAimsCollection?: Maybe<{
-              items: Array<
-                Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
-              >;
-            }>;
-            supplementGrant?: Maybe<
-              Pick<
-                SupplementGrant,
-                'title' | 'description' | 'startDate' | 'endDate'
-              > & {
-                sys: Pick<Sys, 'id'>;
-                proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                aimsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
-                  >;
-                }>;
-              }
-            >;
+            supplementGrant?: Maybe<Pick<SupplementGrant, 'description'>>;
             resourceType?: Maybe<
               Pick<ResourceType, 'name'> & { sys: Pick<Sys, 'id'> }
             >;
@@ -25451,6 +33580,22 @@ export type FetchProjectByIdQuery = {
                     > & {
                         sys: Pick<Sys, 'id'>;
                         researchTheme?: Maybe<Pick<ResearchTheme, 'name'>>;
+                        linkedFrom?: Maybe<{
+                          manuscriptsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<
+                                Pick<Manuscripts, 'status'> & {
+                                  sys: Pick<Sys, 'id'>;
+                                  teamsCollection?: Maybe<{
+                                    items: Array<
+                                      Maybe<{ sys: Pick<Sys, 'id'> }>
+                                    >;
+                                  }>;
+                                }
+                              >
+                            >;
+                          }>;
+                        }>;
                       })
                   | ({ __typename: 'Users' } & Pick<
                       Users,
@@ -25508,33 +33653,8 @@ export type FetchProjectsByTeamIdQuery = {
                           Sys,
                           'id' | 'firstPublishedAt' | 'publishedAt'
                         >;
-                        proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                        originalGrantAimsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<
-                              Pick<Aims, 'description'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >
-                          >;
-                        }>;
                         supplementGrant?: Maybe<
-                          Pick<
-                            SupplementGrant,
-                            'title' | 'description' | 'startDate' | 'endDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                            aimsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Aims, 'description'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }
+                          Pick<SupplementGrant, 'description'>
                         >;
                         resourceType?: Maybe<
                           Pick<ResourceType, 'name'> & { sys: Pick<Sys, 'id'> }
@@ -25644,33 +33764,8 @@ export type FetchProjectsByUserIdQuery = {
                           Sys,
                           'id' | 'firstPublishedAt' | 'publishedAt'
                         >;
-                        proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                        originalGrantAimsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<
-                              Pick<Aims, 'description'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
-                            >
-                          >;
-                        }>;
                         supplementGrant?: Maybe<
-                          Pick<
-                            SupplementGrant,
-                            'title' | 'description' | 'startDate' | 'endDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                            aimsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<
-                                  Pick<Aims, 'description'> & {
-                                    sys: Pick<Sys, 'id'>;
-                                  }
-                                >
-                              >;
-                            }>;
-                          }
+                          Pick<SupplementGrant, 'description'>
                         >;
                         resourceType?: Maybe<
                           Pick<ResourceType, 'name'> & { sys: Pick<Sys, 'id'> }
@@ -25774,28 +33869,7 @@ export type FetchProjectsByMembershipIdQuery = {
                 | 'googleDriveLink'
               > & {
                 sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
-                proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                originalGrantAimsCollection?: Maybe<{
-                  items: Array<
-                    Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
-                  >;
-                }>;
-                supplementGrant?: Maybe<
-                  Pick<
-                    SupplementGrant,
-                    'title' | 'description' | 'startDate' | 'endDate'
-                  > & {
-                    sys: Pick<Sys, 'id'>;
-                    proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
-                    aimsCollection?: Maybe<{
-                      items: Array<
-                        Maybe<
-                          Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }
-                        >
-                      >;
-                    }>;
-                  }
-                >;
+                supplementGrant?: Maybe<Pick<SupplementGrant, 'description'>>;
                 resourceType?: Maybe<
                   Pick<ResourceType, 'name'> & { sys: Pick<Sys, 'id'> }
                 >;
@@ -35153,6 +43227,151 @@ export const ProjectsContentDataFragmentDoc = {
                                       value: 'teamDescription',
                                     },
                                   },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'linkedFrom' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'manuscriptsCollection',
+                                          },
+                                          arguments: [
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'limit',
+                                              },
+                                              value: {
+                                                kind: 'IntValue',
+                                                value: '20',
+                                              },
+                                            },
+                                            {
+                                              kind: 'Argument',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'order',
+                                              },
+                                              value: {
+                                                kind: 'EnumValue',
+                                                value:
+                                                  'sys_firstPublishedAt_DESC',
+                                              },
+                                            },
+                                          ],
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'items',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'sys',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'id',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'status',
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value:
+                                                          'teamsCollection',
+                                                      },
+                                                      arguments: [
+                                                        {
+                                                          kind: 'Argument',
+                                                          name: {
+                                                            kind: 'Name',
+                                                            value: 'limit',
+                                                          },
+                                                          value: {
+                                                            kind: 'IntValue',
+                                                            value: '1',
+                                                          },
+                                                        },
+                                                      ],
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'items',
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'sys',
+                                                                  },
+                                                                  selectionSet:
+                                                                    {
+                                                                      kind: 'SelectionSet',
+                                                                      selections:
+                                                                        [
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'id',
+                                                                            },
+                                                                          },
+                                                                        ],
+                                                                    },
+                                                                },
+                                                              ],
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
                                 ],
                               },
                             },
@@ -35170,6 +43389,346 @@ export const ProjectsContentDataFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<ProjectsContentDataFragment, unknown>;
+export const ProjectsMinimalContentDataFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ProjectsMinimalContentData' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Projects' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'firstPublishedAt' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'publishedAt' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'projectId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'grantId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'originalGrant' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'projectType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'status' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'applicationNumber' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'contactEmail' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'googleDriveLink' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'supplementGrant' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'resourceType' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'researchTagsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'category' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'types' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'toolsCollection' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'membersCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '100' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'projectMember' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'Users' },
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'firstName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'nickname' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'lastName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'email' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'onboarded' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniSinceDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'avatar' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'url' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'Teams' },
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: '__typename' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'displayName',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'inactiveSince',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'researchTheme',
+                                    },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'name' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'teamDescription',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ProjectsMinimalContentDataFragment, unknown>;
 export const ManuscriptsCollectionContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -49028,7 +57587,10 @@ export const FetchProjectsDocument = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'ProjectsContentData' },
+                        name: {
+                          kind: 'Name',
+                          value: 'ProjectsMinimalContentData',
+                        },
                       },
                     ],
                   },
@@ -49039,7 +57601,7 @@ export const FetchProjectsDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsMinimalContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchProjectsQuery, FetchProjectsQueryVariables>;
 export const FetchProjectByIdDocument = {
@@ -49224,7 +57786,7 @@ export const FetchProjectsByTeamIdDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value:
-                                                          'ProjectsContentData',
+                                                          'ProjectsMinimalContentData',
                                                       },
                                                     },
                                                   ],
@@ -49251,7 +57813,7 @@ export const FetchProjectsByTeamIdDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsMinimalContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchProjectsByTeamIdQuery,
@@ -49384,7 +57946,7 @@ export const FetchProjectsByUserIdDocument = {
                                                       name: {
                                                         kind: 'Name',
                                                         value:
-                                                          'ProjectsContentData',
+                                                          'ProjectsMinimalContentData',
                                                       },
                                                     },
                                                   ],
@@ -49411,7 +57973,7 @@ export const FetchProjectsByUserIdDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsMinimalContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchProjectsByUserIdQuery,
@@ -49513,7 +58075,7 @@ export const FetchProjectsByMembershipIdDocument = {
                                     kind: 'FragmentSpread',
                                     name: {
                                       kind: 'Name',
-                                      value: 'ProjectsContentData',
+                                      value: 'ProjectsMinimalContentData',
                                     },
                                   },
                                 ],
@@ -49531,7 +58093,7 @@ export const FetchProjectsByMembershipIdDocument = {
         ],
       },
     },
-    ...ProjectsContentDataFragmentDoc.definitions,
+    ...ProjectsMinimalContentDataFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchProjectsByMembershipIdQuery,

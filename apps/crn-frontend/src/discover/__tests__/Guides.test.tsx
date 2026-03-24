@@ -2,10 +2,11 @@ import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
 import {
   render,
-  waitForElementToBeRemoved,
+  waitFor,
   screen,
 } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createListGuidesResponse } from '@asap-hub/fixtures';
 
 import Guides from '../Guides';
@@ -22,23 +23,30 @@ afterEach(() => {
 const mockGetGuides = getGuides as jest.MockedFunction<typeof getGuides>;
 
 const renderGuides = async (user: Partial<User>) => {
-  render(
-    <Suspense fallback="loading">
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  const result = render(
+    <QueryClientProvider client={queryClient}>
       <RecoilRoot
         initializeState={({ set }) => {
           set(refreshDiscoverState, Math.random());
         }}
       >
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <Guides />
-          </WhenReady>
-        </Auth0Provider>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <Guides />
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
       </RecoilRoot>
-    </Suspense>,
+    </QueryClientProvider>,
   );
 
-  await waitForElementToBeRemoved(screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 
 it('renders guides', async () => {

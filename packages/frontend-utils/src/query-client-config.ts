@@ -5,9 +5,9 @@ export const queryClientDefaultOptions = {
   queries: {
     // data stays fresh indefinitely (no background refetches),
     staleTime: Infinity,
-    //no refetch on window focus
+    // no refetch on window focus
     refetchOnWindowFocus: false,
-    //single retry on failure
+    // single retry on failure
     retry: 1,
   },
 };

@@ -1,10 +1,6 @@
 import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
-import {
-  render,
-  waitFor,
-  screen,
-} from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createListGuidesResponse } from '@asap-hub/fixtures';

@@ -48,22 +48,24 @@ const buildAimArticleMap = async (
     })(),
   ]);
 
-  // Build a lookup: milestoneId → { articleCount, articlesDOI }
+  // Build a lookup: milestoneId → articles (id + doi)
   const milestoneArticleMap = new Map<
     string,
-    { articleCount: number; articlesDOI: string }
+    { articleIds: string[]; articlesDOI: string }
   >();
   milestones.forEach((milestone) => {
     if (!milestone?.sys?.id) return;
     const related = milestone.relatedArticlesCollection;
-    const articleCount = related?.total ?? 0;
+    const articleIds = (related?.items ?? [])
+      .filter((item): item is NonNullable<typeof item> => !!item?.sys?.id)
+      .map((item) => item.sys.id);
     milestoneArticleMap.set(milestone.sys.id, {
-      articleCount,
+      articleIds,
       articlesDOI: extractDOIs(related?.items),
     });
   });
 
-  // Aggregate per aim: sum articleCount and union DOIs across all linked milestones
+  // Aggregate per aim: deduplicate articles by ID across all linked milestones
   const aimArticleMap = new Map<
     string,
     { articleCount: number; articlesDOI: string }
@@ -71,21 +73,21 @@ const buildAimArticleMap = async (
   aims.forEach((aim) => {
     if (!aim?.sys?.id) return;
     const linkedMilestones = aim.milestonesCollection?.items ?? [];
-    let totalArticleCount = 0;
+    const allArticleIds = new Set<string>();
     const allDois = new Set<string>();
 
     linkedMilestones.forEach((milestone) => {
       if (!milestone?.sys?.id) return;
       const data = milestoneArticleMap.get(milestone.sys.id);
       if (!data) return;
-      totalArticleCount += data.articleCount;
+      data.articleIds.forEach((id) => allArticleIds.add(id));
       data.articlesDOI.split(',').forEach((doi) => {
         if (doi) allDois.add(doi);
       });
     });
 
     aimArticleMap.set(aim.sys.id, {
-      articleCount: totalArticleCount,
+      articleCount: allArticleIds.size,
       articlesDOI: [...allDois].join(','),
     });
   });

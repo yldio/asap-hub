@@ -38,6 +38,7 @@ export type MilestoneDataObject = {
   relatedArticlesCollection?: {
     total: number;
     items: Array<{
+      sys: { id: string };
       doi?: string | null;
     } | null>;
   } | null;

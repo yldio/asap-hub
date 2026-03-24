@@ -117,6 +117,9 @@ export const FETCH_MILESTONES = gql`
         relatedArticlesCollection(limit: 100) {
           total
           items {
+            sys {
+              id
+            }
             doi
           }
         }

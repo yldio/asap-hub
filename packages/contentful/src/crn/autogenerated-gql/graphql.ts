@@ -25380,7 +25380,9 @@ export type FetchMilestonesQuery = {
             sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
             relatedArticlesCollection?: Maybe<
               Pick<MilestonesRelatedArticlesCollection, 'total'> & {
-                items: Array<Maybe<Pick<ResearchOutputs, 'doi'>>>;
+                items: Array<
+                  Maybe<Pick<ResearchOutputs, 'doi'> & { sys: Pick<Sys, 'id'> }>
+                >;
               }
             >;
           }
@@ -48976,6 +48978,19 @@ export const FetchMilestonesDocument = {
                               selectionSet: {
                                 kind: 'SelectionSet',
                                 selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'doi' },

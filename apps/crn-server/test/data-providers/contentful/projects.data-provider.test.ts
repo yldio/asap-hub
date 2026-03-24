@@ -81,6 +81,8 @@ describe('ProjectContentfulDataProvider', () => {
               { title_contains: 'health' },
               { researchTags: { name_contains: 'brain' } },
               { researchTags: { name_contains: 'health' } },
+              { resourceType: { name_contains: 'brain' } },
+              { resourceType: { name_contains: 'health' } },
             ],
             projectType_in: ['Discovery Project', 'Resource Project'],
             status_in: ['Completed', 'Active'],

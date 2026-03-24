@@ -593,6 +593,9 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
             ...searchTerms.map((term) => ({
               researchTags: { name_contains: term },
             })),
+            ...searchTerms.map((term) => ({
+              resourceType: { name_contains: term },
+            })),
           ],
         }
       : {};

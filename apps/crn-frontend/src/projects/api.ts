@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/frontend-utils';
 import {
   ListProjectResponse,
+  MilestoneCreateRequest,
   ProjectDetail,
   ProjectStatus,
   ProjectTool,
@@ -129,6 +130,33 @@ export const getProject = async (
     }
     throw new BackendError(
       `Failed to fetch project with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+  return resp.json();
+};
+
+export const createMilestone = async (
+  projectId: string,
+  data: MilestoneCreateRequest,
+  authorization: string,
+): Promise<{ id: string }> => {
+  const resp = await fetch(
+    `${API_BASE_URL}/project/${projectId}/milestones`,
+    {
+      method: 'POST',
+      headers: {
+        authorization,
+        'content-type': 'application/json',
+        ...createSentryHeaders(),
+      },
+      body: JSON.stringify(data),
+    },
+  );
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to create milestone for project ${projectId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       await resp.json().catch(() => undefined),
       resp.status,
     );

@@ -64,6 +64,7 @@ jest.mock('../state', () => {
   return {
     __esModule: true,
     useProjectById,
+    useCreateMilestone: jest.fn(() => jest.fn()),
   };
 });
 

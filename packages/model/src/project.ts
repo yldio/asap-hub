@@ -214,6 +214,37 @@ export type FetchProjectsFilter =
       readonly search?: never;
     };
 
+// Grant type
+export type GrantType = 'original' | 'supplement';
+
+// Lead roles allowed to create milestones (project membership roles)
+export const milestoneLeadRoles = [
+  'Project Manager',
+  'Lead PI',
+  'Co-PI',
+  'Data Manager',
+  'Trainee Project - Lead',
+] as const;
+export type MilestoneLeadRole = (typeof milestoneLeadRoles)[number];
+
+// Team roles that map to milestone lead access for Discovery projects
+// Discovery projects use team membership instead of project membership
+export const milestoneDiscoveryTeamRoles = [
+  'Lead PI (Core Leadership)',
+  'Co-PI (Core Leadership)',
+  'Project Manager',
+  'Data Manager',
+] as const;
+
+// Milestone creation
+export type MilestoneCreateRequest = {
+  readonly grantType: GrantType;
+  readonly description: string;
+  readonly status: MilestoneStatus;
+  readonly aimIds: string[];
+  readonly relatedArticleIds?: string[];
+};
+
 // Response types
 export type ProjectResponse = Project;
 export type ListProjectResponse = ListProjectDataObject;

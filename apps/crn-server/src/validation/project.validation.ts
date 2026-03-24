@@ -1,4 +1,11 @@
-import { ProjectStatus, ProjectTool, ProjectType } from '@asap-hub/model';
+import {
+  GrantType,
+  MilestoneCreateRequest,
+  MilestoneStatus,
+  ProjectStatus,
+  ProjectTool,
+  ProjectType,
+} from '@asap-hub/model';
 import {
   fetchOptionsValidationSchema,
   validateInput,
@@ -115,6 +122,45 @@ const projectPatchRequestValidationSchema: JSONSchemaType<ProjectPatchRequest> =
 
 export const validateProjectPatchRequest = validateInput(
   projectPatchRequestValidationSchema,
+  {
+    skipNull: true,
+    coerce: false,
+  },
+);
+
+const grantTypes: readonly GrantType[] = ['original', 'supplement'];
+const milestoneStatuses: readonly MilestoneStatus[] = [
+  'Pending',
+  'In Progress',
+  'Complete',
+  'Terminated',
+];
+
+type MilestoneCreateBody = MilestoneCreateRequest;
+
+const milestoneCreateValidationSchema: JSONSchemaType<MilestoneCreateBody> = {
+  type: 'object',
+  properties: {
+    grantType: { type: 'string', enum: grantTypes },
+    description: { type: 'string', minLength: 1, maxLength: 750 },
+    status: { type: 'string', enum: milestoneStatuses },
+    aimIds: {
+      type: 'array',
+      items: { type: 'string' },
+      minItems: 1,
+    },
+    relatedArticleIds: {
+      type: 'array',
+      nullable: true,
+      items: { type: 'string' },
+    },
+  },
+  required: ['grantType', 'description', 'status', 'aimIds'],
+  additionalProperties: false,
+};
+
+export const validateMilestoneCreateRequest = validateInput(
+  milestoneCreateValidationSchema,
   {
     skipNull: true,
     coerce: false,

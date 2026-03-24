@@ -7,8 +7,9 @@ import {
   ProjectDetailMilestones,
   NotFoundPage,
 } from '@asap-hub/react-components';
+import { milestoneDiscoveryTeamRoles, milestoneLeadRoles, MilestoneLeadRole } from '@asap-hub/model';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
-import { useProjectById } from './state';
+import { useProjectById, useCreateMilestone } from './state';
 import { useFetchArticles } from './aim-articles-state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
@@ -33,6 +34,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const user = useCurrentUserCRN();
   const isStaff = user?.role === 'Staff';
   const { hash: targetManuscript } = useLocation();
+  const createMilestone = useCreateMilestone(projectId);
 
   if (!projectDetail) {
     return <NotFoundPage />;
@@ -50,6 +52,39 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
   const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
   const milestonesHref = route.milestones({}).$;
+
+  const isLead = (() => {
+    if (!user) return false;
+    if ('members' in projectDetail && projectDetail.members) {
+      return projectDetail.members.some(
+        (m) =>
+          m.id === user.id &&
+          milestoneLeadRoles.includes(m.role as MilestoneLeadRole),
+      );
+    }
+    // Discovery projects use team membership roles instead of project membership
+    if ('teamId' in projectDetail && projectDetail.teamId) {
+      return !!user.teams?.find(
+        (t) =>
+          t.id === projectDetail.teamId &&
+          (milestoneDiscoveryTeamRoles as readonly string[]).includes(t.role),
+      );
+    }
+    return false;
+  })();
+
+  const hasSupplementGrant =
+    'supplementGrant' in projectDetail && !!projectDetail.supplementGrant;
+
+  const originalGrantAims =
+    'originalGrantAims' in projectDetail
+      ? projectDetail.originalGrantAims
+      : undefined;
+
+  const supplementGrantAims =
+    'supplementGrant' in projectDetail
+      ? projectDetail.supplementGrant?.aims
+      : undefined;
 
   return (
     <Frame title={projectDetail.title || ''}>
@@ -122,10 +157,13 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                     <ProjectDetailMilestones
                       milestones={mockMilestones}
                       seeAimsHref={route.about({}).$}
-                      hasSupplementGrant={
-                        'supplementGrant' in projectDetail &&
-                        !!projectDetail.supplementGrant
-                      }
+                      hasSupplementGrant={hasSupplementGrant}
+                      isLead={isLead}
+                      originalGrantAims={originalGrantAims}
+                      supplementGrantAims={supplementGrantAims}
+                      onCreateMilestone={async (data) => {
+                        await createMilestone(data);
+                      }}
                       pageControlsProps={{
                         numberOfPages: 1,
                         currentPageIndex: 0,

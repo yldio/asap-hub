@@ -7,4 +7,5 @@ export const getDataProviderMock = () => ({
   create: jest.fn(),
   update: jest.fn(),
   createFromUrl: jest.fn(),
+  createMilestone: jest.fn(),
 });

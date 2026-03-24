@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { FetchProjectsFilter } from '@asap-hub/model';
+import { FetchProjectsFilter, milestoneDiscoveryTeamRoles, milestoneLeadRoles, MilestoneLeadRole } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import ProjectController from '../controllers/project.controller';
 import {
+  validateMilestoneCreateRequest,
   validateProjectFetchParameters,
   validateProjectParameters,
   validateProjectPatchRequest,
@@ -96,6 +97,49 @@ export const projectRouteFactory = (
       const result = await projectController.update(projectId, tools);
 
       res.json(result);
+    },
+  );
+
+  projectRoutes.post<{ projectId: string }>(
+    '/project/:projectId/milestones',
+    async (req, res) => {
+      const { projectId } = validateProjectParameters(req.params);
+      const data = validateMilestoneCreateRequest(req.body);
+
+      if (!req.loggedInUser) {
+        throw Boom.unauthorized();
+      }
+
+      const project = await projectController.fetchById(projectId);
+
+      const isLead = (() => {
+        if ('members' in project && project.members) {
+          return project.members.some(
+            (m) =>
+              m.id === req.loggedInUser!.id &&
+              milestoneLeadRoles.includes(m.role as MilestoneLeadRole),
+          );
+        }
+        if ('teamId' in project && project.teamId) {
+          return !!req.loggedInUser.teams?.find(
+            (t) =>
+              t.id === project.teamId &&
+              (milestoneDiscoveryTeamRoles as readonly string[]).includes(t.role),
+          );
+        }
+        return false;
+      })();
+
+      if (!isLead) {
+        throw Boom.forbidden();
+      }
+
+      const milestoneId = await projectController.createMilestone(
+        projectId,
+        data,
+      );
+
+      res.status(201).json({ id: milestoneId });
     },
   );
 

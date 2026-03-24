@@ -224,6 +224,7 @@ const mockTraineeProjectNoContact: TraineeProjectDetailType = {
 
 jest.mock('../state', () => ({
   __esModule: true,
+  useCreateMilestone: jest.fn(() => jest.fn()),
   useProjectById: jest.fn((id: string) => {
     const map: Record<string, unknown> = {
       'discovery-1': mockDiscoveryProject,

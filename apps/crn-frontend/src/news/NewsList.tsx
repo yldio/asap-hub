@@ -26,7 +26,7 @@ const NewsList: React.FC<NewsListProps> = ({ searchQuery, filters }) => {
   );
 
   if (isLoading) return <Loading />;
-  if (error || !result) throw error;
+  if (!result) throw error ?? new Error('Failed to load news');
 
   return (
     <NewsPageBody

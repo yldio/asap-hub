@@ -13,7 +13,11 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { Frame, useCookieConsent } from '@asap-hub/frontend-utils';
+import {
+  Frame,
+  queryClientDefaultOptions,
+  useCookieConsent,
+} from '@asap-hub/frontend-utils';
 import {
   BasicLayout,
   CookiesModal,
@@ -92,7 +96,9 @@ const Content = lazy(loadContent);
 const AuthenticatedApp = lazy(loadAuthenticatedApp);
 
 const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: queryClientDefaultOptions,
+});
 
 const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides, setEnvironment, isEnabled } = useFlags();

@@ -1,4 +1,7 @@
-import { useCookieConsent } from '@asap-hub/frontend-utils';
+import {
+  queryClientDefaultOptions,
+  useCookieConsent,
+} from '@asap-hub/frontend-utils';
 import { BasicLayout, Theme } from '@asap-hub/gp2-components';
 import {
   GoogleTagManager,
@@ -91,7 +94,9 @@ const Welcome = lazy(loadWelcome);
 
 const SentryRoutes = Sentry.withSentryReactRouterV6Routing(Routes);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: queryClientDefaultOptions,
+});
 
 const App: FC<Record<string, never>> = () => {
   const { setCurrentOverrides, setEnvironment, isEnabled } = useFlags();

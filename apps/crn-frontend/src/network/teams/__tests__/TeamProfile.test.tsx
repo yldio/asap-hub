@@ -729,10 +729,12 @@ describe('Create Compliance Report', () => {
       network({}).teams({}).team({ teamId: teamResponse.id }).workspace({}).$,
     );
 
-    await user.click(screen.getByTestId('collapsible-button'));
+    await user.click(await screen.findByTestId('collapsible-button'));
 
     await user.click(
-      screen.getByRole('button', { name: /Share Compliance Report Icon/ }),
+      await screen.findByRole('button', {
+        name: /Share Compliance Report Icon/,
+      }),
     );
 
     expect(
@@ -766,7 +768,7 @@ it('deep links to the teams list', async () => {
     id: '42',
   });
 
-  const anchor = screen.getByLabelText(/\+\d/i).closest('a');
+  const anchor = (await screen.findByLabelText(/\+\d/i)).closest('a');
   expect(anchor).toBeVisible();
   const { hash } = new URL(anchor!.href, globalThis.location.href);
 

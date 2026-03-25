@@ -6,7 +6,7 @@ import { getNews, getNewsById } from './api';
 export const useNews = (options: GetListOptions) => {
   const auth0 = useAuth0CRN();
   return useQuery({
-    queryKey: ['news', options],
+    queryKey: ['newsList', options],
     queryFn: async () => {
       const token = await auth0.getTokenSilently();
       return getNews(options, `Bearer ${token}`);

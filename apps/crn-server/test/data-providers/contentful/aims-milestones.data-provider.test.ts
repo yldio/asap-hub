@@ -353,4 +353,126 @@ describe('AimsMilestonesContentfulDataProvider', () => {
       expect(result).toEqual({ total: 0, items: [] });
     });
   });
+
+  describe('fetchArticlesForAim', () => {
+    it('returns deduplicated articles across milestones', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: {
+          milestonesCollection: {
+            items: [
+              {
+                relatedArticlesCollection: {
+                  items: [
+                    { sys: { id: 'article-1' }, title: 'First Article' },
+                    { sys: { id: 'article-2' }, title: 'Second Article' },
+                  ],
+                },
+              },
+              {
+                relatedArticlesCollection: {
+                  items: [
+                    // duplicate — should be omitted
+                    { sys: { id: 'article-1' }, title: 'First Article' },
+                    { sys: { id: 'article-3' }, title: 'Third Article' },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      const result = await dataProvider.fetchArticlesForAim('aim-1');
+
+      expect(result).toEqual([
+        {
+          id: 'article-1',
+          title: 'First Article',
+          href: '/shared-research/article-1',
+        },
+        {
+          id: 'article-2',
+          title: 'Second Article',
+          href: '/shared-research/article-2',
+        },
+        {
+          id: 'article-3',
+          title: 'Third Article',
+          href: '/shared-research/article-3',
+        },
+      ]);
+    });
+
+    it('passes the aim id to the query', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: { milestonesCollection: { items: [] } },
+      });
+
+      await dataProvider.fetchArticlesForAim('aim-42');
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        { id: 'aim-42' },
+      );
+    });
+
+    it('returns empty array when aim has no milestones collection', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: null,
+      });
+
+      const result = await dataProvider.fetchArticlesForAim('aim-1');
+
+      expect(result).toEqual([]);
+    });
+
+    it('skips milestones with no related articles collection', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: {
+          milestonesCollection: {
+            items: [
+              { relatedArticlesCollection: null },
+              {
+                relatedArticlesCollection: {
+                  items: [{ sys: { id: 'article-1' }, title: 'Only Article' }],
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      const result = await dataProvider.fetchArticlesForAim('aim-1');
+
+      expect(result).toEqual([
+        {
+          id: 'article-1',
+          title: 'Only Article',
+          href: '/shared-research/article-1',
+        },
+      ]);
+    });
+
+    it('uses empty string for article title when title is null', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: {
+          milestonesCollection: {
+            items: [
+              {
+                relatedArticlesCollection: {
+                  items: [{ sys: { id: 'article-1' }, title: null }],
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      const result = await dataProvider.fetchArticlesForAim('aim-1');
+
+      expect(result).toEqual([
+        { id: 'article-1', title: '', href: '/shared-research/article-1' },
+      ]);
+    });
+  });
 });

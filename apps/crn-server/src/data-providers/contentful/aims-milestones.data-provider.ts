@@ -111,7 +111,9 @@ export class AimsMilestonesContentfulDataProvider
     };
   }
 
-  async fetchArticlesForAim(aimId: string): Promise<ReadonlyArray<ArticleItem>> {
+  async fetchArticlesForAim(
+    aimId: string,
+  ): Promise<ReadonlyArray<ArticleItem>> {
     const { aims } = await this.contentfulClient.request<
       FetchAimArticlesQuery,
       FetchAimArticlesQueryVariables

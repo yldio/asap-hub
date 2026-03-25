@@ -1,9 +1,6 @@
 import { Suspense } from 'react';
-import {
-  render,
-  waitForElementToBeRemoved,
-  screen,
-} from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { MemoryRouter, Route, Routes } from 'react-router';
@@ -30,22 +27,29 @@ const props: DiscoverResponse = {
 };
 
 const renderPage = async () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   render(
-    <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={['/about']}>
-              <Routes>
-                <Route path={`${about.template}/*`} element={<About />} />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={['/about']}>
+                <Routes>
+                  <Route path={`${about.template}/*`} element={<About />} />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 
 describe('the About page', () => {

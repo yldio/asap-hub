@@ -23,7 +23,6 @@ import {
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getDashboard, getReminders } from '../api';
 import Dashboard from '../Dashboard';
-import { refreshDashboardState } from '../state';
 
 jest.mock('../api');
 jest.mock('../../events/api');
@@ -83,7 +82,6 @@ const renderDashboard = async (user: Partial<User>) => {
         <Suspense fallback="loading">
           <RecoilRoot
             initializeState={({ set }) => {
-              set(refreshDashboardState, Math.random());
               set(refreshUserState(userResponse.id), Math.random());
             }}
           >

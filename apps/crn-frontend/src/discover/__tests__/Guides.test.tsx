@@ -8,7 +8,6 @@ import { createListGuidesResponse } from '@asap-hub/fixtures';
 import Guides from '../Guides';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getGuides } from '../../guides/api';
-import { refreshDiscoverState } from '../../about/state';
 
 jest.mock('../../guides/api');
 
@@ -24,11 +23,7 @@ const renderGuides = async (user: Partial<User>) => {
   });
   const result = render(
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(refreshDiscoverState, Math.random());
-        }}
-      >
+      <RecoilRoot>
         <Suspense fallback="loading">
           <Auth0Provider user={user}>
             <WhenReady>

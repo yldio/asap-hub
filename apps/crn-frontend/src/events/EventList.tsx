@@ -3,8 +3,6 @@ import { getEventListOptions } from '@asap-hub/frontend-utils';
 
 import { useEvents, usePrefetchEvents } from './state';
 import { usePagination, usePaginationParams } from '../hooks';
-import { usePrefetchCalendars } from './calendar/state';
-
 type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;
@@ -36,8 +34,6 @@ const EventList: React.FC<EventListProps> = ({
       pageSize,
     }),
   );
-  usePrefetchCalendars();
-
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
     <EventsList

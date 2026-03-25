@@ -1,11 +1,11 @@
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useAuth0CRN } from '@asap-hub/react-context';
 import { getTeams } from '../network/teams/api';
 
 export const useTeamSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (searchQuery: string) =>
-    getTeams(
+  const auth0 = useAuth0CRN();
+  return async (searchQuery: string) => {
+    const token = await auth0.getTokenSilently();
+    const { items } = await getTeams(
       {
         searchQuery,
         filters: new Set(),
@@ -13,11 +13,11 @@ export const useTeamSuggestions = () => {
         pageSize: null,
         teamType: 'all',
       },
-      authorization,
-    ).then(({ items }) =>
-      items.map(({ id, displayName }) => ({
-        label: displayName,
-        value: id,
-      })),
+      `Bearer ${token}`,
     );
+    return items.map(({ id, displayName }) => ({
+      label: displayName,
+      value: id,
+    }));
+  };
 };

@@ -16,6 +16,11 @@ jest.mock('../../../src/config', () => ({
 
 import { getGraphQLClient } from '@asap-hub/contentful';
 import { exportAimsData } from '../aims';
+import {
+  aimsProjectsDetailFixture,
+  aimsWithMilestonesFixture,
+  aimsMilestonesFixture,
+} from '../../../test/fixtures/aims-milestones.fixtures';
 
 const mockRequest = jest.fn();
 
@@ -23,145 +28,14 @@ const mockGetGraphQLClient = getGraphQLClient as jest.MockedFunction<
   typeof getGraphQLClient
 >;
 
-// Query 1: project + aim metadata (no milestones nesting)
-const projectsDetailFixture = {
-  projectsCollection: {
-    total: 1,
-    items: [
-      {
-        sys: { id: 'project-1' },
-        status: 'Active',
-        membersCollection: {
-          items: [
-            {
-              projectMember: {
-                __typename: 'Teams',
-                sys: { id: 'team-1' },
-                displayName: 'Team Alpha',
-              },
-            },
-          ],
-        },
-        originalGrantAimsCollection: {
-          items: [
-            {
-              sys: {
-                id: 'aim-1',
-                firstPublishedAt: '2025-01-01T00:00:00.000Z',
-                publishedAt: '2025-06-01T00:00:00.000Z',
-              },
-              description: 'First original aim',
-            },
-            {
-              sys: {
-                id: 'aim-2',
-                firstPublishedAt: '2025-02-01T00:00:00.000Z',
-                publishedAt: '2025-07-01T00:00:00.000Z',
-              },
-              description: 'Second original aim',
-            },
-          ],
-        },
-        supplementGrant: {
-          aimsCollection: {
-            items: [
-              {
-                sys: {
-                  id: 'aim-3',
-                  firstPublishedAt: '2025-03-01T00:00:00.000Z',
-                  publishedAt: '2025-08-01T00:00:00.000Z',
-                },
-                description: 'Supplement aim',
-              },
-            ],
-          },
-        },
-      },
-    ],
-  },
-};
-
-// Query 2: aims → milestone IDs (FetchAimsWithMilestones)
-const aimsWithMilestonesFixture = {
-  aimsCollection: {
-    total: 3,
-    items: [
-      {
-        sys: { id: 'aim-1' },
-        milestonesCollection: {
-          items: [{ sys: { id: 'ms-1' } }, { sys: { id: 'ms-2' } }],
-        },
-      },
-      {
-        sys: { id: 'aim-2' },
-        milestonesCollection: {
-          items: [{ sys: { id: 'ms-3' } }],
-        },
-      },
-      {
-        sys: { id: 'aim-3' },
-        milestonesCollection: {
-          items: [{ sys: { id: 'ms-4' } }],
-        },
-      },
-    ],
-  },
-};
-
-// Query 3: milestones → article data (FetchMilestones)
-const milestonesFixture = {
-  milestonesCollection: {
-    total: 4,
-    items: [
-      {
-        sys: { id: 'ms-1', firstPublishedAt: null, publishedAt: null },
-        description: 'Milestone 1',
-        status: 'Active',
-        relatedArticlesCollection: {
-          total: 2,
-          items: [{ doi: '10.1000/abc' }, { doi: '10.1000/def' }],
-        },
-      },
-      {
-        sys: { id: 'ms-2', firstPublishedAt: null, publishedAt: null },
-        description: 'Milestone 2',
-        status: 'Active',
-        relatedArticlesCollection: {
-          total: 1,
-          // Duplicate DOI — should be deduplicated at aim level
-          items: [{ doi: '10.1000/abc' }],
-        },
-      },
-      {
-        sys: { id: 'ms-3', firstPublishedAt: null, publishedAt: null },
-        description: 'Milestone 3',
-        status: 'Active',
-        relatedArticlesCollection: {
-          total: 0,
-          items: [],
-        },
-      },
-      {
-        sys: { id: 'ms-4', firstPublishedAt: null, publishedAt: null },
-        description: 'Milestone 4',
-        status: 'Active',
-        relatedArticlesCollection: {
-          total: 1,
-          items: [{ doi: '10.1000/xyz' }],
-        },
-      },
-    ],
-  },
-};
-
 const makeDefaultMock = () => (query: any) => {
   const body = query?.loc?.source?.body ?? '';
   if (body.includes('projectsCollection'))
-    return Promise.resolve(projectsDetailFixture);
+    return Promise.resolve(aimsProjectsDetailFixture);
   if (body.includes('FetchAimsWithMilestones'))
     return Promise.resolve(aimsWithMilestonesFixture);
   if (body.includes('milestonesCollection'))
-    return Promise.resolve(milestonesFixture);
+    return Promise.resolve(aimsMilestonesFixture);
   return Promise.reject(new Error(`Unexpected query: ${body}`));
 };
 
@@ -213,11 +87,11 @@ describe('exportAimsData', () => {
     });
   });
 
-  it('sums articleCount across all linked milestones', async () => {
+  it('deduplicates articleCount by article ID across linked milestones', async () => {
     const result = await exportAimsData();
     const aim1 = result.find((d) => d.id === 'aim-1')!;
-    // ms-1 has 2 articles + ms-2 has 1 article = 3
-    expect(aim1.articleCount).toBe(3);
+    // ms-1 has article-1 + article-2, ms-2 has article-1 (duplicate) → 2 unique
+    expect(aim1.articleCount).toBe(2);
   });
 
   it('deduplicates articlesDOI across all linked milestones', async () => {
@@ -245,7 +119,7 @@ describe('exportAimsData', () => {
       projectId: 'project-1',
       teamName: 'Team Alpha',
       status: 'Active',
-      articleCount: 3,
+      articleCount: 2,
       createdDate: '2025-01-01T00:00:00.000Z',
       lastDate: '2025-06-01T00:00:00.000Z',
     });

@@ -1,24 +1,15 @@
-import { selector, atom, useRecoilValue } from 'recoil';
-import { DiscoverResponse } from '@asap-hub/model';
-import { authorizationState } from '../auth/state';
+import { useAuth0CRN } from '@asap-hub/react-context';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { getDiscover } from './api';
 
-export const fetchDiscoverState = selector<DiscoverResponse>({
-  key: 'fetchDiscoverState',
-  get: ({ get }) => {
-    get(refreshDiscoverState);
-    return getDiscover(get(authorizationState));
-  },
-});
-
-export const discoverState = atom<DiscoverResponse>({
-  key: 'discoverState',
-  default: fetchDiscoverState,
-});
-
-export const refreshDiscoverState = atom<number>({
-  key: 'refreshDiscoverState',
-  default: 0,
-});
-
-export const useDiscoverState = () => useRecoilValue(discoverState);
+export const useDiscoverState = () => {
+  const auth0 = useAuth0CRN();
+  const { data } = useSuspenseQuery({
+    queryKey: ['discover'],
+    queryFn: async () => {
+      const token = await auth0.getTokenSilently();
+      return getDiscover(`Bearer ${token}`);
+    },
+  });
+  return data;
+};

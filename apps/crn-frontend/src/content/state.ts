@@ -1,11 +1,8 @@
-import { useRecoilValueLoadable, selectorFamily } from 'recoil';
-import { PageResponse } from '@asap-hub/model';
+import { useQuery } from '@tanstack/react-query';
 import { getPageByPath } from './api';
 
-export const pageState = selectorFamily<PageResponse | undefined, string>({
-  key: 'page',
-  get: (path) => () => getPageByPath(path),
-});
-
 export const usePageByPageId = (pageId: string) =>
-  useRecoilValueLoadable(pageState(pageId));
+  useQuery({
+    queryKey: ['page', pageId],
+    queryFn: async () => (await getPageByPath(pageId)) ?? null,
+  });

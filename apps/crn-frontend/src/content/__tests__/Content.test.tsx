@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router';
 import { createPageResponse } from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
-import { Content } from '../Content';
+import ContentWithQueryClient, { Content } from '../Content';
 import { getPageByPath } from '../api';
 
 jest.mock('../api');
@@ -89,4 +89,27 @@ it('renders the 404 page for missing content', async () => {
   await renderPage();
   expect(await screen.findByText(/sorry.+page/i)).toBeVisible();
   expect(mockGetPageByPath).toHaveBeenCalled();
+});
+
+it('renders using the default export with QueryClient wrapper', async () => {
+  mockGetPageByPath.mockResolvedValue(undefined);
+
+  render(
+    <RecoilRoot>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter>
+              <ContentWithQueryClient pageId="test-page" />
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
+  );
+
+  await waitFor(() =>
+    expect(screen.queryByText(/auth0/i)).not.toBeInTheDocument(),
+  );
+  expect(await screen.findByText(/sorry.+page/i)).toBeVisible();
 });

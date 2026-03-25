@@ -1,18 +1,15 @@
 import { act, renderHook } from '@testing-library/react';
-import { useRecoilValue } from 'recoil';
 import { getImpacts } from '../../shared-api/impact';
 import { useImpactSuggestions } from '../impact';
 
-jest.mock('recoil');
+jest.mock('@asap-hub/react-context', () => ({
+  useAuth0CRN: () => ({
+    getTokenSilently: jest.fn().mockResolvedValue('mock-token'),
+  }),
+}));
 jest.mock('../../shared-api/impact');
 
 describe('useImpactSuggestions', () => {
-  const mockAuthorization = 'mock-token';
-
-  beforeEach(() => {
-    (useRecoilValue as jest.Mock).mockReturnValue(mockAuthorization);
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -34,7 +31,7 @@ describe('useImpactSuggestions', () => {
 
     expect(getImpacts).toHaveBeenCalledWith(
       { search: 'example search', take: 1000 },
-      mockAuthorization,
+      'Bearer mock-token',
     );
 
     expect(suggestions).toEqual([

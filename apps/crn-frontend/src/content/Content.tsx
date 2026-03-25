@@ -1,7 +1,6 @@
 import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, queryClientDefaultOptions } from '@asap-hub/frontend-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { queryClientDefaultOptions } from '@asap-hub/frontend-utils';
 
 import { usePageByPageId } from './state';
 

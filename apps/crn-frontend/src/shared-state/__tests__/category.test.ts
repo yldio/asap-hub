@@ -1,18 +1,15 @@
 import { act, renderHook } from '@testing-library/react';
-import { useRecoilValue } from 'recoil';
 import { getCategories } from '../../shared-api/category';
 import { useCategorySuggestions } from '../category';
 
-jest.mock('recoil');
+jest.mock('@asap-hub/react-context', () => ({
+  useAuth0CRN: () => ({
+    getTokenSilently: jest.fn().mockResolvedValue('mock-token'),
+  }),
+}));
 jest.mock('../../shared-api/category');
 
 describe('useCategorySuggestions', () => {
-  const mockAuthorization = 'mock-token';
-
-  beforeEach(() => {
-    (useRecoilValue as jest.Mock).mockReturnValue(mockAuthorization);
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -34,7 +31,7 @@ describe('useCategorySuggestions', () => {
 
     expect(getCategories).toHaveBeenCalledWith(
       { search: 'example search', take: 1000 },
-      mockAuthorization,
+      'Bearer mock-token',
     );
 
     expect(suggestions).toEqual([

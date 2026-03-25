@@ -9,16 +9,11 @@ import {
   ResearchOutputDocumentType,
   ResearchOutputPostRequest,
   ResearchOutputPutRequest,
-  ResearchTagResponse,
-  ResearchThemeResponse,
   ResearchThemeType,
-  ResourceTypeResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { useAuth0CRN } from '@asap-hub/react-context';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { atom, selector, selectorFamily, useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAlgolia } from '../hooks/algolia';
 import {
   createResearchOutput,
@@ -140,64 +135,44 @@ export const useAuthorSuggestions = () => {
     }).then(({ items }) => items);
 };
 
-const researchTagsState = atom<ResearchTagResponse[]>({
-  key: 'researchTagsState',
-  default: [],
-});
-
-export const researchTagsSelector = selector({
-  key: 'researchTags',
-  get: ({ get }) => {
-    get(researchTagsState);
-    const authorization = get(authorizationState);
-    return getResearchTags(authorization);
-  },
-});
-
-export const useResearchTags = () => useRecoilValue(researchTagsSelector);
-
-const researchThemesState = atom<ResearchThemeResponse[]>({
-  key: 'researchThemesState',
-  default: [],
-});
-
-export const researchThemesByTypesSelector = selectorFamily<
-  ResearchThemeResponse[],
-  string
->({
-  key: 'researchThemesByTypes',
-  get:
-    (typesKey) =>
-    ({ get }) => {
-      get(researchThemesState);
-      const authorization = get(authorizationState);
-      const types = typesKey
-        ? (typesKey.split(',') as ResearchThemeType[])
-        : undefined;
-      return getResearchThemes(authorization, types);
+export const useResearchTags = () => {
+  const auth0 = useAuth0CRN();
+  const { data } = useQuery({
+    queryKey: ['researchTags'],
+    queryFn: async () => {
+      const token = await auth0.getTokenSilently();
+      return getResearchTags(`Bearer ${token}`);
     },
-});
+  });
+  return data ?? [];
+};
 
 export const useResearchThemes = (
   types?: ReadonlyArray<ResearchThemeType>,
-): ResearchThemeResponse[] =>
-  useRecoilValue(researchThemesByTypesSelector(types ? types.join(',') : ''));
+) => {
+  const auth0 = useAuth0CRN();
+  const typesKey = types ? [...types].sort().join(',') : '';
+  const { data } = useQuery({
+    queryKey: ['researchThemes', typesKey],
+    queryFn: async () => {
+      const token = await auth0.getTokenSilently();
+      return getResearchThemes(`Bearer ${token}`, types);
+    },
+  });
+  return data ?? [];
+};
 
-const resourceTypesState = atom<ResourceTypeResponse[]>({
-  key: 'resourceTypesState',
-  default: [],
-});
-
-export const resourceTypesSelector = selector({
-  key: 'resourceTypes',
-  get: ({ get }) => {
-    get(resourceTypesState);
-    const authorization = get(authorizationState);
-    return getResourceTypes(authorization);
-  },
-});
-
-export const useResourceTypes = () => useRecoilValue(resourceTypesSelector);
+export const useResourceTypes = () => {
+  const auth0 = useAuth0CRN();
+  const { data } = useQuery({
+    queryKey: ['resourceTypes'],
+    queryFn: async () => {
+      const token = await auth0.getTokenSilently();
+      return getResourceTypes(`Bearer ${token}`);
+    },
+  });
+  return data ?? [];
+};
 
 export const usePostResearchOutput = () => {
   const auth0 = useAuth0CRN();

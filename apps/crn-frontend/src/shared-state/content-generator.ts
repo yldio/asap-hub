@@ -1,12 +1,15 @@
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useAuth0CRN } from '@asap-hub/react-context';
 import { getGeneratedShortDescription } from '../shared-api';
 
 export const useGeneratedContent = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const auth0 = useAuth0CRN();
 
-  return (description: string): Promise<string> =>
-    getGeneratedShortDescription(description, authorization).then(
-      ({ shortDescription }) => shortDescription || '',
+  return async (description: string): Promise<string> => {
+    const token = await auth0.getTokenSilently();
+    const { shortDescription } = await getGeneratedShortDescription(
+      description,
+      `Bearer ${token}`,
     );
+    return shortDescription || '';
+  };
 };

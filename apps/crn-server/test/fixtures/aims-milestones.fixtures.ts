@@ -92,7 +92,8 @@ export const aimsMilestonesFixture = {
       {
         sys: { id: 'ms-1', firstPublishedAt: null, publishedAt: null },
         description: 'Milestone 1',
-        status: 'Active',
+        // aim-1 links to ms-1 (In Progress) + ms-2 (Complete) → 'In Progress'
+        status: 'In Progress',
         relatedArticlesCollection: {
           total: 2,
           items: [
@@ -104,7 +105,7 @@ export const aimsMilestonesFixture = {
       {
         sys: { id: 'ms-2', firstPublishedAt: null, publishedAt: null },
         description: 'Milestone 2',
-        status: 'Active',
+        status: 'Complete',
         relatedArticlesCollection: {
           total: 1,
           items: [{ sys: { id: 'article-1' }, doi: '10.1000/abc' }],
@@ -113,7 +114,8 @@ export const aimsMilestonesFixture = {
       {
         sys: { id: 'ms-3', firstPublishedAt: null, publishedAt: null },
         description: 'Milestone 3',
-        status: 'Active',
+        // aim-2 links to ms-3 (Complete) → 'Complete'
+        status: 'Complete',
         relatedArticlesCollection: {
           total: 0,
           items: [],
@@ -122,7 +124,8 @@ export const aimsMilestonesFixture = {
       {
         sys: { id: 'ms-4', firstPublishedAt: null, publishedAt: null },
         description: 'Milestone 4',
-        status: 'Active',
+        // aim-3 links to ms-4 (Pending) → 'Pending'
+        status: 'Pending',
         relatedArticlesCollection: {
           total: 1,
           items: [{ sys: { id: 'article-3' }, doi: '10.1000/xyz' }],

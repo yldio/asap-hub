@@ -102,6 +102,25 @@ export const FETCH_PROJECTS_WITH_AIMS_DETAIL = gql`
   }
 `;
 
+export const FETCH_AIM_ARTICLES = gql`
+  query FetchAimArticles($id: String!) {
+    aims(id: $id) {
+      milestonesCollection(limit: 50) {
+        items {
+          relatedArticlesCollection(limit: 50) {
+            items {
+              sys {
+                id
+              }
+              title
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const FETCH_MILESTONES = gql`
   query FetchMilestones($limit: Int!, $skip: Int!) {
     milestonesCollection(limit: $limit, skip: $skip) {

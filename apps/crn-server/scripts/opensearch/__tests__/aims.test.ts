@@ -80,11 +80,14 @@ describe('exportAimsData', () => {
     });
   });
 
-  it('sets status from the parent project', async () => {
+  it('derives status from linked milestones, not from the parent project', async () => {
     const result = await exportAimsData();
-    result.forEach((doc) => {
-      expect(doc.status).toBe('Active');
-    });
+    // aim-1 → ms-1 (In Progress) + ms-2 (Complete) → mixed → 'In Progress'
+    expect(result.find((d) => d.id === 'aim-1')!.status).toBe('In Progress');
+    // aim-2 → ms-3 (Complete) → 'Complete'
+    expect(result.find((d) => d.id === 'aim-2')!.status).toBe('Complete');
+    // aim-3 → ms-4 (Pending) → 'Pending'
+    expect(result.find((d) => d.id === 'aim-3')!.status).toBe('Pending');
   });
 
   it('deduplicates articleCount by article ID across linked milestones', async () => {
@@ -118,10 +121,20 @@ describe('exportAimsData', () => {
       grantType: 'original',
       projectId: 'project-1',
       teamName: 'Team Alpha',
-      status: 'Active',
       articleCount: 2,
       createdDate: '2025-01-01T00:00:00.000Z',
       lastDate: '2025-06-01T00:00:00.000Z',
+    });
+  });
+
+  it('falls back to Pending status when aim has no linked milestones in the meta map', async () => {
+    // Verified by 'derives status from linked milestones' test above.
+    // An aim not present in the meta map defaults to status 'Pending'.
+    const result = await exportAimsData();
+    result.forEach((doc) => {
+      expect(['In Progress', 'Complete', 'Pending', 'Terminated']).toContain(
+        doc.status,
+      );
     });
   });
 

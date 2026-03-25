@@ -1,9 +1,12 @@
-import { ListResponse } from '@asap-hub/model';
+import { ArticleItem, ListResponse } from '@asap-hub/model';
 import {
+  FETCH_AIM_ARTICLES,
   FETCH_AIMS_WITH_MILESTONES,
   FETCH_MILESTONES,
   FETCH_PROJECTS_WITH_AIMS,
   FETCH_PROJECTS_WITH_AIMS_DETAIL,
+  FetchAimArticlesQuery,
+  FetchAimArticlesQueryVariables,
   GraphQLClient,
 } from '@asap-hub/contentful';
 
@@ -106,5 +109,35 @@ export class AimsMilestonesContentfulDataProvider
           Boolean,
         ) as MilestoneDataObject[]) || [],
     };
+  }
+
+  async fetchArticlesForAim(aimId: string): Promise<ReadonlyArray<ArticleItem>> {
+    const { aims } = await this.contentfulClient.request<
+      FetchAimArticlesQuery,
+      FetchAimArticlesQueryVariables
+    >(FETCH_AIM_ARTICLES, { id: aimId });
+
+    if (!aims?.milestonesCollection) {
+      return [];
+    }
+
+    const seen = new Set<string>();
+
+    const articles = aims.milestonesCollection.items.flatMap((milestone) => {
+      if (!milestone?.relatedArticlesCollection) return [];
+      return milestone.relatedArticlesCollection.items.flatMap((article) => {
+        if (!article || seen.has(article.sys.id)) return [];
+        seen.add(article.sys.id);
+        return [
+          {
+            id: article.sys.id,
+            title: article.title ?? '',
+            href: `/shared-research/${article.sys.id}`,
+          },
+        ];
+      });
+    });
+
+    return articles;
   }
 }

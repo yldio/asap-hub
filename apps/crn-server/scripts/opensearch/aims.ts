@@ -6,6 +6,7 @@ import type {
   MilestoneDataObject,
   ProjectWithAimsDetailDataObject,
 } from '../../src/data-providers/types';
+import { deriveAimStatus } from '../../src/utils/aim-status';
 import { extractDOIs, paginate } from './shared-utils';
 
 const PROJECTS_PAGE_SIZE = 50;
@@ -25,14 +26,16 @@ const fetchAllProjectsWithAimsDetail = async (
 };
 
 /**
- * Builds a map of aimId → { articleCount, articlesDOI } by joining two flat
- * queries: aims→milestone IDs, then milestones→article data.
+ * Builds a map of aimId → { articleCount, articlesDOI, status } by joining
+ * two flat queries: aims→milestone IDs, then milestones→article+status data.
  * This avoids the deep nesting (aims × milestones × articles) that exceeds
  * Contentful's query complexity limit.
  */
 const buildAimArticleMap = async (
   provider: ReturnType<typeof getAimsMilestonesDataProvider>,
-): Promise<Map<string, { articleCount: number; articlesDOI: string }>> => {
+): Promise<
+  Map<string, { articleCount: number; articlesDOI: string; status: string }>
+> => {
   console.log('Fetching aims with milestone IDs from Contentful...');
   const [aims, milestones] = await Promise.all([
     paginate<AimWithMilestonesDataObject>(
@@ -48,10 +51,10 @@ const buildAimArticleMap = async (
     })(),
   ]);
 
-  // Build a lookup: milestoneId → articles (id + doi)
+  // Build a lookup: milestoneId → articles (id + doi) + status
   const milestoneArticleMap = new Map<
     string,
-    { articleIds: string[]; articlesDOI: string }
+    { articleIds: string[]; articlesDOI: string; status: string | null }
   >();
   milestones.forEach((milestone) => {
     if (!milestone?.sys?.id) return;
@@ -62,19 +65,21 @@ const buildAimArticleMap = async (
     milestoneArticleMap.set(milestone.sys.id, {
       articleIds,
       articlesDOI: extractDOIs(related?.items),
+      status: milestone.status ?? null,
     });
   });
 
-  // Aggregate per aim: deduplicate articles by ID across all linked milestones
+  // Aggregate per aim: deduplicate articles and derive status from milestones
   const aimArticleMap = new Map<
     string,
-    { articleCount: number; articlesDOI: string }
+    { articleCount: number; articlesDOI: string; status: string }
   >();
   aims.forEach((aim) => {
     if (!aim?.sys?.id) return;
     const linkedMilestones = aim.milestonesCollection?.items ?? [];
     const allArticleIds = new Set<string>();
     const allDois = new Set<string>();
+    const linkedMilestoneStatuses: Array<{ status?: string | null }> = [];
 
     linkedMilestones.forEach((milestone) => {
       if (!milestone?.sys?.id) return;
@@ -84,11 +89,13 @@ const buildAimArticleMap = async (
       data.articlesDOI.split(',').forEach((doi) => {
         if (doi) allDois.add(doi);
       });
+      linkedMilestoneStatuses.push({ status: data.status });
     });
 
     aimArticleMap.set(aim.sys.id, {
       articleCount: allArticleIds.size,
       articlesDOI: [...allDois].join(','),
+      status: deriveAimStatus(linkedMilestoneStatuses),
     });
   });
 
@@ -117,7 +124,6 @@ export const exportAimsData = async (): Promise<
 
   projects.forEach((project) => {
     const teamName = getTeamName(project);
-    const status = project.status?.trim() ?? '';
 
     const processAimsCollection = (
       aimsCollection: ProjectWithAimsDetailDataObject['originalGrantAimsCollection'],
@@ -131,9 +137,12 @@ export const exportAimsData = async (): Promise<
           return;
         }
 
-        const { articleCount, articlesDOI } = aimArticleMap.get(aim.sys.id) ?? {
+        const { articleCount, articlesDOI, status } = aimArticleMap.get(
+          aim.sys.id,
+        ) ?? {
           articleCount: 0,
           articlesDOI: '',
+          status: 'Pending',
         };
 
         documents.push({

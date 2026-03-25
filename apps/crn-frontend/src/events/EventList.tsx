@@ -3,6 +3,7 @@ import { getEventListOptions } from '@asap-hub/frontend-utils';
 
 import { useEvents, usePrefetchEvents } from './state';
 import { usePagination, usePaginationParams } from '../hooks';
+
 type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;

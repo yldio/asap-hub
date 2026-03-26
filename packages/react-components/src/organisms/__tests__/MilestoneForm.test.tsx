@@ -7,9 +7,27 @@ import { Aim } from '@asap-hub/model';
 import MilestoneForm from '../MilestoneForm';
 
 const mockAims: Aim[] = [
-  { id: 'aim-1', order: 1, description: 'First aim description' },
-  { id: 'aim-2', order: 2, description: 'Second aim description' },
-  { id: 'aim-3', order: 3, description: 'Third aim description' },
+  {
+    id: 'aim-1',
+    order: 1,
+    description: 'First aim description',
+    status: 'In Progress',
+    articleCount: 0,
+  },
+  {
+    id: 'aim-2',
+    order: 2,
+    description: 'Second aim description',
+    status: 'Pending',
+    articleCount: 0,
+  },
+  {
+    id: 'aim-3',
+    order: 3,
+    description: 'Third aim description',
+    status: 'Complete',
+    articleCount: 2,
+  },
 ];
 
 const defaultProps: ComponentProps<typeof MilestoneForm> = {

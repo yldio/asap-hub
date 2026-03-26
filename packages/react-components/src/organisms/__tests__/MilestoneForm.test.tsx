@@ -129,22 +129,35 @@ describe('MilestoneForm', () => {
   });
 
   describe('related aims chips', () => {
-    it('toggles aim selection on click', async () => {
+    it('toggles aim selection on click and affects submit button', async () => {
       renderMilestoneForm();
+      const descriptionTextarea = screen.getByRole('textbox');
+      await userEvent.type(descriptionTextarea, 'Some description');
+
       const aimChip = screen.getByRole('button', { name: '#1' });
+      const submitButton = screen.getByRole('button', {
+        name: /Add Milestone/i,
+      });
 
       await userEvent.click(aimChip);
-      // Chip is now selected - click again to deselect
+      expect(submitButton).toBeEnabled();
+
       await userEvent.click(aimChip);
-      // Chip is now deselected
+      expect(submitButton).toBeDisabled();
     });
 
     it('allows selecting multiple aims', async () => {
       renderMilestoneForm();
+      const descriptionTextarea = screen.getByRole('textbox');
+      await userEvent.type(descriptionTextarea, 'Some description');
+
       await userEvent.click(screen.getByRole('button', { name: '#1' }));
       await userEvent.click(screen.getByRole('button', { name: '#3' }));
-      // Both aims are selected; submit button should become enabled after
-      // filling description
+
+      const submitButton = screen.getByRole('button', {
+        name: /Add Milestone/i,
+      });
+      expect(submitButton).toBeEnabled();
     });
   });
 

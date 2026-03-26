@@ -33404,7 +33404,11 @@ export type ProjectsContentDataFragment = Pick<
   sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
   proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
   originalGrantAimsCollection?: Maybe<{
-    items: Array<Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>>;
+    items: Array<Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> } & {
+      milestonesCollection?: Maybe<{
+        items: Array<Maybe<Pick<Milestones, 'description' | 'status'> & { sys: Pick<Sys, 'id'> }>>;
+      }>;
+    }>>;
   }>;
   supplementGrant?: Maybe<
     Pick<SupplementGrant, 'title' | 'description' | 'startDate' | 'endDate'> & {
@@ -33412,7 +33416,11 @@ export type ProjectsContentDataFragment = Pick<
       proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
       aimsCollection?: Maybe<{
         items: Array<
-          Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+          Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> } & {
+            milestonesCollection?: Maybe<{
+              items: Array<Maybe<Pick<Milestones, 'description' | 'status'> & { sys: Pick<Sys, 'id'> }>>;
+            }>;
+          }>
         >;
       }>;
     }
@@ -33675,7 +33683,11 @@ export type FetchProjectByIdQuery = {
       proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
       originalGrantAimsCollection?: Maybe<{
         items: Array<
-          Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+          Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> } & {
+            milestonesCollection?: Maybe<{
+              items: Array<Maybe<Pick<Milestones, 'description' | 'status'> & { sys: Pick<Sys, 'id'> }>>;
+            }>;
+          }>
         >;
       }>;
       supplementGrant?: Maybe<
@@ -33687,7 +33699,11 @@ export type FetchProjectByIdQuery = {
           proposal?: Maybe<{ sys: Pick<Sys, 'id'> }>;
           aimsCollection?: Maybe<{
             items: Array<
-              Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+              Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> } & {
+                milestonesCollection?: Maybe<{
+                  items: Array<Maybe<Pick<Milestones, 'description' | 'status'> & { sys: Pick<Sys, 'id'> }>>;
+                }>;
+              }>
             >;
           }>;
         }

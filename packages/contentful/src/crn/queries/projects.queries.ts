@@ -31,6 +31,15 @@ export const projectsContentQueryFragment = gql`
           id
         }
         description
+        milestonesCollection(limit: 50) {
+          items {
+            sys {
+              id
+            }
+            description
+            status
+          }
+        }
       }
     }
     supplementGrant {
@@ -52,6 +61,15 @@ export const projectsContentQueryFragment = gql`
             id
           }
           description
+          milestonesCollection(limit: 50) {
+            items {
+              sys {
+                id
+              }
+              description
+              status
+            }
+          }
         }
       }
     }

@@ -5,6 +5,7 @@ import { RecoilRoot, useRecoilState } from 'recoil';
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import type {
   ListProjectResponse,
+  MilestoneCreateRequest,
   ProjectDetail,
   ProjectResponse,
 } from '@asap-hub/model';
@@ -15,6 +16,7 @@ import {
   useProjectById,
   useProjects,
   usePatchProjectById,
+  useCreateMilestone,
 } from '../state';
 import { auth0State } from '../../auth/state';
 
@@ -26,6 +28,7 @@ jest.mock('../api', () => ({
   getProjects: jest.fn(),
   getProject: jest.fn(),
   patchProject: jest.fn(),
+  createMilestone: jest.fn(),
   toListProjectResponse: jest.fn(),
 }));
 
@@ -36,6 +39,7 @@ const {
   getProjects: mockGetProjects,
   getProject: mockGetProject,
   patchProject: mockPatchProject,
+  createMilestone: mockCreateMilestone,
   toListProjectResponse: mockToListProjectResponse,
 } = jest.requireMock('../api') as jest.Mocked<typeof import('../api')>;
 
@@ -510,7 +514,7 @@ describe('projects state hooks', () => {
       });
     });
 
-    it('uses patch tools when API returns fewer tools (e.g. read-after-write delay)', async () => {
+    it('uses patch tools when API returns fewer tools (read-after-write delay)', async () => {
       const initialProject: ProjectDetail = {
         id: 'project-1',
         title: 'Original Project',
@@ -567,6 +571,182 @@ describe('projects state hooks', () => {
 
       await waitFor(() => {
         expect(result.current.project?.tools).toEqual(patch.tools);
+      });
+    });
+  });
+
+  describe('useCreateMilestone', () => {
+    const baseProject: ProjectDetail = {
+      id: 'project-1',
+      title: 'Test Project',
+      status: 'Active',
+      statusRank: 1,
+      projectType: 'Discovery Project',
+      tags: [],
+      startDate: '2024-01-01',
+      endDate: '2024-06-01',
+      duration: '5 mos',
+      researchTheme: 'Theme 1',
+      teamName: 'Team 1',
+      fundedTeam: {
+        id: 'team-1',
+        displayName: 'Team 1',
+        teamType: 'Discovery Team',
+        researchTheme: 'Theme 1',
+      },
+      originalGrantAims: [
+        {
+          id: 'aim-1',
+          order: 1,
+          description: 'Aim One',
+          status: 'In Progress',
+          articleCount: 0,
+        },
+        {
+          id: 'aim-2',
+          order: 2,
+          description: 'Aim Two',
+          status: 'Pending',
+          articleCount: 0,
+        },
+      ],
+      milestones: [
+        { id: 'ms-existing', description: 'Existing', status: 'Complete' },
+      ],
+    };
+
+    const milestoneRequest: MilestoneCreateRequest = {
+      grantType: 'original',
+      description: 'New milestone',
+      status: 'In Progress',
+      aimIds: ['aim-1', 'aim-2'],
+    };
+
+    it('calls createMilestone API with correct arguments', async () => {
+      const getTokenSilently = jest.fn().mockResolvedValue('token-abc');
+      mockGetProject.mockResolvedValueOnce(baseProject);
+      mockCreateMilestone.mockResolvedValueOnce({ id: 'ms-new' });
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+      };
+
+      const { result } = renderHook(
+        () => ({
+          createFn: useCreateMilestone('project-1'),
+          project: useProjectById('project-1'),
+        }),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      await waitFor(() => expect(result.current.project).toEqual(baseProject));
+
+      await act(async () => {
+        await result.current.createFn(milestoneRequest);
+      });
+
+      expect(mockCreateMilestone).toHaveBeenCalledWith(
+        'project-1',
+        milestoneRequest,
+        'Bearer token-abc',
+      );
+    });
+
+    it('optimistically adds the new milestone to the project state', async () => {
+      const getTokenSilently = jest.fn().mockResolvedValue('token-abc');
+      mockGetProject.mockResolvedValueOnce(baseProject);
+      mockCreateMilestone.mockResolvedValueOnce({ id: 'ms-new' });
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+      };
+
+      const { result } = renderHook(
+        () => ({
+          createFn: useCreateMilestone('project-1'),
+          project: useProjectById('project-1'),
+        }),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      await waitFor(() => expect(result.current.project).toEqual(baseProject));
+
+      await act(async () => {
+        await result.current.createFn(milestoneRequest);
+      });
+
+      await waitFor(() => {
+        const milestones = result.current.project?.milestones;
+        expect(milestones).toHaveLength(2);
+        expect(milestones![1]).toEqual({
+          id: 'ms-new',
+          description: 'New milestone',
+          status: 'In Progress',
+          aims: '1,2',
+        });
+      });
+    });
+
+    it('resolves aim IDs to sorted order numbers from project aims', async () => {
+      const projectWithSupplementAims: ProjectDetail = {
+        ...baseProject,
+        supplementGrant: {
+          grantTitle: 'Supplement',
+          aims: [
+            {
+              id: 'supp-aim-3',
+              order: 3,
+              description: 'Supp Aim 3',
+              status: 'Pending',
+              articleCount: 0,
+            },
+            {
+              id: 'supp-aim-5',
+              order: 5,
+              description: 'Supp Aim 5',
+              status: 'Pending',
+              articleCount: 0,
+            },
+          ],
+        },
+      };
+
+      const requestWithMixedAims: MilestoneCreateRequest = {
+        grantType: 'supplement',
+        description: 'Mixed aims milestone',
+        status: 'Pending',
+        aimIds: ['supp-aim-5', 'aim-1', 'supp-aim-3'],
+      };
+
+      const getTokenSilently = jest.fn().mockResolvedValue('token-abc');
+      mockGetProject.mockResolvedValueOnce(projectWithSupplementAims);
+      mockCreateMilestone.mockResolvedValueOnce({ id: 'ms-mixed' });
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+      };
+
+      const { result } = renderHook(
+        () => ({
+          createFn: useCreateMilestone('project-1'),
+          project: useProjectById('project-1'),
+        }),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      await waitFor(() =>
+        expect(result.current.project).toEqual(projectWithSupplementAims),
+      );
+
+      await act(async () => {
+        await result.current.createFn(requestWithMixedAims);
+      });
+
+      await waitFor(() => {
+        const milestones = result.current.project?.milestones;
+        const newMilestone = milestones?.find((m) => m.id === 'ms-mixed');
+        // aim-1 -> order 1, supp-aim-3 -> order 3, supp-aim-5 -> order 5, sorted
+        expect(newMilestone?.aims).toBe('1,3,5');
       });
     });
   });

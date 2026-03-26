@@ -5,7 +5,12 @@ import {
   getExpectedProjectList,
   getExpectedDiscoveryProject,
 } from '../fixtures/projects.fixtures';
-import type { ProjectTool, ProjectType, ProjectStatus } from '@asap-hub/model';
+import type {
+  MilestoneCreateRequest,
+  ProjectTool,
+  ProjectType,
+  ProjectStatus,
+} from '@asap-hub/model';
 
 describe('Project Controller', () => {
   const projectDataProviderMock = getDataProviderMock();
@@ -173,6 +178,46 @@ describe('Project Controller', () => {
       await expect(controller.update('missing-id', tools)).rejects.toThrow(
         NotFoundError,
       );
+    });
+  });
+
+  describe('createMilestone', () => {
+    const milestoneData: MilestoneCreateRequest = {
+      grantType: 'original',
+      description: 'First milestone',
+      status: 'Pending',
+      aimIds: ['aim-1', 'aim-2'],
+    };
+
+    it('calls the data provider with milestone data excluding grantType', async () => {
+      const project = getExpectedDiscoveryProject();
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
+      projectDataProviderMock.createMilestone.mockResolvedValueOnce(
+        'milestone-1',
+      );
+
+      await controller.createMilestone(project.id, milestoneData);
+
+      expect(projectDataProviderMock.createMilestone).toHaveBeenCalledWith({
+        description: 'First milestone',
+        status: 'Pending',
+        aimIds: ['aim-1', 'aim-2'],
+      });
+    });
+
+    it('returns the milestone ID from the data provider', async () => {
+      const project = getExpectedDiscoveryProject();
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
+      projectDataProviderMock.createMilestone.mockResolvedValueOnce(
+        'milestone-1',
+      );
+
+      const result = await controller.createMilestone(
+        project.id,
+        milestoneData,
+      );
+
+      expect(result).toBe('milestone-1');
     });
   });
 });

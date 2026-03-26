@@ -1,8 +1,13 @@
 import type { AlgoliaClient } from '@asap-hub/algolia';
 import { BackendError } from '@asap-hub/frontend-utils';
-import type { ProjectDetail, ProjectResponse } from '@asap-hub/model';
+import type {
+  MilestoneCreateRequest,
+  ProjectDetail,
+  ProjectResponse,
+} from '@asap-hub/model';
 
 import {
+  createMilestone,
   getAimArticles,
   getProject,
   getProjects,
@@ -365,6 +370,82 @@ describe('projects api', () => {
         statusCode: 500,
       });
       expect(json).toHaveBeenCalled();
+    });
+  });
+
+  describe('createMilestone', () => {
+    const mockFetch = jest.fn();
+    const milestoneData: MilestoneCreateRequest = {
+      grantType: 'original',
+      description: 'First milestone',
+      status: 'Pending',
+      aimIds: ['aim-1'],
+    };
+
+    beforeEach(() => {
+      (global as unknown as { fetch: typeof fetch }).fetch = mockFetch as never;
+    });
+
+    it('makes POST request with correct body', async () => {
+      const created = { id: 'milestone-1' };
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue(created),
+      });
+
+      const result = await createMilestone(
+        'project-1',
+        milestoneData,
+        'Bearer token',
+      );
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://api.example.com/project/project-1/milestones',
+        expect.objectContaining({
+          method: 'POST',
+          body: JSON.stringify(milestoneData),
+        }),
+      );
+      expect(result).toEqual(created);
+    });
+
+    it('sends authorization header', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ id: 'milestone-1' }),
+      });
+
+      await createMilestone('project-1', milestoneData, 'Bearer my-token');
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            authorization: 'Bearer my-token',
+            'content-type': 'application/json',
+          }),
+        }),
+      );
+    });
+
+    it('throws BackendError on non-ok response', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        statusText: 'Forbidden',
+        json: jest.fn().mockResolvedValue({ message: 'not allowed' }),
+      });
+
+      const promise = createMilestone(
+        'project-1',
+        milestoneData,
+        'Bearer token',
+      );
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        statusCode: 403,
+      });
     });
   });
 });

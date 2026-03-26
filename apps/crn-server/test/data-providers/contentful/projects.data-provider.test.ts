@@ -9,6 +9,7 @@ import {
   parseProjectUserMember,
   parseProjectTeamMember,
   parseContentfulAims,
+  parseMilestonesFromAims,
   processTraineeProjectMembers,
   type ProjectMembershipItem,
 } from '../../../src/data-providers/contentful/project.data-provider';
@@ -2244,5 +2245,596 @@ describe('parseContentfulProjectDetail', () => {
       expect(result.total).toBe(3);
       expect(result.items).toHaveLength(1);
     });
+  });
+});
+
+describe('parseMilestonesFromAims', () => {
+  it('returns undefined for undefined input', () => {
+    expect(parseMilestonesFromAims(undefined)).toBeUndefined();
+  });
+
+  it('returns undefined for an empty array', () => {
+    expect(parseMilestonesFromAims([])).toBeUndefined();
+  });
+
+  it('returns undefined when all aims are null', () => {
+    expect(parseMilestonesFromAims([null, null])).toBeUndefined();
+  });
+
+  it('returns undefined when aims have no milestones', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'Aim without milestones',
+        milestonesCollection: { items: [] },
+      },
+    ]);
+
+    expect(result).toBeUndefined();
+  });
+
+  it('returns undefined when milestonesCollection is missing', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'Aim without milestonesCollection',
+      },
+    ]);
+
+    expect(result).toBeUndefined();
+  });
+
+  it('parses milestones from aims correctly', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'First aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-1' },
+              description: 'Milestone One',
+              status: 'Complete',
+            },
+            {
+              sys: { id: 'ms-2' },
+              description: 'Milestone Two',
+              status: 'In Progress',
+            },
+          ],
+        },
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        id: 'ms-1',
+        description: 'Milestone One',
+        status: 'Complete',
+        aims: '1',
+      },
+      {
+        id: 'ms-2',
+        description: 'Milestone Two',
+        status: 'In Progress',
+        aims: '1',
+      },
+    ]);
+  });
+
+  it('deduplicates milestones across aims', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'First aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-shared' },
+              description: 'Shared Milestone',
+              status: 'Pending',
+            },
+          ],
+        },
+      },
+      {
+        sys: { id: 'aim-2' },
+        description: 'Second aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-shared' },
+              description: 'Shared Milestone',
+              status: 'Pending',
+            },
+          ],
+        },
+      },
+    ]);
+
+    // Should appear only once, not twice
+    expect(result).toHaveLength(1);
+    expect(result![0]!.id).toBe('ms-shared');
+  });
+
+  it('aggregates aim orders for shared milestones', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'First aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-shared' },
+              description: 'Shared Milestone',
+              status: 'In Progress',
+            },
+          ],
+        },
+      },
+      {
+        sys: { id: 'aim-2' },
+        description: 'Second aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-shared' },
+              description: 'Shared Milestone',
+              status: 'In Progress',
+            },
+          ],
+        },
+      },
+      {
+        sys: { id: 'aim-3' },
+        description: 'Third aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-shared' },
+              description: 'Shared Milestone',
+              status: 'In Progress',
+            },
+          ],
+        },
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        id: 'ms-shared',
+        description: 'Shared Milestone',
+        status: 'In Progress',
+        aims: '1,2,3',
+      },
+    ]);
+  });
+
+  it('handles null items in aims array', () => {
+    const result = parseMilestonesFromAims([
+      null,
+      {
+        sys: { id: 'aim-1' },
+        description: 'Valid aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-1' },
+              description: 'Milestone',
+              status: 'Pending',
+            },
+          ],
+        },
+      },
+      null,
+    ]);
+
+    expect(result).toEqual([
+      {
+        id: 'ms-1',
+        description: 'Milestone',
+        status: 'Pending',
+        aims: '1',
+      },
+    ]);
+  });
+
+  it('filters out null milestone items within milestonesCollection', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'Aim with null milestones',
+        milestonesCollection: {
+          items: [
+            null,
+            {
+              sys: { id: 'ms-1' },
+              description: 'Valid Milestone',
+              status: 'Complete',
+            },
+            null,
+          ],
+        },
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        id: 'ms-1',
+        description: 'Valid Milestone',
+        status: 'Complete',
+        aims: '1',
+      },
+    ]);
+  });
+
+  it('filters out milestones with empty or whitespace-only descriptions', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'Aim',
+        milestonesCollection: {
+          items: [
+            { sys: { id: 'ms-blank' }, description: '', status: 'Pending' },
+            {
+              sys: { id: 'ms-whitespace' },
+              description: '   ',
+              status: 'Pending',
+            },
+            {
+              sys: { id: 'ms-valid' },
+              description: 'Real milestone',
+              status: 'Pending',
+            },
+          ],
+        },
+      },
+    ]);
+
+    expect(result).toHaveLength(1);
+    expect(result![0]!.id).toBe('ms-valid');
+  });
+
+  it('defaults to Pending for invalid status values', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'Aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-1' },
+              description: 'Milestone with bad status',
+              status: 'InvalidStatus',
+            },
+            {
+              sys: { id: 'ms-2' },
+              description: 'Milestone with null status',
+              status: null,
+            },
+          ],
+        },
+      },
+    ]);
+
+    expect(result).toEqual([
+      {
+        id: 'ms-1',
+        description: 'Milestone with bad status',
+        status: 'Pending',
+        aims: '1',
+      },
+      {
+        id: 'ms-2',
+        description: 'Milestone with null status',
+        status: 'Pending',
+        aims: '1',
+      },
+    ]);
+  });
+
+  it('trims whitespace from milestone descriptions', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'Aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-1' },
+              description: '  Padded milestone  ',
+              status: 'Complete',
+            },
+          ],
+        },
+      },
+    ]);
+
+    expect(result![0]!.description).toBe('Padded milestone');
+  });
+
+  it('accepts all valid milestone statuses', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'Aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-complete' },
+              description: 'Complete one',
+              status: 'Complete',
+            },
+            {
+              sys: { id: 'ms-in-progress' },
+              description: 'In progress one',
+              status: 'In Progress',
+            },
+            {
+              sys: { id: 'ms-pending' },
+              description: 'Pending one',
+              status: 'Pending',
+            },
+            {
+              sys: { id: 'ms-terminated' },
+              description: 'Terminated one',
+              status: 'Terminated',
+            },
+          ],
+        },
+      },
+    ]);
+
+    expect(result).toEqual([
+      expect.objectContaining({ id: 'ms-complete', status: 'Complete' }),
+      expect.objectContaining({ id: 'ms-in-progress', status: 'In Progress' }),
+      expect.objectContaining({ id: 'ms-pending', status: 'Pending' }),
+      expect.objectContaining({ id: 'ms-terminated', status: 'Terminated' }),
+    ]);
+  });
+
+  it('skips aims with empty descriptions (they are filtered out)', () => {
+    const result = parseMilestonesFromAims([
+      {
+        sys: { id: 'aim-empty' },
+        description: '',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-1' },
+              description: 'Should not appear',
+              status: 'Pending',
+            },
+          ],
+        },
+      },
+      {
+        sys: { id: 'aim-valid' },
+        description: 'Valid aim',
+        milestonesCollection: {
+          items: [
+            {
+              sys: { id: 'ms-2' },
+              description: 'Should appear',
+              status: 'Complete',
+            },
+          ],
+        },
+      },
+    ]);
+
+    expect(result).toHaveLength(1);
+    expect(result![0]!.id).toBe('ms-2');
+    expect(result![0]!.aims).toBe('1');
+  });
+});
+
+describe('ProjectContentfulDataProvider - createMilestone', () => {
+  const contentfulClientMock = getContentfulGraphqlClientMock();
+  const environmentMock = getContentfulEnvironmentMock();
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
+
+  const dataProvider = new ProjectContentfulDataProvider(
+    contentfulClientMock,
+    contentfulRestClientMock,
+  );
+
+  const dataProviderWithoutRestClient = new ProjectContentfulDataProvider(
+    contentfulClientMock,
+  );
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('throws when REST client is not configured', async () => {
+    await expect(
+      dataProviderWithoutRestClient.createMilestone({
+        description: 'Test milestone',
+        status: 'Pending',
+        aimIds: ['aim-1'],
+      }),
+    ).rejects.toThrow('REST client not available');
+  });
+
+  it('creates a milestone entry in Contentful and publishes it', async () => {
+    const milestoneEntryMock = getEntry({});
+    milestoneEntryMock.sys.id = 'new-milestone-id';
+    milestoneEntryMock.publish = jest
+      .fn()
+      .mockResolvedValueOnce(milestoneEntryMock);
+    environmentMock.createEntry.mockResolvedValueOnce(milestoneEntryMock);
+
+    const aimEntryMock = getEntry({});
+    const aimEntryUpdated = getEntry({});
+    aimEntryMock.patch = jest.fn().mockResolvedValueOnce(aimEntryUpdated);
+    aimEntryUpdated.publish = jest.fn().mockResolvedValueOnce(aimEntryUpdated);
+    environmentMock.getEntry.mockResolvedValueOnce(aimEntryMock);
+
+    const result = await dataProvider.createMilestone({
+      description: 'Test milestone',
+      status: 'In Progress',
+      aimIds: ['aim-1'],
+    });
+
+    expect(result).toBe('new-milestone-id');
+
+    expect(environmentMock.createEntry).toHaveBeenCalledWith('milestones', {
+      fields: {
+        description: { 'en-US': 'Test milestone' },
+        status: { 'en-US': 'In Progress' },
+        relatedArticles: { 'en-US': [] },
+      },
+    });
+    expect(milestoneEntryMock.publish).toHaveBeenCalled();
+  });
+
+  it('links the milestone to each aim via patchAndPublish', async () => {
+    const milestoneEntryMock = getEntry({});
+    milestoneEntryMock.sys.id = 'milestone-abc';
+    milestoneEntryMock.publish = jest
+      .fn()
+      .mockResolvedValueOnce(milestoneEntryMock);
+    environmentMock.createEntry.mockResolvedValueOnce(milestoneEntryMock);
+
+    // Two aims to link
+    const aimEntry1 = getEntry({});
+    const aimEntry1Updated = getEntry({});
+    aimEntry1.patch = jest.fn().mockResolvedValueOnce(aimEntry1Updated);
+    aimEntry1Updated.publish = jest
+      .fn()
+      .mockResolvedValueOnce(aimEntry1Updated);
+
+    const aimEntry2 = getEntry({
+      milestones: {
+        'en-US': [
+          { sys: { type: 'Link', linkType: 'Entry', id: 'existing-ms' } },
+        ],
+      },
+    });
+    const aimEntry2Updated = getEntry({});
+    aimEntry2.patch = jest.fn().mockResolvedValueOnce(aimEntry2Updated);
+    aimEntry2Updated.publish = jest
+      .fn()
+      .mockResolvedValueOnce(aimEntry2Updated);
+
+    environmentMock.getEntry
+      .mockResolvedValueOnce(aimEntry1)
+      .mockResolvedValueOnce(aimEntry2);
+
+    await dataProvider.createMilestone({
+      description: 'Multi-aim milestone',
+      status: 'Pending',
+      aimIds: ['aim-1', 'aim-2'],
+    });
+
+    expect(environmentMock.getEntry).toHaveBeenCalledWith('aim-1');
+    expect(environmentMock.getEntry).toHaveBeenCalledWith('aim-2');
+
+    // First aim had no existing milestones
+    expect(aimEntry1.patch).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: '/fields/milestones',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: 'milestone-abc',
+                },
+              },
+            ],
+          },
+        }),
+      ]),
+    );
+
+    // Second aim had an existing milestone
+    expect(aimEntry2.patch).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({
+          path: '/fields/milestones',
+          value: {
+            'en-US': [
+              {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: 'existing-ms',
+                },
+              },
+              {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: 'milestone-abc',
+                },
+              },
+            ],
+          },
+        }),
+      ]),
+    );
+  });
+
+  it('includes relatedArticleIds as links when provided', async () => {
+    const milestoneEntryMock = getEntry({});
+    milestoneEntryMock.sys.id = 'ms-with-articles';
+    milestoneEntryMock.publish = jest
+      .fn()
+      .mockResolvedValueOnce(milestoneEntryMock);
+    environmentMock.createEntry.mockResolvedValueOnce(milestoneEntryMock);
+
+    const aimEntryMock = getEntry({});
+    const aimEntryUpdated = getEntry({});
+    aimEntryMock.patch = jest.fn().mockResolvedValueOnce(aimEntryUpdated);
+    aimEntryUpdated.publish = jest.fn().mockResolvedValueOnce(aimEntryUpdated);
+    environmentMock.getEntry.mockResolvedValueOnce(aimEntryMock);
+
+    await dataProvider.createMilestone({
+      description: 'Milestone with articles',
+      status: 'Complete',
+      aimIds: ['aim-1'],
+      relatedArticleIds: ['article-1', 'article-2'],
+    });
+
+    expect(environmentMock.createEntry).toHaveBeenCalledWith('milestones', {
+      fields: {
+        description: { 'en-US': 'Milestone with articles' },
+        status: { 'en-US': 'Complete' },
+        relatedArticles: {
+          'en-US': [
+            { sys: { type: 'Link', linkType: 'Entry', id: 'article-1' } },
+            { sys: { type: 'Link', linkType: 'Entry', id: 'article-2' } },
+          ],
+        },
+      },
+    });
+  });
+
+  it('returns the milestone ID', async () => {
+    const milestoneEntryMock = getEntry({});
+    milestoneEntryMock.sys.id = 'returned-milestone-id';
+    milestoneEntryMock.publish = jest
+      .fn()
+      .mockResolvedValueOnce(milestoneEntryMock);
+    environmentMock.createEntry.mockResolvedValueOnce(milestoneEntryMock);
+
+    const aimEntryMock = getEntry({});
+    const aimEntryUpdated = getEntry({});
+    aimEntryMock.patch = jest.fn().mockResolvedValueOnce(aimEntryUpdated);
+    aimEntryUpdated.publish = jest.fn().mockResolvedValueOnce(aimEntryUpdated);
+    environmentMock.getEntry.mockResolvedValueOnce(aimEntryMock);
+
+    const id = await dataProvider.createMilestone({
+      description: 'Return value test',
+      status: 'Pending',
+      aimIds: ['aim-1'],
+    });
+
+    expect(id).toBe('returned-milestone-id');
   });
 });

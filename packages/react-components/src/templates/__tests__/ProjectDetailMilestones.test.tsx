@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import { Milestone } from '@asap-hub/model';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
+import { Aim, Milestone } from '@asap-hub/model';
 
 import ProjectDetailMilestones from '../ProjectDetailMilestones';
 
@@ -94,5 +95,123 @@ describe('ProjectDetailMilestones', () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getByText('Supplement')).toBeInTheDocument();
+  });
+
+  it('shows "Add New Milestone" button when isLead is true', () => {
+    const onCreateMilestone = jest.fn().mockResolvedValue(undefined);
+    render(
+      <ProjectDetailMilestones
+        milestones={[]}
+        isLead={true}
+        onCreateMilestone={onCreateMilestone}
+      />,
+    );
+
+    expect(screen.getByText('Add New Milestone')).toBeInTheDocument();
+  });
+
+  it('hides "Add New Milestone" button when isLead is false', () => {
+    const onCreateMilestone = jest.fn().mockResolvedValue(undefined);
+    render(
+      <ProjectDetailMilestones
+        milestones={[]}
+        isLead={false}
+        onCreateMilestone={onCreateMilestone}
+      />,
+    );
+
+    expect(screen.queryByText('Add New Milestone')).not.toBeInTheDocument();
+  });
+
+  it('hides "Add New Milestone" button when isLead is undefined', () => {
+    const onCreateMilestone = jest.fn().mockResolvedValue(undefined);
+    render(
+      <ProjectDetailMilestones
+        milestones={[]}
+        onCreateMilestone={onCreateMilestone}
+      />,
+    );
+
+    expect(screen.queryByText('Add New Milestone')).not.toBeInTheDocument();
+  });
+
+  it('shows milestone form modal when "Add New Milestone" button is clicked', () => {
+    const aims: Aim[] = [
+      {
+        id: 'aim-1',
+        order: 1,
+        description: 'First aim',
+        status: 'In Progress',
+        articleCount: 0,
+      },
+    ];
+    const onCreateMilestone = jest.fn().mockResolvedValue(undefined);
+    render(
+      <ProjectDetailMilestones
+        milestones={[]}
+        isLead={true}
+        originalGrantAims={aims}
+        onCreateMilestone={onCreateMilestone}
+      />,
+    );
+
+    fireEvent.click(screen.getByText('Add New Milestone'));
+
+    // MilestoneForm renders inside a modal with aim chip #1
+    expect(screen.getByText('#1')).toBeInTheDocument();
+    expect(screen.getByText('Milestone Description')).toBeInTheDocument();
+  });
+
+  it('calls onCreateMilestone when the form is submitted', async () => {
+    const aims: Aim[] = [
+      {
+        id: 'aim-1',
+        order: 1,
+        description: 'First aim',
+        status: 'In Progress',
+        articleCount: 0,
+      },
+    ];
+    const onCreateMilestone = jest.fn().mockResolvedValue(undefined);
+    render(
+      <MemoryRouter>
+        <ProjectDetailMilestones
+          milestones={[]}
+          isLead={true}
+          originalGrantAims={aims}
+          onCreateMilestone={onCreateMilestone}
+        />
+      </MemoryRouter>,
+    );
+
+    // Open the form
+    fireEvent.click(screen.getByText('Add New Milestone'));
+
+    // Fill in description via the textarea
+    const descriptionTextarea = screen.getByRole('textbox');
+    fireEvent.change(descriptionTextarea, {
+      target: { value: 'Test milestone description' },
+    });
+
+    // Select the aim chip button
+    fireEvent.click(screen.getByText('#1'));
+
+    // Click "Add Milestone" to go to confirmation step
+    fireEvent.click(screen.getByText('Add Milestone'));
+
+    // Confirm in the confirmation modal
+    await waitFor(() => {
+      expect(screen.getByText('Confirm and Notify')).toBeInTheDocument();
+    });
+    fireEvent.click(screen.getByText('Confirm and Notify'));
+
+    await waitFor(() => {
+      expect(onCreateMilestone).toHaveBeenCalledWith(
+        expect.objectContaining({
+          description: 'Test milestone description',
+          aimIds: ['aim-1'],
+        }),
+      );
+    });
   });
 });

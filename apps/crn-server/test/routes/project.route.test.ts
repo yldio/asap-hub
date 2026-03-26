@@ -9,6 +9,7 @@ import { projectRouteFactory } from '../../src/routes/project.route';
 import {
   getExpectedDiscoveryProject,
   getExpectedProjectList,
+  getExpectedTraineeProject,
 } from '../fixtures/projects.fixtures';
 import ProjectController from '../../src/controllers/project.controller';
 
@@ -16,6 +17,7 @@ const projectControllerMock = {
   fetch: jest.fn(),
   fetchById: jest.fn(),
   update: jest.fn(),
+  createMilestone: jest.fn(),
 } as unknown as jest.Mocked<ProjectController>;
 
 const createApp = (loggedInUser?: { teams: { id: string }[] }) => {
@@ -211,6 +213,99 @@ describe('project routes', () => {
         .send({ tools });
 
       expect(response.status).toBe(404);
+    });
+  });
+
+  describe('POST /project/:projectId/milestones', () => {
+    const milestoneBody = {
+      grantType: 'original',
+      description: 'First milestone',
+      status: 'Pending',
+      aimIds: ['aim-1'],
+    };
+
+    it('returns 201 on success', async () => {
+      const project = getExpectedTraineeProject();
+      projectControllerMock.fetchById.mockResolvedValueOnce(project);
+      projectControllerMock.createMilestone.mockResolvedValueOnce(
+        'milestone-1',
+      );
+
+      // Trainee project has members with 'Trainee Project - Lead' role
+      const appWithLead = createApp({
+        id: 'user-trainee',
+        teams: [],
+      } as unknown as { teams: { id: string }[] });
+
+      const response = await supertest(appWithLead)
+        .post('/project/trainee-1/milestones')
+        .send(milestoneBody);
+
+      expect(response.status).toBe(201);
+      expect(response.body).toEqual({ id: 'milestone-1' });
+      expect(projectControllerMock.createMilestone).toHaveBeenCalledWith(
+        'trainee-1',
+        milestoneBody,
+      );
+    });
+
+    it('returns 401 without auth', async () => {
+      const appNoAuth = createApp();
+
+      const response = await supertest(appNoAuth)
+        .post('/project/discovery-1/milestones')
+        .send(milestoneBody);
+
+      expect(response.status).toBe(401);
+      expect(projectControllerMock.createMilestone).not.toHaveBeenCalled();
+    });
+
+    it('returns 403 for non-lead users', async () => {
+      const project = getExpectedTraineeProject();
+      projectControllerMock.fetchById.mockResolvedValueOnce(project);
+
+      // user-trainer has 'Trainee Project - Mentor' role, not a lead role
+      const appNonLead = createApp({
+        id: 'user-trainer',
+        teams: [],
+      } as unknown as { teams: { id: string }[] });
+
+      const response = await supertest(appNonLead)
+        .post('/project/trainee-1/milestones')
+        .send(milestoneBody);
+
+      expect(response.status).toBe(403);
+      expect(projectControllerMock.createMilestone).not.toHaveBeenCalled();
+    });
+
+    it('validates request body', async () => {
+      const response = await supertest(app)
+        .post('/project/discovery-1/milestones')
+        .send({ description: 'Missing required fields' });
+
+      expect(response.status).toBe(400);
+      expect(projectControllerMock.createMilestone).not.toHaveBeenCalled();
+    });
+
+    it('for discovery projects checks team roles', async () => {
+      const project = getExpectedDiscoveryProject(); // teamId: 'team-1'
+      projectControllerMock.fetchById.mockResolvedValueOnce(project);
+      projectControllerMock.createMilestone.mockResolvedValueOnce(
+        'milestone-2',
+      );
+
+      // Discovery projects use team membership; 'Project Manager' is in milestoneDiscoveryTeamRoles
+      const appWithDiscoveryLead = createApp({
+        id: 'user-discovery-lead',
+        teams: [{ id: 'team-1', role: 'Project Manager' }],
+      } as unknown as { teams: { id: string }[] });
+
+      const response = await supertest(appWithDiscoveryLead)
+        .post('/project/discovery-1/milestones')
+        .send(milestoneBody);
+
+      expect(response.status).toBe(201);
+      expect(response.body).toEqual({ id: 'milestone-2' });
     });
   });
 });

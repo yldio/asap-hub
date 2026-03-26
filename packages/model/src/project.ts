@@ -162,6 +162,7 @@ export type BaseProjectDetail = {
   readonly originalGrantProposalId?: string;
   readonly originalGrantAims?: ReadonlyArray<Aim>;
   readonly supplementGrant?: SupplementGrantInfo;
+  readonly milestones?: ReadonlyArray<Milestone>;
 };
 
 type TeamCollaborators = {

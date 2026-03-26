@@ -29,5 +29,7 @@ export type ProjectDataProvider = DataProvider<
     options: FetchPaginationOptions,
   ) => Promise<ListProjectDataObject>;
   update: (id: string, update: ProjectUpdateDataObject) => Promise<void>;
-  createMilestone: (data: Omit<MilestoneCreateRequest, 'grantType'>) => Promise<string>;
+  createMilestone: (
+    data: Omit<MilestoneCreateRequest, 'grantType'>,
+  ) => Promise<string>;
 };

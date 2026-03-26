@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { FetchProjectsFilter, milestoneDiscoveryTeamRoles, milestoneLeadRoles, MilestoneLeadRole } from '@asap-hub/model';
+import {
+  FetchProjectsFilter,
+  milestoneDiscoveryTeamRoles,
+  milestoneLeadRoles,
+  MilestoneLeadRole,
+} from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import ProjectController from '../controllers/project.controller';
 import {
@@ -110,21 +115,24 @@ export const projectRouteFactory = (
         throw Boom.unauthorized();
       }
 
+      const { loggedInUser } = req;
       const project = await projectController.fetchById(projectId);
 
       const isLead = (() => {
         if ('members' in project && project.members) {
           return project.members.some(
             (m) =>
-              m.id === req.loggedInUser!.id &&
+              m.id === loggedInUser.id &&
               milestoneLeadRoles.includes(m.role as MilestoneLeadRole),
           );
         }
         if ('teamId' in project && project.teamId) {
-          return !!req.loggedInUser.teams?.find(
+          return !!loggedInUser.teams?.find(
             (t) =>
               t.id === project.teamId &&
-              (milestoneDiscoveryTeamRoles as readonly string[]).includes(t.role),
+              (milestoneDiscoveryTeamRoles as readonly string[]).includes(
+                t.role,
+              ),
           );
         }
         return false;

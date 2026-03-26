@@ -7,14 +7,17 @@ import {
   ProjectDetailMilestones,
   NotFoundPage,
 } from '@asap-hub/react-components';
-import { milestoneDiscoveryTeamRoles, milestoneLeadRoles, MilestoneLeadRole } from '@asap-hub/model';
+import {
+  milestoneDiscoveryTeamRoles,
+  milestoneLeadRoles,
+  MilestoneLeadRole,
+} from '@asap-hub/model';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import { useProjectById, useCreateMilestone } from './state';
 import { useFetchArticles } from './aim-articles-state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
-import { mockMilestones } from './mock-milestones';
 import type { ProjectDetailConfig } from './projectDetailConfig';
 
 const loadProjectManuscript = () =>
@@ -155,7 +158,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                 element={
                   isProjectMilestonesEnabled ? (
                     <ProjectDetailMilestones
-                      milestones={mockMilestones}
+                      milestones={projectDetail.milestones ?? []}
                       seeAimsHref={route.about({}).$}
                       hasSupplementGrant={hasSupplementGrant}
                       isLead={isLead}

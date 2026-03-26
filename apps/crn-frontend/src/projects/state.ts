@@ -1,5 +1,6 @@
 import {
   ListProjectResponse,
+  Milestone,
   MilestoneCreateRequest,
   ProjectDetail,
   ProjectResponse,
@@ -146,6 +147,39 @@ export const usePatchProjectById = (id: string) => {
 
 export const useCreateMilestone = (projectId: string) => {
   const authorization = useRecoilValue(authorizationState);
-  return async (data: MilestoneCreateRequest) =>
-    createMilestone(projectId, data, authorization);
+  const setProject = useSetRecoilState(projectState(projectId));
+  return async (data: MilestoneCreateRequest) => {
+    const result = await createMilestone(projectId, data, authorization);
+
+    // Optimistically add the new milestone to local state so it appears
+    // in the table immediately without waiting for Contentful's CDN cache.
+    setProject((current) => {
+      if (!current) return current;
+
+      // Resolve aim IDs to aim order numbers from the project detail
+      const allAims = [
+        ...('originalGrantAims' in current && current.originalGrantAims
+          ? current.originalGrantAims
+          : []),
+        ...('supplementGrant' in current && current.supplementGrant?.aims
+          ? current.supplementGrant.aims
+          : []),
+      ];
+      const aimOrders = data.aimIds
+        .map((id) => allAims.find((a) => a.id === id)?.order)
+        .filter((o): o is number => o !== undefined)
+        .sort((a, b) => a - b);
+
+      const newMilestone: Milestone = {
+        id: result.id,
+        description: data.description,
+        status: data.status,
+        aims: aimOrders.length > 0 ? aimOrders.join(',') : undefined,
+      };
+      const existing = current.milestones ?? [];
+      return { ...current, milestones: [...existing, newMilestone] };
+    });
+
+    return result;
+  };
 };

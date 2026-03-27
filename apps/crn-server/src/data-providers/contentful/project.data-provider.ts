@@ -177,7 +177,7 @@ export const processTraineeProjectMembers = (
 
 // Parse Contentful project to model format
 export const parseContentfulProject = (
-  item: ProjectItem | ProjectsCollectionItem,
+  item: ProjectsCollectionItem,
 ): ProjectDataObject => {
   const status = (item.status || '') as ProjectStatus;
 
@@ -667,7 +667,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     }
 
     // Extract projects from memberships and deduplicate by project ID
-    const projectMap = new Map<string, ProjectItem>();
+    const projectMap = new Map<string, ProjectsCollectionItem>();
     const memberships =
       teams.linkedFrom.projectMembershipCollection.items.filter(
         (membership): membership is NonNullable<typeof membership> =>
@@ -765,7 +765,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     }
 
     // Extract projects from memberships and deduplicate by project ID
-    const projectMap = new Map<string, ProjectItem>();
+    const projectMap = new Map<string, ProjectsCollectionItem>();
     const memberships =
       users.linkedFrom.projectMembershipCollection.items.filter(
         (membership): membership is NonNullable<typeof membership> =>

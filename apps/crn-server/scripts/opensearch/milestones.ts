@@ -80,7 +80,12 @@ const buildMilestoneMetaMap = async (
 ): Promise<Map<string, MilestoneMeta>> => {
   const milestoneAccumulator = new Map<
     string,
-    { aimNumbers: Set<number>; projectId: string; projectName: string; grantType: string }
+    {
+      aimNumbers: Set<number>;
+      projectId: string;
+      projectName: string;
+      grantType: string;
+    }
   >();
 
   console.log('Building milestone meta map from aims...');

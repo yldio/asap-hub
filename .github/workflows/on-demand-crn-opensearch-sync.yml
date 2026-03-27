@@ -20,6 +20,8 @@ on:
           - ig-leadership
           - wg-leadership
           - presenter-representation
+          - project-milestones
+          - project-aims
           - all
       environment-name:
         required: true

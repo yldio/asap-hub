@@ -1,3 +1,4 @@
+export * from './aims-milestones.queries';
 export * from './analytics.queries';
 export * from './calendars.queries';
 export * from './category.queries';

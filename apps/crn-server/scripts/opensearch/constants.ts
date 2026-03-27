@@ -72,6 +72,8 @@ export const validMetrics = [
   'ig-leadership',
   'wg-leadership',
   'presenter-representation',
+  'project-milestones',
+  'project-aims',
 ] as const;
 
 export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
@@ -341,6 +343,50 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         uniqueKeyPersonnelCount: { type: 'integer' },
         uniqueKeyPersonnelCountPercentage: { type: 'integer' },
         timeRange: { type: 'keyword' },
+      },
+    },
+  },
+  'project-milestones': {
+    indexAlias: 'project-milestones',
+    mapping: {
+      properties: {
+        id: { type: 'keyword' },
+        description: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+          raw: true,
+        }),
+        aimNumbersAsc: { type: 'keyword' },
+        aimNumbersDesc: { type: 'keyword' },
+        status: { type: 'keyword' },
+        articleCount: { type: 'integer' },
+        articlesDOI: { type: 'text' },
+        projectId: { type: 'keyword' },
+        grantType: { type: 'keyword' },
+        createdDate: { type: 'date' },
+        lastDate: { type: 'date' },
+      },
+    },
+  },
+  'project-aims': {
+    indexAlias: 'project-aims',
+    mapping: {
+      properties: {
+        id: { type: 'keyword' },
+        description: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+          raw: true,
+        }),
+        grantType: { type: 'keyword' },
+        projectId: { type: 'keyword' },
+        teamName: textWithNgramKeyword({
+          normalizer: 'lowercase_normalizer',
+          raw: true,
+        }),
+        status: { type: 'keyword' },
+        articleCount: { type: 'integer' },
+        articlesDOI: { type: 'text' },
+        createdDate: { type: 'date' },
+        lastDate: { type: 'date' },
       },
     },
   },

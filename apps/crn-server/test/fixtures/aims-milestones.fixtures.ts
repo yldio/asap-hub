@@ -8,6 +8,7 @@ export const aimsProjectsDetailFixture = {
     items: [
       {
         sys: { id: 'project-1' },
+        title: 'Project Alpha',
         status: 'Active',
         membersCollection: {
           items: [
@@ -145,6 +146,7 @@ export const milestonesProjectsFixture = {
     items: [
       {
         sys: { id: 'project-1' },
+        title: 'Project Alpha',
         originalGrantAimsCollection: {
           items: [
             { sys: { id: 'aim-1' }, description: 'Aim one' },

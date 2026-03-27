@@ -2,6 +2,7 @@ import { ListResponse } from '@asap-hub/model';
 
 export type ProjectWithAimsDataObject = {
   sys: { id: string };
+  title?: string | null;
   originalGrantAimsCollection?: {
     items: Array<{
       sys: { id: string };
@@ -55,6 +56,7 @@ type AimDetailDataObject = {
 
 export type ProjectWithAimsDetailDataObject = {
   sys: { id: string };
+  title?: string | null;
   status?: string | null;
   membersCollection?: {
     items: Array<{

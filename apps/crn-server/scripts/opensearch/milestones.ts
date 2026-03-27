@@ -15,6 +15,7 @@ const MILESTONES_PAGE_SIZE = 50;
 type AimMeta = {
   order: number;
   projectId: string;
+  projectName: string;
   grantType: 'original' | 'supplement';
 };
 
@@ -32,6 +33,7 @@ const buildAimOrderMap = async (
 
   projects.forEach((project) => {
     const projectId = project.sys.id;
+    const projectName = project.title?.trim() ?? '';
 
     const handleAimsCollection = (
       aimsCollection: ProjectWithAimsDataObject['originalGrantAimsCollection'],
@@ -50,6 +52,7 @@ const buildAimOrderMap = async (
           aimOrderMap.set(aim.sys.id, {
             order: index + 1,
             projectId,
+            projectName,
             grantType,
           });
         }
@@ -67,6 +70,7 @@ const buildAimOrderMap = async (
 type MilestoneMeta = {
   aimNumbers: number[];
   projectId: string;
+  projectName: string;
   grantType: string;
 };
 
@@ -76,7 +80,7 @@ const buildMilestoneMetaMap = async (
 ): Promise<Map<string, MilestoneMeta>> => {
   const milestoneAccumulator = new Map<
     string,
-    { aimNumbers: Set<number>; projectId: string; grantType: string }
+    { aimNumbers: Set<number>; projectId: string; projectName: string; grantType: string }
   >();
 
   console.log('Building milestone meta map from aims...');
@@ -98,6 +102,7 @@ const buildMilestoneMetaMap = async (
       const acc = milestoneAccumulator.get(milestoneId) ?? {
         aimNumbers: new Set<number>(),
         projectId: meta.projectId,
+        projectName: meta.projectName,
         grantType: meta.grantType,
       };
       acc.aimNumbers.add(meta.order);
@@ -110,6 +115,7 @@ const buildMilestoneMetaMap = async (
     milestoneMetaMap.set(milestoneId, {
       aimNumbers: [...acc.aimNumbers].sort((a, b) => a - b),
       projectId: acc.projectId,
+      projectName: acc.projectName,
       grantType: acc.grantType,
     });
   });
@@ -183,6 +189,7 @@ export const exportMilestonesData = async (): Promise<
         articleCount,
         articlesDOI: extractDOIs(related?.items),
         projectId: meta?.projectId ?? '',
+        projectName: meta?.projectName ?? '',
         grantType: meta?.grantType ?? '',
         createdDate: milestone.sys.firstPublishedAt ?? null,
         lastDate: milestone.sys.publishedAt ?? null,

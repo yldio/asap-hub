@@ -70,6 +70,7 @@ describe('exportMilestonesData', () => {
       aimNumbersDesc: '2,1',
       articlesDOI: '10.1000/xyz123,10.1000/xyz456',
       projectId: 'project-1',
+      projectName: 'Project Alpha',
       grantType: 'original',
     });
   });

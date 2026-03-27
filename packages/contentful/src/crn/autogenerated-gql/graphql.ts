@@ -25275,21 +25275,23 @@ export type FetchProjectsWithAimsQuery = {
   projectsCollection?: Maybe<
     Pick<ProjectsCollection, 'total'> & {
       items: Array<
-        Maybe<{
-          sys: Pick<Sys, 'id'>;
-          originalGrantAimsCollection?: Maybe<{
-            items: Array<
-              Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
-            >;
-          }>;
-          supplementGrant?: Maybe<{
-            aimsCollection?: Maybe<{
+        Maybe<
+          Pick<Projects, 'title'> & {
+            sys: Pick<Sys, 'id'>;
+            originalGrantAimsCollection?: Maybe<{
               items: Array<
                 Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
               >;
             }>;
-          }>;
-        }>
+            supplementGrant?: Maybe<{
+              aimsCollection?: Maybe<{
+                items: Array<
+                  Maybe<Pick<Aims, 'description'> & { sys: Pick<Sys, 'id'> }>
+                >;
+              }>;
+            }>;
+          }
+        >
       >;
     }
   >;
@@ -25325,7 +25327,7 @@ export type FetchProjectsWithAimsDetailQuery = {
     Pick<ProjectsCollection, 'total'> & {
       items: Array<
         Maybe<
-          Pick<Projects, 'status'> & {
+          Pick<Projects, 'title' | 'status'> & {
             sys: Pick<Sys, 'id'>;
             membersCollection?: Maybe<{
               items: Array<
@@ -48324,6 +48326,7 @@ export const FetchProjectsWithAimsDocument = {
                           ],
                         },
                       },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       {
                         kind: 'Field',
                         name: {
@@ -48645,6 +48648,7 @@ export const FetchProjectsWithAimsDetailDocument = {
                           ],
                         },
                       },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'status' },

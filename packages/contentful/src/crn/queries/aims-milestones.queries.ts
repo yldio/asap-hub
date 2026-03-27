@@ -10,6 +10,7 @@ export const FETCH_PROJECTS_WITH_AIMS = gql`
         sys {
           id
         }
+        title
         originalGrantAimsCollection(limit: 50) {
           items {
             sys {
@@ -61,6 +62,7 @@ export const FETCH_PROJECTS_WITH_AIMS_DETAIL = gql`
         sys {
           id
         }
+        title
         status
         membersCollection(limit: 50) {
           items {

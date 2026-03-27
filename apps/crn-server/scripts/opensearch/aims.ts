@@ -145,11 +145,15 @@ export const exportAimsData = async (): Promise<
           status: 'Pending',
         };
 
+        console.log('PROJECT TITLE:', project.title);
+        console.log('PROJECT', project);
+
         documents.push({
           id: aim.sys.id,
           description: aim.description.trim(),
           grantType,
           projectId: project.sys.id,
+          projectName: project.title?.trim() ?? '',
           teamName,
           status,
           articleCount,

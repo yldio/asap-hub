@@ -183,6 +183,35 @@ describe('ProjectDetailMilestones', () => {
     expect(screen.getByText('Milestone Description')).toBeInTheDocument();
   });
 
+  it('closes milestone form when cancel is clicked', () => {
+    const aims: Aim[] = [
+      {
+        id: 'aim-1',
+        order: 1,
+        description: 'First aim',
+        status: 'In Progress',
+        articleCount: 0,
+      },
+    ];
+    const onCreateMilestone = jest.fn().mockResolvedValue(undefined);
+    render(
+      <ProjectDetailMilestones
+        milestones={[]}
+        isLead={true}
+        originalGrantAims={aims}
+        onCreateMilestone={onCreateMilestone}
+      />,
+    );
+
+    // Open the form
+    fireEvent.click(screen.getByText('Add New Milestone'));
+    expect(screen.getByText('Milestone Description')).toBeInTheDocument();
+
+    // Click Cancel to close the form
+    fireEvent.click(screen.getByText('Cancel'));
+    expect(screen.queryByText('Milestone Description')).not.toBeInTheDocument();
+  });
+
   it('calls onCreateMilestone when the form is submitted', async () => {
     const aims: Aim[] = [
       {

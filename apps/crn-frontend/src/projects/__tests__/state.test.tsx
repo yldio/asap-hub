@@ -687,6 +687,80 @@ describe('projects state hooks', () => {
       });
     });
 
+    it('returns result without updating state when project is not loaded', async () => {
+      const getTokenSilently = jest.fn().mockResolvedValue('token-abc');
+      // getProject returns undefined so projectState stays undefined
+      mockGetProject.mockResolvedValueOnce(undefined);
+      mockCreateMilestone.mockResolvedValueOnce({ id: 'ms-new' });
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+      };
+
+      const { result } = renderHook(
+        () => ({
+          createFn: useCreateMilestone('project-no-data'),
+          project: useProjectById('project-no-data'),
+        }),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      // Wait for project to resolve as undefined
+      await waitFor(() => expect(result.current.project).toBeUndefined());
+
+      let createResult: { id: string } | undefined;
+      await act(async () => {
+        createResult = await result.current.createFn(milestoneRequest);
+      });
+
+      expect(mockCreateMilestone).toHaveBeenCalledWith(
+        'project-no-data',
+        milestoneRequest,
+        'Bearer token-abc',
+      );
+      expect(createResult).toEqual({ id: 'ms-new' });
+      // Project state should still be undefined since there was no project to update
+      expect(result.current.project).toBeUndefined();
+    });
+
+    it('sets aims to undefined when no aim IDs match any project aims', async () => {
+      const getTokenSilently = jest.fn().mockResolvedValue('token-abc');
+      mockGetProject.mockResolvedValueOnce(baseProject);
+      mockCreateMilestone.mockResolvedValueOnce({ id: 'ms-no-aims' });
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+      };
+
+      const requestWithNonMatchingAims: MilestoneCreateRequest = {
+        grantType: 'original',
+        description: 'Milestone with non-matching aims',
+        status: 'In Progress',
+        aimIds: ['non-existent-aim-1', 'non-existent-aim-2'],
+      };
+
+      const { result } = renderHook(
+        () => ({
+          createFn: useCreateMilestone('project-1'),
+          project: useProjectById('project-1'),
+        }),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      await waitFor(() => expect(result.current.project).toEqual(baseProject));
+
+      await act(async () => {
+        await result.current.createFn(requestWithNonMatchingAims);
+      });
+
+      await waitFor(() => {
+        const milestones = result.current.project?.milestones;
+        const newMilestone = milestones?.find((m) => m.id === 'ms-no-aims');
+        expect(newMilestone).toBeDefined();
+        expect(newMilestone?.aims).toBeUndefined();
+      });
+    });
+
     it('resolves aim IDs to sorted order numbers from project aims', async () => {
       const projectWithSupplementAims: ProjectDetail = {
         ...baseProject,

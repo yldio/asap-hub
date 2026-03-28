@@ -159,9 +159,6 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
   const [selectedAimIds, setSelectedAimIds] = useState<string[]>([]);
   const [status, setStatus] = useState<MilestoneStatus>('Pending');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<
-    Record<string, string>
-  >({});
 
   const grantLabel = grantType === 'supplement' ? 'Supplement' : 'Original';
 
@@ -171,28 +168,10 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
         ? prev.filter((id) => id !== aimId)
         : [...prev, aimId],
     );
-    setValidationErrors((prev) => ({ ...prev, aims: '' }));
-  };
-
-  const validate = (): boolean => {
-    const errors: Record<string, string> = {};
-    if (!description.trim()) {
-      errors.description = 'Description is required';
-    }
-    if (description.length > 750) {
-      errors.description = 'Description must be 750 characters or less';
-    }
-    if (selectedAimIds.length === 0) {
-      errors.aims = 'At least one aim must be selected';
-    }
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
   };
 
   const handleSubmitClick = () => {
-    if (validate()) {
-      setShowConfirmModal(true);
-    }
+    setShowConfirmModal(true);
   };
 
   const handleConfirm = async () => {
@@ -237,19 +216,11 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
             title="Milestone Description"
             subtitle="(required)"
             value={description}
-            onChange={(val) => {
-              setDescription(val);
-              setValidationErrors((prev) => ({ ...prev, description: '' }));
-            }}
+            onChange={setDescription}
             maxLength={750}
             enabled
           />
           <p css={charCountStyles}>{description.length}/750</p>
-          {validationErrors.description && (
-            <Paragraph accent="ember" noMargin>
-              {validationErrors.description}
-            </Paragraph>
-          )}
         </div>
 
         <div css={aimsSectionStyles}>
@@ -278,11 +249,6 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
               ))
             )}
           </div>
-          {validationErrors.aims && (
-            <Paragraph accent="ember" noMargin>
-              {validationErrors.aims}
-            </Paragraph>
-          )}
         </div>
 
         <LabeledDropdown<MilestoneStatus>

@@ -4,6 +4,7 @@ import { getDataProviderMock } from '../mocks/data-provider.mock';
 import {
   getExpectedProjectList,
   getExpectedDiscoveryProject,
+  getExpectedDiscoveryProjectDetailWithAllFields,
 } from '../fixtures/projects.fixtures';
 import type {
   MilestoneCreateRequest,
@@ -203,6 +204,27 @@ describe('Project Controller', () => {
         status: 'Pending',
         aimIds: ['aim-1', 'aim-2'],
       });
+    });
+
+    it('throws forbidden when creating original grant milestone on project with supplement grant', async () => {
+      const projectWithSupplement =
+        getExpectedDiscoveryProjectDetailWithAllFields();
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(
+        projectWithSupplement,
+      );
+
+      const originalGrantData: MilestoneCreateRequest = {
+        grantType: 'original',
+        description: 'Should not be allowed',
+        status: 'Pending',
+        aimIds: ['aim-1'],
+      };
+
+      await expect(
+        controller.createMilestone(projectWithSupplement.id, originalGrantData),
+      ).rejects.toThrow(
+        'Cannot create milestones for Original grant when a Supplement grant exists',
+      );
     });
 
     it('returns the milestone ID from the data provider', async () => {

@@ -447,5 +447,25 @@ describe('projects api', () => {
         statusCode: 403,
       });
     });
+
+    it('throws BackendError when error response body cannot be parsed', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+        json: jest.fn().mockRejectedValue(new Error('invalid json')),
+      });
+
+      const promise = createMilestone(
+        'project-1',
+        milestoneData,
+        'Bearer token',
+      );
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        statusCode: 500,
+      });
+    });
   });
 });

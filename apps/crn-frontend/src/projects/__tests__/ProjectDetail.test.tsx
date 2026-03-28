@@ -220,6 +220,30 @@ const mockTraineeProjectNoContact: TraineeProjectDetailType = {
   members: [],
 };
 
+const mockResourceProjectWithLead: ResourceProjectDetailType = {
+  ...mockResourceProject,
+  id: 'resource-lead',
+  members: [
+    {
+      id: 'lead-user-1',
+      displayName: 'Lead User',
+      firstName: 'Lead',
+      lastName: 'User',
+      email: 'lead@example.com',
+      role: 'Lead PI',
+    },
+  ],
+  originalGrantAims: [
+    {
+      id: 'aim-1',
+      order: 1,
+      description: 'First aim',
+      status: 'In Progress' as const,
+      articleCount: 0,
+    },
+  ],
+};
+
 // --- Combined state mock ---
 
 jest.mock('../state', () => ({
@@ -234,6 +258,7 @@ jest.mock('../state', () => ({
       'resource-no-contact': mockResourceProjectNoContact,
       'resource-collab': mockResourceProjectCollabContact,
       'resource-supplement': mockResourceProjectWithSupplement,
+      'resource-lead': mockResourceProjectWithLead,
       'trainee-1': mockTraineeProject,
       'trainee-no-contact': mockTraineeProjectNoContact,
       'trainee-supplement': mockTraineeProjectWithSupplement,
@@ -562,5 +587,46 @@ describe('ResourceProjectDetail - specific', () => {
     );
     await screen.findByRole('heading', { name: 'Compliance Review' });
     expect(lastWorkspaceProps.contactName).toBe('Jane Collaborator');
+  });
+});
+
+describe('Milestone lead detection and creation', () => {
+  afterEach(() => {
+    reset();
+  });
+
+  it('shows Add New Milestone button for lead user on resource project', async () => {
+    enable('PROJECT_AIMS_AND_MILESTONES');
+    const leadUser = {
+      id: 'lead-user-1',
+      projects: [{ id: 'resource-lead' }],
+      role: 'Grantee',
+    };
+    await renderProjectDetail(
+      ResourceProjectDetail,
+      'resource',
+      'resource-lead',
+      leadUser,
+      'milestones',
+    );
+    expect(await screen.findByText('Add New Milestone')).toBeInTheDocument();
+  });
+
+  it('does not show Add New Milestone button for non-lead user', async () => {
+    enable('PROJECT_AIMS_AND_MILESTONES');
+    const nonLeadUser = {
+      id: 'non-lead-user',
+      projects: [{ id: 'resource-1' }],
+      role: 'Grantee',
+    };
+    await renderProjectDetail(
+      ResourceProjectDetail,
+      'resource',
+      'resource-1',
+      nonLeadUser,
+      'milestones',
+    );
+    await screen.findByText(/These milestones/i);
+    expect(screen.queryByText('Add New Milestone')).not.toBeInTheDocument();
   });
 });

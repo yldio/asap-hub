@@ -823,5 +823,71 @@ describe('projects state hooks', () => {
         expect(newMilestone?.aims).toBe('1,3,5');
       });
     });
+
+    it('resolves aims from supplement-only project without originalGrantAims', async () => {
+      const supplementOnlyProject: ProjectDetail = {
+        id: 'project-1',
+        title: 'Test Project',
+        status: 'Active',
+        statusRank: 1,
+        projectType: 'Trainee Project',
+        tags: [],
+        startDate: '2024-01-01',
+        endDate: '2024-06-01',
+        duration: '5 mos',
+        originalGrant: 'Grant',
+        originalGrantProposalId: 'p-1',
+        contactEmail: 'e@e.com',
+        members: [],
+        supplementGrant: {
+          grantTitle: 'Supplement',
+          aims: [
+            {
+              id: 'supp-aim-1',
+              order: 1,
+              description: 'Supp Aim',
+              status: 'Pending' as const,
+              articleCount: 0,
+            },
+          ],
+        },
+        milestones: [],
+      };
+
+      const getTokenSilently = jest.fn().mockResolvedValue('token-abc');
+      mockGetProject.mockResolvedValueOnce(supplementOnlyProject);
+      mockCreateMilestone.mockResolvedValueOnce({ id: 'ms-supp-only' });
+
+      const initializeState = ({ set }: MutableSnapshot) => {
+        set(auth0State, { getTokenSilently } as never);
+      };
+
+      const { result } = renderHook(
+        () => ({
+          createFn: useCreateMilestone('project-1'),
+          project: useProjectById('project-1'),
+        }),
+        { wrapper: createWrapper(initializeState) },
+      );
+
+      await waitFor(() =>
+        expect(result.current.project).toEqual(supplementOnlyProject),
+      );
+
+      await act(async () => {
+        await result.current.createFn({
+          grantType: 'supplement',
+          description: 'Supplement milestone',
+          status: 'Pending',
+          aimIds: ['supp-aim-1'],
+        });
+      });
+
+      await waitFor(() => {
+        const milestones = result.current.project?.milestones;
+        const newMilestone = milestones?.find((m) => m.id === 'ms-supp-only');
+        expect(newMilestone?.aims).toBe('1');
+      });
+    });
   });
 });

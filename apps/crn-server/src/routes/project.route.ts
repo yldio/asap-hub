@@ -126,16 +126,18 @@ export const projectRouteFactory = (
               milestoneLeadRoles.includes(m.role as MilestoneLeadRole),
           );
         }
-        if ('teamId' in project && project.teamId) {
-          return !!loggedInUser.teams?.find(
+        // Discovery projects use team membership roles instead of project membership
+        return (
+          'teamId' in project &&
+          !!project.teamId &&
+          !!loggedInUser.teams?.find(
             (t) =>
               t.id === project.teamId &&
               (milestoneDiscoveryTeamRoles as readonly string[]).includes(
                 t.role,
               ),
-          );
-        }
-        return false;
+          )
+        );
       })();
 
       if (!isLead) {

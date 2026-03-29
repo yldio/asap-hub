@@ -312,6 +312,40 @@ export const milestoneDiscoveryTeamRoles = [
   'Data Manager',
 ] as const;
 
+/**
+ * Checks whether a user has a milestone-lead role on a project.
+ * Works for both membership-based projects (Resource/Trainee) and
+ * team-based projects (Discovery).
+ */
+export const isProjectMilestoneLead = (
+  project: {
+    members?: ReadonlyArray<{ id: string; role?: string }>;
+    teamId?: string;
+  },
+  user: {
+    id: string;
+    teams?: ReadonlyArray<{ id: string; role?: string }>;
+  },
+): boolean => {
+  if (project.members) {
+    return project.members.some(
+      (m) =>
+        m.id === user.id &&
+        !!m.role &&
+        (milestoneLeadRoles as readonly string[]).includes(m.role),
+    );
+  }
+  if (project.teamId) {
+    return !!user.teams?.some(
+      (t) =>
+        t.id === project.teamId &&
+        !!t.role &&
+        (milestoneDiscoveryTeamRoles as readonly string[]).includes(t.role),
+    );
+  }
+  return false;
+};
+
 // Milestone creation
 export type MilestoneCreateRequest = {
   readonly grantType: GrantType;

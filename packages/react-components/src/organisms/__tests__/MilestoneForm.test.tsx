@@ -471,6 +471,77 @@ describe('MilestoneForm', () => {
     });
   });
 
+  describe('error handling', () => {
+    const fillAndSubmitForm = async () => {
+      const textarea = screen.getByRole('textbox');
+      await userEvent.type(textarea, 'A valid milestone description');
+      await userEvent.click(screen.getByRole('button', { name: '#1' }));
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Add Milestone' }),
+      );
+    };
+
+    it('shows error message when submission fails', async () => {
+      const onSubmit = jest.fn().mockRejectedValue(new Error('Network error'));
+      renderMilestoneForm({ onSubmit });
+      await fillAndSubmitForm();
+
+      await userEvent.click(
+        screen.getByRole('button', { name: /Confirm and Notify/ }),
+      );
+
+      await waitFor(() => {
+        expect(
+          screen.getByText('Failed to create milestone. Please try again.'),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('returns to form view when submission fails', async () => {
+      const onSubmit = jest.fn().mockRejectedValue(new Error('Network error'));
+      renderMilestoneForm({ onSubmit });
+      await fillAndSubmitForm();
+
+      await userEvent.click(
+        screen.getByRole('button', { name: /Confirm and Notify/ }),
+      );
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole('heading', { name: 'Add New Milestone' }),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('clears error message when user clicks Add Milestone again', async () => {
+      const onSubmit = jest
+        .fn()
+        .mockRejectedValueOnce(new Error('Network error'))
+        .mockResolvedValue(undefined);
+      renderMilestoneForm({ onSubmit });
+      await fillAndSubmitForm();
+
+      await userEvent.click(
+        screen.getByRole('button', { name: /Confirm and Notify/ }),
+      );
+
+      await waitFor(() => {
+        expect(
+          screen.getByText('Failed to create milestone. Please try again.'),
+        ).toBeInTheDocument();
+      });
+
+      // Click Add Milestone again — error should be cleared
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Add Milestone' }),
+      );
+
+      expect(
+        screen.queryByText('Failed to create milestone. Please try again.'),
+      ).not.toBeInTheDocument();
+    });
+  });
+
   describe('onCancel callback', () => {
     it('calls onCancel when Cancel button is clicked', async () => {
       const onCancel = jest.fn();

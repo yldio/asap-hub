@@ -83,6 +83,12 @@ export default class ProjectController {
       );
     }
 
+    if (!hasSupplementGrant && data.grantType === 'supplement') {
+      throw Boom.badRequest(
+        'Cannot create milestones for Supplement grant when no Supplement grant exists',
+      );
+    }
+
     // TODO: Validate that aimIds belong to the correct grant type on the project.
     // Currently ProjectResponse does not expose aims data (only ProjectDetail does).
     // Out of scope for initial implementation — the frontend already filters aims

@@ -159,6 +159,7 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
   const [selectedAimIds, setSelectedAimIds] = useState<string[]>([]);
   const [status, setStatus] = useState<MilestoneStatus>('Pending');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const grantLabel = grantType === 'supplement' ? 'Supplement' : 'Original';
 
@@ -171,16 +172,22 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
   };
 
   const handleSubmitClick = () => {
+    setSubmitError(null);
     setShowConfirmModal(true);
   };
 
   const handleConfirm = async () => {
-    await onSubmit({
-      grantType,
-      description: description.trim(),
-      status,
-      aimIds: selectedAimIds,
-    });
+    try {
+      await onSubmit({
+        grantType,
+        description: description.trim(),
+        status,
+        aimIds: selectedAimIds,
+      });
+    } catch {
+      setShowConfirmModal(false);
+      setSubmitError('Failed to create milestone. Please try again.');
+    }
   };
 
   if (showConfirmModal) {
@@ -264,6 +271,11 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
           required
         />
 
+        {submitError && (
+          <Paragraph accent="ember" noMargin>
+            {submitError}
+          </Paragraph>
+        )}
         <div css={buttonContainerStyles}>
           <div css={cancelButtonStyles}>
             <Button onClick={onCancel}>Cancel</Button>

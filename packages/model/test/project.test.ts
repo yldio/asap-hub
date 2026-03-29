@@ -1,7 +1,8 @@
 import {
   isProjectType,
-  projectTypes,
   isProjectLead,
+  isProjectMilestoneLead,
+  projectTypes,
   Project,
 } from '../src/project';
 
@@ -302,6 +303,118 @@ describe('Project Model', () => {
 
     it('should return false for empty string', () => {
       expect(isProjectType('')).toBe(false);
+    });
+  });
+
+  describe('isProjectMilestoneLead', () => {
+    it('returns true for a project member with Lead PI role', () => {
+      const project = { members: [{ id: 'user-1', role: 'Lead PI' }] };
+      const user = { id: 'user-1' };
+      expect(isProjectMilestoneLead(project, user)).toBe(true);
+    });
+
+    it('returns true for a project member with Project Manager role', () => {
+      const project = { members: [{ id: 'user-1', role: 'Project Manager' }] };
+      const user = { id: 'user-1' };
+      expect(isProjectMilestoneLead(project, user)).toBe(true);
+    });
+
+    it('returns true for a project member with Co-PI role', () => {
+      const project = { members: [{ id: 'user-1', role: 'Co-PI' }] };
+      const user = { id: 'user-1' };
+      expect(isProjectMilestoneLead(project, user)).toBe(true);
+    });
+
+    it('returns true for a project member with Data Manager role', () => {
+      const project = { members: [{ id: 'user-1', role: 'Data Manager' }] };
+      const user = { id: 'user-1' };
+      expect(isProjectMilestoneLead(project, user)).toBe(true);
+    });
+
+    it('returns true for a project member with Trainee Project - Lead role', () => {
+      const project = {
+        members: [{ id: 'user-1', role: 'Trainee Project - Lead' }],
+      };
+      const user = { id: 'user-1' };
+      expect(isProjectMilestoneLead(project, user)).toBe(true);
+    });
+
+    it('returns false for a project member with non-lead role', () => {
+      const project = { members: [{ id: 'user-1', role: 'Contributor' }] };
+      const user = { id: 'user-1' };
+      expect(isProjectMilestoneLead(project, user)).toBe(false);
+    });
+
+    it('returns false when user is not a member of the project', () => {
+      const project = { members: [{ id: 'user-2', role: 'Lead PI' }] };
+      const user = { id: 'user-1' };
+      expect(isProjectMilestoneLead(project, user)).toBe(false);
+    });
+
+    it('returns true for discovery project team member with Lead PI (Core Leadership) role', () => {
+      const project = { teamId: 'team-1' };
+      const user = {
+        id: 'user-1',
+        teams: [{ id: 'team-1', role: 'Lead PI (Core Leadership)' }],
+      };
+      expect(isProjectMilestoneLead(project, user)).toBe(true);
+    });
+
+    it('returns true for discovery project team member with Co-PI (Core Leadership) role', () => {
+      const project = { teamId: 'team-1' };
+      const user = {
+        id: 'user-1',
+        teams: [{ id: 'team-1', role: 'Co-PI (Core Leadership)' }],
+      };
+      expect(isProjectMilestoneLead(project, user)).toBe(true);
+    });
+
+    it('returns true for discovery project team member with Project Manager role', () => {
+      const project = { teamId: 'team-1' };
+      const user = {
+        id: 'user-1',
+        teams: [{ id: 'team-1', role: 'Project Manager' }],
+      };
+      expect(isProjectMilestoneLead(project, user)).toBe(true);
+    });
+
+    it('returns true for discovery project team member with Data Manager role', () => {
+      const project = { teamId: 'team-1' };
+      const user = {
+        id: 'user-1',
+        teams: [{ id: 'team-1', role: 'Data Manager' }],
+      };
+      expect(isProjectMilestoneLead(project, user)).toBe(true);
+    });
+
+    it('returns false for discovery project team member with non-lead role', () => {
+      const project = { teamId: 'team-1' };
+      const user = {
+        id: 'user-1',
+        teams: [{ id: 'team-1', role: 'Key Personnel' }],
+      };
+      expect(isProjectMilestoneLead(project, user)).toBe(false);
+    });
+
+    it('returns false for discovery project when user is on a different team', () => {
+      const project = { teamId: 'team-1' };
+      const user = {
+        id: 'user-1',
+        teams: [{ id: 'team-2', role: 'Lead PI (Core Leadership)' }],
+      };
+      expect(isProjectMilestoneLead(project, user)).toBe(false);
+    });
+
+    it('returns false for discovery project when user has no teams', () => {
+      const project = { teamId: 'team-1' };
+      const user = { id: 'user-1' };
+      expect(isProjectMilestoneLead(project, user)).toBe(false);
+    });
+
+    it('returns false when project has neither members nor teamId', () => {
+      const project = {};
+      const user = { id: 'user-1' };
+      expect(isProjectMilestoneLead(project, user)).toBe(false);
     });
   });
 });

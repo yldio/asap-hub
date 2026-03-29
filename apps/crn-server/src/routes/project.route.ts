@@ -1,10 +1,5 @@
 import { Router } from 'express';
-import {
-  FetchProjectsFilter,
-  milestoneDiscoveryTeamRoles,
-  milestoneLeadRoles,
-  MilestoneLeadRole,
-} from '@asap-hub/model';
+import { FetchProjectsFilter, isProjectMilestoneLead } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import ProjectController from '../controllers/project.controller';
 import {
@@ -118,27 +113,7 @@ export const projectRouteFactory = (
       const { loggedInUser } = req;
       const project = await projectController.fetchById(projectId);
 
-      const isLead = (() => {
-        if ('members' in project && project.members) {
-          return project.members.some(
-            (m) =>
-              m.id === loggedInUser.id &&
-              milestoneLeadRoles.includes(m.role as MilestoneLeadRole),
-          );
-        }
-        // Discovery projects use team membership roles instead of project membership
-        return (
-          'teamId' in project &&
-          !!project.teamId &&
-          !!loggedInUser.teams?.find(
-            (t) =>
-              t.id === project.teamId &&
-              (milestoneDiscoveryTeamRoles as readonly string[]).includes(
-                t.role,
-              ),
-          )
-        );
-      })();
+      const isLead = isProjectMilestoneLead(project, loggedInUser);
 
       if (!isLead) {
         throw Boom.forbidden();

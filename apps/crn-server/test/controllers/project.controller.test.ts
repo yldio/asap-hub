@@ -227,6 +227,24 @@ describe('Project Controller', () => {
       );
     });
 
+    it('throws bad request when creating supplement grant milestone on project without supplement grant', async () => {
+      const project = getExpectedDiscoveryProject();
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
+
+      const supplementGrantData: MilestoneCreateRequest = {
+        grantType: 'supplement',
+        description: 'Should not be allowed',
+        status: 'Pending',
+        aimIds: ['aim-1'],
+      };
+
+      await expect(
+        controller.createMilestone(project.id, supplementGrantData),
+      ).rejects.toThrow(
+        'Cannot create milestones for Supplement grant when no Supplement grant exists',
+      );
+    });
+
     it('returns the milestone ID from the data provider', async () => {
       const project = getExpectedDiscoveryProject();
       projectDataProviderMock.fetchById.mockResolvedValueOnce(project);

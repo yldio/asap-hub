@@ -106,7 +106,7 @@ export type ArticlesListProps = {
 
 const ArticlesList: FC<ArticlesListProps> = ({
   initiallyExpanded = false,
-  listMaxHeight = rem(240),
+  listMaxHeight = rem(264),
   maxWidth = rem(408),
   articlesCount = 0,
   aimId,
@@ -114,13 +114,19 @@ const ArticlesList: FC<ArticlesListProps> = ({
 }) => {
   const [expanded, setExpanded] = useState(initiallyExpanded);
   const [articles, setArticles] = useState<ReadonlyArray<ArticleItem>>([]);
+  const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
-    if (initiallyExpanded && articlesCount > 0) {
+    if (initiallyExpanded) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      fetchArticles(aimId).then(setArticles);
+      fetchArticles(aimId).then((result) => {
+        setArticles(result);
+        setHasFetched(true);
+      });
     }
-  }, [aimId, initiallyExpanded, fetchArticles, articlesCount]);
+  }, [aimId, initiallyExpanded, fetchArticles]);
+
+  const displayedCount = hasFetched ? articles.length : articlesCount;
 
   return (
     <div>
@@ -133,7 +139,9 @@ const ArticlesList: FC<ArticlesListProps> = ({
             const nextExpanded = !expanded;
             setExpanded(nextExpanded);
             if (nextExpanded) {
-              setArticles(await fetchArticles(aimId));
+              const result = await fetchArticles(aimId);
+              setArticles(result);
+              setHasFetched(true);
             }
           }}
           overrideStyles={iconButtonStyles}
@@ -141,7 +149,7 @@ const ArticlesList: FC<ArticlesListProps> = ({
           <span css={iconStyles}>
             {expanded ? minusRectIcon : plusRectIcon}
           </span>
-          <span css={titleStyles}>Articles ({articlesCount})</span>
+          <span css={titleStyles}>Articles ({displayedCount})</span>
         </Button>
         <span css={separatorStyles}>•</span>
         <Button

@@ -68,16 +68,14 @@ describe('Aim', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('shows Articles list and Edit when articleCount is greater than 0', () => {
-    const { rerender } = render(<Aim aim={mockAim} {...defaultAimProps} />);
-    expect(screen.getByText('No articles added')).toBeInTheDocument();
-
-    rerender(<Aim aim={longAim} {...defaultAimProps} />);
+  it('shows ArticlesList with expand button when articleCount is greater than 0', () => {
+    render(<Aim aim={longAim} {...defaultAimProps} />);
     expect(screen.getByText('Articles (3)')).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Expand articles' }),
     ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
+    expect(screen.queryByText('No articles added')).not.toBeInTheDocument();
   });
 
   it('toggles articles section on click', async () => {

@@ -3,11 +3,24 @@ import { act, renderHook } from '@testing-library/react';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import { aimArticlesState, useFetchArticles } from '../aim-articles-state';
 
+const mockGetAimArticles = jest.fn();
+
+jest.mock('../api', () => ({
+  ...jest.requireActual('../api'),
+  getAimArticles: (...args: unknown[]) => mockGetAimArticles(...args),
+}));
+
+jest.mock('../../auth/state', () => ({
+  authorizationState: jest.requireActual('recoil').atom({
+    key: 'authorizationState-test',
+    default: 'Bearer test-token',
+  }),
+}));
+
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <RecoilRoot>{children}</RecoilRoot>
 );
 
-/** Hook that uses both useFetchArticles and aimArticlesState under one RecoilRoot so state updates are visible. */
 function useFetchAndState(aimId: string) {
   const fetchArticles = useFetchArticles();
   const articles = useRecoilValue(aimArticlesState(aimId));
@@ -15,73 +28,75 @@ function useFetchAndState(aimId: string) {
 }
 
 describe('aim-articles-state', () => {
-  beforeEach(() => {
-    jest.useFakeTimers();
-  });
-
   afterEach(() => {
-    jest.useRealTimers();
+    jest.resetAllMocks();
   });
 
   describe('useFetchArticles', () => {
-    it('fetches articles for an aim, updates Recoil state, and returns the list', async () => {
+    it('calls getAimArticles with the aimId and authorization, updates Recoil state, and returns the list', async () => {
+      const mockArticles = [
+        { id: 'ro-1', title: 'Article One', href: '/shared-research/ro-1' },
+      ];
+      mockGetAimArticles.mockResolvedValueOnce(mockArticles);
+
       const { result } = renderHook(() => useFetchArticles(), { wrapper });
 
-      const fetchPromise = result.current('aim-1');
+      const articles = await act(async () => result.current('aim-1'));
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
-
-      const resolvedArticles = await act(async () => fetchPromise);
-
-      expect(resolvedArticles).toHaveLength(3);
-      expect(resolvedArticles[0]).toMatchObject({
-        id: 'art-1-1',
-        title: 'Alpha-synuclein aggregation in dopaminergic neurons',
-        href: '#',
-      });
+      expect(articles).toEqual(mockArticles);
+      expect(mockGetAimArticles).toHaveBeenCalledWith(
+        'aim-1',
+        'Bearer test-token',
+      );
     });
 
-    it('returns empty array and sets state for unknown aim id', async () => {
+    it('returns empty array and sets state when API returns no articles', async () => {
+      mockGetAimArticles.mockResolvedValueOnce([]);
+
       const { result } = renderHook(() => useFetchArticles(), { wrapper });
 
-      const fetchPromise = result.current('unknown-aim');
+      const articles = await act(async () => result.current('aim-empty'));
 
-      await act(async () => {
-        jest.runAllTimers();
-      });
+      expect(articles).toEqual([]);
+    });
 
-      const resolvedArticles = await act(async () => fetchPromise);
+    it('returns cached articles without calling the API on subsequent fetches', async () => {
+      const mockArticles = [
+        { id: 'ro-1', title: 'Article One', href: '/shared-research/ro-1' },
+      ];
+      mockGetAimArticles.mockResolvedValueOnce(mockArticles);
 
-      expect(resolvedArticles).toEqual([]);
+      const { result } = renderHook(() => useFetchArticles(), { wrapper });
+
+      await act(async () => result.current('aim-cached'));
+      const cachedArticles = await act(async () =>
+        result.current('aim-cached'),
+      );
+
+      expect(cachedArticles).toEqual(mockArticles);
+      expect(mockGetAimArticles).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('aimArticlesState', () => {
-    it('is updated when useFetchArticles fetch completes', async () => {
+    it('is updated after useFetchArticles resolves', async () => {
+      const mockArticles = [
+        { id: 'ro-2', title: 'Article Two', href: '/shared-research/ro-2' },
+      ];
+      mockGetAimArticles.mockResolvedValueOnce(mockArticles);
+
       const { result } = renderHook(() => useFetchAndState('aim-2'), {
         wrapper,
       });
 
       expect(result.current.articles).toBeUndefined();
 
-      const fetchPromise = result.current.fetchArticles('aim-2');
-
       await act(async () => {
-        jest.runAllTimers();
+        await result.current.fetchArticles('aim-2');
       });
-
-      await act(async () => fetchPromise);
 
       await waitFor(() => {
-        expect(result.current.articles).toHaveLength(1);
-      });
-
-      expect(result.current.articles?.[0]).toMatchObject({
-        id: 'art-2-1',
-        title: 'Computational models for protein misfolding prediction',
-        href: '#',
+        expect(result.current.articles).toEqual(mockArticles);
       });
     });
   });

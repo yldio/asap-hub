@@ -27,6 +27,7 @@ import {
   getProjectByIdGraphqlResponse,
   getProjectsGraphqlEmptyResponse,
   getProjectsGraphqlResponse,
+  getDiscoveryProjectByIdGraphqlItem,
   getDiscoveryProjectWithoutTeamGraphqlItem,
   getDiscoveryProjectGraphqlItem,
   getProjectsGraphqlResponseWithUnknownType,
@@ -255,6 +256,62 @@ describe('ProjectContentfulDataProvider', () => {
       const result = await dataProvider.fetchById('discovery-1');
 
       expect((result as any).originalGrantAims).toBeUndefined();
+    });
+
+    it('handles null hits.hits gracefully (returns empty aims)', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce(
+        getProjectByIdGraphqlResponse(),
+      );
+      opensearchProviderMock.search.mockResolvedValueOnce({ hits: {} });
+      opensearchProviderMock.search.mockResolvedValueOnce({ hits: {} });
+
+      const result = await dataProvider.fetchById('discovery-1');
+
+      expect((result as any).originalGrantAims).toBeUndefined();
+    });
+
+    it('maps supplement grant aims when the project has a supplement grant', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce({
+        projects: {
+          ...getDiscoveryProjectByIdGraphqlItem(),
+          supplementGrant: {
+            grantTitle: 'Supplement Grant',
+            grantDescription: 'Supplement description',
+            grantProposalId: 'proposal-2',
+            grantStartDate: '2024-06-01',
+            grantEndDate: '2025-06-01',
+          },
+        },
+      });
+      opensearchProviderMock.search
+        .mockResolvedValueOnce(emptySearchResponse)
+        .mockResolvedValueOnce({
+          hits: {
+            hits: [
+              {
+                _source: {
+                  id: 'sup-aim-1',
+                  description: 'Supplement aim',
+                  status: 'Active',
+                  articleCount: 1,
+                },
+              },
+            ],
+          },
+        });
+
+      const result = await dataProvider.fetchById('project-with-supplement');
+
+      expect(result).not.toBeNull();
+      const supplementGrant = (result as any).supplementGrant;
+      expect(supplementGrant).toBeDefined();
+      expect(supplementGrant.aims).toHaveLength(1);
+      expect(supplementGrant.aims[0]).toMatchObject({
+        id: 'sup-aim-1',
+        order: 1,
+        status: 'Active',
+        articleCount: 1,
+      });
     });
 
     it('returns null when Contentful does not return the project', async () => {
@@ -1472,6 +1529,43 @@ describe('parseContentfulProjectDetail', () => {
     expect(() => parseContentfulProjectDetail(invalidItem as never)).toThrow(
       'Unknown project type: Unknown Project Type',
     );
+  });
+
+  it('parses supplementGrant aims from aimsItem when supplementGrant is present', () => {
+    const discoveryItem = getDiscoveryProjectDetailGraphqlItem({
+      supplementGrant: getSupplementGrantFields({
+        id: 'supplement-1',
+        title: 'Supplement Grant Title',
+        description: 'Supplement grant description',
+      }),
+    });
+
+    const aimsItem = {
+      originalGrantAimsCollection: null,
+      supplementGrant: {
+        aimsCollection: {
+          items: [
+            {
+              sys: { id: 'sup-aim-1' },
+              description: 'Supplement aim description',
+              milestonesCollection: null,
+            },
+          ],
+        },
+      },
+    };
+
+    const result = parseContentfulProjectDetail(discoveryItem, aimsItem);
+
+    expect(result.supplementGrant?.aims).toEqual([
+      expect.objectContaining({
+        id: 'sup-aim-1',
+        description: 'Supplement aim description',
+        order: 1,
+        status: 'Pending',
+        articleCount: 0,
+      }),
+    ]);
   });
 
   describe('parseContentfulProjectDetail - manuscripts', () => {

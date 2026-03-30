@@ -555,11 +555,8 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       articleCount: number;
     }>
   > {
-    if (!this.opensearchProvider) {
-      throw new Error('OpensearchProvider is required to fetch aims');
-    }
-
-    const response = await this.opensearchProvider.search({
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const response = await this.opensearchProvider!.search({
       index: 'project-aims',
       body: {
         query: {

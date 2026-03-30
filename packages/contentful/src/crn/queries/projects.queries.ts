@@ -263,47 +263,6 @@ export const FETCH_PROJECT_BY_ID = gql`
   }
 `;
 
-export const FETCH_PROJECT_AIMS_BY_ID = gql`
-  query FetchProjectAimsById($id: String!) {
-    projects(id: $id) {
-      originalGrantAimsCollection(limit: 20) {
-        items {
-          sys {
-            id
-          }
-          description
-          milestonesCollection(limit: 50) {
-            items {
-              status
-              relatedArticlesCollection(limit: 30) {
-                total
-              }
-            }
-          }
-        }
-      }
-      supplementGrant {
-        aimsCollection(limit: 20) {
-          items {
-            sys {
-              id
-            }
-            description
-            milestonesCollection(limit: 50) {
-              items {
-                status
-                relatedArticlesCollection(limit: 30) {
-                  total
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 // Fetches projects associated with a team via reverse lookup
 // Teams -> linkedFrom.projectMembershipCollection -> linkedFrom.projectsCollection
 export const FETCH_PROJECTS_BY_TEAM_ID = gql`

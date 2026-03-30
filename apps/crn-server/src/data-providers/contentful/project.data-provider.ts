@@ -6,7 +6,6 @@ import {
   FETCH_PROJECTS_BY_TEAM_ID,
   FETCH_PROJECTS_BY_USER_ID,
   FETCH_PROJECT_BY_ID,
-  FetchProjectAimsByIdQuery,
   FetchProjectByIdQuery,
   FetchProjectByIdQueryVariables,
   FetchProjectsByMembershipIdQuery,
@@ -70,11 +69,16 @@ export type ProjectMembershipItem = NonNullable<
   NonNullable<ProjectItem['membersCollection']>['items'][number]
 >;
 
-type ProjectAimsItem = NonNullable<FetchProjectAimsByIdQuery['projects']>;
-
-type AimsCollectionItem = NonNullable<
-  NonNullable<ProjectAimsItem['originalGrantAimsCollection']>['items'][number]
->;
+type AimsCollectionItem = {
+  sys: { id: string };
+  description?: string | null;
+  milestonesCollection?: {
+    items: Array<{
+      status?: string | null;
+      relatedArticlesCollection?: { total: number } | null;
+    } | null>;
+  } | null;
+};
 
 export const parseContentfulAims = (
   items: Array<AimsCollectionItem | null> | undefined,
@@ -94,7 +98,7 @@ export const parseContentfulAims = (
           description: item.description?.trim() ?? '',
           status: deriveAimStatus(item.milestonesCollection?.items),
           articleCount: (item.milestonesCollection?.items ?? []).reduce(
-            (sum, m) => sum + (m?.relatedArticlesCollection?.total ?? 0),
+            (sum: number, m) => sum + (m?.relatedArticlesCollection?.total ?? 0),
             0,
           ),
         }) satisfies Aim,

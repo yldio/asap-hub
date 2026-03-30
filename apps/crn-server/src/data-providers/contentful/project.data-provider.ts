@@ -76,7 +76,6 @@ type AimsCollectionItem = NonNullable<
   NonNullable<ProjectAimsItem['originalGrantAimsCollection']>['items'][number]
 >;
 
-export { deriveAimStatus } from '../../utils/aim-status';
 
 export const parseContentfulAims = (
   items: Array<AimsCollectionItem | null> | undefined,

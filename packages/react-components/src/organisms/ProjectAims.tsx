@@ -54,6 +54,7 @@ type ProjectAimsProps = {
   supplementGrantAims: ReadonlyArray<AimType>;
   initialDisplayCount?: number;
   fetchArticles: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
+  seeMilestonesHref?: string;
 };
 
 const AimsList: FC<{
@@ -112,6 +113,7 @@ const ProjectAims: FC<ProjectAimsProps> = ({
   supplementGrantAims,
   initialDisplayCount = 4,
   fetchArticles,
+  seeMilestonesHref,
 }) => {
   const [activeTab, setActiveTab] = useState<
     'supplementGrant' | 'originalGrant' | 'no-tabs'
@@ -145,7 +147,7 @@ const ProjectAims: FC<ProjectAimsProps> = ({
           View the core research objectives of this project. Progress toward
           each aim is tracked through related milestones, and associated
           articles are displayed as they are linked through those milestones.{' '}
-          <Link href="#">See milestones</Link>
+          <Link href={seeMilestonesHref ?? '#'}>See milestones</Link>
         </Paragraph>
 
         {isTabbedView && (

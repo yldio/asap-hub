@@ -21,10 +21,11 @@ type ProjectDetailAboutProps = ProjectDetail & {
   readonly fetchArticles: (
     aimId: string,
   ) => Promise<ReadonlyArray<ArticleItem>>;
+  readonly seeMilestonesHref?: string;
 };
 
 const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
-  const { pointOfContactEmail, fetchArticles } = project;
+  const { pointOfContactEmail, fetchArticles, seeMilestonesHref } = project;
   const { isEnabled } = useFlags();
 
   return (
@@ -52,6 +53,7 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
           originalGrantAims={project.originalGrantAims ?? []}
           supplementGrantAims={project.supplementGrant?.aims ?? []}
           fetchArticles={fetchArticles}
+          seeMilestonesHref={seeMilestonesHref}
         />
       )}
 

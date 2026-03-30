@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { rem, tabletScreen } from '../pixels';
-import { fern, lead, neutral1000 } from '../colors';
+import { fern, lead, neutral900, neutral1000 } from '../colors';
 
 export const descriptionContainerStyles = css({
   display: 'flex',
@@ -63,6 +63,118 @@ export const statusContainerStyles = css({
     paddingLeft: 0,
     gap: rem(16),
   },
+});
+
+// Shared article styles used by Milestone and ArticlesList components.
+
+export const articlesHeaderStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  gap: rem(12),
+  marginBottom: rem(8),
+});
+
+export const articlesSeparatorStyles = css({
+  color: neutral900.rgb,
+  fontSize: rem(14),
+});
+
+export const articlesIconButtonStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  padding: 0,
+  minWidth: 'auto',
+  gap: rem(16),
+  textDecoration: 'none',
+  ':hover, :active, :focus': {
+    textDecoration: 'none',
+  },
+});
+
+export const articlesTitleStyles = css({
+  fontSize: rem(17),
+  color: neutral900.rgb,
+  lineHeight: rem(26),
+});
+
+export const articlesIconStyles = css({
+  display: 'flex',
+});
+
+export const articlesListWrapperStyles = (
+  maxHeight: string,
+  maxWidth?: string,
+) =>
+  css({
+    maxHeight,
+    ...(maxWidth ? { maxWidth } : {}),
+    paddingRight: rem(4),
+    overflowY: 'auto',
+    overflowX: 'hidden',
+  });
+
+export const articlesListStyles = css({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(4),
+  marginLeft: rem(36),
+});
+
+export const articlesItemStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+  padding: `${rem(4)} 0`,
+});
+
+export const articlesItemIconStyles = css({
+  flexShrink: 0,
+  display: 'inline-flex',
+  alignItems: 'center',
+  width: rem(24),
+  height: rem(24),
+});
+
+export const articlesItemTextContainerStyles = css({
+  flex: 1,
+  minWidth: 0,
+  paddingRight: rem(12),
+});
+
+export const articlesItemLinkStyles = css({
+  fontSize: rem(17),
+  lineHeight: rem(24),
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  display: 'block',
+});
+
+export const noArticlesTextStyles = css({
+  fontStyle: 'italic',
+  fontSize: rem(17),
+  lineHeight: rem(26),
+  color: neutral900.rgb,
+});
+
+export const editButtonStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  padding: 0,
+  minWidth: 'auto',
+  gap: rem(16),
+  textDecoration: 'none',
+  ':hover, :active, :focus': {
+    textDecoration: 'none',
+  },
+});
+
+export const articlesWrapperStyles = css({
+  marginTop: rem(4),
 });
 
 type StatusValue = 'Complete' | 'In Progress' | 'Pending' | 'Terminated';

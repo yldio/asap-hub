@@ -68,9 +68,13 @@ const milestoneRowWrapperStyles = (index: number, isLast: boolean) =>
 
 type ProjectMilestonesProps = {
   milestones: ReadonlyArray<MilestoneType>;
+  isLead: boolean;
 };
 
-const ProjectMilestones: FC<ProjectMilestonesProps> = ({ milestones }) => {
+const ProjectMilestones: FC<ProjectMilestonesProps> = ({
+  milestones,
+  isLead,
+}) => {
   if (!milestones.length) {
     return null;
   }
@@ -95,7 +99,7 @@ const ProjectMilestones: FC<ProjectMilestonesProps> = ({ milestones }) => {
                   index === milestones.length - 1,
                 )}
               >
-                <Milestone milestone={milestone} />
+                <Milestone milestone={milestone} isLead={isLead} />
               </div>
             ))}
           </div>

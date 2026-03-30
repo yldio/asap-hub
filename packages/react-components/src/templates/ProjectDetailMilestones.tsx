@@ -65,6 +65,7 @@ type ProjectDetailMilestonesProps = {
   readonly seeAimsHref?: string;
   readonly pageControlsProps?: ComponentProps<typeof PageControls>;
   readonly hasSupplementGrant?: boolean;
+  readonly isLead: boolean;
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
@@ -73,6 +74,7 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   // ...pageControlProps // TODO: Add this back when we have actual page controls props
   pageControlsProps,
   hasSupplementGrant = false,
+  isLead,
 }) => {
   const hasMilestones = milestones.length > 0;
   const [selectedGrantType, setSelectedGrantType] = useState<GrantType>(
@@ -130,7 +132,7 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
 
           {hasMilestones && pageControlsProps && (
             <>
-              <ProjectMilestones milestones={milestones} />
+              <ProjectMilestones milestones={milestones} isLead={isLead} />
               <section css={pageControlsStyles}>
                 <PageControls {...pageControlsProps} />
               </section>

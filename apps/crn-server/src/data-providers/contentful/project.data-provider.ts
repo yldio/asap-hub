@@ -549,7 +549,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
         },
         sort: [{ createdDate: { order: 'asc' } }],
         size: 50,
-      } as unknown as OpensearchRequest,
+      } satisfies OpensearchRequest,
     });
 
     return (

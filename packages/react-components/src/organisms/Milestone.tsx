@@ -6,6 +6,7 @@ import { rem, tabletScreen } from '../pixels';
 import { steel, info100, info500 } from '../colors';
 import { article as articleIcon, minusRectIcon, plusRectIcon } from '../icons';
 import { useTextTruncation } from '../hooks';
+import { noop } from '../utils';
 import {
   descriptionContainerStyles,
   mobileLabelStyles,
@@ -204,6 +205,7 @@ const Milestone: FC<MilestoneProps> = ({ milestone, isLead }) => {
         <MilestoneArticlesModal
           articles={articles}
           onClose={() => setIsModalOpen(false)}
+          onConfirm={noop}
         />
       )}
     </div>

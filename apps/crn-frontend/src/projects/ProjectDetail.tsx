@@ -14,7 +14,7 @@ import { useFetchArticles } from './aim-articles-state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
-import { mockMilestones } from './mock-milestones';
+import { mockMilestones, mockLoadArticleOptions } from './mock-milestones';
 import type { ProjectDetailConfig } from './projectDetailConfig';
 
 const loadProjectManuscript = () =>
@@ -130,6 +130,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                         !!projectDetail.supplementGrant
                       }
                       isLead={isLead}
+                      loadArticleOptions={mockLoadArticleOptions}
                       pageControlsProps={{
                         numberOfPages: 1,
                         currentPageIndex: 0,

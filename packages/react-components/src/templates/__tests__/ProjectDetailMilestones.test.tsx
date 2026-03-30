@@ -24,7 +24,7 @@ const mockMilestones: Milestone[] = [
 
 describe('ProjectDetailMilestones', () => {
   it('renders empty state when there are no milestones', () => {
-    render(<ProjectDetailMilestones milestones={[]} />);
+    render(<ProjectDetailMilestones milestones={[]} isLead={false} />);
 
     expect(screen.getByText('Milestones')).toBeInTheDocument();
     expect(
@@ -52,6 +52,7 @@ describe('ProjectDetailMilestones', () => {
       <ProjectDetailMilestones
         milestones={mockMilestones}
         pageControlsProps={pageControlsProps}
+        isLead={false}
       />,
     );
 
@@ -71,7 +72,7 @@ describe('ProjectDetailMilestones', () => {
   });
 
   it('renders the mobile fallback page', () => {
-    render(<ProjectDetailMilestones milestones={[]} />);
+    render(<ProjectDetailMilestones milestones={[]} isLead={false} />);
 
     expect(
       screen.getByText(/Milestones are only available/, { selector: 'span' }),
@@ -80,7 +81,11 @@ describe('ProjectDetailMilestones', () => {
 
   it('defaults to Supplement Grant when hasSupplementGrant is true', () => {
     render(
-      <ProjectDetailMilestones milestones={[]} hasSupplementGrant={true} />,
+      <ProjectDetailMilestones
+        milestones={[]}
+        hasSupplementGrant={true}
+        isLead={false}
+      />,
     );
 
     expect(

@@ -54,28 +54,23 @@ describe('Aim', () => {
     expect(screen.getByText('Complete')).toBeInTheDocument();
   });
 
-  it('shows No articles added and Edit when articleCount is 0', () => {
+  it('shows ArticlesList with count 0 when articleCount is 0', () => {
     render(<Aim aim={mockAim} {...defaultAimProps} />);
-    const noArticles = screen.getByText('No articles added');
-    expect(noArticles).toBeInTheDocument();
-    expect(noArticles).toHaveStyle({ fontStyle: 'italic' });
-    expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
-    expect(screen.queryByText(/Articles \(\d+\)/)).not.toBeInTheDocument();
+    expect(screen.getByText('Articles (0)')).toBeInTheDocument();
     expect(
-      screen.queryByRole('button', {
-        name: /Expand articles|Collapse articles/i,
-      }),
+      screen.queryByRole('button', { name: 'Edit' }),
     ).not.toBeInTheDocument();
   });
 
-  it('shows ArticlesList with expand button when articleCount is greater than 0', () => {
+  it('shows ArticlesList with count when articleCount is greater than 0', () => {
     render(<Aim aim={longAim} {...defaultAimProps} />);
     expect(screen.getByText('Articles (3)')).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: 'Expand articles' }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Edit' })).toBeInTheDocument();
-    expect(screen.queryByText('No articles added')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Edit' }),
+    ).not.toBeInTheDocument();
   });
 
   it('toggles articles section on click', async () => {

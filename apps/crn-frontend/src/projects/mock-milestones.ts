@@ -11,6 +11,20 @@ export const mockMilestones: ReadonlyArray<Milestone> = [
       'Complete literature review and establish baseline metrics for alpha-synuclein aggregation in dopaminergic neurons. Complete literature review and establish baseline metrics for alpha-synuclein aggregation in dopaminergic neurons.',
     status: 'Complete',
     aims: '1',
+    relatedArticles: [
+      {
+        id: 'ro-1',
+        title: 'Alpha-synuclein aggregation in PD models',
+        href: '/shared-research/ro-1',
+        type: 'Preprint',
+      },
+      {
+        id: 'ro-2',
+        title: 'Dopaminergic neuron baseline metrics study',
+        href: '/shared-research/ro-2',
+        type: 'Published',
+      },
+    ],
   },
   {
     id: 'ms-2',
@@ -18,6 +32,14 @@ export const mockMilestones: ReadonlyArray<Milestone> = [
       'Develop and validate imaging protocols for protein misfolding assessment. Finalise standard operating procedures.',
     status: 'In Progress',
     aims: '1,2',
+    relatedArticles: [
+      {
+        id: 'ro-3',
+        title: 'Protein misfolding imaging protocol validation',
+        href: '/shared-research/ro-3',
+        type: 'Preprint',
+      },
+    ],
   },
   {
     id: 'ms-3',

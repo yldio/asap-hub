@@ -5,6 +5,7 @@ import {
   GetListOptions,
 } from '@asap-hub/frontend-utils';
 import {
+  ArticleItem,
   ListProjectResponse,
   ProjectDetail,
   ProjectStatus,
@@ -109,6 +110,23 @@ export const patchProject = async (
   if (!resp.ok) {
     throw new BackendError(
       `Failed to update project with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+  return resp.json();
+};
+
+export const getAimArticles = async (
+  aimId: string,
+  authorization: string,
+): Promise<ReadonlyArray<ArticleItem>> => {
+  const resp = await fetch(`${API_BASE_URL}/aims/${aimId}/articles`, {
+    headers: { authorization, ...createSentryHeaders() },
+  });
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to fetch articles for aim ${aimId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       await resp.json().catch(() => undefined),
       resp.status,
     );

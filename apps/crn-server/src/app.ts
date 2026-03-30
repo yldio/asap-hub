@@ -31,6 +31,7 @@ import {
   contentfulPreviewAccessToken,
   contentfulSpaceId,
 } from './config';
+import AimController from './controllers/aim.controller';
 import AnalyticsController from './controllers/analytics.controller';
 import CalendarController from './controllers/calendar.controller';
 import CategoryController from './controllers/category.controller';
@@ -81,10 +82,12 @@ import { TeamContentfulDataProvider } from './data-providers/contentful/team.dat
 import { TutorialContentfulDataProvider } from './data-providers/contentful/tutorial.data-provider';
 import { UserContentfulDataProvider } from './data-providers/contentful/user.data-provider';
 import { WorkingGroupContentfulDataProvider } from './data-providers/contentful/working-group.data-provider';
+import { AimsMilestonesContentfulDataProvider } from './data-providers/contentful/aims-milestones.data-provider';
 import { ProjectContentfulDataProvider } from './data-providers/contentful/project.data-provider';
 
 import { GuideContentfulDataProvider } from './data-providers/contentful/guide.data-provider';
 import {
+  AimsMilestonesDataProvider,
   AssetDataProvider,
   CategoryDataProvider,
   ComplianceReportDataProvider,
@@ -110,6 +113,7 @@ import {
 import { ProjectDataProvider } from './data-providers/types/projects.data-provider.types';
 import { getContentfulRestClientFactory } from './dependencies/clients.dependencies';
 import { featureFlagMiddlewareFactory } from './middleware/feature-flag';
+import { aimRouteFactory } from './routes/aim.route';
 import { analyticsRouteFactory } from './routes/analytics.route';
 import { calendarRouteFactory } from './routes/calendar.route';
 import { categoryRouteFactory } from './routes/category.routes';
@@ -311,11 +315,19 @@ export const appFactory = (libs: Libs = {}): Express => {
       getContentfulRestClientFactory,
     );
 
+  const aimsMilestonesDataProvider =
+    libs.aimsMilestonesDataProvider ||
+    new AimsMilestonesContentfulDataProvider(contentfulGraphQLClient);
+
+  const opensearchProvider =
+    libs.opensearchProvider || new OpensearchDataProvider();
+
   const projectDataProvider =
     libs.projectDataProvider ||
     new ProjectContentfulDataProvider(
       contentfulGraphQLClient,
       getContentfulRestClientFactory,
+      opensearchProvider,
     );
 
   const labDataProvider =
@@ -331,10 +343,9 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const generativeContentDataProvider = new GenerativeContentDataProvider();
 
-  const opensearchProvider =
-    libs.opensearchProvider || new OpensearchDataProvider();
-
   // Controllers
+  const aimController =
+    libs.aimController || new AimController(aimsMilestonesDataProvider);
   const analyticsController =
     libs.analyticsController || new AnalyticsController(analyticsDataProvider);
   const calendarController =
@@ -429,6 +440,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;
 
   // Routes
+  const aimRoutes = aimRouteFactory(aimController);
   const analyticsRoutes = analyticsRouteFactory(analyticsController);
   const calendarRoutes = calendarRouteFactory(calendarController);
   const categoryRoutes = categoryRouteFactory(categoryController);
@@ -538,6 +550,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(manuscriptRoutes);
   app.use(newsRoutes);
   app.use(projectRoutes);
+  app.use(aimRoutes);
   app.use(opensearchRoutes);
   app.use(reminderRoutes);
   app.use(researchOutputRoutes);
@@ -565,6 +578,8 @@ export const appFactory = (libs: Libs = {}): Express => {
 };
 
 export type Libs = {
+  aimController?: AimController;
+  aimsMilestonesDataProvider?: AimsMilestonesDataProvider;
   analyticsDataProvider?: AnalyticsContentfulDataProvider;
   analyticsController?: AnalyticsController;
   calendarController?: CalendarController;

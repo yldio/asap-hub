@@ -60,7 +60,10 @@ describe('OpensearchController', () => {
       const index = 'manuscripts';
       mockOpensearchProvider.search.mockResolvedValueOnce(mockSearchResponse);
 
-      const result = await opensearchController.search(index, mockSearchRequest);
+      const result = await opensearchController.search(
+        index,
+        mockSearchRequest,
+      );
 
       expect(result).toEqual(mockSearchResponse);
       expect(mockOpensearchProvider.search).toHaveBeenCalledTimes(1);
@@ -134,7 +137,10 @@ describe('OpensearchController', () => {
 
       mockOpensearchProvider.search.mockResolvedValueOnce(emptyResponse);
 
-      const result = await opensearchController.search(index, mockSearchRequest);
+      const result = await opensearchController.search(
+        index,
+        mockSearchRequest,
+      );
 
       expect(result).toEqual(emptyResponse);
       expect(result.hits.hits).toHaveLength(0);

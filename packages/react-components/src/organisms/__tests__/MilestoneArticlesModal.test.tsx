@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ArticleItem } from '@asap-hub/model';
 import MilestoneArticlesModal from '../MilestoneArticlesModal';
@@ -16,50 +16,67 @@ const mockArticles: ArticleItem[] = [
 const defaultProps = {
   onClose: jest.fn(),
   onConfirm: jest.fn(),
+  loadOptions: jest.fn().mockResolvedValue([]),
 };
 
 describe('MilestoneArticlesModal', () => {
-  it('renders "Add Related Articles" title when no articles', () => {
+  it('renders "Add Related Articles" title when no articles', async () => {
     render(<MilestoneArticlesModal articles={[]} {...defaultProps} />);
-    expect(screen.getByText('Add Related Articles')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Add Related Articles')).toBeInTheDocument();
+    });
   });
 
-  it('renders "Edit Related Articles" title when articles exist', () => {
+  it('renders "Edit Related Articles" title when articles exist', async () => {
     render(
       <MilestoneArticlesModal articles={mockArticles} {...defaultProps} />,
     );
-    expect(screen.getByText('Edit Related Articles')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Edit Related Articles')).toBeInTheDocument();
+    });
   });
 
-  it('renders description text', () => {
+  it('renders description text', async () => {
     render(<MilestoneArticlesModal articles={[]} {...defaultProps} />);
-    expect(
-      screen.getByText(/Only published articles on the CRN Hub/),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Only published articles on the CRN Hub/),
+      ).toBeInTheDocument();
+    });
   });
 
-  it('renders article titles inside the select', () => {
+  it('renders article titles inside the select', async () => {
     render(
       <MilestoneArticlesModal articles={mockArticles} {...defaultProps} />,
     );
-    expect(screen.getByText('Alpha-synuclein study')).toBeInTheDocument();
-    expect(screen.getByText('LRRK2 research paper')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Alpha-synuclein study')).toBeInTheDocument();
+      expect(screen.getByText('LRRK2 research paper')).toBeInTheDocument();
+    });
   });
 
-  it('renders type badges on article chips', () => {
+  it('renders type badges on article chips', async () => {
     render(
       <MilestoneArticlesModal articles={mockArticles} {...defaultProps} />,
     );
-    expect(screen.getByText('Preprint')).toBeInTheDocument();
-    expect(screen.getByText('Published')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Preprint')).toBeInTheDocument();
+      expect(screen.getByText('Published')).toBeInTheDocument();
+    });
   });
 
   it('removes article when remove button is clicked', async () => {
     render(
       <MilestoneArticlesModal articles={mockArticles} {...defaultProps} />,
     );
-    const removeButton = screen.getByLabelText('Remove Alpha-synuclein study');
-    await userEvent.click(removeButton);
+    await waitFor(() => {
+      expect(
+        screen.getByLabelText('Remove Alpha-synuclein study'),
+      ).toBeInTheDocument();
+    });
+    await userEvent.click(
+      screen.getByLabelText('Remove Alpha-synuclein study'),
+    );
     expect(screen.queryByText('Alpha-synuclein study')).not.toBeInTheDocument();
     expect(screen.getByText('LRRK2 research paper')).toBeInTheDocument();
   });
@@ -71,8 +88,14 @@ describe('MilestoneArticlesModal', () => {
         articles={[]}
         onClose={onClose}
         onConfirm={jest.fn()}
+        loadOptions={defaultProps.loadOptions}
       />,
     );
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /cancel/i }),
+      ).toBeInTheDocument();
+    });
     await userEvent.click(screen.getByRole('button', { name: /cancel/i }));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
@@ -84,18 +107,24 @@ describe('MilestoneArticlesModal', () => {
         articles={[]}
         onClose={onClose}
         onConfirm={jest.fn()}
+        loadOptions={defaultProps.loadOptions}
       />,
     );
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    });
     const dialog = screen.getByRole('dialog');
     const firstButton = within(dialog).getAllByRole('button')[0]!;
     await userEvent.click(firstButton);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('renders Confirm button as enabled', () => {
+  it('renders Confirm button as enabled', async () => {
     render(<MilestoneArticlesModal articles={[]} {...defaultProps} />);
-    const confirmButton = screen.getByRole('button', { name: /confirm/i });
-    expect(confirmButton).not.toBeDisabled();
+    await waitFor(() => {
+      const confirmButton = screen.getByRole('button', { name: /confirm/i });
+      expect(confirmButton).not.toBeDisabled();
+    });
   });
 
   it('calls onConfirm with current articles when Confirm is clicked', async () => {
@@ -105,8 +134,14 @@ describe('MilestoneArticlesModal', () => {
         articles={mockArticles}
         onClose={jest.fn()}
         onConfirm={onConfirm}
+        loadOptions={defaultProps.loadOptions}
       />,
     );
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /confirm/i }),
+      ).toBeInTheDocument();
+    });
     await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
     expect(onConfirm).toHaveBeenCalledTimes(1);
     expect(onConfirm).toHaveBeenCalledWith(
@@ -120,13 +155,17 @@ describe('MilestoneArticlesModal', () => {
     );
   });
 
-  it('renders select input with placeholder', () => {
+  it('renders select input with placeholder', async () => {
     render(<MilestoneArticlesModal articles={[]} {...defaultProps} />);
-    expect(screen.getByText('Start typing...')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Start typing...')).toBeInTheDocument();
+    });
   });
 
-  it('does not render remove buttons when no articles', () => {
+  it('does not render remove buttons when no articles', async () => {
     render(<MilestoneArticlesModal articles={[]} {...defaultProps} />);
-    expect(screen.queryByLabelText(/Remove/)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByLabelText(/Remove/)).not.toBeInTheDocument();
+    });
   });
 });

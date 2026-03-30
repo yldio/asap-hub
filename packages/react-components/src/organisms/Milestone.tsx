@@ -6,7 +6,7 @@ import { rem, tabletScreen } from '../pixels';
 import { steel, info100, info500 } from '../colors';
 import { article as articleIcon, minusRectIcon, plusRectIcon } from '../icons';
 import { useTextTruncation } from '../hooks';
-import { noop } from '../utils';
+import { noop, ResearchOutputOption } from '../utils';
 import {
   descriptionContainerStyles,
   mobileLabelStyles,
@@ -89,9 +89,14 @@ export const getMilestoneStatusAccent = (
 type MilestoneProps = {
   milestone: MilestoneType;
   isLead: boolean;
+  loadArticleOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
 };
 
-const Milestone: FC<MilestoneProps> = ({ milestone, isLead }) => {
+const Milestone: FC<MilestoneProps> = ({
+  milestone,
+  isLead,
+  loadArticleOptions,
+}) => {
   const { ref, isExpanded, needsExpansion, toggle } = useTextTruncation(
     milestone.description,
   );
@@ -206,6 +211,7 @@ const Milestone: FC<MilestoneProps> = ({ milestone, isLead }) => {
           articles={articles}
           onClose={() => setIsModalOpen(false)}
           onConfirm={noop}
+          loadOptions={loadArticleOptions}
         />
       )}
     </div>

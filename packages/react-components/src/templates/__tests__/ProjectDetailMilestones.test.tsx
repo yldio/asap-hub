@@ -3,6 +3,8 @@ import { Milestone } from '@asap-hub/model';
 
 import ProjectDetailMilestones from '../ProjectDetailMilestones';
 
+const mockLoadArticleOptions = jest.fn(() => Promise.resolve([]));
+
 const pageControlsProps = {
   numberOfPages: 3,
   currentPageIndex: 1,
@@ -24,7 +26,13 @@ const mockMilestones: Milestone[] = [
 
 describe('ProjectDetailMilestones', () => {
   it('renders empty state when there are no milestones', () => {
-    render(<ProjectDetailMilestones milestones={[]} isLead={false} />);
+    render(
+      <ProjectDetailMilestones
+        milestones={[]}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
+    );
 
     expect(screen.getByText('Milestones')).toBeInTheDocument();
     expect(
@@ -53,6 +61,7 @@ describe('ProjectDetailMilestones', () => {
         milestones={mockMilestones}
         pageControlsProps={pageControlsProps}
         isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
       />,
     );
 
@@ -72,7 +81,13 @@ describe('ProjectDetailMilestones', () => {
   });
 
   it('renders the mobile fallback page', () => {
-    render(<ProjectDetailMilestones milestones={[]} isLead={false} />);
+    render(
+      <ProjectDetailMilestones
+        milestones={[]}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
+    );
 
     expect(
       screen.getByText(/Milestones are only available/, { selector: 'span' }),
@@ -85,6 +100,7 @@ describe('ProjectDetailMilestones', () => {
         milestones={[]}
         hasSupplementGrant={true}
         isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
       />,
     );
 

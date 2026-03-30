@@ -76,7 +76,6 @@ type AimsCollectionItem = NonNullable<
   NonNullable<ProjectAimsItem['originalGrantAimsCollection']>['items'][number]
 >;
 
-
 export const parseContentfulAims = (
   items: Array<AimsCollectionItem | null> | undefined,
 ): Aim[] | undefined => {
@@ -371,20 +370,11 @@ const parseProjectManuscripts = (
 // Parse Contentful project to ProjectDetail format with all additional fields
 export const parseContentfulProjectDetail = (
   item: ProjectItem,
-  aimsItem?: ProjectAimsItem | null,
 ): ProjectDetailDataObject => {
   const baseProject = parseContentfulProject(item);
   const { projectType } = baseProject;
 
   const originalGrantProposalId = item.proposal?.sys.id || undefined;
-
-  const originalGrantAims = parseContentfulAims(
-    aimsItem?.originalGrantAimsCollection?.items,
-  );
-
-  const supplementGrantAims = aimsItem?.supplementGrant
-    ? parseContentfulAims(aimsItem.supplementGrant.aimsCollection?.items)
-    : undefined;
 
   const supplementGrant: SupplementGrantInfo | undefined = item.supplementGrant
     ? {
@@ -393,7 +383,6 @@ export const parseContentfulProjectDetail = (
         grantProposalId: item.supplementGrant.proposal?.sys.id || undefined,
         grantStartDate: item.supplementGrant.startDate || undefined,
         grantEndDate: item.supplementGrant.endDate || undefined,
-        aims: supplementGrantAims,
       }
     : undefined;
 
@@ -428,7 +417,6 @@ export const parseContentfulProjectDetail = (
           ...baseProject,
           originalGrantProposalId,
           supplementGrant,
-          originalGrantAims,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
           manuscripts,
@@ -441,7 +429,6 @@ export const parseContentfulProjectDetail = (
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
-        originalGrantAims,
       } as DiscoveryProjectDetail;
     }
 
@@ -475,7 +462,6 @@ export const parseContentfulProjectDetail = (
           ...baseProject,
           originalGrantProposalId,
           supplementGrant,
-          originalGrantAims,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
           manuscripts: resourceManuscripts,
@@ -492,7 +478,6 @@ export const parseContentfulProjectDetail = (
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
-        originalGrantAims,
         members: userMembers.length > 0 ? userMembers : undefined,
       } as ResourceProjectDetail;
     }
@@ -504,7 +489,6 @@ export const parseContentfulProjectDetail = (
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
-        originalGrantAims,
         members: allMembers,
       } as TraineeProjectDetail;
     }

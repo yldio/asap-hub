@@ -1531,43 +1531,6 @@ describe('parseContentfulProjectDetail', () => {
     );
   });
 
-  it('parses supplementGrant aims from aimsItem when supplementGrant is present', () => {
-    const discoveryItem = getDiscoveryProjectDetailGraphqlItem({
-      supplementGrant: getSupplementGrantFields({
-        id: 'supplement-1',
-        title: 'Supplement Grant Title',
-        description: 'Supplement grant description',
-      }),
-    });
-
-    const aimsItem = {
-      originalGrantAimsCollection: null,
-      supplementGrant: {
-        aimsCollection: {
-          items: [
-            {
-              sys: { id: 'sup-aim-1' },
-              description: 'Supplement aim description',
-              milestonesCollection: null,
-            },
-          ],
-        },
-      },
-    };
-
-    const result = parseContentfulProjectDetail(discoveryItem, aimsItem);
-
-    expect(result.supplementGrant?.aims).toEqual([
-      expect.objectContaining({
-        id: 'sup-aim-1',
-        description: 'Supplement aim description',
-        order: 1,
-        status: 'Pending',
-        articleCount: 0,
-      }),
-    ]);
-  });
-
   describe('parseContentfulProjectDetail - manuscripts', () => {
     it('returns manuscripts and collaborationManuscripts for a Discovery project', () => {
       const graphqlItem = getDiscoveryProjectDetailGraphqlItem();

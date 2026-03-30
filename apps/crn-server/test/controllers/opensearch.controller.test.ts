@@ -1,4 +1,3 @@
-import { UserResponse } from '@asap-hub/model';
 import { OpensearchRequest, OpensearchResponse } from '@asap-hub/server-common';
 import OpensearchController from '../../src/controllers/opensearch.controller';
 import OpensearchProvider from '../../src/data-providers/opensearch.data-provider';
@@ -8,13 +7,6 @@ jest.mock('../../src/data-providers/opensearch.data-provider');
 describe('OpensearchController', () => {
   let opensearchController: OpensearchController;
   let mockOpensearchProvider: jest.Mocked<OpensearchProvider>;
-
-  const mockUser: UserResponse = {
-    id: 'user-123',
-    email: 'test@example.com',
-    firstName: 'Test',
-    lastName: 'User',
-  } as UserResponse;
 
   const mockSearchRequest: OpensearchRequest = {
     query: {
@@ -68,18 +60,13 @@ describe('OpensearchController', () => {
       const index = 'manuscripts';
       mockOpensearchProvider.search.mockResolvedValueOnce(mockSearchResponse);
 
-      const result = await opensearchController.search(
-        index,
-        mockSearchRequest,
-        mockUser,
-      );
+      const result = await opensearchController.search(index, mockSearchRequest);
 
       expect(result).toEqual(mockSearchResponse);
       expect(mockOpensearchProvider.search).toHaveBeenCalledTimes(1);
       expect(mockOpensearchProvider.search).toHaveBeenCalledWith({
         index,
         body: mockSearchRequest,
-        loggedInUser: mockUser,
       });
     });
 
@@ -101,12 +88,11 @@ describe('OpensearchController', () => {
 
       mockOpensearchProvider.search.mockResolvedValueOnce(mockSearchResponse);
 
-      await opensearchController.search(index, customSearchRequest, mockUser);
+      await opensearchController.search(index, customSearchRequest);
 
       expect(mockOpensearchProvider.search).toHaveBeenCalledWith({
         index: 'users',
         body: customSearchRequest,
-        loggedInUser: mockUser,
       });
     });
 
@@ -116,13 +102,12 @@ describe('OpensearchController', () => {
       mockOpensearchProvider.search.mockRejectedValueOnce(searchError);
 
       await expect(
-        opensearchController.search(index, mockSearchRequest, mockUser),
+        opensearchController.search(index, mockSearchRequest),
       ).rejects.toThrow('Opensearch connection failed');
 
       expect(mockOpensearchProvider.search).toHaveBeenCalledWith({
         index,
         body: mockSearchRequest,
-        loggedInUser: mockUser,
       });
     });
 
@@ -149,11 +134,7 @@ describe('OpensearchController', () => {
 
       mockOpensearchProvider.search.mockResolvedValueOnce(emptyResponse);
 
-      const result = await opensearchController.search(
-        index,
-        mockSearchRequest,
-        mockUser,
-      );
+      const result = await opensearchController.search(index, mockSearchRequest);
 
       expect(result).toEqual(emptyResponse);
       expect(result.hits.hits).toHaveLength(0);
@@ -215,14 +196,12 @@ describe('OpensearchController', () => {
       const result = await opensearchController.search(
         index,
         complexSearchRequest,
-        mockUser,
       );
 
       expect(result).toEqual(responseWithAggregations);
       expect(mockOpensearchProvider.search).toHaveBeenCalledWith({
         index,
         body: complexSearchRequest,
-        loggedInUser: mockUser,
       });
     });
   });

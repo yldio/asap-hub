@@ -80,7 +80,6 @@ describe('/opensearch/ route', () => {
       expect(opensearchControllerMock.search).toHaveBeenCalledWith(
         'os-champion',
         validSearchBody,
-        expect.any(Object), // loggedInUser
       );
     });
 
@@ -152,7 +151,6 @@ describe('/opensearch/ route', () => {
       expect(opensearchControllerMock.search).toHaveBeenCalledWith(
         'other-index',
         validSearchBody,
-        expect.any(Object),
       );
     });
   });

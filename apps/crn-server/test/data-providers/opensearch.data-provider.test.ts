@@ -1,4 +1,3 @@
-import { UserResponse } from '@asap-hub/model';
 import { OpensearchRequest, OpensearchResponse } from '@asap-hub/server-common';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import OpensearchProvider from '../../src/data-providers/opensearch.data-provider';
@@ -22,13 +21,6 @@ jest.doMock('../../src/config', () => mockConfig);
 describe('OpensearchProvider', () => {
   let opensearchProvider: OpensearchProvider;
   let mockSend: jest.Mock;
-
-  const mockUser: UserResponse = {
-    id: 'user-123',
-    email: 'test@example.com',
-    firstName: 'Test',
-    lastName: 'User',
-  } as UserResponse;
 
   const mockSearchRequest: OpensearchRequest = {
     query: {
@@ -123,22 +115,11 @@ describe('OpensearchProvider', () => {
       const result = await opensearchProvider.search({
         index: 'os-champion',
         body: mockSearchRequest,
-        loggedInUser: mockUser,
       });
 
       expect(result).toEqual(mockSearchResponse);
       expect(mockSend).toHaveBeenCalledTimes(1);
       expect(mockSend).toHaveBeenCalledWith(expect.any(InvokeCommand));
-    });
-
-    test('Should throw Boom forbidden error when user is not logged in', async () => {
-      await expect(
-        opensearchProvider.search({
-          index: 'os-champion',
-          body: mockSearchRequest,
-          loggedInUser: null as any,
-        }),
-      ).rejects.toThrow();
     });
 
     test('Should handle Uint8Array payload response', async () => {
@@ -160,7 +141,6 @@ describe('OpensearchProvider', () => {
       const result = await opensearchProvider.search({
         index: 'os-champion',
         body: mockSearchRequest,
-        loggedInUser: mockUser,
       });
 
       expect(result).toEqual(mockSearchResponse);
@@ -189,7 +169,6 @@ describe('OpensearchProvider', () => {
       await opensearchProvider.search({
         index: 'os-champion',
         body: requestWithoutPagination,
-        loggedInUser: mockUser,
       });
 
       const requestSent = mockSend.mock.calls[0][0];
@@ -224,7 +203,6 @@ describe('OpensearchProvider', () => {
       await opensearchProvider.search({
         index: 'os-champion',
         body: { ...mockSearchRequest, size, from },
-        loggedInUser: mockUser,
       });
 
       const requestSent = mockSend.mock.calls[0][0];
@@ -247,8 +225,7 @@ describe('OpensearchProvider', () => {
         opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
-          loggedInUser: mockUser,
-        }),
+          }),
       ).rejects.toThrow('Lambda returned an empty response');
     });
 
@@ -270,8 +247,7 @@ describe('OpensearchProvider', () => {
         opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
-          loggedInUser: mockUser,
-        }),
+          }),
       ).rejects.toThrow('Invalid JSON response from Lambda');
 
       expect(loggerErrorSpy).toHaveBeenCalledWith(
@@ -317,8 +293,7 @@ describe('OpensearchProvider', () => {
           opensearchProvider.search({
             index: 'os-champion',
             body: mockSearchRequest,
-            loggedInUser: mockUser,
-          }),
+              }),
         ).rejects.toThrow(/Invalid JSON response from Lambda/i);
 
         expect(loggerErrorSpy).toHaveBeenCalledWith(
@@ -347,8 +322,7 @@ describe('OpensearchProvider', () => {
         opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
-          loggedInUser: mockUser,
-        }),
+          }),
       ).rejects.toThrow('Invalid JSON response from Lambda');
     });
 
@@ -363,8 +337,7 @@ describe('OpensearchProvider', () => {
         opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
-          loggedInUser: mockUser,
-        }),
+          }),
       ).rejects.toThrow('Invalid JSON response from Lambda');
     });
 
@@ -383,7 +356,6 @@ describe('OpensearchProvider', () => {
       const result = await opensearchProvider.search({
         index: 'os-champion',
         body: mockSearchRequest,
-        loggedInUser: mockUser,
       });
 
       expect(result).toEqual(mockSearchResponse);
@@ -407,7 +379,6 @@ describe('OpensearchProvider', () => {
       const result = await opensearchProvider.search({
         index: 'os-champion',
         body: mockSearchRequest,
-        loggedInUser: mockUser,
       });
 
       expect(result).toEqual(mockSearchResponse);
@@ -421,8 +392,7 @@ describe('OpensearchProvider', () => {
         opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
-          loggedInUser: mockUser,
-        }),
+          }),
       ).rejects.toThrow('Lambda service unavailable');
     });
   });

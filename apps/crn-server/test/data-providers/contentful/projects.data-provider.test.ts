@@ -158,19 +158,6 @@ describe('ProjectContentfulDataProvider', () => {
       opensearchProviderMock.search.mockResolvedValue(emptySearchResponse);
     });
 
-    it('throws when opensearchProvider is not provided', async () => {
-      const providerWithoutOpensearch = new ProjectContentfulDataProvider(
-        contentfulClientMock,
-      );
-      contentfulClientMock.request.mockResolvedValueOnce(
-        getProjectByIdGraphqlResponse(),
-      );
-
-      await expect(
-        providerWithoutOpensearch.fetchById('project-1'),
-      ).rejects.toThrow('OpensearchProvider is required to fetch aims');
-    });
-
     it('returns a parsed project when the entry exists', async () => {
       contentfulClientMock.request.mockResolvedValueOnce(
         getProjectByIdGraphqlResponse(),

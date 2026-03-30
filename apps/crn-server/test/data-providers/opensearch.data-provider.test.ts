@@ -225,7 +225,7 @@ describe('OpensearchProvider', () => {
         opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
-          }),
+        }),
       ).rejects.toThrow('Lambda returned an empty response');
     });
 
@@ -247,7 +247,7 @@ describe('OpensearchProvider', () => {
         opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
-          }),
+        }),
       ).rejects.toThrow('Invalid JSON response from Lambda');
 
       expect(loggerErrorSpy).toHaveBeenCalledWith(
@@ -293,7 +293,7 @@ describe('OpensearchProvider', () => {
           opensearchProvider.search({
             index: 'os-champion',
             body: mockSearchRequest,
-              }),
+          }),
         ).rejects.toThrow(/Invalid JSON response from Lambda/i);
 
         expect(loggerErrorSpy).toHaveBeenCalledWith(
@@ -322,7 +322,7 @@ describe('OpensearchProvider', () => {
         opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
-          }),
+        }),
       ).rejects.toThrow('Invalid JSON response from Lambda');
     });
 
@@ -337,7 +337,7 @@ describe('OpensearchProvider', () => {
         opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
-          }),
+        }),
       ).rejects.toThrow('Invalid JSON response from Lambda');
     });
 
@@ -392,7 +392,7 @@ describe('OpensearchProvider', () => {
         opensearchProvider.search({
           index: 'os-champion',
           body: mockSearchRequest,
-          }),
+        }),
       ).rejects.toThrow('Lambda service unavailable');
     });
   });

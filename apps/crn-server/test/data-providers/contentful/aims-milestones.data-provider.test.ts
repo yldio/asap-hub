@@ -18,6 +18,7 @@ describe('AimsMilestonesContentfulDataProvider', () => {
           total: 1,
           items: [
             {
+              sys: { id: 'project-1' },
               originalGrantAimsCollection: {
                 items: [
                   { sys: { id: 'aim-1' }, description: 'Aim one' },
@@ -39,6 +40,7 @@ describe('AimsMilestonesContentfulDataProvider', () => {
         total: 1,
         items: [
           {
+            sys: { id: 'project-1' },
             originalGrantAimsCollection: {
               items: [
                 { sys: { id: 'aim-1' }, description: 'Aim one' },
@@ -246,6 +248,102 @@ describe('AimsMilestonesContentfulDataProvider', () => {
         sys: { id: 'milestone-2' },
         relatedArticlesCollection: { total: 0, items: [] },
       });
+    });
+  });
+
+  describe('fetchArticlesForAim', () => {
+    it('returns articles from milestones, deduplicating by id', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: {
+          milestonesCollection: {
+            items: [
+              {
+                relatedArticlesCollection: {
+                  items: [
+                    { sys: { id: 'ro-1' }, title: 'Article One' },
+                    { sys: { id: 'ro-2' }, title: 'Article Two' },
+                  ],
+                },
+              },
+              {
+                relatedArticlesCollection: {
+                  items: [
+                    { sys: { id: 'ro-2' }, title: 'Article Two' },
+                    { sys: { id: 'ro-3' }, title: 'Article Three' },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      const result = await dataProvider.fetchArticlesForAim('aim-1');
+
+      expect(result).toHaveLength(3);
+      expect(result[0]).toEqual({
+        id: 'ro-1',
+        title: 'Article One',
+        href: '/shared-research/ro-1',
+      });
+      expect(result[1]).toEqual({
+        id: 'ro-2',
+        title: 'Article Two',
+        href: '/shared-research/ro-2',
+      });
+      expect(result[2]).toEqual({
+        id: 'ro-3',
+        title: 'Article Three',
+        href: '/shared-research/ro-3',
+      });
+    });
+
+    it('returns empty array when aim has no milestones', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: {
+          milestonesCollection: { items: [] },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchArticlesForAim('aim-no-milestones');
+
+      expect(result).toEqual([]);
+    });
+
+    it('returns empty array when aim is null', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: null,
+      });
+
+      const result = await dataProvider.fetchArticlesForAim('unknown-aim');
+
+      expect(result).toEqual([]);
+    });
+
+    it('skips null milestones and null articles', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: {
+          milestonesCollection: {
+            items: [
+              null,
+              {
+                relatedArticlesCollection: {
+                  items: [
+                    null,
+                    { sys: { id: 'ro-1' }, title: 'Valid Article' },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      });
+
+      const result = await dataProvider.fetchArticlesForAim('aim-1');
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({ id: 'ro-1', title: 'Valid Article' });
     });
   });
 

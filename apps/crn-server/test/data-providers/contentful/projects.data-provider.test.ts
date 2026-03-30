@@ -42,7 +42,14 @@ import {
 
 describe('ProjectContentfulDataProvider', () => {
   const contentfulClientMock = getContentfulGraphqlClientMock();
-  const dataProvider = new ProjectContentfulDataProvider(contentfulClientMock);
+  const opensearchProviderMock = {
+    search: jest.fn(),
+  };
+  const dataProvider = new ProjectContentfulDataProvider(
+    contentfulClientMock,
+    undefined,
+    opensearchProviderMock as any,
+  );
 
   afterEach(() => {
     jest.resetAllMocks();
@@ -145,6 +152,25 @@ describe('ProjectContentfulDataProvider', () => {
   });
 
   describe('fetchById', () => {
+    const emptySearchResponse = { hits: { hits: [] } };
+
+    beforeEach(() => {
+      opensearchProviderMock.search.mockResolvedValue(emptySearchResponse);
+    });
+
+    it('throws when opensearchProvider is not provided', async () => {
+      const providerWithoutOpensearch = new ProjectContentfulDataProvider(
+        contentfulClientMock,
+      );
+      contentfulClientMock.request.mockResolvedValueOnce(
+        getProjectByIdGraphqlResponse(),
+      );
+
+      await expect(
+        providerWithoutOpensearch.fetchById('project-1'),
+      ).rejects.toThrow('OpensearchProvider is required to fetch aims');
+    });
+
     it('returns a parsed project when the entry exists', async () => {
       contentfulClientMock.request.mockResolvedValueOnce(
         getProjectByIdGraphqlResponse(),
@@ -155,6 +181,95 @@ describe('ProjectContentfulDataProvider', () => {
       expect(result).toEqual(getExpectedDiscoveryProjectDetail());
     });
 
+    it('fetches aims from OpenSearch and maps articleCount and status', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce(
+        getProjectByIdGraphqlResponse(),
+      );
+      opensearchProviderMock.search
+        .mockResolvedValueOnce({
+          hits: {
+            hits: [
+              {
+                _source: {
+                  id: 'aim-1',
+                  description: 'First aim',
+                  status: 'Complete',
+                  articleCount: 4,
+                },
+              },
+              {
+                _source: {
+                  id: 'aim-2',
+                  description: 'Second aim',
+                  status: 'In Progress',
+                  articleCount: 2,
+                },
+              },
+            ],
+          },
+        })
+        .mockResolvedValueOnce(emptySearchResponse);
+
+      const result = await dataProvider.fetchById('project-with-aims');
+
+      expect(contentfulClientMock.request).toHaveBeenCalledTimes(1);
+      expect(opensearchProviderMock.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          index: 'project-aims',
+          body: expect.objectContaining({
+            query: {
+              bool: {
+                filter: [
+                  { term: { projectId: 'project-with-aims' } },
+                  { term: { grantType: 'original' } },
+                ],
+              },
+            },
+          }),
+        }),
+      );
+      expect(opensearchProviderMock.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          index: 'project-aims',
+          body: expect.objectContaining({
+            query: {
+              bool: {
+                filter: [
+                  { term: { projectId: 'project-with-aims' } },
+                  { term: { grantType: 'supplement' } },
+                ],
+              },
+            },
+          }),
+        }),
+      );
+      expect(result).not.toBeNull();
+      const originalGrantAims = (result as any).originalGrantAims;
+      expect(originalGrantAims).toHaveLength(2);
+      expect(originalGrantAims[0]).toMatchObject({
+        id: 'aim-1',
+        order: 1,
+        articleCount: 4,
+        status: 'Complete',
+      });
+      expect(originalGrantAims[1]).toMatchObject({
+        id: 'aim-2',
+        order: 2,
+        articleCount: 2,
+        status: 'In Progress',
+      });
+    });
+
+    it('sets originalGrantAims to undefined when OpenSearch returns no aims', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce(
+        getProjectByIdGraphqlResponse(),
+      );
+
+      const result = await dataProvider.fetchById('discovery-1');
+
+      expect((result as any).originalGrantAims).toBeUndefined();
+    });
+
     it('returns null when Contentful does not return the project', async () => {
       contentfulClientMock.request.mockResolvedValueOnce({ projects: null });
 
@@ -163,7 +278,7 @@ describe('ProjectContentfulDataProvider', () => {
       expect(result).toBeNull();
     });
 
-    it('returns null when Contentful request fails', async () => {
+    it('returns null when a request fails', async () => {
       contentfulClientMock.request.mockRejectedValueOnce(
         new Error('Network error'),
       );
@@ -853,14 +968,86 @@ describe('parseContentfulAims', () => {
     ]);
   });
 
-  it('sets status to Pending and articleCount to 0 for all items', () => {
+  it('sums article totals across milestones for articleCount', () => {
+    const result = parseContentfulAims([
+      {
+        sys: { id: 'aim-1' },
+        description: 'First aim',
+        milestonesCollection: {
+          items: [
+            { status: 'Complete', relatedArticlesCollection: { total: 3 } },
+            { status: 'Complete', relatedArticlesCollection: { total: 4 } },
+          ],
+        },
+      },
+    ]);
+
+    expect(result![0]).toMatchObject({ articleCount: 7 });
+  });
+
+  it('sets articleCount to 0 when aim has no milestones', () => {
     const result = parseContentfulAims([
       { sys: { id: 'aim-1' }, description: 'Test aim' },
     ]);
 
-    expect(result![0]).toMatchObject({
-      status: 'Pending',
-      articleCount: 0,
+    expect(result![0]).toMatchObject({ articleCount: 0 });
+  });
+
+  describe('deriveAimStatus', () => {
+    const aim = (statuses: string[]) => {
+      const result = parseContentfulAims([
+        {
+          sys: { id: 'aim-1' },
+          description: 'Test aim',
+          milestonesCollection: {
+            items: statuses.map((status) => ({
+              status,
+              relatedArticlesCollection: { total: 0 },
+            })),
+          },
+        },
+      ]);
+      if (!result?.[0]) throw new Error('Expected aim to be defined');
+      return result[0].status;
+    };
+
+    it('returns Pending when aim has no milestones', () => {
+      const result = parseContentfulAims([
+        { sys: { id: 'aim-1' }, description: 'Test aim' },
+      ]);
+      expect(result![0]).toMatchObject({ status: 'Pending' });
+    });
+
+    it('returns Pending when all milestones are Pending', () => {
+      expect(aim(['Pending', 'Pending'])).toBe('Pending');
+    });
+
+    it('returns Complete when all milestones are Complete', () => {
+      expect(aim(['Complete', 'Complete'])).toBe('Complete');
+    });
+
+    it('returns Terminated when all milestones are Terminated', () => {
+      expect(aim(['Terminated', 'Terminated'])).toBe('Terminated');
+    });
+
+    it('returns In Progress when at least one milestone is In Progress', () => {
+      expect(aim(['Complete', 'In Progress'])).toBe('In Progress');
+    });
+
+    it('returns In Progress when some are Complete and others are Pending', () => {
+      expect(aim(['Complete', 'Pending'])).toBe('In Progress');
+    });
+
+    it('returns In Progress when some are Terminated and others are Pending', () => {
+      expect(aim(['Terminated', 'Pending'])).toBe('In Progress');
+    });
+
+    it('returns Complete when some are Complete and others are Terminated', () => {
+      expect(aim(['Complete', 'Terminated'])).toBe('Complete');
+    });
+
+    it('returns In Progress for a mix of Complete, Terminated, and Pending', () => {
+      expect(aim(['Complete', 'Terminated', 'Pending'])).toBe('In Progress');
     });
   });
 });

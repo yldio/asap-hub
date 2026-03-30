@@ -6,6 +6,7 @@ import {
   FETCH_PROJECTS_BY_TEAM_ID,
   FETCH_PROJECTS_BY_USER_ID,
   FETCH_PROJECT_BY_ID,
+  FetchProjectAimsByIdQuery,
   FetchProjectByIdQuery,
   FetchProjectByIdQueryVariables,
   FetchProjectsByMembershipIdQuery,
@@ -22,6 +23,7 @@ import {
 } from '@asap-hub/contentful';
 import {
   Aim,
+  AimStatus,
   DiscoveryProject,
   FetchPaginationOptions,
   DiscoveryProjectDetail,
@@ -41,9 +43,15 @@ import {
   TraineeProjectDetail,
   ProjectStatusRank,
 } from '@asap-hub/model';
-import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
+import {
+  cleanArray,
+  parseUserDisplayName,
+  OpensearchRequest,
+} from '@asap-hub/server-common';
 import { getCleanProjectTools } from '../../utils/project';
 import logger from '../../utils/logger';
+import OpensearchProvider from '../opensearch.data-provider';
+import { deriveAimStatus } from '../../utils/aim-status';
 
 import {
   FetchProjectsOptions,
@@ -62,9 +70,13 @@ export type ProjectMembershipItem = NonNullable<
   NonNullable<ProjectItem['membersCollection']>['items'][number]
 >;
 
+type ProjectAimsItem = NonNullable<FetchProjectAimsByIdQuery['projects']>;
+
 type AimsCollectionItem = NonNullable<
-  NonNullable<ProjectItem['originalGrantAimsCollection']>['items'][number]
+  NonNullable<ProjectAimsItem['originalGrantAimsCollection']>['items'][number]
 >;
+
+export { deriveAimStatus } from '../../utils/aim-status';
 
 export const parseContentfulAims = (
   items: Array<AimsCollectionItem | null> | undefined,
@@ -82,12 +94,11 @@ export const parseContentfulAims = (
           id: item.sys.id,
           order: index + 1,
           description: item.description?.trim() ?? '',
-          status: 'Pending',
-          // TODO: This needs to be inferred from the aggregation of articles in milestones.
-          // See EPIC ASAP-1337 (general Aims and Milestones description) and tickets
-          // - ASAP-1416
-          // - ASAP-1422
-          articleCount: 0,
+          status: deriveAimStatus(item.milestonesCollection?.items),
+          articleCount: (item.milestonesCollection?.items ?? []).reduce(
+            (sum, m) => sum + (m?.relatedArticlesCollection?.total ?? 0),
+            0,
+          ),
         }) satisfies Aim,
     );
 
@@ -361,6 +372,7 @@ const parseProjectManuscripts = (
 // Parse Contentful project to ProjectDetail format with all additional fields
 export const parseContentfulProjectDetail = (
   item: ProjectItem,
+  aimsItem?: ProjectAimsItem | null,
 ): ProjectDetailDataObject => {
   const baseProject = parseContentfulProject(item);
   const { projectType } = baseProject;
@@ -368,11 +380,11 @@ export const parseContentfulProjectDetail = (
   const originalGrantProposalId = item.proposal?.sys.id || undefined;
 
   const originalGrantAims = parseContentfulAims(
-    item.originalGrantAimsCollection?.items,
+    aimsItem?.originalGrantAimsCollection?.items,
   );
 
-  const supplementGrantAims = item.supplementGrant
-    ? parseContentfulAims(item.supplementGrant.aimsCollection?.items)
+  const supplementGrantAims = aimsItem?.supplementGrant
+    ? parseContentfulAims(aimsItem.supplementGrant.aimsCollection?.items)
     : undefined;
 
   const supplementGrant: SupplementGrantInfo | undefined = item.supplementGrant
@@ -529,22 +541,104 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
   constructor(
     private contentfulClient: GraphQLClient,
     private getRestClient?: () => Promise<Environment>,
+    private opensearchProvider?: OpensearchProvider,
   ) {}
+
+  private async fetchAimsByProjectId(
+    projectId: string,
+    grantType: 'original' | 'supplement',
+  ): Promise<
+    Array<{
+      id: string;
+      description: string;
+      status: string;
+      articleCount: number;
+    }>
+  > {
+    if (!this.opensearchProvider) {
+      throw new Error('OpensearchProvider is required to fetch aims');
+    }
+
+    const response = await this.opensearchProvider.search({
+      index: 'project-aims',
+      body: {
+        query: {
+          bool: {
+            filter: [{ term: { projectId } }, { term: { grantType } }],
+          },
+        },
+        sort: [{ createdDate: { order: 'asc' } }],
+        size: 50,
+      } as unknown as OpensearchRequest,
+    });
+
+    return (
+      (
+        (response.hits?.hits as unknown as Array<{
+          _source: {
+            id: string;
+            description: string;
+            status: string;
+            articleCount: number;
+          };
+        }>) ?? []
+      )
+        // eslint-disable-next-line no-underscore-dangle
+        .map((hit) => hit._source)
+    );
+  }
 
   async fetchById(id: string): Promise<ProjectDataObject | null> {
     try {
-      const { projects } = await this.contentfulClient.request<
-        FetchProjectByIdQuery,
-        FetchProjectByIdQueryVariables
-      >(FETCH_PROJECT_BY_ID, { id });
+      const [{ projects }, originalAimsHits, supplementAimsHits] =
+        await Promise.all([
+          this.contentfulClient.request<
+            FetchProjectByIdQuery,
+            FetchProjectByIdQueryVariables
+          >(FETCH_PROJECT_BY_ID, { id }),
+          this.fetchAimsByProjectId(id, 'original'),
+          this.fetchAimsByProjectId(id, 'supplement'),
+        ]);
 
       if (!projects) {
         return null;
       }
 
-      // Return ProjectDetail with all additional fields
-      return parseContentfulProjectDetail(projects);
+      const toAims = (
+        hits: Array<{
+          id: string;
+          description: string;
+          status: string;
+          articleCount: number;
+        }>,
+      ): ReadonlyArray<Aim> | undefined => {
+        if (hits.length === 0) return undefined;
+        return hits.map((hit, index) => ({
+          id: hit.id,
+          order: index + 1,
+          description: hit.description,
+          status: hit.status as AimStatus,
+          articleCount: hit.articleCount,
+        }));
+      };
+
+      const baseResult = parseContentfulProjectDetail(projects);
+      const originalGrantAims = toAims(originalAimsHits);
+      const supplementGrant = baseResult.supplementGrant
+        ? {
+            ...baseResult.supplementGrant,
+            aims: toAims(supplementAimsHits),
+          }
+        : undefined;
+
+      return {
+        ...baseResult,
+        originalGrantAims,
+        supplementGrant,
+      } as ProjectDetailDataObject;
     } catch (error) {
+      logger.info('error:::', error);
+
       logger.error('Failed to fetch project by id', { id, error });
       return null;
     }

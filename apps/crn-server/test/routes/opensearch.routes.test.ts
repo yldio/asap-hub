@@ -124,7 +124,6 @@ describe('/opensearch/ route', () => {
       expect(opensearchControllerMock.search).toHaveBeenCalledWith(
         'os-champion',
         {},
-        expect.any(Object),
       );
     });
 

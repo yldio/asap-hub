@@ -168,4 +168,24 @@ describe('MilestoneArticlesModal', () => {
       expect(screen.queryByLabelText(/Remove/)).not.toBeInTheDocument();
     });
   });
+
+  it('shows no options message when search yields no results', async () => {
+    const loadOptions = jest.fn().mockResolvedValue([]);
+    render(
+      <MilestoneArticlesModal
+        articles={[]}
+        onClose={jest.fn()}
+        onConfirm={jest.fn()}
+        loadOptions={loadOptions}
+      />,
+    );
+    await waitFor(() => {
+      expect(screen.getByText('Start typing...')).toBeInTheDocument();
+    });
+    const input = screen.getByRole('combobox');
+    await userEvent.type(input, 'nonexistent');
+    await waitFor(() => {
+      expect(screen.getByText('No articles found')).toBeInTheDocument();
+    });
+  });
 });

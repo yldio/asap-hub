@@ -24,11 +24,7 @@ export const opensearchRouteFactory = (
       if (!loggedInUser) throw Boom.forbidden();
 
       try {
-        const result = await opensearchController.search(
-          index,
-          body,
-          loggedInUser,
-        );
+        const result = await opensearchController.search(index, body);
 
         logger.info({
           message: 'Successfully called Opensearch search',

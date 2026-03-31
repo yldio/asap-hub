@@ -33625,22 +33625,6 @@ export type FetchProjectsQuery = {
                               researchTheme?: Maybe<
                                 Pick<ResearchTheme, 'name'>
                               >;
-                              linkedFrom?: Maybe<{
-                                manuscriptsCollection?: Maybe<{
-                                  items: Array<
-                                    Maybe<
-                                      Pick<Manuscripts, 'status'> & {
-                                        sys: Pick<Sys, 'id'>;
-                                        teamsCollection?: Maybe<{
-                                          items: Array<
-                                            Maybe<{ sys: Pick<Sys, 'id'> }>
-                                          >;
-                                        }>;
-                                      }
-                                    >
-                                  >;
-                                }>;
-                              }>;
                             })
                         | ({ __typename: 'Users' } & Pick<
                             Users,
@@ -33862,27 +33846,6 @@ export type FetchProjectsByTeamIdQuery = {
                                           researchTheme?: Maybe<
                                             Pick<ResearchTheme, 'name'>
                                           >;
-                                          linkedFrom?: Maybe<{
-                                            manuscriptsCollection?: Maybe<{
-                                              items: Array<
-                                                Maybe<
-                                                  Pick<
-                                                    Manuscripts,
-                                                    'status'
-                                                  > & {
-                                                    sys: Pick<Sys, 'id'>;
-                                                    teamsCollection?: Maybe<{
-                                                      items: Array<
-                                                        Maybe<{
-                                                          sys: Pick<Sys, 'id'>;
-                                                        }>
-                                                      >;
-                                                    }>;
-                                                  }
-                                                >
-                                              >;
-                                            }>;
-                                          }>;
                                         })
                                     | ({ __typename: 'Users' } & Pick<
                                         Users,
@@ -33994,27 +33957,6 @@ export type FetchProjectsByUserIdQuery = {
                                           researchTheme?: Maybe<
                                             Pick<ResearchTheme, 'name'>
                                           >;
-                                          linkedFrom?: Maybe<{
-                                            manuscriptsCollection?: Maybe<{
-                                              items: Array<
-                                                Maybe<
-                                                  Pick<
-                                                    Manuscripts,
-                                                    'status'
-                                                  > & {
-                                                    sys: Pick<Sys, 'id'>;
-                                                    teamsCollection?: Maybe<{
-                                                      items: Array<
-                                                        Maybe<{
-                                                          sys: Pick<Sys, 'id'>;
-                                                        }>
-                                                      >;
-                                                    }>;
-                                                  }
-                                                >
-                                              >;
-                                            }>;
-                                          }>;
                                         })
                                     | ({ __typename: 'Users' } & Pick<
                                         Users,
@@ -34116,22 +34058,6 @@ export type FetchProjectsByMembershipIdQuery = {
                                   researchTheme?: Maybe<
                                     Pick<ResearchTheme, 'name'>
                                   >;
-                                  linkedFrom?: Maybe<{
-                                    manuscriptsCollection?: Maybe<{
-                                      items: Array<
-                                        Maybe<
-                                          Pick<Manuscripts, 'status'> & {
-                                            sys: Pick<Sys, 'id'>;
-                                            teamsCollection?: Maybe<{
-                                              items: Array<
-                                                Maybe<{ sys: Pick<Sys, 'id'> }>
-                                              >;
-                                            }>;
-                                          }
-                                        >
-                                      >;
-                                    }>;
-                                  }>;
                                 })
                             | ({ __typename: 'Users' } & Pick<
                                 Users,
@@ -49112,7 +49038,7 @@ export const FetchMilestonesDocument = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '100' },
+                            value: { kind: 'IntValue', value: '50' },
                           },
                         ],
                         selectionSet: {

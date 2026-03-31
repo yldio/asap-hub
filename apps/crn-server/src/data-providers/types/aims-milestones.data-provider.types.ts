@@ -1,4 +1,4 @@
-import { ListResponse } from '@asap-hub/model';
+import { ArticleItem, ListResponse } from '@asap-hub/model';
 
 export type ProjectWithAimsDataObject = {
   sys: { id: string };
@@ -94,4 +94,5 @@ export type AimsMilestonesDataProvider = {
     limit: number;
     skip: number;
   }) => Promise<ListResponse<MilestoneDataObject>>;
+  fetchArticlesForAim: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
 };

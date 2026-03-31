@@ -135,7 +135,7 @@ export const FETCH_MILESTONES = gql`
         }
         description
         status
-        relatedArticlesCollection(limit: 100) {
+        relatedArticlesCollection(limit: 50) {
           total
           items {
             sys {

@@ -5,6 +5,7 @@ import {
   contentfulSpaceId,
 } from '../config';
 import { ProjectContentfulDataProvider } from '../data-providers/contentful/project.data-provider';
+import OpensearchProvider from '../data-providers/opensearch.data-provider';
 import { ProjectDataProvider } from '../data-providers/types/projects.data-provider.types';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 
@@ -18,5 +19,6 @@ export const getProjectDataProvider = (): ProjectDataProvider => {
   return new ProjectContentfulDataProvider(
     contentfulGraphQLClient,
     getContentfulRestClientFactory,
+    new OpensearchProvider(),
   );
 };

@@ -1,11 +1,9 @@
-import { UserResponse } from '@asap-hub/model';
 import { OpensearchRequest, OpensearchResponse } from '@asap-hub/server-common';
 import {
   LambdaClient,
   InvokeCommand,
   InvocationType,
 } from '@aws-sdk/client-lambda';
-import Boom from '@hapi/boom';
 import { region, environment } from '../config';
 import logger from '../utils/logger';
 
@@ -133,17 +131,11 @@ export default class OpensearchProvider {
   async search(params: {
     index: string;
     body: OpensearchRequest;
-    loggedInUser: UserResponse;
   }): Promise<OpensearchResponse> {
     logger.info('Searching Opensearch', {
       index: params.index,
       body: params.body,
-      loggedInUser: !!params.loggedInUser,
     });
-
-    if (!params.loggedInUser) {
-      throw Boom.forbidden();
-    }
 
     try {
       const searchPayload: OpensearchRequest = {

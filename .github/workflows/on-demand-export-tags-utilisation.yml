@@ -38,7 +38,7 @@ jobs:
           pr-number: '0'
       - name: Build
         run: |
-          yarn install
+          yarn install --immutable
           yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/model,@asap-hub/server-common,@asap-hub/crn-server}' run build:babel"
           yarn build:typecheck
       - name: Run Tags Utilisation Export

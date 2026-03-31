@@ -169,6 +169,76 @@ describe('MilestoneArticlesModal', () => {
     });
   });
 
+  it('handles menu open and close without errors', async () => {
+    const loadOptions = jest.fn().mockResolvedValue([]);
+    render(
+      <MilestoneArticlesModal
+        articles={[]}
+        onClose={jest.fn()}
+        onConfirm={jest.fn()}
+        loadOptions={loadOptions}
+      />,
+    );
+    const input = screen.getByRole('combobox');
+    await userEvent.type(input, 'test');
+    await waitFor(() => {
+      expect(screen.getByText('No articles found')).toBeInTheDocument();
+    });
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /confirm/i }),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('truncates long article titles and shows full title on hover', async () => {
+    const longTitle = 'A'.repeat(61);
+    const articles: ArticleItem[] = [
+      { id: 'long', title: longTitle, href: '/long', type: 'Preprint' },
+    ];
+    render(<MilestoneArticlesModal articles={articles} {...defaultProps} />);
+    await waitFor(() => {
+      expect(screen.getByText(`${'A'.repeat(60)}…`)).toBeInTheDocument();
+    });
+    const truncatedSpan = screen.getByTitle(longTitle);
+    expect(truncatedSpan).toBeInTheDocument();
+  });
+
+  it('renders custom option with pill in dropdown', async () => {
+    const loadOptions = jest.fn().mockResolvedValue([
+      {
+        label: 'Some Article',
+        value: 'id-1',
+        documentType: 'Article',
+        type: 'Preprint',
+      },
+      {
+        label: 'Untyped Article',
+        value: 'id-2',
+        documentType: 'Article',
+      },
+    ]);
+    render(
+      <MilestoneArticlesModal
+        articles={[
+          { id: 'no-type', title: 'Article without type', href: '/no-type' },
+        ]}
+        onClose={jest.fn()}
+        onConfirm={jest.fn()}
+        loadOptions={loadOptions}
+      />,
+    );
+    expect(screen.getByText('Article without type')).toBeInTheDocument();
+    const input = screen.getByRole('combobox');
+    await userEvent.type(input, 'Some');
+    await waitFor(() => {
+      expect(screen.getByText('Some Article')).toBeInTheDocument();
+    });
+    expect(screen.getByText('Untyped Article')).toBeInTheDocument();
+    expect(screen.getByText('Preprint')).toBeInTheDocument();
+  });
+
   it('shows no options message when search yields no results', async () => {
     const loadOptions = jest.fn().mockResolvedValue([]);
     render(

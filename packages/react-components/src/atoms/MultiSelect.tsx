@@ -68,6 +68,8 @@ export type MultiSelectProps<
   readonly placeholder?: string;
   readonly onFocus?: () => void;
   readonly onBlur?: () => void;
+  readonly onMenuOpen?: () => void;
+  readonly onMenuClose?: () => void;
   readonly onChange?: M extends true
     ? MultiSelectOnChange<T>
     : SingleSelectOnChange<T>;
@@ -116,6 +118,8 @@ const MultiSelect = <
   noOptionsMessage,
   onFocus = noop,
   onBlur = noop,
+  onMenuOpen = noop,
+  onMenuClose = noop,
   onChange = noop,
   creatable = false,
   required = false,
@@ -184,6 +188,8 @@ const MultiSelect = <
       validate();
       onBlur();
     },
+    onMenuOpen,
+    onMenuClose,
     onChange: (
       options: M extends true ? readonly T[] : T | null,
       actionMeta: ActionMeta<T>,

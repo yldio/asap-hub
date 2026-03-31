@@ -27,21 +27,21 @@ const widerModalStyles = css({
   boxSizing: 'content-box',
 });
 
-const selectContainerStyles = css({});
-
 const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
 
-const buttonContainerStyles = css({
-  display: 'grid',
-  columnGap: rem(24),
-  gridTemplateRows: 'max-content 12px max-content',
-  [buttonMediaQuery]: {
-    gridTemplateColumns: 'max-content max-content',
-    gridTemplateRows: 'auto',
-    justifyContent: 'flex-end',
-  },
-  paddingTop: rem(144),
-});
+const buttonContainerStyles = (menuOpen: boolean) =>
+  css({
+    display: 'grid',
+    columnGap: rem(24),
+    gridTemplateRows: 'max-content 12px max-content',
+    [buttonMediaQuery]: {
+      gridTemplateColumns: 'max-content max-content',
+      gridTemplateRows: 'auto',
+      justifyContent: 'flex-end',
+    },
+    paddingTop: menuOpen ? rem(288) : rem(72),
+    transition: 'padding-top 0.2s ease',
+  });
 
 const confirmStyles = css({
   display: 'flex',
@@ -63,6 +63,8 @@ const cancelStyles = css({
     gridRow: '1',
   },
 });
+
+const selectContainerStyles = css({});
 
 const mainWrapStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -109,6 +111,7 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
   const [selectedOptions, setSelectedOptions] = useState<
     ResearchOutputOption[]
   >(articlesToOptions(initialArticles));
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const hasArticles = initialArticles.length > 0;
   const title = hasArticles ? 'Edit Related Articles' : 'Add Related Articles';
 
@@ -134,9 +137,11 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
               onChange={(newValues) => setSelectedOptions([...newValues])}
               noOptionsMessage={() => 'No articles found'}
               components={articleSelectComponents}
+              onMenuOpen={() => setIsMenuOpen(true)}
+              onMenuClose={() => setIsMenuOpen(false)}
             />
           </div>
-          <div css={buttonContainerStyles}>
+          <div css={buttonContainerStyles(isMenuOpen)}>
             <div css={cancelStyles}>
               <Button noMargin onClick={onClose}>
                 Cancel

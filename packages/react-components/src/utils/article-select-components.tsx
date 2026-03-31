@@ -12,12 +12,21 @@ import { rem } from '../pixels';
 import { getMultiValueStyles } from '../select';
 import type { ResearchOutputOption } from './research-output-form';
 
+const TITLE_MAX_LENGTH = 60;
+
+const truncateTitle = (text: React.ReactNode): React.ReactNode => {
+  if (typeof text === 'string' && text.length > TITLE_MAX_LENGTH) {
+    return `${text.slice(0, TITLE_MAX_LENGTH)}…`;
+  }
+  return text;
+};
+
 const optionGridStyles = (showPill: boolean) =>
   css({
     display: 'grid',
-    gridTemplateColumns: `min-content${showPill ? ' min-content' : ''} auto`,
+    gridTemplateColumns: `min-content auto${showPill ? ' min-content' : ''}`,
     justifyItems: 'start',
-    alignItems: 'top',
+    alignItems: 'center',
     alignContent: 'center',
     columnGap: '12px',
   });
@@ -56,27 +65,35 @@ export const createArticleSelectComponents = <T extends ResearchOutputOption>({
   ),
   MultiValueLabel: (
     multiValueLabelProps: MultiValueGenericProps<T, true, GroupBase<T>>,
-  ) => (
-    <components.MultiValueLabel {...multiValueLabelProps}>
-      <div css={optionGridStyles(showArticlePill(multiValueLabelProps.data))}>
-        <div css={articleSelectIconStyles}>
-          {getIcon(multiValueLabelProps.data)}
+  ) => {
+    const label = multiValueLabelProps.children;
+    const isTruncated =
+      typeof label === 'string' && label.length > TITLE_MAX_LENGTH;
+
+    return (
+      <components.MultiValueLabel {...multiValueLabelProps}>
+        <div css={optionGridStyles(showArticlePill(multiValueLabelProps.data))}>
+          <div css={articleSelectIconStyles}>
+            {getIcon(multiValueLabelProps.data)}
+          </div>
+          <span title={isTruncated ? label : undefined}>
+            {truncateTitle(label)}
+          </span>
+          {showArticlePill(multiValueLabelProps.data) && (
+            <Pill accent="gray">{multiValueLabelProps.data.type}</Pill>
+          )}
         </div>
-        {showArticlePill(multiValueLabelProps.data) && (
-          <Pill accent="gray">{multiValueLabelProps.data.type}</Pill>
-        )}
-        <span>{multiValueLabelProps.children}</span>
-      </div>
-    </components.MultiValueLabel>
-  ),
+      </components.MultiValueLabel>
+    );
+  },
   Option: (optionProps: OptionProps<T, true, GroupBase<T>>) => (
     <components.Option {...optionProps}>
       <div css={optionGridStyles(showArticlePill(optionProps.data))}>
         <div css={articleSelectIconStyles}>{getIcon(optionProps.data)}</div>
+        <div>{optionProps.children}</div>
         {showArticlePill(optionProps.data) && (
           <Pill accent="gray">{optionProps.data.type}</Pill>
         )}
-        <div>{optionProps.children}</div>
       </div>
     </components.Option>
   ),

@@ -4,17 +4,16 @@ import { ArticleItem, ResearchOutputType } from '@asap-hub/model';
 
 import { LabeledMultiSelect, Modal } from '../molecules';
 import { article as articleIcon, crossIcon } from '../icons';
-import { Button, Headline3, Paragraph } from '../atoms';
-import { paddingStyles } from '../card';
+import { Button, Headline3 } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
 import { ResearchOutputOption } from '../utils';
 import { createArticleSelectComponents } from '../utils/article-select-components';
 
-const headerStyles = css(paddingStyles, {
-  paddingBottom: 0,
+const headerStyles = css({
   display: 'flex',
   flexDirection: 'row-reverse',
   justifyContent: 'space-between',
+  alignItems: 'center',
 });
 
 const controlsContainerStyles = css({
@@ -22,26 +21,26 @@ const controlsContainerStyles = css({
   alignItems: 'flex-start',
 });
 
-const bodyStyles = css(paddingStyles, {
-  paddingTop: 0,
+const widerModalStyles = css({
+  width: '90%',
+  maxWidth: rem(1060),
+  boxSizing: 'content-box',
 });
 
-const selectContainerStyles = css({
-  marginTop: rem(16),
-  marginBottom: rem(24),
-});
+const selectContainerStyles = css({});
 
 const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
 
 const buttonContainerStyles = css({
   display: 'grid',
-  columnGap: rem(30),
+  columnGap: rem(24),
   gridTemplateRows: 'max-content 12px max-content',
   [buttonMediaQuery]: {
     gridTemplateColumns: 'max-content max-content',
     gridTemplateRows: 'auto',
     justifyContent: 'flex-end',
   },
+  paddingTop: rem(144),
 });
 
 const confirmStyles = css({
@@ -63,6 +62,10 @@ const cancelStyles = css({
   [buttonMediaQuery]: {
     gridRow: '1',
   },
+});
+
+const mainWrapStyles = css({
+  padding: `${rem(32)} ${rem(24)}`,
 });
 
 const articlesToOptions = (
@@ -110,46 +113,44 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
   const title = hasArticles ? 'Edit Related Articles' : 'Add Related Articles';
 
   return (
-    <Modal padding={false}>
-      <header css={headerStyles}>
-        <div css={controlsContainerStyles}>
-          <Button small onClick={onClose}>
-            {crossIcon}
-          </Button>
-        </div>
-        <Headline3>{title}</Headline3>
-      </header>
-      <div css={bodyStyles}>
-        <Paragraph accent="lead">
-          Add any articles associated with this milestone. Only published
-          articles on the CRN Hub will be available to select. These articles
-          will also be displayed in the corresponding Aim.
-        </Paragraph>
-
-        <div css={selectContainerStyles}>
-          <LabeledMultiSelect<ResearchOutputOption>
-            title=""
-            description=""
-            placeholder="Start typing..."
-            values={selectedOptions}
-            loadOptions={loadOptions}
-            onChange={(newValues) => setSelectedOptions([...newValues])}
-            noOptionsMessage={() => 'No articles found'}
-            components={articleSelectComponents}
-          />
-        </div>
-
-        <div css={buttonContainerStyles}>
-          <div css={cancelStyles}>
-            <Button onClick={onClose}>Cancel</Button>
-          </div>
-          <div css={confirmStyles}>
-            <Button
-              primary
-              onClick={() => onConfirm(optionsToArticles(selectedOptions))}
-            >
-              Confirm
+    <Modal padding={false} overrideModalStyles={widerModalStyles}>
+      <div css={mainWrapStyles}>
+        <header css={headerStyles}>
+          <div css={controlsContainerStyles}>
+            <Button small noMargin onClick={onClose}>
+              {crossIcon}
             </Button>
+          </div>
+          <Headline3 noMargin>{title}</Headline3>
+        </header>
+        <div>
+          <div css={selectContainerStyles}>
+            <LabeledMultiSelect<ResearchOutputOption>
+              title=""
+              description="Add any articles associated with this milestone. Only published articles on the CRN Hub will be available to select. These articles will also be displayed in the corresponding Aim."
+              placeholder="Start typing..."
+              values={selectedOptions}
+              loadOptions={loadOptions}
+              onChange={(newValues) => setSelectedOptions([...newValues])}
+              noOptionsMessage={() => 'No articles found'}
+              components={articleSelectComponents}
+            />
+          </div>
+          <div css={buttonContainerStyles}>
+            <div css={cancelStyles}>
+              <Button noMargin onClick={onClose}>
+                Cancel
+              </Button>
+            </div>
+            <div css={confirmStyles}>
+              <Button
+                primary
+                noMargin
+                onClick={() => onConfirm(optionsToArticles(selectedOptions))}
+              >
+                Confirm
+              </Button>
+            </div>
           </div>
         </div>
       </div>

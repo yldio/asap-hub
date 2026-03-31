@@ -98,7 +98,8 @@ export const parseContentfulAims = (
           description: item.description?.trim() ?? '',
           status: deriveAimStatus(item.milestonesCollection?.items),
           articleCount: (item.milestonesCollection?.items ?? []).reduce(
-            (sum: number, m) => sum + (m?.relatedArticlesCollection?.total ?? 0),
+            (sum: number, m) =>
+              sum + (m?.relatedArticlesCollection?.total ?? 0),
             0,
           ),
         }) satisfies Aim,

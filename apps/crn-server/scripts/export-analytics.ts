@@ -25,7 +25,9 @@ export const exportAnalyticsData = async (
   metric: Metric,
   filename?: string,
 ): Promise<void> => {
-  console.log(`Starting export for metric: ${metric}`);
+  // Disabled: OpenSearch is now the sole analytics backend (ASAP-1451)
+  console.log('Algolia analytics export is disabled. OpenSearch is now the sole analytics backend.');
+  return;
   const file = await fs.open(filename || `${metric}.json`, 'w');
 
   try {

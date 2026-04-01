@@ -12,8 +12,6 @@ import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { FC, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
-import { useFlags } from '@asap-hub/react-context';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
 
 import {
   useSearch,
@@ -22,11 +20,7 @@ import {
   usePaginationParams,
   useOpensearchMetrics,
 } from '../../hooks';
-import {
-  AnalyticsSearchOptionsWithSort,
-  getAnalyticsLeadership,
-  getAnalyticsOSChampion,
-} from './api';
+import { getAnalyticsOSChampion } from './api';
 import { leadershipToCSV, osChampionToCSV } from './export';
 import OSChampion, { getOSChampionSortFromSearch } from './OSChampion';
 import TeamLeadership from './TeamLeadership';
@@ -48,8 +42,6 @@ const Leadership: FC<Record<string, never>> = () => {
 
   const { tags, setTags } = useSearch();
   const { timeRange } = useAnalytics();
-  const { client } = useAnalyticsAlgolia();
-  const { isEnabled } = useFlags();
   const opensearchMetrics = useOpensearchMetrics();
   const osChampionClient =
     useAnalyticsOpensearch<OSChampionOpensearchResponse>('os-champion');
@@ -64,13 +56,10 @@ const Leadership: FC<Record<string, never>> = () => {
         },
       ),
       (paginationParams) => {
-        const useOpensearch = isEnabled('OPENSEARCH_METRICS');
-        const fetcher = useOpensearch
-          ? metric === 'working-group'
+        const fetcher =
+          metric === 'working-group'
             ? opensearchMetrics.getAnalyticsWorkingGroupLeadership
-            : opensearchMetrics.getAnalyticsInterestGroupLeadership
-          : (params: AnalyticsSearchOptionsWithSort) =>
-              getAnalyticsLeadership(client, params);
+            : opensearchMetrics.getAnalyticsInterestGroupLeadership;
         return fetcher({
           tags,
           sort: teamSort,
@@ -114,23 +103,12 @@ const Leadership: FC<Record<string, never>> = () => {
         value,
       }));
     }
-    if (isEnabled('OPENSEARCH_METRICS')) {
-      const fetcher =
-        metric === 'working-group'
-          ? opensearchMetrics.getAnalyticsWorkingGroupLeadershipTagSuggestions
-          : opensearchMetrics.getAnalyticsInterestGroupLeadershipTagSuggestions;
-      const response = await fetcher(tagQuery);
-      return response.map((value) => ({
-        label: value,
-        value,
-      }));
-    }
-    const searchedTags = await client.searchForTagValues(
-      ['team-leadership'],
-      tagQuery,
-      {},
-    );
-    return searchedTags.facetHits.map(({ value }) => ({
+    const fetcher =
+      metric === 'working-group'
+        ? opensearchMetrics.getAnalyticsWorkingGroupLeadershipTagSuggestions
+        : opensearchMetrics.getAnalyticsInterestGroupLeadershipTagSuggestions;
+    const response = await fetcher(tagQuery);
+    return response.map((value) => ({
       label: value,
       value,
     }));

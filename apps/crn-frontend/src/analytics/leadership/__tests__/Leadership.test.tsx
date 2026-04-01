@@ -440,19 +440,8 @@ describe('csv export', () => {
   });
 });
 
-describe('working-group with OPENSEARCH_METRICS enabled', () => {
-  it('uses opensearch for tag suggestions when OPENSEARCH_METRICS is enabled', async () => {
-    // This test covers line 119: opensearchMetrics.getAnalyticsLeadershipTagSuggestions(tagQuery)
-    // Enable OPENSEARCH_METRICS flag
-    mockUseFlags.mockReturnValue({
-      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+describe('working-group', () => {
+  it('uses opensearch for tag suggestions', async () => {
     const localMockGetTagSuggestions = jest
       .fn()
       .mockResolvedValue(['Alessi', 'tag2']);
@@ -487,16 +476,7 @@ describe('working-group with OPENSEARCH_METRICS enabled', () => {
     });
   });
 
-  it('uses opensearch for CSV export when OPENSEARCH_METRICS is enabled', async () => {
-    mockUseFlags.mockReturnValue({
-      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+  it('uses opensearch for CSV export', async () => {
     const mockGetAnalyticsWorkingGroupLeadership = jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 });
@@ -530,17 +510,8 @@ describe('working-group with OPENSEARCH_METRICS enabled', () => {
   });
 });
 
-describe('interest-group with OPENSEARCH_METRICS enabled', () => {
-  it('uses opensearch for tag suggestions when OPENSEARCH_METRICS is enabled', async () => {
-    mockUseFlags.mockReturnValue({
-      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+describe('interest-group', () => {
+  it('uses opensearch for tag suggestions', async () => {
     const localMockGetTagSuggestions = jest
       .fn()
       .mockResolvedValue(['Alessi', 'tag2']);
@@ -575,16 +546,7 @@ describe('interest-group with OPENSEARCH_METRICS enabled', () => {
     });
   });
 
-  it('uses opensearch for CSV export when OPENSEARCH_METRICS is enabled', async () => {
-    mockUseFlags.mockReturnValue({
-      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+  it('uses opensearch for CSV export', async () => {
     const mockGetAnalyticsInterestGroupLeadership = jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 });

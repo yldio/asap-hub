@@ -366,7 +366,7 @@ describe('Engagement', () => {
     );
   });
 
-  it('uses opensearch for CSV export when OPENSEARCH_METRICS is enabled', async () => {
+  it('uses opensearch for CSV export', async () => {
     const mockGetPresenterRepresentationOS = jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 });
@@ -374,14 +374,6 @@ describe('Engagement', () => {
       ...defaultUseOpensearchMetricsResponse,
       getPresenterRepresentation: mockGetPresenterRepresentationOS,
     } as unknown as ReturnType<typeof useOpensearchMetrics>);
-    mockUseFlags.mockReturnValue({
-      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
     await renderPage(
       analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
     );
@@ -626,21 +618,10 @@ describe('loadTags function', () => {
     });
   });
 
-  it('loads tags from opensearch for presenters page when opensearch flag is on', async () => {
+  it('loads tags from opensearch for presenters page', async () => {
     const mockGetPresenterSuggestionsOS = jest
       .fn()
       .mockResolvedValue(['team1', 'team2', 'team3']);
-
-    mockUseFlags.mockReturnValue({
-      isEnabled: jest
-        .fn()
-        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
 
     mockUseOpensearchMetrics.mockReturnValue({
       ...defaultUseOpensearchMetricsResponse,

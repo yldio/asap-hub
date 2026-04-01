@@ -7,7 +7,6 @@ import {
   SortOSChampion,
 } from '@asap-hub/model';
 import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
-import { useFlags } from '@asap-hub/react-context';
 import {
   atomFamily,
   DefaultValue,
@@ -21,8 +20,6 @@ import {
   getAnalyticsOSChampion,
 } from './api';
 import { OpensearchIndex } from '../utils/opensearch/types';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { getAlgoliaIndexName } from '../utils/state';
 import { useAnalyticsOpensearch } from '../../hooks';
 
 type Options = AnalyticsSearchOptions & {
@@ -154,9 +151,6 @@ export const analyticsOSChampionState = selectorFamily<
 });
 
 export const useAnalyticsLeadership = (options: Options) => {
-  const { isEnabled } = useFlags();
-  const indexName = getAlgoliaIndexName(options.sort, 'team-leadership');
-  const algoliaClient = useAnalyticsAlgolia(indexName).client;
   const opensearchIndex: OpensearchIndex =
     options.metric === 'interest-group' ? 'ig-leadership' : 'wg-leadership';
   const opensearchClient =
@@ -168,9 +162,8 @@ export const useAnalyticsLeadership = (options: Options) => {
     analyticsLeadershipState(options),
   );
   if (leadership === undefined) {
-    const useOpensearch = isEnabled('OPENSEARCH_METRICS');
     throw getAnalyticsLeadership(
-      useOpensearch ? opensearchClient : algoliaClient,
+      opensearchClient,
       options as AnalyticsSearchOptionsWithSort,
     )
       .then(setLeadership)
@@ -181,7 +174,6 @@ export const useAnalyticsLeadership = (options: Options) => {
   }
   return {
     ...leadership,
-    client: algoliaClient,
   };
 };
 

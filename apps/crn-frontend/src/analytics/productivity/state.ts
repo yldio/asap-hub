@@ -9,7 +9,6 @@ import {
   UserProductivityPerformance,
   UserProductivityResponse,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import {
   atomFamily,
   DefaultValue,
@@ -17,10 +16,8 @@ import {
   useRecoilState,
   useRecoilValueLoadable,
 } from 'recoil';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import {
-  getAlgoliaIndexName,
   makeFlagBasedPerformanceHook,
   makePerformanceState,
 } from '../utils/state';
@@ -97,11 +94,6 @@ export const analyticsUserProductivityState = selectorFamily<
 export const useAnalyticsUserProductivity = (
   options: AnalyticsSearchOptionsWithFiltering<SortUserProductivity>,
 ) => {
-  const { isEnabled } = useFlags();
-
-  const indexName = getAlgoliaIndexName(options.sort, 'user-productivity');
-  const algoliaClient = useAnalyticsAlgolia(indexName).client;
-
   const opensearchClient =
     useAnalyticsOpensearch<UserProductivityResponse>(
       'user-productivity',
@@ -112,10 +104,7 @@ export const useAnalyticsUserProductivity = (
   );
 
   if (userProductivity === undefined) {
-    throw getUserProductivity(
-      isEnabled('OPENSEARCH_METRICS') ? opensearchClient : algoliaClient,
-      options,
-    )
+    throw getUserProductivity(opensearchClient, options)
       .then(setUserProductivity)
       .catch(setUserProductivity);
   }
@@ -235,11 +224,6 @@ export const analyticsTeamProductivityState = selectorFamily<
 export const useAnalyticsTeamProductivity = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamProductivity>,
 ) => {
-  const { isEnabled } = useFlags();
-
-  const indexName = getAlgoliaIndexName(options.sort, 'team-productivity');
-  const algoliaClient = useAnalyticsAlgolia(indexName).client;
-
   const opensearchClient =
     useAnalyticsOpensearch<TeamProductivityResponse>(
       'team-productivity',
@@ -250,10 +234,7 @@ export const useAnalyticsTeamProductivity = (
   );
 
   if (teamProductivity === undefined) {
-    throw getTeamProductivity(
-      isEnabled('OPENSEARCH_METRICS') ? opensearchClient : algoliaClient,
-      options,
-    )
+    throw getTeamProductivity(opensearchClient, options)
       .then(setTeamProductivity)
       .catch(setTeamProductivity);
   }

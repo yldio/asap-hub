@@ -1,7 +1,6 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'COMPLIANCE_NOTIFICATION_LIST'
-  | 'OPENSEARCH_METRICS'
   | 'DATA_MANAGER_ROLE_ENABLED'
   | 'PROJECT_WORKSPACE'
   | 'PROJECT_AIMS_AND_MILESTONES';
@@ -11,7 +10,6 @@ let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   COMPLIANCE_NOTIFICATION_LIST: '',
-  OPENSEARCH_METRICS: false,
   DATA_MANAGER_ROLE_ENABLED: false,
   PROJECT_WORKSPACE: false,
   PROJECT_AIMS_AND_MILESTONES: false,

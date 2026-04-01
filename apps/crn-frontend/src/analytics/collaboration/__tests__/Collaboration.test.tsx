@@ -837,20 +837,10 @@ describe('search', () => {
     );
   });
 
-  it('uses OpenSearch for tag suggestions when flag is enabled', async () => {
+  it('uses OpenSearch for tag suggestions', async () => {
     const mockGetUserCollaborationTagSuggestionsOS = jest
       .fn()
       .mockResolvedValue(['tag-os-1']);
-    mockUseFlags.mockReturnValue({
-      isEnabled: jest
-        .fn()
-        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
 
     mockUseOpensearchMetrics.mockReturnValue({
       getUserCollaboration: jest
@@ -918,20 +908,10 @@ describe('search', () => {
     );
   });
 
-  it('uses OpenSearch for team tag suggestions when flag is enabled', async () => {
+  it('uses OpenSearch for team tag suggestions', async () => {
     const mockGetTeamCollaborationTagSuggestionsOS = jest
       .fn()
       .mockResolvedValue(['team-tag-os-1']);
-    mockUseFlags.mockReturnValue({
-      isEnabled: jest
-        .fn()
-        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
 
     mockUseOpensearchMetrics.mockReturnValue({
       getUserCollaboration: jest
@@ -1025,18 +1005,7 @@ describe('csv export', () => {
     },
   );
 
-  it('exports user collaboration analytics via OpenSearch when flag is enabled', async () => {
-    mockUseFlags.mockReturnValue({
-      isEnabled: jest
-        .fn()
-        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+  it('exports user collaboration analytics via OpenSearch', async () => {
     const mockGetUserCollaborationOS = jest.fn().mockResolvedValue(userData);
     const mockGetUserCollaborationPerformanceOS = jest
       .fn()
@@ -1118,18 +1087,7 @@ describe('csv export', () => {
     expect(mockGetUserCollaboration).not.toHaveBeenCalled();
   });
 
-  it('exports team collaboration analytics via OpenSearch when flag is enabled', async () => {
-    mockUseFlags.mockReturnValue({
-      isEnabled: jest
-        .fn()
-        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+  it('exports team collaboration analytics via OpenSearch', async () => {
     const mockGetTeamCollaborationOS = jest.fn().mockResolvedValue(teamData);
     const mockGetTeamCollaborationPerformanceOS = jest
       .fn()

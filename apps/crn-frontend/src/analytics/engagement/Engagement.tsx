@@ -7,7 +7,6 @@ import {
   SortEngagement,
 } from '@asap-hub/model';
 import { AnalyticsEngagementPageBody } from '@asap-hub/react-components';
-import { useFlags } from '@asap-hub/react-context';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
 import { useState } from 'react';
@@ -19,8 +18,6 @@ import {
   usePaginationParams,
   useSearch,
 } from '../../hooks';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { getEngagement } from './api';
 import { engagementToCSV, meetingRepAttendanceToCSV } from './export';
 import MeetingRepAttendance, {
   getMeetingRepAttendanceSortFromSearch,
@@ -49,8 +46,6 @@ const Engagement = () => {
   const { tags, setTags } = useSearch();
 
   const performance = useEngagementPerformanceValue({ timeRange });
-  const { client } = useAnalyticsAlgolia();
-  const { isEnabled } = useFlags();
   const opensearchMetrics = useOpensearchMetrics();
 
   const [presenterRepresentationSort, setPresenterRepresentationSort] =
@@ -83,19 +78,12 @@ const Engagement = () => {
         header: true,
       }),
       (paginationParams) =>
-        isEnabled('OPENSEARCH_METRICS')
-          ? opensearchMetrics.getPresenterRepresentation({
-              sort: presenterRepresentationSort,
-              timeRange,
-              tags,
-              ...paginationParams,
-            })
-          : getEngagement(client, {
-              timeRange,
-              tags,
-              sort: presenterRepresentationSort,
-              ...paginationParams,
-            }),
+        opensearchMetrics.getPresenterRepresentation({
+          sort: presenterRepresentationSort,
+          timeRange,
+          tags,
+          ...paginationParams,
+        }),
       engagementToCSV(
         performance ?? {
           events: {
@@ -146,13 +134,10 @@ const Engagement = () => {
         value,
       }));
     }
-    const tagResults = isEnabled('OPENSEARCH_METRICS')
-      ? await opensearchMetrics.getPresenterRepresentationTagSuggestions(
-          tagQuery,
-        )
-      : (
-          await client.searchForTagValues(['engagement'], tagQuery, {})
-        ).facetHits.map(({ value }) => value);
+    const tagResults =
+      await opensearchMetrics.getPresenterRepresentationTagSuggestions(
+        tagQuery,
+      );
 
     return tagResults.map((value) => ({
       label: value,

@@ -287,9 +287,7 @@ describe('downloadAnalyticsXLSX', () => {
 
   it('should create a new workbook and process the selected metrics', async () => {
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: false,
     })(
       'current-year',
       new Set([
@@ -656,9 +654,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })(
       'all',
       new Set([
@@ -830,9 +826,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })(
       'last-year',
       new Set([
@@ -857,9 +851,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })(
       'last-year',
       new Set([
@@ -941,9 +933,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })('90d', new Set(['user-productivity']) as Set<MetricExportKeys>);
 
     // Verify getUserProductivityPerformance was called with correct parameters
@@ -1059,9 +1049,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })('30d', new Set(['team-productivity']) as Set<MetricExportKeys>);
 
     // Verify getTeamProductivityPerformance was called with correct parameters
@@ -1161,9 +1149,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })(
       'current-year',
       new Set([
@@ -1409,9 +1395,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })(
       'current-year',
       new Set([
@@ -1515,9 +1499,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })('current-year', new Set(['wg-leadership']) as Set<MetricExportKeys>);
 
     // Verify getAnalyticsWorkingGroupLeadership was called with correct parameters
@@ -1571,9 +1553,7 @@ describe('downloadAnalyticsXLSX', () => {
     );
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })('current-year', new Set(['ig-leadership']) as Set<MetricExportKeys>);
 
     // Verify getAnalyticsInterestGroupLeadership was called with correct parameters
@@ -1669,9 +1649,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })('30d', new Set(['engagement']) as Set<MetricExportKeys>);
 
     expect(

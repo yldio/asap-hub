@@ -15,7 +15,6 @@ import {
   UserCollaborationResponse,
   TeamCollaborationResponse,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import {
   atomFamily,
   DefaultValue,
@@ -23,10 +22,8 @@ import {
   useRecoilState,
   useRecoilValueLoadable,
 } from 'recoil';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import {
-  getAlgoliaIndexName,
   makeFlagBasedPerformanceHook,
   makePerformanceState,
 } from '../utils/state';
@@ -109,10 +106,6 @@ export const analyticsUserCollaborationState = selectorFamily<
 export const useAnalyticsUserCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>,
 ) => {
-  const { isEnabled } = useFlags();
-  const indexName = getAlgoliaIndexName(options.sort, 'user-collaboration');
-
-  const algoliaClient = useAnalyticsAlgolia(indexName).client;
   const opensearchClient =
     useAnalyticsOpensearch<UserCollaborationResponse>(
       'user-collaboration',
@@ -123,10 +116,7 @@ export const useAnalyticsUserCollaboration = (
   );
 
   if (userCollaboration === undefined) {
-    throw getUserCollaboration(
-      isEnabled('OPENSEARCH_METRICS') ? opensearchClient : algoliaClient,
-      options,
-    )
+    throw getUserCollaboration(opensearchClient, options)
       .then(setUserCollaboration)
       .catch(setUserCollaboration);
   }
@@ -207,10 +197,6 @@ export const analyticsTeamCollaborationState = selectorFamily<
 export const useAnalyticsTeamCollaboration = (
   options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
 ) => {
-  const { isEnabled } = useFlags();
-  const indexName = getAlgoliaIndexName(options.sort, 'team-collaboration');
-
-  const algoliaClient = useAnalyticsAlgolia(indexName).client;
   const opensearchClient =
     useAnalyticsOpensearch<TeamCollaborationResponse>(
       'team-collaboration',
@@ -221,15 +207,9 @@ export const useAnalyticsTeamCollaboration = (
   );
 
   if (teamCollaboration === undefined) {
-    if (isEnabled('OPENSEARCH_METRICS')) {
-      throw getTeamCollaboration(opensearchClient, options)
-        .then(setTeamCollaboration)
-        .catch(setTeamCollaboration);
-    } else {
-      throw getTeamCollaboration(algoliaClient, options)
-        .then(setTeamCollaboration)
-        .catch(setTeamCollaboration);
-    }
+    throw getTeamCollaboration(opensearchClient, options)
+      .then(setTeamCollaboration)
+      .catch(setTeamCollaboration);
   }
   if (teamCollaboration instanceof Error) {
     throw teamCollaboration;

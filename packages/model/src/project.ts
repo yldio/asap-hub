@@ -207,6 +207,13 @@ export const projectLeadTeamRoles = [
   'Data Manager',
 ] as const;
 
+export const projectLeadMemberRoles = [
+  'Project Manager',
+  'Lead PI',
+  'Co-PI',
+  'Data Manager',
+] as const;
+
 export const traineeProjectLeadRoles = ['Trainee Project - Lead'] as const;
 
 /**
@@ -249,8 +256,7 @@ export const isProjectLead = (
   }
 
   // User-based Resource projects (no teamId, has members): check members
-  // for team-based lead roles. These projects have individual user members
-  // with roles like "Project Manager" rather than team-level roles.
+  // for project-level lead roles.
   if (
     project.projectType === 'Resource Project' &&
     !project.teamId &&
@@ -259,7 +265,7 @@ export const isProjectLead = (
     return project.members.some(
       (m) =>
         m.id === userId &&
-        (projectLeadTeamRoles as readonly string[]).includes(m.role ?? ''),
+        (projectLeadMemberRoles as readonly string[]).includes(m.role ?? ''),
     );
   }
 

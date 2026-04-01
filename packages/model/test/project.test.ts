@@ -151,6 +151,74 @@ describe('Project Model', () => {
       expect(isProjectLead('user-1', [], project)).toBe(true);
     });
 
+    it('returns true for user-based Resource Project Lead PI in members', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Resource Project',
+        resourceType: 'Resource',
+        isTeamBased: false,
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Test User',
+            role: 'Lead PI',
+          },
+        ],
+      };
+      expect(isProjectLead('user-1', [], project)).toBe(true);
+    });
+
+    it('returns true for user-based Resource Project Co-PI in members', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Resource Project',
+        resourceType: 'Resource',
+        isTeamBased: false,
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Test User',
+            role: 'Co-PI',
+          },
+        ],
+      };
+      expect(isProjectLead('user-1', [], project)).toBe(true);
+    });
+
+    it('returns true for user-based Resource Project Data Manager in members', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Resource Project',
+        resourceType: 'Resource',
+        isTeamBased: false,
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Test User',
+            role: 'Data Manager',
+          },
+        ],
+      };
+      expect(isProjectLead('user-1', [], project)).toBe(true);
+    });
+
+    it('returns false for user-based Resource Project with team-style Lead PI role', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Resource Project',
+        resourceType: 'Resource',
+        isTeamBased: false,
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Test User',
+            role: 'Lead PI (Core Leadership)',
+          },
+        ],
+      };
+      expect(isProjectLead('user-1', [], project)).toBe(false);
+    });
+
     it('returns false for user-based Resource Project with non-lead role', () => {
       const project: Project = {
         ...baseProject,

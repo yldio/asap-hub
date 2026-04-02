@@ -12,7 +12,11 @@ import {
   processTraineeProjectMembers,
   type ProjectMembershipItem,
 } from '../../../src/data-providers/contentful/project.data-provider';
-import { TraineeProject, TraineeProjectDetail } from '@asap-hub/model';
+import {
+  FetchProjectMilestonesOptions,
+  TraineeProject,
+  TraineeProjectDetail,
+} from '@asap-hub/model';
 import { Environment } from '@asap-hub/contentful';
 import {
   getExpectedDiscoveryProject,
@@ -572,6 +576,116 @@ describe('ProjectContentfulDataProvider', () => {
 
     // When no user members exist, members array should be empty
     expect(result.members).toHaveLength(0);
+  });
+
+  describe('fetchProjectMilestones', () => {
+    const emptySearchResponse = { hits: { hits: [] } };
+    const defaultProjectMilestonesOptions: FetchProjectMilestonesOptions = {
+      grantType: 'supplement',
+      skip: 0,
+      take: 10,
+    };
+
+    beforeEach(() => {
+      opensearchProviderMock.search.mockResolvedValue(emptySearchResponse);
+    });
+
+    it('fetches project milestones from OpenSearch', async () => {
+      opensearchProviderMock.search.mockResolvedValueOnce({
+        hits: {
+          hits: [
+            {
+              _source: {
+                id: 'milestone-1',
+                description: 'First milestone',
+                aimNumbersAsc: '1',
+                aimNumbersDesc: '1',
+                status: 'Complete',
+                articleCount: 4,
+                articlesDOI: '',
+                projectId: 'project-1',
+                projectName: 'Project One',
+                grantType: 'supplement',
+                createdDate: '2026-03-30T15:48:05.665Z',
+                lastDate: '2026-03-30T15:48:05.665Z',
+              },
+            },
+            {
+              _source: {
+                id: 'milestone-2',
+                description: 'Second milestone',
+                status: 'In Progress',
+                aimNumbersAsc: '2,5',
+                aimNumbersDesc: '5,2',
+                articleCount: 2,
+                articlesDOI: '',
+                projectId: 'project-1',
+                projectName: 'Project One',
+                grantType: 'supplement',
+                createdDate: '2026-02-30T15:48:05.665Z',
+                lastDate: '2026-02-30T15:48:05.665Z',
+              },
+            },
+          ],
+          total: {
+            value: 2,
+          },
+        },
+      });
+
+      const result = await dataProvider.fetchProjectMilestones(
+        'project-with-milestones',
+        defaultProjectMilestonesOptions,
+      );
+
+      expect(opensearchProviderMock.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          index: 'project-milestones',
+          body: expect.objectContaining({
+            query: {
+              bool: {
+                filter: [
+                  { term: { projectId: 'project-with-milestones' } },
+                  { term: { grantType: 'supplement' } },
+                ],
+              },
+            },
+            sort: [{ aimNumbersAsc: { order: 'asc' } }],
+            from: defaultProjectMilestonesOptions.skip,
+            size: defaultProjectMilestonesOptions.take,
+          }),
+        }),
+      );
+      expect(result).not.toBeNull();
+      expect(result.items).toHaveLength(2);
+      expect(result.total).toBe(2);
+      expect(result.items[0]).toMatchObject({
+        id: 'milestone-1',
+        description: 'First milestone',
+        articleCount: 4,
+        aims: '1',
+        status: 'Complete',
+      });
+      expect(result.items[1]).toMatchObject({
+        id: 'milestone-2',
+        description: 'Second milestone',
+        articleCount: 2,
+        aims: '2,5',
+        status: 'In Progress',
+      });
+    });
+
+    it('handles null hits.hits gracefully', async () => {
+      opensearchProviderMock.search.mockResolvedValueOnce({ hits: {} });
+
+      const result = await dataProvider.fetchProjectMilestones(
+        'discovery-1',
+        defaultProjectMilestonesOptions,
+      );
+
+      expect(result.items).toHaveLength(0);
+      expect(result.total).toBe(0);
+    });
   });
 });
 

@@ -9,6 +9,7 @@ import {
   TraineeProject,
   ProjectEvent,
   WebhookDetail,
+  ListProjectMilestonesResponse,
 } from '@asap-hub/model';
 import { EventBridgeEvent } from 'aws-lambda';
 import { createEventBridgeEventMock } from '../helpers/events';
@@ -933,3 +934,24 @@ export const getTraineeProjectDetailGraphqlItem = (overrides?: {
       ],
     },
   }) as NonNullable<FetchProjectByIdQuery['projects']>;
+
+export const getProjectMilestonesResponse =
+  (): ListProjectMilestonesResponse => ({
+    total: 2,
+    items: [
+      {
+        id: 'milestone-1',
+        description: 'First milestone',
+        articleCount: 4,
+        aims: '1',
+        status: 'Complete',
+      },
+      {
+        id: 'milestone-2',
+        description: 'Second milestone',
+        articleCount: 2,
+        aims: '2,5',
+        status: 'In Progress',
+      },
+    ],
+  });

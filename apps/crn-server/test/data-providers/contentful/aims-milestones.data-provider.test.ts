@@ -573,4 +573,34 @@ describe('AimsMilestonesContentfulDataProvider', () => {
       ]);
     });
   });
+
+  describe('fetchArticlesForMilestone', () => {
+    it('returns empty array when milestone has no articles collection', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        milestones: null,
+      });
+
+      const result =
+        await dataProvider.fetchArticlesForMilestone('milestone-1');
+
+      expect(result).toEqual([]);
+    });
+
+    it('uses empty string for article title when title is null', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        milestones: {
+          relatedArticlesCollection: {
+            items: [{ sys: { id: 'article-1' }, title: null }],
+          },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchArticlesForMilestone('milestone-1');
+
+      expect(result).toEqual([
+        { id: 'article-1', title: '', href: '/shared-research/article-1' },
+      ]);
+    });
+  });
 });

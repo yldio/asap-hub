@@ -41,7 +41,9 @@ const parseArgs = () => {
     console.error(
       'Usage: ts-node scripts/delete-analytics-algolia-indexes.ts --app-id <ID> --api-key <KEY> --index-name <NAME> [--dry-run]',
     );
-    console.error('Or set ALGOLIA_APP_ID, ALGOLIA_API_KEY, and INDEX_NAME env vars.');
+    console.error(
+      'Or set ALGOLIA_APP_ID, ALGOLIA_API_KEY, and INDEX_NAME env vars.',
+    );
     process.exit(1);
   }
 
@@ -56,7 +58,9 @@ const parseArgs = () => {
 };
 
 const isRelatedIndex = (name: string, indexName: string): boolean =>
-  name === indexName || name.startsWith(`${indexName}_`) || name.startsWith(`${indexName}-`);
+  name === indexName ||
+  name.startsWith(`${indexName}_`) ||
+  name.startsWith(`${indexName}-`);
 
 const main = async () => {
   const { appId, apiKey, indexName, dryRun } = parseArgs();
@@ -66,7 +70,9 @@ const main = async () => {
   console.log('Listing all Algolia indexes...');
 
   const { items: allIndexes } = await client.listIndices();
-  const matchingIndexes = allIndexes.filter(({ name }) => isRelatedIndex(name, indexName));
+  const matchingIndexes = allIndexes.filter(({ name }) =>
+    isRelatedIndex(name, indexName),
+  );
 
   if (matchingIndexes.length === 0) {
     console.log('No matching indexes found. Nothing to delete.');
@@ -90,7 +96,9 @@ const main = async () => {
     const index = client.initIndex(name);
     const settings = await index.getSettings();
     if (settings.replicas && settings.replicas.length > 0) {
-      console.log(`  Unlinking ${settings.replicas.length} replicas from ${name}...`);
+      console.log(
+        `  Unlinking ${settings.replicas.length} replicas from ${name}...`,
+      );
       await index.setSettings({ replicas: [] }).wait();
     }
   }

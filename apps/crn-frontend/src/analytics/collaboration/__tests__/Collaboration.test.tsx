@@ -1,4 +1,3 @@
-import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   teamCollaborationPerformance,
@@ -29,6 +28,7 @@ import React, { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 
+import { AnalyticsSearchOptionsWithFiltering } from '../../utils/analytics-options';
 import { OpensearchClient } from '../../utils/opensearch';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import {

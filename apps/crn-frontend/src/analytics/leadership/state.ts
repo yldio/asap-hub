@@ -6,13 +6,13 @@ import {
   SortLeadershipAndMembership,
   SortOSChampion,
 } from '@asap-hub/model';
-import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   atomFamily,
   DefaultValue,
   selectorFamily,
   useRecoilState,
 } from 'recoil';
+import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import {
   AnalyticsSearchOptions,
   getAnalyticsLeadership,

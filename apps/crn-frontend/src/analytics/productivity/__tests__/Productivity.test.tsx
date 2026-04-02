@@ -1,6 +1,5 @@
 import {
   AlgoliaSearchClient,
-  AnalyticsSearchOptionsWithFiltering,
   EMPTY_ALGOLIA_FACET_HITS,
 } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
@@ -36,6 +35,7 @@ import {
   getUserProductivityPerformance,
 } from '../api';
 import Productivity from '../Productivity';
+import { AnalyticsSearchOptionsWithFiltering } from '../../utils/analytics-options';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');

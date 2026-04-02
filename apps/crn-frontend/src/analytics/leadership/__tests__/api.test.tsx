@@ -1,10 +1,4 @@
 import nock from 'nock';
-import {
-  createAlgoliaResponse,
-  AlgoliaSearchClient,
-  ClientSearchResponse,
-  AnalyticsSearchOptionsWithFiltering,
-} from '@asap-hub/algolia';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
 import {
   AnalyticsTeamLeadershipResponse,
@@ -18,6 +12,7 @@ import {
 } from '../api';
 
 import { OpensearchClient } from '../../utils/opensearch';
+import { AnalyticsSearchOptionsWithFiltering } from '../../utils/analytics-options';
 
 jest.mock('../../../config');
 
@@ -33,349 +28,265 @@ const defaultOptions: AnalyticsSearchOptionsWithSort = {
 };
 
 describe('getAnalyticsLeadership', () => {
-  type Search = () => Promise<
-    ClientSearchResponse<'analytics', 'team-leadership'>
-  >;
-
-  const search: jest.MockedFunction<Search> = jest.fn();
-
-  const algoliaSearchClient = {
-    search,
-  } as unknown as AlgoliaSearchClient<'analytics'>;
+  let opensearchClient: OpensearchClient<AnalyticsTeamLeadershipResponse>;
+  const defaultResponse = {
+    items: [teamLeadershipResponse],
+    total: 1,
+  };
 
   beforeEach(() => {
-    search.mockReset();
-
-    search.mockResolvedValue(
-      createAlgoliaResponse<'analytics', 'team-leadership'>([
-        {
-          ...teamLeadershipResponse,
-          objectID: teamLeadershipResponse.id,
-          __meta: { type: 'team-leadership' },
-        },
-      ]),
+    opensearchClient = new OpensearchClient<AnalyticsTeamLeadershipResponse>(
+      'wg-leadership',
+      'token',
     );
+    jest.spyOn(opensearchClient, 'search').mockResolvedValue(defaultResponse);
   });
 
-  it('should not filter team leadership by default', async () => {
-    await getAnalyticsLeadership(algoliaSearchClient, defaultOptions);
+  it('should call search without sort when sort is not provided', async () => {
+    await getAnalyticsLeadership(opensearchClient, defaultOptions);
 
-    expect(search).toHaveBeenCalledWith(
-      ['team-leadership'],
-      '',
+    expect(opensearchClient.search).toHaveBeenCalledWith(
       expect.objectContaining({
-        filters: undefined,
+        searchTags: [],
+        sort: undefined,
       }),
     );
   });
 
-  it('should not default to any specific page or limit hits per page', async () => {
-    await getAnalyticsLeadership(algoliaSearchClient, defaultOptions);
-
-    expect(search).toHaveBeenCalledWith(
-      ['team-leadership'],
-      '',
-      expect.objectContaining({
-        hitsPerPage: undefined,
-        page: undefined,
-      }),
-    );
-  });
-
-  it('should pass the search query to Algolia', async () => {
-    await getAnalyticsLeadership(algoliaSearchClient, {
+  it('should handle team_asc sort', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
       ...defaultOptions,
-      tags: ['Alessi'],
+      sort: 'team_asc',
     });
-    expect(search).toHaveBeenCalledWith(
-      ['team-leadership'],
-      '',
-      expect.objectContaining({
-        tagFilters: [['Alessi']],
-      }),
-    );
-  });
 
-  it('should return successfully fetched team leadership', async () => {
-    const analyticsLeadership = await getAnalyticsLeadership(
-      algoliaSearchClient,
-      defaultOptions,
-    );
-    expect(analyticsLeadership).toEqual(
+    expect(opensearchClient.search).toHaveBeenCalledWith(
       expect.objectContaining({
-        items: [
+        sort: [
           {
-            ...teamLeadershipResponse,
-            objectID: teamLeadershipResponse.id,
-            __meta: { type: 'team-leadership' },
+            'displayName.keyword': {
+              order: 'asc',
+            },
           },
         ],
+      }),
+    );
+  });
+
+  it('should handle team_desc sort', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      sort: 'team_desc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          {
+            'displayName.keyword': {
+              order: 'desc',
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  it('should handle wg_current_leadership_asc sort', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      sort: 'wg_current_leadership_asc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          {
+            workingGroupLeadershipRoleCount: {
+              order: 'asc',
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  it('should handle wg_previous_leadership_desc sort', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      sort: 'wg_previous_leadership_desc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          {
+            workingGroupPreviousLeadershipRoleCount: {
+              order: 'desc',
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  it('should handle wg_current_membership_asc sort', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      sort: 'wg_current_membership_asc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          {
+            workingGroupMemberCount: {
+              order: 'asc',
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  it('should handle wg_previous_membership_desc sort', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      sort: 'wg_previous_membership_desc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          {
+            workingGroupPreviousMemberCount: {
+              order: 'desc',
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  it('should handle ig_current_leadership_asc sort', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      metric: 'interest-group',
+      sort: 'ig_current_leadership_asc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          {
+            interestGroupLeadershipRoleCount: {
+              order: 'asc',
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  it('should handle ig_previous_leadership_desc sort', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      metric: 'interest-group',
+      sort: 'ig_previous_leadership_desc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          {
+            interestGroupPreviousLeadershipRoleCount: {
+              order: 'desc',
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  it('should handle ig_current_membership_asc sort', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      metric: 'interest-group',
+      sort: 'ig_current_membership_asc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          {
+            interestGroupMemberCount: {
+              order: 'asc',
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  it('should handle ig_previous_membership_desc sort', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      metric: 'interest-group',
+      sort: 'ig_previous_membership_desc',
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sort: [
+          {
+            interestGroupPreviousMemberCount: {
+              order: 'desc',
+            },
+          },
+        ],
+      }),
+    );
+  });
+
+  it('should pass currentPage and pageSize when provided', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      currentPage: 2,
+      pageSize: 25,
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentPage: 2,
+        pageSize: 25,
+      }),
+    );
+  });
+
+  it('should pass tags when provided', async () => {
+    await getAnalyticsLeadership(opensearchClient, {
+      ...defaultOptions,
+      tags: ['Alessi', 'Barker'],
+    });
+
+    expect(opensearchClient.search).toHaveBeenCalledWith(
+      expect.objectContaining({
+        searchTags: ['Alessi', 'Barker'],
+      }),
+    );
+  });
+
+  it('should return successfully fetched team leadership from opensearch', async () => {
+    const result = await getAnalyticsLeadership(
+      opensearchClient,
+      defaultOptions,
+    );
+
+    expect(result).toEqual(
+      expect.objectContaining({
+        items: [teamLeadershipResponse],
         total: 1,
       }),
     );
-  });
-
-  describe('with OpensearchClient', () => {
-    let opensearchClient: OpensearchClient<AnalyticsTeamLeadershipResponse>;
-    const defaultResponse = {
-      items: [teamLeadershipResponse],
-      total: 1,
-    };
-
-    beforeEach(() => {
-      opensearchClient = new OpensearchClient<AnalyticsTeamLeadershipResponse>(
-        'wg-leadership',
-        'token',
-      );
-      jest.spyOn(opensearchClient, 'search').mockResolvedValue(defaultResponse);
-    });
-
-    it('should call search without sort when sort is not provided', async () => {
-      await getAnalyticsLeadership(opensearchClient, defaultOptions);
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          searchTags: [],
-          sort: undefined,
-        }),
-      );
-    });
-
-    it('should handle team_asc sort', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        sort: 'team_asc',
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sort: [
-            {
-              'displayName.keyword': {
-                order: 'asc',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    it('should handle team_desc sort', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        sort: 'team_desc',
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sort: [
-            {
-              'displayName.keyword': {
-                order: 'desc',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    it('should handle wg_current_leadership_asc sort', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        sort: 'wg_current_leadership_asc',
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sort: [
-            {
-              workingGroupLeadershipRoleCount: {
-                order: 'asc',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    it('should handle wg_previous_leadership_desc sort', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        sort: 'wg_previous_leadership_desc',
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sort: [
-            {
-              workingGroupPreviousLeadershipRoleCount: {
-                order: 'desc',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    it('should handle wg_current_membership_asc sort', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        sort: 'wg_current_membership_asc',
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sort: [
-            {
-              workingGroupMemberCount: {
-                order: 'asc',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    it('should handle wg_previous_membership_desc sort', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        sort: 'wg_previous_membership_desc',
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sort: [
-            {
-              workingGroupPreviousMemberCount: {
-                order: 'desc',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    it('should handle ig_current_leadership_asc sort', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        metric: 'interest-group',
-        sort: 'ig_current_leadership_asc',
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sort: [
-            {
-              interestGroupLeadershipRoleCount: {
-                order: 'asc',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    it('should handle ig_previous_leadership_desc sort', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        metric: 'interest-group',
-        sort: 'ig_previous_leadership_desc',
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sort: [
-            {
-              interestGroupPreviousLeadershipRoleCount: {
-                order: 'desc',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    it('should handle ig_current_membership_asc sort', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        metric: 'interest-group',
-        sort: 'ig_current_membership_asc',
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sort: [
-            {
-              interestGroupMemberCount: {
-                order: 'asc',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    it('should handle ig_previous_membership_desc sort', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        metric: 'interest-group',
-        sort: 'ig_previous_membership_desc',
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          sort: [
-            {
-              interestGroupPreviousMemberCount: {
-                order: 'desc',
-              },
-            },
-          ],
-        }),
-      );
-    });
-
-    it('should pass currentPage and pageSize when provided', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        currentPage: 2,
-        pageSize: 25,
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          currentPage: 2,
-          pageSize: 25,
-        }),
-      );
-    });
-
-    it('should pass tags when provided', async () => {
-      await getAnalyticsLeadership(opensearchClient, {
-        ...defaultOptions,
-        tags: ['Alessi', 'Barker'],
-      });
-
-      expect(opensearchClient.search).toHaveBeenCalledWith(
-        expect.objectContaining({
-          searchTags: ['Alessi', 'Barker'],
-        }),
-      );
-    });
-
-    it('should return successfully fetched team leadership from opensearch', async () => {
-      const result = await getAnalyticsLeadership(
-        opensearchClient,
-        defaultOptions,
-      );
-
-      expect(result).toEqual(
-        expect.objectContaining({
-          items: [teamLeadershipResponse],
-          total: 1,
-        }),
-      );
-    });
   });
 });
 

@@ -1,4 +1,3 @@
-import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   ListPreprintComplianceOpensearchResponse,
   PreprintComplianceOpensearchResponse,
@@ -7,6 +6,7 @@ import {
   ListPublicationComplianceOpensearchResponse,
   PublicationComplianceOpensearchResponse,
 } from '@asap-hub/model';
+import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { OpensearchClient } from '../utils/opensearch';
 import { OpensearchSortMap } from '../utils/opensearch/types';
 

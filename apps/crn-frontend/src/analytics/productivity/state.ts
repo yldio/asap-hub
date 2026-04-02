@@ -1,4 +1,3 @@
-import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   ListTeamProductivityResponse,
   ListUserProductivityResponse,
@@ -16,6 +15,7 @@ import {
   useRecoilState,
   useRecoilValueLoadable,
 } from 'recoil';
+import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import {
   makeFlagBasedPerformanceHook,

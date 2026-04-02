@@ -19,10 +19,8 @@
     "algolia:delete-index": "yarn workspace @asap-hub/asap-cli algolia:delete-index",
     "algolia:get-settings": "yarn workspace @asap-hub/asap-cli algolia:get-settings",
     "algolia:move-index": "yarn workspace @asap-hub/asap-cli algolia:move-index",
-    "algolia:process-performance": "yarn workspace @asap-hub/asap-cli algolia:process-performance",
     "algolia:remove-records": "yarn workspace @asap-hub/asap-cli algolia:remove-records",
     "algolia:set-settings": "yarn workspace @asap-hub/asap-cli algolia:set-settings",
-    "algolia:set-analytics-settings": "yarn workspace @asap-hub/asap-cli algolia:set-analytics-settings",
     "opensearch:process-performance": "yarn workspace @asap-hub/asap-cli opensearch:process-performance",
     "build": "yarn turbo build --filter='!@asap-hub/contentful-app-*'",
     "build:babel": "turbo build:babel",
@@ -47,7 +45,6 @@
     "contentful:schema:update": "yarn contentful:schema:update:crn && yarn contentful:schema:update:gp2",
     "contentful:schema:update:crn": "APP=crn ./packages/contentful/scripts/schema-update.sh",
     "contentful:schema:update:gp2": "APP=gp2 ./packages/contentful/scripts/schema-update.sh",
-    "export:analytics": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export-analytics",
     "export:entity:crn": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export",
     "export:entity:gp2": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/gp2-server/tsconfig.json --files=./apps/gp2-server/@types ./apps/gp2-server/scripts/cli.ts export",
     "export:compliance": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --transpile-only --project ./apps/crn-server/tsconfig.json --files=./apps/crn-server/@types ./apps/crn-server/scripts/cli.ts export-compliance-data",
@@ -194,7 +191,6 @@
     "typescript": "4.9.5"
   },
   "dependencies": {
-    "algoliasearch": "4.25.3",
     "ts-node": "10.9.2",
     "uuid": "8.3.2"
   },

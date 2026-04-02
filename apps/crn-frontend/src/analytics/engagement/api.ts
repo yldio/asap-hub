@@ -1,13 +1,4 @@
 import {
-  AlgoliaClient,
-  AnalyticsPerformanceOptions,
-  AnalyticsSearchOptions,
-  AnalyticsSearchOptionsWithFiltering,
-  ENGAGEMENT_PERFORMANCE,
-  getPerformanceForMetric,
-} from '@asap-hub/algolia';
-
-import {
   EngagementPerformance,
   ListMeetingRepAttendanceResponse,
   MeetingRepAttendanceResponse,
@@ -18,6 +9,11 @@ import {
   EngagementResponse,
   ListEngagementResponse,
 } from '@asap-hub/model';
+import {
+  AnalyticsPerformanceOptions,
+  AnalyticsSearchOptions,
+  AnalyticsSearchOptionsWithFiltering,
+} from '../utils/analytics-options';
 import { OpensearchClient } from '../utils/opensearch';
 import { OpensearchSortMap } from '../utils/opensearch/types';
 
@@ -68,52 +64,31 @@ const presenterRepresentationOpensearchSort: OpensearchSortMap<SortEngagement> =
   };
 
 export const getEngagement = async (
-  client: AlgoliaClient<'analytics'> | OpensearchClient<EngagementResponse>,
+  client: OpensearchClient<EngagementResponse>,
   options: EngagementListOptions,
 ): Promise<ListEngagementResponse> => {
-  if (client instanceof OpensearchClient) {
-    const { tags, currentPage, pageSize, timeRange, sort } = options;
-    return client.search({
-      searchTags: tags,
-      currentPage: currentPage ?? undefined,
-      pageSize: pageSize ?? undefined,
-      timeRange,
-      searchScope: 'flat',
-      sort: presenterRepresentationOpensearchSort[sort],
-    });
-  }
-  const { currentPage, pageSize, tags, timeRange } = options;
-  const result = await client.search(['engagement'], '', {
-    filters: `(__meta.range:"${timeRange || 'all'}")`,
-    tagFilters: [tags],
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
+  const { tags, currentPage, pageSize, timeRange, sort } = options;
+  return client.search({
+    searchTags: tags,
+    currentPage: currentPage ?? undefined,
+    pageSize: pageSize ?? undefined,
+    timeRange,
+    searchScope: 'flat',
+    sort: presenterRepresentationOpensearchSort[sort],
   });
-  return {
-    items: result.hits,
-    total: result.nbHits,
-    algoliaIndexName: result.index,
-    algoliaQueryId: result.queryID,
-  };
 };
 
 export const getEngagementPerformance = async (
-  client: AlgoliaClient<'analytics'> | OpensearchClient<EngagementPerformance>,
+  client: OpensearchClient<EngagementPerformance>,
   options: AnalyticsPerformanceOptions,
 ) => {
-  if (client instanceof OpensearchClient) {
-    const results = await client.search({
-      searchTags: [],
-      timeRange: options.timeRange,
-      searchScope: 'flat',
-      sort: [],
-    });
-    return results.items[0] as EngagementPerformance | undefined;
-  }
-  return getPerformanceForMetric<EngagementPerformance>(ENGAGEMENT_PERFORMANCE)(
-    client,
-    options,
-  );
+  const results = await client.search({
+    searchTags: [],
+    timeRange: options.timeRange,
+    searchScope: 'flat',
+    sort: [],
+  });
+  return results.items[0] as EngagementPerformance | undefined;
 };
 
 const meetingRepAttendanceOpensearchSort: OpensearchSortMap<SortMeetingRepAttendance> =

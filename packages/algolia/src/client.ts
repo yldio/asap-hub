@@ -36,19 +36,6 @@ import {
 } from '@asap-hub/model';
 import { SearchIndex } from 'algoliasearch';
 import {
-  TEAM_COLLABORATION,
-  TEAM_COLLABORATION_PERFORMANCE,
-  TEAM_LEADERSHIP,
-  TEAM_PRODUCTIVITY,
-  TEAM_PRODUCTIVITY_PERFORMANCE,
-  USER_COLLABORATION,
-  USER_COLLABORATION_PERFORMANCE,
-  USER_PRODUCTIVITY,
-  USER_PRODUCTIVITY_PERFORMANCE,
-  ENGAGEMENT,
-  ENGAGEMENT_PERFORMANCE,
-} from './analytics';
-import {
   EVENT_ENTITY_TYPE,
   EXTERNAL_AUTHOR_ENTITY_TYPE,
   INTEREST_GROUP_ENTITY_TYPE,
@@ -70,6 +57,18 @@ import {
   Payload as GP2Payload,
   PROJECT_ENTITY_TYPE,
 } from './gp2';
+
+const TEAM_LEADERSHIP = 'team-leadership';
+const TEAM_PRODUCTIVITY = 'team-productivity';
+const USER_PRODUCTIVITY = 'user-productivity';
+const TEAM_PRODUCTIVITY_PERFORMANCE = 'team-productivity-performance';
+const USER_PRODUCTIVITY_PERFORMANCE = 'user-productivity-performance';
+const TEAM_COLLABORATION = 'team-collaboration';
+const USER_COLLABORATION = 'user-collaboration';
+const TEAM_COLLABORATION_PERFORMANCE = 'team-collaboration-performance';
+const USER_COLLABORATION_PERFORMANCE = 'user-collaboration-performance';
+const ENGAGEMENT = 'engagement';
+const ENGAGEMENT_PERFORMANCE = 'engagement-performance';
 
 const CRN = 'crn';
 const GP2 = 'gp2';

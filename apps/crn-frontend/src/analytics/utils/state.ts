@@ -1,5 +1,5 @@
 import { atomFamily, RecoilState, useRecoilState } from 'recoil';
-import { AnalyticsPerformanceOptions } from '@asap-hub/algolia';
+import { AnalyticsPerformanceOptions } from './analytics-options';
 
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
 import { OpensearchClient } from './opensearch';

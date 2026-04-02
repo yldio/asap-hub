@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { Milestone } from '@asap-hub/model';
 import ProjectMilestones from '../ProjectMilestones';
 
+const mockLoadArticleOptions = jest.fn(() => Promise.resolve([]));
+
 const mockMilestones: Milestone[] = [
   {
     id: '1',
@@ -32,14 +34,26 @@ const mockMilestones: Milestone[] = [
 
 describe('ProjectMilestones', () => {
   it('renders table headers Aims, Milestone, Status', () => {
-    render(<ProjectMilestones milestones={mockMilestones} />);
+    render(
+      <ProjectMilestones
+        milestones={mockMilestones}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
+    );
     expect(screen.getAllByText('Aims').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Milestone').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Status').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders all milestones', () => {
-    render(<ProjectMilestones milestones={mockMilestones} />);
+    render(
+      <ProjectMilestones
+        milestones={mockMilestones}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
+    );
     expect(screen.getByText('First milestone')).toBeInTheDocument();
     expect(screen.getByText('Second milestone')).toBeInTheDocument();
     expect(screen.getByText('Third milestone')).toBeInTheDocument();
@@ -48,7 +62,13 @@ describe('ProjectMilestones', () => {
   });
 
   it('renders nothing when milestones array is empty', () => {
-    const { container } = render(<ProjectMilestones milestones={[]} />);
+    const { container } = render(
+      <ProjectMilestones
+        milestones={[]}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
+    );
     expect(container.firstChild).toBeNull();
   });
 });

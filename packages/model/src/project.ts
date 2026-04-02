@@ -1,5 +1,6 @@
 import { ListResponse } from './common';
-import { TeamDataObject } from './team';
+import { ResearchOutputType } from './research-output';
+import { TeamDataObject, TeamRole } from './team';
 
 export type ProjectTool = {
   id?: string;
@@ -112,6 +113,13 @@ export type MilestoneStatus =
   | 'Pending'
   | 'Terminated';
 
+export type ArticleItem = {
+  readonly id: string;
+  readonly title: string;
+  readonly href: string;
+  readonly type?: ResearchOutputType;
+};
+
 export type Milestone = {
   readonly id: string;
   readonly description: string;
@@ -121,6 +129,7 @@ export type Milestone = {
    * Stored as string for OpenSearch sorting.
    */
   readonly aims?: string;
+  readonly relatedArticles?: ReadonlyArray<ArticleItem>;
 };
 
 // NOTE: this is going to be inferred from the collection
@@ -128,12 +137,6 @@ export type Milestone = {
 // If redundant, we can remove it, and use MilestoneStatus instead (though AimMilestoneStatus
 // might be a better name)
 export type AimStatus = 'Complete' | 'In Progress' | 'Pending' | 'Terminated';
-
-export type ArticleItem = {
-  readonly id: string;
-  readonly title: string;
-  readonly href: string;
-};
 
 export type Aim = {
   readonly id: string;
@@ -196,6 +199,78 @@ export type TraineeProjectDataObject = TraineeProject;
 export type ProjectDetailDataObject = ProjectDetail;
 
 export type ListProjectDataObject = ListResponse<ProjectDataObject>;
+
+export const projectLeadTeamRoles = [
+  'Project Manager',
+  'Lead PI (Core Leadership)',
+  'Co-PI (Core Leadership)',
+  'Data Manager',
+] as const;
+
+export const projectLeadMemberRoles = [
+  'Project Manager',
+  'Lead PI',
+  'Co-PI',
+  'Data Manager',
+] as const;
+
+export const traineeProjectLeadRoles = ['Trainee Project - Lead'] as const;
+
+/**
+ *
+ * Determines if a user is a "lead" for a given project, controlling access
+ * to features like editing milestone articles.
+ *
+ * For team-based projects (Discovery, team-based Resource): checks the user's
+ * team role against projectLeadTeamRoles.
+ *
+ * For Trainee projects: checks if the user has the "Trainee Project - Lead"
+ * role in the project's members list.
+ *
+ * For user-based Resource projects (isTeamBased=false, no teamId): these have
+ * a members array with roles like "Project Manager" or "Lead PI (Core
+ * Leadership)". We check the user's role in project.members against
+ * projectLeadTeamRoles. For example, a Resource Project not linked to a team
+ * but with individual user members who hold PM or Lead PI roles.
+ */
+export const isProjectLead = (
+  userId: string,
+  userTeams: ReadonlyArray<{ id: string; role: TeamRole }>,
+  project: Project,
+): boolean => {
+  // Team-based projects: Discovery always has teamId, Resource may have teamId
+  if ('teamId' in project && project.teamId) {
+    const userTeam = userTeams.find((t) => t.id === project.teamId);
+    return (
+      !!userTeam &&
+      (projectLeadTeamRoles as readonly string[]).includes(userTeam.role)
+    );
+  }
+
+  if (project.projectType === 'Trainee Project') {
+    return project.members.some(
+      (m) =>
+        m.id === userId &&
+        (traineeProjectLeadRoles as readonly string[]).includes(m.role ?? ''),
+    );
+  }
+
+  // User-based Resource projects (no teamId, has members): check members
+  // for project-level lead roles.
+  if (
+    project.projectType === 'Resource Project' &&
+    !project.teamId &&
+    project.members
+  ) {
+    return project.members.some(
+      (m) =>
+        m.id === userId &&
+        (projectLeadMemberRoles as readonly string[]).includes(m.role ?? ''),
+    );
+  }
+
+  return false;
+};
 
 // Filter types
 export type FetchProjectsFilter =

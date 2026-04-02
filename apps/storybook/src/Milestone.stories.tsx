@@ -1,9 +1,37 @@
-import { Milestone as MilestoneComponent } from '@asap-hub/react-components';
+import {
+  Milestone as MilestoneComponent,
+  ResearchOutputOption,
+} from '@asap-hub/react-components';
 import { Milestone } from '@asap-hub/model';
 
 export default {
   title: 'Organisms / Milestone',
   component: MilestoneComponent,
+};
+
+const mockLoadArticleOptions = (
+  inputValue: string,
+): Promise<ResearchOutputOption[]> =>
+  Promise.resolve(
+    [
+      {
+        value: '1',
+        label: 'Alpha-synuclein aggregation study',
+        documentType: 'Article',
+        type: 'Preprint',
+      },
+      {
+        value: '2',
+        label: 'LRRK2 kinase inhibitor results',
+        documentType: 'Article',
+        type: 'Published',
+      },
+    ].filter((a) => a.label.toLowerCase().includes(inputValue.toLowerCase())),
+  );
+
+const defaultProps = {
+  isLead: true,
+  loadArticleOptions: mockLoadArticleOptions,
 };
 
 const createMilestone = (
@@ -27,24 +55,28 @@ const longDescription =
 // Status variations
 export const StatusComplete = () => (
   <MilestoneComponent
+    {...defaultProps}
     milestone={createMilestone('1', mediumDescription, 'Complete')}
   />
 );
 
 export const StatusInProgress = () => (
   <MilestoneComponent
+    {...defaultProps}
     milestone={createMilestone('1', mediumDescription, 'In Progress')}
   />
 );
 
 export const StatusPending = () => (
   <MilestoneComponent
+    {...defaultProps}
     milestone={createMilestone('1', mediumDescription, 'Pending')}
   />
 );
 
 export const StatusTerminated = () => (
   <MilestoneComponent
+    {...defaultProps}
     milestone={createMilestone('1', mediumDescription, 'Terminated')}
   />
 );
@@ -52,18 +84,21 @@ export const StatusTerminated = () => (
 // Description length variations
 export const ShortDescription = () => (
   <MilestoneComponent
+    {...defaultProps}
     milestone={createMilestone('1', shortDescription, 'Complete')}
   />
 );
 
 export const MediumDescription = () => (
   <MilestoneComponent
+    {...defaultProps}
     milestone={createMilestone('1', mediumDescription, 'In Progress')}
   />
 );
 
 export const LongDescription = () => (
   <MilestoneComponent
+    {...defaultProps}
     milestone={createMilestone('1', longDescription, 'Pending')}
   />
 );
@@ -71,6 +106,7 @@ export const LongDescription = () => (
 // Real-world examples
 export const RealWorldComplete = () => (
   <MilestoneComponent
+    {...defaultProps}
     milestone={createMilestone(
       '1',
       'Complete comprehensive literature review and identify key research gaps in the field of neurodegenerative diseases. This includes analyzing over 200 peer-reviewed publications from the last 5 years.',
@@ -81,6 +117,7 @@ export const RealWorldComplete = () => (
 
 export const RealWorldInProgress = () => (
   <MilestoneComponent
+    {...defaultProps}
     milestone={createMilestone(
       '2',
       'Recruit and enroll 500 study participants across 10 research sites, ensuring diverse demographic representation.',
@@ -91,6 +128,7 @@ export const RealWorldInProgress = () => (
 
 export const RealWorldPending = () => (
   <MilestoneComponent
+    {...defaultProps}
     milestone={createMilestone(
       '3',
       'Conduct preliminary statistical analysis of collected biomarker data and prepare interim findings report.',

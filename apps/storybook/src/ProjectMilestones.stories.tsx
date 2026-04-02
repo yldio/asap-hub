@@ -1,9 +1,37 @@
-import { ProjectMilestones } from '@asap-hub/react-components';
+import {
+  ProjectMilestones,
+  ResearchOutputOption,
+} from '@asap-hub/react-components';
 import { Milestone } from '@asap-hub/model';
 
 export default {
   title: 'Organisms / Project Milestones',
   component: ProjectMilestones,
+};
+
+const mockLoadArticleOptions = (
+  inputValue: string,
+): Promise<ResearchOutputOption[]> =>
+  Promise.resolve(
+    [
+      {
+        value: '1',
+        label: 'Alpha-synuclein aggregation study',
+        documentType: 'Article',
+        type: 'Preprint',
+      },
+      {
+        value: '2',
+        label: 'LRRK2 kinase inhibitor results',
+        documentType: 'Article',
+        type: 'Published',
+      },
+    ].filter((a) => a.label.toLowerCase().includes(inputValue.toLowerCase())),
+  );
+
+const defaultProps = {
+  isLead: true as const,
+  loadArticleOptions: mockLoadArticleOptions,
 };
 
 const createMilestone = (
@@ -28,6 +56,7 @@ const longDescription =
 
 export const Default = () => (
   <ProjectMilestones
+    {...defaultProps}
     milestones={[
       createMilestone('1', longDescription, 'Complete', '1'),
       createMilestone('2', mediumDescription, 'In Progress', '1,2'),
@@ -39,6 +68,7 @@ export const Default = () => (
 
 export const WithMoreMilestones = () => (
   <ProjectMilestones
+    {...defaultProps}
     milestones={[
       createMilestone('1', longDescription, 'Complete', '1'),
       createMilestone('2', mediumDescription, 'In Progress', '1,2'),
@@ -54,6 +84,7 @@ export const WithMoreMilestones = () => (
 
 export const AllStatuses = () => (
   <ProjectMilestones
+    {...defaultProps}
     milestones={[
       createMilestone('1', 'This milestone is complete.', 'Complete', '1'),
       createMilestone(
@@ -70,6 +101,7 @@ export const AllStatuses = () => (
 
 export const ShortDescriptions = () => (
   <ProjectMilestones
+    {...defaultProps}
     milestones={[
       createMilestone('1', 'Complete literature review.', 'Complete', '1'),
       createMilestone('2', 'Analyze initial data.', 'In Progress', '1,2'),
@@ -81,6 +113,7 @@ export const ShortDescriptions = () => (
 
 export const LongDescriptions = () => (
   <ProjectMilestones
+    {...defaultProps}
     milestones={[
       createMilestone('1', longDescription, 'Complete', '1'),
       createMilestone('2', longDescription, 'In Progress', '1,2'),
@@ -92,12 +125,14 @@ export const LongDescriptions = () => (
 
 export const SingleMilestone = () => (
   <ProjectMilestones
+    {...defaultProps}
     milestones={[createMilestone('1', mediumDescription, 'In Progress', '1')]}
   />
 );
 
 export const WithEmptyAims = () => (
   <ProjectMilestones
+    {...defaultProps}
     milestones={[
       createMilestone('1', 'Milestone with aim 1.', 'Complete', '1'),
       createMilestone('2', 'Milestone with no aims.', 'In Progress'),
@@ -108,6 +143,7 @@ export const WithEmptyAims = () => (
 
 export const TwoMilestones = () => (
   <ProjectMilestones
+    {...defaultProps}
     milestones={[
       createMilestone('1', longDescription, 'Complete', '1'),
       createMilestone('2', mediumDescription, 'In Progress', '1,2'),
@@ -117,6 +153,7 @@ export const TwoMilestones = () => (
 
 export const SixMilestones = () => (
   <ProjectMilestones
+    {...defaultProps}
     milestones={[
       createMilestone('1', longDescription, 'Complete', '1'),
       createMilestone('2', mediumDescription, 'In Progress', '1,2'),
@@ -130,6 +167,7 @@ export const SixMilestones = () => (
 
 export const RealWorldExample = () => (
   <ProjectMilestones
+    {...defaultProps}
     milestones={[
       createMilestone(
         '1',

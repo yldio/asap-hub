@@ -1,9 +1,9 @@
 import { Aim as AimType, AimStatus, ArticleItem } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { FC } from 'react';
-import { Button, Pill } from '../atoms';
+import { Pill } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
-import { info100, info500, neutral900, steel } from '../colors';
+import { info100, info500, steel } from '../colors';
 import { useTextTruncation } from '../hooks';
 import {
   descriptionContainerStyles,
@@ -12,9 +12,9 @@ import {
   readMoreButtonStyles,
   statusContainerStyles,
   getStatusAccent,
+  articlesWrapperStyles,
 } from './shared-aim-milestones-styles';
 import { ArticlesList } from '../molecules';
-import { noop } from '../utils';
 
 const aimRowStyles = css({
   display: 'grid',
@@ -32,41 +32,6 @@ const aimRowStyles = css({
     marginBottom: 0,
     paddingBottom: 0,
     borderBottom: 'none',
-  },
-});
-
-const noArticlesWrapperStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  flexWrap: 'wrap',
-  gap: rem(12),
-});
-
-const articlesWrapperStyles = css({
-  marginTop: rem(4),
-});
-
-const noArticlesTextStyles = css({
-  fontStyle: 'italic',
-  fontSize: rem(17),
-  lineHeight: rem(26),
-  color: neutral900.rgb,
-});
-
-const noArticlesSeparatorStyles = css({
-  color: neutral900.rgb,
-  fontSize: rem(17),
-});
-
-const noArticlesEditButtonStyles = css({
-  display: 'inline-flex',
-  alignItems: 'center',
-  padding: 0,
-  minWidth: 'auto',
-  gap: rem(16),
-  textDecoration: 'none',
-  ':hover, :active, :focus': {
-    textDecoration: 'none',
   },
 });
 
@@ -128,26 +93,11 @@ const Aim: FC<AimProps> = ({ aim, fetchArticles }) => {
           )}
         </div>
         <div css={articlesWrapperStyles}>
-          {aim.articleCount === 0 ? (
-            <div css={noArticlesWrapperStyles}>
-              <span css={noArticlesTextStyles}>No articles added</span>
-              <span css={noArticlesSeparatorStyles}>•</span>
-              <Button
-                id={`aim-articles-edit-${aim.id}`}
-                linkStyle
-                onClick={noop}
-                overrideStyles={noArticlesEditButtonStyles}
-              >
-                Edit
-              </Button>
-            </div>
-          ) : (
-            <ArticlesList
-              aimId={aim.id}
-              articlesCount={aim.articleCount}
-              fetchArticles={fetchArticles}
-            />
-          )}
+          <ArticlesList
+            aimId={aim.id}
+            articlesCount={aim.articleCount}
+            fetchArticles={fetchArticles}
+          />
         </div>
       </div>
       <div css={statusContainerStyles}>

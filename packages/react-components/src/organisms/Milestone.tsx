@@ -1,10 +1,35 @@
 import { Milestone as MilestoneType, MilestoneStatus } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { FC } from 'react';
-import { Pill } from '../atoms';
+import { FC, useState } from 'react';
+import { Button, Link, Pill } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
-import { steel, neutral1000, info100, info500, success500 } from '../colors';
+import { steel, info100, info500 } from '../colors';
+import { article as articleIcon, minusRectIcon, plusRectIcon } from '../icons';
 import { useTextTruncation } from '../hooks';
+import { noop, ResearchOutputOption } from '../utils';
+import {
+  descriptionContainerStyles,
+  mobileLabelStyles,
+  clampedDescriptionStyles,
+  readMoreButtonStyles,
+  statusContainerStyles,
+  getStatusAccent,
+  articlesHeaderStyles,
+  articlesSeparatorStyles,
+  articlesIconButtonStyles,
+  articlesIconStyles,
+  articlesTitleStyles,
+  articlesListWrapperStyles,
+  articlesListStyles,
+  articlesItemStyles,
+  articlesItemIconStyles,
+  articlesItemTextContainerStyles,
+  articlesItemLinkStyles,
+  articlesWrapperStyles,
+  noArticlesTextStyles,
+  editButtonStyles,
+} from './shared-aim-milestones-styles';
+import MilestoneArticlesModal from './MilestoneArticlesModal';
 
 function parseAimsString(aims: string | undefined): number[] {
   if (!aims || typeof aims !== 'string') return [];
@@ -56,95 +81,31 @@ const aimBadgeStyles = css({
   whiteSpace: 'nowrap',
 });
 
-const descriptionContainerStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: rem(4),
-  justifyContent: 'flex-start',
-  minWidth: 0,
-  color: neutral1000.rgb,
-});
-
-const mobileLabelStyles = css({
-  fontSize: rem(17),
-  fontWeight: 'bold',
-  color: neutral1000.rgb,
-  marginBottom: rem(8),
-  display: 'none',
-  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
-    display: 'block',
-  },
-});
-
-const descriptionStyles = (isExpanded: boolean) =>
-  css({
-    color: neutral1000.rgb,
-    fontSize: rem(17),
-    lineHeight: rem(24),
-    margin: 0,
-    ...(isExpanded
-      ? {}
-      : {
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-        }),
-  });
-
-const readMoreButtonStyles = css({
-  background: 'none',
-  border: 'none',
-  color: success500.rgb,
-  cursor: 'pointer',
-  padding: 0,
-  fontSize: rem(17),
-  fontWeight: 400,
-  display: 'inline',
-  textAlign: 'left',
-  '&:hover': {
-    textDecoration: 'underline',
-  },
-});
-
-const statusContainerStyles = css({
-  display: 'flex',
-  alignItems: 'flex-start',
-  justifyContent: 'flex-start',
-  paddingBlock: rem(4),
-  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
-    flexDirection: 'column',
-    paddingBlock: 0,
-  },
-});
-
 export const getMilestoneStatusAccent = (
   status: MilestoneStatus,
-): 'success' | 'info' | 'neutral' | 'warning' | 'error' | 'default' => {
-  switch (status) {
-    case 'Complete':
-      return 'success';
-    case 'In Progress':
-      return 'info';
-    case 'Pending':
-      return 'neutral';
-    case 'Terminated':
-      return 'error';
-    default:
-      return 'default';
-  }
-};
+): 'success' | 'info' | 'neutral' | 'warning' | 'error' | 'default' =>
+  getStatusAccent(status);
 
 type MilestoneProps = {
   milestone: MilestoneType;
+  isLead: boolean;
+  loadArticleOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
 };
 
-const Milestone: FC<MilestoneProps> = ({ milestone }) => {
+const Milestone: FC<MilestoneProps> = ({
+  milestone,
+  isLead,
+  loadArticleOptions,
+}) => {
   const { ref, isExpanded, needsExpansion, toggle } = useTextTruncation(
     milestone.description,
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isArticlesExpanded, setIsArticlesExpanded] = useState(false);
 
   const aimNumbers = parseAimsString(milestone.aims);
+  const articles = milestone.relatedArticles ?? [];
+  const articleCount = articles.length;
 
   return (
     <div css={milestoneRowStyles}>
@@ -159,14 +120,85 @@ const Milestone: FC<MilestoneProps> = ({ milestone }) => {
       </div>
       <div css={descriptionContainerStyles}>
         <div css={mobileLabelStyles}>Milestone</div>
-        <div ref={ref} css={descriptionStyles(isExpanded)}>
-          {milestone.description}
+        <div>
+          <div ref={ref} css={clampedDescriptionStyles(isExpanded)}>
+            {milestone.description}
+          </div>
+          {(needsExpansion || isExpanded) && (
+            <button type="button" css={readMoreButtonStyles} onClick={toggle}>
+              {isExpanded ? 'Read Less' : 'Read More'}
+            </button>
+          )}
         </div>
-        {needsExpansion && (
-          <button css={readMoreButtonStyles} onClick={toggle} type="button">
-            {isExpanded ? 'Read Less' : 'Read More'}
-          </button>
-        )}
+        <div css={articlesWrapperStyles}>
+          {articleCount === 0 ? (
+            <div css={articlesHeaderStyles}>
+              <span css={noArticlesTextStyles}>No articles added</span>
+              {isLead && (
+                <>
+                  <span css={articlesSeparatorStyles}>&middot;</span>
+                  <Button
+                    linkStyle
+                    onClick={() => setIsModalOpen(true)}
+                    overrideStyles={editButtonStyles}
+                  >
+                    Edit
+                  </Button>
+                </>
+              )}
+            </div>
+          ) : (
+            <div>
+              <div css={articlesHeaderStyles}>
+                <Button
+                  aria-label={
+                    isArticlesExpanded ? 'Collapse articles' : 'Expand articles'
+                  }
+                  linkStyle
+                  onClick={() => setIsArticlesExpanded(!isArticlesExpanded)}
+                  overrideStyles={articlesIconButtonStyles}
+                >
+                  <span css={articlesIconStyles}>
+                    {isArticlesExpanded ? minusRectIcon : plusRectIcon}
+                  </span>
+                  <span css={articlesTitleStyles}>
+                    Articles ({articleCount})
+                  </span>
+                </Button>
+                {isLead && (
+                  <>
+                    <span css={articlesSeparatorStyles}>•</span>
+                    <Button
+                      linkStyle
+                      onClick={() => setIsModalOpen(true)}
+                      overrideStyles={editButtonStyles}
+                    >
+                      Edit
+                    </Button>
+                  </>
+                )}
+              </div>
+              {isArticlesExpanded && (
+                <div css={articlesListWrapperStyles(rem(240), rem(408))}>
+                  <ul css={articlesListStyles}>
+                    {articles.map(({ id, title, href }) => (
+                      <li key={id} css={articlesItemStyles}>
+                        <span css={articlesItemIconStyles} aria-hidden>
+                          {articleIcon}
+                        </span>
+                        <span css={articlesItemTextContainerStyles}>
+                          <Link href={href}>
+                            <span css={articlesItemLinkStyles}>{title}</span>
+                          </Link>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
       <div css={statusContainerStyles}>
         <div css={mobileLabelStyles}>Status</div>
@@ -174,6 +206,14 @@ const Milestone: FC<MilestoneProps> = ({ milestone }) => {
           {milestone.status}
         </Pill>
       </div>
+      {isModalOpen && (
+        <MilestoneArticlesModal
+          articles={articles}
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={noop}
+          loadOptions={loadArticleOptions}
+        />
+      )}
     </div>
   );
 };

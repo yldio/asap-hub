@@ -1,6 +1,7 @@
 import { FC, lazy } from 'react';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Frame } from '@asap-hub/frontend-utils';
+import { isProjectLead } from '@asap-hub/model';
 import {
   ProjectDetailPage,
   ProjectDetailAbout,
@@ -13,7 +14,7 @@ import { useFetchArticles } from './aim-articles-state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
-import { mockMilestones } from './mock-milestones';
+import { mockMilestones, mockLoadArticleOptions } from './mock-milestones';
 import type { ProjectDetailConfig } from './projectDetailConfig';
 
 const loadProjectManuscript = () =>
@@ -45,11 +46,12 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const route = config.getRoute(projectId);
 
   const isProjectMember = !!user?.projects.find(({ id }) => id === projectId);
+  const isLead =
+    !!user && isProjectLead(user.id, user.teams ?? [], projectDetail);
   const showWorkspace =
     isEnabled('PROJECT_WORKSPACE') && (isProjectMember || isStaff);
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
   const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
-  const milestonesHref = route.milestones({}).$;
 
   return (
     <Frame title={projectDetail.title || ''}>
@@ -60,7 +62,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
             pointOfContactEmail={projectDetail.contactEmail || undefined}
             aboutHref={route.about({}).$}
             workspaceHref={workspaceHref}
-            milestonesHref={milestonesHref}
+            milestonesHref={route.milestones({}).$}
           >
             <Routes>
               {showWorkspace && (
@@ -112,6 +114,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       projectDetail.contactEmail || undefined
                     }
                     fetchArticles={fetchArticles}
+                    seeMilestonesHref={route.milestones({}).$}
                   />
                 }
               />
@@ -126,6 +129,8 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                         'supplementGrant' in projectDetail &&
                         !!projectDetail.supplementGrant
                       }
+                      isLead={isLead}
+                      loadArticleOptions={mockLoadArticleOptions}
                       pageControlsProps={{
                         numberOfPages: 1,
                         currentPageIndex: 0,

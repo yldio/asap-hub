@@ -1,6 +1,7 @@
 import { ComponentProps, useState } from 'react';
 import { css } from '@emotion/react';
 import { Milestone as MilestoneType } from '@asap-hub/model';
+import type { ResearchOutputOption } from '../utils';
 
 import { Headline3, Link, Paragraph } from '../atoms';
 import { LabeledDropdown, PageControls } from '../molecules';
@@ -65,6 +66,10 @@ type ProjectDetailMilestonesProps = {
   readonly seeAimsHref?: string;
   readonly pageControlsProps?: ComponentProps<typeof PageControls>;
   readonly hasSupplementGrant?: boolean;
+  readonly isLead: boolean;
+  readonly loadArticleOptions: (
+    inputValue: string,
+  ) => Promise<ResearchOutputOption[]>;
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
@@ -73,6 +78,8 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   // ...pageControlProps // TODO: Add this back when we have actual page controls props
   pageControlsProps,
   hasSupplementGrant = false,
+  isLead,
+  loadArticleOptions,
 }) => {
   const hasMilestones = milestones.length > 0;
   const [selectedGrantType, setSelectedGrantType] = useState<GrantType>(
@@ -130,7 +137,11 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
 
           {hasMilestones && pageControlsProps && (
             <>
-              <ProjectMilestones milestones={milestones} />
+              <ProjectMilestones
+                milestones={milestones}
+                isLead={isLead}
+                loadArticleOptions={loadArticleOptions}
+              />
               <section css={pageControlsStyles}>
                 <PageControls {...pageControlsProps} />
               </section>

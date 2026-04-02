@@ -101,7 +101,7 @@ describe('ArticlesList', () => {
     expect(screen.getByText('Articles (2)')).toBeInTheDocument();
   });
 
-  it('renders Edit button in the header', () => {
+  it('does not render Edit button in the header', () => {
     render(
       <ArticlesList
         aimId="aim-1"
@@ -109,8 +109,9 @@ describe('ArticlesList', () => {
         fetchArticles={mockFetchArticles}
       />,
     );
-    const editButton = screen.getByRole('button', { name: 'Edit' });
-    expect(editButton).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Edit' }),
+    ).not.toBeInTheDocument();
   });
 
   it('does not fetch when collapsing', async () => {

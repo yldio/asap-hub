@@ -3,6 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { Milestone as MilestoneType, MilestoneStatus } from '@asap-hub/model';
 import Milestone, { getMilestoneStatusAccent } from '../Milestone';
 
+const mockLoadArticleOptions = jest.fn(() => Promise.resolve([]));
+
 const mockMilestone: MilestoneType = {
   id: '1',
   description: 'This is a test milestone description',
@@ -33,12 +35,24 @@ const mockClientHeight = (element: HTMLElement, clientHeight: number) => {
 
 describe('Milestone', () => {
   it('renders milestone description', () => {
-    render(<Milestone milestone={mockMilestone} />);
+    render(
+      <Milestone
+        milestone={mockMilestone}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
+    );
     expect(screen.getByText(mockMilestone.description)).toBeInTheDocument();
   });
 
   it('renders milestone status pill', () => {
-    render(<Milestone milestone={mockMilestone} />);
+    render(
+      <Milestone
+        milestone={mockMilestone}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
+    );
     expect(screen.getByText('Complete')).toBeInTheDocument();
   });
 
@@ -49,6 +63,8 @@ describe('Milestone', () => {
           ...mockMilestone,
           aims: '1,2',
         }}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
       />,
     );
     expect(screen.getByText('#1')).toBeInTheDocument();
@@ -56,34 +72,46 @@ describe('Milestone', () => {
   });
 
   it('renders nothing in Aims column when aims is empty or missing', () => {
-    render(<Milestone milestone={mockMilestone} />);
+    render(
+      <Milestone
+        milestone={mockMilestone}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
+    );
     expect(screen.queryByText('—')).not.toBeInTheDocument();
     expect(screen.queryByText('#1')).not.toBeInTheDocument();
   });
 
   it('does not render link when not provided', () => {
-    render(<Milestone milestone={mockMilestone} />);
+    render(
+      <Milestone
+        milestone={mockMilestone}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
+    );
     expect(
       screen.queryByRole('link', { name: /view milestone/i }),
     ).not.toBeInTheDocument();
   });
 
   it('truncates long descriptions and shows Read More button', async () => {
-    const { container } = render(<Milestone milestone={longMilestone} />);
-
-    // Find the description div and mock its dimensions to simulate truncation
-    const descriptionDiv = container.querySelector(
-      'div[class*="descriptionStyles"]',
+    render(
+      <Milestone
+        milestone={longMilestone}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
     );
-    if (descriptionDiv) {
-      mockScrollHeight(descriptionDiv as HTMLElement, 100);
-      mockClientHeight(descriptionDiv as HTMLElement, 48); // 2 lines at 24px line-height
 
-      // Trigger a window resize to force truncation check
-      act(() => {
-        window.dispatchEvent(new Event('resize'));
-      });
-    }
+    const descriptionDiv = screen.getByText(longMilestone.description);
+    mockScrollHeight(descriptionDiv, 100);
+    mockClientHeight(descriptionDiv, 48);
+
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
 
     await waitFor(() => {
       expect(
@@ -96,20 +124,21 @@ describe('Milestone', () => {
   });
 
   it('expands description when Read More is clicked', async () => {
-    const { container } = render(<Milestone milestone={longMilestone} />);
-
-    // Mock dimensions to simulate truncation
-    const descriptionDiv = container.querySelector(
-      'div[class*="descriptionStyles"]',
+    render(
+      <Milestone
+        milestone={longMilestone}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
     );
-    if (descriptionDiv) {
-      mockScrollHeight(descriptionDiv as HTMLElement, 100);
-      mockClientHeight(descriptionDiv as HTMLElement, 48);
 
-      act(() => {
-        window.dispatchEvent(new Event('resize'));
-      });
-    }
+    const descriptionDiv = screen.getByText(longMilestone.description);
+    mockScrollHeight(descriptionDiv, 100);
+    mockClientHeight(descriptionDiv, 48);
+
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
 
     await waitFor(() => {
       expect(
@@ -132,20 +161,21 @@ describe('Milestone', () => {
   });
 
   it('collapses description when Read Less is clicked', async () => {
-    const { container } = render(<Milestone milestone={longMilestone} />);
-
-    // Mock dimensions to simulate truncation
-    const descriptionDiv = container.querySelector(
-      'div[class*="descriptionStyles"]',
+    render(
+      <Milestone
+        milestone={longMilestone}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+      />,
     );
-    if (descriptionDiv) {
-      mockScrollHeight(descriptionDiv as HTMLElement, 100);
-      mockClientHeight(descriptionDiv as HTMLElement, 48);
 
-      act(() => {
-        window.dispatchEvent(new Event('resize'));
-      });
-    }
+    const descriptionDiv = screen.getByText(longMilestone.description);
+    mockScrollHeight(descriptionDiv, 100);
+    mockClientHeight(descriptionDiv, 48);
+
+    act(() => {
+      window.dispatchEvent(new Event('resize'));
+    });
 
     await waitFor(() => {
       expect(
@@ -172,6 +202,151 @@ describe('Milestone', () => {
       expect(
         screen.queryByRole('button', { name: /Read Less/i }),
       ).not.toBeInTheDocument();
+    });
+  });
+
+  describe('articles section', () => {
+    const milestoneWithArticles: MilestoneType = {
+      ...mockMilestone,
+      relatedArticles: [
+        { id: 'a1', title: 'Article 1', href: '/a1', type: 'Preprint' },
+        { id: 'a2', title: 'Article 2', href: '/a2', type: 'Published' },
+      ],
+    };
+
+    it('displays "No articles added" when no related articles', () => {
+      render(
+        <Milestone
+          milestone={mockMilestone}
+          isLead={false}
+          loadArticleOptions={mockLoadArticleOptions}
+        />,
+      );
+      expect(screen.getByText('No articles added')).toBeInTheDocument();
+    });
+
+    it('displays article count with expand button when articles exist', () => {
+      render(
+        <Milestone
+          milestone={milestoneWithArticles}
+          isLead={false}
+          loadArticleOptions={mockLoadArticleOptions}
+        />,
+      );
+      expect(screen.getByText('Articles (2)')).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /expand articles/i }),
+      ).toBeInTheDocument();
+    });
+
+    it('expands article list when plus icon is clicked', async () => {
+      render(
+        <Milestone
+          milestone={milestoneWithArticles}
+          isLead={false}
+          loadArticleOptions={mockLoadArticleOptions}
+        />,
+      );
+      await userEvent.click(
+        screen.getByRole('button', { name: /expand articles/i }),
+      );
+      expect(screen.getByText('Article 1')).toBeInTheDocument();
+      expect(screen.getByText('Article 2')).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /collapse articles/i }),
+      ).toBeInTheDocument();
+    });
+
+    it('collapses article list when minus icon is clicked', async () => {
+      render(
+        <Milestone
+          milestone={milestoneWithArticles}
+          isLead={false}
+          loadArticleOptions={mockLoadArticleOptions}
+        />,
+      );
+      await userEvent.click(
+        screen.getByRole('button', { name: /expand articles/i }),
+      );
+      expect(screen.getByText('Article 1')).toBeInTheDocument();
+      await userEvent.click(
+        screen.getByRole('button', { name: /collapse articles/i }),
+      );
+      expect(screen.queryByText('Article 1')).not.toBeInTheDocument();
+    });
+
+    it('does not show Edit button when isLead is false', () => {
+      render(
+        <Milestone
+          milestone={mockMilestone}
+          isLead={false}
+          loadArticleOptions={mockLoadArticleOptions}
+        />,
+      );
+      expect(
+        screen.queryByRole('button', { name: /edit/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('shows Edit button when isLead is true and no articles', () => {
+      render(
+        <Milestone
+          milestone={mockMilestone}
+          isLead={true}
+          loadArticleOptions={mockLoadArticleOptions}
+        />,
+      );
+      expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
+    });
+
+    it('shows Edit button when isLead is true and articles exist', () => {
+      render(
+        <Milestone
+          milestone={milestoneWithArticles}
+          isLead={true}
+          loadArticleOptions={mockLoadArticleOptions}
+        />,
+      );
+      expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
+    });
+
+    it('opens modal when Edit is clicked with no articles', async () => {
+      render(
+        <Milestone
+          milestone={mockMilestone}
+          isLead={true}
+          loadArticleOptions={mockLoadArticleOptions}
+        />,
+      );
+      await userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByText('Add Related Articles')).toBeInTheDocument();
+    });
+
+    it('closes modal when Cancel is clicked', async () => {
+      render(
+        <Milestone
+          milestone={mockMilestone}
+          isLead={true}
+          loadArticleOptions={mockLoadArticleOptions}
+        />,
+      );
+      await userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      await userEvent.click(screen.getByRole('button', { name: /cancel/i }));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it('opens Edit modal with correct title when articles exist', async () => {
+      render(
+        <Milestone
+          milestone={milestoneWithArticles}
+          isLead={true}
+          loadArticleOptions={mockLoadArticleOptions}
+        />,
+      );
+      await userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      expect(screen.getByText('Edit Related Articles')).toBeInTheDocument();
     });
   });
 

@@ -5,6 +5,7 @@ import { Card } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
 import { neutral1000, neutral200, steel } from '../colors';
+import type { ResearchOutputOption } from '../utils';
 
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -68,9 +69,15 @@ const milestoneRowWrapperStyles = (index: number, isLast: boolean) =>
 
 type ProjectMilestonesProps = {
   milestones: ReadonlyArray<MilestoneType>;
+  isLead: boolean;
+  loadArticleOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
 };
 
-const ProjectMilestones: FC<ProjectMilestonesProps> = ({ milestones }) => {
+const ProjectMilestones: FC<ProjectMilestonesProps> = ({
+  milestones,
+  isLead,
+  loadArticleOptions,
+}) => {
   if (!milestones.length) {
     return null;
   }
@@ -95,7 +102,11 @@ const ProjectMilestones: FC<ProjectMilestonesProps> = ({ milestones }) => {
                   index === milestones.length - 1,
                 )}
               >
-                <Milestone milestone={milestone} />
+                <Milestone
+                  milestone={milestone}
+                  isLead={isLead}
+                  loadArticleOptions={loadArticleOptions}
+                />
               </div>
             ))}
           </div>

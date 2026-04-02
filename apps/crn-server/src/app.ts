@@ -46,6 +46,7 @@ import ImpactController from './controllers/impact.controller';
 import InterestGroupController from './controllers/interest-group.controller';
 import LabController from './controllers/lab.controller';
 import ManuscriptController from './controllers/manuscript.controller';
+import MilestoneController from './controllers/milestone.controller';
 import NewsController from './controllers/news.controller';
 import ProjectController from './controllers/project.controller';
 import PageController from './controllers/page.controller';
@@ -128,6 +129,7 @@ import { impactRouteFactory } from './routes/impact.route';
 import { interestGroupRouteFactory } from './routes/interest-group.route';
 import { labRouteFactory } from './routes/lab.route';
 import { manuscriptRouteFactory } from './routes/manuscript.route';
+import { milestoneRouteFactory } from './routes/milestone.route';
 import { newsRouteFactory } from './routes/news.route';
 import { pageRouteFactory } from './routes/page.route';
 import { reminderRouteFactory } from './routes/reminder.route';
@@ -378,6 +380,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const interestGroupController =
     libs.interestGroupController ||
     new InterestGroupController(interestGroupDataProvider, userDataProvider);
+  const milestoneController =
+    libs.milestoneController ||
+    new MilestoneController(aimsMilestonesDataProvider);
   const pageController =
     libs.pageController || new PageController(pageDataProvider);
   const reminderController =
@@ -466,6 +471,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const labRoutes = labRouteFactory(labController);
   const manuscriptRoutes = manuscriptRouteFactory(manuscriptController);
+  const milestoneRoutes = milestoneRouteFactory(milestoneController);
   const newsRoutes = newsRouteFactory(newsController);
   const projectRoutes = projectRouteFactory(projectController);
   const opensearchRoutes = opensearchRouteFactory(opensearchController);
@@ -548,6 +554,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(interestGroupRoutes);
   app.use(labRoutes);
   app.use(manuscriptRoutes);
+  app.use(milestoneRoutes);
   app.use(newsRoutes);
   app.use(projectRoutes);
   app.use(aimRoutes);
@@ -596,6 +603,7 @@ export type Libs = {
   filesController?: FilesController;
   labController?: LabController;
   manuscriptController?: ManuscriptController;
+  milestoneController?: MilestoneController;
   newsController?: NewsController;
   projectController?: ProjectController;
   pageController?: PageController;

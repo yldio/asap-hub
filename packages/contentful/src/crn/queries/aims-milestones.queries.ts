@@ -123,6 +123,21 @@ export const FETCH_AIM_ARTICLES = gql`
   }
 `;
 
+export const FETCH_MILESTONE_ARTICLES = gql`
+  query FetchMilestoneArticles($id: String!) {
+    milestones(id: $id) {
+      relatedArticlesCollection(limit: 50) {
+        items {
+          sys {
+            id
+          }
+          title
+        }
+      }
+    }
+  }
+`;
+
 export const FETCH_MILESTONES = gql`
   query FetchMilestones($limit: Int!, $skip: Int!) {
     milestonesCollection(limit: $limit, skip: $skip) {

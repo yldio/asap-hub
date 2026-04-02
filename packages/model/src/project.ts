@@ -1,4 +1,4 @@
-import { ListResponse } from './common';
+import { FetchOptions, ListResponse } from './common';
 import { ResearchOutputType } from './research-output';
 import { TeamDataObject, TeamRole } from './team';
 
@@ -124,6 +124,7 @@ export type Milestone = {
   readonly id: string;
   readonly description: string;
   readonly status: MilestoneStatus;
+  readonly articleCount: number;
   /**
    * Optional comma-separated aim numbers for the Aims column (e.g. "1", "1,2", "2,3,4,5,6").
    * Stored as string for OpenSearch sorting.
@@ -292,3 +293,13 @@ export type FetchProjectsFilter =
 // Response types
 export type ProjectResponse = Project;
 export type ListProjectResponse = ListProjectDataObject;
+
+export const grantTypes = ['original', 'supplement'] as const;
+
+export type GrantType = (typeof grantTypes)[number];
+
+export type ListProjectMilestonesResponse = ListResponse<Milestone>;
+
+export type FetchProjectMilestonesOptions = FetchOptions & {
+  grantType?: GrantType;
+};

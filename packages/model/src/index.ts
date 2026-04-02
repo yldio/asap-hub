@@ -23,6 +23,7 @@ export * from './interest-group';
 export * from './lab';
 export * from './manuscript';
 export * from './news';
+export * from './opensearch';
 export * from './page';
 export * from './project';
 export * from './reminder';

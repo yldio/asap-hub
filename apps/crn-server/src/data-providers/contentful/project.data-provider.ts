@@ -41,6 +41,11 @@ import {
   TraineeProject,
   TraineeProjectDetail,
   ProjectStatusRank,
+  FetchProjectMilestonesOptions,
+  ListProjectMilestonesResponse,
+  OpensearchHitsResponse,
+  Milestone,
+  MilestoneStatus,
 } from '@asap-hub/model';
 import {
   cleanArray,
@@ -57,6 +62,7 @@ import {
   ProjectDataProvider,
   ProjectUpdateDataObject,
 } from '../types/projects.data-provider.types';
+import { ProjectMilestonesDataObject } from '../../../scripts/opensearch/types';
 
 // Type guards for Contentful GraphQL responses
 export type ProjectItem = NonNullable<FetchProjectByIdQuery['projects']>;
@@ -867,6 +873,53 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     return {
       total: uniqueProjects.length,
       items: paginatedItems.map(parseContentfulProject),
+    };
+  }
+
+  async fetchProjectMilestones(
+    id: string,
+    options: FetchProjectMilestonesOptions,
+  ): Promise<ListProjectMilestonesResponse> {
+    if (!this.opensearchProvider) {
+      throw new Error(
+        'Opensearch Provider not configured for ProjectContentfulDataProvider',
+      );
+    }
+    const { take = 10, skip = 0, grantType } = options;
+
+    const response = (await this.opensearchProvider.search({
+      index: 'project-milestones',
+      body: {
+        query: {
+          bool: {
+            filter: [{ term: { projectId: id } }, { term: { grantType } }],
+          },
+        },
+        sort: [{ aimNumbersAsc: { order: 'asc' } }],
+        from: skip,
+        size: take,
+      } satisfies OpensearchRequest,
+    })) as unknown as OpensearchHitsResponse<ProjectMilestonesDataObject>;
+
+    const hits = response.hits?.hits ?? [];
+
+    const items: Milestone[] = hits.map((hit) => {
+      // eslint-disable-next-line no-underscore-dangle
+      const { aimNumbersAsc, aimNumbersDesc, status, ...fields } = hit._source;
+
+      // till we implement sorting the aims field will be sorted in ascending order
+      const isDescAimsSort = false;
+
+      return {
+        ...fields,
+        aims: isDescAimsSort ? aimNumbersDesc : aimNumbersAsc,
+        status: status as MilestoneStatus,
+      };
+    });
+
+    return {
+      total: response.hits?.total?.value || 0,
+      items,
     };
   }
 }

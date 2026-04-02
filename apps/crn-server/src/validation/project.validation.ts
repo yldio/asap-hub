@@ -1,4 +1,10 @@
-import { ProjectStatus, ProjectTool, ProjectType } from '@asap-hub/model';
+import {
+  FetchProjectMilestonesOptions,
+  grantTypes,
+  ProjectStatus,
+  ProjectTool,
+  ProjectType,
+} from '@asap-hub/model';
 import {
   fetchOptionsValidationSchema,
   validateInput,
@@ -118,5 +124,23 @@ export const validateProjectPatchRequest = validateInput(
   {
     skipNull: true,
     coerce: false,
+  },
+);
+
+const projectMilestonesFetchOptionsValidationSchema: JSONSchemaType<FetchProjectMilestonesOptions> =
+  {
+    type: 'object',
+    properties: {
+      ...fetchOptionsValidationSchema.properties,
+      grantType: { type: 'string', enum: grantTypes, nullable: true },
+    },
+    additionalProperties: false,
+  };
+
+export const validateProjectMilestonesFetchOptions = validateInput(
+  projectMilestonesFetchOptionsValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
   },
 );

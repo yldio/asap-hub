@@ -8,7 +8,11 @@ import {
   FetchAimArticlesQuery,
   FetchAimArticlesQueryVariables,
   GraphQLClient,
+  FETCH_MILESTONE_ARTICLES,
+  FetchMilestoneArticlesQuery,
+  FetchMilestoneArticlesQueryVariables,
 } from '@asap-hub/contentful';
+import { cleanArray } from '@asap-hub/server-common';
 
 import {
   AimWithMilestonesDataObject,
@@ -140,6 +144,28 @@ export class AimsMilestonesContentfulDataProvider
       });
     });
 
+    return articles;
+  }
+
+  async fetchArticlesForMilestone(
+    milestoneId: string,
+  ): Promise<ReadonlyArray<ArticleItem>> {
+    const { milestones } = await this.contentfulClient.request<
+      FetchMilestoneArticlesQuery,
+      FetchMilestoneArticlesQueryVariables
+    >(FETCH_MILESTONE_ARTICLES, { id: milestoneId });
+
+    if (!milestones) {
+      return [];
+    }
+
+    const articles = cleanArray(
+      milestones.relatedArticlesCollection?.items,
+    ).map((article) => ({
+      id: article.sys.id,
+      title: article.title ?? '',
+      href: `/shared-research/${article.sys.id}`,
+    }));
     return articles;
   }
 }

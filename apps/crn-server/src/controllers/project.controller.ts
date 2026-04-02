@@ -1,7 +1,9 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
   FetchPaginationOptions,
+  FetchProjectMilestonesOptions,
   FetchProjectsFilter,
+  ListProjectMilestonesResponse,
   ListProjectResponse,
   ProjectResponse,
   ProjectTool,
@@ -64,5 +66,17 @@ export default class ProjectController {
   async update(id: string, tools: ProjectTool[]): Promise<ProjectResponse> {
     await this.projectDataProvider.update(id, { tools });
     return this.fetchById(id);
+  }
+
+  async fetchProjectMilestones(
+    id: string,
+    options: FetchProjectMilestonesOptions,
+  ): Promise<ListProjectMilestonesResponse> {
+    const { total, items } =
+      await this.projectDataProvider.fetchProjectMilestones(id, options);
+    return {
+      total,
+      items,
+    };
   }
 }

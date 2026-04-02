@@ -2,8 +2,10 @@ import {
   DataProvider,
   FetchOptions,
   FetchPaginationOptions,
+  FetchProjectMilestonesOptions,
   FetchProjectsFilter,
   ListProjectDataObject,
+  ListProjectMilestonesResponse,
   ProjectDataObject,
   ProjectTool,
 } from '@asap-hub/model';
@@ -28,4 +30,8 @@ export type ProjectDataProvider = DataProvider<
     options: FetchPaginationOptions,
   ) => Promise<ListProjectDataObject>;
   update: (id: string, update: ProjectUpdateDataObject) => Promise<void>;
+  fetchProjectMilestones: (
+    id: string,
+    options: FetchProjectMilestonesOptions,
+  ) => Promise<ListProjectMilestonesResponse>;
 };

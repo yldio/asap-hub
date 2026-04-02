@@ -48,6 +48,11 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: Skip - Algolia analytics sync disabled
+        run: |
+          echo "Disabled: OpenSearch is now the sole analytics backend (ASAP-1451)"
+          echo "This workflow will be removed in a future PR."
+          exit 0
       - name: Checkout
         uses: actions/checkout@v3
       - name: Re-Build

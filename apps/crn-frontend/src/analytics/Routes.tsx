@@ -4,10 +4,8 @@ import {
   ExportAnalyticsModal,
 } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
-import { useFlags } from '@asap-hub/react-context';
 import { lazy, useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
-import { useAnalyticsAlgolia } from '../hooks/algolia';
 import { useOpensearchMetrics } from '../hooks/opensearch';
 
 import { downloadAnalyticsXLSX } from './utils/export';
@@ -36,14 +34,10 @@ const EngagementBody = lazy(loadEngagement);
 const OpenScienceBody = lazy(loadOpenScience);
 
 const AnalyticsRoutes = () => {
-  const { isEnabled } = useFlags();
-
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     loadLeadership().then(loadProductivity).then(loadCollaboration);
   }, []);
-
-  const { client } = useAnalyticsAlgolia();
 
   const opensearchMetrics = useOpensearchMetrics();
 
@@ -51,9 +45,7 @@ const AnalyticsRoutes = () => {
   const handleExportAnalytics = () => setIsModalOpen(true);
 
   const handleDownload = downloadAnalyticsXLSX({
-    algoliaClient: client,
     opensearchMetrics,
-    opensearchMetricsFlag: isEnabled('OPENSEARCH_METRICS'),
   });
 
   return (

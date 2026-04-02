@@ -7,7 +7,6 @@ import {
   MeetingRepAttendanceDataObject,
   SortEngagement,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import {
   atomFamily,
   DefaultValue,
@@ -16,10 +15,8 @@ import {
   useRecoilValueLoadable,
 } from 'recoil';
 
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { useAnalyticsOpensearch } from '../../hooks';
 import {
-  getAlgoliaIndexName,
   makeFlagBasedPerformanceHook,
   makePerformanceState,
 } from '../utils/state';
@@ -97,10 +94,6 @@ export const analyticsEngagementState = selectorFamily<
 export const useAnalyticsEngagement = (
   options: AnalyticsSearchOptionsWithFiltering<SortEngagement>,
 ) => {
-  const { isEnabled } = useFlags();
-  const indexName = getAlgoliaIndexName(options.sort, 'engagement');
-
-  const algoliaClient = useAnalyticsAlgolia(indexName).client;
   const opensearchClient = useAnalyticsOpensearch<EngagementResponse>(
     'presenter-representation',
   ).client;
@@ -109,10 +102,7 @@ export const useAnalyticsEngagement = (
   );
 
   if (engagement === undefined) {
-    throw getEngagement(
-      isEnabled('OPENSEARCH_METRICS') ? opensearchClient : algoliaClient,
-      options,
-    )
+    throw getEngagement(opensearchClient, options)
       .then(setEngagement)
       .catch(setEngagement);
   }

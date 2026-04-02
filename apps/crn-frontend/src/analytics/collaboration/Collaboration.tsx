@@ -17,7 +17,6 @@ import {
   UserCollaborationSortingDirection,
   UserCollaborationResponse,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { AnalyticsCollaborationPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
@@ -31,14 +30,8 @@ import {
   usePaginationParams,
   useSearch,
 } from '../../hooks';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
 import { TEAM_PERFORMANCE_INITIAL_DATA } from '../utils/constants';
-import { getAlgoliaIndexName } from '../utils/state';
-import {
-  getTeamCollaboration,
-  getUserCollaboration,
-  getPreliminaryDataSharing,
-} from './api';
+import { getPreliminaryDataSharing } from './api';
 import {
   teamCollaborationAcrossTeamToCSV,
   teamCollaborationWithinTeamToCSV,
@@ -59,7 +52,6 @@ const Collaboration = () => {
   const navigate = useNavigate();
   const { search } = useLocation();
 
-  const { isEnabled } = useFlags();
   const { metric: metricParam, type: typeParam } = useParams<{
     metric: 'user' | 'team' | 'sharing-prelim-findings';
     type: CollaborationType;
@@ -75,7 +67,6 @@ const Collaboration = () => {
       metric === 'sharing-prelim-findings' ? 'last-year' : 'all',
   });
   const { tags, setTags } = useSearch();
-  const { client } = useAnalyticsAlgolia();
   const { currentPage } = usePaginationParams();
   const [userSort, setUserSort] = useState<SortUserCollaboration>('user_asc');
   const [teamSort, setTeamSort] = useState<SortTeamCollaboration>('team_asc');
@@ -122,8 +113,6 @@ const Collaboration = () => {
       teamCollaborationInitialSortingDirection,
     );
 
-  const entityType =
-    metric === 'user' ? 'user-collaboration' : 'team-collaboration';
   const setMetric = (
     newMetric: 'user' | 'team' | 'sharing-prelim-findings',
   ) => {
@@ -161,12 +150,6 @@ const Collaboration = () => {
       'preliminary-data-sharing',
     );
   const opensearchMetrics = useOpensearchMetrics();
-  const userClient = useAnalyticsAlgolia(
-    getAlgoliaIndexName(userSort, 'user-collaboration'),
-  ).client;
-  const teamClient = useAnalyticsAlgolia(
-    getAlgoliaIndexName(teamSort, 'team-collaboration'),
-  ).client;
 
   const userPerformance = useUserCollaborationPerformanceValue({
     timeRange,
@@ -206,27 +189,14 @@ const Collaboration = () => {
             header: true,
           },
         ),
-        (
-          paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>,
-        ) => {
-          if (isEnabled('OPENSEARCH_METRICS')) {
-            return opensearchMetrics.getUserCollaboration({
-              documentCategory,
-              sort: userSort,
-              tags,
-              timeRange,
-              ...paginationParams,
-            });
-          }
-
-          return getUserCollaboration(userClient, {
+        (paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>) =>
+          opensearchMetrics.getUserCollaboration({
             documentCategory,
             sort: userSort,
             tags,
             timeRange,
             ...paginationParams,
-          });
-        },
+          }),
         userCollaborationToCSV(
           type,
           userPerformance ?? {
@@ -260,25 +230,14 @@ const Collaboration = () => {
           header: true,
         },
       ),
-      (paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>) => {
-        if (isEnabled('OPENSEARCH_METRICS')) {
-          return opensearchMetrics.getTeamCollaboration({
-            outputType,
-            sort: teamSort,
-            tags,
-            timeRange,
-            ...paginationParams,
-          });
-        }
-
-        return getTeamCollaboration(teamClient, {
+      (paginationParams: Pick<GetListOptions, 'pageSize' | 'currentPage'>) =>
+        opensearchMetrics.getTeamCollaboration({
           outputType,
           sort: teamSort,
           tags,
           timeRange,
           ...paginationParams,
-        });
-      },
+        }),
       type === 'within-team'
         ? teamCollaborationWithinTeamToCSV(
             teamPerformance ?? TEAM_PERFORMANCE_INITIAL_DATA,
@@ -293,34 +252,23 @@ const Collaboration = () => {
   };
 
   const loadTags = async (tagQuery: string) => {
-    if (isEnabled('OPENSEARCH_METRICS')) {
-      if (metric === 'user') {
-        const suggestions =
-          await opensearchMetrics.getUserCollaborationTagSuggestions(tagQuery);
-        return suggestions.map((value) => ({
-          label: value,
-          value,
-        }));
-      }
-      if (metric === 'team') {
-        const suggestions =
-          await opensearchMetrics.getTeamCollaborationTagSuggestions(tagQuery);
-        return suggestions.map((value) => ({
-          label: value,
-          value,
-        }));
-      }
+    if (metric === 'user') {
+      const suggestions =
+        await opensearchMetrics.getUserCollaborationTagSuggestions(tagQuery);
+      return suggestions.map((value) => ({
+        label: value,
+        value,
+      }));
     }
-
-    const searchedTags = await client.searchForTagValues(
-      [entityType],
-      tagQuery,
-      {},
-    );
-    return searchedTags.facetHits.map(({ value }) => ({
-      label: value,
-      value,
-    }));
+    if (metric === 'team') {
+      const suggestions =
+        await opensearchMetrics.getTeamCollaborationTagSuggestions(tagQuery);
+      return suggestions.map((value) => ({
+        label: value,
+        value,
+      }));
+    }
+    return [];
   };
 
   return (

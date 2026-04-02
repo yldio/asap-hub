@@ -23,7 +23,6 @@ import { useFlags } from '@asap-hub/react-context';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
 import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
-import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import { useAnalyticsOpensearch, useOpensearchMetrics } from '../../../hooks';
 import { OpensearchClient } from '../../utils/opensearch';
 
@@ -62,10 +61,6 @@ jest.mock('@asap-hub/frontend-utils', () => {
   };
 });
 
-jest.mock('../../../hooks/algolia', () => ({
-  useAnalyticsAlgolia: jest.fn(),
-}));
-
 jest.mock('../../../hooks/opensearch', () => ({
   useAnalyticsOpensearch: jest.fn(),
 }));
@@ -103,10 +98,6 @@ const mockOSChampionSearch = jest.fn() as jest.MockedFunction<
   OpensearchClient<OSChampionOpensearchResponse>['search']
 >;
 
-const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
-  typeof useAnalyticsAlgolia
->;
-
 const mockUseAnalyticsOpensearch =
   useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
@@ -131,11 +122,6 @@ const igLeadershipClient =
 beforeEach(() => {
   jest.clearAllMocks();
 
-  const mockAlgoliaClient = {
-    searchForTagValues: mockSearchForTagValues,
-    search: mockSearch,
-  };
-
   const mockOpensearchClient = {
     getTagSuggestions: mockGetTagSuggestions,
     search: mockOSChampionSearch,
@@ -149,10 +135,7 @@ beforeEach(() => {
     ],
   });
 
-  mockUseAnalyticsAlgolia.mockReturnValue({
-    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
-  });
-  mockAlgoliaClient.search.mockResolvedValue({
+  mockSearch.mockResolvedValue({
     hits: [],
     nbHits: 0,
     page: 0,
@@ -310,52 +293,57 @@ it('renders OS Champion page without redirect', async () => {
   expect(screen.getAllByText('Open Science Champion').length).toBe(2);
 });
 
-it('calls algolia client with the right index name', async () => {
-  await renderPage();
-
-  await waitFor(() => {
-    expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
-      expect.not.stringContaining('team_desc'),
-    );
-  });
-
-  const sortIcon = await screen.findByTitle(
-    'Active Alphabetical Ascending Sort Icon',
-  );
-  await userEvent.click(sortIcon);
-
-  await waitFor(() => {
-    expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
-      expect.stringContaining('team_desc'),
-    );
-  });
-});
-
 describe('search', () => {
   const getSearchBox = () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
     return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
-  describe('algolia', () => {
+  describe('working-group search', () => {
     it('allows typing in search queries', async () => {
+      const localMockGetTagSuggestions = jest
+        .fn()
+        .mockResolvedValue(['Alessi', 'tag2']);
+      mockUseOpensearchMetrics.mockReturnValue({
+        getAnalyticsWorkingGroupLeadership: jest
+          .fn()
+          .mockResolvedValue({ items: [], total: 0 }),
+        getAnalyticsWorkingGroupLeadershipTagSuggestions:
+          localMockGetTagSuggestions,
+        getAnalyticsInterestGroupLeadership: jest
+          .fn()
+          .mockResolvedValue({ items: [], total: 0 }),
+        getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+          .fn()
+          .mockResolvedValue([]),
+      } as unknown as ReturnType<typeof useOpensearchMetrics>);
+
       await renderPage();
       const searchBox = getSearchBox();
 
       await userEvent.type(searchBox, 'test123');
       expect(searchBox.value).toEqual('test123');
       await waitFor(() =>
-        expect(mockSearchForTagValues).toHaveBeenCalledWith(
-          ['team-leadership'],
-          'test123',
-          {},
-        ),
+        expect(localMockGetTagSuggestions).toHaveBeenCalledWith('test123'),
       );
     });
-    it('Will search algolia using selected team', async () => {
-      mockSearchForTagValues.mockResolvedValue({
-        ...EMPTY_ALGOLIA_FACET_HITS,
-        facetHits: [{ value: 'Alessi', count: 1, highlighted: 'Alessi' }],
-      });
+    it('Will search using selected team tag', async () => {
+      const localMockGetTagSuggestions = jest
+        .fn()
+        .mockResolvedValue(['Alessi']);
+
+      mockUseOpensearchMetrics.mockReturnValue({
+        getAnalyticsWorkingGroupLeadership: jest
+          .fn()
+          .mockResolvedValue({ items: [], total: 0 }),
+        getAnalyticsWorkingGroupLeadershipTagSuggestions:
+          localMockGetTagSuggestions,
+        getAnalyticsInterestGroupLeadership: jest
+          .fn()
+          .mockResolvedValue({ items: [], total: 0 }),
+        getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+          .fn()
+          .mockResolvedValue([]),
+      } as unknown as ReturnType<typeof useOpensearchMetrics>);
 
       await renderPage();
       const searchBox = getSearchBox();
@@ -366,10 +354,8 @@ describe('search', () => {
       });
       await userEvent.click(screen.getByText('Alessi'));
       await waitFor(() =>
-        expect(mockSearch).toHaveBeenCalledWith(
-          expect.anything(),
-          expect.anything(),
-          expect.objectContaining({ tagFilters: [['Alessi']] }),
+        expect(wgLeadershipClient.search).toHaveBeenCalledWith(
+          expect.objectContaining({ searchTags: ['Alessi'] }),
         ),
       );
     });
@@ -440,19 +426,8 @@ describe('csv export', () => {
   });
 });
 
-describe('working-group with OPENSEARCH_METRICS enabled', () => {
-  it('uses opensearch for tag suggestions when OPENSEARCH_METRICS is enabled', async () => {
-    // This test covers line 119: opensearchMetrics.getAnalyticsLeadershipTagSuggestions(tagQuery)
-    // Enable OPENSEARCH_METRICS flag
-    mockUseFlags.mockReturnValue({
-      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+describe('working-group', () => {
+  it('uses opensearch for tag suggestions', async () => {
     const localMockGetTagSuggestions = jest
       .fn()
       .mockResolvedValue(['Alessi', 'tag2']);
@@ -487,16 +462,7 @@ describe('working-group with OPENSEARCH_METRICS enabled', () => {
     });
   });
 
-  it('uses opensearch for CSV export when OPENSEARCH_METRICS is enabled', async () => {
-    mockUseFlags.mockReturnValue({
-      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+  it('uses opensearch for CSV export', async () => {
     const mockGetAnalyticsWorkingGroupLeadership = jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 });
@@ -530,17 +496,8 @@ describe('working-group with OPENSEARCH_METRICS enabled', () => {
   });
 });
 
-describe('interest-group with OPENSEARCH_METRICS enabled', () => {
-  it('uses opensearch for tag suggestions when OPENSEARCH_METRICS is enabled', async () => {
-    mockUseFlags.mockReturnValue({
-      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+describe('interest-group', () => {
+  it('uses opensearch for tag suggestions', async () => {
     const localMockGetTagSuggestions = jest
       .fn()
       .mockResolvedValue(['Alessi', 'tag2']);
@@ -575,16 +532,7 @@ describe('interest-group with OPENSEARCH_METRICS enabled', () => {
     });
   });
 
-  it('uses opensearch for CSV export when OPENSEARCH_METRICS is enabled', async () => {
-    mockUseFlags.mockReturnValue({
-      isEnabled: (flag: string) => flag === 'OPENSEARCH_METRICS',
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+  it('uses opensearch for CSV export', async () => {
     const mockGetAnalyticsInterestGroupLeadership = jest
       .fn()
       .mockResolvedValue({ items: [], total: 0 });
@@ -695,7 +643,7 @@ it('renders data for different time ranges', async () => {
 describe('error handling', () => {
   it('handles API errors when fetching leadership data', async () => {
     const error = new Error('Failed to fetch leadership data');
-    mockSearch.mockRejectedValueOnce(error);
+    jest.spyOn(wgLeadershipClient, 'search').mockRejectedValueOnce(error);
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     let caughtError: Error | null = null;
@@ -814,29 +762,9 @@ describe('error handling', () => {
       id: 'team-2',
     };
 
-    mockSearch.mockResolvedValueOnce({
-      hits: [
-        {
-          ...mockTeam1,
-          objectID: 'team-1',
-          __meta: { type: 'team-leadership' },
-        },
-        {
-          ...mockTeam2,
-          objectID: 'team-2',
-          __meta: { type: 'team-leadership' },
-        },
-      ],
-      nbHits: 2,
-      page: 0,
-      nbPages: 1,
-      hitsPerPage: 10,
-      exhaustiveNbHits: true,
-      processingTimeMS: 0,
-      query: '',
-      params: '',
-      index: 'test-index',
-      queryID: 'test-query-id',
+    jest.spyOn(wgLeadershipClient, 'search').mockResolvedValueOnce({
+      items: [mockTeam1, mockTeam2],
+      total: 2,
     });
 
     const result = render(
@@ -877,6 +805,6 @@ describe('error handling', () => {
     });
 
     // Verify the data was loaded correctly
-    expect(mockSearch).toHaveBeenCalled();
+    expect(wgLeadershipClient.search).toHaveBeenCalled();
   });
 });

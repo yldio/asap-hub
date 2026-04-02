@@ -1,9 +1,4 @@
 import {
-  AlgoliaSearchClient,
-  ClientSearchResponse,
-  createAlgoliaResponse,
-} from '@asap-hub/algolia';
-import {
   engagementPerformance,
   listEngagementResponse,
   performanceByDocumentType,
@@ -17,7 +12,6 @@ import {
   userProductivityResponse,
 } from '@asap-hub/fixtures';
 import { MetricExportKeys } from '@asap-hub/model';
-import { when } from 'jest-when';
 import * as XLSX from 'xlsx';
 
 import {
@@ -83,19 +77,6 @@ describe('getAllData', () => {
 });
 
 describe('downloadAnalyticsXLSX', () => {
-  type Search = () => Promise<
-    ClientSearchResponse<
-      'analytics',
-      'team-productivity' | 'team-productivity-performance'
-    >
-  >;
-
-  const search: jest.MockedFunction<Search> = jest.fn();
-
-  const algoliaSearchClient = {
-    search,
-  } as unknown as AlgoliaSearchClient<'analytics'>;
-
   const mockOpensearchMetrics: jest.Mocked<OpensearchMetricsFacade> = {
     getUserProductivity: jest.fn(),
     getUserProductivityTagSuggestions: jest.fn(),
@@ -125,171 +106,59 @@ describe('downloadAnalyticsXLSX', () => {
   };
 
   beforeEach(() => {
-    search.mockReset();
     // Reset all OpenSearch metric mocks
     Object.values(mockOpensearchMetrics).forEach((mock) => mock.mockReset());
     // Reset XLSX mocks
     jest.clearAllMocks();
-    when(algoliaSearchClient.search)
-      .calledWith(['user-productivity'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'user-productivity'>([
-          {
-            ...userProductivityResponse,
-            objectID: userProductivityResponse.id,
-            __meta: { type: 'user-productivity' },
-          },
-        ]),
-      );
 
-    when(algoliaSearchClient.search)
-      .calledWith(['user-productivity-performance'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'user-productivity-performance'>([
-          {
-            ...userProductivityPerformance,
-            objectID: '12',
-            __meta: {
-              type: 'user-productivity-performance',
-              range: 'current-year',
-            },
-          },
-        ]),
-      );
-
-    when(algoliaSearchClient.search)
-      .calledWith(['team-productivity'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'team-productivity'>([
-          {
-            ...teamProductivityResponse,
-            objectID: teamProductivityResponse.id,
-            __meta: { type: 'team-productivity' },
-          },
-        ]),
-      );
-
-    when(algoliaSearchClient.search)
-      .calledWith(['team-productivity-performance'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'team-productivity-performance'>([
-          {
-            ...performanceByDocumentType,
-            objectID: '12',
-            __meta: {
-              type: 'team-productivity-performance',
-              range: 'current-year',
-            },
-          },
-        ]),
-      );
-
-    when(algoliaSearchClient.search)
-      .calledWith(['user-collaboration'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'user-collaboration'>([
-          {
-            ...userCollaborationResponse.items[0]!,
-            objectID: `${
-              userCollaborationResponse.items[0]!.id
-            }-user-collaboration-current-year`,
-            __meta: { type: 'user-collaboration', range: 'current-year' },
-          },
-        ]),
-      );
-
-    when(algoliaSearchClient.search)
-      .calledWith(['user-collaboration-performance'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'user-collaboration-performance'>([
-          {
-            ...userCollaborationPerformance,
-            objectID: '1',
-            __meta: {
-              type: 'user-collaboration-performance',
-              range: 'current-year',
-              documentCategory: 'all',
-            },
-          },
-        ]),
-      );
-
-    when(algoliaSearchClient.search)
-      .calledWith(['team-collaboration'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'team-collaboration'>([
-          {
-            ...teamCollaborationResponse.items[0]!,
-            objectID: `${
-              teamCollaborationResponse.items[0]!.id
-            }-team-collaboration-current-year`,
-            __meta: { type: 'team-collaboration', range: 'current-year' },
-          },
-        ]),
-      );
-
-    when(algoliaSearchClient.search)
-      .calledWith(['team-collaboration-performance'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'team-collaboration-performance'>([
-          {
-            ...teamCollaborationPerformance,
-            objectID: '1',
-            __meta: {
-              type: 'team-collaboration-performance',
-              range: 'current-year',
-              documentCategory: 'all',
-            },
-          },
-        ]),
-      );
-
-    when(algoliaSearchClient.search)
-      .calledWith(['team-leadership'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'team-leadership'>([
-          {
-            ...teamLeadershipResponse,
-            objectID: teamLeadershipResponse.id,
-            __meta: { type: 'team-leadership' },
-          },
-        ]),
-      );
-
-    when(algoliaSearchClient.search)
-      .calledWith(['engagement'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'engagement'>([
-          {
-            ...listEngagementResponse.items[0]!,
-            objectID: listEngagementResponse.items[0]!.id,
-            __meta: { type: 'engagement' },
-          },
-        ]),
-      );
-
-    when(algoliaSearchClient.search)
-      .calledWith(['engagement-performance'], '', expect.anything())
-      .mockResolvedValue(
-        createAlgoliaResponse<'analytics', 'engagement-performance'>([
-          {
-            ...engagementPerformance,
-            objectID: '1',
-            __meta: {
-              type: 'engagement-performance',
-              range: 'current-year',
-              documentCategory: 'all',
-            },
-          },
-        ]),
-      );
+    // Set up OpenSearch metric mocks (used by downloadAnalyticsXLSX)
+    mockOpensearchMetrics.getUserProductivity.mockResolvedValue({
+      items: [userProductivityResponse],
+      total: 1,
+    });
+    mockOpensearchMetrics.getUserProductivityPerformance.mockResolvedValue(
+      userProductivityPerformance,
+    );
+    mockOpensearchMetrics.getTeamProductivity.mockResolvedValue({
+      items: [teamProductivityResponse],
+      total: 1,
+    });
+    mockOpensearchMetrics.getTeamProductivityPerformance.mockResolvedValue(
+      performanceByDocumentType,
+    );
+    mockOpensearchMetrics.getUserCollaboration.mockResolvedValue(
+      userCollaborationResponse,
+    );
+    mockOpensearchMetrics.getUserCollaborationPerformance.mockResolvedValue(
+      userCollaborationPerformance,
+    );
+    mockOpensearchMetrics.getTeamCollaboration.mockResolvedValue(
+      teamCollaborationResponse,
+    );
+    mockOpensearchMetrics.getTeamCollaborationPerformance.mockResolvedValue(
+      teamCollaborationPerformance,
+    );
+    mockOpensearchMetrics.getAnalyticsInterestGroupLeadership.mockResolvedValue(
+      {
+        items: [teamLeadershipResponse],
+        total: 1,
+      },
+    );
+    mockOpensearchMetrics.getAnalyticsWorkingGroupLeadership.mockResolvedValue({
+      items: [teamLeadershipResponse],
+      total: 1,
+    });
+    mockOpensearchMetrics.getPresenterRepresentation.mockResolvedValue(
+      listEngagementResponse,
+    );
+    mockOpensearchMetrics.getPresenterRepresentationPerformance.mockResolvedValue(
+      engagementPerformance,
+    );
   });
 
   it('should create a new workbook and process the selected metrics', async () => {
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: false,
     })(
       'current-year',
       new Set([
@@ -656,9 +525,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })(
       'all',
       new Set([
@@ -830,9 +697,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })(
       'last-year',
       new Set([
@@ -857,9 +722,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })(
       'last-year',
       new Set([
@@ -941,9 +804,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })('90d', new Set(['user-productivity']) as Set<MetricExportKeys>);
 
     // Verify getUserProductivityPerformance was called with correct parameters
@@ -1059,9 +920,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })('30d', new Set(['team-productivity']) as Set<MetricExportKeys>);
 
     // Verify getTeamProductivityPerformance was called with correct parameters
@@ -1161,9 +1020,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })(
       'current-year',
       new Set([
@@ -1409,9 +1266,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })(
       'current-year',
       new Set([
@@ -1515,9 +1370,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })('current-year', new Set(['wg-leadership']) as Set<MetricExportKeys>);
 
     // Verify getAnalyticsWorkingGroupLeadership was called with correct parameters
@@ -1571,9 +1424,7 @@ describe('downloadAnalyticsXLSX', () => {
     );
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })('current-year', new Set(['ig-leadership']) as Set<MetricExportKeys>);
 
     // Verify getAnalyticsInterestGroupLeadership was called with correct parameters
@@ -1669,9 +1520,7 @@ describe('downloadAnalyticsXLSX', () => {
     });
 
     await downloadAnalyticsXLSX({
-      algoliaClient: algoliaSearchClient,
       opensearchMetrics: mockOpensearchMetrics,
-      opensearchMetricsFlag: true,
     })('30d', new Set(['engagement']) as Set<MetricExportKeys>);
 
     expect(

@@ -7,7 +7,6 @@ import {
   UserProductivityResponse,
   TeamProductivityResponse,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { AnalyticsProductivityPageBody } from '@asap-hub/react-components';
 import { analytics } from '@asap-hub/routing';
 import { format } from 'date-fns';
@@ -19,9 +18,6 @@ import {
   usePaginationParams,
   useSearch,
 } from '../../hooks';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { getAlgoliaIndexName } from '../utils/state';
-import { getTeamProductivity, getUserProductivity } from './api';
 import { teamProductivityToCSV, userProductivityToCSV } from './export';
 import {
   useTeamProductivityPerformanceValue,
@@ -34,7 +30,6 @@ import UserProductivity from './UserProductivity';
 const Productivity = () => {
   const navigate = useNavigate();
   const { currentPage } = usePaginationParams();
-  const { isEnabled } = useFlags();
 
   const { metric: metricParam } = useParams<{ metric: 'user' | 'team' }>();
   const metric = (metricParam ?? 'user') as 'user' | 'team';
@@ -43,7 +38,6 @@ const Productivity = () => {
 
   const { timeRange, documentCategory, outputType } = useAnalytics();
   const { tags, setTags } = useSearch();
-  const { client } = useAnalyticsAlgolia();
   const opensearchMetrics = useOpensearchMetrics();
 
   const entityType =
@@ -51,13 +45,6 @@ const Productivity = () => {
 
   const [userSort, setUserSort] = useState<SortUserProductivity>('user_asc');
   const [teamSort, setTeamSort] = useState<SortTeamProductivity>('team_asc');
-
-  const userClient = useAnalyticsAlgolia(
-    getAlgoliaIndexName(userSort, 'user-productivity'),
-  ).client;
-  const teamClient = useAnalyticsAlgolia(
-    getAlgoliaIndexName(teamSort, 'team-productivity'),
-  ).client;
 
   const emptyPerformanceMetrics = {
     belowAverageMin: 0,
@@ -101,21 +88,13 @@ const Productivity = () => {
           },
         ),
         (paginationParams) =>
-          isEnabled('OPENSEARCH_METRICS')
-            ? opensearchMetrics.getUserProductivity({
-                sort: userSort,
-                timeRange,
-                documentCategory,
-                tags,
-                ...paginationParams,
-              })
-            : getUserProductivity(userClient, {
-                sort: userSort,
-                timeRange,
-                documentCategory,
-                tags,
-                ...paginationParams,
-              }),
+          opensearchMetrics.getUserProductivity({
+            sort: userSort,
+            timeRange,
+            documentCategory,
+            tags,
+            ...paginationParams,
+          }),
         userProductivityToCSV(userPerformanceValue ?? defaultUserPerformance),
         200,
       );
@@ -129,21 +108,13 @@ const Productivity = () => {
         },
       ),
       (paginationParams) =>
-        isEnabled('OPENSEARCH_METRICS')
-          ? opensearchMetrics.getTeamProductivity({
-              sort: teamSort,
-              timeRange,
-              outputType,
-              tags,
-              ...paginationParams,
-            })
-          : getTeamProductivity(teamClient, {
-              sort: teamSort,
-              timeRange,
-              outputType,
-              tags,
-              ...paginationParams,
-            }),
+        opensearchMetrics.getTeamProductivity({
+          sort: teamSort,
+          timeRange,
+          outputType,
+          tags,
+          ...paginationParams,
+        }),
       teamProductivityToCSV(teamPerformanceValue ?? defaultTeamPerformance),
       200,
     );
@@ -161,27 +132,16 @@ const Productivity = () => {
       tags={tags}
       setTags={setTags}
       loadTags={async (tagQuery) => {
-        if (isEnabled('OPENSEARCH_METRICS')) {
-          const tagResults =
-            entityType === 'user-productivity'
-              ? await opensearchMetrics.getUserProductivityTagSuggestions(
-                  tagQuery,
-                )
-              : await opensearchMetrics.getTeamProductivityTagSuggestions(
-                  tagQuery,
-                );
+        const tagResults =
+          entityType === 'user-productivity'
+            ? await opensearchMetrics.getUserProductivityTagSuggestions(
+                tagQuery,
+              )
+            : await opensearchMetrics.getTeamProductivityTagSuggestions(
+                tagQuery,
+              );
 
-          return tagResults.map((value) => ({
-            label: value,
-            value,
-          }));
-        }
-        const searchedTags = await client.searchForTagValues(
-          [entityType],
-          tagQuery,
-          {},
-        );
-        return searchedTags.facetHits.map(({ value }) => ({
+        return tagResults.map((value) => ({
           label: value,
           value,
         }));

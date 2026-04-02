@@ -1,11 +1,7 @@
 import { atomFamily, RecoilState, useRecoilState } from 'recoil';
-import { AlgoliaClient, AnalyticsPerformanceOptions } from '@asap-hub/algolia';
-import { AnalyticsSortOptions, Metric } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
+import { AnalyticsPerformanceOptions } from '@asap-hub/algolia';
 
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
-import { useAnalyticsAlgolia } from '../../hooks/algolia';
-import { ANALYTICS_ALGOLIA_INDEX } from '../../config';
 import { OpensearchClient } from './opensearch';
 
 export const makePerformanceState = <T>(key: string) =>
@@ -15,13 +11,13 @@ export const makePerformanceState = <T>(key: string) =>
   });
 
 /**
- *  Fetch performance metrics based on `OPENSEARCH_METRICS` flag using either Opensearch or Algolia
+ *  Fetch performance metrics from Opensearch
  */
 export const makeFlagBasedPerformanceHook =
   <T>(
     state: (p: AnalyticsPerformanceOptions) => RecoilState<T | undefined>,
     get: (
-      client: AlgoliaClient<'analytics'> | OpensearchClient<T>,
+      client: OpensearchClient<T>,
       options: AnalyticsPerformanceOptions,
     ) => Promise<T | undefined>,
     opensearchIndex:
@@ -29,23 +25,15 @@ export const makeFlagBasedPerformanceHook =
       | 'team-productivity-performance'
       | 'user-collaboration-performance'
       | 'team-collaboration-performance'
-      | 'presenter-representation-performance', // NOTE: Add more as we add new performance indexes to opensearch
+      | 'presenter-representation-performance',
   ) =>
   (options: AnalyticsPerformanceOptions) => {
-    const { isEnabled } = useFlags();
-
     const opensearchClient = useAnalyticsOpensearch<T>(opensearchIndex);
-    const algoliaClient = useAnalyticsAlgolia(ANALYTICS_ALGOLIA_INDEX);
 
     const [performance, setPerformance] = useRecoilState(state(options));
 
     if (performance === undefined) {
-      throw get(
-        isEnabled('OPENSEARCH_METRICS')
-          ? opensearchClient.client
-          : algoliaClient.client,
-        options,
-      )
+      throw get(opensearchClient.client, options)
         .then(setPerformance)
         .catch(setPerformance);
     }
@@ -55,34 +43,3 @@ export const makeFlagBasedPerformanceHook =
     }
     return performance;
   };
-
-export const getAlgoliaIndexName = (
-  sort: AnalyticsSortOptions,
-  metric: Metric,
-) => {
-  let indexName = ANALYTICS_ALGOLIA_INDEX;
-  switch (metric) {
-    case 'team-collaboration':
-    case 'team-productivity':
-      if (sort !== 'team_asc')
-        indexName = `${ANALYTICS_ALGOLIA_INDEX}_team_${sort.replace(
-          'team_',
-          '',
-        )}`;
-      break;
-    case 'user-collaboration':
-    case 'user-productivity':
-      if (sort !== 'user_asc')
-        indexName = `${ANALYTICS_ALGOLIA_INDEX}_user_${sort.replace(
-          'user_',
-          '',
-        )}`;
-      break;
-    case 'team-leadership':
-    case 'engagement':
-      if (sort !== 'team_asc') indexName = `${ANALYTICS_ALGOLIA_INDEX}_${sort}`;
-      break;
-  }
-
-  return indexName;
-};

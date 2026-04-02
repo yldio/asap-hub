@@ -1,0 +1,60 @@
+name: Delete CRN Analytics Algolia Indexes
+on:
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        required: true
+        type: environment
+        description: Choose which environment to use
+        default: Production
+      index-name:
+        required: true
+        type: string
+        description: 'Index name to delete (e.g. crn-analytics_dev, crn-analytics_prod, crn-analytics_CI-1234)'
+      dry-run:
+        required: false
+        type: boolean
+        description: Dry run (list indexes without deleting)
+        default: true
+
+jobs:
+  delete-indexes:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    environment: ${{ github.event.inputs.environment-name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
+      - name: Cache build typecheck output
+        uses: ./.github/actions/cache-unplugged
+        with:
+          environment-name: Production
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ github.event.inputs.environment-name }}
+      - name: Get Algolia Keys
+        id: algolia-keys
+        uses: ./.github/actions/algolia-keys
+        with:
+          algolia-app-id-name: ${{ steps.setup.outputs.crn-algolia-app-id-name }}
+          algolia-api-key-name: ${{ steps.setup.outputs.crn-algolia-api-key-name }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-default-region: ${{ steps.setup.outputs.aws-default-region }}
+      - name: Rebuild dependencies
+        run: yarn build:babel
+      - name: Delete Analytics Algolia Indexes
+        run: TS_NODE_COMPILER_OPTIONS='{"module":"commonjs"}' yarn ts-node --transpile-only scripts/delete-analytics-algolia-indexes.ts
+        env:
+          ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
+          ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}
+          INDEX_NAME: ${{ github.event.inputs.index-name }}
+          DRY_RUN: ${{ github.event.inputs.dry-run }}

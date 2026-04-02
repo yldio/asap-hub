@@ -25,7 +25,6 @@ import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { OpensearchClient } from '../../utils/opensearch';
-import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import {
   useOpensearchMetrics,
   useAnalyticsOpensearch,
@@ -49,10 +48,6 @@ jest.mock('@asap-hub/frontend-utils', () => {
 });
 
 jest.mock('../api');
-
-jest.mock('../../../hooks/algolia', () => ({
-  useAnalyticsAlgolia: jest.fn(),
-}));
 
 jest.mock('../../../hooks/opensearch', () => ({
   useOpensearchMetrics: jest.fn(),
@@ -109,10 +104,6 @@ const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
   AlgoliaSearchClient<'analytics'>['searchForTagValues']
 >;
 
-const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
-  typeof useAnalyticsAlgolia
->;
-
 const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
   typeof useOpensearchMetrics
 >;
@@ -126,10 +117,6 @@ const mockNavigate = jest.fn();
 const mockUseNavigate = useNavigate as jest.MockedFunction<typeof useNavigate>;
 
 beforeEach(() => {
-  const mockAlgoliaClient = {
-    searchForTagValues: mockSearchForTagValues,
-  };
-
   mockSearchForTagValues.mockResolvedValue({
     ...EMPTY_ALGOLIA_FACET_HITS,
     facetHits: [
@@ -138,9 +125,6 @@ beforeEach(() => {
     ],
   });
 
-  mockUseAnalyticsAlgolia.mockReturnValue({
-    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
-  });
   mockUseOpensearchMetrics.mockReturnValue({
     getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
     getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
@@ -381,28 +365,6 @@ describe('user productivity', () => {
     });
     expect(screen.queryByText('75')).not.toBeInTheDocument();
   });
-
-  it('calls algolia client with the right index name', async () => {
-    const { getByTitle } = await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'user' }).$,
-    );
-
-    await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
-        expect.not.stringContaining('user_desc'),
-      );
-    });
-    await act(async () => {
-      await userEvent.click(
-        getByTitle('User Active Alphabetical Ascending Sort Icon'),
-      );
-    });
-    await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenCalledWith(
-        expect.stringContaining('user_desc'),
-      );
-    });
-  });
 });
 
 describe('team productivity', () => {
@@ -524,28 +486,6 @@ describe('team productivity', () => {
     expect(screen.getByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
   });
-
-  it('calls algolia client with the right index name', async () => {
-    const { getByTitle } = await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
-    );
-
-    await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
-        expect.not.stringContaining('team_desc'),
-      );
-    });
-    await act(async () => {
-      await userEvent.click(
-        getByTitle('Active Alphabetical Ascending Sort Icon'),
-      );
-    });
-    await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenCalledWith(
-        expect.stringContaining('team_desc'),
-      );
-    });
-  });
 });
 
 describe('metric switching', () => {
@@ -634,6 +574,14 @@ describe('search', () => {
     return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
   it('allows typing in search queries', async () => {
+    const mockGetTeamTagSuggestions = jest
+      .fn()
+      .mockResolvedValue(['tag1', 'tag2']);
+    mockUseOpensearchMetrics.mockReturnValue({
+      ...mockUseOpensearchMetrics(),
+      getTeamProductivityTagSuggestions: mockGetTeamTagSuggestions,
+    } as unknown as ReturnType<typeof useOpensearchMetrics>);
+
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );
@@ -642,11 +590,7 @@ describe('search', () => {
       await userEvent.type(searchBox, 'test123');
     });
     await waitFor(() =>
-      expect(mockSearchForTagValues).toHaveBeenCalledWith(
-        ['team-productivity'],
-        'test123',
-        {},
-      ),
+      expect(mockGetTeamTagSuggestions).toHaveBeenCalledWith('test123'),
     );
   });
 });
@@ -681,19 +625,7 @@ describe('csv export', () => {
     );
   });
 
-  it('exports user productivity analytics via OpenSearch when flag is enabled', async () => {
-    // Set up flag to enable OpenSearch metrics
-    mockUseFlags.mockReturnValue({
-      isEnabled: jest
-        .fn()
-        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+  it('exports user productivity analytics', async () => {
     // Mock OpenSearch metrics methods
     const mockGetUserProductivityOS = jest.fn().mockResolvedValue({
       items: [
@@ -837,19 +769,7 @@ describe('csv export', () => {
     expect(mockGetUserProductivity).not.toHaveBeenCalled();
   });
 
-  it('exports team productivity analytics via OpenSearch when flag is enabled', async () => {
-    // Set up flag to enable OpenSearch metrics
-    mockUseFlags.mockReturnValue({
-      isEnabled: jest
-        .fn()
-        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
+  it('exports team productivity analytics', async () => {
     // Mock OpenSearch metrics methods for team productivity
     const mockGetTeamProductivityOS = jest.fn().mockResolvedValue({
       items: [
@@ -1014,21 +934,10 @@ describe('tag suggestions', () => {
     return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
 
-  it('uses OpenSearch for user productivity tag suggestions when flag is enabled', async () => {
+  it('uses OpenSearch for user productivity tag suggestions', async () => {
     const mockGetUserProductivityTagSuggestions = jest
       .fn()
       .mockResolvedValue(['User One', 'User Two']);
-
-    mockUseFlags.mockReturnValue({
-      isEnabled: jest
-        .fn()
-        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
 
     mockUseOpensearchMetrics.mockReturnValue({
       getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
@@ -1100,21 +1009,10 @@ describe('tag suggestions', () => {
     expect(mockSearchForTagValues).not.toHaveBeenCalled();
   });
 
-  it('uses OpenSearch for team productivity tag suggestions when flag is enabled', async () => {
+  it('uses OpenSearch for team productivity tag suggestions', async () => {
     const mockGetTeamProductivityTagSuggestions = jest
       .fn()
       .mockResolvedValue(['Team Alpha', 'Team Beta']);
-
-    mockUseFlags.mockReturnValue({
-      isEnabled: jest
-        .fn()
-        .mockImplementation((flag: string) => flag === 'OPENSEARCH_METRICS'),
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
 
     mockUseOpensearchMetrics.mockReturnValue({
       getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
@@ -1184,38 +1082,5 @@ describe('tag suggestions', () => {
     });
 
     expect(mockSearchForTagValues).not.toHaveBeenCalled();
-  });
-
-  it('uses Algolia for tag suggestions when OPENSEARCH_METRICS flag is disabled', async () => {
-    mockSearchForTagValues.mockClear();
-
-    // The beforeEach already sets flag to false, but let's be explicit
-    mockUseFlags.mockReturnValue({
-      isEnabled: jest.fn().mockReturnValue(false),
-      reset: jest.fn(),
-      disable: jest.fn(),
-      setCurrentOverrides: jest.fn(),
-      setEnvironment: jest.fn(),
-      enable: jest.fn(),
-    });
-
-    await renderPage(
-      analytics({}).productivity({}).metric({ metric: 'team' }).$,
-    );
-
-    const searchBox = getSearchBox();
-    await act(async () => {
-      // Type characters - the search is called with the full input value
-      await userEvent.type(searchBox, 'test123');
-    });
-
-    await waitFor(() => {
-      // Algolia searchForTagValues is called with the search input value
-      expect(mockSearchForTagValues).toHaveBeenCalledWith(
-        ['team-productivity'],
-        'test123',
-        {},
-      );
-    });
   });
 });

@@ -1,4 +1,3 @@
-import { AlgoliaClient } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   LimitedTimeRangeOption,
@@ -16,34 +15,20 @@ import { format } from 'date-fns';
 import * as XLSX from 'xlsx';
 import { OpensearchMetricsFacade } from '../../hooks/opensearch';
 import {
-  getTeamCollaboration,
-  getTeamCollaborationPerformance,
-  getUserCollaboration,
-  getUserCollaborationPerformance,
-} from '../collaboration/api';
-import {
   preliminaryDataSharingToCSV,
   teamCollaborationAcrossTeamToCSV,
   teamCollaborationWithinTeamToCSV,
   userCollaborationToCSV,
 } from '../collaboration/export';
-import { getEngagement, getEngagementPerformance } from '../engagement/api';
 import {
   engagementToCSV,
   meetingRepAttendanceToCSV,
 } from '../engagement/export';
-import { getAnalyticsLeadership } from '../leadership/api';
 import { leadershipToCSV, osChampionToCSV } from '../leadership/export';
 import {
   preprintComplianceToCSV,
   publicationComplianceToCSV,
 } from '../open-science/export';
-import {
-  getTeamProductivity,
-  getTeamProductivityPerformance,
-  getUserProductivity,
-  getUserProductivityPerformance,
-} from '../productivity/api';
 import {
   teamProductivityToCSV,
   userProductivityToCSV,
@@ -83,15 +68,7 @@ export const getAllData = async <T>(
 };
 
 export const downloadAnalyticsXLSX =
-  ({
-    algoliaClient,
-    opensearchMetrics,
-    opensearchMetricsFlag,
-  }: {
-    algoliaClient: AlgoliaClient<'analytics'>;
-    opensearchMetrics: OpensearchMetricsFacade;
-    opensearchMetricsFlag: boolean;
-  }) =>
+  ({ opensearchMetrics }: { opensearchMetrics: OpensearchMetricsFacade }) =>
   async (timeRange: TimeRangeOption, metrics: Set<MetricExportKeys>) => {
     const workbook = XLSX.utils.book_new();
 
@@ -125,93 +102,54 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'user-productivity',
           () =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getUserProductivityPerformance({
-                  timeRange,
-                  documentCategory: 'all',
-                })
-              : getUserProductivityPerformance(algoliaClient, {
-                  timeRange,
-                  documentCategory: 'all',
-                }),
+            opensearchMetrics.getUserProductivityPerformance({
+              timeRange,
+              documentCategory: 'all',
+            }),
           (paginationParams) =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getUserProductivity({
-                  timeRange,
-                  documentCategory,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                })
-              : getUserProductivity(algoliaClient, {
-                  timeRange,
-                  documentCategory,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                }),
+            opensearchMetrics.getUserProductivity({
+              timeRange,
+              documentCategory,
+              sort,
+              tags,
+              ...paginationParams,
+            }),
           userProductivityToCSV,
         ),
       'team-productivity': () =>
         processMetric(
           'team-productivity',
           () =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getTeamProductivityPerformance({
-                  timeRange,
-                  outputType: 'all',
-                })
-              : getTeamProductivityPerformance(algoliaClient, {
-                  timeRange,
-                  outputType: 'all',
-                }),
+            opensearchMetrics.getTeamProductivityPerformance({
+              timeRange,
+              outputType: 'all',
+            }),
           (paginationParams) =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getTeamProductivity({
-                  timeRange,
-                  outputType: 'all',
-                  sort,
-                  tags,
-                  ...paginationParams,
-                })
-              : getTeamProductivity(algoliaClient, {
-                  timeRange,
-                  outputType: 'all',
-                  sort: 'team_asc',
-                  tags: [],
-                  ...paginationParams,
-                }),
+            opensearchMetrics.getTeamProductivity({
+              timeRange,
+              outputType: 'all',
+              sort,
+              tags,
+              ...paginationParams,
+            }),
           teamProductivityToCSV,
         ),
       'user-collaboration-within': () =>
         processMetric(
           'user-collaboration-within',
           () =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getUserCollaborationPerformance({
-                  timeRange,
-                  documentCategory: 'all',
-                })
-              : getUserCollaborationPerformance(algoliaClient, {
-                  timeRange,
-                  documentCategory: 'all',
-                }),
+            opensearchMetrics.getUserCollaborationPerformance({
+              timeRange,
+              documentCategory: 'all',
+            }),
           (paginationParams) =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getUserCollaboration({
-                  timeRange,
-                  documentCategory,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                })
-              : getUserCollaboration(algoliaClient, {
-                  timeRange,
-                  documentCategory,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                }),
+            opensearchMetrics.getUserCollaboration({
+              timeRange,
+              documentCategory,
+              sort,
+              tags,
+              ...paginationParams,
+            }),
           (performance) =>
             userCollaborationToCSV(
               'within-team',
@@ -223,31 +161,18 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'user-collaboration-across',
           () =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getUserCollaborationPerformance({
-                  timeRange,
-                  documentCategory: 'all',
-                })
-              : getUserCollaborationPerformance(algoliaClient, {
-                  timeRange,
-                  documentCategory: 'all',
-                }),
+            opensearchMetrics.getUserCollaborationPerformance({
+              timeRange,
+              documentCategory: 'all',
+            }),
           (paginationParams) =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getUserCollaboration({
-                  timeRange,
-                  documentCategory,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                })
-              : getUserCollaboration(algoliaClient, {
-                  timeRange,
-                  documentCategory,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                }),
+            opensearchMetrics.getUserCollaboration({
+              timeRange,
+              documentCategory,
+              sort,
+              tags,
+              ...paginationParams,
+            }),
           (performance) =>
             userCollaborationToCSV(
               'across-teams',
@@ -259,31 +184,18 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-collaboration-within',
           () =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getTeamCollaborationPerformance({
-                  timeRange,
-                  outputType,
-                })
-              : getTeamCollaborationPerformance(algoliaClient, {
-                  timeRange,
-                  outputType,
-                }),
+            opensearchMetrics.getTeamCollaborationPerformance({
+              timeRange,
+              outputType,
+            }),
           (paginationParams) =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getTeamCollaboration({
-                  timeRange,
-                  outputType,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                })
-              : getTeamCollaboration(algoliaClient, {
-                  timeRange,
-                  outputType,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                }),
+            opensearchMetrics.getTeamCollaboration({
+              timeRange,
+              outputType,
+              sort,
+              tags,
+              ...paginationParams,
+            }),
           (performance) =>
             teamCollaborationWithinTeamToCSV(performance, outputType),
         ),
@@ -291,31 +203,18 @@ export const downloadAnalyticsXLSX =
         processMetric(
           'team-collaboration-across',
           () =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getTeamCollaborationPerformance({
-                  timeRange,
-                  outputType: 'all',
-                })
-              : getTeamCollaborationPerformance(algoliaClient, {
-                  timeRange,
-                  outputType: 'all',
-                }),
+            opensearchMetrics.getTeamCollaborationPerformance({
+              timeRange,
+              outputType: 'all',
+            }),
           (paginationParams) =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getTeamCollaboration({
-                  timeRange,
-                  outputType,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                })
-              : getTeamCollaboration(algoliaClient, {
-                  timeRange,
-                  outputType,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                }),
+            opensearchMetrics.getTeamCollaboration({
+              timeRange,
+              outputType,
+              sort,
+              tags,
+              ...paginationParams,
+            }),
           (performance) =>
             teamCollaborationAcrossTeamToCSV(performance, outputType),
         ),
@@ -324,15 +223,10 @@ export const downloadAnalyticsXLSX =
           'wg-leadership',
           async () => undefined,
           (paginationParams) =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getAnalyticsWorkingGroupLeadership({
-                  tags,
-                  ...paginationParams,
-                })
-              : getAnalyticsLeadership(algoliaClient, {
-                  tags,
-                  ...paginationParams,
-                }),
+            opensearchMetrics.getAnalyticsWorkingGroupLeadership({
+              tags,
+              ...paginationParams,
+            }),
           () => leadershipToCSV('working-group'),
         ),
       'ig-leadership': () =>
@@ -340,40 +234,26 @@ export const downloadAnalyticsXLSX =
           'ig-leadership',
           async () => undefined,
           (paginationParams) =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getAnalyticsInterestGroupLeadership({
-                  tags,
-                  ...paginationParams,
-                })
-              : getAnalyticsLeadership(algoliaClient, {
-                  tags,
-                  ...paginationParams,
-                }),
+            opensearchMetrics.getAnalyticsInterestGroupLeadership({
+              tags,
+              ...paginationParams,
+            }),
           () => leadershipToCSV('interest-group'),
         ),
       engagement: () =>
         processMetric(
           'engagement',
           () =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getPresenterRepresentationPerformance({
-                  timeRange,
-                })
-              : getEngagementPerformance(algoliaClient, { timeRange }),
+            opensearchMetrics.getPresenterRepresentationPerformance({
+              timeRange,
+            }),
           (paginationParams) =>
-            opensearchMetricsFlag
-              ? opensearchMetrics.getPresenterRepresentation({
-                  timeRange,
-                  sort,
-                  tags,
-                  ...paginationParams,
-                })
-              : getEngagement(algoliaClient, {
-                  tags,
-                  timeRange,
-                  sort,
-                  ...paginationParams,
-                }),
+            opensearchMetrics.getPresenterRepresentation({
+              timeRange,
+              sort,
+              tags,
+              ...paginationParams,
+            }),
           (performance) => engagementToCSV(performance),
         ),
       'publication-compliance': () =>

@@ -36,6 +36,8 @@ on:
 
 jobs:
   algolia:
+    # Disabled: OpenSearch is now the sole analytics backend (ASAP-1451)
+    if: false
     uses: ./.github/workflows/reusable-crn-analytics-algolia-sync.yml
     with:
       environment-name: ${{ github.event.inputs.environment-name }}

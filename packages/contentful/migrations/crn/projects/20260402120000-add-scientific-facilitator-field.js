@@ -1,5 +1,4 @@
-module.exports.description =
-  'Add Scientific Facilitator field to projects';
+module.exports.description = 'Add Scientific Facilitator field to projects';
 
 module.exports.up = (migration) => {
   const projects = migration.editContentType('projects');

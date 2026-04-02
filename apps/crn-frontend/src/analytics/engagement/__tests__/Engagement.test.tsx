@@ -556,24 +556,6 @@ describe('loadTags function', () => {
     );
   });
 
-  it('loads tags from algolia for presenters page', async () => {
-    await renderPage(
-      analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
-    );
-
-    const searchBox = getSearchBox();
-
-    await userEvent.type(searchBox, 'test123');
-    await waitFor(() => {
-      expect(searchBox.value).toEqual('test123');
-      expect(mockSearchForTagValues).toHaveBeenCalledWith(
-        ['engagement'],
-        'test123',
-        {},
-      );
-    });
-  });
-
   it('loads tags from opensearch for presenters page', async () => {
     const mockGetPresenterSuggestionsOS = jest
       .fn()

@@ -298,26 +298,52 @@ describe('search', () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
     return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
-  describe('algolia', () => {
+  describe('working-group search', () => {
     it('allows typing in search queries', async () => {
+      const localMockGetTagSuggestions = jest
+        .fn()
+        .mockResolvedValue(['Alessi', 'tag2']);
+      mockUseOpensearchMetrics.mockReturnValue({
+        getAnalyticsWorkingGroupLeadership: jest
+          .fn()
+          .mockResolvedValue({ items: [], total: 0 }),
+        getAnalyticsWorkingGroupLeadershipTagSuggestions:
+          localMockGetTagSuggestions,
+        getAnalyticsInterestGroupLeadership: jest
+          .fn()
+          .mockResolvedValue({ items: [], total: 0 }),
+        getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+          .fn()
+          .mockResolvedValue([]),
+      } as unknown as ReturnType<typeof useOpensearchMetrics>);
+
       await renderPage();
       const searchBox = getSearchBox();
 
       await userEvent.type(searchBox, 'test123');
       expect(searchBox.value).toEqual('test123');
       await waitFor(() =>
-        expect(mockSearchForTagValues).toHaveBeenCalledWith(
-          ['team-leadership'],
-          'test123',
-          {},
-        ),
+        expect(localMockGetTagSuggestions).toHaveBeenCalledWith('test123'),
       );
     });
-    it('Will search algolia using selected team', async () => {
-      mockSearchForTagValues.mockResolvedValue({
-        ...EMPTY_ALGOLIA_FACET_HITS,
-        facetHits: [{ value: 'Alessi', count: 1, highlighted: 'Alessi' }],
-      });
+    it('Will search using selected team tag', async () => {
+      const localMockGetTagSuggestions = jest
+        .fn()
+        .mockResolvedValue(['Alessi']);
+
+      mockUseOpensearchMetrics.mockReturnValue({
+        getAnalyticsWorkingGroupLeadership: jest
+          .fn()
+          .mockResolvedValue({ items: [], total: 0 }),
+        getAnalyticsWorkingGroupLeadershipTagSuggestions:
+          localMockGetTagSuggestions,
+        getAnalyticsInterestGroupLeadership: jest
+          .fn()
+          .mockResolvedValue({ items: [], total: 0 }),
+        getAnalyticsInterestGroupLeadershipTagSuggestions: jest
+          .fn()
+          .mockResolvedValue([]),
+      } as unknown as ReturnType<typeof useOpensearchMetrics>);
 
       await renderPage();
       const searchBox = getSearchBox();
@@ -328,10 +354,8 @@ describe('search', () => {
       });
       await userEvent.click(screen.getByText('Alessi'));
       await waitFor(() =>
-        expect(mockSearch).toHaveBeenCalledWith(
-          expect.anything(),
-          expect.anything(),
-          expect.objectContaining({ tagFilters: [['Alessi']] }),
+        expect(wgLeadershipClient.search).toHaveBeenCalledWith(
+          expect.objectContaining({ searchTags: ['Alessi'] }),
         ),
       );
     });
@@ -619,7 +643,7 @@ it('renders data for different time ranges', async () => {
 describe('error handling', () => {
   it('handles API errors when fetching leadership data', async () => {
     const error = new Error('Failed to fetch leadership data');
-    mockSearch.mockRejectedValueOnce(error);
+    jest.spyOn(wgLeadershipClient, 'search').mockRejectedValueOnce(error);
     jest.spyOn(console, 'error').mockImplementation(() => {});
 
     let caughtError: Error | null = null;
@@ -738,29 +762,9 @@ describe('error handling', () => {
       id: 'team-2',
     };
 
-    mockSearch.mockResolvedValueOnce({
-      hits: [
-        {
-          ...mockTeam1,
-          objectID: 'team-1',
-          __meta: { type: 'team-leadership' },
-        },
-        {
-          ...mockTeam2,
-          objectID: 'team-2',
-          __meta: { type: 'team-leadership' },
-        },
-      ],
-      nbHits: 2,
-      page: 0,
-      nbPages: 1,
-      hitsPerPage: 10,
-      exhaustiveNbHits: true,
-      processingTimeMS: 0,
-      query: '',
-      params: '',
-      index: 'test-index',
-      queryID: 'test-query-id',
+    jest.spyOn(wgLeadershipClient, 'search').mockResolvedValueOnce({
+      items: [mockTeam1, mockTeam2],
+      total: 2,
     });
 
     const result = render(
@@ -801,6 +805,6 @@ describe('error handling', () => {
     });
 
     // Verify the data was loaded correctly
-    expect(mockSearch).toHaveBeenCalled();
+    expect(wgLeadershipClient.search).toHaveBeenCalled();
   });
 });

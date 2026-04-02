@@ -888,6 +888,35 @@ describe('search', () => {
       ),
     );
   });
+
+  it('returns empty tags for sharing preliminary findings', async () => {
+    mockGetPreliminaryDataSharing.mockResolvedValue(
+      preliminaryDataSharingResponse,
+    );
+
+    await renderPage('sharing-prelim-findings', undefined);
+    const searchContainer = screen.getByRole('search') as HTMLElement;
+    const searchBox = within(searchContainer).getByRole(
+      'combobox',
+    ) as HTMLInputElement;
+
+    await userEvent.type(searchBox, 'test');
+    // Wait for debounce (500ms) + buffer to ensure loadTags would have been called
+    await new Promise((r) => {
+      setTimeout(r, 800);
+    });
+    await waitFor(() => {
+      expect(searchBox.value).toEqual('test');
+    });
+    // sharing-prelim-findings should not call user or team tag APIs
+    const metricsReturnValue = mockUseOpensearchMetrics.mock.results[0]?.value;
+    expect(
+      metricsReturnValue?.getUserCollaborationTagSuggestions,
+    ).not.toHaveBeenCalled();
+    expect(
+      metricsReturnValue?.getTeamCollaborationTagSuggestions,
+    ).not.toHaveBeenCalled();
+  });
 });
 
 describe('csv export', () => {

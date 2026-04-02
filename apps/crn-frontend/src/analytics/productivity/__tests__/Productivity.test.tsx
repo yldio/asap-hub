@@ -574,6 +574,14 @@ describe('search', () => {
     return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
   it('allows typing in search queries', async () => {
+    const mockGetTeamTagSuggestions = jest
+      .fn()
+      .mockResolvedValue(['tag1', 'tag2']);
+    mockUseOpensearchMetrics.mockReturnValue({
+      ...mockUseOpensearchMetrics(),
+      getTeamProductivityTagSuggestions: mockGetTeamTagSuggestions,
+    } as unknown as ReturnType<typeof useOpensearchMetrics>);
+
     await renderPage(
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );
@@ -582,11 +590,7 @@ describe('search', () => {
       await userEvent.type(searchBox, 'test123');
     });
     await waitFor(() =>
-      expect(mockSearchForTagValues).toHaveBeenCalledWith(
-        ['team-productivity'],
-        'test123',
-        {},
-      ),
+      expect(mockGetTeamTagSuggestions).toHaveBeenCalledWith('test123'),
     );
   });
 });

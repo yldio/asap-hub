@@ -1,7 +1,6 @@
 import {
   AlgoliaSearchClient,
   EMPTY_ALGOLIA_FACET_HITS,
-  EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
@@ -29,7 +28,6 @@ import { RecoilRoot } from 'recoil';
 import { OpensearchClient } from '../../utils/opensearch';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import {
   useAnalyticsOpensearch,
   useOpensearchMetrics,
@@ -78,10 +76,6 @@ jest.mock('@asap-hub/algolia', () => ({
     .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
 }));
 
-jest.mock('../../../hooks/algolia', () => ({
-  useAnalyticsAlgolia: jest.fn(),
-}));
-
 jest.mock('../../../hooks/opensearch', () => ({
   useAnalyticsOpensearch: jest.fn(),
   useOpensearchMetrics: jest.fn(),
@@ -120,14 +114,6 @@ const mockGetPerformance = getEngagementPerformance as jest.MockedFunction<
 
 const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
   AlgoliaSearchClient<'analytics'>['searchForTagValues']
->;
-
-const mockSearch = jest.fn() as jest.MockedFunction<
-  AlgoliaSearchClient<'analytics'>['search']
->;
-
-const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
-  typeof useAnalyticsAlgolia
 >;
 
 const mockUseAnalyticsOpensearch =
@@ -170,11 +156,6 @@ const data: ListEngagementResponse = {
   ],
 };
 
-const mockAlgoliaClient = {
-  searchForTagValues: mockSearchForTagValues,
-  search: mockSearch,
-};
-
 const defaultUseOpensearchMetricsResponse = {
   getMeetingRepAttendance: jest.fn().mockResolvedValue({ items: [], total: 0 }),
   getMeetingRepAttendanceTagSuggestions: jest
@@ -191,10 +172,6 @@ const defaultUseOpensearchMetricsResponse = {
 beforeEach(() => {
   jest.clearAllMocks();
 
-  mockUseAnalyticsAlgolia.mockReturnValue({
-    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
-  });
-  mockAlgoliaClient.search.mockResolvedValue(EMPTY_ALGOLIA_RESPONSE);
   mockSearchForTagValues.mockResolvedValue({
     ...EMPTY_ALGOLIA_FACET_HITS,
     facetHits: [
@@ -303,27 +280,6 @@ describe('Engagement', () => {
       expect(screen.getAllByText('3')).toHaveLength(1);
       expect(screen.getAllByText('3 (100%)')).toHaveLength(1);
       expect(screen.getAllByText('4')).toHaveLength(1);
-    });
-  });
-
-  it('calls algolia client with the right index name', async () => {
-    await renderPage(
-      analytics({}).engagement({}).metric({ metric: 'presenters' }).$,
-    );
-
-    await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenCalled();
-    });
-
-    await userEvent.click(
-      screen.getByTitle('Active Alphabetical Ascending Sort Icon'),
-    );
-
-    // Wait for the component to re-render and call useAnalyticsAlgolia with new sort
-    await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenCalledWith(
-        expect.stringContaining('team_desc'),
-      );
     });
   });
 

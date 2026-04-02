@@ -1,7 +1,3 @@
-import {
-  AlgoliaSearchClient,
-  EMPTY_ALGOLIA_FACET_HITS,
-} from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { analytics } from '@asap-hub/routing';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
@@ -13,14 +9,9 @@ import { RecoilRoot } from 'recoil';
 import { PreprintComplianceOpensearchResponse } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import { useAnalyticsOpensearch } from '../../../hooks';
 import { OpensearchClient } from '../../utils/opensearch';
 import OpenScience from '../OpenScience';
-
-jest.mock('../../../hooks/algolia', () => ({
-  useAnalyticsAlgolia: jest.fn(),
-}));
 
 jest.mock('../../../hooks', () => ({
   ...jest.requireActual('../../../hooks'),
@@ -43,16 +34,8 @@ jest.useFakeTimers();
 
 mockConsoleError();
 
-const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
-  AlgoliaSearchClient<'analytics'>['searchForTagValues']
->;
-
 const mockGetTagSuggestions = jest.fn() as jest.MockedFunction<
   OpensearchClient<PreprintComplianceOpensearchResponse>['getTagSuggestions']
->;
-
-const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
-  typeof useAnalyticsAlgolia
 >;
 
 const mockUseAnalyticsOpensearch =
@@ -65,25 +48,10 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
 beforeEach(() => {
   jest.clearAllMocks();
 
-  const mockAlgoliaClient = {
-    searchForTagValues: mockSearchForTagValues,
-  };
-
   const mockOpensearchClient = {
     getTagSuggestions: mockGetTagSuggestions,
     search: jest.fn().mockResolvedValue({ items: [], total: 0 }),
   };
-
-  mockUseAnalyticsAlgolia.mockReturnValue({
-    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
-  });
-  mockSearchForTagValues.mockResolvedValue({
-    ...EMPTY_ALGOLIA_FACET_HITS,
-    facetHits: [
-      { value: 'tag1', highlighted: 'tag1', count: 1 },
-      { value: 'tag2', highlighted: 'tag2', count: 1 },
-    ],
-  });
 
   mockUseAnalyticsOpensearch.mockReturnValue({
     client:

@@ -23,7 +23,6 @@ import { useFlags } from '@asap-hub/react-context';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
 import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
-import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import { useAnalyticsOpensearch, useOpensearchMetrics } from '../../../hooks';
 import { OpensearchClient } from '../../utils/opensearch';
 
@@ -62,10 +61,6 @@ jest.mock('@asap-hub/frontend-utils', () => {
   };
 });
 
-jest.mock('../../../hooks/algolia', () => ({
-  useAnalyticsAlgolia: jest.fn(),
-}));
-
 jest.mock('../../../hooks/opensearch', () => ({
   useAnalyticsOpensearch: jest.fn(),
 }));
@@ -103,10 +98,6 @@ const mockOSChampionSearch = jest.fn() as jest.MockedFunction<
   OpensearchClient<OSChampionOpensearchResponse>['search']
 >;
 
-const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
-  typeof useAnalyticsAlgolia
->;
-
 const mockUseAnalyticsOpensearch =
   useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
@@ -131,11 +122,6 @@ const igLeadershipClient =
 beforeEach(() => {
   jest.clearAllMocks();
 
-  const mockAlgoliaClient = {
-    searchForTagValues: mockSearchForTagValues,
-    search: mockSearch,
-  };
-
   const mockOpensearchClient = {
     getTagSuggestions: mockGetTagSuggestions,
     search: mockOSChampionSearch,
@@ -149,10 +135,7 @@ beforeEach(() => {
     ],
   });
 
-  mockUseAnalyticsAlgolia.mockReturnValue({
-    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
-  });
-  mockAlgoliaClient.search.mockResolvedValue({
+  mockSearch.mockResolvedValue({
     hits: [],
     nbHits: 0,
     page: 0,
@@ -308,27 +291,6 @@ it('switches to open science champion data', async () => {
 it('renders OS Champion page without redirect', async () => {
   await renderPage('os-champion');
   expect(screen.getAllByText('Open Science Champion').length).toBe(2);
-});
-
-it('calls algolia client with the right index name', async () => {
-  await renderPage();
-
-  await waitFor(() => {
-    expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
-      expect.not.stringContaining('team_desc'),
-    );
-  });
-
-  const sortIcon = await screen.findByTitle(
-    'Active Alphabetical Ascending Sort Icon',
-  );
-  await userEvent.click(sortIcon);
-
-  await waitFor(() => {
-    expect(mockUseAnalyticsAlgolia).toHaveBeenLastCalledWith(
-      expect.stringContaining('team_desc'),
-    );
-  });
 });
 
 describe('search', () => {

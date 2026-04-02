@@ -1,8 +1,4 @@
-import {
-  AlgoliaSearchClient,
-  AnalyticsSearchOptionsWithFiltering,
-  EMPTY_ALGOLIA_FACET_HITS,
-} from '@asap-hub/algolia';
+import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   teamCollaborationPerformance,
@@ -35,7 +31,6 @@ import { RecoilRoot } from 'recoil';
 
 import { OpensearchClient } from '../../utils/opensearch';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { useAnalyticsAlgolia } from '../../../hooks/algolia';
 import {
   useAnalyticsOpensearch,
   useOpensearchMetrics,
@@ -60,10 +55,6 @@ jest.mock('@asap-hub/frontend-utils', () => {
   };
 });
 jest.mock('../api');
-jest.mock('../../../hooks/algolia', () => ({
-  useAnalyticsAlgolia: jest.fn(),
-}));
-
 jest.mock('../../../hooks/opensearch', () => ({
   useAnalyticsOpensearch: jest.fn(),
   useOpensearchMetrics: jest.fn(),
@@ -137,12 +128,6 @@ const mockGetPreliminaryDataSharing =
   >;
 mockGetPreliminaryDataSharing.mockResolvedValue(preliminaryDataSharingResponse);
 
-const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
-  AlgoliaSearchClient<'analytics'>['searchForTagValues']
->;
-const mockUseAnalyticsAlgolia = useAnalyticsAlgolia as jest.MockedFunction<
-  typeof useAnalyticsAlgolia
->;
 const mockUseAnalyticsOpensearch =
   useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
@@ -267,25 +252,9 @@ const renderPage = async (
 };
 
 beforeEach(() => {
-  const mockAlgoliaClient = {
-    searchForTagValues: mockSearchForTagValues,
-  };
-
   const mockOpensearchClient = {
     request: jest.fn(),
   };
-
-  mockSearchForTagValues.mockResolvedValue({
-    ...EMPTY_ALGOLIA_FACET_HITS,
-    facetHits: [
-      { value: 'tag1', highlighted: 'tag1', count: 1 },
-      { value: 'tag2', highlighted: 'tag2', count: 1 },
-    ],
-  });
-
-  mockUseAnalyticsAlgolia.mockReturnValue({
-    client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
-  });
 
   mockUseAnalyticsOpensearch.mockReturnValue({
     client:
@@ -426,25 +395,6 @@ describe('user collaboration', () => {
     await waitFor(() => expect(screen.getByText('100')).toBeVisible());
     expect(screen.queryByText('300')).not.toBeInTheDocument();
   });
-
-  it('calls algolia client with the right index name', async () => {
-    const { getByTitle } = await renderPage('user', 'within-team');
-    await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenCalledWith(
-        expect.not.stringContaining('user_desc'),
-      );
-    });
-    // Clear previous calls to check only new calls after sort change
-    mockUseAnalyticsAlgolia.mockClear();
-    await userEvent.click(
-      getByTitle('User Active Alphabetical Ascending Sort Icon'),
-    );
-    await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenCalledWith(
-        expect.stringContaining('user_desc'),
-      );
-    });
-  });
 });
 
 describe('team collaboration', () => {
@@ -522,23 +472,6 @@ describe('team collaboration', () => {
 
     await waitFor(() => expect(screen.getByText('50')).toBeVisible());
     expect(screen.queryByText('100')).not.toBeInTheDocument();
-  });
-
-  it('calls algolia client with the right index name', async () => {
-    const { getByTitle } = await renderPage('team', 'within-team');
-    await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenCalled();
-    });
-    // Clear previous calls to check only new calls after sort change
-    mockUseAnalyticsAlgolia.mockClear();
-    await userEvent.click(
-      getByTitle('Active Alphabetical Ascending Sort Icon'),
-    );
-    await waitFor(() => {
-      expect(mockUseAnalyticsAlgolia).toHaveBeenCalledWith(
-        expect.stringContaining('team_desc'),
-      );
-    });
   });
 });
 
@@ -814,29 +747,6 @@ describe('search', () => {
     const searchContainer = screen.getByRole('search') as HTMLElement;
     return within(searchContainer).getByRole('combobox') as HTMLInputElement;
   };
-  it('allows typing in search queries', async () => {
-    const mockAlgoliaClient = {
-      searchForTagValues: mockSearchForTagValues,
-    };
-
-    mockUseAnalyticsAlgolia.mockReturnValue({
-      client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'analytics'>,
-    });
-
-    await renderPage('user', 'within-team');
-    const searchBox = getSearchBox();
-
-    await userEvent.type(searchBox, 'test123');
-    expect(searchBox.value).toEqual('test123');
-    await waitFor(() =>
-      expect(mockSearchForTagValues).toHaveBeenCalledWith(
-        ['user-collaboration'],
-        'test123',
-        {},
-      ),
-    );
-  });
-
   it('uses OpenSearch for tag suggestions', async () => {
     const mockGetUserCollaborationTagSuggestionsOS = jest
       .fn()

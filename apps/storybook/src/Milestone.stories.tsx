@@ -34,14 +34,18 @@ const defaultProps = {
   loadArticleOptions: mockLoadArticleOptions,
 };
 
+const mockFetchArticles = () => Promise.resolve([]);
+
 const createMilestone = (
   id: string,
   description: string,
   status: Milestone['status'],
+  articleCount: number = 0,
 ): Milestone => ({
   id,
   description,
   status,
+  articleCount,
 });
 
 const shortDescription = 'Complete initial research and literature review.';
@@ -57,6 +61,7 @@ export const StatusComplete = () => (
   <MilestoneComponent
     {...defaultProps}
     milestone={createMilestone('1', mediumDescription, 'Complete')}
+    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -64,6 +69,7 @@ export const StatusInProgress = () => (
   <MilestoneComponent
     {...defaultProps}
     milestone={createMilestone('1', mediumDescription, 'In Progress')}
+    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -71,6 +77,7 @@ export const StatusPending = () => (
   <MilestoneComponent
     {...defaultProps}
     milestone={createMilestone('1', mediumDescription, 'Pending')}
+    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -78,6 +85,7 @@ export const StatusTerminated = () => (
   <MilestoneComponent
     {...defaultProps}
     milestone={createMilestone('1', mediumDescription, 'Terminated')}
+    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -86,6 +94,7 @@ export const ShortDescription = () => (
   <MilestoneComponent
     {...defaultProps}
     milestone={createMilestone('1', shortDescription, 'Complete')}
+    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -93,6 +102,7 @@ export const MediumDescription = () => (
   <MilestoneComponent
     {...defaultProps}
     milestone={createMilestone('1', mediumDescription, 'In Progress')}
+    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -100,6 +110,7 @@ export const LongDescription = () => (
   <MilestoneComponent
     {...defaultProps}
     milestone={createMilestone('1', longDescription, 'Pending')}
+    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -112,6 +123,7 @@ export const RealWorldComplete = () => (
       'Complete comprehensive literature review and identify key research gaps in the field of neurodegenerative diseases. This includes analyzing over 200 peer-reviewed publications from the last 5 years.',
       'Complete',
     )}
+    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -123,6 +135,7 @@ export const RealWorldInProgress = () => (
       'Recruit and enroll 500 study participants across 10 research sites, ensuring diverse demographic representation.',
       'In Progress',
     )}
+    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -134,5 +147,6 @@ export const RealWorldPending = () => (
       'Conduct preliminary statistical analysis of collected biomarker data and prepare interim findings report.',
       'Pending',
     )}
+    fetchLinkedArticles={mockFetchArticles}
   />
 );

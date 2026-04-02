@@ -239,6 +239,10 @@ jest.mock('../state', () => ({
     };
     return map[id];
   }),
+  useProjectMilestones: jest.fn(() => ({
+    items: [],
+    total: 0,
+  })),
 }));
 
 // --- Test helper ---

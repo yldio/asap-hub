@@ -26,6 +26,7 @@ export const mockMilestones: ReadonlyArray<Milestone> = [
         type: 'Published',
       },
     ],
+    articleCount: 0,
   },
   {
     id: 'ms-2',
@@ -41,6 +42,7 @@ export const mockMilestones: ReadonlyArray<Milestone> = [
         type: 'Preprint',
       },
     ],
+    articleCount: 0,
   },
   {
     id: 'ms-3',
@@ -48,6 +50,7 @@ export const mockMilestones: ReadonlyArray<Milestone> = [
       'Run biochemical assays in Parkinson models and document findings. Prepare interim report for review.',
     status: 'Pending',
     aims: '2',
+    articleCount: 2,
   },
   {
     id: 'ms-4',
@@ -55,6 +58,7 @@ export const mockMilestones: ReadonlyArray<Milestone> = [
       'Complete gene therapy pilot in synucleinopathy models and analyse therapeutic targeting outcomes.',
     status: 'Pending',
     aims: '2,3,4,5,6',
+    articleCount: 0,
   },
   {
     id: 'ms-5',
@@ -62,6 +66,7 @@ export const mockMilestones: ReadonlyArray<Milestone> = [
       'Multi-site replication of biomarker candidates and submission of final project report. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     status: 'Terminated',
     aims: '3',
+    articleCount: 0,
   },
 ];
 

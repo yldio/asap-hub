@@ -1,6 +1,10 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Milestone as MilestoneType, MilestoneStatus } from '@asap-hub/model';
+import {
+  ArticleItem,
+  Milestone as MilestoneType,
+  MilestoneStatus,
+} from '@asap-hub/model';
 import Milestone, { getMilestoneStatusAccent } from '../Milestone';
 
 const mockLoadArticleOptions = jest.fn(() => Promise.resolve([]));
@@ -9,6 +13,7 @@ const mockMilestone: MilestoneType = {
   id: '1',
   description: 'This is a test milestone description',
   status: 'Complete',
+  articleCount: 0,
 };
 
 const longMilestone: MilestoneType = {
@@ -16,7 +21,10 @@ const longMilestone: MilestoneType = {
   description:
     'This is a very long milestone description that exceeds the character limit and should be truncated with a Read More button to allow users to expand and see the full content.',
   status: 'In Progress',
+  articleCount: 0,
 };
+
+const mockFetchArticles = jest.fn(() => Promise.resolve([]));
 
 // Mock scrollHeight and clientHeight to simulate truncation
 const mockScrollHeight = (element: HTMLElement, scrollHeight: number) => {
@@ -40,6 +48,7 @@ describe('Milestone', () => {
         milestone={mockMilestone}
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
       />,
     );
     expect(screen.getByText(mockMilestone.description)).toBeInTheDocument();
@@ -51,6 +60,7 @@ describe('Milestone', () => {
         milestone={mockMilestone}
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
       />,
     );
     expect(screen.getByText('Complete')).toBeInTheDocument();
@@ -65,6 +75,7 @@ describe('Milestone', () => {
         }}
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
       />,
     );
     expect(screen.getByText('#1')).toBeInTheDocument();
@@ -77,23 +88,11 @@ describe('Milestone', () => {
         milestone={mockMilestone}
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
       />,
     );
     expect(screen.queryByText('—')).not.toBeInTheDocument();
     expect(screen.queryByText('#1')).not.toBeInTheDocument();
-  });
-
-  it('does not render link when not provided', () => {
-    render(
-      <Milestone
-        milestone={mockMilestone}
-        isLead={false}
-        loadArticleOptions={mockLoadArticleOptions}
-      />,
-    );
-    expect(
-      screen.queryByRole('link', { name: /view milestone/i }),
-    ).not.toBeInTheDocument();
   });
 
   it('truncates long descriptions and shows Read More button', async () => {
@@ -102,6 +101,7 @@ describe('Milestone', () => {
         milestone={longMilestone}
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
       />,
     );
 
@@ -129,6 +129,7 @@ describe('Milestone', () => {
         milestone={longMilestone}
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
       />,
     );
 
@@ -166,6 +167,7 @@ describe('Milestone', () => {
         milestone={longMilestone}
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
       />,
     );
 
@@ -208,11 +210,16 @@ describe('Milestone', () => {
   describe('articles section', () => {
     const milestoneWithArticles: MilestoneType = {
       ...mockMilestone,
-      relatedArticles: [
-        { id: 'a1', title: 'Article 1', href: '/a1', type: 'Preprint' },
-        { id: 'a2', title: 'Article 2', href: '/a2', type: 'Published' },
-      ],
+      articleCount: 2,
     };
+    const sampleArticles: ArticleItem[] = [
+      { id: 'a1', title: 'Article 1', href: '/a1', type: 'Preprint' },
+      { id: 'a2', title: 'Article 2', href: '/a2', type: 'Published' },
+    ];
+
+    const mockFetchLinkedArticles = jest.fn(() =>
+      Promise.resolve(sampleArticles),
+    );
 
     it('displays "No articles added" when no related articles', () => {
       render(
@@ -220,6 +227,7 @@ describe('Milestone', () => {
           milestone={mockMilestone}
           isLead={false}
           loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchArticles}
         />,
       );
       expect(screen.getByText('No articles added')).toBeInTheDocument();
@@ -231,6 +239,7 @@ describe('Milestone', () => {
           milestone={milestoneWithArticles}
           isLead={false}
           loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchArticles}
         />,
       );
       expect(screen.getByText('Articles (2)')).toBeInTheDocument();
@@ -245,6 +254,7 @@ describe('Milestone', () => {
           milestone={milestoneWithArticles}
           isLead={false}
           loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchLinkedArticles}
         />,
       );
       await userEvent.click(
@@ -263,6 +273,7 @@ describe('Milestone', () => {
           milestone={milestoneWithArticles}
           isLead={false}
           loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchLinkedArticles}
         />,
       );
       await userEvent.click(
@@ -281,6 +292,7 @@ describe('Milestone', () => {
           milestone={mockMilestone}
           isLead={false}
           loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchArticles}
         />,
       );
       expect(
@@ -294,6 +306,7 @@ describe('Milestone', () => {
           milestone={mockMilestone}
           isLead={true}
           loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchArticles}
         />,
       );
       expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
@@ -305,6 +318,7 @@ describe('Milestone', () => {
           milestone={milestoneWithArticles}
           isLead={true}
           loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchArticles}
         />,
       );
       expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
@@ -316,6 +330,7 @@ describe('Milestone', () => {
           milestone={mockMilestone}
           isLead={true}
           loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchArticles}
         />,
       );
       await userEvent.click(screen.getByRole('button', { name: /edit/i }));
@@ -329,6 +344,7 @@ describe('Milestone', () => {
           milestone={mockMilestone}
           isLead={true}
           loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchArticles}
         />,
       );
       await userEvent.click(screen.getByRole('button', { name: /edit/i }));
@@ -343,6 +359,7 @@ describe('Milestone', () => {
           milestone={milestoneWithArticles}
           isLead={true}
           loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchLinkedArticles}
         />,
       );
       await userEvent.click(screen.getByRole('button', { name: /edit/i }));

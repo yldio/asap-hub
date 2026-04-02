@@ -1,5 +1,6 @@
 import { Apps, ClientSearchResponse, EntityResponses } from '.';
 
+/* istanbul ignore next */
 export const createAlgoliaResponse = <
   App extends Apps,
   EntityType extends keyof EntityResponses[App],

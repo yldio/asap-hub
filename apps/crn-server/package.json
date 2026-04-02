@@ -13,6 +13,10 @@
     "test": "WORKSPACE_PATH=apps/crn-server yarn workspace asap-hub test:workspace",
     "test:coverage": "WORKSPACE_PATH=apps/crn-server; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/",
     "import:entries": "ts-node ./scripts/import-entries.ts",
+    "import:teams": "ts-node ./scripts/import-teams.ts",
+    "import:new-users": "ts-node ./scripts/import-new-users.ts",
+    "import:add-users-to-teams": "ts-node ./scripts/import-add-users-to-teams.ts",
+    "publish:team-entities": "ts-node ./scripts/publish-team-entities.ts",
     "sync:opensearch": "ts-node ./scripts/opensearch/sync-opensearch-analytics.ts",
     "sync:preprint-compliance-local": "ts-node ./scripts/opensearch/sync-opensearch-preprint-compliance-local.ts",
     "sync:publication-compliance-local": "ts-node ./scripts/opensearch/sync-opensearch-publication-compliance-local.ts"

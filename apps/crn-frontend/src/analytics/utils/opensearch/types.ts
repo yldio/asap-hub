@@ -1,24 +1,12 @@
-import { DocumentCategoryOption, OutputTypeOption } from '@asap-hub/model';
+import {
+  DocumentCategoryOption,
+  GrantType,
+  OutputTypeOption,
+} from '@asap-hub/model';
 
 export interface SearchResult<T> {
   items: T[];
   total: number;
-}
-
-export interface OpensearchHit<T> {
-  _index: string;
-  _id: string;
-  _score: number;
-  _source: T;
-}
-
-export interface OpensearchHitsResponse<T> {
-  hits: {
-    total: {
-      value: number;
-    };
-    hits: OpensearchHit<T>[];
-  };
 }
 
 export type AggregationBucket = {
@@ -59,6 +47,8 @@ export type OpensearchSearchOptions = {
   documentCategory?: DocumentCategoryOption;
   sort?: OpensearchSort[];
   outputType?: OutputTypeOption;
+  grantType?: GrantType;
+  projectId?: string;
 };
 
 type SortConfigOrder = 'asc' | 'desc';

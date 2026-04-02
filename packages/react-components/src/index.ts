@@ -188,7 +188,7 @@ export {
   ProjectContributors,
   ProjectDetailOverview,
   ProjectAims,
-  ProjectMilestones,
+  ProjectMilestonesTable,
   Aim,
   Milestone,
   PublicationComplianceTable,

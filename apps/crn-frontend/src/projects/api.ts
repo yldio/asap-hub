@@ -6,12 +6,15 @@ import {
 } from '@asap-hub/frontend-utils';
 import {
   ArticleItem,
+  GrantType,
+  ListProjectMilestonesResponse,
   ListProjectResponse,
   ProjectDetail,
   ProjectStatus,
   ProjectTool,
   ProjectType,
 } from '@asap-hub/model';
+import createListApiUrl from '../CreateListApiUrl';
 import { API_BASE_URL } from '../config';
 
 const escapeFacetValue = (value: string) => value.replace(/"/g, '\\"');
@@ -98,7 +101,7 @@ export const patchProject = async (
   patch: { tools: ProjectTool[] },
   authorization: string,
 ): Promise<ProjectDetail> => {
-  const resp = await fetch(`${API_BASE_URL}/project/${id}`, {
+  const resp = await fetch(`${API_BASE_URL}/projects/${id}`, {
     method: 'PATCH',
     headers: {
       authorization,
@@ -134,11 +137,31 @@ export const getAimArticles = async (
   return resp.json();
 };
 
+export const getMilestoneArticles = async (
+  milestoneId: string,
+  authorization: string,
+): Promise<ReadonlyArray<ArticleItem>> => {
+  const resp = await fetch(
+    `${API_BASE_URL}/milestones/${milestoneId}/articles`,
+    {
+      headers: { authorization, ...createSentryHeaders() },
+    },
+  );
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to fetch articles for milestone ${milestoneId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+  return resp.json();
+};
+
 export const getProject = async (
   id: string,
   authorization: string,
 ): Promise<ProjectDetail | undefined> => {
-  const resp = await fetch(`${API_BASE_URL}/project/${id}`, {
+  const resp = await fetch(`${API_BASE_URL}/projects/${id}`, {
     headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {
@@ -147,6 +170,36 @@ export const getProject = async (
     }
     throw new BackendError(
       `Failed to fetch project with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+  return resp.json();
+};
+
+export type MilestonesListOptions = GetListOptions & {
+  grantType?: GrantType;
+  projectId: string;
+};
+
+export const getProjectMilestones = async (
+  options: MilestonesListOptions,
+  authorization: string,
+): Promise<ListProjectMilestonesResponse> => {
+  const { projectId, grantType, ...searchOptions } = options;
+  const url = createListApiUrl(`projects/${projectId}/milestones`, {
+    ...searchOptions,
+  });
+  if (grantType) {
+    url.searchParams.set('grantType', grantType);
+  }
+
+  const resp = await fetch(url.toString(), {
+    headers: { authorization },
+  });
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to fetch milestones for project with id ${projectId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       await resp.json().catch(() => undefined),
       resp.status,
     );

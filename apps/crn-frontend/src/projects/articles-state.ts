@@ -1,7 +1,7 @@
 import type { ArticleItem } from '@asap-hub/model';
 import { atomFamily, useRecoilCallback } from 'recoil';
 import { authorizationState } from '../auth/state';
-import { getAimArticles } from './api';
+import { getAimArticles, getMilestoneArticles } from './api';
 
 /**
  * Cache for articles by aim id.
@@ -19,7 +19,7 @@ export const aimArticlesState = atomFamily<
  * updates Recoil cache, and returns the list. Use when expanding an aim's
  * articles section.
  */
-export const useFetchArticles = (): ((
+export const useFetchAimArticles = (): ((
   aimId: string,
 ) => Promise<ReadonlyArray<ArticleItem>>) =>
   useRecoilCallback(({ set, snapshot }) => async (aimId: string) => {
@@ -30,5 +30,29 @@ export const useFetchArticles = (): ((
     const authorization = await snapshot.getPromise(authorizationState);
     const articles = await getAimArticles(aimId, authorization);
     set(aimArticlesState(aimId), articles);
+    return articles;
+  });
+
+export const milestoneArticlesState = atomFamily<
+  ReadonlyArray<ArticleItem> | undefined,
+  string
+>({
+  key: 'milestoneArticles',
+  default: undefined,
+});
+
+export const useFetchMilestoneArticles = (): ((
+  milestoneId: string,
+) => Promise<ReadonlyArray<ArticleItem>>) =>
+  useRecoilCallback(({ set, snapshot }) => async (milestoneId: string) => {
+    const cached = await snapshot.getPromise(
+      milestoneArticlesState(milestoneId),
+    );
+    if (cached !== undefined) {
+      return cached;
+    }
+    const authorization = await snapshot.getPromise(authorizationState);
+    const articles = await getMilestoneArticles(milestoneId, authorization);
+    set(milestoneArticlesState(milestoneId), articles);
     return articles;
   });

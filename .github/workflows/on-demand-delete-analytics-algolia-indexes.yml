@@ -52,7 +52,7 @@ jobs:
       - name: Rebuild dependencies
         run: yarn build:babel
       - name: Delete Analytics Algolia Indexes
-        run: npx ts-node scripts/delete-analytics-algolia-indexes.ts
+        run: TS_NODE_COMPILER_OPTIONS='{"module":"commonjs"}' yarn ts-node --transpile-only scripts/delete-analytics-algolia-indexes.ts
         env:
           ALGOLIA_APP_ID: ${{ steps.algolia-keys.outputs.algolia-app-id }}
           ALGOLIA_API_KEY: ${{ steps.algolia-keys.outputs.algolia-api-key }}

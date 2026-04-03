@@ -1,4 +1,8 @@
-import { Environment } from 'contentful-management';
+import {
+  type Asset,
+  type Entry,
+  type Environment,
+} from 'contentful-management';
 import { getContentfulEnvironment, getErrorMessage } from './import-utils';
 
 /**
@@ -12,9 +16,8 @@ import { getContentfulEnvironment, getErrorMessage } from './import-utils';
  *
  * Designed to be called from a GitHub Action for incremental rollout.
  *
- * Usage:
- *   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN=*** CONTENTFUL_SPACE_ID=*** CONTENTFUL_ENV_ID=*** \
- *     yarn publish:team-entities <teamId1> <teamId2> ...
+ * Usage (env vars loaded from .env file):
+ *   yarn publish:team-entities <teamIdOrName1> <teamIdOrName2> ...
  */
 
 // Collected entities by type, deduplicated across all teams
@@ -28,6 +31,13 @@ type PublishQueue = {
   projects: Set<string>;
 };
 
+type ResolvedTeamReference = {
+  id: string;
+  name: string;
+  reference: string;
+  url: string;
+};
+
 const createQueue = (): PublishQueue => ({
   researchTags: new Set(),
   assets: new Set(),
@@ -38,20 +48,300 @@ const createQueue = (): PublishQueue => ({
   projects: new Set(),
 });
 
+type PublishOutcome = 'published' | 'already_published' | 'failed';
+type PublishState = 'draft' | 'changed' | 'published';
+
+type VersionedSys = {
+  id: string;
+  version?: number;
+  publishedVersion?: number;
+};
+
+type PublishableResource = {
+  sys: VersionedSys;
+  fields: unknown;
+  publish: () => Promise<unknown>;
+};
+
+type PublishResourceOptions<T extends PublishableResource> = {
+  id: string;
+  label: string;
+  fetchResource: (id: string) => Promise<T>;
+  describeResource: (resource: T) => string;
+  buildUrl: (id: string) => string;
+};
+
+type LocalizedFieldMap = Record<string, { 'en-US'?: unknown } | undefined>;
+
+const getPublishState = ({
+  version,
+  publishedVersion,
+}: VersionedSys): PublishState => {
+  if (typeof publishedVersion !== 'number') {
+    return 'draft';
+  }
+
+  if (typeof version === 'number' && version > publishedVersion + 1) {
+    return 'changed';
+  }
+
+  return 'published';
+};
+
+const getContentfulAppBaseUrl = (): string => {
+  const spaceId = process.env.CONTENTFUL_SPACE_ID;
+  const environmentId = process.env.CONTENTFUL_ENV_ID;
+
+  if (!spaceId || !environmentId) {
+    return '';
+  }
+
+  return `https://app.contentful.com/spaces/${spaceId}/environments/${environmentId}`;
+};
+
+const buildEntryUrl = (id: string): string => {
+  const baseUrl = getContentfulAppBaseUrl();
+
+  return baseUrl ? `${baseUrl}/entries/${id}` : id;
+};
+
+const buildAssetUrl = (id: string): string => {
+  const baseUrl = getContentfulAppBaseUrl();
+
+  return baseUrl ? `${baseUrl}/assets/${id}` : id;
+};
+
+const getLocalizedFieldValue = (
+  resource: { fields: unknown },
+  fieldName: string,
+): unknown => {
+  const fields = resource.fields as LocalizedFieldMap | undefined;
+
+  return fields?.[fieldName]?.['en-US'];
+};
+
+const getLocalizedString = (
+  resource: { fields: unknown },
+  fieldName: string,
+): string | undefined => {
+  const value = getLocalizedFieldValue(resource, fieldName);
+
+  return typeof value === 'string' && value ? value : undefined;
+};
+
+const describeEntry = (entry: Entry, label: string): string => {
+  if (label === 'team') {
+    return getLocalizedString(entry, 'displayName') || 'Unnamed team';
+  }
+
+  if (label === 'user') {
+    const firstName = getLocalizedString(entry, 'firstName') || '';
+    const lastName = getLocalizedString(entry, 'lastName') || '';
+    const fullName = `${firstName} ${lastName}`.trim();
+
+    return fullName || getLocalizedString(entry, 'email') || 'Unnamed user';
+  }
+
+  if (label === 'project') {
+    return (
+      getLocalizedString(entry, 'projectId') ||
+      getLocalizedString(entry, 'title') ||
+      'Unnamed project'
+    );
+  }
+
+  if (label === 'researchTag') {
+    return getLocalizedString(entry, 'name') || 'Unnamed research tag';
+  }
+
+  if (label === 'teamMembership') {
+    return getLocalizedString(entry, 'role') || 'Unnamed team membership';
+  }
+
+  if (label === 'projectMembership') {
+    return getLocalizedString(entry, 'role') || 'Unnamed project membership';
+  }
+
+  return label;
+};
+
+const describeAsset = (asset: Asset): string => {
+  const title = getLocalizedString(asset, 'title');
+  if (title) {
+    return title;
+  }
+
+  const file = getLocalizedFieldValue(asset, 'file') as
+    | { fileName?: string }
+    | undefined;
+
+  return file?.fileName || 'Unnamed asset';
+};
+
+const isNotFoundError = (error: unknown): boolean => {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  try {
+    const parsed = JSON.parse(error.message) as { status?: number };
+
+    return parsed.status === 404;
+  } catch {
+    return error.message.includes('404') || /not found/i.test(error.message);
+  }
+};
+
+const isTeamEntry = (entry: Entry): boolean =>
+  entry.sys.contentType?.sys?.id === 'teams';
+
+const buildResolvedTeam = (
+  entry: Entry,
+  reference: string,
+): ResolvedTeamReference => ({
+  id: entry.sys.id,
+  name: getLocalizedString(entry, 'displayName') || entry.sys.id,
+  reference,
+  url: buildEntryUrl(entry.sys.id),
+});
+
+const resolveTeamById = async (
+  env: Environment,
+  reference: string,
+): Promise<ResolvedTeamReference | null> => {
+  try {
+    const entry = await env.getEntry(reference);
+
+    if (!isTeamEntry(entry)) {
+      throw new Error(
+        `Reference "${reference}" resolved to Contentful entry "${reference}", but it is not a team entry.`,
+      );
+    }
+
+    return buildResolvedTeam(entry, reference);
+  } catch (error: unknown) {
+    if (isNotFoundError(error)) {
+      return null;
+    }
+
+    throw error;
+  }
+};
+
+const resolveTeamByName = async (
+  env: Environment,
+  reference: string,
+): Promise<ResolvedTeamReference> => {
+  const matches = await env.getEntries({
+    content_type: 'teams',
+    'fields.displayName': reference,
+    limit: 10,
+  });
+
+  if (matches.items.length === 0) {
+    throw new Error(
+      `Could not resolve team reference "${reference}" as either a team entry ID or an exact team displayName.`,
+    );
+  }
+
+  if (matches.items.length > 1) {
+    const candidates = matches.items
+      .map((entry) => {
+        const resolvedTeam = buildResolvedTeam(entry, reference);
+
+        return `  - ${resolvedTeam.name} (${resolvedTeam.id}) ${resolvedTeam.url}`;
+      })
+      .join('\n');
+
+    throw new Error(
+      `Team name "${reference}" is ambiguous. Matching teams:\n${candidates}`,
+    );
+  }
+
+  const [entry] = matches.items;
+
+  if (!entry) {
+    throw new Error(`Could not resolve team reference "${reference}".`);
+  }
+
+  return buildResolvedTeam(entry, reference);
+};
+
+const resolveTeamReference = async (
+  env: Environment,
+  reference: string,
+): Promise<ResolvedTeamReference> => {
+  const resolvedById = await resolveTeamById(env, reference);
+
+  if (resolvedById) {
+    return resolvedById;
+  }
+
+  return resolveTeamByName(env, reference);
+};
+
+const resolveTeamReferences = async (
+  env: Environment,
+  references: string[],
+): Promise<ResolvedTeamReference[]> => {
+  const resolvedTeams = new Map<string, ResolvedTeamReference>();
+
+  for (const reference of references) {
+    const resolvedTeam = await resolveTeamReference(env, reference);
+
+    if (!resolvedTeams.has(resolvedTeam.id)) {
+      resolvedTeams.set(resolvedTeam.id, resolvedTeam);
+    }
+  }
+
+  return Array.from(resolvedTeams.values());
+};
+
+const publishResource = async <T extends PublishableResource>({
+  id,
+  label,
+  fetchResource,
+  describeResource,
+  buildUrl,
+}: PublishResourceOptions<T>): Promise<PublishOutcome> => {
+  try {
+    const resource = await fetchResource(id);
+    const description = describeResource(resource);
+    const details = `${description} (${id}) ${buildUrl(id)}`;
+    const publishState = getPublishState(resource.sys);
+
+    if (publishState === 'published') {
+      console.log(`  Already published ${label}: ${details}`);
+      return 'already_published';
+    }
+
+    await resource.publish();
+    console.log(`  Published ${label}: ${details}`);
+    return 'published';
+  } catch (error: unknown) {
+    console.error(
+      `  FAILED ${label}: ${id} ${buildUrl(id)} - ${getErrorMessage(error)}`,
+    );
+    return 'failed';
+  }
+};
+
 const collectRelatedEntities = async (
   env: Environment,
-  teamId: string,
+  team: ResolvedTeamReference,
   queue: PublishQueue,
 ): Promise<void> => {
-  console.log(`\nCollecting entities for team ${teamId}...`);
+  console.log(
+    `\nCollecting entities for team ${team.name} (${team.id}) ${team.url}...`,
+  );
 
   // Add the team itself
-  queue.teams.add(teamId);
+  queue.teams.add(team.id);
 
   // Find teamMemberships that link to this team
   const memberships = await env.getEntries({
     content_type: 'teamMembership',
-    links_to_entry: teamId,
+    links_to_entry: team.id,
     limit: 200,
   });
 
@@ -87,7 +377,7 @@ const collectRelatedEntities = async (
   // Find projectMemberships that link to this team
   const projectMemberships = await env.getEntries({
     content_type: 'projectMembership',
-    links_to_entry: teamId,
+    links_to_entry: team.id,
     limit: 10,
   });
 
@@ -117,53 +407,47 @@ const publishEntry = async (
   env: Environment,
   entryId: string,
   label: string,
-): Promise<'published' | 'already_published' | 'failed'> => {
-  try {
-    const entry = await env.getEntry(entryId);
-    if (entry.isPublished()) {
-      return 'already_published';
-    }
-    await entry.publish();
-    console.log(`  Published ${label}: ${entryId}`);
-    return 'published';
-  } catch (error: unknown) {
-    console.error(`  FAILED ${label}: ${entryId} - ${getErrorMessage(error)}`);
-    return 'failed';
-  }
-};
+): Promise<PublishOutcome> =>
+  publishResource<Entry>({
+    id: entryId,
+    label,
+    fetchResource: (id) => env.getEntry(id),
+    describeResource: (entry) => describeEntry(entry, label),
+    buildUrl: buildEntryUrl,
+  });
 
 const publishAsset = async (
   env: Environment,
   assetId: string,
-): Promise<'published' | 'already_published' | 'failed'> => {
-  try {
-    const asset = await env.getAsset(assetId);
-    if (asset.isPublished()) {
-      return 'already_published';
-    }
-    await asset.publish();
-    console.log(`  Published asset: ${assetId}`);
-    return 'published';
-  } catch (error: unknown) {
-    console.error(`  FAILED asset: ${assetId} - ${getErrorMessage(error)}`);
-    return 'failed';
-  }
-};
+): Promise<PublishOutcome> =>
+  publishResource<Asset>({
+    id: assetId,
+    label: 'asset',
+    fetchResource: (id) => env.getAsset(id),
+    describeResource: describeAsset,
+    buildUrl: buildAssetUrl,
+  });
 
 const app = async () => {
-  const teamIds = process.argv.slice(2);
-  if (teamIds.length === 0) {
+  const teamReferences = process.argv.slice(2);
+  if (teamReferences.length === 0) {
     throw new Error(
-      'Usage: yarn publish:team-entities <teamId1> <teamId2> ...',
+      'Usage: yarn publish:team-entities <teamIdOrName1> <teamIdOrName2> ...',
     );
   }
 
   const env = await getContentfulEnvironment();
   const queue = createQueue();
+  const resolvedTeams = await resolveTeamReferences(env, teamReferences);
+
+  console.log(`\n--- Resolved Teams ---`);
+  for (const team of resolvedTeams) {
+    console.log(`${team.reference} -> ${team.name} (${team.id}) ${team.url}`);
+  }
 
   // Collect all related entities across all teams
-  for (const teamId of teamIds) {
-    await collectRelatedEntities(env, teamId, queue);
+  for (const team of resolvedTeams) {
+    await collectRelatedEntities(env, team, queue);
   }
 
   console.log(`\n--- Publish Queue ---`);
@@ -179,7 +463,7 @@ const app = async () => {
   let alreadyPublished = 0;
   let failed = 0;
 
-  const track = (result: 'published' | 'already_published' | 'failed') => {
+  const track = (result: PublishOutcome) => {
     if (result === 'published') {
       published += 1;
     } else if (result === 'already_published') {

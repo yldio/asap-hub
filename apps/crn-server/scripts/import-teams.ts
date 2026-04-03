@@ -19,8 +19,7 @@ import {
  * Creates projectMembership entries (DRAFT) linking each team to its project.
  * Updates draft project entries to include the new projectMembership in their members array.
  *
- * Usage:
- *   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN=*** CONTENTFUL_SPACE_ID=*** CONTENTFUL_ENV_ID=*** \
+ * Usage (env vars loaded from .env file):
  *     yarn import:teams <csv-path>
  */
 

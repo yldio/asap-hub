@@ -35,9 +35,8 @@ import {
  *
  * Running without flags executes all preprocessing inline then imports.
  *
- * Usage:
- *   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN=*** CONTENTFUL_SPACE_ID=*** CONTENTFUL_ENV_ID=*** \
- *     OPENAI_API_KEY=*** yarn import:new-users [flags] <csv-path>
+ * Usage (env vars loaded from .env file):
+ *   yarn import:new-users [flags] <csv-path>
  */
 
 const app = async () => {

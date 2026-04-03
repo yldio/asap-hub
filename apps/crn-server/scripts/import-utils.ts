@@ -1143,7 +1143,7 @@ export const prepareLocations = async (
     const parsed = JSON.parse(content) as
       | ParsedLocationsPayload
       | ParsedLocation[];
-    const results = Array.isArray(parsed) ? parsed : (parsed.locations ?? []);
+    const results = Array.isArray(parsed) ? parsed : parsed.locations ?? [];
 
     if (!Array.isArray(results) || results.length !== batch.length) {
       console.warn(

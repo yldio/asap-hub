@@ -36,9 +36,8 @@ import {
  *
  * Supports the same --prepare-* flags as import-new-users.ts.
  *
- * Usage:
- *   CONTENTFUL_MANAGEMENT_ACCESS_TOKEN=*** CONTENTFUL_SPACE_ID=*** CONTENTFUL_ENV_ID=*** \
- *     OPENAI_API_KEY=*** yarn import:add-users-to-teams [flags] <csv-path>
+ * Usage (env vars loaded from .env file):
+ *     yarn import:add-users-to-teams [flags] <csv-path>
  */
 
 const findExistingUser = async (

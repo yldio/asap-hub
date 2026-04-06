@@ -251,9 +251,15 @@ const renderPage = async (
   return result;
 };
 
+const mockGetPreliminaryDataSharingTagSuggestions = jest
+  .fn()
+  .mockResolvedValue([]);
+
 beforeEach(() => {
+  mockGetPreliminaryDataSharingTagSuggestions.mockClear();
   const mockOpensearchClient = {
     request: jest.fn(),
+    getTagSuggestions: mockGetPreliminaryDataSharingTagSuggestions,
   };
 
   mockUseAnalyticsOpensearch.mockReturnValue({
@@ -889,10 +895,13 @@ describe('search', () => {
     );
   });
 
-  it('returns empty tags for sharing preliminary findings', async () => {
+  it('loads tag suggestions from preliminary data sharing index for sharing preliminary findings', async () => {
     mockGetPreliminaryDataSharing.mockResolvedValue(
       preliminaryDataSharingResponse,
     );
+    mockGetPreliminaryDataSharingTagSuggestions.mockResolvedValue([
+      'Team Alessi',
+    ]);
 
     await renderPage('sharing-prelim-findings', undefined);
     const searchContainer = screen.getByRole('search') as HTMLElement;
@@ -900,15 +909,14 @@ describe('search', () => {
       'combobox',
     ) as HTMLInputElement;
 
-    await userEvent.type(searchBox, 'test');
-    // Wait for debounce (500ms) + buffer to ensure loadTags would have been called
-    await new Promise((r) => {
-      setTimeout(r, 800);
-    });
-    await waitFor(() => {
-      expect(searchBox.value).toEqual('test');
-    });
-    // sharing-prelim-findings should not call user or team tag APIs
+    await userEvent.type(searchBox, 'Alessi');
+    await waitFor(() =>
+      expect(mockGetPreliminaryDataSharingTagSuggestions).toHaveBeenCalledWith(
+        'Alessi',
+        'flat',
+      ),
+    );
+    // sharing-prelim-findings must not call user or team tag APIs
     const metricsReturnValue = mockUseOpensearchMetrics.mock.results[0]?.value;
     expect(
       metricsReturnValue?.getUserCollaborationTagSuggestions,

@@ -268,6 +268,18 @@ const Collaboration = () => {
         value,
       }));
     }
+    if (metric === 'sharing-prelim-findings') {
+      const suggestions =
+        await preliminaryDataSharingClient.client.getTagSuggestions(
+          tagQuery,
+          'flat',
+        );
+      return suggestions.map((value) => ({
+        label: value,
+        value,
+      }));
+    }
+
     return [];
   };
 

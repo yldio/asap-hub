@@ -33,9 +33,12 @@ const createBasePreprintComplianceMetricObject = (
   teamId: team?.id || '',
   teamName,
   isTeamInactive: !!team?.inactiveSince,
-  numberOfPreprints: 0,
-  numberOfPublications: 0,
-  postedPriorPercentage: 0,
+  // Default numeric fields to null so teams missing from the spreadsheet
+  // (or rows with "Limited Data") sort to the N/A bucket via missing:_first
+  // / _last instead of mixing in with real zeros.
+  numberOfPreprints: null,
+  numberOfPublications: null,
+  postedPriorPercentage: null,
   ranking: '',
   timeRange,
 });

@@ -749,8 +749,8 @@ export type PreprintComplianceDataObject = {
   teamId: string;
   teamName: string;
   isTeamInactive: boolean;
-  numberOfPreprints: number;
-  numberOfPublications: number;
+  numberOfPreprints: number | null;
+  numberOfPublications: number | null;
   postedPriorPercentage: number | null;
   ranking: string;
   timeRange: Extract<TimeRangeOption, 'all' | 'last-year'>;

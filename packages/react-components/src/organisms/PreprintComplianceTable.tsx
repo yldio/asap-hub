@@ -231,7 +231,11 @@ const PreprintComplianceTable: React.FC<PreprintComplianceTableProps> = ({
                     </p>
                   </td>
                   <td className={'preprints'}>
-                    <p>{row.numberOfPreprints}</p>
+                    <p>
+                      {row.numberOfPreprints === null
+                        ? 'N/A'
+                        : row.numberOfPreprints}
+                    </p>
                   </td>
                   <td>
                     <p css={iconStyles}>

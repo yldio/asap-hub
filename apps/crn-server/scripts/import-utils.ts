@@ -367,19 +367,46 @@ export const extractGitHubId = (raw: string): string => {
   if (!raw) {
     return '';
   }
-  // Only match github.com profile URLs (not github.io pages or other subdomains)
-  const match = raw.match(/github\.com\/([^/?]+)/);
-  if (match) {
-    const [, profileId = ''] = match;
-    return profileId;
+
+  const trimmed = raw.trim();
+  const handlePattern = /^[A-Za-z0-9-]+$/;
+  if (handlePattern.test(trimmed)) {
+    return trimmed;
   }
-  if (raw.includes('http')) {
+
+  const looksLikeSchemeLessGitHubProfile =
+    /^(github\.com|www\.github\.com)\//i.test(trimmed);
+  const normalized = looksLikeSchemeLessGitHubProfile
+    ? `https://${trimmed}`
+    : trimmed;
+
+  try {
+    const parsedUrl = new URL(normalized);
+    const host = parsedUrl.hostname.toLowerCase();
+    const pathSegments = parsedUrl.pathname.split('/').filter(Boolean);
+
+    if (
+      (host === 'github.com' || host === 'www.github.com') &&
+      pathSegments.length === 1 &&
+      handlePattern.test(pathSegments[0] || '')
+    ) {
+      return pathSegments[0] || '';
+    }
+  } catch {
+    // Fall through to the warning below.
+  }
+
+  if (
+    trimmed.includes('http') ||
+    trimmed.toLowerCase().includes('github') ||
+    trimmed.includes('/')
+  ) {
     console.warn(
-      `  Warning: Dropping non-GitHub URL from GitHub field: ${raw}`,
+      `  Warning: Dropping non-GitHub profile from GitHub field: ${raw}`,
     );
-    return '';
   }
-  return raw;
+
+  return '';
 };
 
 export const extractGoogleScholarId = (raw: string): string => {

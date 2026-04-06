@@ -40,6 +40,7 @@ export type ParsedUserData = {
   tagNames: string[];
   questions: string[];
   biography: string;
+  /** Value from the CSV `ASAP Hub Role` column. */
   role: string | undefined;
   teams: Array<{ name: string; role: string }>;
 };
@@ -63,6 +64,31 @@ export type LocalizedField<T> = {
 };
 
 export type LocalizedFields = Record<string, LocalizedField<unknown>>;
+
+/**
+ * Controls how `buildUserFields()` applies user data for a specific import flow.
+ *
+ * Use `CREATE_USER_FIELDS_OPTIONS` when building fields for brand-new users and
+ * `UPDATE_USER_FIELDS_OPTIONS` when updating existing users.
+ */
+export type BuildUserFieldsOptions = {
+  /** Include the email field in the generated payload. */
+  includeEmail: boolean;
+  /** Require the CSV `ASAP Hub Role` value to be present before building the payload. */
+  requireRole: boolean;
+};
+
+/** Use these options when creating a brand-new user entry. */
+export const CREATE_USER_FIELDS_OPTIONS: BuildUserFieldsOptions = {
+  includeEmail: true,
+  requireRole: true,
+};
+
+/** Use these options when updating an existing user entry. */
+export const UPDATE_USER_FIELDS_OPTIONS: BuildUserFieldsOptions = {
+  includeEmail: false,
+  requireRole: false,
+};
 
 /** Accepted degree values for the CRN user content model. */
 export const VALID_DEGREES = [
@@ -1337,26 +1363,37 @@ export const prepareTags = async (
   return { normalized, created, publishedDrafts };
 };
 
-/** Builds the Contentful user fields payload shared by both user import scripts. */
+/**
+ * Builds the Contentful user fields payload shared by both user import scripts.
+ * Pass explicit options so the caller makes it clear whether the payload is for
+ * new-user creation or an update to an existing user.
+ *
+ * Use `CREATE_USER_FIELDS_OPTIONS` for new users and
+ * `UPDATE_USER_FIELDS_OPTIONS` for updates to existing users.
+ */
 export const buildUserFields = (
   data: ParsedUserData,
   teamMembershipIds: string[],
   tagIds: string[],
   avatarId: string | null,
+  options: BuildUserFieldsOptions,
   existingTeams: Array<Link<'Entry'>> = [],
 ): LocalizedFields => {
+  const { includeEmail, requireRole } = options;
   const fields: LocalizedFields = {};
 
-  if (!data.role) {
+  if (requireRole && !data.role) {
     throw new Error('ASAP Hub Role is required for new users');
   }
 
   fields.firstName = loc(data.firstName);
   fields.lastName = loc(data.lastName);
-  if (data.email) {
+  if (includeEmail && data.email) {
     fields.email = loc(data.email);
   }
-  fields.role = loc(data.role);
+  if (data.role) {
+    fields.role = loc(data.role);
+  }
   fields.lastUpdated = loc(new Date().toISOString());
 
   if (data.nickname) {

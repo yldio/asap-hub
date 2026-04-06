@@ -1,11 +1,10 @@
 import { type Environment, type Link } from '@asap-hub/contentful';
 import {
+  buildUserFields,
   cell,
   col,
   cleanupAsset,
   cleanupEntries,
-  createAssetLink,
-  createEntryLink,
   createTeamMembership,
   findTeamByName,
   findUserByEmail,
@@ -14,7 +13,6 @@ import {
   getErrorMessage,
   isEmptyRow,
   loadTagCache,
-  loc,
   normalizeTagNames,
   parseImportArgs,
   parseUserRow,
@@ -23,8 +21,8 @@ import {
   runPrepareSteps,
   shouldSkipRow,
   type ContentfulEntryLookup,
-  type LocalizedFields,
   type ParsedUserData,
+  UPDATE_USER_FIELDS_OPTIONS,
   uploadAvatar,
   userHasTeamMembership,
   validateRequiredColumns,
@@ -102,125 +100,6 @@ const findExistingUser = async (
   return null;
 };
 
-/**
- * Builds the update payload for an existing user without overwriting populated
- * Contentful fields with empty CSV values.
- */
-const buildUpdateFields = (
-  data: ParsedUserData,
-  newMembershipIds: string[],
-  tagIds: string[],
-  avatarId: string | null,
-  existingTeamLinks: Array<Link<'Entry'>>,
-): LocalizedFields => {
-  const fields: LocalizedFields = {};
-
-  fields.lastUpdated = loc(new Date().toISOString());
-
-  // Identity fields (CSV is considered more current)
-  if (data.firstName) {
-    fields.firstName = loc(data.firstName);
-  }
-  if (data.lastName) {
-    fields.lastName = loc(data.lastName);
-  }
-  if (data.nickname) {
-    fields.nickname = loc(data.nickname);
-  }
-  if (data.role) {
-    fields.role = loc(data.role);
-  }
-
-  // Profile fields
-  if (data.orcid) {
-    fields.orcid = loc(data.orcid);
-  }
-  if (data.degree) {
-    fields.degree = loc(data.degree);
-  }
-  if (data.city) {
-    fields.city = loc(data.city);
-  }
-  if (data.stateOrProvince) {
-    fields.stateOrProvince = loc(data.stateOrProvince);
-  }
-  if (data.country) {
-    fields.country = loc(data.country);
-  }
-  if (data.jobTitle) {
-    fields.jobTitle = loc(data.jobTitle);
-  }
-  if (data.institution) {
-    fields.institution = loc(data.institution);
-  }
-
-  // Social links
-  if (data.website1) {
-    fields.website1 = loc(data.website1);
-  }
-  if (data.website2) {
-    fields.website2 = loc(data.website2);
-  }
-  if (data.linkedIn) {
-    fields.linkedIn = loc(data.linkedIn);
-  }
-  if (data.researcherId) {
-    fields.researcherId = loc(data.researcherId);
-  }
-  if (data.twitter) {
-    fields.twitter = loc(data.twitter);
-  }
-  if (data.github) {
-    fields.github = loc(data.github);
-  }
-  if (data.googleScholar) {
-    fields.googleScholar = loc(data.googleScholar);
-  }
-  if (data.researchGate) {
-    fields.researchGate = loc(data.researchGate);
-  }
-  if (data.blueSky) {
-    fields.blueSky = loc(data.blueSky);
-  }
-
-  // Text fields
-  if (data.responsibilities) {
-    fields.responsibilities = loc(data.responsibilities);
-  }
-  if (data.researchInterests) {
-    fields.researchInterests = loc(data.researchInterests);
-  }
-  if (data.expertiseAndResourceDescription) {
-    fields.expertiseAndResourceDescription = loc(
-      data.expertiseAndResourceDescription,
-    );
-  }
-  if (data.biography) {
-    fields.biography = loc(data.biography);
-  }
-
-  // Questions
-  if (data.questions.length > 0) {
-    fields.questions = loc(data.questions);
-  }
-
-  // Tags (replaces existing, CSV is authoritative)
-  if (tagIds.length > 0) {
-    fields.researchTags = loc(tagIds.map(createEntryLink));
-  }
-
-  // Avatar
-  if (avatarId) {
-    fields.avatar = loc(createAssetLink(avatarId));
-  }
-
-  // Teams: merge existing + new memberships
-  const newLinks = newMembershipIds.map(createEntryLink);
-  fields.teams = loc([...existingTeamLinks, ...newLinks]);
-
-  return fields;
-};
-
 const app = async () => {
   const args = parseImportArgs();
   const { headers, rows } = await readCsv(args.csvPath);
@@ -235,7 +114,6 @@ const app = async () => {
 
   console.log(`Read ${rows.length} rows from ${args.csvPath}`);
 
-  // Only connects to Contentful if --prepare-tags or full import
   const prepResult = await runPrepareSteps(args, rows, headers);
   if (prepResult.shouldExit) {
     return;
@@ -355,11 +233,12 @@ const app = async () => {
                 }
               }
 
-              const updateFields = buildUpdateFields(
+              const updateFields = buildUserFields(
                 data,
                 createdMembershipIds,
                 tagIds,
                 createdAvatarId,
+                UPDATE_USER_FIELDS_OPTIONS,
                 existingTeamLinks,
               );
 

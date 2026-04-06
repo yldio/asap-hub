@@ -4,6 +4,7 @@ import {
   col,
   cleanupAsset,
   cleanupEntries,
+  CREATE_USER_FIELDS_OPTIONS,
   createTeamMembership,
   loadTagCache,
   findTeamByName,
@@ -204,6 +205,8 @@ const app = async () => {
                 createdMembershipIds,
                 tagIds,
                 createdAvatarId,
+                CREATE_USER_FIELDS_OPTIONS,
+                [],
               );
               fields.onboarded = loc(true);
 

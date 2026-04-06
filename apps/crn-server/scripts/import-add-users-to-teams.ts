@@ -7,7 +7,6 @@ import {
   cleanupEntries,
   createTeamMembership,
   findTeamByName,
-  findUserByEmail,
   findUserByOrcid,
   getContentfulEnvironment,
   getErrorMessage,
@@ -32,7 +31,7 @@ import {
  * Adds existing users to new teams and updates their profile data.
  * All entries stay in draft / "changed" state (not published).
  *
- * Looks up users by ORCID (primary), then email.
+ * Looks up users by ORCID only.
  * Skips rows where Team Role = "UNKNOWN" or ASAP Hub Role is empty.
  *
  * Supports the same --prepare-* flags as import-new-users.ts.
@@ -83,21 +82,11 @@ const findExistingUser = async (
   env: Environment,
   data: ParsedUserData,
 ): Promise<ContentfulEntryLookup | null> => {
-  if (data.orcid) {
-    const found = await findUserByOrcid(env, data.orcid);
-    if (found) {
-      return found;
-    }
+  if (!data.orcid) {
+    return null;
   }
 
-  if (data.email) {
-    const found = await findUserByEmail(env, data.email);
-    if (found) {
-      return found;
-    }
-  }
-
-  return null;
+  return findUserByOrcid(env, data.orcid);
 };
 
 const app = async () => {

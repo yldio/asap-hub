@@ -116,11 +116,11 @@ export const TAG_MAPPING: Record<string, string | string[] | null> = {
   'Western blot / Immunoblot': 'Western Blot',
   'Immunity and inflammation': 'Immunity',
   'Mitochondrial dysfunction': 'Mitochondrial dysfunction',
-  Neurophysiology: null, // WARNING: pending client clarification and should be skipped
-  Clearance: null, // WARNING: pending client clarification and should be skipped
+  Neurophysiology: 'Neurophysiology',
+  Clearance: 'Clearance',
 };
 
-export const TAGS_TO_CREATE: string[] = []; // Client requested not to create new tags this time
+export const TAGS_TO_CREATE: string[] = ['Neurophysiology', 'Clearance'];
 
 const AVATAR_OUTPUT_DIR = '/tmp/asap-import';
 const LOCATION_MODEL = 'gpt-4o-2024-08-06'; // cheap but smart enough for the task

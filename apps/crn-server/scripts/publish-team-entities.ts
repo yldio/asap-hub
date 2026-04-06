@@ -42,7 +42,8 @@ type ResolvedTeamReference = {
   url: string;
 };
 
-const createQueue = (): PublishQueue => ({
+// exported for testing
+export const createQueue = (): PublishQueue => ({
   researchTags: new Set(),
   assets: new Set(),
   researchOutputVersions: new Set(),
@@ -98,6 +99,16 @@ type LinkLike = {
   };
 };
 
+const getRequiredEnvValue = (name: string): string => {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(`Missing env var: ${name}`);
+  }
+
+  return value;
+};
+
 const RESEARCH_OUTPUT_RESEARCH_TAG_FIELDS = [
   'methods',
   'organisms',
@@ -106,7 +117,8 @@ const RESEARCH_OUTPUT_RESEARCH_TAG_FIELDS = [
   'subtype',
 ] as const;
 
-const getPublishState = ({
+// exported for testing
+export const getPublishState = ({
   version,
   publishedVersion,
 }: VersionedSys): PublishState => {
@@ -121,30 +133,24 @@ const getPublishState = ({
   return 'published';
 };
 
-const getContentfulAppBaseUrl = (): string => {
-  const spaceId = process.env.CONTENTFUL_SPACE_ID;
-  const environmentId = process.env.CONTENTFUL_ENV_ID;
-
-  if (!spaceId || !environmentId) {
-    return '';
-  }
+// exported for testing
+export const getContentfulAppBaseUrl = (): string => {
+  const spaceId = getRequiredEnvValue('CONTENTFUL_SPACE_ID');
+  const environmentId = getRequiredEnvValue('CONTENTFUL_ENV_ID');
 
   return `https://app.contentful.com/spaces/${spaceId}/environments/${environmentId}`;
 };
 
-const buildEntryUrl = (id: string): string => {
-  const baseUrl = getContentfulAppBaseUrl();
+// exported for testing
+export const buildEntryUrl = (baseUrl: string, id: string): string =>
+  `${baseUrl}/entries/${id}`;
 
-  return baseUrl ? `${baseUrl}/entries/${id}` : id;
-};
+// exported for testing
+export const buildAssetUrl = (baseUrl: string, id: string): string =>
+  `${baseUrl}/assets/${id}`;
 
-const buildAssetUrl = (id: string): string => {
-  const baseUrl = getContentfulAppBaseUrl();
-
-  return baseUrl ? `${baseUrl}/assets/${id}` : id;
-};
-
-const getLocalizedFieldValue = (
+// exported for testing
+export const getLocalizedFieldValue = (
   resource: { fields: unknown },
   fieldName: string,
 ): unknown => {
@@ -153,7 +159,8 @@ const getLocalizedFieldValue = (
   return fields?.[fieldName]?.['en-US'];
 };
 
-const getLocalizedString = (
+// exported for testing
+export const getLocalizedString = (
   resource: { fields: unknown },
   fieldName: string,
 ): string | undefined => {
@@ -162,7 +169,8 @@ const getLocalizedString = (
   return typeof value === 'string' && value ? value : undefined;
 };
 
-const getLinkedEntryIds = (value: unknown): string[] => {
+// exported for testing
+export const getLinkedEntryIds = (value: unknown): string[] => {
   if (Array.isArray(value)) {
     return value.flatMap((item) => getLinkedEntryIds(item));
   }
@@ -171,7 +179,8 @@ const getLinkedEntryIds = (value: unknown): string[] => {
   return typeof id === 'string' ? [id] : [];
 };
 
-const describeEntry = (entry: Entry, label: string): string => {
+// exported for testing
+export const describeEntry = (entry: Entry, label: string): string => {
   if (label === 'team') {
     return getLocalizedString(entry, 'displayName') || 'Unnamed team';
   }
@@ -217,7 +226,8 @@ const describeEntry = (entry: Entry, label: string): string => {
   return label;
 };
 
-const describeAsset = (asset: Asset): string => {
+// exported for testing
+export const describeAsset = (asset: Asset): string => {
   const title = getLocalizedString(asset, 'title');
   if (title) {
     return title;
@@ -230,7 +240,8 @@ const describeAsset = (asset: Asset): string => {
   return file?.fileName || 'Unnamed asset';
 };
 
-const isNotFoundError = (error: unknown): boolean => {
+// exported for testing
+export const isNotFoundError = (error: unknown): boolean => {
   if (!(error instanceof Error)) {
     return false;
   }
@@ -244,22 +255,26 @@ const isNotFoundError = (error: unknown): boolean => {
   }
 };
 
-const isTeamEntry = (entry: Entry): boolean =>
+// exported for testing
+export const isTeamEntry = (entry: Entry): boolean =>
   entry.sys.contentType?.sys?.id === 'teams';
 
-const buildResolvedTeam = (
+// exported for testing
+export const buildResolvedTeam = (
   entry: Entry,
   reference: string,
+  appBaseUrl: string,
 ): ResolvedTeamReference => ({
   id: entry.sys.id,
   name: getLocalizedString(entry, 'displayName') || entry.sys.id,
   reference,
-  url: buildEntryUrl(entry.sys.id),
+  url: buildEntryUrl(appBaseUrl, entry.sys.id),
 });
 
 const resolveTeamById = async (
   env: Environment,
   reference: string,
+  appBaseUrl: string,
 ): Promise<ResolvedTeamReference | null> => {
   try {
     const entry = await env.getEntry(reference);
@@ -276,7 +291,7 @@ const resolveTeamById = async (
       );
     }
 
-    return buildResolvedTeam(entry, reference);
+    return buildResolvedTeam(entry, reference, appBaseUrl);
   } catch (error: unknown) {
     if (isNotFoundError(error)) {
       return null;
@@ -289,6 +304,7 @@ const resolveTeamById = async (
 const resolveTeamByName = async (
   env: Environment,
   reference: string,
+  appBaseUrl: string,
 ): Promise<ResolvedTeamReference> => {
   const matches = await env.getEntries({
     ...NON_ARCHIVED_ENTRY_QUERY,
@@ -306,7 +322,7 @@ const resolveTeamByName = async (
   if (matches.items.length > 1) {
     const candidates = matches.items
       .map((entry) => {
-        const resolvedTeam = buildResolvedTeam(entry, reference);
+        const resolvedTeam = buildResolvedTeam(entry, reference, appBaseUrl);
 
         return `  - ${resolvedTeam.name} (${resolvedTeam.id}) ${resolvedTeam.url}`;
       })
@@ -323,30 +339,32 @@ const resolveTeamByName = async (
     throw new Error(`Could not resolve team reference "${reference}".`);
   }
 
-  return buildResolvedTeam(entry, reference);
+  return buildResolvedTeam(entry, reference, appBaseUrl);
 };
 
 const resolveTeamReference = async (
   env: Environment,
   reference: string,
+  appBaseUrl: string,
 ): Promise<ResolvedTeamReference> => {
-  const resolvedById = await resolveTeamById(env, reference);
+  const resolvedById = await resolveTeamById(env, reference, appBaseUrl);
 
   if (resolvedById) {
     return resolvedById;
   }
 
-  return resolveTeamByName(env, reference);
+  return resolveTeamByName(env, reference, appBaseUrl);
 };
 
 const resolveTeamReferences = async (
   env: Environment,
   references: string[],
+  appBaseUrl: string,
 ): Promise<ResolvedTeamReference[]> => {
   const resolvedTeams = new Map<string, ResolvedTeamReference>();
 
   for (const reference of references) {
-    const resolvedTeam = await resolveTeamReference(env, reference);
+    const resolvedTeam = await resolveTeamReference(env, reference, appBaseUrl);
 
     if (!resolvedTeams.has(resolvedTeam.id)) {
       resolvedTeams.set(resolvedTeam.id, resolvedTeam);
@@ -558,6 +576,7 @@ const collectRelatedEntities = async (
 
 const publishEntry = async (
   env: Environment,
+  appBaseUrl: string,
   entryId: string,
   label: string,
 ): Promise<PublishOutcome> =>
@@ -566,11 +585,12 @@ const publishEntry = async (
     label,
     fetchResource: (id) => env.getEntry(id),
     describeResource: (entry) => describeEntry(entry, label),
-    buildUrl: buildEntryUrl,
+    buildUrl: (id) => buildEntryUrl(appBaseUrl, id),
   });
 
 const publishAsset = async (
   env: Environment,
+  appBaseUrl: string,
   assetId: string,
 ): Promise<PublishOutcome> =>
   publishResource<Asset>({
@@ -578,7 +598,7 @@ const publishAsset = async (
     label: 'asset',
     fetchResource: (id) => env.getAsset(id),
     describeResource: describeAsset,
-    buildUrl: buildAssetUrl,
+    buildUrl: (id) => buildAssetUrl(appBaseUrl, id),
   });
 
 const app = async () => {
@@ -589,9 +609,14 @@ const app = async () => {
     );
   }
 
+  const appBaseUrl = getContentfulAppBaseUrl();
   const env = await getContentfulEnvironment();
   const queue = createQueue();
-  const resolvedTeams = await resolveTeamReferences(env, teamReferences);
+  const resolvedTeams = await resolveTeamReferences(
+    env,
+    teamReferences,
+    appBaseUrl,
+  );
 
   console.log(`\n--- Resolved Teams ---`);
   for (const team of resolvedTeams) {
@@ -635,47 +660,47 @@ const app = async () => {
   console.log(`\n--- Phase 1: Leaf nodes ---`);
 
   for (const id of queue.researchTags) {
-    track(await publishEntry(env, id, 'researchTag'));
+    track(await publishEntry(env, appBaseUrl, id, 'researchTag'));
   }
   for (const id of queue.assets) {
-    track(await publishAsset(env, id));
+    track(await publishAsset(env, appBaseUrl, id));
   }
   for (const id of queue.researchOutputVersions) {
-    track(await publishEntry(env, id, 'researchOutputVersion'));
+    track(await publishEntry(env, appBaseUrl, id, 'researchOutputVersion'));
   }
 
   // Phase 2: Teams
   console.log(`\n--- Phase 2: Teams ---`);
 
   for (const id of queue.teams) {
-    track(await publishEntry(env, id, 'team'));
+    track(await publishEntry(env, appBaseUrl, id, 'team'));
   }
 
   // Phase 3: Memberships
   console.log(`\n--- Phase 3: Memberships ---`);
 
   for (const id of queue.teamMemberships) {
-    track(await publishEntry(env, id, 'teamMembership'));
+    track(await publishEntry(env, appBaseUrl, id, 'teamMembership'));
   }
   for (const id of queue.projectMemberships) {
-    track(await publishEntry(env, id, 'projectMembership'));
+    track(await publishEntry(env, appBaseUrl, id, 'projectMembership'));
   }
 
   // Phase 4: Users and Projects
   console.log(`\n--- Phase 4: Users and Projects ---`);
 
   for (const id of queue.users) {
-    track(await publishEntry(env, id, 'user'));
+    track(await publishEntry(env, appBaseUrl, id, 'user'));
   }
   for (const id of queue.projects) {
-    track(await publishEntry(env, id, 'project'));
+    track(await publishEntry(env, appBaseUrl, id, 'project'));
   }
 
   // Phase 5: Research outputs
   console.log(`\n--- Phase 5: Research outputs ---`);
 
   for (const id of queue.researchOutputs) {
-    track(await publishEntry(env, id, 'researchOutput'));
+    track(await publishEntry(env, appBaseUrl, id, 'researchOutput'));
   }
 
   console.log(`\n--- Summary ---`);
@@ -688,7 +713,9 @@ const app = async () => {
   }
 };
 
-app().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (require.main === module) {
+  app().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

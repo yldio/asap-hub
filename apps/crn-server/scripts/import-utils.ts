@@ -352,7 +352,7 @@ export const col = (headers: string[], name: string): number => {
 
 export const validateRequiredColumns = (
   headers: string[],
-  requiredColumns: string[],
+  requiredColumns: readonly string[],
 ): void => {
   for (const columnName of requiredColumns) {
     col(headers, columnName);

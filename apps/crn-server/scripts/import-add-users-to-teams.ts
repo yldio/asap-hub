@@ -230,7 +230,9 @@ const app = async () => {
   }
 };
 
-app().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (require.main === module) {
+  app().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

@@ -96,6 +96,55 @@ export const UPDATE_USER_FIELDS_OPTIONS: BuildUserFieldsOptions = {
   requireRole: false,
 };
 
+/** CSV columns shared by both user import scripts. */
+export const REQUIRED_USER_COLUMNS = [
+  'First name',
+  'Preferred name',
+  'Last name',
+  'Email address',
+  'ORCID',
+  'Degree',
+  'Location',
+  'Position title',
+  'Institution',
+  'Please upload a profile photo.',
+  'Website 1',
+  'Website 2',
+  'LinkedIn',
+  'ResearcherID',
+  'X',
+  'Bluesky',
+  'GitHub',
+  'Google Scholar',
+  'ResearchGate',
+  'Responsibilities',
+  'Research Interests',
+  'Expertise and resources description',
+  'Tags',
+  'Open question 1',
+  'Open question 2',
+  'Open question 3',
+  'Open question 4',
+  'Biography',
+  'ASAP Hub Role',
+] as const;
+
+/** CSV columns required for the new-user import. */
+export const REQUIRED_NEW_USER_COLUMNS = [
+  ...REQUIRED_USER_COLUMNS,
+  'Team 1',
+  'Team 1 Role',
+  'Team 2',
+  'Team 2 Role',
+] as const;
+
+/** CSV columns required for the existing-user import. */
+export const REQUIRED_EXISTING_USER_COLUMNS = [
+  ...REQUIRED_NEW_USER_COLUMNS,
+  'Team 3',
+  'Team 3 Role',
+] as const;
+
 /** Maps CSV team role labels to the team membership roles used in Contentful. */
 export const TEAM_ROLE_MAPPING: Record<string, string> = {
   'Coordinating Lead PI': 'Lead PI (Core Leadership)',

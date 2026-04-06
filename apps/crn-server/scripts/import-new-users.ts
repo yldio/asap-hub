@@ -17,6 +17,7 @@ import {
   parseImportArgs,
   parseUserRow,
   readCsv,
+  REQUIRED_NEW_USER_COLUMNS,
   resolveTagIds,
   runPrepareSteps,
   shouldSkipRow,
@@ -42,42 +43,6 @@ import {
  * Usage (env vars loaded from .env file):
  *   yarn import:new-users [flags] <csv-path>
  */
-
-const REQUIRED_NEW_USER_COLUMNS = [
-  'First name',
-  'Preferred name',
-  'Last name',
-  'Email address',
-  'ORCID',
-  'Degree',
-  'Location',
-  'Position title',
-  'Institution',
-  'Please upload a profile photo.',
-  'Website 1',
-  'Website 2',
-  'LinkedIn',
-  'ResearcherID',
-  'X',
-  'Bluesky',
-  'GitHub',
-  'Google Scholar',
-  'ResearchGate',
-  'Responsibilities',
-  'Research Interests',
-  'Expertise and resources description',
-  'Tags',
-  'Open question 1',
-  'Open question 2',
-  'Open question 3',
-  'Open question 4',
-  'Biography',
-  'ASAP Hub Role',
-  'Team 1',
-  'Team 1 Role',
-  'Team 2',
-  'Team 2 Role',
-];
 
 const app = async () => {
   const args = parseImportArgs();

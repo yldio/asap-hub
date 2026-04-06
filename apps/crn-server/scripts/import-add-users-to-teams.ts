@@ -16,6 +16,7 @@ import {
   parseImportArgs,
   parseUserRow,
   readCsv,
+  REQUIRED_EXISTING_USER_COLUMNS,
   resolveTagIds,
   runPrepareSteps,
   shouldSkipRow,
@@ -39,44 +40,6 @@ import {
  * Usage (env vars loaded from .env file):
  *     yarn import:add-users-to-teams [flags] <csv-path>
  */
-
-const REQUIRED_EXISTING_USER_COLUMNS = [
-  'First name',
-  'Preferred name',
-  'Last name',
-  'Email address',
-  'ORCID',
-  'Degree',
-  'Location',
-  'Position title',
-  'Institution',
-  'Please upload a profile photo.',
-  'Website 1',
-  'Website 2',
-  'LinkedIn',
-  'ResearcherID',
-  'X',
-  'Bluesky',
-  'GitHub',
-  'Google Scholar',
-  'ResearchGate',
-  'Responsibilities',
-  'Research Interests',
-  'Expertise and resources description',
-  'Tags',
-  'Open question 1',
-  'Open question 2',
-  'Open question 3',
-  'Open question 4',
-  'Biography',
-  'ASAP Hub Role',
-  'Team 1',
-  'Team 1 Role',
-  'Team 2',
-  'Team 2 Role',
-  'Team 3',
-  'Team 3 Role',
-];
 
 const findExistingUser = async (
   env: Environment,

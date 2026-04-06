@@ -123,7 +123,7 @@ export const userWithTeamsRecordsTagQueryBuilder: TagQueryBuilder = (
         aggs: {
           names: {
             terms: {
-              field: 'teams.team.keyword',
+              field: 'teams.team.raw',
               size: 10,
             },
           },
@@ -220,7 +220,7 @@ export const userWithTeamsRecordsTagQueryBuilder: TagQueryBuilder = (
           aggs: {
             names: {
               terms: {
-                field: 'teams.team.keyword',
+                field: 'teams.team.raw',
                 size: 10,
               },
             },

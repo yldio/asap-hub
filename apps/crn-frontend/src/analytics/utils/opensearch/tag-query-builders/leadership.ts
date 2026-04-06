@@ -75,7 +75,7 @@ export const leadershipRecordTagQueryBuilder: TagQueryBuilder = (
     const aggs: LeadershipBasedIndexEmptyQueryAggregation = {
       [LEADERSHIP_BASED_INDEX_TEAMS]: {
         terms: {
-          field: 'displayName.keyword',
+          field: 'displayName.raw',
           size: 10,
         },
       },

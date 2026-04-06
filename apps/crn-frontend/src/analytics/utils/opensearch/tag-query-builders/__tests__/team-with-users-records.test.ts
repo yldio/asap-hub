@@ -14,7 +14,7 @@ describe('teamWithUsersRecordsTagQueryBuilder', () => {
         aggs: {
           teamWithUsersIndex_teams: {
             terms: {
-              field: 'teamName.keyword',
+              field: 'teamName.raw',
               size: 5,
             },
           },
@@ -30,7 +30,7 @@ describe('teamWithUsersRecordsTagQueryBuilder', () => {
         aggs: {
           teamWithUsersIndex_teams: {
             terms: {
-              field: 'teamName.keyword',
+              field: 'teamName.raw',
               size: 5,
             },
           },
@@ -41,7 +41,7 @@ describe('teamWithUsersRecordsTagQueryBuilder', () => {
             aggs: {
               names: {
                 terms: {
-                  field: 'users.name.keyword',
+                  field: 'users.name.raw',
                   size: 5,
                 },
               },

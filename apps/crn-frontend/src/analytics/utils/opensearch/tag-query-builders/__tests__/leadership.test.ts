@@ -20,7 +20,7 @@ describe('leadershipRecordTagQueryBuilder', () => {
         aggs: {
           leadershipBasedIndex_teams: {
             terms: {
-              field: 'displayName.keyword',
+              field: 'displayName.raw',
               size: 10,
             },
           },

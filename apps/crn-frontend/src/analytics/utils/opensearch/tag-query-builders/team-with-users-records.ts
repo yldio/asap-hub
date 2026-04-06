@@ -103,7 +103,7 @@ export const teamWithUsersRecordsTagQueryBuilder: TagQueryBuilder = (
     const aggs: TeamWithUsersIndexEmptyQueryAggregation = {
       [TEAM_WITH_USERS_INDEX_TEAMS]: {
         terms: {
-          field: 'teamName.keyword',
+          field: 'teamName.raw',
           size: 5,
         },
       },
@@ -117,7 +117,7 @@ export const teamWithUsersRecordsTagQueryBuilder: TagQueryBuilder = (
         aggs: {
           names: {
             terms: {
-              field: 'users.name.keyword',
+              field: 'users.name.raw',
               size: 5,
             },
           },
@@ -164,7 +164,7 @@ export const teamWithUsersRecordsTagQueryBuilder: TagQueryBuilder = (
       aggs: {
         teams: {
           terms: {
-            field: 'teamName.keyword',
+            field: 'teamName.raw',
             size: 10,
           },
         },
@@ -198,7 +198,7 @@ export const teamWithUsersRecordsTagQueryBuilder: TagQueryBuilder = (
           aggs: {
             names: {
               terms: {
-                field: 'users.name.keyword',
+                field: 'users.name.raw',
                 size: 10,
               },
             },

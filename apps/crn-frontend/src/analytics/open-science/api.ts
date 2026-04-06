@@ -18,7 +18,7 @@ const preprintComplianceOpensearchSort: OpensearchSortMap<SortPreprintCompliance
       {
         numberOfPreprints: {
           order: 'asc',
-          missing: '_last',
+          missing: '_first',
         },
       },
     ],
@@ -78,20 +78,36 @@ export const getPreprintCompliance = async (
     ListPreprintComplianceOpensearchResponse
   >(opensearchClient, options, preprintComplianceOpensearchSort);
 
+// N/A (null / "Limited Data") rows should appear first when sorting asc and
+// last when sorting desc, so they never push real data off the visible pages.
 const publicationComplianceOpensearchSort: OpensearchSortMap<SortPublicationCompliance> =
   {
     team_asc: [{ 'teamName.keyword': { order: 'asc' } }],
     team_desc: [{ 'teamName.keyword': { order: 'desc' } }],
-    publications_asc: [{ overallCompliance: { order: 'asc' } }],
-    publications_desc: [{ overallCompliance: { order: 'desc' } }],
-    datasets_asc: [{ datasetsPercentage: { order: 'asc' } }],
-    datasets_desc: [{ datasetsPercentage: { order: 'desc' } }],
-    protocols_asc: [{ protocolsPercentage: { order: 'asc' } }],
-    protocols_desc: [{ protocolsPercentage: { order: 'desc' } }],
-    code_asc: [{ codePercentage: { order: 'asc' } }],
-    code_desc: [{ codePercentage: { order: 'desc' } }],
-    lab_materials_asc: [{ labMaterialsPercentage: { order: 'asc' } }],
-    lab_materials_desc: [{ labMaterialsPercentage: { order: 'desc' } }],
+    publications_asc: [
+      { overallCompliance: { order: 'asc', missing: '_first' } },
+    ],
+    publications_desc: [
+      { overallCompliance: { order: 'desc', missing: '_last' } },
+    ],
+    datasets_asc: [{ datasetsPercentage: { order: 'asc', missing: '_first' } }],
+    datasets_desc: [
+      { datasetsPercentage: { order: 'desc', missing: '_last' } },
+    ],
+    protocols_asc: [
+      { protocolsPercentage: { order: 'asc', missing: '_first' } },
+    ],
+    protocols_desc: [
+      { protocolsPercentage: { order: 'desc', missing: '_last' } },
+    ],
+    code_asc: [{ codePercentage: { order: 'asc', missing: '_first' } }],
+    code_desc: [{ codePercentage: { order: 'desc', missing: '_last' } }],
+    lab_materials_asc: [
+      { labMaterialsPercentage: { order: 'asc', missing: '_first' } },
+    ],
+    lab_materials_desc: [
+      { labMaterialsPercentage: { order: 'desc', missing: '_last' } },
+    ],
   };
 
 export const getPublicationCompliance = async (

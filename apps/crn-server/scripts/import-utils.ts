@@ -183,75 +183,28 @@ const LOCATION_RESPONSE_SCHEMA = {
   },
 } as const;
 
-const serializePreparedLocation = (location: ParsedLocation): string => {
-  const city = location.city.trim();
-  const state = location.state.trim();
-  const country = location.country.trim();
-
-  if (city && state && country) {
-    return `${city}|${state}|${country}`;
-  }
-
-  if (city && state) {
-    return `${city}|${state}|`;
-  }
-
-  if (city && country) {
-    return `${city}|${country}`;
-  }
-
-  if (state && country) {
-    return `|${state}|${country}`;
-  }
-
-  if (city) {
-    return city;
-  }
-
-  if (country) {
-    return country;
-  }
-
-  return state;
-};
+const serializePreparedLocation = (location: ParsedLocation): string =>
+  [location.city.trim(), location.state.trim(), location.country.trim()].join(
+    '|',
+  );
 
 const parsePreparedLocation = (
   rawLocation: string,
 ): { city: string; stateOrProvince: string; country: string } => {
   const parts = rawLocation.split('|').map((part) => part.trim());
 
-  if (parts.length >= 3) {
-    const [city, stateOrProvince, country] = parts;
-
-    return {
-      city: city || '',
-      stateOrProvince: stateOrProvince || '',
-      country: country || '',
-    };
+  if (parts.length !== 3) {
+    throw new Error(
+      `Prepared location must use city|state|country format: ${rawLocation}`,
+    );
   }
 
-  if (parts.length === 2) {
-    const [city, country] = parts;
-
-    return {
-      city: city || '',
-      stateOrProvince: '',
-      country: country || '',
-    };
-  }
-
-  if (parts.length === 1) {
-    return {
-      city: parts[0] || '',
-      stateOrProvince: '',
-      country: '',
-    };
-  }
+  const [city, stateOrProvince, country] = parts;
 
   return {
-    city: '',
-    stateOrProvince: '',
-    country: '',
+    city: city || '',
+    stateOrProvince: stateOrProvince || '',
+    country: country || '',
   };
 };
 
@@ -1165,7 +1118,7 @@ export const prepareLocations = async (
               'Only include state/province when it is provided or strongly implied by the input. ' +
               'Return a JSON object with key "locations" containing an array where each element ' +
               'has "city", "state", and "country" keys. Use full state names (e.g., "Illinois" not "IL") and use "USA" for the United States. ' +
-              'Examples: "Munich, Germany" -> {"city":"Munich","state":"","country":"Germany"}; "San Diego, CA" -> {"city":"San Diego","state":"California","country":"USA"}; if the state is known but the country is genuinely unknown, return an empty country string rather than moving the state into the country field. ' +
+              'Examples: "Munich, Germany" -> {"city":"Munich","state":"","country":"Germany"}; "San Diego, CA" -> {"city":"San Diego","state":"California","country":"USA"}; "Bonn" -> {"city":"Bonn","state":"","country":""}; "Germany" -> {"city":"","state":"","country":"Germany"}; if the state is known but the country is genuinely unknown, return an empty country string rather than moving the state into the country field. ' +
               'Use an empty string only when a component is genuinely unknown. ' +
               'The array must have exactly the same number of elements as the input list.',
           },

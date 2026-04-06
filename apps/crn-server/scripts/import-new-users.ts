@@ -1,5 +1,7 @@
 import {
   buildUserFields,
+  cell,
+  col,
   cleanupAsset,
   cleanupEntries,
   createTeamMembership,
@@ -18,6 +20,7 @@ import {
   runPrepareSteps,
   shouldSkipRow,
   uploadAvatar,
+  validateRequiredColumns,
 } from './import-utils';
 
 /**
@@ -39,9 +42,53 @@ import {
  *   yarn import:new-users [flags] <csv-path>
  */
 
+const REQUIRED_NEW_USER_COLUMNS = [
+  'First name',
+  'Preferred name',
+  'Last name',
+  'Email address',
+  'ORCID',
+  'Degree',
+  'Location',
+  'Position title',
+  'Institution',
+  'Please upload a profile photo.',
+  'Website 1',
+  'Website 2',
+  'LinkedIn',
+  'ResearcherID',
+  'X',
+  'Bluesky',
+  'GitHub',
+  'Google Scholar',
+  'ResearchGate',
+  'Responsibilities',
+  'Research Interests',
+  'Expertise and resources description',
+  'Tags',
+  'Open question 1',
+  'Open question 2',
+  'Open question 3',
+  'Open question 4',
+  'Biography',
+  'ASAP Hub Role',
+  'Team 1',
+  'Team 1 Role',
+  'Team 2',
+  'Team 2 Role',
+];
+
 const app = async () => {
   const args = parseImportArgs();
   const { headers, rows } = await readCsv(args.csvPath);
+
+  validateRequiredColumns(headers, REQUIRED_NEW_USER_COLUMNS);
+
+  const columns = {
+    firstName: col(headers, 'First name'),
+    lastName: col(headers, 'Last name'),
+    email: col(headers, 'Email address'),
+  };
 
   console.log(`Read ${rows.length} rows from ${args.csvPath}`);
 
@@ -73,18 +120,18 @@ const app = async () => {
       try {
         const skipReason = shouldSkipRow(row, headers);
         if (skipReason) {
-          const name = `${(row[headers.indexOf('First name')] || '').trim()} ${(
-            row[headers.indexOf('Last name')] || ''
-          ).trim()}`.trim();
+          const name = `${cell(row, columns.firstName)} ${cell(
+            row,
+            columns.lastName,
+          )}`.trim();
           console.log(`Skipped row ${rowNum} (${skipReason}): ${name}`);
           skippedRole += 1;
         } else {
-          const rawName = `${(
-            row[headers.indexOf('First name')] || ''
-          ).trim()} ${(row[headers.indexOf('Last name')] || '').trim()}`.trim();
-          const rawEmail = (row[headers.indexOf('Email address')] || '')
-            .trim()
-            .toLowerCase();
+          const rawName = `${cell(row, columns.firstName)} ${cell(
+            row,
+            columns.lastName,
+          )}`.trim();
+          const rawEmail = cell(row, columns.email).toLowerCase();
           const rawLabel = `${rawName || 'Unnamed user'}${
             rawEmail ? ` (${rawEmail})` : ''
           }`;

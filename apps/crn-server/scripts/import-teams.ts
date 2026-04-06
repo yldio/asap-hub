@@ -1,5 +1,7 @@
 import { type Entry, type Environment, type Link } from '@asap-hub/contentful';
 import {
+  cell,
+  col,
   createEntryLink,
   findProjectByProjectId,
   getContentfulEnvironment,
@@ -8,6 +10,7 @@ import {
   loc,
   readCsv,
   type LocalizedFields,
+  validateRequiredColumns,
 } from './import-utils';
 
 /**
@@ -24,6 +27,14 @@ import {
  */
 
 const RESEARCH_THEMES_TO_CREATE = ['Tool Generation', 'PD Heterogeneity'];
+
+const REQUIRED_TEAM_COLUMNS = [
+  'Team Name',
+  'Team Type',
+  'Team Description',
+  'Research Theme',
+  'Project ID',
+];
 
 const ensureResearchThemes = async (
   env: Environment,
@@ -134,6 +145,16 @@ const app = async () => {
   const themeMap = await ensureResearchThemes(env);
   const { rows, headers } = await readCsv(csvPath);
 
+  validateRequiredColumns(headers, REQUIRED_TEAM_COLUMNS);
+
+  const columns = {
+    teamName: col(headers, 'Team Name'),
+    teamType: col(headers, 'Team Type'),
+    teamDescription: col(headers, 'Team Description'),
+    researchTheme: col(headers, 'Research Theme'),
+    projectId: col(headers, 'Project ID'),
+  };
+
   let created = 0;
   let skipped = 0;
   let failed = 0;
@@ -144,15 +165,11 @@ const app = async () => {
 
   for (const row of rows) {
     if (!isEmptyRow(row)) {
-      const teamName = (row[headers.indexOf('Team Name')] || '').trim();
-      const teamType = (row[headers.indexOf('Team Type')] || '').trim();
-      const teamDescription = (
-        row[headers.indexOf('Team Description')] || ''
-      ).trim();
-      const researchTheme = (
-        row[headers.indexOf('Research Theme')] || ''
-      ).trim();
-      const projectId = (row[headers.indexOf('Project ID')] || '').trim();
+      const teamName = cell(row, columns.teamName);
+      const teamType = cell(row, columns.teamType);
+      const teamDescription = cell(row, columns.teamDescription);
+      const researchTheme = cell(row, columns.researchTheme);
+      const projectId = cell(row, columns.projectId);
 
       if (!teamName) {
         console.log('Skipping row with empty team name');

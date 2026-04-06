@@ -262,6 +262,8 @@ export const writeCsv = (
 
 export const col = (headers: string[], name: string): number => {
   const idx = headers.indexOf(name);
+  // In practice should not happen because we have validated the headers at the very
+  // beggining, but just in case...
   if (idx === -1) {
     throw new Error(
       `CSV column "${name}" not found. Available: ${headers.join(', ')}`,
@@ -270,9 +272,21 @@ export const col = (headers: string[], name: string): number => {
   return idx;
 };
 
+export const validateRequiredColumns = (
+  headers: string[],
+  requiredColumns: string[],
+): void => {
+  for (const columnName of requiredColumns) {
+    col(headers, columnName);
+  }
+};
+
+export const cell = (row: string[], index: number): string =>
+  (row[index] || '').trim();
+
 const cellVal = (row: string[], headers: string[], name: string): string => {
   const idx = headers.indexOf(name);
-  return idx >= 0 ? (row[idx] || '').trim() : '';
+  return idx >= 0 ? cell(row, idx) : '';
 };
 
 /** Parses CLI flags shared by the import scripts. */
@@ -626,7 +640,7 @@ export const mapTeamRole = (csvRole: string): string => {
 };
 
 export const isEmptyRow = (row: string[]): boolean =>
-  row.every((cell) => !cell || cell.trim() === '');
+  row.every((value) => !value || value.trim() === '');
 
 /** Parses a raw CSV row into the normalized user shape used by the import scripts. */
 export const parseUserRow = (
@@ -1053,13 +1067,17 @@ export const prepareAvatars = async (
   let failed = 0;
 
   for (const [index, row] of rows.entries()) {
-    const cell = (row[colIdx] || '').trim();
+    const avatarCell = (row[colIdx] || '').trim();
 
-    if (!cell || cell.startsWith('/') || !cell.includes('drive.google.com')) {
+    if (
+      !avatarCell ||
+      avatarCell.startsWith('/') ||
+      !avatarCell.includes('drive.google.com')
+    ) {
       skipped += 1;
     } else {
       try {
-        const localPath = await downloadGoogleDriveImage(cell);
+        const localPath = await downloadGoogleDriveImage(avatarCell);
         row[colIdx] = localPath;
         downloaded += 1;
         console.log(

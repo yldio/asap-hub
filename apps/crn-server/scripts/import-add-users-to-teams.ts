@@ -221,6 +221,18 @@ const app = async () => {
           console.log(`Skipped row ${rowNum} (${skipReason}): ${name}`);
           skippedRole += 1;
         } else {
+          const rawName = `${(
+            row[headers.indexOf('First name')] || ''
+          ).trim()} ${(row[headers.indexOf('Last name')] || '').trim()}`.trim();
+          const rawEmail = (row[headers.indexOf('Email address')] || '')
+            .trim()
+            .toLowerCase();
+          const rawLabel = `${rawName || 'Unnamed user'}${
+            rawEmail ? ` (${rawEmail})` : ''
+          }`;
+
+          console.log(`Processing row ${rowNum}: ${rawLabel}`);
+
           const data = parseUserRow(row, headers);
 
           if (!data.firstName && !data.lastName) {
@@ -232,12 +244,12 @@ const app = async () => {
             if (!user) {
               notFound += 1;
               console.error(
-                `NOT FOUND row ${rowNum}: ${label} (ORCID: ${
+                `  NOT FOUND row ${rowNum}: ${label} (ORCID: ${
                   data.orcid || 'none'
                 }, email: ${data.email || 'none'})`,
               );
             } else {
-              console.log(`Processing row ${rowNum}: ${label} (${user.id})`);
+              console.log(`  Matched existing user: ${label} (${user.id})`);
 
               const userEntry = await env.getEntry(user.id);
               const existingTeamLinks = (userEntry.fields?.teams?.['en-US'] ||

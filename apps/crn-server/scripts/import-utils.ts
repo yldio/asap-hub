@@ -515,6 +515,59 @@ export const sanitizeSocialValue = (value: string): string => {
   return trimmed;
 };
 
+/**
+ * Normalizes website fields to valid HTTP(S) URLs so they can be published.
+ * Bare domains are upgraded to `https://...`. Placeholder values are dropped.
+ */
+export const sanitizeWebsiteUrl = (raw: string, fieldName: string): string => {
+  if (!raw) {
+    return '';
+  }
+
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  if (SOCIAL_JUNK_VALUES.has(trimmed.toLowerCase())) {
+    console.warn(
+      `  Warning: Dropping placeholder value from ${fieldName}: ${raw}`,
+    );
+    return '';
+  }
+
+  const hasExplicitScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed);
+  const normalized = hasExplicitScheme ? trimmed : `https://${trimmed}`;
+
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(normalized);
+  } catch {
+    console.warn(`  Warning: Dropping invalid URL from ${fieldName}: ${raw}`);
+    return '';
+  }
+
+  if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+    console.warn(
+      `  Warning: Dropping unsupported URL scheme from ${fieldName}: ${raw}`,
+    );
+    return '';
+  }
+
+  if (!parsedUrl.hostname || !parsedUrl.hostname.includes('.')) {
+    console.warn(`  Warning: Dropping invalid URL from ${fieldName}: ${raw}`);
+    return '';
+  }
+
+  if (!hasExplicitScheme) {
+    console.warn(
+      `  Warning: Normalizing ${fieldName} by adding https://: ${raw}`,
+    );
+  }
+
+  return normalized;
+};
+
 export const extractBlueskyHandle = (raw: string): string => {
   if (!raw) {
     return '';
@@ -641,8 +694,8 @@ export const parseUserRow = (
     jobTitle: v('Position title'),
     institution: v('Institution'),
     avatarSource: v('Please upload a profile photo.'),
-    website1: v('Website 1'),
-    website2: v('Website 2'),
+    website1: sanitizeWebsiteUrl(v('Website 1'), 'Website 1'),
+    website2: sanitizeWebsiteUrl(v('Website 2'), 'Website 2'),
     linkedIn: extractLinkedInId(sanitizeSocialValue(v('LinkedIn'))),
     researcherId: extractResearcherId(sanitizeSocialValue(v('ResearcherID'))),
     twitter: extractTwitterId(sanitizeSocialValue(v('X'))),

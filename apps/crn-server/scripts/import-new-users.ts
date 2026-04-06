@@ -79,6 +79,18 @@ const app = async () => {
           console.log(`Skipped row ${rowNum} (${skipReason}): ${name}`);
           skippedRole += 1;
         } else {
+          const rawName = `${(
+            row[headers.indexOf('First name')] || ''
+          ).trim()} ${(row[headers.indexOf('Last name')] || '').trim()}`.trim();
+          const rawEmail = (row[headers.indexOf('Email address')] || '')
+            .trim()
+            .toLowerCase();
+          const rawLabel = `${rawName || 'Unnamed user'}${
+            rawEmail ? ` (${rawEmail})` : ''
+          }`;
+
+          console.log(`Processing row ${rowNum}: ${rawLabel}`);
+
           const data = parseUserRow(row, headers);
 
           if (!data.firstName && !data.lastName) {
@@ -94,11 +106,9 @@ const app = async () => {
             }
 
             if (existingUser) {
-              console.log(`Skipped (exists): ${label}`);
+              console.log(`  Skipped (exists): ${label}`);
               skipped += 1;
             } else {
-              console.log(`Processing row ${rowNum}: ${label}`);
-
               const resolvedTeams: Array<{ teamId: string; role: string }> = [];
               for (const team of data.teams) {
                 const teamEntry = await findTeamByName(env, team.name);

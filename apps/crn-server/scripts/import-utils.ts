@@ -40,7 +40,7 @@ export type ParsedUserData = {
   tagNames: string[];
   questions: string[];
   biography: string;
-  role: string;
+  role: string | undefined;
   teams: Array<{ name: string; role: string }>;
 };
 
@@ -308,10 +308,9 @@ export const shouldSkipRow = (
   headers: string[],
 ): string | null => {
   const hubRole = cellVal(row, headers, 'ASAP Hub Role');
-  const team1 = cellVal(row, headers, 'Team 1');
 
-  // Skip if ASAP Hub Role is empty (and the row has some data)
-  if (!hubRole && team1) {
+  // Skip any non-empty row if ASAP Hub Role is empty.
+  if (!hubRole) {
     return 'empty ASAP Hub Role';
   }
 
@@ -631,7 +630,7 @@ export const parseUserRow = (
     }
   }
 
-  const role = v('ASAP Hub Role') || 'Grantee';
+  const role = v('ASAP Hub Role') || undefined;
 
   return {
     firstName: v('First name'),
@@ -1296,6 +1295,10 @@ export const buildUserFields = (
   existingTeams: Array<Link<'Entry'>> = [],
 ): LocalizedFields => {
   const fields: LocalizedFields = {};
+
+  if (!data.role) {
+    throw new Error('ASAP Hub Role is required for new users');
+  }
 
   fields.firstName = loc(data.firstName);
   fields.lastName = loc(data.lastName);

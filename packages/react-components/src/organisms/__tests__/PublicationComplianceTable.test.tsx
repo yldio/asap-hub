@@ -280,6 +280,24 @@ describe('PublicationComplianceTable', () => {
     expect(screen.getAllByText('N/A')).toHaveLength(5);
   });
 
+  it.each([['Limited Data'], ['  limited data  '], ['Limited DATA']])(
+    'renders N/A for limited data ranking regardless of casing/whitespace (%s)',
+    (ranking) => {
+      const data = [
+        {
+          ...publicationComplianceData,
+          datasetsRanking: ranking,
+          protocolsRanking: ranking,
+          codeRanking: ranking,
+          labMaterialsRanking: ranking,
+          overallCompliance: null,
+        },
+      ];
+      render(<PublicationComplianceTable {...defaultProps} data={data} />);
+      expect(screen.getAllByText('N/A')).toHaveLength(5);
+    },
+  );
+
   it('renders team links correctly', () => {
     render(<PublicationComplianceTable {...defaultProps} />);
 

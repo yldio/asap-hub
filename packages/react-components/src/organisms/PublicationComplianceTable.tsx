@@ -119,6 +119,12 @@ type PublicationComplianceTableProps = ComponentProps<typeof PageControls> & {
   sortingDirection: PublicationComplianceSortingDirection;
 };
 
+// Spreadsheet uses "Limited Data", earlier datasets used "LIMITED DATA". Match
+// either casing so the limited-data icon is rendered consistently.
+const isLimitedDataRanking = (ranking: string | undefined): boolean =>
+  typeof ranking === 'string' &&
+  ranking.trim().toLowerCase() === 'limited data';
+
 const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
   data,
   sort,
@@ -301,13 +307,13 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                     <p css={iconStyles}>
                       <span css={valueStyles}>
                         {row.datasetsPercentage === null ||
-                        row.datasetsRanking === 'LIMITED DATA'
+                        isLimitedDataRanking(row.datasetsRanking)
                           ? 'N/A'
                           : `${row.datasetsPercentage}%`}
                       </span>
                       {getPerformanceMoodIcon(
                         row.datasetsPercentage ?? 0,
-                        row.datasetsRanking === 'LIMITED DATA',
+                        isLimitedDataRanking(row.datasetsRanking),
                       )}
                     </p>
                   </td>
@@ -315,13 +321,13 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                     <p css={iconStyles}>
                       <span css={valueStyles}>
                         {row.protocolsPercentage === null ||
-                        row.protocolsRanking === 'LIMITED DATA'
+                        isLimitedDataRanking(row.protocolsRanking)
                           ? 'N/A'
                           : `${row.protocolsPercentage}%`}
                       </span>
                       {getPerformanceMoodIcon(
                         row.protocolsPercentage ?? 0,
-                        row.protocolsRanking === 'LIMITED DATA',
+                        isLimitedDataRanking(row.protocolsRanking),
                       )}
                     </p>
                   </td>
@@ -329,13 +335,13 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                     <p css={iconStyles}>
                       <span css={valueStyles}>
                         {row.codePercentage === null ||
-                        row.codeRanking === 'LIMITED DATA'
+                        isLimitedDataRanking(row.codeRanking)
                           ? 'N/A'
                           : `${row.codePercentage}%`}
                       </span>
                       {getPerformanceMoodIcon(
                         row.codePercentage ?? 0,
-                        row.codeRanking === 'LIMITED DATA',
+                        isLimitedDataRanking(row.codeRanking),
                       )}
                     </p>
                   </td>
@@ -343,13 +349,13 @@ const PublicationComplianceTable: React.FC<PublicationComplianceTableProps> = ({
                     <p css={iconStyles}>
                       <span css={valueStyles}>
                         {row.labMaterialsPercentage === null ||
-                        row.labMaterialsRanking === 'LIMITED DATA'
+                        isLimitedDataRanking(row.labMaterialsRanking)
                           ? 'N/A'
                           : `${row.labMaterialsPercentage}%`}
                       </span>
                       {getPerformanceMoodIcon(
                         row.labMaterialsPercentage ?? 0,
-                        row.labMaterialsRanking === 'LIMITED DATA',
+                        isLimitedDataRanking(row.labMaterialsRanking),
                       )}
                     </p>
                   </td>

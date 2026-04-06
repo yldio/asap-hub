@@ -9,10 +9,11 @@ import { getContentfulEnvironment, getErrorMessage } from './import-utils';
  * Publishes all draft entities related to one or more teams.
  *
  * Given team entry IDs, traverses the entity graph to find and publish:
- *   Phase 1: Research tags, avatar assets (leaf nodes)
+ *   Phase 1: Research tags, avatar assets, research output versions (leaf nodes)
  *   Phase 2: Teams
  *   Phase 3: TeamMemberships, projectMemberships
  *   Phase 4: Users, projects
+ *   Phase 5: Research outputs
  *
  * Designed to be called from a GitHub Action for incremental rollout.
  *
@@ -24,11 +25,13 @@ import { getContentfulEnvironment, getErrorMessage } from './import-utils';
 type PublishQueue = {
   researchTags: Set<string>;
   assets: Set<string>;
+  researchOutputVersions: Set<string>;
   teams: Set<string>;
   teamMemberships: Set<string>;
   projectMemberships: Set<string>;
   users: Set<string>;
   projects: Set<string>;
+  researchOutputs: Set<string>;
 };
 
 type ResolvedTeamReference = {
@@ -41,11 +44,13 @@ type ResolvedTeamReference = {
 const createQueue = (): PublishQueue => ({
   researchTags: new Set(),
   assets: new Set(),
+  researchOutputVersions: new Set(),
   teams: new Set(),
   teamMemberships: new Set(),
   projectMemberships: new Set(),
   users: new Set(),
   projects: new Set(),
+  researchOutputs: new Set(),
 });
 
 type PublishOutcome = 'published' | 'already_published' | 'failed';
@@ -152,6 +157,16 @@ const describeEntry = (entry: Entry, label: string): string => {
 
   if (label === 'researchTag') {
     return getLocalizedString(entry, 'name') || 'Unnamed research tag';
+  }
+
+  if (label === 'researchOutput') {
+    return getLocalizedString(entry, 'title') || 'Unnamed research output';
+  }
+
+  if (label === 'researchOutputVersion') {
+    return (
+      getLocalizedString(entry, 'title') || 'Unnamed research output version'
+    );
   }
 
   if (label === 'teamMembership') {
@@ -396,10 +411,35 @@ const collectRelatedEntities = async (
     }
   }
 
+  const researchOutputs = await env.getEntries({
+    content_type: 'researchOutputs',
+    links_to_entry: team.id,
+    limit: 500,
+  });
+
+  for (const researchOutput of researchOutputs.items) {
+    queue.researchOutputs.add(researchOutput.sys.id);
+
+    const tagLinks = researchOutput.fields?.tags?.['en-US'] || [];
+    for (const tagLink of tagLinks) {
+      if (tagLink?.sys?.id) {
+        queue.researchTags.add(tagLink.sys.id);
+      }
+    }
+
+    const versionLinks = researchOutput.fields?.versions?.['en-US'] || [];
+    for (const versionLink of versionLinks) {
+      if (versionLink?.sys?.id) {
+        queue.researchOutputVersions.add(versionLink.sys.id);
+      }
+    }
+  }
+
   console.log(
     `  Found: ${memberships.items.length} memberships, ` +
       `${queue.users.size} users (cumulative), ` +
-      `${projectMemberships.items.length} project memberships`,
+      `${projectMemberships.items.length} project memberships, ` +
+      `${researchOutputs.items.length} research outputs`,
   );
 };
 
@@ -453,11 +493,13 @@ const app = async () => {
   console.log(`\n--- Publish Queue ---`);
   console.log(`Research tags: ${queue.researchTags.size}`);
   console.log(`Assets (avatars): ${queue.assets.size}`);
+  console.log(`Research output versions: ${queue.researchOutputVersions.size}`);
   console.log(`Teams: ${queue.teams.size}`);
   console.log(`Team memberships: ${queue.teamMemberships.size}`);
   console.log(`Project memberships: ${queue.projectMemberships.size}`);
   console.log(`Users: ${queue.users.size}`);
   console.log(`Projects: ${queue.projects.size}`);
+  console.log(`Research outputs: ${queue.researchOutputs.size}`);
 
   let published = 0;
   let alreadyPublished = 0;
@@ -481,6 +523,9 @@ const app = async () => {
   }
   for (const id of queue.assets) {
     track(await publishAsset(env, id));
+  }
+  for (const id of queue.researchOutputVersions) {
+    track(await publishEntry(env, id, 'researchOutputVersion'));
   }
 
   // Phase 2: Teams
@@ -508,6 +553,13 @@ const app = async () => {
   }
   for (const id of queue.projects) {
     track(await publishEntry(env, id, 'project'));
+  }
+
+  // Phase 5: Research outputs
+  console.log(`\n--- Phase 5: Research outputs ---`);
+
+  for (const id of queue.researchOutputs) {
+    track(await publishEntry(env, id, 'researchOutput'));
   }
 
   console.log(`\n--- Summary ---`);

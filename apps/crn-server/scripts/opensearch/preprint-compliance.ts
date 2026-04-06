@@ -85,14 +85,17 @@ const mapSpreadsheetDataToMetrics = (
         ];
 
       if (fieldName && documents[timeRange]) {
-        if (fieldName === 'postedPriorPercentage') {
-          // The spreadsheet stores this as e.g. "98.82%". Parse to a float so
-          // it actually lands in OpenSearch as a sortable number rather than
-          // being silently dropped to null.
+        if (fieldName === 'ranking') {
+          (documents[timeRange] as Record<string, unknown>)[fieldName] =
+            typeof value === 'string' ? value : '';
+        } else {
+          // All other preprint fields are numeric in the OpenSearch mapping
+          // (numberOfPreprints, numberOfPublications, postedPriorPercentage).
+          // Spreadsheet may contain "Limited Data", "NA", "98.82%" etc., so
+          // coerce to number | null instead of letting raw strings reach
+          // OpenSearch and get rejected by the integer/float mapping.
           (documents[timeRange] as Record<string, unknown>)[fieldName] =
             parseComplianceNumericValue(value);
-        } else {
-          (documents[timeRange] as Record<string, unknown>)[fieldName] = value;
         }
       }
     });

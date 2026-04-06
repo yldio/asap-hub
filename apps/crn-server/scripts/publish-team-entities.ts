@@ -78,6 +78,13 @@ type PublishResourceOptions<T extends PublishableResource> = {
 
 type LocalizedFieldMap = Record<string, { 'en-US'?: unknown } | undefined>;
 
+type LinkedEntryQuery = {
+  content_type: string;
+  links_to_entry: string;
+  limit: number;
+  skip?: number;
+};
+
 const getPublishState = ({
   version,
   publishedVersion,
@@ -312,6 +319,48 @@ const resolveTeamReferences = async (
   return Array.from(resolvedTeams.values());
 };
 
+/**
+ * Use a pagination strategy to fetch all related entities and fails if we can't bring all
+ */
+const getAllLinkedEntries = async (
+  env: Environment,
+  query: LinkedEntryQuery,
+  label: string,
+): Promise<Entry[]> => {
+  const entries: Entry[] = [];
+  let skip = 0;
+  let total = 0;
+
+  while (total === 0 || entries.length < total) {
+    const response = await env.getEntries({
+      ...query,
+      skip,
+    });
+
+    if (skip === 0) {
+      total = response.total;
+
+      if (response.total > response.items.length) {
+        console.log(`  Paginating ${label}: ${response.total} total entries`);
+      }
+    }
+
+    if (response.items.length === 0) {
+      if (entries.length < total) {
+        throw new Error(
+          `Pagination stalled while collecting ${label}: expected ${total} entries, got ${entries.length}`,
+        );
+      }
+      break;
+    }
+
+    entries.push(...response.items);
+    skip += response.items.length;
+  }
+
+  return entries;
+};
+
 const publishResource = async <T extends PublishableResource>({
   id,
   label,
@@ -354,23 +403,31 @@ const collectRelatedEntities = async (
   queue.teams.add(team.id);
 
   // Find teamMemberships that link to this team
-  const memberships = await env.getEntries({
-    content_type: 'teamMembership',
-    links_to_entry: team.id,
-    limit: 200,
-  });
+  const memberships = await getAllLinkedEntries(
+    env,
+    {
+      content_type: 'teamMembership',
+      links_to_entry: team.id,
+      limit: 200,
+    },
+    `team memberships for ${team.name}`,
+  );
 
-  for (const membership of memberships.items) {
+  for (const membership of memberships) {
     queue.teamMemberships.add(membership.sys.id);
 
     // Find users that reference this teamMembership
-    const users = await env.getEntries({
-      content_type: 'users',
-      links_to_entry: membership.sys.id,
-      limit: 10,
-    });
+    const users = await getAllLinkedEntries(
+      env,
+      {
+        content_type: 'users',
+        links_to_entry: membership.sys.id,
+        limit: 10,
+      },
+      `users for team membership ${membership.sys.id}`,
+    );
 
-    for (const user of users.items) {
+    for (const user of users) {
       queue.users.add(user.sys.id);
 
       // Collect avatar asset
@@ -390,34 +447,46 @@ const collectRelatedEntities = async (
   }
 
   // Find projectMemberships that link to this team
-  const projectMemberships = await env.getEntries({
-    content_type: 'projectMembership',
-    links_to_entry: team.id,
-    limit: 10,
-  });
+  const projectMemberships = await getAllLinkedEntries(
+    env,
+    {
+      content_type: 'projectMembership',
+      links_to_entry: team.id,
+      limit: 10,
+    },
+    `project memberships for ${team.name}`,
+  );
 
-  for (const pm of projectMemberships.items) {
+  for (const pm of projectMemberships) {
     queue.projectMemberships.add(pm.sys.id);
 
     // Find projects that reference this projectMembership
-    const projects = await env.getEntries({
-      content_type: 'projects',
-      links_to_entry: pm.sys.id,
-      limit: 5,
-    });
+    const projects = await getAllLinkedEntries(
+      env,
+      {
+        content_type: 'projects',
+        links_to_entry: pm.sys.id,
+        limit: 5,
+      },
+      `projects for project membership ${pm.sys.id}`,
+    );
 
-    for (const project of projects.items) {
+    for (const project of projects) {
       queue.projects.add(project.sys.id);
     }
   }
 
-  const researchOutputs = await env.getEntries({
-    content_type: 'researchOutputs',
-    links_to_entry: team.id,
-    limit: 500,
-  });
+  const researchOutputs = await getAllLinkedEntries(
+    env,
+    {
+      content_type: 'researchOutputs',
+      links_to_entry: team.id,
+      limit: 500,
+    },
+    `research outputs for ${team.name}`,
+  );
 
-  for (const researchOutput of researchOutputs.items) {
+  for (const researchOutput of researchOutputs) {
     queue.researchOutputs.add(researchOutput.sys.id);
 
     const tagLinks = researchOutput.fields?.tags?.['en-US'] || [];
@@ -436,10 +505,10 @@ const collectRelatedEntities = async (
   }
 
   console.log(
-    `  Found: ${memberships.items.length} memberships, ` +
+    `  Found: ${memberships.length} memberships, ` +
       `${queue.users.size} users (cumulative), ` +
-      `${projectMemberships.items.length} project memberships, ` +
-      `${researchOutputs.items.length} research outputs`,
+      `${projectMemberships.length} project memberships, ` +
+      `${researchOutputs.length} research outputs`,
   );
 };
 

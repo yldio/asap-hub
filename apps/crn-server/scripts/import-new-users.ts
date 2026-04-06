@@ -31,7 +31,7 @@ import {
  * Supports preprocessing flags:
  *   --prepare-avatars    Download Google Drive images to /tmp/asap-import/
  *   --prepare-locations  Parse locations via OpenAI into city|country or city|state|country
- *   --prepare-tags       Normalize tags and create approved missing ones as draft
+ *   --prepare-tags       Normalize tags and create approved missing ones, publishing them immediately
  *
  * Running without flags executes all preprocessing inline then imports.
  *

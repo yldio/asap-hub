@@ -1196,7 +1196,7 @@ export const prepareLocations = async (
 };
 
 /**
- * Normalizes tags, creates any configured missing draft tags, and rewrites the rows in place.
+ * Normalizes tags, creates any configured missing tags, and rewrites the rows in place.
  */
 export const prepareTags = async (
   rows: string[][],
@@ -1204,6 +1204,22 @@ export const prepareTags = async (
   env: Environment,
 ): Promise<{ normalized: number; created: number }> => {
   const colIdx = col(headers, 'Tags');
+  const approvedTagEntries = new Map<string, Entry>();
+
+  if (TAGS_TO_CREATE.length > 0) {
+    const existingApprovedTags = await env.getEntries({
+      content_type: 'researchTags',
+      'fields.name[in]': TAGS_TO_CREATE.join(','),
+      limit: TAGS_TO_CREATE.length,
+    });
+
+    for (const entry of existingApprovedTags.items) {
+      const name = entry.fields?.name?.['en-US'] as string | undefined;
+      if (name) {
+        approvedTagEntries.set(name, entry);
+      }
+    }
+  }
 
   await loadTagCache(env);
   if (!tagIdCache) {
@@ -1212,13 +1228,24 @@ export const prepareTags = async (
 
   let created = 0;
   for (const tagName of TAGS_TO_CREATE) {
-    if (!tagIdCache.has(tagName)) {
-      console.log(`  Creating new tag (draft): "${tagName}"`);
-      await env.createEntry('researchTags', {
+    const existingTag = approvedTagEntries.get(tagName);
+
+    if (!existingTag) {
+      console.log(`  Creating and publishing new tag: "${tagName}"`);
+      const entry = await env.createEntry('researchTags', {
         fields: { name: loc(tagName) },
       });
-      // Stay draft, will be loaded into cache on next loadTagCache call
+
+      const publishedEntry = await entry.publish();
+      approvedTagEntries.set(tagName, publishedEntry);
       created += 1;
+    } else if (existingTag.isDraft()) {
+      const publishedEntry = await existingTag.publish();
+
+      approvedTagEntries.set(tagName, publishedEntry);
+      console.log(
+        `  Published existing draft tag: "${tagName}" (${publishedEntry.sys.id})`,
+      );
     }
   }
 

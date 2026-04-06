@@ -1,9 +1,10 @@
+import { type Asset, type Entry, type Environment } from '@asap-hub/contentful';
 import {
-  type Asset,
-  type Entry,
-  type Environment,
-} from 'contentful-management';
-import { getContentfulEnvironment, getErrorMessage } from './import-utils';
+  getContentfulEnvironment,
+  getErrorMessage,
+  isArchivedResource,
+  NON_ARCHIVED_ENTRY_QUERY,
+} from './import-utils';
 
 /**
  * Publishes all draft entities related to one or more teams.
@@ -53,13 +54,19 @@ const createQueue = (): PublishQueue => ({
   researchOutputs: new Set(),
 });
 
-type PublishOutcome = 'published' | 'already_published' | 'failed';
+type PublishOutcome =
+  | 'published'
+  | 'already_published'
+  | 'skipped_archived'
+  | 'failed';
 type PublishState = 'draft' | 'changed' | 'published';
 
 type VersionedSys = {
   id: string;
   version?: number;
   publishedVersion?: number;
+  archivedAt?: string;
+  archivedVersion?: number;
 };
 
 type PublishableResource = {
@@ -84,6 +91,20 @@ type LinkedEntryQuery = {
   limit: number;
   skip?: number;
 };
+
+type LinkLike = {
+  sys?: {
+    id?: string;
+  };
+};
+
+const RESEARCH_OUTPUT_RESEARCH_TAG_FIELDS = [
+  'methods',
+  'organisms',
+  'environments',
+  'keywords',
+  'subtype',
+] as const;
 
 const getPublishState = ({
   version,
@@ -139,6 +160,15 @@ const getLocalizedString = (
   const value = getLocalizedFieldValue(resource, fieldName);
 
   return typeof value === 'string' && value ? value : undefined;
+};
+
+const getLinkedEntryIds = (value: unknown): string[] => {
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => getLinkedEntryIds(item));
+  }
+
+  const id = (value as LinkLike | undefined)?.sys?.id;
+  return typeof id === 'string' ? [id] : [];
 };
 
 const describeEntry = (entry: Entry, label: string): string => {
@@ -240,6 +270,12 @@ const resolveTeamById = async (
       );
     }
 
+    if (isArchivedResource(entry.sys)) {
+      throw new Error(
+        `Reference "${reference}" resolved to archived team entry "${reference}". Archived teams cannot be published.`,
+      );
+    }
+
     return buildResolvedTeam(entry, reference);
   } catch (error: unknown) {
     if (isNotFoundError(error)) {
@@ -255,6 +291,7 @@ const resolveTeamByName = async (
   reference: string,
 ): Promise<ResolvedTeamReference> => {
   const matches = await env.getEntries({
+    ...NON_ARCHIVED_ENTRY_QUERY,
     content_type: 'teams',
     'fields.displayName': reference,
     limit: 10,
@@ -333,6 +370,7 @@ const getAllLinkedEntries = async (
 
   while (total === 0 || entries.length < total) {
     const response = await env.getEntries({
+      ...NON_ARCHIVED_ENTRY_QUERY,
       ...query,
       skip,
     });
@@ -372,6 +410,12 @@ const publishResource = async <T extends PublishableResource>({
     const resource = await fetchResource(id);
     const description = describeResource(resource);
     const details = `${description} (${id}) ${buildUrl(id)}`;
+
+    if (isArchivedResource(resource.sys)) {
+      console.log(`  Skipped archived ${label}: ${details}`);
+      return 'skipped_archived';
+    }
+
     const publishState = getPublishState(resource.sys);
 
     if (publishState === 'published') {
@@ -431,17 +475,17 @@ const collectRelatedEntities = async (
       queue.users.add(user.sys.id);
 
       // Collect avatar asset
-      const avatarLink = user.fields?.avatar?.['en-US'];
-      if (avatarLink?.sys?.id) {
-        queue.assets.add(avatarLink.sys.id);
+      for (const avatarId of getLinkedEntryIds(
+        getLocalizedFieldValue(user, 'avatar'),
+      )) {
+        queue.assets.add(avatarId);
       }
 
       // Collect research tags
-      const tagLinks = user.fields?.researchTags?.['en-US'] || [];
-      for (const tagLink of tagLinks) {
-        if (tagLink?.sys?.id) {
-          queue.researchTags.add(tagLink.sys.id);
-        }
+      for (const tagId of getLinkedEntryIds(
+        getLocalizedFieldValue(user, 'researchTags'),
+      )) {
+        queue.researchTags.add(tagId);
       }
     }
   }
@@ -489,18 +533,18 @@ const collectRelatedEntities = async (
   for (const researchOutput of researchOutputs) {
     queue.researchOutputs.add(researchOutput.sys.id);
 
-    const tagLinks = researchOutput.fields?.tags?.['en-US'] || [];
-    for (const tagLink of tagLinks) {
-      if (tagLink?.sys?.id) {
-        queue.researchTags.add(tagLink.sys.id);
+    for (const fieldName of RESEARCH_OUTPUT_RESEARCH_TAG_FIELDS) {
+      for (const tagId of getLinkedEntryIds(
+        getLocalizedFieldValue(researchOutput, fieldName),
+      )) {
+        queue.researchTags.add(tagId);
       }
     }
 
-    const versionLinks = researchOutput.fields?.versions?.['en-US'] || [];
-    for (const versionLink of versionLinks) {
-      if (versionLink?.sys?.id) {
-        queue.researchOutputVersions.add(versionLink.sys.id);
-      }
+    for (const versionId of getLinkedEntryIds(
+      getLocalizedFieldValue(researchOutput, 'versions'),
+    )) {
+      queue.researchOutputVersions.add(versionId);
     }
   }
 
@@ -572,6 +616,7 @@ const app = async () => {
 
   let published = 0;
   let alreadyPublished = 0;
+  let skippedArchived = 0;
   let failed = 0;
 
   const track = (result: PublishOutcome) => {
@@ -579,6 +624,8 @@ const app = async () => {
       published += 1;
     } else if (result === 'already_published') {
       alreadyPublished += 1;
+    } else if (result === 'skipped_archived') {
+      skippedArchived += 1;
     } else {
       failed += 1;
     }
@@ -633,7 +680,7 @@ const app = async () => {
 
   console.log(`\n--- Summary ---`);
   console.log(
-    `Published: ${published}, Already published: ${alreadyPublished}, Failed: ${failed}`,
+    `Published: ${published}, Already published: ${alreadyPublished}, Skipped archived: ${skippedArchived}, Failed: ${failed}`,
   );
 
   if (failed > 0) {

@@ -6,8 +6,10 @@ import {
   findProjectByProjectId,
   getContentfulEnvironment,
   getErrorMessage,
+  isArchivedResource,
   isEmptyRow,
   loc,
+  NON_ARCHIVED_ENTRY_QUERY,
   readCsv,
   type LocalizedFields,
   validateRequiredColumns,
@@ -43,6 +45,7 @@ const ensureResearchThemes = async (
   const themeEntries = new Map<string, Entry>();
 
   const existing = await env.getEntries({
+    ...NON_ARCHIVED_ENTRY_QUERY,
     content_type: 'researchTheme',
     limit: 50,
   });
@@ -105,6 +108,9 @@ const linkTeamToProject = async (
   for (const memberLink of members) {
     try {
       const membership = await env.getEntry(memberLink.sys.id);
+      if (isArchivedResource(membership.sys)) {
+        continue;
+      }
       const linkedId = membership.fields?.projectMember?.['en-US']?.sys?.id;
       if (linkedId === teamId) {
         console.log(`  Project link already complete, skipping`);
@@ -178,6 +184,7 @@ const app = async () => {
         try {
           // Dedup: check if team already exists
           const existing = await env.getEntries({
+            ...NON_ARCHIVED_ENTRY_QUERY,
             content_type: 'teams',
             'fields.displayName': teamName,
             limit: 1,

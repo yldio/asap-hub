@@ -65,6 +65,11 @@ export type LocalizedField<T> = {
 
 export type LocalizedFields = Record<string, LocalizedField<unknown>>;
 
+type ArchivableSys = {
+  archivedAt?: string;
+  archivedVersion?: number;
+};
+
 /**
  * Controls how `buildUserFields()` applies user data for a specific import flow.
  *
@@ -153,6 +158,16 @@ const LOCATION_MODEL = 'gpt-4o-2024-08-06'; // cheap but smart enough for the ta
 const MODEL_INPUT_COST_PER_MILLION = 2.5;
 const MODEL_CACHED_INPUT_COST_PER_MILLION = 1.25;
 const MODEL_OUTPUT_COST_PER_MILLION = 10;
+
+export const NON_ARCHIVED_ENTRY_QUERY = {
+  'sys.archivedAt[exists]': false,
+} as const;
+
+export const isArchivedResource = ({
+  archivedAt,
+  archivedVersion,
+}: ArchivableSys): boolean =>
+  typeof archivedVersion === 'number' || typeof archivedAt === 'string';
 
 type OpenAiChatCompletionUsage = {
   prompt_tokens?: number;
@@ -784,6 +799,7 @@ export const findTeamByName = async (
   }
 
   const entries = await env.getEntries({
+    ...NON_ARCHIVED_ENTRY_QUERY,
     content_type: 'teams',
     'fields.displayName': displayName,
     limit: 1,
@@ -803,6 +819,7 @@ export const findProjectByProjectId = async (
   projectId: string,
 ): Promise<ContentfulEntryLookup | null> => {
   const entries = await env.getEntries({
+    ...NON_ARCHIVED_ENTRY_QUERY,
     content_type: 'projects',
     'fields.projectId': projectId,
     limit: 1,
@@ -820,6 +837,7 @@ export const findUserByOrcid = async (
   orcid: string,
 ): Promise<ContentfulEntryLookup | null> => {
   const entries = await env.getEntries({
+    ...NON_ARCHIVED_ENTRY_QUERY,
     content_type: 'users',
     'fields.orcid': orcid,
     limit: 1,
@@ -837,6 +855,7 @@ export const findUserByEmail = async (
   email: string,
 ): Promise<ContentfulEntryLookup | null> => {
   const entries = await env.getEntries({
+    ...NON_ARCHIVED_ENTRY_QUERY,
     content_type: 'users',
     'fields.email': email,
     limit: 1,
@@ -906,6 +925,9 @@ export const userHasTeamMembership = async (
   for (const link of teamsField) {
     try {
       const membership = await env.getEntry(link.sys.id);
+      if (isArchivedResource(membership.sys)) {
+        continue;
+      }
       const membershipTeamId = membership.fields?.team?.['en-US']?.sys?.id;
       if (membershipTeamId === targetTeamId) {
         return true;
@@ -966,6 +988,7 @@ export const loadTagCache = async (env: Environment): Promise<void> => {
 
   while (skip < total) {
     const response = await env.getEntries({
+      ...NON_ARCHIVED_ENTRY_QUERY,
       content_type: 'researchTags',
       limit,
       skip,
@@ -1294,6 +1317,7 @@ export const prepareTags = async (
 
   if (TAGS_TO_CREATE.length > 0) {
     const existingApprovedTags = await env.getEntries({
+      ...NON_ARCHIVED_ENTRY_QUERY,
       content_type: 'researchTags',
       'fields.name[in]': TAGS_TO_CREATE.join(','),
       limit: TAGS_TO_CREATE.length,

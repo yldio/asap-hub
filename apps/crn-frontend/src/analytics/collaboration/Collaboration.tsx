@@ -280,6 +280,10 @@ const Collaboration = () => {
       }));
     }
 
+    // Defensive fallback: `metric` is typed as a closed union of the three
+    // branches above, so this is unreachable in practice. Kept to satisfy
+    // the function's return contract if a future metric is added.
+    /* istanbul ignore next */
     return [];
   };
 

@@ -167,4 +167,21 @@ describe('PreprintComplianceTable', () => {
     );
     expect(screen.getByText('N/A')).toBeInTheDocument();
   });
+
+  it('renders N/A for null numberOfPreprints', () => {
+    render(
+      <PreprintComplianceTable
+        {...defaultProps}
+        data={[
+          {
+            ...preprintComplianceData,
+            numberOfPreprints: null,
+            postedPriorPercentage: null,
+          },
+        ]}
+      />,
+    );
+    // Two N/A cells: one for the preprint count, one for the posted-prior %.
+    expect(screen.getAllByText('N/A')).toHaveLength(2);
+  });
 });

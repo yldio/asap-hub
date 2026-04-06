@@ -1202,7 +1202,11 @@ export const prepareTags = async (
   rows: string[][],
   headers: string[],
   env: Environment,
-): Promise<{ normalized: number; created: number }> => {
+): Promise<{
+  normalized: number;
+  created: number;
+  publishedDrafts: number;
+}> => {
   const colIdx = col(headers, 'Tags');
   const approvedTagEntries = new Map<string, Entry>();
 
@@ -1227,6 +1231,7 @@ export const prepareTags = async (
   }
 
   let created = 0;
+  let publishedDrafts = 0;
   for (const tagName of TAGS_TO_CREATE) {
     const existingTag = approvedTagEntries.get(tagName);
 
@@ -1243,6 +1248,7 @@ export const prepareTags = async (
       const publishedEntry = await existingTag.publish();
 
       approvedTagEntries.set(tagName, publishedEntry);
+      publishedDrafts += 1;
       console.log(
         `  Published existing draft tag: "${tagName}" (${publishedEntry.sys.id})`,
       );
@@ -1272,7 +1278,7 @@ export const prepareTags = async (
     }
   }
 
-  return { normalized, created };
+  return { normalized, created, publishedDrafts };
 };
 
 /** Builds the Contentful user fields payload shared by both user import scripts. */
@@ -1414,7 +1420,7 @@ export const runPrepareSteps = async (
     console.log('\n--- Preparing tags ---');
     const result = await prepareTags(rows, headers, env);
     console.log(
-      `Tags: ${result.normalized} normalized, ${result.created} new tags created (draft)`,
+      `Tags: ${result.normalized} normalized, ${result.created} new tags created and published, ${result.publishedDrafts} existing draft tags published`,
     );
   }
 

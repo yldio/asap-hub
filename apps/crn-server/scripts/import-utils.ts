@@ -6,6 +6,7 @@ import {
   type Environment,
   type Link,
 } from '@asap-hub/contentful';
+import { isUserDegree, type UserDegree } from '@asap-hub/model';
 import csvParse from 'csv-parse';
 import fs from 'fs';
 import path from 'path';
@@ -17,7 +18,7 @@ export type ParsedUserData = {
   lastName: string;
   email: string;
   orcid: string;
-  degree: string | undefined;
+  degree: UserDegree | undefined;
   rawLocation: string;
   city: string;
   stateOrProvince: string;
@@ -94,19 +95,6 @@ export const UPDATE_USER_FIELDS_OPTIONS: BuildUserFieldsOptions = {
   includeEmail: false,
   requireRole: false,
 };
-
-/** Accepted degree values for the CRN user content model. */
-export const VALID_DEGREES = [
-  'BA',
-  'BSc',
-  'MSc',
-  'PhD',
-  'MD',
-  'MD, PhD',
-  'MPH',
-  'MA',
-  'MBA',
-];
 
 /** Maps CSV team role labels to the team membership roles used in Contentful. */
 export const TEAM_ROLE_MAPPING: Record<string, string> = {
@@ -638,17 +626,17 @@ export const cleanOrcid = (raw: string): string => {
 };
 
 /** Keeps only supported degree values and collapses `MD` plus `PhD` into one value. */
-export const filterDegree = (raw: string): string | undefined => {
+export const filterDegree = (raw: string): UserDegree | undefined => {
   if (!raw) {
     return undefined;
   }
-  if (VALID_DEGREES.includes(raw)) {
+  if (isUserDegree(raw)) {
     return raw;
   }
 
   const parts = raw.split(',').map((p) => p.trim());
-  const validParts = parts.filter((p) => VALID_DEGREES.includes(p));
-  const droppedParts = parts.filter((p) => !VALID_DEGREES.includes(p));
+  const validParts = parts.filter(isUserDegree);
+  const droppedParts = parts.filter((p) => !isUserDegree(p));
 
   if (droppedParts.length > 0) {
     console.warn(
@@ -660,7 +648,7 @@ export const filterDegree = (raw: string): string | undefined => {
     return undefined;
   }
 
-  // This just handles a special combined value, much like what we do in packages/model/src/user.ts
+  // This preserves both supported degrees when the combined CMS value exists.
   if (validParts.includes('MD') && validParts.includes('PhD')) {
     return 'MD, PhD';
   }
@@ -1242,7 +1230,7 @@ export const prepareLocations = async (
     const parsed = JSON.parse(content) as
       | ParsedLocationsPayload
       | ParsedLocation[];
-    const results = Array.isArray(parsed) ? parsed : (parsed.locations ?? []);
+    const results = Array.isArray(parsed) ? parsed : parsed.locations ?? [];
 
     if (!Array.isArray(results)) {
       throw new Error(

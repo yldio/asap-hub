@@ -99,6 +99,12 @@ type LinkLike = {
   };
 };
 
+type ResearchOutputDependencyQueue = {
+  researchOutputs: Set<string>;
+  researchTags: Set<string>;
+  researchOutputVersions: Set<string>;
+};
+
 const getRequiredEnvValue = (name: string): string => {
   const value = process.env[name];
 
@@ -116,6 +122,9 @@ const RESEARCH_OUTPUT_RESEARCH_TAG_FIELDS = [
   'keywords',
   'subtype',
 ] as const;
+
+const getEntryContentTypeId = (entry: Entry): string | undefined =>
+  entry.sys.contentType?.sys?.id;
 
 // exported for testing
 export const getPublishState = ({
@@ -177,6 +186,126 @@ export const getLinkedEntryIds = (value: unknown): string[] => {
 
   const id = (value as LinkLike | undefined)?.sys?.id;
   return typeof id === 'string' ? [id] : [];
+};
+
+// exported for testing
+export const getProjectProposalIds = (
+  project: Entry,
+): { proposalIds: string[]; supplementGrantIds: string[] } => ({
+  proposalIds: getLinkedEntryIds(getLocalizedFieldValue(project, 'proposal')),
+  supplementGrantIds: getLinkedEntryIds(
+    getLocalizedFieldValue(project, 'supplementGrant'),
+  ),
+});
+
+// exported for testing
+export const getSupplementGrantProposalIds = (
+  supplementGrant: Entry,
+): string[] =>
+  getLinkedEntryIds(getLocalizedFieldValue(supplementGrant, 'proposal'));
+
+// exported for testing
+export const collectResearchOutputDependencies = (
+  queue: ResearchOutputDependencyQueue,
+  researchOutput: Entry,
+): void => {
+  queue.researchOutputs.add(researchOutput.sys.id);
+
+  for (const fieldName of RESEARCH_OUTPUT_RESEARCH_TAG_FIELDS) {
+    for (const tagId of getLinkedEntryIds(
+      getLocalizedFieldValue(researchOutput, fieldName),
+    )) {
+      queue.researchTags.add(tagId);
+    }
+  }
+
+  for (const versionId of getLinkedEntryIds(
+    getLocalizedFieldValue(researchOutput, 'versions'),
+  )) {
+    queue.researchOutputVersions.add(versionId);
+  }
+};
+
+// exported for testing purposes
+export const collectProjectProposalResearchOutputs = async (
+  env: Pick<Environment, 'getEntry'>,
+  queue: ResearchOutputDependencyQueue,
+  project: Entry,
+  appBaseUrl: string,
+): Promise<number> => {
+  let proposalResearchOutputs = 0;
+
+  // TODO: Does it make sense to have more than one researchOutput linked
+  // to the `proposal` or `supplementGrant`? We could fetch just one instead
+  const { proposalIds, supplementGrantIds } = getProjectProposalIds(project);
+
+  for (const proposalId of proposalIds) {
+    const proposal = await env.getEntry(proposalId);
+
+    if (isArchivedResource(proposal.sys)) {
+      console.log(
+        `  Skipped archived project proposal: ${proposalId} ${buildEntryUrl(
+          appBaseUrl,
+          proposalId,
+        )}`,
+      );
+      continue;
+    }
+
+    if (getEntryContentTypeId(proposal) !== 'researchOutputs') {
+      throw new Error(
+        `Project proposal "${proposalId}" must resolve to a researchOutputs entry.`,
+      );
+    }
+
+    collectResearchOutputDependencies(queue, proposal);
+    proposalResearchOutputs += 1;
+  }
+
+  for (const supplementGrantId of supplementGrantIds) {
+    const supplementGrant = await env.getEntry(supplementGrantId);
+
+    if (isArchivedResource(supplementGrant.sys)) {
+      console.log(
+        `  Skipped archived supplement grant: ${supplementGrantId} ${buildEntryUrl(
+          appBaseUrl,
+          supplementGrantId,
+        )}`,
+      );
+      continue;
+    }
+
+    if (getEntryContentTypeId(supplementGrant) !== 'supplementGrant') {
+      throw new Error(
+        `Project supplement grant "${supplementGrantId}" must resolve to a supplementGrant entry.`,
+      );
+    }
+
+    for (const proposalId of getSupplementGrantProposalIds(supplementGrant)) {
+      const proposal = await env.getEntry(proposalId);
+
+      if (isArchivedResource(proposal.sys)) {
+        console.log(
+          `  Skipped archived supplement grant proposal: ${proposalId} ${buildEntryUrl(
+            appBaseUrl,
+            proposalId,
+          )}`,
+        );
+        continue;
+      }
+
+      if (getEntryContentTypeId(proposal) !== 'researchOutputs') {
+        throw new Error(
+          `Supplement grant proposal "${proposalId}" must resolve to a researchOutputs entry.`,
+        );
+      }
+
+      collectResearchOutputDependencies(queue, proposal);
+      proposalResearchOutputs += 1;
+    }
+  }
+
+  return proposalResearchOutputs;
 };
 
 // exported for testing
@@ -257,7 +386,7 @@ export const isNotFoundError = (error: unknown): boolean => {
 
 // exported for testing
 export const isTeamEntry = (entry: Entry): boolean =>
-  entry.sys.contentType?.sys?.id === 'teams';
+  getEntryContentTypeId(entry) === 'teams';
 
 // exported for testing
 export const buildResolvedTeam = (
@@ -456,6 +585,7 @@ const collectRelatedEntities = async (
   env: Environment,
   team: ResolvedTeamReference,
   queue: PublishQueue,
+  appBaseUrl: string,
 ): Promise<void> => {
   console.log(
     `\nCollecting entities for team ${team.name} (${team.id}) ${team.url}...`,
@@ -509,6 +639,10 @@ const collectRelatedEntities = async (
   }
 
   // Find projectMemberships that link to this team
+  // It's supposed to be one and only one project associated to a
+  // team, but for correctness sake I'm adding a retrieval for
+  // all memberships
+  // TODO: Is it worth replacing this with just a fetch to the related entity?
   const projectMemberships = await getAllLinkedEntries(
     env,
     {
@@ -518,6 +652,8 @@ const collectRelatedEntities = async (
     },
     `project memberships for ${team.name}`,
   );
+
+  let proposalResearchOutputs = 0;
 
   for (const pm of projectMemberships) {
     queue.projectMemberships.add(pm.sys.id);
@@ -535,6 +671,13 @@ const collectRelatedEntities = async (
 
     for (const project of projects) {
       queue.projects.add(project.sys.id);
+
+      proposalResearchOutputs += await collectProjectProposalResearchOutputs(
+        env,
+        queue,
+        project,
+        appBaseUrl,
+      );
     }
   }
 
@@ -549,28 +692,15 @@ const collectRelatedEntities = async (
   );
 
   for (const researchOutput of researchOutputs) {
-    queue.researchOutputs.add(researchOutput.sys.id);
-
-    for (const fieldName of RESEARCH_OUTPUT_RESEARCH_TAG_FIELDS) {
-      for (const tagId of getLinkedEntryIds(
-        getLocalizedFieldValue(researchOutput, fieldName),
-      )) {
-        queue.researchTags.add(tagId);
-      }
-    }
-
-    for (const versionId of getLinkedEntryIds(
-      getLocalizedFieldValue(researchOutput, 'versions'),
-    )) {
-      queue.researchOutputVersions.add(versionId);
-    }
+    collectResearchOutputDependencies(queue, researchOutput);
   }
 
   console.log(
     `  Found: ${memberships.length} memberships, ` +
       `${queue.users.size} users (cumulative), ` +
       `${projectMemberships.length} project memberships, ` +
-      `${researchOutputs.length} research outputs`,
+      `${researchOutputs.length} team-linked research outputs, ` +
+      `${proposalResearchOutputs} proposal research outputs`,
   );
 };
 
@@ -625,7 +755,7 @@ const app = async () => {
 
   // Collect all related entities across all teams
   for (const team of resolvedTeams) {
-    await collectRelatedEntities(env, team, queue);
+    await collectRelatedEntities(env, team, queue, appBaseUrl);
   }
 
   console.log(`\n--- Publish Queue ---`);

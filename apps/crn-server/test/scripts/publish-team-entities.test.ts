@@ -3,6 +3,8 @@ import {
   buildAssetUrl,
   buildEntryUrl,
   buildResolvedTeam,
+  collectProjectProposalResearchOutputs,
+  collectResearchOutputDependencies,
   createQueue,
   describeAsset,
   describeEntry,
@@ -10,7 +12,9 @@ import {
   getLinkedEntryIds,
   getLocalizedFieldValue,
   getLocalizedString,
+  getProjectProposalIds,
   getPublishState,
+  getSupplementGrantProposalIds,
   isNotFoundError,
   isTeamEntry,
 } from '../../scripts/publish-team-entities';
@@ -211,6 +215,246 @@ describe('publish-team-entities helpers', () => {
     test('returns an empty array for junk values', () => {
       expect(getLinkedEntryIds(undefined)).toEqual([]);
       expect(getLinkedEntryIds({ foo: 'bar' })).toEqual([]);
+    });
+  });
+
+  describe('project proposal helpers', () => {
+    test('extracts project proposal and supplement grant IDs', () => {
+      const project = createEntry({
+        contentTypeId: 'projects',
+        fields: {
+          proposal: { sys: { id: 'proposal-1' } },
+          supplementGrant: { sys: { id: 'supplement-1' } },
+        },
+      });
+
+      expect(getProjectProposalIds(project)).toEqual({
+        proposalIds: ['proposal-1'],
+        supplementGrantIds: ['supplement-1'],
+      });
+    });
+
+    test('returns empty arrays when a project has no linked proposal fields', () => {
+      expect(
+        getProjectProposalIds(createEntry({ contentTypeId: 'projects' })),
+      ).toEqual({
+        proposalIds: [],
+        supplementGrantIds: [],
+      });
+    });
+
+    test('extracts proposal IDs from supplement grants', () => {
+      const supplementGrant = createEntry({
+        contentTypeId: 'supplementGrant',
+        fields: {
+          proposal: { sys: { id: 'proposal-2' } },
+        },
+      });
+
+      expect(getSupplementGrantProposalIds(supplementGrant)).toEqual([
+        'proposal-2',
+      ]);
+    });
+
+    test('returns an empty array when a supplement grant has no proposal', () => {
+      expect(
+        getSupplementGrantProposalIds(
+          createEntry({ contentTypeId: 'supplementGrant' }),
+        ),
+      ).toEqual([]);
+    });
+  });
+
+  describe('collectResearchOutputDependencies', () => {
+    test('adds the research output, linked tags, and versions to the queue', () => {
+      const queue = createQueue();
+      const researchOutput = createEntry({
+        id: 'research-output-1',
+        contentTypeId: 'researchOutputs',
+        fields: {
+          methods: [{ sys: { id: 'tag-1' } }],
+          organisms: [{ sys: { id: 'tag-2' } }],
+          environments: [{ sys: { id: 'tag-3' } }],
+          keywords: [{ sys: { id: 'tag-4' } }],
+          subtype: { sys: { id: 'tag-5' } },
+          versions: [
+            { sys: { id: 'version-1' } },
+            { sys: { id: 'version-2' } },
+          ],
+        },
+      });
+
+      collectResearchOutputDependencies(queue, researchOutput);
+
+      expect(Array.from(queue.researchOutputs)).toEqual(['research-output-1']);
+      expect(Array.from(queue.researchTags)).toEqual([
+        'tag-1',
+        'tag-2',
+        'tag-3',
+        'tag-4',
+        'tag-5',
+      ]);
+      expect(Array.from(queue.researchOutputVersions)).toEqual([
+        'version-1',
+        'version-2',
+      ]);
+    });
+
+    test('handles missing dependency fields without crashing or duplicating', () => {
+      const queue = createQueue();
+      queue.researchTags.add('tag-1');
+      queue.researchOutputVersions.add('version-1');
+
+      const researchOutput = createEntry({
+        id: 'research-output-1',
+        contentTypeId: 'researchOutputs',
+        fields: {
+          methods: [{ sys: { id: 'tag-1' } }],
+          versions: [{ sys: { id: 'version-1' } }],
+        },
+      });
+
+      expect(() =>
+        collectResearchOutputDependencies(queue, researchOutput),
+      ).not.toThrow();
+      expect(Array.from(queue.researchTags)).toEqual(['tag-1']);
+      expect(Array.from(queue.researchOutputVersions)).toEqual(['version-1']);
+    });
+  });
+
+  describe('collectProjectProposalResearchOutputs', () => {
+    test('collects project and supplement grant proposal research outputs', async () => {
+      const queue = createQueue();
+      const project = createEntry({
+        id: 'project-1',
+        contentTypeId: 'projects',
+        fields: {
+          proposal: { sys: { id: 'proposal-1' } },
+          supplementGrant: { sys: { id: 'supplement-1' } },
+        },
+      });
+      const entries = new Map<string, Entry>([
+        [
+          'proposal-1',
+          createEntry({
+            id: 'proposal-1',
+            contentTypeId: 'researchOutputs',
+            fields: {
+              methods: [{ sys: { id: 'tag-1' } }],
+              versions: [{ sys: { id: 'version-1' } }],
+            },
+          }),
+        ],
+        [
+          'supplement-1',
+          createEntry({
+            id: 'supplement-1',
+            contentTypeId: 'supplementGrant',
+            fields: {
+              proposal: { sys: { id: 'proposal-2' } },
+            },
+          }),
+        ],
+        [
+          'proposal-2',
+          createEntry({
+            id: 'proposal-2',
+            contentTypeId: 'researchOutputs',
+            fields: {
+              keywords: [{ sys: { id: 'tag-2' } }],
+              versions: [{ sys: { id: 'version-2' } }],
+            },
+          }),
+        ],
+      ]);
+      const env = {
+        getEntry: jest.fn(async (id: string) => {
+          const entry = entries.get(id);
+          if (!entry) {
+            throw new Error(`Missing entry ${id}`);
+          }
+
+          return entry;
+        }),
+      };
+
+      await expect(
+        collectProjectProposalResearchOutputs(
+          env,
+          queue,
+          project,
+          'https://app.contentful.com/spaces/space/environments/env',
+        ),
+      ).resolves.toBe(2);
+
+      expect(Array.from(queue.researchOutputs)).toEqual([
+        'proposal-1',
+        'proposal-2',
+      ]);
+      expect(Array.from(queue.researchTags)).toEqual(['tag-1', 'tag-2']);
+      expect(Array.from(queue.researchOutputVersions)).toEqual([
+        'version-1',
+        'version-2',
+      ]);
+    });
+
+    test('skips archived project proposal research outputs', async () => {
+      jest.spyOn(console, 'log').mockImplementation(() => undefined);
+
+      const queue = createQueue();
+      const project = createEntry({
+        id: 'project-1',
+        contentTypeId: 'projects',
+        fields: {
+          proposal: { sys: { id: 'proposal-1' } },
+        },
+      });
+      const archivedProposal = createEntry({
+        id: 'proposal-1',
+        contentTypeId: 'researchOutputs',
+      });
+      archivedProposal.sys.archivedVersion = 1;
+
+      const env = {
+        getEntry: jest.fn(async () => archivedProposal),
+      };
+
+      await expect(
+        collectProjectProposalResearchOutputs(
+          env,
+          queue,
+          project,
+          'https://app.contentful.com/spaces/space/environments/env',
+        ),
+      ).resolves.toBe(0);
+
+      expect(queue.researchOutputs.size).toBe(0);
+    });
+
+    test('throws when a project proposal does not resolve to a research output', async () => {
+      const project = createEntry({
+        id: 'project-1',
+        contentTypeId: 'projects',
+        fields: {
+          proposal: { sys: { id: 'proposal-1' } },
+        },
+      });
+      const env = {
+        getEntry: jest.fn(async () =>
+          createEntry({ id: 'proposal-1', contentTypeId: 'projects' }),
+        ),
+      };
+
+      await expect(
+        collectProjectProposalResearchOutputs(
+          env,
+          createQueue(),
+          project,
+          'https://app.contentful.com/spaces/space/environments/env',
+        ),
+      ).rejects.toThrow(
+        'Project proposal "proposal-1" must resolve to a researchOutputs entry.',
+      );
     });
   });
 

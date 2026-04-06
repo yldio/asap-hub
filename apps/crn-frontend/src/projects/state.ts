@@ -146,7 +146,7 @@ export const usePatchProjectById = (id: string) => {
   };
 };
 
-const projectMilestonesIndexState = atomFamily<
+export const projectMilestonesIndexState = atomFamily<
   | {
       ids: ReadonlyArray<string>;
       total: number;
@@ -158,7 +158,7 @@ const projectMilestonesIndexState = atomFamily<
   MilestonesListOptions
 >({ key: 'projectMilestonesListCache', default: undefined });
 
-const projectMilestonesListItemState = atomFamily<
+export const projectMilestonesListItemState = atomFamily<
   Milestone | undefined,
   string
 >({

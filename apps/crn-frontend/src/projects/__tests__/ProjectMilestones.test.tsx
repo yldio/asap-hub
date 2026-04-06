@@ -1,7 +1,11 @@
 import { projects } from '@asap-hub/routing';
 import { render, waitFor, screen, act } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { createListProjectMilestoneResponse } from '@asap-hub/fixtures';
+import {
+  createListProjectMilestoneResponse,
+  createProjectMilestoneResponse,
+} from '@asap-hub/fixtures';
+import { ListProjectMilestonesResponse } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
@@ -9,7 +13,16 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import ProjectMilestones from '../ProjectMilestones';
-import { getProjectMilestones, getMilestoneArticles } from '../api';
+import {
+  getProjectMilestones,
+  getMilestoneArticles,
+  MilestonesListOptions,
+} from '../api';
+import {
+  projectMilestonesIndexState,
+  projectMilestonesListItemState,
+  projectMilestonesState,
+} from '../state';
 
 jest.mock('../api');
 
@@ -41,9 +54,30 @@ const renderPage = async (grantType?: string) => {
     .milestones({}).$;
 
   const path = grantType ? `${basePath}?grantType=${grantType}` : basePath;
+  const options: MilestonesListOptions = {
+    searchQuery: '',
+    currentPage: 0,
+    filters: new Set(),
+    pageSize: 10,
+    grantType: 'supplement',
+    projectId,
+  };
 
   const result = render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ reset, set }) => {
+        set(projectMilestonesIndexState(options), {
+          ids: ['1'],
+          total: 1,
+        });
+        set(
+          projectMilestonesListItemState('1'),
+          createProjectMilestoneResponse({ key: '1' }),
+        );
+
+        reset(projectMilestonesState(options));
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -82,118 +116,8 @@ describe('ProjectMilestones', () => {
     expect(screen.getByRole('heading', { name: 'Milestones' })).toBeVisible();
   });
 
-  //   it('uses team_asc as the default sort when no sort query param is set', async () => {
-  //     await renderPage('sharing-prelim-findings', undefined);
-
-  //     await waitFor(() => {
-  //       expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
-  //     });
-
-  //     const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
-  //     expect(options.sort).toBe('team_asc');
-  //   });
-
-  //   it('uses the sort value from the URL query param when provided', async () => {
-  //     await renderPage(
-  //       'sharing-prelim-findings',
-  //       undefined,
-  //       'sort=percent_shared_desc',
-  //     );
-
-  //     await waitFor(() => {
-  //       expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
-  //     });
-
-  //     const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
-  //     expect(options.sort).toBe('percent_shared_desc');
-  //   });
-
-  //   it('falls back to team_asc when the URL sort value is invalid', async () => {
-  //     await renderPage(
-  //       'sharing-prelim-findings',
-  //       undefined,
-  //       'sort=invalid_sort_value',
-  //     );
-
-  //     await waitFor(() => {
-  //       expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
-  //     });
-
-  //     const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
-  //     expect(options.sort).toBe('team_asc');
-  //   });
-
-  //   it('resets pagination to the first page when changing sort', async () => {
-  //     await renderPage(
-  //       'sharing-prelim-findings',
-  //       undefined,
-  //       'currentPage=2&sort=team_asc',
-  //     );
-
-  //     // Wait for BOTH the initial load (page 2) AND the usePagination
-  //     // auto-correction (page 0) to settle before clearing
-  //     await waitFor(() => {
-  //       const { calls } = mockGetPreliminaryDataSharing.mock;
-  //       expect(calls.some(([, opts]) => opts.currentPage === 0)).toBe(true);
-  //     });
-
-  //     mockGetPreliminaryDataSharing.mockClear();
-
-  //     await screen.findByText('Percent Shared');
-
-  //     const button = await screen.findByRole('button', {
-  //       name: /sort by percent shared/i,
-  //     });
-  //     await userEvent.click(button);
-
-  //     await waitFor(() => {
-  //       expect(mockGetPreliminaryDataSharing).toHaveBeenCalledWith(
-  //         expect.anything(),
-  //         expect.objectContaining({
-  //           currentPage: 0,
-  //           sort: 'percent_shared_desc',
-  //         }),
-  //       );
-  //     });
-
-  //     const call = mockGetPreliminaryDataSharing.mock.calls.find(
-  //       ([, opts]) => opts.sort === 'percent_shared_desc',
-  //     )!;
-  //     const [, options] = call;
-  //     expect(options.sort).toBe('percent_shared_desc');
-  //     expect(options.currentPage).toBe(0);
-  //   });
-
-  //   it('updates the sort param in the URL when a sort button is clicked', async () => {
-  //     await renderPage('sharing-prelim-findings', undefined, 'sort=team_asc');
-
-  //     await waitFor(() => {
-  //       expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
-  //     });
-
-  //     mockGetPreliminaryDataSharing.mockClear();
-
-  //     const button = await screen.findByRole('button', {
-  //       name: /sort by percent shared/i,
-  //     });
-  //     await userEvent.click(button);
-
-  //     await waitFor(() => {
-  //       expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
-  //     });
-
-  //     const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
-  //     expect(options.sort).toBe('percent_shared_desc');
-  //   });
-
   it('fetches milestones depending on the grant type selected', async () => {
     await renderPage();
-
-    // await waitFor(() => {
-    //   expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
-    // });
-
-    // mockGetPreliminaryDataSharing.mockClear();
 
     const grantTypeDropdown = screen.getByRole('combobox');
     await userEvent.click(grantTypeDropdown);
@@ -225,60 +149,34 @@ describe('ProjectMilestones', () => {
         expect.anything(),
       );
     });
-
-    // const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
-    // expect(options.sort).toBe('percent_shared_asc');
   });
 
-  //   it('sets default time range to last 12 months', async () => {
-  //     await renderPage('sharing-prelim-findings', undefined);
+  it('fetches articles for a milestone when expanded', async () => {
+    const projectMilestone = createProjectMilestoneResponse({
+      articleCount: 1,
+      key: 1,
+      status: 'In Progress',
+    });
+    const milestones: ListProjectMilestonesResponse = {
+      total: 1,
+      items: [projectMilestone],
+    };
 
-  //     expect(
-  //       screen.getByRole('heading', { name: /Sharing Preliminary Findings/i }),
-  //     ).toBeVisible();
+    mockGetProjectMilestones.mockResolvedValue(milestones);
+    mockGetMilestoneArticles.mockResolvedValue([
+      { id: 'a1', title: 'Article 1', href: '/a1', type: 'Preprint' },
+    ]);
 
-  //     expect(
-  //       screen.queryByRole('button', {
-  //         name: /Since Hub Launch \(2020\)/i,
-  //       }),
-  //     ).not.toBeInTheDocument();
+    await renderPage();
 
-  //     expect(
-  //       screen.getByRole('button', { name: /Last 12 months/i }),
-  //     ).toBeVisible();
-  //   });
+    expect(await screen.findByText('Articles (1)')).toBeInTheDocument();
 
-  //   it('can navigate to sharing preliminary findings page', async () => {
-  //     await renderPage('user', 'within-team');
-  //     const input = screen.getAllByRole('combobox', { hidden: false });
+    await userEvent.click(
+      screen.getByRole('button', { name: /expand articles/i }),
+    );
 
-  //     await userEvent.click(input[0]!);
-  //     await userEvent.click(screen.getByText('Sharing Preliminary Findings'));
-
-  //     await waitFor(() =>
-  //       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-  //     );
-  //     expect(
-  //       screen.getByRole('heading', { name: /Sharing Preliminary Findings/i }),
-  //     ).toBeVisible();
-  //     expect(screen.queryByText('User Co-Production')).not.toBeInTheDocument();
-  //     expect(screen.queryByText('Type')).not.toBeInTheDocument();
-  //   });
-
-  //   it('exports sharing preliminary findings with the current sort applied', async () => {
-  //     await renderPage(
-  //       'sharing-prelim-findings',
-  //       undefined,
-  //       'sort=percent_shared_desc',
-  //     );
-  //     mockGetPreliminaryDataSharing.mockClear();
-  //     await userEvent.click(screen.getByText(/csv/i));
-  //     await waitFor(() => {
-  //       expect(mockGetPreliminaryDataSharing).toHaveBeenCalled();
-  //     });
-  //     const [, options] = mockGetPreliminaryDataSharing.mock.calls[0]!;
-  //     expect(options.sort).toBe('percent_shared_desc');
-  //   });
+    expect(screen.getByText('Article 1')).toBeInTheDocument();
+  });
 
   it('throws error when fetching project milestones fails', async () => {
     const error = new Error('API Error');

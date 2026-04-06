@@ -1142,11 +1142,12 @@ export const prepareLocations = async (
               'Infer the country when it can be determined with high confidence from the city and/or state, such as San Diego, California -> USA and Munich -> Germany. ' +
               'Always include the country when you can infer it with high confidence. ' +
               'Only include state/province when it is provided or strongly implied by the input. ' +
+              'Return exactly one object per numbered input, in the same order, with no omissions, no extras, and no reordering. ' +
               'Return a JSON object with key "locations" containing an array where each element ' +
               'has "city", "state", and "country" keys. Use full state names (e.g., "Illinois" not "IL") and use "USA" for the United States. ' +
               'Examples: "Munich, Germany" -> {"city":"Munich","state":"","country":"Germany"}; "San Diego, CA" -> {"city":"San Diego","state":"California","country":"USA"}; "Bonn" -> {"city":"Bonn","state":"","country":""}; "Germany" -> {"city":"","state":"","country":"Germany"}; if the state is known but the country is genuinely unknown, return an empty country string rather than moving the state into the country field. ' +
               'Use an empty string only when a component is genuinely unknown. ' +
-              'The array must have exactly the same number of elements as the input list.',
+              `The array must have exactly ${batch.length} elements because the input list has ${batch.length} items.`,
           },
           { role: 'user', content: numbered },
         ],
@@ -1177,11 +1178,21 @@ export const prepareLocations = async (
       | ParsedLocation[];
     const results = Array.isArray(parsed) ? parsed : parsed.locations ?? [];
 
-    if (!Array.isArray(results) || results.length !== batch.length) {
-      console.warn(
-        `  Warning: OpenAI returned ${
-          Array.isArray(results) ? results.length : 0
-        } results for batch of ${batch.length}`,
+    if (!Array.isArray(results)) {
+      throw new Error(
+        `OpenAI returned a non-array locations payload for batch ${
+          Math.floor(batchStart / batchSize) + 1
+        }`,
+      );
+    }
+
+    if (results.length !== batch.length) {
+      throw new Error(
+        `OpenAI returned ${results.length} locations for batch ${
+          Math.floor(batchStart / batchSize) + 1
+        } but ${batch.length} were requested. Batch inputs: ${batch.join(
+          ' | ',
+        )}`,
       );
     }
 

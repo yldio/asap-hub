@@ -921,11 +921,6 @@ export const cleanupAsset = async (
   try {
     const asset = await env.getAsset(assetId);
     if (!asset.isPublished()) {
-      try {
-        await asset.unpublish();
-      } catch {
-        // Ignore assets that were never published.
-      }
       await asset.delete();
       console.warn(`  Cleaned up asset: ${assetId}`);
     }

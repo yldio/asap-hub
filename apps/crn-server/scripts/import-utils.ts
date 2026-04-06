@@ -628,10 +628,13 @@ export const cleanOrcid = (raw: string): string => {
   if (!raw) {
     return '';
   }
+
   return raw
-    .replace(/^https?:\/\/orcid\.org\//, '')
-    .replace(/^orcid\.org\//, '')
-    .trim();
+    .trim()
+    .replace(/[?#].*$/, '')
+    .replace(/^https?:\/\/(?:www\.)?orcid\.org\//i, '')
+    .replace(/^(?:www\.)?orcid\.org\//i, '')
+    .replace(/\/+$/, '');
 };
 
 /** Keeps only supported degree values and collapses `MD` plus `PhD` into one value. */
@@ -657,6 +660,7 @@ export const filterDegree = (raw: string): string | undefined => {
     return undefined;
   }
 
+  // This just handles a special combined value, much like what we do in packages/model/src/user.ts
   if (validParts.includes('MD') && validParts.includes('PhD')) {
     return 'MD, PhD';
   }
@@ -1238,7 +1242,7 @@ export const prepareLocations = async (
     const parsed = JSON.parse(content) as
       | ParsedLocationsPayload
       | ParsedLocation[];
-    const results = Array.isArray(parsed) ? parsed : parsed.locations ?? [];
+    const results = Array.isArray(parsed) ? parsed : (parsed.locations ?? []);
 
     if (!Array.isArray(results)) {
       throw new Error(

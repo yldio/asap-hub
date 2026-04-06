@@ -248,6 +248,12 @@ const app = async () => {
   console.log(
     `Projects linked: ${projectsLinked}, Projects missing: ${projectsMissing}`,
   );
+
+  if (failed > 0 || projectsMissing > 0) {
+    throw new Error(
+      `Team import completed with ${failed} failed row(s) and ${projectsMissing} missing project link(s).`,
+    );
+  }
 };
 
 app().catch((err) => {

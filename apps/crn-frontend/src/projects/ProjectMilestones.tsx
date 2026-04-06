@@ -1,11 +1,11 @@
+import { SearchFrame } from '@asap-hub/frontend-utils';
 import { GrantType } from '@asap-hub/model';
 import {
-  LoadingContentBodyTable,
   ProjectDetailMilestones,
   ProjectMilestonesTable,
   ResearchOutputOption,
 } from '@asap-hub/react-components';
-import { Suspense, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useFetchMilestoneArticles } from './articles-state';
@@ -108,7 +108,7 @@ const ProjectMilestones: React.FC<{
       selectedGrantType={selectedGrantType}
       onGrantTypeChange={handleGrantTypeChange}
     >
-      <Suspense key={search} fallback={<LoadingContentBodyTable />}>
+      <SearchFrame title="Project Milestones">
         {/* <ProjectMilestonesTable
           milestones={milestones}
           pageControlsProps={{
@@ -127,7 +127,7 @@ const ProjectMilestones: React.FC<{
           isLead={isLead}
           loadArticleOptions={loadArticleOptions}
         />
-      </Suspense>
+      </SearchFrame>
     </ProjectDetailMilestones>
   );
 };

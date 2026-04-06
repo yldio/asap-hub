@@ -130,7 +130,6 @@ export type Milestone = {
    * Stored as string for OpenSearch sorting.
    */
   readonly aims?: string;
-  readonly relatedArticles?: ReadonlyArray<ArticleItem>;
 };
 
 // NOTE: this is going to be inferred from the collection

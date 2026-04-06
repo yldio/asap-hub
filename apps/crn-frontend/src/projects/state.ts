@@ -156,7 +156,7 @@ const projectMilestonesIndexState = atomFamily<
   | Error
   | undefined,
   MilestonesListOptions
->({ key: 'projectListCache', default: undefined });
+>({ key: 'projectMilestonesListCache', default: undefined });
 
 const projectMilestonesListItemState = atomFamily<
   Milestone | undefined,
@@ -170,7 +170,7 @@ export const projectMilestonesState = selectorFamily<
   ListProjectMilestonesResponse | Error | undefined,
   MilestonesListOptions
 >({
-  key: 'projects',
+  key: 'projectMilestones',
   get:
     (options) =>
     ({ get }) => {
@@ -203,7 +203,6 @@ export const projectMilestonesState = selectorFamily<
       } else if (projects instanceof Error) {
         set(projectMilestonesIndexState(options), projects);
       } else {
-        // Cache list items separately (incomplete data)
         projects.items.forEach((project) =>
           set(projectMilestonesListItemState(project.id), project),
         );

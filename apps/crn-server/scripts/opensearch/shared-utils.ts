@@ -72,6 +72,36 @@ export const readComplianceData = async (
   return rawData as Record<string, unknown>[];
 };
 
+/**
+ * Parse a numeric value coming from a Google Sheets compliance row.
+ *
+ * The compliance spreadsheets store percentages as strings like "98.82%" and
+ * use sentinel strings like "Limited Data" or "NA" to indicate missing values.
+ * Plain numbers can also come through directly when the cell is numeric.
+ *
+ * Returns the numeric value, or null if the value is missing/non-numeric.
+ */
+export const parseComplianceNumericValue = (value: unknown): number | null => {
+  if (value === null || value === undefined || value === '') {
+    return null;
+  }
+
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : null;
+  }
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim().replace(/%$/, '');
+    if (trimmed === '') {
+      return null;
+    }
+    const parsed = Number(trimmed);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
+};
+
 export const extractDOIs = (
   items: Array<{ doi?: string | null } | null> | undefined,
 ): string =>

@@ -1,4 +1,8 @@
-import { fetchAllTeams, readComplianceData } from './shared-utils';
+import {
+  fetchAllTeams,
+  parseComplianceNumericValue,
+  readComplianceData,
+} from './shared-utils';
 
 import {
   PREPRINT_COMPLIANCE_SHEET_NAME,
@@ -81,11 +85,12 @@ const mapSpreadsheetDataToMetrics = (
         ];
 
       if (fieldName && documents[timeRange]) {
-        if (
-          fieldName === 'postedPriorPercentage' &&
-          typeof value === 'string'
-        ) {
-          (documents[timeRange] as Record<string, unknown>)[fieldName] = null;
+        if (fieldName === 'postedPriorPercentage') {
+          // The spreadsheet stores this as e.g. "98.82%". Parse to a float so
+          // it actually lands in OpenSearch as a sortable number rather than
+          // being silently dropped to null.
+          (documents[timeRange] as Record<string, unknown>)[fieldName] =
+            parseComplianceNumericValue(value);
         } else {
           (documents[timeRange] as Record<string, unknown>)[fieldName] = value;
         }

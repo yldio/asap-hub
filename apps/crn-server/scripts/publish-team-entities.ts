@@ -635,6 +635,10 @@ const app = async () => {
   console.log(
     `Published: ${published}, Already published: ${alreadyPublished}, Failed: ${failed}`,
   );
+
+  if (failed > 0) {
+    throw new Error(`${failed} entities failed to publish.`);
+  }
 };
 
 app().catch((err) => {

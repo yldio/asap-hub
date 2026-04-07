@@ -686,6 +686,20 @@ describe('ProjectContentfulDataProvider', () => {
       expect(result.items).toHaveLength(0);
       expect(result.total).toBe(0);
     });
+
+    it('throws an error when opensearch provider is not configured properly', async () => {
+      const dataProviderWithoutOpenSearch = new ProjectContentfulDataProvider(
+        contentfulClientMock,
+        undefined,
+      );
+      await expect(
+        dataProviderWithoutOpenSearch.fetchProjectMilestones('project-1', {
+          grantType: 'original',
+        }),
+      ).rejects.toThrow(
+        'Opensearch Provider not configured for ProjectContentfulDataProvider',
+      );
+    });
   });
 });
 

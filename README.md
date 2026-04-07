@@ -4,6 +4,10 @@
 
 [![Pipeline development and production](https://github.com/yldio/asap-hub/actions/workflows/on-push-master.yml/badge.svg)](https://github.com/yldio/asap-hub/actions/workflows/on-push-master.yml)
 
+## Authentication
+
+This project uses [Auth0](https://auth0.com/) for authentication in both the CRN and GP2 apps. User accounts are managed through Contentful — each user in the app corresponds to a `User` content entry in Contentful, and Auth0 handles the actual login flow. See [Setting up your development environment](#setting-up-your-development-environment) for how to create a local user.
+
 ## Requirements
 
 ### Node.js

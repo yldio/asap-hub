@@ -7,10 +7,13 @@ import {
   MilestoneStatus,
 } from '@asap-hub/model';
 
-// TODO: Pill and getMilestoneStatusAccent will be used when Related Articles
-// dropdown is implemented (out of scope for this ticket)
-import { Button, Headline3, Paragraph } from '../atoms';
-import { LabeledDropdown, LabeledTextArea, Modal } from '../molecules';
+import { Button, Headline3, MultiSelectOptionsType, Paragraph } from '../atoms';
+import {
+  LabeledDropdown,
+  LabeledMultiSelect,
+  LabeledTextArea,
+  Modal,
+} from '../molecules';
 import { paddingStyles } from '../card';
 import { rem, mobileScreen } from '../pixels';
 import { crossIcon } from '../icons';
@@ -127,14 +130,6 @@ const submitButtonStyles = css({
   },
 });
 
-const charCountStyles = css({
-  textAlign: 'right',
-  fontSize: rem(13),
-  color: lead.rgb,
-  margin: 0,
-  marginTop: rem(-16),
-});
-
 const milestoneStatuses: MilestoneStatus[] = [
   'Pending',
   'In Progress',
@@ -142,11 +137,17 @@ const milestoneStatuses: MilestoneStatus[] = [
   'Terminated',
 ];
 
+type ArticleOption = MultiSelectOptionsType;
+
 type MilestoneFormProps = {
   readonly grantType: GrantType;
   readonly aims: ReadonlyArray<Aim>;
   readonly onSubmit: (data: MilestoneCreateRequest) => Promise<void>;
   readonly onCancel: () => void;
+  readonly getArticleSuggestions?: (
+    inputValue: string,
+    callback: (options: ReadonlyArray<ArticleOption>) => void,
+  ) => Promise<ReadonlyArray<ArticleOption>> | void;
 };
 
 const MilestoneForm: React.FC<MilestoneFormProps> = ({
@@ -154,9 +155,13 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
   aims,
   onSubmit,
   onCancel,
+  getArticleSuggestions,
 }) => {
   const [description, setDescription] = useState('');
   const [selectedAimIds, setSelectedAimIds] = useState<string[]>([]);
+  const [selectedArticles, setSelectedArticles] = useState<
+    readonly ArticleOption[]
+  >([]);
   const [status, setStatus] = useState<MilestoneStatus>('Pending');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -183,6 +188,9 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
         description: description.trim(),
         status,
         aimIds: selectedAimIds,
+        relatedArticleIds: selectedArticles.length
+          ? selectedArticles.map((a) => a.value)
+          : undefined,
       });
     } catch {
       setShowConfirmModal(false);
@@ -218,17 +226,14 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
           <p css={grantTypeValueStyles}>{grantLabel}</p>
         </div>
 
-        <div>
-          <LabeledTextArea
-            title="Milestone Description"
-            subtitle="(required)"
-            value={description}
-            onChange={setDescription}
-            maxLength={750}
-            enabled
-          />
-          <p css={charCountStyles}>{description.length}/750</p>
-        </div>
+        <LabeledTextArea
+          title="Milestone Description"
+          subtitle="(required)"
+          value={description}
+          onChange={setDescription}
+          maxLength={750}
+          enabled
+        />
 
         <div css={aimsSectionStyles}>
           <p css={aimsLabelStyles}>
@@ -257,6 +262,21 @@ const MilestoneForm: React.FC<MilestoneFormProps> = ({
             )}
           </div>
         </div>
+
+        {getArticleSuggestions && (
+          <LabeledMultiSelect<ArticleOption>
+            title="Related Articles"
+            subtitle="(optional)"
+            description="Add the articles that resulted from completing this milestone or contributed to its progress. Only published articles on the CRN Hub will be available below. These articles will also be displayed in the corresponding Aim."
+            placeholder="Start typing..."
+            loadOptions={getArticleSuggestions}
+            onChange={setSelectedArticles}
+            values={selectedArticles}
+            noOptionsMessage={({ inputValue }) =>
+              `Sorry, no articles match "${inputValue}"`
+            }
+          />
+        )}
 
         <LabeledDropdown<MilestoneStatus>
           title="Milestone status"

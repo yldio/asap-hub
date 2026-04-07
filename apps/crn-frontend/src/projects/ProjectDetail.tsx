@@ -147,6 +147,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       originalGrantAims={originalGrantAims}
                       supplementGrantAims={supplementGrantAims}
                       onCreateMilestone={createMilestone}
+                      getArticleSuggestions={getArticleSuggestions}
                       pageControlsProps={{
                         numberOfPages: 1,
                         currentPageIndex: 0,

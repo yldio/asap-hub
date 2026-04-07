@@ -10,6 +10,7 @@ import type { ResearchOutputOption } from '../utils';
 
 import { Button, Headline3, Link, Paragraph } from '../atoms';
 import { LabeledDropdown, PageControls } from '../molecules';
+import { plusIcon } from '../icons';
 import ProjectMilestones from '../organisms/ProjectMilestones';
 import MilestoneForm from '../organisms/MilestoneForm';
 import { rem, mobileScreen } from '../pixels';
@@ -84,6 +85,9 @@ type ProjectDetailMilestonesProps = {
   readonly onCreateMilestone?: (
     data: MilestoneCreateRequest,
   ) => Promise<unknown>;
+  readonly getArticleSuggestions?: ComponentProps<
+    typeof MilestoneForm
+  >['getArticleSuggestions'];
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
@@ -96,6 +100,7 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   originalGrantAims = [],
   supplementGrantAims = [],
   onCreateMilestone,
+  getArticleSuggestions,
 }) => {
   const hasMilestones = milestones.length > 0;
   const [selectedGrantType, setSelectedGrantType] = useState<GrantType>(
@@ -134,8 +139,8 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
 
           {isLead && onCreateMilestone && (
             <div css={addButtonContainerStyles}>
-              <Button primary onClick={() => setShowForm(true)}>
-                Add New Milestone
+              <Button onClick={() => setShowForm(true)}>
+                {plusIcon} Add New Milestone
               </Button>
             </div>
           )}
@@ -185,6 +190,7 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
         <MilestoneForm
           grantType={formGrantType}
           aims={formAims}
+          getArticleSuggestions={getArticleSuggestions}
           onSubmit={async (data) => {
             await onCreateMilestone(data);
             setShowForm(false);

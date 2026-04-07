@@ -40,18 +40,35 @@ This repository consists of packages and apps along with their tests inside the 
 
 ## Scripts
 
-This is a list of the scripts that you will commonly need to run locally in the repo root and their descriptions.
 For a full list of root scripts, look inside [`package.json`](package.json).
-For a list of individual package and particularly app scripts, look inside the readme file or `package.json` of the individual package or app.
+For a list of individual package and app scripts, look inside the readme file or `package.json` of the individual package or app.
 
-- `yarn build` - This will typecheck and build all packages and apps in the repository. You may want to run this e.g. after checking out a branch.
-- `yarn watch:babel` - This will watch all the packages (but not apps) for changes and whenever changes occur, build them, so that other packages and apps can use the changes.
-- `yarn watch:typecheck` - This will watch all the packages (but not apps) for changes and whenever changes occur, typecheck them and emit new type definitions, so that other packages and apps can see the new module type signature.
-- `yarn fix:format` - This will reformat all files in the repository to match our formatting standards using [Prettier](https://prettier.io/).
-- `yarn test` - This will lint and test all packages and apps in the repository. You may want to run this with `--watch` or other [Jest CLI options](https://jestjs.io/docs/en/cli.html).
-- `yarn test:integration` - Runs the integration tests for the API against Contentful.
-- `yarn test:*` - There are further test configurations being run on CI that are usually slower or more specific and thus not suitable to run during day-to-day development. You can execute those scripts manually. Some of them may require installing native modules via `yarn rebuild` first.
-- `yarn lint` - this will run the linting for the project. A `yarn build:typecheck` is a prerequisite.
+### Development
+
+| Script | Description |
+|--------|-------------|
+| `yarn watch` | Watch all packages and run babel + typecheck on changes (recommended during development) |
+| `yarn watch:babel` | Watch packages and rebuild with Babel on changes |
+| `yarn watch:typecheck` | Watch packages and re-emit type definitions on changes |
+| `yarn start:crn` | Run both the CRN backend and frontend |
+| `yarn start:gp2` | Run both the GP2 backend and frontend |
+| `yarn start:backend:crn` | Run only the CRN backend |
+| `yarn start:frontend:crn` | Run only the CRN frontend |
+| `yarn start:backend:gp2` | Run only the GP2 backend |
+| `yarn start:frontend:gp2` | Run only the GP2 frontend |
+| `yarn start:storybook` | Run Storybook |
+| `yarn start` | Run all apps |
+
+### Build & test
+
+| Script | Description |
+|--------|-------------|
+| `yarn build` | Typecheck and build all packages and apps |
+| `yarn test` | Lint and test all packages and apps (supports `--watch` and other [Jest CLI options](https://jestjs.io/docs/en/cli.html)) |
+| `yarn test:integration` | Run integration tests for the API against Contentful |
+| `yarn test:*` | Further CI-specific test configurations (slower; some require `yarn rebuild` first) |
+| `yarn lint` | Run linting (requires `yarn build:typecheck` first) |
+| `yarn fix:format` | Reformat all files using [Prettier](https://prettier.io/) |
 
 ## Setting up your development environment
 
@@ -86,18 +103,7 @@ To send a new invitation you can remove the values from the `Connections` field.
   | `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN` | Running Contentful migrations (optional) |
   | `GP2_CONTENTFUL_SPACE_ID` + `GP2_CONTENTFUL_ACCESS_TOKEN` | GP2 backend (optional) |
   | `OPENAI_API_KEY` | AI features (optional) |
-- You can run all apps in the project with a simple `yarn start` on the project's root. It will load up everything, but you don't need to run everything. Depending on what you're doing, you only need some apps up
-- `yarn watch:babel`: to have babel watching and compiling for you (you'll need this running most of the time)
-- `yarn watch:typecheck`: well... for types checking (you'll need this running most of the time)
-- `yarn watch`: to have babel and type checking watching and compiling for you
-- `yarn start:backend:crn`: to run the CRN backend
-- `yarn start:frontend:crn`: to run the CRN frontend
-- `yarn start:backend:gp2`: to run the GP2 backend
-- `yarn start:frontend:gp2`: to run the GP2 frontend
-- `yarn start:storybook`: to run storybook
-- `yarn start:crn` - to run both the CRN backend and frontend
-- `yarn start:gp2` - to run both the GP2 backend and frontend
-- `yarn start`: to run all of the above
+- You can run all apps with `yarn start`, but you typically only need a subset. See the [Scripts](#scripts) section for the full list of available start commands. During development you will almost always want `yarn watch` running alongside your app.
 
 ### Now that everything's up
 

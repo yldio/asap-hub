@@ -84,7 +84,10 @@ type MilestoneCollectionItem = {
   status?: string | null;
   relatedArticlesCollection?: { total: number } | null;
 };
-type AimsCollectionItem = Omit<AimsCollectionItemBase, 'milestonesCollection'> & {
+type AimsCollectionItem = Omit<
+  AimsCollectionItemBase,
+  'milestonesCollection'
+> & {
   milestonesCollection?: {
     items: Array<MilestoneCollectionItem | null>;
   } | null;

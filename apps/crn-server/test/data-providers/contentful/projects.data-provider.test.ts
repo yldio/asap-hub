@@ -1020,8 +1020,16 @@ describe('parseContentfulAims', () => {
         description: 'First aim',
         milestonesCollection: {
           items: [
-            { sys: { id: 'ms-1' }, status: 'Complete', relatedArticlesCollection: { total: 3 } },
-            { sys: { id: 'ms-2' }, status: 'Complete', relatedArticlesCollection: { total: 4 } },
+            {
+              sys: { id: 'ms-1' },
+              status: 'Complete',
+              relatedArticlesCollection: { total: 3 },
+            },
+            {
+              sys: { id: 'ms-2' },
+              status: 'Complete',
+              relatedArticlesCollection: { total: 4 },
+            },
           ],
         },
       },

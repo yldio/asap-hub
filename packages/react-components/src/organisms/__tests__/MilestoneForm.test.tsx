@@ -471,6 +471,80 @@ describe('MilestoneForm', () => {
     });
   });
 
+  describe('related articles', () => {
+    it('renders Related Articles field when getArticleSuggestions is provided', async () => {
+      renderMilestoneForm({
+        getArticleSuggestions: jest.fn().mockResolvedValue([]),
+      });
+      await waitFor(() => {
+        expect(screen.getByText('Related Articles')).toBeInTheDocument();
+      });
+    });
+
+    it('shows no options message when article search returns no results', async () => {
+      const getArticleSuggestions = jest.fn().mockResolvedValue([]);
+      renderMilestoneForm({ getArticleSuggestions });
+
+      const articleInput = screen.getByText('Start typing...');
+      await userEvent.click(articleInput);
+      await userEvent.keyboard('nonexistent');
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(/Sorry, no articles match "nonexistent"/),
+        ).toBeInTheDocument();
+      });
+    });
+
+    it('does not render Related Articles field when getArticleSuggestions is not provided', () => {
+      renderMilestoneForm();
+      expect(screen.queryByText('Related Articles')).not.toBeInTheDocument();
+    });
+
+    it('includes selected article IDs in submit data', async () => {
+      const onSubmit = jest.fn().mockResolvedValue(undefined);
+      const mockArticles = [
+        { label: 'Article One', value: 'article-1' },
+        { label: 'Article Two', value: 'article-2' },
+      ];
+      const getArticleSuggestions = jest.fn().mockResolvedValue(mockArticles);
+
+      renderMilestoneForm({ onSubmit, getArticleSuggestions });
+
+      const textarea = screen.getByRole('textbox', {
+        name: /Milestone Description/i,
+      });
+      await userEvent.type(textarea, 'Description with articles');
+      await userEvent.click(screen.getByRole('button', { name: '#1' }));
+
+      // Type in the article search and select an article
+      const articleInput = screen.getByText('Start typing...');
+      await userEvent.click(articleInput);
+      await userEvent.keyboard('Article');
+
+      await waitFor(() => {
+        expect(screen.getByText('Article One')).toBeInTheDocument();
+      });
+
+      await userEvent.click(screen.getByText('Article One'));
+
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Add Milestone' }),
+      );
+      await userEvent.click(
+        screen.getByRole('button', { name: /Confirm and Notify/ }),
+      );
+
+      await waitFor(() => {
+        expect(onSubmit).toHaveBeenCalledWith(
+          expect.objectContaining({
+            relatedArticleIds: ['article-1'],
+          }),
+        );
+      });
+    });
+  });
+
   describe('error handling', () => {
     const fillAndSubmitForm = async () => {
       const textarea = screen.getByRole('textbox');

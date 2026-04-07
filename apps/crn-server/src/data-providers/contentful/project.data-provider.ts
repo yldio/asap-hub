@@ -82,8 +82,9 @@ type MilestoneCollectionItem = {
   sys: { id: string };
   description?: string | null;
   status?: string | null;
+  relatedArticlesCollection?: { total: number } | null;
 };
-type AimsCollectionItem = AimsCollectionItemBase & {
+type AimsCollectionItem = Omit<AimsCollectionItemBase, 'milestonesCollection'> & {
   milestonesCollection?: {
     items: Array<MilestoneCollectionItem | null>;
   } | null;

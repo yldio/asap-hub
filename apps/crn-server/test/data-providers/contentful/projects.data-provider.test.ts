@@ -1020,8 +1020,8 @@ describe('parseContentfulAims', () => {
         description: 'First aim',
         milestonesCollection: {
           items: [
-            { status: 'Complete', relatedArticlesCollection: { total: 3 } },
-            { status: 'Complete', relatedArticlesCollection: { total: 4 } },
+            { sys: { id: 'ms-1' }, status: 'Complete', relatedArticlesCollection: { total: 3 } },
+            { sys: { id: 'ms-2' }, status: 'Complete', relatedArticlesCollection: { total: 4 } },
           ],
         },
       },
@@ -1045,7 +1045,8 @@ describe('parseContentfulAims', () => {
           sys: { id: 'aim-1' },
           description: 'Test aim',
           milestonesCollection: {
-            items: statuses.map((status) => ({
+            items: statuses.map((status, i) => ({
+              sys: { id: `ms-${i}` },
               status,
               relatedArticlesCollection: { total: 0 },
             })),

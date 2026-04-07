@@ -174,7 +174,7 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
               <ProjectMilestones
                 milestones={milestones}
                 isLead={isLead}
-                loadArticleOptions={loadArticleOptions}
+                loadArticleOptions={loadArticleOptions ?? (() => Promise.resolve([]))}
               />
               <section css={pageControlsStyles}>
                 <PageControls {...pageControlsProps} />

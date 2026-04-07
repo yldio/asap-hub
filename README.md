@@ -74,17 +74,6 @@ For a list of individual package and app scripts, look inside the readme file or
 
 For you, a newcomer, to be running your development setup, you'll need to complete the following steps:
 
-### Create a new user on Contentful
-
-- Log in to <https://www.contentful.com/>
-- You will need to be added to the "YLD ASAP > CRN Hub" or "YLD ASAP > GP2" app if you don't already have access
-- In th environment selector in the top left, select `Development` (or `Production` if required)
-- In the "Content" section, create a new `User` content model with your email address
-- If you use an `@yld.io` email address for the user then you should receive an invitation email, and you can follow th instructions from the email
-- If you do not receive an invitation email then you can copy the value which should be populated in the `Connections` field on the user, and visit <https://dev.hub.asap.science/welcome/{invitation-code}> with the invitation code replaced with the value from Contentful
-
-To send a new invitation you can remove the values from the `Connections` field.
-
 ### Get everything running
 
 - Create a `.env` file from the example:
@@ -109,7 +98,15 @@ To send a new invitation you can remove the values from the `Connections` field.
 
 - On <http://localhost:3000> you should have the CRN hub running
 - On <http://localhost:4000> you should have the GP2 hub running
-- You should be able to log in to the relevant app using the user you created above
+
+### Create a user on Contentful
+
+To log in you need a `User` entry in Contentful linked to your email:
+
+- Log in to <https://www.contentful.com/>
+- You will need to be added to the "YLD ASAP > CRN Hub" or "YLD ASAP > GP2" app if you don't already have access
+- In the environment selector in the top left, select `Development` (or `Production` if required)
+- In the "Content" section, create a new `User` content entry with your email address
 
 ### Logging in
 

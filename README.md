@@ -66,7 +66,22 @@ To send a new invitation you can remove the values from the `Connections` field.
 
 ### Get everything running
 
-- create a `.env` file and update it with the necessary details (ask one of the engineers for a working config, there is a `.env.example` file to work from, but you'll need the details)
+- Create a `.env` file from the example:
+
+  ```sh
+  cp .env.example .env
+  ```
+
+  The following fields are already pre-filled in `.env.example` and should work out of the box for the development environment. You will need to ask a colleague for the values of the fields that are left blank:
+
+  | Field | Required for |
+  |-------|-------------|
+  | `CONTENTFUL_ACCESS_TOKEN` | CRN backend (reading content) |
+  | `CONTENTFUL_PREVIEW_ACCESS_TOKEN` | CRN backend (draft/preview content) |
+  | `ALGOLIA_API_KEY` | Search functionality |
+  | `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN` | Running Contentful migrations (optional) |
+  | `GP2_CONTENTFUL_SPACE_ID` + `GP2_CONTENTFUL_ACCESS_TOKEN` | GP2 backend (optional) |
+  | `OPENAI_API_KEY` | AI features (optional) |
 - You can run all apps in the project with a simple `yarn start` on the project's root. It will load up everything, but you don't need to run everything. Depending on what you're doing, you only need some apps up
 - `yarn watch:babel`: to have babel watching and compiling for you (you'll need this running most of the time)
 - `yarn watch:typecheck`: well... for types checking (you'll need this running most of the time)

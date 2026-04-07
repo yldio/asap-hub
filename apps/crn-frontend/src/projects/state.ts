@@ -150,8 +150,6 @@ export const projectMilestonesIndexState = atomFamily<
   | {
       ids: ReadonlyArray<string>;
       total: number;
-      algoliaQueryId?: string;
-      algoliaIndexName?: string;
     }
   | Error
   | undefined,
@@ -185,8 +183,6 @@ export const projectMilestonesState = selectorFamily<
       return {
         total: index.total,
         items: projectMilestones,
-        algoliaIndexName: index.algoliaIndexName,
-        algoliaQueryId: index.algoliaQueryId,
       };
     },
   set:
@@ -209,8 +205,6 @@ export const projectMilestonesState = selectorFamily<
         set(projectMilestonesIndexState(options), {
           total: projects.total,
           ids: projects.items.map(({ id }) => id),
-          algoliaIndexName: projects.algoliaIndexName,
-          algoliaQueryId: projects.algoliaQueryId,
         });
       }
     },

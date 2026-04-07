@@ -2,15 +2,15 @@ import { ArticleItem, ListResponse } from '@asap-hub/model';
 import {
   FETCH_AIM_ARTICLES,
   FETCH_AIMS_WITH_MILESTONES,
+  FETCH_MILESTONE_ARTICLES,
   FETCH_MILESTONES,
   FETCH_PROJECTS_WITH_AIMS,
   FETCH_PROJECTS_WITH_AIMS_DETAIL,
   FetchAimArticlesQuery,
   FetchAimArticlesQueryVariables,
-  GraphQLClient,
-  FETCH_MILESTONE_ARTICLES,
   FetchMilestoneArticlesQuery,
   FetchMilestoneArticlesQueryVariables,
+  GraphQLClient,
 } from '@asap-hub/contentful';
 import { cleanArray } from '@asap-hub/server-common';
 

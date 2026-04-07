@@ -29,6 +29,8 @@ const mockLoadArticleOptions = (
     ].filter((a) => a.label.toLowerCase().includes(inputValue.toLowerCase())),
   );
 
+const mockFetchArticles = () => Promise.resolve([]);
+
 const defaultProps = {
   isLead: true as const,
   loadArticleOptions: mockLoadArticleOptions,
@@ -38,6 +40,7 @@ const defaultProps = {
     currentPageIndex: 0,
     renderPageHref: (index: number) => `#${index}`,
   },
+  fetchLinkedArticles: mockFetchArticles,
 };
 
 const createMilestone = (
@@ -62,8 +65,6 @@ const mediumDescription =
 const longDescription =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
-const mockFetchArticles = () => Promise.resolve([]);
-
 export const Default = () => (
   <ProjectMilestonesTable
     {...defaultProps}
@@ -73,7 +74,6 @@ export const Default = () => (
       createMilestone('3', longDescription, 'Pending', '2'),
       createMilestone('4', shortDescription, 'Complete', '2,3,4'),
     ]}
-    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -90,7 +90,6 @@ export const WithMoreMilestones = () => (
       createMilestone('7', shortDescription, 'Complete', '3,5'),
       createMilestone('8', mediumDescription, 'In Progress', '4'),
     ]}
-    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -108,7 +107,6 @@ export const AllStatuses = () => (
       createMilestone('3', 'This milestone is pending.', 'Pending', '2'),
       createMilestone('4', 'This milestone is terminated.', 'Terminated', '3'),
     ]}
-    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -121,7 +119,6 @@ export const ShortDescriptions = () => (
       createMilestone('3', 'Prepare interim report.', 'Pending', '2'),
       createMilestone('4', 'Submit findings.', 'Complete', '2,3'),
     ]}
-    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -134,7 +131,6 @@ export const LongDescriptions = () => (
       createMilestone('3', longDescription, 'Pending', '2,3,4,5,6'),
       createMilestone('4', longDescription, 'Complete', '3'),
     ]}
-    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -142,7 +138,6 @@ export const SingleMilestone = () => (
   <ProjectMilestonesTable
     {...defaultProps}
     milestones={[createMilestone('1', mediumDescription, 'In Progress', '1')]}
-    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -154,7 +149,6 @@ export const WithEmptyAims = () => (
       createMilestone('2', 'Milestone with no aims.', 'In Progress'),
       createMilestone('3', 'Milestone with multiple aims.', 'Pending', '2,3,4'),
     ]}
-    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -165,7 +159,6 @@ export const TwoMilestones = () => (
       createMilestone('1', longDescription, 'Complete', '1'),
       createMilestone('2', mediumDescription, 'In Progress', '1,2'),
     ]}
-    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -180,7 +173,6 @@ export const SixMilestones = () => (
       createMilestone('5', mediumDescription, 'Terminated', '3'),
       createMilestone('6', longDescription, 'Terminated', '3,5'),
     ]}
-    fetchLinkedArticles={mockFetchArticles}
   />
 );
 
@@ -219,6 +211,5 @@ export const RealWorldExample = () => (
         '3',
       ),
     ]}
-    fetchLinkedArticles={mockFetchArticles}
   />
 );

@@ -1,16 +1,9 @@
-// import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-import {
-  // ArticleItem,
-  GrantType,
-  // Milestone as MilestoneType,
-} from '@asap-hub/model';
+import { GrantType } from '@asap-hub/model';
 
 import { Headline3, Link, Paragraph } from '../atoms';
 import { LabeledDropdown } from '../molecules';
-// import ProjectMilestonesTable from '../organisms/ProjectMilestonesTable';
 import { rem, mobileScreen } from '../pixels';
-// import { neutral1000 } from '../colors';
 import MilestonesMobilePage from './MilestonesMobilePage';
 
 const containerStyles = css({
@@ -34,21 +27,6 @@ const aimsLinkTextStyles = css({
     textDecoration: 'underline',
   },
 });
-
-// const noMilestonesTextStyles = css({
-//   fontSize: rem(17),
-//   lineHeight: rem(24),
-//   fontWeight: 700,
-//   color: neutral1000.rgb,
-//   marginTop: rem(16),
-// });
-
-// const pageControlsStyles = css({
-//   display: 'flex',
-//   justifyContent: 'center',
-//   paddingTop: rem(16),
-//   paddingBottom: rem(36),
-// });
 
 const pageMobileStyles = css({
   [`@media (min-width: ${mobileScreen.max}px)`]: {
@@ -118,12 +96,6 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
             <Link href={seeAimsHref ?? '#'} underlined>
               <span css={aimsLinkTextStyles}>See Aims</span>
             </Link>
-            {/* {!hasMilestones && (
-              <Paragraph accent="lead" noMargin styles={noMilestonesTextStyles}>
-                No milestones related to the {grantLabel} Grant have been added
-                to this project yet.
-              </Paragraph>
-            )} */}
           </div>
           {children}
         </div>

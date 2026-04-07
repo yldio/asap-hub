@@ -675,6 +675,77 @@ describe('ProjectContentfulDataProvider', () => {
       });
     });
 
+    it('does not filter by grant type if not provided', async () => {
+      opensearchProviderMock.search.mockResolvedValueOnce({
+        hits: {
+          hits: [
+            {
+              _source: {
+                id: 'milestone-1',
+                description: 'First milestone',
+                aimNumbersAsc: '1',
+                aimNumbersDesc: '1',
+                status: 'Complete',
+                articleCount: 4,
+                articlesDOI: '',
+                projectId: 'project-1',
+                projectName: 'Project One',
+                grantType: 'supplement',
+                createdDate: '2026-03-30T15:48:05.665Z',
+                lastDate: '2026-03-30T15:48:05.665Z',
+              },
+            },
+            {
+              _source: {
+                id: 'milestone-2',
+                description: 'Second milestone',
+                status: 'In Progress',
+                aimNumbersAsc: '2,5',
+                aimNumbersDesc: '5,2',
+                articleCount: 2,
+                articlesDOI: '',
+                projectId: 'project-1',
+                projectName: 'Project One',
+                grantType: 'original',
+                createdDate: '2026-02-30T15:48:05.665Z',
+                lastDate: '2026-02-30T15:48:05.665Z',
+              },
+            },
+          ],
+          total: {
+            value: 2,
+          },
+        },
+      });
+
+      const result = await dataProvider.fetchProjectMilestones(
+        'project-with-milestones',
+        {
+          skip: 10,
+          take: 5,
+        },
+      );
+
+      expect(opensearchProviderMock.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          index: 'project-milestones',
+          body: expect.objectContaining({
+            query: {
+              bool: {
+                filter: [{ term: { projectId: 'project-with-milestones' } }],
+              },
+            },
+            sort: [{ aimNumbersAsc: { order: 'asc' } }],
+            from: 10,
+            size: 5,
+          }),
+        }),
+      );
+      expect(result).not.toBeNull();
+      expect(result.items).toHaveLength(2);
+      expect(result.total).toBe(2);
+    });
+
     it('handles null hits.hits gracefully', async () => {
       opensearchProviderMock.search.mockResolvedValueOnce({ hits: {} });
 

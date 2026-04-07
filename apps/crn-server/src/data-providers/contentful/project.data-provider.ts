@@ -886,13 +886,17 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       );
     }
     const { take = 10, skip = 0, grantType } = options;
+    const filters = [
+      { term: { projectId: id } },
+      ...(grantType ? [{ term: { grantType } }] : []),
+    ];
 
     const response = (await this.opensearchProvider.search({
       index: 'project-milestones',
       body: {
         query: {
           bool: {
-            filter: [{ term: { projectId: id } }, { term: { grantType } }],
+            filter: filters,
           },
         },
         sort: [{ aimNumbersAsc: { order: 'asc' } }],
@@ -907,7 +911,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       // eslint-disable-next-line no-underscore-dangle
       const { aimNumbersAsc, aimNumbersDesc, status, ...fields } = hit._source;
 
-      // till we implement sorting the aims field will be sorted in ascending order
+      // till we implement sorting the aims field used will be the one sorted in ascending order
       const isDescAimsSort = false;
 
       return {

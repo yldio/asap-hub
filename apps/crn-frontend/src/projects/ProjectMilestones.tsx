@@ -69,26 +69,9 @@ const ProjectMilestones: React.FC<{
   const { search } = useLocation();
   const navigate = useNavigate();
 
-  // const params = new URLSearchParams(location.search);
-
-  // const selectedGrantType =
-  //   (params.get('grantType') as GrantType) ??
-  //   (hasSupplementGrant ? 'supplement' : 'original');
   const [selectedGrantType, setSelectedGrantType] = useState<GrantType>(
     hasSupplementGrant ? 'supplement' : 'original',
   );
-
-  // const { items: milestones = [], total } = useProjectMilestones({
-  //   projectId,
-  //   grantType: selectedGrantType,
-  //   searchQuery: '',
-  //   filters: new Set(),
-  //   currentPage,
-  //   pageSize,
-  // });
-
-  // const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
-  // const fetchArticles = useFetchMilestoneArticles();
 
   const handleGrantTypeChange = useCallback(
     (grantType: GrantType) => {
@@ -109,18 +92,6 @@ const ProjectMilestones: React.FC<{
       onGrantTypeChange={handleGrantTypeChange}
     >
       <SearchFrame title="Project Milestones">
-        {/* <ProjectMilestonesTable
-          milestones={milestones}
-          pageControlsProps={{
-            numberOfPages,
-            currentPageIndex: currentPage,
-            renderPageHref,
-          }}
-          fetchLinkedArticles={fetchArticles}
-          isLead={isLead}
-          loadArticleOptions={loadArticleOptions}
-          selectedGrantType={selectedGrantType}
-        /> */}
         <ProjectMilestonesTableContent
           projectId={projectId}
           selectedGrantType={selectedGrantType}

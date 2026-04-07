@@ -1,39 +1,6 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
-// import { ArticleItem } from '@asap-hub/model';
-
 import ProjectDetailMilestones from '../ProjectDetailMilestones';
-
-// const mockLoadArticleOptions = jest.fn(() => Promise.resolve([]));
-// const pageControlsProps = {
-//   numberOfPages: 3,
-//   currentPageIndex: 1,
-//   renderPageHref: (index: number) => `/page/${index}`,
-// };
-
-// const mockMilestones: Milestone[] = [
-//   {
-//     id: '1',
-//     description: 'First milestone',
-//     status: 'Complete',
-//     articleCount: 0,
-//     aims: '1',
-//   },
-//   {
-//     id: '2',
-//     description: 'Second milestone',
-//     status: 'In Progress',
-//     articleCount: 0,
-//     aims: '2',
-//   },
-// ];
-
-// const sampleArticles: ArticleItem[] = [
-//   { id: '1', title: 'First article', href: '/articles/1' },
-//   { id: '2', title: 'Second article', href: '/articles/2' },
-// ];
-
-// const mockFetchArticles = jest.fn(() => Promise.resolve(sampleArticles));
 
 const defaultProps: ComponentProps<typeof ProjectDetailMilestones> = {
   selectedGrantType: 'original',

@@ -1,8 +1,4 @@
-import {
-  DocumentCategoryOption,
-  GrantType,
-  OutputTypeOption,
-} from '@asap-hub/model';
+import { DocumentCategoryOption, OutputTypeOption } from '@asap-hub/model';
 
 export interface SearchResult<T> {
   items: T[];
@@ -47,8 +43,6 @@ export type OpensearchSearchOptions = {
   documentCategory?: DocumentCategoryOption;
   sort?: OpensearchSort[];
   outputType?: OutputTypeOption;
-  grantType?: GrantType;
-  projectId?: string;
 };
 
 type SortConfigOrder = 'asc' | 'desc';

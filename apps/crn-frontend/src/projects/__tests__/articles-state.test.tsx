@@ -112,7 +112,7 @@ describe('aim-articles-state', () => {
         wrapper,
       });
 
-      const articles = await act(async () => result.current('aim-empty'));
+      const articles = await act(async () => result.current('milestone-empty'));
 
       expect(articles).toEqual([]);
     });

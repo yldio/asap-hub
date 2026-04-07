@@ -159,11 +159,7 @@ describe('project routes', () => {
       expect(response.body).toEqual(projectMilestones);
       expect(projectControllerMock.fetchProjectMilestones).toHaveBeenCalledWith(
         'project-1',
-        expect.objectContaining({
-          take: undefined,
-          skip: undefined,
-          grantType: undefined,
-        }),
+        {},
       );
     });
 

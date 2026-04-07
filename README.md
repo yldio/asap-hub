@@ -101,6 +101,22 @@ To send a new invitation you can remove the values from the `Connections` field.
 - On <http://localhost:4000> you should have the GP2 hub running
 - You should be able to log in to the relevant app using the user you created above
 
+### Logging in
+
+The apps use Auth0 for authentication — there is no traditional username/password. To log in:
+
+1. Click the **Login** button on the app homepage
+2. You will be redirected to the Auth0 login page; enter the email address of the Contentful user you created
+3. If this is your first login, check your email for an invitation link from Auth0
+
+If you do not receive an invitation email, copy the value from the `Connections` field on your Contentful user and visit:
+
+```
+https://dev.hub.asap.science/welcome/{invitation-code}
+```
+
+To send a new invitation, remove the value from the `Connections` field in Contentful and save.
+
 ### Contentful Dedicated Environment
 
 If you require a dedicated environment for your development work, create a PR and add one or both of the following labels to your PR. This will run the github action workflow to create a new environment in contentful.

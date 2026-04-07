@@ -90,7 +90,7 @@ For you, a newcomer, to be running your development setup, you'll need to comple
   | `CONTENTFUL_PREVIEW_ACCESS_TOKEN` | CRN backend (draft/preview content) |
   | `ALGOLIA_API_KEY` | Search functionality |
   | `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN` | Running Contentful migrations (optional) |
-  | `GP2_CONTENTFUL_SPACE_ID` + `GP2_CONTENTFUL_ACCESS_TOKEN` | GP2 backend (optional) |
+  | `GP2_CONTENTFUL_SPACE_ID` + `GP2_CONTENTFUL_ACCESS_TOKEN` + `GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN` | GP2 backend (optional) |
   | `OPENAI_API_KEY` | AI features (optional) |
 - You can run all apps with `yarn start`, but you typically only need a subset. See the [Scripts](#scripts) section for the full list of available start commands. During development you will almost always want `yarn watch` running alongside your app.
 

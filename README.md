@@ -124,38 +124,6 @@ https://dev.hub.asap.science/welcome/{invitation-code}
 
 To send a new invitation, remove the value from the `Connections` field in Contentful and save.
 
-### Contentful Dedicated Environment
-
-If you require a dedicated environment for your development work, create a PR and add one or both of the following labels to your PR. This will run the github action workflow to create a new environment in contentful.
-This will also create a duplication of the algolia entity index for you to use during the development.
-
-- crn-create-environment
-- gp2-create-environment
-
-You should create a dedicated environment in Contentful if:
-
-- you are making any changes to the content models in Contentful
-- you need to develop/test webhook behaviour as part of your PR
-
-When creating a new Contentful environment you will need to ensure that the API keys you are using for local development have permission to access that environment. You can check this by inspecting your API key settings at <https://app.contentful.com/spaces/5v6w5j61tndm/environments/master/api/keys>.
-
-### Analytics Algolia Dedicated Environment
-
-If you require a dedicated environment for your development work, create a PR and add the following label to it.
-This will run the github action workflow to create a new environment with a copy of the relevant Analytics Algolia indexes.
-
-- crn-create-analytics-algolia-index
-
-To avoid incurring in extra costs you should only use this if you need to make changes in Analytics indexes and make sure they are deleted when you close/merge your PR.
-
-### Update Postmark templates
-
-If you need to create or update templates on Postmark you can have your branch deploying your changes to Postmarks Branch server. For that you'll need to add the following label to your PR:
-
-- postmark-templates-update
-
-Note: this DOES NOT create a dedicated server. The same server will be used if there are multiple branches using it.
-
 ## Editor setup
 
 Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks) for how to integrate your editor with the TypeScript compiler and ESLint linter in this repository. You will also need to set up your editor to run ESLint with the same CLI options that the scripts do — they are in [this file](jest-runner-eslint.config.js).
@@ -166,6 +134,36 @@ Individual `packages` or `apps` may contain their own readme files as deemed nec
 The [`docs`](docs) folder contains overall architecture / decision documentation.
 
 ## Contentful
+
+### Dedicated Environment
+
+If you require a dedicated environment for your development work, create a PR and add one or both of the following labels. This will trigger a GitHub Actions workflow to create a new Contentful environment and a duplicate of the Algolia entity index.
+
+- `crn-create-environment`
+- `gp2-create-environment`
+
+You should create a dedicated environment if:
+
+- you are making any changes to the content models in Contentful
+- you need to develop/test webhook behaviour as part of your PR
+
+When using a dedicated environment, ensure your API keys have permission to access it. Check your API key settings at <https://app.contentful.com/spaces/5v6w5j61tndm/environments/master/api/keys>.
+
+### Analytics Algolia Dedicated Environment
+
+If you need to make changes to Analytics Algolia indexes, add the following label to your PR. This triggers a GitHub Actions workflow that creates a copy of the relevant indexes.
+
+- `crn-create-analytics-algolia-index`
+
+To avoid unnecessary costs, only use this when making changes to Analytics indexes, and delete the indexes when your PR is closed or merged.
+
+### Update Postmark templates
+
+To deploy Postmark template changes from your branch, add the following label to your PR:
+
+- `postmark-templates-update`
+
+Note: this does NOT create a dedicated server — all branches sharing this label use the same Postmark branch server.
 
 ### Schema changes and graphql
 

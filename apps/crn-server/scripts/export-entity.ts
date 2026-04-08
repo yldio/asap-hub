@@ -1,5 +1,9 @@
 import { EntityData, EntityResponses } from '@asap-hub/algolia';
-import { ListResponse, ResearchTagDataObject } from '@asap-hub/model';
+import {
+  ListResponse,
+  NewsResponse,
+  ResearchTagDataObject,
+} from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalAuthors from '../src/controllers/external-author.controller';
@@ -238,10 +242,11 @@ const transformRecords = (
 
   // type 'news'
   if ('frequency' in record) {
+    const { text: _text, ...rest } = payload as NewsResponse;
     return {
-      ...payload,
+      ...rest,
       _tags: record.tags,
-    };
+    } as ReturnType<typeof transformRecords>;
   }
 
   return {

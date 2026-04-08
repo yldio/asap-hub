@@ -19,7 +19,14 @@ import {
  * Designed to be called from a GitHub Action for incremental rollout.
  *
  * Usage (env vars loaded from .env file):
- *   yarn publish:team-entities <teamIdOrName1> <teamIdOrName2> ...
+ *   Space-separated references:
+ *     yarn publish:team-entities <teamIdOrName1> <teamIdOrName2> ...
+ *
+ *   Comma-separated references in a single argument:
+ *     yarn publish:team-entities "<teamIdOrName1>,<teamIdOrName2>,..."
+ *
+ * Team names with spaces still need shell quoting, for example:
+ *   yarn publish:team-entities "De Lorean" "Hawk,Harper"
  */
 
 // Collected entities by type, deduplicated across all teams
@@ -187,6 +194,15 @@ export const getLinkedEntryIds = (value: unknown): string[] => {
   const id = (value as LinkLike | undefined)?.sys?.id;
   return typeof id === 'string' ? [id] : [];
 };
+
+// exported for testing
+export const parseTeamReferences = (rawArguments: string[]): string[] =>
+  rawArguments.flatMap((argument) =>
+    argument
+      .split(',')
+      .map((reference) => reference.trim())
+      .filter(Boolean),
+  );
 
 // exported for testing
 export const getProjectProposalIds = (
@@ -732,7 +748,7 @@ const publishAsset = async (
   });
 
 const app = async () => {
-  const teamReferences = process.argv.slice(2);
+  const teamReferences = parseTeamReferences(process.argv.slice(2));
   if (teamReferences.length === 0) {
     throw new Error(
       'Usage: yarn publish:team-entities <teamIdOrName1> <teamIdOrName2> ...',

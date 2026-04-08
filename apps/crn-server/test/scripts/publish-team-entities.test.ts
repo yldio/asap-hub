@@ -12,6 +12,7 @@ import {
   getLinkedEntryIds,
   getLocalizedFieldValue,
   getLocalizedString,
+  parseTeamReferences,
   getProjectProposalIds,
   getPublishState,
   getSupplementGrantProposalIds,
@@ -215,6 +216,38 @@ describe('publish-team-entities helpers', () => {
     test('returns an empty array for junk values', () => {
       expect(getLinkedEntryIds(undefined)).toEqual([]);
       expect(getLinkedEntryIds({ foo: 'bar' })).toEqual([]);
+    });
+  });
+
+  describe('parseTeamReferences', () => {
+    test('returns an empty array when no arguments are provided', () => {
+      expect(parseTeamReferences([])).toEqual([]);
+    });
+
+    test('preserves plain team arguments', () => {
+      expect(parseTeamReferences(['Fraser', 'Halliday'])).toEqual([
+        'Fraser',
+        'Halliday',
+      ]);
+    });
+
+    test('splits comma-separated arguments and trims whitespace', () => {
+      expect(
+        parseTeamReferences([' Fraser, Halliday , 2SEvzFMhntYMugwW2nt5fz ']),
+      ).toEqual(['Fraser', 'Halliday', '2SEvzFMhntYMugwW2nt5fz']);
+    });
+
+    test('supports mixed plain and comma-separated arguments', () => {
+      expect(
+        parseTeamReferences(['Fraser,Halliday', 'JFT', ' , Awatramani ']),
+      ).toEqual(['Fraser', 'Halliday', 'JFT', 'Awatramani']);
+    });
+
+    test('drops empty references created by extra commas', () => {
+      expect(parseTeamReferences(['Fraser,,', ', Halliday ,'])).toEqual([
+        'Fraser',
+        'Halliday',
+      ]);
     });
   });
 

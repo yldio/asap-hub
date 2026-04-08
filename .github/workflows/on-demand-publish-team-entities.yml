@@ -1,0 +1,80 @@
+name: Publish Team Entities
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        required: true
+        description: The environment name
+        type: choice
+        options:
+          - Branch
+          - Development
+          - Production
+      contentful-environment-id:
+        required: true
+        type: string
+        description: 'Contentful environment ID, e.g. "Development", "Production", or "crn-xyz"'
+      team-references:
+        required: true
+        type: string
+        description: 'Comma-separated list of exact team names and/or team entry IDs, e.g. Hawk,De Lorean,ASAP'
+  workflow_call:
+    inputs:
+      environment-name:
+        required: true
+        type: string
+      contentful-environment-id:
+        required: true
+        type: string
+      team-references:
+        required: true
+        type: string
+    secrets:
+      CONTENTFUL_MANAGEMENT_TOKEN:
+        required: true
+
+jobs:
+  publish_team_entities:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment-name }}
+    container:
+      image: ghcr.io/yldio/asap-hub/node-python-sq:7b77d99657ab3718ed548ba366ffbcbb15315fd8
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        id: setup
+        uses: ./.github/actions/setup-environment
+        with:
+          environment-name: ${{ inputs.environment-name }}
+
+      - name: Build
+        run: |
+          yarn install --immutable
+          yarn exec "yarn workspaces foreach -vptR --from '{@asap-hub/model,@asap-hub/contentful,@asap-hub/server-common,@asap-hub/crn-server}' run build:babel"
+          yarn build:typecheck
+
+      - name: Summary
+        shell: bash
+        env:
+          CONTENTFUL_ENV_ID: ${{ inputs.contentful-environment-id }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+        run: |
+          {
+            printf '## Publish Team Entities\n\n'
+            printf -- '- Contentful environment: `%s`\n' "$CONTENTFUL_ENV_ID"
+            printf -- '- Contentful space: `%s`\n' "$CONTENTFUL_SPACE_ID"
+            printf -- '- Team references: `%s`\n' "${{ inputs.team-references }}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish team entities
+        env:
+          CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_TOKEN }}
+          CONTENTFUL_ENV_ID: ${{ inputs.contentful-environment-id }}
+          CONTENTFUL_SPACE_ID: ${{ steps.setup.outputs.crn-contentful-space-id }}
+        run: yarn workspace @asap-hub/crn-server publish:team-entities "${{ inputs.team-references }}"

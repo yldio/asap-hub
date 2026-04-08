@@ -24,6 +24,7 @@ import {
   parseOpenQuestions,
   parseUserRow,
   REQUIRED_EXISTING_USER_COLUMNS,
+  resolveGoogleDriveImageExtension,
   sanitizeSocialValue,
   sanitizeWebsiteUrl,
   shouldSkipRow,
@@ -664,12 +665,70 @@ describe('import-utils', () => {
       ).toBe('FILE456');
     });
 
+    test('extracts a file id from the full Drive viewer URL format we saw in ASAP-1446', () => {
+      expect(
+        extractGoogleDriveFileId(
+          'https://drive.google.com/file/d/FILE789/view',
+        ),
+      ).toBe('FILE789');
+    });
+
     test('returns null for unsupported Drive URLs', () => {
       expect(
         extractGoogleDriveFileId(
           'https://drive.google.com/drive/folders/FILE789',
         ),
       ).toBeNull();
+    });
+  });
+
+  describe('resolveGoogleDriveImageExtension', () => {
+    test('accepts supported image content types directly', () => {
+      expect(
+        resolveGoogleDriveImageExtension({
+          contentType: 'image/jpeg',
+          fileId: 'FILE123',
+        }),
+      ).toBe('.jpg');
+      expect(
+        resolveGoogleDriveImageExtension({
+          contentType: 'image/png',
+          fileId: 'FILE123',
+        }),
+      ).toBe('.png');
+    });
+
+    test('reports unsupported image content types clearly', () => {
+      expect(() =>
+        resolveGoogleDriveImageExtension({
+          contentType: 'image/tiff',
+          fileId: 'FILE123',
+        }),
+      ).toThrow(
+        'Drive returned unsupported image Content-Type "image/tiff" for file FILE123. Only JPEG and PNG are supported.',
+      );
+    });
+
+    test('reports application content types as unsupported', () => {
+      expect(() =>
+        resolveGoogleDriveImageExtension({
+          contentType: 'application/octet-stream',
+          fileId: 'FILE123',
+        }),
+      ).toThrow(
+        'Drive returned unsupported Content-Type "application/octet-stream" for file FILE123. Only JPEG and PNG are supported.',
+      );
+    });
+
+    test('reports non-image content types as unsupported too', () => {
+      expect(() =>
+        resolveGoogleDriveImageExtension({
+          contentType: 'text/html; charset=utf-8',
+          fileId: 'FILE123',
+        }),
+      ).toThrow(
+        'Drive returned unsupported Content-Type "text/html; charset=utf-8" for file FILE123. Only JPEG and PNG are supported.',
+      );
     });
   });
 

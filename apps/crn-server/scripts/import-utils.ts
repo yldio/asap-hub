@@ -1104,6 +1104,40 @@ export const extractGoogleDriveFileId = (url: string): string | null => {
   return null;
 };
 
+type SupportedAvatarExtension = '.jpg' | '.png';
+
+// exported for testing
+export const resolveGoogleDriveImageExtension = ({
+  contentType,
+  fileId,
+}: {
+  contentType: string;
+  fileId: string;
+}): SupportedAvatarExtension => {
+  const normalizedContentType = contentType.toLowerCase();
+
+  if (
+    normalizedContentType.includes('image/jpeg') ||
+    normalizedContentType.includes('image/jpg')
+  ) {
+    return '.jpg';
+  }
+
+  if (normalizedContentType.includes('image/png')) {
+    return '.png';
+  }
+
+  if (normalizedContentType.startsWith('image/')) {
+    throw new Error(
+      `Drive returned unsupported image Content-Type "${contentType}" for file ${fileId}. Only JPEG and PNG are supported.`,
+    );
+  }
+
+  throw new Error(
+    `Drive returned unsupported Content-Type "${contentType}" for file ${fileId}. Only JPEG and PNG are supported.`,
+  );
+};
+
 /** Downloads a Google Drive image to the local avatar cache directory. */
 export const downloadGoogleDriveImage = async (
   url: string,
@@ -1116,23 +1150,27 @@ export const downloadGoogleDriveImage = async (
   fs.mkdirSync(AVATAR_OUTPUT_DIR, { recursive: true });
 
   const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-  const response = await fetch(downloadUrl, { redirect: 'follow' });
+  let response: Response;
+
+  try {
+    response = await fetch(downloadUrl, { redirect: 'follow' });
+  } catch (error: unknown) {
+    throw new Error(
+      `Failed to download Drive file ${fileId}: ${getErrorMessage(error)}`,
+    );
+  }
 
   if (!response.ok) {
-    throw new Error(`Failed to download image: HTTP ${response.status}`);
+    throw new Error(
+      `Failed to download Drive file ${fileId}: HTTP ${response.status}`,
+    );
   }
 
   const contentType = response.headers.get('content-type') || '';
-  if (!contentType.startsWith('image/')) {
-    throw new Error(
-      `Drive returned non-image Content-Type "${contentType}" for file ${fileId} (possibly a permissions page)`,
-    );
-  }
-  const ext = contentType.includes('png')
-    ? '.png'
-    : contentType.includes('gif')
-      ? '.gif'
-      : '.jpg';
+  const ext = resolveGoogleDriveImageExtension({
+    contentType,
+    fileId,
+  });
   const outputPath = path.join(AVATAR_OUTPUT_DIR, `${fileId}${ext}`);
 
   const buffer = Buffer.from(await response.arrayBuffer());

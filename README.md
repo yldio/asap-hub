@@ -45,30 +45,30 @@ For a list of individual package and app scripts, look inside the readme file or
 
 ### Development
 
-| Script | Description |
-|--------|-------------|
-| `yarn watch` | Watch all packages and run babel + typecheck on changes (recommended during development) |
-| `yarn watch:babel` | Watch packages and rebuild with Babel on changes |
-| `yarn watch:typecheck` | Watch packages and re-emit type definitions on changes |
-| `yarn start:crn` | Run both the CRN backend and frontend |
-| `yarn start:gp2` | Run both the GP2 backend and frontend |
-| `yarn start:backend:crn` | Run only the CRN backend |
-| `yarn start:frontend:crn` | Run only the CRN frontend |
-| `yarn start:backend:gp2` | Run only the GP2 backend |
-| `yarn start:frontend:gp2` | Run only the GP2 frontend |
-| `yarn start:storybook` | Run Storybook |
-| `yarn start` | Run all apps |
+| Script                    | Description                                                                              |
+| ------------------------- | ---------------------------------------------------------------------------------------- |
+| `yarn watch`              | Watch all packages and run babel + typecheck on changes (recommended during development) |
+| `yarn watch:babel`        | Watch packages and rebuild with Babel on changes                                         |
+| `yarn watch:typecheck`    | Watch packages and re-emit type definitions on changes                                   |
+| `yarn start:crn`          | Run both the CRN backend and frontend                                                    |
+| `yarn start:gp2`          | Run both the GP2 backend and frontend                                                    |
+| `yarn start:backend:crn`  | Run only the CRN backend                                                                 |
+| `yarn start:frontend:crn` | Run only the CRN frontend                                                                |
+| `yarn start:backend:gp2`  | Run only the GP2 backend                                                                 |
+| `yarn start:frontend:gp2` | Run only the GP2 frontend                                                                |
+| `yarn start:storybook`    | Run Storybook                                                                            |
+| `yarn start`              | Run all apps                                                                             |
 
 ### Build & test
 
-| Script | Description |
-|--------|-------------|
-| `yarn build` | Typecheck and build all packages and apps |
-| `yarn test` | Lint and test all packages and apps (supports `--watch` and other [Jest CLI options](https://jestjs.io/docs/en/cli.html)) |
-| `yarn test:integration` | Run integration tests for the API against Contentful |
-| `yarn test:*` | Further CI-specific test configurations (slower; some require `yarn rebuild` first) |
-| `yarn lint` | Run linting (requires `yarn build:typecheck` first) |
-| `yarn fix:format` | Reformat all files using [Prettier](https://prettier.io/) |
+| Script                  | Description                                                                                                               |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `yarn build`            | Typecheck and build all packages and apps                                                                                 |
+| `yarn test`             | Lint and test all packages and apps (supports `--watch` and other [Jest CLI options](https://jestjs.io/docs/en/cli.html)) |
+| `yarn test:integration` | Run integration tests for the API against Contentful                                                                      |
+| `yarn test:*`           | Further CI-specific test configurations (slower; some require `yarn rebuild` first)                                       |
+| `yarn lint`             | Run linting (requires `yarn build:typecheck` first)                                                                       |
+| `yarn fix:format`       | Reformat all files using [Prettier](https://prettier.io/)                                                                 |
 
 ## Setting up your development environment
 
@@ -84,14 +84,15 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 
   The following fields are already pre-filled in `.env.example` and should work out of the box for the development environment. You will need to ask a colleague for the values of the fields that are left blank:
 
-  | Field | Required for |
-  |-------|-------------|
-  | `CONTENTFUL_ACCESS_TOKEN` | CRN backend (reading content) |
-  | `CONTENTFUL_PREVIEW_ACCESS_TOKEN` | CRN backend (draft/preview content) |
-  | `ALGOLIA_API_KEY` | Search functionality |
-  | `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN` | Running Contentful migrations (optional) |
-  | `GP2_CONTENTFUL_SPACE_ID` + `GP2_CONTENTFUL_ACCESS_TOKEN` + `GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN` | GP2 backend (optional) |
-  | `OPENAI_API_KEY` | AI features (optional) |
+  | Field                                                                                             | Required for                             |
+  | ------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+  | `CONTENTFUL_ACCESS_TOKEN`                                                                         | CRN backend (reading content)            |
+  | `CONTENTFUL_PREVIEW_ACCESS_TOKEN`                                                                 | CRN backend (draft/preview content)      |
+  | `ALGOLIA_API_KEY`                                                                                 | Search functionality                     |
+  | `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN`                                                              | Running Contentful migrations (optional) |
+  | `GP2_CONTENTFUL_SPACE_ID` + `GP2_CONTENTFUL_ACCESS_TOKEN` + `GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN` | GP2 backend (optional)                   |
+  | `OPENAI_API_KEY`                                                                                  | AI features (optional)                   |
+
 - You can run all apps with `yarn start`, but you typically only need a subset. See the [Scripts](#scripts) section for the full list of available start commands. During development you will almost always want `yarn watch` running alongside your app.
 
 ### Now that everything's up

@@ -13,7 +13,6 @@ import {
   SortTeamCollaboration,
   SortUserCollaboration,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { analytics } from '@asap-hub/routing';
 import {
   render,
@@ -58,10 +57,6 @@ jest.mock('../api');
 jest.mock('../../../hooks/opensearch', () => ({
   useAnalyticsOpensearch: jest.fn(),
   useOpensearchMetrics: jest.fn(),
-}));
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: jest.fn(),
 }));
 
 type SharingPreliminaryFindingsProps = React.ComponentProps<
@@ -133,7 +128,6 @@ const mockUseAnalyticsOpensearch =
 const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
   typeof useOpensearchMetrics
 >;
-const mockUseFlags = useFlags as jest.MockedFunction<typeof useFlags>;
 
 const userData: ListUserCollaborationResponse = {
   total: 2,
@@ -307,15 +301,6 @@ beforeEach(() => {
       .fn()
       .mockResolvedValue(undefined),
     getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
-  });
-
-  mockUseFlags.mockReturnValue({
-    isEnabled: jest.fn().mockReturnValue(false),
-    reset: jest.fn(),
-    disable: jest.fn(),
-    setCurrentOverrides: jest.fn(),
-    setEnvironment: jest.fn(),
-    enable: jest.fn(),
   });
 
   mockGetUserCollaboration.mockResolvedValue(userData);

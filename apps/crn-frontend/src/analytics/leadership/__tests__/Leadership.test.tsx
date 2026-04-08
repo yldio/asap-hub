@@ -1,7 +1,3 @@
-import {
-  AlgoliaSearchClient,
-  EMPTY_ALGOLIA_FACET_HITS,
-} from '@asap-hub/algolia';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
   Auth0Provider,
@@ -19,7 +15,6 @@ import {
   OSChampionOpensearchResponse,
   AnalyticsTeamLeadershipResponse,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { teamLeadershipResponse } from '@asap-hub/fixtures';
 import Leadership from '../Leadership';
 import { analyticsLeadershipState } from '../state';
@@ -73,21 +68,8 @@ jest.mock('../../../hooks', () => {
   };
 });
 
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: jest.fn(),
-}));
-
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
->;
-
-const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
-  AlgoliaSearchClient<'analytics'>['searchForTagValues']
->;
-
-const mockSearch = jest.fn() as jest.MockedFunction<
-  AlgoliaSearchClient<'analytics'>['search']
 >;
 
 const mockGetTagSuggestions = jest.fn() as jest.MockedFunction<
@@ -104,8 +86,6 @@ const mockUseAnalyticsOpensearch =
 const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
   typeof useOpensearchMetrics
 >;
-
-const mockUseFlags = useFlags as jest.MockedFunction<typeof useFlags>;
 
 // Create actual OpensearchClient instances for testing
 const wgLeadershipClient =
@@ -126,28 +106,6 @@ beforeEach(() => {
     getTagSuggestions: mockGetTagSuggestions,
     search: mockOSChampionSearch,
   };
-
-  mockSearchForTagValues.mockResolvedValue({
-    ...EMPTY_ALGOLIA_FACET_HITS,
-    facetHits: [
-      { value: 'Alessi', highlighted: 'Alessi', count: 1 },
-      { value: 'tag2', highlighted: 'tag2', count: 1 },
-    ],
-  });
-
-  mockSearch.mockResolvedValue({
-    hits: [],
-    nbHits: 0,
-    page: 0,
-    nbPages: 0,
-    hitsPerPage: 10,
-    exhaustiveNbHits: true,
-    processingTimeMS: 0,
-    query: '',
-    params: '',
-    index: 'test-index',
-    queryID: 'test-query-id',
-  });
 
   mockGetTagSuggestions.mockResolvedValue(['Alessi', 'tag2']);
 
@@ -188,15 +146,6 @@ beforeEach(() => {
       .fn()
       .mockResolvedValue(['Alessi', 'tag2']),
   } as unknown as ReturnType<typeof useOpensearchMetrics>);
-
-  mockUseFlags.mockReturnValue({
-    isEnabled: jest.fn().mockReturnValue(false),
-    reset: jest.fn(),
-    disable: jest.fn(),
-    setCurrentOverrides: jest.fn(),
-    setEnvironment: jest.fn(),
-    enable: jest.fn(),
-  });
 });
 
 const getPath = (metric: string) =>

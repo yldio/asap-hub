@@ -1,7 +1,3 @@
-import {
-  AlgoliaSearchClient,
-  EMPTY_ALGOLIA_FACET_HITS,
-} from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
@@ -13,7 +9,6 @@ import {
   TeamProductivityResponse,
   UserProductivityResponse,
 } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { analytics } from '@asap-hub/routing';
 import { render, screen, waitFor, within, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -52,11 +47,6 @@ jest.mock('../api');
 jest.mock('../../../hooks/opensearch', () => ({
   useOpensearchMetrics: jest.fn(),
   useAnalyticsOpensearch: jest.fn(),
-}));
-
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: jest.fn(),
 }));
 
 jest.mock('react-router', () => ({
@@ -100,10 +90,6 @@ mockGetUserProductivityPerformance.mockResolvedValue(
   userProductivityPerformance,
 );
 
-const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
-  AlgoliaSearchClient<'analytics'>['searchForTagValues']
->;
-
 const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
   typeof useOpensearchMetrics
 >;
@@ -111,20 +97,10 @@ const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
 const mockUseAnalyticsOpensearch =
   useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
-const mockUseFlags = useFlags as jest.MockedFunction<typeof useFlags>;
-
 const mockNavigate = jest.fn();
 const mockUseNavigate = useNavigate as jest.MockedFunction<typeof useNavigate>;
 
 beforeEach(() => {
-  mockSearchForTagValues.mockResolvedValue({
-    ...EMPTY_ALGOLIA_FACET_HITS,
-    facetHits: [
-      { value: 'tag1', highlighted: 'tag1', count: 1 },
-      { value: 'tag2', highlighted: 'tag2', count: 1 },
-    ],
-  });
-
   mockUseOpensearchMetrics.mockReturnValue({
     getUserProductivity: jest.fn().mockResolvedValue({ items: [], total: 0 }),
     getUserProductivityTagSuggestions: jest.fn().mockResolvedValue([]),
@@ -173,15 +149,7 @@ beforeEach(() => {
     getPresenterRepresentationTagSuggestions: jest.fn().mockResolvedValue([]),
   });
   mockUseAnalyticsOpensearch.mockReturnValue({
-    client: {} as OpensearchClient<unknown>, // Mock opensearch client (not used since flag is false)
-  });
-  mockUseFlags.mockReturnValue({
-    isEnabled: jest.fn().mockReturnValue(false),
-    reset: jest.fn(),
-    disable: jest.fn(),
-    setCurrentOverrides: jest.fn(),
-    setEnvironment: jest.fn(),
-    enable: jest.fn(),
+    client: {} as OpensearchClient<unknown>,
   });
   mockGetUserProductivity.mockResolvedValue({ items: [], total: 0 });
   mockGetTeamProductivity.mockResolvedValue({ items: [], total: 0 });
@@ -1005,8 +973,6 @@ describe('tag suggestions', () => {
     await waitFor(() => {
       expect(mockGetUserProductivityTagSuggestions).toHaveBeenCalled();
     });
-
-    expect(mockSearchForTagValues).not.toHaveBeenCalled();
   });
 
   it('uses OpenSearch for team productivity tag suggestions', async () => {
@@ -1080,7 +1046,5 @@ describe('tag suggestions', () => {
     await waitFor(() => {
       expect(mockGetTeamProductivityTagSuggestions).toHaveBeenCalled();
     });
-
-    expect(mockSearchForTagValues).not.toHaveBeenCalled();
   });
 });

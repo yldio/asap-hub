@@ -1,7 +1,3 @@
-import {
-  AlgoliaSearchClient,
-  EMPTY_ALGOLIA_FACET_HITS,
-} from '@asap-hub/algolia';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import {
@@ -11,7 +7,6 @@ import {
   MeetingRepAttendanceResponse,
 } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
-import { useFlags } from '@asap-hub/react-context';
 import {
   render,
   screen,
@@ -69,21 +64,9 @@ class TestErrorBoundary extends React.Component<
   }
 }
 
-jest.mock('@asap-hub/algolia', () => ({
-  ...jest.requireActual('@asap-hub/algolia'),
-  algoliaSearchClientFactory: jest
-    .fn()
-    .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
-}));
-
 jest.mock('../../../hooks/opensearch', () => ({
   useAnalyticsOpensearch: jest.fn(),
   useOpensearchMetrics: jest.fn(),
-}));
-
-jest.mock('@asap-hub/react-context', () => ({
-  ...jest.requireActual('@asap-hub/react-context'),
-  useFlags: jest.fn(),
 }));
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -112,18 +95,12 @@ const mockGetPerformance = getEngagementPerformance as jest.MockedFunction<
   typeof getEngagementPerformance
 >;
 
-const mockSearchForTagValues = jest.fn() as jest.MockedFunction<
-  AlgoliaSearchClient<'analytics'>['searchForTagValues']
->;
-
 const mockUseAnalyticsOpensearch =
   useAnalyticsOpensearch as jest.MockedFunction<typeof useAnalyticsOpensearch>;
 
 const mockUseOpensearchMetrics = useOpensearchMetrics as jest.MockedFunction<
   typeof useOpensearchMetrics
 >;
-
-const mockUseFlags = useFlags as jest.MockedFunction<typeof useFlags>;
 
 const engagementClient = new OpensearchClient<EngagementResponse>(
   'presenter-representation',
@@ -172,13 +149,6 @@ const defaultUseOpensearchMetricsResponse = {
 beforeEach(() => {
   jest.clearAllMocks();
 
-  mockSearchForTagValues.mockResolvedValue({
-    ...EMPTY_ALGOLIA_FACET_HITS,
-    facetHits: [
-      { value: 'tag1', highlighted: 'tag1', count: 1 },
-      { value: 'tag2', highlighted: 'tag2', count: 1 },
-    ],
-  });
   mockGetEngagement.mockResolvedValue(data);
   mockGetMeetingRepAttendance.mockResolvedValue({ items: [], total: 0 });
   const metric = {
@@ -212,15 +182,6 @@ beforeEach(() => {
       typeof useOpensearchMetrics
     >,
   );
-
-  mockUseFlags.mockReturnValue({
-    isEnabled: jest.fn().mockReturnValue(false),
-    reset: jest.fn(),
-    disable: jest.fn(),
-    setCurrentOverrides: jest.fn(),
-    setEnvironment: jest.fn(),
-    enable: jest.fn(),
-  });
 });
 
 const renderPage = async (path: string) => {

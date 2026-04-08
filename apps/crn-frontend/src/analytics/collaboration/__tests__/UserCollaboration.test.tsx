@@ -3,7 +3,6 @@ import {
   userCollaborationInitialSortingDirection,
   UserCollaborationResponse,
 } from '@asap-hub/model';
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { render, waitFor } from '@testing-library/react';
 import { userCollaborationPerformance } from '@asap-hub/fixtures';
 import { Suspense } from 'react';
@@ -14,13 +13,6 @@ import { getUserCollaboration, getUserCollaborationPerformance } from '../api';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { analyticsUserCollaborationState } from '../state';
 import UserCollaboration from '../UserCollaboration';
-
-jest.mock('@asap-hub/algolia', () => ({
-  ...jest.requireActual('@asap-hub/algolia'),
-  algoliaSearchClientFactory: jest
-    .fn()
-    .mockReturnValue({} as AlgoliaSearchClient<'analytics'>),
-}));
 
 jest.mock('../api');
 

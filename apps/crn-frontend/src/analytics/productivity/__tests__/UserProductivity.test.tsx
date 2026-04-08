@@ -1,4 +1,3 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
   Auth0Provider,
   WhenReady,
@@ -16,13 +15,6 @@ import { RecoilRoot } from 'recoil';
 import { getUserProductivity, getUserProductivityPerformance } from '../api';
 import { analyticsUserProductivityState } from '../state';
 import UserProductivity from '../UserProductivity';
-
-jest.mock('@asap-hub/algolia', () => ({
-  ...jest.requireActual('@asap-hub/algolia'),
-  algoliaSearchClientFactory: jest
-    .fn()
-    .mockReturnValue({} as AlgoliaSearchClient<'crn'>),
-}));
 
 jest.mock('../api');
 

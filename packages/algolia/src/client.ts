@@ -4,7 +4,6 @@ import {
   SearchResponse,
 } from '@algolia/client-search';
 import {
-  AnalyticsTeamLeadershipResponse,
   DocumentCategoryOption,
   EventResponse,
   ExternalAuthorResponse,
@@ -12,24 +11,14 @@ import {
   InterestGroupResponse,
   NewsResponse,
   ResearchOutputResponse,
-  TeamCollaborationResponse,
   TeamListItemResponse,
-  TeamProductivityPerformance,
-  TeamCollaborationPerformance,
-  TeamProductivityResponse,
   TimeRangeOption,
   TutorialsResponse,
-  UserCollaborationResponse,
   UserListItemResponse,
-  UserProductivityPerformance,
-  UserProductivityResponse,
   UserResponse,
   WithMeta,
   WorkingGroupResponse,
-  UserCollaborationPerformance,
   OutputTypeOption,
-  EngagementResponse,
-  EngagementPerformance,
   PartialManuscriptResponse,
   ManuscriptVersionResponse,
   ProjectResponse,
@@ -58,22 +47,9 @@ import {
   PROJECT_ENTITY_TYPE,
 } from './gp2';
 
-const TEAM_LEADERSHIP = 'team-leadership';
-const TEAM_PRODUCTIVITY = 'team-productivity';
-const USER_PRODUCTIVITY = 'user-productivity';
-const TEAM_PRODUCTIVITY_PERFORMANCE = 'team-productivity-performance';
-const USER_PRODUCTIVITY_PERFORMANCE = 'user-productivity-performance';
-const TEAM_COLLABORATION = 'team-collaboration';
-const USER_COLLABORATION = 'user-collaboration';
-const TEAM_COLLABORATION_PERFORMANCE = 'team-collaboration-performance';
-const USER_COLLABORATION_PERFORMANCE = 'user-collaboration-performance';
-const ENGAGEMENT = 'engagement';
-const ENGAGEMENT_PERFORMANCE = 'engagement-performance';
-
 const CRN = 'crn';
 const GP2 = 'gp2';
-const ANALYTICS = 'analytics';
-export type Apps = typeof CRN | typeof GP2 | typeof ANALYTICS;
+export type Apps = typeof CRN | typeof GP2;
 
 export type EntityData =
   | EventResponse
@@ -88,14 +64,6 @@ export type EntityData =
   | WorkingGroupResponse
   | PartialManuscriptResponse
   | ManuscriptVersionResponse;
-
-export type AnalyticsData =
-  | AnalyticsTeamLeadershipResponse
-  | UserProductivityResponse
-  | TeamProductivityResponse
-  | UserCollaborationResponse
-  | TeamCollaborationResponse
-  | EngagementResponse;
 
 export type EntityResponses = {
   [CRN]: {
@@ -144,22 +112,6 @@ export type EntityResponses = {
     [PROJECT_ENTITY_TYPE]: gp2Model.ProjectResponse;
     [USER_ENTITY_TYPE]: gp2Model.UserResponse;
     [WORKING_GROUP_ENTITY_TYPE]: gp2Model.WorkingGroupResponse;
-  };
-  [ANALYTICS]: {
-    [TEAM_LEADERSHIP]: AnalyticsTeamLeadershipResponse;
-
-    [TEAM_PRODUCTIVITY]: TeamProductivityResponse;
-    [USER_PRODUCTIVITY]: UserProductivityResponse;
-    [TEAM_PRODUCTIVITY_PERFORMANCE]: TeamProductivityPerformance;
-    [USER_PRODUCTIVITY_PERFORMANCE]: UserProductivityPerformance;
-
-    [TEAM_COLLABORATION]: TeamCollaborationResponse;
-    [USER_COLLABORATION]: UserCollaborationResponse;
-    [TEAM_COLLABORATION_PERFORMANCE]: TeamCollaborationPerformance;
-    [USER_COLLABORATION_PERFORMANCE]: UserCollaborationPerformance;
-
-    [ENGAGEMENT]: EngagementResponse;
-    [ENGAGEMENT_PERFORMANCE]: EngagementPerformance;
   };
 };
 export type SavePayload = Payload | GP2Payload;

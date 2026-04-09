@@ -84,6 +84,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         teamId: { type: 'text' },
         teamName: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
+          raw: true,
         }),
         isTeamInactive: { type: 'boolean' },
         teamAwardsCount: { type: 'integer' },
@@ -91,7 +92,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
           type: 'nested',
           properties: {
             id: { type: 'text' },
-            name: textWithNgramKeyword(),
+            name: textWithNgramKeyword({ raw: true }),
             awardsCount: { type: 'integer' },
           },
         },
@@ -106,6 +107,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         teamId: { type: 'text' },
         teamName: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
+          raw: true,
         }),
         isTeamInactive: { type: 'boolean' },
         percentShared: { type: 'integer' },
@@ -121,6 +123,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         teamId: { type: 'text' },
         teamName: textWithNgramKeyword({
           normalizer: 'lowercase_normalizer',
+          raw: true,
         }),
         isTeamInactive: { type: 'boolean' },
         attendancePercentage: { type: 'integer' },
@@ -134,11 +137,11 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         teamId: { type: 'text' },
-        teamName: textWithNgramKeyword(),
+        teamName: textWithNgramKeyword({ raw: true }),
         isTeamInactive: { type: 'boolean' },
         numberOfPreprints: { type: 'integer' },
         numberOfPublications: { type: 'integer' },
-        postedPriorPercentage: { type: 'integer' },
+        postedPriorPercentage: { type: 'float' },
         ranking: { type: 'text' },
         timeRange: { type: 'keyword' },
       },
@@ -149,17 +152,17 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
     mapping: {
       properties: {
         teamId: { type: 'text' },
-        teamName: textWithNgramKeyword(),
+        teamName: textWithNgramKeyword({ raw: true }),
         isTeamInactive: { type: 'boolean' },
-        overallCompliance: { type: 'integer' },
+        overallCompliance: { type: 'float' },
         ranking: { type: 'text' },
-        datasetsPercentage: { type: 'integer' },
+        datasetsPercentage: { type: 'float' },
         datasetsRanking: { type: 'text' },
-        protocolsPercentage: { type: 'integer' },
+        protocolsPercentage: { type: 'float' },
         protocolsRanking: { type: 'text' },
-        codePercentage: { type: 'integer' },
+        codePercentage: { type: 'float' },
         codeRanking: { type: 'text' },
-        labMaterialsPercentage: { type: 'integer' },
+        labMaterialsPercentage: { type: 'float' },
         labMaterialsRanking: { type: 'text' },
         numberOfPublications: { type: 'integer' },
         numberOfOutputs: { type: 'integer' },
@@ -182,7 +185,10 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
           type: 'nested',
           properties: {
             id: { type: 'text' },
-            name: textWithNgramKeyword(),
+            team: textWithNgramKeyword({
+              normalizer: 'lowercase_normalizer',
+              raw: true,
+            }),
             role: { type: 'keyword' },
             isTeamInactive: { type: 'boolean' },
             isUserInactiveOnTeam: { type: 'boolean' },
@@ -230,6 +236,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
             id: { type: 'text' },
             team: textWithNgramKeyword({
               normalizer: 'lowercase_normalizer',
+              raw: true,
             }),
             role: { type: 'keyword' },
             teamInactiveSince: { type: 'keyword' },

@@ -1,4 +1,8 @@
-import { fetchAllTeams, readComplianceData } from './shared-utils';
+import {
+  fetchAllTeams,
+  parseComplianceNumericValue,
+  readComplianceData,
+} from './shared-utils';
 
 import {
   PUBLICATION_COMPLIANCE_ALL_TIME_SHEET_NAME,
@@ -20,6 +24,14 @@ const readPublicationComplianceData = async (
   return rawData as SpreadsheetRow[];
 };
 
+const TEXT_FIELDS = new Set<string>([
+  'ranking',
+  'datasetsRanking',
+  'protocolsRanking',
+  'codeRanking',
+  'labMaterialsRanking',
+]);
+
 const createBasePublicationComplianceMetricObject = (
   team: { id: string; inactiveSince?: string } | null,
   teamName: string,
@@ -28,22 +40,22 @@ const createBasePublicationComplianceMetricObject = (
   teamId: team?.id || '',
   teamName,
   isTeamInactive: !!team?.inactiveSince,
-  overallCompliance: 0,
+  overallCompliance: null,
   ranking: '',
-  datasetsPercentage: 0,
+  datasetsPercentage: null,
   datasetsRanking: '',
-  protocolsPercentage: 0,
+  protocolsPercentage: null,
   protocolsRanking: '',
-  codePercentage: 0,
+  codePercentage: null,
   codeRanking: '',
-  labMaterialsPercentage: 0,
+  labMaterialsPercentage: null,
   labMaterialsRanking: '',
-  numberOfPublications: 0,
-  numberOfOutputs: 0,
-  numberOfDatasets: 0,
-  numberOfProtocols: 0,
-  numberOfCode: 0,
-  numberOfLabMaterials: 0,
+  numberOfPublications: null,
+  numberOfOutputs: null,
+  numberOfDatasets: null,
+  numberOfProtocols: null,
+  numberOfCode: null,
+  numberOfLabMaterials: null,
   timeRange,
 });
 
@@ -83,14 +95,21 @@ const mapSpreadsheetDataToMetrics = (
             key as keyof typeof PUBLICATION_COMPLIANCE_HEADER_MAPPINGS
           ];
 
-        if (fieldName) {
-          // Handle fields that might be strings like "NA" or null/undefined
-          if (value === 'NA' || value === null || value === undefined) {
-            (document as Record<string, unknown>)[fieldName] = null;
-          } else {
-            (document as Record<string, unknown>)[fieldName] = value;
-          }
+        if (!fieldName) return;
+
+        if (TEXT_FIELDS.has(fieldName)) {
+          // Ranking columns are free-form text (e.g. "Outstanding", "Needs
+          // Improvement", "Limited Data") — store as-is, defaulting to ''.
+          (document as Record<string, unknown>)[fieldName] =
+            typeof value === 'string' ? value : '';
+          return;
         }
+
+        // Numeric columns: percentages arrive as "98.82%" strings, counts can
+        // be "Limited Data"/"NA"/empty. Coerce to number | null so the doc
+        // matches the OpenSearch mapping.
+        (document as Record<string, unknown>)[fieldName] =
+          parseComplianceNumericValue(value);
       });
 
       return document;

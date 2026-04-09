@@ -42,7 +42,7 @@ describe('userWithTeamsRecordsTagQueryBuilder', () => {
             aggs: {
               names: {
                 terms: {
-                  field: 'teams.team.keyword',
+                  field: 'teams.team.raw',
                   size: 10,
                 },
               },

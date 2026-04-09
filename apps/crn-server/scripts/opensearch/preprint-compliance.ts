@@ -1,4 +1,8 @@
-import { fetchAllTeams, readComplianceData } from './shared-utils';
+import {
+  fetchAllTeams,
+  parseComplianceNumericValue,
+  readComplianceData,
+} from './shared-utils';
 
 import {
   PREPRINT_COMPLIANCE_SHEET_NAME,
@@ -29,9 +33,12 @@ const createBasePreprintComplianceMetricObject = (
   teamId: team?.id || '',
   teamName,
   isTeamInactive: !!team?.inactiveSince,
-  numberOfPreprints: 0,
-  numberOfPublications: 0,
-  postedPriorPercentage: 0,
+  // Default numeric fields to null so teams missing from the spreadsheet
+  // (or rows with "Limited Data") sort to the N/A bucket via missing:_first
+  // / _last instead of mixing in with real zeros.
+  numberOfPreprints: null,
+  numberOfPublications: null,
+  postedPriorPercentage: null,
   ranking: '',
   timeRange,
 });
@@ -81,13 +88,17 @@ const mapSpreadsheetDataToMetrics = (
         ];
 
       if (fieldName && documents[timeRange]) {
-        if (
-          fieldName === 'postedPriorPercentage' &&
-          typeof value === 'string'
-        ) {
-          (documents[timeRange] as Record<string, unknown>)[fieldName] = null;
+        if (fieldName === 'ranking') {
+          (documents[timeRange] as Record<string, unknown>)[fieldName] =
+            typeof value === 'string' ? value : '';
         } else {
-          (documents[timeRange] as Record<string, unknown>)[fieldName] = value;
+          // All other preprint fields are numeric in the OpenSearch mapping
+          // (numberOfPreprints, numberOfPublications, postedPriorPercentage).
+          // Spreadsheet may contain "Limited Data", "NA", "98.82%" etc., so
+          // coerce to number | null instead of letting raw strings reach
+          // OpenSearch and get rejected by the integer/float mapping.
+          (documents[timeRange] as Record<string, unknown>)[fieldName] =
+            parseComplianceNumericValue(value);
         }
       }
     });

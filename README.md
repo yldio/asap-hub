@@ -4,6 +4,10 @@
 
 [![Pipeline development and production](https://github.com/yldio/asap-hub/actions/workflows/on-push-master.yml/badge.svg)](https://github.com/yldio/asap-hub/actions/workflows/on-push-master.yml)
 
+## Authentication
+
+This project uses [Auth0](https://auth0.com/) for authentication in both the CRN and GP2 apps. User accounts are managed through Contentful — each user in the app corresponds to a `User` content entry in Contentful, and Auth0 handles the actual login flow. See [Setting up your development environment](#setting-up-your-development-environment) for how to create a local user.
+
 ## Requirements
 
 ### Node.js
@@ -36,87 +40,90 @@ This repository consists of packages and apps along with their tests inside the 
 
 ## Scripts
 
-This is a list of the scripts that you will commonly need to run locally in the repo root and their descriptions.
 For a full list of root scripts, look inside [`package.json`](package.json).
-For a list of individual package and particularly app scripts, look inside the readme file or `package.json` of the individual package or app.
+For a list of individual package and app scripts, look inside the readme file or `package.json` of the individual package or app.
 
-- `yarn build` - This will typecheck and build all packages and apps in the repository. You may want to run this e.g. after checking out a branch.
-- `yarn watch:babel` - This will watch all the packages (but not apps) for changes and whenever changes occur, build them, so that other packages and apps can use the changes.
-- `yarn watch:typecheck` - This will watch all the packages (but not apps) for changes and whenever changes occur, typecheck them and emit new type definitions, so that other packages and apps can see the new module type signature.
-- `yarn fix:format` - This will reformat all files in the repository to match our formatting standards using [Prettier](https://prettier.io/).
-- `yarn test` - This will lint and test all packages and apps in the repository. You may want to run this with `--watch` or other [Jest CLI options](https://jestjs.io/docs/en/cli.html).
-- `yarn test:integration` - Runs the integration tests for the API against Contentful.
-- `yarn test:*` - There are further test configurations being run on CI that are usually slower or more specific and thus not suitable to run during day-to-day development. You can execute those scripts manually. Some of them may require installing native modules via `yarn rebuild` first.
-- `yarn lint` - this will run the linting for the project. A `yarn build:typecheck` is a prerequisite.
+### Development
+
+| Script                    | Description                                                                              |
+| ------------------------- | ---------------------------------------------------------------------------------------- |
+| `yarn watch`              | Watch all packages and run babel + typecheck on changes (recommended during development) |
+| `yarn watch:babel`        | Watch packages and rebuild with Babel on changes                                         |
+| `yarn watch:typecheck`    | Watch packages and re-emit type definitions on changes                                   |
+| `yarn start:crn`          | Run both the CRN backend and frontend                                                    |
+| `yarn start:gp2`          | Run both the GP2 backend and frontend                                                    |
+| `yarn start:backend:crn`  | Run only the CRN backend                                                                 |
+| `yarn start:frontend:crn` | Run only the CRN frontend                                                                |
+| `yarn start:backend:gp2`  | Run only the GP2 backend                                                                 |
+| `yarn start:frontend:gp2` | Run only the GP2 frontend                                                                |
+| `yarn start:storybook`    | Run Storybook                                                                            |
+| `yarn start`              | Run all apps                                                                             |
+
+### Build & test
+
+| Script                  | Description                                                                                                               |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `yarn build`            | Typecheck and build all packages and apps                                                                                 |
+| `yarn test`             | Lint and test all packages and apps (supports `--watch` and other [Jest CLI options](https://jestjs.io/docs/en/cli.html)) |
+| `yarn test:integration` | Run integration tests for the API against Contentful                                                                      |
+| `yarn test:*`           | Further CI-specific test configurations (slower; some require `yarn rebuild` first)                                       |
+| `yarn lint`             | Run linting (requires `yarn build:typecheck` first)                                                                       |
+| `yarn fix:format`       | Reformat all files using [Prettier](https://prettier.io/)                                                                 |
 
 ## Setting up your development environment
 
 For you, a newcomer, to be running your development setup, you'll need to complete the following steps:
 
-### Create a new user on Contentful
-
-- Log in to <https://www.contentful.com/>
-- You will need to be added to the "YLD ASAP > CRN Hub" or "YLD ASAP > GP2" app if you don't already have access
-- In th environment selector in the top left, select `Development` (or `Production` if required)
-- In the "Content" section, create a new `User` content model with your email address
-- If you use an `@yld.io` email address for the user then you should receive an invitation email, and you can follow th instructions from the email
-- If you do not receive an invitation email then you can copy the value which should be populated in the `Connections` field on the user, and visit <https://dev.hub.asap.science/welcome/{invitation-code}> with the invitation code replaced with the value from Contentful
-
-To send a new invitation you can remove the values from the `Connections` field.
-
 ### Get everything running
 
-- create a `.env` file and update it with the necessary details (ask one of the engineers for a working config, there is a `.env.example` file to work from, but you'll need the details)
-- You can run all apps in the project with a simple `yarn start` on the project's root. It will load up everything, but you don't need to run everything. Depending on what you're doing, you only need some apps up
-- `yarn watch:babel`: to have babel watching and compiling for you (you'll need this running most of the time)
-- `yarn watch:typecheck`: well... for types checking (you'll need this running most of the time)
-- `yarn watch`: to have babel and type checking watching and compiling for you
-- `yarn start:backend:crn`: to run the CRN backend
-- `yarn start:frontend:crn`: to run the CRN frontend
-- `yarn start:backend:gp2`: to run the GP2 backend
-- `yarn start:frontend:gp2`: to run the GP2 frontend
-- `yarn start:storybook`: to run storybook
-- `yarn start:crn` - to run both the CRN backend and frontend
-- `yarn start:gp2` - to run both the GP2 backend and frontend
-- `yarn start`: to run all of the above
+- Create a `.env` file from the example:
+
+  ```sh
+  cp .env.example .env
+  ```
+
+  The following fields are already pre-filled in `.env.example` and should work out of the box for the development environment. You will need to ask a colleague for the values of the fields that are left blank:
+
+  | Field                                                                                             | Required for                             |
+  | ------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+  | `CONTENTFUL_ACCESS_TOKEN`                                                                         | CRN backend (reading content)            |
+  | `CONTENTFUL_PREVIEW_ACCESS_TOKEN`                                                                 | CRN backend (draft/preview content)      |
+  | `ALGOLIA_API_KEY`                                                                                 | Search functionality                     |
+  | `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN`                                                              | Running Contentful migrations (optional) |
+  | `GP2_CONTENTFUL_SPACE_ID` + `GP2_CONTENTFUL_ACCESS_TOKEN` + `GP2_CONTENTFUL_PREVIEW_ACCESS_TOKEN` | GP2 backend (optional)                   |
+  | `OPENAI_API_KEY`                                                                                  | AI features (optional)                   |
+
+- You can run all apps with `yarn start`, but you typically only need a subset. See the [Scripts](#scripts) section for the full list of available start commands. During development you will almost always want `yarn watch` running alongside your app.
 
 ### Now that everything's up
 
 - On <http://localhost:3000> you should have the CRN hub running
 - On <http://localhost:4000> you should have the GP2 hub running
-- You should be able to log in to the relevant app using the user you created above
 
-### Contentful Dedicated Environment
+### Create a user on Contentful
 
-If you require a dedicated environment for your development work, create a PR and add one or both of the following labels to your PR. This will run the github action workflow to create a new environment in contentful.
-This will also create a duplication of the algolia entity index for you to use during the development.
+To log in you need a `User` entry in Contentful linked to your email:
 
-- crn-create-environment
-- gp2-create-environment
+- Log in to <https://www.contentful.com/>
+- You will need to be added to the "YLD ASAP > CRN Hub" or "YLD ASAP > GP2" app if you don't already have access
+- In the environment selector in the top left, select `Development` (or `Production` if required)
+- In the "Content" section, create a new `User` content entry with your email address
 
-You should create a dedicated environment in Contentful if:
+### Logging in
 
-- you are making any changes to the content models in Contentful
-- you need to develop/test webhook behaviour as part of your PR
+The apps use Auth0 for authentication — there is no traditional username/password. To log in:
 
-When creating a new Contentful environment you will need to ensure that the API keys you are using for local development have permission to access that environment. You can check this by inspecting your API key settings at <https://app.contentful.com/spaces/5v6w5j61tndm/environments/master/api/keys>.
+1. Click the **Login** button on the app homepage
+2. You will be redirected to the Auth0 login page; enter the email address of the Contentful user you created
+3. If this is your first login, check your email for an invitation link from Auth0
 
-### Analytics Algolia Dedicated Environment
+If you do not receive an invitation email, copy the value from the `Connections` field on your Contentful user and visit:
 
-If you require a dedicated environment for your development work, create a PR and add the following label to it.
-This will run the github action workflow to create a new environment with a copy of the relevant Analytics Algolia indexes.
+```
+https://dev.hub.asap.science/welcome/{invitation-code}
+```
 
-- crn-create-analytics-algolia-index
-
-To avoid incurring in extra costs you should only use this if you need to make changes in Analytics indexes and make sure they are deleted when you close/merge your PR.
-
-### Update Postmark templates
-
-If you need to create or update templates on Postmark you can have your branch deploying your changes to Postmarks Branch server. For that you'll need to add the following label to your PR:
-
-- postmark-templates-update
-
-Note: this DOES NOT create a dedicated server. The same server will be used if there are multiple branches using it.
+To send a new invitation, remove the value from the `Connections` field in Contentful and save.
 
 ## Editor setup
 
@@ -128,6 +135,36 @@ Individual `packages` or `apps` may contain their own readme files as deemed nec
 The [`docs`](docs) folder contains overall architecture / decision documentation.
 
 ## Contentful
+
+### Dedicated Environment
+
+If you require a dedicated environment for your development work, create a PR and add one or both of the following labels. This will trigger a GitHub Actions workflow to create a new Contentful environment and a duplicate of the Algolia entity index.
+
+- `crn-create-environment`
+- `gp2-create-environment`
+
+You should create a dedicated environment if:
+
+- you are making any changes to the content models in Contentful
+- you need to develop/test webhook behaviour as part of your PR
+
+When using a dedicated environment, ensure your API keys have permission to access it. Check your API key settings at <https://app.contentful.com/spaces/5v6w5j61tndm/environments/master/api/keys>.
+
+### Analytics Algolia Dedicated Environment
+
+If you need to make changes to Analytics Algolia indexes, add the following label to your PR. This triggers a GitHub Actions workflow that creates a copy of the relevant indexes.
+
+- `crn-create-analytics-algolia-index`
+
+To avoid unnecessary costs, only use this when making changes to Analytics indexes, and delete the indexes when your PR is closed or merged.
+
+### Update Postmark templates
+
+To deploy Postmark template changes from your branch, add the following label to your PR:
+
+- `postmark-templates-update`
+
+Note: this does NOT create a dedicated server — all branches sharing this label use the same Postmark branch server.
 
 ### Schema changes and graphql
 

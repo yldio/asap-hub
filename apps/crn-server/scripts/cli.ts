@@ -2,10 +2,8 @@
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { exportEntity } from './export-entity';
-import { exportAnalyticsData } from './export-analytics';
 import { exportComplianceData } from './export-compliance-data';
 import { exportTagsUtilisation } from './export-tags-utilisation';
-import type { Metric } from '@asap-hub/model';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(hideBin(process.argv))
@@ -55,32 +53,6 @@ yargs(hideBin(process.argv))
           | 'working-group',
         filename,
       ),
-  })
-  .command<{ metric: string; filename?: string }>({
-    command: 'export-analytics <metric>',
-    describe: 'export analytics data to JSON',
-    builder: (cli) =>
-      cli
-        .positional('metric', {
-          describe: 'choose a metric to export data',
-          type: 'string',
-          choices: [
-            'team-leadership',
-            'team-productivity',
-            'user-productivity',
-            'team-collaboration',
-            'user-collaboration',
-            'engagement',
-          ],
-          demandOption: true,
-        })
-        .option('filename', {
-          alias: 'f',
-          type: 'string',
-          description: 'The output file name',
-        }),
-    handler: async ({ metric, filename }) =>
-      exportAnalyticsData(metric as Metric, filename),
   })
   .command<{
     contentfulBackupFileName: string;

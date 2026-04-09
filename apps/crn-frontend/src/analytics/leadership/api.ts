@@ -1,8 +1,4 @@
 import {
-  AlgoliaClient,
-  AnalyticsSearchOptionsWithFiltering,
-} from '@asap-hub/algolia';
-import {
   AnalyticsTeamLeadershipResponse,
   ListAnalyticsTeamLeadershipResponse,
   ListOSChampionOpensearchResponse,
@@ -11,6 +7,7 @@ import {
   SortOSChampion,
 } from '@asap-hub/model';
 import { MetricOption } from '@asap-hub/react-components';
+import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { OpensearchClient } from '../utils/opensearch/client';
 import { OpensearchSort, OpensearchSortMap } from '../utils/opensearch/types';
 
@@ -26,61 +23,44 @@ export type AnalyticsSearchOptionsWithSort = AnalyticsSearchOptions & {
 };
 
 export const getAnalyticsLeadership = async (
-  client:
-    | AlgoliaClient<'analytics'>
-    | OpensearchClient<AnalyticsTeamLeadershipResponse>,
+  client: OpensearchClient<AnalyticsTeamLeadershipResponse>,
   { tags, currentPage, pageSize, sort }: AnalyticsSearchOptionsWithSort,
 ): Promise<ListAnalyticsTeamLeadershipResponse | undefined> => {
-  if (client instanceof OpensearchClient) {
-    let opensearchSort: OpensearchSort[] | undefined;
-    if (sort) {
-      const fieldMap: Record<string, string> = {
-        team: 'displayName.keyword',
-        wg_current_leadership: 'workingGroupLeadershipRoleCount',
-        wg_previous_leadership: 'workingGroupPreviousLeadershipRoleCount',
-        wg_current_membership: 'workingGroupMemberCount',
-        wg_previous_membership: 'workingGroupPreviousMemberCount',
-        ig_current_leadership: 'interestGroupLeadershipRoleCount',
-        ig_previous_leadership: 'interestGroupPreviousLeadershipRoleCount',
-        ig_current_membership: 'interestGroupMemberCount',
-        ig_previous_membership: 'interestGroupPreviousMemberCount',
-      };
-      const direction = sort.endsWith('_asc') ? 'asc' : 'desc';
-      const baseSort = sort.replace(/_(asc|desc)$/, '');
-      const field = fieldMap[baseSort];
-      if (field) {
-        opensearchSort = [
-          {
-            [field]: {
-              order: direction,
-            },
+  let opensearchSort: OpensearchSort[] | undefined;
+  if (sort) {
+    const fieldMap: Record<string, string> = {
+      team: 'displayName.keyword',
+      wg_current_leadership: 'workingGroupLeadershipRoleCount',
+      wg_previous_leadership: 'workingGroupPreviousLeadershipRoleCount',
+      wg_current_membership: 'workingGroupMemberCount',
+      wg_previous_membership: 'workingGroupPreviousMemberCount',
+      ig_current_leadership: 'interestGroupLeadershipRoleCount',
+      ig_previous_leadership: 'interestGroupPreviousLeadershipRoleCount',
+      ig_current_membership: 'interestGroupMemberCount',
+      ig_previous_membership: 'interestGroupPreviousMemberCount',
+    };
+    const direction = sort.endsWith('_asc') ? 'asc' : 'desc';
+    const baseSort = sort.replace(/_(asc|desc)$/, '');
+    const field = fieldMap[baseSort];
+    if (field) {
+      opensearchSort = [
+        {
+          [field]: {
+            order: direction,
           },
-        ];
-      }
+        },
+      ];
     }
-
-    return client.search({
-      searchTags: tags,
-      currentPage: currentPage ?? undefined,
-      pageSize: pageSize ?? undefined,
-      timeRange: 'all',
-      searchScope: 'flat',
-      sort: opensearchSort,
-    });
   }
-  const result = await client.search(['team-leadership'], '', {
-    tagFilters: [tags],
-    filters: undefined,
-    page: currentPage ?? undefined,
-    hitsPerPage: pageSize ?? undefined,
-  });
 
-  return {
-    items: result.hits,
-    total: result.nbHits,
-    algoliaIndexName: result.index,
-    algoliaQueryId: result.queryID,
-  };
+  return client.search({
+    searchTags: tags,
+    currentPage: currentPage ?? undefined,
+    pageSize: pageSize ?? undefined,
+    timeRange: 'all',
+    searchScope: 'flat',
+    sort: opensearchSort,
+  });
 };
 
 const osChampionOpensearchSort: OpensearchSortMap<SortOSChampion> = {

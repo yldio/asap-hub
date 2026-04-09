@@ -11500,7 +11500,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/uuid", "npm:8.3.4"],\
             ["@types/webpack", "npm:4.41.40"],\
             ["@yarnpkg/pnpify", "npm:3.1.8"],\
-            ["algoliasearch", "npm:4.25.3"],\
             ["babel-jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:29.7.0"],\
             ["babel-plugin-lodash", "npm:3.3.4"],\
             ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],\
@@ -39843,7 +39842,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/uuid", "npm:8.3.4"],\
             ["@types/webpack", "npm:4.41.40"],\
             ["@yarnpkg/pnpify", "npm:3.1.8"],\
-            ["algoliasearch", "npm:4.25.3"],\
             ["babel-jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:29.7.0"],\
             ["babel-plugin-lodash", "npm:3.3.4"],\
             ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],\

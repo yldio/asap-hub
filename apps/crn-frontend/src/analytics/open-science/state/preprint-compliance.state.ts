@@ -1,4 +1,3 @@
-import { AnalyticsSearchOptionsWithFiltering } from '@asap-hub/algolia';
 import {
   ListPreprintComplianceOpensearchResponse,
   PreprintComplianceOpensearchResponse,
@@ -11,6 +10,7 @@ import {
   selectorFamily,
   useRecoilState,
 } from 'recoil';
+import { AnalyticsSearchOptionsWithFiltering } from '../../utils/analytics-options';
 import { getPreprintCompliance } from '../api';
 import { useAnalyticsOpensearch } from '../../../hooks';
 

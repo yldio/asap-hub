@@ -1,4 +1,3 @@
-import { AlgoliaSearchClient } from '@asap-hub/algolia';
 import {
   ListTeamCollaborationResponse,
   teamCollaborationInitialSortingDirection,
@@ -13,13 +12,6 @@ import { getTeamCollaboration, getTeamCollaborationPerformance } from '../api';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { analyticsTeamCollaborationState } from '../state';
 import TeamCollaboration from '../TeamCollaboration';
-
-jest.mock('@asap-hub/algolia', () => ({
-  ...jest.requireActual('@asap-hub/algolia'),
-  algoliaSearchClientFactory: jest
-    .fn()
-    .mockReturnValue({} as AlgoliaSearchClient<'analytics'>),
-}));
 
 jest.mock('../api');
 

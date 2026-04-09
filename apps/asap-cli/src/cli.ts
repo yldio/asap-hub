@@ -13,9 +13,7 @@ import {
   getAlgoliaSettings,
   moveAlgoliaIndex,
   removeAlgoliaRecords,
-  setAlgoliaAnalyticsSettings,
   setAlgoliaSettings,
-  processPerformance,
 } from './scripts/algolia';
 import { processPerformance as processOpensearchPerformance } from './scripts/opensearch';
 
@@ -51,37 +49,10 @@ const appNameOption = {
   demandOption: trueType,
 };
 
-enum ProductivityMetricOption {
-  all = 'all',
-  'team-productivity' = 'team-productivity',
-  'user-productivity' = 'user-productivity',
-  'user-collaboration' = 'user-collaboration',
-  'team-collaboration' = 'team-collaboration',
-  'engagement' = 'engagement',
-}
-
-const productivityMetricOption = {
-  alias: 'm',
-  description: 'Productivity Metric',
-  choices: Object.values(ProductivityMetricOption),
-  default: ProductivityMetricOption.all,
-};
-
 type BaseArguments = {
   appid: string;
   apikey: string;
 };
-
-interface ProcessPerformanceArguments extends BaseArguments {
-  index: string;
-  metric:
-    | 'all'
-    | 'engagement'
-    | 'user-productivity'
-    | 'team-productivity'
-    | 'user-collaboration'
-    | 'team-collaboration';
-}
 
 interface DeleteIndexArguments extends BaseArguments {
   index: string;
@@ -110,10 +81,6 @@ interface SetSettingsArguments extends BaseArguments {
   index: string;
   appName: string;
 }
-interface SetAnalyticsSettings extends BaseArguments {
-  index: string;
-}
-
 interface ProcessOpensearchPerformanceArguments {
   awsRegion: string;
   environment: string;
@@ -130,23 +97,6 @@ interface ProcessOpensearchPerformanceArguments {
 
 // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-floating-promises
 yargs(hideBin(process.argv))
-  .command<ProcessPerformanceArguments>({
-    command: 'algolia:process-performance',
-    describe: 'process analytics performance',
-    builder: (cli) =>
-      cli
-        .option('appid', appIdOption)
-        .option('apikey', apikeyOption)
-        .option('index', indexOption)
-        .option('metric', productivityMetricOption),
-    handler: async ({ index, appid, apikey, metric }) =>
-      processPerformance({
-        algoliaAppId: appid,
-        algoliaCiApiKey: apikey,
-        indexName: index,
-        metric,
-      }),
-  })
   .command<DeleteIndexArguments>({
     command: 'algolia:delete-index',
     describe: 'deletes the index',
@@ -258,21 +208,6 @@ yargs(hideBin(process.argv))
         algoliaCiApiKey: apikey,
         indexName: index,
         appName,
-      }),
-  })
-  .command<SetAnalyticsSettings>({
-    command: 'algolia:set-analytics-settings',
-    describe: 'sets the settings for an Algolia analytics index',
-    builder: (cli) =>
-      cli
-        .option('appid', appIdOption)
-        .option('apikey', apikeyOption)
-        .option('index', indexOption),
-    handler: async ({ index, appid, apikey }) =>
-      setAlgoliaAnalyticsSettings({
-        algoliaAppId: appid,
-        algoliaCiApiKey: apikey,
-        indexName: index,
       }),
   })
   .command<ProcessOpensearchPerformanceArguments>({

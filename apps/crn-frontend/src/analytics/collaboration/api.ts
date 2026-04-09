@@ -1,14 +1,3 @@
-import {
-  AlgoliaClient,
-  AnalyticsPerformanceOptions,
-  AnalyticsSearchOptionsWithFiltering,
-  getMetric,
-  getPerformanceForMetric,
-  TEAM_COLLABORATION,
-  TEAM_COLLABORATION_PERFORMANCE,
-  USER_COLLABORATION,
-  USER_COLLABORATION_PERFORMANCE,
-} from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   DocumentCategoryOption,
@@ -26,9 +15,12 @@ import {
   UserCollaborationResponse,
 } from '@asap-hub/model';
 import {
+  AnalyticsPerformanceOptions,
+  AnalyticsSearchOptionsWithFiltering,
+} from '../utils/analytics-options';
+import {
   buildNormalizedStringSort,
   OpensearchClient,
-  SearchResult,
 } from '../utils/opensearch';
 import { OpensearchSortMap } from '../utils/opensearch/types';
 
@@ -274,104 +266,74 @@ const teamCollaborationOpensearchSort: OpensearchSortMap<SortTeamCollaboration> 
   };
 
 export const getUserCollaboration = (
-  client:
-    | AlgoliaClient<'analytics'>
-    | OpensearchClient<UserCollaborationResponse>,
+  client: OpensearchClient<UserCollaborationResponse>,
   options: AnalyticsSearchOptionsWithFiltering<SortUserCollaboration>,
 ) => {
-  if (client instanceof OpensearchClient) {
-    const { tags, currentPage, pageSize, timeRange, documentCategory, sort } =
-      options;
-    return client.search({
-      searchTags: tags,
-      currentPage: currentPage ?? undefined,
-      pageSize: pageSize ?? undefined,
-      timeRange,
-      searchScope: 'extended',
-      documentCategory,
-      sort: userCollaborationOpensearchSort[sort],
-    });
-  }
-  return getMetric<
-    SearchResult<UserCollaborationResponse>,
-    SortUserCollaboration
-  >(USER_COLLABORATION)(client, options);
+  const { tags, currentPage, pageSize, timeRange, documentCategory, sort } =
+    options;
+  return client.search({
+    searchTags: tags,
+    currentPage: currentPage ?? undefined,
+    pageSize: pageSize ?? undefined,
+    timeRange,
+    searchScope: 'extended',
+    documentCategory,
+    sort: userCollaborationOpensearchSort[sort],
+  });
 };
 
 export const getTeamCollaboration = (
-  client:
-    | AlgoliaClient<'analytics'>
-    | OpensearchClient<TeamCollaborationResponse>,
+  client: OpensearchClient<TeamCollaborationResponse>,
   options: AnalyticsSearchOptionsWithFiltering<SortTeamCollaboration>,
 ) => {
-  if (client instanceof OpensearchClient) {
-    const {
-      tags,
-      currentPage,
-      pageSize,
-      timeRange,
-      documentCategory,
-      outputType,
-      sort,
-    } = options;
-    return client.search({
-      searchTags: tags,
-      currentPage: currentPage ?? undefined,
-      pageSize: pageSize ?? undefined,
-      timeRange,
-      searchScope: 'flat',
-      documentCategory,
-      outputType,
-      sort: teamCollaborationOpensearchSort[sort],
-    });
-  }
-  return getMetric<
-    SearchResult<TeamCollaborationResponse>,
-    SortTeamCollaboration
-  >(TEAM_COLLABORATION)(client, options);
+  const {
+    tags,
+    currentPage,
+    pageSize,
+    timeRange,
+    documentCategory,
+    outputType,
+    sort,
+  } = options;
+  return client.search({
+    searchTags: tags,
+    currentPage: currentPage ?? undefined,
+    pageSize: pageSize ?? undefined,
+    timeRange,
+    searchScope: 'flat',
+    documentCategory,
+    outputType,
+    sort: teamCollaborationOpensearchSort[sort],
+  });
 };
 
 export const getTeamCollaborationPerformance = async (
-  client:
-    | AlgoliaClient<'analytics'>
-    | OpensearchClient<TeamCollaborationPerformance>,
+  client: OpensearchClient<TeamCollaborationPerformance>,
   options: AnalyticsPerformanceOptions,
 ) => {
-  if (client instanceof OpensearchClient) {
-    const results = await client.search({
-      searchTags: [],
-      timeRange: options.timeRange,
-      searchScope: 'flat',
-      sort: [],
-      documentCategory: options.documentCategory,
-      outputType: options.outputType,
-    });
-    return results.items[0] as TeamCollaborationPerformance | undefined;
-  }
-  return getPerformanceForMetric<TeamCollaborationPerformance>(
-    TEAM_COLLABORATION_PERFORMANCE,
-  )(client, options);
+  const results = await client.search({
+    searchTags: [],
+    timeRange: options.timeRange,
+    searchScope: 'flat',
+    sort: [],
+    documentCategory: options.documentCategory,
+    outputType: options.outputType,
+  });
+  return results.items[0] as TeamCollaborationPerformance | undefined;
 };
 
 export const getUserCollaborationPerformance = async (
-  client:
-    | AlgoliaClient<'analytics'>
-    | OpensearchClient<UserCollaborationPerformance>,
+  client: OpensearchClient<UserCollaborationPerformance>,
   options: AnalyticsPerformanceOptions,
 ) => {
-  if (client instanceof OpensearchClient) {
-    const results = await client.search({
-      searchTags: [],
-      timeRange: options.timeRange,
-      searchScope: 'flat',
-      sort: [],
-      documentCategory: options.documentCategory,
-    });
-    return results.items[0] as UserCollaborationPerformance | undefined;
-  }
-  return getPerformanceForMetric<UserCollaborationPerformance>(
-    USER_COLLABORATION_PERFORMANCE,
-  )(client, options);
+  const results = await client.search({
+    searchTags: [],
+    timeRange: options.timeRange,
+    searchScope: 'flat',
+    sort: [],
+    documentCategory: options.documentCategory,
+  });
+  return results.items[0] as UserCollaborationPerformance | undefined;
 };
 
 export type PreliminaryDataSharingSearchOptions = {

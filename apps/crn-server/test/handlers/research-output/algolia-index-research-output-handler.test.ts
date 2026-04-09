@@ -15,6 +15,13 @@ import { manuscriptVersionControllerMock } from '../../mocks/manuscript-version.
 const algoliaSearchClientMock = getAlgoliaSearchClientMock();
 jest.mock('../../../src/utils/logger');
 
+const withoutDescription = (
+  researchOutput: ReturnType<typeof getResearchOutputResponse>,
+) => {
+  const { description, ...rest } = researchOutput;
+  return rest;
+};
+
 describe('Research Output index handler', () => {
   const indexHandler = indexResearchOutputHandler(
     researchOutputControllerMock,
@@ -33,7 +40,7 @@ describe('Research Output index handler', () => {
     await indexHandler(publishedEvent('ro-1234'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: expect.objectContaining(researchOutputResponse),
+      data: expect.objectContaining(withoutDescription(researchOutputResponse)),
       type: 'research-output',
     });
   });
@@ -52,9 +59,11 @@ describe('Research Output index handler', () => {
 
     await indexHandler(publishedEvent('ro-1234'));
 
+    const { description, ...expectedWithoutDescription } =
+      researchOutputResponse;
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
       data: {
-        ...researchOutputResponse,
+        ...expectedWithoutDescription,
         _tags: [
           'methods-tag',
           'organisms-tag',
@@ -100,11 +109,13 @@ describe('Research Output index handler', () => {
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(2);
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
-      data: expect.objectContaining(researchOutputResponse),
+      data: expect.objectContaining(withoutDescription(researchOutputResponse)),
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
-      data: expect.objectContaining(relatedResearchOutputResponse),
+      data: expect.objectContaining(
+        withoutDescription(relatedResearchOutputResponse),
+      ),
       type: 'research-output',
     });
   });
@@ -151,15 +162,19 @@ describe('Research Output index handler', () => {
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledTimes(3);
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(1, {
-      data: expect.objectContaining(researchOutputResponse),
+      data: expect.objectContaining(withoutDescription(researchOutputResponse)),
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(2, {
-      data: expect.objectContaining(ownRelatedResearchOutputResponse),
+      data: expect.objectContaining(
+        withoutDescription(ownRelatedResearchOutputResponse),
+      ),
       type: 'research-output',
     });
     expect(algoliaSearchClientMock.save).toHaveBeenNthCalledWith(3, {
-      data: expect.objectContaining(foreignRelatedResearchOutputResponse),
+      data: expect.objectContaining(
+        withoutDescription(foreignRelatedResearchOutputResponse),
+      ),
       type: 'research-output',
     });
   });
@@ -318,7 +333,7 @@ describe('Research Output index handler', () => {
     await indexHandler(publishedEvent('ro-1234'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: expect.objectContaining(researchOutputResponse),
+      data: expect.objectContaining(withoutDescription(researchOutputResponse)),
       type: 'research-output',
     });
     expect(manuscriptVersionControllerMock.fetchById).toHaveBeenCalledWith(
@@ -355,7 +370,7 @@ describe('Research Output index handler', () => {
     await indexHandler(publishedEvent('ro-1234'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: expect.objectContaining(researchOutputResponse),
+      data: expect.objectContaining(withoutDescription(researchOutputResponse)),
       type: 'research-output',
     });
     expect(manuscriptVersionControllerMock.fetchById).toHaveBeenCalledWith(
@@ -376,7 +391,7 @@ describe('Research Output index handler', () => {
     await indexHandler(publishedEvent('ro-1234'));
 
     expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
-      data: expect.objectContaining(researchOutputResponse),
+      data: expect.objectContaining(withoutDescription(researchOutputResponse)),
       type: 'research-output',
     });
     expect(manuscriptVersionControllerMock.fetchById).not.toHaveBeenCalled();

@@ -34,8 +34,12 @@ export const indexResearchOutputHandler =
           return researchOutput;
         }
 
+        const {
+          description: _description,
+          ...researchOutputWithoutDescription
+        } = researchOutput;
         const data = {
-          ...researchOutput,
+          ...researchOutputWithoutDescription,
           _tags: [
             ...researchOutput.methods,
             ...researchOutput.organisms,

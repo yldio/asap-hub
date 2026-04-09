@@ -170,10 +170,12 @@ const transformRecords = (
 
   // type 'research-output'
   if ('subtype' in record) {
+    const { description: _description, ...payloadWithoutDescription } =
+      payload as typeof payload & { description?: string };
     const subtype = record.subtype;
 
     return {
-      ...payload,
+      ...payloadWithoutDescription,
       _tags: [
         ...record.methods,
         ...record.organisms,
@@ -181,7 +183,7 @@ const transformRecords = (
         ...(subtype ? [subtype] : []),
         ...record.keywords,
       ],
-    };
+    } as ReturnType<typeof transformRecords>;
   }
 
   // type 'user'

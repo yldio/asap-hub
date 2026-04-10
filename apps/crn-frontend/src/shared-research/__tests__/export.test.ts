@@ -270,6 +270,14 @@ describe('researchOutputToCSV', () => {
     expect(researchOutputToCSV(output).firstVersionAccession).toBe('');
     expect(researchOutputToCSV(output).firstVersionLink).toBe('');
   });
+
+  it('exports NA for doi when not present', () => {
+    const output: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      doi: undefined,
+    };
+    expect(researchOutputToCSV(output).doi).toBe('NA');
+  });
 });
 
 describe('squidexResultsToStream', () => {

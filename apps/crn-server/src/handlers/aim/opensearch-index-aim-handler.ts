@@ -27,10 +27,7 @@ export const indexAimOpensearchHandler =
     const { resourceId } = event.detail;
     logger.debug(`Event ${eventType} for resource ${resourceId}`);
 
-    if (
-      eventType === 'AimsPublished' ||
-      eventType === 'AimsUnpublished'
-    ) {
+    if (eventType === 'AimsPublished' || eventType === 'AimsUnpublished') {
       if (eventType === 'AimsPublished') {
         await reindexAimById(provider, resourceId);
         await reindexMilestonesByAimId(provider, resourceId);
@@ -57,8 +54,7 @@ export const indexAimOpensearchHandler =
       eventType === 'ProjectMembershipPublished' ||
       eventType === 'ProjectMembershipUnpublished'
     ) {
-      const projectId =
-        await provider.fetchProjectIdByMembershipId(resourceId);
+      const projectId = await provider.fetchProjectIdByMembershipId(resourceId);
       if (projectId) {
         await reindexByProjectId(provider, projectId);
       }

@@ -129,8 +129,7 @@ const getAimOrder = (
   const originalIdx = originalAims.findIndex((a) => a?.sys?.id === aimId);
   if (originalIdx >= 0) return originalIdx + 1;
 
-  const supplementAims =
-    project.supplementGrant?.aimsCollection?.items ?? [];
+  const supplementAims = project.supplementGrant?.aimsCollection?.items ?? [];
   const supplementIdx = supplementAims.findIndex((a) => a?.sys?.id === aimId);
   if (supplementIdx >= 0) return supplementIdx + 1;
 

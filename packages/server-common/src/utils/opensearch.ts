@@ -269,7 +269,9 @@ export const deleteOpensearchDocuments = async (
 ): Promise<void> => {
   if (ids.length === 0) return;
 
-  const bulkBody = ids.flatMap((id) => [{ delete: { _index: indexAlias, _id: id } }]);
+  const bulkBody = ids.flatMap((id) => [
+    { delete: { _index: indexAlias, _id: id } },
+  ]);
 
   const response = await client.bulk({ body: bulkBody, refresh: 'true' });
 

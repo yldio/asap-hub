@@ -7,17 +7,13 @@ const mockReindexMilestoneById = jest.fn().mockResolvedValue(undefined);
 const mockReindexAimsByMilestoneId = jest.fn().mockResolvedValue(undefined);
 const mockDeleteMilestoneById = jest.fn().mockResolvedValue(undefined);
 
-jest.mock(
-  '../../../src/handlers/opensearch/aims-milestones-reindex',
-  () => ({
-    reindexMilestoneById: (...args: unknown[]) =>
-      mockReindexMilestoneById(...args),
-    reindexAimsByMilestoneId: (...args: unknown[]) =>
-      mockReindexAimsByMilestoneId(...args),
-    deleteMilestoneById: (...args: unknown[]) =>
-      mockDeleteMilestoneById(...args),
-  }),
-);
+jest.mock('../../../src/handlers/opensearch/aims-milestones-reindex', () => ({
+  reindexMilestoneById: (...args: unknown[]) =>
+    mockReindexMilestoneById(...args),
+  reindexAimsByMilestoneId: (...args: unknown[]) =>
+    mockReindexAimsByMilestoneId(...args),
+  deleteMilestoneById: (...args: unknown[]) => mockDeleteMilestoneById(...args),
+}));
 
 const mockProvider = {
   fetchProjectsWithAims: jest.fn(),

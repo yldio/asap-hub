@@ -9,19 +9,14 @@ const mockDeleteAimById = jest.fn().mockResolvedValue(undefined);
 const mockReindexByProjectId = jest.fn().mockResolvedValue(undefined);
 const mockDeleteByProjectId = jest.fn().mockResolvedValue(undefined);
 
-jest.mock(
-  '../../../src/handlers/opensearch/aims-milestones-reindex',
-  () => ({
-    reindexAimById: (...args: unknown[]) => mockReindexAimById(...args),
-    reindexMilestonesByAimId: (...args: unknown[]) =>
-      mockReindexMilestonesByAimId(...args),
-    deleteAimById: (...args: unknown[]) => mockDeleteAimById(...args),
-    reindexByProjectId: (...args: unknown[]) =>
-      mockReindexByProjectId(...args),
-    deleteByProjectId: (...args: unknown[]) =>
-      mockDeleteByProjectId(...args),
-  }),
-);
+jest.mock('../../../src/handlers/opensearch/aims-milestones-reindex', () => ({
+  reindexAimById: (...args: unknown[]) => mockReindexAimById(...args),
+  reindexMilestonesByAimId: (...args: unknown[]) =>
+    mockReindexMilestonesByAimId(...args),
+  deleteAimById: (...args: unknown[]) => mockDeleteAimById(...args),
+  reindexByProjectId: (...args: unknown[]) => mockReindexByProjectId(...args),
+  deleteByProjectId: (...args: unknown[]) => mockDeleteByProjectId(...args),
+}));
 
 const mockProvider = {
   fetchProjectsWithAims: jest.fn(),
@@ -114,9 +109,7 @@ describe('OpenSearch Index Aim Handler', () => {
 
   describe('ProjectMembership events', () => {
     test('ProjectMembershipPublished finds the project and reindexes its aims', async () => {
-      mockProvider.fetchProjectIdByMembershipId.mockResolvedValue(
-        'project-1',
-      );
+      mockProvider.fetchProjectIdByMembershipId.mockResolvedValue('project-1');
 
       const event = createEventBridgeEventMock(
         { resourceId: 'membership-1' },

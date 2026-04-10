@@ -190,9 +190,7 @@ export class AimsMilestonesContentfulDataProvider
 
     return (
       milestones?.linkedFrom?.aimsCollection?.items
-        ?.filter(
-          (item): item is NonNullable<typeof item> => item !== null,
-        )
+        ?.filter((item): item is NonNullable<typeof item> => item !== null)
         .map((item) => item.sys.id) ?? []
     );
   }

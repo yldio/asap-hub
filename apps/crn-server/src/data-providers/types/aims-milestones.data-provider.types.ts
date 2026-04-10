@@ -98,4 +98,22 @@ export type AimsMilestonesDataProvider = {
   fetchArticlesForMilestone: (
     milestoneId: string,
   ) => Promise<ReadonlyArray<ArticleItem>>;
+  fetchAimIdsLinkedToMilestone: (
+    milestoneId: string,
+  ) => Promise<ReadonlyArray<string>>;
+  fetchProjectWithAimsDetailByAimId: (
+    aimId: string,
+  ) => Promise<ProjectWithAimsDetailDataObject | null>;
+  fetchAimWithMilestonesById: (
+    aimId: string,
+  ) => Promise<AimWithMilestonesDataObject | null>;
+  fetchMilestoneById: (
+    milestoneId: string,
+  ) => Promise<MilestoneDataObject | null>;
+  fetchProjectWithAimsDetailById: (
+    projectId: string,
+  ) => Promise<ProjectWithAimsDetailDataObject | null>;
+  fetchProjectIdByMembershipId: (
+    membershipId: string,
+  ) => Promise<string | null>;
 };

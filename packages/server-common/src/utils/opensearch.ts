@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console, no-underscore-dangle */
 import { Client } from '@opensearch-project/opensearch';
 import {
   extractDomainFromEndpoint,
@@ -231,6 +231,59 @@ const updateAliasAndCleanup = async (
         }
       }),
     );
+  }
+};
+
+export const upsertOpensearchDocuments = async <T extends { id: string }>(
+  client: Client,
+  indexAlias: string,
+  documents: T[],
+): Promise<void> => {
+  if (documents.length === 0) return;
+
+  const bulkBody = documents.flatMap((doc) => [
+    { index: { _index: indexAlias, _id: doc.id } },
+    doc as Record<string, unknown>,
+  ]);
+
+  const response = await client.bulk({ body: bulkBody, refresh: 'true' });
+
+  if (response.body.errors) {
+    const errors = response.body.items
+      .filter(
+        (item: { index?: { error?: { reason?: string } } }) =>
+          item.index?.error,
+      )
+      .map(
+        (item: { index?: { _id?: string; error?: { reason?: string } } }) =>
+          `${item.index?._id}: ${item.index?.error?.reason}`,
+      );
+    console.error(`Upsert errors: ${errors.join(', ')}`);
+  }
+};
+
+export const deleteOpensearchDocuments = async (
+  client: Client,
+  indexAlias: string,
+  ids: string[],
+): Promise<void> => {
+  if (ids.length === 0) return;
+
+  const bulkBody = ids.flatMap((id) => [{ delete: { _index: indexAlias, _id: id } }]);
+
+  const response = await client.bulk({ body: bulkBody, refresh: 'true' });
+
+  if (response.body.errors) {
+    const errors = response.body.items
+      .filter(
+        (item: { delete?: { error?: { reason?: string } } }) =>
+          item.delete?.error,
+      )
+      .map(
+        (item: { delete?: { _id?: string; error?: { reason?: string } } }) =>
+          `${item.delete?._id}: ${item.delete?.error?.reason}`,
+      );
+    console.error(`Delete errors: ${errors.join(', ')}`);
   }
 };
 

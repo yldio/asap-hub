@@ -4,27 +4,68 @@ import {
   ProjectMembershipEvent,
 } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
+import type { AimsMilestonesDataProvider } from '../../data-providers/types';
+import { getAimsMilestonesDataProvider } from '../../dependencies/aims-milestones.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { exportMetricToOpensearch } from '../../../scripts/opensearch/sync-opensearch-analytics';
+import {
+  reindexAimById,
+  reindexMilestonesByAimId,
+  deleteAimById,
+  reindexByProjectId,
+  deleteByProjectId,
+} from '../opensearch/aims-milestones-reindex';
 
 type OpensearchAimEvent = AimEvent | ProjectEvent | ProjectMembershipEvent;
 
 export const indexAimOpensearchHandler =
-  (): EventBridgeHandler<OpensearchAimEvent, { resourceId: string }> =>
+  (
+    provider: AimsMilestonesDataProvider,
+  ): EventBridgeHandler<OpensearchAimEvent, { resourceId: string }> =>
   async (event) => {
     const eventType = event['detail-type'];
-    logger.debug(
-      `Event ${eventType} - triggering full aims & milestones reindex`,
-    );
+    const { resourceId } = event.detail;
+    logger.debug(`Event ${eventType} for resource ${resourceId}`);
 
-    await Promise.all([
-      exportMetricToOpensearch('project-aims'),
-      exportMetricToOpensearch('project-milestones'),
-    ]);
+    if (
+      eventType === 'AimsPublished' ||
+      eventType === 'AimsUnpublished'
+    ) {
+      if (eventType === 'AimsPublished') {
+        await reindexAimById(provider, resourceId);
+        await reindexMilestonesByAimId(provider, resourceId);
+      } else {
+        await deleteAimById(resourceId);
+        await reindexMilestonesByAimId(provider, resourceId);
+      }
+      return;
+    }
 
-    logger.debug('Successfully reindexed project-aims and project-milestones');
+    if (
+      eventType === 'ProjectsPublished' ||
+      eventType === 'ProjectsUnpublished'
+    ) {
+      if (eventType === 'ProjectsPublished') {
+        await reindexByProjectId(provider, resourceId);
+      } else {
+        await deleteByProjectId(provider, resourceId);
+      }
+      return;
+    }
+
+    if (
+      eventType === 'ProjectMembershipPublished' ||
+      eventType === 'ProjectMembershipUnpublished'
+    ) {
+      const projectId =
+        await provider.fetchProjectIdByMembershipId(resourceId);
+      if (projectId) {
+        await reindexByProjectId(provider, projectId);
+      }
+    }
   };
 
 /* istanbul ignore next */
-export const handler = sentryWrapper(indexAimOpensearchHandler());
+export const handler = sentryWrapper(
+  indexAimOpensearchHandler(getAimsMilestonesDataProvider()),
+);

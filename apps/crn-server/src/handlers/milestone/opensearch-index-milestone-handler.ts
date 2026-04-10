@@ -1,23 +1,34 @@
 import { MilestoneEvent } from '@asap-hub/model';
-import { EventBridgeHandler, MilestonePayload } from '@asap-hub/server-common';
+import { EventBridgeHandler } from '@asap-hub/server-common';
+import type { AimsMilestonesDataProvider } from '../../data-providers/types';
+import { getAimsMilestonesDataProvider } from '../../dependencies/aims-milestones.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
-import { exportMetricToOpensearch } from '../../../scripts/opensearch/sync-opensearch-analytics';
+import {
+  reindexMilestoneById,
+  reindexAimsByMilestoneId,
+  deleteMilestoneById,
+} from '../opensearch/aims-milestones-reindex';
 
 export const indexMilestoneOpensearchHandler =
-  (): EventBridgeHandler<MilestoneEvent, MilestonePayload> => async (event) => {
+  (
+    provider: AimsMilestonesDataProvider,
+  ): EventBridgeHandler<MilestoneEvent, { resourceId: string }> =>
+  async (event) => {
     const eventType = event['detail-type'];
-    logger.debug(
-      `Event ${eventType} - triggering full aims & milestones reindex`,
-    );
+    const milestoneId = event.detail.resourceId;
+    logger.debug(`Event ${eventType} for milestone ${milestoneId}`);
 
-    await Promise.all([
-      exportMetricToOpensearch('project-aims'),
-      exportMetricToOpensearch('project-milestones'),
-    ]);
-
-    logger.debug('Successfully reindexed project-aims and project-milestones');
+    if (eventType === 'MilestonesPublished') {
+      await reindexMilestoneById(provider, milestoneId);
+      await reindexAimsByMilestoneId(provider, milestoneId);
+    } else {
+      await reindexAimsByMilestoneId(provider, milestoneId);
+      await deleteMilestoneById(milestoneId);
+    }
   };
 
 /* istanbul ignore next */
-export const handler = sentryWrapper(indexMilestoneOpensearchHandler());
+export const handler = sentryWrapper(
+  indexMilestoneOpensearchHandler(getAimsMilestonesDataProvider()),
+);

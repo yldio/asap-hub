@@ -1426,7 +1426,7 @@ const serverlessConfig: AWS = {
     },
     opensearchIndexAims: {
       handler: './src/handlers/aim/opensearch-index-aim-handler.handler',
-      timeout: 300,
+      timeout: 120,
       memorySize: 512,
       events: [
         {
@@ -1455,7 +1455,7 @@ const serverlessConfig: AWS = {
     opensearchIndexMilestones: {
       handler:
         './src/handlers/milestone/opensearch-index-milestone-handler.handler',
-      timeout: 300,
+      timeout: 120,
       memorySize: 512,
       events: [
         {

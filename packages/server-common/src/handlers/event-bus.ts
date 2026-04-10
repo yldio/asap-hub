@@ -39,3 +39,9 @@ export type ManuscriptPayload = WebhookDetail<
 export type ManuscriptVersionPayload = WebhookDetail<
   ContentfulWebhookPayload<'manuscriptVersions'>
 >;
+
+export type AimPayload = WebhookDetail<ContentfulWebhookPayload<'aims'>>;
+
+export type MilestonePayload = WebhookDetail<
+  ContentfulWebhookPayload<'milestones'>
+>;

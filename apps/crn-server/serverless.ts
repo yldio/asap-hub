@@ -1424,6 +1424,59 @@ const serverlessConfig: AWS = {
         OPENSEARCH_PASSWORD: opensearchMasterPassword,
       },
     },
+    opensearchIndexAims: {
+      handler: './src/handlers/aim/opensearch-index-aim-handler.handler',
+      timeout: 300,
+      memorySize: 512,
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'AimsPublished',
+                'AimsUnpublished',
+                'ProjectsPublished',
+                'ProjectsUnpublished',
+                'ProjectMembershipPublished',
+                'ProjectMembershipUnpublished',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+        OPENSEARCH_USERNAME: opensearchMasterUser,
+        OPENSEARCH_PASSWORD: opensearchMasterPassword,
+      },
+    },
+    opensearchIndexMilestones: {
+      handler:
+        './src/handlers/milestone/opensearch-index-milestone-handler.handler',
+      timeout: 300,
+      memorySize: 512,
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'MilestonesPublished',
+                'MilestonesUnpublished',
+              ] satisfies WebhookDetailType[],
+            },
+          },
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+        OPENSEARCH_USERNAME: opensearchMasterUser,
+        OPENSEARCH_PASSWORD: opensearchMasterPassword,
+      },
+    },
   },
   resources: {
     Conditions: {

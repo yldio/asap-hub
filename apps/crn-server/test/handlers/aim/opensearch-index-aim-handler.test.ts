@@ -1,67 +1,152 @@
-import {
-  AimEvent,
-  ProjectEvent,
-  ProjectMembershipEvent,
-} from '@asap-hub/model';
 import { indexAimOpensearchHandler } from '../../../src/handlers/aim/opensearch-index-aim-handler';
 import { createEventBridgeEventMock } from '../../helpers/events';
 
 jest.mock('../../../src/utils/logger');
 
-jest.mock('../../../scripts/opensearch/sync-opensearch-analytics', () => ({
-  exportMetricToOpensearch: jest.fn().mockResolvedValue(undefined),
-}));
+const mockReindexAimById = jest.fn().mockResolvedValue(undefined);
+const mockReindexMilestonesByAimId = jest.fn().mockResolvedValue(undefined);
+const mockDeleteAimById = jest.fn().mockResolvedValue(undefined);
+const mockReindexByProjectId = jest.fn().mockResolvedValue(undefined);
+const mockDeleteByProjectId = jest.fn().mockResolvedValue(undefined);
 
-import { exportMetricToOpensearch } from '../../../scripts/opensearch/sync-opensearch-analytics';
+jest.mock(
+  '../../../src/handlers/opensearch/aims-milestones-reindex',
+  () => ({
+    reindexAimById: (...args: unknown[]) => mockReindexAimById(...args),
+    reindexMilestonesByAimId: (...args: unknown[]) =>
+      mockReindexMilestonesByAimId(...args),
+    deleteAimById: (...args: unknown[]) => mockDeleteAimById(...args),
+    reindexByProjectId: (...args: unknown[]) =>
+      mockReindexByProjectId(...args),
+    deleteByProjectId: (...args: unknown[]) =>
+      mockDeleteByProjectId(...args),
+  }),
+);
 
-const mockExportMetricToOpensearch =
-  exportMetricToOpensearch as jest.MockedFunction<
-    typeof exportMetricToOpensearch
-  >;
-
-const triggerEvents: (AimEvent | ProjectEvent | ProjectMembershipEvent)[] = [
-  'AimsPublished',
-  'AimsUnpublished',
-  'ProjectsPublished',
-  'ProjectsUnpublished',
-  'ProjectMembershipPublished',
-  'ProjectMembershipUnpublished',
-];
+const mockProvider = {
+  fetchProjectsWithAims: jest.fn(),
+  fetchProjectsWithAimsDetail: jest.fn(),
+  fetchAimsWithMilestones: jest.fn(),
+  fetchMilestones: jest.fn(),
+  fetchArticlesForAim: jest.fn(),
+  fetchAimIdsLinkedToMilestone: jest.fn(),
+  fetchProjectWithAimsDetailByAimId: jest.fn(),
+  fetchAimWithMilestonesById: jest.fn(),
+  fetchMilestoneById: jest.fn(),
+  fetchProjectWithAimsDetailById: jest.fn(),
+  fetchProjectIdByMembershipId: jest.fn(),
+};
 
 describe('OpenSearch Index Aim Handler', () => {
-  const handler = indexAimOpensearchHandler();
+  const handler = indexAimOpensearchHandler(mockProvider);
 
   afterEach(() => jest.clearAllMocks());
 
-  test.each(triggerEvents)(
-    'should reindex both project-aims and project-milestones on %s',
-    async (eventType) => {
+  describe('Aim events', () => {
+    test('AimsPublished reindexes the aim and its linked milestones', async () => {
       const event = createEventBridgeEventMock(
-        { resourceId: 'resource-1' },
-        eventType,
-        'resource-1',
+        { resourceId: 'aim-1' },
+        'AimsPublished',
+        'aim-1',
       );
 
       await handler(event);
 
-      expect(mockExportMetricToOpensearch).toHaveBeenCalledWith('project-aims');
-      expect(mockExportMetricToOpensearch).toHaveBeenCalledWith(
-        'project-milestones',
+      expect(mockReindexAimById).toHaveBeenCalledWith(mockProvider, 'aim-1');
+      expect(mockReindexMilestonesByAimId).toHaveBeenCalledWith(
+        mockProvider,
+        'aim-1',
       );
-      expect(mockExportMetricToOpensearch).toHaveBeenCalledTimes(2);
-    },
-  );
+      expect(mockDeleteAimById).not.toHaveBeenCalled();
+    });
 
-  test('should throw when reindex fails', async () => {
-    const error = new Error('Reindex failed');
-    mockExportMetricToOpensearch.mockRejectedValueOnce(error);
+    test('AimsUnpublished deletes the aim and reindexes linked milestones', async () => {
+      const event = createEventBridgeEventMock(
+        { resourceId: 'aim-1' },
+        'AimsUnpublished',
+        'aim-1',
+      );
 
-    const event = createEventBridgeEventMock(
-      { resourceId: 'aim-1' },
-      'AimsPublished' as AimEvent,
-      'aim-1',
-    );
+      await handler(event);
 
-    await expect(handler(event)).rejects.toThrow('Reindex failed');
+      expect(mockDeleteAimById).toHaveBeenCalledWith('aim-1');
+      expect(mockReindexMilestonesByAimId).toHaveBeenCalledWith(
+        mockProvider,
+        'aim-1',
+      );
+      expect(mockReindexAimById).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Project events', () => {
+    test('ProjectsPublished reindexes all aims and milestones for the project', async () => {
+      const event = createEventBridgeEventMock(
+        { resourceId: 'project-1' },
+        'ProjectsPublished',
+        'project-1',
+      );
+
+      await handler(event);
+
+      expect(mockReindexByProjectId).toHaveBeenCalledWith(
+        mockProvider,
+        'project-1',
+      );
+      expect(mockDeleteByProjectId).not.toHaveBeenCalled();
+    });
+
+    test('ProjectsUnpublished deletes all aims and milestones for the project', async () => {
+      const event = createEventBridgeEventMock(
+        { resourceId: 'project-1' },
+        'ProjectsUnpublished',
+        'project-1',
+      );
+
+      await handler(event);
+
+      expect(mockDeleteByProjectId).toHaveBeenCalledWith(
+        mockProvider,
+        'project-1',
+      );
+      expect(mockReindexByProjectId).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('ProjectMembership events', () => {
+    test('ProjectMembershipPublished finds the project and reindexes its aims', async () => {
+      mockProvider.fetchProjectIdByMembershipId.mockResolvedValue(
+        'project-1',
+      );
+
+      const event = createEventBridgeEventMock(
+        { resourceId: 'membership-1' },
+        'ProjectMembershipPublished',
+        'membership-1',
+      );
+
+      await handler(event);
+
+      expect(mockProvider.fetchProjectIdByMembershipId).toHaveBeenCalledWith(
+        'membership-1',
+      );
+      expect(mockReindexByProjectId).toHaveBeenCalledWith(
+        mockProvider,
+        'project-1',
+      );
+    });
+
+    test('ProjectMembershipPublished does nothing when project not found', async () => {
+      mockProvider.fetchProjectIdByMembershipId.mockResolvedValue(null);
+
+      const event = createEventBridgeEventMock(
+        { resourceId: 'membership-1' },
+        'ProjectMembershipPublished',
+        'membership-1',
+      );
+
+      await handler(event);
+
+      expect(mockReindexByProjectId).not.toHaveBeenCalled();
+    });
   });
 });

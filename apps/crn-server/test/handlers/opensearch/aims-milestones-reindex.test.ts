@@ -1,0 +1,352 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+const mockGetClient = jest.fn();
+const mockUpsertOpensearchDocuments = jest.fn().mockResolvedValue(undefined);
+const mockDeleteOpensearchDocuments = jest.fn().mockResolvedValue(undefined);
+
+jest.mock('@asap-hub/server-common', () => ({
+  getClient: (...args: unknown[]) => mockGetClient(...args),
+  upsertOpensearchDocuments: (...args: unknown[]) =>
+    mockUpsertOpensearchDocuments(...args),
+  deleteOpensearchDocuments: (...args: unknown[]) =>
+    mockDeleteOpensearchDocuments(...args),
+  getCloudWatchLogger: () => ({
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  }),
+}));
+
+jest.mock('../../../src/utils/logger');
+
+jest.mock('../../../src/config', () => ({
+  awsRegion: 'us-east-1',
+  environment: 'test',
+  opensearchUsername: 'test-user',
+  opensearchPassword: 'test-pass',
+  contentfulAccessToken: 'token',
+  contentfulEnvId: 'env',
+  contentfulSpaceId: 'space',
+}));
+
+import {
+  reindexAimById,
+  reindexMilestoneById,
+  reindexAimsByMilestoneId,
+  reindexMilestonesByAimId,
+  reindexByProjectId,
+  deleteAimById,
+  deleteMilestoneById,
+  deleteByProjectId,
+} from '../../../src/handlers/opensearch/aims-milestones-reindex';
+import type { AimsMilestonesDataProvider } from '../../../src/data-providers/types';
+
+const mockClient = {} as any;
+
+const createMockProvider = (): jest.Mocked<AimsMilestonesDataProvider> => ({
+  fetchProjectsWithAims: jest.fn(),
+  fetchProjectsWithAimsDetail: jest.fn(),
+  fetchAimsWithMilestones: jest.fn(),
+  fetchMilestones: jest.fn(),
+  fetchArticlesForAim: jest.fn(),
+  fetchAimIdsLinkedToMilestone: jest.fn(),
+  fetchProjectWithAimsDetailByAimId: jest.fn(),
+  fetchAimWithMilestonesById: jest.fn(),
+  fetchMilestoneById: jest.fn(),
+  fetchProjectWithAimsDetailById: jest.fn(),
+  fetchProjectIdByMembershipId: jest.fn(),
+});
+
+const makeProject = (overrides: any = {}) => ({
+  sys: { id: 'project-1' },
+  title: 'Project Alpha',
+  status: 'Active',
+  membersCollection: {
+    items: [
+      {
+        projectMember: {
+          __typename: 'Teams',
+          sys: { id: 'team-1' },
+          displayName: 'Team Alpha',
+        },
+      },
+    ],
+  },
+  originalGrantAimsCollection: {
+    items: [
+      {
+        sys: {
+          id: 'aim-1',
+          firstPublishedAt: '2025-01-01T00:00:00.000Z',
+          publishedAt: '2025-06-01T00:00:00.000Z',
+        },
+        description: 'First aim',
+      },
+    ],
+  },
+  supplementGrant: null,
+  ...overrides,
+});
+
+const makeMilestone = (overrides: any = {}) => ({
+  sys: {
+    id: 'ms-1',
+    firstPublishedAt: '2025-02-01T00:00:00.000Z',
+    publishedAt: '2025-07-01T00:00:00.000Z',
+  },
+  description: 'First milestone',
+  status: 'In Progress',
+  relatedArticlesCollection: {
+    total: 1,
+    items: [{ sys: { id: 'article-1' }, doi: '10.1000/abc' }],
+  },
+  ...overrides,
+});
+
+describe('aims-milestones-reindex', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockGetClient.mockResolvedValue(mockClient);
+  });
+
+  describe('reindexAimById', () => {
+    test('builds and upserts an aim document', async () => {
+      const provider = createMockProvider();
+      const project = makeProject();
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(project);
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-1' },
+        milestonesCollection: { items: [{ sys: { id: 'ms-1' } }] },
+      });
+      provider.fetchMilestoneById.mockResolvedValue(makeMilestone());
+
+      await reindexAimById(provider, 'aim-1');
+
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-aims',
+        [
+          expect.objectContaining({
+            id: 'aim-1',
+            description: 'First aim',
+            grantType: 'original',
+            projectId: 'project-1',
+            projectName: 'Project Alpha',
+            teamName: 'Team Alpha',
+            status: 'In Progress',
+            articleCount: 1,
+            articlesDOI: '10.1000/abc',
+          }),
+        ],
+      );
+    });
+
+    test('skips when aim not found', async () => {
+      const provider = createMockProvider();
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(null);
+      provider.fetchAimWithMilestonesById.mockResolvedValue(null);
+
+      await reindexAimById(provider, 'aim-missing');
+
+      expect(mockUpsertOpensearchDocuments).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('reindexMilestoneById', () => {
+    test('builds and upserts a milestone document', async () => {
+      const provider = createMockProvider();
+      const project = makeProject();
+      provider.fetchMilestoneById.mockResolvedValue(makeMilestone());
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue(['aim-1']);
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(project);
+
+      await reindexMilestoneById(provider, 'ms-1');
+
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        [
+          expect.objectContaining({
+            id: 'ms-1',
+            description: 'First milestone',
+            status: 'In Progress',
+            aimNumbersAsc: '1',
+            aimNumbersDesc: '1',
+            projectId: 'project-1',
+            projectName: 'Project Alpha',
+            articleCount: 1,
+          }),
+        ],
+      );
+    });
+
+    test('skips when milestone not found', async () => {
+      const provider = createMockProvider();
+      provider.fetchMilestoneById.mockResolvedValue(null);
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue([]);
+
+      await reindexMilestoneById(provider, 'ms-missing');
+
+      expect(mockUpsertOpensearchDocuments).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('reindexAimsByMilestoneId', () => {
+    test('finds aims linked to milestone and reindexes each', async () => {
+      const provider = createMockProvider();
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue([
+        'aim-1',
+        'aim-2',
+      ]);
+
+      const project = makeProject({
+        originalGrantAimsCollection: {
+          items: [
+            {
+              sys: {
+                id: 'aim-1',
+                firstPublishedAt: '2025-01-01T00:00:00.000Z',
+                publishedAt: '2025-06-01T00:00:00.000Z',
+              },
+              description: 'First aim',
+            },
+            {
+              sys: {
+                id: 'aim-2',
+                firstPublishedAt: '2025-01-02T00:00:00.000Z',
+                publishedAt: '2025-06-02T00:00:00.000Z',
+              },
+              description: 'Second aim',
+            },
+          ],
+        },
+      });
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(project);
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-1' },
+        milestonesCollection: { items: [{ sys: { id: 'ms-1' } }] },
+      });
+      provider.fetchMilestoneById.mockResolvedValue(makeMilestone());
+
+      await reindexAimsByMilestoneId(provider, 'ms-1');
+
+      expect(provider.fetchAimIdsLinkedToMilestone).toHaveBeenCalledWith(
+        'ms-1',
+      );
+      // Called once per aim
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('reindexMilestonesByAimId', () => {
+    test('finds milestones linked to aim and reindexes each', async () => {
+      const provider = createMockProvider();
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-1' },
+        milestonesCollection: {
+          items: [{ sys: { id: 'ms-1' } }, { sys: { id: 'ms-2' } }],
+        },
+      });
+      provider.fetchMilestoneById.mockResolvedValue(makeMilestone());
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue(['aim-1']);
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(
+        makeProject(),
+      );
+
+      await reindexMilestonesByAimId(provider, 'aim-1');
+
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('reindexByProjectId', () => {
+    test('reindexes all aims and milestones for a project', async () => {
+      const provider = createMockProvider();
+      const project = makeProject();
+      provider.fetchProjectWithAimsDetailById.mockResolvedValue(project);
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(project);
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-1' },
+        milestonesCollection: { items: [{ sys: { id: 'ms-1' } }] },
+      });
+      provider.fetchMilestoneById.mockResolvedValue(makeMilestone());
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue(['aim-1']);
+
+      await reindexByProjectId(provider, 'project-1');
+
+      expect(provider.fetchProjectWithAimsDetailById).toHaveBeenCalledWith(
+        'project-1',
+      );
+      // At least one upsert for aim and one for milestone
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalled();
+    });
+
+    test('skips when project not found', async () => {
+      const provider = createMockProvider();
+      provider.fetchProjectWithAimsDetailById.mockResolvedValue(null);
+
+      await reindexByProjectId(provider, 'project-missing');
+
+      expect(mockUpsertOpensearchDocuments).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteAimById', () => {
+    test('deletes aim from OpenSearch', async () => {
+      await deleteAimById('aim-1');
+
+      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-aims',
+        ['aim-1'],
+      );
+    });
+  });
+
+  describe('deleteMilestoneById', () => {
+    test('deletes milestone from OpenSearch', async () => {
+      await deleteMilestoneById('ms-1');
+
+      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        ['ms-1'],
+      );
+    });
+  });
+
+  describe('deleteByProjectId', () => {
+    test('deletes all aims and milestones for a project', async () => {
+      const provider = createMockProvider();
+      const project = makeProject();
+      provider.fetchProjectWithAimsDetailById.mockResolvedValue(project);
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-1' },
+        milestonesCollection: { items: [{ sys: { id: 'ms-1' } }] },
+      });
+
+      await deleteByProjectId(provider, 'project-1');
+
+      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-aims',
+        ['aim-1'],
+      );
+      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        ['ms-1'],
+      );
+    });
+
+    test('skips when project not found', async () => {
+      const provider = createMockProvider();
+      provider.fetchProjectWithAimsDetailById.mockResolvedValue(null);
+
+      await deleteByProjectId(provider, 'project-missing');
+
+      expect(mockDeleteOpensearchDocuments).not.toHaveBeenCalled();
+    });
+  });
+});

@@ -128,6 +128,26 @@ describe('OpenSearch Index Aim Handler', () => {
       );
     });
 
+    test('ProjectMembershipUnpublished finds the project and reindexes its aims', async () => {
+      mockProvider.fetchProjectIdByMembershipId.mockResolvedValue('project-1');
+
+      const event = createEventBridgeEventMock(
+        { resourceId: 'membership-1' },
+        'ProjectMembershipUnpublished',
+        'membership-1',
+      );
+
+      await handler(event);
+
+      expect(mockProvider.fetchProjectIdByMembershipId).toHaveBeenCalledWith(
+        'membership-1',
+      );
+      expect(mockReindexByProjectId).toHaveBeenCalledWith(
+        mockProvider,
+        'project-1',
+      );
+    });
+
     test('ProjectMembershipPublished does nothing when project not found', async () => {
       mockProvider.fetchProjectIdByMembershipId.mockResolvedValue(null);
 

@@ -142,6 +142,85 @@ describe('aims-milestones-reindex', () => {
       );
     });
 
+    test('handles aim in supplement grant', async () => {
+      const provider = createMockProvider();
+      const project = makeProject({
+        originalGrantAimsCollection: { items: [] },
+        supplementGrant: {
+          aimsCollection: {
+            items: [
+              {
+                sys: {
+                  id: 'aim-s1',
+                  firstPublishedAt: '2025-03-01T00:00:00.000Z',
+                  publishedAt: '2025-08-01T00:00:00.000Z',
+                },
+                description: 'Supplement aim',
+              },
+            ],
+          },
+        },
+      });
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(project);
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-s1' },
+        milestonesCollection: { items: [] },
+      });
+
+      await reindexAimById(provider, 'aim-s1');
+
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-aims',
+        [
+          expect.objectContaining({
+            id: 'aim-s1',
+            grantType: 'supplement',
+          }),
+        ],
+      );
+    });
+
+    test('skips when aim description is empty', async () => {
+      const provider = createMockProvider();
+      const project = makeProject({
+        originalGrantAimsCollection: {
+          items: [
+            {
+              sys: { id: 'aim-1', firstPublishedAt: null, publishedAt: null },
+              description: '   ',
+            },
+          ],
+        },
+      });
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(project);
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-1' },
+        milestonesCollection: { items: [] },
+      });
+
+      await reindexAimById(provider, 'aim-1');
+
+      expect(mockUpsertOpensearchDocuments).not.toHaveBeenCalled();
+    });
+
+    test('skips when aim detail not found in project', async () => {
+      const provider = createMockProvider();
+      const project = makeProject({
+        originalGrantAimsCollection: { items: [] },
+        supplementGrant: null,
+      });
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(project);
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-missing' },
+        milestonesCollection: { items: [] },
+      });
+
+      await reindexAimById(provider, 'aim-missing');
+
+      expect(mockUpsertOpensearchDocuments).not.toHaveBeenCalled();
+    });
+
     test('skips when aim not found', async () => {
       const provider = createMockProvider();
       provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(null);
@@ -176,6 +255,62 @@ describe('aims-milestones-reindex', () => {
             projectId: 'project-1',
             projectName: 'Project Alpha',
             articleCount: 1,
+          }),
+        ],
+      );
+    });
+
+    test('handles aim in supplement grant for milestone aimNumbers', async () => {
+      const provider = createMockProvider();
+      const project = makeProject({
+        originalGrantAimsCollection: { items: [] },
+        supplementGrant: {
+          aimsCollection: {
+            items: [
+              {
+                sys: { id: 'aim-s1' },
+                description: 'Supplement aim',
+              },
+            ],
+          },
+        },
+      });
+      provider.fetchMilestoneById.mockResolvedValue(makeMilestone());
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue(['aim-s1']);
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(project);
+
+      await reindexMilestoneById(provider, 'ms-1');
+
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        [
+          expect.objectContaining({
+            grantType: 'supplement',
+            aimNumbersAsc: '1',
+          }),
+        ],
+      );
+    });
+
+    test('uses aimOrder 0 when aim not found in project collections', async () => {
+      const provider = createMockProvider();
+      const project = makeProject({
+        originalGrantAimsCollection: { items: [] },
+        supplementGrant: null,
+      });
+      provider.fetchMilestoneById.mockResolvedValue(makeMilestone());
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue(['aim-orphan']);
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(project);
+
+      await reindexMilestoneById(provider, 'ms-1');
+
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        [
+          expect.objectContaining({
+            aimNumbersAsc: '0',
           }),
         ],
       );

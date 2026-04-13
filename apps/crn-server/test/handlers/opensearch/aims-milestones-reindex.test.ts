@@ -2,14 +2,14 @@
 
 const mockGetClient = jest.fn();
 const mockUpsertOpensearchDocuments = jest.fn().mockResolvedValue(undefined);
-const mockDeleteOpensearchDocuments = jest.fn().mockResolvedValue(undefined);
+const mockDeleteByDocumentIds = jest.fn().mockResolvedValue(undefined);
 
 jest.mock('@asap-hub/server-common', () => ({
   getClient: (...args: unknown[]) => mockGetClient(...args),
   upsertOpensearchDocuments: (...args: unknown[]) =>
     mockUpsertOpensearchDocuments(...args),
-  deleteOpensearchDocuments: (...args: unknown[]) =>
-    mockDeleteOpensearchDocuments(...args),
+  deleteByDocumentIds: (...args: unknown[]) =>
+    mockDeleteByDocumentIds(...args),
   getCloudWatchLogger: () => ({
     debug: jest.fn(),
     info: jest.fn(),
@@ -146,7 +146,7 @@ describe('aims-milestones-reindex', () => {
       );
 
       // Milestones deleted then reinserted
-      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
         mockClient,
         'project-milestones',
         ['ms-1'],
@@ -507,12 +507,12 @@ describe('aims-milestones-reindex', () => {
       );
 
       // Deletes aims then milestones
-      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
         mockClient,
         'project-aims',
         ['aim-1'],
       );
-      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
         mockClient,
         'project-milestones',
         ['ms-1'],
@@ -545,7 +545,7 @@ describe('aims-milestones-reindex', () => {
     test('deletes aim from OpenSearch', async () => {
       await deleteAimById('aim-1');
 
-      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
         mockClient,
         'project-aims',
         ['aim-1'],
@@ -557,7 +557,7 @@ describe('aims-milestones-reindex', () => {
     test('deletes milestone from OpenSearch', async () => {
       await deleteMilestoneById('ms-1');
 
-      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
         mockClient,
         'project-milestones',
         ['ms-1'],
@@ -577,7 +577,7 @@ describe('aims-milestones-reindex', () => {
 
       await deleteMilestonesByAimId(provider, 'aim-1');
 
-      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
         mockClient,
         'project-milestones',
         ['ms-1', 'ms-2'],
@@ -593,7 +593,7 @@ describe('aims-milestones-reindex', () => {
 
       await deleteMilestonesByAimId(provider, 'aim-1');
 
-      expect(mockDeleteOpensearchDocuments).not.toHaveBeenCalled();
+      expect(mockDeleteByDocumentIds).not.toHaveBeenCalled();
     });
   });
 
@@ -609,12 +609,12 @@ describe('aims-milestones-reindex', () => {
 
       await deleteByProjectId(provider, 'project-1');
 
-      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
         mockClient,
         'project-aims',
         ['aim-1'],
       );
-      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
         mockClient,
         'project-milestones',
         ['ms-1'],
@@ -627,7 +627,7 @@ describe('aims-milestones-reindex', () => {
 
       await deleteByProjectId(provider, 'project-missing');
 
-      expect(mockDeleteOpensearchDocuments).not.toHaveBeenCalled();
+      expect(mockDeleteByDocumentIds).not.toHaveBeenCalled();
     });
   });
 });

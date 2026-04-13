@@ -2,7 +2,7 @@ import { Client } from '@opensearch-project/opensearch';
 import {
   getClient,
   upsertOpensearchDocuments,
-  deleteOpensearchDocuments,
+  deleteByDocumentIds,
 } from '@asap-hub/server-common';
 import type {
   AimsMilestonesDataProvider,
@@ -249,7 +249,7 @@ export const reindexAimById = async (
       .map((m) => m.sys.id) ?? [];
 
   if (milestoneIds.length > 0) {
-    await deleteOpensearchDocuments(client, MILESTONES_INDEX, milestoneIds);
+    await deleteByDocumentIds(client, MILESTONES_INDEX, milestoneIds);
   }
 
   for (const milestoneId of milestoneIds) {
@@ -427,13 +427,13 @@ export const reindexByProjectId = async (
 
   // Delete all existing aims for this project
   if (aimIds.length > 0) {
-    await deleteOpensearchDocuments(client, AIMS_INDEX, aimIds);
+    await deleteByDocumentIds(client, AIMS_INDEX, aimIds);
   }
 
   // Delete all existing milestones for these aims
   const milestoneIds = await collectMilestoneIdsForAims(provider, aimIds);
   if (milestoneIds.length > 0) {
-    await deleteOpensearchDocuments(client, MILESTONES_INDEX, milestoneIds);
+    await deleteByDocumentIds(client, MILESTONES_INDEX, milestoneIds);
   }
 
   // Reinsert all aims
@@ -484,7 +484,7 @@ export const reindexByProjectId = async (
  */
 export const deleteAimById = async (aimId: string): Promise<void> => {
   const client = await getOpensearchClient();
-  await deleteOpensearchDocuments(client, AIMS_INDEX, [aimId]);
+  await deleteByDocumentIds(client, AIMS_INDEX, [aimId]);
 };
 
 /**
@@ -494,7 +494,7 @@ export const deleteMilestoneById = async (
   milestoneId: string,
 ): Promise<void> => {
   const client = await getOpensearchClient();
-  await deleteOpensearchDocuments(client, MILESTONES_INDEX, [milestoneId]);
+  await deleteByDocumentIds(client, MILESTONES_INDEX, [milestoneId]);
 };
 
 /**
@@ -514,10 +514,10 @@ export const deleteByProjectId = async (
 
   const client = await getOpensearchClient();
   const aimIds = allAims.map((a) => a.sys.id);
-  await deleteOpensearchDocuments(client, AIMS_INDEX, aimIds);
+  await deleteByDocumentIds(client, AIMS_INDEX, aimIds);
 
   const milestoneIds = await collectMilestoneIdsForAims(provider, aimIds);
-  await deleteOpensearchDocuments(client, MILESTONES_INDEX, milestoneIds);
+  await deleteByDocumentIds(client, MILESTONES_INDEX, milestoneIds);
 };
 
 /**
@@ -537,5 +537,5 @@ export const deleteMilestonesByAimId = async (
   if (milestoneIds.length === 0) return;
 
   const client = await getOpensearchClient();
-  await deleteOpensearchDocuments(client, MILESTONES_INDEX, milestoneIds);
+  await deleteByDocumentIds(client, MILESTONES_INDEX, milestoneIds);
 };

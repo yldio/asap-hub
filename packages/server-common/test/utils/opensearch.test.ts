@@ -3,6 +3,7 @@ import {
   indexOpensearchData,
   upsertOpensearchDocuments,
   deleteOpensearchDocuments,
+  deleteByDocumentIds,
 } from '../../src/utils/opensearch';
 import { getOpensearchEndpoint } from '../../src/utils/opensearch-endpoint';
 import type { OpensearchMapping } from '../../src/utils/types';
@@ -151,6 +152,43 @@ describe('deleteOpensearchDocuments', () => {
     expect(console.error).toHaveBeenCalledWith(
       'Delete errors: doc-1: not found',
     );
+  });
+});
+
+describe('deleteByDocumentIds', () => {
+  const mockDeleteByQueryClient = {
+    deleteByQuery: jest.fn(),
+  } as unknown as Client;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should do nothing when ids array is empty', async () => {
+    await deleteByDocumentIds(mockDeleteByQueryClient, 'test-index', []);
+
+    expect(mockDeleteByQueryClient.deleteByQuery).not.toHaveBeenCalled();
+  });
+
+  test('should delete documents by querying on the id field', async () => {
+    (mockDeleteByQueryClient.deleteByQuery as jest.Mock).mockResolvedValue({
+      body: { deleted: 2 },
+    });
+
+    await deleteByDocumentIds(mockDeleteByQueryClient, 'test-index', [
+      'doc-1',
+      'doc-2',
+    ]);
+
+    expect(mockDeleteByQueryClient.deleteByQuery).toHaveBeenCalledWith({
+      index: 'test-index',
+      body: {
+        query: {
+          terms: { id: ['doc-1', 'doc-2'] },
+        },
+      },
+      refresh: true,
+    });
   });
 });
 

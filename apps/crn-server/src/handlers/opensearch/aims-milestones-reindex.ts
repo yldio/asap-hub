@@ -520,12 +520,15 @@ export const deleteByProjectId = async (projectId: string): Promise<void> => {
 };
 
 /**
- * Deletes all milestones linked to an aim from OpenSearch.
- * Used when an aim is unpublished — its milestones should be cleaned up.
+ * Refreshes milestones linked to an unpublished aim.
  *
- * Note: if the aim is already unpublished (gone from the delivery API),
- * we cannot resolve its milestone IDs and must rely on the scheduled
- * full reindex to clean up stale milestone documents.
+ * Milestones are shared across aims, so we cannot blindly delete them.
+ * For each milestone linked to the aim:
+ *   - If still linked to other published aims → reindex it (updates aimNumbers)
+ *   - If orphaned (no other aims link to it)  → delete it from OpenSearch
+ *
+ * Note: if the aim is already gone from the delivery API, we cannot resolve
+ * its milestone IDs and rely on the scheduled full reindex.
  */
 export const deleteMilestonesByAimId = async (
   provider: AimsMilestonesDataProvider,
@@ -546,6 +549,17 @@ export const deleteMilestonesByAimId = async (
 
   if (milestoneIds.length === 0) return;
 
-  const client = await getOpensearchClient();
-  await deleteByDocumentIds(client, MILESTONES_INDEX, milestoneIds);
+  for (const milestoneId of milestoneIds) {
+    const otherAimIds = (
+      await provider.fetchAimIdsLinkedToMilestone(milestoneId)
+    ).filter((id) => id !== aimId);
+
+    if (otherAimIds.length > 0) {
+      // Milestone is shared with other aims — reindex to update aimNumbers
+      await reindexMilestoneById(provider, milestoneId);
+    } else {
+      // No other aims reference this milestone — safe to delete
+      await deleteMilestoneById(milestoneId);
+    }
+  }
 };

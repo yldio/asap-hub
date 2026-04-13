@@ -567,7 +567,57 @@ describe('aims-milestones-reindex', () => {
   });
 
   describe('deleteMilestonesByAimId', () => {
-    test('deletes all milestones linked to an aim', async () => {
+    test('reindexes milestones still linked to other aims instead of deleting', async () => {
+      const provider = createMockProvider();
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-1' },
+        milestonesCollection: {
+          items: [{ sys: { id: 'ms-1' } }],
+        },
+      });
+      // ms-1 is also linked to aim-2
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue([
+        'aim-1',
+        'aim-2',
+      ]);
+      provider.fetchMilestoneById.mockResolvedValue(makeMilestone());
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(
+        makeProject(),
+      );
+
+      await deleteMilestonesByAimId(provider, 'aim-1');
+
+      // Should reindex, not delete
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        [expect.objectContaining({ id: 'ms-1' })],
+      );
+      expect(mockDeleteByDocumentIds).not.toHaveBeenCalled();
+    });
+
+    test('deletes orphaned milestones not linked to other aims', async () => {
+      const provider = createMockProvider();
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-1' },
+        milestonesCollection: {
+          items: [{ sys: { id: 'ms-1' } }],
+        },
+      });
+      // ms-1 is only linked to aim-1 (the one being unpublished)
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue(['aim-1']);
+
+      await deleteMilestonesByAimId(provider, 'aim-1');
+
+      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        ['ms-1'],
+      );
+      expect(mockUpsertOpensearchDocuments).not.toHaveBeenCalled();
+    });
+
+    test('handles mix of shared and orphaned milestones', async () => {
       const provider = createMockProvider();
       provider.fetchAimWithMilestonesById.mockResolvedValue({
         sys: { id: 'aim-1' },
@@ -575,13 +625,27 @@ describe('aims-milestones-reindex', () => {
           items: [{ sys: { id: 'ms-1' } }, { sys: { id: 'ms-2' } }],
         },
       });
+      // deleteMilestonesByAimId calls fetchAimIdsLinkedToMilestone for ms-1,
+      // then reindexMilestoneById also calls it for ms-1 internally,
+      // then deleteMilestonesByAimId calls it for ms-2
+      provider.fetchAimIdsLinkedToMilestone
+        .mockResolvedValueOnce(['aim-1', 'aim-2']) // ms-1: shared (checked by deleteMilestonesByAimId)
+        .mockResolvedValueOnce(['aim-2']) // ms-1: reindexMilestoneById resolves linked aims
+        .mockResolvedValueOnce(['aim-1']); // ms-2: orphaned (checked by deleteMilestonesByAimId)
+      provider.fetchMilestoneById.mockResolvedValue(makeMilestone());
+      provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(
+        makeProject(),
+      );
 
       await deleteMilestonesByAimId(provider, 'aim-1');
 
+      // ms-1 reindexed
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledTimes(1);
+      // ms-2 deleted
       expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
         mockClient,
         'project-milestones',
-        ['ms-1', 'ms-2'],
+        ['ms-2'],
       );
     });
 
@@ -595,6 +659,17 @@ describe('aims-milestones-reindex', () => {
       await deleteMilestonesByAimId(provider, 'aim-1');
 
       expect(mockDeleteByDocumentIds).not.toHaveBeenCalled();
+      expect(mockUpsertOpensearchDocuments).not.toHaveBeenCalled();
+    });
+
+    test('skips when aim not available in Contentful', async () => {
+      const provider = createMockProvider();
+      provider.fetchAimWithMilestonesById.mockResolvedValue(null);
+
+      await deleteMilestonesByAimId(provider, 'aim-1');
+
+      expect(mockDeleteByDocumentIds).not.toHaveBeenCalled();
+      expect(mockUpsertOpensearchDocuments).not.toHaveBeenCalled();
     });
   });
 

@@ -1,16 +1,32 @@
 import { css } from '@emotion/react';
-import { GrantType } from '@asap-hub/model';
+import { Aim, GrantType, MilestoneCreateRequest } from '@asap-hub/model';
+import { ComponentProps, useState } from 'react';
 
-import { Headline3, Link, Paragraph } from '../atoms';
+import { Button, Headline3, Link, Paragraph } from '../atoms';
 import { formatDateToTimezone } from '../date';
-import { LabeledDropdown } from '../molecules';
+import { LabeledDropdown, LabeledMultiSelect } from '../molecules';
 import { rem, mobileScreen } from '../pixels';
 import { neutral900 } from '../colors';
 import MilestonesMobilePage from './MilestonesMobilePage';
+import { plusIcon } from '../icons';
+import CreateMilestoneModal from './CreateMilestoneModal';
+import { ResearchOutputOption } from '../utils';
 
 const containerStyles = css({
   display: 'grid',
   rowGap: rem(32),
+});
+
+const headerStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+});
+
+const createMilestoneButtonStyles = css({
+  flexGrow: 0,
+  alignSelf: 'center',
+  gap: rem(8),
 });
 
 const descriptionSectionStyles = css({
@@ -50,18 +66,30 @@ const pageDesktopStyles = css({
 
 type ProjectDetailMilestonesProps = {
   readonly seeAimsHref?: string;
+  isLead: boolean;
   selectedGrantType: GrantType;
   onGrantTypeChange: (grantType: GrantType) => void;
   children: React.ReactNode;
   hasSupplementGrant: boolean;
   readonly milestonesLastUpdated?: Partial<Record<GrantType, string>>;
+  readonly aims: ReadonlyArray<Aim>;
+  loadArticleOptions: NonNullable<
+    ComponentProps<
+      typeof LabeledMultiSelect<ResearchOutputOption>
+    >['loadOptions']
+  >;
+  onCreateProjectMilestone: (data: MilestoneCreateRequest) => Promise<void>;
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   seeAimsHref,
+  isLead,
   selectedGrantType,
   onGrantTypeChange,
   hasSupplementGrant,
+  aims,
+  loadArticleOptions,
+  onCreateProjectMilestone,
   children,
   milestonesLastUpdated,
 }) => {
@@ -69,8 +97,34 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
 
+  const canCreateMilestone =
+    isLead &&
+    (selectedGrantType === 'supplement' ||
+      (selectedGrantType === 'original' && !hasSupplementGrant));
+
+  const [displayCreateMilestoneModal, setDisplayCreateMilestoneModal] =
+    useState(false);
+
+  const handleAddNewMilestone = () => {
+    setDisplayCreateMilestoneModal(true);
+  };
+
+  const onSubmitMilestoneForm = async (data: MilestoneCreateRequest) => {
+    await onCreateProjectMilestone(data);
+    setDisplayCreateMilestoneModal(false);
+  };
+
   return (
     <>
+      {displayCreateMilestoneModal && (
+        <CreateMilestoneModal
+          grantType={selectedGrantType}
+          aims={aims}
+          onCancel={() => setDisplayCreateMilestoneModal(false)}
+          onSubmit={onSubmitMilestoneForm}
+          getArticleSuggestions={loadArticleOptions}
+        />
+      )}
       <div css={pageDesktopStyles}>
         <div css={containerStyles}>
           <LabeledDropdown<GrantType>
@@ -92,7 +146,16 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
           />
 
           <div css={descriptionSectionStyles}>
-            <Headline3 noMargin>Milestones</Headline3>
+            <div css={headerStyles}>
+              <Headline3 noMargin>Milestones</Headline3>
+              {canCreateMilestone && (
+                <div css={createMilestoneButtonStyles}>
+                  <Button onClick={handleAddNewMilestone} noMargin small>
+                    {plusIcon} Add New Milestone
+                  </Button>
+                </div>
+              )}
+            </div>
             <Paragraph accent="lead">
               These milestones track progress toward the objectives of the{' '}
               {grantLabel} Grant through defined deliverables and timelines.

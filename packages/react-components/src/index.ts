@@ -261,6 +261,7 @@ export {
   ComplianceReportForm,
   ContactInfoModal,
   ContentPage,
+  CreateMilestoneModal,
   DashboardPage,
   DashboardPageBody,
   DiscoverGuides,

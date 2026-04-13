@@ -123,9 +123,11 @@ type ProjectMilestonesProps = {
   readonly hasAppliedSearch: boolean;
   readonly pageControlsProps: ComponentProps<typeof PageControls>;
   readonly isLead: boolean;
-  readonly loadArticleOptions: (
-    inputValue: string,
-  ) => Promise<ResearchOutputOption[]>;
+  readonly loadArticleOptions: NonNullable<
+    ComponentProps<
+      typeof LabeledMultiSelect<ResearchOutputOption>
+    >['loadOptions']
+  >;
   readonly fetchLinkedArticles: (
     milestoneId: string,
   ) => Promise<ReadonlyArray<ArticleItem>>;

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { ComponentProps, useState } from 'react';
 import { ArticleItem, ResearchOutputType } from '@asap-hub/model';
 
 import { LabeledMultiSelect, Modal } from '../molecules';
@@ -94,7 +94,11 @@ type MilestoneArticlesModalProps = {
   readonly articles: ReadonlyArray<ArticleItem>;
   readonly onClose: () => void;
   readonly onConfirm: (articles: ReadonlyArray<ArticleItem>) => void;
-  readonly loadOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
+  readonly loadOptions: NonNullable<
+    ComponentProps<
+      typeof LabeledMultiSelect<ResearchOutputOption>
+    >['loadOptions']
+  >;
 };
 
 const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({

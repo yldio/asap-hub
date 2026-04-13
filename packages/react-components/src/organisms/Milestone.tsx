@@ -4,7 +4,7 @@ import {
   MilestoneStatus,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { FC, useState } from 'react';
+import { ComponentProps, FC, useState } from 'react';
 import { Button, Link, Pill } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import { steel, info100, info500 } from '../colors';
@@ -34,6 +34,7 @@ import {
   editButtonStyles,
 } from './shared-aim-milestones-styles';
 import MilestoneArticlesModal from './MilestoneArticlesModal';
+import { LabeledMultiSelect } from '../molecules';
 
 function parseAimsString(aims: string | undefined): number[] {
   if (!aims || typeof aims !== 'string') return [];
@@ -93,7 +94,11 @@ export const getMilestoneStatusAccent = (
 type MilestoneProps = {
   milestone: MilestoneType;
   isLead: boolean;
-  loadArticleOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
+  loadArticleOptions: NonNullable<
+    ComponentProps<
+      typeof LabeledMultiSelect<ResearchOutputOption>
+    >['loadOptions']
+  >;
   readonly fetchLinkedArticles: (
     milestoneId: string,
   ) => Promise<ReadonlyArray<ArticleItem>>;
@@ -228,7 +233,7 @@ const Milestone: FC<MilestoneProps> = ({
           )}
         </div>
       </div>
-      <div css={statusContainerStyles}>
+      <div css={[statusContainerStyles, { paddingLeft: 0 }]}>
         <div css={mobileLabelStyles}>Status</div>
         <Pill accent={getMilestoneStatusAccent(milestone.status)} noMargin>
           {milestone.status}

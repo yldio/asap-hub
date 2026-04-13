@@ -1,52 +1,41 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { GrantType, milestoneStatuses } from '@asap-hub/model';
+import { Aim, GrantType } from '@asap-hub/model';
 import {
+  LabeledMultiSelect,
   ProjectDetailMilestones,
   ProjectMilestonesTable,
   ResearchOutputOption,
-  SearchAndFilter,
 } from '@asap-hub/react-components';
-import { useCallback } from 'react';
+import { ComponentProps, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { usePagination, usePaginationParams, useSearch } from '../hooks';
+import { useManuscriptToast } from '../network/teams/useManuscriptToast';
+import { usePagination, usePaginationParams } from '../hooks';
 import { useFetchMilestoneArticles } from './articles-state';
-import { useProjectMilestones } from './state';
-
-const milestoneControlsStyles = {
-  display: 'grid',
-  rowGap: 32,
-} as const;
-
-const milestoneStatusFilterOptions = [
-  { title: 'STATUS' },
-  ...milestoneStatuses.map((status) => ({
-    label: status,
-    value: status,
-  })),
-];
+import { useCreateProjectMilestone, useProjectMilestones } from './state';
 
 type TableContentProps = {
   projectId: string;
   selectedGrantType: GrantType;
   isLead: boolean;
-  searchQuery: string;
-  filters: Set<string>;
-  loadArticleOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
+  loadArticleOptions: NonNullable<
+    ComponentProps<
+      typeof LabeledMultiSelect<ResearchOutputOption>
+    >['loadOptions']
+  >;
 };
 
 const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
   projectId,
   selectedGrantType,
   isLead,
-  searchQuery,
-  filters,
   loadArticleOptions,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const filters = useMemo(() => new Set<string>(), []);
   const { items: milestones = [], total } = useProjectMilestones({
     projectId,
     grantType: selectedGrantType,
-    searchQuery,
+    searchQuery: '',
     filters,
     currentPage,
     pageSize,
@@ -67,42 +56,39 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
       isLead={isLead}
       loadArticleOptions={loadArticleOptions}
       selectedGrantType={selectedGrantType}
-      total={total}
-      hasAppliedSearch={searchQuery.trim().length > 0 || filters.size > 0}
     />
   );
 };
 
 const ProjectMilestones: React.FC<{
-  projectId: string;
-  isLead: boolean;
-  loadArticleOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
-  hasSupplementGrant: boolean;
-  seeAimsHref?: string;
+  readonly projectId: string;
+  readonly isLead: boolean;
+  readonly hasSupplementGrant: boolean;
+  readonly aims: ReadonlyArray<Aim>;
+  readonly seeAimsHref?: string;
   milestonesLastUpdated?: Partial<Record<GrantType, string>>;
+  readonly teamId?: string;
+  readonly loadArticleOptions: NonNullable<
+    ComponentProps<
+      typeof LabeledMultiSelect<ResearchOutputOption>
+    >['loadOptions']
+  >;
 }> = ({
   projectId,
   hasSupplementGrant,
   seeAimsHref,
+  aims,
   isLead,
   loadArticleOptions,
   milestonesLastUpdated,
 }) => {
   const { search } = useLocation();
   const navigate = useNavigate();
-  const {
-    searchQuery,
-    debouncedSearchQuery,
-    setSearchQuery,
-    filters,
-    toggleFilter,
-  } = useSearch();
 
-  const selectedGrantType: GrantType =
-    hasSupplementGrant &&
-    new URLSearchParams(search).get('grantType') !== 'original'
-      ? 'supplement'
-      : 'original';
+  const params = new URLSearchParams(search);
+  const selectedGrantType =
+    (params.get('grantType') as GrantType) ??
+    (hasSupplementGrant ? 'supplement' : 'original');
 
   const handleGrantTypeChange = useCallback(
     (grantType: GrantType) => {
@@ -114,35 +100,45 @@ const ProjectMilestones: React.FC<{
     [search, navigate],
   );
 
+  const createProjectMilestone = useCreateProjectMilestone(projectId);
+  const { setFormType } = useManuscriptToast();
+
+  const onSuccess = () => {
+    setFormType({
+      type: 'milestone-created',
+      accent: 'successLarge',
+    });
+  };
+
+  const onError = () => {
+    setFormType({
+      type: 'default-error',
+      accent: 'error',
+    });
+  };
+
   return (
     <ProjectDetailMilestones
       hasSupplementGrant={hasSupplementGrant}
       seeAimsHref={seeAimsHref}
       selectedGrantType={selectedGrantType}
+      isLead={isLead}
       onGrantTypeChange={handleGrantTypeChange}
       milestonesLastUpdated={milestonesLastUpdated}
+      aims={aims}
+      loadArticleOptions={loadArticleOptions}
+      onCreateProjectMilestone={createProjectMilestone}
+      onError={onError}
+      onSuccess={onSuccess}
     >
-      <div style={milestoneControlsStyles}>
-        <SearchAndFilter
-          searchQuery={searchQuery}
-          onChangeSearch={setSearchQuery}
-          searchPlaceholder="Enter milestone description"
-          filters={filters}
-          onChangeFilter={toggleFilter}
-          filterOptions={milestoneStatusFilterOptions}
-          filterButtonText="Filter"
+      <SearchFrame title="Project Milestones">
+        <ProjectMilestonesTableContent
+          projectId={projectId}
+          selectedGrantType={selectedGrantType}
+          isLead={isLead}
+          loadArticleOptions={loadArticleOptions}
         />
-        <SearchFrame title="Project Milestones">
-          <ProjectMilestonesTableContent
-            projectId={projectId}
-            selectedGrantType={selectedGrantType}
-            isLead={isLead}
-            searchQuery={debouncedSearchQuery}
-            filters={filters}
-            loadArticleOptions={loadArticleOptions}
-          />
-        </SearchFrame>
-      </div>
+      </SearchFrame>
     </ProjectDetailMilestones>
   );
 };

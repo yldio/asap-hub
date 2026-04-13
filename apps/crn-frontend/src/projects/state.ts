@@ -1,10 +1,13 @@
 import {
+  GrantType,
   ListProjectMilestonesResponse,
   ListProjectResponse,
   Milestone,
+  MilestoneCreateRequest,
   ProjectDetail,
   ProjectResponse,
   ProjectTool,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
   atomFamily,
@@ -14,9 +17,11 @@ import {
   useRecoilValue,
   useSetRecoilState,
 } from 'recoil';
+import { getResearchOutputs } from '../shared-research/api';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
+  createProjectMilestone,
   getProject,
   getProjectMilestones,
   getProjects,
@@ -146,6 +151,10 @@ export const usePatchProjectById = (id: string) => {
   };
 };
 
+export type MilestonesListOptionsWithVersion = MilestonesListOptions & {
+  version: number;
+};
+
 export const projectMilestonesIndexState = atomFamily<
   | {
       ids: ReadonlyArray<string>;
@@ -153,7 +162,7 @@ export const projectMilestonesIndexState = atomFamily<
     }
   | Error
   | undefined,
-  MilestonesListOptions
+  MilestonesListOptionsWithVersion
 >({ key: 'projectMilestonesListCache', default: undefined });
 
 export const projectMilestonesListItemState = atomFamily<
@@ -164,16 +173,35 @@ export const projectMilestonesListItemState = atomFamily<
   default: undefined,
 });
 
+const projectMilestonesVersionState = atomFamily<
+  number,
+  { projectId: string; grantType: GrantType | 'all' }
+>({
+  key: 'projectMilestonesVersion',
+  default: 0,
+});
+
 export const projectMilestonesState = selectorFamily<
   ListProjectMilestonesResponse | Error | undefined,
-  MilestonesListOptions
+  MilestonesListOptionsWithVersion
 >({
   key: 'projectMilestones',
   get:
     (options) =>
-    ({ get }) => {
+    async ({ get }) => {
       const index = get(projectMilestonesIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
+      // if (index === undefined || index instanceof Error) return index;
+      if (index === undefined) {
+        const authorization = get(authorizationState);
+
+        const result = await getProjectMilestones(options, authorization);
+
+        return result; // will be passed to selector set automatically
+      }
+
+      if (index instanceof Error) {
+        throw index;
+      }
       const projectMilestones: Milestone[] = [];
       for (const id of index.ids) {
         const projectMilestone = get(projectMilestonesListItemState(id));
@@ -210,20 +238,83 @@ export const projectMilestonesState = selectorFamily<
     },
 });
 
-export const useProjectMilestones = (options: MilestonesListOptions) => {
-  const [projectMilestones, setProjectMilestones] = useRecoilState(
-    projectMilestonesState(options),
-  );
-  const authorization = useRecoilValue(authorizationState);
+// export const useProjectMilestones = (options: MilestonesListOptions) => {
+//   const version = useRecoilValue(
+//     projectMilestonesVersionState({
+//       projectId: options.projectId,
+//       grantType: options.grantType,
+//     }),
+//   );
 
-  if (projectMilestones === undefined) {
-    throw getProjectMilestones(options, authorization)
-      .then(setProjectMilestones)
-      .catch(setProjectMilestones);
-  }
-  if (projectMilestones instanceof Error) {
+//   const key = { ...options, version };
+//   const [projectMilestones, setProjectMilestones] = useRecoilState(
+//     projectMilestonesState(key),
+//   );
+//   const authorization = useRecoilValue(authorizationState);
+
+//   if (projectMilestones === undefined) {
+//     throw getProjectMilestones(options, authorization)
+//       .then(setProjectMilestones)
+//       .catch(setProjectMilestones);
+//   }
+//   if (projectMilestones instanceof Error) {
+//     throw projectMilestones;
+//   }
+
+//   return { ...projectMilestones };
+// };
+
+export const useProjectMilestones = (options: MilestonesListOptions) => {
+  const version = useRecoilValue(
+    projectMilestonesVersionState({
+      projectId: options.projectId,
+      grantType: options.grantType,
+    }),
+  );
+
+  const key = { ...options, version };
+
+  const projectMilestones = useRecoilValue(projectMilestonesState(key));
+
+  if (!projectMilestones || projectMilestones instanceof Error) {
     throw projectMilestones;
   }
 
-  return { ...projectMilestones };
+  return projectMilestones;
+};
+export const useProjectArticlesSuggestions = (teamId: string) => {
+  const algoliaClient = useAlgolia();
+
+  return (searchQuery: string) =>
+    getResearchOutputs(algoliaClient.client, {
+      searchQuery,
+      currentPage: null,
+      pageSize: 5, // check the size
+      filters: new Set(['Article']),
+      teamId,
+    }).then(({ hits }) =>
+      (hits as ResearchOutputResponse[]).map(
+        ({ id, title, documentType, type }) => ({
+          label: title,
+          value: id,
+          documentType,
+          type,
+        }),
+      ),
+    );
+};
+
+export const useCreateProjectMilestone = (
+  projectId: string,
+  grantType: GrantType,
+) => {
+  const authorization = useRecoilValue(authorizationState);
+  const bumpVersion = useSetRecoilState(
+    projectMilestonesVersionState({ projectId, grantType }),
+  );
+  return async (data: MilestoneCreateRequest) => {
+    const result = await createProjectMilestone(projectId, data, authorization);
+    bumpVersion((v) => v + 1);
+    return result.id;
+  };
 };

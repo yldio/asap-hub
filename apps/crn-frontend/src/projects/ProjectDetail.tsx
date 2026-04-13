@@ -14,7 +14,6 @@ import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvide
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
 import type { ProjectDetailConfig } from './projectDetailConfig';
-import { mockLoadArticleOptions } from './mock-milestones';
 
 const loadProjectManuscript = () =>
   import(/* webpackChunkName: "project-manuscript" */ './ProjectManuscript');
@@ -53,8 +52,20 @@ const ProjectDetail: FC<Props> = ({ config }) => {
     !!user && isProjectLead(user.id, user.teams ?? [], projectDetail);
   const showWorkspace =
     isEnabled('PROJECT_WORKSPACE') && (isProjectMember || isStaff);
+
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
   const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
+  const hasSupplementGrant =
+    'supplementGrant' in projectDetail && !!projectDetail.supplementGrant;
+  const activeProjectAims =
+    (hasSupplementGrant
+      ? projectDetail.supplementGrant?.aims
+      : projectDetail.originalGrantAims) || [];
+
+  const teamId =
+    'teamId' in projectDetail && projectDetail.teamId
+      ? projectDetail.teamId
+      : undefined;
 
   return (
     <Frame title={projectDetail.title || ''}>
@@ -128,13 +139,11 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                     <Frame title="Project Milestones">
                       <ProjectMilestones
                         projectId={projectId}
+                        teamId={teamId}
                         seeAimsHref={route.about({}).$}
-                        hasSupplementGrant={
-                          'supplementGrant' in projectDetail &&
-                          !!projectDetail.supplementGrant
-                        }
+                        hasSupplementGrant={hasSupplementGrant}
+                        aims={activeProjectAims}
                         isLead={isLead}
-                        loadArticleOptions={mockLoadArticleOptions}
                         milestonesLastUpdated={
                           projectDetail.milestonesLastUpdated
                         }

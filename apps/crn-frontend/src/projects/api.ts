@@ -9,6 +9,7 @@ import {
   GrantType,
   ListProjectMilestonesResponse,
   ListProjectResponse,
+  MilestoneCreateRequest,
   ProjectDetail,
   ProjectStatus,
   ProjectTool,
@@ -178,7 +179,7 @@ export const getProject = async (
 };
 
 export type MilestonesListOptions = GetListOptions & {
-  grantType?: GrantType;
+  grantType: GrantType | 'all';
   projectId: string;
 };
 
@@ -190,7 +191,7 @@ export const getProjectMilestones = async (
   const url = createListApiUrl(`projects/${projectId}/milestones`, {
     ...searchOptions,
   });
-  if (grantType) {
+  if (grantType && grantType !== 'all') {
     url.searchParams.set('grantType', grantType);
   }
 
@@ -200,6 +201,30 @@ export const getProjectMilestones = async (
   if (!resp.ok) {
     throw new BackendError(
       `Failed to fetch milestones for project with id ${projectId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+  return resp.json();
+};
+
+export const createProjectMilestone = async (
+  projectId: string,
+  data: MilestoneCreateRequest,
+  authorization: string,
+): Promise<{ id: string }> => {
+  const resp = await fetch(`${API_BASE_URL}/projects/${projectId}/milestones`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(data),
+  });
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to create milestone for project ${projectId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       await resp.json().catch(() => undefined),
       resp.status,
     );

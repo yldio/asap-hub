@@ -1,9 +1,4 @@
-import {
-  AimEvent,
-  ProjectEvent,
-  ProjectMembershipEvent,
-  SupplementGrantEvent,
-} from '@asap-hub/model';
+import { AimEvent, ProjectEvent, SupplementGrantEvent } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import type { AimsMilestonesDataProvider } from '../../data-providers/types';
 import { getAimsMilestonesDataProvider } from '../../dependencies/aims-milestones.dependencies';
@@ -17,11 +12,7 @@ import {
   deleteByProjectId,
 } from '../opensearch/aims-milestones-reindex';
 
-type OpensearchAimEvent =
-  | AimEvent
-  | ProjectEvent
-  | ProjectMembershipEvent
-  | SupplementGrantEvent;
+type OpensearchAimEvent = AimEvent | ProjectEvent | SupplementGrantEvent;
 
 export const indexAimOpensearchHandler =
   (
@@ -49,18 +40,7 @@ export const indexAimOpensearchHandler =
       if (eventType === 'ProjectsPublished') {
         await reindexByProjectId(provider, resourceId);
       } else {
-        await deleteByProjectId(provider, resourceId);
-      }
-      return;
-    }
-
-    if (
-      eventType === 'ProjectMembershipPublished' ||
-      eventType === 'ProjectMembershipUnpublished'
-    ) {
-      const projectId = await provider.fetchProjectIdByMembershipId(resourceId);
-      if (projectId) {
-        await reindexByProjectId(provider, projectId);
+        await deleteByProjectId(resourceId);
       }
       return;
     }
@@ -73,6 +53,10 @@ export const indexAimOpensearchHandler =
         await provider.fetchProjectIdBySupplementGrantId(resourceId);
       if (projectId) {
         await reindexByProjectId(provider, projectId);
+      } else {
+        logger.debug(
+          `SupplementGrant ${resourceId}: could not resolve parent project, skipping`,
+        );
       }
     }
   };

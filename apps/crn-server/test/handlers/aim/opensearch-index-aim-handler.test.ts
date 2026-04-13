@@ -29,7 +29,6 @@ const mockProvider = {
   fetchAimWithMilestonesById: jest.fn(),
   fetchMilestoneById: jest.fn(),
   fetchProjectWithAimsDetailById: jest.fn(),
-  fetchProjectIdByMembershipId: jest.fn(),
   fetchProjectIdBySupplementGrantId: jest.fn(),
 };
 
@@ -96,66 +95,7 @@ describe('OpenSearch Index Aim Handler', () => {
 
       await handler(event);
 
-      expect(mockDeleteByProjectId).toHaveBeenCalledWith(
-        mockProvider,
-        'project-1',
-      );
-      expect(mockReindexByProjectId).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('ProjectMembership events', () => {
-    test('ProjectMembershipPublished finds the project and reindexes its aims', async () => {
-      mockProvider.fetchProjectIdByMembershipId.mockResolvedValue('project-1');
-
-      const event = createEventBridgeEventMock(
-        { resourceId: 'membership-1' },
-        'ProjectMembershipPublished',
-        'membership-1',
-      );
-
-      await handler(event);
-
-      expect(mockProvider.fetchProjectIdByMembershipId).toHaveBeenCalledWith(
-        'membership-1',
-      );
-      expect(mockReindexByProjectId).toHaveBeenCalledWith(
-        mockProvider,
-        'project-1',
-      );
-    });
-
-    test('ProjectMembershipUnpublished finds the project and reindexes its aims', async () => {
-      mockProvider.fetchProjectIdByMembershipId.mockResolvedValue('project-1');
-
-      const event = createEventBridgeEventMock(
-        { resourceId: 'membership-1' },
-        'ProjectMembershipUnpublished',
-        'membership-1',
-      );
-
-      await handler(event);
-
-      expect(mockProvider.fetchProjectIdByMembershipId).toHaveBeenCalledWith(
-        'membership-1',
-      );
-      expect(mockReindexByProjectId).toHaveBeenCalledWith(
-        mockProvider,
-        'project-1',
-      );
-    });
-
-    test('ProjectMembershipPublished does nothing when project not found', async () => {
-      mockProvider.fetchProjectIdByMembershipId.mockResolvedValue(null);
-
-      const event = createEventBridgeEventMock(
-        { resourceId: 'membership-1' },
-        'ProjectMembershipPublished',
-        'membership-1',
-      );
-
-      await handler(event);
-
+      expect(mockDeleteByProjectId).toHaveBeenCalledWith('project-1');
       expect(mockReindexByProjectId).not.toHaveBeenCalled();
     });
   });

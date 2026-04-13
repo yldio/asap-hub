@@ -3,12 +3,14 @@
 const mockGetClient = jest.fn();
 const mockUpsertOpensearchDocuments = jest.fn().mockResolvedValue(undefined);
 const mockDeleteByDocumentIds = jest.fn().mockResolvedValue(undefined);
+const mockDeleteByFieldValue = jest.fn().mockResolvedValue(undefined);
 
 jest.mock('@asap-hub/server-common', () => ({
   getClient: (...args: unknown[]) => mockGetClient(...args),
   upsertOpensearchDocuments: (...args: unknown[]) =>
     mockUpsertOpensearchDocuments(...args),
   deleteByDocumentIds: (...args: unknown[]) => mockDeleteByDocumentIds(...args),
+  deleteByFieldValue: (...args: unknown[]) => mockDeleteByFieldValue(...args),
   getCloudWatchLogger: () => ({
     debug: jest.fn(),
     info: jest.fn(),
@@ -597,36 +599,21 @@ describe('aims-milestones-reindex', () => {
   });
 
   describe('deleteByProjectId', () => {
-    test('deletes all aims and milestones for a project', async () => {
-      const provider = createMockProvider();
-      const project = makeProject();
-      provider.fetchProjectWithAimsDetailById.mockResolvedValue(project);
-      provider.fetchAimWithMilestonesById.mockResolvedValue({
-        sys: { id: 'aim-1' },
-        milestonesCollection: { items: [{ sys: { id: 'ms-1' } }] },
-      });
+    test('deletes all aims and milestones for a project by querying OpenSearch', async () => {
+      await deleteByProjectId('project-1');
 
-      await deleteByProjectId(provider, 'project-1');
-
-      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
+      expect(mockDeleteByFieldValue).toHaveBeenCalledWith(
         mockClient,
         'project-aims',
-        ['aim-1'],
+        'projectId',
+        'project-1',
       );
-      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
+      expect(mockDeleteByFieldValue).toHaveBeenCalledWith(
         mockClient,
         'project-milestones',
-        ['ms-1'],
+        'projectId',
+        'project-1',
       );
-    });
-
-    test('skips when project not found', async () => {
-      const provider = createMockProvider();
-      provider.fetchProjectWithAimsDetailById.mockResolvedValue(null);
-
-      await deleteByProjectId(provider, 'project-missing');
-
-      expect(mockDeleteByDocumentIds).not.toHaveBeenCalled();
     });
   });
 });

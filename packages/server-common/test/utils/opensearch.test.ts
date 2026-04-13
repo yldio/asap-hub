@@ -4,6 +4,7 @@ import {
   upsertOpensearchDocuments,
   deleteOpensearchDocuments,
   deleteByDocumentIds,
+  deleteByFieldValue,
 } from '../../src/utils/opensearch';
 import { getOpensearchEndpoint } from '../../src/utils/opensearch-endpoint';
 import type { OpensearchMapping } from '../../src/utils/types';
@@ -152,6 +153,39 @@ describe('deleteOpensearchDocuments', () => {
     expect(console.error).toHaveBeenCalledWith(
       'Delete errors: doc-1: not found',
     );
+  });
+});
+
+describe('deleteByFieldValue', () => {
+  const mockFieldClient = {
+    deleteByQuery: jest.fn(),
+  } as unknown as Client;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should delete documents matching a field value', async () => {
+    (mockFieldClient.deleteByQuery as jest.Mock).mockResolvedValue({
+      body: { deleted: 3 },
+    });
+
+    await deleteByFieldValue(
+      mockFieldClient,
+      'test-index',
+      'projectId',
+      'project-1',
+    );
+
+    expect(mockFieldClient.deleteByQuery).toHaveBeenCalledWith({
+      index: 'test-index',
+      body: {
+        query: {
+          term: { projectId: 'project-1' },
+        },
+      },
+      refresh: true,
+    });
   });
 });
 

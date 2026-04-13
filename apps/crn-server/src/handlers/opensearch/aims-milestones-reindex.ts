@@ -3,6 +3,7 @@ import {
   getClient,
   upsertOpensearchDocuments,
   deleteByDocumentIds,
+  deleteByFieldValue,
 } from '@asap-hub/server-common';
 import type {
   AimsMilestonesDataProvider,
@@ -331,12 +332,22 @@ export const reindexMilestoneById = async (
 /**
  * Finds aims linked to a milestone and rebuilds their OpenSearch documents.
  * Used when a milestone changes (its status/articles affect aim status).
+ *
+ * Note: if the milestone is unpublished (gone from the delivery API),
+ * we cannot resolve its linked aims and must rely on the scheduled
+ * full reindex to refresh their status/article counts.
  */
 export const reindexAimsByMilestoneId = async (
   provider: AimsMilestonesDataProvider,
   milestoneId: string,
 ): Promise<void> => {
   const aimIds = await provider.fetchAimIdsLinkedToMilestone(milestoneId);
+  if (aimIds.length === 0) {
+    logger.debug(
+      `Milestone ${milestoneId}: no linked aims found, aim refresh deferred to full reindex`,
+    );
+    return;
+  }
   const client = await getOpensearchClient();
 
   for (const aimId of aimIds) {
@@ -499,38 +510,37 @@ export const deleteMilestoneById = async (
 
 /**
  * Deletes all aim and milestone documents for a project.
+ * Queries OpenSearch directly by projectId so it works even when
+ * the project is no longer available in Contentful (e.g. after unpublish).
  */
-export const deleteByProjectId = async (
-  provider: AimsMilestonesDataProvider,
-  projectId: string,
-): Promise<void> => {
-  const project = await provider.fetchProjectWithAimsDetailById(projectId);
-  if (!project) return;
-
-  const allAims = [
-    ...(project.originalGrantAimsCollection?.items ?? []),
-    ...(project.supplementGrant?.aimsCollection?.items ?? []),
-  ].filter((a): a is NonNullable<typeof a> => a !== null);
-
+export const deleteByProjectId = async (projectId: string): Promise<void> => {
   const client = await getOpensearchClient();
-  const aimIds = allAims.map((a) => a.sys.id);
-  await deleteByDocumentIds(client, AIMS_INDEX, aimIds);
-
-  const milestoneIds = await collectMilestoneIdsForAims(provider, aimIds);
-  await deleteByDocumentIds(client, MILESTONES_INDEX, milestoneIds);
+  await deleteByFieldValue(client, AIMS_INDEX, 'projectId', projectId);
+  await deleteByFieldValue(client, MILESTONES_INDEX, 'projectId', projectId);
 };
 
 /**
  * Deletes all milestones linked to an aim from OpenSearch.
  * Used when an aim is unpublished — its milestones should be cleaned up.
+ *
+ * Note: if the aim is already unpublished (gone from the delivery API),
+ * we cannot resolve its milestone IDs and must rely on the scheduled
+ * full reindex to clean up stale milestone documents.
  */
 export const deleteMilestonesByAimId = async (
   provider: AimsMilestonesDataProvider,
   aimId: string,
 ): Promise<void> => {
   const aim = await provider.fetchAimWithMilestonesById(aimId);
+  if (!aim) {
+    logger.debug(
+      `Aim ${aimId} not available in Contentful, milestone cleanup deferred to full reindex`,
+    );
+    return;
+  }
+
   const milestoneIds =
-    aim?.milestonesCollection?.items
+    aim.milestonesCollection?.items
       ?.filter((m): m is NonNullable<typeof m> => m !== null)
       .map((m) => m.sys.id) ?? [];
 

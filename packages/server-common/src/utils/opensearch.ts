@@ -312,6 +312,28 @@ export const deleteByDocumentIds = async (
   });
 };
 
+/**
+ * Deletes documents matching a { term: { field: value } } query.
+ * Useful for cleaning up related documents when the parent entity
+ * is no longer available in the source API (e.g. after unpublish).
+ */
+export const deleteByFieldValue = async (
+  client: Client,
+  indexAlias: string,
+  field: string,
+  value: string,
+): Promise<void> => {
+  await client.deleteByQuery({
+    index: indexAlias,
+    body: {
+      query: {
+        term: { [field]: value },
+      },
+    },
+    refresh: true,
+  });
+};
+
 export const indexOpensearchData = async <T>({
   awsRegion,
   stage,

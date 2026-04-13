@@ -1,12 +1,12 @@
 import {
-  ProjectMilestones,
+  ProjectMilestonesTable,
   ResearchOutputOption,
 } from '@asap-hub/react-components';
-import { Milestone } from '@asap-hub/model';
+import { GrantType, Milestone } from '@asap-hub/model';
 
 export default {
   title: 'Organisms / Project Milestones',
-  component: ProjectMilestones,
+  component: ProjectMilestonesTable,
 };
 
 const mockLoadArticleOptions = (
@@ -29,9 +29,18 @@ const mockLoadArticleOptions = (
     ].filter((a) => a.label.toLowerCase().includes(inputValue.toLowerCase())),
   );
 
+const mockFetchArticles = () => Promise.resolve([]);
+
 const defaultProps = {
   isLead: true as const,
   loadArticleOptions: mockLoadArticleOptions,
+  selectedGrantType: 'supplement' as GrantType,
+  pageControlsProps: {
+    numberOfPages: 1,
+    currentPageIndex: 0,
+    renderPageHref: (index: number) => `#${index}`,
+  },
+  fetchLinkedArticles: mockFetchArticles,
 };
 
 const createMilestone = (
@@ -39,11 +48,13 @@ const createMilestone = (
   description: string,
   status: Milestone['status'],
   aims?: string,
+  articleCount: number = 0,
 ): Milestone => ({
   id,
   description,
   status,
   ...(aims !== undefined && { aims }),
+  articleCount,
 });
 
 const shortDescription = 'Complete initial research and literature review.';
@@ -55,7 +66,7 @@ const longDescription =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
 export const Default = () => (
-  <ProjectMilestones
+  <ProjectMilestonesTable
     {...defaultProps}
     milestones={[
       createMilestone('1', longDescription, 'Complete', '1'),
@@ -67,7 +78,7 @@ export const Default = () => (
 );
 
 export const WithMoreMilestones = () => (
-  <ProjectMilestones
+  <ProjectMilestonesTable
     {...defaultProps}
     milestones={[
       createMilestone('1', longDescription, 'Complete', '1'),
@@ -83,7 +94,7 @@ export const WithMoreMilestones = () => (
 );
 
 export const AllStatuses = () => (
-  <ProjectMilestones
+  <ProjectMilestonesTable
     {...defaultProps}
     milestones={[
       createMilestone('1', 'This milestone is complete.', 'Complete', '1'),
@@ -100,7 +111,7 @@ export const AllStatuses = () => (
 );
 
 export const ShortDescriptions = () => (
-  <ProjectMilestones
+  <ProjectMilestonesTable
     {...defaultProps}
     milestones={[
       createMilestone('1', 'Complete literature review.', 'Complete', '1'),
@@ -112,7 +123,7 @@ export const ShortDescriptions = () => (
 );
 
 export const LongDescriptions = () => (
-  <ProjectMilestones
+  <ProjectMilestonesTable
     {...defaultProps}
     milestones={[
       createMilestone('1', longDescription, 'Complete', '1'),
@@ -124,14 +135,14 @@ export const LongDescriptions = () => (
 );
 
 export const SingleMilestone = () => (
-  <ProjectMilestones
+  <ProjectMilestonesTable
     {...defaultProps}
     milestones={[createMilestone('1', mediumDescription, 'In Progress', '1')]}
   />
 );
 
 export const WithEmptyAims = () => (
-  <ProjectMilestones
+  <ProjectMilestonesTable
     {...defaultProps}
     milestones={[
       createMilestone('1', 'Milestone with aim 1.', 'Complete', '1'),
@@ -142,7 +153,7 @@ export const WithEmptyAims = () => (
 );
 
 export const TwoMilestones = () => (
-  <ProjectMilestones
+  <ProjectMilestonesTable
     {...defaultProps}
     milestones={[
       createMilestone('1', longDescription, 'Complete', '1'),
@@ -152,7 +163,7 @@ export const TwoMilestones = () => (
 );
 
 export const SixMilestones = () => (
-  <ProjectMilestones
+  <ProjectMilestonesTable
     {...defaultProps}
     milestones={[
       createMilestone('1', longDescription, 'Complete', '1'),
@@ -166,7 +177,7 @@ export const SixMilestones = () => (
 );
 
 export const RealWorldExample = () => (
-  <ProjectMilestones
+  <ProjectMilestonesTable
     {...defaultProps}
     milestones={[
       createMilestone(

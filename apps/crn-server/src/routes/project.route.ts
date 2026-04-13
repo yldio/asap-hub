@@ -4,6 +4,7 @@ import Boom from '@hapi/boom';
 import ProjectController from '../controllers/project.controller';
 import {
   validateProjectFetchParameters,
+  validateProjectMilestonesFetchOptions,
   validateProjectParameters,
   validateProjectPatchRequest,
 } from '../validation/project.validation';
@@ -67,7 +68,7 @@ export const projectRouteFactory = (
   });
 
   projectRoutes.get<{ projectId: string }>(
-    '/project/:projectId',
+    '/projects/:projectId',
     async (req, res) => {
       const { projectId } = validateProjectParameters(req.params);
 
@@ -77,8 +78,28 @@ export const projectRouteFactory = (
     },
   );
 
+  projectRoutes.get<{ projectId: string }>(
+    '/projects/:projectId/milestones',
+    async (req, res) => {
+      if (!req.loggedInUser) throw Boom.forbidden();
+      const { projectId } = validateProjectParameters(req.params);
+
+      const options = validateProjectMilestonesFetchOptions(req.query);
+
+      const { take, skip, grantType } = options;
+
+      const result = await projectController.fetchProjectMilestones(projectId, {
+        take,
+        skip,
+        grantType,
+      });
+
+      res.json(result);
+    },
+  );
+
   projectRoutes.patch<{ projectId: string }>(
-    '/project/:projectId',
+    '/projects/:projectId',
     async (req, res) => {
       const { projectId } = validateProjectParameters(req.params);
       const { tools } = validateProjectPatchRequest(req.body);

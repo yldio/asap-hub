@@ -1,4 +1,8 @@
-import { Milestone as MilestoneType, MilestoneStatus } from '@asap-hub/model';
+import {
+  ArticleItem,
+  Milestone as MilestoneType,
+  MilestoneStatus,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { FC, useState } from 'react';
 import { Button, Link, Pill } from '../atoms';
@@ -90,22 +94,38 @@ type MilestoneProps = {
   milestone: MilestoneType;
   isLead: boolean;
   loadArticleOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
+  readonly fetchLinkedArticles: (
+    milestoneId: string,
+  ) => Promise<ReadonlyArray<ArticleItem>>;
 };
 
 const Milestone: FC<MilestoneProps> = ({
   milestone,
+  fetchLinkedArticles,
   isLead,
   loadArticleOptions,
 }) => {
   const { ref, isExpanded, needsExpansion, toggle } = useTextTruncation(
     milestone.description,
   );
+  const milestoneId = milestone.id;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [articles, setArticles] = useState<ReadonlyArray<ArticleItem>>([]);
   const [isArticlesExpanded, setIsArticlesExpanded] = useState(false);
 
+  const [hasFetched, setHasFetched] = useState(false);
+
+  const fetchArticlesIfNeeded = async () => {
+    if (hasFetched) return;
+
+    const result = await fetchLinkedArticles(milestoneId);
+    setArticles(result);
+    setHasFetched(true);
+  };
+
   const aimNumbers = parseAimsString(milestone.aims);
-  const articles = milestone.relatedArticles ?? [];
-  const articleCount = articles.length;
+
+  const { articleCount } = milestone;
 
   return (
     <div css={milestoneRowStyles}>
@@ -155,7 +175,12 @@ const Milestone: FC<MilestoneProps> = ({
                     isArticlesExpanded ? 'Collapse articles' : 'Expand articles'
                   }
                   linkStyle
-                  onClick={() => setIsArticlesExpanded(!isArticlesExpanded)}
+                  onClick={async () => {
+                    if (!isArticlesExpanded) {
+                      await fetchArticlesIfNeeded();
+                    }
+                    setIsArticlesExpanded((prev) => !prev);
+                  }}
                   overrideStyles={articlesIconButtonStyles}
                 >
                   <span css={articlesIconStyles}>
@@ -170,7 +195,10 @@ const Milestone: FC<MilestoneProps> = ({
                     <span css={articlesSeparatorStyles}>•</span>
                     <Button
                       linkStyle
-                      onClick={() => setIsModalOpen(true)}
+                      onClick={async () => {
+                        await fetchArticlesIfNeeded();
+                        setIsModalOpen(true);
+                      }}
                       overrideStyles={editButtonStyles}
                     >
                       Edit

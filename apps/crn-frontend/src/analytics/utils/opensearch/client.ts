@@ -1,4 +1,5 @@
 import { createSentryHeaders } from '@asap-hub/frontend-utils';
+import { OpensearchHit, OpensearchHitsResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../../../config';
 import {
   teamWithUsersRecordSearchQueryBuilder,
@@ -12,8 +13,6 @@ import { userWithTeamsRecordsTagQueryBuilder } from './tag-query-builders/user-w
 import { teamRecordTagQueryBuilder } from './tag-query-builders/team-record';
 import { leadershipRecordTagQueryBuilder } from './tag-query-builders/leadership';
 import type {
-  OpensearchHit,
-  OpensearchHitsResponse,
   OpensearchIndex,
   OpensearchSearchOptions,
   OpensearchSort,

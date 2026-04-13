@@ -1,17 +1,4 @@
-import { mockMilestones, mockLoadArticleOptions } from '../mock-milestones';
-
-describe('mockMilestones', () => {
-  it('contains milestones with and without related articles', () => {
-    const withArticles = mockMilestones.filter(
-      (m) => m.relatedArticles && m.relatedArticles.length > 0,
-    );
-    const withoutArticles = mockMilestones.filter(
-      (m) => !m.relatedArticles || m.relatedArticles.length === 0,
-    );
-    expect(withArticles.length).toBeGreaterThan(0);
-    expect(withoutArticles.length).toBeGreaterThan(0);
-  });
-});
+import { mockLoadArticleOptions } from '../mock-milestones';
 
 describe('mockLoadArticleOptions', () => {
   it('returns matching articles for a search term', async () => {

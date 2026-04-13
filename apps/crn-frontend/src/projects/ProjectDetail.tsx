@@ -5,21 +5,24 @@ import { isProjectLead } from '@asap-hub/model';
 import {
   ProjectDetailPage,
   ProjectDetailAbout,
-  ProjectDetailMilestones,
   NotFoundPage,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import { useProjectById } from './state';
-import { useFetchArticles } from './aim-articles-state';
+import { useFetchAimArticles } from './articles-state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
-import { mockMilestones, mockLoadArticleOptions } from './mock-milestones';
 import type { ProjectDetailConfig } from './projectDetailConfig';
+import { mockLoadArticleOptions } from './mock-milestones';
 
 const loadProjectManuscript = () =>
   import(/* webpackChunkName: "project-manuscript" */ './ProjectManuscript');
+const loadProjectMilestones = () =>
+  import(/* webpackChunkName: "project-manuscript" */ './ProjectMilestones');
+
 const ProjectManuscript = lazy(loadProjectManuscript);
+const ProjectMilestones = lazy(loadProjectMilestones);
 
 type Props = {
   config: ProjectDetailConfig;
@@ -29,7 +32,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const { projectId: rawProjectId } = useParams<{ projectId: string }>();
   const projectId = rawProjectId ?? '';
   const projectDetail = useProjectById(projectId);
-  const fetchArticles = useFetchArticles();
+  const fetchArticles = useFetchAimArticles();
   const { isEnabled } = useFlags();
   const user = useCurrentUserCRN();
   const isStaff = user?.role === 'Staff';
@@ -122,23 +125,18 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                 path="milestones"
                 element={
                   isProjectMilestonesEnabled ? (
-                    <ProjectDetailMilestones
-                      milestones={mockMilestones}
-                      seeAimsHref={route.about({}).$}
-                      hasSupplementGrant={
-                        'supplementGrant' in projectDetail &&
-                        !!projectDetail.supplementGrant
-                      }
-                      isLead={isLead}
-                      loadArticleOptions={mockLoadArticleOptions}
-                      pageControlsProps={{
-                        numberOfPages: 1,
-                        currentPageIndex: 0,
-                        renderPageHref: (index: number) =>
-                          route.milestones({}).$ +
-                          (index > 0 ? `?page=${index + 1}` : ''),
-                      }}
-                    />
+                    <Frame title="Project Milestones">
+                      <ProjectMilestones
+                        projectId={projectId}
+                        seeAimsHref={route.about({}).$}
+                        hasSupplementGrant={
+                          'supplementGrant' in projectDetail &&
+                          !!projectDetail.supplementGrant
+                        }
+                        isLead={isLead}
+                        loadArticleOptions={mockLoadArticleOptions}
+                      />
+                    </Frame>
                   ) : (
                     <NotFoundPage />
                   )

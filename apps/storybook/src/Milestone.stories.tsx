@@ -29,19 +29,24 @@ const mockLoadArticleOptions = (
     ].filter((a) => a.label.toLowerCase().includes(inputValue.toLowerCase())),
   );
 
+const mockFetchArticles = () => Promise.resolve([]);
+
 const defaultProps = {
   isLead: true,
   loadArticleOptions: mockLoadArticleOptions,
+  fetchLinkedArticles: mockFetchArticles,
 };
 
 const createMilestone = (
   id: string,
   description: string,
   status: Milestone['status'],
+  articleCount: number = 0,
 ): Milestone => ({
   id,
   description,
   status,
+  articleCount,
 });
 
 const shortDescription = 'Complete initial research and literature review.';

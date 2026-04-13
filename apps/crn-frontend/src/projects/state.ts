@@ -1,5 +1,7 @@
 import {
+  ListProjectMilestonesResponse,
   ListProjectResponse,
+  Milestone,
   ProjectDetail,
   ProjectResponse,
   ProjectTool,
@@ -16,7 +18,9 @@ import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
   getProject,
+  getProjectMilestones,
   getProjects,
+  MilestonesListOptions,
   patchProject,
   ProjectListOptions,
   toListProjectResponse,
@@ -140,4 +144,86 @@ export const usePatchProjectById = (id: string) => {
     // due to Contentful's read-after-write delay.
     setProject({ ...updated, tools: patch.tools });
   };
+};
+
+export const projectMilestonesIndexState = atomFamily<
+  | {
+      ids: ReadonlyArray<string>;
+      total: number;
+    }
+  | Error
+  | undefined,
+  MilestonesListOptions
+>({ key: 'projectMilestonesListCache', default: undefined });
+
+export const projectMilestonesListItemState = atomFamily<
+  Milestone | undefined,
+  string
+>({
+  key: 'projectMilestonesListItem',
+  default: undefined,
+});
+
+export const projectMilestonesState = selectorFamily<
+  ListProjectMilestonesResponse | Error | undefined,
+  MilestonesListOptions
+>({
+  key: 'projectMilestones',
+  get:
+    (options) =>
+    ({ get }) => {
+      const index = get(projectMilestonesIndexState(options));
+      if (index === undefined || index instanceof Error) return index;
+      const projectMilestones: Milestone[] = [];
+      for (const id of index.ids) {
+        const projectMilestone = get(projectMilestonesListItemState(id));
+        if (projectMilestone === undefined) return undefined;
+        projectMilestones.push(projectMilestone);
+      }
+      return {
+        total: index.total,
+        items: projectMilestones,
+      };
+    },
+  set:
+    (options) =>
+    ({ get, set, reset }, projects) => {
+      if (projects === undefined || projects instanceof DefaultValue) {
+        const previous = get(projectMilestonesIndexState(options));
+        if (previous && !(previous instanceof Error)) {
+          previous.ids.forEach((id) =>
+            reset(projectMilestonesListItemState(id)),
+          );
+        }
+        reset(projectMilestonesIndexState(options));
+      } else if (projects instanceof Error) {
+        set(projectMilestonesIndexState(options), projects);
+      } else {
+        projects.items.forEach((project) =>
+          set(projectMilestonesListItemState(project.id), project),
+        );
+        set(projectMilestonesIndexState(options), {
+          total: projects.total,
+          ids: projects.items.map(({ id }) => id),
+        });
+      }
+    },
+});
+
+export const useProjectMilestones = (options: MilestonesListOptions) => {
+  const [projectMilestones, setProjectMilestones] = useRecoilState(
+    projectMilestonesState(options),
+  );
+  const authorization = useRecoilValue(authorizationState);
+
+  if (projectMilestones === undefined) {
+    throw getProjectMilestones(options, authorization)
+      .then(setProjectMilestones)
+      .catch(setProjectMilestones);
+  }
+  if (projectMilestones instanceof Error) {
+    throw projectMilestones;
+  }
+
+  return { ...projectMilestones };
 };

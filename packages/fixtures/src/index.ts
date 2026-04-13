@@ -13,6 +13,7 @@ export * from './manuscript-versions';
 export * from './manuscripts';
 export * from './news';
 export * from './pages';
+export * from './projects';
 export * from './reminder';
 export * from './research-outputs';
 export * from './research-tags';

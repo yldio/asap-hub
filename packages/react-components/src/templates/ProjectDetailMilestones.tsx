@@ -1,13 +1,9 @@
-import { ComponentProps, useState } from 'react';
 import { css } from '@emotion/react';
-import { Milestone as MilestoneType } from '@asap-hub/model';
-import type { ResearchOutputOption } from '../utils';
+import { GrantType } from '@asap-hub/model';
 
 import { Headline3, Link, Paragraph } from '../atoms';
-import { LabeledDropdown, PageControls } from '../molecules';
-import ProjectMilestones from '../organisms/ProjectMilestones';
+import { LabeledDropdown } from '../molecules';
 import { rem, mobileScreen } from '../pixels';
-import { neutral1000 } from '../colors';
 import MilestonesMobilePage from './MilestonesMobilePage';
 
 const containerStyles = css({
@@ -32,21 +28,6 @@ const aimsLinkTextStyles = css({
   },
 });
 
-const noMilestonesTextStyles = css({
-  fontSize: rem(17),
-  lineHeight: rem(24),
-  fontWeight: 700,
-  color: neutral1000.rgb,
-  marginTop: rem(16),
-});
-
-const pageControlsStyles = css({
-  display: 'flex',
-  justifyContent: 'center',
-  paddingTop: rem(16),
-  paddingBottom: rem(36),
-});
-
 const pageMobileStyles = css({
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     display: 'none',
@@ -59,33 +40,21 @@ const pageDesktopStyles = css({
   },
 });
 
-type GrantType = 'original' | 'supplement';
-
 type ProjectDetailMilestonesProps = {
-  readonly milestones: ReadonlyArray<MilestoneType>;
   readonly seeAimsHref?: string;
-  readonly pageControlsProps?: ComponentProps<typeof PageControls>;
-  readonly hasSupplementGrant?: boolean;
-  readonly isLead: boolean;
-  readonly loadArticleOptions: (
-    inputValue: string,
-  ) => Promise<ResearchOutputOption[]>;
+  selectedGrantType: GrantType;
+  onGrantTypeChange: (grantType: GrantType) => void;
+  children: React.ReactNode;
+  hasSupplementGrant: boolean;
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
-  milestones,
   seeAimsHref,
-  // ...pageControlProps // TODO: Add this back when we have actual page controls props
-  pageControlsProps,
-  hasSupplementGrant = false,
-  isLead,
-  loadArticleOptions,
+  selectedGrantType,
+  onGrantTypeChange,
+  hasSupplementGrant,
+  children,
 }) => {
-  const hasMilestones = milestones.length > 0;
-  const [selectedGrantType, setSelectedGrantType] = useState<GrantType>(
-    hasSupplementGrant ? 'supplement' : 'original',
-  );
-
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
 
@@ -95,7 +64,7 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
         <div css={containerStyles}>
           <LabeledDropdown<GrantType>
             title="Grant Type"
-            enabled={hasMilestones}
+            enabled={hasSupplementGrant}
             value={selectedGrantType}
             options={[
               {
@@ -107,7 +76,7 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
                 value: 'supplement',
               },
             ]}
-            onChange={setSelectedGrantType}
+            onChange={onGrantTypeChange}
             required={true}
           />
 
@@ -127,26 +96,8 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
             <Link href={seeAimsHref ?? '#'} underlined>
               <span css={aimsLinkTextStyles}>See Aims</span>
             </Link>
-            {!hasMilestones && (
-              <Paragraph accent="lead" noMargin styles={noMilestonesTextStyles}>
-                No milestones related to the {grantLabel} Grant have been added
-                to this project yet.
-              </Paragraph>
-            )}
           </div>
-
-          {hasMilestones && pageControlsProps && (
-            <>
-              <ProjectMilestones
-                milestones={milestones}
-                isLead={isLead}
-                loadArticleOptions={loadArticleOptions}
-              />
-              <section css={pageControlsStyles}>
-                <PageControls {...pageControlsProps} />
-              </section>
-            </>
-          )}
+          {children}
         </div>
       </div>
       <div css={pageMobileStyles}>

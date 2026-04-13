@@ -4,8 +4,11 @@ import type { ProjectDetail, ProjectResponse } from '@asap-hub/model';
 
 import {
   getAimArticles,
+  getMilestoneArticles,
   getProject,
+  getProjectMilestones,
   getProjects,
+  MilestonesListOptions,
   patchProject,
   ProjectListOptions,
   toListProjectResponse,
@@ -188,7 +191,7 @@ describe('projects api', () => {
       const result = await patchProject('1', patch, 'Bearer token');
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'https://api.example.com/project/1',
+        'https://api.example.com/projects/1',
         expect.objectContaining({
           method: 'PATCH',
           headers: expect.objectContaining({ authorization: 'Bearer token' }),
@@ -309,7 +312,7 @@ describe('projects api', () => {
       const result = await getProject('1', 'Bearer token');
 
       expect(mockFetch).toHaveBeenCalledWith(
-        'https://api.example.com/project/1',
+        'https://api.example.com/projects/1',
         expect.objectContaining({
           headers: expect.objectContaining({ authorization: 'Bearer token' }),
         }),
@@ -358,6 +361,159 @@ describe('projects api', () => {
       });
 
       const promise = getProject('1', 'Bearer token');
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: undefined,
+        statusCode: 500,
+      });
+      expect(json).toHaveBeenCalled();
+    });
+  });
+
+  describe('getMilestoneArticles', () => {
+    const mockFetch = jest.fn();
+
+    beforeEach(() => {
+      (global as unknown as { fetch: typeof fetch }).fetch = mockFetch as never;
+    });
+
+    it('returns articles when the response is ok', async () => {
+      const articles = [{ id: 'article-1' }];
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue(articles),
+      });
+
+      const result = await getMilestoneArticles('milestone-1', 'Bearer token');
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://api.example.com/milestones/milestone-1/articles',
+        expect.objectContaining({
+          headers: expect.objectContaining({ authorization: 'Bearer token' }),
+        }),
+      );
+      expect(result).toEqual(articles);
+    });
+
+    it('throws BackendError when the response is not ok', async () => {
+      const errorBody = { message: 'not found' };
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        statusText: 'Not Found',
+        json: jest.fn().mockResolvedValue(errorBody),
+      });
+
+      const promise = getMilestoneArticles('milestone-1', 'Bearer token');
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: errorBody,
+        statusCode: 404,
+      });
+    });
+
+    it('throws BackendError when the response body cannot be parsed', async () => {
+      const json = jest.fn().mockRejectedValue(new Error('parse failure'));
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Server Error',
+        json,
+      });
+
+      const promise = getMilestoneArticles('milestone-1', 'Bearer token');
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: undefined,
+        statusCode: 500,
+      });
+      expect(json).toHaveBeenCalled();
+    });
+  });
+
+  describe('getProjectMilestones', () => {
+    const mockFetch = jest.fn();
+
+    const options: MilestonesListOptions = {
+      projectId: 'project-1',
+      grantType: 'original',
+      searchQuery: '',
+      currentPage: 2,
+      pageSize: 15,
+      filters: new Set<string>(),
+    };
+
+    beforeEach(() => {
+      (global as unknown as { fetch: typeof fetch }).fetch = mockFetch as never;
+    });
+
+    it('returns project milestones when the response is ok', async () => {
+      const projectMilestones = {
+        total: 2,
+        items: [
+          {
+            id: 'milestone-1',
+            description: 'First milestone',
+            articleCount: 4,
+            aims: '1',
+            status: 'Complete',
+          },
+          {
+            id: 'milestone-2',
+            description: 'Second milestone',
+            articleCount: 2,
+            aims: '2,5',
+            status: 'In Progress',
+          },
+        ],
+      };
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue(projectMilestones),
+      });
+
+      const result = await getProjectMilestones(options, 'Bearer token');
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        `https://api.example.com/projects/${options.projectId}/milestones?take=15&skip=30&grantType=original`,
+        expect.objectContaining({
+          headers: expect.objectContaining({ authorization: 'Bearer token' }),
+        }),
+      );
+      expect(result).toEqual(projectMilestones);
+    });
+
+    it('throws BackendError when the response is not ok', async () => {
+      const errorBody = { message: 'not found' };
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        statusText: 'Not Found',
+        json: jest.fn().mockResolvedValue(errorBody),
+      });
+
+      const promise = getProjectMilestones(options, 'Bearer token');
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: errorBody,
+        statusCode: 404,
+      });
+    });
+
+    it('throws BackendError when the response body cannot be parsed', async () => {
+      const json = jest.fn().mockRejectedValue(new Error('parse failure'));
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Server Error',
+        json,
+      });
+
+      const promise = getProjectMilestones(options, 'Bearer token');
 
       await expect(promise).rejects.toThrow(BackendError);
       await expect(promise).rejects.toMatchObject({

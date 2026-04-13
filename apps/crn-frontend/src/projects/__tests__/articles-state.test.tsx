@@ -1,13 +1,20 @@
 import { waitFor } from '@testing-library/dom';
 import { act, renderHook } from '@testing-library/react';
 import { RecoilRoot, useRecoilValue } from 'recoil';
-import { aimArticlesState, useFetchArticles } from '../aim-articles-state';
+import {
+  aimArticlesState,
+  useFetchAimArticles,
+  useFetchMilestoneArticles,
+} from '../articles-state';
 
 const mockGetAimArticles = jest.fn();
+const mockGetMilestoneArticles = jest.fn();
 
 jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
   getAimArticles: (...args: unknown[]) => mockGetAimArticles(...args),
+  getMilestoneArticles: (...args: unknown[]) =>
+    mockGetMilestoneArticles(...args),
 }));
 
 jest.mock('../../auth/state', () => ({
@@ -22,7 +29,7 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 function useFetchAndState(aimId: string) {
-  const fetchArticles = useFetchArticles();
+  const fetchArticles = useFetchAimArticles();
   const articles = useRecoilValue(aimArticlesState(aimId));
   return { fetchArticles, articles };
 }
@@ -32,14 +39,14 @@ describe('aim-articles-state', () => {
     jest.resetAllMocks();
   });
 
-  describe('useFetchArticles', () => {
+  describe('useFetchAimArticles', () => {
     it('calls getAimArticles with the aimId and authorization, updates Recoil state, and returns the list', async () => {
       const mockArticles = [
         { id: 'ro-1', title: 'Article One', href: '/shared-research/ro-1' },
       ];
       mockGetAimArticles.mockResolvedValueOnce(mockArticles);
 
-      const { result } = renderHook(() => useFetchArticles(), { wrapper });
+      const { result } = renderHook(() => useFetchAimArticles(), { wrapper });
 
       const articles = await act(async () => result.current('aim-1'));
 
@@ -53,7 +60,7 @@ describe('aim-articles-state', () => {
     it('returns empty array and sets state when API returns no articles', async () => {
       mockGetAimArticles.mockResolvedValueOnce([]);
 
-      const { result } = renderHook(() => useFetchArticles(), { wrapper });
+      const { result } = renderHook(() => useFetchAimArticles(), { wrapper });
 
       const articles = await act(async () => result.current('aim-empty'));
 
@@ -66,7 +73,7 @@ describe('aim-articles-state', () => {
       ];
       mockGetAimArticles.mockResolvedValueOnce(mockArticles);
 
-      const { result } = renderHook(() => useFetchArticles(), { wrapper });
+      const { result } = renderHook(() => useFetchAimArticles(), { wrapper });
 
       await act(async () => result.current('aim-cached'));
       const cachedArticles = await act(async () =>
@@ -75,6 +82,58 @@ describe('aim-articles-state', () => {
 
       expect(cachedArticles).toEqual(mockArticles);
       expect(mockGetAimArticles).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('useFetchMilestoneArticles', () => {
+    it('calls getMilestoneArticles with the milestoneId and authorization, updates Recoil state, and returns the list', async () => {
+      const mockArticles = [
+        { id: 'ro-1', title: 'Article One', href: '/shared-research/ro-1' },
+      ];
+      mockGetMilestoneArticles.mockResolvedValueOnce(mockArticles);
+
+      const { result } = renderHook(() => useFetchMilestoneArticles(), {
+        wrapper,
+      });
+
+      const articles = await act(async () => result.current('milestone-1'));
+
+      expect(articles).toEqual(mockArticles);
+      expect(mockGetMilestoneArticles).toHaveBeenCalledWith(
+        'milestone-1',
+        'Bearer test-token',
+      );
+    });
+
+    it('returns empty array and sets state when API returns no articles', async () => {
+      mockGetMilestoneArticles.mockResolvedValueOnce([]);
+
+      const { result } = renderHook(() => useFetchMilestoneArticles(), {
+        wrapper,
+      });
+
+      const articles = await act(async () => result.current('milestone-empty'));
+
+      expect(articles).toEqual([]);
+    });
+
+    it('returns cached articles without calling the API on subsequent fetches', async () => {
+      const mockArticles = [
+        { id: 'ro-1', title: 'Article One', href: '/shared-research/ro-1' },
+      ];
+      mockGetMilestoneArticles.mockResolvedValueOnce(mockArticles);
+
+      const { result } = renderHook(() => useFetchMilestoneArticles(), {
+        wrapper,
+      });
+
+      await act(async () => result.current('milestone-cached'));
+      const cachedArticles = await act(async () =>
+        result.current('milestone-cached'),
+      );
+
+      expect(cachedArticles).toEqual(mockArticles);
+      expect(mockGetMilestoneArticles).toHaveBeenCalledTimes(1);
     });
   });
 

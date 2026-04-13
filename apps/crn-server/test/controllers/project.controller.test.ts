@@ -1,14 +1,14 @@
 import { NotFoundError } from '@asap-hub/errors';
 import ProjectController from '../../src/controllers/project.controller';
-import { getDataProviderMock } from '../mocks/data-provider.mock';
+import { projectDataProviderMock } from '../mocks/project.data-provider.mock';
 import {
   getExpectedProjectList,
   getExpectedDiscoveryProject,
+  getProjectMilestonesResponse,
 } from '../fixtures/projects.fixtures';
 import type { ProjectTool, ProjectType, ProjectStatus } from '@asap-hub/model';
 
 describe('Project Controller', () => {
-  const projectDataProviderMock = getDataProviderMock();
   const controller = new ProjectController(projectDataProviderMock);
 
   afterEach(() => {
@@ -173,6 +173,21 @@ describe('Project Controller', () => {
       await expect(controller.update('missing-id', tools)).rejects.toThrow(
         NotFoundError,
       );
+    });
+  });
+
+  describe('fetchProjectMilestones', () => {
+    it('returns the project milestones', async () => {
+      const projectMilestones = getProjectMilestonesResponse();
+      projectDataProviderMock.fetchProjectMilestones.mockResolvedValueOnce(
+        projectMilestones,
+      );
+
+      const result = await controller.fetchProjectMilestones('project-1', {
+        grantType: 'original',
+      });
+
+      expect(result).toEqual(projectMilestones);
     });
   });
 });

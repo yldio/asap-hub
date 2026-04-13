@@ -9,12 +9,14 @@ import { projectRouteFactory } from '../../src/routes/project.route';
 import {
   getExpectedDiscoveryProject,
   getExpectedProjectList,
+  getProjectMilestonesResponse,
 } from '../fixtures/projects.fixtures';
 import ProjectController from '../../src/controllers/project.controller';
 
 const projectControllerMock = {
   fetch: jest.fn(),
   fetchById: jest.fn(),
+  fetchProjectMilestones: jest.fn(),
   update: jest.fn(),
 } as unknown as jest.Mocked<ProjectController>;
 
@@ -117,12 +119,12 @@ describe('project routes', () => {
     });
   });
 
-  describe('GET /project/:projectId', () => {
+  describe('GET /projects/:projectId', () => {
     it('returns the project when found', async () => {
       const project = getExpectedDiscoveryProject();
       projectControllerMock.fetchById.mockResolvedValueOnce(project);
 
-      const response = await supertest(app).get('/project/discovery-1');
+      const response = await supertest(app).get('/projects/discovery-1');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(project);
@@ -136,13 +138,44 @@ describe('project routes', () => {
         new NotFoundError(undefined, 'project missing'),
       );
 
-      const response = await supertest(app).get('/project/missing');
+      const response = await supertest(app).get('/projects/missing');
 
       expect(response.status).toBe(404);
     });
   });
 
-  describe('PATCH /project/:projectId', () => {
+  describe('GET /projects/:projectId/milestones', () => {
+    it('returns the project milestones', async () => {
+      const projectMilestones = getProjectMilestonesResponse();
+      projectControllerMock.fetchProjectMilestones.mockResolvedValueOnce(
+        projectMilestones,
+      );
+
+      const response = await supertest(app).get(
+        '/projects/project-1/milestones',
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(projectMilestones);
+      expect(projectControllerMock.fetchProjectMilestones).toHaveBeenCalledWith(
+        'project-1',
+        {},
+      );
+    });
+
+    it('returns 400 for invalid query parameters', async () => {
+      const response = await supertest(app)
+        .get('/projects/project-1/milestones')
+        .query({ take: 'invalid' });
+
+      expect(response.status).toBe(400);
+      expect(
+        projectControllerMock.fetchProjectMilestones,
+      ).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('PATCH /projects/:projectId', () => {
     const tools = [{ name: 'Slack', url: 'https://slack.com' }];
 
     it('calls update with the project id and tools and returns the result', async () => {
@@ -153,7 +186,7 @@ describe('project routes', () => {
       projectControllerMock.update.mockResolvedValueOnce(updated);
 
       const response = await supertest(app)
-        .patch('/project/discovery-1')
+        .patch('/projects/discovery-1')
         .send({ tools });
 
       expect(response.status).toBe(200);
@@ -170,7 +203,7 @@ describe('project routes', () => {
 
       const appWithOtherTeam = createApp({ teams: [{ id: 'other-team' }] });
       const response = await supertest(appWithOtherTeam)
-        .patch('/project/discovery-1')
+        .patch('/projects/discovery-1')
         .send({ tools });
 
       expect(response.status).toBe(403);
@@ -185,7 +218,7 @@ describe('project routes', () => {
       );
 
       const response = await supertest(app)
-        .patch('/project/discovery-1')
+        .patch('/projects/discovery-1')
         .send({ tools });
 
       expect(response.status).toBe(403);
@@ -194,7 +227,7 @@ describe('project routes', () => {
 
     it('returns 400 for an invalid request body', async () => {
       const response = await supertest(app)
-        .patch('/project/discovery-1')
+        .patch('/projects/discovery-1')
         .send({ tools: [{ name: 'Missing URL' }] });
 
       expect(response.status).toBe(400);
@@ -207,7 +240,7 @@ describe('project routes', () => {
       );
 
       const response = await supertest(app)
-        .patch('/project/missing')
+        .patch('/projects/missing')
         .send({ tools });
 
       expect(response.status).toBe(404);

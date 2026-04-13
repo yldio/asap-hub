@@ -2,8 +2,6 @@ export type {
   OpensearchIndex,
   OpensearchSort,
   SearchResult,
-  OpensearchHit,
-  OpensearchHitsResponse,
   SearchScope,
   OpensearchSearchOptions,
   TagQueryBuilder,

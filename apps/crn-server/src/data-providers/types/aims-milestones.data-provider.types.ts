@@ -95,4 +95,7 @@ export type AimsMilestonesDataProvider = {
     skip: number;
   }) => Promise<ListResponse<MilestoneDataObject>>;
   fetchArticlesForAim: (aimId: string) => Promise<ReadonlyArray<ArticleItem>>;
+  fetchArticlesForMilestone: (
+    milestoneId: string,
+  ) => Promise<ReadonlyArray<ArticleItem>>;
 };

@@ -11,8 +11,8 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
   reindexAimById,
-  reindexMilestonesByAimId,
   deleteAimById,
+  deleteMilestonesByAimId,
   reindexByProjectId,
   deleteByProjectId,
 } from '../opensearch/aims-milestones-reindex';
@@ -35,10 +35,9 @@ export const indexAimOpensearchHandler =
     if (eventType === 'AimsPublished' || eventType === 'AimsUnpublished') {
       if (eventType === 'AimsPublished') {
         await reindexAimById(provider, resourceId);
-        await reindexMilestonesByAimId(provider, resourceId);
       } else {
         await deleteAimById(resourceId);
-        await reindexMilestonesByAimId(provider, resourceId);
+        await deleteMilestonesByAimId(provider, resourceId);
       }
       return;
     }

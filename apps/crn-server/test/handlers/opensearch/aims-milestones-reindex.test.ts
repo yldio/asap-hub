@@ -39,6 +39,7 @@ import {
   deleteAimById,
   deleteMilestoneById,
   deleteByProjectId,
+  deleteMilestonesByAimId,
 } from '../../../src/handlers/opensearch/aims-milestones-reindex';
 import type { AimsMilestonesDataProvider } from '../../../src/data-providers/types';
 
@@ -112,7 +113,7 @@ describe('aims-milestones-reindex', () => {
   });
 
   describe('reindexAimById', () => {
-    test('builds and upserts an aim document', async () => {
+    test('builds and upserts an aim document, then deletes and reinserts milestones', async () => {
       const provider = createMockProvider();
       const project = makeProject();
       provider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(project);
@@ -121,9 +122,11 @@ describe('aims-milestones-reindex', () => {
         milestonesCollection: { items: [{ sys: { id: 'ms-1' } }] },
       });
       provider.fetchMilestoneById.mockResolvedValue(makeMilestone());
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue(['aim-1']);
 
       await reindexAimById(provider, 'aim-1');
 
+      // Aim upsert
       expect(mockUpsertOpensearchDocuments).toHaveBeenCalledWith(
         mockClient,
         'project-aims',
@@ -138,6 +141,23 @@ describe('aims-milestones-reindex', () => {
             status: 'In Progress',
             articleCount: 1,
             articlesDOI: '10.1000/abc',
+          }),
+        ],
+      );
+
+      // Milestones deleted then reinserted
+      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        ['ms-1'],
+      );
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        [
+          expect.objectContaining({
+            id: 'ms-1',
+            description: 'First milestone',
           }),
         ],
       );
@@ -329,7 +349,7 @@ describe('aims-milestones-reindex', () => {
   });
 
   describe('reindexAimsByMilestoneId', () => {
-    test('finds aims linked to milestone and reindexes each', async () => {
+    test('finds aims linked to milestone and rebuilds each', async () => {
       const provider = createMockProvider();
       provider.fetchAimIdsLinkedToMilestone.mockResolvedValue([
         'aim-1',
@@ -397,7 +417,7 @@ describe('aims-milestones-reindex', () => {
   });
 
   describe('reindexByProjectId', () => {
-    test('reindexes all aims and milestones for a project', async () => {
+    test('deletes all aims and milestones then reinserts from Contentful', async () => {
       const provider = createMockProvider();
       const project = makeProject();
       provider.fetchProjectWithAimsDetailById.mockResolvedValue(project);
@@ -414,8 +434,30 @@ describe('aims-milestones-reindex', () => {
       expect(provider.fetchProjectWithAimsDetailById).toHaveBeenCalledWith(
         'project-1',
       );
-      // At least one upsert for aim and one for milestone
-      expect(mockUpsertOpensearchDocuments).toHaveBeenCalled();
+
+      // Deletes aims then milestones
+      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-aims',
+        ['aim-1'],
+      );
+      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        ['ms-1'],
+      );
+
+      // Then reinserts aim and milestone
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-aims',
+        [expect.objectContaining({ id: 'aim-1' })],
+      );
+      expect(mockUpsertOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        [expect.objectContaining({ id: 'ms-1' })],
+      );
     });
 
     test('skips when project not found', async () => {
@@ -449,6 +491,38 @@ describe('aims-milestones-reindex', () => {
         'project-milestones',
         ['ms-1'],
       );
+    });
+  });
+
+  describe('deleteMilestonesByAimId', () => {
+    test('deletes all milestones linked to an aim', async () => {
+      const provider = createMockProvider();
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-1' },
+        milestonesCollection: {
+          items: [{ sys: { id: 'ms-1' } }, { sys: { id: 'ms-2' } }],
+        },
+      });
+
+      await deleteMilestonesByAimId(provider, 'aim-1');
+
+      expect(mockDeleteOpensearchDocuments).toHaveBeenCalledWith(
+        mockClient,
+        'project-milestones',
+        ['ms-1', 'ms-2'],
+      );
+    });
+
+    test('skips when aim has no milestones', async () => {
+      const provider = createMockProvider();
+      provider.fetchAimWithMilestonesById.mockResolvedValue({
+        sys: { id: 'aim-1' },
+        milestonesCollection: { items: [] },
+      });
+
+      await deleteMilestonesByAimId(provider, 'aim-1');
+
+      expect(mockDeleteOpensearchDocuments).not.toHaveBeenCalled();
     });
   });
 

@@ -4,16 +4,16 @@ import { createEventBridgeEventMock } from '../../helpers/events';
 jest.mock('../../../src/utils/logger');
 
 const mockReindexAimById = jest.fn().mockResolvedValue(undefined);
-const mockReindexMilestonesByAimId = jest.fn().mockResolvedValue(undefined);
 const mockDeleteAimById = jest.fn().mockResolvedValue(undefined);
+const mockDeleteMilestonesByAimId = jest.fn().mockResolvedValue(undefined);
 const mockReindexByProjectId = jest.fn().mockResolvedValue(undefined);
 const mockDeleteByProjectId = jest.fn().mockResolvedValue(undefined);
 
 jest.mock('../../../src/handlers/opensearch/aims-milestones-reindex', () => ({
   reindexAimById: (...args: unknown[]) => mockReindexAimById(...args),
-  reindexMilestonesByAimId: (...args: unknown[]) =>
-    mockReindexMilestonesByAimId(...args),
   deleteAimById: (...args: unknown[]) => mockDeleteAimById(...args),
+  deleteMilestonesByAimId: (...args: unknown[]) =>
+    mockDeleteMilestonesByAimId(...args),
   reindexByProjectId: (...args: unknown[]) => mockReindexByProjectId(...args),
   deleteByProjectId: (...args: unknown[]) => mockDeleteByProjectId(...args),
 }));
@@ -39,7 +39,7 @@ describe('OpenSearch Index Aim Handler', () => {
   afterEach(() => jest.clearAllMocks());
 
   describe('Aim events', () => {
-    test('AimsPublished reindexes the aim and its linked milestones', async () => {
+    test('AimsPublished reindexes the aim (which includes milestone delete+reinsert)', async () => {
       const event = createEventBridgeEventMock(
         { resourceId: 'aim-1' },
         'AimsPublished',
@@ -49,14 +49,10 @@ describe('OpenSearch Index Aim Handler', () => {
       await handler(event);
 
       expect(mockReindexAimById).toHaveBeenCalledWith(mockProvider, 'aim-1');
-      expect(mockReindexMilestonesByAimId).toHaveBeenCalledWith(
-        mockProvider,
-        'aim-1',
-      );
       expect(mockDeleteAimById).not.toHaveBeenCalled();
     });
 
-    test('AimsUnpublished deletes the aim and reindexes linked milestones', async () => {
+    test('AimsUnpublished deletes the aim and its milestones', async () => {
       const event = createEventBridgeEventMock(
         { resourceId: 'aim-1' },
         'AimsUnpublished',
@@ -66,7 +62,7 @@ describe('OpenSearch Index Aim Handler', () => {
       await handler(event);
 
       expect(mockDeleteAimById).toHaveBeenCalledWith('aim-1');
-      expect(mockReindexMilestonesByAimId).toHaveBeenCalledWith(
+      expect(mockDeleteMilestonesByAimId).toHaveBeenCalledWith(
         mockProvider,
         'aim-1',
       );

@@ -6,7 +6,12 @@ import {
   getExpectedDiscoveryProject,
   getProjectMilestonesResponse,
 } from '../fixtures/projects.fixtures';
-import type { ProjectTool, ProjectType, ProjectStatus } from '@asap-hub/model';
+import type {
+  ProjectTool,
+  ProjectType,
+  ProjectStatus,
+  MilestoneCreateRequest,
+} from '@asap-hub/model';
 
 describe('Project Controller', () => {
   const controller = new ProjectController(projectDataProviderMock);
@@ -188,6 +193,108 @@ describe('Project Controller', () => {
       });
 
       expect(result).toEqual(projectMilestones);
+    });
+  });
+
+  describe('createMilestone', () => {
+    const milestoneData: MilestoneCreateRequest = {
+      description: 'Milestone 1',
+      status: 'In Progress',
+      aimIds: ['aim-id-1'],
+      grantType: 'original',
+    };
+
+    it('creates a milestone when project has no supplement grant and grantType is original', async () => {
+      const project = {
+        ...getExpectedDiscoveryProject(),
+        supplementGrant: undefined,
+      };
+
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
+      projectDataProviderMock.createMilestone.mockResolvedValueOnce(
+        'milestone-1',
+      );
+
+      const result = await controller.createMilestone(
+        project.id,
+        milestoneData,
+      );
+
+      expect(projectDataProviderMock.fetchById).toHaveBeenCalledWith(
+        project.id,
+      );
+      expect(projectDataProviderMock.createMilestone).toHaveBeenCalledWith(
+        milestoneData,
+      );
+      expect(result).toBe('milestone-1');
+    });
+
+    it('creates a milestone when project has supplement grant and grantType is supplement', async () => {
+      const project = {
+        ...getExpectedDiscoveryProject(),
+        supplementGrant: { id: 'supp-1' },
+      };
+
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
+      projectDataProviderMock.createMilestone.mockResolvedValueOnce(
+        'milestone-2',
+      );
+
+      const result = await controller.createMilestone(project.id, {
+        ...milestoneData,
+        grantType: 'supplement',
+      });
+
+      expect(projectDataProviderMock.createMilestone).toHaveBeenCalledWith({
+        ...milestoneData,
+        grantType: 'supplement',
+      });
+      expect(result).toBe('milestone-2');
+    });
+
+    it('throws NotFoundError when project does not exist', async () => {
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(null);
+
+      await expect(
+        controller.createMilestone('missing-id', milestoneData),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    it('throws badRequest when supplement grant exists but grantType selected is original', async () => {
+      const project = {
+        ...getExpectedDiscoveryProject(),
+        supplementGrant: { id: 'supp-1' },
+      };
+
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
+
+      await expect(
+        controller.createMilestone(project.id, milestoneData),
+      ).rejects.toThrow(
+        'Cannot create milestones for Original grant when a Supplement grant exists',
+      );
+
+      expect(projectDataProviderMock.createMilestone).not.toHaveBeenCalled();
+    });
+
+    it('throws badRequest when no supplement grant exists but grantType selected is supplement', async () => {
+      const project = {
+        ...getExpectedDiscoveryProject(),
+        supplementGrant: undefined,
+      };
+
+      projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
+
+      await expect(
+        controller.createMilestone(project.id, {
+          ...milestoneData,
+          grantType: 'supplement',
+        }),
+      ).rejects.toThrow(
+        'Cannot create milestones for Supplement grant when no Supplement grant exists',
+      );
+
+      expect(projectDataProviderMock.createMilestone).not.toHaveBeenCalled();
     });
   });
 });

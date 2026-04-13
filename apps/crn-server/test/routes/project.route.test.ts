@@ -3,12 +3,17 @@ import express from 'express';
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
 import { NotFoundError } from '@asap-hub/errors';
-import { ListProjectDataObject, ProjectResponse } from '@asap-hub/model';
+import {
+  ListProjectDataObject,
+  ProjectResponse,
+  TeamRole,
+} from '@asap-hub/model';
 
 import { projectRouteFactory } from '../../src/routes/project.route';
 import {
   getExpectedDiscoveryProject,
   getExpectedProjectList,
+  getExpectedTraineeProject,
   getProjectMilestonesResponse,
 } from '../fixtures/projects.fixtures';
 import ProjectController from '../../src/controllers/project.controller';
@@ -18,9 +23,13 @@ const projectControllerMock = {
   fetchById: jest.fn(),
   fetchProjectMilestones: jest.fn(),
   update: jest.fn(),
+  createMilestone: jest.fn(),
 } as unknown as jest.Mocked<ProjectController>;
 
-const createApp = (loggedInUser?: { teams: { id: string }[] }) => {
+const createApp = (loggedInUser?: {
+  id?: string;
+  teams: { id: string; role?: TeamRole }[];
+}) => {
   const app = express();
   app.use(express.json());
   if (loggedInUser) {
@@ -269,6 +278,125 @@ describe('project routes', () => {
         .send({ tools });
 
       expect(response.status).toBe(404);
+    });
+  });
+
+  describe('POST /projects/:projectId/milestones', () => {
+    const milestonePayload = {
+      grantType: 'original',
+      description: 'First milestone',
+      status: 'Pending',
+      aimIds: ['aim-1'],
+    };
+
+    it('creates a milestone and returns the id when user is a project lead', async () => {
+      const project = getExpectedDiscoveryProject();
+      const milestoneId = 'milestone-123';
+      const relatedTeamId = project.teamId!;
+
+      projectControllerMock.fetchById.mockResolvedValueOnce(project);
+      projectControllerMock.createMilestone.mockResolvedValueOnce(milestoneId);
+
+      const appWithLead = createApp({
+        id: 'user-id',
+        teams: [{ id: relatedTeamId, role: 'Project Manager' }],
+      });
+
+      const response = await supertest(appWithLead)
+        .post('/projects/discovery-1/milestones')
+        .send(milestonePayload);
+
+      expect(response.status).toBe(201);
+      expect(response.body).toEqual({ id: milestoneId });
+      expect(projectControllerMock.createMilestone).toHaveBeenCalledWith(
+        'discovery-1',
+        milestonePayload,
+      );
+    });
+
+    it('returns 401 when user is not logged in', async () => {
+      const appWithoutUser = createApp();
+
+      const response = await supertest(appWithoutUser)
+        .post('/projects/discovery-1/milestones')
+        .send(milestonePayload);
+
+      expect(response.status).toBe(401);
+      expect(projectControllerMock.createMilestone).not.toHaveBeenCalled();
+    });
+
+    it('returns 403 when the user is not a project lead for team based project', async () => {
+      const project = getExpectedDiscoveryProject();
+      const relatedTeamId = project.teamId!;
+
+      projectControllerMock.fetchById.mockResolvedValueOnce(project);
+
+      const appWithNonLead = createApp({
+        id: 'user-id',
+        teams: [{ id: relatedTeamId, role: 'Key Personnel' }],
+      });
+
+      const response = await supertest(appWithNonLead)
+        .post('/projects/discovery-1/milestones')
+        .send(milestonePayload);
+
+      expect(response.status).toBe(403);
+      expect(projectControllerMock.createMilestone).not.toHaveBeenCalled();
+    });
+
+    it('returns 403 when the user is not a project lead for user based project', async () => {
+      const userId = 'user-non-lead';
+      const project = {
+        ...getExpectedTraineeProject(),
+        members: [
+          {
+            id: userId,
+            displayName: 'Dana Lopez',
+            firstName: 'Dana',
+            lastName: 'Lopez',
+            avatarUrl: undefined,
+            role: 'Trainee Project - Key Personnel',
+            email: 'dana@example.com',
+            alumniSinceDate: undefined,
+          },
+        ],
+      };
+
+      projectControllerMock.fetchById.mockResolvedValueOnce(project);
+
+      const appWithNonLead = createApp({
+        id: userId,
+        teams: [{ id: 'team-1' }],
+      });
+
+      const response = await supertest(appWithNonLead)
+        .post('/projects/discovery-1/milestones')
+        .send(milestonePayload);
+
+      expect(response.status).toBe(403);
+      expect(projectControllerMock.createMilestone).not.toHaveBeenCalled();
+    });
+
+    it('returns 400 for an invalid request body', async () => {
+      const response = await supertest(app)
+        .post('/projects/discovery-1/milestones')
+        .send({ name: 'Missing due date' });
+
+      expect(response.status).toBe(400);
+      expect(projectControllerMock.createMilestone).not.toHaveBeenCalled();
+    });
+
+    it('maps not found errors to a 404 response', async () => {
+      projectControllerMock.fetchById.mockRejectedValueOnce(
+        new NotFoundError(undefined, 'project missing'),
+      );
+
+      const response = await supertest(app)
+        .post('/projects/missing/milestones')
+        .send(milestonePayload);
+
+      expect(response.status).toBe(404);
+      expect(projectControllerMock.createMilestone).not.toHaveBeenCalled();
     });
   });
 });

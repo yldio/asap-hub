@@ -352,16 +352,13 @@ export const reindexByProjectId = async (
 
   const client = await getOpensearchClient();
 
-  // Delete all existing aims for this project
-  if (aimIds.length > 0) {
-    await deleteByDocumentIds(client, AIMS_INDEX, aimIds);
-  }
+  // Delete ALL existing aims and milestones for this project by projectId.
+  // Using projectId field (not document IDs) ensures we also remove aims/milestones
+  // that were previously linked but have since been unlinked from the project.
+  await deleteByFieldValue(client, AIMS_INDEX, 'projectId', projectId);
+  await deleteByFieldValue(client, MILESTONES_INDEX, 'projectId', projectId);
 
-  // Delete all existing milestones for these aims
   const milestoneIds = await collectMilestoneIdsForAims(provider, aimIds);
-  if (milestoneIds.length > 0) {
-    await deleteByDocumentIds(client, MILESTONES_INDEX, milestoneIds);
-  }
 
   // Reinsert all aims
   for (const aimDetail of allAimDetails) {

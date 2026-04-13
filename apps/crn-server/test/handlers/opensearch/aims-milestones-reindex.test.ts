@@ -375,16 +375,18 @@ describe('aims-milestones-reindex', () => {
         'project-1',
       );
 
-      // Deletes aims then milestones
-      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
+      // Deletes all aims and milestones for this project by projectId field
+      expect(mockDeleteByFieldValue).toHaveBeenCalledWith(
         mockClient,
         'project-aims',
-        ['aim-1'],
+        'projectId',
+        'project-1',
       );
-      expect(mockDeleteByDocumentIds).toHaveBeenCalledWith(
+      expect(mockDeleteByFieldValue).toHaveBeenCalledWith(
         mockClient,
         'project-milestones',
-        ['ms-1'],
+        'projectId',
+        'project-1',
       );
 
       // Then reinserts aim and milestone

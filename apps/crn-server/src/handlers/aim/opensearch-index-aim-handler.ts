@@ -5,7 +5,6 @@ import { getAimsMilestonesDataProvider } from '../../dependencies/aims-milestone
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
-  reindexAimById,
   deleteAimById,
   deleteMilestonesByAimId,
   reindexByProjectId,
@@ -25,7 +24,17 @@ export const indexAimOpensearchHandler =
 
     if (eventType === 'AimsPublished' || eventType === 'AimsUnpublished') {
       if (eventType === 'AimsPublished') {
-        await reindexAimById(provider, resourceId);
+        // Reindex the entire project so that milestones removed from this aim
+        // also get refreshed (their aimNumbers may have changed).
+        const project =
+          await provider.fetchProjectWithAimsDetailByAimId(resourceId);
+        if (project) {
+          await reindexByProjectId(provider, project.sys.id);
+        } else {
+          logger.debug(
+            `Aim ${resourceId}: could not resolve parent project, skipping`,
+          );
+        }
       } else {
         await deleteAimById(resourceId);
         await deleteMilestonesByAimId(provider, resourceId);

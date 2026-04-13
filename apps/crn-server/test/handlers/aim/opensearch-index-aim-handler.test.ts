@@ -38,7 +38,11 @@ describe('OpenSearch Index Aim Handler', () => {
   afterEach(() => jest.clearAllMocks());
 
   describe('Aim events', () => {
-    test('AimsPublished reindexes the aim (which includes milestone delete+reinsert)', async () => {
+    test('AimsPublished resolves the parent project and reindexes it', async () => {
+      mockProvider.fetchProjectWithAimsDetailByAimId.mockResolvedValue({
+        sys: { id: 'project-1' },
+      });
+
       const event = createEventBridgeEventMock(
         { resourceId: 'aim-1' },
         'AimsPublished',
@@ -47,8 +51,28 @@ describe('OpenSearch Index Aim Handler', () => {
 
       await handler(event);
 
-      expect(mockReindexAimById).toHaveBeenCalledWith(mockProvider, 'aim-1');
+      expect(
+        mockProvider.fetchProjectWithAimsDetailByAimId,
+      ).toHaveBeenCalledWith('aim-1');
+      expect(mockReindexByProjectId).toHaveBeenCalledWith(
+        mockProvider,
+        'project-1',
+      );
       expect(mockDeleteAimById).not.toHaveBeenCalled();
+    });
+
+    test('AimsPublished skips when parent project not found', async () => {
+      mockProvider.fetchProjectWithAimsDetailByAimId.mockResolvedValue(null);
+
+      const event = createEventBridgeEventMock(
+        { resourceId: 'aim-1' },
+        'AimsPublished',
+        'aim-1',
+      );
+
+      await handler(event);
+
+      expect(mockReindexByProjectId).not.toHaveBeenCalled();
     });
 
     test('AimsUnpublished deletes the aim and its milestones', async () => {

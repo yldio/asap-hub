@@ -313,6 +313,16 @@ describe('aims-milestones-reindex', () => {
       expect(mockUpsertOpensearchDocuments).not.toHaveBeenCalled();
     });
 
+    test('skips when no aims are linked to the milestone', async () => {
+      const provider = createMockProvider();
+      provider.fetchAimIdsLinkedToMilestone.mockResolvedValue([]);
+
+      await reindexAimsByMilestoneId(provider, 'ms-orphan');
+
+      expect(mockGetClient).not.toHaveBeenCalled();
+      expect(mockUpsertOpensearchDocuments).not.toHaveBeenCalled();
+    });
+
     test('skips when project or aim not found', async () => {
       const provider = createMockProvider();
       provider.fetchAimIdsLinkedToMilestone.mockResolvedValue(['aim-1']);

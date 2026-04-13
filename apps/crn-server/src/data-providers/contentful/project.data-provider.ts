@@ -19,6 +19,7 @@ import {
   GraphQLClient,
   patchAndPublish,
   ProjectsOrder,
+  getLinkEntity,
 } from '@asap-hub/contentful';
 import {
   Aim,
@@ -47,6 +48,7 @@ import {
   Milestone,
   MilestoneStatus,
   milestoneStatuses,
+  MilestoneCreateRequest,
 } from '@asap-hub/model';
 import {
   cleanArray,
@@ -994,5 +996,38 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       total: response.hits?.total?.value || 0,
       items,
     };
+  }
+
+  async createMilestone(data: MilestoneCreateRequest): Promise<string> {
+    if (!this.getRestClient) {
+      throw new Error('REST client not available');
+    }
+
+    const environment = await this.getRestClient();
+
+    const milestoneEntry = await environment.createEntry('milestones', {
+      fields: addLocaleToFields({
+        description: data.description,
+        status: data.status,
+        relatedArticles: data.relatedArticleIds?.length
+          ? data.relatedArticleIds.map((id: string) => getLinkEntity(id))
+          : [],
+      }),
+    });
+
+    await milestoneEntry.publish();
+
+    for (const aimId of data.aimIds) {
+      const aimEntry = await environment.getEntry(aimId);
+      const currentMilestones = aimEntry.fields.milestones?.['en-US'] || [];
+      await patchAndPublish(aimEntry, {
+        milestones: [
+          ...currentMilestones,
+          getLinkEntity(milestoneEntry.sys.id),
+        ],
+      });
+    }
+
+    return milestoneEntry.sys.id;
   }
 }

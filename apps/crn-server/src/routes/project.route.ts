@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { FetchProjectsFilter } from '@asap-hub/model';
+import { FetchProjectsFilter, isProjectLead } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import ProjectController from '../controllers/project.controller';
 import {
   validateProjectFetchParameters,
+  validateProjectMilestoneCreateRequest,
   validateProjectMilestonesFetchOptions,
   validateProjectParameters,
   validateProjectPatchRequest,
@@ -97,6 +98,38 @@ export const projectRouteFactory = (
       });
 
       res.json(result);
+    },
+  );
+
+  projectRoutes.post<{ projectId: string }>(
+    '/projects/:projectId/milestones',
+    async (req, res) => {
+      const { projectId } = validateProjectParameters(req.params);
+      const data = validateProjectMilestoneCreateRequest(req.body);
+
+      if (!req.loggedInUser) {
+        throw Boom.unauthorized();
+      }
+
+      const { loggedInUser } = req;
+      const project = await projectController.fetchById(projectId);
+
+      const isLead = isProjectLead(
+        loggedInUser.id,
+        loggedInUser.teams,
+        project,
+      );
+
+      if (!isLead) {
+        throw Boom.forbidden();
+      }
+
+      const milestoneId = await projectController.createMilestone(
+        projectId,
+        data,
+      );
+
+      res.status(201).json({ id: milestoneId });
     },
   );
 

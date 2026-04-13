@@ -5,9 +5,11 @@ import {
   FetchProjectsFilter,
   ListProjectMilestonesResponse,
   ListProjectResponse,
+  MilestoneCreateRequest,
   ProjectResponse,
   ProjectTool,
 } from '@asap-hub/model';
+import Boom from '@hapi/boom';
 import { ProjectDataProvider } from '../data-providers/types/projects.data-provider.types';
 
 type FetchProjectsOptions = {
@@ -78,5 +80,28 @@ export default class ProjectController {
       total,
       items,
     };
+  }
+
+  async createMilestone(
+    projectId: string,
+    data: MilestoneCreateRequest,
+  ): Promise<string> {
+    const project = await this.fetchById(projectId);
+
+    const hasSupplementGrant =
+      'supplementGrant' in project && !!project.supplementGrant;
+
+    if (hasSupplementGrant && data.grantType === 'original') {
+      throw Boom.badRequest(
+        'Cannot create milestones for Original grant when a Supplement grant exists',
+      );
+    }
+
+    if (!hasSupplementGrant && data.grantType === 'supplement') {
+      throw Boom.badRequest(
+        'Cannot create milestones for Supplement grant when no Supplement grant exists',
+      );
+    }
+    return this.projectDataProvider.createMilestone(data);
   }
 }

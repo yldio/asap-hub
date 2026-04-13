@@ -1,8 +1,13 @@
 import type { AlgoliaClient } from '@asap-hub/algolia';
 import { BackendError } from '@asap-hub/frontend-utils';
-import type { ProjectDetail, ProjectResponse } from '@asap-hub/model';
+import type {
+  MilestoneCreateRequest,
+  ProjectDetail,
+  ProjectResponse,
+} from '@asap-hub/model';
 
 import {
+  createProjectMilestone,
   getAimArticles,
   getMilestoneArticles,
   getProject,
@@ -537,6 +542,82 @@ describe('projects api', () => {
       });
 
       const promise = getProjectMilestones(options, 'Bearer token');
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: undefined,
+        statusCode: 500,
+      });
+      expect(json).toHaveBeenCalled();
+    });
+  });
+
+  describe('createProjectMilestone', () => {
+    const mockFetch = jest.fn();
+    const milestoneData: MilestoneCreateRequest = {
+      grantType: 'original',
+      description: 'milestone description',
+      aimIds: ['1', '3'],
+      status: 'In Progress',
+    };
+
+    beforeEach(() => {
+      (global as unknown as { fetch: typeof fetch }).fetch = mockFetch as never;
+    });
+
+    it('makes an authorized POST request and returns the created milestone id', async () => {
+      const created = { id: 'milestone-1' };
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue(created),
+      });
+
+      const result = await createProjectMilestone(
+        '1',
+        milestoneData,
+        'Bearer token',
+      );
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://api.example.com/projects/1/milestones',
+        expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({ authorization: 'Bearer token' }),
+          body: JSON.stringify(milestoneData),
+        }),
+      );
+      expect(result).toEqual(created);
+    });
+
+    it('throws BackendError when the response is not ok', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Server Error',
+        json: jest.fn().mockResolvedValue({ message: 'boom' }),
+      });
+
+      await expect(
+        createProjectMilestone('1', milestoneData, 'Bearer token'),
+      ).rejects.toThrow(
+        'Failed to create milestone for project 1. Expected status 2xx. Received status 500 Server Error.',
+      );
+    });
+
+    it('throws BackendError when the response body cannot be parsed', async () => {
+      const json = jest.fn().mockRejectedValue(new Error('parse failure'));
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Server Error',
+        json,
+      });
+
+      const promise = createProjectMilestone(
+        '1',
+        milestoneData,
+        'Bearer token',
+      );
 
       await expect(promise).rejects.toThrow(BackendError);
       await expect(promise).rejects.toMatchObject({

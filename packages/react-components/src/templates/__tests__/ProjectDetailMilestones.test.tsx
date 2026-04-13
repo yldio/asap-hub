@@ -1,11 +1,36 @@
 import { ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
+import { Aim } from '@asap-hub/model';
+
 import ProjectDetailMilestones from '../ProjectDetailMilestones';
 
+const mockAims: Aim[] = [
+  {
+    id: '1',
+    order: 1,
+    description: 'Aim Description One',
+    status: 'In Progress',
+    articleCount: 0,
+  },
+  {
+    id: '2',
+    order: 2,
+    description: 'Aim Description Two',
+    status: 'Complete',
+    articleCount: 2,
+  },
+];
+
 const defaultProps: ComponentProps<typeof ProjectDetailMilestones> = {
+  isLead: true,
   selectedGrantType: 'original',
   onGrantTypeChange: () => null,
   hasSupplementGrant: false,
+  aims: mockAims,
+
+  loadArticleOptions: jest.fn().mockResolvedValue([]),
+
+  onCreateProjectMilestone: jest.fn().mockResolvedValue('milestone-id'),
   children: <span>table</span>,
 };
 
@@ -89,5 +114,57 @@ describe('ProjectDetailMilestones', () => {
     render(<ProjectDetailMilestones {...defaultProps} />);
 
     expect(screen.queryByText(/Last Update:/)).not.toBeInTheDocument();
+  });
+
+  describe('Add New Milestone button visibility', () => {
+    describe('button is visible when', () => {
+      it.each`
+        isLead  | selectedGrantType | hasSupplementGrant
+        ${true} | ${'original'}     | ${false}
+        ${true} | ${'supplement'}   | ${true}
+        ${true} | ${'supplement'}   | ${false}
+      `(
+        'isLead=$isLead, grant=$selectedGrantType, hasSupplementGrant=$hasSupplementGrant',
+        ({ isLead, selectedGrantType, hasSupplementGrant }) => {
+          render(
+            <ProjectDetailMilestones
+              {...defaultProps}
+              isLead={isLead}
+              selectedGrantType={selectedGrantType}
+              hasSupplementGrant={hasSupplementGrant}
+            />,
+          );
+
+          expect(
+            screen.getByRole('button', { name: /add new milestone/i }),
+          ).toBeInTheDocument();
+        },
+      );
+    });
+
+    describe('button is not visible when', () => {
+      it.each`
+        isLead   | selectedGrantType | hasSupplementGrant
+        ${true}  | ${'original'}     | ${true}
+        ${false} | ${'original'}     | ${false}
+        ${false} | ${'supplement'}   | ${true}
+      `(
+        'isLead=$isLead, grant=$selectedGrantType, hasSupplementGrant=$hasSupplementGrant',
+        ({ isLead, selectedGrantType, hasSupplementGrant }) => {
+          render(
+            <ProjectDetailMilestones
+              {...defaultProps}
+              isLead={isLead}
+              selectedGrantType={selectedGrantType}
+              hasSupplementGrant={hasSupplementGrant}
+            />,
+          );
+
+          expect(
+            screen.queryByRole('button', { name: /add new milestone/i }),
+          ).not.toBeInTheDocument();
+        },
+      );
+    });
   });
 });

@@ -239,10 +239,12 @@ jest.mock('../state', () => ({
     };
     return map[id];
   }),
-  useProjectMilestones: jest.fn(() => ({
+  useProjectMilestones: jest.fn().mockResolvedValue({
     items: [],
     total: 0,
-  })),
+  }),
+  useProjectArticlesSuggestions: jest.fn().mockResolvedValue([]),
+  useCreateProjectMilestone: jest.fn().mockReturnValue(jest.fn()),
 }));
 
 // --- Test helper ---
@@ -516,7 +518,7 @@ describe('DiscoveryProjectDetail - specific', () => {
       projects: [{ id: 'discovery-1' }],
       role: 'Grantee',
     };
-    document.cookie = 'ASAP_PROJECT_WORKSPACE=true';
+    enable('PROJECT_WORKSPACE');
     await renderProjectDetail(
       DiscoveryProjectDetail,
       'discovery',
@@ -527,8 +529,6 @@ describe('DiscoveryProjectDetail - specific', () => {
     await screen.findByRole('heading', { name: 'Compliance Review' });
     expect(lastWorkspaceProps.manuscripts).toEqual(['ms-1', 'ms-2']);
     expect(lastWorkspaceProps.collaborationManuscripts).toEqual(['ms-3']);
-    document.cookie =
-      'ASAP_PROJECT_WORKSPACE=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   });
 
   it('renders workspace with contact name from collaborators', async () => {

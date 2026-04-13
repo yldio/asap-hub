@@ -1,9 +1,10 @@
 import { projects } from '@asap-hub/routing';
-import { render, waitFor, screen, act } from '@testing-library/react';
+import { render, waitFor, screen, act, within } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   createListProjectMilestoneResponse,
   createProjectMilestoneResponse,
+  createProjectAim,
 } from '@asap-hub/fixtures';
 import { ListProjectMilestonesResponse } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
@@ -16,15 +17,22 @@ import ProjectMilestones from '../ProjectMilestones';
 import {
   getProjectMilestones,
   getMilestoneArticles,
-  MilestonesListOptions,
+  createProjectMilestone,
 } from '../api';
 import {
+  MilestonesListOptionsWithVersion,
   projectMilestonesIndexState,
   projectMilestonesListItemState,
   projectMilestonesState,
 } from '../state';
+import { getResearchOutputs } from '../../shared-research/api';
+import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
 
 jest.mock('../api');
+jest.mock('../../shared-research/api', () => ({
+  getResearchOutputs: jest.fn(),
+}));
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -39,11 +47,25 @@ const mockGetMilestoneArticles = getMilestoneArticles as jest.MockedFunction<
   typeof getMilestoneArticles
 >;
 
+const mockCreateProjectMilestone =
+  createProjectMilestone as jest.MockedFunction<typeof createProjectMilestone>;
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
+
 beforeEach(() => {
   mockGetProjectMilestones.mockResolvedValue(
     createListProjectMilestoneResponse(),
   );
   mockGetMilestoneArticles.mockResolvedValue([]);
+  mockCreateProjectMilestone.mockResolvedValue({ id: 'milestone-1' });
+  mockGetResearchOutputs.mockResolvedValue({
+    ...createResearchOutputListAlgoliaResponse(2),
+    hits: createResearchOutputListAlgoliaResponse(2).hits.map((hit, index) => ({
+      ...hit,
+      title: `Project Article ${index}`,
+    })),
+  });
 });
 
 const projectId = 'proj-1';
@@ -61,6 +83,7 @@ const renderPage = async (queryString = '', waitForLoad = true) => {
     pageSize: 10,
     grantType: 'supplement',
     projectId,
+    version: 1,
   };
 
   const result = render(
@@ -82,19 +105,24 @@ const renderPage = async (queryString = '', waitForLoad = true) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
-              <Routes>
-                <Route
-                  path="/projects/discovery/proj-1/milestones?"
-                  element={
-                    <ProjectMilestones
-                      projectId={projectId}
-                      isLead={true}
-                      hasSupplementGrant={true}
-                      loadArticleOptions={jest.fn(() => Promise.resolve([]))}
-                    />
-                  }
-                />
-              </Routes>
+              <ManuscriptToastProvider>
+                <Routes>
+                  <Route
+                    path="/projects/discovery/proj-1/milestones?"
+                    element={
+                      <ProjectMilestones
+                        projectId={projectId}
+                        isLead={true}
+                        hasSupplementGrant={true}
+                        aims={[
+                          createProjectAim({ key: 1, order: 1 }),
+                          createProjectAim({ key: 2, order: 2 }),
+                        ]}
+                      />
+                    }
+                  />
+                </Routes>
+              </ManuscriptToastProvider>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -226,5 +254,113 @@ describe('ProjectMilestones', () => {
     await waitFor(() =>
       expect(getByText(/Something went wrong/i)).toBeVisible(),
     );
+  });
+
+  it('displays Add New Milestone button if on supplement grant milestones page and user is lead', async () => {
+    await renderPage();
+
+    expect(
+      await screen.findByRole('button', {
+        name: /Add New Milestone/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('can create a milestone when the data is valid', async () => {
+    await renderPage();
+
+    const addNewMilestoneButton = await screen.findByRole('button', {
+      name: /Add New Milestone/i,
+    });
+
+    await userEvent.click(addNewMilestoneButton);
+
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Description/i }),
+      'Some description',
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: '#1' }));
+
+    const relatedArticlesLabel = screen
+      .getByText('Related Articles')
+      .closest('div')!;
+
+    const articlesInput = within(relatedArticlesLabel!).getByRole('combobox');
+    await userEvent.click(articlesInput);
+
+    const option = await screen.findByText(/Project Article 1/i);
+    await userEvent.click(option);
+
+    const submitButton = await screen.findByRole('button', {
+      name: 'Confirm',
+    });
+    await userEvent.click(submitButton);
+
+    const confirmButton = await screen.findByRole('button', {
+      name: /confirm and notify/i,
+    });
+    await userEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(mockCreateProjectMilestone).toHaveBeenCalledWith(
+        projectId,
+        {
+          description: 'Some description',
+          status: 'Pending',
+          grantType: 'supplement',
+          relatedArticleIds: ['ro1'],
+          aimIds: ['uuid-1'],
+        },
+        'Bearer access_token',
+      );
+    });
+    expect(
+      screen.getByText(/Milestone added successfully./i),
+    ).toBeInTheDocument();
+  });
+
+  it('displays error toast when there is an error creating a manuscript', async () => {
+    mockCreateProjectMilestone.mockRejectedValueOnce(new Error('error'));
+    await renderPage();
+
+    const addNewMilestoneButton = await screen.findByRole('button', {
+      name: /Add New Milestone/i,
+    });
+
+    await userEvent.click(addNewMilestoneButton);
+
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Description/i }),
+      'Some description',
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: '#1' }));
+
+    const relatedArticlesLabel = screen
+      .getByText('Related Articles')
+      .closest('div')!;
+
+    const articlesInput = within(relatedArticlesLabel!).getByRole('combobox');
+    await userEvent.click(articlesInput);
+
+    const option = await screen.findByText(/Project Article 1/i);
+    await userEvent.click(option);
+
+    const submitButton = await screen.findByRole('button', {
+      name: 'Confirm',
+    });
+    await userEvent.click(submitButton);
+
+    const confirmButton = await screen.findByRole('button', {
+      name: /confirm and notify/i,
+    });
+    await userEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('An error has occurred. Please try again later.'),
+      ).toBeInTheDocument();
+    });
   });
 });

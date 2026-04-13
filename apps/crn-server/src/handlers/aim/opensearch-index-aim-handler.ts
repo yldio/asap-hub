@@ -2,6 +2,7 @@ import {
   AimEvent,
   ProjectEvent,
   ProjectMembershipEvent,
+  SupplementGrantEvent,
 } from '@asap-hub/model';
 import { EventBridgeHandler } from '@asap-hub/server-common';
 import type { AimsMilestonesDataProvider } from '../../data-providers/types';
@@ -16,7 +17,11 @@ import {
   deleteByProjectId,
 } from '../opensearch/aims-milestones-reindex';
 
-type OpensearchAimEvent = AimEvent | ProjectEvent | ProjectMembershipEvent;
+type OpensearchAimEvent =
+  | AimEvent
+  | ProjectEvent
+  | ProjectMembershipEvent
+  | SupplementGrantEvent;
 
 export const indexAimOpensearchHandler =
   (
@@ -55,6 +60,18 @@ export const indexAimOpensearchHandler =
       eventType === 'ProjectMembershipUnpublished'
     ) {
       const projectId = await provider.fetchProjectIdByMembershipId(resourceId);
+      if (projectId) {
+        await reindexByProjectId(provider, projectId);
+      }
+      return;
+    }
+
+    if (
+      eventType === 'SupplementGrantPublished' ||
+      eventType === 'SupplementGrantUnpublished'
+    ) {
+      const projectId =
+        await provider.fetchProjectIdBySupplementGrantId(resourceId);
       if (projectId) {
         await reindexByProjectId(provider, projectId);
       }

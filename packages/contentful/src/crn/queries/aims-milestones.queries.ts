@@ -360,6 +360,22 @@ export const FETCH_PROJECT_ID_BY_MEMBERSHIP_ID = gql`
   }
 `;
 
+export const FETCH_PROJECT_ID_BY_SUPPLEMENT_GRANT_ID = gql`
+  query FetchProjectIdBySupplementGrantId($supplementGrantId: String!) {
+    supplementGrant(id: $supplementGrantId) {
+      linkedFrom {
+        projectsCollection(limit: 1) {
+          items {
+            sys {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const FETCH_MILESTONES = gql`
   query FetchMilestones($limit: Int!, $skip: Int!) {
     milestonesCollection(limit: $limit, skip: $skip) {

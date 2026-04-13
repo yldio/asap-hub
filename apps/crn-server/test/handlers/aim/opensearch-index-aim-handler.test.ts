@@ -30,6 +30,7 @@ const mockProvider = {
   fetchMilestoneById: jest.fn(),
   fetchProjectWithAimsDetailById: jest.fn(),
   fetchProjectIdByMembershipId: jest.fn(),
+  fetchProjectIdBySupplementGrantId: jest.fn(),
 };
 
 describe('OpenSearch Index Aim Handler', () => {
@@ -155,6 +156,66 @@ describe('OpenSearch Index Aim Handler', () => {
         { resourceId: 'membership-1' },
         'ProjectMembershipPublished',
         'membership-1',
+      );
+
+      await handler(event);
+
+      expect(mockReindexByProjectId).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('SupplementGrant events', () => {
+    test('SupplementGrantPublished finds the project and reindexes its aims and milestones', async () => {
+      mockProvider.fetchProjectIdBySupplementGrantId.mockResolvedValue(
+        'project-1',
+      );
+
+      const event = createEventBridgeEventMock(
+        { resourceId: 'sg-1' },
+        'SupplementGrantPublished',
+        'sg-1',
+      );
+
+      await handler(event);
+
+      expect(
+        mockProvider.fetchProjectIdBySupplementGrantId,
+      ).toHaveBeenCalledWith('sg-1');
+      expect(mockReindexByProjectId).toHaveBeenCalledWith(
+        mockProvider,
+        'project-1',
+      );
+    });
+
+    test('SupplementGrantUnpublished finds the project and reindexes its aims and milestones', async () => {
+      mockProvider.fetchProjectIdBySupplementGrantId.mockResolvedValue(
+        'project-1',
+      );
+
+      const event = createEventBridgeEventMock(
+        { resourceId: 'sg-1' },
+        'SupplementGrantUnpublished',
+        'sg-1',
+      );
+
+      await handler(event);
+
+      expect(
+        mockProvider.fetchProjectIdBySupplementGrantId,
+      ).toHaveBeenCalledWith('sg-1');
+      expect(mockReindexByProjectId).toHaveBeenCalledWith(
+        mockProvider,
+        'project-1',
+      );
+    });
+
+    test('SupplementGrantPublished does nothing when project not found', async () => {
+      mockProvider.fetchProjectIdBySupplementGrantId.mockResolvedValue(null);
+
+      const event = createEventBridgeEventMock(
+        { resourceId: 'sg-1' },
+        'SupplementGrantPublished',
+        'sg-1',
       );
 
       await handler(event);

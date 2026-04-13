@@ -869,4 +869,51 @@ describe('AimsMilestonesContentfulDataProvider', () => {
       expect(result).toBeNull();
     });
   });
+
+  describe('fetchProjectIdBySupplementGrantId', () => {
+    it('returns the project id linked to a supplement grant', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        supplementGrant: {
+          linkedFrom: {
+            projectsCollection: {
+              items: [{ sys: { id: 'project-1' } }],
+            },
+          },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchProjectIdBySupplementGrantId('sg-1');
+
+      expect(result).toBe('project-1');
+    });
+
+    it('returns null when supplement grant not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        supplementGrant: null,
+      });
+
+      const result =
+        await dataProvider.fetchProjectIdBySupplementGrantId('sg-missing');
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null when no projects linked to supplement grant', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        supplementGrant: {
+          linkedFrom: {
+            projectsCollection: {
+              items: [],
+            },
+          },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchProjectIdBySupplementGrantId('sg-1');
+
+      expect(result).toBeNull();
+    });
+  });
 });

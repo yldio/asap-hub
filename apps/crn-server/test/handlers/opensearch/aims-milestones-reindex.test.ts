@@ -56,6 +56,7 @@ const createMockProvider = (): jest.Mocked<AimsMilestonesDataProvider> => ({
   fetchMilestoneById: jest.fn(),
   fetchProjectWithAimsDetailById: jest.fn(),
   fetchProjectIdByMembershipId: jest.fn(),
+  fetchProjectIdBySupplementGrantId: jest.fn(),
 });
 
 const makeProject = (overrides: any = {}) => ({

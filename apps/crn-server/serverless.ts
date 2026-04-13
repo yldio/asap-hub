@@ -1441,6 +1441,8 @@ const serverlessConfig: AWS = {
                 'ProjectsUnpublished',
                 'ProjectMembershipPublished',
                 'ProjectMembershipUnpublished',
+                'SupplementGrantPublished',
+                'SupplementGrantUnpublished',
               ] satisfies WebhookDetailType[],
             },
           },

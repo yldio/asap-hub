@@ -122,7 +122,7 @@ export const researchOutputToCSV = (
   sharingStatus: output.sharingStatus,
   asapFunded: output.asapFunded,
   link: output.link,
-  doi: output.doi,
+  doi: output.doi ?? 'NA',
   rrid: output.rrid,
   accession: output.accession,
   labCatalogNumber: output.labCatalogNumber,

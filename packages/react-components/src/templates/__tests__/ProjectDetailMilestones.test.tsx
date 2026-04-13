@@ -52,4 +52,22 @@ describe('ProjectDetailMilestones', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Supplement')).toBeInTheDocument();
   });
+
+  it('renders last updated date when lastUpdated prop is provided', () => {
+    render(
+      <ProjectDetailMilestones
+        {...defaultProps}
+        lastUpdated="2025-04-01T00:00:00.000Z"
+      />,
+    );
+
+    expect(screen.getByText(/Last Update:/)).toBeInTheDocument();
+    expect(screen.getByText(/1st April 2025/)).toBeInTheDocument();
+  });
+
+  it('does not render last updated bar when lastUpdated is omitted', () => {
+    render(<ProjectDetailMilestones {...defaultProps} />);
+
+    expect(screen.queryByText(/Last Update:/)).not.toBeInTheDocument();
+  });
 });

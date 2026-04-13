@@ -538,6 +538,31 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     private opensearchProvider?: OpensearchProvider,
   ) {}
 
+  private async fetchMilestonesLastUpdated(
+    projectId: string,
+  ): Promise<string | undefined> {
+    if (!this.opensearchProvider) {
+      return undefined;
+    }
+
+    const response = await this.opensearchProvider.search({
+      index: 'project-milestones',
+      body: {
+        query: { term: { projectId } },
+        aggs: {
+          last_milestone_update: { max: { field: 'lastDate' } },
+        },
+        size: 0,
+      } satisfies OpensearchRequest,
+    });
+
+    const agg = response.aggregations?.last_milestone_update as
+      | { value_as_string?: string }
+      | undefined;
+
+    return agg?.value_as_string;
+  }
+
   private async fetchAimsByProjectId(
     projectId: string,
     grantType: 'original' | 'supplement',
@@ -581,15 +606,20 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
   async fetchById(id: string): Promise<ProjectDataObject | null> {
     try {
-      const [{ projects }, originalAimsHits, supplementAimsHits] =
-        await Promise.all([
-          this.contentfulClient.request<
-            FetchProjectByIdQuery,
-            FetchProjectByIdQueryVariables
-          >(FETCH_PROJECT_BY_ID, { id }),
-          this.fetchAimsByProjectId(id, 'original'),
-          this.fetchAimsByProjectId(id, 'supplement'),
-        ]);
+      const [
+        { projects },
+        originalAimsHits,
+        supplementAimsHits,
+        milestonesLastUpdated,
+      ] = await Promise.all([
+        this.contentfulClient.request<
+          FetchProjectByIdQuery,
+          FetchProjectByIdQueryVariables
+        >(FETCH_PROJECT_BY_ID, { id }),
+        this.fetchAimsByProjectId(id, 'original'),
+        this.fetchAimsByProjectId(id, 'supplement'),
+        this.fetchMilestonesLastUpdated(id),
+      ]);
 
       if (!projects) {
         return null;
@@ -626,6 +656,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
         ...baseResult,
         originalGrantAims,
         supplementGrant,
+        milestonesLastUpdated,
       } as ProjectDetailDataObject;
     } catch (error) {
       logger.info('error:::', error);

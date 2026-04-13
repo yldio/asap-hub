@@ -2,8 +2,10 @@ import { css } from '@emotion/react';
 import { GrantType } from '@asap-hub/model';
 
 import { Headline3, Link, Paragraph } from '../atoms';
+import { formatDateToTimezone } from '../date';
 import { LabeledDropdown } from '../molecules';
 import { rem, mobileScreen } from '../pixels';
+import { neutral900 } from '../colors';
 import MilestonesMobilePage from './MilestonesMobilePage';
 
 const containerStyles = css({
@@ -28,6 +30,13 @@ const aimsLinkTextStyles = css({
   },
 });
 
+const lastUpdatedBarStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+  color: neutral900.rgb,
+});
+
 const pageMobileStyles = css({
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     display: 'none',
@@ -46,6 +55,7 @@ type ProjectDetailMilestonesProps = {
   onGrantTypeChange: (grantType: GrantType) => void;
   children: React.ReactNode;
   hasSupplementGrant: boolean;
+  readonly lastUpdated?: string;
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
@@ -54,6 +64,7 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   onGrantTypeChange,
   hasSupplementGrant,
   children,
+  lastUpdated,
 }) => {
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
@@ -96,6 +107,17 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
             <Link href={seeAimsHref ?? '#'} underlined>
               <span css={aimsLinkTextStyles}>See Aims</span>
             </Link>
+            {lastUpdated && (
+              <div css={lastUpdatedBarStyles}>
+                <span>
+                  Last Update:{' '}
+                  {formatDateToTimezone(
+                    lastUpdated,
+                    'do MMMM yyyy, h:mm aaa (z)',
+                  )}
+                </span>
+              </div>
+            )}
           </div>
           {children}
         </div>

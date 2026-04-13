@@ -3,14 +3,12 @@ import { createEventBridgeEventMock } from '../../helpers/events';
 
 jest.mock('../../../src/utils/logger');
 
-const mockReindexAimById = jest.fn().mockResolvedValue(undefined);
 const mockDeleteAimById = jest.fn().mockResolvedValue(undefined);
 const mockDeleteMilestonesByAimId = jest.fn().mockResolvedValue(undefined);
 const mockReindexByProjectId = jest.fn().mockResolvedValue(undefined);
 const mockDeleteByProjectId = jest.fn().mockResolvedValue(undefined);
 
 jest.mock('../../../src/handlers/opensearch/aims-milestones-reindex', () => ({
-  reindexAimById: (...args: unknown[]) => mockReindexAimById(...args),
   deleteAimById: (...args: unknown[]) => mockDeleteAimById(...args),
   deleteMilestonesByAimId: (...args: unknown[]) =>
     mockDeleteMilestonesByAimId(...args),
@@ -24,12 +22,13 @@ const mockProvider = {
   fetchAimsWithMilestones: jest.fn(),
   fetchMilestones: jest.fn(),
   fetchArticlesForAim: jest.fn(),
+  fetchArticlesForMilestone: jest.fn(),
   fetchAimIdsLinkedToMilestone: jest.fn(),
   fetchProjectWithAimsDetailByAimId: jest.fn(),
   fetchAimWithMilestonesById: jest.fn(),
   fetchMilestoneById: jest.fn(),
   fetchProjectWithAimsDetailById: jest.fn(),
-  fetchProjectIdByMembershipId: jest.fn(),
+
   fetchProjectIdBySupplementGrantId: jest.fn(),
 };
 
@@ -90,7 +89,6 @@ describe('OpenSearch Index Aim Handler', () => {
         mockProvider,
         'aim-1',
       );
-      expect(mockReindexAimById).not.toHaveBeenCalled();
     });
   });
 

@@ -344,22 +344,6 @@ export const FETCH_PROJECT_WITH_AIMS_DETAIL_BY_ID = gql`
   }
 `;
 
-export const FETCH_PROJECT_ID_BY_MEMBERSHIP_ID = gql`
-  query FetchProjectIdByMembershipId($membershipId: String!) {
-    projectMembership(id: $membershipId) {
-      linkedFrom {
-        projectsCollection(limit: 1) {
-          items {
-            sys {
-              id
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 export const FETCH_PROJECT_ID_BY_SUPPLEMENT_GRANT_ID = gql`
   query FetchProjectIdBySupplementGrantId($supplementGrantId: String!) {
     supplementGrant(id: $supplementGrantId) {

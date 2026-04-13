@@ -21,12 +21,12 @@ const mockProvider = {
   fetchAimsWithMilestones: jest.fn(),
   fetchMilestones: jest.fn(),
   fetchArticlesForAim: jest.fn(),
+  fetchArticlesForMilestone: jest.fn(),
   fetchAimIdsLinkedToMilestone: jest.fn(),
   fetchProjectWithAimsDetailByAimId: jest.fn(),
   fetchAimWithMilestonesById: jest.fn(),
   fetchMilestoneById: jest.fn(),
   fetchProjectWithAimsDetailById: jest.fn(),
-  fetchProjectIdByMembershipId: jest.fn(),
   fetchProjectIdBySupplementGrantId: jest.fn(),
 };
 

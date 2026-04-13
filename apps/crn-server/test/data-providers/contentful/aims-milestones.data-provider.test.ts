@@ -823,53 +823,6 @@ describe('AimsMilestonesContentfulDataProvider', () => {
     });
   });
 
-  describe('fetchProjectIdByMembershipId', () => {
-    it('returns the project id linked to a membership', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        projectMembership: {
-          linkedFrom: {
-            projectsCollection: {
-              items: [{ sys: { id: 'project-1' } }],
-            },
-          },
-        },
-      });
-
-      const result =
-        await dataProvider.fetchProjectIdByMembershipId('membership-1');
-
-      expect(result).toBe('project-1');
-    });
-
-    it('returns null when membership not found', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        projectMembership: null,
-      });
-
-      const result =
-        await dataProvider.fetchProjectIdByMembershipId('membership-missing');
-
-      expect(result).toBeNull();
-    });
-
-    it('returns null when no projects linked to membership', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
-        projectMembership: {
-          linkedFrom: {
-            projectsCollection: {
-              items: [],
-            },
-          },
-        },
-      });
-
-      const result =
-        await dataProvider.fetchProjectIdByMembershipId('membership-1');
-
-      expect(result).toBeNull();
-    });
-  });
-
   describe('fetchProjectIdBySupplementGrantId', () => {
     it('returns the project id linked to a supplement grant', async () => {
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({

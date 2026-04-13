@@ -113,9 +113,6 @@ export type AimsMilestonesDataProvider = {
   fetchProjectWithAimsDetailById: (
     projectId: string,
   ) => Promise<ProjectWithAimsDetailDataObject | null>;
-  fetchProjectIdByMembershipId: (
-    membershipId: string,
-  ) => Promise<string | null>;
   fetchProjectIdBySupplementGrantId: (
     supplementGrantId: string,
   ) => Promise<string | null>;

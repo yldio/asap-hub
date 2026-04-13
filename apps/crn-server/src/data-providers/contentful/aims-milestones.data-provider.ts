@@ -9,7 +9,6 @@ import {
   FETCH_MILESTONES,
   FETCH_PROJECT_WITH_AIMS_DETAIL_BY_AIM_ID,
   FETCH_PROJECT_WITH_AIMS_DETAIL_BY_ID,
-  FETCH_PROJECT_ID_BY_MEMBERSHIP_ID,
   FETCH_PROJECT_ID_BY_SUPPLEMENT_GRANT_ID,
   FETCH_PROJECTS_WITH_AIMS,
   FETCH_PROJECTS_WITH_AIMS_DETAIL,
@@ -257,25 +256,6 @@ export class AimsMilestonesContentfulDataProvider
     }>(FETCH_PROJECT_WITH_AIMS_DETAIL_BY_ID, { projectId });
 
     return projects;
-  }
-
-  async fetchProjectIdByMembershipId(
-    membershipId: string,
-  ): Promise<string | null> {
-    const { projectMembership } = await this.contentfulClient.request<{
-      projectMembership: {
-        linkedFrom?: {
-          projectsCollection?: {
-            items: Array<{ sys: { id: string } } | null>;
-          } | null;
-        } | null;
-      } | null;
-    }>(FETCH_PROJECT_ID_BY_MEMBERSHIP_ID, { membershipId });
-
-    return (
-      projectMembership?.linkedFrom?.projectsCollection?.items?.find(Boolean)
-        ?.sys.id ?? null
-    );
   }
 
   async fetchProjectIdBySupplementGrantId(

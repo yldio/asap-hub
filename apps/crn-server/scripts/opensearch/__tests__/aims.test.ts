@@ -123,9 +123,20 @@ describe('exportAimsData', () => {
       projectName: 'Project Alpha',
       teamName: 'Team Alpha',
       articleCount: 2,
+      aimOrder: 1,
       createdDate: '2025-01-01T00:00:00.000Z',
       lastDate: '2025-06-01T00:00:00.000Z',
     });
+  });
+
+  it('assigns aimOrder based on position within the collection', async () => {
+    const result = await exportAimsData();
+    const originalAims = result.filter((d) => d.grantType === 'original');
+    expect(originalAims[0]).toMatchObject({ id: 'aim-1', aimOrder: 1 });
+    expect(originalAims[1]).toMatchObject({ id: 'aim-2', aimOrder: 2 });
+
+    const supplementAims = result.filter((d) => d.grantType === 'supplement');
+    expect(supplementAims[0]).toMatchObject({ id: 'aim-3', aimOrder: 1 });
   });
 
   it('falls back to Pending status when aim has no linked milestones in the meta map', async () => {

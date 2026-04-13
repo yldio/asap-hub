@@ -79,6 +79,8 @@ export type ProjectAimsDataObject = {
   articleCount: number;
   /** Comma-separated list of unique DOIs aggregated across all linked milestones. */
   articlesDOI: string;
+  /** 1-based position of the aim within the project's collection (matches Contentful ordering). */
+  aimOrder: number;
   createdDate: string | null;
   lastDate: string | null;
 };

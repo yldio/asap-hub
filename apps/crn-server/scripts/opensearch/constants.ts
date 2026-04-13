@@ -392,6 +392,7 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         status: { type: 'keyword' },
         articleCount: { type: 'integer' },
         articlesDOI: { type: 'text' },
+        aimOrder: { type: 'integer' },
         createdDate: { type: 'date' },
         lastDate: { type: 'date' },
       },

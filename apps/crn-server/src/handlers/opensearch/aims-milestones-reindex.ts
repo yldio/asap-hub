@@ -81,6 +81,7 @@ const buildAimDocument = (
     status: deriveAimStatus(milestoneStatuses),
     articleCount: allArticleIds.size,
     articlesDOI: [...allDois].join(','),
+    aimOrder: getAimOrder(aim.sys.id, project),
     createdDate: aim.sys.firstPublishedAt ?? null,
     lastDate: aim.sys.publishedAt ?? null,
   };

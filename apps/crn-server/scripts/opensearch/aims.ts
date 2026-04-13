@@ -130,7 +130,7 @@ export const exportAimsData = async (): Promise<
       grantType: 'original' | 'supplement',
     ) => {
       const aims = aimsCollection?.items ?? [];
-      aims.forEach((aim) => {
+      aims.forEach((aim, index) => {
         if (!aim?.sys?.id) return;
         if (!aim.description?.trim()) {
           console.warn(`Skipping aim ${aim.sys.id} — missing description.`);
@@ -145,9 +145,6 @@ export const exportAimsData = async (): Promise<
           status: 'Pending',
         };
 
-        console.log('PROJECT TITLE:', project.title);
-        console.log('PROJECT', project);
-
         documents.push({
           id: aim.sys.id,
           description: aim.description.trim(),
@@ -158,6 +155,7 @@ export const exportAimsData = async (): Promise<
           status,
           articleCount,
           articlesDOI,
+          aimOrder: index + 1,
           createdDate: aim.sys.firstPublishedAt ?? null,
           lastDate: aim.sys.publishedAt ?? null,
         });

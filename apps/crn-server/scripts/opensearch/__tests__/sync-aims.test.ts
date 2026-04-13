@@ -97,6 +97,7 @@ describe('Aims sync integration', () => {
       expect(data.mapping.properties).toHaveProperty('status');
       expect(data.mapping.properties).toHaveProperty('articleCount');
       expect(data.mapping.properties).toHaveProperty('articlesDOI');
+      expect(data.mapping.properties).toHaveProperty('aimOrder');
       expect(data.mapping.properties).toHaveProperty('createdDate');
       expect(data.mapping.properties).toHaveProperty('lastDate');
     }

@@ -8,8 +8,7 @@ jest.mock('@asap-hub/server-common', () => ({
   getClient: (...args: unknown[]) => mockGetClient(...args),
   upsertOpensearchDocuments: (...args: unknown[]) =>
     mockUpsertOpensearchDocuments(...args),
-  deleteByDocumentIds: (...args: unknown[]) =>
-    mockDeleteByDocumentIds(...args),
+  deleteByDocumentIds: (...args: unknown[]) => mockDeleteByDocumentIds(...args),
   getCloudWatchLogger: () => ({
     debug: jest.fn(),
     info: jest.fn(),

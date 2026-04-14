@@ -8,7 +8,7 @@ import {
   NotFoundPage,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
-import { useProjectById } from './state';
+import { useProjectArticlesSuggestions, useProjectById } from './state';
 import { useFetchAimArticles } from './articles-state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
@@ -37,6 +37,14 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const isStaff = user?.role === 'Staff';
   const { hash: targetManuscript } = useLocation();
 
+  const teamId =
+    projectDetail && 'teamId' in projectDetail && projectDetail.teamId
+      ? projectDetail.teamId
+      : undefined;
+
+  // TODO: should be expanded to handle searching by project id as this will fail for user-based projects.
+  const loadArticleOptions = useProjectArticlesSuggestions(teamId ?? projectId);
+
   if (!projectDetail) {
     return <NotFoundPage />;
   }
@@ -61,11 +69,6 @@ const ProjectDetail: FC<Props> = ({ config }) => {
     (hasSupplementGrant
       ? projectDetail.supplementGrant?.aims
       : projectDetail.originalGrantAims) || [];
-
-  const teamId =
-    'teamId' in projectDetail && projectDetail.teamId
-      ? projectDetail.teamId
-      : undefined;
 
   return (
     <Frame title={projectDetail.title || ''}>
@@ -139,7 +142,6 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                     <Frame title="Project Milestones">
                       <ProjectMilestones
                         projectId={projectId}
-                        teamId={teamId}
                         seeAimsHref={route.about({}).$}
                         hasSupplementGrant={hasSupplementGrant}
                         aims={activeProjectAims}
@@ -147,6 +149,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                         milestonesLastUpdated={
                           projectDetail.milestonesLastUpdated
                         }
+                        loadArticleOptions={loadArticleOptions}
                       />
                     </Frame>
                   ) : (

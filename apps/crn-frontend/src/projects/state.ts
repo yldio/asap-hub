@@ -1,5 +1,4 @@
 import {
-  GrantType,
   ListProjectMilestonesResponse,
   ListProjectResponse,
   Milestone,
@@ -10,6 +9,7 @@ import {
   ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
+  atom,
   atomFamily,
   DefaultValue,
   selectorFamily,
@@ -17,6 +17,7 @@ import {
   useRecoilValue,
   useSetRecoilState,
 } from 'recoil';
+import { useCallback } from 'react';
 import { getResearchOutputs } from '../shared-research/api';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
@@ -31,6 +32,17 @@ import {
   toListProjectResponse,
 } from './api';
 
+const pendingMilestonePromises = new Map<string, Promise<void>>();
+
+const serializeMilestonesOptions = (options: MilestonesListOptions): string =>
+  JSON.stringify({
+    currentPage: options.currentPage,
+    pageSize: options.pageSize,
+    searchQuery: options.searchQuery,
+    filters: options.filters ? Array.from(options.filters).sort() : [],
+    grantType: options.grantType,
+    projectId: options.projectId,
+  });
 // Separate cache for list data (incomplete, from Algolia)
 const projectListCacheState = atomFamily<
   | {
@@ -151,8 +163,8 @@ export const usePatchProjectById = (id: string) => {
   };
 };
 
-export type MilestonesListOptionsWithVersion = MilestonesListOptions & {
-  version: number;
+export type RefreshMilestonesListOptions = MilestonesListOptions & {
+  refreshToken: number;
 };
 
 export const projectMilestonesIndexState = atomFamily<
@@ -162,8 +174,13 @@ export const projectMilestonesIndexState = atomFamily<
     }
   | Error
   | undefined,
-  MilestonesListOptionsWithVersion
+  RefreshMilestonesListOptions
 >({ key: 'projectMilestonesListCache', default: undefined });
+
+export const refreshProjectMilestonesIndex = atom<number>({
+  key: 'refreshProjectMilestonesIndex',
+  default: 0,
+});
 
 export const projectMilestonesListItemState = atomFamily<
   Milestone | undefined,
@@ -173,23 +190,21 @@ export const projectMilestonesListItemState = atomFamily<
   default: undefined,
 });
 
-const projectMilestonesVersionState = atomFamily<
-  number,
-  { projectId: string; grantType: GrantType | 'all' }
->({
-  key: 'projectMilestonesVersion',
-  default: 0,
-});
-
 export const projectMilestonesState = selectorFamily<
   ListProjectMilestonesResponse | Error | undefined,
-  MilestonesListOptionsWithVersion
+  MilestonesListOptions
 >({
   key: 'projectMilestones',
   get:
     (options) =>
     ({ get }) => {
-      const index = get(projectMilestonesIndexState(options));
+      const refreshToken = get(refreshProjectMilestonesIndex);
+      const index = get(
+        projectMilestonesIndexState({
+          ...options,
+          refreshToken,
+        }),
+      );
       if (index === undefined || index instanceof Error) return index;
 
       const projectMilestones: Milestone[] = [];
@@ -206,19 +221,21 @@ export const projectMilestonesState = selectorFamily<
   set:
     (options) =>
     ({ get, set, reset }, projectMilestones) => {
+      const refreshToken = get(refreshProjectMilestonesIndex);
+      const indexStateOptions = { ...options, refreshToken };
       if (
         projectMilestones === undefined ||
         projectMilestones instanceof DefaultValue
       ) {
-        const previous = get(projectMilestonesIndexState(options));
+        const previous = get(projectMilestonesIndexState(indexStateOptions));
         if (previous && !(previous instanceof Error)) {
           previous.ids.forEach((id) =>
             reset(projectMilestonesListItemState(id)),
           );
         }
-        reset(projectMilestonesIndexState(options));
+        reset(projectMilestonesIndexState(indexStateOptions));
       } else if (projectMilestones instanceof Error) {
-        set(projectMilestonesIndexState(options), projectMilestones);
+        set(projectMilestonesIndexState(indexStateOptions), projectMilestones);
       } else {
         projectMilestones.items.forEach((projectMilestone) =>
           set(
@@ -226,7 +243,7 @@ export const projectMilestonesState = selectorFamily<
             projectMilestone,
           ),
         );
-        set(projectMilestonesIndexState(options), {
+        set(projectMilestonesIndexState(indexStateOptions), {
           total: projectMilestones.total,
           ids: projectMilestones.items.map(({ id }) => id),
         });
@@ -234,26 +251,33 @@ export const projectMilestonesState = selectorFamily<
     },
 });
 
+export const useInvalidateProjectMilestonesIndex = () => {
+  const [refresh, setRefresh] = useRecoilState(refreshProjectMilestonesIndex);
+
+  return useCallback(() => {
+    setRefresh(refresh + 1);
+  }, [refresh, setRefresh]);
+};
+
 export const useProjectMilestones = (options: MilestonesListOptions) => {
-  const version = useRecoilValue(
-    projectMilestonesVersionState({
-      projectId: options.projectId,
-      grantType: options.grantType,
-    }),
-  );
-
-  const key = { ...options, version };
-
   const [projectMilestones, setProjectMilestones] = useRecoilState(
-    projectMilestonesState(key),
+    projectMilestonesState(options),
   );
-
   const authorization = useRecoilValue(authorizationState);
+  const optionsKey = serializeMilestonesOptions(options);
 
   if (projectMilestones === undefined) {
-    throw getProjectMilestones(options, authorization)
-      .then(setProjectMilestones)
-      .catch(setProjectMilestones);
+    let pendingPromise = pendingMilestonePromises.get(optionsKey);
+    if (!pendingPromise) {
+      pendingPromise = getProjectMilestones(options, authorization)
+        .then(setProjectMilestones)
+        .catch(setProjectMilestones)
+        .finally(() => {
+          pendingMilestonePromises.delete(optionsKey);
+        });
+      pendingMilestonePromises.set(optionsKey, pendingPromise);
+    }
+    throw pendingPromise;
   }
 
   if (projectMilestones instanceof Error) {
@@ -285,17 +309,16 @@ export const useProjectArticlesSuggestions = (teamId: string) => {
     );
 };
 
-export const useCreateProjectMilestone = (
-  projectId: string,
-  grantType: GrantType,
-) => {
+export const useCreateProjectMilestone = (projectId: string) => {
   const authorization = useRecoilValue(authorizationState);
-  const bumpVersion = useSetRecoilState(
-    projectMilestonesVersionState({ projectId, grantType }),
-  );
+  const invalidateProjectMilestonesIndex =
+    useInvalidateProjectMilestonesIndex();
   return async (data: MilestoneCreateRequest) => {
     const result = await createProjectMilestone(projectId, data, authorization);
-    bumpVersion((v) => v + 1);
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 5000);
+    });
+    invalidateProjectMilestonesIndex();
     return result.id;
   };
 };

@@ -25939,20 +25939,6 @@ export type FetchProjectWithAimsDetailByIdQuery = {
   >;
 };
 
-export type FetchProjectIdByMembershipIdQueryVariables = Exact<{
-  membershipId: Scalars['String'];
-}>;
-
-export type FetchProjectIdByMembershipIdQuery = {
-  projectMembership?: Maybe<{
-    linkedFrom?: Maybe<{
-      projectsCollection?: Maybe<{
-        items: Array<Maybe<{ sys: Pick<Sys, 'id'> }>>;
-      }>;
-    }>;
-  }>;
-};
-
 export type FetchProjectIdBySupplementGrantIdQueryVariables = Exact<{
   supplementGrantId: Scalars['String'];
 }>;
@@ -50960,106 +50946,6 @@ export const FetchProjectWithAimsDetailByIdDocument = {
 } as unknown as DocumentNode<
   FetchProjectWithAimsDetailByIdQuery,
   FetchProjectWithAimsDetailByIdQueryVariables
->;
-export const FetchProjectIdByMembershipIdDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'FetchProjectIdByMembershipId' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'membershipId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'projectMembership' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'membershipId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'linkedFrom' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'projectsCollection' },
-                        arguments: [
-                          {
-                            kind: 'Argument',
-                            name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '1' },
-                          },
-                        ],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'items' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'sys' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  FetchProjectIdByMembershipIdQuery,
-  FetchProjectIdByMembershipIdQueryVariables
 >;
 export const FetchProjectIdBySupplementGrantIdDocument = {
   kind: 'Document',

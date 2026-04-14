@@ -43,6 +43,11 @@ const eventBase = {
     },
     body: {},
   },
+  client: {
+    name: 'ASAP Hub',
+    client_id: 'hub_id',
+    metadata: {},
+  },
   user,
   secrets: {
     API_URL: apiUrl,
@@ -63,6 +68,20 @@ const apiBase = {
 beforeEach(() => {
   jest.clearAllMocks();
   nock.cleanAll();
+});
+
+it('skips metadata for KR-Sync client', async () => {
+  await onExecutePostLogin(
+    {
+      ...eventBase,
+      client: {
+        ...eventBase.client,
+        name: 'ASAP KR-Sync',
+      },
+    },
+    apiBase,
+  );
+  expect(apiBase.idToken.setCustomClaim).not.toHaveBeenCalled();
 });
 
 it('denies login if the redirect_uri is missing from query and body', async () => {

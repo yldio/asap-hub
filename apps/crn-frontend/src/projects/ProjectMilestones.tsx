@@ -117,6 +117,9 @@ const ProjectMilestones: React.FC<{
     });
   };
 
+  // TODO: should be expanded to handle searching by project id as this will fail for user-based projects.
+  const loadArticleOptions = useProjectArticlesSuggestions(teamId ?? projectId);
+
   return (
     <ProjectDetailMilestones
       hasSupplementGrant={hasSupplementGrant}

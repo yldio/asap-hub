@@ -18,7 +18,7 @@ import type { ProjectDetailConfig } from './projectDetailConfig';
 const loadProjectManuscript = () =>
   import(/* webpackChunkName: "project-manuscript" */ './ProjectManuscript');
 const loadProjectMilestones = () =>
-  import(/* webpackChunkName: "project-manuscript" */ './ProjectMilestones');
+  import(/* webpackChunkName: "project-milestones" */ './ProjectMilestones');
 
 const ProjectManuscript = lazy(loadProjectManuscript);
 const ProjectMilestones = lazy(loadProjectMilestones);

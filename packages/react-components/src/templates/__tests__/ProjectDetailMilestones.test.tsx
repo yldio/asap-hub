@@ -170,6 +170,26 @@ describe('ProjectDetailMilestones', () => {
     });
   });
 
+  it('closes modal when cancel button is clicked', async () => {
+    render(<ProjectDetailMilestones {...defaultProps} />);
+
+    const addNewMilestoneButton = await screen.findByRole('button', {
+      name: /Add New Milestone/i,
+    });
+
+    await userEvent.click(addNewMilestoneButton);
+
+    expect(screen.getByText(/Milestone Description/i)).toBeInTheDocument();
+
+    const cancelButton = screen.getByRole('button', {
+      name: 'Cancel',
+    });
+    await userEvent.click(cancelButton);
+    expect(
+      screen.queryByText(/Milestone Description/i),
+    ).not.toBeInTheDocument();
+  });
+
   it('can create a milestone when the data is valid', async () => {
     const mockOnCreateProjectMilestone = jest
       .fn()

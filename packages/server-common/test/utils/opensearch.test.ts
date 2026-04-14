@@ -73,7 +73,7 @@ describe('upsertOpensearchDocuments', () => {
     });
   });
 
-  test('should log errors when bulk upsert has failures', async () => {
+  test('should throw when bulk upsert has failures', async () => {
     (mockBulkClient.bulk as jest.Mock).mockResolvedValue({
       body: {
         errors: true,
@@ -84,14 +84,12 @@ describe('upsertOpensearchDocuments', () => {
       },
     });
 
-    await upsertOpensearchDocuments(mockBulkClient, 'test-index', [
-      { id: 'doc-1', title: 'First' },
-      { id: 'doc-2', title: 'Second' },
-    ]);
-
-    expect(console.error).toHaveBeenCalledWith(
-      'Upsert errors: doc-1: mapping error',
-    );
+    await expect(
+      upsertOpensearchDocuments(mockBulkClient, 'test-index', [
+        { id: 'doc-1', title: 'First' },
+        { id: 'doc-2', title: 'Second' },
+      ]),
+    ).rejects.toThrow('Upsert errors: doc-1: mapping error');
   });
 });
 
@@ -134,7 +132,7 @@ describe('deleteOpensearchDocuments', () => {
     });
   });
 
-  test('should log errors when bulk delete has failures', async () => {
+  test('should throw when bulk delete has failures', async () => {
     (mockBulkClient.bulk as jest.Mock).mockResolvedValue({
       body: {
         errors: true,
@@ -145,14 +143,12 @@ describe('deleteOpensearchDocuments', () => {
       },
     });
 
-    await deleteOpensearchDocuments(mockBulkClient, 'test-index', [
-      'doc-1',
-      'doc-2',
-    ]);
-
-    expect(console.error).toHaveBeenCalledWith(
-      'Delete errors: doc-1: not found',
-    );
+    await expect(
+      deleteOpensearchDocuments(mockBulkClient, 'test-index', [
+        'doc-1',
+        'doc-2',
+      ]),
+    ).rejects.toThrow('Delete errors: doc-1: not found');
   });
 });
 
@@ -186,6 +182,21 @@ describe('deleteByFieldValue', () => {
       },
       refresh: true,
     });
+  });
+
+  test('should throw when deleteByQuery reports failures', async () => {
+    (mockFieldClient.deleteByQuery as jest.Mock).mockResolvedValue({
+      body: { deleted: 0, failures: [{ id: 'x', cause: { reason: 'boom' } }] },
+    });
+
+    await expect(
+      deleteByFieldValue(
+        mockFieldClient,
+        'test-index',
+        'projectId',
+        'project-1',
+      ),
+    ).rejects.toThrow(/deleteByFieldValue failures/);
   });
 });
 
@@ -223,6 +234,16 @@ describe('deleteByDocumentIds', () => {
       },
       refresh: true,
     });
+  });
+
+  test('should throw when deleteByQuery reports failures', async () => {
+    (mockDeleteByQueryClient.deleteByQuery as jest.Mock).mockResolvedValue({
+      body: { deleted: 0, failures: [{ id: 'x', cause: { reason: 'boom' } }] },
+    });
+
+    await expect(
+      deleteByDocumentIds(mockDeleteByQueryClient, 'test-index', ['doc-1']),
+    ).rejects.toThrow(/deleteByDocumentIds failures/);
   });
 });
 

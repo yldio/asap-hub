@@ -7,6 +7,7 @@ import {
 } from '@asap-hub/server-common';
 import type {
   AimsMilestonesDataProvider,
+  AimWithMilestonesDataObject,
   MilestoneDataObject,
   ProjectWithAimsDetailDataObject,
 } from '../../data-providers/types';
@@ -139,6 +140,16 @@ const getAimOrder = (
 };
 
 /**
+ * Extracts non-null milestone IDs from an aim's milestonesCollection.
+ */
+const getMilestoneIdsFromAim = (
+  aim: AimWithMilestonesDataObject | null,
+): string[] =>
+  aim?.milestonesCollection?.items
+    ?.filter((m): m is NonNullable<typeof m> => m !== null)
+    .map((m) => m.sys.id) ?? [];
+
+/**
  * Collects all milestone IDs for a list of aim IDs.
  */
 const collectMilestoneIdsForAims = async (
@@ -148,13 +159,48 @@ const collectMilestoneIdsForAims = async (
   const milestoneIds: string[] = [];
   for (const aimId of aimIds) {
     const aim = await provider.fetchAimWithMilestonesById(aimId);
-    const ids =
-      aim?.milestonesCollection?.items
-        ?.filter((m): m is NonNullable<typeof m> => m !== null)
-        .map((m) => m.sys.id) ?? [];
-    milestoneIds.push(...ids);
+    milestoneIds.push(...getMilestoneIdsFromAim(aim));
   }
   return [...new Set(milestoneIds)];
+};
+
+type AimDetail = {
+  sys: {
+    id: string;
+    firstPublishedAt?: string | null;
+    publishedAt?: string | null;
+  };
+  description?: string | null;
+};
+
+/**
+ * Fetches an aim's milestones and builds its OpenSearch document.
+ * Returns null when the aim has no description (skipped by buildAimDocument).
+ */
+const buildAimDocumentForAim = async (
+  provider: AimsMilestonesDataProvider,
+  aimId: string,
+  project: ProjectWithAimsDetailDataObject,
+  aimDetail: AimDetail,
+  grantType: 'original' | 'supplement',
+): Promise<ProjectAimsDataObject | null> => {
+  const aimWithMilestones = await provider.fetchAimWithMilestonesById(aimId);
+  const milestoneIds = getMilestoneIdsFromAim(aimWithMilestones);
+
+  const milestones = await Promise.all(
+    milestoneIds.map((id) => provider.fetchMilestoneById(id)),
+  );
+  const validMilestones = milestones.filter(
+    (m): m is MilestoneDataObject => m !== null,
+  );
+
+  return buildAimDocument(
+    aimDetail,
+    project,
+    grantType,
+    validMilestones,
+    milestoneIds,
+  );
 };
 
 /**
@@ -165,40 +211,76 @@ const buildAndUpsertAim = async (
   provider: AimsMilestonesDataProvider,
   aimId: string,
   project: ProjectWithAimsDetailDataObject,
-  aimDetail: {
-    sys: {
-      id: string;
-      firstPublishedAt?: string | null;
-      publishedAt?: string | null;
-    };
-    description?: string | null;
-  },
+  aimDetail: AimDetail,
   grantType: 'original' | 'supplement',
 ): Promise<ProjectAimsDataObject | null> => {
-  const aimWithMilestones = await provider.fetchAimWithMilestonesById(aimId);
-  const milestoneIds =
-    aimWithMilestones?.milestonesCollection?.items
-      ?.filter((m): m is NonNullable<typeof m> => m !== null)
-      .map((m) => m.sys.id) ?? [];
-
-  const milestones = await Promise.all(
-    milestoneIds.map((id) => provider.fetchMilestoneById(id)),
-  );
-  const validMilestones = milestones.filter(
-    (m): m is MilestoneDataObject => m !== null,
-  );
-
-  const doc = buildAimDocument(
-    aimDetail,
+  const doc = await buildAimDocumentForAim(
+    provider,
+    aimId,
     project,
+    aimDetail,
     grantType,
-    validMilestones,
-    milestoneIds,
   );
   if (!doc) return null;
 
   await upsertOpensearchDocuments(client, AIMS_INDEX, [doc]);
   return doc;
+};
+
+/**
+ * Resolves aimNumbers/grantType/project info for a milestone by looking up
+ * each aim linked to it, then builds the milestone document.
+ */
+const buildMilestoneDocumentForMilestone = async (
+  provider: AimsMilestonesDataProvider,
+  milestone: MilestoneDataObject,
+  linkedAimIds: readonly string[],
+  fallbackProjectId = '',
+  fallbackProjectName = '',
+): Promise<ProjectMilestonesDataObject> => {
+  let projectId = fallbackProjectId;
+  let projectName = fallbackProjectName;
+  let grantType = '';
+  const aimNumbers: number[] = [];
+
+  for (const aimId of linkedAimIds) {
+    const project = await provider.fetchProjectWithAimsDetailByAimId(aimId);
+    if (project) {
+      projectId = project.sys.id;
+      projectName = project.title?.trim() ?? '';
+      grantType = getAimGrantType(aimId, project);
+      aimNumbers.push(getAimOrder(aimId, project));
+    }
+  }
+
+  return buildMilestoneDocument(
+    milestone,
+    aimNumbers,
+    projectId,
+    projectName,
+    grantType,
+  );
+};
+
+/**
+ * Builds a milestone document and upserts it.
+ */
+const buildAndUpsertMilestone = async (
+  client: Client,
+  provider: AimsMilestonesDataProvider,
+  milestone: MilestoneDataObject,
+  linkedAimIds: readonly string[],
+  fallbackProjectId?: string,
+  fallbackProjectName?: string,
+): Promise<void> => {
+  const doc = await buildMilestoneDocumentForMilestone(
+    provider,
+    milestone,
+    linkedAimIds,
+    fallbackProjectId,
+    fallbackProjectName,
+  );
+  await upsertOpensearchDocuments(client, MILESTONES_INDEX, [doc]);
 };
 
 /**
@@ -218,31 +300,8 @@ export const reindexMilestoneById = async (
     return;
   }
 
-  let projectId = '';
-  let projectName = '';
-  let grantType = '';
-  const aimNumbers: number[] = [];
-
-  for (const aimId of aimIds) {
-    const project = await provider.fetchProjectWithAimsDetailByAimId(aimId);
-    if (project) {
-      projectId = project.sys.id;
-      projectName = project.title?.trim() ?? '';
-      grantType = getAimGrantType(aimId, project);
-      aimNumbers.push(getAimOrder(aimId, project));
-    }
-  }
-
-  const doc = buildMilestoneDocument(
-    milestone,
-    aimNumbers,
-    projectId,
-    projectName,
-    grantType,
-  );
-
   const client = await getOpensearchClient();
-  await upsertOpensearchDocuments(client, MILESTONES_INDEX, [doc]);
+  await buildAndUpsertMilestone(client, provider, milestone, aimIds);
 };
 
 /**
@@ -267,45 +326,26 @@ export const reindexAimsByMilestoneId = async (
   const client = await getOpensearchClient();
 
   for (const aimId of aimIds) {
-    const [project, aimWithMilestones] = await Promise.all([
-      provider.fetchProjectWithAimsDetailByAimId(aimId),
-      provider.fetchAimWithMilestonesById(aimId),
-    ]);
-
-    if (project && aimWithMilestones) {
-      const grantType = getAimGrantType(aimId, project);
-      const aimDetail =
-        project.originalGrantAimsCollection?.items?.find(
+    const project = await provider.fetchProjectWithAimsDetailByAimId(aimId);
+    const aimDetail = project
+      ? project.originalGrantAimsCollection?.items?.find(
           (a) => a?.sys?.id === aimId,
         ) ??
         project.supplementGrant?.aimsCollection?.items?.find(
           (a) => a?.sys?.id === aimId,
-        );
+        )
+      : undefined;
 
-      if (aimDetail) {
-        const msIds =
-          aimWithMilestones.milestonesCollection?.items
-            ?.filter((m): m is NonNullable<typeof m> => m !== null)
-            .map((m) => m.sys.id) ?? [];
-
-        const milestones = await Promise.all(
-          msIds.map((id) => provider.fetchMilestoneById(id)),
-        );
-        const validMilestones = milestones.filter(
-          (m): m is MilestoneDataObject => m !== null,
-        );
-
-        const doc = buildAimDocument(
-          aimDetail,
-          project,
-          grantType,
-          validMilestones,
-          msIds,
-        );
-        if (doc) {
-          await upsertOpensearchDocuments(client, AIMS_INDEX, [doc]);
-        }
-      }
+    if (project && aimDetail) {
+      const grantType = getAimGrantType(aimId, project);
+      await buildAndUpsertAim(
+        client,
+        provider,
+        aimId,
+        project,
+        aimDetail,
+        grantType,
+      );
     }
   }
 };
@@ -319,10 +359,7 @@ export const reindexMilestonesByAimId = async (
   aimId: string,
 ): Promise<void> => {
   const aim = await provider.fetchAimWithMilestonesById(aimId);
-  const milestoneIds =
-    aim?.milestonesCollection?.items
-      ?.filter((m): m is NonNullable<typeof m> => m !== null)
-      .map((m) => m.sys.id) ?? [];
+  const milestoneIds = getMilestoneIdsFromAim(aim);
 
   for (const milestoneId of milestoneIds) {
     await reindexMilestoneById(provider, milestoneId);
@@ -350,14 +387,13 @@ export const reindexByProjectId = async (
 
   const aimIds = allAimDetails.map((a) => a.sys.id);
 
+  // Delete ALL existing aims and milestones for this project.
+  // Using deleteByProjectId (projectId field, not document IDs) ensures we also
+  // remove aims/milestones that were previously linked but have since been
+  // unlinked from the project.
+  await deleteByProjectId(projectId);
+
   const client = await getOpensearchClient();
-
-  // Delete ALL existing aims and milestones for this project by projectId.
-  // Using projectId field (not document IDs) ensures we also remove aims/milestones
-  // that were previously linked but have since been unlinked from the project.
-  await deleteByFieldValue(client, AIMS_INDEX, 'projectId', projectId);
-  await deleteByFieldValue(client, MILESTONES_INDEX, 'projectId', projectId);
-
   const milestoneIds = await collectMilestoneIdsForAims(provider, aimIds);
 
   // Reinsert all aims
@@ -379,26 +415,14 @@ export const reindexByProjectId = async (
     if (milestone) {
       const linkedAimIds =
         await provider.fetchAimIdsLinkedToMilestone(milestoneId);
-      const aimNumbers: number[] = [];
-      let msGrantType = '';
-
-      for (const linkedAimId of linkedAimIds) {
-        const linkedProject =
-          await provider.fetchProjectWithAimsDetailByAimId(linkedAimId);
-        if (linkedProject) {
-          msGrantType = getAimGrantType(linkedAimId, linkedProject);
-          aimNumbers.push(getAimOrder(linkedAimId, linkedProject));
-        }
-      }
-
-      const doc = buildMilestoneDocument(
+      await buildAndUpsertMilestone(
+        client,
+        provider,
         milestone,
-        aimNumbers,
+        linkedAimIds,
         project.sys.id,
         project.title?.trim() ?? '',
-        msGrantType,
       );
-      await upsertOpensearchDocuments(client, MILESTONES_INDEX, [doc]);
     }
   }
 };
@@ -455,10 +479,7 @@ export const deleteMilestonesByAimId = async (
     return;
   }
 
-  const milestoneIds =
-    aim.milestonesCollection?.items
-      ?.filter((m): m is NonNullable<typeof m> => m !== null)
-      .map((m) => m.sys.id) ?? [];
+  const milestoneIds = getMilestoneIdsFromAim(aim);
 
   if (milestoneIds.length === 0) return;
 

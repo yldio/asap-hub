@@ -234,6 +234,39 @@ const updateAliasAndCleanup = async (
   }
 };
 
+type BulkItem = {
+  index?: { _id?: string; error?: { reason?: string } };
+  delete?: { _id?: string; error?: { reason?: string } };
+};
+
+const throwIfBulkHasErrors = (
+  response: { body: { errors?: boolean; items: BulkItem[] } },
+  operation: 'index' | 'delete',
+  label: string,
+): void => {
+  if (!response.body.errors) return;
+
+  const errors = response.body.items
+    .filter((item) => item[operation]?.error)
+    .map(
+      (item) => `${item[operation]?._id}: ${item[operation]?.error?.reason}`,
+    );
+
+  throw new Error(`${label}: ${errors.join(', ')}`);
+};
+
+const throwIfDeleteByQueryHasFailures = (
+  response: { body: unknown },
+  label: string,
+): void => {
+  const body = response.body as { failures?: unknown } | undefined;
+  const rawFailures = body?.failures;
+  const failures = Array.isArray(rawFailures) ? rawFailures : [];
+  if (failures.length > 0) {
+    throw new Error(`${label}: ${JSON.stringify(failures)}`);
+  }
+};
+
 export const upsertOpensearchDocuments = async <T extends { id: string }>(
   client: Client,
   indexAlias: string,
@@ -247,19 +280,7 @@ export const upsertOpensearchDocuments = async <T extends { id: string }>(
   ]);
 
   const response = await client.bulk({ body: bulkBody, refresh: 'true' });
-
-  if (response.body.errors) {
-    const errors = response.body.items
-      .filter(
-        (item: { index?: { error?: { reason?: string } } }) =>
-          item.index?.error,
-      )
-      .map(
-        (item: { index?: { _id?: string; error?: { reason?: string } } }) =>
-          `${item.index?._id}: ${item.index?.error?.reason}`,
-      );
-    console.error(`Upsert errors: ${errors.join(', ')}`);
-  }
+  throwIfBulkHasErrors(response, 'index', 'Upsert errors');
 };
 
 export const deleteOpensearchDocuments = async (
@@ -274,19 +295,7 @@ export const deleteOpensearchDocuments = async (
   ]);
 
   const response = await client.bulk({ body: bulkBody, refresh: 'true' });
-
-  if (response.body.errors) {
-    const errors = response.body.items
-      .filter(
-        (item: { delete?: { error?: { reason?: string } } }) =>
-          item.delete?.error,
-      )
-      .map(
-        (item: { delete?: { _id?: string; error?: { reason?: string } } }) =>
-          `${item.delete?._id}: ${item.delete?.error?.reason}`,
-      );
-    console.error(`Delete errors: ${errors.join(', ')}`);
-  }
+  throwIfBulkHasErrors(response, 'delete', 'Delete errors');
 };
 
 /**
@@ -301,7 +310,7 @@ export const deleteByDocumentIds = async (
 ): Promise<void> => {
   if (ids.length === 0) return;
 
-  await client.deleteByQuery({
+  const response = await client.deleteByQuery({
     index: indexAlias,
     body: {
       query: {
@@ -310,6 +319,7 @@ export const deleteByDocumentIds = async (
     },
     refresh: true,
   });
+  throwIfDeleteByQueryHasFailures(response, 'deleteByDocumentIds failures');
 };
 
 /**
@@ -323,7 +333,7 @@ export const deleteByFieldValue = async (
   field: string,
   value: string,
 ): Promise<void> => {
-  await client.deleteByQuery({
+  const response = await client.deleteByQuery({
     index: indexAlias,
     body: {
       query: {
@@ -332,6 +342,7 @@ export const deleteByFieldValue = async (
     },
     refresh: true,
   });
+  throwIfDeleteByQueryHasFailures(response, 'deleteByFieldValue failures');
 };
 
 export const indexOpensearchData = async <T>({

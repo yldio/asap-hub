@@ -33,7 +33,6 @@ const aimsLinkTextStyles = css({
 const lastUpdatedBarStyles = css({
   display: 'flex',
   alignItems: 'center',
-  gap: rem(8),
   color: neutral900.rgb,
 });
 

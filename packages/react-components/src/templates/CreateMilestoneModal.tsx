@@ -88,21 +88,6 @@ type CreateMilestoneFormData = {
   status: MilestoneStatus;
 };
 
-// export const getStatusPillAccent = (
-//   status: MilestoneStatus,
-// ): 'info' | 'success' | 'warning' | 'error' => {
-//   switch (status) {
-//     case 'In Progress':
-//       return 'info';
-//     case 'Complete':
-//       return 'success';
-//     case 'Terminated':
-//       return 'error';
-//     default:
-//       return 'info';
-//   }
-// };
-
 type CreateMilestoneModalProps = {
   readonly grantType: GrantType;
   readonly aims: ReadonlyArray<Aim>;

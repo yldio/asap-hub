@@ -1,5 +1,7 @@
 import { ComponentProps } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
 import { Aim } from '@asap-hub/model';
 
 import ProjectDetailMilestones from '../ProjectDetailMilestones';
@@ -165,6 +167,53 @@ describe('ProjectDetailMilestones', () => {
           ).not.toBeInTheDocument();
         },
       );
+    });
+  });
+
+  it('can create a milestone when the data is valid', async () => {
+    const mockOnCreateProjectMilestone = jest
+      .fn()
+      .mockResolvedValue('milestone-id');
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <ProjectDetailMilestones
+          {...defaultProps}
+          onCreateProjectMilestone={mockOnCreateProjectMilestone}
+        />
+      </MemoryRouter>,
+    );
+
+    const addNewMilestoneButton = await screen.findByRole('button', {
+      name: /Add New Milestone/i,
+    });
+
+    await userEvent.click(addNewMilestoneButton);
+
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Description/i }),
+      'Some description',
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: '#1' }));
+
+    const submitButton = await screen.findByRole('button', {
+      name: 'Confirm',
+    });
+    await userEvent.click(submitButton);
+
+    const confirmButton = await screen.findByRole('button', {
+      name: /confirm and notify/i,
+    });
+    await userEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(mockOnCreateProjectMilestone).toHaveBeenCalledWith({
+        description: 'Some description',
+        status: 'Pending',
+        grantType: 'original',
+        relatedArticleIds: [],
+        aimIds: ['1'],
+      });
     });
   });
 });

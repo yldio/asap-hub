@@ -541,11 +541,8 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
   private async fetchMilestonesLastUpdated(
     projectId: string,
   ): Promise<string | undefined> {
-    if (!this.opensearchProvider) {
-      return undefined;
-    }
-
-    const response = await this.opensearchProvider.search({
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const response = await this.opensearchProvider!.search({
       index: 'project-milestones',
       body: {
         query: { term: { projectId } },

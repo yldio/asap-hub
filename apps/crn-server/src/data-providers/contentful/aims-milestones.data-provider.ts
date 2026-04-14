@@ -18,7 +18,7 @@ import {
   FetchMilestoneArticlesQueryVariables,
   GraphQLClient,
 } from '@asap-hub/contentful';
-import { cleanArray } from '@asap-hub/server-common';
+import { cleanArray, getFirstValid } from '@asap-hub/server-common';
 
 import {
   AimWithMilestonesDataObject,
@@ -217,15 +217,17 @@ export class AimsMilestonesContentfulDataProvider
       } | null;
     }>(FETCH_PROJECT_WITH_AIMS_DETAIL_BY_AIM_ID, { aimId });
 
-    const directProject =
-      aims?.linkedFrom?.projectsCollection?.items?.find(Boolean) ?? null;
+    const directProject = getFirstValid(
+      aims?.linkedFrom?.projectsCollection?.items,
+    );
     if (directProject) return directProject;
 
-    const supplementProject =
-      aims?.linkedFrom?.supplementGrantCollection?.items
-        ?.find(Boolean)
-        ?.linkedFrom?.projectsCollection?.items?.find(Boolean) ?? null;
-    return supplementProject;
+    const supplementGrant = getFirstValid(
+      aims?.linkedFrom?.supplementGrantCollection?.items,
+    );
+    return getFirstValid(
+      supplementGrant?.linkedFrom?.projectsCollection?.items,
+    );
   }
 
   async fetchAimWithMilestonesById(
@@ -272,7 +274,7 @@ export class AimsMilestonesContentfulDataProvider
     }>(FETCH_PROJECT_ID_BY_SUPPLEMENT_GRANT_ID, { supplementGrantId });
 
     return (
-      supplementGrant?.linkedFrom?.projectsCollection?.items?.find(Boolean)?.sys
+      getFirstValid(supplementGrant?.linkedFrom?.projectsCollection?.items)?.sys
         .id ?? null
     );
   }

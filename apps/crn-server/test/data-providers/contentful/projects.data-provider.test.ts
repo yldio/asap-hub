@@ -1,4 +1,5 @@
 import { ProjectsOrder } from '@asap-hub/contentful';
+import { OpensearchRequest } from '@asap-hub/server-common';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 import { getEntry } from '../../fixtures/contentful.fixtures';
@@ -44,6 +45,28 @@ import {
   getSupplementGrantFields,
   getOriginalGrantFields,
 } from '../../fixtures/projects.fixtures';
+
+const milestonesSearchMock =
+  (dates: Partial<Record<'original' | 'supplement', string>>) =>
+  ({ index, body }: { index: string; body: OpensearchRequest }) => {
+    if (index === 'project-milestones') {
+      const filter = body.query?.bool?.filter;
+      const filters = Array.isArray(filter) ? filter : filter ? [filter] : [];
+      const grantType = filters
+        .map((f) => {
+          const val = f.term?.['grantType'];
+          return typeof val === 'string' ? val : undefined;
+        })
+        .find(Boolean) as 'original' | 'supplement' | undefined;
+      const date = grantType ? dates[grantType] : undefined;
+      if (date) {
+        return Promise.resolve({
+          aggregations: { last_milestone_update: { value_as_string: date } },
+        });
+      }
+    }
+    return Promise.resolve({ hits: { hits: [] } });
+  };
 
 describe('ProjectContentfulDataProvider', () => {
   const contentfulClientMock = getContentfulGraphqlClientMock();
@@ -334,6 +357,40 @@ describe('ProjectContentfulDataProvider', () => {
       const result = await dataProvider.fetchById('any-id');
 
       expect(result).toBeNull();
+    });
+
+    it('populates milestonesLastUpdated when both grant types have milestone dates', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce(
+        getProjectByIdGraphqlResponse(),
+      );
+      opensearchProviderMock.search.mockImplementation(
+        milestonesSearchMock({
+          original: '2025-04-01T00:00:00.000Z',
+          supplement: '2025-06-01T00:00:00.000Z',
+        }),
+      );
+
+      const result = await dataProvider.fetchById('project-with-milestones');
+
+      expect((result as any).milestonesLastUpdated).toEqual({
+        original: '2025-04-01T00:00:00.000Z',
+        supplement: '2025-06-01T00:00:00.000Z',
+      });
+    });
+
+    it('populates milestonesLastUpdated with only the grant type that has data', async () => {
+      contentfulClientMock.request.mockResolvedValueOnce(
+        getProjectByIdGraphqlResponse(),
+      );
+      opensearchProviderMock.search.mockImplementation(
+        milestonesSearchMock({ original: '2025-04-01T00:00:00.000Z' }),
+      );
+
+      const result = await dataProvider.fetchById('project-with-original-milestones');
+
+      expect((result as any).milestonesLastUpdated).toEqual({
+        original: '2025-04-01T00:00:00.000Z',
+      });
     });
   });
 

@@ -486,6 +486,29 @@ describe('projects api', () => {
       expect(result).toEqual(projectMilestones);
     });
 
+    it('includes search and filter params when provided', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ total: 0, items: [] }),
+      });
+
+      await getProjectMilestones(
+        {
+          ...options,
+          searchQuery: 'milestone description',
+          filters: new Set(['Complete', 'Pending']),
+        },
+        'Bearer token',
+      );
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://api.example.com/projects/project-1/milestones?search=milestone+description&take=15&skip=30&filter=Complete&filter=Pending&grantType=original',
+        expect.objectContaining({
+          headers: expect.objectContaining({ authorization: 'Bearer token' }),
+        }),
+      );
+    });
+
     it('throws BackendError when the response is not ok', async () => {
       const errorBody = { message: 'not found' };
       mockFetch.mockResolvedValueOnce({

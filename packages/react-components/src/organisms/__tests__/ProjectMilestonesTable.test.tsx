@@ -59,6 +59,8 @@ describe('ProjectMilestonesTable', () => {
     render(
       <ProjectMilestonesTable
         milestones={mockMilestones}
+        total={mockMilestones.length}
+        hasAppliedSearch={false}
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
@@ -75,6 +77,7 @@ describe('ProjectMilestonesTable', () => {
     // Milestone rows
     expect(screen.getByText('First milestone')).toBeInTheDocument();
     expect(screen.getByText('Second milestone')).toBeInTheDocument();
+    expect(screen.getByText('5 results found')).toBeInTheDocument();
 
     // PageControls numbers
     expect(screen.getByText('1')).toBeInTheDocument();
@@ -86,6 +89,8 @@ describe('ProjectMilestonesTable', () => {
     render(
       <ProjectMilestonesTable
         milestones={mockMilestones}
+        total={mockMilestones.length}
+        hasAppliedSearch={false}
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
@@ -104,6 +109,8 @@ describe('ProjectMilestonesTable', () => {
     render(
       <ProjectMilestonesTable
         milestones={[]}
+        total={0}
+        hasAppliedSearch={false}
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
@@ -114,6 +121,29 @@ describe('ProjectMilestonesTable', () => {
     expect(
       screen.getByText(
         'No milestones related to the Original Grant have been added to this project yet.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('renders search empty state when no milestones match the current search', () => {
+    render(
+      <ProjectMilestonesTable
+        milestones={[]}
+        total={0}
+        hasAppliedSearch={true}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
+        pageControlsProps={pageControlsProps}
+        selectedGrantType={'original'}
+      />,
+    );
+
+    expect(screen.getByText('0 results found')).toBeInTheDocument();
+    expect(screen.getByText('No results found.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Please double-check your search for any typos or try a different search term.',
       ),
     ).toBeInTheDocument();
   });

@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import SearchAndFilter from '../SearchAndFilter';
 import { noop } from '../../utils';
@@ -21,4 +21,10 @@ it('passes query correctly', () => {
     <SearchAndFilter {...props} searchQuery="test123" />,
   );
   expect(getByRole('searchbox')).toHaveValue('test123');
+});
+
+it('renders a custom filter button label', () => {
+  render(<SearchAndFilter {...props} filterButtonText="Filter" />);
+
+  expect(screen.getByRole('button', { name: /filter/i })).toBeVisible();
 });

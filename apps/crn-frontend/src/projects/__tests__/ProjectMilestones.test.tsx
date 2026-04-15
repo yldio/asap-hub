@@ -47,13 +47,13 @@ beforeEach(() => {
 });
 
 const projectId = 'proj-1';
-const renderPage = async (grantType?: string) => {
+const renderPage = async (queryString = '', waitForLoad = true) => {
   const basePath = projects({})
     .discoveryProjects({})
     .discoveryProject({ projectId })
     .milestones({}).$;
 
-  const path = grantType ? `${basePath}?grantType=${grantType}` : basePath;
+  const path = queryString ? `${basePath}?${queryString}` : basePath;
   const options: MilestonesListOptions = {
     searchQuery: '',
     currentPage: 0,
@@ -102,9 +102,11 @@ const renderPage = async (grantType?: string) => {
     </RecoilRoot>,
   );
 
-  await waitFor(() =>
-    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-  );
+  if (waitForLoad) {
+    await waitFor(() =>
+      expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+  }
 
   return result;
 };
@@ -114,6 +116,25 @@ describe('ProjectMilestones', () => {
     await renderPage();
 
     expect(screen.getByRole('heading', { name: 'Milestones' })).toBeVisible();
+    expect(screen.getByRole('searchbox')).toBeVisible();
+    expect(screen.getByRole('button', { name: /filter/i })).toBeVisible();
+  });
+
+  it('keeps the search controls visible while milestones are loading', async () => {
+    mockGetProjectMilestones.mockImplementation(
+      () =>
+        new Promise<ListProjectMilestonesResponse>((resolve) => {
+          void resolve;
+        }),
+    );
+
+    await renderPage('searchQuery=alpha', false);
+
+    expect(
+      await screen.findByRole('heading', { name: 'Milestones' }),
+    ).toBeVisible();
+    expect(screen.getByRole('searchbox')).toBeVisible();
+    expect(screen.getByRole('button', { name: /filter/i })).toBeVisible();
   });
 
   it('fetches milestones depending on the grant type selected', async () => {
@@ -149,6 +170,24 @@ describe('ProjectMilestones', () => {
         expect.anything(),
       );
     });
+  });
+
+  it('passes search query and status filters to the milestones fetch', async () => {
+    await renderPage('grantType=original&searchQuery=alpha&filter=Complete');
+
+    await waitFor(() => {
+      expect(mockGetProjectMilestones).toHaveBeenCalledWith(
+        expect.objectContaining({
+          grantType: 'original',
+          searchQuery: 'alpha',
+        }),
+        expect.anything(),
+      );
+    });
+
+    expect(mockGetProjectMilestones.mock.calls[0]?.[0]?.filters).toEqual(
+      new Set(['Complete']),
+    );
   });
 
   it('fetches articles for a milestone when expanded', async () => {

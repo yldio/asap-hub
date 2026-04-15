@@ -146,6 +146,10 @@ export type Aim = {
   readonly articleCount: number;
 };
 
+export const grantTypes = ['original', 'supplement'] as const;
+
+export type GrantType = (typeof grantTypes)[number];
+
 // Grant information types
 export type OriginalGrantInfo = {
   readonly originalGrant: string;
@@ -293,10 +297,6 @@ export type FetchProjectsFilter =
 // Response types
 export type ProjectResponse = Project;
 export type ListProjectResponse = ListProjectDataObject;
-
-export const grantTypes = ['original', 'supplement'] as const;
-
-export type GrantType = (typeof grantTypes)[number];
 
 export type ListProjectMilestonesResponse = ListResponse<Milestone>;
 

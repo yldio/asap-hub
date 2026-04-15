@@ -20,6 +20,7 @@ interface SearchAndFilterProps<V extends string> {
   readonly filters?: Set<V>;
   readonly onChangeFilter?: (filter: V) => void;
   readonly filterOptions: ReadonlyArray<Option<V> | Title>;
+  readonly filterButtonText?: string;
 
   readonly searchQuery: SearchFieldProps['value'];
   readonly onChangeSearch: SearchFieldProps['onChange'];
@@ -34,6 +35,7 @@ export default function SearchAndFilter<V extends string>({
   filters,
   onChangeFilter,
   filterOptions,
+  filterButtonText,
 }: SearchAndFilterProps<V>): ReturnType<React.FC> {
   return (
     <div role="search" css={styles}>
@@ -46,6 +48,7 @@ export default function SearchAndFilter<V extends string>({
         filters={filters}
         onChangeFilter={onChangeFilter}
         filterOptions={filterOptions}
+        buttonText={filterButtonText}
       />
     </div>
   );

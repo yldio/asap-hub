@@ -3,14 +3,15 @@ import {
   useState,
   useEffect,
   ComponentProps,
-  createRef,
   FC,
   lazy,
   ReactNode,
+  useRef,
 } from 'react';
 import { useLocation } from 'react-router';
 import { css } from '@emotion/react';
 import { tags } from '@asap-hub/routing';
+import { ScrollContext } from '@asap-hub/react-context';
 
 import {
   steel,
@@ -247,7 +248,7 @@ const Layout: FC<LayoutProps> = ({
 
   let location: ReturnType<typeof useLocation> | undefined;
   let prevLocation: ReturnType<typeof useLocation> | undefined;
-  const mainRef = createRef<HTMLDivElement>();
+  const mainRef = useRef<HTMLDivElement>(null);
   // This hook *is* called unconditionally despite what rules-of-hooks says
   /* eslint-disable react-hooks/rules-of-hooks */
   try {
@@ -267,6 +268,14 @@ const Layout: FC<LayoutProps> = ({
       mainRef.current.scrollTo(0, 0);
     }
   }, [location, prevLocation, mainRef]);
+
+  const scrollToTop = (options?: ScrollToOptions) => {
+    mainRef.current?.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+      ...options,
+    });
+  };
 
   return (
     <ToastStack>
@@ -296,9 +305,11 @@ const Layout: FC<LayoutProps> = ({
             <div css={SearchIconStyles}>{tagSearchIcon}</div>
           </Navigation>
         </div>
-        <main ref={mainRef} css={contentStyles}>
-          {children}
-        </main>
+        <ScrollContext.Provider value={{ scrollToTop }}>
+          <main ref={mainRef} css={contentStyles}>
+            {children}
+          </main>
+        </ScrollContext.Provider>
         <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
           <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
         </div>

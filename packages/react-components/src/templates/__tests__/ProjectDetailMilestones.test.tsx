@@ -29,6 +29,8 @@ const defaultProps: ComponentProps<typeof ProjectDetailMilestones> = {
   onGrantTypeChange: () => null,
   hasSupplementGrant: false,
   aims: mockAims,
+  onError: jest.fn(),
+  onSuccess: jest.fn(),
 
   loadArticleOptions: jest.fn().mockResolvedValue([]),
 
@@ -250,6 +252,49 @@ describe('ProjectDetailMilestones', () => {
         relatedArticleIds: [],
         aimIds: ['1'],
       });
+    });
+  });
+
+  it('calls onError callback when creation fails', async () => {
+    const mockOnCreateProjectMilestone = jest
+      .fn()
+      .mockRejectedValueOnce(new Error('failed'));
+    const onError = jest.fn();
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <ProjectDetailMilestones
+          {...defaultProps}
+          onCreateProjectMilestone={mockOnCreateProjectMilestone}
+          onError={onError}
+        />
+      </MemoryRouter>,
+    );
+
+    const addNewMilestoneButton = await screen.findByRole('button', {
+      name: /Add New Milestone/i,
+    });
+
+    await userEvent.click(addNewMilestoneButton);
+
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Description/i }),
+      'Some description',
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: '#1' }));
+
+    const submitButton = await screen.findByRole('button', {
+      name: 'Confirm',
+    });
+    await userEvent.click(submitButton);
+
+    const confirmButton = await screen.findByRole('button', {
+      name: /confirm and notify/i,
+    });
+    await userEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(onError).toHaveBeenCalled();
     });
   });
 });

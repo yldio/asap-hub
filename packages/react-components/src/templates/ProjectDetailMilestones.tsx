@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { Aim, GrantType, MilestoneCreateRequest } from '@asap-hub/model';
 import { ComponentProps, useState } from 'react';
+import { useScrollToTop } from '@asap-hub/react-context';
 
 import { Button, Headline3, Link, Paragraph } from '../atoms';
 import { formatDateToTimezone } from '../date';
@@ -78,9 +79,11 @@ type ProjectDetailMilestonesProps = {
       typeof LabeledMultiSelect<ResearchOutputOption>
     >['loadOptions']
   >;
+  readonly onSuccess: () => void;
+  readonly onError: () => void;
   readonly onCreateProjectMilestone: (
     data: MilestoneCreateRequest,
-  ) => Promise<void>;
+  ) => Promise<string | void>;
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
@@ -92,6 +95,8 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   aims,
   loadArticleOptions,
   onCreateProjectMilestone,
+  onError,
+  onSuccess,
   children,
   milestonesLastUpdated,
 }) => {
@@ -108,13 +113,22 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   const [displayCreateMilestoneModal, setDisplayCreateMilestoneModal] =
     useState(false);
 
+  const { scrollToTop } = useScrollToTop();
+
   const handleAddNewMilestone = () => {
     setDisplayCreateMilestoneModal(true);
   };
 
   const onSubmitMilestoneForm = async (data: MilestoneCreateRequest) => {
-    await onCreateProjectMilestone(data);
-    setDisplayCreateMilestoneModal(false);
+    try {
+      await onCreateProjectMilestone(data);
+      onSuccess();
+    } catch {
+      onError();
+    } finally {
+      setDisplayCreateMilestoneModal(false);
+      scrollToTop();
+    }
   };
 
   return (

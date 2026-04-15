@@ -179,19 +179,21 @@ export const getProject = async (
 };
 
 export type MilestonesListOptions = GetListOptions & {
-  grantType: GrantType | 'all';
+  grantType: GrantType;
   projectId: string;
 };
 
 export const getProjectMilestones = async (
-  options: MilestonesListOptions,
+  options: Omit<MilestonesListOptions, 'grantType'> & {
+    grantType?: GrantType;
+  },
   authorization: string,
 ): Promise<ListProjectMilestonesResponse> => {
   const { projectId, grantType, ...searchOptions } = options;
   const url = createListApiUrl(`projects/${projectId}/milestones`, {
     ...searchOptions,
   });
-  if (grantType && grantType !== 'all') {
+  if (grantType) {
     url.searchParams.set('grantType', grantType);
   }
 

@@ -38,7 +38,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const { hash: targetManuscript } = useLocation();
 
   const teamId =
-    projectDetail && 'teamId' in projectDetail && projectDetail.teamId
+    projectDetail && 'teamId' in projectDetail
       ? projectDetail.teamId
       : undefined;
 

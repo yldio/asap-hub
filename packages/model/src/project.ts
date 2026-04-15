@@ -165,7 +165,7 @@ export type BaseProjectDetail = {
   readonly originalGrantProposalId?: string;
   readonly originalGrantAims?: ReadonlyArray<Aim>;
   readonly supplementGrant?: SupplementGrantInfo;
-  readonly milestonesLastUpdated?: string;
+  readonly milestonesLastUpdated?: Partial<Record<GrantType, string>>;
 };
 
 type TeamCollaborators = {

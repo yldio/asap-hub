@@ -135,7 +135,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                         }
                         isLead={isLead}
                         loadArticleOptions={mockLoadArticleOptions}
-                        lastUpdated={projectDetail.milestonesLastUpdated}
+                        milestonesLastUpdated={projectDetail.milestonesLastUpdated}
                       />
                     </Frame>
                   ) : (

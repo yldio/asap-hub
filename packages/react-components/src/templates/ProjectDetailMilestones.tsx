@@ -54,7 +54,7 @@ type ProjectDetailMilestonesProps = {
   onGrantTypeChange: (grantType: GrantType) => void;
   children: React.ReactNode;
   hasSupplementGrant: boolean;
-  readonly lastUpdated?: string;
+  readonly milestonesLastUpdated?: Partial<Record<GrantType, string>>;
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
@@ -63,8 +63,9 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   onGrantTypeChange,
   hasSupplementGrant,
   children,
-  lastUpdated,
+  milestonesLastUpdated,
 }) => {
+  const lastUpdated = milestonesLastUpdated?.[selectedGrantType];
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
 

@@ -99,8 +99,6 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
 
-  console.log(aims);
-
   const canCreateMilestone =
     isLead &&
     (selectedGrantType === 'supplement' ||

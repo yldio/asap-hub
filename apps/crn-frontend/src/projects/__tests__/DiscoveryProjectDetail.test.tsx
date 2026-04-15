@@ -31,6 +31,15 @@ const mockDiscoveryProject: DiscoveryProjectDetailType = {
   teamId: 'team-1',
   originalGrant: 'Original Grant',
   originalGrantProposalId: 'proposal-1',
+  originalGrantAims: [
+    {
+      id: '1',
+      order: 1,
+      description: 'Aim Description One',
+      status: 'In Progress',
+      articleCount: 0,
+    },
+  ],
   contactEmail: 'contact@example.com',
   fundedTeam: {
     id: 'team-1',

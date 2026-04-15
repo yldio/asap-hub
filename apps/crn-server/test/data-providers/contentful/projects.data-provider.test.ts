@@ -386,7 +386,9 @@ describe('ProjectContentfulDataProvider', () => {
         milestonesSearchMock({ original: '2025-04-01T00:00:00.000Z' }),
       );
 
-      const result = await dataProvider.fetchById('project-with-original-milestones');
+      const result = await dataProvider.fetchById(
+        'project-with-original-milestones',
+      );
 
       expect((result as any).milestonesLastUpdated).toEqual({
         original: '2025-04-01T00:00:00.000Z',

@@ -124,7 +124,7 @@ describe('ProjectDetailMilestones', () => {
         isLead  | selectedGrantType | hasSupplementGrant
         ${true} | ${'original'}     | ${false}
         ${true} | ${'supplement'}   | ${true}
-        ${true} | ${'supplement'}   | ${false}
+        ${true} | ${'supplement'}   | ${true}
       `(
         'isLead=$isLead, grant=$selectedGrantType, hasSupplementGrant=$hasSupplementGrant',
         ({ isLead, selectedGrantType, hasSupplementGrant }) => {
@@ -167,6 +167,22 @@ describe('ProjectDetailMilestones', () => {
           ).not.toBeInTheDocument();
         },
       );
+    });
+
+    it('does not display button if there are no aims for the selected grant type', () => {
+      render(
+        <ProjectDetailMilestones
+          {...defaultProps}
+          isLead={true}
+          selectedGrantType={'supplement'}
+          hasSupplementGrant={true}
+          aims={[]}
+        />,
+      );
+
+      expect(
+        screen.queryByRole('button', { name: /add new milestone/i }),
+      ).not.toBeInTheDocument();
     });
   });
 

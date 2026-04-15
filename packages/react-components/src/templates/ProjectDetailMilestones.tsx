@@ -66,19 +66,21 @@ const pageDesktopStyles = css({
 
 type ProjectDetailMilestonesProps = {
   readonly seeAimsHref?: string;
-  isLead: boolean;
-  selectedGrantType: GrantType;
-  onGrantTypeChange: (grantType: GrantType) => void;
-  children: React.ReactNode;
-  hasSupplementGrant: boolean;
+  readonly isLead: boolean;
+  readonly selectedGrantType: GrantType;
+  readonly onGrantTypeChange: (grantType: GrantType) => void;
+  readonly children: React.ReactNode;
+  readonly hasSupplementGrant: boolean;
   readonly milestonesLastUpdated?: Partial<Record<GrantType, string>>;
   readonly aims: ReadonlyArray<Aim>;
-  loadArticleOptions: NonNullable<
+  readonly loadArticleOptions: NonNullable<
     ComponentProps<
       typeof LabeledMultiSelect<ResearchOutputOption>
     >['loadOptions']
   >;
-  onCreateProjectMilestone: (data: MilestoneCreateRequest) => Promise<void>;
+  readonly onCreateProjectMilestone: (
+    data: MilestoneCreateRequest,
+  ) => Promise<void>;
 };
 
 const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
@@ -97,10 +99,13 @@ const ProjectDetailMilestones: React.FC<ProjectDetailMilestonesProps> = ({
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
 
+  console.log(aims);
+
   const canCreateMilestone =
     isLead &&
     (selectedGrantType === 'supplement' ||
-      (selectedGrantType === 'original' && !hasSupplementGrant));
+      (selectedGrantType === 'original' && !hasSupplementGrant)) &&
+    aims.length > 0;
 
   const [displayCreateMilestoneModal, setDisplayCreateMilestoneModal] =
     useState(false);

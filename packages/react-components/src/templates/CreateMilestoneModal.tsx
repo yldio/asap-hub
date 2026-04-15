@@ -69,8 +69,6 @@ const cancelStyles = css({
   },
 });
 
-const selectContainerStyles = css({});
-
 const contentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
 });
@@ -221,32 +219,27 @@ const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
               />
             )}
           />
-          <div css={selectContainerStyles}>
-            <Controller
-              name="relatedArticles"
-              control={control}
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <LabeledMultiSelect<ResearchOutputOption>
-                  title="Related Articles"
-                  description="Add the articles that resulted from completing this milestone or contributed to its progress. Only published articles on the CRN Hub will be available below. These articles will also be displayed in the corresponding Aim."
-                  subtitle="(optional)"
-                  enabled={!isSubmitting}
-                  placeholder="Start typing..."
-                  loadOptions={getArticleSuggestions}
-                  onChange={onChange}
-                  values={value}
-                  noOptionsMessage={({ inputValue }: { inputValue: string }) =>
-                    `Sorry, no articles match ${inputValue}`
-                  }
-                  customValidationMessage={error?.message}
-                  components={articleSelectComponents}
-                />
-              )}
-            />
-          </div>
+          <Controller
+            name="relatedArticles"
+            control={control}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <LabeledMultiSelect<ResearchOutputOption>
+                title="Related Articles"
+                description="Add the articles that resulted from completing this milestone or contributed to its progress. Only published articles on the CRN Hub will be available below. These articles will also be displayed in the corresponding Aim."
+                subtitle="(optional)"
+                enabled={!isSubmitting}
+                placeholder="Start typing..."
+                loadOptions={getArticleSuggestions}
+                onChange={onChange}
+                values={value}
+                noOptionsMessage={({ inputValue }: { inputValue: string }) =>
+                  `Sorry, no articles match ${inputValue}`
+                }
+                customValidationMessage={error?.message}
+                components={articleSelectComponents}
+              />
+            )}
+          />
 
           <Controller
             name="status"

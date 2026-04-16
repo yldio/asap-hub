@@ -52,4 +52,42 @@ describe('ProjectDetailMilestones', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('Supplement')).toBeInTheDocument();
   });
+
+  it('renders original last updated date when viewing original grant', () => {
+    render(
+      <ProjectDetailMilestones
+        {...defaultProps}
+        selectedGrantType="original"
+        milestonesLastUpdated={{
+          original: '2025-04-01T00:00:00.000Z',
+          supplement: '2025-06-01T00:00:00.000Z',
+        }}
+      />,
+    );
+
+    expect(screen.getByText(/Last Update:/)).toBeInTheDocument();
+    expect(screen.getByText(/1st April 2025/)).toBeInTheDocument();
+  });
+
+  it('renders supplement last updated date when viewing supplement grant', () => {
+    render(
+      <ProjectDetailMilestones
+        {...defaultProps}
+        selectedGrantType="supplement"
+        milestonesLastUpdated={{
+          original: '2025-04-01T00:00:00.000Z',
+          supplement: '2025-06-01T00:00:00.000Z',
+        }}
+      />,
+    );
+
+    expect(screen.getByText(/Last Update:/)).toBeInTheDocument();
+    expect(screen.getByText(/1st June 2025/)).toBeInTheDocument();
+  });
+
+  it('does not render last updated bar when no date is provided for the selected grant type', () => {
+    render(<ProjectDetailMilestones {...defaultProps} />);
+
+    expect(screen.queryByText(/Last Update:/)).not.toBeInTheDocument();
+  });
 });

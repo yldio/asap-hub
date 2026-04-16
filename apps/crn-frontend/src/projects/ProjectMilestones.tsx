@@ -59,12 +59,14 @@ const ProjectMilestones: React.FC<{
   loadArticleOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
   hasSupplementGrant: boolean;
   seeAimsHref?: string;
+  milestonesLastUpdated?: Partial<Record<GrantType, string>>;
 }> = ({
   projectId,
   hasSupplementGrant,
   seeAimsHref,
   isLead,
   loadArticleOptions,
+  milestonesLastUpdated,
 }) => {
   const { search } = useLocation();
   const navigate = useNavigate();
@@ -90,6 +92,7 @@ const ProjectMilestones: React.FC<{
       seeAimsHref={seeAimsHref}
       selectedGrantType={selectedGrantType}
       onGrantTypeChange={handleGrantTypeChange}
+      milestonesLastUpdated={milestonesLastUpdated}
     >
       <SearchFrame title="Project Milestones">
         <ProjectMilestonesTableContent

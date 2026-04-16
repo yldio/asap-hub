@@ -146,6 +146,10 @@ export type Aim = {
   readonly articleCount: number;
 };
 
+export const grantTypes = ['original', 'supplement'] as const;
+
+export type GrantType = (typeof grantTypes)[number];
+
 // Grant information types
 export type OriginalGrantInfo = {
   readonly originalGrant: string;
@@ -165,6 +169,7 @@ export type BaseProjectDetail = {
   readonly originalGrantProposalId?: string;
   readonly originalGrantAims?: ReadonlyArray<Aim>;
   readonly supplementGrant?: SupplementGrantInfo;
+  readonly milestonesLastUpdated?: Partial<Record<GrantType, string>>;
 };
 
 type TeamCollaborators = {
@@ -292,10 +297,6 @@ export type FetchProjectsFilter =
 // Response types
 export type ProjectResponse = Project;
 export type ListProjectResponse = ListProjectDataObject;
-
-export const grantTypes = ['original', 'supplement'] as const;
-
-export type GrantType = (typeof grantTypes)[number];
 
 export type ListProjectMilestonesResponse = ListResponse<Milestone>;
 

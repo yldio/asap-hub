@@ -538,6 +538,33 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     private opensearchProvider?: OpensearchProvider,
   ) {}
 
+  private async fetchMilestonesLastUpdated(
+    projectId: string,
+    grantType: 'original' | 'supplement',
+  ): Promise<string | undefined> {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const response = await this.opensearchProvider!.search({
+      index: 'project-milestones',
+      body: {
+        query: {
+          bool: {
+            filter: [{ term: { projectId } }, { term: { grantType } }],
+          },
+        },
+        aggs: {
+          last_milestone_update: { max: { field: 'lastDate' } },
+        },
+        size: 0,
+      } satisfies OpensearchRequest,
+    });
+
+    const agg = response.aggregations?.last_milestone_update as
+      | { value_as_string?: string }
+      | undefined;
+
+    return agg?.value_as_string;
+  }
+
   private async fetchAimsByProjectId(
     projectId: string,
     grantType: 'original' | 'supplement',
@@ -581,15 +608,22 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
   async fetchById(id: string): Promise<ProjectDataObject | null> {
     try {
-      const [{ projects }, originalAimsHits, supplementAimsHits] =
-        await Promise.all([
-          this.contentfulClient.request<
-            FetchProjectByIdQuery,
-            FetchProjectByIdQueryVariables
-          >(FETCH_PROJECT_BY_ID, { id }),
-          this.fetchAimsByProjectId(id, 'original'),
-          this.fetchAimsByProjectId(id, 'supplement'),
-        ]);
+      const [
+        { projects },
+        originalAimsHits,
+        supplementAimsHits,
+        originalMilestonesLastUpdated,
+        supplementMilestonesLastUpdated,
+      ] = await Promise.all([
+        this.contentfulClient.request<
+          FetchProjectByIdQuery,
+          FetchProjectByIdQueryVariables
+        >(FETCH_PROJECT_BY_ID, { id }),
+        this.fetchAimsByProjectId(id, 'original'),
+        this.fetchAimsByProjectId(id, 'supplement'),
+        this.fetchMilestonesLastUpdated(id, 'original'),
+        this.fetchMilestonesLastUpdated(id, 'supplement'),
+      ]);
 
       if (!projects) {
         return null;
@@ -622,10 +656,23 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
           }
         : undefined;
 
+      const milestonesLastUpdated = {
+        ...(originalMilestonesLastUpdated && {
+          original: originalMilestonesLastUpdated,
+        }),
+        ...(supplementMilestonesLastUpdated && {
+          supplement: supplementMilestonesLastUpdated,
+        }),
+      };
+
       return {
         ...baseResult,
         originalGrantAims,
         supplementGrant,
+        milestonesLastUpdated:
+          Object.keys(milestonesLastUpdated).length > 0
+            ? milestonesLastUpdated
+            : undefined,
       } as ProjectDetailDataObject;
     } catch (error) {
       logger.info('error:::', error);

@@ -98,15 +98,11 @@ const ProjectMilestones: React.FC<{
     toggleFilter,
   } = useSearch();
 
-  const selectedGrantType: GrantType = (() => {
-    if (!hasSupplementGrant) {
-      return 'original';
-    }
-
-    const grantType = new URLSearchParams(search).get('grantType');
-
-    return grantType === 'original' ? 'original' : 'supplement';
-  })();
+  const selectedGrantType: GrantType =
+    hasSupplementGrant &&
+    new URLSearchParams(search).get('grantType') !== 'original'
+      ? 'supplement'
+      : 'original';
 
   const handleGrantTypeChange = useCallback(
     (grantType: GrantType) => {

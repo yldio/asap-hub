@@ -939,11 +939,11 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       (value): value is MilestoneStatus =>
         milestoneStatuses.includes(value as MilestoneStatus),
     );
-    const filters = [
+    const filters = cleanArray([
       { term: { projectId: id } },
-      ...(grantType ? [{ term: { grantType } }] : []),
-      ...(statusFilters.length ? [{ terms: { status: statusFilters } }] : []),
-    ];
+      grantType ? { term: { grantType } } : undefined,
+      statusFilters.length ? { terms: { status: statusFilters } } : undefined,
+    ]);
 
     const response = (await this.opensearchProvider.search({
       index: 'project-milestones',

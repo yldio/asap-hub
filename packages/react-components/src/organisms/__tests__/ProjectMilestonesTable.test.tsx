@@ -123,6 +123,7 @@ describe('ProjectMilestonesTable', () => {
         'No milestones related to the Original Grant have been added to this project yet.',
       ),
     ).toBeInTheDocument();
+    expect(screen.queryByText('0 results found')).not.toBeInTheDocument();
   });
 
   it('renders search empty state when no milestones match the current search', () => {

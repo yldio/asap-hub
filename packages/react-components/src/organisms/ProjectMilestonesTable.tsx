@@ -105,7 +105,7 @@ const noResultsStyles = css({
   svg: {
     width: rem(48),
     height: rem(48),
-    stroke: '#00202C',
+    stroke: neutral1000.rgb,
   },
 });
 
@@ -149,28 +149,30 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
     total === 1 ? `${total} result found` : `${total} results found`;
 
   if (!milestones.length) {
+    if (!hasAppliedSearch) {
+      return (
+        <Paragraph accent="lead" noMargin styles={noMilestonesTextStyles}>
+          No milestones related to the {grantLabel} Grant have been added to
+          this project yet.
+        </Paragraph>
+      );
+    }
+
     return (
       <div css={containerStyles}>
         <strong>{resultsFoundText}</strong>
-        {hasAppliedSearch ? (
-          <div css={noResultsStyles}>
-            <div css={noResultsIconStyles} aria-hidden>
-              {searchIcon}
-            </div>
-            <div>
-              <Headline3 noMargin>No results found.</Headline3>
-            </div>
-            <Paragraph noMargin accent="lead">
-              Please double-check your search for any typos or try a different
-              search term.
-            </Paragraph>
+        <div css={noResultsStyles}>
+          <div css={noResultsIconStyles} aria-hidden>
+            {searchIcon}
           </div>
-        ) : (
-          <Paragraph accent="lead" noMargin styles={noMilestonesTextStyles}>
-            No milestones related to the {grantLabel} Grant have been added to
-            this project yet.
+          <div>
+            <Headline3 noMargin>No results found.</Headline3>
+          </div>
+          <Paragraph noMargin accent="lead">
+            Please double-check your search for any typos or try a different
+            search term.
           </Paragraph>
-        )}
+        </div>
       </div>
     );
   }

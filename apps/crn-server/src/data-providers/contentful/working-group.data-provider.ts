@@ -24,14 +24,13 @@ import {
   addLocaleToFields,
   Link,
 } from '@asap-hub/contentful';
-import { parseUserDisplayName } from '@asap-hub/server-common';
+import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 
 import { WorkingGroupDataProvider } from '../types';
 import {
   parseContentfulGraphqlCalendarToResponse,
   mapDeliverables,
 } from '../transformers';
-import { cleanArray } from '../../utils/clean-array';
 import logger from '../../utils/logger';
 import { parseTeamsCollection } from './user.data-provider';
 

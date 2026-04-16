@@ -50,6 +50,7 @@ import {
   VideoEventReminder,
 } from '@asap-hub/model';
 import {
+  cleanArray,
   getReferenceDates,
   inLast24Hours,
   inLast7Days,
@@ -58,7 +59,6 @@ import {
 import { DateTime } from 'luxon';
 import { isCMSAdministrator } from '@asap-hub/validation';
 import { ReminderDataProvider } from '../types';
-import { cleanArray } from '../../utils/clean-array';
 
 type EventCollection = FetchRemindersQuery['eventsCollection'];
 type EventItem = NonNullable<NonNullable<EventCollection>['items'][number]>;

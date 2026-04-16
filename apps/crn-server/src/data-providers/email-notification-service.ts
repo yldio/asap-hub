@@ -15,6 +15,7 @@ import {
   EmailTriggerAction,
   manuscriptNotificationAttachmentContent,
 } from '@asap-hub/model';
+import { cleanArray } from '@asap-hub/server-common';
 import * as postmark from 'postmark';
 import {
   alternativeAssignedOSEmail,
@@ -23,7 +24,6 @@ import {
   origin,
   postmarkServerToken,
 } from '../config';
-import { cleanArray } from '../utils/clean-array';
 import logger from '../utils/logger';
 import { getCommaAndString } from '../utils/text';
 import { getManuscriptVersionUID } from './contentful/manuscript.data-provider';

@@ -13,8 +13,11 @@ import type { ResearchOutputOption } from '../utils';
 import { PageControls } from '../molecules';
 import { searchIcon } from '../icons';
 
+const WRAPPER_TOP_PADDING = 32;
+
 const contentStyles = css({
-  padding: `${rem(32)} ${rem(24)}`,
+  padding: `${rem(WRAPPER_TOP_PADDING)} ${rem(24)}`,
+  paddingBottom: 0,
 });
 
 const containerStyles = css({
@@ -75,7 +78,9 @@ const milestoneRowWrapperStyles = (index: number, isLast: boolean) =>
     paddingTop: index === 0 ? 0 : rem(20),
     paddingBottom: rem(20),
     borderBottom: `1px solid ${steel.rgb}`,
-    ...(isLast ? { paddingBottom: rem(0), borderBottom: 'none' } : {}),
+    ...(isLast
+      ? { paddingBottom: rem(WRAPPER_TOP_PADDING), borderBottom: 'none' }
+      : {}),
   });
 
 const noMilestonesTextStyles = css({

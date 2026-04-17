@@ -18,6 +18,7 @@ import {
   getProjectMilestones,
   getMilestoneArticles,
   createProjectMilestone,
+  putMilestoneArticles,
 } from '../api';
 import {
   projectMilestonesIndexState,
@@ -45,6 +46,10 @@ const mockGetMilestoneArticles = getMilestoneArticles as jest.MockedFunction<
 const mockCreateProjectMilestone =
   createProjectMilestone as jest.MockedFunction<typeof createProjectMilestone>;
 
+const mockPutMilestoneArticles = putMilestoneArticles as jest.MockedFunction<
+  typeof putMilestoneArticles
+>;
+
 const mockLoadArticleOptions = jest.fn(() =>
   Promise.resolve([
     {
@@ -62,6 +67,7 @@ beforeEach(() => {
   );
   mockGetMilestoneArticles.mockResolvedValue([]);
   mockCreateProjectMilestone.mockResolvedValue({ id: 'milestone-1' });
+  mockPutMilestoneArticles.mockResolvedValue(undefined);
 });
 
 const projectId = 'proj-1';
@@ -373,6 +379,24 @@ describe('ProjectMilestones', () => {
     const confirmButton = await screen.findByRole('button', {
       name: /confirm and notify/i,
     });
+    await userEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('An error has occurred. Please try again later.'),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('displays error toast when saving articles fails', async () => {
+    mockPutMilestoneArticles.mockRejectedValueOnce(new Error('save failed'));
+
+    await renderPage();
+
+    const [editButton] = await screen.findAllByRole('button', { name: /edit/i });
+    await userEvent.click(editButton!);
+
+    const confirmButton = screen.getByRole('button', { name: /confirm/i });
     await userEvent.click(confirmButton);
 
     await waitFor(() => {

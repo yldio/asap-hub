@@ -159,6 +159,32 @@ export const getMilestoneArticles = async (
   return resp.json();
 };
 
+export const putMilestoneArticles = async (
+  milestoneId: string,
+  articleIds: string[],
+  authorization: string,
+): Promise<void> => {
+  const resp = await fetch(
+    `${API_BASE_URL}/milestones/${milestoneId}/articles`,
+    {
+      method: 'PUT',
+      headers: {
+        authorization,
+        'content-type': 'application/json',
+        ...createSentryHeaders(),
+      },
+      body: JSON.stringify({ articleIds }),
+    },
+  );
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to update articles for milestone ${milestoneId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+};
+
 export const getProject = async (
   id: string,
   authorization: string,

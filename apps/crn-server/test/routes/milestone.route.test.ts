@@ -8,6 +8,7 @@ import { loggerMock } from '../mocks/logger.mock';
 
 const milestoneControllerMock = {
   fetchArticles: jest.fn(),
+  updateArticles: jest.fn(),
 } as unknown as jest.Mocked<MilestoneController>;
 
 describe('GET /milestones/:milestoneId/articles', () => {
@@ -67,5 +68,50 @@ describe('GET /milestones/:milestoneId/articles', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual([]);
+  });
+});
+
+describe('PUT /milestones/:milestoneId/articles', () => {
+  const userMockFactory = jest.fn<UserResponse | undefined, []>();
+  const authHandlerMock: AuthHandler = (req, _res, next) => {
+    req.loggedInUser = userMockFactory();
+    next();
+  };
+
+  const app = appFactory({
+    milestoneController: milestoneControllerMock,
+    authHandler: authHandlerMock,
+    logger: loggerMock,
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('returns 403 when loggedInUser is not set', async () => {
+    userMockFactory.mockReturnValueOnce(undefined);
+
+    const response = await supertest(app)
+      .put('/milestones/milestone-1/articles')
+      .send({ articleIds: ['ro-1'] });
+
+    expect(response.status).toBe(403);
+    expect(milestoneControllerMock.updateArticles).not.toHaveBeenCalled();
+  });
+
+  it('returns 200 and calls controller with milestoneId and articleIds', async () => {
+    userMockFactory.mockReturnValueOnce(createUserResponse());
+    milestoneControllerMock.updateArticles.mockResolvedValueOnce(undefined);
+
+    const response = await supertest(app)
+      .put('/milestones/milestone-1/articles')
+      .send({ articleIds: ['ro-1', 'ro-2'] });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ success: true });
+    expect(milestoneControllerMock.updateArticles).toHaveBeenCalledWith(
+      'milestone-1',
+      ['ro-1', 'ro-2'],
+    );
   });
 });

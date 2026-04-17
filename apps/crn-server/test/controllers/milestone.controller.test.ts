@@ -36,4 +36,18 @@ describe('Milestone Controller', () => {
       expect(result).toEqual([]);
     });
   });
+
+  describe('updateArticles', () => {
+    it('delegates to the data provider with milestoneId and articleIds', async () => {
+      aimsMilestonesDataProviderMock.updateArticlesForMilestone.mockResolvedValueOnce(
+        undefined,
+      );
+
+      await controller.updateArticles('milestone-1', ['ro-1', 'ro-2']);
+
+      expect(
+        aimsMilestonesDataProviderMock.updateArticlesForMilestone,
+      ).toHaveBeenCalledWith('milestone-1', ['ro-1', 'ro-2']);
+    });
+  });
 });

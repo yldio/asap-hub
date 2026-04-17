@@ -11,4 +11,14 @@ export default class MilestoneController {
       milestoneId,
     );
   }
+
+  async updateArticles(
+    milestoneId: string,
+    articleIds: string[],
+  ): Promise<void> {
+    return this.aimsMilestonesDataProvider.updateArticlesForMilestone(
+      milestoneId,
+      articleIds,
+    );
+  }
 }

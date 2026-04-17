@@ -17,5 +17,18 @@ export const milestoneRouteFactory = (
     res.json(articles);
   });
 
+  milestoneRoutes.put(
+    '/milestones/:milestoneId/articles',
+    async (req, res) => {
+      if (!req.loggedInUser) throw Boom.forbidden();
+
+      const { milestoneId } = req.params;
+      const { articleIds } = req.body as { articleIds: string[] };
+
+      await milestoneController.updateArticles(milestoneId, articleIds);
+      res.json({ success: true });
+    },
+  );
+
   return milestoneRoutes;
 };

@@ -61,6 +61,31 @@ describe('Manuscript controller', () => {
 
       expect(result).toEqual(getManuscriptResponse());
     });
+
+    test('Should return the found manuscripts when fetching by ids', async () => {
+      manuscriptDataProviderMock.fetchById
+        .mockResolvedValueOnce(getManuscriptDataObject())
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(getManuscriptDataObject());
+
+      const result = await manuscriptController.fetchByIds(
+        ['manuscript-id-1', 'missing-id', 'manuscript-id-1'],
+        'user-id-1',
+      );
+
+      expect(result).toEqual([getManuscriptResponse()]);
+      expect(manuscriptDataProviderMock.fetchById).toHaveBeenCalledTimes(2);
+      expect(manuscriptDataProviderMock.fetchById).toHaveBeenNthCalledWith(
+        1,
+        'manuscript-id-1',
+        'user-id-1',
+      );
+      expect(manuscriptDataProviderMock.fetchById).toHaveBeenNthCalledWith(
+        2,
+        'missing-id',
+        'user-id-1',
+      );
+    });
   });
 
   describe('Fetch', () => {

@@ -41,6 +41,7 @@ import {
   getDiscussion,
   getLabs,
   getManuscript,
+  getManuscriptsByIds,
   getManuscripts,
   getManuscriptVersionByManuscriptId,
   getManuscriptVersions,
@@ -584,6 +585,38 @@ describe('Manuscript', () => {
         getManuscript('42', ''),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Failed to fetch manuscript with id 42. Expected status 2xx or 404. Received status 500."`,
+      );
+    });
+  });
+
+  describe('POST batch', () => {
+    it('makes an authorized POST request for manuscript ids', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .post('/manuscripts/batch', { ids: ['42', '84'] })
+        .reply(200, []);
+
+      await getManuscriptsByIds(['42', '84'], 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('returns successfully fetched manuscripts', async () => {
+      const manuscript = createManuscriptResponse();
+      nock(API_BASE_URL)
+        .post('/manuscripts/batch', { ids: ['42'] })
+        .reply(200, [manuscript]);
+
+      expect(await getManuscriptsByIds(['42'], '')).toEqual([manuscript]);
+    });
+
+    it('errors for another status', async () => {
+      nock(API_BASE_URL)
+        .post('/manuscripts/batch', { ids: ['42'] })
+        .reply(500);
+
+      await expect(
+        getManuscriptsByIds(['42'], ''),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to fetch manuscripts. Expected status 2xx. Received status 500."`,
       );
     });
   });

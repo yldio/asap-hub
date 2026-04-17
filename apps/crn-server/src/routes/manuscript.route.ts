@@ -12,6 +12,7 @@ import multer from 'multer';
 import ManuscriptController from '../controllers/manuscript.controller';
 import {
   validateFileUploadFromUrl,
+  validateManuscriptBatchRequestParameters,
   validateManuscriptParameters,
   validateManuscriptPostRequestParameters,
   validateManuscriptPutRequestParameters,
@@ -131,6 +132,21 @@ export const manuscriptRouteFactory = (
 
     res.status(201).json(manuscript);
   });
+
+  manuscriptRoutes.post<unknown, ManuscriptResponse[]>(
+    '/manuscripts/batch',
+    async (req, res: Response<ManuscriptResponse[]>) => {
+      const { body, loggedInUser } = req;
+
+      if (!loggedInUser) throw Boom.forbidden();
+
+      const { ids } = validateManuscriptBatchRequestParameters(body);
+
+      const result = await manuscriptController.fetchByIds(ids, loggedInUser.id);
+
+      res.json(result);
+    },
+  );
 
   manuscriptRoutes.post<{ manuscriptId: string }>(
     '/manuscripts/:manuscriptId',

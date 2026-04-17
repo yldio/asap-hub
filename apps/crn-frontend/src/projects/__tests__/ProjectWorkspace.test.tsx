@@ -17,6 +17,7 @@ const mockMarkDiscussionAsRead = jest.fn().mockResolvedValue(undefined);
 const mockSetFormType = jest.fn();
 
 jest.mock('../../network/teams/state', () => ({
+  useBatchManuscriptsByIds: jest.fn(),
   useIsComplianceReviewer: jest.fn(() => false),
   usePutManuscript: jest.fn(() => mockUpdateManuscript),
   useCreateDiscussion: jest.fn(() => mockCreateDiscussion),
@@ -162,6 +163,24 @@ describe('ProjectWorkspace', () => {
     expect(capturedProps.useManuscriptById).toBeDefined();
     expect(capturedProps.onUpdateManuscript).toBeDefined();
     expect(capturedProps.isComplianceReviewer).toBe(false);
+  });
+
+  it('preloads manuscript ids for the workspace', async () => {
+    const { useBatchManuscriptsByIds } = jest.requireMock(
+      '../../network/teams/state',
+    ) as {
+      useBatchManuscriptsByIds: jest.Mock;
+    };
+
+    await renderProjectWorkspace({
+      manuscripts: ['manuscript-1'],
+      collaborationManuscripts: ['manuscript-2'],
+    });
+
+    expect(useBatchManuscriptsByIds).toHaveBeenCalledWith([
+      'manuscript-1',
+      'manuscript-2',
+    ]);
   });
 
   describe('handleUpdateManuscript', () => {

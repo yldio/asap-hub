@@ -39,3 +39,12 @@ it('displays compliance report description and url when expanded', async () => {
     'http://example.com/',
   );
 });
+
+it('hides the submitter team name when showTeamName is false', () => {
+  const { getByText, queryByText } = render(
+    <ComplianceReportCard {...props} showTeamName={false} />,
+  );
+
+  expect(getByText('Test User')).toBeInTheDocument();
+  expect(queryByText('Team A')).not.toBeInTheDocument();
+});

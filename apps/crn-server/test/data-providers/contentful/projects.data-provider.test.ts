@@ -1952,19 +1952,90 @@ describe('parseContentfulProjectDetail', () => {
       });
     });
 
-    it('does not include manuscripts for Resource non-team-based projects', () => {
+    it('returns manuscripts for Resource non-team-based projects', () => {
       const graphqlItem = getResourceIndividualProjectDetailGraphqlItem();
+      const membersCollection = (graphqlItem as Record<string, unknown>)
+        .membersCollection as {
+        items: Array<{
+          projectMember: Record<string, unknown>;
+        }>;
+      };
+      membersCollection.items[0]!.projectMember.linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            {
+              sys: { id: 'resource-user-ms-1' },
+              status: 'Waiting for Report',
+              teamsCollection: {
+                items: [{ sys: { id: 'resource-team-main' } }],
+              },
+            },
+            {
+              sys: { id: 'resource-user-ms-2' },
+              status: 'Compliant',
+              teamsCollection: {
+                items: [{ sys: { id: 'resource-team-main' } }],
+              },
+            },
+          ],
+        },
+      };
+      membersCollection.items[1]!.projectMember.linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            {
+              sys: { id: 'resource-user-ms-1' },
+              status: 'Waiting for Report',
+              teamsCollection: {
+                items: [{ sys: { id: 'resource-team-main' } }],
+              },
+            },
+          ],
+        },
+      };
+
       const result = parseContentfulProjectDetail(graphqlItem);
 
-      expect(result).not.toHaveProperty('manuscripts');
+      expect(result).toMatchObject({
+        manuscripts: ['resource-user-ms-1', 'resource-user-ms-2'],
+      });
       expect(result).not.toHaveProperty('collaborationManuscripts');
     });
 
-    it('does not include manuscripts for Trainee projects', () => {
+    it('returns manuscripts for Trainee projects', () => {
       const graphqlItem = getTraineeProjectDetailGraphqlItem();
+      const membersCollection = (graphqlItem as Record<string, unknown>)
+        .membersCollection as {
+        items: Array<{
+          projectMember: Record<string, unknown>;
+        }>;
+      };
+      membersCollection.items[0]!.projectMember.linkedFrom = {
+        manuscriptsCollection: {
+          items: [
+            {
+              sys: { id: 'trainee-ms-2' },
+              status: 'Closed (other)',
+              teamsCollection: {
+                items: [{ sys: { id: 'trainee-team-main' } }],
+              },
+            },
+            {
+              sys: { id: 'trainee-ms-1' },
+              status: 'Waiting for Report',
+              teamsCollection: {
+                items: [{ sys: { id: 'trainee-team-main' } }],
+              },
+            },
+          ],
+        },
+      };
+
       const result = parseContentfulProjectDetail(graphqlItem);
 
-      expect(result).not.toHaveProperty('manuscripts');
+      expect(result).toMatchObject({
+        manuscripts: ['trainee-ms-1', 'trainee-ms-2'],
+      });
       expect(result).not.toHaveProperty('collaborationManuscripts');
     });
 

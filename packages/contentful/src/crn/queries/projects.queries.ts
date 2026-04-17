@@ -104,6 +104,26 @@ export const projectsContentQueryFragment = gql`
             avatar {
               url
             }
+            linkedFrom {
+              manuscriptsCollection(
+                limit: 50
+                order: sys_firstPublishedAt_DESC
+              ) {
+                items {
+                  sys {
+                    id
+                  }
+                  status
+                  teamsCollection(limit: 1) {
+                    items {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
           ... on Teams {
             __typename

@@ -48,7 +48,7 @@ export { default as MenuHeader } from './MenuHeader';
 export { default as MeetingRepAttendanceTable } from './MeetingRepAttendanceTable';
 export { default as Aim } from './Aim';
 export { default as Milestone } from './Milestone';
-export { default as MilestoneArticlesModal } from './MilestoneArticlesModal';
+export { articlesToOptions, default as MilestoneArticlesModal } from './MilestoneArticlesModal';
 export { default as NewsCard } from './NewsCard';
 export { default as NewsSection } from './NewsSection';
 export { default as NoEvents } from './NoEvents';

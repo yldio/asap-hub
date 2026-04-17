@@ -132,6 +132,7 @@ export {
 } from './molecules';
 export {
   AdditionalMaterials,
+  articlesToOptions,
   AuthorSelect,
   CalendarList,
   CaptionCard,

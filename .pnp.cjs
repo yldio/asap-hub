@@ -7814,6 +7814,50 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.6.0"\
       ],\
       [\
+        "lefthook",\
+        "npm:1.13.6"\
+      ],\
+      [\
+        "lefthook-darwin-arm64",\
+        "npm:1.13.6"\
+      ],\
+      [\
+        "lefthook-darwin-x64",\
+        "npm:1.13.6"\
+      ],\
+      [\
+        "lefthook-freebsd-arm64",\
+        "npm:1.13.6"\
+      ],\
+      [\
+        "lefthook-freebsd-x64",\
+        "npm:1.13.6"\
+      ],\
+      [\
+        "lefthook-linux-arm64",\
+        "npm:1.13.6"\
+      ],\
+      [\
+        "lefthook-linux-x64",\
+        "npm:1.13.6"\
+      ],\
+      [\
+        "lefthook-openbsd-arm64",\
+        "npm:1.13.6"\
+      ],\
+      [\
+        "lefthook-openbsd-x64",\
+        "npm:1.13.6"\
+      ],\
+      [\
+        "lefthook-windows-arm64",\
+        "npm:1.13.6"\
+      ],\
+      [\
+        "lefthook-windows-x64",\
+        "npm:1.13.6"\
+      ],\
+      [\
         "level-blobs",\
         "npm:0.1.7"\
       ],\
@@ -11529,6 +11573,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
             ["jscpd", "npm:3.5.10"],\
+            ["lefthook", "npm:1.13.6"],\
             ["nock", "npm:13.4.0"],\
             ["node-fetch", "npm:3.0.0-beta.9"],\
             ["prettier", "npm:3.1.1"],\
@@ -41313,6 +41358,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],\
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.5"],\
             ["jscpd", "npm:3.5.10"],\
+            ["lefthook", "npm:1.13.6"],\
             ["nock", "npm:13.4.0"],\
             ["node-fetch", "npm:3.0.0-beta.9"],\
             ["prettier", "npm:3.1.1"],\
@@ -56306,6 +56352,115 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/leac-npm-0.6.0-79f7890bc5-a7a722cfc2.zip/node_modules/leac/",\
           "packageDependencies": [\
             ["leac", "npm:0.6.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-npm-1.13.6-54219a35e6/node_modules/lefthook/",\
+          "packageDependencies": [\
+            ["lefthook", "npm:1.13.6"],\
+            ["lefthook-darwin-arm64", "npm:1.13.6"],\
+            ["lefthook-darwin-x64", "npm:1.13.6"],\
+            ["lefthook-freebsd-arm64", "npm:1.13.6"],\
+            ["lefthook-freebsd-x64", "npm:1.13.6"],\
+            ["lefthook-linux-arm64", "npm:1.13.6"],\
+            ["lefthook-linux-x64", "npm:1.13.6"],\
+            ["lefthook-openbsd-arm64", "npm:1.13.6"],\
+            ["lefthook-openbsd-x64", "npm:1.13.6"],\
+            ["lefthook-windows-arm64", "npm:1.13.6"],\
+            ["lefthook-windows-x64", "npm:1.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook-darwin-arm64", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-darwin-arm64-npm-1.13.6-b8f333b5db/node_modules/lefthook-darwin-arm64/",\
+          "packageDependencies": [\
+            ["lefthook-darwin-arm64", "npm:1.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook-darwin-x64", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-darwin-x64-npm-1.13.6-425d5618de/node_modules/lefthook-darwin-x64/",\
+          "packageDependencies": [\
+            ["lefthook-darwin-x64", "npm:1.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook-freebsd-arm64", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-freebsd-arm64-npm-1.13.6-16f23ab646/node_modules/lefthook-freebsd-arm64/",\
+          "packageDependencies": [\
+            ["lefthook-freebsd-arm64", "npm:1.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook-freebsd-x64", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-freebsd-x64-npm-1.13.6-edf0865916/node_modules/lefthook-freebsd-x64/",\
+          "packageDependencies": [\
+            ["lefthook-freebsd-x64", "npm:1.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook-linux-arm64", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-linux-arm64-npm-1.13.6-d675b83dea/node_modules/lefthook-linux-arm64/",\
+          "packageDependencies": [\
+            ["lefthook-linux-arm64", "npm:1.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook-linux-x64", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-linux-x64-npm-1.13.6-7b087ed1c2/node_modules/lefthook-linux-x64/",\
+          "packageDependencies": [\
+            ["lefthook-linux-x64", "npm:1.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook-openbsd-arm64", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-openbsd-arm64-npm-1.13.6-891cbbf789/node_modules/lefthook-openbsd-arm64/",\
+          "packageDependencies": [\
+            ["lefthook-openbsd-arm64", "npm:1.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook-openbsd-x64", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-openbsd-x64-npm-1.13.6-db5ba66427/node_modules/lefthook-openbsd-x64/",\
+          "packageDependencies": [\
+            ["lefthook-openbsd-x64", "npm:1.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook-windows-arm64", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-windows-arm64-npm-1.13.6-e44041d666/node_modules/lefthook-windows-arm64/",\
+          "packageDependencies": [\
+            ["lefthook-windows-arm64", "npm:1.13.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["lefthook-windows-x64", [\
+        ["npm:1.13.6", {\
+          "packageLocation": "./.yarn/unplugged/lefthook-windows-x64-npm-1.13.6-40c529b6c5/node_modules/lefthook-windows-x64/",\
+          "packageDependencies": [\
+            ["lefthook-windows-x64", "npm:1.13.6"]\
           ],\
           "linkType": "HARD"\
         }]\

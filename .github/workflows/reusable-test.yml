@@ -43,7 +43,18 @@ jobs:
           environment-name: ${{ inputs.environment-name }}
       - name: Check
         run: |
-          yarn ${{ matrix.script }}
+          if [ "${{ matrix.script }}" = "lint:format" ] && \
+             [ "${{ inputs.environment-name }}" = "Branch" ]; then
+            git fetch origin master --depth=1
+            FILES=$(git diff --name-only --diff-filter=d FETCH_HEAD HEAD \
+              | grep -E '\.(js|jsx|ts|tsx|json|html|css|scss|md|mdx|yml|yaml)$' \
+              | tr '\n' ' ')
+            if [ -n "$FILES" ]; then
+              yarn prettier -l $FILES
+            fi
+          else
+            yarn ${{ matrix.script }}
+          fi
   extensions:
     runs-on: ubuntu-latest
     container:
@@ -194,7 +205,18 @@ jobs:
         shell: bash
         run: yarn build:typecheck
       - name: lint
-        run: yarn lint
+        run: |
+          if [ "${{ inputs.environment-name }}" = "Branch" ]; then
+            git fetch origin master --depth=1
+            FILES=$(git diff --name-only --diff-filter=d FETCH_HEAD HEAD \
+              | grep -E '\.(js|jsx|ts|tsx)$' \
+              | tr '\n' ' ')
+            if [ -n "$FILES" ]; then
+              yarn eslint $FILES
+            fi
+          else
+            yarn lint
+          fi
 
   copy-paste-check:
     runs-on: ubuntu-latest

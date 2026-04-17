@@ -116,4 +116,8 @@ export type AimsMilestonesDataProvider = {
   fetchProjectIdBySupplementGrantId: (
     supplementGrantId: string,
   ) => Promise<string | null>;
+  updateArticlesForMilestone: (
+    milestoneId: string,
+    articleIds: string[],
+  ) => Promise<void>;
 };

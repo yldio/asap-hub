@@ -1,10 +1,26 @@
+import { Environment, patchAndPublish } from '@asap-hub/contentful';
 import { AimsMilestonesContentfulDataProvider } from '../../../src/data-providers/contentful/aims-milestones.data-provider';
+import { getEntry } from '../../fixtures/contentful.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
+
+jest.mock('@asap-hub/contentful', () => ({
+  ...jest.requireActual('@asap-hub/contentful'),
+  patchAndPublish: jest.fn().mockResolvedValue(undefined),
+}));
 
 describe('AimsMilestonesContentfulDataProvider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
   const dataProvider = new AimsMilestonesContentfulDataProvider(
     contentfulGraphqlClientMock,
+  );
+
+  const environmentMock = getContentfulEnvironmentMock();
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
+  const dataProviderWithRestClient = new AimsMilestonesContentfulDataProvider(
+    contentfulGraphqlClientMock,
+    contentfulRestClientMock,
   );
 
   afterEach(() => {
@@ -867,6 +883,44 @@ describe('AimsMilestonesContentfulDataProvider', () => {
         await dataProvider.fetchProjectIdBySupplementGrantId('sg-1');
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe('updateArticlesForMilestone', () => {
+    const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+      typeof patchAndPublish
+    >;
+
+    it('gets the milestone entry and patches relatedArticles', async () => {
+      const entry = getEntry({ relatedArticles: [] });
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      await dataProviderWithRestClient.updateArticlesForMilestone(
+        'milestone-1',
+        ['ro-1', 'ro-2'],
+      );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('milestone-1');
+      expect(mockPatchAndPublish).toHaveBeenCalledWith(entry, {
+        relatedArticles: [
+          { sys: { type: 'Link', linkType: 'Entry', id: 'ro-1' } },
+          { sys: { type: 'Link', linkType: 'Entry', id: 'ro-2' } },
+        ],
+      });
+    });
+
+    it('patches with empty array when articleIds is empty', async () => {
+      const entry = getEntry({ relatedArticles: [] });
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      await dataProviderWithRestClient.updateArticlesForMilestone(
+        'milestone-1',
+        [],
+      );
+
+      expect(mockPatchAndPublish).toHaveBeenCalledWith(entry, {
+        relatedArticles: [],
+      });
     });
   });
 });

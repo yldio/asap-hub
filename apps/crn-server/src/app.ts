@@ -319,7 +319,10 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const aimsMilestonesDataProvider =
     libs.aimsMilestonesDataProvider ||
-    new AimsMilestonesContentfulDataProvider(contentfulGraphQLClient);
+    new AimsMilestonesContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
 
   const opensearchProvider =
     libs.opensearchProvider || new OpensearchDataProvider();

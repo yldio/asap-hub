@@ -8,7 +8,6 @@ import { dashboard as dashboardRoute } from '@asap-hub/routing';
 import { FC, useState } from 'react';
 import { useMatch } from 'react-router';
 
-import { usePrefetchCalendars } from '../events/calendar/state';
 import { CARD_VIEW_PAGE_SIZE } from '../hooks';
 import { usePrefetchTeams } from '../network/teams/state';
 import { usePatchUserById, useUserById } from '../network/users/state';
@@ -44,7 +43,6 @@ const Dashboard: FC<Record<string, never>> = () => {
     filters: new Set(),
     teamType: 'Resource Team',
   });
-  usePrefetchCalendars();
   const patchUser = usePatchUserById(id);
   const user = useUserById(id);
 

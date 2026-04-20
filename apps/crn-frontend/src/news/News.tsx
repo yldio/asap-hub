@@ -1,4 +1,8 @@
-import { NotFoundPage, NewsDetailsPage } from '@asap-hub/react-components';
+import {
+  Loading,
+  NotFoundPage,
+  NewsDetailsPage,
+} from '@asap-hub/react-components';
 import { news as newsRoute, useRouteParams } from '@asap-hub/routing';
 import { Frame } from '@asap-hub/frontend-utils';
 
@@ -7,7 +11,9 @@ import { useNewsById } from './state';
 const News: React.FC<Record<string, never>> = () => {
   const { articleId } = useRouteParams(newsRoute({}).article);
 
-  const news = useNewsById(articleId);
+  const { data: news, isLoading } = useNewsById(articleId);
+
+  if (isLoading) return <Loading />;
 
   if (news) {
     const props = {

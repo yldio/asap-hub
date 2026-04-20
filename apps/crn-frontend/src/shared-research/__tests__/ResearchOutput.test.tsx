@@ -10,6 +10,7 @@ import {
   createUserResponse,
 } from '@asap-hub/fixtures';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
@@ -17,9 +18,10 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { User } from '@asap-hub/auth';
 
+import { auth0State } from '../../auth/state';
+
 import ResearchOutput from '../ResearchOutput';
 import { getResearchOutput } from '../api';
-import { refreshResearchOutputState } from '../state';
 import {
   getManuscriptVersionByManuscriptId,
   updateTeamResearchOutput,
@@ -106,30 +108,37 @@ const researchOutputRoute = sharedResearch({}).researchOutput({
 });
 
 const renderComponent = async (path: string, user = defaultUser) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshResearchOutputState(id), Math.random())
-      }
-    >
-      <Auth0Provider user={user}>
-        <WhenReady>
-          <Suspense fallback="Loading...">
-            <MemoryRouter initialEntries={[path]}>
-              <Routes>
-                <Route path="/prev" element={<div>Previous Page</div>} />
-                <Route
-                  path={`${sharedResearch.template}${
-                    sharedResearch({}).researchOutput.template
-                  }/*`}
-                  element={<ResearchOutput />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </Suspense>
-        </WhenReady>
-      </Auth0Provider>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ set }) =>
+          set(auth0State, {
+            getTokenSilently: jest.fn().mockResolvedValue('test_token'),
+          } as never)
+        }
+      >
+        <Auth0Provider user={user}>
+          <WhenReady>
+            <Suspense fallback="Loading...">
+              <MemoryRouter initialEntries={[path]}>
+                <Routes>
+                  <Route path="/prev" element={<div>Previous Page</div>} />
+                  <Route
+                    path={`${sharedResearch.template}${
+                      sharedResearch({}).researchOutput.template
+                    }/*`}
+                    element={<ResearchOutput />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </Suspense>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

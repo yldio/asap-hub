@@ -1,10 +1,7 @@
 import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
-import {
-  render,
-  waitForElementToBeRemoved,
-  screen,
-} from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { createUserResponse } from '@asap-hub/fixtures';
@@ -12,7 +9,6 @@ import { DiscoverResponse } from '@asap-hub/model';
 
 import About from '../About';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshDiscoverState } from '../state';
 import { getDiscover } from '../api';
 
 jest.mock('../api');
@@ -30,26 +26,29 @@ const props: DiscoverResponse = {
 };
 
 const renderPage = async (user: Partial<User>) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshDiscoverState, Math.random());
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter initialEntries={['/about']}>
-              <Routes>
-                <Route path="/about/*" element={<About />} />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter initialEntries={['/about']}>
+                <Routes>
+                  <Route path="/about/*" element={<About />} />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+  );
 };
 
 it('renders about with members', async () => {

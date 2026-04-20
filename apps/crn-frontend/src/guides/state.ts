@@ -1,32 +1,18 @@
 import { ListGuideResponse } from '@asap-hub/model';
-import { selectorFamily, atomFamily, useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useAuth0CRN } from '@asap-hub/react-context';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { getGuides } from './api';
-
-export const refreshGuideCollectionState = atomFamily<number, string>({
-  key: 'refreshGuideCollection',
-  default: 0,
-});
-export const fetchGuideCollectionState = selectorFamily<
-  ListGuideResponse | undefined,
-  string
->({
-  key: 'fetchGuideCollection',
-  get:
-    (title: string) =>
-    ({ get }) => {
-      get(refreshGuideCollectionState(title));
-      const authorization = get(authorizationState);
-      return getGuides(authorization, title);
-    },
-});
-
-const guideCollectionState = atomFamily<ListGuideResponse | undefined, string>({
-  key: 'guideCollection',
-  default: fetchGuideCollectionState,
-});
 
 export const useGuidesByCollection = (
   collection: string,
-): ListGuideResponse | undefined =>
-  useRecoilValue(guideCollectionState(collection));
+): ListGuideResponse | undefined => {
+  const auth0 = useAuth0CRN();
+  const { data } = useSuspenseQuery({
+    queryKey: ['guides', collection],
+    queryFn: async (): Promise<ListGuideResponse> => {
+      const token = await auth0.getTokenSilently();
+      return getGuides(`Bearer ${token}`, collection);
+    },
+  });
+  return data;
+};

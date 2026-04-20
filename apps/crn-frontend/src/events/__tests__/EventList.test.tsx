@@ -4,7 +4,6 @@ import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
-import { refreshCalendarsState } from '../calendar/state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../api';
 import { eventsState } from '../state';
@@ -20,8 +19,7 @@ const renderEventsListPage = async (
 ) => {
   const result = render(
     <RecoilRoot
-      initializeState={({ set, reset }) => {
-        set(refreshCalendarsState, Math.random());
+      initializeState={({ reset }) => {
         reset(
           eventsState({
             searchQuery,

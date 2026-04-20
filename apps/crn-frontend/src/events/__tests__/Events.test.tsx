@@ -4,12 +4,12 @@ import { events } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../api';
 import { getCalendars } from '../calendar/api';
-import { refreshCalendarsState } from '../calendar/state';
 import Events from '../Events';
 
 import { eventsState } from '../state';
@@ -24,25 +24,30 @@ const mockGetEventsFromAlgolia = getEvents as jest.MockedFunction<
   typeof getEvents
 >;
 
-const renderEventsPage = (pathname = events({}).$, search?: string) =>
-  render(
-    <RecoilRoot
-      initializeState={({ set, reset }) => {
-        set(refreshCalendarsState, Math.random());
-        reset(eventsState(getEventListOptions(new Date(), { past: false })));
-      }}
-    >
-      <Auth0Provider user={{}}>
-        <WhenReady>
-          <MemoryRouter initialEntries={[{ pathname, search }]}>
-            <Routes>
-              <Route path={`${events.template}/*`} element={<Events />} />
-            </Routes>
-          </MemoryRouter>
-        </WhenReady>
-      </Auth0Provider>
-    </RecoilRoot>,
+const renderEventsPage = (pathname = events({}).$, search?: string) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ reset }) => {
+          reset(eventsState(getEventListOptions(new Date(), { past: false })));
+        }}
+      >
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[{ pathname, search }]}>
+              <Routes>
+                <Route path={`${events.template}/*`} element={<Events />} />
+              </Routes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
+};
 
 beforeEach(() => {
   jest.clearAllMocks();

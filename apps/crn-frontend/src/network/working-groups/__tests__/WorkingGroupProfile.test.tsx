@@ -16,13 +16,18 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import {
   ResearchOutputWorkingGroupResponse,
   WorkingGroupResponse,
 } from '@asap-hub/model';
 import { subDays } from 'date-fns';
-import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { auth0State } from '../../../auth/state';
+import {
+  Auth0ProviderForQuery as Auth0Provider,
+  WhenReadyForQuery as WhenReady,
+} from '../../../auth/test-utils-tanstack';
 import {
   getDraftResearchOutputs,
   getResearchOutput,
@@ -79,12 +84,15 @@ const renderWorkingGroupProfile = async (
   initialPath = network({}).workingGroups({}).workingGroup({ workingGroupId })
     .$,
   workingGroupOverrides = {},
+  mockWorkingGroup = true,
 ) => {
-  mockGetWorkingGroup.mockImplementation(async (id) =>
-    id === workingGroupResponse.id
-      ? { ...workingGroupResponse, ...workingGroupOverrides }
-      : undefined,
-  );
+  if (mockWorkingGroup) {
+    mockGetWorkingGroup.mockImplementation(async (id) =>
+      id === workingGroupResponse.id
+        ? { ...workingGroupResponse, ...workingGroupOverrides }
+        : undefined,
+    );
+  }
 
   const router = createMemoryRouter(
     [
@@ -104,20 +112,28 @@ const renderWorkingGroupProfile = async (
     },
   );
 
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshWorkingGroupState(workingGroupResponse.id), Math.random())
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <RouterProvider router={router} />
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ set }) => {
+          set(refreshWorkingGroupState(workingGroupResponse.id), Math.random());
+          set(auth0State, {
+            getTokenSilently: jest.fn().mockResolvedValue('test_token'),
+          } as never);
+        }}
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <RouterProvider router={router} />
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   return router;
@@ -133,8 +149,13 @@ it('renders the about working-group information by default', async () => {
 });
 
 it('renders the not-found page when the working-group is not found', async () => {
-  mockGetWorkingGroup.mockResolvedValueOnce(undefined);
-  await renderWorkingGroupProfile();
+  mockGetWorkingGroup.mockResolvedValue(undefined);
+  await renderWorkingGroupProfile(
+    {},
+    network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+    {},
+    false,
+  );
 
   expect(
     await screen.findByText(/can’t seem to find that page/i),
@@ -429,11 +450,16 @@ describe('the calendar tab', () => {
   });
 
   it('cannot be switched to if the working group is inactive', async () => {
-    mockGetWorkingGroup.mockResolvedValueOnce({
+    mockGetWorkingGroup.mockResolvedValue({
       ...createWorkingGroupResponse(),
       complete: true,
     });
-    await renderWorkingGroupProfile();
+    await renderWorkingGroupProfile(
+      {},
+      network({}).workingGroups({}).workingGroup({ workingGroupId }).$,
+      {},
+      false,
+    );
 
     expect(screen.queryByText('Calendar')).not.toBeInTheDocument();
   });

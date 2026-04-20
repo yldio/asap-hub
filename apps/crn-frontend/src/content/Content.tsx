@@ -1,23 +1,23 @@
-import { RecoilRoot } from 'recoil';
 import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, queryClientDefaultOptions } from '@asap-hub/frontend-utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { usePageByPageId } from './state';
 
 interface ContentProps {
   pageId: string;
 }
-const Content: React.FC<ContentProps> = ({ pageId }) => {
-  const pageLoadable = usePageByPageId(pageId);
+export const Content: React.FC<ContentProps> = ({ pageId }) => {
+  const { data: page, isLoading } = usePageByPageId(pageId);
 
-  if (pageLoadable.state === 'loading') {
+  if (isLoading) {
     return <Loading />;
   }
 
-  if (pageLoadable.state === 'hasValue' && pageLoadable.contents) {
+  if (page) {
     return (
-      <Frame title={pageLoadable.contents.title}>
-        <ContentPage {...pageLoadable.contents} />
+      <Frame title={page.title}>
+        <ContentPage {...page} />
       </Frame>
     );
   }
@@ -25,10 +25,14 @@ const Content: React.FC<ContentProps> = ({ pageId }) => {
   return <NotFoundPage />;
 };
 
-const ContentWithRecoil: React.FC<ContentProps> = (props) => (
-  <RecoilRoot>
+const queryClient = new QueryClient({
+  defaultOptions: queryClientDefaultOptions,
+});
+
+const ContentWithQueryClient: React.FC<ContentProps> = (props) => (
+  <QueryClientProvider client={queryClient}>
     <Content {...props} />
-  </RecoilRoot>
+  </QueryClientProvider>
 );
 
-export default ContentWithRecoil;
+export default ContentWithQueryClient;

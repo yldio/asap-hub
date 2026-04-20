@@ -12,6 +12,7 @@ import {
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 
 import { getResearchOutputs } from '../api';
@@ -26,23 +27,28 @@ jest.setTimeout(30000);
 beforeEach(() => jest.spyOn(console, 'warn').mockImplementation());
 mockConsoleError();
 const renderSharedResearchPage = async (pathname: string, query = '') => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   render(
-    <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Routes>
-                <Route
-                  path="/shared-research/*"
-                  element={<SharedResearchRoutes />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[{ pathname, search: query }]}>
+                <Routes>
+                  <Route
+                    path="/shared-research/*"
+                    element={<SharedResearchRoutes />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };

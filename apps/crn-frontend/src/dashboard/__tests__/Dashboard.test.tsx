@@ -10,6 +10,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
@@ -22,7 +23,6 @@ import {
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getDashboard, getReminders } from '../api';
 import Dashboard from '../Dashboard';
-import { refreshDashboardState } from '../state';
 
 jest.mock('../api');
 jest.mock('../../events/api');
@@ -73,23 +73,27 @@ mockGetDraftResearchOutputs.mockResolvedValue({
 });
 
 const renderDashboard = async (user: Partial<User>) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   const result = render(
-    <MemoryRouter>
-      <Suspense fallback="loading">
-        <RecoilRoot
-          initializeState={({ set }) => {
-            set(refreshDashboardState, Math.random());
-            set(refreshUserState(userResponse.id), Math.random());
-          }}
-        >
-          <Auth0Provider user={user}>
-            <WhenReady>
-              <Dashboard />
-            </WhenReady>
-          </Auth0Provider>
-        </RecoilRoot>
-      </Suspense>
-    </MemoryRouter>,
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <Suspense fallback="loading">
+          <RecoilRoot
+            initializeState={({ set }) => {
+              set(refreshUserState(userResponse.id), Math.random());
+            }}
+          >
+            <Auth0Provider user={user}>
+              <WhenReady>
+                <Dashboard />
+              </WhenReady>
+            </Auth0Provider>
+          </RecoilRoot>
+        </Suspense>
+      </MemoryRouter>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

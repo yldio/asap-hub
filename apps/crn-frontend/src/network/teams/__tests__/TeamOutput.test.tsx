@@ -27,6 +27,7 @@ import userEvent from '@testing-library/user-event';
 import { editorRef } from '@asap-hub/react-components';
 import { Suspense, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
 import {
@@ -1455,36 +1456,41 @@ async function renderPage({
 
   currentLocation = null;
 
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshTeamState(teamId), Math.random())
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[initialPath]}>
-              <LocationCapture />
-              <Routes>
-                <Route
-                  path={path}
-                  element={
-                    <TeamOutput
-                      teamId={teamId}
-                      researchOutputData={researchOutputData}
-                      versionAction={versionAction}
-                      latestManuscriptVersion={latestManuscriptVersion}
-                      isDuplicate={isDuplicate}
-                    />
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ set }) =>
+          set(refreshTeamState(teamId), Math.random())
+        }
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[initialPath]}>
+                <LocationCapture />
+                <Routes>
+                  <Route
+                    path={path}
+                    element={
+                      <TeamOutput
+                        teamId={teamId}
+                        researchOutputData={researchOutputData}
+                        versionAction={versionAction}
+                        latestManuscriptVersion={latestManuscriptVersion}
+                        isDuplicate={isDuplicate}
+                      />
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 }

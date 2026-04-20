@@ -42,6 +42,8 @@ describe('Manuscript controller', () => {
   );
 
   describe('Fetch-by-ID method', () => {
+    beforeEach(jest.clearAllMocks);
+
     test('Should throw when working-group is not found', async () => {
       manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(null);
 

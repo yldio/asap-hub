@@ -15,6 +15,10 @@ actions:
         value: '##AUTH0_ADDITIONAL_CLAIM_DOMAIN##'
       - name: AUTH0_SHARED_SECRET
         value: '##AUTH0_SHARED_SECRET##'
+      - name: API_URL
+        value: '##API_URL##'
+      - name: BASE_PR_APP_DOMAIN
+        value: '##BASE_PR_APP_DOMAIN##'
     status: built
     supported_triggers:
       - id: post-login
@@ -31,6 +35,10 @@ actions:
         value: '##AUTH0_ADDITIONAL_CLAIM_DOMAIN##'
       - name: AUTH0_SHARED_SECRET
         value: '##AUTH0_SHARED_SECRET##'
+      - name: API_URL
+        value: '##API_URL##'
+      - name: BASE_PR_APP_DOMAIN
+        value: '##BASE_PR_APP_DOMAIN##'
     status: built
     supported_triggers:
       - id: post-login

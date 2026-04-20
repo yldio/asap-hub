@@ -73,12 +73,24 @@ const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => ({
     : parseGP2UserMetadata(response)),
 });
 
-const getApiUrls = (event: Auth0PostLoginEventWithSecrets) => {
-  const redirect_uri = new URLSearchParams(event.request.query).get(
+const fetchUserMetadata = (
+  apiUrl: string,
+  event: Auth0PostLoginEventWithSecrets,
+) =>
+  got(`${apiUrl}/webhook/users/${event.user.user_id}`, {
+    headers: {
+      Authorization: `Basic ${event.secrets.AUTH0_SHARED_SECRET}`,
+    },
+    timeout: 10000,
+  }).json<Auth0UserResponse>();
+
+const getApiUrls = (
+  event: Auth0PostLoginEventWithSecrets,
+): [string, string] => {
+  const queryRedirectUri = new URLSearchParams(event.request.query).get(
     'redirect_uri',
-  )
-    ? new URLSearchParams(event.request.query).get('redirect_uri')
-    : event.request.body.redirect_uri;
+  );
+  const redirect_uri = queryRedirectUri ?? event.request.body.redirect_uri;
   if (!redirect_uri) {
     throw new Error('Missing redirect_uri');
   }
@@ -104,22 +116,22 @@ export const onExecutePostLogin = async (
 ) => {
   try {
     if (event.client.name === 'ASAP KR-Sync') {
-      console.log('Skipping metadata for ASAP KR-Sync');
+      const apiUrl = event.secrets.API_URL ?? '##API_URL##';
+      const response = await fetchUserMetadata(apiUrl, event);
+
+      if (isUserMetadataResponse(response) && response.alumniSinceDate) {
+        console.log('Rejecting KR-Sync login: User is alumni');
+        return api.access.deny('alumni-user-access-denied');
+      }
+
+      console.log('Successfully verified KR-Sync user');
       return true;
     }
     const [apiUrl, redirect_uri] = getApiUrls(event);
     console.log(
       `requesting metadata from ${apiUrl}/webhook/users/${event.user.user_id}`,
     );
-    const response = await got(
-      `${apiUrl}/webhook/users/${event.user.user_id}`,
-      {
-        headers: {
-          Authorization: `Basic ${event.secrets.AUTH0_SHARED_SECRET}`,
-        },
-        timeout: 10000,
-      },
-    ).json<Auth0UserResponse>();
+    const response = await fetchUserMetadata(apiUrl, event);
     if (isUserMetadataResponse(response) && response.alumniSinceDate) {
       return api.access.deny('alumni-user-access-denied');
     }

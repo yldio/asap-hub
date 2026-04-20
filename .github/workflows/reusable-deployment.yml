@@ -466,6 +466,7 @@ jobs:
           BASE_PR_APP_DOMAIN: ${{ steps.setup.outputs.crn-base-pr-app-domain }}
           API_URL: ${{ steps.setup.outputs.crn-api-url }}
           AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}
+          AUTH0_KEYWORD_REPLACE_MAPPINGS: '{"APPLICATION_NAME":"crn","BASE_PR_APP_DOMAIN":"${{ steps.setup.outputs.crn-base-pr-app-domain }}","API_URL":"${{ steps.setup.outputs.crn-api-url }}","AUTH0_ADDITIONAL_CLAIM_DOMAIN":"${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}","AUTH0_SHARED_SECRET":"${{ secrets.CRN_AUTH0_SHARED_SECRET }}"}'
 
       - name: Deploy CRN
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
@@ -479,6 +480,7 @@ jobs:
           API_URL: ${{ steps.setup.outputs.crn-api-url }}
           AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}
           AUTH0_SHARED_SECRET: ${{ secrets.CRN_AUTH0_SHARED_SECRET }}
+          AUTH0_KEYWORD_REPLACE_MAPPINGS: '{"APPLICATION_NAME":"crn","BASE_PR_APP_DOMAIN":"${{ steps.setup.outputs.crn-base-pr-app-domain }}","API_URL":"${{ steps.setup.outputs.crn-api-url }}","AUTH0_ADDITIONAL_CLAIM_DOMAIN":"${{ steps.setup.outputs.crn-auth0-additional-claim-domain }}","AUTH0_SHARED_SECRET":"${{ secrets.CRN_AUTH0_SHARED_SECRET }}"}'
 
       - name: Deploy GP2 PR
         if: ${{ inputs.environment-name == 'Branch' && steps.setup.outputs.auth0-label == 'true' }}
@@ -492,6 +494,7 @@ jobs:
           BASE_PR_APP_DOMAIN: ${{ steps.setup.outputs.gp2-base-pr-app-domain }}
           API_URL: ${{ steps.setup.outputs.gp2-api-url }}
           AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-additional-claim-domain }}
+          AUTH0_KEYWORD_REPLACE_MAPPINGS: '{"APPLICATION_NAME":"gp2","BASE_PR_APP_DOMAIN":"${{ steps.setup.outputs.gp2-base-pr-app-domain }}","API_URL":"${{ steps.setup.outputs.gp2-api-url }}","AUTH0_ADDITIONAL_CLAIM_DOMAIN":"${{ steps.setup.outputs.gp2-auth0-additional-claim-domain }}","AUTH0_SHARED_SECRET":"${{ secrets.GP2_AUTH0_SHARED_SECRET }}"}'
 
       - name: Deploy GP2
         if: ${{ inputs.environment-name=='Development' || inputs.environment-name=='Production' }}
@@ -505,6 +508,7 @@ jobs:
           API_URL: ${{ steps.setup.outputs.gp2-api-url }}
           AUTH0_ADDITIONAL_CLAIM_DOMAIN: ${{ steps.setup.outputs.gp2-auth0-additional-claim-domain }}
           AUTH0_SHARED_SECRET: ${{ secrets.GP2_AUTH0_SHARED_SECRET }}
+          AUTH0_KEYWORD_REPLACE_MAPPINGS: '{"APPLICATION_NAME":"gp2","BASE_PR_APP_DOMAIN":"${{ steps.setup.outputs.gp2-base-pr-app-domain }}","API_URL":"${{ steps.setup.outputs.gp2-api-url }}","AUTH0_ADDITIONAL_CLAIM_DOMAIN":"${{ steps.setup.outputs.gp2-auth0-additional-claim-domain }}","AUTH0_SHARED_SECRET":"${{ secrets.GP2_AUTH0_SHARED_SECRET }}"}'
 
   postmark-templates:
     if: ${{ inputs.environment-name != 'Branch' || contains(github.event.pull_request.labels.*.name, 'postmark-templates-update')}}

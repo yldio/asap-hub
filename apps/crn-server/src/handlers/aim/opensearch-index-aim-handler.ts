@@ -6,7 +6,6 @@ import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 import {
   deleteAimById,
-  deleteMilestonesByAimId,
   reindexByProjectId,
   deleteByProjectId,
 } from '../opensearch/aims-milestones-reindex';
@@ -36,8 +35,10 @@ export const indexAimOpensearchHandler =
           );
         }
       } else {
+        // Milestone cleanup is deferred to the scheduled full reindex: the
+        // aim is already gone from Contentful so we can't resolve its
+        // linked milestones to check for orphans.
         await deleteAimById(resourceId);
-        await deleteMilestonesByAimId(provider, resourceId);
       }
       return;
     }

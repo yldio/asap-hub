@@ -109,13 +109,11 @@ describe('For an ASAP KR-Sync login', () => {
   });
 
   it('denies access for alumni users', async () => {
-    nock(apiUrl)
-      .get(`/webhook/users/${user.user_id}`)
-      .reply(200, {
-        id: '42',
-        teams: [],
-        alumniSinceDate: '2024-01-01',
-      });
+    nock(apiUrl).get(`/webhook/users/${user.user_id}`).reply(200, {
+      id: '42',
+      teams: [],
+      alumniSinceDate: '2024-01-01',
+    });
 
     await onExecutePostLogin(krSyncEvent, apiBase);
 

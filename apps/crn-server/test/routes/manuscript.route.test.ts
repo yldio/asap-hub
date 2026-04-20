@@ -248,9 +248,11 @@ describe('/manuscripts/ route', () => {
         onboarded: false,
       });
 
-      const response = await supertest(app).post('/manuscripts/batch').send({
-        ids: ['manuscript-1'],
-      });
+      const response = await supertest(app)
+        .post('/manuscripts/batch')
+        .send({
+          ids: ['manuscript-1'],
+        });
 
       expect(response.status).toEqual(403);
     });
@@ -269,18 +271,22 @@ describe('/manuscripts/ route', () => {
         manuscriptResponse,
       ]);
 
-      const response = await supertest(app).post('/manuscripts/batch').send({
-        ids: ['manuscript-1'],
-      });
+      const response = await supertest(app)
+        .post('/manuscripts/batch')
+        .send({
+          ids: ['manuscript-1'],
+        });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual([manuscriptResponse]);
     });
 
     test('Should call the controller with the right parameters', async () => {
-      await supertest(app).post('/manuscripts/batch').send({
-        ids: ['manuscript-1', 'manuscript-2'],
-      });
+      await supertest(app)
+        .post('/manuscripts/batch')
+        .send({
+          ids: ['manuscript-1', 'manuscript-2'],
+        });
 
       expect(manuscriptControllerMock.fetchByIds).toHaveBeenCalledWith(
         ['manuscript-1', 'manuscript-2'],

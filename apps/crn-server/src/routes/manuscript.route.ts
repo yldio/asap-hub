@@ -142,7 +142,10 @@ export const manuscriptRouteFactory = (
 
       const { ids } = validateManuscriptBatchRequestParameters(body);
 
-      const result = await manuscriptController.fetchByIds(ids, loggedInUser.id);
+      const result = await manuscriptController.fetchByIds(
+        ids,
+        loggedInUser.id,
+      );
 
       res.json(result);
     },

@@ -332,14 +332,15 @@ type ProjectManuscriptItem = {
   } | null;
 };
 
-type ProjectMemberWithLinkedManuscripts =
-  NonNullable<ProjectMembershipItem['projectMember']> & {
-    linkedFrom?: {
-      manuscriptsCollection?: {
-        items: Array<ProjectManuscriptItem | null>;
-      };
+type ProjectMemberWithLinkedManuscripts = NonNullable<
+  ProjectMembershipItem['projectMember']
+> & {
+  linkedFrom?: {
+    manuscriptsCollection?: {
+      items: Array<ProjectManuscriptItem | null>;
     };
   };
+};
 
 const sortProjectManuscripts = (manuscripts: ProjectManuscriptItem[]) => {
   const STATUS_PRIORITY: Record<'Compliant' | 'Closed (other)', number> = {

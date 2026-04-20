@@ -148,9 +148,9 @@ describe('ProjectMilestones', () => {
   it('keeps the search controls visible while milestones are loading', async () => {
     mockGetProjectMilestones.mockImplementation(
       () =>
-        new Promise<ListProjectMilestonesResponse>((resolve) => {
-          void resolve;
-        }),
+        new Promise((resolve) =>
+          setTimeout(() => resolve({ total: 0, items: [] }), 10),
+        ),
     );
 
     await renderPage('searchQuery=alpha', false);
@@ -306,6 +306,10 @@ describe('ProjectMilestones', () => {
 
     await act(async () => {
       jest.advanceTimersByTime(5000);
+    });
+
+    await act(async () => {
+      jest.runAllTimers();
     });
 
     await waitFor(() => {

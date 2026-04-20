@@ -72,7 +72,7 @@ const renderPage = async (queryString = '', waitForLoad = true) => {
     .milestones({}).$;
 
   const path = queryString ? `${basePath}?${queryString}` : basePath;
-  const options: MilestonesListOptions = {
+  const options: RefreshMilestonesListOptions = {
     searchQuery: '',
     currentPage: 0,
     filters: new Set(),

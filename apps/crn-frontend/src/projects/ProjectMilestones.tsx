@@ -1,22 +1,38 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { Aim, GrantType } from '@asap-hub/model';
+import { Aim, GrantType, milestoneStatuses } from '@asap-hub/model';
 import {
   LabeledMultiSelect,
   ProjectDetailMilestones,
   ProjectMilestonesTable,
   ResearchOutputOption,
+  SearchAndFilter,
 } from '@asap-hub/react-components';
-import { ComponentProps, useCallback, useMemo } from 'react';
+import { ComponentProps, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useManuscriptToast } from '../network/teams/useManuscriptToast';
-import { usePagination, usePaginationParams } from '../hooks';
+import { usePagination, usePaginationParams, useSearch } from '../hooks';
 import { useFetchMilestoneArticles } from './articles-state';
 import { useCreateProjectMilestone, useProjectMilestones } from './state';
+
+const milestoneControlsStyles = {
+  display: 'grid',
+  rowGap: 32,
+} as const;
+
+const milestoneStatusFilterOptions = [
+  { title: 'STATUS' },
+  ...milestoneStatuses.map((status) => ({
+    label: status,
+    value: status,
+  })),
+];
 
 type TableContentProps = {
   projectId: string;
   selectedGrantType: GrantType;
   isLead: boolean;
+  searchQuery: string;
+  filters: Set<string>;
   loadArticleOptions: NonNullable<
     ComponentProps<
       typeof LabeledMultiSelect<ResearchOutputOption>
@@ -28,14 +44,15 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
   projectId,
   selectedGrantType,
   isLead,
+  searchQuery,
+  filters,
   loadArticleOptions,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const filters = useMemo(() => new Set<string>(), []);
   const { items: milestones = [], total } = useProjectMilestones({
     projectId,
     grantType: selectedGrantType,
-    searchQuery: '',
+    searchQuery,
     filters,
     currentPage,
     pageSize,
@@ -56,6 +73,8 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
       isLead={isLead}
       loadArticleOptions={loadArticleOptions}
       selectedGrantType={selectedGrantType}
+      total={total}
+      hasAppliedSearch={searchQuery.trim().length > 0 || filters.size > 0}
     />
   );
 };
@@ -85,10 +104,19 @@ const ProjectMilestones: React.FC<{
   const { search } = useLocation();
   const navigate = useNavigate();
 
-  const params = new URLSearchParams(search);
-  const selectedGrantType =
-    (params.get('grantType') as GrantType) ??
-    (hasSupplementGrant ? 'supplement' : 'original');
+  const {
+    searchQuery,
+    debouncedSearchQuery,
+    setSearchQuery,
+    filters,
+    toggleFilter,
+  } = useSearch();
+
+  const selectedGrantType: GrantType =
+    hasSupplementGrant &&
+    new URLSearchParams(search).get('grantType') !== 'original'
+      ? 'supplement'
+      : 'original';
 
   const handleGrantTypeChange = useCallback(
     (grantType: GrantType) => {
@@ -131,14 +159,27 @@ const ProjectMilestones: React.FC<{
       onError={onError}
       onSuccess={onSuccess}
     >
-      <SearchFrame title="Project Milestones">
-        <ProjectMilestonesTableContent
-          projectId={projectId}
-          selectedGrantType={selectedGrantType}
-          isLead={isLead}
-          loadArticleOptions={loadArticleOptions}
+      <div style={milestoneControlsStyles}>
+        <SearchAndFilter
+          searchQuery={searchQuery}
+          onChangeSearch={setSearchQuery}
+          searchPlaceholder="Enter milestone description"
+          filters={filters}
+          onChangeFilter={toggleFilter}
+          filterOptions={milestoneStatusFilterOptions}
+          filterButtonText="Filter"
         />
-      </SearchFrame>
+        <SearchFrame title="Project Milestones">
+          <ProjectMilestonesTableContent
+            projectId={projectId}
+            selectedGrantType={selectedGrantType}
+            isLead={isLead}
+            searchQuery={debouncedSearchQuery}
+            filters={filters}
+            loadArticleOptions={loadArticleOptions}
+          />
+        </SearchFrame>
+      </div>
     </ProjectDetailMilestones>
   );
 };

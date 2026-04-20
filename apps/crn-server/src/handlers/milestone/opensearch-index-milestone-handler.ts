@@ -23,7 +23,8 @@ export const indexMilestoneOpensearchHandler =
       await reindexMilestoneById(provider, milestoneId);
       await reindexAimsByMilestoneId(provider, milestoneId);
     } else {
-      await reindexAimsByMilestoneId(provider, milestoneId);
+      // Aim refresh is deferred to the scheduled full reindex: the milestone
+      // is already gone from Contentful so we can't resolve its linked aims.
       await deleteMilestoneById(milestoneId);
     }
   };

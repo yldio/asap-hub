@@ -55,7 +55,7 @@ describe('OpenSearch Index Milestone Handler', () => {
     expect(mockDeleteMilestoneById).not.toHaveBeenCalled();
   });
 
-  test('MilestonesUnpublished reindexes linked aims then deletes the milestone', async () => {
+  test('MilestonesUnpublished deletes the milestone without touching linked aims', async () => {
     const event = createEventBridgeEventMock(
       { resourceId: 'milestone-1' },
       'MilestonesUnpublished',
@@ -64,11 +64,8 @@ describe('OpenSearch Index Milestone Handler', () => {
 
     await handler(event);
 
-    expect(mockReindexAimsByMilestoneId).toHaveBeenCalledWith(
-      mockProvider,
-      'milestone-1',
-    );
     expect(mockDeleteMilestoneById).toHaveBeenCalledWith('milestone-1');
+    expect(mockReindexAimsByMilestoneId).not.toHaveBeenCalled();
     expect(mockReindexMilestoneById).not.toHaveBeenCalled();
   });
 

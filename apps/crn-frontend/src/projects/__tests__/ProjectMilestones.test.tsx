@@ -148,9 +148,9 @@ describe('ProjectMilestones', () => {
   it('keeps the search controls visible while milestones are loading', async () => {
     mockGetProjectMilestones.mockImplementation(
       () =>
-        new Promise((resolve) =>
-          setTimeout(() => resolve({ total: 0, items: [] }), 10),
-        ),
+        new Promise((resolve) => {
+          setTimeout(() => resolve({ total: 0, items: [] }), 10);
+        }),
     );
 
     await renderPage('searchQuery=alpha', false);

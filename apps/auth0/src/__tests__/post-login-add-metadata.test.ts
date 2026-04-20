@@ -70,18 +70,82 @@ beforeEach(() => {
   nock.cleanAll();
 });
 
-it('skips metadata for KR-Sync client', async () => {
-  await onExecutePostLogin(
-    {
-      ...eventBase,
-      client: {
-        ...eventBase.client,
-        name: 'ASAP KR-Sync',
-      },
+describe('For an ASAP KR-Sync login', () => {
+  const krSyncEvent = {
+    ...eventBase,
+    client: {
+      ...eventBase.client,
+      name: 'ASAP KR-Sync',
     },
-    apiBase,
-  );
-  expect(apiBase.idToken.setCustomClaim).not.toHaveBeenCalled();
+  };
+
+  it('verifies the user against the webhook without setting custom claims', async () => {
+    nock(apiUrl).get(`/webhook/users/${user.user_id}`).reply(200, { id: '42' });
+
+    await onExecutePostLogin(krSyncEvent, apiBase);
+
+    expect(nock.isDone()).toBe(true);
+    expect(apiBase.idToken.setCustomClaim).not.toHaveBeenCalled();
+    expect(apiBase.access.deny).not.toHaveBeenCalled();
+  });
+
+  it('passes the AUTH0_SHARED_SECRET as a basic auth token', async () => {
+    const token = 'KR_SYNC_SECRET';
+    nock(apiUrl, {
+      reqheaders: { authorization: `Basic ${token}` },
+    })
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, { id: '42' });
+
+    await onExecutePostLogin(
+      {
+        ...krSyncEvent,
+        secrets: { ...krSyncEvent.secrets, AUTH0_SHARED_SECRET: token },
+      },
+      apiBase,
+    );
+
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('denies access for alumni users', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, {
+        id: '42',
+        teams: [],
+        alumniSinceDate: '2024-01-01',
+      });
+
+    await onExecutePostLogin(krSyncEvent, apiBase);
+
+    expect(apiBase.access.deny).toHaveBeenCalledWith(
+      'alumni-user-access-denied',
+    );
+    expect(apiBase.idToken.setCustomClaim).not.toHaveBeenCalled();
+  });
+
+  it('denies access if the webhook returns an error (unknown user)', async () => {
+    nock(apiUrl).get(`/webhook/users/${user.user_id}`).reply(404);
+
+    await onExecutePostLogin(krSyncEvent, apiBase);
+
+    expect(apiBase.access.deny).toHaveBeenCalledWith(
+      'Response code 404 (Not Found)',
+    );
+    expect(apiBase.idToken.setCustomClaim).not.toHaveBeenCalled();
+  });
+
+  it('allows non-alumni GP2 users (no teams field on response)', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, { id: '42', role: 'Trainee' });
+
+    await onExecutePostLogin(krSyncEvent, apiBase);
+
+    expect(apiBase.access.deny).not.toHaveBeenCalled();
+    expect(apiBase.idToken.setCustomClaim).not.toHaveBeenCalled();
+  });
 });
 
 it('denies login if the redirect_uri is missing from query and body', async () => {

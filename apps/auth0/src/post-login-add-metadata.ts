@@ -116,7 +116,8 @@ export const onExecutePostLogin = async (
 ) => {
   try {
     if (event.client.name === 'ASAP KR-Sync') {
-      const response = await fetchUserMetadata(event.secrets.API_URL, event);
+      const apiUrl = event.secrets.API_URL ?? '##API_URL##';
+      const response = await fetchUserMetadata(apiUrl, event);
 
       if (isUserMetadataResponse(response) && response.alumniSinceDate) {
         console.log('Rejecting KR-Sync login: User is alumni');

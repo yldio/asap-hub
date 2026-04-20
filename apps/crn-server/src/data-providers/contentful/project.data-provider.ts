@@ -46,6 +46,7 @@ import {
   OpensearchHitsResponse,
   Milestone,
   MilestoneStatus,
+  milestoneStatuses,
 } from '@asap-hub/model';
 import {
   cleanArray,
@@ -932,11 +933,17 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
         'Opensearch Provider not configured for ProjectContentfulDataProvider',
       );
     }
-    const { take = 10, skip = 0, grantType } = options;
-    const filters = [
+    const { take = 10, skip = 0, grantType, search, filter } = options;
+    const normalizedSearch = search?.trim();
+    const statusFilters = (filter ?? []).filter(
+      (value): value is MilestoneStatus =>
+        milestoneStatuses.includes(value as MilestoneStatus),
+    );
+    const filters = cleanArray([
       { term: { projectId: id } },
-      ...(grantType ? [{ term: { grantType } }] : []),
-    ];
+      grantType ? { term: { grantType } } : undefined,
+      statusFilters.length ? { terms: { status: statusFilters } } : undefined,
+    ]);
 
     const response = (await this.opensearchProvider.search({
       index: 'project-milestones',
@@ -944,6 +951,21 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
         query: {
           bool: {
             filter: filters,
+            ...(normalizedSearch
+              ? {
+                  must: [
+                    {
+                      match: {
+                        description: {
+                          query: normalizedSearch,
+                          fuzziness: 'AUTO',
+                          operator: 'and',
+                        },
+                      },
+                    },
+                  ],
+                }
+              : {}),
           },
         },
         sort: [{ aimNumbersAsc: { order: 'asc' } }],

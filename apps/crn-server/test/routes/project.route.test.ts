@@ -173,6 +173,31 @@ describe('project routes', () => {
         projectControllerMock.fetchProjectMilestones,
       ).not.toHaveBeenCalled();
     });
+
+    it('forwards search and filter query parameters', async () => {
+      projectControllerMock.fetchProjectMilestones.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+
+      const response = await supertest(app)
+        .get('/projects/project-1/milestones')
+        .query({
+          grantType: 'original',
+          search: 'milestone description',
+          filter: ['Complete', 'Pending'],
+        });
+
+      expect(response.status).toBe(200);
+      expect(projectControllerMock.fetchProjectMilestones).toHaveBeenCalledWith(
+        'project-1',
+        {
+          grantType: 'original',
+          search: 'milestone description',
+          filter: ['Complete', 'Pending'],
+        },
+      );
+    });
   });
 
   describe('PATCH /projects/:projectId', () => {

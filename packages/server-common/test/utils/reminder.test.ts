@@ -3,7 +3,6 @@ import {
   getReferenceDates,
   convertDate,
   inLast24Hours,
-  cleanArray,
   filterUndefined,
   getUserName,
   capitalizeFirstLetter,
@@ -111,16 +110,6 @@ describe('inLast7Days', () => {
       expect(inLast7Days(date, timezone)).toEqual(expected);
     },
   );
-});
-
-describe('cleanArray', () => {
-  it('should handle an empty input array', () => {
-    expect(cleanArray([])).toEqual([]);
-  });
-
-  it('should remove null items from the array', () => {
-    expect(cleanArray([1, null, 'hello', null, 42])).toEqual([1, 'hello', 42]);
-  });
 });
 
 describe('filterUndefined', () => {

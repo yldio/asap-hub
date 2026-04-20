@@ -63,11 +63,6 @@ export const inLast7Days = (date: string, zone: string) => {
   return convertedDate >= last7DaysISO && convertedDate <= now;
 };
 
-export const cleanArray = <Item>(
-  items: Array<Item | null> | undefined,
-): Array<Item> =>
-  (items || []).filter((item: Item | null): item is Item => item !== null);
-
 export const filterUndefined = (arr: (string | undefined)[]): string[] =>
   arr.filter((value) => value !== undefined) as string[];
 

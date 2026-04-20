@@ -207,7 +207,7 @@ const Milestone: FC<MilestoneProps> = ({
                 )}
               </div>
               {isArticlesExpanded && (
-                <div css={articlesListWrapperStyles(rem(240), rem(408))}>
+                <div css={articlesListWrapperStyles(rem(240))}>
                   <ul css={articlesListStyles}>
                     {articles.map(({ id, title, href }) => (
                       <li key={id} css={articlesItemStyles}>

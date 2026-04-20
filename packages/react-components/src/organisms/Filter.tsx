@@ -58,11 +58,13 @@ export interface FilterProps<V extends string> {
   readonly filters?: Set<V>;
   readonly onChangeFilter?: (filter: V) => void;
   readonly filterOptions: ReadonlyArray<Option<V> | Title>;
+  readonly buttonText?: string;
 }
 export default function Filter<V extends string>({
   filters = new Set(),
   onChangeFilter = noop,
   filterOptions,
+  buttonText = 'Filters',
 }: FilterProps<V>): ReturnType<React.FC> {
   const [menuShown, setMenuShown] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
@@ -114,7 +116,7 @@ export default function Filter<V extends string>({
         onClick={() => setMenuShown(!menuShown)}
       >
         {filterIcon}
-        <span css={buttonTextStyles}>Filters</span>
+        <span css={buttonTextStyles}>{buttonText}</span>
       </Button>
       <div
         css={{

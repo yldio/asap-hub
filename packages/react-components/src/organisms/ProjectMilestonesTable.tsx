@@ -5,15 +5,24 @@ import {
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, FC } from 'react';
-import { Card, Paragraph } from '../atoms';
+import { Card, Headline3, Paragraph } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
 import { neutral1000, neutral200, steel } from '../colors';
 import type { ResearchOutputOption } from '../utils';
 import { PageControls } from '../molecules';
+import { searchIcon } from '../icons';
+
+const WRAPPER_TOP_PADDING = 32;
 
 const contentStyles = css({
-  padding: `${rem(32)} ${rem(24)}`,
+  padding: `${rem(WRAPPER_TOP_PADDING)} ${rem(24)}`,
+  paddingBottom: 0,
+});
+
+const containerStyles = css({
+  display: 'grid',
+  rowGap: rem(32),
 });
 
 const milestonesGridStyles = css({
@@ -69,7 +78,9 @@ const milestoneRowWrapperStyles = (index: number, isLast: boolean) =>
     paddingTop: index === 0 ? 0 : rem(20),
     paddingBottom: rem(20),
     borderBottom: `1px solid ${steel.rgb}`,
-    ...(isLast ? { paddingBottom: rem(0), borderBottom: 'none' } : {}),
+    ...(isLast
+      ? { paddingBottom: rem(WRAPPER_TOP_PADDING), borderBottom: 'none' }
+      : {}),
   });
 
 const noMilestonesTextStyles = css({
@@ -86,8 +97,30 @@ const pageControlsStyles = css({
   paddingBottom: rem(36),
 });
 
+const noResultsStyles = css({
+  display: 'grid',
+  justifyItems: 'center',
+  textAlign: 'center',
+  rowGap: rem(16),
+  svg: {
+    width: rem(48),
+    height: rem(48),
+    stroke: neutral1000.rgb,
+  },
+});
+
+const noResultsIconStyles = css({
+  display: 'inline-flex',
+  svg: {
+    width: rem(48),
+    height: rem(48),
+  },
+});
+
 type ProjectMilestonesProps = {
   readonly milestones: ReadonlyArray<MilestoneType>;
+  readonly total: number;
+  readonly hasAppliedSearch: boolean;
   readonly pageControlsProps: ComponentProps<typeof PageControls>;
   readonly isLead: boolean;
   readonly loadArticleOptions: (
@@ -101,6 +134,8 @@ type ProjectMilestonesProps = {
 
 const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
   milestones,
+  total,
+  hasAppliedSearch,
   isLead,
   loadArticleOptions,
   fetchLinkedArticles,
@@ -109,17 +144,42 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
 }) => {
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
+
+  const resultsFoundText =
+    total === 1 ? `${total} result found` : `${total} results found`;
+
   if (!milestones.length) {
+    if (!hasAppliedSearch) {
+      return (
+        <Paragraph accent="lead" noMargin styles={noMilestonesTextStyles}>
+          No milestones related to the {grantLabel} Grant have been added to
+          this project yet.
+        </Paragraph>
+      );
+    }
+
     return (
-      <Paragraph accent="lead" noMargin styles={noMilestonesTextStyles}>
-        No milestones related to the {grantLabel} Grant have been added to this
-        project yet.
-      </Paragraph>
+      <div css={containerStyles}>
+        <strong>{resultsFoundText}</strong>
+        <div css={noResultsStyles}>
+          <div css={noResultsIconStyles} aria-hidden>
+            {searchIcon}
+          </div>
+          <div>
+            <Headline3 noMargin>No results found.</Headline3>
+          </div>
+          <Paragraph noMargin accent="lead">
+            Please double-check your search for any typos or try a different
+            search term.
+          </Paragraph>
+        </div>
+      </div>
     );
   }
 
   return (
-    <>
+    <div css={containerStyles}>
+      <strong>{resultsFoundText}</strong>
       <Card padding={false}>
         <div css={contentStyles}>
           <div css={milestonesGridStyles}>
@@ -154,7 +214,7 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
       <section css={pageControlsStyles}>
         <PageControls {...pageControlsProps} />
       </section>
-    </>
+    </div>
   );
 };
 

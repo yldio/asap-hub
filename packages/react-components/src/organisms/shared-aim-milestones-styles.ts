@@ -7,6 +7,7 @@ export const descriptionContainerStyles = css({
   flexDirection: 'column',
   gap: rem(12),
   justifyContent: 'flex-start',
+  minWidth: 0,
 });
 
 export const mobileLabelStyles = css({

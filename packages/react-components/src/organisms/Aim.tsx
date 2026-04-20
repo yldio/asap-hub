@@ -97,6 +97,7 @@ const Aim: FC<AimProps> = ({ aim, fetchArticles }) => {
             aimId={aim.id}
             articlesCount={aim.articleCount}
             fetchArticles={fetchArticles}
+            maxWidth="none"
           />
         </div>
       </div>

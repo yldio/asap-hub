@@ -106,12 +106,14 @@ export type TraineeProject = BaseProject & {
 
 export type Project = DiscoveryProject | ResourceProject | TraineeProject;
 
-// Milestone types
-export type MilestoneStatus =
-  | 'Complete'
-  | 'In Progress'
-  | 'Pending'
-  | 'Terminated';
+export const milestoneStatuses = [
+  'Complete',
+  'In Progress',
+  'Pending',
+  'Terminated',
+] as const;
+
+export type MilestoneStatus = (typeof milestoneStatuses)[number];
 
 export type ArticleItem = {
   readonly id: string;

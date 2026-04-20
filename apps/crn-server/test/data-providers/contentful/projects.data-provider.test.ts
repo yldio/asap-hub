@@ -805,6 +805,42 @@ describe('ProjectContentfulDataProvider', () => {
       expect(result.total).toBe(2);
     });
 
+    it('applies description search and status filters', async () => {
+      await dataProvider.fetchProjectMilestones('project-with-milestones', {
+        ...defaultProjectMilestonesOptions,
+        search: 'interim milestone',
+        filter: ['Complete', 'Pending', 'invalid'],
+      });
+
+      expect(opensearchProviderMock.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          index: 'project-milestones',
+          body: expect.objectContaining({
+            query: {
+              bool: {
+                filter: [
+                  { term: { projectId: 'project-with-milestones' } },
+                  { term: { grantType: 'supplement' } },
+                  { terms: { status: ['Complete', 'Pending'] } },
+                ],
+                must: [
+                  {
+                    match: {
+                      description: {
+                        query: 'interim milestone',
+                        fuzziness: 'AUTO',
+                        operator: 'and',
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          }),
+        }),
+      );
+    });
+
     it('handles null hits.hits gracefully', async () => {
       opensearchProviderMock.search.mockResolvedValueOnce({ hits: {} });
 

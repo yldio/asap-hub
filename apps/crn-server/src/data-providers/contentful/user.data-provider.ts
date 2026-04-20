@@ -52,8 +52,8 @@ import {
   UsersFilter,
   UsersOrder,
 } from '@asap-hub/contentful';
+import { cleanArray } from '@asap-hub/server-common';
 import { DocumentNode } from 'graphql';
-import { cleanArray } from '../../utils/clean-array';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
 import { parseResearchTags } from './research-tag.data-provider';

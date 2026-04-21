@@ -445,7 +445,7 @@ const serverlessConfig: AWS = {
       platform: 'node',
       target: 'node20',
       bundle: true,
-      concurrency: 8,
+      concurrency: 4,
     },
     'serverless-offline-ssm': {
       stages: ['local'],

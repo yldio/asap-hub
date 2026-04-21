@@ -136,7 +136,7 @@ runs:
         CURRENT_REVISION: ${{ github.sha }}
         HOSTNAME: ${{ inputs.hostname }}
         NODE_ENV: 'production'
-        NODE_OPTIONS: '--max-old-space-size=8192'
+        NODE_OPTIONS: '--max-old-space-size=6144'
         OPENAI_API_KEY: ${{ inputs.openai-api-key }}
         POSTMARK_SERVER_TOKEN: ${{ inputs.postmark-server-token }}
         SENTRY_DSN_API: ${{ inputs.sentry-dsn-api }}

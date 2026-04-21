@@ -104,4 +104,8 @@ export default class ProjectController {
     }
     return this.projectDataProvider.createMilestone(data);
   }
+
+  async isProjectMilestonesSynced(id: string): Promise<boolean> {
+    return this.projectDataProvider.isProjectMilestonesSynced(id);
+  }
 }

@@ -35,5 +35,6 @@ export type ProjectDataProvider = DataProvider<
     id: string,
     options: FetchProjectMilestonesOptions,
   ) => Promise<ListProjectMilestonesResponse>;
-  createMilestone(data: MilestoneCreateRequest): Promise<string>;
+  createMilestone: (data: MilestoneCreateRequest) => Promise<string>;
+  isProjectMilestonesSynced: (id: string) => Promise<boolean>;
 };

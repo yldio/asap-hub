@@ -101,15 +101,29 @@ export const projectRouteFactory = (
     },
   );
 
+  projectRoutes.get(
+    '/projects/:projectId/milestones-sync-status',
+    async (req, res) => {
+      const { projectId } = req.params;
+      const { loggedInUser } = req;
+
+      if (!loggedInUser) throw Boom.forbidden();
+
+      const syncComplete =
+        await projectController.isProjectMilestonesSynced(projectId);
+      res.json({ syncComplete });
+    },
+  );
+
   projectRoutes.post<{ projectId: string }>(
     '/projects/:projectId/milestones',
     async (req, res) => {
-      const { projectId } = validateProjectParameters(req.params);
-      const data = validateProjectMilestoneCreateRequest(req.body);
-
       if (!req.loggedInUser) {
         throw Boom.unauthorized();
       }
+
+      const { projectId } = validateProjectParameters(req.params);
+      const data = validateProjectMilestoneCreateRequest(req.body);
 
       const { loggedInUser } = req;
       const project = await projectController.fetchById(projectId);

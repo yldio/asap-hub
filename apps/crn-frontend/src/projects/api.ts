@@ -3,6 +3,7 @@ import {
   BackendError,
   createSentryHeaders,
   GetListOptions,
+  wait,
 } from '@asap-hub/frontend-utils';
 import {
   ArticleItem,
@@ -232,4 +233,55 @@ export const createProjectMilestone = async (
     );
   }
   return resp.json();
+};
+
+export const isProjectMilestonesSyncComplete = async (
+  projectId: string,
+  authorization: string,
+): Promise<boolean> => {
+  const resp = await fetch(
+    `${API_BASE_URL}/projects/${projectId}/milestones-sync-status`,
+    {
+      headers: { authorization, ...createSentryHeaders() },
+    },
+  );
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to check milestones sync completion for project with id ${projectId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+  const data = await resp.json();
+  return data.syncComplete;
+};
+
+export const waitForMilestonesSync = async (
+  projectId: string,
+  authorization: string,
+): Promise<boolean> => {
+  let stableCount = 0;
+
+  /* eslint-disable no-await-in-loop */
+  for (let i = 0; i < 10; i += 1) {
+    let synced = false;
+    try {
+      synced = await isProjectMilestonesSyncComplete(projectId, authorization);
+    } catch (e) {
+      synced = false;
+    }
+
+    if (synced) {
+      stableCount += 1;
+    } else {
+      stableCount = 0;
+    }
+
+    if (stableCount >= 2) return true;
+
+    await wait(1500);
+  }
+  /* eslint-enable no-await-in-loop */
+
+  return false;
 };

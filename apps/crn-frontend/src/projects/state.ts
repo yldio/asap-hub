@@ -30,6 +30,7 @@ import {
   patchProject,
   ProjectListOptions,
   toListProjectResponse,
+  waitForMilestonesSync,
 } from './api';
 
 const pendingMilestonePromises = new Map<string, Promise<void>>();
@@ -315,10 +316,11 @@ export const useCreateProjectMilestone = (projectId: string) => {
     useInvalidateProjectMilestonesIndex();
   return async (data: MilestoneCreateRequest) => {
     const result = await createProjectMilestone(projectId, data, authorization);
-    await new Promise<void>((resolve) => {
-      setTimeout(resolve, 5000);
-    });
+
+    await waitForMilestonesSync(projectId, authorization);
+
     invalidateProjectMilestonesIndex();
+
     return result.id;
   };
 };

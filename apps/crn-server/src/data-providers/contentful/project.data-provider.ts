@@ -20,6 +20,9 @@ import {
   patchAndPublish,
   ProjectsOrder,
   getLinkEntity,
+  FETCH_PROJECT_MILESTONE_IDS,
+  FetchProjectMilestoneIdsQuery,
+  FetchProjectMilestoneIdsQueryVariables,
 } from '@asap-hub/contentful';
 import {
   Aim,
@@ -55,7 +58,7 @@ import {
   parseUserDisplayName,
   OpensearchRequest,
 } from '@asap-hub/server-common';
-import { getCleanProjectTools } from '../../utils/project';
+import { haveSameIds, getCleanProjectTools } from '../../utils/project';
 import logger from '../../utils/logger';
 import OpensearchProvider from '../opensearch.data-provider';
 import { deriveAimStatus } from '../../utils/aim-status';
@@ -609,6 +612,61 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     );
   }
 
+  private async fetchOpenSearchMilestoneIds(
+    projectId: string,
+  ): Promise<string[]> {
+    if (!this.opensearchProvider) {
+      throw new Error('Opensearch Provider not configured');
+    }
+
+    const response = (await this.opensearchProvider.search({
+      index: 'project-milestones',
+      body: {
+        query: {
+          bool: {
+            filter: [{ term: { projectId } }],
+          },
+        },
+        size: 100,
+        _source: ['id'],
+      } satisfies OpensearchRequest,
+    })) as unknown as OpensearchHitsResponse<{ id: string }>;
+
+    const hits = response.hits?.hits ?? [];
+
+    // eslint-disable-next-line no-underscore-dangle
+    return hits.map((hit) => hit._source.id);
+  }
+
+  private async fetchContentfulMilestoneIds(
+    projectId: string,
+  ): Promise<string[]> {
+    const { projects } = await this.contentfulClient.request<
+      FetchProjectMilestoneIdsQuery,
+      FetchProjectMilestoneIdsQueryVariables
+    >(FETCH_PROJECT_MILESTONE_IDS, {
+      projectId,
+    });
+
+    if (!projects) return [];
+
+    const ids = new Set<string>();
+
+    projects.originalGrantAimsCollection?.items?.forEach((aim) => {
+      aim?.milestonesCollection?.items?.forEach((m) => {
+        if (m?.sys?.id) ids.add(m.sys.id);
+      });
+    });
+
+    projects.supplementGrant?.aimsCollection?.items?.forEach((aim) => {
+      aim?.milestonesCollection?.items?.forEach((m) => {
+        if (m?.sys?.id) ids.add(m.sys.id);
+      });
+    });
+
+    return [...ids];
+  }
+
   async fetchById(id: string): Promise<ProjectDataObject | null> {
     try {
       const [
@@ -1017,17 +1075,29 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
     await milestoneEntry.publish();
 
-    for (const aimId of data.aimIds) {
-      const aimEntry = await environment.getEntry(aimId);
-      const currentMilestones = aimEntry.fields.milestones?.['en-US'] || [];
-      await patchAndPublish(aimEntry, {
-        milestones: [
-          ...currentMilestones,
-          getLinkEntity(milestoneEntry.sys.id),
-        ],
-      });
-    }
+    await Promise.all(
+      data.aimIds.map(async (aimId) => {
+        const aimEntry = await environment.getEntry(aimId);
+        const currentMilestones = aimEntry.fields.milestones?.['en-US'] || [];
+
+        await patchAndPublish(aimEntry, {
+          milestones: [
+            ...currentMilestones,
+            getLinkEntity(milestoneEntry.sys.id),
+          ],
+        });
+      }),
+    );
 
     return milestoneEntry.sys.id;
+  }
+
+  async isProjectMilestonesSynced(projectId: string): Promise<boolean> {
+    const [contentfulIds, osIds] = await Promise.all([
+      this.fetchContentfulMilestoneIds(projectId),
+      this.fetchOpenSearchMilestoneIds(projectId),
+    ]);
+
+    return haveSameIds(contentfulIds, osIds);
   }
 }

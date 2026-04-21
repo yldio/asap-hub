@@ -297,4 +297,23 @@ describe('Project Controller', () => {
       expect(projectDataProviderMock.createMilestone).not.toHaveBeenCalled();
     });
   });
+
+  describe('isProjectMilestonesSynced', () => {
+    it.each([[true], [false]])(
+      'returns %s when projectDataProvider returns %s',
+      async (value) => {
+        projectDataProviderMock.isProjectMilestonesSynced.mockResolvedValueOnce(
+          value,
+        );
+
+        const result = await controller.isProjectMilestonesSynced('project-1');
+
+        expect(
+          projectDataProviderMock.isProjectMilestonesSynced,
+        ).toHaveBeenCalledWith('project-1');
+
+        expect(result).toBe(value);
+      },
+    );
+  });
 });

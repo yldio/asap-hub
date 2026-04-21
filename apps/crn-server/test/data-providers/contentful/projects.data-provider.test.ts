@@ -2724,3 +2724,89 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
     );
   });
 });
+
+describe('ProjectContentfulDataProvider - isProjectMilestonesSynced', () => {
+  const contentfulClientMock = getContentfulGraphqlClientMock();
+
+  const opensearchProviderMock = {
+    search: jest.fn(),
+  };
+
+  const dataProvider = new ProjectContentfulDataProvider(
+    contentfulClientMock,
+    undefined,
+    opensearchProviderMock as any,
+  );
+
+  const mockProjectMilestoneIdsResponse = {
+    projects: {
+      originalGrantAimsCollection: {
+        items: [
+          {
+            milestonesCollection: {
+              items: [{ sys: { id: 'a' } }, { sys: { id: 'b' } }],
+            },
+          },
+          {
+            milestonesCollection: {
+              items: [{ sys: { id: 'c' } }],
+            },
+          },
+        ],
+      },
+      supplementGrant: {
+        aimsCollection: {
+          items: [
+            {
+              milestonesCollection: {
+                items: [{ sys: { id: 'd' } }],
+              },
+            },
+          ],
+        },
+      },
+    },
+  };
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('returns true when Contentful and OpenSearch milestone IDs match', async () => {
+    contentfulClientMock.request.mockResolvedValueOnce(
+      mockProjectMilestoneIdsResponse,
+    );
+
+    // OpenSearch response
+    opensearchProviderMock.search.mockResolvedValueOnce({
+      hits: {
+        hits: [
+          { _source: { id: 'b' } },
+          { _source: { id: 'a' } },
+          { _source: { id: 'c' } },
+          { _source: { id: 'd' } },
+        ],
+      },
+    });
+
+    const result = await dataProvider.isProjectMilestonesSynced('project-1');
+
+    expect(result).toBe(true);
+  });
+
+  it('returns false when counts differ', async () => {
+    contentfulClientMock.request.mockResolvedValueOnce(
+      getProjectByIdGraphqlResponse(),
+    );
+
+    opensearchProviderMock.search.mockResolvedValueOnce({
+      hits: {
+        hits: [{ _source: { id: 'a' } }],
+      },
+    });
+
+    const result = await dataProvider.isProjectMilestonesSynced('project-1');
+
+    expect(result).toBe(false);
+  });
+});

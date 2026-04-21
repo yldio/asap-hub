@@ -24,6 +24,7 @@ const projectControllerMock = {
   fetchProjectMilestones: jest.fn(),
   update: jest.fn(),
   createMilestone: jest.fn(),
+  isProjectMilestonesSynced: jest.fn(),
 } as unknown as jest.Mocked<ProjectController>;
 
 const createApp = (loggedInUser?: {
@@ -397,6 +398,50 @@ describe('project routes', () => {
 
       expect(response.status).toBe(404);
       expect(projectControllerMock.createMilestone).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('GET /projects/:projectId/milestones-sync-status', () => {
+    it('returns sync status from controller', async () => {
+      projectControllerMock.isProjectMilestonesSynced.mockResolvedValueOnce(
+        true,
+      );
+
+      const response = await supertest(app).get(
+        '/projects/project-1/milestones-sync-status',
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ syncComplete: true });
+      expect(
+        projectControllerMock.isProjectMilestonesSynced,
+      ).toHaveBeenCalledWith('project-1');
+    });
+
+    it('returns 403 when user is not logged in', async () => {
+      const appWithoutUser = createApp();
+
+      const response = await supertest(appWithoutUser).get(
+        '/projects/project-1/milestones-sync-status',
+      );
+
+      expect(response.status).toBe(403);
+      expect(
+        projectControllerMock.isProjectMilestonesSynced,
+      ).not.toHaveBeenCalled();
+    });
+
+    it('handles false sync status correctly', async () => {
+      projectControllerMock.isProjectMilestonesSynced.mockResolvedValueOnce(
+        false,
+      );
+
+      const response = await supertest(app).get(
+        '/projects/project-1/milestones-sync-status',
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ syncComplete: false });
     });
   });
 });

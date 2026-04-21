@@ -1601,6 +1601,8 @@ enum DiscoverMembersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -1682,6 +1684,8 @@ enum DiscoverMembersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -1775,6 +1779,8 @@ enum DiscoverScientificAdvisoryBoardCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -1856,6 +1862,8 @@ enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -2071,6 +2079,8 @@ enum DiscussionsReadByCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -2152,6 +2162,8 @@ enum DiscussionsReadByCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -4978,6 +4990,8 @@ enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -5053,6 +5067,8 @@ enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -5427,6 +5443,8 @@ enum LabsLinkingCollectionsUsersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -5502,6 +5520,8 @@ enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -6420,6 +6440,8 @@ enum ManuscriptsAssignedUsersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -6501,6 +6523,8 @@ enum ManuscriptsAssignedUsersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -8055,6 +8079,8 @@ type Projects implements Entry & _Node {
   researchTagsCollection(limit: Int = 100, locale: String, order: [ProjectsResearchTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResearchTagsFilter): ProjectsResearchTagsCollection
   researchTagsCursorCollection(limit: Int = 100, locale: String, order: [ProjectsResearchTagsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ResearchTagsFilter): ProjectsResearchTagsCursorCollection
   resourceType(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: ResourceTypeFilter): ResourceType
+  scientificFacilitatorCollection(limit: Int = 100, locale: String, order: [ProjectsScientificFacilitatorCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: UsersFilter): ProjectsScientificFacilitatorCollection
+  scientificFacilitatorCursorCollection(limit: Int = 100, locale: String, order: [ProjectsScientificFacilitatorCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): ProjectsScientificFacilitatorCursorCollection
   startDate(locale: String, useFallbackLocale: Boolean): DateTime
   status(locale: String, useFallbackLocale: Boolean): String
   supplementGrant(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: SupplementGrantFilter): SupplementGrant
@@ -8149,6 +8175,8 @@ input ProjectsFilter {
   researchTagsCollection_exists: Boolean
   resourceType: cfResourceTypeNestedFilter
   resourceType_exists: Boolean
+  scientificFacilitator: cfUsersNestedFilter
+  scientificFacilitatorCollection_exists: Boolean
   startDate: DateTime
   startDate_exists: Boolean
   startDate_gt: DateTime
@@ -8396,6 +8424,173 @@ enum ProjectsResearchTagsCursorCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+type ProjectsScientificFacilitatorCollection {
+  items: [Users]!
+  limit: Int!
+  skip: Int!
+  total: Int!
+}
+
+enum ProjectsScientificFacilitatorCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
+  city_ASC
+  city_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  country_ASC
+  country_DESC
+  createdDate_ASC
+  createdDate_DESC
+  degree_ASC
+  degree_DESC
+  dismissedGettingStarted_ASC
+  dismissedGettingStarted_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  institution_ASC
+  institution_DESC
+  lastName_ASC
+  lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
+  onboarded_ASC
+  onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  twitter_ASC
+  twitter_DESC
+  website1_ASC
+  website1_DESC
+  website2_ASC
+  website2_DESC
+}
+
+type ProjectsScientificFacilitatorCursorCollection {
+  items: [Users]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum ProjectsScientificFacilitatorCursorCollectionOrder {
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
+  city_ASC
+  city_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  country_ASC
+  country_DESC
+  createdDate_ASC
+  createdDate_DESC
+  degree_ASC
+  degree_DESC
+  dismissedGettingStarted_ASC
+  dismissedGettingStarted_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  institution_ASC
+  institution_DESC
+  lastName_ASC
+  lastName_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
+  onboarded_ASC
+  onboarded_DESC
+  openScienceTeamMember_ASC
+  openScienceTeamMember_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  twitter_ASC
+  twitter_DESC
+  website1_ASC
+  website1_DESC
+  website2_ASC
+  website2_DESC
 }
 
 type ProjectsToolsCollection {
@@ -10577,6 +10772,8 @@ enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -10652,6 +10849,8 @@ enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -11354,6 +11553,8 @@ enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -11429,6 +11630,8 @@ enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -12861,6 +13064,7 @@ type Users implements Entry & _Node {
   alumniSinceDate(locale: String, useFallbackLocale: Boolean): DateTime
   avatar(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   biography(locale: String, useFallbackLocale: Boolean): String
+  blueSky(locale: String, useFallbackLocale: Boolean): String
   city(locale: String, useFallbackLocale: Boolean): String
   connections(locale: String, useFallbackLocale: Boolean): [String]
   contactEmail(locale: String, useFallbackLocale: Boolean): String
@@ -12973,6 +13177,13 @@ input UsersFilter {
   biography_not: String
   biography_not_contains: String
   biography_not_in: [String]
+  blueSky: String
+  blueSky_contains: String
+  blueSky_exists: Boolean
+  blueSky_in: [String]
+  blueSky_not: String
+  blueSky_not_contains: String
+  blueSky_not_in: [String]
   city: String
   city_contains: String
   city_exists: Boolean
@@ -13280,6 +13491,8 @@ type UsersLinkingCollections {
   messagesCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsMessagesCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): MessagesCursorCollection
   projectMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectMembershipCollection
   projectMembershipCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectMembershipCursorCollection
+  projectsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+  projectsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectsCursorCollection
   researchOutputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ResearchOutputsCollection
   researchOutputsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsResearchOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ResearchOutputsCursorCollection
   tutorialsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsTutorialsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): TutorialsCollection
@@ -13674,6 +13887,64 @@ enum UsersLinkingCollectionsProjectMembershipCursorCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+enum UsersLinkingCollectionsProjectsCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  endDate_ASC
+  endDate_DESC
+  googleDriveLink_ASC
+  googleDriveLink_DESC
+  grantId_ASC
+  grantId_DESC
+  projectId_ASC
+  projectId_DESC
+  projectType_ASC
+  projectType_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsProjectsCursorCollectionOrder {
+  applicationNumber_ASC
+  applicationNumber_DESC
+  contactEmail_ASC
+  contactEmail_DESC
+  endDate_ASC
+  endDate_DESC
+  googleDriveLink_ASC
+  googleDriveLink_DESC
+  grantId_ASC
+  grantId_DESC
+  projectId_ASC
+  projectId_DESC
+  projectType_ASC
+  projectType_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 enum UsersLinkingCollectionsResearchOutputsCollectionOrder {
   accession_ASC
   accession_DESC
@@ -13934,6 +14205,8 @@ enum UsersOrder {
   alumniLocation_DESC
   alumniSinceDate_ASC
   alumniSinceDate_DESC
+  blueSky_ASC
+  blueSky_DESC
   city_ASC
   city_DESC
   contactEmail_ASC
@@ -15684,6 +15957,7 @@ input cfProjectsNestedFilter {
   proposal_exists: Boolean
   researchTagsCollection_exists: Boolean
   resourceType_exists: Boolean
+  scientificFacilitatorCollection_exists: Boolean
   startDate: DateTime
   startDate_exists: Boolean
   startDate_gt: DateTime
@@ -16305,6 +16579,13 @@ input cfUsersNestedFilter {
   biography_not: String
   biography_not_contains: String
   biography_not_in: [String]
+  blueSky: String
+  blueSky_contains: String
+  blueSky_exists: Boolean
+  blueSky_in: [String]
+  blueSky_not: String
+  blueSky_not_contains: String
+  blueSky_not_in: [String]
   city: String
   city_contains: String
   city_exists: Boolean

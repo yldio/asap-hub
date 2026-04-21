@@ -603,4 +603,270 @@ describe('AimsMilestonesContentfulDataProvider', () => {
       ]);
     });
   });
+
+  describe('fetchAimIdsLinkedToMilestone', () => {
+    it('returns aim ids linked to a milestone', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        milestones: {
+          linkedFrom: {
+            aimsCollection: {
+              items: [{ sys: { id: 'aim-1' } }, { sys: { id: 'aim-2' } }],
+            },
+          },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchAimIdsLinkedToMilestone('milestone-1');
+
+      expect(result).toEqual(['aim-1', 'aim-2']);
+    });
+
+    it('filters out null items', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        milestones: {
+          linkedFrom: {
+            aimsCollection: {
+              items: [null, { sys: { id: 'aim-1' } }, null],
+            },
+          },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchAimIdsLinkedToMilestone('milestone-1');
+
+      expect(result).toEqual(['aim-1']);
+    });
+
+    it('returns empty array when milestone not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        milestones: null,
+      });
+
+      const result =
+        await dataProvider.fetchAimIdsLinkedToMilestone('milestone-missing');
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('fetchProjectWithAimsDetailByAimId', () => {
+    it('returns the direct project linked to an aim', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: {
+          linkedFrom: {
+            projectsCollection: {
+              items: [
+                {
+                  sys: { id: 'project-1' },
+                  title: 'Project Alpha',
+                },
+              ],
+            },
+            supplementGrantCollection: { items: [] },
+          },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchProjectWithAimsDetailByAimId('aim-1');
+
+      expect(result).toEqual({
+        sys: { id: 'project-1' },
+        title: 'Project Alpha',
+      });
+    });
+
+    it('returns project via supplement grant when no direct project', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: {
+          linkedFrom: {
+            projectsCollection: { items: [null] },
+            supplementGrantCollection: {
+              items: [
+                {
+                  linkedFrom: {
+                    projectsCollection: {
+                      items: [
+                        {
+                          sys: { id: 'project-2' },
+                          title: 'Project Beta',
+                        },
+                      ],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchProjectWithAimsDetailByAimId('aim-1');
+
+      expect(result).toEqual({
+        sys: { id: 'project-2' },
+        title: 'Project Beta',
+      });
+    });
+
+    it('returns null when aim not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: null,
+      });
+
+      const result =
+        await dataProvider.fetchProjectWithAimsDetailByAimId('aim-missing');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('fetchAimWithMilestonesById', () => {
+    it('returns the aim with its milestones', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: {
+          sys: { id: 'aim-1' },
+          milestonesCollection: {
+            items: [{ sys: { id: 'ms-1' } }, { sys: { id: 'ms-2' } }],
+          },
+        },
+      });
+
+      const result = await dataProvider.fetchAimWithMilestonesById('aim-1');
+
+      expect(result).toEqual({
+        sys: { id: 'aim-1' },
+        milestonesCollection: {
+          items: [{ sys: { id: 'ms-1' } }, { sys: { id: 'ms-2' } }],
+        },
+      });
+    });
+
+    it('returns null when aim not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        aims: null,
+      });
+
+      const result =
+        await dataProvider.fetchAimWithMilestonesById('aim-missing');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('fetchMilestoneById', () => {
+    it('returns the milestone', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        milestones: {
+          sys: { id: 'ms-1' },
+          description: 'Test milestone',
+          status: 'Completed',
+        },
+      });
+
+      const result = await dataProvider.fetchMilestoneById('ms-1');
+
+      expect(result).toEqual({
+        sys: { id: 'ms-1' },
+        description: 'Test milestone',
+        status: 'Completed',
+      });
+    });
+
+    it('returns null when milestone not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        milestones: null,
+      });
+
+      const result = await dataProvider.fetchMilestoneById('ms-missing');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('fetchProjectWithAimsDetailById', () => {
+    it('returns the project with aims detail', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        projects: {
+          sys: { id: 'project-1' },
+          title: 'Project Alpha',
+          originalGrantAimsCollection: {
+            items: [{ sys: { id: 'aim-1' }, description: 'First aim' }],
+          },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchProjectWithAimsDetailById('project-1');
+
+      expect(result).toEqual({
+        sys: { id: 'project-1' },
+        title: 'Project Alpha',
+        originalGrantAimsCollection: {
+          items: [{ sys: { id: 'aim-1' }, description: 'First aim' }],
+        },
+      });
+    });
+
+    it('returns null when project not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        projects: null,
+      });
+
+      const result =
+        await dataProvider.fetchProjectWithAimsDetailById('project-missing');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('fetchProjectIdBySupplementGrantId', () => {
+    it('returns the project id linked to a supplement grant', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        supplementGrant: {
+          linkedFrom: {
+            projectsCollection: {
+              items: [{ sys: { id: 'project-1' } }],
+            },
+          },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchProjectIdBySupplementGrantId('sg-1');
+
+      expect(result).toBe('project-1');
+    });
+
+    it('returns null when supplement grant not found', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        supplementGrant: null,
+      });
+
+      const result =
+        await dataProvider.fetchProjectIdBySupplementGrantId('sg-missing');
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null when no projects linked to supplement grant', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        supplementGrant: {
+          linkedFrom: {
+            projectsCollection: {
+              items: [],
+            },
+          },
+        },
+      });
+
+      const result =
+        await dataProvider.fetchProjectIdBySupplementGrantId('sg-1');
+
+      expect(result).toBeNull();
+    });
+  });
 });

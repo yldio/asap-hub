@@ -1,5 +1,11 @@
 import { Client } from '@opensearch-project/opensearch';
-import { indexOpensearchData } from '../../src/utils/opensearch';
+import {
+  indexOpensearchData,
+  upsertOpensearchDocuments,
+  deleteOpensearchDocuments,
+  deleteByDocumentIds,
+  deleteByFieldValue,
+} from '../../src/utils/opensearch';
 import { getOpensearchEndpoint } from '../../src/utils/opensearch-endpoint';
 import type { OpensearchMapping } from '../../src/utils/types';
 
@@ -23,6 +29,223 @@ const mockClient = {
 const mockGetOpensearchEndpoint = getOpensearchEndpoint as jest.MockedFunction<
   typeof getOpensearchEndpoint
 >;
+
+describe('upsertOpensearchDocuments', () => {
+  const mockBulkClient = {
+    bulk: jest.fn(),
+  } as unknown as Client;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test('should do nothing when documents array is empty', async () => {
+    await upsertOpensearchDocuments(mockBulkClient, 'test-index', []);
+
+    expect(mockBulkClient.bulk).not.toHaveBeenCalled();
+  });
+
+  test('should upsert documents using bulk API', async () => {
+    (mockBulkClient.bulk as jest.Mock).mockResolvedValue({
+      body: { errors: false, items: [] },
+    });
+
+    const documents = [
+      { id: 'doc-1', title: 'First' },
+      { id: 'doc-2', title: 'Second' },
+    ];
+
+    await upsertOpensearchDocuments(mockBulkClient, 'test-index', documents);
+
+    expect(mockBulkClient.bulk).toHaveBeenCalledWith({
+      body: [
+        { index: { _index: 'test-index', _id: 'doc-1' } },
+        { id: 'doc-1', title: 'First' },
+        { index: { _index: 'test-index', _id: 'doc-2' } },
+        { id: 'doc-2', title: 'Second' },
+      ],
+      refresh: 'true',
+    });
+  });
+
+  test('should throw when bulk upsert has failures', async () => {
+    (mockBulkClient.bulk as jest.Mock).mockResolvedValue({
+      body: {
+        errors: true,
+        items: [
+          { index: { _id: 'doc-1', error: { reason: 'mapping error' } } },
+          { index: { _id: 'doc-2' } },
+        ],
+      },
+    });
+
+    await expect(
+      upsertOpensearchDocuments(mockBulkClient, 'test-index', [
+        { id: 'doc-1', title: 'First' },
+        { id: 'doc-2', title: 'Second' },
+      ]),
+    ).rejects.toThrow('Upsert errors: doc-1: mapping error');
+  });
+});
+
+describe('deleteOpensearchDocuments', () => {
+  const mockBulkClient = {
+    bulk: jest.fn(),
+  } as unknown as Client;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation();
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test('should do nothing when ids array is empty', async () => {
+    await deleteOpensearchDocuments(mockBulkClient, 'test-index', []);
+
+    expect(mockBulkClient.bulk).not.toHaveBeenCalled();
+  });
+
+  test('should delete documents using bulk API', async () => {
+    (mockBulkClient.bulk as jest.Mock).mockResolvedValue({
+      body: { errors: false, items: [] },
+    });
+
+    await deleteOpensearchDocuments(mockBulkClient, 'test-index', [
+      'doc-1',
+      'doc-2',
+    ]);
+
+    expect(mockBulkClient.bulk).toHaveBeenCalledWith({
+      body: [
+        { delete: { _index: 'test-index', _id: 'doc-1' } },
+        { delete: { _index: 'test-index', _id: 'doc-2' } },
+      ],
+      refresh: 'true',
+    });
+  });
+
+  test('should throw when bulk delete has failures', async () => {
+    (mockBulkClient.bulk as jest.Mock).mockResolvedValue({
+      body: {
+        errors: true,
+        items: [
+          { delete: { _id: 'doc-1', error: { reason: 'not found' } } },
+          { delete: { _id: 'doc-2' } },
+        ],
+      },
+    });
+
+    await expect(
+      deleteOpensearchDocuments(mockBulkClient, 'test-index', [
+        'doc-1',
+        'doc-2',
+      ]),
+    ).rejects.toThrow('Delete errors: doc-1: not found');
+  });
+});
+
+describe('deleteByFieldValue', () => {
+  const mockFieldClient = {
+    deleteByQuery: jest.fn(),
+  } as unknown as Client;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should delete documents matching a field value', async () => {
+    (mockFieldClient.deleteByQuery as jest.Mock).mockResolvedValue({
+      body: { deleted: 3 },
+    });
+
+    await deleteByFieldValue(
+      mockFieldClient,
+      'test-index',
+      'projectId',
+      'project-1',
+    );
+
+    expect(mockFieldClient.deleteByQuery).toHaveBeenCalledWith({
+      index: 'test-index',
+      body: {
+        query: {
+          term: { projectId: 'project-1' },
+        },
+      },
+      refresh: true,
+    });
+  });
+
+  test('should throw when deleteByQuery reports failures', async () => {
+    (mockFieldClient.deleteByQuery as jest.Mock).mockResolvedValue({
+      body: { deleted: 0, failures: [{ id: 'x', cause: { reason: 'boom' } }] },
+    });
+
+    await expect(
+      deleteByFieldValue(
+        mockFieldClient,
+        'test-index',
+        'projectId',
+        'project-1',
+      ),
+    ).rejects.toThrow(/deleteByFieldValue failures/);
+  });
+});
+
+describe('deleteByDocumentIds', () => {
+  const mockDeleteByQueryClient = {
+    deleteByQuery: jest.fn(),
+  } as unknown as Client;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('should do nothing when ids array is empty', async () => {
+    await deleteByDocumentIds(mockDeleteByQueryClient, 'test-index', []);
+
+    expect(mockDeleteByQueryClient.deleteByQuery).not.toHaveBeenCalled();
+  });
+
+  test('should delete documents by querying on the id field', async () => {
+    (mockDeleteByQueryClient.deleteByQuery as jest.Mock).mockResolvedValue({
+      body: { deleted: 2 },
+    });
+
+    await deleteByDocumentIds(mockDeleteByQueryClient, 'test-index', [
+      'doc-1',
+      'doc-2',
+    ]);
+
+    expect(mockDeleteByQueryClient.deleteByQuery).toHaveBeenCalledWith({
+      index: 'test-index',
+      body: {
+        query: {
+          terms: { id: ['doc-1', 'doc-2'] },
+        },
+      },
+      refresh: true,
+    });
+  });
+
+  test('should throw when deleteByQuery reports failures', async () => {
+    (mockDeleteByQueryClient.deleteByQuery as jest.Mock).mockResolvedValue({
+      body: { deleted: 0, failures: [{ id: 'x', cause: { reason: 'boom' } }] },
+    });
+
+    await expect(
+      deleteByDocumentIds(mockDeleteByQueryClient, 'test-index', ['doc-1']),
+    ).rejects.toThrow(/deleteByDocumentIds failures/);
+  });
+});
 
 describe('indexOpensearchData', () => {
   const mockEndpoint = 'https://test-opensearch-endpoint.com';

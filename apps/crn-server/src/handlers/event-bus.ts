@@ -50,3 +50,13 @@ export type UserContentfulPayload = WebhookDetail<
 >;
 
 export type UserPayload = UserContentfulPayload;
+
+export type AimContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'aims'>
+>;
+export type AimPayload = AimContentfulPayload;
+
+export type MilestoneContentfulPayload = WebhookDetail<
+  ContentfulWebhookPayload<'milestones'>
+>;
+export type MilestonePayload = MilestoneContentfulPayload;

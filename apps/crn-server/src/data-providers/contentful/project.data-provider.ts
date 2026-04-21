@@ -586,7 +586,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
             filter: [{ term: { projectId } }, { term: { grantType } }],
           },
         },
-        sort: [{ createdDate: { order: 'asc' } }],
+        sort: [{ aimOrder: { order: 'asc', missing: '_last' } }],
         size: 50,
       } satisfies OpensearchRequest,
     });

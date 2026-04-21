@@ -1,5 +1,6 @@
 export * from './active-campaign';
 export * from './alerts';
+export * from './array-helpers';
 export * from './aws-secret-manager';
 export * from './clean-array';
 export * from './csv-parse';

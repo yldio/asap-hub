@@ -7,6 +7,7 @@ import { ComplianceReportDataObject } from './compliance-report';
 import { ManuscriptDiscussion } from './discussion';
 import { ExternalAuthorResponse } from './external-author';
 import { ImpactResponse } from './impact';
+import { ProjectType } from './project';
 import { UserResponse } from './user';
 
 export const manuscriptTypes = [
@@ -914,6 +915,12 @@ export type PartialManuscriptResponse = Pick<ManuscriptVersion, 'id'> &
     | 'declinedReason'
   > & {
     lastUpdated: string;
+    project?: {
+      id: string;
+      title: string;
+      projectType?: ProjectType;
+      isTeamBased?: boolean;
+    };
     team: { id: string; displayName: string };
     assignedUsers: ManuscriptAssignedUser[];
     manuscriptId: string;

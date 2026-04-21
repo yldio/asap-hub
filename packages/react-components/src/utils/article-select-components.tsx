@@ -8,6 +8,7 @@ import {
 
 import { Pill } from '../atoms';
 import { charcoal } from '../colors';
+import { article } from '../icons';
 import { rem } from '../pixels';
 import { getMultiValueStyles } from '../select';
 import type { ResearchOutputOption } from './research-output-form';
@@ -98,3 +99,9 @@ export const createArticleSelectComponents = <T extends ResearchOutputOption>({
     </components.Option>
   ),
 });
+
+export const articleSelectComponents =
+  createArticleSelectComponents<ResearchOutputOption>({
+    getIcon: () => article,
+    showArticlePill: (data) => !!data.type,
+  });

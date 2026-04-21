@@ -17,14 +17,14 @@ import {
   LabeledTextArea,
   Modal,
 } from '../molecules';
-import { article as articleIcon, crossIcon } from '../icons';
+import { crossIcon } from '../icons';
 import { Button, Paragraph, Pill, Subtitle } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
 import { ResearchOutputOption, titleCase } from '../utils';
-import { createArticleSelectComponents } from '../utils/article-select-components';
 import { Option, OptionsType } from '../select';
 import { ConfirmModal } from '../organisms';
 import { getStatusAccent } from '../organisms/shared-aim-milestones-styles';
+import { articleSelectComponents } from '../utils/article-select-components';
 
 const widerModalStyles = css({
   width: '90%',
@@ -105,11 +105,6 @@ const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
   onSubmit,
   getArticleSuggestions,
 }) => {
-  const articleSelectComponents =
-    createArticleSelectComponents<ResearchOutputOption>({
-      getIcon: () => articleIcon,
-      showArticlePill: (data) => !!data.type,
-    });
   const {
     control,
     formState: { isSubmitting, isValid },
@@ -199,10 +194,7 @@ const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
             rules={{
               required: 'Please select aims for this milestone.',
             }}
-            render={({
-              field: { value, onChange, onBlur },
-              fieldState: { error },
-            }) => (
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
               <LabeledPillSelector
                 title="Related Aims"
                 subtitle="(required)"
@@ -210,7 +202,6 @@ const CreateMilestoneModal: React.FC<CreateMilestoneModalProps> = ({
                 validationMessage={error?.message}
                 value={value}
                 onChange={onChange}
-                onBlur={onBlur}
                 enabled={!isSubmitting}
                 options={aims.map((aim) => ({
                   value: aim.id,

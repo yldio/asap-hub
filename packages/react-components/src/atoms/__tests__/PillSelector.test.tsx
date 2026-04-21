@@ -64,24 +64,4 @@ describe('PillSelector', () => {
 
     expect(onChange).not.toHaveBeenCalled();
   });
-
-  it('calls onBlur when a pill loses focus', async () => {
-    const onBlur = jest.fn();
-
-    render(
-      <PillSelector
-        options={options}
-        value={[]}
-        onChange={jest.fn()}
-        onBlur={onBlur}
-      />,
-    );
-
-    const button = screen.getByRole('button', { name: 'One' });
-
-    await userEvent.click(button);
-    await userEvent.tab();
-
-    expect(onBlur).toHaveBeenCalled();
-  });
 });

@@ -3,11 +3,11 @@ import { ComponentProps, useState } from 'react';
 import { ArticleItem, ResearchOutputType } from '@asap-hub/model';
 
 import { LabeledMultiSelect, Modal } from '../molecules';
-import { article as articleIcon, crossIcon } from '../icons';
+import { crossIcon } from '../icons';
 import { Button, Headline3 } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
 import { ResearchOutputOption } from '../utils';
-import { createArticleSelectComponents } from '../utils/article-select-components';
+import { articleSelectComponents } from '../utils/article-select-components';
 
 const headerStyles = css({
   display: 'flex',
@@ -107,11 +107,6 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
   onConfirm,
   loadOptions,
 }) => {
-  const articleSelectComponents =
-    createArticleSelectComponents<ResearchOutputOption>({
-      getIcon: () => articleIcon,
-      showArticlePill: (data) => !!data.type,
-    });
   const [selectedOptions, setSelectedOptions] = useState<
     ResearchOutputOption[]
   >(articlesToOptions(initialArticles));

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { colors, noop } from '..';
+import { colors } from '..';
 import { lead, paper, steel, tin } from '../colors';
 import { borderWidth } from '../form';
 import { rem } from '../pixels';
@@ -8,7 +8,7 @@ const containerStyles = css({
   padding: rem(6),
   display: 'flex',
   flexWrap: 'wrap',
-  gap: 8,
+  gap: rem(8),
 });
 
 const disabledStyles = css({
@@ -51,7 +51,6 @@ type PillSelectorProps<V extends string> = {
   options: PillOption<V>[];
   value: V[];
   onChange: (value: V[]) => void;
-  onBlur?: () => void;
   enabled?: boolean;
   error?: boolean;
 };
@@ -60,7 +59,6 @@ const PillSelector = <V extends string>({
   options,
   value,
   onChange,
-  onBlur = noop,
   enabled = true,
   error = false,
 }: PillSelectorProps<V>) => {
@@ -87,7 +85,6 @@ const PillSelector = <V extends string>({
             ]}
             type="button"
             onClick={() => toggle(option.value)}
-            onBlur={onBlur}
           >
             {option.label}
           </button>

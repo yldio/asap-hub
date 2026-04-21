@@ -1,5 +1,12 @@
 import { css, useTheme } from '@emotion/react';
-import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
+import {
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Select, {
   ActionMeta,
   components as reactAsyncComponents,
@@ -85,6 +92,8 @@ export type MultiSelectProps<
   | (Pick<Props<T, true, GroupBase<T>>, 'noOptionsMessage' | 'components'> & {
       readonly suggestions: ReadonlyArray<T>;
       readonly loadOptions?: undefined;
+      readonly loadOptionsDebounceMs?: undefined;
+      readonly defaultOptions?: undefined;
     })
   | (Pick<
       AsyncProps<T, true, GroupBase<T>>,
@@ -95,6 +104,8 @@ export type MultiSelectProps<
         callback: (options: ReadonlyArray<T>) => void,
       ) => Promise<ReadonlyArray<T>> | void;
       readonly suggestions?: undefined;
+      readonly loadOptionsDebounceMs?: number;
+      readonly defaultOptions?: boolean;
     })
 );
 
@@ -109,6 +120,8 @@ const MultiSelect = <
 >({
   customValidationMessage = '',
   loadOptions,
+  loadOptionsDebounceMs = 300,
+  defaultOptions = true,
   id,
   suggestions,
   components,
@@ -131,6 +144,44 @@ const MultiSelect = <
 }: MultiSelectProps<T, M>): ReactElement => {
   const theme = useTheme();
   let inputRef: RefType<T, M> = null;
+
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const loadOptionsRef = useRef(loadOptions);
+  loadOptionsRef.current = loadOptions;
+
+  // Stable function reference — created once per mount, reads loadOptionsRef for
+  // latest value. This prevents react-select from resetting when parent re-renders.
+  const stableDebouncedFn = useRef(
+    (inputValue: string, callback: (opts: ReadonlyArray<T>) => void): void => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = setTimeout(() => {
+        const result = loadOptionsRef.current?.(inputValue, callback);
+        if (result instanceof Promise) {
+          result.then(callback);
+        }
+      }, loadOptionsDebounceMs);
+    },
+  ).current;
+
+  const effectiveLoadOptions: typeof loadOptions = loadOptions
+    ? loadOptionsDebounceMs > 0
+      ? stableDebouncedFn
+      : loadOptions
+    : undefined;
+
+  const ControlComponent = useMemo(
+    () =>
+      leftIndicator
+        ? (props: Parameters<typeof reactAsyncComponents.Control>[0]) => (
+            <reactAsyncComponents.Control {...props}>
+              <div css={indicatorStyles}>{leftIndicator}</div>
+              {props.children}
+            </reactAsyncComponents.Control>
+          )
+        : undefined,
+    [leftIndicator],
+  );
+
   const handleOnContextMenu = () => {
     inputRef?.blur?.();
   };
@@ -161,27 +212,13 @@ const MultiSelect = <
     value: values ?? getValues<T, M>(isMulti),
     components: {
       MultiValueRemove,
-      ...(leftIndicator
-        ? {
-            Control: (
-              props: Parameters<typeof reactAsyncComponents.Control>[0],
-            ) => (
-              <reactAsyncComponents.Control {...props}>
-                <div css={indicatorStyles}>{leftIndicator}</div>
-                {props.children}
-              </reactAsyncComponents.Control>
-            ),
-          }
-        : {}),
-
+      ...(ControlComponent ? { Control: ControlComponent } : {}),
       ...components,
     } as Props<T, M, GroupBase<T>>['components'],
     noOptionsMessage,
     styles: reactMultiSelectStyles(theme, !!validationMessage, isMulti),
     onFocus: () => {
-      if (onFocus) {
-        onFocus();
-      }
+      onFocus();
     },
     onBlur: () => {
       setHasBlurred(true);
@@ -240,9 +277,9 @@ const MultiSelect = <
           ref={(ref) => {
             inputRef = ref;
           }}
-          loadOptions={loadOptions}
+          loadOptions={effectiveLoadOptions}
           cacheOptions
-          defaultOptions
+          defaultOptions={defaultOptions}
           maxMenuHeight={maxMenuHeight}
         />
       ) : (
@@ -251,9 +288,9 @@ const MultiSelect = <
           ref={(ref) => {
             inputRef = ref;
           }}
-          loadOptions={loadOptions}
+          loadOptions={effectiveLoadOptions}
           cacheOptions
-          defaultOptions
+          defaultOptions={defaultOptions}
           maxMenuHeight={maxMenuHeight}
         />
       )}

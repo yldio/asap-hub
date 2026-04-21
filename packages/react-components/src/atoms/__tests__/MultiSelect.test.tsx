@@ -217,6 +217,53 @@ describe('invalidity', () => {
   });
 });
 
+describe('Async debounce', () => {
+  it('does not call loadOptions on mount when defaultOptions is false (default)', () => {
+    const loadOptions = jest.fn().mockResolvedValue([]);
+    render(<MultiSelect loadOptions={loadOptions} />);
+    expect(loadOptions).not.toHaveBeenCalled();
+  });
+
+  it('calls loadOptions on mount with empty string when defaultOptions is true', async () => {
+    const loadOptions = jest.fn().mockResolvedValue([]);
+    render(
+      <MultiSelect
+        loadOptions={loadOptions}
+        loadOptionsDebounceMs={0}
+        defaultOptions
+      />,
+    );
+    await waitFor(() => expect(loadOptions).toHaveBeenCalledTimes(1));
+    expect(loadOptions).toHaveBeenCalledWith('', expect.any(Function));
+  });
+
+  it('debounces loadOptions calls — only fires after the delay', async () => {
+    const loadOptions = jest.fn().mockResolvedValue([]);
+    const { getByRole } = render(
+      <MultiSelect loadOptions={loadOptions} loadOptionsDebounceMs={300} />,
+    );
+
+    // Type quickly — the debounce timer is reset on each keystroke
+    await userEvent.type(getByRole('combobox'), 'cancer');
+    // Immediately after typing, debounce hasn't fired yet
+    expect(loadOptions).not.toHaveBeenCalled();
+
+    // Wait for debounce to fire (> 300ms)
+    await waitFor(() => expect(loadOptions).toHaveBeenCalledTimes(1), {
+      timeout: 600,
+    });
+  });
+
+  it('bypasses debounce when loadOptionsDebounceMs is 0', async () => {
+    const loadOptions = jest.fn().mockResolvedValue([]);
+    const { getByRole } = render(
+      <MultiSelect loadOptions={loadOptions} loadOptionsDebounceMs={0} />,
+    );
+    await userEvent.type(getByRole('combobox'), 'a');
+    expect(loadOptions).toHaveBeenCalled();
+  });
+});
+
 describe('Async', () => {
   const asyncProps: ComponentProps<typeof MultiSelect> = {
     loadOptions: jest.fn(),
@@ -227,6 +274,7 @@ describe('Async', () => {
     const { getByRole, getByText, queryByText } = render(
       <MultiSelect
         loadOptions={loadOptionsEmpty}
+        loadOptionsDebounceMs={0}
         noOptionsMessage={() => 'No options'}
       />,
     );
@@ -252,6 +300,8 @@ describe('Async', () => {
       const { getByText, getByRole, queryByText } = render(
         <MultiSelect
           loadOptions={loadOptions}
+          loadOptionsDebounceMs={0}
+          defaultOptions
           onChange={handleChange}
           isMulti={isMulti}
         />,
@@ -370,6 +420,8 @@ describe('Async', () => {
         loadOptions={jest
           .fn()
           .mockResolvedValue([{ label: 'Example', value: '123' }])}
+        loadOptionsDebounceMs={0}
+        defaultOptions
         creatable={true}
         onChange={mockOnChange}
       />,

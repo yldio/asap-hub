@@ -241,6 +241,7 @@ const AnalyticsControls: React.FC<AnalyticsControlsProps> = ({
                     : 'No results found'
                 }
                 loadOptions={debouncedLoadTags}
+                loadOptionsDebounceMs={0}
                 onChange={(items) => setTags(items.map(({ value }) => value))}
                 values={tags.map((tag) => ({
                   label: tag,

@@ -5,19 +5,22 @@ import {
   PartialManuscriptResponse,
   statusButtonOptions,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { network, projects } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import {
   addUserIcon,
   AssignedUsersAvatarList,
   AuthorSelect,
+  DiscoveryProjectIcon,
   lead,
   neutral200,
   PencilIcon,
   plusIcon,
+  ResourceProjectIcon,
   StatusButton,
   steel,
+  TraineeProjectIcon,
 } from '..';
 import { Anchor, Button, Link, Pill } from '../atoms';
 import { borderRadius } from '../card';
@@ -109,9 +112,14 @@ const statusButtonContainerStyles = css({
   fontSize: rem(14),
 });
 
-const teamLinkStyles = css({
+const entityLinkStyles = css({
   display: 'flex',
+  alignItems: 'center',
   gap: rem(3),
+});
+
+const projectIconStyles = css({
+  display: 'inline-flex',
 });
 
 const apcCoverageContainerStyles = css({
@@ -123,6 +131,7 @@ const apcCoverageContainerStyles = css({
 });
 
 type ComplianceTableRowProps = {
+  displayProjectColumn: boolean;
   isComplianceReviewer: boolean;
   data: PartialManuscriptResponse;
   getAssignedUsersSuggestions: NonNullable<
@@ -138,6 +147,42 @@ type ComplianceTableRowProps = {
 
 const completeStatuses = ['Closed (other)', 'Compliant'];
 export const apcCoverableStatuses = ['Compliant', 'Submit Final Publication'];
+
+const getProjectRoute = (
+  project: NonNullable<PartialManuscriptResponse['project']>,
+) => {
+  switch (project.projectType) {
+    case 'Discovery Project':
+      return projects({})
+        .discoveryProjects({})
+        .discoveryProject({ projectId: project.id }).$;
+    case 'Resource Project':
+      return projects({})
+        .resourceProjects({})
+        .resourceProject({ projectId: project.id }).$;
+    case 'Trainee Project':
+      return projects({})
+        .traineeProjects({})
+        .traineeProject({ projectId: project.id }).$;
+    default:
+      return undefined;
+  }
+};
+
+const getProjectIcon = (
+  projectType: NonNullable<PartialManuscriptResponse['project']>['projectType'],
+) => {
+  switch (projectType) {
+    case 'Discovery Project':
+      return <DiscoveryProjectIcon />;
+    case 'Resource Project':
+      return <ResourceProjectIcon />;
+    case 'Trainee Project':
+      return <TraineeProjectIcon />;
+    default:
+      return null;
+  }
+};
 
 const getAPCStatusLabel = (
   apcRequested?: boolean,
@@ -231,6 +276,7 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
 };
 
 const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
+  displayProjectColumn,
   isComplianceReviewer,
   data,
   handleAssignUsersClick,
@@ -242,6 +288,7 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
     team,
     manuscriptId,
     lastUpdated,
+    project,
     status,
     assignedUsers,
     apcRequested,
@@ -250,6 +297,14 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
 
   const canEditAssignedUsers =
     !completeStatuses.includes(status ?? '') && isComplianceReviewer;
+  const manuscriptHref = team.id
+    ? `${network({}).teams({}).team({ teamId: team.id }).workspace({}).$}#${id}`
+    : undefined;
+  const teamHref = team.id
+    ? network({}).teams({}).team({ teamId: team.id }).workspace({}).$
+    : undefined;
+  const projectHref = project ? getProjectRoute(project) : undefined;
+  const isUserBasedProject = project?.isTeamBased === false;
 
   return (
     <>
@@ -259,29 +314,48 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
         data-testid="compliance-table-row"
       >
         <td className={'sticky'}>
-          <Pill accent="blue" numberOfLines={1} isLink>
+          <Pill
+            accent="blue"
+            numberOfLines={1}
+            isLink={Boolean(manuscriptHref)}
+          >
             <span css={pillIdStyles}>
-              <Anchor
-                href={`${
-                  network({}).teams({}).team({ teamId: team.id }).workspace({})
-                    .$
-                }#${id}`}
-              >
-                {manuscriptId}
-              </Anchor>
+              {manuscriptHref ? (
+                <Anchor href={manuscriptHref}>{manuscriptId}</Anchor>
+              ) : (
+                manuscriptId
+              )}
             </span>
           </Pill>
         </td>
+        {displayProjectColumn && (
+          <td>
+            {project?.title ? (
+              <p css={entityLinkStyles}>
+                <span css={projectIconStyles}>
+                  {getProjectIcon(project.projectType)}
+                </span>
+                {projectHref ? (
+                  <Link href={projectHref}>{project.title}</Link>
+                ) : (
+                  project.title
+                )}
+              </p>
+            ) : (
+              '—'
+            )}
+          </td>
+        )}
         <td>
-          <p css={teamLinkStyles}>
-            <Link
-              href={
-                network({}).teams({}).team({ teamId: team.id }).workspace({}).$
-              }
-            >
-              {team.displayName}
-            </Link>
-          </p>
+          {isUserBasedProject ? (
+            '—'
+          ) : team.displayName && teamHref ? (
+            <p css={entityLinkStyles}>
+              <Link href={teamHref}>{team.displayName}</Link>
+            </p>
+          ) : (
+            team.displayName || '—'
+          )}
         </td>
         <td>
           {lastUpdated &&

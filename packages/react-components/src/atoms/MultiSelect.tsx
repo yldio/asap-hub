@@ -157,7 +157,7 @@ const MultiSelect = <
       debounceTimerRef.current = setTimeout(() => {
         const result = loadOptionsRef.current?.(inputValue, callback);
         if (result instanceof Promise) {
-          result.then(callback);
+          void result.then(callback);
         }
       }, loadOptionsDebounceMs);
     },

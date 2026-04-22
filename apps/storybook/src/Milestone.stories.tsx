@@ -35,6 +35,7 @@ const defaultProps = {
   isLead: true,
   loadArticleOptions: mockLoadArticleOptions,
   fetchLinkedArticles: mockFetchArticles,
+  onSaveArticles: () => Promise.resolve(),
 };
 
 const createMilestone = (

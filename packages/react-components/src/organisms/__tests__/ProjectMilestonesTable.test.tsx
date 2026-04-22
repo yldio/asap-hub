@@ -140,6 +140,7 @@ describe('ProjectMilestonesTable', () => {
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
         pageControlsProps={pageControlsProps}
+        onSaveArticles={mockOnSaveArticles}
         selectedGrantType={'original'}
       />,
     );
@@ -158,6 +159,8 @@ describe('ProjectMilestonesTable', () => {
       <ProjectMilestonesTable
         milestones={[mockMilestones[0]!]}
         isLead={true}
+        total={mockMilestones.length}
+        hasAppliedSearch={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
         onSaveArticles={mockOnSaveArticles}

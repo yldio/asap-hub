@@ -43925,7 +43925,7 @@ export const ProjectsContentDataFragmentDoc = {
                                               },
                                               value: {
                                                 kind: 'IntValue',
-                                                value: '20',
+                                                value: '50',
                                               },
                                             },
                                             {

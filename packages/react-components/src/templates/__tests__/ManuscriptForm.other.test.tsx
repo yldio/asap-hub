@@ -143,7 +143,7 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByText, findByRole, findByLabelText } = render(
+      const { findByText, findByRole, findByLabelText } = render(
         <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
@@ -176,7 +176,7 @@ describe('authors', () => {
       });
 
       await userEvent.click(sectionInput);
-      await userEvent.click(getByText('Author One'));
+      await userEvent.click(await findByText('Author One'));
 
       await submitForm({ findByRole });
       await waitFor(() => {
@@ -212,7 +212,7 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByLabelText, getByText, findByRole, findByLabelText } = render(
+      const { getByLabelText, findByText, findByRole, findByLabelText } = render(
         <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
@@ -244,7 +244,7 @@ describe('authors', () => {
       // This avoids race conditions with Suspense fallbacks in CI environments
       const sectionInput = await findByLabelText(section);
       await userEvent.click(sectionInput);
-      await userEvent.click(getByText(/External Author One \(Non CRN\)/));
+      await userEvent.click(await findByText(/External Author One \(Non CRN\)/));
       await userEvent.type(
         getByLabelText(/External Author One Email/i),
         'external@author.com',
@@ -288,7 +288,7 @@ describe('authors', () => {
         },
       ]);
 
-      const { getByLabelText, getByText, findByRole, findByLabelText } = render(
+      const { getByLabelText, findByText, findByRole, findByLabelText } = render(
         <StaticRouter location="/">
           <Suspense fallback={<div>Loading...</div>}>
             <ManuscriptForm
@@ -322,7 +322,7 @@ describe('authors', () => {
 
       await userEvent.type(sectionInput, 'Jane Doe');
 
-      await userEvent.click(getByText(/Jane Doe/, { selector: 'strong' }));
+      await userEvent.click(await findByText(/Jane Doe/, { selector: 'strong' }));
       await userEvent.type(getByLabelText(/Jane Doe Email/i), 'jane@doe.com');
 
       await submitForm({ findByRole });

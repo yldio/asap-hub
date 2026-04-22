@@ -2796,7 +2796,7 @@ describe('ProjectContentfulDataProvider - isProjectMilestonesSynced', () => {
 
   it('returns false when counts differ', async () => {
     contentfulClientMock.request.mockResolvedValueOnce(
-      getProjectByIdGraphqlResponse(),
+      mockProjectMilestoneIdsResponse,
     );
 
     opensearchProviderMock.search.mockResolvedValueOnce({
@@ -2808,5 +2808,20 @@ describe('ProjectContentfulDataProvider - isProjectMilestonesSynced', () => {
     const result = await dataProvider.isProjectMilestonesSynced('project-1');
 
     expect(result).toBe(false);
+  });
+
+  it('throws an error when opensearch provider is not configured properly', async () => {
+    contentfulClientMock.request.mockResolvedValueOnce(
+      mockProjectMilestoneIdsResponse,
+    );
+    const dataProviderWithoutOpenSearch = new ProjectContentfulDataProvider(
+      contentfulClientMock,
+      undefined,
+    );
+    await expect(
+      dataProviderWithoutOpenSearch.isProjectMilestonesSynced('project-1'),
+    ).rejects.toThrow(
+      'Opensearch Provider not configured for ProjectContentfulDataProvider',
+    );
   });
 });

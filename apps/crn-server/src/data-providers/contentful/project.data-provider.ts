@@ -616,7 +616,9 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     projectId: string,
   ): Promise<string[]> {
     if (!this.opensearchProvider) {
-      throw new Error('Opensearch Provider not configured');
+      throw new Error(
+        'Opensearch Provider not configured for ProjectContentfulDataProvider',
+      );
     }
 
     const response = (await this.opensearchProvider.search({

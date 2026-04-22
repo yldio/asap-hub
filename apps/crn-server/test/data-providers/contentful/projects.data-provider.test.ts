@@ -1669,6 +1669,61 @@ describe('parseContentfulProjectDetail', () => {
     expect(result).not.toHaveProperty('fundedTeam');
   });
 
+  it('returns no manuscripts for Resource Project (non-team-based) when members are not Users', () => {
+    const resourceItem = getResourceIndividualProjectDetailGraphqlItem({
+      originalGrant: 'Individual Resource Grant',
+      proposalId: 'individual-proposal-1',
+      supplementGrant: null,
+    });
+
+    resourceItem.membersCollection = {
+      total: 1,
+      items: [
+        {
+          sys: { id: 'membership-resource-non-user' },
+          role: 'Contributor',
+          projectMember: null,
+        },
+      ],
+    } as never;
+
+    const result = parseContentfulProjectDetail(resourceItem);
+
+    expect(result).toMatchObject({
+      id: 'resource-individual-1',
+      projectType: 'Resource Project',
+      manuscripts: [],
+    });
+  });
+
+  it('returns no manuscripts for Trainee Project when members are not Users', () => {
+    const traineeItem = getTraineeProjectDetailGraphqlItem({
+      originalGrant: 'Trainee Original Grant',
+      proposalId: 'trainee-proposal-1',
+    });
+
+    traineeItem.membersCollection = {
+      total: 1,
+      items: [
+        {
+          sys: { id: 'membership-trainee-non-user' },
+          role: 'Trainee Project - Lead',
+          projectMember: null,
+        },
+      ],
+    } as never;
+
+    const result = parseContentfulProjectDetail(
+      traineeItem,
+    ) as TraineeProjectDetail;
+
+    expect(result).toMatchObject({
+      id: 'trainee-1',
+      projectType: 'Trainee Project',
+      manuscripts: [],
+    });
+  });
+
   it('parses Trainee Project detail with grants', () => {
     const traineeItem = getTraineeProjectDetailGraphqlItem({
       originalGrant: 'Trainee Original Grant',

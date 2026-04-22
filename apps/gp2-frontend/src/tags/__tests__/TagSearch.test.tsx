@@ -110,7 +110,9 @@ describe('TagSearch', () => {
 
     await renderPage();
     await userEvent.click(screen.getByRole('combobox'));
-    await userEvent.click(screen.getByText('LGW'));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'LGW' }, { timeout: 5000 }),
+    );
     expect(mockSetTags).toHaveBeenCalledWith(['LGW']);
   });
 });

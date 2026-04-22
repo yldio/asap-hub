@@ -168,8 +168,6 @@ describe('ProjectMilestonesTable', () => {
         selectedGrantType={'original'}
       />,
     );
-    expect(
-      screen.getByRole('button', { name: /edit/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
   });
 });

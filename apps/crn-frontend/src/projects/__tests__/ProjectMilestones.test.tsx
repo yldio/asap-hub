@@ -393,7 +393,9 @@ describe('ProjectMilestones', () => {
 
     await renderPage();
 
-    const [editButton] = await screen.findAllByRole('button', { name: /edit/i });
+    const [editButton] = await screen.findAllByRole('button', {
+      name: /edit/i,
+    });
     await userEvent.click(editButton!);
 
     const confirmButton = screen.getByRole('button', { name: /confirm/i });

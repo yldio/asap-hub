@@ -524,9 +524,7 @@ describe('Milestone', () => {
       await userEvent.click(screen.getByRole('button', { name: /edit/i }));
       expect(screen.getByRole('dialog')).toBeInTheDocument();
 
-      await userEvent.click(
-        screen.getByRole('button', { name: /confirm/i }),
-      );
+      await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
 
       await waitFor(() => {
         expect(mockOnSaveArticles).toHaveBeenCalledWith('1', []);

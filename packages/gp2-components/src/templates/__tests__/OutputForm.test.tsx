@@ -221,7 +221,9 @@ describe('OutputForm', () => {
       await user.click(screen.getByText('Chris Blue'));
       await user.click(authors);
       await user.type(authors, 'Alex White');
-      await user.click(await screen.findByRole('option', { name: /Alex White/i }));
+      await user.click(
+        await screen.findByRole('option', { name: /Alex White/i }),
+      );
 
       await user.click(
         screen.getByRole('combobox', {

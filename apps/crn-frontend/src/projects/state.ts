@@ -317,6 +317,8 @@ export const useCreateProjectMilestone = (projectId: string) => {
   return async (data: MilestoneCreateRequest) => {
     const result = await createProjectMilestone(projectId, data, authorization);
 
+    // TODO: align with product/design on how to handle cases where sync does not
+    // complete within the polling window.
     await waitForMilestonesSync(projectId, authorization);
 
     invalidateProjectMilestonesIndex();

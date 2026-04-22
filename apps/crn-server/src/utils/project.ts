@@ -15,9 +15,5 @@ export const haveSameIds = (a: string[], b: string[]): boolean => {
   const aSorted = [...a].sort();
   const bSorted = [...b].sort();
 
-  // console.log('checking ids');
-  //   console.log(aSorted);
-  //   console.log(bSorted);
-
   return aSorted.every((val, i) => val === bSorted[i]);
 };

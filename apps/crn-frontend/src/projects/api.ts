@@ -256,6 +256,16 @@ export const isProjectMilestonesSyncComplete = async (
   return data.syncComplete;
 };
 
+/**
+ * Polls the API to determine whether milestone syncing for a project is complete.
+ *
+ * The function calls `isProjectMilestonesSyncComplete` up to 10 times with a 1.5s delay
+ * between attempts. To avoid returning true on transient or inconsistent states,
+ * it requires **two consecutive successful (true) responses** before considering
+ * the sync complete.
+ *
+ * Any errors during polling are treated as a failed attempt and retried.
+ */
 export const waitForMilestonesSync = async (
   projectId: string,
   authorization: string,

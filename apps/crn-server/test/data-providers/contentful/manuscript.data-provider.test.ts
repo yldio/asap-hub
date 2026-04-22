@@ -23,6 +23,7 @@ import {
 } from '../../../src/data-providers/contentful/manuscript.data-provider';
 import {
   getContentfulGraphqlManuscript,
+  getContentfulGraphqlManuscriptProject,
   getContentfulGraphqlManuscriptsCollection,
   getContentfulGraphqlManuscriptVersions,
   getManuscriptCreateDataObject,
@@ -131,10 +132,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         sys: { id: 'team-1' },
         displayName: 'Team A',
       }),
-      Projects: () => ({
-        projectId: 'ID01',
-        grantId: 'grant',
-      }),
+      Projects: () => getContentfulGraphqlManuscriptProject(),
     });
 
   const manuscriptDataProviderMockGraphql =
@@ -1123,6 +1121,108 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(result).toMatchObject(expectedResult);
     });
 
+    test('Should prefer the direct manuscript project when present', async () => {
+      const contentfulGraphQLResponse =
+        getContentfulGraphqlManuscriptsCollection();
+
+      contentfulGraphQLResponse.items[0]!.project =
+        getContentfulGraphqlManuscriptProject({
+          sys: { id: 'direct-project-id' },
+          title: 'User Based Resource Project',
+          projectType: 'Resource Project',
+          projectId: 'USR',
+          grantId: '001',
+        });
+      contentfulGraphQLResponse.items[0]!.versionsCollection!.items[0]!.type =
+        'Original Research';
+      contentfulGraphQLResponse.items[0]!.versionsCollection!.items[0]!.lifecycle =
+        'Preprint';
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptDataProvider.fetch({});
+
+      expect(result.items[0]).toMatchObject({
+        manuscriptId: 'USR-001-001-org-P-1',
+        project: {
+          id: 'direct-project-id',
+          title: 'User Based Resource Project',
+          projectType: 'Resource Project',
+          isTeamBased: false,
+        },
+      });
+    });
+
+    test('Should return no project when neither manuscript nor team project exists', async () => {
+      const contentfulGraphQLResponse =
+        getContentfulGraphqlManuscriptsCollection();
+
+      contentfulGraphQLResponse.items[0]!.teamsCollection!.items[0]!.linkedFrom =
+        {
+          projectMembershipCollection: {
+            items: [],
+          },
+        };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptDataProvider.fetch({});
+
+      expect(result.items[0]!.project).toBeUndefined();
+    });
+
+    test('Should keep the project when the project type is unsupported', async () => {
+      const contentfulGraphQLResponse =
+        getContentfulGraphqlManuscriptsCollection();
+
+      contentfulGraphQLResponse.items[0]!.project =
+        getContentfulGraphqlManuscriptProject({
+          title: 'Project Alpha',
+          projectType: 'Unsupported Project' as never,
+        });
+      contentfulGraphQLResponse.items[0]!.versionsCollection!.items[0]!.type =
+        'Original Research';
+      contentfulGraphQLResponse.items[0]!.versionsCollection!.items[0]!.lifecycle =
+        'Preprint';
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptDataProvider.fetch({});
+
+      expect(result.items[0]!.project).toMatchObject({
+        id: 'project-1',
+        title: 'Project Alpha',
+        isTeamBased: false,
+      });
+      expect(result.items[0]!.project?.projectType).toBeUndefined();
+    });
+
+    test('Should omit the project when the direct manuscript project is incomplete', async () => {
+      const contentfulGraphQLResponse =
+        getContentfulGraphqlManuscriptsCollection();
+
+      contentfulGraphQLResponse.items[0]!.project =
+        getContentfulGraphqlManuscriptProject({ title: null });
+      contentfulGraphQLResponse.items[0]!.versionsCollection!.items[0]!.type =
+        'Original Research';
+      contentfulGraphQLResponse.items[0]!.versionsCollection!.items[0]!.lifecycle =
+        'Preprint';
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptsCollection: contentfulGraphQLResponse,
+      });
+
+      const result = await manuscriptDataProvider.fetch({});
+
+      expect(result.items[0]!.project).toBeUndefined();
+    });
+
     test('Should return an empty result when the client returns an empty array of data', async () => {
       const contentfulGraphQLResponse =
         getContentfulGraphqlManuscriptsCollection();
@@ -1167,6 +1267,61 @@ describe('Manuscripts Contentful Data Provider', () => {
       );
 
       expect(result).toMatchObject(getManuscriptDataObject());
+    });
+
+    test('Should prefer the direct manuscript project when building version identifiers', async () => {
+      const directProject = getContentfulGraphqlManuscriptProject({
+        sys: { id: 'direct-project-id' },
+        title: 'User Based Resource Project',
+        projectType: 'Resource Project',
+        projectId: 'USR',
+        grantId: '001',
+      });
+      const manuscript = getContentfulGraphqlManuscript({
+        project: directProject,
+        teamsCollection: {
+          items: [
+            {
+              sys: { id: 'team-1' },
+              linkedFrom: {
+                projectMembershipCollection: {
+                  items: [
+                    {
+                      linkedFrom: {
+                        projectsCollection: {
+                          items: [
+                            getContentfulGraphqlManuscriptProject({
+                              projectId: 'TEAM',
+                              grantId: '999',
+                            }),
+                          ],
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
+
+      expect(result!.versions[0]!.versionUID).toEqual('USR-001-001-org-P-1');
+    });
+
+    test('Should fall back to the first team linked project when the manuscript project is empty', async () => {
+      const result = await manuscriptDataProviderMockGraphql.fetchById(
+        'manuscript-id-1',
+        'user-id-1',
+      );
+
+      expect(result!.versions[0]!.versionUID).toEqual('ID01-grant-001-org-P-1');
     });
 
     test.each`

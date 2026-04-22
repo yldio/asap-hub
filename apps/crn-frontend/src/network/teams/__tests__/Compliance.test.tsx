@@ -22,6 +22,13 @@ import Compliance from '../Compliance';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { manuscriptsState } from '../state';
 
+const mockIsEnabled = jest.fn();
+
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
 mockConsoleError();
 
 jest.mock('@asap-hub/frontend-utils', () => {
@@ -130,6 +137,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
   jest.resetModules();
+  mockIsEnabled.mockReturnValue(false);
   mockUseAlgolia.mockReturnValue({
     client: useAlgolia as unknown as AlgoliaSearchClient<'crn'>,
   });
@@ -148,6 +156,37 @@ it('renders error message when the request is not a 2XX', async () => {
   await waitFor(() => {
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
+});
+
+it('shows the project column when PROJECT_WORKSPACE is enabled', async () => {
+  mockIsEnabled.mockImplementation(
+    (flag: string) => flag === 'PROJECT_WORKSPACE',
+  );
+
+  mockGetManuscripts.mockResolvedValue({
+    items: [
+      {
+        ...createPartialManuscriptResponse(),
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          projectType: 'Resource Project',
+          isTeamBased: true,
+        },
+      },
+    ],
+    total: 1,
+  });
+
+  await renderCompliancePage();
+
+  expect(
+    await screen.findByRole('columnheader', { name: 'Project' }),
+  ).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Project Alpha' })).toHaveAttribute(
+    'href',
+    '/projects/resource/project-id',
+  );
 });
 
 it('updates manuscript and refreshes data when handleUpdateManuscript is called and the status is changed', async () => {

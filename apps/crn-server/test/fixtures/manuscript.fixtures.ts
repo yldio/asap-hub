@@ -107,10 +107,26 @@ export const getContentfulGraphqlManuscript = (
   status: 'Compliant',
   apcRequested: false,
   apcAmountPaid: null,
+  project: null,
   teamsCollection: {
     items: [{ sys: { id: 'team-1' } }],
   },
   versionsCollection: getContentfulGraphqlManuscriptVersions(),
+  ...props,
+});
+
+export const getContentfulGraphqlManuscriptProject = (
+  props: Partial<
+    NonNullable<NonNullable<FetchManuscriptByIdQuery>['manuscripts']>['project']
+  > = {},
+): NonNullable<
+  NonNullable<NonNullable<FetchManuscriptByIdQuery>['manuscripts']>['project']
+> => ({
+  sys: { id: 'project-1' },
+  title: 'Project Alpha',
+  projectType: 'Resource Project',
+  projectId: 'ID01',
+  grantId: 'grant',
   ...props,
 });
 
@@ -219,58 +235,62 @@ export const getContentfulGraphqlManuscriptVersions = (
 
 export const getContentfulGraphqlManuscriptsCollection = (): NonNullable<
   NonNullable<FetchManuscriptsQuery>['manuscriptsCollection']
-> => ({
-  total: 1,
-  items: [
-    {
-      sys: {
-        id: 'manuscript-id-1',
-      },
-      title: 'Manuscript Title',
-      status: 'Compliant',
-      count: 1,
-      teamsCollection: {
-        items: [
-          {
-            sys: { id: 'team-1' },
-            displayName: 'Test Team',
-            linkedFrom: {
-              projectMembershipCollection: {
-                items: [
-                  {
-                    linkedFrom: {
-                      projectsCollection: {
-                        items: [
-                          {
-                            projectId: '',
-                            grantId: '',
-                          },
-                        ],
+> =>
+  ({
+    total: 1,
+    items: [
+      {
+        sys: {
+          id: 'manuscript-id-1',
+        },
+        title: 'Manuscript Title',
+        status: 'Compliant',
+        count: 1,
+        project: null,
+        teamsCollection: {
+          items: [
+            {
+              sys: { id: 'team-1' },
+              displayName: 'Test Team',
+              linkedFrom: {
+                projectMembershipCollection: {
+                  items: [
+                    {
+                      linkedFrom: {
+                        projectsCollection: {
+                          items: [
+                            getContentfulGraphqlManuscriptProject({
+                              projectId: '',
+                              grantId: '',
+                            }),
+                          ],
+                        },
                       },
                     },
-                  },
-                ],
+                  ],
+                },
               },
             },
-          },
-        ],
-      },
-      versionsCollection: {
-        items: [
-          {
-            sys: {
-              id: '',
-              publishedAt: '2020-09-23T20:45:22.000Z',
+          ],
+        },
+        versionsCollection: {
+          items: [
+            {
+              sys: {
+                id: '',
+                publishedAt: '2020-09-23T20:45:22.000Z',
+              },
+              type: '',
+              lifecycle: '',
+              count: 1,
             },
-            type: '',
-            lifecycle: '',
-            count: 1,
-          },
-        ],
+          ],
+        },
       },
-    },
-  ],
-});
+    ],
+  }) as NonNullable<
+    NonNullable<FetchManuscriptsQuery>['manuscriptsCollection']
+  >;
 
 export const getManuscriptDiscussions = (): ManuscriptDiscussion => ({
   id: 'discussion-id-1',
@@ -408,6 +428,12 @@ export const getManuscriptsListResponse =
           },
         ],
         lastUpdated: '2020-09-23T20:45:22.000Z',
+        project: {
+          id: 'project-1',
+          title: 'Project Alpha',
+          projectType: 'Resource Project',
+          isTeamBased: true,
+        },
         status: 'Compliant',
         team: {
           id: 'team-1',
@@ -429,6 +455,12 @@ export const getManuscriptsListResponse =
           },
         ],
         lastUpdated: '2020-09-23T20:45:22.000Z',
+        project: {
+          id: 'project-1',
+          title: 'Project Alpha',
+          projectType: 'Resource Project',
+          isTeamBased: true,
+        },
         status: 'Compliant',
         team: {
           id: 'team-1',

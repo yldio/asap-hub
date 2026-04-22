@@ -3,6 +3,13 @@ import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import { ComplianceDashboard } from '..';
 
+const mockIsEnabled = jest.fn();
+
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
 describe('ComplianceDashboard', () => {
   const props: ComponentProps<typeof ComplianceDashboard> = {
     hasAppliedFilters: false,
@@ -29,6 +36,10 @@ describe('ComplianceDashboard', () => {
     setSortingDirection: jest.fn(),
     onUpdateManuscript: jest.fn(),
   };
+
+  beforeEach(() => {
+    mockIsEnabled.mockReturnValue(false);
+  });
 
   it('renders the empty manuscript view when there are no manuscripts', () => {
     const { getByText } = render(<ComplianceDashboard {...props} data={[]} />);

@@ -377,9 +377,7 @@ const deduplicateProjectManuscripts = (
   });
 };
 
-const getManuscriptIdsFromProjectLinkedFrom = (
-  item: ProjectItem,
-): string[] => {
+const getManuscriptIdsFromProjectLinkedFrom = (item: ProjectItem): string[] => {
   const items = cleanArray(item.linkedFrom?.manuscriptsCollection?.items);
   return sortProjectManuscripts(deduplicateProjectManuscripts(items)).map(
     (m) => m.sys.id,

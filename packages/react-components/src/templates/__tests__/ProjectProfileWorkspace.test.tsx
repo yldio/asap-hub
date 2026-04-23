@@ -256,12 +256,14 @@ describe('ProjectProfileWorkspace', () => {
         expect(getByTestId('project-manuscripts')).toBeInTheDocument();
       });
 
-      it('renders an empty state when no manuscripts exist', () => {
-        const { getByTestId, getByText } = renderWithRouter(
+      it('renders the empty-state prompt when no manuscripts exist', () => {
+        const { queryByTestId, getByText } = renderWithRouter(
           <ProjectProfileWorkspace {...defaultProps} isTeamBased={false} />,
         );
-        expect(getByTestId('project-manuscripts')).toBeInTheDocument();
-        expect(getByText('No manuscripts available.')).toBeInTheDocument();
+        expect(queryByTestId('project-manuscripts')).not.toBeInTheDocument();
+        expect(
+          getByText(/Submit your manuscript to receive a report/),
+        ).toBeInTheDocument();
       });
     });
   });

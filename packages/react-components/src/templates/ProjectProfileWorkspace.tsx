@@ -329,39 +329,29 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                 )}
               </div>
             </>
-          ) : !isTeamBased ? (
+          ) : !isTeamBased && manuscripts.length > 0 ? (
             <div data-testid="project-manuscripts" css={manuscriptsGroupStyles}>
-              {manuscripts.length > 0 ? (
-                manuscripts.map((manuscriptId) => (
-                  <div key={manuscriptId}>
-                    <ManuscriptCard
-                      id={manuscriptId}
-                      user={user}
-                      // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
-                      teamId={id}
-                      isComplianceReviewer={isComplianceReviewer}
-                      onUpdateManuscript={onUpdateManuscript}
-                      isActiveTeam={isActiveProject}
-                      createDiscussion={createDiscussion}
-                      useManuscriptById={useManuscriptById}
-                      onReplyToDiscussion={onReplyToDiscussion}
-                      onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                      showTeamName={false}
-                      {...(manuscriptId === targetManuscriptId
-                        ? { isTargetManuscript: true }
-                        : {})}
-                    />
-                  </div>
-                ))
-              ) : (
-                <Paragraph
-                  noMargin
-                  accent="lead"
-                  data-testid="project-manuscripts-empty-state"
-                >
-                  No manuscripts available.
-                </Paragraph>
-              )}
+              {manuscripts.map((manuscriptId) => (
+                <div key={manuscriptId}>
+                  <ManuscriptCard
+                    id={manuscriptId}
+                    user={user}
+                    // OOS: id here is a projectId; wire correct teamId when manuscript display is implemented
+                    teamId={id}
+                    isComplianceReviewer={isComplianceReviewer}
+                    onUpdateManuscript={onUpdateManuscript}
+                    isActiveTeam={isActiveProject}
+                    createDiscussion={createDiscussion}
+                    useManuscriptById={useManuscriptById}
+                    onReplyToDiscussion={onReplyToDiscussion}
+                    onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                    showTeamName={false}
+                    {...(manuscriptId === targetManuscriptId
+                      ? { isTargetManuscript: true }
+                      : {})}
+                  />
+                </div>
+              ))}
             </div>
           ) : null}
         </Card>

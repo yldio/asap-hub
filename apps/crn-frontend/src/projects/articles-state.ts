@@ -6,6 +6,7 @@ import {
   getMilestoneArticles,
   putMilestoneArticles,
 } from './api';
+import { projectMilestonesListItemState } from './state';
 
 /**
  * Cache for articles by aim id.
@@ -73,4 +74,8 @@ export const useUpdateMilestoneArticles = (): ((
       authorization,
     );
     set(milestoneArticlesState(milestoneId), articles);
+
+    set(projectMilestonesListItemState(milestoneId), (current) =>
+      current ? { ...current, articleCount: articles.length } : current,
+    );
   });

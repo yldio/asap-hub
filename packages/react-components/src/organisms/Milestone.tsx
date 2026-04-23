@@ -250,7 +250,6 @@ const Milestone: FC<MilestoneProps> = ({
             void onSaveArticles(milestoneId, updated)
               .then(() => {
                 setArticles(updated);
-                setIsModalOpen(false);
               })
               .catch(() => {});
           }}

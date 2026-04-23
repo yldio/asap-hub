@@ -150,7 +150,10 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
               <Button
                 primary
                 noMargin
-                onClick={() => onConfirm(optionsToArticles(selectedOptions))}
+                onClick={() => {
+                  onClose();
+                  onConfirm(optionsToArticles(selectedOptions));
+                }}
               >
                 Confirm
               </Button>

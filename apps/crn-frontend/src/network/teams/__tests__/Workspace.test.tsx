@@ -41,7 +41,6 @@ jest.setTimeout(60000);
 jest.mock('../api', () => ({
   patchTeam: jest.fn(),
   updateManuscript: jest.fn().mockResolvedValue({}),
-  getDiscussion: jest.fn(),
   updateDiscussion: jest.fn(),
   createDiscussion: jest.fn().mockResolvedValue({}),
   getManuscript: jest.fn(),

@@ -127,30 +127,24 @@ describe('MilestoneArticlesModal', () => {
     });
   });
 
-  it('calls onConfirm with current articles when Confirm is clicked', async () => {
+  it('calls onClose and onConfirm when Confirm is clicked', async () => {
+    const onClose = jest.fn();
     const onConfirm = jest.fn();
     render(
       <MilestoneArticlesModal
         articles={mockArticles}
-        onClose={jest.fn()}
+        onClose={onClose}
         onConfirm={onConfirm}
         loadOptions={defaultProps.loadOptions}
       />,
     );
-    await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: /confirm/i }),
-      ).toBeInTheDocument();
-    });
     await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    expect(onClose).toHaveBeenCalledTimes(1);
     expect(onConfirm).toHaveBeenCalledTimes(1);
     expect(onConfirm).toHaveBeenCalledWith(
       expect.arrayContaining([
         expect.objectContaining({ id: 'a1', title: 'Alpha-synuclein study' }),
-        expect.objectContaining({
-          id: 'a2',
-          title: 'LRRK2 research paper',
-        }),
+        expect.objectContaining({ id: 'a2', title: 'LRRK2 research paper' }),
       ]),
     );
   });

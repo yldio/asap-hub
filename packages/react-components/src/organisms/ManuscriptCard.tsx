@@ -65,6 +65,9 @@ type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
     ];
     readonly isTargetManuscript?: boolean;
     readonly showTeamName?: boolean;
+    readonly getEditManuscriptHref?: (manuscriptId: string) => string;
+    readonly getResubmitManuscriptHref?: (manuscriptId: string) => string;
+    readonly getCreateComplianceReportHref?: (manuscriptId: string) => string;
   };
 
 const manuscriptContainerStyles = css({
@@ -240,6 +243,9 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   onMarkDiscussionAsRead,
   isTargetManuscript = false,
   showTeamName,
+  getEditManuscriptHref,
+  getResubmitManuscriptHref,
+  getCreateComplianceReportHref,
 }) => {
   const [tooltipHoverShown, setTooltipHoverShown] = useState<boolean>(false);
 

@@ -20,9 +20,14 @@ const loadProjectManuscript = () =>
   import(/* webpackChunkName: "project-manuscript" */ './ProjectManuscript');
 const loadProjectMilestones = () =>
   import(/* webpackChunkName: "project-manuscript" */ './ProjectMilestones');
+const loadProjectComplianceReport = () =>
+  import(
+    /* webpackChunkName: "project-compliance-report" */ './ProjectComplianceReport'
+  );
 
 const ProjectManuscript = lazy(loadProjectManuscript);
 const ProjectMilestones = lazy(loadProjectMilestones);
+const ProjectComplianceReport = lazy(loadProjectComplianceReport);
 
 type Props = {
   config: ProjectDetailConfig;
@@ -100,6 +105,21 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       projectId={projectId}
                       projectType={config.projectTypeKey}
                       resubmitManuscript
+                    />
+                  </Frame>
+                }
+              />
+            )}
+            {showWorkspace && (
+              <Route
+                path={`workspace${
+                  route.workspace({}).createComplianceReport.template
+                }`}
+                element={
+                  <Frame title="Create Compliance Report">
+                    <ProjectComplianceReport
+                      projectId={projectId}
+                      projectType={config.projectTypeKey}
                     />
                   </Frame>
                 }

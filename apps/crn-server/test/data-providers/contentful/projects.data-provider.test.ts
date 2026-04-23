@@ -1669,23 +1669,51 @@ describe('parseContentfulProjectDetail', () => {
     expect(result).not.toHaveProperty('fundedTeam');
   });
 
-  it('returns no manuscripts for Resource Project (non-team-based) when members are not Users', () => {
+  it('uses project-level linkedFrom manuscripts for Resource Project (non-team-based)', () => {
     const resourceItem = getResourceIndividualProjectDetailGraphqlItem({
       originalGrant: 'Individual Resource Grant',
       proposalId: 'individual-proposal-1',
       supplementGrant: null,
     });
 
-    resourceItem.membersCollection = {
-      total: 1,
-      items: [
-        {
-          sys: { id: 'membership-resource-non-user' },
-          role: 'Contributor',
-          projectMember: null,
-        },
-      ],
-    } as never;
+    (resourceItem as { linkedFrom?: unknown }).linkedFrom = {
+      manuscriptsCollection: {
+        items: [
+          {
+            sys: { id: 'ms-project-1' },
+            status: 'Compliant',
+            teamsCollection: { items: [{ sys: { id: 'team-1' } }] },
+          },
+          null,
+          {
+            sys: { id: 'ms-project-2' },
+            status: 'Waiting for Report',
+            teamsCollection: { items: [] },
+          },
+          {
+            sys: { id: 'ms-project-1' },
+            status: 'Compliant',
+            teamsCollection: { items: [] },
+          },
+        ],
+      },
+    };
+
+    const result = parseContentfulProjectDetail(resourceItem);
+
+    expect(result).toMatchObject({
+      id: 'resource-individual-1',
+      projectType: 'Resource Project',
+      manuscripts: ['ms-project-2', 'ms-project-1'],
+    });
+  });
+
+  it('returns no manuscripts for Resource Project (non-team-based) when project has no linked manuscripts', () => {
+    const resourceItem = getResourceIndividualProjectDetailGraphqlItem({
+      originalGrant: 'Individual Resource Grant',
+      proposalId: 'individual-proposal-1',
+      supplementGrant: null,
+    });
 
     const result = parseContentfulProjectDetail(resourceItem);
 
@@ -1696,22 +1724,28 @@ describe('parseContentfulProjectDetail', () => {
     });
   });
 
-  it('returns no manuscripts for Trainee Project when members are not Users', () => {
+  it('uses project-level linkedFrom manuscripts for Trainee Project', () => {
     const traineeItem = getTraineeProjectDetailGraphqlItem({
       originalGrant: 'Trainee Original Grant',
       proposalId: 'trainee-proposal-1',
     });
 
-    traineeItem.membersCollection = {
-      total: 1,
-      items: [
-        {
-          sys: { id: 'membership-trainee-non-user' },
-          role: 'Trainee Project - Lead',
-          projectMember: null,
-        },
-      ],
-    } as never;
+    (traineeItem as { linkedFrom?: unknown }).linkedFrom = {
+      manuscriptsCollection: {
+        items: [
+          {
+            sys: { id: 'trainee-ms-1' },
+            status: 'Waiting for Report',
+            teamsCollection: { items: [] },
+          },
+          {
+            sys: { id: 'trainee-ms-2' },
+            status: 'Compliant',
+            teamsCollection: { items: [] },
+          },
+        ],
+      },
+    };
 
     const result = parseContentfulProjectDetail(
       traineeItem,
@@ -1720,7 +1754,7 @@ describe('parseContentfulProjectDetail', () => {
     expect(result).toMatchObject({
       id: 'trainee-1',
       projectType: 'Trainee Project',
-      manuscripts: [],
+      manuscripts: ['trainee-ms-1', 'trainee-ms-2'],
     });
   });
 
@@ -2009,13 +2043,7 @@ describe('parseContentfulProjectDetail', () => {
 
     it('returns manuscripts for Resource non-team-based projects', () => {
       const graphqlItem = getResourceIndividualProjectDetailGraphqlItem();
-      const membersCollection = (graphqlItem as Record<string, unknown>)
-        .membersCollection as {
-        items: Array<{
-          projectMember: Record<string, unknown>;
-        }>;
-      };
-      membersCollection.items[0]!.projectMember.linkedFrom = {
+      (graphqlItem as { linkedFrom?: unknown }).linkedFrom = {
         manuscriptsCollection: {
           items: [
             {
@@ -2032,12 +2060,6 @@ describe('parseContentfulProjectDetail', () => {
                 items: [{ sys: { id: 'resource-team-main' } }],
               },
             },
-          ],
-        },
-      };
-      membersCollection.items[1]!.projectMember.linkedFrom = {
-        manuscriptsCollection: {
-          items: [
             {
               sys: { id: 'resource-user-ms-1' },
               status: 'Waiting for Report',
@@ -2059,13 +2081,7 @@ describe('parseContentfulProjectDetail', () => {
 
     it('returns manuscripts for Trainee projects', () => {
       const graphqlItem = getTraineeProjectDetailGraphqlItem();
-      const membersCollection = (graphqlItem as Record<string, unknown>)
-        .membersCollection as {
-        items: Array<{
-          projectMember: Record<string, unknown>;
-        }>;
-      };
-      membersCollection.items[0]!.projectMember.linkedFrom = {
+      (graphqlItem as { linkedFrom?: unknown }).linkedFrom = {
         manuscriptsCollection: {
           items: [
             {

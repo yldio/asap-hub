@@ -377,18 +377,14 @@ const deduplicateProjectManuscripts = (
   });
 };
 
-const getManuscriptIdsFromMembers = (
-  members: ProjectMembershipItem[],
-): string[] =>
-  sortProjectManuscripts(
-    deduplicateProjectManuscripts(
-      members.flatMap((member) =>
-        member.projectMember?.__typename === 'Users'
-          ? getManuscriptItemsFromProjectMember(member.projectMember)
-          : [],
-      ),
-    ),
-  ).map((m) => m.sys.id);
+const getManuscriptIdsFromProjectLinkedFrom = (
+  item: ProjectItem,
+): string[] => {
+  const items = cleanArray(item.linkedFrom?.manuscriptsCollection?.items);
+  return sortProjectManuscripts(deduplicateProjectManuscripts(items)).map(
+    (m) => m.sys.id,
+  );
+};
 
 const parseProjectManuscripts = (
   manuscriptItems: ProjectManuscriptItem[],
@@ -515,7 +511,7 @@ export const parseContentfulProjectDetail = (
         .filter((m) => m.projectMember?.__typename === 'Users')
         .map((m) => parseProjectUserMember(m));
 
-      const manuscripts = getManuscriptIdsFromMembers(members);
+      const manuscripts = getManuscriptIdsFromProjectLinkedFrom(item);
 
       return {
         ...baseProject,
@@ -528,7 +524,7 @@ export const parseContentfulProjectDetail = (
 
     case 'Trainee Project': {
       const allMembers = processTraineeProjectMembers(members);
-      const manuscripts = getManuscriptIdsFromMembers(members);
+      const manuscripts = getManuscriptIdsFromProjectLinkedFrom(item);
 
       return {
         ...baseProject,

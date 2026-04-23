@@ -368,11 +368,27 @@ const getManuscriptItemsFromProjectMember = (
 
 const deduplicateProjectManuscripts = (
   manuscriptItems: ProjectManuscriptItem[],
-): ProjectManuscriptItem[] =>
-  manuscriptItems.filter(
-    (manuscript, index, items) =>
-      items.findIndex(({ sys }) => sys.id === manuscript.sys.id) === index,
-  );
+): ProjectManuscriptItem[] => {
+  const seen = new Set<string>();
+  return manuscriptItems.filter(({ sys }) => {
+    if (seen.has(sys.id)) return false;
+    seen.add(sys.id);
+    return true;
+  });
+};
+
+const getManuscriptIdsFromMembers = (
+  members: ProjectMembershipItem[],
+): string[] =>
+  sortProjectManuscripts(
+    deduplicateProjectManuscripts(
+      members.flatMap((member) =>
+        member.projectMember?.__typename === 'Users'
+          ? getManuscriptItemsFromProjectMember(member.projectMember)
+          : [],
+      ),
+    ),
+  ).map((m) => m.sys.id);
 
 const parseProjectManuscripts = (
   manuscriptItems: ProjectManuscriptItem[],
@@ -499,15 +515,7 @@ export const parseContentfulProjectDetail = (
         .filter((m) => m.projectMember?.__typename === 'Users')
         .map((m) => parseProjectUserMember(m));
 
-      const manuscripts = sortProjectManuscripts(
-        deduplicateProjectManuscripts(
-          members.flatMap((member) =>
-            member.projectMember?.__typename === 'Users'
-              ? getManuscriptItemsFromProjectMember(member.projectMember)
-              : [],
-          ),
-        ),
-      ).map((manuscript) => manuscript.sys.id);
+      const manuscripts = getManuscriptIdsFromMembers(members);
 
       return {
         ...baseProject,
@@ -520,15 +528,7 @@ export const parseContentfulProjectDetail = (
 
     case 'Trainee Project': {
       const allMembers = processTraineeProjectMembers(members);
-      const manuscripts = sortProjectManuscripts(
-        deduplicateProjectManuscripts(
-          members.flatMap((member) =>
-            member.projectMember?.__typename === 'Users'
-              ? getManuscriptItemsFromProjectMember(member.projectMember)
-              : [],
-          ),
-        ),
-      ).map((manuscript) => manuscript.sys.id);
+      const manuscripts = getManuscriptIdsFromMembers(members);
 
       return {
         ...baseProject,

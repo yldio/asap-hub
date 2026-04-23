@@ -46,6 +46,13 @@ jest.mock('../ProjectManuscript', () => ({
   default: () => <div data-testid="mock-manuscript-form">Manuscript Form</div>,
 }));
 
+jest.mock('../ProjectComplianceReport', () => ({
+  __esModule: true,
+  default: () => (
+    <div data-testid="mock-compliance-report-form">Compliance Report Form</div>
+  ),
+}));
+
 // --- Mock project data ---
 
 const mockDiscoveryProject: DiscoveryProjectDetailType = {
@@ -491,6 +498,24 @@ describe.each(variants)(
       );
       expect(
         await screen.findByTestId('mock-manuscript-form'),
+      ).toBeInTheDocument();
+    });
+
+    it('renders create compliance report route via lazy loading', async () => {
+      const memberUser = {
+        projects: [{ id: mainProjectId }],
+        role: 'Grantee',
+      };
+      enable('PROJECT_WORKSPACE');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        memberUser,
+        'workspace/create-compliance-report/ms-1',
+      );
+      expect(
+        await screen.findByTestId('mock-compliance-report-form'),
       ).toBeInTheDocument();
     });
 

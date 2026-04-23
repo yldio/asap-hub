@@ -24,6 +24,15 @@ jest.mock('../../network/teams/state', () => ({
     .mockReturnValue(jest.fn().mockResolvedValue({ id: 'file-1' })),
 }));
 
+const mockUseProjectById = jest.fn((_id?: string) => undefined);
+jest.mock('../state', () => {
+  const actual = jest.requireActual('../state');
+  return {
+    ...actual,
+    useProjectById: (id: string) => mockUseProjectById(id),
+  };
+});
+
 const mockAuthorSuggestions = jest
   .fn()
   .mockResolvedValue([{ id: 'author-1', displayName: 'Test Author' }]);

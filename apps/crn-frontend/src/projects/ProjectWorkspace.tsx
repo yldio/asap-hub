@@ -38,6 +38,9 @@ type ProjectWorkspaceProps = Omit<
   | 'onDeleteTool'
 > & {
   readonly workspaceHref: string;
+  readonly getEditManuscriptHref?: (manuscriptId: string) => string;
+  readonly getResubmitManuscriptHref?: (manuscriptId: string) => string;
+  readonly getCreateComplianceReportHref?: (manuscriptId: string) => string;
 };
 
 const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({

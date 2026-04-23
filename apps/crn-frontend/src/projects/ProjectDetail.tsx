@@ -202,6 +202,21 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                             createManuscriptHref={
                               route.workspace({}).createManuscript({}).$
                             }
+                            getEditManuscriptHref={(manuscriptId) =>
+                              route
+                                .workspace({})
+                                .editManuscript({ manuscriptId }).$
+                            }
+                            getResubmitManuscriptHref={(manuscriptId) =>
+                              route
+                                .workspace({})
+                                .resubmitManuscript({ manuscriptId }).$
+                            }
+                            getCreateComplianceReportHref={(manuscriptId) =>
+                              route
+                                .workspace({})
+                                .createComplianceReport({ manuscriptId }).$
+                            }
                             targetManuscriptId={targetManuscript.slice(1)}
                             workspaceHref={route.workspace({}).$}
                           />

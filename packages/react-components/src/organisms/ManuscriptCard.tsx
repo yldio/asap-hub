@@ -267,17 +267,21 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
 
   const discussionTabRef = useRef<HTMLButtonElement>(null);
 
-  const complianceReportRoute = network({})
-    .teams({})
-    .team({ teamId })
-    .workspace({})
-    .createComplianceReport({ manuscriptId: id }).$;
+  const complianceReportRoute = getCreateComplianceReportHref
+    ? getCreateComplianceReportHref(id)
+    : network({})
+        .teams({})
+        .team({ teamId })
+        .workspace({})
+        .createComplianceReport({ manuscriptId: id }).$;
 
-  const resubmitManuscriptRoute = network({})
-    .teams({})
-    .team({ teamId })
-    .workspace({})
-    .resubmitManuscript({ manuscriptId: id }).$;
+  const resubmitManuscriptRoute = getResubmitManuscriptHref
+    ? getResubmitManuscriptHref(id)
+    : network({})
+        .teams({})
+        .team({ teamId })
+        .workspace({})
+        .resubmitManuscript({ manuscriptId: id }).$;
 
   const handleShareComplianceReport = () => {
     void navigate(complianceReportRoute, { state: { fromButton: true } });
@@ -524,6 +528,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                         categories={manuscript?.categories || []}
                         impact={manuscript?.impact}
                         showTeamName={showTeamName}
+                        getEditManuscriptHref={getEditManuscriptHref}
                       />
                     ))}
                   {versions.length > VERSION_LIMIT && (

@@ -10,7 +10,7 @@ import { rem, tabletScreen } from '../pixels';
 import { steel, info100, info500 } from '../colors';
 import { article as articleIcon, minusRectIcon, plusRectIcon } from '../icons';
 import { useTextTruncation } from '../hooks';
-import { ResearchOutputOption } from '../utils';
+import { noop, ResearchOutputOption } from '../utils';
 import {
   descriptionContainerStyles,
   mobileLabelStyles,
@@ -251,7 +251,7 @@ const Milestone: FC<MilestoneProps> = ({
               .then(() => {
                 setArticles(updated);
               })
-              .catch(() => {});
+              .catch(noop);
           }}
           loadOptions={loadArticleOptions}
         />

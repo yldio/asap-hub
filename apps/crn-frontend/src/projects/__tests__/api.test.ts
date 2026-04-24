@@ -17,6 +17,7 @@ import {
   MilestonesListOptions,
   patchProject,
   ProjectListOptions,
+  putMilestoneArticles,
   toListProjectResponse,
   waitForMilestonesSync,
 } from '../api';
@@ -436,6 +437,92 @@ describe('projects api', () => {
       });
 
       const promise = getMilestoneArticles('milestone-1', 'Bearer token');
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: undefined,
+        statusCode: 500,
+      });
+      expect(json).toHaveBeenCalled();
+    });
+  });
+
+  describe('putMilestoneArticles', () => {
+    const mockFetch = jest.fn();
+
+    beforeEach(() => {
+      (global as unknown as { fetch: typeof fetch }).fetch = mockFetch as never;
+    });
+
+    it('makes a PUT request with the correct body', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true });
+
+      await putMilestoneArticles(
+        'milestone-1',
+        ['ro-1', 'ro-2'],
+        'Bearer token',
+      );
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://api.example.com/milestones/milestone-1/articles',
+        expect.objectContaining({
+          method: 'PUT',
+          headers: expect.objectContaining({
+            authorization: 'Bearer token',
+            'content-type': 'application/json',
+          }),
+          body: JSON.stringify({ articleIds: ['ro-1', 'ro-2'] }),
+        }),
+      );
+    });
+
+    it('makes a PUT request with an empty articleIds array', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true });
+
+      await putMilestoneArticles('milestone-1', [], 'Bearer token');
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({ body: JSON.stringify({ articleIds: [] }) }),
+      );
+    });
+
+    it('throws BackendError when the response is not ok', async () => {
+      const errorBody = { message: 'forbidden' };
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        statusText: 'Forbidden',
+        json: jest.fn().mockResolvedValue(errorBody),
+      });
+
+      const promise = putMilestoneArticles(
+        'milestone-1',
+        ['ro-1'],
+        'Bearer token',
+      );
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: errorBody,
+        statusCode: 403,
+      });
+    });
+
+    it('throws BackendError when the response body cannot be parsed', async () => {
+      const json = jest.fn().mockRejectedValue(new Error('parse failure'));
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Server Error',
+        json,
+      });
+
+      const promise = putMilestoneArticles(
+        'milestone-1',
+        ['ro-1'],
+        'Bearer token',
+      );
 
       await expect(promise).rejects.toThrow(BackendError);
       await expect(promise).rejects.toMatchObject({

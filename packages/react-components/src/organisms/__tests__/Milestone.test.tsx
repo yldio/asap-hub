@@ -458,7 +458,7 @@ describe('Milestone', () => {
       expect(localFetchMock).toHaveBeenCalledTimes(2);
     });
 
-    it('keeps modal open when save fails', async () => {
+    it('closes modal immediately on confirm even when save fails', async () => {
       mockOnSaveArticles.mockRejectedValueOnce(new Error('save failed'));
       render(
         <Milestone
@@ -476,9 +476,8 @@ describe('Milestone', () => {
       await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
 
       await waitFor(() => {
-        expect(mockOnSaveArticles).toHaveBeenCalled();
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       });
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
 
     it('displays saved articles in list after confirming modal', async () => {

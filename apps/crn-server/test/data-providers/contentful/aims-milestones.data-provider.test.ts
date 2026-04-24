@@ -887,6 +887,14 @@ describe('AimsMilestonesContentfulDataProvider', () => {
   });
 
   describe('updateArticlesForMilestone', () => {
+    it('throws when REST client is not configured', async () => {
+      await expect(
+        dataProvider.updateArticlesForMilestone('milestone-1', ['ro-1']),
+      ).rejects.toThrow(
+        'REST client not configured for AimsMilestonesContentfulDataProvider',
+      );
+    });
+
     const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
       typeof patchAndPublish
     >;

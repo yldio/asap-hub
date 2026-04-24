@@ -1,16 +1,10 @@
 import { AlgoliaSearchClient, CRNTagSearchEntities } from '@asap-hub/algolia';
 import { GetListOptions } from '@asap-hub/frontend-utils';
-
-import nock from 'nock';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { getTagSearch } from '../api';
 
 jest.mock('../../config');
-
-afterEach(() => {
-  nock.cleanAll();
-});
 
 const options: GetListOptions = {
   filters: new Set<string>(),

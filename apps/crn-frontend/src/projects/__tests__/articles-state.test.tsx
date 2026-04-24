@@ -159,7 +159,9 @@ describe('aim-articles-state', () => {
 
     function useUpdateAndRead(milestoneId: string) {
       const updateArticles = useUpdateMilestoneArticles();
-      const cachedArticles = useRecoilValue(milestoneArticlesState(milestoneId));
+      const cachedArticles = useRecoilValue(
+        milestoneArticlesState(milestoneId),
+      );
       const cachedMilestone = useRecoilValue(
         projectMilestonesListItemState(milestoneId),
       );
@@ -169,10 +171,9 @@ describe('aim-articles-state', () => {
     it('calls putMilestoneArticles with milestoneId, article ids, and authorization', async () => {
       mockPutMilestoneArticles.mockResolvedValueOnce(undefined);
 
-      const { result } = renderHook(
-        () => useUpdateAndRead('milestone-1'),
-        { wrapper },
-      );
+      const { result } = renderHook(() => useUpdateAndRead('milestone-1'), {
+        wrapper,
+      });
 
       await act(async () => {
         await result.current.updateArticles('milestone-1', mockArticles);
@@ -188,10 +189,9 @@ describe('aim-articles-state', () => {
     it('updates milestoneArticlesState after a successful save', async () => {
       mockPutMilestoneArticles.mockResolvedValueOnce(undefined);
 
-      const { result } = renderHook(
-        () => useUpdateAndRead('milestone-2'),
-        { wrapper },
-      );
+      const { result } = renderHook(() => useUpdateAndRead('milestone-2'), {
+        wrapper,
+      });
 
       expect(result.current.cachedArticles).toBeUndefined();
 
@@ -214,17 +214,19 @@ describe('aim-articles-state', () => {
       }) => (
         <RecoilRoot
           initializeState={(snap) => {
-            snap.set(projectMilestonesListItemState('milestone-3'), mockMilestone);
+            snap.set(
+              projectMilestonesListItemState('milestone-3'),
+              mockMilestone,
+            );
           }}
         >
           {children}
         </RecoilRoot>
       );
 
-      const { result } = renderHook(
-        () => useUpdateAndRead('milestone-3'),
-        { wrapper: wrapperWithMilestone },
-      );
+      const { result } = renderHook(() => useUpdateAndRead('milestone-3'), {
+        wrapper: wrapperWithMilestone,
+      });
 
       await act(async () => {
         await result.current.updateArticles('milestone-3', mockArticles);
@@ -240,10 +242,9 @@ describe('aim-articles-state', () => {
     it('does not modify projectMilestonesListItemState when milestone is not cached', async () => {
       mockPutMilestoneArticles.mockResolvedValueOnce(undefined);
 
-      const { result } = renderHook(
-        () => useUpdateAndRead('milestone-4'),
-        { wrapper },
-      );
+      const { result } = renderHook(() => useUpdateAndRead('milestone-4'), {
+        wrapper,
+      });
 
       await act(async () => {
         await result.current.updateArticles('milestone-4', mockArticles);

@@ -3,7 +3,8 @@ export type Flag =
   | 'COMPLIANCE_NOTIFICATION_LIST'
   | 'DATA_MANAGER_ROLE_ENABLED'
   | 'PROJECT_WORKSPACE'
-  | 'PROJECT_AIMS_AND_MILESTONES';
+  | 'PROJECT_AIMS_AND_MILESTONES'
+  | 'ALGOLIA_DEBOUNCE_MS';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
 let overrides: Flags = {
@@ -51,6 +52,8 @@ export const setCurrentOverrides = (
 const setOverride = (flag: Flag, value: boolean | string): void => {
   overrides = { ...overrides, [flag]: value };
 };
+export const getValue = (flag: Flag): boolean | string | undefined =>
+  overrides[flag];
 export const disable = (flag: Flag): void => setOverride(flag, false);
 export const enable = (flag: Flag, value?: string): void =>
   setOverride(flag, value ?? true);

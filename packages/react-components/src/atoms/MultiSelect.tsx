@@ -19,6 +19,8 @@ import AsyncSelect from 'react-select/async';
 import type { AsyncProps } from 'react-select/async';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 
+import { useFlags } from '@asap-hub/react-context';
+
 import { pixels } from '..';
 import { useValidation, validationMessageStyles } from '../form';
 import { crossIcon } from '../icons';
@@ -135,7 +137,7 @@ const MultiSelect = <
 >({
   customValidationMessage = '',
   loadOptions,
-  loadOptionsDebounceMs = 300,
+  loadOptionsDebounceMs,
   defaultOptions = true,
   id,
   suggestions,
@@ -158,6 +160,9 @@ const MultiSelect = <
   values = getValues<T, M>(isMulti),
 }: MultiSelectProps<T, M>): ReactElement => {
   const theme = useTheme();
+  const { getValue } = useFlags();
+  const flagDebounceMs = Number(getValue('ALGOLIA_DEBOUNCE_MS')) || undefined;
+  const effectiveDebounceMs = loadOptionsDebounceMs ?? flagDebounceMs ?? 300;
   let inputRef: RefType<T, M> = null;
 
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -179,12 +184,12 @@ const MultiSelect = <
         if (result instanceof Promise) {
           void result.then(guardedCallback).catch(() => guardedCallback([]));
         }
-      }, loadOptionsDebounceMs);
+      }, effectiveDebounceMs);
     },
   ).current;
 
   const effectiveLoadOptions: typeof loadOptions = loadOptions
-    ? loadOptionsDebounceMs > 0
+    ? effectiveDebounceMs > 0
       ? stableDebouncedFn
       : loadOptions
     : undefined;

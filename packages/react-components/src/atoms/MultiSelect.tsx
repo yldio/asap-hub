@@ -2,8 +2,9 @@ import { css, useTheme } from '@emotion/react';
 import {
   ReactElement,
   ReactNode,
+  createContext,
+  useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -32,6 +33,20 @@ const indicatorStyles = css({
   paddingLeft: rem(6),
   paddingRight: rem(3),
 });
+
+const LeftIndicatorContext = createContext<ReactNode>(null);
+
+const IndicatorControl = (
+  props: Parameters<typeof reactAsyncComponents.Control>[0],
+) => {
+  const leftIndicator = useContext(LeftIndicatorContext);
+  return (
+    <reactAsyncComponents.Control {...props}>
+      <div css={indicatorStyles}>{leftIndicator}</div>
+      {props.children}
+    </reactAsyncComponents.Control>
+  );
+};
 
 export type MultiSelectOptionsType = {
   isFixed?: boolean;
@@ -148,6 +163,7 @@ const MultiSelect = <
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadOptionsRef = useRef(loadOptions);
   loadOptionsRef.current = loadOptions;
+  const requestCounterRef = useRef(0);
 
   // Stable function reference — created once per mount, reads loadOptionsRef for
   // latest value. This prevents react-select from resetting when parent re-renders.
@@ -155,9 +171,13 @@ const MultiSelect = <
     (inputValue: string, callback: (opts: ReadonlyArray<T>) => void): void => {
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = setTimeout(() => {
-        const result = loadOptionsRef.current?.(inputValue, callback);
+        const requestId = ++requestCounterRef.current;
+        const guardedCallback = (options: ReadonlyArray<T>) => {
+          if (requestId === requestCounterRef.current) callback(options);
+        };
+        const result = loadOptionsRef.current?.(inputValue, guardedCallback);
         if (result instanceof Promise) {
-          void result.then(callback).catch(() => callback([]));
+          void result.then(guardedCallback).catch(() => guardedCallback([]));
         }
       }, loadOptionsDebounceMs);
     },
@@ -168,19 +188,6 @@ const MultiSelect = <
       ? stableDebouncedFn
       : loadOptions
     : undefined;
-
-  const ControlComponent = useMemo(
-    () =>
-      leftIndicator
-        ? (props: Parameters<typeof reactAsyncComponents.Control>[0]) => (
-            <reactAsyncComponents.Control {...props}>
-              <div css={indicatorStyles}>{leftIndicator}</div>
-              {props.children}
-            </reactAsyncComponents.Control>
-          )
-        : undefined,
-    [leftIndicator],
-  );
 
   const handleOnContextMenu = () => {
     inputRef?.blur?.();
@@ -212,7 +219,7 @@ const MultiSelect = <
     value: values ?? getValues<T, M>(isMulti),
     components: {
       MultiValueRemove,
-      ...(ControlComponent ? { Control: ControlComponent } : {}),
+      ...(leftIndicator ? { Control: IndicatorControl } : {}),
       ...components,
     } as Props<T, M, GroupBase<T>>['components'],
     noOptionsMessage,
@@ -261,59 +268,63 @@ const MultiSelect = <
   };
 
   return (
-    <div css={containerStyles(noMargin)} onContextMenu={handleOnContextMenu}>
-      {suggestions ? (
-        <Select<T, typeof isMulti, GroupBase<T>>
-          {...commonProps}
-          ref={(ref) => {
-            inputRef = ref;
-          }}
-          options={suggestions as T[]}
-          maxMenuHeight={maxMenuHeight}
+    <LeftIndicatorContext.Provider value={leftIndicator}>
+      <div css={containerStyles(noMargin)} onContextMenu={handleOnContextMenu}>
+        {suggestions ? (
+          <Select<T, typeof isMulti, GroupBase<T>>
+            {...commonProps}
+            ref={(ref) => {
+              inputRef = ref;
+            }}
+            options={suggestions as T[]}
+            maxMenuHeight={maxMenuHeight}
+          />
+        ) : creatable ? (
+          <AsyncCreatableSelect<T, typeof isMulti, GroupBase<T>>
+            {...commonProps}
+            ref={(ref) => {
+              inputRef = ref;
+            }}
+            loadOptions={effectiveLoadOptions}
+            cacheOptions
+            defaultOptions={defaultOptions}
+            maxMenuHeight={maxMenuHeight}
+          />
+        ) : (
+          <AsyncSelect<T, typeof isMulti, GroupBase<T>>
+            {...commonProps}
+            ref={(ref) => {
+              inputRef = ref;
+            }}
+            loadOptions={effectiveLoadOptions}
+            cacheOptions
+            defaultOptions={defaultOptions}
+            maxMenuHeight={maxMenuHeight}
+          />
+        )}
+        <input
+          {...validationTargetProps}
+          tabIndex={-1}
+          autoComplete="off"
+          onChange={noop}
+          value={
+            Array.isArray(values)
+              ? values.map((value) => value.label).join(',')
+              : typeof values === 'object' &&
+                  values !== null &&
+                  'label' in values
+                ? values.label ?? ''
+                : ''
+          }
+          required={required}
+          disabled={!enabled}
+          hidden
         />
-      ) : creatable ? (
-        <AsyncCreatableSelect<T, typeof isMulti, GroupBase<T>>
-          {...commonProps}
-          ref={(ref) => {
-            inputRef = ref;
-          }}
-          loadOptions={effectiveLoadOptions}
-          cacheOptions
-          defaultOptions={defaultOptions}
-          maxMenuHeight={maxMenuHeight}
-        />
-      ) : (
-        <AsyncSelect<T, typeof isMulti, GroupBase<T>>
-          {...commonProps}
-          ref={(ref) => {
-            inputRef = ref;
-          }}
-          loadOptions={effectiveLoadOptions}
-          cacheOptions
-          defaultOptions={defaultOptions}
-          maxMenuHeight={maxMenuHeight}
-        />
-      )}
-      <input
-        {...validationTargetProps}
-        tabIndex={-1}
-        autoComplete="off"
-        onChange={noop}
-        value={
-          Array.isArray(values)
-            ? values.map((value) => value.label).join(',')
-            : typeof values === 'object' && values !== null && 'label' in values
-              ? values.label ?? ''
-              : ''
-        }
-        required={required}
-        disabled={!enabled}
-        hidden
-      />
-      {validationMessage?.trim() && (
-        <div css={validationMessageStyles}>{validationMessage}</div>
-      )}
-    </div>
+        {validationMessage?.trim() && (
+          <div css={validationMessageStyles}>{validationMessage}</div>
+        )}
+      </div>
+    </LeftIndicatorContext.Provider>
   );
 };
 

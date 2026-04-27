@@ -219,9 +219,18 @@ describe('invalidity', () => {
 
 describe('Async debounce', () => {
   it('does not call loadOptions on mount when defaultOptions is false (default)', () => {
+    jest.useFakeTimers();
     const loadOptions = jest.fn().mockResolvedValue([]);
-    render(<MultiSelect loadOptions={loadOptions} />);
+    render(
+      <MultiSelect
+        loadOptions={loadOptions}
+        loadOptionsDebounceMs={300}
+        defaultOptions={false}
+      />,
+    );
+    jest.advanceTimersByTime(350); // wait a bit more than 300ms to make sure  the test is not passing because the 300ms didn't pass yet
     expect(loadOptions).not.toHaveBeenCalled();
+    jest.useRealTimers();
   });
 
   it('calls loadOptions on mount with empty string when defaultOptions is true', async () => {
@@ -242,12 +251,10 @@ describe('Async debounce', () => {
     const { getByRole } = render(
       <MultiSelect loadOptions={loadOptions} loadOptionsDebounceMs={300} />,
     );
-
     // Type quickly — the debounce timer is reset on each keystroke
     await userEvent.type(getByRole('combobox'), 'cancer');
     // Immediately after typing, debounce hasn't fired yet
     expect(loadOptions).not.toHaveBeenCalled();
-
     // Wait for debounce to fire (> 300ms)
     await waitFor(() => expect(loadOptions).toHaveBeenCalledTimes(1), {
       timeout: 600,
@@ -261,6 +268,46 @@ describe('Async debounce', () => {
     );
     await userEvent.type(getByRole('combobox'), 'a');
     expect(loadOptions).toHaveBeenCalled();
+  });
+
+  it('ignores stale response when newer request has already resolved', async () => {
+    type Resolver = (
+      opts: ReadonlyArray<{ label: string; value: string }>,
+    ) => void;
+    const resolvers: Resolver[] = [];
+    const loadOptions = jest.fn().mockImplementation(
+      () =>
+        new Promise<ReadonlyArray<{ label: string; value: string }>>(
+          (resolve) => {
+            resolvers.push(resolve);
+          },
+        ),
+    );
+
+    const { getByRole, getByText, queryByText } = render(
+      <MultiSelect
+        loadOptions={loadOptions}
+        loadOptionsDebounceMs={50}
+        defaultOptions={false}
+      />,
+    );
+
+    await userEvent.type(getByRole('combobox'), 'amin-tesin');
+    await waitFor(() => expect(loadOptions).toHaveBeenCalledTimes(1));
+
+    await userEvent.type(getByRole('combobox'), '{backspace}{backspace}');
+    await waitFor(() => expect(loadOptions).toHaveBeenCalledTimes(2));
+
+    // Resolve newer (2nd) request first
+    resolvers[1]!([{ label: 'Newer Result', value: 'newer' }]);
+    await waitFor(() => expect(getByText('Newer Result')).toBeInTheDocument());
+
+    // Resolve stale (1st) request — must be discarded
+    resolvers[0]!([{ label: 'Stale Result', value: 'stale' }]);
+    await waitFor(() =>
+      expect(queryByText('Stale Result')).not.toBeInTheDocument(),
+    );
+    expect(getByText('Newer Result')).toBeInTheDocument();
   });
 });
 

@@ -4,7 +4,7 @@ export type Flag =
   | 'DATA_MANAGER_ROLE_ENABLED'
   | 'PROJECT_WORKSPACE'
   | 'PROJECT_AIMS_AND_MILESTONES'
-  | 'ALGOLIA_DEBOUNCE_MS';
+  | 'ALGOLIA_DEBOUNCE_MS_LIST';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
 let overrides: Flags = {

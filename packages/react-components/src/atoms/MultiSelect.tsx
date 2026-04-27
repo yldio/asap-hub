@@ -161,7 +161,8 @@ const MultiSelect = <
 }: MultiSelectProps<T, M>): ReactElement => {
   const theme = useTheme();
   const { getValue } = useFlags();
-  const flagDebounceMs = Number(getValue('ALGOLIA_DEBOUNCE_MS_LIST')) || undefined;
+  const flagDebounceMs =
+    Number(getValue('ALGOLIA_DEBOUNCE_MS_LIST')) || undefined;
   const effectiveDebounceMs = flagDebounceMs ?? loadOptionsDebounceMs ?? 300;
   let inputRef: RefType<T, M> = null;
 

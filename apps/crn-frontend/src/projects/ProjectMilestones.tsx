@@ -11,7 +11,10 @@ import { ComponentProps, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useManuscriptToast } from '../network/teams/useManuscriptToast';
 import { usePagination, usePaginationParams, useSearch } from '../hooks';
-import { useFetchMilestoneArticles } from './articles-state';
+import {
+  useFetchMilestoneArticles,
+  useUpdateMilestoneArticles,
+} from './articles-state';
 import { useCreateProjectMilestone, useProjectMilestones } from './state';
 
 const milestoneControlsStyles = {
@@ -60,6 +63,20 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   const fetchArticles = useFetchMilestoneArticles();
+  const rawSaveArticles = useUpdateMilestoneArticles();
+  const { setFormType } = useManuscriptToast();
+
+  const onSaveArticles = useCallback<typeof rawSaveArticles>(
+    async (milestoneId, articles) => {
+      try {
+        await rawSaveArticles(milestoneId, articles);
+      } catch (e) {
+        setFormType({ type: 'default-error', accent: 'error' });
+        throw e;
+      }
+    },
+    [rawSaveArticles, setFormType],
+  );
 
   return (
     <ProjectMilestonesTable
@@ -72,6 +89,7 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
       fetchLinkedArticles={fetchArticles}
       isLead={isLead}
       loadArticleOptions={loadArticleOptions}
+      onSaveArticles={onSaveArticles}
       selectedGrantType={selectedGrantType}
       total={total}
       hasAppliedSearch={searchQuery.trim().length > 0 || filters.size > 0}

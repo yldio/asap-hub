@@ -70,7 +70,7 @@ const mainWrapStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
 });
 
-const articlesToOptions = (
+export const articlesToOptions = (
   articles: ReadonlyArray<ArticleItem>,
 ): ResearchOutputOption[] =>
   articles.map((a) => ({
@@ -86,7 +86,7 @@ const optionsToArticles = (
   options.map((o) => ({
     id: o.value,
     title: o.label,
-    href: '',
+    href: `/shared-research/${o.value}`,
     type: o.type as ResearchOutputType | undefined,
   }));
 
@@ -150,7 +150,10 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
               <Button
                 primary
                 noMargin
-                onClick={() => onConfirm(optionsToArticles(selectedOptions))}
+                onClick={() => {
+                  onClose();
+                  onConfirm(optionsToArticles(selectedOptions));
+                }}
               >
                 Confirm
               </Button>

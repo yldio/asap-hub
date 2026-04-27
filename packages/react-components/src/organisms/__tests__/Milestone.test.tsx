@@ -8,6 +8,7 @@ import {
 import Milestone, { getMilestoneStatusAccent } from '../Milestone';
 
 const mockLoadArticleOptions = jest.fn(() => Promise.resolve([]));
+const mockOnSaveArticles = jest.fn(() => Promise.resolve());
 
 const mockMilestone: MilestoneType = {
   id: '1',
@@ -49,6 +50,7 @@ describe('Milestone', () => {
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
       />,
     );
     expect(screen.getByText(mockMilestone.description)).toBeInTheDocument();
@@ -61,6 +63,7 @@ describe('Milestone', () => {
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
       />,
     );
     expect(screen.getByText('Complete')).toBeInTheDocument();
@@ -76,6 +79,7 @@ describe('Milestone', () => {
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
       />,
     );
     expect(screen.getByText('#1')).toBeInTheDocument();
@@ -89,6 +93,7 @@ describe('Milestone', () => {
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
       />,
     );
     expect(screen.queryByText('—')).not.toBeInTheDocument();
@@ -102,6 +107,7 @@ describe('Milestone', () => {
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
       />,
     );
 
@@ -130,6 +136,7 @@ describe('Milestone', () => {
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
       />,
     );
 
@@ -168,6 +175,7 @@ describe('Milestone', () => {
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
       />,
     );
 
@@ -213,8 +221,18 @@ describe('Milestone', () => {
       articleCount: 2,
     };
     const sampleArticles: ArticleItem[] = [
-      { id: 'a1', title: 'Article 1', href: '/a1', type: 'Preprint' },
-      { id: 'a2', title: 'Article 2', href: '/a2', type: 'Published' },
+      {
+        id: 'a1',
+        title: 'Article 1',
+        href: '/shared-research/a1',
+        type: 'Preprint',
+      },
+      {
+        id: 'a2',
+        title: 'Article 2',
+        href: '/shared-research/a2',
+        type: 'Published',
+      },
     ];
 
     const mockFetchLinkedArticles = jest.fn(() =>
@@ -228,6 +246,7 @@ describe('Milestone', () => {
           isLead={false}
           loadArticleOptions={mockLoadArticleOptions}
           fetchLinkedArticles={mockFetchArticles}
+          onSaveArticles={mockOnSaveArticles}
         />,
       );
       expect(screen.getByText('No articles added')).toBeInTheDocument();
@@ -240,6 +259,7 @@ describe('Milestone', () => {
           isLead={false}
           loadArticleOptions={mockLoadArticleOptions}
           fetchLinkedArticles={mockFetchArticles}
+          onSaveArticles={mockOnSaveArticles}
         />,
       );
       expect(screen.getByText('Articles (2)')).toBeInTheDocument();
@@ -255,6 +275,7 @@ describe('Milestone', () => {
           isLead={false}
           loadArticleOptions={mockLoadArticleOptions}
           fetchLinkedArticles={mockFetchLinkedArticles}
+          onSaveArticles={mockOnSaveArticles}
         />,
       );
       await userEvent.click(
@@ -274,6 +295,7 @@ describe('Milestone', () => {
           isLead={false}
           loadArticleOptions={mockLoadArticleOptions}
           fetchLinkedArticles={mockFetchLinkedArticles}
+          onSaveArticles={mockOnSaveArticles}
         />,
       );
       await userEvent.click(
@@ -293,6 +315,7 @@ describe('Milestone', () => {
           isLead={false}
           loadArticleOptions={mockLoadArticleOptions}
           fetchLinkedArticles={mockFetchArticles}
+          onSaveArticles={mockOnSaveArticles}
         />,
       );
       expect(
@@ -307,6 +330,7 @@ describe('Milestone', () => {
           isLead={true}
           loadArticleOptions={mockLoadArticleOptions}
           fetchLinkedArticles={mockFetchArticles}
+          onSaveArticles={mockOnSaveArticles}
         />,
       );
       expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
@@ -319,6 +343,7 @@ describe('Milestone', () => {
           isLead={true}
           loadArticleOptions={mockLoadArticleOptions}
           fetchLinkedArticles={mockFetchArticles}
+          onSaveArticles={mockOnSaveArticles}
         />,
       );
       expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
@@ -331,6 +356,7 @@ describe('Milestone', () => {
           isLead={true}
           loadArticleOptions={mockLoadArticleOptions}
           fetchLinkedArticles={mockFetchArticles}
+          onSaveArticles={mockOnSaveArticles}
         />,
       );
       await userEvent.click(screen.getByRole('button', { name: /edit/i }));
@@ -345,6 +371,7 @@ describe('Milestone', () => {
           isLead={true}
           loadArticleOptions={mockLoadArticleOptions}
           fetchLinkedArticles={mockFetchArticles}
+          onSaveArticles={mockOnSaveArticles}
         />,
       );
       await userEvent.click(screen.getByRole('button', { name: /edit/i }));
@@ -360,10 +387,148 @@ describe('Milestone', () => {
           isLead={true}
           loadArticleOptions={mockLoadArticleOptions}
           fetchLinkedArticles={mockFetchLinkedArticles}
+          onSaveArticles={mockOnSaveArticles}
         />,
       );
       await userEvent.click(screen.getByRole('button', { name: /edit/i }));
       expect(screen.getByText('Edit Related Articles')).toBeInTheDocument();
+    });
+
+    it('renders article titles as links with correct hrefs when expanded', async () => {
+      render(
+        <Milestone
+          milestone={milestoneWithArticles}
+          isLead={false}
+          loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchLinkedArticles}
+          onSaveArticles={mockOnSaveArticles}
+        />,
+      );
+      await userEvent.click(
+        screen.getByRole('button', { name: /expand articles/i }),
+      );
+      expect(screen.getByRole('link', { name: 'Article 1' })).toHaveAttribute(
+        'href',
+        '/shared-research/a1',
+      );
+      expect(screen.getByRole('link', { name: 'Article 2' })).toHaveAttribute(
+        'href',
+        '/shared-research/a2',
+      );
+    });
+
+    it('calls fetchLinkedArticles with milestone id when Edit is clicked with existing articles', async () => {
+      render(
+        <Milestone
+          milestone={milestoneWithArticles}
+          isLead={true}
+          loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchLinkedArticles}
+          onSaveArticles={mockOnSaveArticles}
+        />,
+      );
+      await userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      expect(mockFetchLinkedArticles).toHaveBeenCalledWith(
+        milestoneWithArticles.id,
+      );
+    });
+
+    it('re-fetches articles when Edit is opened a second time after saving', async () => {
+      const localFetchMock = jest.fn(() => Promise.resolve(sampleArticles));
+      mockOnSaveArticles.mockResolvedValueOnce(undefined);
+      render(
+        <Milestone
+          milestone={milestoneWithArticles}
+          isLead={true}
+          loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={localFetchMock}
+          onSaveArticles={mockOnSaveArticles}
+        />,
+      );
+
+      await userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      expect(localFetchMock).toHaveBeenCalledTimes(1);
+
+      await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      });
+
+      await userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      expect(localFetchMock).toHaveBeenCalledTimes(2);
+    });
+
+    it('closes modal immediately on confirm even when save fails', async () => {
+      mockOnSaveArticles.mockRejectedValueOnce(new Error('save failed'));
+      render(
+        <Milestone
+          milestone={mockMilestone}
+          isLead={true}
+          loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchArticles}
+          onSaveArticles={mockOnSaveArticles}
+        />,
+      );
+
+      await userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+      await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      });
+    });
+
+    it('displays saved articles in list after confirming modal', async () => {
+      mockOnSaveArticles.mockResolvedValueOnce(undefined);
+      render(
+        <Milestone
+          milestone={milestoneWithArticles}
+          isLead={true}
+          loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchLinkedArticles}
+          onSaveArticles={mockOnSaveArticles}
+        />,
+      );
+      await userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      });
+      await userEvent.click(
+        screen.getByRole('button', { name: /expand articles/i }),
+      );
+      expect(screen.getByRole('link', { name: 'Article 1' })).toHaveAttribute(
+        'href',
+        '/shared-research/a1',
+      );
+      expect(screen.getByRole('link', { name: 'Article 2' })).toHaveAttribute(
+        'href',
+        '/shared-research/a2',
+      );
+    });
+
+    it('calls onSaveArticles and closes modal when Confirm is clicked', async () => {
+      mockOnSaveArticles.mockResolvedValueOnce(undefined);
+      render(
+        <Milestone
+          milestone={mockMilestone}
+          isLead={true}
+          loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchArticles}
+          onSaveArticles={mockOnSaveArticles}
+        />,
+      );
+      await userEvent.click(screen.getByRole('button', { name: /edit/i }));
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+      await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+
+      await waitFor(() => {
+        expect(mockOnSaveArticles).toHaveBeenCalledWith('1', []);
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      });
     });
   });
 

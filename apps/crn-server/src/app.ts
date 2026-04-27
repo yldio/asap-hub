@@ -319,7 +319,10 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   const aimsMilestonesDataProvider =
     libs.aimsMilestonesDataProvider ||
-    new AimsMilestonesContentfulDataProvider(contentfulGraphQLClient);
+    new AimsMilestonesContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
 
   const opensearchProvider =
     libs.opensearchProvider || new OpensearchDataProvider();
@@ -471,7 +474,10 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const labRoutes = labRouteFactory(labController);
   const manuscriptRoutes = manuscriptRouteFactory(manuscriptController);
-  const milestoneRoutes = milestoneRouteFactory(milestoneController);
+  const milestoneRoutes = milestoneRouteFactory(
+    milestoneController,
+    projectController,
+  );
   const newsRoutes = newsRouteFactory(newsController);
   const projectRoutes = projectRouteFactory(projectController);
   const opensearchRoutes = opensearchRouteFactory(opensearchController);

@@ -1,5 +1,6 @@
 import { ArticleItem, ListResponse } from '@asap-hub/model';
 import {
+  Environment,
   FETCH_AIM_ARTICLES,
   FETCH_AIMS_WITH_MILESTONES,
   FETCH_AIMS_LINKED_TO_MILESTONE,
@@ -16,7 +17,9 @@ import {
   FetchAimArticlesQueryVariables,
   FetchMilestoneArticlesQuery,
   FetchMilestoneArticlesQueryVariables,
+  getLinkEntities,
   GraphQLClient,
+  patchAndPublish,
 } from '@asap-hub/contentful';
 import { cleanArray, getFirstValid } from '@asap-hub/server-common';
 
@@ -31,7 +34,10 @@ import {
 export class AimsMilestonesContentfulDataProvider
   implements AimsMilestonesDataProvider
 {
-  constructor(private contentfulClient: GraphQLClient) {}
+  constructor(
+    private contentfulClient: GraphQLClient,
+    private getRestClient?: () => Promise<Environment>,
+  ) {}
 
   async fetchProjectsWithAims(options: {
     limit: number;
@@ -277,5 +283,23 @@ export class AimsMilestonesContentfulDataProvider
       getFirstValid(supplementGrant?.linkedFrom?.projectsCollection?.items)?.sys
         .id ?? null
     );
+  }
+
+  async updateArticlesForMilestone(
+    milestoneId: string,
+    articleIds: string[],
+  ): Promise<void> {
+    if (!this.getRestClient) {
+      throw new Error(
+        'REST client not configured for AimsMilestonesContentfulDataProvider',
+      );
+    }
+
+    const environment = await this.getRestClient();
+    const entry = await environment.getEntry(milestoneId);
+
+    await patchAndPublish(entry, {
+      relatedArticles: getLinkEntities(articleIds),
+    });
   }
 }

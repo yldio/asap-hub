@@ -102,6 +102,10 @@ type MilestoneProps = {
   readonly fetchLinkedArticles: (
     milestoneId: string,
   ) => Promise<ReadonlyArray<ArticleItem>>;
+  readonly onSaveArticles: (
+    milestoneId: string,
+    articles: ReadonlyArray<ArticleItem>,
+  ) => Promise<void>;
 };
 
 const Milestone: FC<MilestoneProps> = ({
@@ -109,28 +113,27 @@ const Milestone: FC<MilestoneProps> = ({
   fetchLinkedArticles,
   isLead,
   loadArticleOptions,
+  onSaveArticles,
 }) => {
   const { ref, isExpanded, needsExpansion, toggle } = useTextTruncation(
     milestone.description,
   );
   const milestoneId = milestone.id;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [articles, setArticles] = useState<ReadonlyArray<ArticleItem>>([]);
+  const [articles, setArticles] = useState<
+    ReadonlyArray<ArticleItem> | undefined
+  >(undefined);
   const [isArticlesExpanded, setIsArticlesExpanded] = useState(false);
 
-  const [hasFetched, setHasFetched] = useState(false);
+  const articleCount =
+    articles !== undefined ? articles.length : milestone.articleCount;
 
-  const fetchArticlesIfNeeded = async () => {
-    if (hasFetched) return;
-
+  const fetchArticles = async () => {
     const result = await fetchLinkedArticles(milestoneId);
     setArticles(result);
-    setHasFetched(true);
   };
 
   const aimNumbers = parseAimsString(milestone.aims);
-
-  const { articleCount } = milestone;
 
   return (
     <div css={milestoneRowStyles}>
@@ -161,7 +164,7 @@ const Milestone: FC<MilestoneProps> = ({
               <span css={noArticlesTextStyles}>No articles added</span>
               {isLead && (
                 <>
-                  <span css={articlesSeparatorStyles}>&middot;</span>
+                  <span css={articlesSeparatorStyles}>•</span>
                   <Button
                     linkStyle
                     onClick={() => setIsModalOpen(true)}
@@ -181,8 +184,8 @@ const Milestone: FC<MilestoneProps> = ({
                   }
                   linkStyle
                   onClick={async () => {
-                    if (!isArticlesExpanded) {
-                      await fetchArticlesIfNeeded();
+                    if (!isArticlesExpanded && articles === undefined) {
+                      await fetchArticles();
                     }
                     setIsArticlesExpanded((prev) => !prev);
                   }}
@@ -201,7 +204,7 @@ const Milestone: FC<MilestoneProps> = ({
                     <Button
                       linkStyle
                       onClick={async () => {
-                        await fetchArticlesIfNeeded();
+                        await fetchArticles();
                         setIsModalOpen(true);
                       }}
                       overrideStyles={editButtonStyles}
@@ -214,7 +217,7 @@ const Milestone: FC<MilestoneProps> = ({
               {isArticlesExpanded && (
                 <div css={articlesListWrapperStyles(rem(240))}>
                   <ul css={articlesListStyles}>
-                    {articles.map(({ id, title, href }) => (
+                    {(articles ?? []).map(({ id, title, href }) => (
                       <li key={id} css={articlesItemStyles}>
                         <span css={articlesItemIconStyles} aria-hidden>
                           {articleIcon}
@@ -241,9 +244,15 @@ const Milestone: FC<MilestoneProps> = ({
       </div>
       {isModalOpen && (
         <MilestoneArticlesModal
-          articles={articles}
+          articles={articles ?? []}
           onClose={() => setIsModalOpen(false)}
-          onConfirm={noop}
+          onConfirm={(updated) => {
+            void onSaveArticles(milestoneId, updated)
+              .then(() => {
+                setArticles(updated);
+              })
+              .catch(noop);
+          }}
           loadOptions={loadArticleOptions}
         />
       )}

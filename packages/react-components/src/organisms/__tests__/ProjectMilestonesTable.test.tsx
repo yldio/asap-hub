@@ -3,6 +3,7 @@ import { ArticleItem, Milestone } from '@asap-hub/model';
 import ProjectMilestonesTable from '../ProjectMilestonesTable';
 
 const mockLoadArticleOptions = jest.fn(() => Promise.resolve([]));
+const mockOnSaveArticles = jest.fn(() => Promise.resolve());
 
 const mockMilestones: Milestone[] = [
   {
@@ -64,6 +65,7 @@ describe('ProjectMilestonesTable', () => {
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
         pageControlsProps={pageControlsProps}
         selectedGrantType={'original'}
       />,
@@ -94,6 +96,7 @@ describe('ProjectMilestonesTable', () => {
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
         pageControlsProps={pageControlsProps}
         selectedGrantType={'original'}
       />,
@@ -114,6 +117,7 @@ describe('ProjectMilestonesTable', () => {
         isLead={false}
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
         pageControlsProps={pageControlsProps}
         selectedGrantType={'original'}
       />,
@@ -136,6 +140,7 @@ describe('ProjectMilestonesTable', () => {
         loadArticleOptions={mockLoadArticleOptions}
         fetchLinkedArticles={mockFetchArticles}
         pageControlsProps={pageControlsProps}
+        onSaveArticles={mockOnSaveArticles}
         selectedGrantType={'original'}
       />,
     );
@@ -147,5 +152,22 @@ describe('ProjectMilestonesTable', () => {
         'Please double-check your search for any typos or try a different search term.',
       ),
     ).toBeInTheDocument();
+  });
+
+  it('passes onSaveArticles down to each Milestone row', async () => {
+    render(
+      <ProjectMilestonesTable
+        milestones={[mockMilestones[0]!]}
+        isLead={true}
+        total={mockMilestones.length}
+        hasAppliedSearch={false}
+        loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
+        pageControlsProps={pageControlsProps}
+        selectedGrantType={'original'}
+      />,
+    );
+    expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();
   });
 });

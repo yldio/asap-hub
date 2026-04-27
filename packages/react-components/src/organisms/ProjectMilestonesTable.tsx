@@ -131,6 +131,10 @@ type ProjectMilestonesProps = {
   readonly fetchLinkedArticles: (
     milestoneId: string,
   ) => Promise<ReadonlyArray<ArticleItem>>;
+  readonly onSaveArticles: (
+    milestoneId: string,
+    articles: ReadonlyArray<ArticleItem>,
+  ) => Promise<void>;
   readonly selectedGrantType: GrantType;
 };
 
@@ -141,6 +145,7 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
   isLead,
   loadArticleOptions,
   fetchLinkedArticles,
+  onSaveArticles,
   selectedGrantType,
   pageControlsProps,
 }) => {
@@ -206,6 +211,7 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
                     fetchLinkedArticles={fetchLinkedArticles}
                     isLead={isLead}
                     loadArticleOptions={loadArticleOptions}
+                    onSaveArticles={onSaveArticles}
                   />
                 </div>
               ))}

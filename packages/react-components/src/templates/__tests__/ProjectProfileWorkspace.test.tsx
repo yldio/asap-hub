@@ -255,6 +255,16 @@ describe('ProjectProfileWorkspace', () => {
         );
         expect(getByTestId('project-manuscripts')).toBeInTheDocument();
       });
+
+      it('renders the empty-state prompt when no manuscripts exist', () => {
+        const { queryByTestId, getByText } = renderWithRouter(
+          <ProjectProfileWorkspace {...defaultProps} isTeamBased={false} />,
+        );
+        expect(queryByTestId('project-manuscripts')).not.toBeInTheDocument();
+        expect(
+          getByText(/Submit your manuscript to receive a report/),
+        ).toBeInTheDocument();
+      });
     });
   });
 

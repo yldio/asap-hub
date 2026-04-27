@@ -47,6 +47,23 @@ export default class ManuscriptController {
     return manuscript;
   }
 
+  async fetchByIds(
+    manuscriptIds: ReadonlyArray<string>,
+    userId: string,
+  ): Promise<ManuscriptResponse[]> {
+    const uniqueManuscriptIds = [...new Set(manuscriptIds)];
+
+    const manuscripts = await Promise.all(
+      uniqueManuscriptIds.map((manuscriptId) =>
+        this.manuscriptDataProvider.fetchById(manuscriptId, userId),
+      ),
+    );
+
+    return manuscripts.filter(
+      (manuscript): manuscript is ManuscriptResponse => manuscript !== null,
+    );
+  }
+
   async fetch(
     options: FetchOptions<ManuscriptsFilter>,
   ): Promise<ListPartialManuscriptResponse> {

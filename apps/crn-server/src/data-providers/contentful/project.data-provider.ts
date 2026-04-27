@@ -337,6 +337,16 @@ type ProjectManuscriptItem = {
   } | null;
 };
 
+type ProjectMemberWithLinkedManuscripts = NonNullable<
+  ProjectMembershipItem['projectMember']
+> & {
+  linkedFrom?: {
+    manuscriptsCollection?: {
+      items: Array<ProjectManuscriptItem | null>;
+    };
+  };
+};
+
 const sortProjectManuscripts = (manuscripts: ProjectManuscriptItem[]) => {
   const STATUS_PRIORITY: Record<'Compliant' | 'Closed (other)', number> = {
     Compliant: 1,
@@ -351,18 +361,31 @@ const sortProjectManuscripts = (manuscripts: ProjectManuscriptItem[]) => {
   });
 };
 
-const getManuscriptItemsFromTeamMember = (
-  teamMember: NonNullable<ProjectMembershipItem['projectMember']>,
+const getManuscriptItemsFromProjectMember = (
+  projectMember: NonNullable<ProjectMembershipItem['projectMember']>,
 ): ProjectManuscriptItem[] => {
-  const memberWithLinkedFrom = teamMember as typeof teamMember & {
-    linkedFrom?: {
-      manuscriptsCollection?: {
-        items: Array<ProjectManuscriptItem | null>;
-      };
-    };
-  };
+  const memberWithLinkedFrom =
+    projectMember as ProjectMemberWithLinkedManuscripts;
   return cleanArray(
     memberWithLinkedFrom.linkedFrom?.manuscriptsCollection?.items,
+  );
+};
+
+const deduplicateProjectManuscripts = (
+  manuscriptItems: ProjectManuscriptItem[],
+): ProjectManuscriptItem[] => {
+  const seen = new Set<string>();
+  return manuscriptItems.filter(({ sys }) => {
+    if (seen.has(sys.id)) return false;
+    seen.add(sys.id);
+    return true;
+  });
+};
+
+const getManuscriptIdsFromProjectLinkedFrom = (item: ProjectItem): string[] => {
+  const items = cleanArray(item.linkedFrom?.manuscriptsCollection?.items);
+  return sortProjectManuscripts(deduplicateProjectManuscripts(items)).map(
+    (m) => m.sys.id,
   );
 };
 
@@ -426,7 +449,7 @@ export const parseContentfulProjectDetail = (
           .map((m) => parseProjectUserMember(m));
 
         // Parse manuscripts from team's linkedFrom
-        const manuscriptItems = getManuscriptItemsFromTeamMember(teamMember);
+        const manuscriptItems = getManuscriptItemsFromProjectMember(teamMember);
         const { manuscripts, collaborationManuscripts } =
           parseProjectManuscripts(manuscriptItems, teamMember.sys.id);
 
@@ -469,7 +492,7 @@ export const parseContentfulProjectDetail = (
 
         // Parse manuscripts from team's linkedFrom
         const resourceManuscriptItems =
-          getManuscriptItemsFromTeamMember(teamMember);
+          getManuscriptItemsFromProjectMember(teamMember);
         const {
           manuscripts: resourceManuscripts,
           collaborationManuscripts: resourceCollaborationManuscripts,
@@ -491,22 +514,27 @@ export const parseContentfulProjectDetail = (
         .filter((m) => m.projectMember?.__typename === 'Users')
         .map((m) => parseProjectUserMember(m));
 
+      const manuscripts = getManuscriptIdsFromProjectLinkedFrom(item);
+
       return {
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
         members: userMembers.length > 0 ? userMembers : undefined,
+        manuscripts,
       } as ResourceProjectDetail;
     }
 
     case 'Trainee Project': {
       const allMembers = processTraineeProjectMembers(members);
+      const manuscripts = getManuscriptIdsFromProjectLinkedFrom(item);
 
       return {
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
         members: allMembers,
+        manuscripts,
       } as TraineeProjectDetail;
     }
 

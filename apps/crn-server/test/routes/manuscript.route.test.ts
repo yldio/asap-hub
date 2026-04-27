@@ -241,6 +241,60 @@ describe('/manuscripts/ route', () => {
     });
   });
 
+  describe('POST /manuscripts/batch', () => {
+    test('Should return 403 when not allowed to get manuscripts', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: false,
+      });
+
+      const response = await supertest(app)
+        .post('/manuscripts/batch')
+        .send({
+          ids: ['manuscript-1'],
+        });
+
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should validate the request body', async () => {
+      const response = await supertest(app).post('/manuscripts/batch').send({
+        ids: [],
+      });
+
+      expect(response.status).toEqual(400);
+    });
+
+    test('Should return the result correctly', async () => {
+      const manuscriptResponse = getManuscriptResponse();
+      manuscriptControllerMock.fetchByIds.mockResolvedValueOnce([
+        manuscriptResponse,
+      ]);
+
+      const response = await supertest(app)
+        .post('/manuscripts/batch')
+        .send({
+          ids: ['manuscript-1'],
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([manuscriptResponse]);
+    });
+
+    test('Should call the controller with the right parameters', async () => {
+      await supertest(app)
+        .post('/manuscripts/batch')
+        .send({
+          ids: ['manuscript-1', 'manuscript-2'],
+        });
+
+      expect(manuscriptControllerMock.fetchByIds).toHaveBeenCalledWith(
+        ['manuscript-1', 'manuscript-2'],
+        'user-id-0',
+      );
+    });
+  });
+
   describe('POST /manuscripts/file-upload-from-url', () => {
     const manuscriptFileResponse = getManuscriptFileResponse();
     test('should call createFile with the correct parameters when the file information is correctly provided', async () => {

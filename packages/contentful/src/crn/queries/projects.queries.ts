@@ -82,6 +82,23 @@ export const projectsContentQueryFragment = gql`
         url
       }
     }
+    linkedFrom {
+      manuscriptsCollection(limit: 100, order: sys_firstPublishedAt_DESC) {
+        items {
+          sys {
+            id
+          }
+          status
+          teamsCollection(limit: 1) {
+            items {
+              sys {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
     membersCollection(limit: 100) {
       total
       items {
@@ -103,6 +120,26 @@ export const projectsContentQueryFragment = gql`
             alumniSinceDate
             avatar {
               url
+            }
+            linkedFrom {
+              manuscriptsCollection(
+                limit: 50
+                order: sys_firstPublishedAt_DESC
+              ) {
+                items {
+                  sys {
+                    id
+                  }
+                  status
+                  teamsCollection(limit: 1) {
+                    items {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
           ... on Teams {

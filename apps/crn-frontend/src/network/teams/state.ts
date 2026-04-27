@@ -41,6 +41,7 @@ import {
   createPreprintResearchOutput,
   downloadFullComplianceDataset,
   getManuscript,
+  getManuscriptsByIds,
   getManuscripts,
   getManuscriptVersions,
   getManuscriptVersionByManuscriptId,
@@ -223,6 +224,41 @@ export const useInvalidateManuscriptIndex = () => {
 
 export const useManuscriptById = (id: string) =>
   useRecoilState(manuscriptState(id));
+
+const batchManuscriptsResolvedState = atomFamily<boolean, string>({
+  key: 'batchManuscriptsResolved',
+  default: false,
+});
+
+export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
+  const authorization = useRecoilValue(authorizationState);
+  const deduplicatedIds = [...new Set(ids.filter(Boolean))].sort();
+  const key = deduplicatedIds.join(',');
+  const [resolved, setResolved] = useRecoilState(
+    batchManuscriptsResolvedState(key),
+  );
+
+  const hydrateManuscripts = useRecoilCallback(
+    ({ set }) =>
+      async (manuscriptIds: ReadonlyArray<string>) => {
+        const manuscripts = await getManuscriptsByIds(
+          manuscriptIds,
+          authorization,
+        );
+        manuscripts.forEach((manuscript) => {
+          set(manuscriptState(manuscript.id), manuscript);
+        });
+        setResolved(true);
+      },
+    [authorization, setResolved],
+  );
+
+  if (!deduplicatedIds.length || resolved) {
+    return;
+  }
+
+  throw hydrateManuscripts(deduplicatedIds);
+};
 
 export const useSetManuscriptItem = () => {
   const [refresh, setRefresh] = useRecoilState(refreshManuscriptIndex);

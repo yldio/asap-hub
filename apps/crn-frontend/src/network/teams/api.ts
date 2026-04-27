@@ -464,6 +464,29 @@ export const getManuscript = async (
   return resp.json();
 };
 
+export const getManuscriptsByIds = async (
+  ids: ReadonlyArray<string>,
+  authorization: string,
+): Promise<ManuscriptResponse[]> => {
+  const resp = await fetch(`${API_BASE_URL}/manuscripts/batch`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization,
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify({ ids }),
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch manuscripts. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+
+  return resp.json();
+};
+
 export type ManuscriptVersionOptions = Omit<GetListOptions, 'filters'> & {
   teamId?: string;
 };

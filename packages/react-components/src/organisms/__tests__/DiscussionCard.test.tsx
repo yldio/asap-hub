@@ -79,6 +79,21 @@ describe('DiscussionCard', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('hides the creator team name when showTeamName is false', () => {
+    render(
+      <DiscussionCard
+        manuscriptId="manuscript-1"
+        discussion={mockDiscussion}
+        onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        showTeamName={false}
+      />,
+    );
+
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.queryByText('Team 1')).not.toBeInTheDocument();
+  });
+
   it('expands when clicking the expand button', async () => {
     render(
       <DiscussionCard

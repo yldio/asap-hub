@@ -2,6 +2,7 @@ import ManuscriptController from '../../src/controllers/manuscript.controller';
 
 export const manuscriptControllerMock = {
   fetchById: jest.fn(),
+  fetchByIds: jest.fn(),
   create: jest.fn(),
   createFile: jest.fn(),
   createVersion: jest.fn(),

@@ -8,6 +8,7 @@ import {
   ToolModal,
 } from '@asap-hub/react-components';
 import {
+  useBatchManuscriptsByIds,
   useIsComplianceReviewer,
   useManuscriptById,
   usePutManuscript,
@@ -45,6 +46,10 @@ const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({
 }) => {
   const { setEligibilityReasons } = useEligibilityReason();
   const isComplianceReviewer = useIsComplianceReviewer();
+  useBatchManuscriptsByIds([
+    ...props.manuscripts,
+    ...(props.collaborationManuscripts ?? []),
+  ]);
   const updateManuscript = usePutManuscript();
   const {
     handleCreateDiscussion,

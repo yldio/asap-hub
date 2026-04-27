@@ -13,6 +13,7 @@ import {
 import { authorizationState, auth0State } from '../../../auth/state';
 import {
   getManuscript,
+  getManuscriptsByIds,
   patchTeam,
   updateDiscussion,
   createDiscussion,
@@ -22,6 +23,7 @@ import * as stateModule from '../state';
 import {
   patchedTeamState,
   teamState,
+  useBatchManuscriptsByIds,
   usePatchTeamById,
   useReplyToDiscussion,
   useUploadManuscriptFileViaPresignedUrl,
@@ -35,6 +37,7 @@ const mockSetDiscussion = jest.fn();
 jest.mock('../api', () => ({
   updateDiscussion: jest.fn(),
   getManuscript: jest.fn(),
+  getManuscriptsByIds: jest.fn(),
   uploadManuscriptFileViaPresignedUrl: jest.fn(),
   createDiscussion: jest.fn(),
   createPreprintResearchOutput: jest.fn(),
@@ -811,5 +814,62 @@ describe('usePatchTeamById', () => {
     await waitFor(() => {
       expect(result.current.team).toEqual(updatedTeam);
     });
+  });
+});
+
+describe('useBatchManuscriptsByIds', () => {
+  const actualUseRecoilValue = jest.requireActual('recoil').useRecoilValue;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(recoilModule, 'useRecoilValue').mockImplementation((state) => {
+      if (state === authorizationState) {
+        return mockAuthorization;
+      }
+      return actualUseRecoilValue(state);
+    });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('returns immediately when ids are empty', () => {
+    const { result } = renderHook(() => useBatchManuscriptsByIds([]), {
+      wrapper: ({ children }: { children: React.ReactNode }) => (
+        <RecoilRoot>{children}</RecoilRoot>
+      ),
+    });
+
+    expect(result.current).toBeUndefined();
+    expect(getManuscriptsByIds).not.toHaveBeenCalled();
+  });
+
+  it('deduplicates, sorts, and calls getManuscriptsByIds', async () => {
+    const manuscript1 = { id: 'm-1', title: 'One' };
+    const manuscript2 = { id: 'm-2', title: 'Two' };
+    (getManuscriptsByIds as jest.Mock).mockResolvedValue([
+      manuscript1,
+      manuscript2,
+    ]);
+
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <RecoilRoot>
+        <Suspense fallback="loading">{children}</Suspense>
+      </RecoilRoot>
+    );
+
+    renderHook(() => useBatchManuscriptsByIds(['m-2', 'm-1', '', 'm-1']), {
+      wrapper,
+    });
+
+    await waitFor(() => {
+      expect(getManuscriptsByIds).toHaveBeenCalledTimes(1);
+    });
+
+    expect(getManuscriptsByIds).toHaveBeenCalledWith(
+      ['m-1', 'm-2'],
+      mockAuthorization,
+    );
   });
 });

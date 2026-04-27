@@ -10,6 +10,10 @@ type ManuscriptParameters = {
   manuscriptId: string;
 };
 
+type ManuscriptBatchRequest = {
+  ids: string[];
+};
+
 const manuscriptParametersValidationSchema: JSONSchemaType<ManuscriptParameters> =
   {
     type: 'object',
@@ -22,6 +26,28 @@ const manuscriptParametersValidationSchema: JSONSchemaType<ManuscriptParameters>
 
 export const validateManuscriptParameters = validateInput(
   manuscriptParametersValidationSchema,
+  {
+    skipNull: false,
+    coerce: false,
+  },
+);
+
+const manuscriptBatchRequestValidationSchema: JSONSchemaType<ManuscriptBatchRequest> =
+  {
+    type: 'object',
+    properties: {
+      ids: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 1,
+      },
+    },
+    required: ['ids'],
+    additionalProperties: false,
+  };
+
+export const validateManuscriptBatchRequestParameters = validateInput(
+  manuscriptBatchRequestValidationSchema,
   {
     skipNull: false,
     coerce: false,

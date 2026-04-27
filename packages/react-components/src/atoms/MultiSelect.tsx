@@ -162,7 +162,7 @@ const MultiSelect = <
   const theme = useTheme();
   const { getValue } = useFlags();
   const flagDebounceMs = Number(getValue('ALGOLIA_DEBOUNCE_MS')) || undefined;
-  const effectiveDebounceMs = loadOptionsDebounceMs ?? flagDebounceMs ?? 300;
+  const effectiveDebounceMs = flagDebounceMs ?? loadOptionsDebounceMs ?? 300;
   let inputRef: RefType<T, M> = null;
 
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);

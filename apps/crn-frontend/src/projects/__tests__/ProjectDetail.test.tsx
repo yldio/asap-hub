@@ -535,6 +535,51 @@ describe.each(variants)(
 
 // --- Variant-specific tests ---
 
+describe('Workspace href callbacks', () => {
+  it('builds edit, resubmit, and create-compliance-report hrefs from manuscriptId', async () => {
+    const memberUser = {
+      projects: [{ id: 'discovery-1' }],
+      role: 'Grantee',
+    };
+    enable('PROJECT_WORKSPACE');
+    await renderProjectDetail(
+      DiscoveryProjectDetail,
+      'discovery',
+      'discovery-1',
+      memberUser,
+      'workspace',
+    );
+    await screen.findByRole('heading', { name: 'Compliance Review' });
+
+    const getEditManuscriptHref = lastWorkspaceProps.getEditManuscriptHref as (
+      manuscriptId: string,
+    ) => string;
+    const getResubmitManuscriptHref =
+      lastWorkspaceProps.getResubmitManuscriptHref as (
+        manuscriptId: string,
+      ) => string;
+    const getCreateComplianceReportHref =
+      lastWorkspaceProps.getCreateComplianceReportHref as (
+        manuscriptId: string,
+      ) => string;
+
+    const workspaceRoute = projects({})
+      .discoveryProjects({})
+      .discoveryProject({ projectId: 'discovery-1' })
+      .workspace({});
+
+    expect(getEditManuscriptHref('ms-1')).toBe(
+      workspaceRoute.editManuscript({ manuscriptId: 'ms-1' }).$,
+    );
+    expect(getResubmitManuscriptHref('ms-1')).toBe(
+      workspaceRoute.resubmitManuscript({ manuscriptId: 'ms-1' }).$,
+    );
+    expect(getCreateComplianceReportHref('ms-1')).toBe(
+      workspaceRoute.createComplianceReport({ manuscriptId: 'ms-1' }).$,
+    );
+  });
+});
+
 describe('DiscoveryProjectDetail - specific', () => {
   it('passes manuscripts and collaborationManuscripts to ProjectWorkspace', async () => {
     const memberUser = {

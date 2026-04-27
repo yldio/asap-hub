@@ -353,6 +353,27 @@ describe('ProjectManuscript', () => {
     ]);
   });
 
+  it('uses fundedTeam from projectDetail for teamId and team display name', async () => {
+    mockUseProjectById.mockReturnValueOnce({
+      fundedTeam: {
+        id: 'funded-team-1',
+        displayName: 'Funded Team',
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    await renderPage('discovery', false, {
+      teams: [{ id: 'user-team', displayName: 'User Team' }],
+    });
+    await waitFor(() => {
+      expect(screen.getByText(/what are you sharing/i)).toBeInTheDocument();
+    });
+    expect(capturedFormProps.teamId).toBe('funded-team-1');
+    expect(capturedFormProps.selectedTeams).toEqual([
+      { value: 'funded-team-1', label: 'Funded Team', isFixed: true },
+    ]);
+  });
+
   describe('with existing manuscript data', () => {
     it('maps categories, teams, labs, and authors to select options', async () => {
       mockUseManuscriptById.mockReturnValueOnce([

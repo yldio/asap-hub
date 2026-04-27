@@ -8,7 +8,6 @@ import {
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { ReactNode, useMemo } from 'react';
-import { useFlags } from '@asap-hub/react-context';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { rem } from '../pixels';
@@ -103,26 +102,14 @@ const teamFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
   { label: 'Inactive', value: 'Inactive' },
 ];
 
-const filterOutDataManager = (
-  filters: ReadonlyArray<
-    Option<TeamRole | Role | UserMembershipStatus> | Title
-  >,
-) =>
-  filters.filter(
-    (filter) => !('value' in filter) || filter.value !== 'Data Manager',
-  );
-
 const getFilterOptionsAndPlaceholder = (
   page: Page,
-  dataManagerEnabled: boolean,
   researchThemes?: ReadonlyArray<{ id: string; name: string }>,
 ) => {
   switch (page) {
     case 'users':
       return {
-        filterOptions: dataManagerEnabled
-          ? userFilters
-          : filterOutDataManager(userFilters),
+        filterOptions: userFilters,
         searchPlaceholder: 'Enter name, keyword, institution, …',
       };
 
@@ -168,17 +155,9 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   pageDescription,
   researchThemes,
 }) => {
-  const { isEnabled } = useFlags();
-  const isDataManagerEnabled = isEnabled('DATA_MANAGER_ROLE_ENABLED');
-
   const { filterOptions, searchPlaceholder } = useMemo(
-    () =>
-      getFilterOptionsAndPlaceholder(
-        page,
-        isDataManagerEnabled,
-        researchThemes,
-      ),
-    [page, isDataManagerEnabled, researchThemes],
+    () => getFilterOptionsAndPlaceholder(page, researchThemes),
+    [page, researchThemes],
   );
 
   return (

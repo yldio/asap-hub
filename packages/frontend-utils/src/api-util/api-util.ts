@@ -83,3 +83,9 @@ export const getTimezone = (date: Date) => {
 
   return 'UTC';
 };
+
+/* istanbul ignore next */
+export const wait = (ms: number) =>
+  new Promise<void>((resolve) => {
+    setTimeout(resolve, ms);
+  });

@@ -20,4 +20,5 @@ export {
   NotificationContext,
 } from './notification-message';
 export type { Notification, Page } from './notification-message';
+export { useScrollToTop, ScrollContext } from './scroll';
 export { UserProfileContext } from './user-profile';

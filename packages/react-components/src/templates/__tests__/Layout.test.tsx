@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
+import { useScrollToTop } from '@asap-hub/react-context';
 
 import Layout from '../Layout';
 
@@ -128,6 +129,37 @@ it('scrolls to top between page navigations', async () => {
 
   await userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]!);
   expect(getByRole('main').scrollTo).toHaveBeenCalled();
+});
+
+it('calls scrollToTop with merged options', async () => {
+  const TestComponent = () => {
+    const { scrollToTop } = useScrollToTop();
+
+    return (
+      <button onClick={() => scrollToTop({ behavior: 'auto' })}>Scroll</button>
+    );
+  };
+  const scrollToMock = jest.fn();
+
+  Object.defineProperty(HTMLElement.prototype, 'scrollTo', {
+    value: scrollToMock,
+    writable: true,
+  });
+
+  const { getByRole } = render(
+    <MemoryRouter>
+      <Layout {...props}>
+        <TestComponent />
+      </Layout>
+    </MemoryRouter>,
+  );
+
+  await userEvent.click(getByRole('button', { name: /scroll/i }));
+
+  expect(scrollToMock).toHaveBeenCalledWith({
+    top: 0,
+    behavior: 'auto', // overridden from default 'smooth'
+  });
 });
 
 it('displays onboarding footer', async () => {

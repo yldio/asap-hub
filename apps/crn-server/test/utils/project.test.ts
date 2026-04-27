@@ -1,4 +1,4 @@
-import { getCleanProjectTools } from '../../src/utils/project';
+import { getCleanProjectTools, haveSameIds } from '../../src/utils/project';
 
 describe('getCleanProjectTools', () => {
   it('returns tools unchanged when all fields are non-empty', () => {
@@ -45,5 +45,27 @@ describe('getCleanProjectTools', () => {
       { name: 'Slack', url: 'https://slack.com', description: 'Chat' },
       { name: 'GitHub', url: 'https://github.com' },
     ]);
+  });
+});
+
+describe('haveSameIds', () => {
+  it('returns true for identical arrays (same order)', () => {
+    expect(haveSameIds(['a', 'b', 'c'], ['a', 'b', 'c'])).toBe(true);
+  });
+
+  it('returns true for identical arrays (different order)', () => {
+    expect(haveSameIds(['b', 'a', 'c'], ['a', 'b', 'c'])).toBe(true);
+  });
+
+  it('returns false when arrays have different lengths', () => {
+    expect(haveSameIds(['a', 'b'], ['a', 'b', 'c'])).toBe(false);
+  });
+
+  it('returns false when values differ', () => {
+    expect(haveSameIds(['a', 'b', 'c'], ['a', 'b', 'd'])).toBe(false);
+  });
+
+  it('returns true for empty arrays', () => {
+    expect(haveSameIds([], [])).toBe(true);
   });
 });

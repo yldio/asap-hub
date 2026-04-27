@@ -305,3 +305,11 @@ export type ListProjectMilestonesResponse = ListResponse<Milestone>;
 export type FetchProjectMilestonesOptions = FetchOptions & {
   grantType?: GrantType;
 };
+
+export type MilestoneCreateRequest = {
+  readonly grantType: GrantType;
+  readonly description: string;
+  readonly status: MilestoneStatus;
+  readonly aimIds: string[];
+  readonly relatedArticleIds?: string[];
+};

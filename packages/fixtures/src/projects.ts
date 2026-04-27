@@ -2,6 +2,7 @@ import {
   Milestone,
   MilestoneStatus,
   ListProjectMilestonesResponse,
+  Aim,
 } from '@asap-hub/model';
 
 type FixtureOptions = {
@@ -30,6 +31,24 @@ export const createListProjectMilestoneResponse = (
   items: Array.from({ length: items }, (_, idx) => ({
     ...createProjectMilestoneResponse({ key: idx + 1 }),
   })),
+});
+
+export const createProjectAim = ({
+  key,
+  order = 1,
+  status = 'In Progress',
+  articleCount = 1,
+}: {
+  key: string | number;
+  order?: number;
+  status?: MilestoneStatus;
+  articleCount?: number;
+}): Aim => ({
+  id: `uuid-${key}`,
+  order,
+  description: `${key} description`,
+  status,
+  articleCount,
 });
 
 export default createProjectMilestoneResponse;

@@ -1,10 +1,15 @@
 import { Suspense } from 'react';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import type { MutableSnapshot } from 'recoil';
-import { RecoilRoot, useRecoilState } from 'recoil';
+import {
+  RecoilRoot,
+  useRecoilState,
+  MutableSnapshot,
+  useRecoilValue,
+} from 'recoil';
 import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import type {
   ListProjectResponse,
+  Milestone,
   ProjectDetail,
   ProjectResponse,
 } from '@asap-hub/model';
@@ -15,6 +20,9 @@ import {
   useProjectById,
   useProjects,
   usePatchProjectById,
+  projectMilestonesListItemState,
+  projectMilestonesState,
+  projectMilestonesIndexState,
 } from '../state';
 import { auth0State } from '../../auth/state';
 
@@ -569,5 +577,56 @@ describe('projects state hooks', () => {
         expect(result.current.project?.tools).toEqual(patch.tools);
       });
     });
+  });
+});
+
+describe('project milestones state hooks for coverage', () => {
+  it('clears cached milestone items when selector is set to undefined', () => {
+    const options = {
+      projectId: 'proj-1',
+      grantType: 'supplement' as const,
+      searchQuery: '',
+      filters: new Set<string>(),
+      currentPage: 0,
+      pageSize: 10,
+    };
+
+    const wrapper = createWrapper(({ set }: MutableSnapshot) => {
+      set(
+        projectMilestonesIndexState({
+          ...options,
+          refreshToken: 0,
+        }),
+        {
+          total: 1,
+          ids: ['m1'],
+        },
+      );
+
+      set(projectMilestonesListItemState('m1'), {
+        id: 'm1',
+        description: 'Milestone 1',
+      } as Milestone);
+    });
+
+    const { result } = renderHook(
+      () => ({
+        state: useRecoilState(projectMilestonesState(options)),
+        item: useRecoilValue(projectMilestonesListItemState('m1')),
+      }),
+      { wrapper },
+    );
+
+    // sanity check
+    expect(result.current.item).toBeDefined();
+
+    const [, setMilestones] = result.current.state;
+
+    act(() => {
+      setMilestones(undefined);
+    });
+
+    expect(result.current.state[0]).toBeUndefined();
+    expect(result.current.item).toBeUndefined();
   });
 });

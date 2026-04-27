@@ -3,12 +3,14 @@ import {
   BackendError,
   createSentryHeaders,
   GetListOptions,
+  wait,
 } from '@asap-hub/frontend-utils';
 import {
   ArticleItem,
   GrantType,
   ListProjectMilestonesResponse,
   ListProjectResponse,
+  MilestoneCreateRequest,
   ProjectDetail,
   ProjectStatus,
   ProjectTool,
@@ -178,12 +180,14 @@ export const getProject = async (
 };
 
 export type MilestonesListOptions = GetListOptions & {
-  grantType?: GrantType;
+  grantType: GrantType;
   projectId: string;
 };
 
 export const getProjectMilestones = async (
-  options: MilestonesListOptions,
+  options: Omit<MilestonesListOptions, 'grantType'> & {
+    grantType?: GrantType;
+  },
   authorization: string,
 ): Promise<ListProjectMilestonesResponse> => {
   const { projectId, grantType, ...searchOptions } = options;
@@ -205,4 +209,89 @@ export const getProjectMilestones = async (
     );
   }
   return resp.json();
+};
+
+export const createProjectMilestone = async (
+  projectId: string,
+  data: MilestoneCreateRequest,
+  authorization: string,
+): Promise<{ id: string }> => {
+  const resp = await fetch(`${API_BASE_URL}/projects/${projectId}/milestones`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(data),
+  });
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to create milestone for project ${projectId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+  return resp.json();
+};
+
+export const isProjectMilestonesSyncComplete = async (
+  projectId: string,
+  authorization: string,
+): Promise<boolean> => {
+  const resp = await fetch(
+    `${API_BASE_URL}/projects/${projectId}/milestones-sync-status`,
+    {
+      headers: { authorization, ...createSentryHeaders() },
+    },
+  );
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to check milestones sync completion for project with id ${projectId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+  const data = await resp.json();
+  return data.syncComplete;
+};
+
+/**
+ * Polls the API to determine whether milestone syncing for a project is complete.
+ *
+ * The function calls `isProjectMilestonesSyncComplete` up to 10 times with a 1.5s delay
+ * between attempts. To avoid returning true on transient or inconsistent states,
+ * it requires **two consecutive successful (true) responses** before considering
+ * the sync complete.
+ *
+ * Any errors during polling are treated as a failed attempt and retried.
+ */
+export const waitForMilestonesSync = async (
+  projectId: string,
+  authorization: string,
+): Promise<boolean> => {
+  let stableCount = 0;
+
+  /* eslint-disable no-await-in-loop */
+  for (let i = 0; i < 10; i += 1) {
+    let synced = false;
+    try {
+      synced = await isProjectMilestonesSyncComplete(projectId, authorization);
+    } catch (e) {
+      synced = false;
+    }
+
+    if (synced) {
+      stableCount += 1;
+    } else {
+      stableCount = 0;
+    }
+
+    if (stableCount >= 2) return true;
+
+    await wait(1500);
+  }
+  /* eslint-enable no-await-in-loop */
+
+  return false;
 };

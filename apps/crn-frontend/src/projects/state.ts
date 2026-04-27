@@ -2,11 +2,14 @@ import {
   ListProjectMilestonesResponse,
   ListProjectResponse,
   Milestone,
+  MilestoneCreateRequest,
   ProjectDetail,
   ProjectResponse,
   ProjectTool,
+  ResearchOutputResponse,
 } from '@asap-hub/model';
 import {
+  atom,
   atomFamily,
   DefaultValue,
   selectorFamily,
@@ -14,9 +17,12 @@ import {
   useRecoilValue,
   useSetRecoilState,
 } from 'recoil';
+import { useCallback } from 'react';
+import { getResearchOutputs } from '../shared-research/api';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
+  createProjectMilestone,
   getProject,
   getProjectMilestones,
   getProjects,
@@ -24,8 +30,20 @@ import {
   patchProject,
   ProjectListOptions,
   toListProjectResponse,
+  waitForMilestonesSync,
 } from './api';
 
+const pendingMilestonePromises = new Map<string, Promise<void>>();
+
+const serializeMilestonesOptions = (options: MilestonesListOptions): string =>
+  JSON.stringify({
+    currentPage: options.currentPage,
+    pageSize: options.pageSize,
+    searchQuery: options.searchQuery,
+    filters: options.filters ? Array.from(options.filters).sort() : [],
+    grantType: options.grantType,
+    projectId: options.projectId,
+  });
 // Separate cache for list data (incomplete, from Algolia)
 const projectListCacheState = atomFamily<
   | {
@@ -146,6 +164,10 @@ export const usePatchProjectById = (id: string) => {
   };
 };
 
+export type RefreshMilestonesListOptions = MilestonesListOptions & {
+  refreshToken: number;
+};
+
 export const projectMilestonesIndexState = atomFamily<
   | {
       ids: ReadonlyArray<string>;
@@ -153,8 +175,13 @@ export const projectMilestonesIndexState = atomFamily<
     }
   | Error
   | undefined,
-  MilestonesListOptions
+  RefreshMilestonesListOptions
 >({ key: 'projectMilestonesListCache', default: undefined });
+
+export const refreshProjectMilestonesIndex = atom<number>({
+  key: 'refreshProjectMilestonesIndex',
+  default: 0,
+});
 
 export const projectMilestonesListItemState = atomFamily<
   Milestone | undefined,
@@ -172,8 +199,15 @@ export const projectMilestonesState = selectorFamily<
   get:
     (options) =>
     ({ get }) => {
-      const index = get(projectMilestonesIndexState(options));
+      const refreshToken = get(refreshProjectMilestonesIndex);
+      const index = get(
+        projectMilestonesIndexState({
+          ...options,
+          refreshToken,
+        }),
+      );
       if (index === undefined || index instanceof Error) return index;
+
       const projectMilestones: Milestone[] = [];
       for (const id of index.ids) {
         const projectMilestone = get(projectMilestonesListItemState(id));
@@ -187,43 +221,108 @@ export const projectMilestonesState = selectorFamily<
     },
   set:
     (options) =>
-    ({ get, set, reset }, projects) => {
-      if (projects === undefined || projects instanceof DefaultValue) {
-        const previous = get(projectMilestonesIndexState(options));
+    ({ get, set, reset }, projectMilestones) => {
+      const refreshToken = get(refreshProjectMilestonesIndex);
+      const indexStateOptions = { ...options, refreshToken };
+      if (
+        projectMilestones === undefined ||
+        projectMilestones instanceof DefaultValue
+      ) {
+        const previous = get(projectMilestonesIndexState(indexStateOptions));
         if (previous && !(previous instanceof Error)) {
           previous.ids.forEach((id) =>
             reset(projectMilestonesListItemState(id)),
           );
         }
-        reset(projectMilestonesIndexState(options));
-      } else if (projects instanceof Error) {
-        set(projectMilestonesIndexState(options), projects);
+        reset(projectMilestonesIndexState(indexStateOptions));
+      } else if (projectMilestones instanceof Error) {
+        set(projectMilestonesIndexState(indexStateOptions), projectMilestones);
       } else {
-        projects.items.forEach((project) =>
-          set(projectMilestonesListItemState(project.id), project),
+        projectMilestones.items.forEach((projectMilestone) =>
+          set(
+            projectMilestonesListItemState(projectMilestone.id),
+            projectMilestone,
+          ),
         );
-        set(projectMilestonesIndexState(options), {
-          total: projects.total,
-          ids: projects.items.map(({ id }) => id),
+        set(projectMilestonesIndexState(indexStateOptions), {
+          total: projectMilestones.total,
+          ids: projectMilestones.items.map(({ id }) => id),
         });
       }
     },
 });
+
+export const useInvalidateProjectMilestonesIndex = () => {
+  const [refresh, setRefresh] = useRecoilState(refreshProjectMilestonesIndex);
+
+  return useCallback(() => {
+    setRefresh(refresh + 1);
+  }, [refresh, setRefresh]);
+};
 
 export const useProjectMilestones = (options: MilestonesListOptions) => {
   const [projectMilestones, setProjectMilestones] = useRecoilState(
     projectMilestonesState(options),
   );
   const authorization = useRecoilValue(authorizationState);
+  const optionsKey = serializeMilestonesOptions(options);
 
   if (projectMilestones === undefined) {
-    throw getProjectMilestones(options, authorization)
-      .then(setProjectMilestones)
-      .catch(setProjectMilestones);
+    let pendingPromise = pendingMilestonePromises.get(optionsKey);
+    if (!pendingPromise) {
+      pendingPromise = getProjectMilestones(options, authorization)
+        .then(setProjectMilestones)
+        .catch(setProjectMilestones)
+        .finally(() => {
+          pendingMilestonePromises.delete(optionsKey);
+        });
+      pendingMilestonePromises.set(optionsKey, pendingPromise);
+    }
+    throw pendingPromise;
   }
+
   if (projectMilestones instanceof Error) {
     throw projectMilestones;
   }
 
-  return { ...projectMilestones };
+  return projectMilestones;
+};
+
+export const useProjectArticlesSuggestions = (teamId: string) => {
+  const algoliaClient = useAlgolia();
+
+  return (searchQuery: string) =>
+    getResearchOutputs(algoliaClient.client, {
+      searchQuery,
+      currentPage: null,
+      pageSize: 5, // check the size
+      filters: new Set(['Article']),
+      teamId,
+    }).then(({ hits }) =>
+      (hits as ResearchOutputResponse[]).map(
+        ({ id, title, documentType, type }) => ({
+          label: title,
+          value: id,
+          documentType,
+          type,
+        }),
+      ),
+    );
+};
+
+export const useCreateProjectMilestone = (projectId: string) => {
+  const authorization = useRecoilValue(authorizationState);
+  const invalidateProjectMilestonesIndex =
+    useInvalidateProjectMilestonesIndex();
+  return async (data: MilestoneCreateRequest) => {
+    const result = await createProjectMilestone(projectId, data, authorization);
+
+    // TODO: align with product/design on how to handle cases where sync does not
+    // complete within the polling window.
+    await waitForMilestonesSync(projectId, authorization);
+
+    invalidateProjectMilestonesIndex();
+
+    return result.id;
+  };
 };

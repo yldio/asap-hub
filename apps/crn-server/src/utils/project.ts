@@ -8,3 +8,12 @@ export const getCleanProjectTools = (tools: ProjectTool[]): ProjectTool[] =>
       {} as ProjectTool,
     ),
   );
+
+export const haveSameIds = (a: string[], b: string[]): boolean => {
+  if (a.length !== b.length) return false;
+
+  const aSorted = [...a].sort();
+  const bSorted = [...b].sort();
+
+  return aSorted.every((val, i) => val === bSorted[i]);
+};

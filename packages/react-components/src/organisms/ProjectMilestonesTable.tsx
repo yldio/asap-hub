@@ -10,7 +10,7 @@ import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
 import { neutral1000, neutral200, steel } from '../colors';
 import type { ResearchOutputOption } from '../utils';
-import { PageControls } from '../molecules';
+import { LabeledMultiSelect, PageControls } from '../molecules';
 import { searchIcon } from '../icons';
 
 const WRAPPER_TOP_PADDING = 32;
@@ -123,9 +123,11 @@ type ProjectMilestonesProps = {
   readonly hasAppliedSearch: boolean;
   readonly pageControlsProps: ComponentProps<typeof PageControls>;
   readonly isLead: boolean;
-  readonly loadArticleOptions: (
-    inputValue: string,
-  ) => Promise<ResearchOutputOption[]>;
+  readonly loadArticleOptions: NonNullable<
+    ComponentProps<
+      typeof LabeledMultiSelect<ResearchOutputOption>
+    >['loadOptions']
+  >;
   readonly fetchLinkedArticles: (
     milestoneId: string,
   ) => Promise<ReadonlyArray<ArticleItem>>;

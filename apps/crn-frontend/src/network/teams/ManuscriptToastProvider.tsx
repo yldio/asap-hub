@@ -10,6 +10,7 @@ type FormType =
   | 'reply-to-discussion'
   | 'discussion-started'
   | 'manuscript-status-error'
+  | 'milestone-created'
   | '';
 
 type ManuscriptToastType = {
@@ -53,6 +54,8 @@ export const ManuscriptToastProvider = ({
     'discussion-started': 'Discussion started successfully.',
     'manuscript-status-error':
       'The manuscript status has been changed to compliant or closed, which disables new discussions and replies. Please email the Open Science team at openscience@parkinsonsroadmap.org if you have additional questions related to this manuscript.',
+    'milestone-created':
+      'Milestone added successfully. It now appears in the milestone table according to its related aim(s).',
   };
 
   return (

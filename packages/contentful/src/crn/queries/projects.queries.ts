@@ -331,3 +331,34 @@ export const FETCH_PROJECTS_BY_MEMBERSHIP_ID = gql`
     }
   }
 `;
+
+export const FETCH_PROJECT_MILESTONE_IDS = gql`
+  query FetchProjectMilestoneIds($projectId: String!) {
+    projects(id: $projectId) {
+      originalGrantAimsCollection {
+        items {
+          milestonesCollection {
+            items {
+              sys {
+                id
+              }
+            }
+          }
+        }
+      }
+      supplementGrant {
+        aimsCollection {
+          items {
+            milestonesCollection {
+              items {
+                sys {
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

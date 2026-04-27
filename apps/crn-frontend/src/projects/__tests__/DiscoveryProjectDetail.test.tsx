@@ -1,15 +1,20 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { enable, disable, reset } from '@asap-hub/flags';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
 import type {
   DiscoveryProjectDetail as DiscoveryProjectDetailType,
   ResourceProject,
+  TeamRole,
 } from '@asap-hub/model';
+import { createUserResponse } from '@asap-hub/fixtures';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import DiscoveryProjectDetail from '../DiscoveryProjectDetail';
+import { getResearchOutputs } from '../../shared-research/api';
+import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 
 const mockDiscoveryProject: DiscoveryProjectDetailType = {
   id: 'discovery-1',
@@ -26,6 +31,15 @@ const mockDiscoveryProject: DiscoveryProjectDetailType = {
   teamId: 'team-1',
   originalGrant: 'Original Grant',
   originalGrantProposalId: 'proposal-1',
+  originalGrantAims: [
+    {
+      id: '1',
+      order: 1,
+      description: 'Aim Description One',
+      status: 'In Progress',
+      articleCount: 0,
+    },
+  ],
   contactEmail: 'contact@example.com',
   fundedTeam: {
     id: 'team-1',
@@ -54,6 +68,7 @@ const mockResourceProject: ResourceProject = {
 };
 
 jest.mock('../state', () => {
+  const actual = jest.requireActual('../state');
   const useProjectById = jest.fn((id: string) => {
     if (id === 'discovery-1') {
       return mockDiscoveryProject;
@@ -65,10 +80,18 @@ jest.mock('../state', () => {
   });
 
   return {
-    __esModule: true,
+    ...actual,
     useProjectById,
+    useCreateProjectMilestone: jest.fn().mockReturnValue(jest.fn()),
   };
 });
+jest.mock('../../shared-research/api', () => ({
+  getResearchOutputs: jest.fn(),
+}));
+
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
 
 const renderDiscoveryProjectDetail = async (projectId: string) => {
   const path = `${projects.template}/discovery/${projectId}/about`;
@@ -100,6 +123,15 @@ const renderDiscoveryProjectDetail = async (projectId: string) => {
 describe('DiscoveryProjectDetail', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
+    mockGetResearchOutputs.mockResolvedValue({
+      ...createResearchOutputListAlgoliaResponse(2),
+      hits: createResearchOutputListAlgoliaResponse(2).hits.map(
+        (hit, index) => ({
+          ...hit,
+          title: `Project Article ${index}`,
+        }),
+      ),
+    });
   });
 
   afterEach(() => {
@@ -195,5 +227,60 @@ describe('DiscoveryProjectDetail', () => {
     });
 
     expect(screen.getAllByText('Milestones').length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('can fetch the projects articles', async () => {
+    enable('PROJECT_AIMS_AND_MILESTONES');
+    const path = `${projects.template}/discovery/discovery-1/milestones`;
+    const mockUser = {
+      ...createUserResponse({}, 1),
+      onboarded: true,
+      algoliaApiKey: 'algolia-mock-key',
+      teams: [
+        {
+          displayName: 'Discovery Team',
+          role: 'Project Manager' as TeamRole,
+          id: 'team-1',
+        },
+      ],
+    };
+
+    render(
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={mockUser}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[path]}>
+                <Routes>
+                  <Route
+                    path={`${projects.template}/discovery/:projectId/*`}
+                    element={<DiscoveryProjectDetail />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+
+    const addNewMilestoneButton = await screen.findByRole('button', {
+      name: /Add New Milestone/i,
+    });
+
+    await userEvent.click(addNewMilestoneButton);
+
+    const relatedArticlesLabel = screen
+      .getByText('Related Articles')
+      .closest('div')!;
+
+    const articlesInput = within(relatedArticlesLabel!).getByRole('combobox');
+    await userEvent.click(articlesInput);
+
+    expect(await screen.findByText(/Project Article 1/i)).toBeVisible();
   });
 });

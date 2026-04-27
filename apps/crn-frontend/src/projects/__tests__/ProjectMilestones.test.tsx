@@ -1,9 +1,10 @@
 import { projects } from '@asap-hub/routing';
-import { render, waitFor, screen, act } from '@testing-library/react';
+import { render, waitFor, screen, act, within } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   createListProjectMilestoneResponse,
   createProjectMilestoneResponse,
+  createProjectAim,
 } from '@asap-hub/fixtures';
 import { ListProjectMilestonesResponse } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
@@ -16,13 +17,15 @@ import ProjectMilestones from '../ProjectMilestones';
 import {
   getProjectMilestones,
   getMilestoneArticles,
-  MilestonesListOptions,
+  createProjectMilestone,
 } from '../api';
 import {
   projectMilestonesIndexState,
   projectMilestonesListItemState,
   projectMilestonesState,
+  RefreshMilestonesListOptions,
 } from '../state';
+import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
 
 jest.mock('../api');
 
@@ -39,11 +42,26 @@ const mockGetMilestoneArticles = getMilestoneArticles as jest.MockedFunction<
   typeof getMilestoneArticles
 >;
 
+const mockCreateProjectMilestone =
+  createProjectMilestone as jest.MockedFunction<typeof createProjectMilestone>;
+
+const mockLoadArticleOptions = jest.fn(() =>
+  Promise.resolve([
+    {
+      label: 'Project Article 1',
+      value: 'article-1',
+      documentType: 'Article',
+      type: 'Preprint',
+    },
+  ]),
+);
+
 beforeEach(() => {
   mockGetProjectMilestones.mockResolvedValue(
     createListProjectMilestoneResponse(),
   );
   mockGetMilestoneArticles.mockResolvedValue([]);
+  mockCreateProjectMilestone.mockResolvedValue({ id: 'milestone-1' });
 });
 
 const projectId = 'proj-1';
@@ -54,13 +72,14 @@ const renderPage = async (queryString = '', waitForLoad = true) => {
     .milestones({}).$;
 
   const path = queryString ? `${basePath}?${queryString}` : basePath;
-  const options: MilestonesListOptions = {
+  const options: RefreshMilestonesListOptions = {
     searchQuery: '',
     currentPage: 0,
     filters: new Set(),
     pageSize: 10,
     grantType: 'supplement',
     projectId,
+    refreshToken: 1,
   };
 
   const result = render(
@@ -82,19 +101,25 @@ const renderPage = async (queryString = '', waitForLoad = true) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[path]}>
-              <Routes>
-                <Route
-                  path="/projects/discovery/proj-1/milestones?"
-                  element={
-                    <ProjectMilestones
-                      projectId={projectId}
-                      isLead={true}
-                      hasSupplementGrant={true}
-                      loadArticleOptions={jest.fn(() => Promise.resolve([]))}
-                    />
-                  }
-                />
-              </Routes>
+              <ManuscriptToastProvider>
+                <Routes>
+                  <Route
+                    path="/projects/discovery/proj-1/milestones?"
+                    element={
+                      <ProjectMilestones
+                        projectId={projectId}
+                        isLead={true}
+                        hasSupplementGrant={true}
+                        aims={[
+                          createProjectAim({ key: 1, order: 1 }),
+                          createProjectAim({ key: 2, order: 2 }),
+                        ]}
+                        loadArticleOptions={mockLoadArticleOptions}
+                      />
+                    }
+                  />
+                </Routes>
+              </ManuscriptToastProvider>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -123,8 +148,8 @@ describe('ProjectMilestones', () => {
   it('keeps the search controls visible while milestones are loading', async () => {
     mockGetProjectMilestones.mockImplementation(
       () =>
-        new Promise<ListProjectMilestonesResponse>((resolve) => {
-          void resolve;
+        new Promise((resolve) => {
+          setTimeout(() => resolve({ total: 0, items: [] }), 10);
         }),
     );
 
@@ -226,5 +251,134 @@ describe('ProjectMilestones', () => {
     await waitFor(() =>
       expect(getByText(/Something went wrong/i)).toBeVisible(),
     );
+  });
+
+  it('displays Add New Milestone button if on supplement grant milestones page and user is lead', async () => {
+    await renderPage();
+
+    expect(
+      await screen.findByRole('button', {
+        name: /Add New Milestone/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('can create a milestone when the data is valid', async () => {
+    jest.useFakeTimers();
+
+    const user = userEvent.setup({
+      advanceTimers: jest.advanceTimersByTime,
+    });
+    await renderPage();
+
+    const addNewMilestoneButton = await screen.findByRole('button', {
+      name: /Add New Milestone/i,
+    });
+
+    await user.click(addNewMilestoneButton);
+
+    await user.type(
+      screen.getByRole('textbox', { name: /Description/i }),
+      'Some description',
+    );
+
+    await user.click(screen.getByRole('button', { name: '#1' }));
+
+    const relatedArticlesLabel = screen
+      .getByText('Related Articles')
+      .closest('div')!;
+
+    const articlesInput = within(relatedArticlesLabel!).getByRole('combobox');
+    await user.click(articlesInput);
+
+    const option = await screen.findByText(/Project Article 1/i);
+    await user.click(option);
+
+    const submitButton = await screen.findByRole('button', {
+      name: 'Confirm',
+    });
+    await user.click(submitButton);
+
+    const confirmButton = await screen.findByRole('button', {
+      name: /confirm and notify/i,
+    });
+    await user.click(confirmButton);
+
+    await act(async () => {
+      jest.advanceTimersByTime(5000);
+    });
+
+    await act(async () => {
+      jest.runAllTimers();
+    });
+
+    await waitFor(() => {
+      expect(mockCreateProjectMilestone).toHaveBeenCalledWith(
+        projectId,
+        {
+          description: 'Some description',
+          status: 'Pending',
+          grantType: 'supplement',
+          relatedArticleIds: ['article-1'],
+          aimIds: ['uuid-1'],
+        },
+        'Bearer access_token',
+      );
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole('button', { name: /confirm and notify/i }),
+      ).not.toBeInTheDocument();
+    });
+    expect(
+      screen.getByText(/Milestone added successfully./i),
+    ).toBeInTheDocument();
+
+    jest.useRealTimers();
+  });
+
+  it('displays error toast when there is an error creating a manuscript', async () => {
+    mockCreateProjectMilestone.mockRejectedValueOnce(new Error('error'));
+    await renderPage();
+
+    const addNewMilestoneButton = await screen.findByRole('button', {
+      name: /Add New Milestone/i,
+    });
+
+    await userEvent.click(addNewMilestoneButton);
+
+    await userEvent.type(
+      screen.getByRole('textbox', { name: /Description/i }),
+      'Some description',
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: '#1' }));
+
+    const relatedArticlesLabel = screen
+      .getByText('Related Articles')
+      .closest('div')!;
+
+    const articlesInput = within(relatedArticlesLabel!).getByRole('combobox');
+    await userEvent.click(articlesInput);
+
+    const option = await screen.findByText(/Project Article 1/i);
+    await userEvent.click(option);
+
+    const submitButton = await screen.findByRole('button', {
+      name: 'Confirm',
+    });
+    await userEvent.click(submitButton);
+
+    const confirmButton = await screen.findByRole('button', {
+      name: /confirm and notify/i,
+    });
+    await userEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('An error has occurred. Please try again later.'),
+      ).toBeInTheDocument();
+    });
   });
 });

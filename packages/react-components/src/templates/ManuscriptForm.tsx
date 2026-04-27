@@ -385,7 +385,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const additionalAuthorsWithoutTeamAdded = new Set();
   const labsWithoutTeamAdded = new Set();
 
-  const [impactOtions, setImpactOptions] = useState<
+  const [impactOptions, setImpactOptions] = useState<
     {
       label: string;
       value: string;
@@ -393,8 +393,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   >([]);
 
   const getImpactOptions = useCallback(async () => {
-    const impactOptions = await getImpactSuggestions('');
-    setImpactOptions(impactOptions);
+    const impactSuggestions = await getImpactSuggestions('');
+    setImpactOptions(impactSuggestions);
   }, [getImpactSuggestions]);
 
   useEffect(() => {
@@ -1243,9 +1243,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       title="Impact"
                       subtitle="(required)"
                       description="Select the option that best describes the impact of this manuscript on the PD field."
-                      options={impactOtions}
+                      options={impactOptions}
                       onChange={(e) => {
-                        const impactOption = impactOtions.find(
+                        const impactOption = impactOptions.find(
                           (option) => option.value === e,
                         );
                         onChange(impactOption);

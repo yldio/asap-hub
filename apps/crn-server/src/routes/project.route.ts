@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { FetchProjectsFilter } from '@asap-hub/model';
+import { FetchProjectsFilter, isProjectLead } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import ProjectController from '../controllers/project.controller';
 import {
   validateProjectFetchParameters,
+  validateProjectMilestoneCreateRequest,
   validateProjectMilestonesFetchOptions,
   validateProjectParameters,
   validateProjectPatchRequest,
@@ -97,6 +98,52 @@ export const projectRouteFactory = (
       });
 
       res.json(result);
+    },
+  );
+
+  projectRoutes.get(
+    '/projects/:projectId/milestones-sync-status',
+    async (req, res) => {
+      const { projectId } = req.params;
+      const { loggedInUser } = req;
+
+      if (!loggedInUser) throw Boom.forbidden();
+
+      const syncComplete =
+        await projectController.isProjectMilestonesSynced(projectId);
+      res.json({ syncComplete });
+    },
+  );
+
+  projectRoutes.post<{ projectId: string }>(
+    '/projects/:projectId/milestones',
+    async (req, res) => {
+      if (!req.loggedInUser) {
+        throw Boom.unauthorized();
+      }
+
+      const { projectId } = validateProjectParameters(req.params);
+      const data = validateProjectMilestoneCreateRequest(req.body);
+
+      const { loggedInUser } = req;
+      const project = await projectController.fetchById(projectId);
+
+      const isLead = isProjectLead(
+        loggedInUser.id,
+        loggedInUser.teams,
+        project,
+      );
+
+      if (!isLead) {
+        throw Boom.forbidden();
+      }
+
+      const milestoneId = await projectController.createMilestone(
+        projectId,
+        data,
+      );
+
+      res.status(201).json({ id: milestoneId });
     },
   );
 

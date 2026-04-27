@@ -164,7 +164,9 @@ const Milestone: FC<MilestoneProps> = ({
               <span css={noArticlesTextStyles}>No articles added</span>
               {isLead && (
                 <>
-                  <span css={articlesSeparatorStyles}>&middot;</span>
+                  <span css={[articlesSeparatorStyles, { fontSize: rem(20) }]}>
+                    &middot;
+                  </span>
                   <Button
                     linkStyle
                     onClick={() => setIsModalOpen(true)}

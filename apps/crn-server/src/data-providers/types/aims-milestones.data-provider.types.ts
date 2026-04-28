@@ -28,6 +28,12 @@ export type AimWithMilestonesDataObject = {
   } | null;
 };
 
+type MilestoneUserLink = {
+  sys: { id: string };
+  firstName?: string | null;
+  lastName?: string | null;
+};
+
 export type MilestoneDataObject = {
   sys: {
     id: string;
@@ -36,6 +42,11 @@ export type MilestoneDataObject = {
   };
   description?: string | null;
   status?: string | null;
+  bulkImported?: boolean | null;
+  statusUpdatedAt?: string | null;
+  statusUpdatedBy?: MilestoneUserLink | null;
+  outputsLinkedAt?: string | null;
+  outputsLinkedBy?: MilestoneUserLink | null;
   relatedArticlesCollection?: {
     total: number;
     items: Array<{

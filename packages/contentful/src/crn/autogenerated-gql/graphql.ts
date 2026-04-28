@@ -280,6 +280,12 @@ export type AimsMilestonesCollection = {
 };
 
 export enum AimsMilestonesCollectionOrder {
+  BulkImportedAsc = 'bulkImported_ASC',
+  BulkImportedDesc = 'bulkImported_DESC',
+  OutputsLinkedAtAsc = 'outputsLinkedAt_ASC',
+  OutputsLinkedAtDesc = 'outputsLinkedAt_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -299,6 +305,12 @@ export type AimsMilestonesCursorCollection = {
 };
 
 export enum AimsMilestonesCursorCollectionOrder {
+  BulkImportedAsc = 'bulkImported_ASC',
+  BulkImportedDesc = 'bulkImported_DESC',
+  OutputsLinkedAtAsc = 'outputsLinkedAt_ASC',
+  OutputsLinkedAtDesc = 'outputsLinkedAt_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -10596,14 +10608,25 @@ export enum MigrationOrder {
 export type Milestones = Entry &
   _Node & {
     _id: Scalars['ID'];
+    bulkImported?: Maybe<Scalars['Boolean']>;
     contentfulMetadata: ContentfulMetadata;
     description?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<MilestonesLinkingCollections>;
+    outputsLinkedAt?: Maybe<Scalars['DateTime']>;
+    outputsLinkedBy?: Maybe<Users>;
     relatedArticlesCollection?: Maybe<MilestonesRelatedArticlesCollection>;
     relatedArticlesCursorCollection?: Maybe<MilestonesRelatedArticlesCursorCollection>;
     status?: Maybe<Scalars['String']>;
+    statusUpdatedAt?: Maybe<Scalars['DateTime']>;
+    statusUpdatedBy?: Maybe<Users>;
     sys: Sys;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesBulkImportedArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
 export type MilestonesDescriptionArgs = {
@@ -10614,6 +10637,20 @@ export type MilestonesDescriptionArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
 export type MilestonesLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesOutputsLinkedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesOutputsLinkedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
@@ -10649,6 +10686,20 @@ export type MilestonesStatusArgs = {
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesStatusUpdatedAtArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones) */
+export type MilestonesStatusUpdatedByArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<UsersFilter>;
+};
+
 export type MilestonesCollection = {
   items: Array<Maybe<Milestones>>;
   limit: Scalars['Int'];
@@ -10665,6 +10716,9 @@ export type MilestonesCursorCollection = {
 export type MilestonesFilter = {
   AND?: InputMaybe<Array<InputMaybe<MilestonesFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<MilestonesFilter>>>;
+  bulkImported?: InputMaybe<Scalars['Boolean']>;
+  bulkImported_exists?: InputMaybe<Scalars['Boolean']>;
+  bulkImported_not?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
@@ -10673,9 +10727,31 @@ export type MilestonesFilter = {
   description_not?: InputMaybe<Scalars['String']>;
   description_not_contains?: InputMaybe<Scalars['String']>;
   description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  outputsLinkedAt?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  outputsLinkedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  outputsLinkedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_not?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  outputsLinkedBy?: InputMaybe<CfUsersNestedFilter>;
+  outputsLinkedBy_exists?: InputMaybe<Scalars['Boolean']>;
   relatedArticles?: InputMaybe<CfResearchOutputsNestedFilter>;
   relatedArticlesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   status?: InputMaybe<Scalars['String']>;
+  statusUpdatedAt?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  statusUpdatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  statusUpdatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  statusUpdatedBy?: InputMaybe<CfUsersNestedFilter>;
+  statusUpdatedBy_exists?: InputMaybe<Scalars['Boolean']>;
   status_contains?: InputMaybe<Scalars['String']>;
   status_exists?: InputMaybe<Scalars['Boolean']>;
   status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -10755,6 +10831,12 @@ export enum MilestonesLinkingCollectionsAimsCursorCollectionOrder {
 }
 
 export enum MilestonesOrder {
+  BulkImportedAsc = 'bulkImported_ASC',
+  BulkImportedDesc = 'bulkImported_DESC',
+  OutputsLinkedAtAsc = 'outputsLinkedAt_ASC',
+  OutputsLinkedAtDesc = 'outputsLinkedAt_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -15861,6 +15943,12 @@ export enum ResearchOutputsLinkingCollectionsManuscriptsCursorCollectionOrder {
 }
 
 export enum ResearchOutputsLinkingCollectionsMilestonesCollectionOrder {
+  BulkImportedAsc = 'bulkImported_ASC',
+  BulkImportedDesc = 'bulkImported_DESC',
+  OutputsLinkedAtAsc = 'outputsLinkedAt_ASC',
+  OutputsLinkedAtDesc = 'outputsLinkedAt_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -15874,6 +15962,12 @@ export enum ResearchOutputsLinkingCollectionsMilestonesCollectionOrder {
 }
 
 export enum ResearchOutputsLinkingCollectionsMilestonesCursorCollectionOrder {
+  BulkImportedAsc = 'bulkImported_ASC',
+  BulkImportedDesc = 'bulkImported_DESC',
+  OutputsLinkedAtAsc = 'outputsLinkedAt_ASC',
+  OutputsLinkedAtDesc = 'outputsLinkedAt_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
   StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -21258,6 +21352,8 @@ export type UsersLinkingCollections = {
   manuscriptsCursorCollection?: Maybe<ManuscriptsCursorCollection>;
   messagesCollection?: Maybe<MessagesCollection>;
   messagesCursorCollection?: Maybe<MessagesCursorCollection>;
+  milestonesCollection?: Maybe<MilestonesCollection>;
+  milestonesCursorCollection?: Maybe<MilestonesCursorCollection>;
   projectMembershipCollection?: Maybe<ProjectMembershipCollection>;
   projectMembershipCursorCollection?: Maybe<ProjectMembershipCursorCollection>;
   projectsCollection?: Maybe<ProjectsCollection>;
@@ -21497,6 +21593,29 @@ export type UsersLinkingCollectionsMessagesCursorCollectionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   order?: InputMaybe<
     Array<InputMaybe<UsersLinkingCollectionsMessagesCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsMilestonesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsMilestonesCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type UsersLinkingCollectionsMilestonesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<UsersLinkingCollectionsMilestonesCursorCollectionOrder>>
   >;
   pageNext?: InputMaybe<Scalars['String']>;
   pagePrev?: InputMaybe<Scalars['String']>;
@@ -21998,6 +22117,44 @@ export enum UsersLinkingCollectionsMessagesCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsMessagesCursorCollectionOrder {
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum UsersLinkingCollectionsMilestonesCollectionOrder {
+  BulkImportedAsc = 'bulkImported_ASC',
+  BulkImportedDesc = 'bulkImported_DESC',
+  OutputsLinkedAtAsc = 'outputsLinkedAt_ASC',
+  OutputsLinkedAtDesc = 'outputsLinkedAt_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum UsersLinkingCollectionsMilestonesCursorCollectionOrder {
+  BulkImportedAsc = 'bulkImported_ASC',
+  BulkImportedDesc = 'bulkImported_DESC',
+  OutputsLinkedAtAsc = 'outputsLinkedAt_ASC',
+  OutputsLinkedAtDesc = 'outputsLinkedAt_DESC',
+  StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
+  StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
+  StatusAsc = 'status_ASC',
+  StatusDesc = 'status_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -24312,6 +24469,9 @@ export type CfMessagesNestedFilter = {
 export type CfMilestonesNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfMilestonesNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfMilestonesNestedFilter>>>;
+  bulkImported?: InputMaybe<Scalars['Boolean']>;
+  bulkImported_exists?: InputMaybe<Scalars['Boolean']>;
+  bulkImported_not?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   description?: InputMaybe<Scalars['String']>;
   description_contains?: InputMaybe<Scalars['String']>;
@@ -24320,8 +24480,28 @@ export type CfMilestonesNestedFilter = {
   description_not?: InputMaybe<Scalars['String']>;
   description_not_contains?: InputMaybe<Scalars['String']>;
   description_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  outputsLinkedAt?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  outputsLinkedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  outputsLinkedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_not?: InputMaybe<Scalars['DateTime']>;
+  outputsLinkedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  outputsLinkedBy_exists?: InputMaybe<Scalars['Boolean']>;
   relatedArticlesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   status?: InputMaybe<Scalars['String']>;
+  statusUpdatedAt?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_exists?: InputMaybe<Scalars['Boolean']>;
+  statusUpdatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  statusUpdatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  statusUpdatedAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  statusUpdatedBy_exists?: InputMaybe<Scalars['Boolean']>;
   status_contains?: InputMaybe<Scalars['String']>;
   status_exists?: InputMaybe<Scalars['Boolean']>;
   status_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
@@ -25882,8 +26062,21 @@ export type FetchMilestoneByIdQueryVariables = Exact<{
 
 export type FetchMilestoneByIdQuery = {
   milestones?: Maybe<
-    Pick<Milestones, 'description' | 'status'> & {
+    Pick<
+      Milestones,
+      | 'description'
+      | 'status'
+      | 'bulkImported'
+      | 'statusUpdatedAt'
+      | 'outputsLinkedAt'
+    > & {
       sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
+      statusUpdatedBy?: Maybe<
+        Pick<Users, 'firstName' | 'lastName'> & { sys: Pick<Sys, 'id'> }
+      >;
+      outputsLinkedBy?: Maybe<
+        Pick<Users, 'firstName' | 'lastName'> & { sys: Pick<Sys, 'id'> }
+      >;
       relatedArticlesCollection?: Maybe<
         Pick<MilestonesRelatedArticlesCollection, 'total'> & {
           items: Array<
@@ -25963,8 +26156,21 @@ export type FetchMilestonesQuery = {
     Pick<MilestonesCollection, 'total'> & {
       items: Array<
         Maybe<
-          Pick<Milestones, 'description' | 'status'> & {
+          Pick<
+            Milestones,
+            | 'description'
+            | 'status'
+            | 'bulkImported'
+            | 'statusUpdatedAt'
+            | 'outputsLinkedAt'
+          > & {
             sys: Pick<Sys, 'id' | 'firstPublishedAt' | 'publishedAt'>;
+            statusUpdatedBy?: Maybe<
+              Pick<Users, 'firstName' | 'lastName'> & { sys: Pick<Sys, 'id'> }
+            >;
+            outputsLinkedBy?: Maybe<
+              Pick<Users, 'firstName' | 'lastName'> & { sys: Pick<Sys, 'id'> }
+            >;
             relatedArticlesCollection?: Maybe<
               Pick<MilestonesRelatedArticlesCollection, 'total'> & {
                 items: Array<
@@ -50965,6 +51171,78 @@ export const FetchMilestoneByIdDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'status' } },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'bulkImported' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'statusUpdatedAt' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'statusUpdatedBy' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'firstName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastName' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'outputsLinkedAt' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'outputsLinkedBy' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sys' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'firstName' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'lastName' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'relatedArticlesCollection' },
                   arguments: [
                     {
@@ -51469,6 +51747,78 @@ export const FetchMilestonesDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'status' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'bulkImported' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'statusUpdatedAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'statusUpdatedBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'outputsLinkedAt' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'outputsLinkedBy' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',

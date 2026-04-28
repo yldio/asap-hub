@@ -118,8 +118,32 @@ const entityLinkStyles = css({
   gap: rem(3),
 });
 
+const projectEntityStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(3),
+  width: rem(180),
+  maxWidth: rem(180),
+  minWidth: 0,
+});
+
 const projectIconStyles = css({
   display: 'inline-flex',
+  flexShrink: 0,
+});
+
+const projectTitleStyles = css({
+  minWidth: 0,
+  flex: 1,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  '& > a': {
+    display: 'block',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
 });
 
 const apcCoverageContainerStyles = css({
@@ -331,15 +355,17 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
         {displayProjectColumn && (
           <td>
             {project?.title ? (
-              <p css={entityLinkStyles}>
+              <p css={projectEntityStyles}>
                 <span css={projectIconStyles}>
                   {getProjectIcon(project.projectType)}
                 </span>
-                {projectHref ? (
-                  <Link href={projectHref}>{project.title}</Link>
-                ) : (
-                  project.title
-                )}
+                <span css={projectTitleStyles} title={project.title}>
+                  {projectHref ? (
+                    <Link href={projectHref}>{project.title}</Link>
+                  ) : (
+                    project.title
+                  )}
+                </span>
               </p>
             ) : (
               '—'

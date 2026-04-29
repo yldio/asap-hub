@@ -268,7 +268,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                     jobTitle={jobTitle}
                     teams={teams}
                     labs={labs}
-                    userActiveTeamsRoute={tabRoutes.research({}).$}
                     isAlumni={!!alumniSinceDate}
                   />
                 </div>

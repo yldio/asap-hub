@@ -396,6 +396,86 @@ it('redirects to resubmit manuscript form when user clicks on Submit Revised Man
   );
 });
 
+it('uses override getCreateComplianceReportHref for the share compliance report button', async () => {
+  const userActions = userEvent.setup({ delay: null });
+  const { getByRole, getByTestId } = render(
+    <MemoryRouter>
+      <Routes>
+        <Route
+          path="*"
+          element={
+            <>
+              <LocationCapture />
+              <ManuscriptCard
+                {...props}
+                isComplianceReviewer
+                getCreateComplianceReportHref={(manuscriptId) =>
+                  `/projects/discovery/project-1/workspace/create-compliance-report/${manuscriptId}`
+                }
+              />
+            </>
+          }
+        />
+      </Routes>
+    </MemoryRouter>,
+  );
+
+  await userActions.click(getByTestId('collapsible-button'));
+  await userActions.click(
+    getByRole('button', { name: /Share Compliance Report Icon/i }),
+  );
+  expect(currentLocation?.pathname).toBe(
+    `/projects/discovery/project-1/workspace/create-compliance-report/${props.id}`,
+  );
+});
+
+it('uses override getResubmitManuscriptHref for the resubmit manuscript button', async () => {
+  const userActions = userEvent.setup({ delay: null });
+  const manuscriptVersions = [
+    {
+      ...mockVersionWithReport,
+      firstAuthors: [user],
+    },
+  ];
+  const { getByRole, getByTestId } = render(
+    <MemoryRouter>
+      <Routes>
+        <Route
+          path="*"
+          element={
+            <>
+              <LocationCapture />
+              <ManuscriptCard
+                {...props}
+                useManuscriptById={useManuscriptById.mockImplementation(() => [
+                  {
+                    id: 'manuscript_0',
+                    title: 'Mock Manuscript Title',
+                    status: 'Waiting for Report',
+                    versions: manuscriptVersions,
+                  },
+                  jest.fn(),
+                ])}
+                getResubmitManuscriptHref={(manuscriptId) =>
+                  `/projects/discovery/project-1/workspace/resubmit-manuscript/${manuscriptId}`
+                }
+              />
+            </>
+          }
+        />
+      </Routes>
+    </MemoryRouter>,
+  );
+
+  await userActions.click(getByTestId('collapsible-button'));
+  await userActions.click(
+    getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+  );
+  expect(currentLocation?.pathname).toBe(
+    `/projects/discovery/project-1/workspace/resubmit-manuscript/${props.id}`,
+  );
+});
+
 it('displays the confirmation modal when isComplianceReviewer is true and the user tries to change the manuscript status to a different one than it has started', async () => {
   const userActions = userEvent.setup({ delay: null });
   const { getByRole, getByTestId, getByText } = render(

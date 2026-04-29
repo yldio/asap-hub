@@ -19,9 +19,14 @@ const loadProjectManuscript = () =>
   import(/* webpackChunkName: "project-manuscript" */ './ProjectManuscript');
 const loadProjectMilestones = () =>
   import(/* webpackChunkName: "project-milestones" */ './ProjectMilestones');
+const loadProjectComplianceReport = () =>
+  import(
+    /* webpackChunkName: "project-compliance-report" */ './ProjectComplianceReport'
+  );
 
 const ProjectManuscript = lazy(loadProjectManuscript);
 const ProjectMilestones = lazy(loadProjectMilestones);
+const ProjectComplianceReport = lazy(loadProjectComplianceReport);
 
 type Props = {
   config: ProjectDetailConfig;
@@ -74,128 +79,171 @@ const ProjectDetail: FC<Props> = ({ config }) => {
     <Frame title={projectDetail.title || ''}>
       <ManuscriptToastProvider>
         <EligibilityReasonProvider>
-          <ProjectDetailPage
-            {...projectDetail}
-            pointOfContactEmail={projectDetail.contactEmail || undefined}
-            aboutHref={route.about({}).$}
-            workspaceHref={workspaceHref}
-            milestonesHref={route.milestones({}).$}
-          >
-            <Routes>
-              {showWorkspace && (
-                <Route
-                  path={`workspace${
-                    route.workspace({}).createManuscript.template
-                  }`}
-                  element={
+          <Routes>
+            {showWorkspace && (
+              <Route
+                path={`workspace${
+                  route.workspace({}).createManuscript.template
+                }`}
+                element={
+                  <Frame title="Create Manuscript">
                     <ProjectManuscript
                       projectId={projectId}
                       projectType={config.projectTypeKey}
                     />
-                  }
-                />
-              )}
-              {showWorkspace && (
-                <Route
-                  path={`workspace${
-                    route.workspace({}).editManuscript.template
-                  }`}
-                  element={
+                  </Frame>
+                }
+              />
+            )}
+            {showWorkspace && (
+              <Route
+                path={`workspace${route.workspace({}).editManuscript.template}`}
+                element={
+                  <Frame title="Edit Manuscript">
                     <ProjectManuscript
                       projectId={projectId}
                       projectType={config.projectTypeKey}
                     />
-                  }
-                />
-              )}
-              {showWorkspace && (
-                <Route
-                  path={`workspace${
-                    route.workspace({}).resubmitManuscript.template
-                  }`}
-                  element={
+                  </Frame>
+                }
+              />
+            )}
+            {showWorkspace && (
+              <Route
+                path={`workspace${
+                  route.workspace({}).resubmitManuscript.template
+                }`}
+                element={
+                  <Frame title="Resubmit Manuscript">
                     <ProjectManuscript
                       projectId={projectId}
                       projectType={config.projectTypeKey}
                       resubmitManuscript
                     />
-                  }
-                />
-              )}
-              <Route
-                path="about"
-                element={
-                  <ProjectDetailAbout
-                    {...projectDetail}
-                    pointOfContactEmail={
-                      projectDetail.contactEmail || undefined
-                    }
-                    fetchArticles={fetchArticles}
-                    seeMilestonesHref={route.milestones({}).$}
-                  />
+                  </Frame>
                 }
               />
+            )}
+            {showWorkspace && (
               <Route
-                path="milestones"
+                path={`workspace${
+                  route.workspace({}).createComplianceReport.template
+                }`}
                 element={
-                  isProjectMilestonesEnabled ? (
-                    <Frame title="Project Milestones">
-                      <ProjectMilestones
-                        projectId={projectId}
-                        seeAimsHref={route.about({}).$}
-                        hasSupplementGrant={hasSupplementGrant}
-                        aims={activeProjectAims}
-                        isLead={isLead}
-                        milestonesLastUpdated={
-                          projectDetail.milestonesLastUpdated
-                        }
-                        loadArticleOptions={loadArticleOptions}
-                      />
-                    </Frame>
-                  ) : (
-                    <NotFoundPage />
-                  )
-                }
-              />
-              {showWorkspace && (
-                <Route
-                  path="workspace/*"
-                  element={
-                    <ProjectWorkspace
-                      id={projectId}
-                      isProjectMember={isProjectMember}
-                      isTeamBased={config.getIsTeamBased(projectDetail)}
-                      manuscripts={projectDetail.manuscripts ?? []}
-                      collaborationManuscripts={
-                        projectDetail.collaborationManuscripts ?? []
-                      }
-                      tools={projectDetail.tools ?? []}
-                      lastModifiedDate={new Date().toISOString()}
-                      contactEmail={projectDetail.contactEmail || undefined}
-                      contactName={config.getContactName(projectDetail)}
-                      toolsHref={route.workspace({}).tools({}).$}
-                      editToolHref={(index) =>
-                        route
-                          .workspace({})
-                          .tools({})
-                          .tool({ toolIndex: `${index}` }).$
-                      }
-                      isActiveProject={projectDetail.status === 'Active'}
-                      createManuscriptHref={
-                        route.workspace({}).createManuscript({}).$
-                      }
-                      targetManuscriptId={targetManuscript.slice(1)}
-                      workspaceHref={route.workspace({}).$}
+                  <Frame title="Create Compliance Report">
+                    <ProjectComplianceReport
+                      projectId={projectId}
+                      projectType={config.projectTypeKey}
                     />
-                  }
-                />
-              )}
-              <Route
-                index
-                element={<Navigate to={route.about({}).$} replace />}
+                  </Frame>
+                }
               />
-            </Routes>
-          </ProjectDetailPage>
+            )}
+            <Route
+              path="*"
+              element={
+                <ProjectDetailPage
+                  {...projectDetail}
+                  pointOfContactEmail={projectDetail.contactEmail || undefined}
+                  aboutHref={route.about({}).$}
+                  workspaceHref={workspaceHref}
+                  milestonesHref={route.milestones({}).$}
+                >
+                  <Routes>
+                    <Route
+                      path="about"
+                      element={
+                        <ProjectDetailAbout
+                          {...projectDetail}
+                          pointOfContactEmail={
+                            projectDetail.contactEmail || undefined
+                          }
+                          fetchArticles={fetchArticles}
+                          seeMilestonesHref={route.milestones({}).$}
+                        />
+                      }
+                    />
+                    <Route
+                      path="milestones"
+                      element={
+                        isProjectMilestonesEnabled ? (
+                          <Frame title="Project Milestones">
+                            <ProjectMilestones
+                              projectId={projectId}
+                              seeAimsHref={route.about({}).$}
+                              hasSupplementGrant={hasSupplementGrant}
+                              aims={activeProjectAims}
+                              isLead={isLead}
+                              loadArticleOptions={loadArticleOptions}
+                              milestonesLastUpdated={
+                                projectDetail.milestonesLastUpdated
+                              }
+                            />
+                          </Frame>
+                        ) : (
+                          <NotFoundPage />
+                        )
+                      }
+                    />
+                    {showWorkspace && (
+                      <Route
+                        path="workspace/*"
+                        element={
+                          <ProjectWorkspace
+                            id={projectId}
+                            isProjectMember={isProjectMember}
+                            isTeamBased={config.getIsTeamBased(projectDetail)}
+                            manuscripts={projectDetail.manuscripts ?? []}
+                            collaborationManuscripts={
+                              projectDetail.collaborationManuscripts ?? []
+                            }
+                            tools={projectDetail.tools ?? []}
+                            lastModifiedDate={new Date().toISOString()}
+                            contactEmail={
+                              projectDetail.contactEmail || undefined
+                            }
+                            contactName={config.getContactName(projectDetail)}
+                            toolsHref={route.workspace({}).tools({}).$}
+                            editToolHref={(index) =>
+                              route
+                                .workspace({})
+                                .tools({})
+                                .tool({ toolIndex: `${index}` }).$
+                            }
+                            isActiveProject={projectDetail.status === 'Active'}
+                            createManuscriptHref={
+                              route.workspace({}).createManuscript({}).$
+                            }
+                            getEditManuscriptHref={(manuscriptId) =>
+                              route
+                                .workspace({})
+                                .editManuscript({ manuscriptId }).$
+                            }
+                            getResubmitManuscriptHref={(manuscriptId) =>
+                              route
+                                .workspace({})
+                                .resubmitManuscript({ manuscriptId }).$
+                            }
+                            getCreateComplianceReportHref={(manuscriptId) =>
+                              route
+                                .workspace({})
+                                .createComplianceReport({ manuscriptId }).$
+                            }
+                            targetManuscriptId={targetManuscript.slice(1)}
+                            workspaceHref={route.workspace({}).$}
+                          />
+                        }
+                      />
+                    )}
+                    <Route
+                      index
+                      element={<Navigate to={route.about({}).$} replace />}
+                    />
+                  </Routes>
+                </ProjectDetailPage>
+              }
+            />
+          </Routes>
         </EligibilityReasonProvider>
       </ManuscriptToastProvider>
     </Frame>

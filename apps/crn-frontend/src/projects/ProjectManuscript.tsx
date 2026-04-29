@@ -28,7 +28,7 @@ import {
 } from '../network/teams/state';
 import { useEligibilityReason } from '../network/teams/useEligibilityReason';
 import { useManuscriptToast } from '../network/teams/useManuscriptToast';
-import { refreshProjectState } from './state';
+import { refreshProjectState, useProjectById } from './state';
 
 const loadManuscriptForm = () =>
   import(
@@ -52,11 +52,17 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
   );
   const { manuscriptId } = useParams<{ manuscriptId: string }>();
   const [manuscript] = useManuscriptById(manuscriptId ?? '');
+  const projectDetail = useProjectById(projectId);
 
   const user = useCurrentUserCRN();
-  // TODO: retrieve teamId and teamDisplayName from the project's funded team
-  const teamId = user?.teams[0]?.id ?? '';
-  const teamDisplayName = user?.teams[0]?.displayName ?? '';
+  const projectTeam =
+    projectDetail && 'fundedTeam' in projectDetail
+      ? projectDetail.fundedTeam
+      : undefined;
+  const teamId =
+    manuscript?.teamId ?? projectTeam?.id ?? user?.teams[0]?.id ?? '';
+  const teamDisplayName =
+    projectTeam?.displayName ?? user?.teams[0]?.displayName ?? '';
 
   const { eligibilityReasons } = useEligibilityReason();
   const { setFormType } = useManuscriptToast();

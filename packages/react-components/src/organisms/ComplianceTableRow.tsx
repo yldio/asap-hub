@@ -64,7 +64,7 @@ const assignedUsersContainerStyles = css({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  maxWidth: rem(160),
+  maxWidth: rem(170),
   alignItems: 'center',
 });
 
@@ -82,7 +82,8 @@ const noUsersStyles = css({
   fontSize: rem(14),
   color: lead.rgb,
   width: '100%',
-  maxWidth: rem(90),
+  whiteSpace: 'nowrap',
+  alignItems: 'anchor-center',
 });
 
 const assignUsersButtonStyles = css({

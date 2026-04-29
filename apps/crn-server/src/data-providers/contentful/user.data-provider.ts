@@ -57,7 +57,6 @@ import { DocumentNode } from 'graphql';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
 import { parseResearchTags } from './research-tag.data-provider';
-import { EntryContentfulDataProvider } from './entry.data-provider';
 
 export type QueryUserListItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -172,8 +171,6 @@ export class UserContentfulDataProvider implements UserDataProvider {
     publicUser: boolean = false,
   ): Promise<UserDataObject | null> {
     const { users } = await this.fetchUserById(id, publicUser);
-    const controller = new EntryContentfulDataProvider(this.getRestClient);
-    await controller.getChangedFields(id);
 
     if (!users) {
       return null;

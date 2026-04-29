@@ -30,6 +30,20 @@ describe('Users Dependencies', () => {
       expect(assetDataProvider).toBeInstanceOf(AssetContentfulDataProvider);
     });
   });
+
+  describe('getEntryDataProvider', () => {
+    it('Should resolve Entry Contentful Data Provider', async () => {
+      const { EntryContentfulDataProvider } = await import(
+        '../../src/data-providers/contentful/entry.data-provider'
+      );
+      const getDependenciesModule = await import(
+        '../../src/dependencies/users.dependencies'
+      );
+      const entryDataProvider = getDependenciesModule.getEntryDataProvider();
+
+      expect(entryDataProvider).toBeInstanceOf(EntryContentfulDataProvider);
+    });
+  });
 });
 
 // necessary to avoid " cannot be compiled under '--isolatedModules' because it is considered a global script file"

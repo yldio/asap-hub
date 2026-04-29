@@ -171,7 +171,8 @@ const MultiSelect = <
     (inputValue: string, callback: (opts: ReadonlyArray<T>) => void): void => {
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = setTimeout(() => {
-        const requestId = ++requestCounterRef.current;
+        requestCounterRef.current += 1;
+        const requestId = requestCounterRef.current;
         const guardedCallback = (options: ReadonlyArray<T>) => {
           if (requestId === requestCounterRef.current) callback(options);
         };

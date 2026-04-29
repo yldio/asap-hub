@@ -341,6 +341,22 @@ const serverlessConfig: AWS = {
           },
           {
             Effect: 'Allow',
+            Action: 'secretsmanager:*',
+            Resource: {
+              'Fn::Join': [
+                ':',
+                [
+                  'arn:aws:secretsmanager',
+                  { Ref: 'AWS::Region' },
+                  { Ref: 'AWS::AccountId' },
+                  'secret',
+                  `google-api-credentials-test*`,
+                ],
+              ],
+            },
+          },
+          {
+            Effect: 'Allow',
             Action: 'ses:SendTemplatedEmail',
             Resource: ['*'],
             Condition: {
@@ -403,6 +419,18 @@ const serverlessConfig: AWS = {
             ],
             Resource: {
               'Fn::GetAtt': ['GoogleCalendarEventQueue', 'Arn'],
+            },
+          },
+          {
+            Effect: 'Allow',
+            Action: [
+              'sqs:SendMessage',
+              'sqs:ReceiveMessage',
+              'sqs:DeleteMessage',
+              'sqs:GetQueueAttributes',
+            ],
+            Resource: {
+              'Fn::GetAtt': ['ComplianceDocSyncQueue', 'Arn'],
             },
           },
         ],
@@ -1280,6 +1308,60 @@ const serverlessConfig: AWS = {
       ],
       environment: {
         SENTRY_DSN: sentryDsnHandlers,
+      },
+    },
+    complianceSpreadsheetEntryHandler: {
+      handler:
+        './src/handlers/compliance-sheet/compliance-entry-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: [eventBusSourceContentful],
+              'detail-type': [
+                'ManuscriptVersionsPublished',
+                'ManuscriptsPublished',
+                'ProjectsPublished',
+                'ComplianceReportsPublished',
+                'UsersPublished',
+                'TeamsPublished',
+                'ManuscriptVersionsUnpublished',
+                'ManuscriptsUnpublished',
+                'UsersUnpublished',
+                'TeamsUnpublished',
+                'ProjectsUnpublished',
+                'ComplianceReportsUnpublished',
+              ],
+            },
+          },
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+        COMPLIANCE_DOC_SYNC_QUEUE_URL: { Ref: 'ComplianceDocSyncQueue' },
+      },
+    },
+    complianceSpreadsheetSyncHandler: {
+      handler:
+        './src/handlers/compliance-sheet/compliance-spreadsheet-sync-handler.handler',
+      timeout: 20,
+      reservedConcurrency: 2,
+      events: [
+        {
+          sqs: {
+            arn: {
+              'Fn::GetAtt': ['ComplianceDocSyncQueue', 'Arn'],
+            },
+            batchSize: 1,
+            maximumConcurrency: 2,
+          },
+        },
+      ],
+      environment: {
+        SENTRY_DSN: sentryDsnHandlers,
+        COMPLIANCE_LIVE_SHEET_ID: `\${ssm:compliance-live-sheet-id}`,
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-test`,
       },
     },
     contentfulWebhook: {
@@ -2272,6 +2354,28 @@ const serverlessConfig: AWS = {
         Properties: {
           QueueName:
             '${self:service}-${self:provider.stage}-invite-user-queue-dlq',
+          MessageRetentionPeriod: 1209600, // 14 days
+        },
+      },
+      ComplianceDocSyncQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-compliance-doc-sync-queue',
+          VisibilityTimeout: 120,
+          RedrivePolicy: {
+            maxReceiveCount: 5,
+            deadLetterTargetArn: {
+              'Fn::GetAtt': ['ComplianceDocSyncQueueDLQ', 'Arn'],
+            },
+          },
+        },
+      },
+      ComplianceDocSyncQueueDLQ: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName:
+            '${self:service}-${self:provider.stage}-compliance-doc-sync-queue-dlq',
           MessageRetentionPeriod: 1209600, // 14 days
         },
       },

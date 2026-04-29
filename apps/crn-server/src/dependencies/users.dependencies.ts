@@ -10,9 +10,11 @@ import {
   UserDataProvider,
   AssetDataProvider,
   ResearchTagDataProvider,
+  EntryDataProvider,
 } from '../data-providers/types';
 import { getContentfulRestClientFactory } from './clients.dependencies';
 import { ResearchTagContentfulDataProvider } from '../data-providers/contentful/research-tag.data-provider';
+import { EntryContentfulDataProvider } from '../data-providers/contentful/entry.data-provider';
 
 const getGraphQLClient = () =>
   getContentfulGraphQLClient({
@@ -32,6 +34,9 @@ export const getUserDataProvider = (): UserDataProvider => {
 
 export const getAssetDataProvider = (): AssetDataProvider =>
   new AssetContentfulDataProvider(getContentfulRestClientFactory);
+
+export const getEntryDataProvider = (): EntryDataProvider =>
+  new EntryContentfulDataProvider(getContentfulRestClientFactory);
 
 export const getResearchTagsDataProvider = (): ResearchTagDataProvider => {
   const contentfulGraphQLClient = getGraphQLClient();

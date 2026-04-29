@@ -53,6 +53,8 @@ const {
   QUEUE_URL,
   OPENSEARCH_USERNAME,
   OPENSEARCH_PASSWORD,
+  COMPLIANCE_DOC_SYNC_QUEUE_URL,
+  COMPLIANCE_LIVE_SHEET_ID,
 } = process.env;
 
 export const activeCampaignAccount = ACTIVE_CAMPAIGN_ACCOUNT || '';
@@ -128,3 +130,5 @@ export const opensearchPassword = OPENSEARCH_PASSWORD || '';
 export const awsRegion = AWS_REGION || REGION || 'us-east-1';
 export const opensearchAnalyticsSpreadsheetUrl =
   OPENSEARCH_ANALYTICS_SPREADSHEET_URL || '';
+export const complianceDocSyncQueueUrl = COMPLIANCE_DOC_SYNC_QUEUE_URL || '';
+export const complianceLiveSpreadsheetId = COMPLIANCE_LIVE_SHEET_ID || '';

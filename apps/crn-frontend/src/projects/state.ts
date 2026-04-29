@@ -43,6 +43,7 @@ const serializeMilestonesOptions = (options: MilestonesListOptions): string =>
     filters: options.filters ? Array.from(options.filters).sort() : [],
     grantType: options.grantType,
     projectId: options.projectId,
+    sort: options.sort,
   });
 // Separate cache for list data (incomplete, from Algolia)
 const projectListCacheState = atomFamily<

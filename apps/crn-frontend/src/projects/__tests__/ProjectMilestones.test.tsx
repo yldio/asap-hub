@@ -203,6 +203,51 @@ describe('ProjectMilestones', () => {
     });
   });
 
+  it('applies sort from URL on initial render', async () => {
+    await renderPage('sort=aim_desc');
+
+    await waitFor(() => {
+      expect(mockGetProjectMilestones).toHaveBeenCalledWith(
+        expect.objectContaining({ sort: 'aim_desc' }),
+        expect.anything(),
+      );
+    });
+  });
+
+  it('falls back to aim_asc when URL sort is not a recognised value', async () => {
+    await renderPage('sort=foo');
+
+    await waitFor(() => {
+      expect(mockGetProjectMilestones).toHaveBeenCalledWith(
+        expect.objectContaining({ sort: 'aim_asc' }),
+        expect.anything(),
+      );
+    });
+  });
+
+  it('toggles sort by Aim # and refetches with the new sort', async () => {
+    await renderPage();
+
+    await waitFor(() => {
+      expect(mockGetProjectMilestones).toHaveBeenCalledWith(
+        expect.objectContaining({ sort: 'aim_asc' }),
+        expect.anything(),
+      );
+    });
+
+    const sortButton = await screen.findByRole('button', { name: /Aims/ });
+    mockGetProjectMilestones.mockClear();
+
+    await userEvent.click(sortButton);
+
+    await waitFor(() => {
+      expect(mockGetProjectMilestones).toHaveBeenCalledWith(
+        expect.objectContaining({ sort: 'aim_desc' }),
+        expect.anything(),
+      );
+    });
+  });
+
   it('passes search query and status filters to the milestones fetch', async () => {
     await renderPage('grantType=original&searchQuery=alpha&filter=Complete');
 

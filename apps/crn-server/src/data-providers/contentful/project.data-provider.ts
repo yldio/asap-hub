@@ -1023,7 +1023,14 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
         'Opensearch Provider not configured for ProjectContentfulDataProvider',
       );
     }
-    const { take = 10, skip = 0, grantType, search, filter } = options;
+    const {
+      take = 10,
+      skip = 0,
+      grantType,
+      search,
+      filter,
+      sort = 'aim_asc',
+    } = options;
     const normalizedSearch = search?.trim();
     const statusFilters = (filter ?? []).filter(
       (value): value is MilestoneStatus =>
@@ -1034,6 +1041,9 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       grantType ? { term: { grantType } } : undefined,
       statusFilters.length ? { terms: { status: statusFilters } } : undefined,
     ]);
+
+    const isDescAimsSort = sort === 'aim_desc';
+    const sortField = isDescAimsSort ? 'aimNumbersDesc' : 'aimNumbersAsc';
 
     const response = (await this.opensearchProvider.search({
       index: 'project-milestones',
@@ -1058,7 +1068,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
               : {}),
           },
         },
-        sort: [{ aimNumbersAsc: { order: 'asc' } }],
+        sort: [{ [sortField]: { order: 'asc' } }],
         from: skip,
         size: take,
       } satisfies OpensearchRequest,
@@ -1069,9 +1079,6 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     const items: Milestone[] = hits.map((hit) => {
       // eslint-disable-next-line no-underscore-dangle
       const { aimNumbersAsc, aimNumbersDesc, status, ...fields } = hit._source;
-
-      // till we implement sorting the aims field used will be the one sorted in ascending order
-      const isDescAimsSort = false;
 
       return {
         ...fields,

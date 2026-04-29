@@ -194,6 +194,25 @@ describe('Project Controller', () => {
 
       expect(result).toEqual(projectMilestones);
     });
+
+    it('forwards sort option to the data provider', async () => {
+      projectDataProviderMock.fetchProjectMilestones.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+
+      await controller.fetchProjectMilestones('project-1', {
+        grantType: 'original',
+        sort: 'aim_desc',
+      });
+
+      expect(
+        projectDataProviderMock.fetchProjectMilestones,
+      ).toHaveBeenCalledWith('project-1', {
+        grantType: 'original',
+        sort: 'aim_desc',
+      });
+    });
   });
 
   describe('createMilestone', () => {

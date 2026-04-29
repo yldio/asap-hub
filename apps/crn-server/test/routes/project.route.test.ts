@@ -208,6 +208,34 @@ describe('project routes', () => {
         },
       );
     });
+
+    it('forwards the sort query parameter', async () => {
+      projectControllerMock.fetchProjectMilestones.mockResolvedValueOnce({
+        total: 0,
+        items: [],
+      });
+
+      const response = await supertest(app)
+        .get('/projects/project-1/milestones')
+        .query({ sort: 'aim_desc' });
+
+      expect(response.status).toBe(200);
+      expect(projectControllerMock.fetchProjectMilestones).toHaveBeenCalledWith(
+        'project-1',
+        expect.objectContaining({ sort: 'aim_desc' }),
+      );
+    });
+
+    it('returns 400 when sort is not a recognised value', async () => {
+      const response = await supertest(app)
+        .get('/projects/project-1/milestones')
+        .query({ sort: 'bogus' });
+
+      expect(response.status).toBe(400);
+      expect(
+        projectControllerMock.fetchProjectMilestones,
+      ).not.toHaveBeenCalled();
+    });
   });
 
   describe('PATCH /projects/:projectId', () => {

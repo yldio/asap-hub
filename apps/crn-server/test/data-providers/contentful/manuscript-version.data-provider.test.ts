@@ -1,13 +1,21 @@
-import { getContentfulGraphqlClientMockServer } from '@asap-hub/contentful';
+import {
+  Environment,
+  getContentfulGraphqlClientMockServer,
+} from '@asap-hub/contentful';
 
 import { GraphQLError } from 'graphql';
 import { ManuscriptVersionContentfulDataProvider } from '../../../src/data-providers/contentful/manuscript-version.data-provider';
+import {
+  getEntry,
+  getEntryCollection,
+} from '../../fixtures/contentful.fixtures';
 
 import {
   getContentfulManuscript,
   getContentfulManuscriptProjectsCollection,
   getContentfulManuscriptsCollection,
   getContentfulManuscriptVersion,
+  getContentfulManuscriptVersionFull,
   getManuscriptVersionDataObject,
   getManuscriptVersionsListResponse,
   Version,
@@ -15,6 +23,7 @@ import {
 import { getContentfulGraphqlManuscriptsCollection } from '../../fixtures/manuscript.fixtures';
 import { getContentfulGraphql } from '../../fixtures/teams.fixtures';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
+import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
 
 describe('Manuscript Versions Contentful Data Provider', () => {
   const contentfulGraphqlClientMock = getContentfulGraphqlClientMock();
@@ -448,6 +457,270 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       expect(result.latestManuscriptVersion?.hasLinkedResearchOutput).toBe(
         false,
       );
+    });
+  });
+
+  describe('fetchManuscriptVersionIdsByLinkedEntry', () => {
+    const environmentMock = getContentfulEnvironmentMock();
+    const contentfulRestClientMock: () => Promise<Environment> = () =>
+      Promise.resolve(environmentMock);
+    const dataProviderWithRestClient =
+      new ManuscriptVersionContentfulDataProvider(
+        contentfulGraphqlClientMock,
+        contentfulRestClientMock,
+      );
+    test('should throw if REST client is not configured', async () => {
+      await expect(
+        manuscriptVersionDataProvider.fetchManuscriptVersionIdsByLinkedEntry(
+          'entry-1',
+          'users',
+        ),
+      ).rejects.toThrow(
+        'REST client not configured for ManuscriptVersionContentfulDataProvider',
+      );
+    });
+
+    test('should return version IDs from manuscript entry', async () => {
+      const entry = getEntry({
+        versions: {
+          'en-US': [{ sys: { id: 'v1' } }, { sys: { id: 'v2' } }],
+        },
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      const result =
+        await dataProviderWithRestClient.fetchManuscriptVersionIdsByLinkedEntry(
+          'entry-1',
+          'manuscripts',
+        );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('entry-1', {
+        content_type: 'manuscripts',
+      });
+
+      expect(result).toEqual(['v1', 'v2']);
+    });
+
+    test('should handle case where manuscript entry has no versions', async () => {
+      const entry = getEntry({
+        versions: {},
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      const result =
+        await dataProviderWithRestClient.fetchManuscriptVersionIdsByLinkedEntry(
+          'entry-1',
+          'manuscripts',
+        );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('entry-1', {
+        content_type: 'manuscripts',
+      });
+
+      expect(result).toEqual([]);
+    });
+
+    test('should return version IDs from compliance report entry', async () => {
+      const entry = getEntry({
+        manuscriptVersion: {
+          'en-US': { sys: { id: 'v1' } },
+        },
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      const result =
+        await dataProviderWithRestClient.fetchManuscriptVersionIdsByLinkedEntry(
+          'entry-1',
+          'complianceReports',
+        );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('entry-1', {
+        content_type: 'complianceReports',
+      });
+
+      expect(result).toEqual(['v1']);
+    });
+
+    test('should handle case where compliance entry has no versions', async () => {
+      const entry = getEntry({
+        manuscriptVersion: {},
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      const result =
+        await dataProviderWithRestClient.fetchManuscriptVersionIdsByLinkedEntry(
+          'entry-1',
+          'complianceReports',
+        );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('entry-1', {
+        content_type: 'complianceReports',
+      });
+
+      expect(result).toEqual([]);
+    });
+
+    test('should merge direct and linked manuscript version IDs', async () => {
+      const directVersionEntries = [
+        getEntry({}, { id: 'v1' }),
+        getEntry({}, { id: 'v2' }),
+      ];
+
+      const linkedManuscriptEntries = [
+        getEntry(
+          {
+            versions: {
+              'en-US': [{ sys: { id: 'v2' } }, { sys: { id: 'v3' } }],
+            },
+          },
+          { id: 'm1' },
+        ),
+      ];
+
+      environmentMock.getEntries
+        .mockResolvedValueOnce(getEntryCollection(directVersionEntries))
+        .mockResolvedValueOnce(getEntryCollection(linkedManuscriptEntries));
+
+      const result =
+        await dataProviderWithRestClient.fetchManuscriptVersionIdsByLinkedEntry(
+          'entry-1',
+          'users',
+        );
+
+      expect(environmentMock.getEntries).toHaveBeenCalledTimes(2);
+
+      expect(result.sort()).toEqual(['v1', 'v2', 'v3']);
+    });
+
+    test('should handle missing fields safely', async () => {
+      const directVersionEntries = [getEntry({}, { id: undefined })];
+
+      const linkedManuscriptEntries = [
+        getEntry({}, { id: 'm1' }), // no versions field
+      ];
+
+      environmentMock.getEntries
+        .mockResolvedValueOnce(getEntryCollection(directVersionEntries))
+        .mockResolvedValueOnce(getEntryCollection(linkedManuscriptEntries));
+
+      const result =
+        await dataProviderWithRestClient.fetchManuscriptVersionIdsByLinkedEntry(
+          'entry-1',
+          'users',
+        );
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('fetchComplianceManuscriptVersions', () => {
+    test('should fetch manuscript versions by ids using id_in filter', async () => {
+      const ids = ['mv1', 'mv2'];
+
+      const response = {
+        manuscriptVersionsCollection: {
+          total: 2,
+          items: [
+            getContentfulManuscriptVersion(1),
+            getContentfulManuscriptVersion(2),
+          ],
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(response);
+
+      const result =
+        await manuscriptVersionDataProvider.fetchComplianceManuscriptVersions({
+          filter: ids,
+        });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          where: {
+            sys: {
+              id_in: ids,
+            },
+          },
+        }),
+      );
+
+      expect(result.items.length).toBe(2);
+      expect(result.total).toBe(2);
+    });
+
+    test('should fetch manuscript versions with pagination when no filter is provided', async () => {
+      const response = {
+        manuscriptVersionsCollection: {
+          total: 5,
+          items: [getContentfulManuscriptVersion(1)],
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(response);
+
+      const result =
+        await manuscriptVersionDataProvider.fetchComplianceManuscriptVersions({
+          take: 10,
+          skip: 0,
+        });
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          limit: 10,
+          skip: 0,
+        }),
+      );
+
+      expect(result.total).toBe(5);
+    });
+
+    test('should parse manuscript version correctly', async () => {
+      const version1 = getContentfulManuscriptVersionFull(1);
+      const version2 = getContentfulManuscriptVersionFull(2, {
+        sys: { id: 'project-1' },
+        projectId: 'P-USER-1',
+        grantId: 'G-USER-1',
+        title: 'User Project',
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptVersionsCollection: {
+          total: 2,
+          items: [version1, version2],
+        },
+      });
+
+      const result =
+        await manuscriptVersionDataProvider.fetchComplianceManuscriptVersions({
+          filter: [version1.sys.id, version2.sys.id],
+        });
+
+      expect(result.items[0]).toHaveProperty('id');
+      expect(result.items[0]).toHaveProperty('title');
+      expect(result.items[0]).toHaveProperty('mainProject');
+      expect(result.items[1]).toHaveProperty('id');
+      expect(result.items[1]).toHaveProperty('title');
+      expect(result.items[1]).toHaveProperty('mainProject');
+    });
+    test('should return empty result when no manuscript versions exist', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscriptVersionsCollection: {
+          total: 0,
+          items: [],
+        },
+      });
+
+      const result =
+        await manuscriptVersionDataProvider.fetchComplianceManuscriptVersions(
+          {},
+        );
+
+      expect(result).toEqual({
+        items: [],
+        total: 0,
+      });
     });
   });
 });

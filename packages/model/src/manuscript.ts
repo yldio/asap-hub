@@ -998,6 +998,60 @@ export type ManuscriptError = {
   };
 };
 
+export type ManuscriptVersionExport = {
+  id: string;
+  title: string;
+  url?: string;
+  type: string;
+  lifecycle: string;
+  manuscriptId: string;
+  manuscriptFile: string;
+  keyResourceTable?: string;
+  additionalFiles?: string;
+  preprintDoi?: string;
+  publicationDoi?: string;
+  otherDetails?: string;
+  description: string;
+  shortDescription: string;
+  impact?: string;
+  categories?: string;
+  mainProject: string;
+  teams: string;
+  status: string;
+  apcRequested?: string;
+  apcAmountRequested?: string;
+  apcCoverageRequestStatus?: string;
+  apcAmountPaid?: string;
+  declinedReason?: string;
+  acknowledgedGrantNumber?: string;
+  acknowledgedGrantNumberDetails?: string;
+  asapAffiliationIncluded?: string;
+  asapAffiliationIncludedDetails?: string;
+  manuscriptLicense?: string;
+  manuscriptLicenseDetails?: string;
+  datasetsDeposited?: string;
+  datasetsDepositedDetails?: string;
+  codeDeposited?: string;
+  codeDepositedDetails?: string;
+  protocolsDeposited?: string;
+  protocolsDepositedDetails?: string;
+  labMaterialsRegistered?: string;
+  labMaterialsRegisteredDetails?: string;
+  availabilityStatement?: string;
+  availabilityStatementDetails?: string;
+  firstAuthors: string;
+  correspondingAuthor?: string;
+  additionalAuthors?: string;
+  assignedUsers?: string;
+  labs?: string;
+  complianceReportUrl?: string;
+  complianceReportDescription?: string;
+  versionLastUpdatedDate: string;
+};
+
+export type ListManuscriptVersionExportResponse =
+  ListResponse<ManuscriptVersionExport>;
+
 export type FileAction = 'upload' | 'download';
 
 export const apcRequestedOptions = ['Requested', 'Not Requested'] as const;

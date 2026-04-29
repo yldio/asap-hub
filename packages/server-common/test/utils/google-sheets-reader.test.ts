@@ -1,15 +1,26 @@
 import { sheets_v4 as sheetsV4 } from '@googleapis/sheets';
+import { GoogleAuth } from 'google-auth-library';
 import {
   parseComplianceSheet,
   extractSpreadsheetIdFromUrl,
+  getWritableSheetsClient,
 } from '../../src/utils/google-sheets-reader';
 
-jest.mock('@googleapis/sheets');
-jest.mock('google-auth-library', () => ({
-  ...jest.requireActual('google-auth-library'),
-  GoogleAuth: jest.fn(),
-  JWT: jest.fn(),
+jest.mock('@googleapis/sheets', () => ({
+  sheets_v4: {
+    Sheets: jest.fn(),
+  },
 }));
+jest.mock('google-auth-library', () => {
+  const fromJSONMock = jest.fn().mockReturnValue('mock-jwt');
+  return {
+    ...jest.requireActual('google-auth-library'),
+    GoogleAuth: jest.fn().mockImplementation(() => ({
+      fromJSON: fromJSONMock,
+    })),
+    JWT: jest.fn(),
+  };
+});
 jest.mock('../../src/utils/aws-secret-manager');
 
 describe('Google Sheets Reader', () => {
@@ -281,6 +292,33 @@ describe('Google Sheets Reader', () => {
       expect(() => extractSpreadsheetIdFromUrl(url)).toThrow(
         'Could not extract spreadsheet ID from URL: https://docs.google.com/spreadsheets/',
       );
+    });
+  });
+
+  describe('getWritableSheetsClient', () => {
+    it('should create a writable sheets client with correct scopes', async () => {
+      const mockCreds = { client_email: 'test@test.com', private_key: 'key' };
+      const getJWTCredentials = jest.fn().mockResolvedValue(mockCreds);
+
+      const client = await getWritableSheetsClient(getJWTCredentials);
+
+      expect(getJWTCredentials).toHaveBeenCalled();
+
+      expect(GoogleAuth).toHaveBeenCalledWith({
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+      });
+
+      const googleAuthMock = GoogleAuth as unknown as jest.Mock;
+      expect(googleAuthMock).toHaveBeenCalledTimes(1);
+
+      const instance = googleAuthMock.mock.results[0].value;
+      expect(instance.fromJSON).toHaveBeenCalledWith(mockCreds);
+
+      expect(sheetsV4.Sheets).toHaveBeenCalledWith({
+        auth: 'mock-jwt',
+      });
+
+      expect(client).toBeDefined();
     });
   });
 });

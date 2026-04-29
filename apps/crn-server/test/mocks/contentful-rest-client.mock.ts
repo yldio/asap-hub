@@ -6,6 +6,7 @@ export const getContentfulEnvironmentMock = (
   ({
     ...overrideProps,
     getEntry: jest.fn(),
+    getEntries: jest.fn(),
     getAsset: jest.fn(),
     createEntry: jest.fn(),
     createAssetFromFiles: jest.fn(),

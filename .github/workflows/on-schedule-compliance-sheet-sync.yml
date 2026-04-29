@@ -1,5 +1,7 @@
-name: Migrate impact and categories
+name: Monthly Compliance Sheet Sync
 on:
+  schedule:
+    - cron: '0 8 1 * *' # At 08:00 UTC, first day of the month.
   workflow_dispatch:
 
 jobs:

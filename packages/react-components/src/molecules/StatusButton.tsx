@@ -52,7 +52,7 @@ const menuContainerStyles = css({
   display: 'none',
   overflow: 'hidden',
   zIndex: 1,
-  width: rem(250),
+  width: rem(280),
   top: rem(8),
   left: 0,
   backgroundColor: paper.rgb,

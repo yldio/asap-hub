@@ -11,6 +11,7 @@ import {
   ListProjectMilestonesResponse,
   ListProjectResponse,
   MilestoneCreateRequest,
+  MilestoneSortOption,
   ProjectDetail,
   ProjectStatus,
   ProjectTool,
@@ -208,6 +209,7 @@ export const getProject = async (
 export type MilestonesListOptions = GetListOptions & {
   grantType: GrantType;
   projectId: string;
+  sort?: MilestoneSortOption;
 };
 
 export const getProjectMilestones = async (
@@ -216,12 +218,15 @@ export const getProjectMilestones = async (
   },
   authorization: string,
 ): Promise<ListProjectMilestonesResponse> => {
-  const { projectId, grantType, ...searchOptions } = options;
+  const { projectId, grantType, sort, ...searchOptions } = options;
   const url = createListApiUrl(`projects/${projectId}/milestones`, {
     ...searchOptions,
   });
   if (grantType) {
     url.searchParams.set('grantType', grantType);
+  }
+  if (sort) {
+    url.searchParams.set('sort', sort);
   }
 
   const resp = await fetch(url.toString(), {

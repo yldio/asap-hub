@@ -42,6 +42,8 @@ const defaultProps = {
   },
   fetchLinkedArticles: mockFetchArticles,
   onSaveArticles: () => Promise.resolve(),
+  sort: 'aim_asc' as const,
+  onToggleSort: () => {},
 };
 
 const createMilestone = (
@@ -58,9 +60,13 @@ const createMilestone = (
   articleCount,
 });
 
-const renderMilestonesTable = (milestones: Milestone[]) => (
+const renderMilestonesTable = (
+  milestones: Milestone[],
+  sort: 'aim_asc' | 'aim_desc' = 'aim_asc',
+) => (
   <ProjectMilestonesTable
     {...defaultProps}
+    sort={sort}
     milestones={milestones}
     total={milestones.length}
     hasAppliedSearch={false}
@@ -82,6 +88,17 @@ export const Default = () =>
     createMilestone('3', longDescription, 'Pending', '2'),
     createMilestone('4', shortDescription, 'Complete', '2,3,4'),
   ]);
+
+export const SortedDescending = () =>
+  renderMilestonesTable(
+    [
+      createMilestone('1', shortDescription, 'Complete', '3,2,1'),
+      createMilestone('2', mediumDescription, 'In Progress', '3,2'),
+      createMilestone('3', longDescription, 'Pending', '2'),
+      createMilestone('4', shortDescription, 'Complete', '1'),
+    ],
+    'aim_desc',
+  );
 
 export const WithMoreMilestones = () =>
   renderMilestonesTable([

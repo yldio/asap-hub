@@ -302,8 +302,12 @@ export type ListProjectResponse = ListProjectDataObject;
 
 export type ListProjectMilestonesResponse = ListResponse<Milestone>;
 
+export const milestoneSortOptions = ['aim_asc', 'aim_desc'] as const;
+export type MilestoneSortOption = (typeof milestoneSortOptions)[number];
+
 export type FetchProjectMilestonesOptions = FetchOptions & {
   grantType?: GrantType;
+  sort?: MilestoneSortOption;
 };
 
 export type MilestoneCreateRequest = {

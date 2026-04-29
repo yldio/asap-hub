@@ -87,7 +87,7 @@ export const projectRouteFactory = (
 
       const options = validateProjectMilestonesFetchOptions(req.query);
 
-      const { take, skip, grantType, search, filter } = options;
+      const { take, skip, grantType, search, filter, sort } = options;
 
       const result = await projectController.fetchProjectMilestones(projectId, {
         take,
@@ -95,6 +95,7 @@ export const projectRouteFactory = (
         grantType,
         search,
         filter,
+        sort,
       });
 
       res.json(result);

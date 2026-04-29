@@ -2,6 +2,7 @@ import {
   FetchProjectMilestonesOptions,
   grantTypes,
   MilestoneCreateRequest,
+  milestoneSortOptions,
   milestoneStatuses,
   ProjectStatus,
   ProjectTool,
@@ -135,6 +136,7 @@ const projectMilestonesFetchOptionsValidationSchema: JSONSchemaType<FetchProject
     properties: {
       ...fetchOptionsValidationSchema.properties,
       grantType: { type: 'string', enum: grantTypes, nullable: true },
+      sort: { type: 'string', enum: milestoneSortOptions, nullable: true },
     },
     additionalProperties: false,
   };

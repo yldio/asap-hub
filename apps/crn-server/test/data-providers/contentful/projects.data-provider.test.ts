@@ -842,6 +842,61 @@ describe('ProjectContentfulDataProvider', () => {
       );
     });
 
+    it('sorts by aimNumbersDesc when sort=aim_desc', async () => {
+      opensearchProviderMock.search.mockResolvedValueOnce({
+        hits: {
+          hits: [
+            {
+              _source: {
+                id: 'milestone-1',
+                description: 'First milestone',
+                aimNumbersAsc: '1,2',
+                aimNumbersDesc: '2,1',
+                status: 'Complete',
+                articleCount: 0,
+                articlesDOI: '',
+                projectId: 'project-1',
+                projectName: 'Project One',
+                grantType: 'supplement',
+                createdDate: '2026-03-30T15:48:05.665Z',
+                lastDate: '2026-03-30T15:48:05.665Z',
+              },
+            },
+          ],
+          total: { value: 1 },
+        },
+      });
+
+      const result = await dataProvider.fetchProjectMilestones(
+        'project-with-milestones',
+        { ...defaultProjectMilestonesOptions, sort: 'aim_desc' },
+      );
+
+      expect(opensearchProviderMock.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: expect.objectContaining({
+            sort: [{ aimNumbersDesc: { order: 'asc' } }],
+          }),
+        }),
+      );
+      expect(result.items[0]?.aims).toBe('2,1');
+    });
+
+    it('sorts by aimNumbersAsc when sort=aim_asc explicitly', async () => {
+      await dataProvider.fetchProjectMilestones('project-with-milestones', {
+        ...defaultProjectMilestonesOptions,
+        sort: 'aim_asc',
+      });
+
+      expect(opensearchProviderMock.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: expect.objectContaining({
+            sort: [{ aimNumbersAsc: { order: 'asc' } }],
+          }),
+        }),
+      );
+    });
+
     it('handles null hits.hits gracefully', async () => {
       opensearchProviderMock.search.mockResolvedValueOnce({ hits: {} });
 

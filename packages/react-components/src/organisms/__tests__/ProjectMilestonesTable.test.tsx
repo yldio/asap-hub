@@ -1,9 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { ArticleItem, Milestone } from '@asap-hub/model';
 import ProjectMilestonesTable from '../ProjectMilestonesTable';
 
 const mockLoadArticleOptions = jest.fn(() => Promise.resolve([]));
 const mockOnSaveArticles = jest.fn(() => Promise.resolve());
+const mockOnToggleSort = jest.fn();
 
 const mockMilestones: Milestone[] = [
   {
@@ -52,7 +53,7 @@ const mockFetchArticles = jest.fn(() => Promise.resolve(sampleArticles));
 
 describe('ProjectMilestonesTable', () => {
   beforeEach(() => {
-    mockFetchArticles.mockClear();
+    jest.clearAllMocks();
     mockFetchArticles.mockResolvedValue(sampleArticles);
   });
 
@@ -68,6 +69,8 @@ describe('ProjectMilestonesTable', () => {
         onSaveArticles={mockOnSaveArticles}
         pageControlsProps={pageControlsProps}
         selectedGrantType={'original'}
+        sort="aim_asc"
+        onToggleSort={mockOnToggleSort}
       />,
     );
 
@@ -99,6 +102,8 @@ describe('ProjectMilestonesTable', () => {
         onSaveArticles={mockOnSaveArticles}
         pageControlsProps={pageControlsProps}
         selectedGrantType={'original'}
+        sort="aim_asc"
+        onToggleSort={mockOnToggleSort}
       />,
     );
     expect(screen.getByText('First milestone')).toBeInTheDocument();
@@ -120,6 +125,8 @@ describe('ProjectMilestonesTable', () => {
         onSaveArticles={mockOnSaveArticles}
         pageControlsProps={pageControlsProps}
         selectedGrantType={'original'}
+        sort="aim_asc"
+        onToggleSort={mockOnToggleSort}
       />,
     );
     expect(
@@ -142,6 +149,8 @@ describe('ProjectMilestonesTable', () => {
         pageControlsProps={pageControlsProps}
         onSaveArticles={mockOnSaveArticles}
         selectedGrantType={'original'}
+        sort="aim_asc"
+        onToggleSort={mockOnToggleSort}
       />,
     );
 
@@ -151,6 +160,70 @@ describe('ProjectMilestonesTable', () => {
       screen.getByText(
         'Please double-check your search for any typos or try a different search term.',
       ),
+    ).toBeInTheDocument();
+  });
+
+  it('renders the Aims header as a sort button and fires onToggleSort', () => {
+    render(
+      <ProjectMilestonesTable
+        milestones={mockMilestones}
+        total={mockMilestones.length}
+        hasAppliedSearch={false}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
+        pageControlsProps={pageControlsProps}
+        selectedGrantType={'original'}
+        sort="aim_asc"
+        onToggleSort={mockOnToggleSort}
+      />,
+    );
+
+    const sortButton = screen.getByRole('button', { name: /Aims/ });
+    fireEvent.click(sortButton);
+    expect(mockOnToggleSort).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders the ascending sort icon when sort is aim_asc', () => {
+    render(
+      <ProjectMilestonesTable
+        milestones={mockMilestones}
+        total={mockMilestones.length}
+        hasAppliedSearch={false}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
+        pageControlsProps={pageControlsProps}
+        selectedGrantType={'original'}
+        sort="aim_asc"
+        onToggleSort={mockOnToggleSort}
+      />,
+    );
+    expect(
+      screen.getByTitle(/Active Numerical Ascending Sort Icon/),
+    ).toBeInTheDocument();
+  });
+
+  it('renders the descending sort icon when sort is aim_desc', () => {
+    render(
+      <ProjectMilestonesTable
+        milestones={mockMilestones}
+        total={mockMilestones.length}
+        hasAppliedSearch={false}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
+        pageControlsProps={pageControlsProps}
+        selectedGrantType={'original'}
+        sort="aim_desc"
+        onToggleSort={mockOnToggleSort}
+      />,
+    );
+    expect(
+      screen.getByTitle(/Active Numerical Descending Sort Icon/),
     ).toBeInTheDocument();
   });
 
@@ -166,6 +239,8 @@ describe('ProjectMilestonesTable', () => {
         onSaveArticles={mockOnSaveArticles}
         pageControlsProps={pageControlsProps}
         selectedGrantType={'original'}
+        sort="aim_asc"
+        onToggleSort={mockOnToggleSort}
       />,
     );
     expect(screen.getByRole('button', { name: /edit/i })).toBeInTheDocument();

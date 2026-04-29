@@ -1,12 +1,12 @@
 import React from 'react';
 import { css } from '@emotion/react';
 import { TeamResponse, ProjectStatus } from '@asap-hub/model';
-import { projects } from '@asap-hub/routing';
 
 import { Paragraph, Pill } from '../atoms';
 import { LinkHeadline, TabbedCard } from '../molecules';
 import { getStatusPillAccent } from './ProjectCard';
 import { rem } from '../pixels';
+import { getProjectRoute } from '../utils';
 
 const projectHeaderStyles = css({
   display: 'flex',
@@ -113,14 +113,12 @@ const TeamProjectsCard: React.FC<TeamProjectsCardProps> = ({
           ? project.supplementGrant.description ?? ''
           : project.projectSummary ?? '';
 
-        const projectRoute =
-          project.projectType === 'Discovery Project'
-            ? projects({})
-                .discoveryProjects({})
-                .discoveryProject({ projectId: project.linkedProjectId }).$
-            : projects({})
-                .resourceProjects({})
-                .resourceProject({ projectId: project.linkedProjectId }).$;
+        const projectRoute = project.projectType
+          ? getProjectRoute({
+              projectId: project.linkedProjectId,
+              projectType: project.projectType,
+            })
+          : undefined;
 
         return (
           <div css={cardContentStyles}>

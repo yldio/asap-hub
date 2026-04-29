@@ -4,29 +4,11 @@ import { logout, staticPages } from '@asap-hub/routing';
 
 import { rem } from '../pixels';
 import { Divider, NavigationLink, Caption, Anchor } from '../atoms';
-import {
-  UserIcon,
-  feedbackIcon,
-  logoutIcon,
-  DiscoveryProjectIcon,
-  ResourceProjectIcon,
-  TraineeProjectIcon,
-} from '../icons';
+import { UserIcon, feedbackIcon, logoutIcon } from '../icons';
 import { mailToFeedback } from '../mail';
 import { UserNavigationAssociationSection } from '../molecules';
 import { MAX_NAVIGATION_MENU_WIDTH } from '../layout';
-
-const getProjectIcon = (projectType: ProjectType): JSX.Element => {
-  switch (projectType) {
-    case 'Discovery Project':
-      return <DiscoveryProjectIcon />;
-    case 'Resource Project':
-      return <ResourceProjectIcon />;
-    case 'Trainee Project':
-    default:
-      return <TraineeProjectIcon />;
-  }
-};
+import { getProjectIcon } from '../utils';
 
 const containerStyles = css({
   width: '100%',

@@ -5,28 +5,25 @@ import {
   PartialManuscriptResponse,
   statusButtonOptions,
 } from '@asap-hub/model';
-import { network, projects } from '@asap-hub/routing';
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import {
   addUserIcon,
   AssignedUsersAvatarList,
   AuthorSelect,
-  DiscoveryProjectIcon,
   lead,
   neutral200,
   PencilIcon,
   plusIcon,
-  ResourceProjectIcon,
   StatusButton,
   steel,
-  TraineeProjectIcon,
 } from '..';
 import { Anchor, Button, Link, Pill } from '../atoms';
 import { borderRadius } from '../card';
 import { formatDateToTimezone } from '../date';
 import { rem } from '../pixels';
-import { getReviewerStatusType } from '../utils';
+import { getProjectConfig, getReviewerStatusType } from '../utils';
 
 const rowStyles = css({
   padding: `${rem(20)} ${rem(24)} 0`,
@@ -172,41 +169,8 @@ type ComplianceTableRowProps = {
 const completeStatuses = ['Closed (other)', 'Compliant'];
 export const apcCoverableStatuses = ['Compliant', 'Submit Final Publication'];
 
-const getProjectRoute = (
-  project: NonNullable<PartialManuscriptResponse['project']>,
-) => {
-  switch (project.projectType) {
-    case 'Discovery Project':
-      return projects({})
-        .discoveryProjects({})
-        .discoveryProject({ projectId: project.id }).$;
-    case 'Resource Project':
-      return projects({})
-        .resourceProjects({})
-        .resourceProject({ projectId: project.id }).$;
-    case 'Trainee Project':
-      return projects({})
-        .traineeProjects({})
-        .traineeProject({ projectId: project.id }).$;
-    default:
-      return undefined;
-  }
-};
-
-const getProjectIcon = (
-  projectType: NonNullable<PartialManuscriptResponse['project']>['projectType'],
-) => {
-  switch (projectType) {
-    case 'Discovery Project':
-      return <DiscoveryProjectIcon />;
-    case 'Resource Project':
-      return <ResourceProjectIcon />;
-    case 'Trainee Project':
-      return <TraineeProjectIcon />;
-    default:
-      return null;
-  }
-};
+const getTeamWorkspaceHref = (teamId: string) =>
+  teamId ? network({}).teams({}).team({ teamId }).workspace({}).$ : undefined;
 
 const getAPCStatusLabel = (
   apcRequested?: boolean,
@@ -321,13 +285,14 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
 
   const canEditAssignedUsers =
     !completeStatuses.includes(status ?? '') && isComplianceReviewer;
-  const manuscriptHref = team.id
-    ? `${network({}).teams({}).team({ teamId: team.id }).workspace({}).$}#${id}`
+  const teamHref = getTeamWorkspaceHref(team.id);
+  const manuscriptHref = teamHref ? `${teamHref}#${id}` : undefined;
+  const projectConfig = project?.projectType
+    ? getProjectConfig({
+        projectId: project.id,
+        projectType: project.projectType,
+      })
     : undefined;
-  const teamHref = team.id
-    ? network({}).teams({}).team({ teamId: team.id }).workspace({}).$
-    : undefined;
-  const projectHref = project ? getProjectRoute(project) : undefined;
   const isUserBasedProject = project?.isTeamBased === false;
 
   return (
@@ -356,12 +321,10 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
           <td>
             {project?.title ? (
               <p css={projectEntityStyles}>
-                <span css={projectIconStyles}>
-                  {getProjectIcon(project.projectType)}
-                </span>
+                <span css={projectIconStyles}>{projectConfig?.icon}</span>
                 <span css={projectTitleStyles} title={project.title}>
-                  {projectHref ? (
-                    <Link href={projectHref}>{project.title}</Link>
+                  {projectConfig?.href ? (
+                    <Link href={projectConfig.href}>{project.title}</Link>
                   ) : (
                     project.title
                   )}

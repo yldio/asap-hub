@@ -1,12 +1,11 @@
 import { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { UserProfileContext } from '@asap-hub/react-context';
 import UserProfilePersonalText from '../UserProfilePersonalText';
 
 const props: ComponentProps<typeof UserProfilePersonalText> = {
   labs: [],
   teams: [],
-  userActiveTeamsRoute: '#',
 };
 
 it.each`
@@ -323,16 +322,14 @@ it('does not show "Former Roles" section when there are no inactive teams', () =
   expect(queryByText('Former Roles')).not.toBeInTheDocument();
 });
 
-it('handles "View all roles" click event', () => {
+it('scrolls to teams card when "View all roles" is clicked and card exists', () => {
   const mockScrollIntoView = jest.fn();
-  const mockElement = {
-    scrollIntoView: mockScrollIntoView,
-  } as unknown as HTMLElement;
-  const mockGetElementById = jest.fn(() => mockElement);
+  const teamsCard = document.createElement('div');
+  teamsCard.id = 'user-teams-tabbed-card';
+  teamsCard.scrollIntoView = mockScrollIntoView;
+  document.body.appendChild(teamsCard);
 
-  document.getElementById = mockGetElementById;
-
-  const { getByText } = render(
+  const { getByText, queryByText } = render(
     <UserProfilePersonalText
       {...props}
       teams={[
@@ -343,23 +340,22 @@ it('handles "View all roles" click event', () => {
     />,
   );
 
-  const viewAllLink = getByText('View all roles');
-  viewAllLink.click();
+  fireEvent.click(getByText('View all roles'));
 
-  expect(mockGetElementById).toHaveBeenCalledWith('user-teams-tabbed-card');
   expect(mockScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
+  expect(queryByText('View all roles')).toBeInTheDocument();
+
+  document.body.removeChild(teamsCard);
 });
 
-it('handles "View all former roles" click event', () => {
+it('scrolls to teams card when "View all former roles" is clicked and card exists', () => {
   const mockScrollIntoView = jest.fn();
-  const mockElement = {
-    scrollIntoView: mockScrollIntoView,
-  } as unknown as HTMLElement;
-  const mockGetElementById = jest.fn(() => mockElement);
+  const teamsCard = document.createElement('div');
+  teamsCard.id = 'user-teams-tabbed-card';
+  teamsCard.scrollIntoView = mockScrollIntoView;
+  document.body.appendChild(teamsCard);
 
-  document.getElementById = mockGetElementById;
-
-  const { getByText } = render(
+  const { getByText, queryByText } = render(
     <UserProfilePersonalText
       {...props}
       isAlumni={true}
@@ -371,9 +367,49 @@ it('handles "View all former roles" click event', () => {
     />,
   );
 
-  const viewAllLink = getByText('View all former roles');
-  viewAllLink.click();
+  fireEvent.click(getByText('View all former roles'));
 
-  expect(mockGetElementById).toHaveBeenCalledWith('user-teams-tabbed-card');
   expect(mockScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
+  expect(queryByText('View all former roles')).toBeInTheDocument();
+
+  document.body.removeChild(teamsCard);
+});
+
+it('expands all active teams when "View all roles" is clicked', () => {
+  const { getByText, queryByText, container } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        { id: '1', displayName: 'Team A', role: 'Lead PI (Core Leadership)' },
+        { id: '2', displayName: 'Team B', role: 'Collaborating PI' },
+        { id: '3', displayName: 'Team C', role: 'Project Manager' },
+      ]}
+    />,
+  );
+
+  expect(container).not.toHaveTextContent('Project Manager on');
+  fireEvent.click(getByText('View all roles'));
+
+  expect(container).toHaveTextContent('Project Manager on');
+  expect(queryByText('View all roles')).not.toBeInTheDocument();
+});
+
+it('expands all inactive teams when "View all former roles" is clicked', () => {
+  const { getByText, queryByText, container } = render(
+    <UserProfilePersonalText
+      {...props}
+      isAlumni={true}
+      teams={[
+        { id: '1', displayName: 'Former A', role: 'Lead PI (Core Leadership)' },
+        { id: '2', displayName: 'Former B', role: 'Collaborating PI' },
+        { id: '3', displayName: 'Former C', role: 'Project Manager' },
+      ]}
+    />,
+  );
+
+  expect(container).not.toHaveTextContent('Project Manager on');
+  fireEvent.click(getByText('View all former roles'));
+
+  expect(container).toHaveTextContent('Project Manager on');
+  expect(queryByText('View all former roles')).not.toBeInTheDocument();
 });

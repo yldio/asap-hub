@@ -28,6 +28,7 @@ const mockProvider = {
   fetchMilestoneById: jest.fn(),
   fetchProjectWithAimsDetailById: jest.fn(),
   fetchProjectIdBySupplementGrantId: jest.fn(),
+  updateArticlesForMilestone: jest.fn(),
 };
 
 describe('OpenSearch Index Milestone Handler', () => {

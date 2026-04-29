@@ -1,16 +1,21 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { GrantType, milestoneStatuses } from '@asap-hub/model';
+import { Aim, GrantType, milestoneStatuses } from '@asap-hub/model';
 import {
+  LabeledMultiSelect,
   ProjectDetailMilestones,
   ProjectMilestonesTable,
   ResearchOutputOption,
   SearchAndFilter,
 } from '@asap-hub/react-components';
-import { useCallback } from 'react';
+import { ComponentProps, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router';
+import { useManuscriptToast } from '../network/teams/useManuscriptToast';
 import { usePagination, usePaginationParams, useSearch } from '../hooks';
-import { useFetchMilestoneArticles } from './articles-state';
-import { useProjectMilestones } from './state';
+import {
+  useFetchMilestoneArticles,
+  useUpdateMilestoneArticles,
+} from './articles-state';
+import { useCreateProjectMilestone, useProjectMilestones } from './state';
 
 const milestoneControlsStyles = {
   display: 'grid',
@@ -31,7 +36,11 @@ type TableContentProps = {
   isLead: boolean;
   searchQuery: string;
   filters: Set<string>;
-  loadArticleOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
+  loadArticleOptions: NonNullable<
+    ComponentProps<
+      typeof LabeledMultiSelect<ResearchOutputOption>
+    >['loadOptions']
+  >;
 };
 
 const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
@@ -54,6 +63,20 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   const fetchArticles = useFetchMilestoneArticles();
+  const rawSaveArticles = useUpdateMilestoneArticles();
+  const { setFormType } = useManuscriptToast();
+
+  const onSaveArticles = useCallback<typeof rawSaveArticles>(
+    async (milestoneId, articles) => {
+      try {
+        await rawSaveArticles(milestoneId, articles);
+      } catch (e) {
+        setFormType({ type: 'default-error', accent: 'error' });
+        throw e;
+      }
+    },
+    [rawSaveArticles, setFormType],
+  );
 
   return (
     <ProjectMilestonesTable
@@ -66,6 +89,7 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
       fetchLinkedArticles={fetchArticles}
       isLead={isLead}
       loadArticleOptions={loadArticleOptions}
+      onSaveArticles={onSaveArticles}
       selectedGrantType={selectedGrantType}
       total={total}
       hasAppliedSearch={searchQuery.trim().length > 0 || filters.size > 0}
@@ -74,22 +98,30 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
 };
 
 const ProjectMilestones: React.FC<{
-  projectId: string;
-  isLead: boolean;
-  loadArticleOptions: (inputValue: string) => Promise<ResearchOutputOption[]>;
-  hasSupplementGrant: boolean;
-  seeAimsHref?: string;
+  readonly projectId: string;
+  readonly isLead: boolean;
+  readonly hasSupplementGrant: boolean;
+  readonly aims: ReadonlyArray<Aim>;
+  readonly seeAimsHref?: string;
   milestonesLastUpdated?: Partial<Record<GrantType, string>>;
+  readonly teamId?: string;
+  readonly loadArticleOptions: NonNullable<
+    ComponentProps<
+      typeof LabeledMultiSelect<ResearchOutputOption>
+    >['loadOptions']
+  >;
 }> = ({
   projectId,
   hasSupplementGrant,
   seeAimsHref,
+  aims,
   isLead,
   loadArticleOptions,
   milestonesLastUpdated,
 }) => {
   const { search } = useLocation();
   const navigate = useNavigate();
+
   const {
     searchQuery,
     debouncedSearchQuery,
@@ -114,13 +146,36 @@ const ProjectMilestones: React.FC<{
     [search, navigate],
   );
 
+  const createProjectMilestone = useCreateProjectMilestone(projectId);
+  const { setFormType } = useManuscriptToast();
+
+  const onSuccess = () => {
+    setFormType({
+      type: 'milestone-created',
+      accent: 'successLarge',
+    });
+  };
+
+  const onError = () => {
+    setFormType({
+      type: 'default-error',
+      accent: 'error',
+    });
+  };
+
   return (
     <ProjectDetailMilestones
       hasSupplementGrant={hasSupplementGrant}
       seeAimsHref={seeAimsHref}
       selectedGrantType={selectedGrantType}
+      isLead={isLead}
       onGrantTypeChange={handleGrantTypeChange}
       milestonesLastUpdated={milestonesLastUpdated}
+      aims={aims}
+      loadArticleOptions={loadArticleOptions}
+      onCreateProjectMilestone={createProjectMilestone}
+      onError={onError}
+      onSuccess={onSuccess}
     >
       <div style={milestoneControlsStyles}>
         <SearchAndFilter

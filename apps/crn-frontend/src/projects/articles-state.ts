@@ -1,7 +1,12 @@
 import type { ArticleItem } from '@asap-hub/model';
 import { atomFamily, useRecoilCallback } from 'recoil';
 import { authorizationState } from '../auth/state';
-import { getAimArticles, getMilestoneArticles } from './api';
+import {
+  getAimArticles,
+  getMilestoneArticles,
+  putMilestoneArticles,
+} from './api';
+import { projectMilestonesListItemState } from './state';
 
 /**
  * Cache for articles by aim id.
@@ -55,4 +60,22 @@ export const useFetchMilestoneArticles = (): ((
     const articles = await getMilestoneArticles(milestoneId, authorization);
     set(milestoneArticlesState(milestoneId), articles);
     return articles;
+  });
+
+export const useUpdateMilestoneArticles = (): ((
+  milestoneId: string,
+  articles: ReadonlyArray<ArticleItem>,
+) => Promise<void>) =>
+  useRecoilCallback(({ set, snapshot }) => async (milestoneId, articles) => {
+    const authorization = await snapshot.getPromise(authorizationState);
+    await putMilestoneArticles(
+      milestoneId,
+      articles.map((a) => a.id),
+      authorization,
+    );
+    set(milestoneArticlesState(milestoneId), articles);
+
+    set(projectMilestonesListItemState(milestoneId), (current) =>
+      current ? { ...current, articleCount: articles.length } : current,
+    );
   });

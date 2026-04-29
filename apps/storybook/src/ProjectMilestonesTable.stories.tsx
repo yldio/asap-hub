@@ -41,6 +41,7 @@ const defaultProps = {
     renderPageHref: (index: number) => `#${index}`,
   },
   fetchLinkedArticles: mockFetchArticles,
+  onSaveArticles: () => Promise.resolve(),
 };
 
 const createMilestone = (

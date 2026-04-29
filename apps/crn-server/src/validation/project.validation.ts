@@ -1,6 +1,8 @@
 import {
   FetchProjectMilestonesOptions,
   grantTypes,
+  MilestoneCreateRequest,
+  milestoneStatuses,
   ProjectStatus,
   ProjectTool,
   ProjectType,
@@ -142,5 +144,35 @@ export const validateProjectMilestonesFetchOptions = validateInput(
   {
     skipNull: true,
     coerce: true,
+  },
+);
+
+const projectMilestoneCreateValidationSchema: JSONSchemaType<MilestoneCreateRequest> =
+  {
+    type: 'object',
+    properties: {
+      grantType: { type: 'string', enum: grantTypes },
+      description: { type: 'string', minLength: 1, maxLength: 750 },
+      status: { type: 'string', enum: milestoneStatuses },
+      aimIds: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 1,
+      },
+      relatedArticleIds: {
+        type: 'array',
+        nullable: true,
+        items: { type: 'string' },
+      },
+    },
+    required: ['grantType', 'description', 'status', 'aimIds'],
+    additionalProperties: false,
+  };
+
+export const validateProjectMilestoneCreateRequest = validateInput(
+  projectMilestoneCreateValidationSchema,
+  {
+    skipNull: true,
+    coerce: false,
   },
 );

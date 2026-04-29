@@ -14,6 +14,7 @@ export { default as ComplianceDashboard } from './ComplianceDashboard';
 export { default as ComplianceReportForm } from './ComplianceReportForm';
 export { default as ContactInfoModal } from './ContactInfoModal';
 export { default as ContentPage } from './ContentPage';
+export { default as CreateMilestoneModal } from './CreateMilestoneModal';
 export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as DiscoverGuides } from './DiscoverGuides';

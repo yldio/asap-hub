@@ -132,6 +132,7 @@ jest.mock('../state', () => {
     __esModule: true,
     useProjects,
     useProjectById,
+    useProjectArticlesSuggestions: jest.fn().mockResolvedValue([]),
   };
 });
 

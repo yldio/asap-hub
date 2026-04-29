@@ -132,6 +132,7 @@ export {
 } from './molecules';
 export {
   AdditionalMaterials,
+  articlesToOptions,
   AuthorSelect,
   CalendarList,
   CaptionCard,
@@ -261,6 +262,7 @@ export {
   ComplianceReportForm,
   ContactInfoModal,
   ContentPage,
+  CreateMilestoneModal,
   DashboardPage,
   DashboardPageBody,
   DiscoverGuides,

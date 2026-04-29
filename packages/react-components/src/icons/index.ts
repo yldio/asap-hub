@@ -107,6 +107,7 @@ export { default as NumericalSortingIcon } from './numerical-sorting';
 export { default as OpenScienceIcon } from './openscience';
 export { default as OrcidIcon } from './orcid';
 export { default as OrcidSocialIcon } from './orcid-social';
+export { default as outlookClassicIcon } from './outlook-classic';
 export { default as outlookIcon } from './outlook';
 export { default as padlockIcon } from './padlock';
 export { default as paperClipIcon } from './paper-clip';

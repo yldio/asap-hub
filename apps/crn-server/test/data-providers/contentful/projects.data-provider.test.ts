@@ -1,4 +1,4 @@
-import { ProjectsOrder } from '@asap-hub/contentful';
+import { Entry, ProjectsOrder } from '@asap-hub/contentful';
 import { OpensearchRequest } from '@asap-hub/server-common';
 import { getContentfulGraphqlClientMock } from '../../mocks/contentful-graphql-client.mock';
 import { getContentfulEnvironmentMock } from '../../mocks/contentful-rest-client.mock';
@@ -15,6 +15,7 @@ import {
 } from '../../../src/data-providers/contentful/project.data-provider';
 import {
   FetchProjectMilestonesOptions,
+  MilestoneCreateRequest,
   TraineeProject,
   TraineeProjectDetail,
 } from '@asap-hub/model';
@@ -2680,5 +2681,289 @@ describe('parseContentfulProjectDetail', () => {
       expect(result.total).toBe(3);
       expect(result.items).toHaveLength(1);
     });
+  });
+});
+
+describe('ProjectContentfulDataProvider - createMilestone', () => {
+  const contentfulClientMock = getContentfulGraphqlClientMock();
+  const environmentMock = getContentfulEnvironmentMock();
+  const contentfulRestClientMock: () => Promise<Environment> = () =>
+    Promise.resolve(environmentMock);
+
+  const dataProvider = new ProjectContentfulDataProvider(
+    contentfulClientMock,
+    contentfulRestClientMock,
+  );
+
+  const dataProviderWithoutRestClient = new ProjectContentfulDataProvider(
+    contentfulClientMock,
+  );
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  const milestoneData: MilestoneCreateRequest = {
+    grantType: 'original',
+    description: 'Test milestone',
+    status: 'Complete',
+    relatedArticleIds: ['article-1'],
+    aimIds: ['aim-1', 'aim-2'],
+  };
+
+  it('throws when REST client is not available', async () => {
+    await expect(
+      dataProviderWithoutRestClient.createMilestone(milestoneData),
+    ).rejects.toThrow('REST client not available');
+  });
+
+  it('creates and publishes a milestone', async () => {
+    const publish = jest.fn().mockResolvedValue({} as Entry);
+
+    const milestoneEntryMock = {
+      sys: { id: 'milestone-1' },
+      publish,
+    } as unknown as Entry;
+
+    environmentMock.createEntry.mockResolvedValueOnce(milestoneEntryMock);
+
+    const aimEntryMock = {
+      fields: { milestones: { 'en-US': [] } },
+      patch: jest.fn().mockResolvedValue({ publish }),
+    } as unknown as Entry;
+
+    environmentMock.getEntry.mockResolvedValue(aimEntryMock);
+
+    const result = await dataProvider.createMilestone(milestoneData);
+
+    expect(environmentMock.createEntry).toHaveBeenCalledWith(
+      'milestones',
+      expect.objectContaining({
+        fields: {
+          description: { 'en-US': milestoneData.description },
+          status: { 'en-US': milestoneData.status },
+          relatedArticles: {
+            'en-US': [
+              {
+                sys: {
+                  id: 'article-1',
+                  linkType: 'Entry',
+                  type: 'Link',
+                },
+              },
+            ],
+          },
+        },
+      }),
+    );
+
+    expect(publish).toHaveBeenCalled();
+    expect(result).toBe('milestone-1');
+  });
+
+  it('appends milestone link to each aim and publishes', async () => {
+    const publish = jest.fn().mockResolvedValue({} as Entry);
+
+    const milestoneEntryMock = {
+      sys: { id: 'milestone-1' },
+      publish,
+    } as unknown as Entry;
+
+    environmentMock.createEntry.mockResolvedValueOnce(milestoneEntryMock);
+
+    const aimEntryMock1 = {
+      fields: { milestones: { 'en-US': [] } },
+      patch: jest.fn().mockResolvedValue({ publish }),
+    } as unknown as Entry;
+
+    const existingMilestone = {
+      sys: { id: 'existing', linkType: 'Entry', type: 'Link' },
+    };
+
+    const aimEntryMock2 = {
+      fields: { milestones: { 'en-US': [existingMilestone] } },
+      patch: jest.fn().mockResolvedValue({ publish }),
+    } as unknown as Entry;
+
+    environmentMock.getEntry
+      .mockResolvedValueOnce(aimEntryMock1)
+      .mockResolvedValueOnce(aimEntryMock2);
+
+    await dataProvider.createMilestone(milestoneData);
+
+    expect(environmentMock.getEntry).toHaveBeenCalledWith('aim-1');
+    expect(environmentMock.getEntry).toHaveBeenCalledWith('aim-2');
+
+    expect(aimEntryMock1.patch).toHaveBeenCalledWith([
+      {
+        op: 'replace',
+        path: '/fields/milestones',
+        value: {
+          'en-US': [
+            {
+              sys: {
+                id: 'milestone-1',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        },
+      },
+    ]);
+
+    expect(aimEntryMock2.patch).toHaveBeenCalledWith([
+      {
+        op: 'replace',
+        path: '/fields/milestones',
+        value: {
+          'en-US': [
+            existingMilestone,
+            {
+              sys: {
+                id: 'milestone-1',
+                linkType: 'Entry',
+                type: 'Link',
+              },
+            },
+          ],
+        },
+      },
+    ]);
+  });
+
+  it('handles empty relatedArticleIds', async () => {
+    const publish = jest.fn().mockResolvedValue({} as Entry);
+
+    const milestoneEntryMock = {
+      sys: { id: 'milestone-1' },
+      publish,
+    } as unknown as Entry;
+
+    environmentMock.createEntry.mockResolvedValueOnce(milestoneEntryMock);
+
+    const aimEntryMock = {
+      fields: { milestones: { 'en-US': [] } },
+      patch: jest.fn().mockResolvedValue({ publish }),
+    } as unknown as Entry;
+
+    environmentMock.getEntry.mockResolvedValue(aimEntryMock);
+
+    await dataProvider.createMilestone({
+      ...milestoneData,
+      relatedArticleIds: [],
+    });
+
+    expect(environmentMock.createEntry).toHaveBeenCalledWith(
+      'milestones',
+      expect.objectContaining({
+        fields: {
+          description: { 'en-US': milestoneData.description },
+          status: { 'en-US': milestoneData.status },
+          relatedArticles: { 'en-US': [] },
+        },
+      }),
+    );
+  });
+});
+
+describe('ProjectContentfulDataProvider - isProjectMilestonesSynced', () => {
+  const contentfulClientMock = getContentfulGraphqlClientMock();
+
+  const opensearchProviderMock = {
+    search: jest.fn(),
+  };
+
+  const dataProvider = new ProjectContentfulDataProvider(
+    contentfulClientMock,
+    undefined,
+    opensearchProviderMock as any,
+  );
+
+  const mockProjectMilestoneIdsResponse = {
+    projects: {
+      originalGrantAimsCollection: {
+        items: [
+          {
+            milestonesCollection: {
+              items: [{ sys: { id: 'a' } }, { sys: { id: 'b' } }],
+            },
+          },
+          {
+            milestonesCollection: {
+              items: [{ sys: { id: 'c' } }],
+            },
+          },
+        ],
+      },
+      supplementGrant: {
+        aimsCollection: {
+          items: [
+            {
+              milestonesCollection: {
+                items: [{ sys: { id: 'd' } }],
+              },
+            },
+          ],
+        },
+      },
+    },
+  };
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('returns true when Contentful and OpenSearch milestone IDs match', async () => {
+    contentfulClientMock.request.mockResolvedValueOnce(
+      mockProjectMilestoneIdsResponse,
+    );
+
+    // OpenSearch response
+    opensearchProviderMock.search.mockResolvedValueOnce({
+      hits: {
+        hits: [
+          { _source: { id: 'b' } },
+          { _source: { id: 'a' } },
+          { _source: { id: 'c' } },
+          { _source: { id: 'd' } },
+        ],
+      },
+    });
+
+    const result = await dataProvider.isProjectMilestonesSynced('project-1');
+
+    expect(result).toBe(true);
+  });
+
+  it('returns false when counts differ', async () => {
+    contentfulClientMock.request.mockResolvedValueOnce(
+      mockProjectMilestoneIdsResponse,
+    );
+
+    opensearchProviderMock.search.mockResolvedValueOnce({
+      hits: {
+        hits: [{ _source: { id: 'a' } }],
+      },
+    });
+
+    const result = await dataProvider.isProjectMilestonesSynced('project-1');
+
+    expect(result).toBe(false);
+  });
+
+  it('throws an error when opensearch provider is not configured properly', async () => {
+    contentfulClientMock.request.mockResolvedValueOnce(
+      mockProjectMilestoneIdsResponse,
+    );
+    const dataProviderWithoutOpenSearch = new ProjectContentfulDataProvider(
+      contentfulClientMock,
+      undefined,
+    );
+    await expect(
+      dataProviderWithoutOpenSearch.isProjectMilestonesSynced('project-1'),
+    ).rejects.toThrow(
+      'Opensearch Provider not configured for ProjectContentfulDataProvider',
+    );
   });
 });

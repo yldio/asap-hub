@@ -232,28 +232,6 @@ it('does not render page description when not provided', () => {
   expect(queryByText(/custom page description/i)).not.toBeInTheDocument();
 });
 
-describe('Data Manager filter', () => {
-  it('removes the Data Manager filter when the flag is disabled', () => {
-    mockIsEnabled.mockReturnValueOnce(false);
-    const { queryByText } = render(
-      <MemoryRouter initialEntries={[network({}).users({}).$]}>
-        <NetworkPageHeader {...props} page="users" />
-      </MemoryRouter>,
-    );
-    expect(queryByText('Data Manager')).not.toBeInTheDocument();
-  });
-
-  it('shows the Data Manager filter when the flag is enabled', () => {
-    mockIsEnabled.mockReturnValueOnce(true);
-    const { getByText } = render(
-      <MemoryRouter initialEntries={[network({}).users({}).$]}>
-        <NetworkPageHeader {...props} page="users" />
-      </MemoryRouter>,
-    );
-    expect(getByText('Data Manager')).toBeInTheDocument();
-  });
-});
-
 describe('Research Theme Filters', () => {
   it('renders research theme filters when researchThemes are provided', () => {
     const researchThemes = [

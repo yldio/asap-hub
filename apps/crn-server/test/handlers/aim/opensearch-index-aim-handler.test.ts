@@ -25,8 +25,8 @@ const mockProvider = {
   fetchAimWithMilestonesById: jest.fn(),
   fetchMilestoneById: jest.fn(),
   fetchProjectWithAimsDetailById: jest.fn(),
-
   fetchProjectIdBySupplementGrantId: jest.fn(),
+  updateArticlesForMilestone: jest.fn(),
 };
 
 describe('OpenSearch Index Aim Handler', () => {

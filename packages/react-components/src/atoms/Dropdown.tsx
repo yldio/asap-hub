@@ -4,6 +4,8 @@ import Select, {
   ControlProps,
   SingleValueProps,
   GroupBase,
+  OptionProps,
+  components,
 } from 'react-select';
 import { useValidation, validationMessageStyles } from '../form';
 import { dropdownChevronIcon, dropdownCrossIcon } from '../icons';
@@ -37,6 +39,19 @@ function CustomSingleValue<V extends string>({
   );
 }
 
+function CustomOption<V extends string>({
+  renderOption,
+  ...props
+}: OptionProps<Option<V>, false> & {
+  renderOption?: (option: Option<V>) => ReactNode;
+}) {
+  return (
+    <components.Option {...props}>
+      {renderOption ? renderOption(props.data) : props.data.label}
+    </components.Option>
+  );
+}
+
 const DropdownIndicator: FC = () => dropdownChevronIcon;
 const CrossIcon: FC = () => dropdownCrossIcon;
 const ClearIndicator = <V extends string>({
@@ -62,8 +77,11 @@ export interface DropdownProps<V extends string> {
 
   readonly value: V;
   readonly renderValue?: (value: V) => ReactNode;
+  readonly renderOption?: (option: Option<V>) => ReactNode;
   readonly onChange?: (newValue: V) => void;
   readonly onBlur?: () => void;
+  readonly onMenuOpen?: () => void;
+  readonly onMenuClose?: () => void;
   readonly noOptionsMessage?: (value: { inputValue: string }) => string | null;
 }
 export default function Dropdown<V extends string>({
@@ -78,8 +96,11 @@ export default function Dropdown<V extends string>({
 
   value,
   renderValue,
+  renderOption,
   onChange = noop,
   onBlur = noop,
+  onMenuOpen = noop,
+  onMenuClose = noop,
   noOptionsMessage,
 }: DropdownProps<V>): ReturnType<FC> {
   const { validationMessage, validationTargetProps, validate } =
@@ -128,6 +149,9 @@ export default function Dropdown<V extends string>({
           SingleValue: (props) => (
             <CustomSingleValue {...props} renderValue={renderValue} />
           ),
+          Option: (props) => (
+            <CustomOption {...props} renderOption={renderOption} />
+          ),
         }}
         styles={reactSelectStyles(theme, !!validationMessage)}
         noOptionsMessage={noOptionsMessage}
@@ -137,6 +161,8 @@ export default function Dropdown<V extends string>({
           validate();
           onBlur();
         }}
+        onMenuClose={onMenuClose}
+        onMenuOpen={onMenuOpen}
         aria-label={name}
       />
       <input

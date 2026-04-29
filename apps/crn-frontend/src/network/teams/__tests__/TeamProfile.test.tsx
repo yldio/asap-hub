@@ -417,13 +417,17 @@ it('displays manuscript success toast message and user can dismiss toast', async
     name: /Impact/i,
   });
   await user.type(impactInput, 'My Imp');
-  await user.click(screen.getByText(/^My Impact$/i));
+  await user.click(
+    await screen.findByText(/^My Impact$/i, {}, { timeout: 5000 }),
+  );
 
   const categoryInput = screen.getByRole('combobox', {
     name: /Category/i,
   });
   await user.type(categoryInput, 'My Cat');
-  await user.click(screen.getByText(/^My Category$/i));
+  await user.click(
+    await screen.findByText(/^My Category$/i, {}, { timeout: 5000 }),
+  );
 
   fireEvent.change(screen.getByLabelText(/First Authors/i), {
     target: { value: 'Jane Doe' },
@@ -433,7 +437,7 @@ it('displays manuscript success toast message and user can dismiss toast', async
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
 
-  await user.click(screen.getByText(/Non CRN/i));
+  await user.click(await screen.findByText(/Non CRN/i, {}, { timeout: 5000 }));
 
   expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
   fireEvent.change(screen.getByLabelText(/Jane Doe Email/i), {

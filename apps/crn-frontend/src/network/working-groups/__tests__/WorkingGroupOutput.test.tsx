@@ -134,10 +134,14 @@ const mandatoryFields = async (
     target: { value: doi },
   });
   await user.click(screen.getByRole('combobox', { name: /Authors/i }));
-  await user.click(screen.getByText('Person A 3'));
+  await user.click(
+    await screen.findByText('Person A 3', {}, { timeout: 5000 }),
+  );
 
   await user.click(screen.getByRole('combobox', { name: /Teams/i }));
-  await user.click(screen.getByText('Abu-Remaileh, M 1'));
+  await user.click(
+    await screen.findByText('Abu-Remaileh, M 1', {}, { timeout: 5000 }),
+  );
 
   return {
     publish: async () => {
@@ -356,7 +360,9 @@ it('can submit a form when form data is valid', async () => {
   );
 
   await user.click(screen.getByRole('combobox', { name: /Labs/i }));
-  await user.click(screen.getByText('Example 1 Lab'));
+  await user.click(
+    await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
+  );
 
   await publish();
 
@@ -443,7 +449,9 @@ it('can save draft when form data is valid', async () => {
   );
 
   await user.click(screen.getByRole('combobox', { name: /Labs/i }));
-  await user.click(screen.getByText('Example 1 Lab'));
+  await user.click(
+    await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
+  );
 
   await saveDraft();
 

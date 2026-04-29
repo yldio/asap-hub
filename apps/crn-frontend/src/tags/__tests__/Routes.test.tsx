@@ -106,7 +106,9 @@ describe('tags', () => {
     await renderTagsPage();
 
     await userEvent.click(screen.getByRole('combobox'));
-    await userEvent.click(screen.getByText('LGW'));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'LGW' }, { timeout: 5000 }),
+    );
     await waitFor(() =>
       expect(mockGetTagSearch).toHaveBeenCalledWith(
         expect.anything(),
@@ -127,7 +129,9 @@ describe('tags', () => {
     await renderTagsPage();
 
     await userEvent.click(screen.getByRole('combobox'));
-    await userEvent.click(screen.getByText('LGW'));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'LGW' }, { timeout: 5000 }),
+    );
     await waitFor(() => {
       expect(mockGetTagSearch).toHaveBeenCalled();
       expect(mockSearchForTagValues).toHaveBeenCalledWith(
@@ -222,7 +226,9 @@ it('Will show algolia results', async () => {
   await renderTagsPage();
 
   await userEvent.click(screen.getByRole('combobox'));
-  await userEvent.click(screen.getByText('LGW'));
+  await userEvent.click(
+    await screen.findByRole('option', { name: 'LGW' }, { timeout: 5000 }),
+  );
   await waitFor(() =>
     expect(screen.getByText('Tom Cruise')).toBeInTheDocument(),
   );
@@ -239,7 +245,9 @@ it('Will show page when algolia rejects with undefined', async () => {
   await renderTagsPage();
 
   await userEvent.click(screen.getByRole('combobox'));
-  await userEvent.click(screen.getByText('LGW'));
+  await userEvent.click(
+    await screen.findByRole('option', { name: 'LGW' }, { timeout: 5000 }),
+  );
   await waitFor(() =>
     expect(mockGetTagSearch).toHaveBeenCalledWith(
       expect.anything(),
@@ -263,7 +271,9 @@ it('Will show page when algolia rejects with error', async () => {
   await renderTagsPage();
 
   await userEvent.click(screen.getByRole('combobox'));
-  await userEvent.click(screen.getByText('LGW'));
+  await userEvent.click(
+    await screen.findByRole('option', { name: 'LGW' }, { timeout: 5000 }),
+  );
   await waitFor(() =>
     expect(mockGetTagSearch).toHaveBeenCalledWith(
       expect.anything(),

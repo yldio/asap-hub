@@ -219,7 +219,7 @@ it('shows default error toast when submitting with any other error', async () =>
   await user.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');
 
   // External author email
-  await user.click(screen.getByText(/Non CRN/i));
+  await user.click(await screen.findByText(/Non CRN/i, {}, { timeout: 5000 }));
   await user.type(
     screen.getByLabelText(/Jane Doe Email/i),
     'jane@doe.com{enter}',

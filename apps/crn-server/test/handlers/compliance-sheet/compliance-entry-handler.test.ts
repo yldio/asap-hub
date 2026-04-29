@@ -21,6 +21,7 @@ describe('Compliance Entry Handler', () => {
     sqsMock,
     manuscriptVersionsControllerMock,
     entryControllerMock,
+    { isProd: true },
   );
 
   test('should send message with manuscriptVersionId when event is ManuscriptVersions', async () => {
@@ -49,25 +50,21 @@ describe('Compliance Entry Handler', () => {
     );
   });
 
-  test('should fetch manuscriptVersionIds and send message for non-manuscript events', async () => {
+  test('should fetch manuscriptVersionIds and send message for non-manuscript version events', async () => {
     manuscriptVersionsControllerMock.fetchManuscriptVersionIdsByLinkedEntry.mockResolvedValueOnce(
       ['mv-1', 'mv-2'],
     );
 
     const event = {
-      'detail-type': 'UsersPublished',
-      detail: { resourceId: 'user-123' },
+      'detail-type': 'ManuscriptsPublished',
+      detail: { resourceId: 'manuscript-123' },
     } as any;
 
     await handler(event);
 
-    expect(entryControllerMock.getChangedFields).toHaveBeenCalledWith(
-      'user-123',
-    );
-
     expect(
       manuscriptVersionsControllerMock.fetchManuscriptVersionIdsByLinkedEntry,
-    ).toHaveBeenCalledWith('user-123', 'users');
+    ).toHaveBeenCalledWith('manuscript-123', 'manuscripts');
 
     expect(sqsMock.send).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -75,7 +72,7 @@ describe('Compliance Entry Handler', () => {
           QueueUrl: expect.any(String),
           MessageBody: JSON.stringify({
             manuscriptVersionIds: ['mv-1', 'mv-2'],
-            sourceEvent: 'UsersPublished',
+            sourceEvent: 'ManuscriptsPublished',
           }),
         },
       }),
@@ -105,8 +102,8 @@ describe('Compliance Entry Handler', () => {
     );
 
     const event = {
-      'detail-type': 'UsersPublished',
-      detail: { resourceId: 'user-123' },
+      'detail-type': 'ManuscriptsPublished',
+      detail: { resourceId: 'manuscript-123' },
     } as any;
 
     await handler(event);
@@ -127,5 +124,74 @@ describe('Compliance Entry Handler', () => {
     await expect(handler(event)).rejects.toThrow(error);
 
     expect(sqsMock.send).not.toHaveBeenCalled();
+  });
+
+  test('should skip sync in prod if relevant fields did not change', async () => {
+    entryControllerMock.getChangedFields.mockResolvedValueOnce(['email']);
+
+    const handler = complianceEntryHandler(
+      sqsMock,
+      manuscriptVersionsControllerMock,
+      entryControllerMock,
+      { isProd: true },
+    );
+
+    const event = {
+      'detail-type': 'UsersPublished',
+      detail: { resourceId: 'user-123' },
+    } as any;
+
+    await handler(event);
+
+    expect(
+      manuscriptVersionsControllerMock.fetchManuscriptVersionIdsByLinkedEntry,
+    ).not.toHaveBeenCalled();
+
+    expect(sqsMock.send).not.toHaveBeenCalled();
+  });
+
+  test('should always sync in non-prod regardless of changed fields', async () => {
+    entryControllerMock.getChangedFields.mockResolvedValueOnce(['email']);
+
+    manuscriptVersionsControllerMock.fetchManuscriptVersionIdsByLinkedEntry.mockResolvedValueOnce(
+      ['mv-1'],
+    );
+
+    const handler = complianceEntryHandler(
+      sqsMock,
+      manuscriptVersionsControllerMock,
+      entryControllerMock,
+      { isProd: false },
+    );
+
+    const event = {
+      'detail-type': 'UsersPublished',
+      detail: { resourceId: 'user-123' },
+    } as any;
+
+    await handler(event);
+
+    expect(entryControllerMock.getChangedFields).not.toHaveBeenCalled();
+    expect(
+      manuscriptVersionsControllerMock.fetchManuscriptVersionIdsByLinkedEntry,
+    ).toHaveBeenCalled();
+
+    expect(sqsMock.send).toHaveBeenCalled();
+  });
+
+  test('should not call getChangedFields for compliance reports', async () => {
+    const event = {
+      'detail-type': 'ComplianceReportsPublished',
+      detail: { resourceId: 'cr-1' },
+    } as any;
+
+    manuscriptVersionsControllerMock.fetchManuscriptVersionIdsByLinkedEntry.mockResolvedValueOnce(
+      ['mv-1'],
+    );
+
+    await handler(event);
+
+    expect(entryControllerMock.getChangedFields).not.toHaveBeenCalled();
+    expect(sqsMock.send).toHaveBeenCalled();
   });
 });

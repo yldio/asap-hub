@@ -14,7 +14,7 @@ import {
   ComplianceReportPayload,
 } from '@asap-hub/server-common';
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
-import { complianceDocSyncQueueUrl } from '../../config';
+import { complianceDocSyncQueueUrl, contentfulEnvId } from '../../config';
 import { getEntryDataProvider } from '../../dependencies/users.dependencies';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
@@ -22,12 +22,38 @@ import EntryController from '../../controllers/entry.controller';
 import ManuscriptVersionController from '../../controllers/manuscript-version.controller';
 import { getManuscriptVersionsDataProvider } from '../../dependencies/manuscript-versions.dependencies';
 
+const shouldSyncEntry = async (
+  entryController: EntryController,
+  entityType: string,
+  resourceId: string,
+  isProd: boolean,
+): Promise<boolean> => {
+  if (!isProd) return true;
+
+  const FIELD_FILTERS: Record<string, string[] | null> = {
+    users: ['lastName', 'nickname', 'firstName', 'middleName'],
+    teams: ['displayName'],
+    projects: ['title', 'projectId', 'grantId'],
+    manuscripts: null,
+    complianceReports: null,
+  };
+
+  const allowedFields = FIELD_FILTERS[entityType];
+
+  // no filtering rules → always sync
+  if (!allowedFields) return true;
+
+  const changedFields = await entryController.getChangedFields(resourceId);
+
+  return changedFields.some((f) => allowedFields.includes(f));
+};
 /* istanbul ignore next */
 export const complianceEntryHandler =
   (
     sqs: SQSClient,
     manuscriptVersionsController: ManuscriptVersionController,
     entryController: EntryController,
+    options?: { isProd?: boolean },
   ): EventBridgeHandler<
     | ManuscriptVersionEvent
     | UserEvent
@@ -47,6 +73,9 @@ export const complianceEntryHandler =
     const detailType = event['detail-type'];
     const base = detailType.replace(/(Published|Unpublished)$/, '');
 
+    const isUnpublished = detailType.includes('Unpublished');
+    const isProd = options?.isProd ?? false;
+
     const entityType = base.charAt(0).toLowerCase() + base.slice(1);
 
     let manuscriptVersionIds: string[] = [];
@@ -55,7 +84,22 @@ export const complianceEntryHandler =
       if (detailType.includes('ManuscriptVersions')) {
         manuscriptVersionIds = [event.detail.resourceId];
       } else {
-        await entryController.getChangedFields(event.detail.resourceId);
+        if (!isUnpublished) {
+          const shouldSync = await shouldSyncEntry(
+            entryController,
+            entityType,
+            event.detail.resourceId,
+            isProd,
+          );
+
+          if (!shouldSync) {
+            logger.debug(
+              { resourceId: event.detail.resourceId, entityType },
+              'No relevant field changes, skipping sync',
+            );
+            return;
+          }
+        }
         manuscriptVersionIds =
           await manuscriptVersionsController.fetchManuscriptVersionIdsByLinkedEntry(
             event.detail.resourceId,
@@ -94,5 +138,6 @@ export const handler = sentryWrapper(
     sqs,
     new ManuscriptVersionController(getManuscriptVersionsDataProvider()),
     new EntryController(getEntryDataProvider()),
+    { isProd: contentfulEnvId === 'Production' },
   ),
 );

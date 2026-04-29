@@ -154,13 +154,17 @@ describe('Create Projects Output', () => {
     );
     const authors = screen.getByRole('combobox', { name: /Authors/i });
     await user.click(authors);
-    await user.click(screen.getByText('Tony Stark'));
+    await user.click(
+      await screen.findByText('Tony Stark', {}, { timeout: 5000 }),
+    );
     await user.click(authors);
-    await user.click(screen.getByText(/Steve Rogers \(/i));
+    await user.click(
+      await screen.findByText(/Steve Rogers \(/i, {}, { timeout: 5000 }),
+    );
     await user.click(
       screen.getByRole('combobox', { name: /identifier type/i }),
     );
-    await user.click(screen.getByText(/^none/i));
+    await user.click(await screen.findByText(/^none/i, {}, { timeout: 5000 }));
     expect(screen.getByText('Project Title')).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Publish' }));
     await user.click(screen.getByRole('button', { name: 'Publish Output' }));
@@ -233,11 +237,13 @@ describe('Create Projects Output', () => {
     );
     const authors = screen.getByRole('combobox', { name: /Authors/i });
     await user.click(authors);
-    await user.click(screen.getByText('Tony Stark'));
+    await user.click(
+      await screen.findByText('Tony Stark', {}, { timeout: 5000 }),
+    );
     await user.click(
       screen.getByRole('combobox', { name: /identifier type/i }),
     );
-    await user.click(screen.getByText(/^none/i));
+    await user.click(await screen.findByText(/^none/i, {}, { timeout: 5000 }));
     expect(screen.getByText('Project Title')).toBeVisible();
     await user.click(screen.getByRole('button', { name: 'Publish' }));
     await user.click(screen.getByRole('button', { name: 'Publish Output' }));

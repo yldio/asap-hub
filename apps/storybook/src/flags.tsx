@@ -1,6 +1,6 @@
 import { FC, ComponentType, Fragment, ReactNode } from 'react';
 import { Decorator } from '@storybook/react';
-import { Flag } from '@asap-hub/flags';
+import { Flag, getValue } from '@asap-hub/flags';
 import { FlagsContext, useFlags } from '@asap-hub/react-context';
 
 import { boolean } from './knobs';
@@ -17,6 +17,7 @@ const DisableFlag: FC<{ flag: Flag; children?: ReactNode }> = ({
         reset,
         enable,
         isEnabled: (f) => (f === flag ? false : isEnabled(f)),
+        getValue,
         setCurrentOverrides: () => {},
         setEnvironment: () => {},
       }}

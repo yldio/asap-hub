@@ -2,6 +2,7 @@
 import { useContext, useState, useCallback, createContext, FC } from 'react';
 import {
   isEnabled,
+  getValue,
   disable,
   enable,
   reset,
@@ -13,6 +14,7 @@ import {
 type Flags = Pick<
   typeof import('@asap-hub/flags'),
   | 'isEnabled'
+  | 'getValue'
   | 'reset'
   | 'disable'
   | 'setCurrentOverrides'
@@ -46,6 +48,7 @@ const parseCookie = (cookies: string) =>
 
 export const FlagsContext = createContext<Flags>({
   isEnabled,
+  getValue,
   disable,
   reset,
   enable,
@@ -60,6 +63,7 @@ export const LiveFlagsProvider: FC<{ readonly children: React.ReactNode }> = ({
   const [, setOverrides] = useState(getOverrides());
   const flags: Flags = {
     isEnabled,
+    getValue,
     disable: useCallback((flag) => {
       disable(flag);
       setOverrides(getOverrides());

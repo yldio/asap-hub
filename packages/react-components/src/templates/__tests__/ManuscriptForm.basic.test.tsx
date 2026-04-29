@@ -494,7 +494,7 @@ describe('Manuscript form', () => {
   });
 
   it('lets user select valid impact and category, and shows no match message on invalid input', async () => {
-    const { getByRole, getByText } = await renderManuscriptForm({
+    const { getByRole, getByText, findByText } = await renderManuscriptForm({
       ...defaultProps,
       impact: undefined,
       categories: [],
@@ -524,16 +524,16 @@ describe('Manuscript form', () => {
       expect(getByText(/This field is required/i)).toBeVisible();
     });
     await userEvent.type(categoryInput, 'Category');
-    await userEvent.click(getByText('Category A'));
+    await userEvent.click(await findByText('Category A'));
     categoryInput.blur();
 
     expect(getByText('Category A')).toBeInTheDocument();
 
     // --- Category limit ---
     await userEvent.click(categoryInput);
-    await userEvent.click(getByText('Category B'));
+    await userEvent.click(await findByText('Category B'));
     await userEvent.click(categoryInput);
-    await userEvent.click(getByText('Category C'));
+    await userEvent.click(await findByText('Category C'));
     categoryInput.blur();
 
     await waitFor(() => {

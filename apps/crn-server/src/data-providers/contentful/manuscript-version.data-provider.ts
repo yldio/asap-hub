@@ -1,19 +1,27 @@
 import {
+  Environment,
+  FetchComplianceManuscriptVersionsQuery,
+  FetchComplianceManuscriptVersionsQueryVariables,
   FetchManuscriptVersionByIdQuery,
   FetchManuscriptVersionByIdQueryVariables,
   FetchVersionsByManuscriptQuery,
   FetchVersionsByManuscriptQueryVariables,
+  FETCH_COMPLIANCE_MANUSCRIPT_VERSIONS,
   FETCH_MANUSCRIPT_VERSION_BY_ID,
   FETCH_VERSIONS_BY_MANUSCRIPT,
   GraphQLClient,
+  Link,
   ManuscriptsFilter,
+  ManuscriptVersionsFilter,
 } from '@asap-hub/contentful';
 import {
   FetchOptions,
+  ListManuscriptVersionExportResponse,
   ListManuscriptVersionResponse,
   ManuscriptLifecycle,
   ManuscriptType,
   ManuscriptVersionDataObject,
+  ManuscriptVersionExport,
   ManuscriptVersionResponse,
   mapManuscriptLifecycleToType,
 } from '@asap-hub/model';
@@ -32,10 +40,19 @@ type ManuscriptVersion = NonNullable<
   Manuscript['versionsCollection']
 >['items'][number];
 
+type ComplianceManuscriptVersion = NonNullable<
+  NonNullable<
+    FetchComplianceManuscriptVersionsQuery['manuscriptVersionsCollection']
+  >['items'][number]
+>;
+
 export class ManuscriptVersionContentfulDataProvider
   implements ManuscriptVersionDataProvider
 {
-  constructor(private contentfulClient: GraphQLClient) {}
+  constructor(
+    private contentfulClient: GraphQLClient,
+    private getRestClient?: () => Promise<Environment>,
+  ) {}
 
   async fetch(
     options: FetchOptions<ManuscriptsFilter>,
@@ -114,6 +131,103 @@ export class ManuscriptVersionContentfulDataProvider
       latestManuscriptVersion: manuscript
         ? parseGraphQLManucriptVersion(manuscript, latestVersion)
         : undefined,
+    };
+  }
+
+  /**
+   * Returns all manuscript version IDs linked to a given entry.
+   *
+   * - For `manuscripts`: reads version IDs directly from the entry
+   * - For other types: resolves both direct links (manuscriptVersions)
+   *   and indirect links via manuscripts
+   *
+   * Results are de-duplicated.
+   *
+   * Throws if the REST client is not configured.
+   */
+  async fetchManuscriptVersionIdsByLinkedEntry(
+    entryId: string,
+    entryType: string,
+  ): Promise<string[]> {
+    if (!this.getRestClient) {
+      throw new Error(
+        'REST client not configured for ManuscriptVersionContentfulDataProvider',
+      );
+    }
+    const environment = await this.getRestClient();
+
+    if (entryType === 'manuscripts') {
+      const manuscript = await environment.getEntry(entryId, {
+        content_type: 'manuscripts',
+      });
+
+      const versionIds =
+        manuscript.fields?.versions?.['en-US']?.map(
+          (v: Link<'Entry'>) => v.sys.id,
+        ) ?? [];
+
+      return versionIds;
+    }
+
+    const results = new Set<string>();
+
+    const add = (ids: string[]) => {
+      ids.forEach((id) => results.add(id));
+    };
+
+    const directVersionLinks = await environment.getEntries({
+      content_type: 'manuscriptVersions',
+      links_to_entry: entryId,
+      limit: 1000,
+    });
+    add(directVersionLinks.items.map((i) => i.sys.id));
+
+    const manuscripts = await environment.getEntries({
+      content_type: 'manuscripts',
+      links_to_entry: entryId,
+      limit: 1000,
+    });
+
+    for (const linkedManuscript of manuscripts.items) {
+      const versionIds =
+        linkedManuscript.fields?.versions?.['en-US'].map(
+          (v: Link<'Entry'>) => v.sys.id,
+        ) ?? [];
+      versionIds.forEach((id: string) => results.add(id));
+    }
+    return [...results];
+  }
+
+  async fetchComplianceManuscriptVersions(
+    options: FetchOptions<string[]>,
+  ): Promise<ListManuscriptVersionExportResponse> {
+    const { take = 8, skip = 0, filter } = options;
+
+    const ids = filter ?? [];
+
+    const searchQuery: ManuscriptVersionsFilter = {
+      sys: {
+        ...(ids.length ? { id_in: ids } : {}),
+      },
+    };
+
+    const variables: FetchComplianceManuscriptVersionsQueryVariables = {
+      where: searchQuery,
+      ...(ids.length ? {} : { limit: take, skip }),
+    };
+
+    const { manuscriptVersionsCollection } =
+      await this.contentfulClient.request<
+        FetchComplianceManuscriptVersionsQuery,
+        FetchComplianceManuscriptVersionsQueryVariables
+      >(FETCH_COMPLIANCE_MANUSCRIPT_VERSIONS, variables);
+
+    const manuscriptVersions = cleanArray(
+      manuscriptVersionsCollection?.items,
+    ).map(parseGraphQLComplianceManuscriptVersion);
+    return {
+      total: manuscriptVersionsCollection?.total || 0,
+      items: manuscriptVersions,
     };
   }
 }
@@ -231,3 +345,135 @@ const parseGraphQLManucriptVersion = (
         : latestVersion?.publicationDoi) || undefined,
   };
 };
+
+const parseGraphQLComplianceManuscriptVersion = (
+  manuscriptVersion: ComplianceManuscriptVersion,
+): ManuscriptVersionExport => {
+  const manuscript =
+    manuscriptVersion.linkedFrom?.manuscriptsCollection?.items[0];
+  const generatingTeam = manuscript?.teamsCollection?.items[0];
+  const generatingProject = manuscript?.project;
+  const isUserBasedProjectManuscript = !!generatingProject?.sys.id;
+  const project = isUserBasedProjectManuscript
+    ? generatingProject
+    : generatingTeam?.linkedFrom?.projectMembershipCollection?.items[0]
+        ?.linkedFrom?.projectsCollection?.items[0];
+  const linkedComplianceReport =
+    manuscriptVersion.linkedFrom?.complianceReportsCollection?.items[0];
+
+  return {
+    id: manuscriptVersion.sys.id,
+    title: manuscript?.title || '',
+    manuscriptId: getManuscriptVersionUID({
+      version: {
+        type: manuscriptVersion.type,
+        count: manuscriptVersion.count,
+        lifecycle: manuscriptVersion.lifecycle,
+      },
+      teamIdCode: project?.projectId || '',
+      grantId: project?.grantId || '',
+      manuscriptCount: manuscript?.count || 0,
+    }),
+    url: manuscript?.url || '',
+    type: manuscriptVersion?.type || '',
+    lifecycle: manuscriptVersion?.lifecycle || '',
+    preprintDoi: manuscriptVersion?.preprintDoi || '',
+    publicationDoi: manuscriptVersion?.publicationDoi || '',
+    otherDetails: manuscriptVersion?.otherDetails || '',
+    manuscriptFile: manuscriptVersion.manuscriptFile?.url || '',
+    keyResourceTable: manuscriptVersion.keyResourceTable?.url || '',
+    additionalFiles: cleanArray(
+      manuscriptVersion.additionalFilesCollection?.items,
+    )
+      .map((file) => file.url)
+      .join(', '),
+    description: manuscriptVersion?.description || '',
+    shortDescription: manuscriptVersion?.shortDescription || '',
+    mainProject: project?.title || '',
+    teams: cleanArray(manuscriptVersion.teamsCollection?.items)
+      .map((teamItem) => teamItem.displayName)
+      .join(', '),
+    firstAuthors: parseGraphQLAuthor(
+      cleanArray(manuscriptVersion?.firstAuthorsCollection?.items),
+    ).join(', '),
+    labs: cleanArray(manuscriptVersion?.labsCollection?.items)
+      .map((lab) => lab.name)
+      .join(', '),
+    correspondingAuthor: parseGraphQLAuthor(
+      cleanArray(manuscriptVersion?.correspondingAuthorCollection?.items),
+    ).join(', '),
+    additionalAuthors: parseGraphQLAuthor(
+      cleanArray(manuscriptVersion?.additionalAuthorsCollection?.items),
+    ).join(', '),
+    status: manuscript?.status || '',
+    acknowledgedGrantNumber: manuscriptVersion.acknowledgedGrantNumber || '',
+    acknowledgedGrantNumberDetails:
+      manuscriptVersion.acknowledgedGrantNumberDetails || '',
+    asapAffiliationIncluded: manuscriptVersion.asapAffiliationIncluded || '',
+    asapAffiliationIncludedDetails:
+      manuscriptVersion.asapAffiliationIncludedDetails || '',
+    availabilityStatement: manuscriptVersion.availabilityStatement || '',
+    availabilityStatementDetails:
+      manuscriptVersion.availabilityStatementDetails || '',
+    codeDeposited: manuscriptVersion.codeDeposited || '',
+    codeDepositedDetails: manuscriptVersion.codeDepositedDetails || '',
+    datasetsDeposited: manuscriptVersion.datasetsDeposited || '',
+    datasetsDepositedDetails: manuscriptVersion.datasetsDepositedDetails || '',
+    labMaterialsRegistered: manuscriptVersion.labMaterialsRegistered || '',
+    labMaterialsRegisteredDetails:
+      manuscriptVersion.labMaterialsRegisteredDetails || '',
+    protocolsDeposited: manuscriptVersion.protocolsDeposited || '',
+    protocolsDepositedDetails:
+      manuscriptVersion.protocolsDepositedDetails || '',
+    manuscriptLicense: manuscriptVersion.manuscriptLicense || '',
+    manuscriptLicenseDetails: manuscriptVersion.manuscriptLicenseDetails || '',
+    complianceReportDescription: linkedComplianceReport?.description || '',
+    complianceReportUrl: linkedComplianceReport?.url || '',
+    apcRequested: String(!!manuscript?.apcRequested),
+    apcAmountRequested:
+      manuscript?.apcAmountRequested != null
+        ? Number(manuscript.apcAmountRequested).toString()
+        : '',
+    apcCoverageRequestStatus: manuscript?.apcCoverageRequestStatus || '',
+    apcAmountPaid:
+      manuscript?.apcAmountRequested != null
+        ? Number(manuscript.apcAmountPaid).toString()
+        : '',
+    declinedReason: manuscript?.declinedReason || '',
+    assignedUsers: cleanArray(manuscript?.assignedUsersCollection?.items)
+      .map((user) =>
+        parseUserDisplayName(
+          user.firstName || '',
+          user.lastName || '',
+          user.middleName || '',
+          user.nickname || '',
+        ),
+      )
+      .join(', '),
+    impact: manuscript?.impact?.name || '',
+    categories: cleanArray(manuscript?.categoriesCollection?.items)
+      .map((category) => category.name)
+      .join(', '),
+    versionLastUpdatedDate: manuscriptVersion.sys.publishedAt || '',
+  };
+};
+
+const parseGraphQLAuthor = (
+  authorItems: NonNullable<
+    NonNullable<
+      ComplianceManuscriptVersion['firstAuthorsCollection']
+    >['items'][number]
+  >[],
+) =>
+  authorItems.map((author) => {
+    if (author.__typename === 'Users') {
+      return parseUserDisplayName(
+        author.firstName || '',
+        author.lastName || '',
+        author.middleName || '',
+        author.nickname || '',
+      );
+    }
+
+    return author?.name || '';
+  });

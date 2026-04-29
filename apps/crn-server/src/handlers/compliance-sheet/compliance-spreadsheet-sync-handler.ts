@@ -73,7 +73,7 @@ const syncRows = async (
       // exists in sheet → update
       if (rowIndex) {
         updates.push({
-          range: `Sheet1!A${rowIndex}:AU${rowIndex}`,
+          range: `Sheet1!A${rowIndex}:AV${rowIndex}`,
           values: [row],
         });
       } else {

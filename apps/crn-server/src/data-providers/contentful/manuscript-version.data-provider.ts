@@ -169,6 +169,17 @@ export class ManuscriptVersionContentfulDataProvider
       return versionIds;
     }
 
+    if (entryType === 'complianceReports') {
+      const complianceReport = await environment.getEntry(entryId, {
+        content_type: 'complianceReports',
+      });
+
+      const versionId =
+        complianceReport.fields?.manuscriptVersion?.['en-US']?.sys?.id;
+
+      return versionId ? [versionId] : [];
+    }
+
     const results = new Set<string>();
 
     const add = (ids: string[]) => {

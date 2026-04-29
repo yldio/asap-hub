@@ -520,6 +520,46 @@ describe('Manuscript Versions Contentful Data Provider', () => {
       expect(result).toEqual([]);
     });
 
+    test('should return version IDs from compliance report entry', async () => {
+      const entry = getEntry({
+        manuscriptVersion: {
+          'en-US': { sys: { id: 'v1' } },
+        },
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      const result =
+        await dataProviderWithRestClient.fetchManuscriptVersionIdsByLinkedEntry(
+          'entry-1',
+          'complianceReports',
+        );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('entry-1', {
+        content_type: 'complianceReports',
+      });
+
+      expect(result).toEqual(['v1']);
+    });
+
+    test('should handle case where compliance entry has no versions', async () => {
+      const entry = getEntry({
+        manuscriptVersion: {},
+      });
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      const result =
+        await dataProviderWithRestClient.fetchManuscriptVersionIdsByLinkedEntry(
+          'entry-1',
+          'complianceReports',
+        );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('entry-1', {
+        content_type: 'complianceReports',
+      });
+
+      expect(result).toEqual([]);
+    });
+
     test('should merge direct and linked manuscript version IDs', async () => {
       const directVersionEntries = [
         getEntry({}, { id: 'v1' }),

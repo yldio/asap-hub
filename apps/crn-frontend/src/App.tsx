@@ -19,6 +19,7 @@ import {
   LoadingLayout,
   LogoProvider,
   NavigationBlockerProvider,
+  PortalContainer,
   ToastStack,
   UtilityBar,
 } from '@asap-hub/react-components';
@@ -205,6 +206,7 @@ const App: FC<Record<string, never>> = () => {
           },
         ]}
       />
+      <PortalContainer />
     </LogoProvider>
   );
 };

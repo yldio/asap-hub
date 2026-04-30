@@ -3,6 +3,7 @@ export * from './common';
 export * from './events';
 export * from './icon';
 export * from './manuscripts';
+export * from './portal';
 export * from './project';
 export * from './research-output-form';
 export * from './text';

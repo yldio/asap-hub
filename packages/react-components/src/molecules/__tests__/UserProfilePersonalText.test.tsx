@@ -383,19 +383,30 @@ it('toggles active teams between expanded and collapsed', () => {
         { id: '1', displayName: 'Team A', role: 'Lead PI (Core Leadership)' },
         { id: '2', displayName: 'Team B', role: 'Collaborating PI' },
         { id: '3', displayName: 'Team C', role: 'Project Manager' },
+        { id: '4', displayName: 'Team D', role: 'Key Personnel' },
+        { id: '5', displayName: 'Team E', role: 'Trainee' },
       ]}
     />,
   );
 
+  expect(container).toHaveTextContent('Lead PI (Core Leadership) on');
+  expect(container).toHaveTextContent('Collaborating PI on');
   expect(container).not.toHaveTextContent('Project Manager on');
+  expect(container).not.toHaveTextContent('Key Personnel on');
+  expect(container).not.toHaveTextContent('Trainee on');
+
   fireEvent.click(getByText('View all roles'));
 
   expect(container).toHaveTextContent('Project Manager on');
+  expect(container).toHaveTextContent('Key Personnel on');
+  expect(container).toHaveTextContent('Trainee on');
   expect(getByText('View less roles')).toBeInTheDocument();
 
   fireEvent.click(getByText('View less roles'));
 
   expect(container).not.toHaveTextContent('Project Manager on');
+  expect(container).not.toHaveTextContent('Key Personnel on');
+  expect(container).not.toHaveTextContent('Trainee on');
   expect(getByText('View all roles')).toBeInTheDocument();
 });
 
@@ -408,18 +419,29 @@ it('toggles inactive teams between expanded and collapsed', () => {
         { id: '1', displayName: 'Former A', role: 'Lead PI (Core Leadership)' },
         { id: '2', displayName: 'Former B', role: 'Collaborating PI' },
         { id: '3', displayName: 'Former C', role: 'Project Manager' },
+        { id: '4', displayName: 'Former D', role: 'Key Personnel' },
+        { id: '5', displayName: 'Former E', role: 'Trainee' },
       ]}
     />,
   );
 
+  expect(container).toHaveTextContent('Lead PI (Core Leadership) on');
+  expect(container).toHaveTextContent('Collaborating PI on');
   expect(container).not.toHaveTextContent('Project Manager on');
+  expect(container).not.toHaveTextContent('Key Personnel on');
+  expect(container).not.toHaveTextContent('Trainee on');
+
   fireEvent.click(getByText('View all former roles'));
 
   expect(container).toHaveTextContent('Project Manager on');
+  expect(container).toHaveTextContent('Key Personnel on');
+  expect(container).toHaveTextContent('Trainee on');
   expect(getByText('View less former roles')).toBeInTheDocument();
 
   fireEvent.click(getByText('View less former roles'));
 
   expect(container).not.toHaveTextContent('Project Manager on');
+  expect(container).not.toHaveTextContent('Key Personnel on');
+  expect(container).not.toHaveTextContent('Trainee on');
   expect(getByText('View all former roles')).toBeInTheDocument();
 });

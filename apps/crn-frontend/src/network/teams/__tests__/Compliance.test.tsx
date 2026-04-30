@@ -7,6 +7,7 @@ import {
 } from '@asap-hub/fixtures';
 import { createCsvFileStream, Frame } from '@asap-hub/frontend-utils';
 import { PartialManuscriptResponse } from '@asap-hub/model';
+import { portalContainerId } from '@asap-hub/react-components';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Stringifier } from 'csv-stringify';
@@ -21,6 +22,13 @@ import { getManuscripts, updateManuscript } from '../api';
 import Compliance from '../Compliance';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { manuscriptsState } from '../state';
+
+const mockIsEnabled = jest.fn();
+
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
 
 mockConsoleError();
 
@@ -123,6 +131,17 @@ const renderCompliancePage = async () => {
   return result;
 };
 
+const findStatusMenuButton = (name: RegExp) =>
+  waitFor(() => {
+    const portalContainer = document.getElementById(portalContainerId);
+
+    expect(portalContainer).toBeInTheDocument();
+
+    return within(portalContainer as HTMLElement).getAllByRole('button', {
+      name,
+    })[0] as HTMLButtonElement;
+  });
+
 const originalWindowOpen = window.open;
 let mockWindowOpen: jest.MockedFunction<typeof globalThis.open>;
 
@@ -130,6 +149,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.resetAllMocks();
   jest.resetModules();
+  mockIsEnabled.mockReturnValue(false);
   mockUseAlgolia.mockReturnValue({
     client: useAlgolia as unknown as AlgoliaSearchClient<'crn'>,
   });
@@ -148,6 +168,37 @@ it('renders error message when the request is not a 2XX', async () => {
   await waitFor(() => {
     expect(screen.getByText(/Something went wrong/i)).toBeVisible();
   });
+});
+
+it('shows the project column when PROJECT_WORKSPACE is enabled', async () => {
+  mockIsEnabled.mockImplementation(
+    (flag: string) => flag === 'PROJECT_WORKSPACE',
+  );
+
+  mockGetManuscripts.mockResolvedValue({
+    items: [
+      {
+        ...createPartialManuscriptResponse(),
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          projectType: 'Resource Project',
+          isTeamBased: true,
+        },
+      },
+    ],
+    total: 1,
+  });
+
+  await renderCompliancePage();
+
+  expect(
+    await screen.findByRole('columnheader', { name: 'Project' }),
+  ).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Project Alpha' })).toHaveAttribute(
+    'href',
+    '/projects/resource/project-id',
+  );
 });
 
 it('updates manuscript and refreshes data when handleUpdateManuscript is called and the status is changed', async () => {
@@ -182,11 +233,7 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   });
   await userEvent.click(statusButton);
 
-  const newStatusButton = within(
-    screen.getByTestId('compliance-table-row'),
-  ).getByRole('button', {
-    name: /Addendum Required/i,
-  });
+  const newStatusButton = await findStatusMenuButton(/Addendum Required/i);
   await userEvent.click(newStatusButton);
 
   const confirmButton = screen.getByRole('button', {
@@ -245,11 +292,7 @@ it('manuscripts remain the same when there is not a match between the manuscript
   });
   await userEvent.click(statusButton);
 
-  const newStatusButton = within(
-    screen.getByTestId('compliance-table-row'),
-  ).getByRole('button', {
-    name: /Addendum Required/i,
-  });
+  const newStatusButton = await findStatusMenuButton(/Addendum Required/i);
   await userEvent.click(newStatusButton);
 
   const confirmButton = screen.getByRole('button', {
@@ -310,11 +353,7 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
   });
   await userEvent.click(statusButton);
 
-  const newStatusButton = within(
-    screen.getByTestId('compliance-table-row'),
-  ).getByRole('button', {
-    name: /Addendum Required/i,
-  });
+  const newStatusButton = await findStatusMenuButton(/Addendum Required/i);
   await userEvent.click(newStatusButton);
 
   const confirmButton = screen.getByRole('button', {

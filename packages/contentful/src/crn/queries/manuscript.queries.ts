@@ -3,6 +3,18 @@
 import { gql } from 'graphql-tag';
 import { discussionContentQueryFragment } from './discussions.queries';
 // // TODO: Increase limit to 10. We have to reduced it to 5 for now to avoid break down of the application.
+export const manuscriptProjectQueryFragment = gql`
+  fragment ManuscriptProject on Projects {
+    sys {
+      id
+    }
+    title
+    projectType
+    projectId
+    grantId
+  }
+`;
+
 export const manuscriptContentQueryFragment = gql`
   fragment ManuscriptsContent on Manuscripts {
     sys {
@@ -18,6 +30,9 @@ export const manuscriptContentQueryFragment = gql`
     apcCoverageRequestStatus
     apcAmountPaid
     declinedReason
+    project {
+      ...ManuscriptProject
+    }
     impact {
       sys {
         id
@@ -312,6 +327,7 @@ export const manuscriptContentQueryFragment = gql`
       }
     }
   }
+  ${manuscriptProjectQueryFragment}
 `;
 
 export const FETCH_MANUSCRIPT_BY_ID = gql`
@@ -338,8 +354,7 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
                 linkedFrom {
                   projectsCollection(limit: 1) {
                     items {
-                      projectId
-                      grantId
+                      ...ManuscriptProject
                     }
                   }
                 }
@@ -371,6 +386,9 @@ export const FETCH_MANUSCRIPTS = gql`
         apcCoverageRequestStatus
         apcAmountPaid
         declinedReason
+        project {
+          ...ManuscriptProject
+        }
         impact {
           sys {
             id
@@ -409,8 +427,7 @@ export const FETCH_MANUSCRIPTS = gql`
                   linkedFrom {
                     projectsCollection(limit: 1) {
                       items {
-                        projectId
-                        grantId
+                        ...ManuscriptProject
                       }
                     }
                   }
@@ -433,6 +450,7 @@ export const FETCH_MANUSCRIPTS = gql`
       }
     }
   }
+  ${manuscriptProjectQueryFragment}
 `;
 
 export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`

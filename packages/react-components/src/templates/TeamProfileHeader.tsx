@@ -1,6 +1,6 @@
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
-import { network, projects } from '@asap-hub/routing';
+import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
 import { CopyButton, Display, Link, Pill, StateTag, TabLink } from '../atoms';
@@ -21,7 +21,7 @@ import {
 import { createMailTo } from '../mail';
 import { DropdownButton, UserAvatarList, TabNav } from '../molecules';
 import { mobileScreen, rem, tabletScreen } from '../pixels';
-import { getCounterString } from '../utils';
+import { getCounterString, getProjectRoute } from '../utils';
 import PageInfoContainer from './PageInfoContainer';
 
 const titleStyle = css({
@@ -173,19 +173,13 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   linkedProjectId,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
-  let projectLink;
-
-  if (linkedProjectId) {
-    if (projectType === 'Discovery Project') {
-      projectLink = projects({})
-        .discoveryProjects({})
-        .discoveryProject({ projectId: linkedProjectId }).$;
-    } else if (projectType === 'Resource Project') {
-      projectLink = projects({})
-        .resourceProjects({})
-        .resourceProject({ projectId: linkedProjectId }).$;
-    }
-  }
+  const projectLink =
+    linkedProjectId && projectType
+      ? getProjectRoute({
+          projectId: linkedProjectId,
+          projectType,
+        })
+      : undefined;
 
   const { canShareResearchOutput } = useContext(
     ResearchOutputPermissionsContext,

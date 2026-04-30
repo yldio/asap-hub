@@ -23,7 +23,7 @@ import { Anchor, Button, Link, Pill } from '../atoms';
 import { borderRadius } from '../card';
 import { formatDateToTimezone } from '../date';
 import { rem } from '../pixels';
-import { getReviewerStatusType } from '../utils';
+import { getProjectConfig, getReviewerStatusType } from '../utils';
 
 const rowStyles = css({
   padding: `${rem(20)} ${rem(24)} 0`,
@@ -64,7 +64,7 @@ const assignedUsersContainerStyles = css({
   display: 'flex',
   flexDirection: 'row',
   width: '100%',
-  maxWidth: rem(160),
+  maxWidth: rem(170),
   alignItems: 'center',
 });
 
@@ -82,7 +82,8 @@ const noUsersStyles = css({
   fontSize: rem(14),
   color: lead.rgb,
   width: '100%',
-  maxWidth: rem(90),
+  whiteSpace: 'nowrap',
+  alignItems: 'anchor-center',
 });
 
 const assignUsersButtonStyles = css({
@@ -109,9 +110,38 @@ const statusButtonContainerStyles = css({
   fontSize: rem(14),
 });
 
-const teamLinkStyles = css({
+const entityLinkStyles = css({
   display: 'flex',
+  alignItems: 'center',
   gap: rem(3),
+});
+
+const projectEntityStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(3),
+  width: rem(180),
+  maxWidth: rem(180),
+  minWidth: 0,
+});
+
+const projectIconStyles = css({
+  display: 'inline-flex',
+  flexShrink: 0,
+});
+
+const projectTitleStyles = css({
+  minWidth: 0,
+  flex: 1,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  '& > a': {
+    display: 'block',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
 });
 
 const apcCoverageContainerStyles = css({
@@ -123,6 +153,7 @@ const apcCoverageContainerStyles = css({
 });
 
 type ComplianceTableRowProps = {
+  displayProjectColumn: boolean;
   isComplianceReviewer: boolean;
   data: PartialManuscriptResponse;
   getAssignedUsersSuggestions: NonNullable<
@@ -138,6 +169,9 @@ type ComplianceTableRowProps = {
 
 const completeStatuses = ['Closed (other)', 'Compliant'];
 export const apcCoverableStatuses = ['Compliant', 'Submit Final Publication'];
+
+const getTeamWorkspaceHref = (teamId: string) =>
+  teamId ? network({}).teams({}).team({ teamId }).workspace({}).$ : undefined;
 
 const getAPCStatusLabel = (
   apcRequested?: boolean,
@@ -231,6 +265,7 @@ const APCCoverage: React.FC<APCCoverageProps> = ({
 };
 
 const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
+  displayProjectColumn,
   isComplianceReviewer,
   data,
   handleAssignUsersClick,
@@ -242,6 +277,7 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
     team,
     manuscriptId,
     lastUpdated,
+    project,
     status,
     assignedUsers,
     apcRequested,
@@ -250,6 +286,15 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
 
   const canEditAssignedUsers =
     !completeStatuses.includes(status ?? '') && isComplianceReviewer;
+  const teamHref = getTeamWorkspaceHref(team.id);
+  const manuscriptHref = teamHref ? `${teamHref}#${id}` : undefined;
+  const projectConfig = project?.projectType
+    ? getProjectConfig({
+        projectId: project.id,
+        projectType: project.projectType,
+      })
+    : undefined;
+  const isUserBasedProject = project?.isTeamBased === false;
 
   return (
     <>
@@ -259,29 +304,48 @@ const ComplianceTableRow: React.FC<ComplianceTableRowProps> = ({
         data-testid="compliance-table-row"
       >
         <td className={'sticky'}>
-          <Pill accent="blue" numberOfLines={1} isLink>
+          <Pill
+            accent="blue"
+            numberOfLines={1}
+            isLink={Boolean(manuscriptHref)}
+          >
             <span css={pillIdStyles}>
-              <Anchor
-                href={`${
-                  network({}).teams({}).team({ teamId: team.id }).workspace({})
-                    .$
-                }#${id}`}
-              >
-                {manuscriptId}
-              </Anchor>
+              {manuscriptHref ? (
+                <Anchor href={manuscriptHref}>{manuscriptId}</Anchor>
+              ) : (
+                manuscriptId
+              )}
             </span>
           </Pill>
         </td>
+        {displayProjectColumn && (
+          <td>
+            {project?.title ? (
+              <p css={projectEntityStyles}>
+                <span css={projectIconStyles}>{projectConfig?.icon}</span>
+                <span css={projectTitleStyles} title={project.title}>
+                  {projectConfig?.href ? (
+                    <Link href={projectConfig.href}>{project.title}</Link>
+                  ) : (
+                    project.title
+                  )}
+                </span>
+              </p>
+            ) : (
+              '—'
+            )}
+          </td>
+        )}
         <td>
-          <p css={teamLinkStyles}>
-            <Link
-              href={
-                network({}).teams({}).team({ teamId: team.id }).workspace({}).$
-              }
-            >
-              {team.displayName}
-            </Link>
-          </p>
+          {isUserBasedProject ? (
+            '—'
+          ) : team.displayName && teamHref ? (
+            <p css={entityLinkStyles}>
+              <Link href={teamHref}>{team.displayName}</Link>
+            </p>
+          ) : (
+            team.displayName || '—'
+          )}
         </td>
         <td>
           {lastUpdated &&

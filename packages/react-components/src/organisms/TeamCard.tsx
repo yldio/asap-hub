@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { TeamListItemResponse } from '@asap-hub/model';
-import { network, projects } from '@asap-hub/routing';
+import { network } from '@asap-hub/routing';
 
 import { StateTag } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
@@ -12,7 +12,7 @@ import {
   DiscoveryProjectIcon,
   ResourceProjectIcon,
 } from '../icons';
-import { getCounterString } from '../utils';
+import { getCounterString, getProjectRoute } from '../utils';
 import { EntityCard } from '.';
 
 const footerStyles = css({
@@ -52,19 +52,13 @@ const TeamCard: React.FC<TeamCardProps> = ({
 }) => {
   const href = network({}).teams({}).team({ teamId: id }).$;
   const isAsapTeam = displayName === 'ASAP';
-  let projectLink;
-
-  if (linkedProjectId) {
-    if (projectType === 'Discovery Project') {
-      projectLink = projects({})
-        .discoveryProjects({})
-        .discoveryProject({ projectId: linkedProjectId }).$;
-    } else if (projectType === 'Resource Project') {
-      projectLink = projects({})
-        .resourceProjects({})
-        .resourceProject({ projectId: linkedProjectId }).$;
-    }
-  }
+  const projectLink =
+    linkedProjectId && projectType
+      ? getProjectRoute({
+          projectId: linkedProjectId,
+          projectType,
+        })
+      : undefined;
 
   const footer = (
     <div css={footerStyles}>

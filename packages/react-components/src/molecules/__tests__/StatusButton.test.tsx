@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   info100,
@@ -8,6 +8,7 @@ import {
   warning100,
   warning500,
 } from '../../colors';
+import { portalContainerId } from '../../utils/portal';
 
 import StatusButton, {
   iconStyles,
@@ -16,6 +17,18 @@ import StatusButton, {
   statusTagStyles,
   StatusType,
 } from '../StatusButton';
+
+beforeEach(() => {
+  document.getElementById(portalContainerId)?.remove();
+
+  const portalContainer = document.createElement('div');
+  portalContainer.id = portalContainerId;
+  document.body.appendChild(portalContainer);
+});
+
+afterEach(() => {
+  document.getElementById(portalContainerId)?.remove();
+});
 
 it('renders a StatusButton as Label when canEdit is false', () => {
   render(<StatusButton buttonChildren={() => <>Status</>} />);
@@ -32,13 +45,13 @@ it('renders a StatusButton as dropdown when canEdit is true', () => {
 it('renders a StatusButton button item', async () => {
   const onClick = jest.fn();
   render(
-    <StatusButton buttonChildren={() => <>Example</>}>
+    <StatusButton buttonChildren={() => <>Example</>} canEdit={true}>
       {{ item: 'Example Button', onClick }}
       {{ item: 'Second Item', onClick: jest.fn() }}
     </StatusButton>,
   );
   await userEvent.click(screen.getByRole('button'));
-  await userEvent.click(screen.getByText('Example Button'));
+  await userEvent.click(screen.getByRole('button', { name: 'Example Button' }));
 
   expect(onClick).toHaveBeenCalled();
 });
@@ -76,7 +89,78 @@ it('renders items on modal and hides it on outside click', async () => {
   await userEvent.click(screen.getByRole('button'));
   screen.getAllByRole('listitem').forEach((e) => expect(e).toBeVisible());
   await userEvent.click(screen.getByRole('heading'));
-  screen.queryAllByRole('listitem').forEach((e) => expect(e).not.toBeVisible());
+  expect(screen.queryByRole('list')).not.toBeInTheDocument();
+});
+
+it('renders the menu in the portal positioned below the button', async () => {
+  render(
+    <StatusButton buttonChildren={() => <>test</>} canEdit={true}>
+      {{ item: '1', onClick: jest.fn() }}
+      {{ item: '2', onClick: jest.fn() }}
+    </StatusButton>,
+  );
+
+  const statusButton = screen.getByTestId('status-button');
+  const statusButtonContainer = statusButton.parentElement as HTMLDivElement;
+  jest.spyOn(statusButtonContainer, 'getBoundingClientRect').mockReturnValue({
+    bottom: 52,
+    height: 32,
+    left: 30,
+    right: 170,
+    top: 20,
+    width: 140,
+    x: 30,
+    y: 20,
+    toJSON: jest.fn(),
+  });
+
+  await userEvent.click(statusButton);
+
+  const portalContainer = document.getElementById(portalContainerId);
+  expect(portalContainer).toBeInTheDocument();
+
+  const menu = within(portalContainer as HTMLElement).getByRole(
+    'list',
+  ).parentElement;
+  expect(menu).toHaveStyle('position: fixed');
+  expect(menu).toHaveStyle('top: 60px');
+  expect(menu).toHaveStyle('left: 30px');
+});
+
+it('hides the menu on resize', async () => {
+  render(
+    <StatusButton buttonChildren={() => <>test</>} canEdit={true}>
+      {{ item: '1', onClick: jest.fn() }}
+      {{ item: '2', onClick: jest.fn() }}
+    </StatusButton>,
+  );
+
+  await userEvent.click(screen.getByRole('button'));
+  expect(screen.getByRole('list')).toBeInTheDocument();
+
+  act(() => {
+    window.dispatchEvent(new Event('resize'));
+  });
+
+  expect(screen.queryByRole('list')).not.toBeInTheDocument();
+});
+
+it('hides the menu on scroll', async () => {
+  render(
+    <StatusButton buttonChildren={() => <>test</>} canEdit={true}>
+      {{ item: '1', onClick: jest.fn() }}
+      {{ item: '2', onClick: jest.fn() }}
+    </StatusButton>,
+  );
+
+  await userEvent.click(screen.getByRole('button'));
+  expect(screen.getByRole('list')).toBeInTheDocument();
+
+  act(() => {
+    window.dispatchEvent(new Event('scroll'));
+  });
+
+  expect(screen.queryByRole('list')).not.toBeInTheDocument();
 });
 
 describe('statusButtonStyles', () => {

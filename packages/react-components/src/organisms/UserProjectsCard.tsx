@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { UserProjectMembership, ProjectStatus } from '@asap-hub/model';
-import { projects as projectRoutes } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 
 import { Card, Paragraph, Button, Headline2, Anchor, Pill } from '../atoms';
 import { charcoal, fern, neutral900, steel } from '../colors';
 import { rem, tabletScreen } from '../pixels';
+import { getProjectRoute } from '../utils';
 import { getStatusPillAccent } from './ProjectCard';
 
 const MAX_PROJECTS = 6;
@@ -175,26 +175,6 @@ type UserProjectsCardProps = {
 const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
   const [showMore, setShowMore] = useState(false);
 
-  const getProjectRoute = (project: UserProjectMembership) => {
-    if (project.projectType === 'Discovery Project') {
-      return projectRoutes({})
-        .discoveryProjects({})
-        .discoveryProject({ projectId: project.id }).$;
-    }
-    if (project.projectType === 'Resource Project') {
-      return projectRoutes({})
-        .resourceProjects({})
-        .resourceProject({ projectId: project.id }).$;
-    }
-    if (project.projectType === 'Trainee Project') {
-      return projectRoutes({})
-        .traineeProjects({})
-        .traineeProject({ projectId: project.id }).$;
-    }
-    // Unknown project type
-    return undefined;
-  };
-
   const displayProjects = showMore ? projects : projects.slice(0, MAX_PROJECTS);
   const hasMoreProjects = projects.length > MAX_PROJECTS;
 
@@ -254,7 +234,10 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
         </thead>
         <tbody>
           {displayProjects.map((project, index) => {
-            const projectRoute = getProjectRoute(project);
+            const projectRoute = getProjectRoute({
+              projectId: project.id,
+              projectType: project.projectType,
+            });
             const isLastRow = index === displayProjects.length - 1;
 
             return (
@@ -311,7 +294,10 @@ const UserProjectsCard: React.FC<UserProjectsCardProps> = ({ projects }) => {
       {/* Mobile Card View */}
       <div css={mobileProjectsList} data-testid="projects-mobile-list">
         {displayProjects.map((project, index) => {
-          const projectRoute = getProjectRoute(project);
+          const projectRoute = getProjectRoute({
+            projectId: project.id,
+            projectType: project.projectType,
+          });
           const isLastRow = index === displayProjects.length - 1;
 
           return (

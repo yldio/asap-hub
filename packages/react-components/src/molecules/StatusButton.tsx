@@ -17,6 +17,7 @@ import {
 } from '..';
 
 import { rem, mobileScreen, formTargetWidth } from '../pixels';
+import { Portal } from '../utils/portal';
 
 import {
   paper,
@@ -41,30 +42,29 @@ const containerStyles = css({
   },
 });
 
-const menuWrapperStyles = css({
-  position: 'relative',
-  display: 'flex',
-  maxWidth: rem(formTargetWidth),
-});
+type MenuPosition = {
+  top: number;
+  left: number;
+};
 
-const menuContainerStyles = css({
-  position: 'absolute',
-  display: 'none',
-  overflow: 'hidden',
-  zIndex: 1,
-  width: rem(280),
-  top: rem(8),
-  left: 0,
-  backgroundColor: paper.rgb,
-  border: `1px solid ${steel.rgb}`,
-  boxShadow: `0 2px 6px 0 ${colorWithTransparency(tin, 0.34).rgba}`,
-  flexDirection: 'column',
-  padding: `${rem(6)} 0`,
-});
+const menuOffset = 8;
 
-const showMenuStyles = css({
-  display: 'flex',
-});
+const menuContainerStyles = ({ top, left }: MenuPosition) =>
+  css({
+    position: 'fixed',
+    display: 'flex',
+    overflow: 'hidden',
+    zIndex: 1,
+    width: rem(280),
+    maxWidth: rem(formTargetWidth),
+    top,
+    left,
+    backgroundColor: paper.rgb,
+    border: `1px solid ${steel.rgb}`,
+    boxShadow: `0 2px 6px 0 ${colorWithTransparency(tin, 0.34).rgba}`,
+    flexDirection: 'column',
+    padding: `${rem(6)} 0`,
+  });
 
 const listStyles = css({
   display: 'flex',
@@ -120,10 +120,6 @@ const resetButtonStyles = css({
     outline: 'none',
     boxShadow: 'none',
   },
-});
-
-const alignLeftStyles = css({
-  left: 0,
 });
 
 export const statusButtonStyles = (
@@ -255,22 +251,42 @@ type StatusButtonProps = {
 const StatusButton: React.FC<StatusButtonProps> = ({
   children = [],
   buttonChildren,
-  alignLeft = false,
   primary,
   canEdit = false,
   selectedStatusType = 'none',
   wrap = false,
 }) => {
   const reference = useRef<HTMLDivElement>(null);
-  const handleClick = () => setMenuShown(!menuShown);
+  const menuReference = useRef<HTMLDivElement>(null);
   const [menuShown, setMenuShown] = useState(false);
+  const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
+
+  const updateMenuPosition = () => {
+    const rect = reference.current?.getBoundingClientRect();
+
+    if (rect) {
+      setMenuPosition({
+        top: rect.bottom + menuOffset,
+        left: rect.left,
+      });
+    }
+  };
+
+  const handleClick = () => {
+    if (!menuShown) {
+      updateMenuPosition();
+    }
+
+    setMenuShown(!menuShown);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: Event) => {
-      if (
-        reference.current &&
-        !reference.current.contains(event.target as Node)
-      ) {
+      const target = event.target as Node;
+      const isClickInsideButton = reference.current?.contains(target);
+      const isClickInsideMenu = menuReference.current?.contains(target);
+
+      if (!isClickInsideButton && !isClickInsideMenu) {
         setMenuShown(false);
       }
     };
@@ -279,7 +295,23 @@ const StatusButton: React.FC<StatusButtonProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [reference]);
+  }, []);
+
+  useEffect(() => {
+    if (!menuShown) {
+      return undefined;
+    }
+
+    const closeMenu = () => setMenuShown(false);
+
+    window.addEventListener('resize', closeMenu);
+    window.addEventListener('scroll', closeMenu, true);
+
+    return () => {
+      window.removeEventListener('resize', closeMenu);
+      window.removeEventListener('scroll', closeMenu, true);
+    };
+  }, [menuShown]);
 
   const hasIcon = ['final', canEdit ? 'warning' : 'default'].includes(
     selectedStatusType,
@@ -308,45 +340,41 @@ const StatusButton: React.FC<StatusButtonProps> = ({
         {buttonChildren(menuShown)}
         {canEdit ? (menuShown ? chevronUpIcon : chevronDownIcon) : null}
       </Button>
-      <div css={menuWrapperStyles}>
-        <div
-          css={[
-            menuContainerStyles,
-            menuShown && showMenuStyles,
-            alignLeft && alignLeftStyles,
-          ]}
-        >
-          <ul css={listStyles}>
-            {children.map(
-              (
-                { item, type = 'default', onClick, closeOnClick = true },
-                index,
-              ) => (
-                <li key={`drop-${index}`} css={itemStyles}>
-                  <button
-                    css={[resetButtonStyles]}
-                    onClick={(e) => {
-                      if (closeOnClick) {
-                        setMenuShown(false);
-                      }
-                      onClick && onClick(e);
-                    }}
-                  >
-                    <span css={itemContentStyles(type)}>
-                      {['warning', 'final'].includes(type) && (
-                        <span css={iconStyles(type, canEdit)}>
-                          {statusIcon(type, canEdit)}
-                        </span>
-                      )}
-                      <span>{item}</span>
-                    </span>
-                  </button>
-                </li>
-              ),
-            )}
-          </ul>
-        </div>
-      </div>
+      {menuShown && menuPosition && (
+        <Portal>
+          <div ref={menuReference} css={menuContainerStyles(menuPosition)}>
+            <ul css={listStyles}>
+              {children.map(
+                (
+                  { item, type = 'default', onClick, closeOnClick = true },
+                  index,
+                ) => (
+                  <li key={`drop-${index}`} css={itemStyles}>
+                    <button
+                      css={[resetButtonStyles]}
+                      onClick={(e) => {
+                        if (closeOnClick) {
+                          setMenuShown(false);
+                        }
+                        onClick && onClick(e);
+                      }}
+                    >
+                      <span css={itemContentStyles(type)}>
+                        {['warning', 'final'].includes(type) && (
+                          <span css={iconStyles(type, canEdit)}>
+                            {statusIcon(type, canEdit)}
+                          </span>
+                        )}
+                        <span>{item}</span>
+                      </span>
+                    </button>
+                  </li>
+                ),
+              )}
+            </ul>
+          </div>
+        </Portal>
+      )}
     </div>
   );
 };

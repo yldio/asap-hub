@@ -23,6 +23,7 @@ describe('ComplianceTableRow', () => {
 
   const defaultProps: ComponentProps<typeof ComplianceTableRow> = {
     data,
+    displayProjectColumn: false,
     isComplianceReviewer: true,
     getAssignedUsersSuggestions: jest.fn(),
     handleAssignUsersClick: jest.fn(),
@@ -96,6 +97,120 @@ describe('ComplianceTableRow', () => {
       'href',
       expect.stringContaining('team-id'),
     );
+  });
+
+  it('renders an em dash for user-based projects', () => {
+    renderComponent({
+      displayProjectColumn: true,
+      data: {
+        ...data,
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          projectType: 'Resource Project',
+          isTeamBased: false,
+        },
+      },
+    });
+
+    const cells = screen.getAllByRole('cell');
+    expect(cells[1]).toHaveTextContent('Project Alpha');
+    expect(cells[2]).toHaveTextContent('—');
+    expect(
+      screen.queryByRole('link', { name: 'Test Team' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it.each`
+    projectType            | expectedHref                        | iconTitle
+    ${'Discovery Project'} | ${'/projects/discovery/project-id'} | ${'Discovery Project'}
+    ${'Resource Project'}  | ${'/projects/resource/project-id'}  | ${'Resource Project'}
+    ${'Trainee Project'}   | ${'/projects/trainee/project-id'}   | ${'Trainee Project'}
+  `(
+    'renders $projectType project link and icon',
+    ({ projectType, expectedHref, iconTitle }) => {
+      renderComponent({
+        displayProjectColumn: true,
+        data: {
+          ...data,
+          project: {
+            id: 'project-id',
+            title: 'Project Alpha',
+            projectType,
+            isTeamBased: true,
+          },
+        },
+      });
+
+      expect(
+        screen.getByRole('link', { name: 'Project Alpha' }),
+      ).toHaveAttribute('href', expectedHref);
+      expect(screen.getByTitle(iconTitle)).toBeInTheDocument();
+    },
+  );
+
+  it('renders a plain manuscript id when the team link is unavailable', () => {
+    renderComponent({
+      data: {
+        ...data,
+        team: { id: '', displayName: 'Test Team' },
+      },
+    });
+
+    expect(screen.getByText('DA1-000463-002-org-G-1')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'DA1-000463-002-org-G-1' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders a plain project title when the project route is unavailable', () => {
+    renderComponent({
+      displayProjectColumn: true,
+      data: {
+        ...data,
+        project: {
+          id: 'project-id',
+          title: 'Project Alpha',
+          isTeamBased: true,
+        },
+      },
+    });
+
+    expect(screen.getByText('Project Alpha')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Project Alpha' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders an em dash in the project column when no project exists', () => {
+    renderComponent({ displayProjectColumn: true });
+
+    expect(screen.getAllByRole('cell')[1]).toHaveTextContent('—');
+  });
+
+  it('renders the team name as plain text when the team route is unavailable', () => {
+    renderComponent({
+      data: {
+        ...data,
+        team: { id: '', displayName: 'Test Team' },
+      },
+    });
+
+    expect(screen.getByText('Test Team')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Test Team' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders an em dash when the team is missing', () => {
+    renderComponent({
+      data: {
+        ...data,
+        team: { id: '', displayName: '' },
+      },
+    });
+
+    expect(screen.getAllByRole('cell')[1]).toHaveTextContent('—');
   });
 
   describe('assigned users', () => {

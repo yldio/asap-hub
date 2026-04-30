@@ -40,6 +40,7 @@ import {
   ManuscriptType,
   manuscriptTypes,
   EmailTriggerAction,
+  isProjectType,
   ManuscriptUpdateDataObject,
   ManuscriptVersion,
   QuickCheckDetails,
@@ -57,6 +58,29 @@ type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
 type ManuscriptListItem = NonNullable<
   NonNullable<FetchManuscriptsQuery['manuscriptsCollection']>['items'][number]
 >;
+type ManuscriptListProject = NonNullable<ManuscriptListItem['project']>;
+type ManuscriptListTeamItem = NonNullable<
+  NonNullable<ManuscriptListItem['teamsCollection']>['items'][number]
+>;
+type ManuscriptTeamItem =
+  | ManuscriptListTeamItem
+  | NonNullable<
+      NonNullable<ManuscriptItem['teamsCollection']>['items'][number]
+    >;
+type ManuscriptProjectSource = Pick<
+  ManuscriptListItem | ManuscriptItem,
+  'project' | 'teamsCollection'
+>;
+
+type GraphqlManuscriptProject = Pick<
+  ManuscriptListProject,
+  'grantId' | 'projectId' | 'projectType' | 'sys' | 'title'
+>;
+
+type ResolvedManuscriptProject = {
+  isTeamBased: boolean;
+  project: GraphqlManuscriptProject;
+};
 
 type ComplianceReport = NonNullable<
   NonNullable<
@@ -65,6 +89,32 @@ type ComplianceReport = NonNullable<
     >['linkedFrom']
   >['complianceReportsCollection']
 >['items'][number];
+
+const getTeamLinkedProject = (team?: ManuscriptTeamItem | null) =>
+  team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
+    ?.projectsCollection?.items[0];
+
+function resolveManuscriptProject(
+  manuscript: ManuscriptProjectSource,
+): ResolvedManuscriptProject | undefined {
+  if (manuscript.project) {
+    return {
+      project: manuscript.project,
+      isTeamBased: false,
+    };
+  }
+
+  const project = getTeamLinkedProject(manuscript.teamsCollection?.items[0]);
+
+  if (!project) {
+    return undefined;
+  }
+
+  return {
+    project,
+    isTeamBased: true,
+  };
+}
 
 export class ManuscriptContentfulDataProvider
   implements ManuscriptDataProvider
@@ -108,9 +158,8 @@ export class ManuscriptContentfulDataProvider
         .map((manuscript) => {
           const version = manuscript.versionsCollection?.items[0];
           const team = manuscript.teamsCollection?.items[0];
-          const project =
-            team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
-              ?.projectsCollection?.items[0];
+          const resolvedProject = resolveManuscriptProject(manuscript);
+          const project = resolvedProject?.project;
           return {
             manuscriptId: getManuscriptVersionUID({
               version: {
@@ -141,6 +190,7 @@ export class ManuscriptContentfulDataProvider
             apcAmountPaid: manuscript.apcAmountPaid || undefined,
             declinedReason: manuscript.declinedReason || undefined,
             lastUpdated: version?.sys.publishedAt,
+            project: parseGraphQLManuscriptProject(resolvedProject),
             team: {
               id: team?.sys.id || '',
               displayName: team?.displayName || '',
@@ -484,6 +534,34 @@ const parseGraphQLManuscriptAssignedUsers = (
     avatarUrl: user?.avatar?.url || '',
   })) || [];
 
+const parseGraphQLManuscriptProject = (
+  resolvedProject?: ResolvedManuscriptProject,
+) => {
+  if (!resolvedProject) {
+    return undefined;
+  }
+
+  const { isTeamBased, project } = resolvedProject;
+
+  const id = project.sys?.id || '';
+  const title = project.title || '';
+  const projectTypeValue = project.projectType;
+  const projectType = isProjectType(projectTypeValue)
+    ? projectTypeValue
+    : undefined;
+
+  if (!id || !title) {
+    return undefined;
+  }
+
+  return {
+    id,
+    title,
+    projectType,
+    isTeamBased,
+  };
+};
+
 const parseGraphQLManuscriptDiscussions = (
   discussionItems:
     | NonNullable<NonNullable<ManuscriptItem['discussionsCollection']>['items']>
@@ -530,12 +608,9 @@ const parseGraphQLManuscript = (
   manuscript: ManuscriptItem,
 ): ManuscriptDataObject => {
   const teamData = manuscript.teamsCollection?.items[0];
-  const projectData =
-    teamData?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
-      ?.projectsCollection?.items[0];
-
-  const teamId = projectData?.projectId || '';
-  const grantId = projectData?.grantId || '';
+  const resolvedProject = resolveManuscriptProject(manuscript);
+  const projectId = resolvedProject?.project.projectId || '';
+  const grantId = resolvedProject?.project.grantId || '';
   const count = manuscript.count || 1;
   return {
     id: manuscript.sys.id,
@@ -559,7 +634,7 @@ const parseGraphQLManuscript = (
     versions: parseGraphqlManuscriptVersion(
       manuscript.versionsCollection?.items || [],
       grantId,
-      teamId,
+      projectId,
       count,
     ),
     impact:

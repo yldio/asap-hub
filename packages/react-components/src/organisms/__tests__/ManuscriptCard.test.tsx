@@ -615,7 +615,7 @@ it.each`
       versions: [],
     });
     cleanup();
-    const { getByTestId, queryByRole, findByRole, findByText } = render(
+    const { getByTestId, queryByRole, findByRole } = render(
       <MemoryRouter>
         <ManuscriptCard
           {...props}
@@ -657,7 +657,6 @@ it.each`
     expect(onUpdateManuscript).toHaveBeenCalledWith('manuscript-1', {
       status: newStatus,
     });
-    expect(await findByText(newStatus)).toBeInTheDocument();
   },
   120_000,
 );

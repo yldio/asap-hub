@@ -375,8 +375,8 @@ it('scrolls to teams card when "View all former roles" is clicked and card exist
   document.body.removeChild(teamsCard);
 });
 
-it('expands all active teams when "View all roles" is clicked', () => {
-  const { getByText, queryByText, container } = render(
+it('toggles active teams between expanded and collapsed', () => {
+  const { getByText, container } = render(
     <UserProfilePersonalText
       {...props}
       teams={[
@@ -391,11 +391,16 @@ it('expands all active teams when "View all roles" is clicked', () => {
   fireEvent.click(getByText('View all roles'));
 
   expect(container).toHaveTextContent('Project Manager on');
-  expect(queryByText('View all roles')).not.toBeInTheDocument();
+  expect(getByText('View less roles')).toBeInTheDocument();
+
+  fireEvent.click(getByText('View less roles'));
+
+  expect(container).not.toHaveTextContent('Project Manager on');
+  expect(getByText('View all roles')).toBeInTheDocument();
 });
 
-it('expands all inactive teams when "View all former roles" is clicked', () => {
-  const { getByText, queryByText, container } = render(
+it('toggles inactive teams between expanded and collapsed', () => {
+  const { getByText, container } = render(
     <UserProfilePersonalText
       {...props}
       isAlumni={true}
@@ -411,5 +416,10 @@ it('expands all inactive teams when "View all former roles" is clicked', () => {
   fireEvent.click(getByText('View all former roles'));
 
   expect(container).toHaveTextContent('Project Manager on');
-  expect(queryByText('View all former roles')).not.toBeInTheDocument();
+  expect(getByText('View less former roles')).toBeInTheDocument();
+
+  fireEvent.click(getByText('View less former roles'));
+
+  expect(container).not.toHaveTextContent('Project Manager on');
+  expect(getByText('View all former roles')).toBeInTheDocument();
 });

@@ -130,23 +130,27 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
                 </Link>
               </div>
             ))}
-            {!showAllActive && activeTeams.length > MAX_TEAMS && (
+            {activeTeams.length > MAX_TEAMS && (
               <Anchor
                 href="#"
                 onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                   e.preventDefault();
-                  const teamsCard = document.getElementById(
-                    'user-teams-tabbed-card',
-                  );
-                  if (teamsCard) {
-                    teamsCard.scrollIntoView({ behavior: 'smooth' });
+                  if (showAllActive) {
+                    setShowAllActive(false);
                   } else {
-                    setShowAllActive(true);
+                    const teamsCard = document.getElementById(
+                      'user-teams-tabbed-card',
+                    );
+                    if (teamsCard) {
+                      teamsCard.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      setShowAllActive(true);
+                    }
                   }
                 }}
                 css={(theme) => [styles, getLinkColors(theme.colors, 'light')]}
               >
-                View all roles
+                {showAllActive ? 'View less roles' : 'View all roles'}
               </Anchor>
             )}
             {inactiveTeams.length ? (
@@ -169,23 +173,29 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
                 </Link>
               </div>
             ))}
-            {!showAllInactive && inactiveTeams.length > MAX_TEAMS && (
+            {inactiveTeams.length > MAX_TEAMS && (
               <Anchor
                 href="#"
                 onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                   e.preventDefault();
-                  const teamsCard = document.getElementById(
-                    'user-teams-tabbed-card',
-                  );
-                  if (teamsCard) {
-                    teamsCard.scrollIntoView({ behavior: 'smooth' });
+                  if (showAllInactive) {
+                    setShowAllInactive(false);
                   } else {
-                    setShowAllInactive(true);
+                    const teamsCard = document.getElementById(
+                      'user-teams-tabbed-card',
+                    );
+                    if (teamsCard) {
+                      teamsCard.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      setShowAllInactive(true);
+                    }
                   }
                 }}
                 css={(theme) => [styles, getLinkColors(theme.colors, 'light')]}
               >
-                View all former roles
+                {showAllInactive
+                  ? 'View less former roles'
+                  : 'View all former roles'}
               </Anchor>
             )}
           </>

@@ -7,6 +7,7 @@ import {
 } from '@asap-hub/fixtures';
 import { createCsvFileStream, Frame } from '@asap-hub/frontend-utils';
 import { PartialManuscriptResponse } from '@asap-hub/model';
+import { portalContainerId } from '@asap-hub/react-components';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Stringifier } from 'csv-stringify';
@@ -130,6 +131,17 @@ const renderCompliancePage = async () => {
   return result;
 };
 
+const findStatusMenuButton = (name: RegExp) =>
+  waitFor(() => {
+    const portalContainer = document.getElementById(portalContainerId);
+
+    expect(portalContainer).toBeInTheDocument();
+
+    return within(portalContainer as HTMLElement).getAllByRole('button', {
+      name,
+    })[0] as HTMLButtonElement;
+  });
+
 const originalWindowOpen = window.open;
 let mockWindowOpen: jest.MockedFunction<typeof globalThis.open>;
 
@@ -221,11 +233,7 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
   });
   await userEvent.click(statusButton);
 
-  const newStatusButton = within(
-    screen.getByTestId('compliance-table-row'),
-  ).getByRole('button', {
-    name: /Addendum Required/i,
-  });
+  const newStatusButton = await findStatusMenuButton(/Addendum Required/i);
   await userEvent.click(newStatusButton);
 
   const confirmButton = screen.getByRole('button', {
@@ -284,11 +292,7 @@ it('manuscripts remain the same when there is not a match between the manuscript
   });
   await userEvent.click(statusButton);
 
-  const newStatusButton = within(
-    screen.getByTestId('compliance-table-row'),
-  ).getByRole('button', {
-    name: /Addendum Required/i,
-  });
+  const newStatusButton = await findStatusMenuButton(/Addendum Required/i);
   await userEvent.click(newStatusButton);
 
   const confirmButton = screen.getByRole('button', {
@@ -349,11 +353,7 @@ it('manuscripts remain the same when getting previous manuscripts fails', async 
   });
   await userEvent.click(statusButton);
 
-  const newStatusButton = within(
-    screen.getByTestId('compliance-table-row'),
-  ).getByRole('button', {
-    name: /Addendum Required/i,
-  });
+  const newStatusButton = await findStatusMenuButton(/Addendum Required/i);
   await userEvent.click(newStatusButton);
 
   const confirmButton = screen.getByRole('button', {

@@ -8,6 +8,10 @@ import {
 import { Portal, PortalContainer, portalContainerId } from '../portal';
 
 const removePortalContainer = (containerId = portalContainerId) => {
+  if (typeof document === 'undefined') {
+    return;
+  }
+
   document.getElementById(containerId)?.remove();
 };
 
@@ -100,13 +104,13 @@ describe('Portal', () => {
 
       expect(testRenderer?.toJSON()).toBeNull();
     } finally {
-      await testRendererAct(() => {
-        testRenderer?.unmount();
-      });
-
       if (documentDescriptor) {
         Object.defineProperty(globalThis, 'document', documentDescriptor);
       }
+
+      await testRendererAct(() => {
+        testRenderer?.unmount();
+      });
     }
   });
 });

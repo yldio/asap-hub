@@ -101,6 +101,8 @@ const renderWithWrapper = (
 
 const user = {
   id: 'test-user-1',
+  role: 'Staff',
+  openScienceTeamMember: true,
   teams: [
     {
       id,
@@ -153,10 +155,13 @@ describe('Manuscript', () => {
           manuscripts: [manuscriptId],
         }}
       />,
+      user,
     );
 
     await userEvent.click(await screen.findByTestId('status-button'));
-    await userEvent.click(screen.getByText('Addendum Required'));
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Addendum Required' }),
+    );
     await userEvent.click(
       screen.getByRole('button', { name: 'Update Status and Notify' }),
     );

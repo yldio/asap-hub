@@ -284,23 +284,6 @@ export const FETCH_MILESTONE_BY_ID = gql`
       }
       description
       status
-      bulkImported
-      statusUpdatedAt
-      statusUpdatedBy {
-        sys {
-          id
-        }
-        firstName
-        lastName
-      }
-      outputsLinkedAt
-      outputsLinkedBy {
-        sys {
-          id
-        }
-        firstName
-        lastName
-      }
       relatedArticlesCollection(limit: 50) {
         total
         items {
@@ -389,23 +372,6 @@ export const FETCH_MILESTONES = gql`
         }
         description
         status
-        bulkImported
-        statusUpdatedAt
-        statusUpdatedBy {
-          sys {
-            id
-          }
-          firstName
-          lastName
-        }
-        outputsLinkedAt
-        outputsLinkedBy {
-          sys {
-            id
-          }
-          firstName
-          lastName
-        }
         relatedArticlesCollection(limit: 50) {
           total
           items {

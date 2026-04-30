@@ -69,6 +69,26 @@ module.exports.up = (migration) => {
   milestones.moveField('statusUpdatedBy').afterField('statusUpdatedAt');
   milestones.moveField('outputsLinkedAt').afterField('relatedArticles');
   milestones.moveField('outputsLinkedBy').afterField('outputsLinkedAt');
+
+  milestones.changeFieldControl(
+    'statusUpdatedBy',
+    'builtin',
+    'entryLinkEditor',
+    {
+      showLinkEntityAction: true,
+      showCreateEntityAction: false,
+    },
+  );
+
+  milestones.changeFieldControl(
+    'outputsLinkedBy',
+    'builtin',
+    'entryLinkEditor',
+    {
+      showLinkEntityAction: true,
+      showCreateEntityAction: false,
+    },
+  );
 };
 
 module.exports.down = (migration) => {

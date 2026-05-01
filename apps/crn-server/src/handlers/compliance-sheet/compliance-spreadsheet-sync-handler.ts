@@ -124,8 +124,9 @@ export const sqsComplianceSheetSyncHandlerFactory =
       const body = JSON.parse(record.body);
 
       for (const id of body.manuscriptVersionIds ?? []) {
-        if (!id) continue;
-        allIds.add(id);
+        if (id) {
+          allIds.add(id);
+        }
       }
     }
 

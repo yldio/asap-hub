@@ -1345,7 +1345,7 @@ const serverlessConfig: AWS = {
     complianceSpreadsheetSyncHandler: {
       handler:
         './src/handlers/compliance-sheet/compliance-spreadsheet-sync-handler.handler',
-      timeout: 20,
+      timeout: 40,
       reservedConcurrency: 2,
       events: [
         {
@@ -1353,7 +1353,7 @@ const serverlessConfig: AWS = {
             arn: {
               'Fn::GetAtt': ['ComplianceDocSyncQueue', 'Arn'],
             },
-            batchSize: 1,
+            batchSize: 5,
             maximumConcurrency: 2,
           },
         },

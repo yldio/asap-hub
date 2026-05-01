@@ -118,33 +118,32 @@ export const sqsComplianceSheetSyncHandlerFactory =
     manuscriptVersionController: ManuscriptVersionController,
   ) =>
   async (event: SQSEvent) => {
-    await Promise.all(
-      event.Records.map(async (record) => {
-        const body = JSON.parse(record.body);
-        const { manuscriptVersionIds } = body;
+    const allIds = new Set<string>();
 
-        if (!manuscriptVersionIds || manuscriptVersionIds.length === 0) {
-          logger.debug('No manuscriptVersionIds provided, skipping sync');
-          return;
-        }
+    for (const record of event.Records) {
+      const body = JSON.parse(record.body);
 
-        try {
-          const sheets = await sheetsClient;
+      for (const id of body.manuscriptVersionIds ?? []) {
+        if (!id) continue;
+        allIds.add(id);
+      }
+    }
 
-          await syncRows(
-            sheets,
-            manuscriptVersionIds,
-            manuscriptVersionController,
-          );
-        } catch (error) {
-          logger.error(error, 'Error while syncing manuscript versions');
+    if (allIds.size === 0) {
+      logger.debug('No unique manuscript version ids provided, skipping sync');
+      return;
+    }
+    try {
+      const sheets = await sheetsClient;
 
-          throw new Error(
-            `Unable to sync manuscript versions [${manuscriptVersionIds}]`,
-          );
-        }
-      }),
-    );
+      await syncRows(sheets, [...allIds], manuscriptVersionController);
+    } catch (error) {
+      logger.error(error, 'Error while syncing manuscript versions');
+
+      throw new Error(
+        `Unable to sync manuscript versions [${[...allIds].join(', ')}]`,
+      );
+    }
   };
 
 const getJWTCredentials = getJWTCredentialsFactory({

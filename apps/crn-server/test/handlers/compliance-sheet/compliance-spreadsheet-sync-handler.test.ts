@@ -82,7 +82,7 @@ describe('Compliance Spreadsheet Sync Handler', () => {
       Records: [
         {
           body: JSON.stringify({
-            manuscriptVersionIds: ['mv-1', 'mv-2'],
+            manuscriptVersionIds: ['mv-1', undefined, 'mv-2'],
           }),
         },
       ],

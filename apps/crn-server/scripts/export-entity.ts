@@ -236,10 +236,14 @@ const transformRecords = (
 
   // type 'tutorial'
   if ('usedInPublication' in record && 'shortText' in record) {
-    return {
-      ...payload,
-      _tags: record.tags,
+    const { text: _text, ...payloadWithoutText } = payload as typeof payload & {
+      text?: string;
     };
+
+    return {
+      ...payloadWithoutText,
+      _tags: record.tags,
+    } as ReturnType<typeof transformRecords>;
   }
 
   // type 'news'

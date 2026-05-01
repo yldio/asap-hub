@@ -33,8 +33,10 @@ export const indexTutorialHandler =
           logger.debug(`Fetched tutorial ${tutorialId}`);
 
           if (tutorial) {
+            const { text: _text, ...tutorialWithoutText } = tutorial;
+
             await algoliaClient.save({
-              data: addTagsFunction(tutorial) as TutorialsResponse,
+              data: addTagsFunction(tutorialWithoutText) as TutorialsResponse,
               type: 'tutorial',
             });
 

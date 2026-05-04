@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { css } from '@emotion/react';
 import { UserListItemResponse, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
@@ -57,7 +57,7 @@ type UserProfilePersonalTextProps = Pick<
   | 'city'
   | 'labs'
   | 'tags'
-> & { userActiveTeamsRoute?: string; isAlumni?: boolean; teams: UserTeam[] };
+> & { isAlumni?: boolean; teams: UserTeam[] };
 const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   institution,
   country,
@@ -70,6 +70,8 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   isAlumni,
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
+  const [showAllActive, setShowAllActive] = useState(false);
+  const [showAllInactive, setShowAllInactive] = useState(false);
 
   const labsList = getUniqueCommaStringWithSuffix(
     labs.map((lab) => lab.name),
@@ -81,6 +83,14 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
     (team) =>
       isAlumni || !!team?.teamInactiveSince || !!team?.inactiveSinceDate,
   );
+
+  const visibleActiveTeams = showAllActive
+    ? activeTeams
+    : activeTeams.slice(0, MAX_TEAMS);
+  const visibleInactiveTeams = showAllInactive
+    ? inactiveTeams
+    : inactiveTeams.slice(0, MAX_TEAMS);
+
   return (
     <div>
       <div css={paragraphStyles}>
@@ -92,7 +102,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
           </>
         ) : isOwnProfile ? (
           <span css={{ color: tin.rgb }}>
-            Where do you work and what’s your position?
+            Where do you work and what's your position?
           </span>
         ) : null}
 
@@ -112,31 +122,35 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
           </div>
         ) : (
           <>
-            {activeTeams
-              .slice(0, MAX_TEAMS)
-              .map(({ id, role: teamRole, displayName }) => (
-                <div style={{ display: 'flex' }} key={id}>
-                  <div>{teamRole} on&nbsp;</div>
-                  <Link href={network({}).teams({}).team({ teamId: id }).$}>
-                    Team {displayName}
-                  </Link>
-                </div>
-              ))}
+            {visibleActiveTeams.map(({ id, role: teamRole, displayName }) => (
+              <div style={{ display: 'flex' }} key={id}>
+                <div>{teamRole} on&nbsp;</div>
+                <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                  Team {displayName}
+                </Link>
+              </div>
+            ))}
             {activeTeams.length > MAX_TEAMS && (
               <Anchor
                 href="#"
                 onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                   e.preventDefault();
-                  const teamsCard = document.getElementById(
-                    'user-teams-tabbed-card',
-                  );
-                  if (teamsCard) {
-                    teamsCard.scrollIntoView({ behavior: 'smooth' });
+                  if (showAllActive) {
+                    setShowAllActive(false);
+                  } else {
+                    const teamsCard = document.getElementById(
+                      'user-teams-tabbed-card',
+                    );
+                    if (teamsCard) {
+                      teamsCard.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      setShowAllActive(true);
+                    }
                   }
                 }}
                 css={(theme) => [styles, getLinkColors(theme.colors, 'light')]}
               >
-                View all roles
+                {showAllActive ? 'View less roles' : 'View all roles'}
               </Anchor>
             )}
             {inactiveTeams.length ? (
@@ -151,31 +165,37 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
                 <span css={badgeStyles}>{alumniBadgeIcon}</span>
               </div>
             ) : null}
-            {inactiveTeams
-              .slice(0, MAX_TEAMS)
-              .map(({ id, role: teamRole, displayName }) => (
-                <div style={{ display: 'flex' }} key={id}>
-                  <div>{teamRole} on&nbsp;</div>
-                  <Link href={network({}).teams({}).team({ teamId: id }).$}>
-                    Team {displayName}
-                  </Link>
-                </div>
-              ))}
+            {visibleInactiveTeams.map(({ id, role: teamRole, displayName }) => (
+              <div style={{ display: 'flex' }} key={id}>
+                <div>{teamRole} on&nbsp;</div>
+                <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                  Team {displayName}
+                </Link>
+              </div>
+            ))}
             {inactiveTeams.length > MAX_TEAMS && (
               <Anchor
                 href="#"
                 onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
                   e.preventDefault();
-                  const teamsCard = document.getElementById(
-                    'user-teams-tabbed-card',
-                  );
-                  if (teamsCard) {
-                    teamsCard.scrollIntoView({ behavior: 'smooth' });
+                  if (showAllInactive) {
+                    setShowAllInactive(false);
+                  } else {
+                    const teamsCard = document.getElementById(
+                      'user-teams-tabbed-card',
+                    );
+                    if (teamsCard) {
+                      teamsCard.scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                      setShowAllInactive(true);
+                    }
                   }
                 }}
                 css={(theme) => [styles, getLinkColors(theme.colors, 'light')]}
               >
-                View all former roles
+                {showAllInactive
+                  ? 'View less former roles'
+                  : 'View all former roles'}
               </Anchor>
             )}
           </>

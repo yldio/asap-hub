@@ -18,6 +18,7 @@ import {
   FetchMilestoneArticlesQuery,
   FetchMilestoneArticlesQueryVariables,
   getLinkEntities,
+  getLinkEntity,
   GraphQLClient,
   patchAndPublish,
 } from '@asap-hub/contentful';
@@ -288,6 +289,7 @@ export class AimsMilestonesContentfulDataProvider
   async updateArticlesForMilestone(
     milestoneId: string,
     articleIds: string[],
+    userId: string,
   ): Promise<void> {
     if (!this.getRestClient) {
       throw new Error(
@@ -300,6 +302,8 @@ export class AimsMilestonesContentfulDataProvider
 
     await patchAndPublish(entry, {
       relatedArticles: getLinkEntities(articleIds),
+      outputsLinkedAt: new Date(),
+      outputsLinkedBy: getLinkEntity(userId),
     });
   }
 }

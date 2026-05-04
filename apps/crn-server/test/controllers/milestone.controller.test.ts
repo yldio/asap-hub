@@ -96,16 +96,20 @@ describe('Milestone Controller', () => {
   });
 
   describe('updateArticles', () => {
-    it('delegates to the data provider with milestoneId and articleIds', async () => {
+    it('delegates to the data provider with milestoneId, articleIds and userId', async () => {
       aimsMilestonesDataProviderMock.updateArticlesForMilestone.mockResolvedValueOnce(
         undefined,
       );
 
-      await controller.updateArticles('milestone-1', ['ro-1', 'ro-2']);
+      await controller.updateArticles(
+        'milestone-1',
+        ['ro-1', 'ro-2'],
+        'user-1',
+      );
 
       expect(
         aimsMilestonesDataProviderMock.updateArticlesForMilestone,
-      ).toHaveBeenCalledWith('milestone-1', ['ro-1', 'ro-2']);
+      ).toHaveBeenCalledWith('milestone-1', ['ro-1', 'ro-2'], 'user-1');
     });
   });
 });

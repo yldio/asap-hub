@@ -887,9 +887,21 @@ describe('AimsMilestonesContentfulDataProvider', () => {
   });
 
   describe('updateArticlesForMilestone', () => {
+    beforeAll(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-05-04T10:00:00.000Z'));
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
     it('throws when REST client is not configured', async () => {
       await expect(
-        dataProvider.updateArticlesForMilestone('milestone-1', ['ro-1']),
+        dataProvider.updateArticlesForMilestone(
+          'milestone-1',
+          ['ro-1'],
+          'user-1',
+        ),
       ).rejects.toThrow(
         'REST client not configured for AimsMilestonesContentfulDataProvider',
       );
@@ -899,13 +911,14 @@ describe('AimsMilestonesContentfulDataProvider', () => {
       typeof patchAndPublish
     >;
 
-    it('gets the milestone entry and patches relatedArticles', async () => {
+    it('gets the milestone entry and patches relatedArticles with audit fields', async () => {
       const entry = getEntry({ relatedArticles: [] });
       environmentMock.getEntry.mockResolvedValueOnce(entry);
 
       await dataProviderWithRestClient.updateArticlesForMilestone(
         'milestone-1',
         ['ro-1', 'ro-2'],
+        'user-1',
       );
 
       expect(environmentMock.getEntry).toHaveBeenCalledWith('milestone-1');
@@ -914,6 +927,10 @@ describe('AimsMilestonesContentfulDataProvider', () => {
           { sys: { type: 'Link', linkType: 'Entry', id: 'ro-1' } },
           { sys: { type: 'Link', linkType: 'Entry', id: 'ro-2' } },
         ],
+        outputsLinkedAt: new Date('2026-05-04T10:00:00.000Z'),
+        outputsLinkedBy: {
+          sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+        },
       });
     });
 
@@ -924,10 +941,15 @@ describe('AimsMilestonesContentfulDataProvider', () => {
       await dataProviderWithRestClient.updateArticlesForMilestone(
         'milestone-1',
         [],
+        'user-1',
       );
 
       expect(mockPatchAndPublish).toHaveBeenCalledWith(entry, {
         relatedArticles: [],
+        outputsLinkedAt: new Date('2026-05-04T10:00:00.000Z'),
+        outputsLinkedBy: {
+          sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+        },
       });
     });
   });

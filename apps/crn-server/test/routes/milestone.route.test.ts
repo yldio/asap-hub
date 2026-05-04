@@ -135,7 +135,8 @@ describe('PUT /milestones/:milestoneId/articles', () => {
   });
 
   it('returns 200 and updates articles when user is a project lead', async () => {
-    const app = makeApp(makeUser('Project Manager'));
+    const user = makeUser('Project Manager');
+    const app = makeApp(user);
 
     milestoneControllerMock.fetchById.mockResolvedValueOnce({
       projectId: project.id,
@@ -156,6 +157,7 @@ describe('PUT /milestones/:milestoneId/articles', () => {
     expect(milestoneControllerMock.updateArticles).toHaveBeenCalledWith(
       'milestone-1',
       ['ro-1', 'ro-2'],
+      user.id,
     );
   });
 

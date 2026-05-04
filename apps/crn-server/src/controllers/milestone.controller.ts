@@ -38,10 +38,12 @@ export default class MilestoneController {
   async updateArticles(
     milestoneId: string,
     articleIds: string[],
+    userId: string,
   ): Promise<void> {
     return this.aimsMilestonesDataProvider.updateArticlesForMilestone(
       milestoneId,
       articleIds,
+      userId,
     );
   }
 }

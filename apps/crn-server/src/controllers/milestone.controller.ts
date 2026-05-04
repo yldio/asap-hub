@@ -1,4 +1,4 @@
-import { ArticleItem } from '@asap-hub/model';
+import { ArticleItem, MilestoneUpdateRequest } from '@asap-hub/model';
 import { NotFoundError } from '@asap-hub/errors';
 import { AimsMilestonesDataProvider } from '../data-providers/types';
 
@@ -43,6 +43,18 @@ export default class MilestoneController {
     return this.aimsMilestonesDataProvider.updateArticlesForMilestone(
       milestoneId,
       articleIds,
+      userId,
+    );
+  }
+
+  async update(
+    milestoneId: string,
+    update: MilestoneUpdateRequest,
+    userId: string,
+  ): Promise<void> {
+    return this.aimsMilestonesDataProvider.updateMilestone(
+      milestoneId,
+      update,
       userId,
     );
   }

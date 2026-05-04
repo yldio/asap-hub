@@ -3,7 +3,10 @@ import { isProjectLead } from '@asap-hub/model';
 import { Router } from 'express';
 import MilestoneController from '../controllers/milestone.controller';
 import ProjectController from '../controllers/project.controller';
-import { validateMilestoneArticleUpdateRequest } from '../validation/milestone.validation';
+import {
+  validateMilestoneArticleUpdateRequest,
+  validateMilestoneUpdateRequest,
+} from '../validation/milestone.validation';
 
 export const milestoneRouteFactory = (
   milestoneController: MilestoneController,
@@ -39,6 +42,23 @@ export const milestoneRouteFactory = (
       articleIds,
       req.loggedInUser.id,
     );
+    res.json({ success: true });
+  });
+
+  milestoneRoutes.patch('/milestones/:milestoneId', async (req, res) => {
+    if (!req.loggedInUser) throw Boom.forbidden();
+
+    const { milestoneId } = req.params;
+    const update = validateMilestoneUpdateRequest(req.body);
+
+    const milestone = await milestoneController.fetchById(milestoneId);
+    const project = await projectController.fetchById(milestone.projectId);
+
+    if (!isProjectLead(req.loggedInUser.id, req.loggedInUser.teams, project)) {
+      throw Boom.forbidden();
+    }
+
+    await milestoneController.update(milestoneId, update, req.loggedInUser.id);
     res.json({ success: true });
   });
 

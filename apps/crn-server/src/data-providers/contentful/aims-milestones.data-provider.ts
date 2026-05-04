@@ -1,4 +1,8 @@
-import { ArticleItem, ListResponse } from '@asap-hub/model';
+import {
+  ArticleItem,
+  ListResponse,
+  MilestoneUpdateRequest,
+} from '@asap-hub/model';
 import {
   Environment,
   FETCH_AIM_ARTICLES,
@@ -305,5 +309,40 @@ export class AimsMilestonesContentfulDataProvider
       outputsLinkedAt: new Date(),
       outputsLinkedBy: getLinkEntity(userId),
     });
+  }
+
+  async updateMilestone(
+    milestoneId: string,
+    update: MilestoneUpdateRequest,
+    userId: string,
+  ): Promise<void> {
+    if (!this.getRestClient) {
+      throw new Error(
+        'REST client not configured for AimsMilestonesContentfulDataProvider',
+      );
+    }
+
+    const environment = await this.getRestClient();
+    const entry = await environment.getEntry(milestoneId);
+
+    const fields: Record<string, unknown> = {};
+    const now = new Date();
+    const userLink = getLinkEntity(userId);
+
+    if (update.status !== undefined) {
+      fields.status = update.status;
+      fields.statusUpdatedAt = now;
+      fields.statusUpdatedBy = userLink;
+    }
+
+    if (update.articleIds !== undefined) {
+      fields.relatedArticles = getLinkEntities(update.articleIds);
+      fields.outputsLinkedAt = now;
+      fields.outputsLinkedBy = userLink;
+    }
+
+    if (Object.keys(fields).length === 0) return;
+
+    await patchAndPublish(entry, fields);
   }
 }

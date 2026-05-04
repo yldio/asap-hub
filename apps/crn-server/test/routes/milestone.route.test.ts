@@ -13,6 +13,7 @@ const milestoneControllerMock = {
   fetchArticles: jest.fn(),
   fetchById: jest.fn(),
   updateArticles: jest.fn(),
+  update: jest.fn(),
 } as unknown as jest.Mocked<MilestoneController>;
 
 describe('GET /milestones/:milestoneId/articles', () => {
@@ -188,5 +189,124 @@ describe('PUT /milestones/:milestoneId/articles', () => {
 
     expect(response.status).toBe(404);
     expect(milestoneControllerMock.updateArticles).not.toHaveBeenCalled();
+  });
+});
+
+describe('PATCH /milestones/:milestoneId', () => {
+  const project = getExpectedDiscoveryProject();
+  const projectTeamId = project.teamId!;
+
+  const makeUser = (role: string): UserResponse => ({
+    ...createUserResponse(),
+    teams: [
+      {
+        id: projectTeamId,
+        role: role as UserResponse['teams'][0]['role'],
+        displayName: 'Team',
+      },
+    ],
+  });
+
+  const makeApp = (user: UserResponse | undefined) => {
+    const authHandlerMock: AuthHandler = (req, _res, next) => {
+      req.loggedInUser = user;
+      next();
+    };
+    return appFactory({
+      milestoneController: milestoneControllerMock,
+      projectController: projectControllerMock,
+      authHandler: authHandlerMock,
+      logger: loggerMock,
+    });
+  };
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('returns 403 when loggedInUser is not set', async () => {
+    const app = makeApp(undefined);
+
+    const response = await supertest(app)
+      .patch('/milestones/milestone-1')
+      .send({ status: 'Complete' });
+
+    expect(response.status).toBe(403);
+    expect(milestoneControllerMock.update).not.toHaveBeenCalled();
+  });
+
+  it('returns 403 when user is not a project lead', async () => {
+    const app = makeApp(makeUser('Collaborating PI'));
+
+    milestoneControllerMock.fetchById.mockResolvedValueOnce({
+      projectId: project.id,
+    });
+    projectControllerMock.fetchById.mockResolvedValueOnce(project);
+
+    const response = await supertest(app)
+      .patch('/milestones/milestone-1')
+      .send({ status: 'Complete' });
+
+    expect(response.status).toBe(403);
+    expect(milestoneControllerMock.update).not.toHaveBeenCalled();
+  });
+
+  it('returns 200 and updates the milestone status with article ids when user is a project lead', async () => {
+    const user = makeUser('Project Manager');
+    const app = makeApp(user);
+
+    milestoneControllerMock.fetchById.mockResolvedValueOnce({
+      projectId: project.id,
+    });
+    projectControllerMock.fetchById.mockResolvedValueOnce(project);
+    milestoneControllerMock.update.mockResolvedValueOnce(undefined);
+
+    const response = await supertest(app)
+      .patch('/milestones/milestone-1')
+      .send({ status: 'Complete', articleIds: ['ro-1', 'ro-2'] });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ success: true });
+    expect(milestoneControllerMock.update).toHaveBeenCalledWith(
+      'milestone-1',
+      { status: 'Complete', articleIds: ['ro-1', 'ro-2'] },
+      user.id,
+    );
+  });
+
+  it.each(['Complete', 'Terminated'])(
+    'accepts status=%s with article association',
+    async (status) => {
+      const user = makeUser('Project Manager');
+      const app = makeApp(user);
+
+      milestoneControllerMock.fetchById.mockResolvedValueOnce({
+        projectId: project.id,
+      });
+      projectControllerMock.fetchById.mockResolvedValueOnce(project);
+      milestoneControllerMock.update.mockResolvedValueOnce(undefined);
+
+      const response = await supertest(app)
+        .patch('/milestones/milestone-1')
+        .send({ status, articleIds: ['ro-1'] });
+
+      expect(response.status).toBe(200);
+      expect(milestoneControllerMock.update).toHaveBeenCalledWith(
+        'milestone-1',
+        { status, articleIds: ['ro-1'] },
+        user.id,
+      );
+    },
+  );
+
+  it('returns 400 when status value is not a valid milestone status', async () => {
+    const app = makeApp(makeUser('Project Manager'));
+
+    const response = await supertest(app)
+      .patch('/milestones/milestone-1')
+      .send({ status: 'NotARealStatus' });
+
+    expect(response.status).toBe(400);
+    expect(milestoneControllerMock.update).not.toHaveBeenCalled();
   });
 });

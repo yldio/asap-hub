@@ -14,4 +14,5 @@ export const aimsMilestonesDataProviderMock = {
   fetchProjectWithAimsDetailById: jest.fn(),
   fetchProjectIdBySupplementGrantId: jest.fn(),
   updateArticlesForMilestone: jest.fn(),
+  updateMilestone: jest.fn(),
 } as unknown as jest.Mocked<AimsMilestonesDataProvider>;

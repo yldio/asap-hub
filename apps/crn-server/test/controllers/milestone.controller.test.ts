@@ -112,4 +112,26 @@ describe('Milestone Controller', () => {
       ).toHaveBeenCalledWith('milestone-1', ['ro-1', 'ro-2'], 'user-1');
     });
   });
+
+  describe('update', () => {
+    it('delegates to the data provider with milestoneId, update payload and userId', async () => {
+      aimsMilestonesDataProviderMock.updateMilestone.mockResolvedValueOnce(
+        undefined,
+      );
+
+      await controller.update(
+        'milestone-1',
+        { status: 'Complete', articleIds: ['ro-1'] },
+        'user-1',
+      );
+
+      expect(
+        aimsMilestonesDataProviderMock.updateMilestone,
+      ).toHaveBeenCalledWith(
+        'milestone-1',
+        { status: 'Complete', articleIds: ['ro-1'] },
+        'user-1',
+      );
+    });
+  });
 });

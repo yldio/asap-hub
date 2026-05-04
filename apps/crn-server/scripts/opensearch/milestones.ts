@@ -147,14 +147,16 @@ const fetchAllMilestones = async (
 
 const buildAimNumbersStrings = (numbers: number[] | undefined) => {
   if (!numbers || numbers.length === 0) {
-    return { aimNumbersAsc: '', aimNumbersDesc: '' };
+    return { aimNumbersAsc: '', aimNumbersDesc: '', aimMax: 0, aimCount: 0 };
   }
 
   const sorted = [...numbers].sort((a, b) => a - b);
   const aimNumbersAsc = sorted.join(',');
   const aimNumbersDesc = [...sorted].reverse().join(',');
+  const aimMax = sorted[sorted.length - 1] ?? 0;
+  const aimCount = sorted.length;
 
-  return { aimNumbersAsc, aimNumbersDesc };
+  return { aimNumbersAsc, aimNumbersDesc, aimMax, aimCount };
 };
 
 export const exportMilestonesData = async (): Promise<
@@ -178,9 +180,8 @@ export const exportMilestonesData = async (): Promise<
     (milestone) => {
       const milestoneId = milestone.sys.id;
       const meta = milestoneMetaMap.get(milestoneId);
-      const { aimNumbersAsc, aimNumbersDesc } = buildAimNumbersStrings(
-        meta?.aimNumbers,
-      );
+      const { aimNumbersAsc, aimNumbersDesc, aimMax, aimCount } =
+        buildAimNumbersStrings(meta?.aimNumbers);
 
       const related = milestone.relatedArticlesCollection;
       const articleCount = related?.total ?? 0;
@@ -190,6 +191,8 @@ export const exportMilestonesData = async (): Promise<
         description: milestone.description?.trim() ?? '',
         aimNumbersAsc,
         aimNumbersDesc,
+        aimMax,
+        aimCount,
         status: milestone.status ?? '',
         articleCount,
         articlesDOI: extractDOIs(related?.items),

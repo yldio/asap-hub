@@ -68,6 +68,8 @@ describe('exportMilestonesData', () => {
       lastDate: '2025-02-01T00:00:00.000Z',
       aimNumbersAsc: '1,2',
       aimNumbersDesc: '2,1',
+      aimMax: 2,
+      aimCount: 2,
       articlesDOI: '10.1000/xyz123,10.1000/xyz456',
       projectId: 'project-1',
       projectName: 'Project Alpha',

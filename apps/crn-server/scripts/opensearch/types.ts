@@ -54,8 +54,12 @@ export type ProjectMilestonesDataObject = {
   description: string;
   /** Comma-separated aim numbers in ascending order, e.g. "1", "1,2", "2,3,4". */
   aimNumbersAsc: string;
-  /** Same aim numbers but reversed, for descending sort, e.g. "4,3,2". */
+  /** Same aim numbers but reversed, used for display when sorting descending, e.g. "4,3,2". */
   aimNumbersDesc: string;
+  /** Highest aim number in the milestone; 0 when no aims. Used as primary descending sort key. */
+  aimMax: number;
+  /** Number of aims linked to the milestone; 0 when no aims. Used as descending sort tiebreaker. */
+  aimCount: number;
   status: string;
   articleCount: number;
   /** Comma-separated list of unique related article DOIs for this milestone. */

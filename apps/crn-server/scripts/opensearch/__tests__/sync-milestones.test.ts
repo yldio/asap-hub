@@ -91,6 +91,8 @@ describe('Milestones sync integration', () => {
       expect(data.mapping.properties).toHaveProperty('description');
       expect(data.mapping.properties).toHaveProperty('aimNumbersAsc');
       expect(data.mapping.properties).toHaveProperty('aimNumbersDesc');
+      expect(data.mapping.properties).toHaveProperty('aimMax');
+      expect(data.mapping.properties).toHaveProperty('aimCount');
       expect(data.mapping.properties).toHaveProperty('status');
       expect(data.mapping.properties).toHaveProperty('articleCount');
       expect(data.mapping.properties).toHaveProperty('articlesDOI');

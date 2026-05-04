@@ -364,6 +364,8 @@ export const metricConfig: Record<Metrics, OpensearchMetricConfig> = {
         }),
         aimNumbersAsc: { type: 'keyword' },
         aimNumbersDesc: { type: 'keyword' },
+        aimMax: { type: 'integer' },
+        aimCount: { type: 'integer' },
         status: { type: 'keyword' },
         articleCount: { type: 'integer' },
         articlesDOI: { type: 'text' },

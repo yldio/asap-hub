@@ -660,6 +660,8 @@ describe('ProjectContentfulDataProvider', () => {
                 description: 'First milestone',
                 aimNumbersAsc: '1',
                 aimNumbersDesc: '1',
+                aimMax: 1,
+                aimCount: 1,
                 status: 'Complete',
                 articleCount: 4,
                 articlesDOI: '',
@@ -677,6 +679,8 @@ describe('ProjectContentfulDataProvider', () => {
                 status: 'In Progress',
                 aimNumbersAsc: '2,5',
                 aimNumbersDesc: '5,2',
+                aimMax: 5,
+                aimCount: 2,
                 articleCount: 2,
                 articlesDOI: '',
                 projectId: 'project-1',
@@ -745,6 +749,8 @@ describe('ProjectContentfulDataProvider', () => {
                 description: 'First milestone',
                 aimNumbersAsc: '1',
                 aimNumbersDesc: '1',
+                aimMax: 1,
+                aimCount: 1,
                 status: 'Complete',
                 articleCount: 4,
                 articlesDOI: '',
@@ -762,6 +768,8 @@ describe('ProjectContentfulDataProvider', () => {
                 status: 'In Progress',
                 aimNumbersAsc: '2,5',
                 aimNumbersDesc: '5,2',
+                aimMax: 5,
+                aimCount: 2,
                 articleCount: 2,
                 articlesDOI: '',
                 projectId: 'project-1',
@@ -842,7 +850,7 @@ describe('ProjectContentfulDataProvider', () => {
       );
     });
 
-    it('sorts by aimNumbersDesc when sort=aim_desc', async () => {
+    it('sorts by aimMax desc, aimCount asc, aimNumbersAsc asc when sort=aim_desc', async () => {
       opensearchProviderMock.search.mockResolvedValueOnce({
         hits: {
           hits: [
@@ -852,6 +860,8 @@ describe('ProjectContentfulDataProvider', () => {
                 description: 'First milestone',
                 aimNumbersAsc: '1,2',
                 aimNumbersDesc: '2,1',
+                aimMax: 2,
+                aimCount: 2,
                 status: 'Complete',
                 articleCount: 0,
                 articlesDOI: '',
@@ -875,7 +885,11 @@ describe('ProjectContentfulDataProvider', () => {
       expect(opensearchProviderMock.search).toHaveBeenCalledWith(
         expect.objectContaining({
           body: expect.objectContaining({
-            sort: [{ aimNumbersDesc: { order: 'asc' } }],
+            sort: [
+              { aimMax: { order: 'desc' } },
+              { aimCount: { order: 'asc' } },
+              { aimNumbersAsc: { order: 'asc' } },
+            ],
           }),
         }),
       );

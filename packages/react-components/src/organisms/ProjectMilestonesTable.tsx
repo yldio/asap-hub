@@ -5,7 +5,7 @@ import {
   MilestoneSortOption,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { ComponentProps, FC } from 'react';
+import { ComponentProps, FC, useMemo } from 'react';
 import { Card, Headline3, Paragraph } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
@@ -169,6 +169,21 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
 
+  const displayedMilestones = useMemo(
+    () =>
+      sort === 'aim_desc'
+        ? milestones.map((milestone) =>
+            milestone.aims
+              ? {
+                  ...milestone,
+                  aims: milestone.aims.split(',').reverse().join(','),
+                }
+              : milestone,
+          )
+        : milestones,
+    [milestones, sort],
+  );
+
   const resultsFoundText =
     total === 1 ? `${total} result found` : `${total} results found`;
 
@@ -228,23 +243,16 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
               <div css={[headerLabelStyles, statusHeaderStyles]}>Status</div>
             </div>
             <div css={milestonesListStyles}>
-              {milestones.map((milestone, index) => (
+              {displayedMilestones.map((milestone, index) => (
                 <div
                   key={milestone.id}
                   css={milestoneRowWrapperStyles(
                     index,
-                    index === milestones.length - 1,
+                    index === displayedMilestones.length - 1,
                   )}
                 >
                   <Milestone
-                    milestone={
-                      sort === 'aim_desc' && milestone.aims
-                        ? {
-                            ...milestone,
-                            aims: milestone.aims.split(',').reverse().join(','),
-                          }
-                        : milestone
-                    }
+                    milestone={milestone}
                     fetchLinkedArticles={fetchLinkedArticles}
                     isLead={isLead}
                     loadArticleOptions={loadArticleOptions}

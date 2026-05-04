@@ -1086,20 +1086,28 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     };
   }
 
-  async createMilestone(data: MilestoneCreateRequest): Promise<string> {
+  async createMilestone(
+    data: MilestoneCreateRequest,
+    userId: string,
+  ): Promise<string> {
     if (!this.getRestClient) {
       throw new Error('REST client not available');
     }
 
     const environment = await this.getRestClient();
 
+    const articleIds = data.relatedArticleIds ?? [];
+    const hasArticles = articleIds.length > 0;
+
     const milestoneEntry = await environment.createEntry('milestones', {
       fields: addLocaleToFields({
         description: data.description,
         status: data.status,
-        relatedArticles: data.relatedArticleIds?.length
-          ? data.relatedArticleIds.map((id: string) => getLinkEntity(id))
-          : [],
+        relatedArticles: articleIds.map((id: string) => getLinkEntity(id)),
+        ...(hasArticles && {
+          outputsLinkedAt: new Date(),
+          outputsLinkedBy: getLinkEntity(userId),
+        }),
       }),
     });
 

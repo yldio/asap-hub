@@ -1086,7 +1086,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       const {
         _source: {
           aimNumbersAsc,
-          aimNumbersDesc,
+          aimNumbersDesc: _aimNumbersDesc,
           aimMax: _aimMax,
           aimCount: _aimCount,
           status,
@@ -1096,7 +1096,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
       return {
         ...fields,
-        aims: isDescAimsSort ? aimNumbersDesc : aimNumbersAsc,
+        aims: aimNumbersAsc,
         status: status as MilestoneStatus,
       };
     });

@@ -891,7 +891,7 @@ describe('ProjectContentfulDataProvider', () => {
           }),
         }),
       );
-      expect(result.items[0]?.aims).toBe('2,1');
+      expect(result.items[0]?.aims).toBe('1,2');
     });
 
     it('sorts by aimNumbersAsc when sort=aim_asc explicitly', async () => {

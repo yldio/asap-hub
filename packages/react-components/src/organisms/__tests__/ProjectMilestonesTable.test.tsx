@@ -227,6 +227,53 @@ describe('ProjectMilestonesTable', () => {
     ).toBeInTheDocument();
   });
 
+  it('reverses aim badge order when sort is aim_desc', () => {
+    const milestoneWithAims: Milestone = {
+      id: 'm-aims',
+      description: 'With aims',
+      status: 'In Progress',
+      articleCount: 0,
+      aims: '1,2,3',
+    };
+    const { rerender } = render(
+      <ProjectMilestonesTable
+        milestones={[milestoneWithAims]}
+        total={1}
+        hasAppliedSearch={false}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
+        pageControlsProps={pageControlsProps}
+        selectedGrantType={'original'}
+        sort="aim_asc"
+        onToggleSort={mockOnToggleSort}
+      />,
+    );
+    const ascBadges = screen.getAllByText(/^#\d+$/).map((el) => el.textContent);
+    expect(ascBadges).toEqual(['#1', '#2', '#3']);
+
+    rerender(
+      <ProjectMilestonesTable
+        milestones={[milestoneWithAims]}
+        total={1}
+        hasAppliedSearch={false}
+        isLead={false}
+        loadArticleOptions={mockLoadArticleOptions}
+        fetchLinkedArticles={mockFetchArticles}
+        onSaveArticles={mockOnSaveArticles}
+        pageControlsProps={pageControlsProps}
+        selectedGrantType={'original'}
+        sort="aim_desc"
+        onToggleSort={mockOnToggleSort}
+      />,
+    );
+    const descBadges = screen
+      .getAllByText(/^#\d+$/)
+      .map((el) => el.textContent);
+    expect(descBadges).toEqual(['#3', '#2', '#1']);
+  });
+
   it('passes onSaveArticles down to each Milestone row', async () => {
     render(
       <ProjectMilestonesTable

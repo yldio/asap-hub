@@ -237,7 +237,14 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
                   )}
                 >
                   <Milestone
-                    milestone={milestone}
+                    milestone={
+                      sort === 'aim_desc' && milestone.aims
+                        ? {
+                            ...milestone,
+                            aims: milestone.aims.split(',').reverse().join(','),
+                          }
+                        : milestone
+                    }
                     fetchLinkedArticles={fetchLinkedArticles}
                     isLead={isLead}
                     loadArticleOptions={loadArticleOptions}

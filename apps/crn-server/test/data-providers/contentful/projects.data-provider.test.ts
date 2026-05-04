@@ -642,8 +642,6 @@ describe('ProjectContentfulDataProvider', () => {
     const emptySearchResponse = { hits: { hits: [] } };
     const defaultProjectMilestonesOptions: FetchProjectMilestonesOptions = {
       grantType: 'supplement',
-      skip: 0,
-      take: 10,
     };
 
     beforeEach(() => {
@@ -715,8 +713,8 @@ describe('ProjectContentfulDataProvider', () => {
               },
             },
             sort: [{ aimNumbersAsc: { order: 'asc' } }],
-            from: defaultProjectMilestonesOptions.skip,
-            size: defaultProjectMilestonesOptions.take,
+            from: 0,
+            size: 10,
           }),
         }),
       );

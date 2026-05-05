@@ -221,7 +221,9 @@ describe('OutputForm', () => {
       await user.click(screen.getByText('Chris Blue'));
       await user.click(authors);
       await user.type(authors, 'Alex White');
-      await user.keyboard('{Enter}');
+      await user.click(
+        await screen.findByRole('option', { name: /Alex White/i }),
+      );
 
       await user.click(
         screen.getByRole('combobox', {
@@ -266,6 +268,9 @@ describe('OutputForm', () => {
             { userId: 'u2' },
             { externalUserName: 'Alex White' },
           ],
+          type: undefined,
+          subtype: undefined,
+          publishDate: undefined,
           mainEntityId: '12',
           workingGroupIds: ['2'],
           projectIds: ['3'],

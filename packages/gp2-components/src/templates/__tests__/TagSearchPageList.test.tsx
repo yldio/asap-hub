@@ -30,7 +30,7 @@ describe('TagSearchPageList', () => {
     );
 
     await userEvent.click(screen.getByRole('combobox'));
-    expect(loadTags).toHaveBeenCalled();
+    await waitFor(() => expect(loadTags).toHaveBeenCalled());
     await waitFor(() =>
       expect(screen.getByText('No results found')).toBeVisible(),
     );

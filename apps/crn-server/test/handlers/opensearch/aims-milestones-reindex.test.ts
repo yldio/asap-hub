@@ -130,8 +130,7 @@ describe('aims-milestones-reindex', () => {
             id: 'ms-1',
             description: 'First milestone',
             status: 'In Progress',
-            aimNumbersAsc: '1',
-            aimNumbersDesc: '1',
+            aimNumbers: '1',
             projectId: 'project-1',
             projectName: 'Project Alpha',
             articleCount: 1,
@@ -167,7 +166,7 @@ describe('aims-milestones-reindex', () => {
         [
           expect.objectContaining({
             grantType: 'supplement',
-            aimNumbersAsc: '1',
+            aimNumbers: '1',
           }),
         ],
       );
@@ -190,7 +189,7 @@ describe('aims-milestones-reindex', () => {
         'project-milestones',
         [
           expect.objectContaining({
-            aimNumbersAsc: '0',
+            aimNumbers: '0',
           }),
         ],
       );

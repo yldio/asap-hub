@@ -656,10 +656,7 @@ describe('ProjectContentfulDataProvider', () => {
               _source: {
                 id: 'milestone-1',
                 description: 'First milestone',
-                aimNumbersAsc: '1',
-                aimNumbersDesc: '1',
-                aimMax: 1,
-                aimCount: 1,
+                aimNumbers: '1',
                 status: 'Complete',
                 articleCount: 4,
                 articlesDOI: '',
@@ -675,10 +672,7 @@ describe('ProjectContentfulDataProvider', () => {
                 id: 'milestone-2',
                 description: 'Second milestone',
                 status: 'In Progress',
-                aimNumbersAsc: '2,5',
-                aimNumbersDesc: '5,2',
-                aimMax: 5,
-                aimCount: 2,
+                aimNumbers: '2,5',
                 articleCount: 2,
                 articlesDOI: '',
                 projectId: 'project-1',
@@ -712,7 +706,7 @@ describe('ProjectContentfulDataProvider', () => {
                 ],
               },
             },
-            sort: [{ aimNumbersAsc: { order: 'asc' } }],
+            sort: [{ aimNumbersSortAsc: { order: 'asc' } }],
             from: 0,
             size: 10,
           }),
@@ -745,10 +739,7 @@ describe('ProjectContentfulDataProvider', () => {
               _source: {
                 id: 'milestone-1',
                 description: 'First milestone',
-                aimNumbersAsc: '1',
-                aimNumbersDesc: '1',
-                aimMax: 1,
-                aimCount: 1,
+                aimNumbers: '1',
                 status: 'Complete',
                 articleCount: 4,
                 articlesDOI: '',
@@ -764,10 +755,7 @@ describe('ProjectContentfulDataProvider', () => {
                 id: 'milestone-2',
                 description: 'Second milestone',
                 status: 'In Progress',
-                aimNumbersAsc: '2,5',
-                aimNumbersDesc: '5,2',
-                aimMax: 5,
-                aimCount: 2,
+                aimNumbers: '2,5',
                 articleCount: 2,
                 articlesDOI: '',
                 projectId: 'project-1',
@@ -801,7 +789,7 @@ describe('ProjectContentfulDataProvider', () => {
                 filter: [{ term: { projectId: 'project-with-milestones' } }],
               },
             },
-            sort: [{ aimNumbersAsc: { order: 'asc' } }],
+            sort: [{ aimNumbersSortAsc: { order: 'asc' } }],
             from: 10,
             size: 5,
           }),
@@ -848,7 +836,7 @@ describe('ProjectContentfulDataProvider', () => {
       );
     });
 
-    it('sorts by aimMax desc, aimCount asc, aimNumbersAsc asc when sort=aim_desc', async () => {
+    it('sorts by aimNumbersSortDesc runtime field when sort=aim_desc', async () => {
       opensearchProviderMock.search.mockResolvedValueOnce({
         hits: {
           hits: [
@@ -856,10 +844,7 @@ describe('ProjectContentfulDataProvider', () => {
               _source: {
                 id: 'milestone-1',
                 description: 'First milestone',
-                aimNumbersAsc: '1,2',
-                aimNumbersDesc: '2,1',
-                aimMax: 2,
-                aimCount: 2,
+                aimNumbers: '1,2',
                 status: 'Complete',
                 articleCount: 0,
                 articlesDOI: '',
@@ -883,18 +868,19 @@ describe('ProjectContentfulDataProvider', () => {
       expect(opensearchProviderMock.search).toHaveBeenCalledWith(
         expect.objectContaining({
           body: expect.objectContaining({
-            sort: [
-              { aimMax: { order: 'desc' } },
-              { aimCount: { order: 'asc' } },
-              { aimNumbersAsc: { order: 'asc' } },
-            ],
+            runtime_mappings: expect.objectContaining({
+              aimNumbersSortDesc: expect.objectContaining({
+                type: 'keyword',
+              }),
+            }),
+            sort: [{ aimNumbersSortDesc: { order: 'asc' } }],
           }),
         }),
       );
       expect(result.items[0]?.aims).toBe('1,2');
     });
 
-    it('sorts by aimNumbersAsc when sort=aim_asc explicitly', async () => {
+    it('sorts by aimNumbersSortAsc runtime field when sort=aim_asc explicitly', async () => {
       await dataProvider.fetchProjectMilestones('project-with-milestones', {
         ...defaultProjectMilestonesOptions,
         sort: 'aim_asc',
@@ -903,7 +889,12 @@ describe('ProjectContentfulDataProvider', () => {
       expect(opensearchProviderMock.search).toHaveBeenCalledWith(
         expect.objectContaining({
           body: expect.objectContaining({
-            sort: [{ aimNumbersAsc: { order: 'asc' } }],
+            runtime_mappings: expect.objectContaining({
+              aimNumbersSortAsc: expect.objectContaining({
+                type: 'keyword',
+              }),
+            }),
+            sort: [{ aimNumbersSortAsc: { order: 'asc' } }],
           }),
         }),
       );

@@ -102,10 +102,7 @@ const buildMilestoneDocument = (
   return {
     id: milestone.sys.id,
     description: milestone.description?.trim() ?? '',
-    aimNumbersAsc: sorted.join(','),
-    aimNumbersDesc: [...sorted].reverse().join(','),
-    aimMax: sorted.length ? sorted[sorted.length - 1] ?? 0 : 0,
-    aimCount: sorted.length,
+    aimNumbers: sorted.join(','),
     status: milestone.status ?? '',
     articleCount: related?.total ?? 0,
     articlesDOI: extractDOIs(related?.items),

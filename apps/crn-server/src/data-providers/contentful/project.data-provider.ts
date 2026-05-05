@@ -61,6 +61,10 @@ import {
 import { haveSameIds, getCleanProjectTools } from '../../utils/project';
 import logger from '../../utils/logger';
 import OpensearchProvider from '../opensearch.data-provider';
+import {
+  aimNumbersAscSortScript,
+  aimNumbersDescSortScript,
+} from '../opensearch/aim-numbers-sort-scripts';
 import { deriveAimStatus } from '../../utils/aim-status';
 
 import {
@@ -1043,17 +1047,23 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     ]);
 
     const isDescAimsSort = sort === 'aim_desc';
-    const sortClause: OpensearchRequest['sort'] = isDescAimsSort
-      ? [
-          { aimMax: { order: 'desc' } },
-          { aimCount: { order: 'asc' } },
-          { aimNumbersAsc: { order: 'asc' } },
-        ]
-      : [{ aimNumbersAsc: { order: 'asc' } }];
+    const sortField = isDescAimsSort
+      ? 'aimNumbersSortDesc'
+      : 'aimNumbersSortAsc';
 
     const response = (await this.opensearchProvider.search({
       index: 'project-milestones',
       body: {
+        runtime_mappings: {
+          aimNumbersSortAsc: {
+            type: 'keyword',
+            script: { source: aimNumbersAscSortScript },
+          },
+          aimNumbersSortDesc: {
+            type: 'keyword',
+            script: { source: aimNumbersDescSortScript },
+          },
+        },
         query: {
           bool: {
             filter: filters,
@@ -1074,29 +1084,22 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
               : {}),
           },
         },
-        sort: sortClause,
+        sort: [{ [sortField]: { order: 'asc' } }],
         from: skip,
         size: take,
-      } satisfies OpensearchRequest,
+      } as unknown as OpensearchRequest,
     })) as unknown as OpensearchHitsResponse<ProjectMilestonesDataObject>;
 
     const hits = response.hits?.hits ?? [];
 
     const items: Milestone[] = hits.map((hit) => {
       const {
-        _source: {
-          aimNumbersAsc,
-          aimNumbersDesc: _aimNumbersDesc,
-          aimMax: _aimMax,
-          aimCount: _aimCount,
-          status,
-          ...fields
-        },
+        _source: { aimNumbers, status, ...fields },
       } = hit;
 
       return {
         ...fields,
-        aims: aimNumbersAsc,
+        aims: aimNumbers,
         status: status as MilestoneStatus,
       };
     });

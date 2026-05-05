@@ -1047,23 +1047,13 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     ]);
 
     const isDescAimsSort = sort === 'aim_desc';
-    const sortField = isDescAimsSort
-      ? 'aimNumbersSortDesc'
-      : 'aimNumbersSortAsc';
+    const sortScriptSource = isDescAimsSort
+      ? aimNumbersDescSortScript
+      : aimNumbersAscSortScript;
 
     const response = (await this.opensearchProvider.search({
       index: 'project-milestones',
       body: {
-        runtime_mappings: {
-          aimNumbersSortAsc: {
-            type: 'keyword',
-            script: { source: aimNumbersAscSortScript },
-          },
-          aimNumbersSortDesc: {
-            type: 'keyword',
-            script: { source: aimNumbersDescSortScript },
-          },
-        },
         query: {
           bool: {
             filter: filters,
@@ -1084,10 +1074,18 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
               : {}),
           },
         },
-        sort: [{ [sortField]: { order: 'asc' } }],
+        sort: [
+          {
+            _script: {
+              type: 'string',
+              order: 'asc',
+              script: { source: sortScriptSource },
+            },
+          },
+        ],
         from: skip,
         size: take,
-      } as unknown as OpensearchRequest,
+      } satisfies OpensearchRequest,
     })) as unknown as OpensearchHitsResponse<ProjectMilestonesDataObject>;
 
     const hits = response.hits?.hits ?? [];

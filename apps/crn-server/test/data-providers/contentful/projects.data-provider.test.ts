@@ -706,7 +706,17 @@ describe('ProjectContentfulDataProvider', () => {
                 ],
               },
             },
-            sort: [{ aimNumbersSortAsc: { order: 'asc' } }],
+            sort: [
+              expect.objectContaining({
+                _script: expect.objectContaining({
+                  type: 'string',
+                  order: 'asc',
+                  script: expect.objectContaining({
+                    source: expect.stringContaining("doc['aimNumbers']"),
+                  }),
+                }),
+              }),
+            ],
             from: 0,
             size: 10,
           }),
@@ -789,7 +799,14 @@ describe('ProjectContentfulDataProvider', () => {
                 filter: [{ term: { projectId: 'project-with-milestones' } }],
               },
             },
-            sort: [{ aimNumbersSortAsc: { order: 'asc' } }],
+            sort: [
+              expect.objectContaining({
+                _script: expect.objectContaining({
+                  type: 'string',
+                  order: 'asc',
+                }),
+              }),
+            ],
             from: 10,
             size: 5,
           }),
@@ -836,7 +853,7 @@ describe('ProjectContentfulDataProvider', () => {
       );
     });
 
-    it('sorts by aimNumbersSortDesc runtime field when sort=aim_desc', async () => {
+    it('sorts using descending aim numbers script when sort=aim_desc', async () => {
       opensearchProviderMock.search.mockResolvedValueOnce({
         hits: {
           hits: [
@@ -868,19 +885,24 @@ describe('ProjectContentfulDataProvider', () => {
       expect(opensearchProviderMock.search).toHaveBeenCalledWith(
         expect.objectContaining({
           body: expect.objectContaining({
-            runtime_mappings: expect.objectContaining({
-              aimNumbersSortDesc: expect.objectContaining({
-                type: 'keyword',
+            sort: [
+              expect.objectContaining({
+                _script: expect.objectContaining({
+                  type: 'string',
+                  order: 'asc',
+                  script: expect.objectContaining({
+                    source: expect.stringContaining('999 - max'),
+                  }),
+                }),
               }),
-            }),
-            sort: [{ aimNumbersSortDesc: { order: 'asc' } }],
+            ],
           }),
         }),
       );
       expect(result.items[0]?.aims).toBe('1,2');
     });
 
-    it('sorts by aimNumbersSortAsc runtime field when sort=aim_asc explicitly', async () => {
+    it('sorts using ascending aim numbers script when sort=aim_asc explicitly', async () => {
       await dataProvider.fetchProjectMilestones('project-with-milestones', {
         ...defaultProjectMilestonesOptions,
         sort: 'aim_asc',
@@ -889,12 +911,17 @@ describe('ProjectContentfulDataProvider', () => {
       expect(opensearchProviderMock.search).toHaveBeenCalledWith(
         expect.objectContaining({
           body: expect.objectContaining({
-            runtime_mappings: expect.objectContaining({
-              aimNumbersSortAsc: expect.objectContaining({
-                type: 'keyword',
+            sort: [
+              expect.objectContaining({
+                _script: expect.objectContaining({
+                  type: 'string',
+                  order: 'asc',
+                  script: expect.objectContaining({
+                    source: expect.stringContaining("doc['aimNumbers']"),
+                  }),
+                }),
               }),
-            }),
-            sort: [{ aimNumbersSortAsc: { order: 'asc' } }],
+            ],
           }),
         }),
       );

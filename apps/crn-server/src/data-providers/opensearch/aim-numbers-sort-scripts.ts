@@ -1,20 +1,20 @@
 export const aimNumbersAscSortScript = `
-  if (doc['aimNumbers'].size() == 0) { emit(''); return; }
+  if (doc['aimNumbers'].size() == 0) { return ''; }
   def s = doc['aimNumbers'].value;
-  if (s == null || s.isEmpty()) { emit(''); return; }
+  if (s == null || s.isEmpty()) { return ''; }
   def parts = s.splitOnToken(',');
   def out = new StringBuilder();
   for (int i = 0; i < parts.length; i++) {
     if (i > 0) out.append(',');
     out.append(String.format('%03d', new def[]{ Integer.parseInt(parts[i]) }));
   }
-  emit(out.toString());
+  return out.toString();
 `;
 
 export const aimNumbersDescSortScript = `
-  if (doc['aimNumbers'].size() == 0) { emit('999|999|'); return; }
+  if (doc['aimNumbers'].size() == 0) { return '999|999|'; }
   def s = doc['aimNumbers'].value;
-  if (s == null || s.isEmpty()) { emit('999|999|'); return; }
+  if (s == null || s.isEmpty()) { return '999|999|'; }
   def parts = s.splitOnToken(',');
   int max = 0;
   for (int i = 0; i < parts.length; i++) {
@@ -28,5 +28,5 @@ export const aimNumbersDescSortScript = `
     if (i > 0) aims.append(',');
     aims.append(String.format('%03d', new def[]{ Integer.parseInt(parts[i]) }));
   }
-  emit(String.format('%03d|%03d|%s', new def[]{ invMax, count, aims.toString() }));
+  return String.format('%03d|%03d|%s', new def[]{ invMax, count, aims.toString() });
 `;

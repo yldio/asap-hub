@@ -186,7 +186,7 @@ const Compliance: React.FC = () => {
   return (
     <article>
       <SearchField
-        placeholder="Enter team name, ID, assigned users..."
+        placeholder="Enter project name, team name, ID, assigned users..."
         value={searchQuery}
         onChange={setSearchQuery}
       />

@@ -587,6 +587,8 @@ export const exportMetricToOpensearch = async <T extends Metrics>(
       documents,
       mapping: config.mapping,
     }),
+    useDocumentIdAsOpensearchId:
+      metric === 'project-aims' || metric === 'project-milestones',
   });
 
   console.log(

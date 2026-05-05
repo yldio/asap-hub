@@ -1362,7 +1362,6 @@ const serverlessConfig: AWS = {
               'Fn::GetAtt': ['ComplianceDocSyncQueue', 'Arn'],
             },
             batchSize: 5,
-            maximumConcurrency: 1,
           },
         },
       ],

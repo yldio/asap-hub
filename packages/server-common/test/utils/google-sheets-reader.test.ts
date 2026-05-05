@@ -327,11 +327,9 @@ describe('Google Sheets Reader', () => {
     const mockSpreadsheetId = 'test-spreadsheet-id';
 
     it('should return title of the sheet at index specified', async () => {
-      mockSheetsClient.spreadsheets.get = jest
-        .fn()
-        .mockResolvedValue({
-          data: { sheets: [{ properties: { title: 'First Sheet' } }] },
-        });
+      mockSheetsClient.spreadsheets.get = jest.fn().mockResolvedValue({
+        data: { sheets: [{ properties: { title: 'First Sheet' } }] },
+      });
 
       const result = await getSheetNameForRange(
         mockSheetsClient,

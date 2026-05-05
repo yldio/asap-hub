@@ -20,18 +20,17 @@ jest.mock('@asap-hub/server-common', () => {
 });
 const sheetsMock = {
   spreadsheets: {
-    get: 
-      jest.fn().mockResolvedValue({
-        data: {
-          sheets: [
-            {
-              properties: {
-                title: "FirstSheet",
-              },
+    get: jest.fn().mockResolvedValue({
+      data: {
+        sheets: [
+          {
+            properties: {
+              title: 'FirstSheet',
             },
-          ],
-        },
-      }),
+          },
+        ],
+      },
+    }),
     values: {
       get: jest.fn(),
       batchUpdate: jest.fn(),

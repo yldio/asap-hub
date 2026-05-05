@@ -186,4 +186,3 @@ export const getSheetNameForRange = async (
 
   return `'${sheet.properties.title.replace(/'/g, "''")}'`;
 };
-

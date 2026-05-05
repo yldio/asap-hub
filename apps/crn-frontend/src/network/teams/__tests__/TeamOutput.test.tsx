@@ -332,9 +332,13 @@ it('can publish a form when the data is valid', async () => {
   );
 
   await user.click(screen.getByRole('combobox', { name: /Labs/i }));
-  await user.click(screen.getByText('Example 1 Lab'));
+  await user.click(
+    await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
+  );
   await user.click(screen.getByRole('combobox', { name: /Authors/i }));
-  await user.click(screen.getByText('Person A 3'));
+  await user.click(
+    await screen.findByText('Person A 3', {}, { timeout: 5000 }),
+  );
 
   await publish();
 
@@ -406,9 +410,13 @@ it('can save draft when form data is valid', async () => {
   );
 
   await user.click(screen.getByRole('combobox', { name: /Labs/i }));
-  await user.click(screen.getByText('Example 1 Lab'));
+  await user.click(
+    await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
+  );
   await user.click(screen.getByRole('combobox', { name: /Authors/i }));
-  await user.click(screen.getByText('Person A 3'));
+  await user.click(
+    await screen.findByText('Person A 3', {}, { timeout: 5000 }),
+  );
 
   await saveDraft();
 
@@ -1185,9 +1193,16 @@ describe('manuscript outputs flow', () => {
 
     const input = screen.getByRole('combobox');
     await user.type(input, 'Version One');
-    await user.keyboard('{Tab}');
 
-    expect(screen.getByRole('button', { name: /import/i })).toBeEnabled();
+    await user.click(
+      await screen.findByText('Version One', {}, { timeout: 5000 }),
+    );
+
+    await waitFor(
+      () =>
+        expect(screen.getByRole('button', { name: /import/i })).toBeEnabled(),
+      { timeout: 5000 },
+    );
   });
 
   it('can publish a form with selected manuscript version data', async () => {

@@ -153,6 +153,9 @@ type ProjectProfileWorkspaceProps = Pick<
       newEligibilityReason: Set<string>,
     ) => void;
     readonly createManuscriptHref?: string;
+    readonly getEditManuscriptHref?: (manuscriptId: string) => string;
+    readonly getResubmitManuscriptHref?: (manuscriptId: string) => string;
+    readonly getCreateComplianceReportHref?: (manuscriptId: string) => string;
   };
 
 const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
@@ -180,6 +183,9 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
   targetManuscriptId,
   setEligibilityReasons,
   createManuscriptHref,
+  getEditManuscriptHref,
+  getResubmitManuscriptHref,
+  getCreateComplianceReportHref,
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const navigate = useNavigate();
@@ -277,6 +283,13 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                             onReplyToDiscussion={onReplyToDiscussion}
                             onMarkDiscussionAsRead={onMarkDiscussionAsRead}
                             showTeamName={false}
+                            getEditManuscriptHref={getEditManuscriptHref}
+                            getResubmitManuscriptHref={
+                              getResubmitManuscriptHref
+                            }
+                            getCreateComplianceReportHref={
+                              getCreateComplianceReportHref
+                            }
                             {...(manuscriptId === targetManuscriptId
                               ? { isTargetManuscript: true }
                               : {})}
@@ -317,6 +330,13 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                             onReplyToDiscussion={onReplyToDiscussion}
                             onMarkDiscussionAsRead={onMarkDiscussionAsRead}
                             showTeamName={false}
+                            getEditManuscriptHref={getEditManuscriptHref}
+                            getResubmitManuscriptHref={
+                              getResubmitManuscriptHref
+                            }
+                            getCreateComplianceReportHref={
+                              getCreateComplianceReportHref
+                            }
                           />
                         </div>
                       ))}
@@ -346,6 +366,11 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                     onReplyToDiscussion={onReplyToDiscussion}
                     onMarkDiscussionAsRead={onMarkDiscussionAsRead}
                     showTeamName={false}
+                    getEditManuscriptHref={getEditManuscriptHref}
+                    getResubmitManuscriptHref={getResubmitManuscriptHref}
+                    getCreateComplianceReportHref={
+                      getCreateComplianceReportHref
+                    }
                     {...(manuscriptId === targetManuscriptId
                       ? { isTargetManuscript: true }
                       : {})}

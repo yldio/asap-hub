@@ -798,6 +798,7 @@ const OutputForm: React.FC<OutputFormProps> = ({
                       enabled={!isSaving}
                       placeholder="Start typing..."
                       loadOptions={getAuthorSuggestions}
+                      defaultOptions
                       externalLabel="Non GP2"
                       onChange={setAuthors}
                       values={newAuthors}

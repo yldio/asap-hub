@@ -32801,6 +32801,11 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
   }>;
 };
 
+export type ManuscriptProjectFragment = Pick<
+  Projects,
+  'title' | 'projectType' | 'projectId' | 'grantId'
+> & { sys: Pick<Sys, 'id'> };
+
 export type ManuscriptsContentFragment = Pick<
   Manuscripts,
   | 'title'
@@ -32814,6 +32819,11 @@ export type ManuscriptsContentFragment = Pick<
   | 'declinedReason'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
+  project?: Maybe<
+    Pick<Projects, 'title' | 'projectType' | 'projectId' | 'grantId'> & {
+      sys: Pick<Sys, 'id'>;
+    }
+  >;
   impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
   categoriesCollection?: Maybe<{
     items: Array<Maybe<Pick<Category, 'name'> & { sys: Pick<Sys, 'id'> }>>;
@@ -33151,7 +33161,12 @@ export type FetchManuscriptByIdQuery = {
                     linkedFrom?: Maybe<{
                       projectsCollection?: Maybe<{
                         items: Array<
-                          Maybe<Pick<Projects, 'projectId' | 'grantId'>>
+                          Maybe<
+                            Pick<
+                              Projects,
+                              'title' | 'projectType' | 'projectId' | 'grantId'
+                            > & { sys: Pick<Sys, 'id'> }
+                          >
                         >;
                       }>;
                     }>;
@@ -33163,6 +33178,11 @@ export type FetchManuscriptByIdQuery = {
         >;
       }>;
       sys: Pick<Sys, 'id' | 'publishedVersion'>;
+      project?: Maybe<
+        Pick<Projects, 'title' | 'projectType' | 'projectId' | 'grantId'> & {
+          sys: Pick<Sys, 'id'>;
+        }
+      >;
       impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
       categoriesCollection?: Maybe<{
         items: Array<Maybe<Pick<Category, 'name'> & { sys: Pick<Sys, 'id'> }>>;
@@ -33424,6 +33444,12 @@ export type FetchManuscriptsQuery = {
             | 'declinedReason'
           > & {
             sys: Pick<Sys, 'id'>;
+            project?: Maybe<
+              Pick<
+                Projects,
+                'title' | 'projectType' | 'projectId' | 'grantId'
+              > & { sys: Pick<Sys, 'id'> }
+            >;
             impact?: Maybe<Pick<Impact, 'name'> & { sys: Pick<Sys, 'id'> }>;
             categoriesCollection?: Maybe<{
               items: Array<
@@ -33452,7 +33478,15 @@ export type FetchManuscriptsQuery = {
                             linkedFrom?: Maybe<{
                               projectsCollection?: Maybe<{
                                 items: Array<
-                                  Maybe<Pick<Projects, 'projectId' | 'grantId'>>
+                                  Maybe<
+                                    Pick<
+                                      Projects,
+                                      | 'title'
+                                      | 'projectType'
+                                      | 'projectId'
+                                      | 'grantId'
+                                    > & { sys: Pick<Sys, 'id'> }
+                                  >
                                 >;
                               }>;
                             }>;
@@ -41809,6 +41843,38 @@ export const VersionsContentFragmentDoc = {
     ...UserAuthorsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<VersionsContentFragment, unknown>;
+export const ManuscriptProjectFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'ManuscriptProject' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Projects' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'projectType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'projectId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'grantId' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ManuscriptProjectFragment, unknown>;
 export const ManuscriptsContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -41851,6 +41917,19 @@ export const ManuscriptsContentFragmentDoc = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'apcAmountPaid' } },
           { kind: 'Field', name: { kind: 'Name', value: 'declinedReason' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'project' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ManuscriptProject' },
+                },
+              ],
+            },
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'impact' },
@@ -43555,6 +43634,7 @@ export const ManuscriptsContentFragmentDoc = {
         ],
       },
     },
+    ...ManuscriptProjectFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<ManuscriptsContentFragment, unknown>;
 export const NewsContentFragmentDoc = {
@@ -60655,19 +60735,11 @@ export const FetchManuscriptByIdDocument = {
                                                               kind: 'SelectionSet',
                                                               selections: [
                                                                 {
-                                                                  kind: 'Field',
+                                                                  kind: 'FragmentSpread',
                                                                   name: {
                                                                     kind: 'Name',
                                                                     value:
-                                                                      'projectId',
-                                                                  },
-                                                                },
-                                                                {
-                                                                  kind: 'Field',
-                                                                  name: {
-                                                                    kind: 'Name',
-                                                                    value:
-                                                                      'grantId',
+                                                                      'ManuscriptProject',
                                                                   },
                                                                 },
                                                               ],
@@ -60702,6 +60774,7 @@ export const FetchManuscriptByIdDocument = {
     },
     ...ManuscriptsContentFragmentDoc.definitions,
     ...DiscussionsContentFragmentDoc.definitions,
+    ...ManuscriptProjectFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchManuscriptByIdQuery,
@@ -60824,6 +60897,22 @@ export const FetchManuscriptsDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'declinedReason' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'project' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'ManuscriptProject',
+                              },
+                            },
+                          ],
+                        },
                       },
                       {
                         kind: 'Field',
@@ -61078,19 +61167,11 @@ export const FetchManuscriptsDocument = {
                                                                       selections:
                                                                         [
                                                                           {
-                                                                            kind: 'Field',
+                                                                            kind: 'FragmentSpread',
                                                                             name: {
                                                                               kind: 'Name',
                                                                               value:
-                                                                                'projectId',
-                                                                            },
-                                                                          },
-                                                                          {
-                                                                            kind: 'Field',
-                                                                            name: {
-                                                                              kind: 'Name',
-                                                                              value:
-                                                                                'grantId',
+                                                                                'ManuscriptProject',
                                                                             },
                                                                           },
                                                                         ],
@@ -61191,6 +61272,7 @@ export const FetchManuscriptsDocument = {
         ],
       },
     },
+    ...ManuscriptProjectFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<
   FetchManuscriptsQuery,

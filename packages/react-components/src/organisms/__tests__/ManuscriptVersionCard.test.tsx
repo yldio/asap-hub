@@ -201,6 +201,24 @@ describe('edit', () => {
     await user.click(editButton);
     // Navigation is tested indirectly - the button should trigger useNavigate without errors
   });
+
+  it('uses getEditManuscriptHref when provided to build the edit URL', () => {
+    const getEditManuscriptHref = jest.fn(
+      (manuscriptId: string) =>
+        `/projects/discovery/project-1/workspace/edit-manuscript/${manuscriptId}`,
+    );
+    render(
+      <MemoryRouter>
+        <ManuscriptVersionCard
+          {...props}
+          isActiveVersion
+          isManuscriptContributor
+          getEditManuscriptHref={getEditManuscriptHref}
+        />
+      </MemoryRouter>,
+    );
+    expect(getEditManuscriptHref).toHaveBeenCalledWith(props.manuscriptId);
+  });
 });
 
 it('displays Additional Information section when present', async () => {

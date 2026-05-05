@@ -24,6 +24,15 @@ jest.mock('../../network/teams/state', () => ({
     .mockReturnValue(jest.fn().mockResolvedValue({ id: 'file-1' })),
 }));
 
+const mockUseProjectById = jest.fn((_id?: string) => undefined);
+jest.mock('../state', () => {
+  const actual = jest.requireActual('../state');
+  return {
+    ...actual,
+    useProjectById: (id: string) => mockUseProjectById(id),
+  };
+});
+
 const mockAuthorSuggestions = jest
   .fn()
   .mockResolvedValue([{ id: 'author-1', displayName: 'Test Author' }]);
@@ -341,6 +350,27 @@ describe('ProjectManuscript', () => {
     expect(capturedFormProps.teamId).toBe('');
     expect(capturedFormProps.selectedTeams).toEqual([
       { value: '', label: '', isFixed: true },
+    ]);
+  });
+
+  it('uses fundedTeam from projectDetail for teamId and team display name', async () => {
+    mockUseProjectById.mockReturnValueOnce({
+      fundedTeam: {
+        id: 'funded-team-1',
+        displayName: 'Funded Team',
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    await renderPage('discovery', false, {
+      teams: [{ id: 'user-team', displayName: 'User Team' }],
+    });
+    await waitFor(() => {
+      expect(screen.getByText(/what are you sharing/i)).toBeInTheDocument();
+    });
+    expect(capturedFormProps.teamId).toBe('funded-team-1');
+    expect(capturedFormProps.selectedTeams).toEqual([
+      { value: 'funded-team-1', label: 'Funded Team', isFixed: true },
     ]);
   });
 

@@ -13,12 +13,23 @@ const createProjectRoute = () => {
     { manuscriptId: stringParser },
     {},
   );
+  const createComplianceReport = route(
+    '/create-compliance-report/:manuscriptId',
+    { manuscriptId: stringParser },
+    {},
+  );
   const tool = route('/tool/:toolIndex', { toolIndex: stringParser }, {});
   const tools = route('/tools', {}, { tool });
   const workspace = route(
     '/workspace',
     {},
-    { createManuscript, editManuscript, resubmitManuscript, tools },
+    {
+      createManuscript,
+      editManuscript,
+      resubmitManuscript,
+      createComplianceReport,
+      tools,
+    },
   );
   const milestones = route('/milestones', {}, {});
 

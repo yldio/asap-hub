@@ -105,7 +105,9 @@ it.each([true, false])(
     expect(screen.getByText(/Jane Doe/i, { selector: 'strong' })).toBeVisible();
     expect(screen.getByText(/(Non CRN)/i, { selector: 'span' })).toBeVisible();
 
-    await userEvent.click(screen.getByText(/Non CRN/i));
+    await userEvent.click(
+      await screen.findByText(/Non CRN/i, {}, { timeout: 5000 }),
+    );
 
     expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
   },
@@ -139,7 +141,9 @@ it.each([true, false])(
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    await userEvent.click(screen.getByText(/External Author/i));
+    await userEvent.click(
+      await screen.findByText(/External Author/i, {}, { timeout: 5000 }),
+    );
 
     expect(screen.getByText(/External Author Email/i)).toBeInTheDocument();
   },
@@ -156,7 +160,9 @@ it.each([true, false])(
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByText(/Non CRN/i));
+    await userEvent.click(
+      await screen.findByText(/Non CRN/i, {}, { timeout: 5000 }),
+    );
 
     expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
 
@@ -197,7 +203,9 @@ describe('Multiple Option Selection', () => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    await userEvent.click(screen.getByText('Author Two'));
+    await userEvent.click(
+      await screen.findByText('Author Two', {}, { timeout: 5000 }),
+    );
 
     expect(screen.getByText(/Author Two/i)).toBeInTheDocument();
     expect(screen.queryByText(/Author One/i)).not.toBeInTheDocument();
@@ -207,7 +215,9 @@ describe('Multiple Option Selection', () => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    await userEvent.click(screen.getByText('Author One'));
+    await userEvent.click(
+      await screen.findByText('Author One', {}, { timeout: 5000 }),
+    );
 
     expect(screen.getByText(/Author One/i)).toBeInTheDocument();
     expect(screen.getByText(/Author Two/i)).toBeInTheDocument();
@@ -221,7 +231,9 @@ describe('Multiple Option Selection', () => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    await userEvent.click(screen.getByText('Author Two'));
+    await userEvent.click(
+      await screen.findByText('Author Two', {}, { timeout: 5000 }),
+    );
 
     await userEvent.type(screen.getByRole('combobox'), 'Jane Doe');
 
@@ -229,7 +241,9 @@ describe('Multiple Option Selection', () => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
     });
 
-    await userEvent.click(screen.getByText(/Non CRN/i));
+    await userEvent.click(
+      await screen.findByText(/Non CRN/i, {}, { timeout: 5000 }),
+    );
 
     expect(screen.getByText(/Jane Doe Email/i)).toBeInTheDocument();
 
@@ -251,7 +265,9 @@ describe('Single Option Selection', () => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    await userEvent.click(screen.getByText('Author Two'));
+    await userEvent.click(
+      await screen.findByText('Author Two', {}, { timeout: 5000 }),
+    );
 
     expect(screen.getByText(/Author Two/i)).toBeInTheDocument();
     expect(screen.queryByText(/Author One/i)).not.toBeInTheDocument();
@@ -261,7 +277,9 @@ describe('Single Option Selection', () => {
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
     );
 
-    await userEvent.click(screen.getByText('Author One'));
+    await userEvent.click(
+      await screen.findByText('Author One', {}, { timeout: 5000 }),
+    );
 
     expect(screen.getByText(/Author One/i)).toBeInTheDocument();
     expect(screen.queryByText(/Author Two/i)).not.toBeInTheDocument();

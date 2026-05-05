@@ -42,6 +42,7 @@ type ManuscriptVersionCardProps = {
   impact?: ManuscriptImpact;
   openDiscussionTab: () => void;
   showTeamName?: boolean;
+  getEditManuscriptHref?: (manuscriptId: string) => string;
 };
 
 const toastStyles = css({
@@ -190,6 +191,7 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
   impact,
   openDiscussionTab,
   showTeamName = true,
+  getEditManuscriptHref,
 }) => {
   const navigate = useNavigate();
 
@@ -221,11 +223,13 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
 
   const updatedByData = getUpdatedByData();
 
-  const editManuscriptRoute = network({})
-    .teams({})
-    .team({ teamId })
-    .workspace({})
-    .editManuscript({ manuscriptId }).$;
+  const editManuscriptRoute = getEditManuscriptHref
+    ? getEditManuscriptHref(manuscriptId)
+    : network({})
+        .teams({})
+        .team({ teamId })
+        .workspace({})
+        .editManuscript({ manuscriptId }).$;
 
   const handleEditManuscript = () => {
     if (editManuscriptRoute) {

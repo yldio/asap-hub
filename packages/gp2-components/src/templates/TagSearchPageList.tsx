@@ -63,6 +63,7 @@ const TagSearchPageList: React.FC<TagSearchPageListProps> = ({
         leftIndicator={searchIcon}
         noOptionsMessage={() => 'No results found'}
         loadOptions={loadTags}
+        defaultOptions
         onChange={(items) => setTags(items.map(({ value }) => value))}
         values={tags.map((tag) => ({
           label: tag,

@@ -347,6 +347,9 @@ export {
   getIconForDocumentType,
   formatUserLocation,
   considerEndedAfter,
+  Portal,
+  PortalContainer,
+  portalContainerId,
 } from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant, SwitchProps } from './atoms';

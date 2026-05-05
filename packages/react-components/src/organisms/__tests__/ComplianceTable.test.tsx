@@ -8,6 +8,13 @@ import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import ComplianceTable from '../ComplianceTable';
 
+const mockIsEnabled = jest.fn();
+
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
 describe('ComplianceTable', () => {
   const mockOnUpdateManuscript = jest.fn();
   const pageControlsProps = {
@@ -46,9 +53,65 @@ describe('ComplianceTable', () => {
     getAssignedUsersSuggestions: jest.fn(),
   };
 
+  beforeEach(() => {
+    mockIsEnabled.mockReturnValue(false);
+  });
+
   it('renders data', () => {
     const { getByText } = render(<ComplianceTable {...defaultProps} />);
     expect(getByText('Test Team')).toBeInTheDocument();
+  });
+
+  it('does not render the project column when disabled', () => {
+    const { queryByRole } = render(
+      <ComplianceTable
+        {...defaultProps}
+        data={[
+          {
+            ...complianceData,
+            project: {
+              id: 'project-id',
+              title: 'Project Alpha',
+              projectType: 'Resource Project',
+              isTeamBased: true,
+            },
+          },
+        ]}
+      />,
+    );
+
+    expect(
+      queryByRole('columnheader', { name: 'Project' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('renders the project column and links project names when enabled', () => {
+    mockIsEnabled.mockImplementation(
+      (flag: string) => flag === 'PROJECT_WORKSPACE',
+    );
+
+    const { getByRole } = render(
+      <ComplianceTable
+        {...defaultProps}
+        data={[
+          {
+            ...complianceData,
+            project: {
+              id: 'project-id',
+              title: 'Project Alpha',
+              projectType: 'Resource Project',
+              isTeamBased: true,
+            },
+          },
+        ]}
+      />,
+    );
+
+    expect(getByRole('columnheader', { name: 'Project' })).toBeInTheDocument();
+    expect(getByRole('link', { name: 'Project Alpha' })).toHaveAttribute(
+      'href',
+      '/projects/resource/project-id',
+    );
   });
 
   describe('status change modal', () => {

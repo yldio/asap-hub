@@ -49,3 +49,9 @@ export type MilestonePayload = WebhookDetail<
 export type ComplianceReportPayload = WebhookDetail<
   ContentfulWebhookPayload<'complianceReports'>
 >;
+
+export type ImpactPayload = WebhookDetail<ContentfulWebhookPayload<'impact'>>;
+
+export type CategoryPayload = WebhookDetail<
+  ContentfulWebhookPayload<'category'>
+>;

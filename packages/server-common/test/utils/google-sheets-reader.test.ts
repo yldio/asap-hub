@@ -4,6 +4,7 @@ import {
   parseComplianceSheet,
   extractSpreadsheetIdFromUrl,
   getWritableSheetsClient,
+  getSheetNameForRange,
 } from '../../src/utils/google-sheets-reader';
 
 jest.mock('@googleapis/sheets', () => ({
@@ -319,6 +320,58 @@ describe('Google Sheets Reader', () => {
       });
 
       expect(client).toBeDefined();
+    });
+  });
+
+  describe('getSheetNameForRange', () => {
+    const mockSpreadsheetId = 'test-spreadsheet-id';
+
+    it('should return title of the sheet at index specified', async () => {
+      mockSheetsClient.spreadsheets.get = jest
+        .fn()
+        .mockResolvedValue({
+          data: { sheets: [{ properties: { title: 'First Sheet' } }] },
+        });
+
+      const result = await getSheetNameForRange(
+        mockSheetsClient,
+        mockSpreadsheetId,
+        0,
+      );
+
+      expect(result).toEqual(`'First Sheet'`);
+    });
+
+    it('escapes apostrophes in sheet titles for A1 notation', async () => {
+      mockSheetsClient.spreadsheets.get = jest.fn().mockResolvedValue({
+        data: {
+          sheets: [
+            {
+              properties: {
+                title: "O'Brien",
+              },
+            },
+          ],
+        },
+      });
+
+      const result = await getSheetNameForRange(
+        mockSheetsClient,
+        mockSpreadsheetId,
+        0,
+      );
+
+      expect(result).toBe(`'O''Brien'`);
+    });
+
+    it('throws an error if no sheet title at index specified', async () => {
+      mockSheetsClient.spreadsheets.get = jest
+        .fn()
+        .mockResolvedValue({ data: { sheets: [] } });
+
+      await expect(
+        getSheetNameForRange(mockSheetsClient, mockSpreadsheetId, 0),
+      ).rejects.toThrow('No sheet found at index 0');
     });
   });
 });

@@ -36,6 +36,10 @@ const shouldSyncEntry = async (
     projects: ['title', 'projectId', 'grantId'],
     manuscripts: null,
     complianceReports: null,
+    impact: null,
+    category: null,
+    labs: ['name'],
+    externalAuthors: ['name'],
   };
 
   const allowedFields = FIELD_FILTERS[entityType];

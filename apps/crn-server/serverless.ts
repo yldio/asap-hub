@@ -1326,12 +1326,20 @@ const serverlessConfig: AWS = {
                 'ComplianceReportsPublished',
                 'UsersPublished',
                 'TeamsPublished',
+                'LabsPublished',
+                'ExternalAuthorsPublished',
+                'ImpactPublished',
+                'CategoryPublished',
                 'ManuscriptVersionsUnpublished',
                 'ManuscriptsUnpublished',
                 'UsersUnpublished',
                 'TeamsUnpublished',
                 'ProjectsUnpublished',
                 'ComplianceReportsUnpublished',
+                'LabsUnpublished',
+                'ExternalAuthorsUnpublished',
+                'CategoryUnpublished',
+                'ImpactUnpublished',
               ],
             },
           },
@@ -1346,7 +1354,7 @@ const serverlessConfig: AWS = {
       handler:
         './src/handlers/compliance-sheet/compliance-spreadsheet-sync-handler.handler',
       timeout: 40,
-      reservedConcurrency: 2,
+      reservedConcurrency: 1,
       events: [
         {
           sqs: {
@@ -1354,7 +1362,7 @@ const serverlessConfig: AWS = {
               'Fn::GetAtt': ['ComplianceDocSyncQueue', 'Arn'],
             },
             batchSize: 5,
-            maximumConcurrency: 2,
+            maximumConcurrency: 1,
           },
         },
       ],

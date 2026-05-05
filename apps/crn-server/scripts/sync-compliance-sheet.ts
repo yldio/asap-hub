@@ -1,6 +1,7 @@
 import { ManuscriptVersionExport } from '@asap-hub/model';
 import {
   getJWTCredentialsFactory,
+  getSheetNameForRange,
   getWritableSheetsClient,
   SheetsClient,
 } from '@asap-hub/server-common';
@@ -27,10 +28,10 @@ const controller = new ManuscriptVersionController(
   getManuscriptVersionsDataProvider(),
 );
 
-const clearSheet = async (sheets: Awaited<SheetsClient>) => {
+const clearSheet = async (sheets: Awaited<SheetsClient>, sheetName: string) => {
   await sheets.spreadsheets.values.clear({
     spreadsheetId,
-    range: 'Sheet1!A2:AW',
+    range: `${sheetName}!A2:AW`,
   });
 
   console.log('Sheet cleared');
@@ -38,6 +39,7 @@ const clearSheet = async (sheets: Awaited<SheetsClient>) => {
 
 const writeInChunks = async (
   sheets: Awaited<SheetsClient>,
+  sheetName: string,
   rows: string[][],
 ) => {
   for (let i = 0; i < rows.length; i += CHUNK_SIZE) {
@@ -45,7 +47,7 @@ const writeInChunks = async (
 
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: 'Sheet1!A2',
+      range: `${sheetName}!A${2 + i}`,
       valueInputOption: 'RAW',
       requestBody: {
         values: chunk,
@@ -81,7 +83,8 @@ const rebuildSheet = async (
   sheets: Awaited<SheetsClient>,
   controller: ManuscriptVersionController,
 ) => {
-  await clearSheet(sheets);
+  const sheetName = await getSheetNameForRange(sheets, spreadsheetId, 0);
+  await clearSheet(sheets, sheetName);
 
   const manuscriptVersions = await fetchAllManuscriptVersions(controller);
 
@@ -91,7 +94,7 @@ const rebuildSheet = async (
     .filter((version) => version.title.trim())
     .map(mapToSheetRow);
 
-  await writeInChunks(sheets, rows);
+  await writeInChunks(sheets, sheetName, rows);
 
   console.log('Rebuild complete');
 };

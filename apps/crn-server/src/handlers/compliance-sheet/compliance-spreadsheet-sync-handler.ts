@@ -1,5 +1,6 @@
 import {
   getJWTCredentialsFactory,
+  getSheetNameForRange,
   getWritableSheetsClient,
   SheetsClient,
 } from '@asap-hub/server-common';
@@ -20,10 +21,11 @@ const spreadsheetId = complianceLiveSpreadsheetId;
 
 const getIdRowMap = async (
   sheets: Awaited<SheetsClient>,
+  sheetName: string,
 ): Promise<Map<string, number>> => {
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId,
-    range: 'Sheet1!A:A',
+    range: `${sheetName}!A:A`,
   });
 
   const rows = response.data.values ?? [];
@@ -44,7 +46,8 @@ const syncRows = async (
   manuscriptVersionIds: string[],
   controller: ManuscriptVersionController,
 ) => {
-  const idRowMap = await getIdRowMap(sheets);
+  const sheetName = await getSheetNameForRange(sheets, spreadsheetId, 0);
+  const idRowMap = await getIdRowMap(sheets, sheetName);
 
   const manuscriptVersions = await controller.fetchComplianceManuscriptVersions(
     { filter: manuscriptVersionIds },
@@ -63,7 +66,7 @@ const syncRows = async (
     if (!mv || !mv.title) {
       if (rowIndex) {
         updates.push({
-          range: `Sheet1!A${rowIndex}:AV${rowIndex}`,
+          range: `${sheetName}!A${rowIndex}:AV${rowIndex}`,
           values: [Array(48).fill('')],
         });
       }
@@ -73,7 +76,7 @@ const syncRows = async (
       // exists in sheet → update
       if (rowIndex) {
         updates.push({
-          range: `Sheet1!A${rowIndex}:AV${rowIndex}`,
+          range: `${sheetName}!A${rowIndex}:AV${rowIndex}`,
           values: [row],
         });
       } else {
@@ -98,7 +101,7 @@ const syncRows = async (
   if (appends.length > 0) {
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'Sheet1!A:A',
+      range: `${sheetName}!A:A`,
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
       requestBody: {

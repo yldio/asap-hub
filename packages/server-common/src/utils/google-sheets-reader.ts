@@ -168,3 +168,22 @@ export const readGoogleSheetsData = async (
 };
 
 export type SheetsClient = ReturnType<typeof getWritableSheetsClient>;
+
+export const getSheetNameForRange = async (
+  sheets: Awaited<SheetsClient>,
+  spreadsheetId: string,
+  index: number,
+) => {
+  const response = await sheets.spreadsheets.get({
+    spreadsheetId,
+  });
+
+  const sheet = response.data.sheets?.[index];
+
+  if (!sheet?.properties?.title) {
+    throw new Error(`No sheet found at index ${index}`);
+  }
+
+  return `'${sheet.properties.title.replace(/'/g, "''")}'`;
+};
+

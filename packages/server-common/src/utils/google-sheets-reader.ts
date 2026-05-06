@@ -136,6 +136,19 @@ export const getSheetsClient = async (getJWTCredentials: GetJWTCredentials) => {
   } as unknown as GlobalOptions);
 };
 
+export const getWritableSheetsClient = async (
+  getJWTCredentials: GetJWTCredentials,
+) => {
+  const creds = await getJWTCredentials();
+  const auth = new GoogleAuth({
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  }).fromJSON(creds) as JWT;
+
+  return new sheetsV4.Sheets({ auth } as unknown as {
+    auth: GoogleAuth;
+  } as unknown as GlobalOptions);
+};
+
 /* istanbul ignore next */
 export const readGoogleSheetsDataLocal = async (
   spreadsheetId: string,
@@ -152,4 +165,24 @@ export const readGoogleSheetsData = async (
 ): Promise<GoogleSheetsRow[]> => {
   const sheets = await getSheetsClient(getJWTCredentials);
   return parseComplianceSheet(sheets, config.spreadsheetId, config.range);
+};
+
+export type SheetsClient = ReturnType<typeof getWritableSheetsClient>;
+
+export const getSheetNameForRange = async (
+  sheets: Awaited<SheetsClient>,
+  spreadsheetId: string,
+  index: number,
+) => {
+  const response = await sheets.spreadsheets.get({
+    spreadsheetId,
+  });
+
+  const sheet = response.data.sheets?.[index];
+
+  if (!sheet?.properties?.title) {
+    throw new Error(`No sheet found at index ${index}`);
+  }
+
+  return `'${sheet.properties.title.replace(/'/g, "''")}'`;
 };

@@ -1,4 +1,11 @@
-import { Entry, Link, SysLink } from '@asap-hub/contentful';
+import {
+  Collection,
+  Entry,
+  EntryProps,
+  KeyValueMap,
+  Link,
+  SysLink,
+} from '@asap-hub/contentful';
 
 export const contenfulSpaceLink: SysLink = {
   sys: { type: 'Link', linkType: 'Space', id: 'space-id' },
@@ -56,4 +63,17 @@ export const getEntry = (
     ...sys,
   },
   fields,
+});
+
+export const getEntryCollection = (
+  items: Entry[],
+): Collection<Entry, EntryProps<KeyValueMap>> => ({
+  total: items.length,
+  skip: 0,
+  limit: 10,
+  toPlainObject: jest.fn(),
+  sys: {
+    type: 'Array',
+  },
+  items,
 });

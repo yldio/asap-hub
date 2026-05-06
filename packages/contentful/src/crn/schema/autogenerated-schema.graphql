@@ -166,6 +166,12 @@ type AimsMilestonesCollection {
 }
 
 enum AimsMilestonesCollectionOrder {
+  bulkImported_ASC
+  bulkImported_DESC
+  outputsLinkedAt_ASC
+  outputsLinkedAt_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -185,6 +191,12 @@ type AimsMilestonesCursorCollection {
 }
 
 enum AimsMilestonesCursorCollectionOrder {
+  bulkImported_ASC
+  bulkImported_DESC
+  outputsLinkedAt_ASC
+  outputsLinkedAt_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -7220,12 +7232,17 @@ enum MigrationOrder {
 """[See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/milestones)"""
 type Milestones implements Entry & _Node {
   _id: ID!
+  bulkImported(locale: String, useFallbackLocale: Boolean): Boolean
   contentfulMetadata: ContentfulMetadata!
   description(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): MilestonesLinkingCollections
+  outputsLinkedAt(locale: String, useFallbackLocale: Boolean): DateTime
+  outputsLinkedBy(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
   relatedArticlesCollection(limit: Int = 100, locale: String, order: [MilestonesRelatedArticlesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResearchOutputsFilter): MilestonesRelatedArticlesCollection
   relatedArticlesCursorCollection(limit: Int = 100, locale: String, order: [MilestonesRelatedArticlesCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ResearchOutputsFilter): MilestonesRelatedArticlesCursorCollection
   status(locale: String, useFallbackLocale: Boolean): String
+  statusUpdatedAt(locale: String, useFallbackLocale: Boolean): DateTime
+  statusUpdatedBy(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
   sys: Sys!
 }
 
@@ -7245,6 +7262,9 @@ type MilestonesCursorCollection {
 input MilestonesFilter {
   AND: [MilestonesFilter]
   OR: [MilestonesFilter]
+  bulkImported: Boolean
+  bulkImported_exists: Boolean
+  bulkImported_not: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   description: String
   description_contains: String
@@ -7253,9 +7273,31 @@ input MilestonesFilter {
   description_not: String
   description_not_contains: String
   description_not_in: [String]
+  outputsLinkedAt: DateTime
+  outputsLinkedAt_exists: Boolean
+  outputsLinkedAt_gt: DateTime
+  outputsLinkedAt_gte: DateTime
+  outputsLinkedAt_in: [DateTime]
+  outputsLinkedAt_lt: DateTime
+  outputsLinkedAt_lte: DateTime
+  outputsLinkedAt_not: DateTime
+  outputsLinkedAt_not_in: [DateTime]
+  outputsLinkedBy: cfUsersNestedFilter
+  outputsLinkedBy_exists: Boolean
   relatedArticles: cfResearchOutputsNestedFilter
   relatedArticlesCollection_exists: Boolean
   status: String
+  statusUpdatedAt: DateTime
+  statusUpdatedAt_exists: Boolean
+  statusUpdatedAt_gt: DateTime
+  statusUpdatedAt_gte: DateTime
+  statusUpdatedAt_in: [DateTime]
+  statusUpdatedAt_lt: DateTime
+  statusUpdatedAt_lte: DateTime
+  statusUpdatedAt_not: DateTime
+  statusUpdatedAt_not_in: [DateTime]
+  statusUpdatedBy: cfUsersNestedFilter
+  statusUpdatedBy_exists: Boolean
   status_contains: String
   status_exists: Boolean
   status_in: [String]
@@ -7295,6 +7337,12 @@ enum MilestonesLinkingCollectionsAimsCursorCollectionOrder {
 }
 
 enum MilestonesOrder {
+  bulkImported_ASC
+  bulkImported_DESC
+  outputsLinkedAt_ASC
+  outputsLinkedAt_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -9627,6 +9675,12 @@ enum ResearchOutputsLinkingCollectionsManuscriptsCursorCollectionOrder {
 }
 
 enum ResearchOutputsLinkingCollectionsMilestonesCollectionOrder {
+  bulkImported_ASC
+  bulkImported_DESC
+  outputsLinkedAt_ASC
+  outputsLinkedAt_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -9640,6 +9694,12 @@ enum ResearchOutputsLinkingCollectionsMilestonesCollectionOrder {
 }
 
 enum ResearchOutputsLinkingCollectionsMilestonesCursorCollectionOrder {
+  bulkImported_ASC
+  bulkImported_DESC
+  outputsLinkedAt_ASC
+  outputsLinkedAt_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
   status_ASC
   status_DESC
   sys_firstPublishedAt_ASC
@@ -13489,6 +13549,8 @@ type UsersLinkingCollections {
   manuscriptsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsManuscriptsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ManuscriptsCursorCollection
   messagesCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsMessagesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): MessagesCollection
   messagesCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsMessagesCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): MessagesCursorCollection
+  milestonesCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): MilestonesCollection
+  milestonesCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsMilestonesCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): MilestonesCursorCollection
   projectMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectMembershipCollection
   projectMembershipCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectMembershipCursorCollection
   projectsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
@@ -13851,6 +13913,44 @@ enum UsersLinkingCollectionsMessagesCollectionOrder {
 }
 
 enum UsersLinkingCollectionsMessagesCursorCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsMilestonesCollectionOrder {
+  bulkImported_ASC
+  bulkImported_DESC
+  outputsLinkedAt_ASC
+  outputsLinkedAt_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsMilestonesCursorCollectionOrder {
+  bulkImported_ASC
+  bulkImported_DESC
+  outputsLinkedAt_ASC
+  outputsLinkedAt_DESC
+  statusUpdatedAt_ASC
+  statusUpdatedAt_DESC
+  status_ASC
+  status_DESC
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -15744,6 +15844,9 @@ input cfMessagesNestedFilter {
 input cfMilestonesNestedFilter {
   AND: [cfMilestonesNestedFilter]
   OR: [cfMilestonesNestedFilter]
+  bulkImported: Boolean
+  bulkImported_exists: Boolean
+  bulkImported_not: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   description: String
   description_contains: String
@@ -15752,8 +15855,28 @@ input cfMilestonesNestedFilter {
   description_not: String
   description_not_contains: String
   description_not_in: [String]
+  outputsLinkedAt: DateTime
+  outputsLinkedAt_exists: Boolean
+  outputsLinkedAt_gt: DateTime
+  outputsLinkedAt_gte: DateTime
+  outputsLinkedAt_in: [DateTime]
+  outputsLinkedAt_lt: DateTime
+  outputsLinkedAt_lte: DateTime
+  outputsLinkedAt_not: DateTime
+  outputsLinkedAt_not_in: [DateTime]
+  outputsLinkedBy_exists: Boolean
   relatedArticlesCollection_exists: Boolean
   status: String
+  statusUpdatedAt: DateTime
+  statusUpdatedAt_exists: Boolean
+  statusUpdatedAt_gt: DateTime
+  statusUpdatedAt_gte: DateTime
+  statusUpdatedAt_in: [DateTime]
+  statusUpdatedAt_lt: DateTime
+  statusUpdatedAt_lte: DateTime
+  statusUpdatedAt_not: DateTime
+  statusUpdatedAt_not_in: [DateTime]
+  statusUpdatedBy_exists: Boolean
   status_contains: String
   status_exists: Boolean
   status_in: [String]

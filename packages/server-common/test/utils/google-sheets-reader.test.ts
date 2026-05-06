@@ -1,15 +1,27 @@
 import { sheets_v4 as sheetsV4 } from '@googleapis/sheets';
+import { GoogleAuth } from 'google-auth-library';
 import {
   parseComplianceSheet,
   extractSpreadsheetIdFromUrl,
+  getWritableSheetsClient,
+  getSheetNameForRange,
 } from '../../src/utils/google-sheets-reader';
 
-jest.mock('@googleapis/sheets');
-jest.mock('google-auth-library', () => ({
-  ...jest.requireActual('google-auth-library'),
-  GoogleAuth: jest.fn(),
-  JWT: jest.fn(),
+jest.mock('@googleapis/sheets', () => ({
+  sheets_v4: {
+    Sheets: jest.fn(),
+  },
 }));
+jest.mock('google-auth-library', () => {
+  const fromJSONMock = jest.fn().mockReturnValue('mock-jwt');
+  return {
+    ...jest.requireActual('google-auth-library'),
+    GoogleAuth: jest.fn().mockImplementation(() => ({
+      fromJSON: fromJSONMock,
+    })),
+    JWT: jest.fn(),
+  };
+});
 jest.mock('../../src/utils/aws-secret-manager');
 
 describe('Google Sheets Reader', () => {
@@ -281,6 +293,83 @@ describe('Google Sheets Reader', () => {
       expect(() => extractSpreadsheetIdFromUrl(url)).toThrow(
         'Could not extract spreadsheet ID from URL: https://docs.google.com/spreadsheets/',
       );
+    });
+  });
+
+  describe('getWritableSheetsClient', () => {
+    it('should create a writable sheets client with correct scopes', async () => {
+      const mockCreds = { client_email: 'test@test.com', private_key: 'key' };
+      const getJWTCredentials = jest.fn().mockResolvedValue(mockCreds);
+
+      const client = await getWritableSheetsClient(getJWTCredentials);
+
+      expect(getJWTCredentials).toHaveBeenCalled();
+
+      expect(GoogleAuth).toHaveBeenCalledWith({
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+      });
+
+      const googleAuthMock = GoogleAuth as unknown as jest.Mock;
+      expect(googleAuthMock).toHaveBeenCalledTimes(1);
+
+      const instance = googleAuthMock.mock.results[0].value;
+      expect(instance.fromJSON).toHaveBeenCalledWith(mockCreds);
+
+      expect(sheetsV4.Sheets).toHaveBeenCalledWith({
+        auth: 'mock-jwt',
+      });
+
+      expect(client).toBeDefined();
+    });
+  });
+
+  describe('getSheetNameForRange', () => {
+    const mockSpreadsheetId = 'test-spreadsheet-id';
+
+    it('should return title of the sheet at index specified', async () => {
+      mockSheetsClient.spreadsheets.get = jest.fn().mockResolvedValue({
+        data: { sheets: [{ properties: { title: 'First Sheet' } }] },
+      });
+
+      const result = await getSheetNameForRange(
+        mockSheetsClient,
+        mockSpreadsheetId,
+        0,
+      );
+
+      expect(result).toEqual(`'First Sheet'`);
+    });
+
+    it('escapes apostrophes in sheet titles for A1 notation', async () => {
+      mockSheetsClient.spreadsheets.get = jest.fn().mockResolvedValue({
+        data: {
+          sheets: [
+            {
+              properties: {
+                title: "O'Brien",
+              },
+            },
+          ],
+        },
+      });
+
+      const result = await getSheetNameForRange(
+        mockSheetsClient,
+        mockSpreadsheetId,
+        0,
+      );
+
+      expect(result).toBe(`'O''Brien'`);
+    });
+
+    it('throws an error if no sheet title at index specified', async () => {
+      mockSheetsClient.spreadsheets.get = jest
+        .fn()
+        .mockResolvedValue({ data: { sheets: [] } });
+
+      await expect(
+        getSheetNameForRange(mockSheetsClient, mockSpreadsheetId, 0),
+      ).rejects.toThrow('No sheet found at index 0');
     });
   });
 });

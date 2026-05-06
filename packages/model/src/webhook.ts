@@ -19,6 +19,9 @@ export type ProjectMembershipEvent = `ProjectMembership${EntityEventAction}`;
 export type AimEvent = `Aims${EntityEventAction}`;
 export type MilestoneEvent = `Milestones${EntityEventAction}`;
 export type SupplementGrantEvent = `SupplementGrant${EntityEventAction}`;
+export type ComplianceReportEvent = `ComplianceReports${EntityEventAction}`;
+export type ImpactEvent = `Impact${EntityEventAction}`;
+export type CategoryEvent = `Category${EntityEventAction}`;
 
 export type WebhookDetailType =
   | CalendarEvent
@@ -39,7 +42,10 @@ export type WebhookDetailType =
   | ProjectMembershipEvent
   | AimEvent
   | MilestoneEvent
-  | SupplementGrantEvent;
+  | SupplementGrantEvent
+  | ComplianceReportEvent
+  | CategoryEvent
+  | ImpactEvent;
 
 export type WebhookDetail<T extends object = object> = {
   resourceId: string;

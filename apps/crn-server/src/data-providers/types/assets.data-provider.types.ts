@@ -22,3 +22,7 @@ export interface AssetDataProvider extends DataProvider {
     data: AssetCreateDataObject & { fileType?: string },
   ): Promise<AssetCreateDataObject>;
 }
+
+export interface EntryDataProvider extends DataProvider {
+  getChangedFields(entryId: string): Promise<string[]>;
+}

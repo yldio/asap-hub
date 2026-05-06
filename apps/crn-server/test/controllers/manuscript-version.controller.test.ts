@@ -3,6 +3,7 @@ import ManuscriptVersionController from '../../src/controllers/manuscript-versio
 import { ManuscriptVersionDataProvider } from '../../src/data-providers/types';
 import {
   getManuscriptVersionDataObject,
+  getManuscriptVersionExportResponse,
   getManuscriptVersionsListResponse,
 } from '../fixtures/manuscript-versions.fixtures';
 import { manuscriptVersionDataProviderMock as manuscriptVersionDataProviderContentfulMock } from '../mocks/manuscript-version.data-provider.mock';
@@ -56,6 +57,47 @@ describe('Manuscript Version controller', () => {
       const result = await manuscriptVersionController.fetch({});
 
       expect(result).toEqual({ items: [], total: 0 });
+    });
+  });
+
+  describe('fetchComplianceManuscriptVersions', () => {
+    test('Should return the manuscript versions', async () => {
+      const manuscriptVersionResponse = getManuscriptVersionExportResponse();
+      manuscriptVersionDataProviderMock.fetchComplianceManuscriptVersions.mockResolvedValue(
+        manuscriptVersionResponse,
+      );
+      const result =
+        await manuscriptVersionController.fetchComplianceManuscriptVersions({});
+
+      expect(result).toEqual(manuscriptVersionResponse);
+    });
+
+    test('Should return empty list when there are no manuscript versions', async () => {
+      manuscriptVersionDataProviderMock.fetchComplianceManuscriptVersions.mockResolvedValue(
+        {
+          total: 0,
+          items: [],
+        },
+      );
+      const result =
+        await manuscriptVersionController.fetchComplianceManuscriptVersions({});
+
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+  });
+
+  describe('fetchManuscriptVersionIdsByLinkedEntry', () => {
+    test('Should return the version ids fetched', async () => {
+      manuscriptVersionDataProviderMock.fetchManuscriptVersionIdsByLinkedEntry.mockResolvedValue(
+        ['version-id-1'],
+      );
+      const result =
+        await manuscriptVersionController.fetchManuscriptVersionIdsByLinkedEntry(
+          'user-id-1',
+          'user',
+        );
+
+      expect(result).toEqual(['version-id-1']);
     });
   });
 });

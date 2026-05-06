@@ -16,7 +16,10 @@ export type ContentfulWebhookPayloadType =
   | 'teamMembership'
   | 'aims'
   | 'milestones'
-  | 'supplementGrant';
+  | 'supplementGrant'
+  | 'complianceReports'
+  | 'impact'
+  | 'category';
 
 type CapitalizeFirstLetter<S extends string> =
   S extends `${infer First}${infer Rest}` ? `${Uppercase<First>}${Rest}` : S;

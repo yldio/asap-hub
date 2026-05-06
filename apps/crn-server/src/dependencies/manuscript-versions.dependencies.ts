@@ -6,6 +6,7 @@ import {
 } from '../config';
 import { ManuscriptVersionContentfulDataProvider } from '../data-providers/contentful/manuscript-version.data-provider';
 import { ManuscriptVersionDataProvider } from '../data-providers/types';
+import { getContentfulRestClientFactory } from './clients.dependencies';
 
 export const getManuscriptVersionsDataProvider =
   (): ManuscriptVersionDataProvider => {
@@ -15,5 +16,8 @@ export const getManuscriptVersionsDataProvider =
       environment: contentfulEnvId,
     });
 
-    return new ManuscriptVersionContentfulDataProvider(contentfulGraphQLClient);
+    return new ManuscriptVersionContentfulDataProvider(
+      contentfulGraphQLClient,
+      getContentfulRestClientFactory,
+    );
   };

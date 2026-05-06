@@ -2,6 +2,7 @@ import { ManuscriptsFilter } from '@asap-hub/contentful';
 import { NotFoundError } from '@asap-hub/errors';
 import {
   FetchOptions,
+  ListManuscriptVersionExportResponse,
   ListManuscriptVersionResponse,
   ManuscriptVersionResponse,
 } from '@asap-hub/model';
@@ -38,5 +39,23 @@ export default class ManuscriptVersionController {
     }
 
     return response.latestManuscriptVersion || null;
+  }
+
+  async fetchComplianceManuscriptVersions(
+    options: FetchOptions<string[]>,
+  ): Promise<ListManuscriptVersionExportResponse> {
+    return this.manuscriptVersionDataProvider.fetchComplianceManuscriptVersions(
+      options,
+    );
+  }
+
+  async fetchManuscriptVersionIdsByLinkedEntry(
+    entryId: string,
+    entryType: string,
+  ): Promise<string[]> {
+    return this.manuscriptVersionDataProvider.fetchManuscriptVersionIdsByLinkedEntry(
+      entryId,
+      entryType,
+    );
   }
 }

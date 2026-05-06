@@ -45,3 +45,13 @@ export type AimPayload = WebhookDetail<ContentfulWebhookPayload<'aims'>>;
 export type MilestonePayload = WebhookDetail<
   ContentfulWebhookPayload<'milestones'>
 >;
+
+export type ComplianceReportPayload = WebhookDetail<
+  ContentfulWebhookPayload<'complianceReports'>
+>;
+
+export type ImpactPayload = WebhookDetail<ContentfulWebhookPayload<'impact'>>;
+
+export type CategoryPayload = WebhookDetail<
+  ContentfulWebhookPayload<'category'>
+>;

@@ -1355,7 +1355,7 @@ const serverlessConfig: AWS = {
         environment: {
           SENTRY_DSN: sentryDsnHandlers,
           COMPLIANCE_LIVE_SHEET_ID: `\${ssm:compliance-live-sheet-id}`,
-          GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-test`,
+          GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-prod`,
         },
       },
     }),

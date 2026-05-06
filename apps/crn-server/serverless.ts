@@ -403,18 +403,22 @@ const serverlessConfig: AWS = {
               'Fn::GetAtt': ['GoogleCalendarEventQueue', 'Arn'],
             },
           },
-          {
-            Effect: 'Allow',
-            Action: [
-              'sqs:SendMessage',
-              'sqs:ReceiveMessage',
-              'sqs:DeleteMessage',
-              'sqs:GetQueueAttributes',
-            ],
-            Resource: {
-              'Fn::GetAtt': ['ComplianceDocSyncQueue', 'Arn'],
-            },
-          },
+          ...(isProd
+            ? [
+                {
+                  Effect: 'Allow',
+                  Action: [
+                    'sqs:SendMessage',
+                    'sqs:ReceiveMessage',
+                    'sqs:DeleteMessage',
+                    'sqs:GetQueueAttributes',
+                  ],
+                  Resource: {
+                    'Fn::GetAtt': ['ComplianceDocSyncQueue', 'Arn'],
+                  },
+                },
+              ]
+            : []),
         ],
       },
     },

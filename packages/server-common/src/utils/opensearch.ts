@@ -114,14 +114,11 @@ const indexBatch = async <T>(
     `Processing batch ${batchNumber}/${totalBatches} (${batch.length} documents)`,
   );
 
-  const hasId = (value: unknown): value is { id: string } => {
-    return (
-      typeof value === 'object' &&
-      value !== null &&
-      'id' in value &&
-      typeof (value as { id: unknown }).id === 'string'
-    );
-  };
+  const hasId = (value: unknown): value is { id: string } =>
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    typeof (value as { id: unknown }).id === 'string';
 
   const bulkBody = batch.flatMap((doc) => {
     const setIndexId = useDocumentIdAsOpensearchId && hasId(doc);

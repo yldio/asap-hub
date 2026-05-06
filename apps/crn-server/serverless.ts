@@ -39,8 +39,9 @@ assert.ok(
   'stage must be either "dev" or "production" or a PR number',
 );
 
+const isProd = stage === 'production';
 const region = process.env.AWS_REGION as NonNullable<AWS['provider']['region']>;
-const envAlias = stage === 'production' ? 'prod' : 'dev';
+const envAlias = isProd ? 'prod' : 'dev';
 const envRef =
   stage === 'production' ? 'prod' : stage === 'dev' ? 'dev' : `CI-${stage}`;
 
@@ -71,9 +72,8 @@ const contentfulWebhookAuthenticationToken =
 const contentfulSpaceId = process.env.CONTENTFUL_SPACE_ID!;
 const sesRegion = process.env.SES_REGION!;
 const hostname = process.env.HOSTNAME!;
-const appHostname = stage === 'production' ? hostname : `${stage}.${hostname}`;
-const apiHostname =
-  stage === 'production' ? `api.${hostname}` : `api-${stage}.${hostname}`;
+const appHostname = isProd ? hostname : `${stage}.${hostname}`;
+const apiHostname = isProd ? `api.${hostname}` : `api-${stage}.${hostname}`;
 const appUrl = `https://${appHostname}`;
 const apiUrl = `https://${apiHostname}`;
 const nodeEnv = 'production';
@@ -93,13 +93,11 @@ const algoliaIndex = process.env.ALGOLIA_INDEX
   : `asap-hub_${envRef}`;
 const service = 'asap-hub';
 
-const opensearchDomainName =
-  stage === 'production'
-    ? `${service}-${stage}-search`
-    : `${service}-dev-search`;
+const opensearchDomainName = isProd
+  ? `${service}-${stage}-search`
+  : `${service}-dev-search`;
 
-const opensearchDomain =
-  stage === 'production' ? 'OpensearchDomainProd' : 'OpensearchDomain';
+const opensearchDomain = isProd ? 'OpensearchDomainProd' : 'OpensearchDomain';
 
 const shouldCreateDomain = stage === 'production' || stage === 'dev';
 
@@ -181,12 +179,12 @@ const serverlessConfig: AWS = {
       ACTIVE_CAMPAIGN_ACCOUNT: activeCampaignAccount,
       ACTIVE_CAMPAIGN_TOKEN: activeCampaignToken,
       APP_ORIGIN: appUrl,
-      DEBUG: stage === 'production' ? '' : 'crn-server,http',
+      DEBUG: isProd ? '' : 'crn-server,http',
       NODE_ENV: nodeEnv,
       ENVIRONMENT: stage,
       REGION: region,
       API_URL: apiUrl,
-      LOG_LEVEL: logLevel || (stage === 'production' ? 'error' : 'info'),
+      LOG_LEVEL: logLevel || (isProd ? 'error' : 'info'),
       NODE_OPTIONS: '--enable-source-maps',
       ALGOLIA_APP_ID: `\${ssm:crn-algolia-app-id-${envAlias}}`,
       CURRENT_REVISION: ciCommitSha ?? currentRevision,
@@ -335,22 +333,6 @@ const serverlessConfig: AWS = {
                   { Ref: 'AWS::AccountId' },
                   'secret',
                   `google-api-credentials-${envAlias}*`,
-                ],
-              ],
-            },
-          },
-          {
-            Effect: 'Allow',
-            Action: 'secretsmanager:*',
-            Resource: {
-              'Fn::Join': [
-                ':',
-                [
-                  'arn:aws:secretsmanager',
-                  { Ref: 'AWS::Region' },
-                  { Ref: 'AWS::AccountId' },
-                  'secret',
-                  `google-api-credentials-test*`,
                 ],
               ],
             },
@@ -1310,67 +1292,69 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-    complianceSpreadsheetEntryHandler: {
-      handler:
-        './src/handlers/compliance-sheet/compliance-entry-handler.handler',
-      events: [
-        {
-          eventBridge: {
-            eventBus: 'asap-events-${self:provider.stage}',
-            pattern: {
-              source: [eventBusSourceContentful],
-              'detail-type': [
-                'ManuscriptVersionsPublished',
-                'ManuscriptsPublished',
-                'ProjectsPublished',
-                'ComplianceReportsPublished',
-                'UsersPublished',
-                'TeamsPublished',
-                'LabsPublished',
-                'ExternalAuthorsPublished',
-                'ImpactPublished',
-                'CategoryPublished',
-                'ManuscriptVersionsUnpublished',
-                'ManuscriptsUnpublished',
-                'UsersUnpublished',
-                'TeamsUnpublished',
-                'ProjectsUnpublished',
-                'ComplianceReportsUnpublished',
-                'LabsUnpublished',
-                'ExternalAuthorsUnpublished',
-                'CategoryUnpublished',
-                'ImpactUnpublished',
-              ],
+    ...(isProd && {
+      complianceSpreadsheetEntryHandler: {
+        handler:
+          './src/handlers/compliance-sheet/compliance-entry-handler.handler',
+        events: [
+          {
+            eventBridge: {
+              eventBus: 'asap-events-${self:provider.stage}',
+              pattern: {
+                source: [eventBusSourceContentful],
+                'detail-type': [
+                  'ManuscriptVersionsPublished',
+                  'ManuscriptsPublished',
+                  'ProjectsPublished',
+                  'ComplianceReportsPublished',
+                  'UsersPublished',
+                  'TeamsPublished',
+                  'LabsPublished',
+                  'ExternalAuthorsPublished',
+                  'ImpactPublished',
+                  'CategoryPublished',
+                  'ManuscriptVersionsUnpublished',
+                  'ManuscriptsUnpublished',
+                  'UsersUnpublished',
+                  'TeamsUnpublished',
+                  'ProjectsUnpublished',
+                  'ComplianceReportsUnpublished',
+                  'LabsUnpublished',
+                  'ExternalAuthorsUnpublished',
+                  'CategoryUnpublished',
+                  'ImpactUnpublished',
+                ],
+              },
             },
           },
+        ],
+        environment: {
+          SENTRY_DSN: sentryDsnHandlers,
+          COMPLIANCE_DOC_SYNC_QUEUE_URL: { Ref: 'ComplianceDocSyncQueue' },
         },
-      ],
-      environment: {
-        SENTRY_DSN: sentryDsnHandlers,
-        COMPLIANCE_DOC_SYNC_QUEUE_URL: { Ref: 'ComplianceDocSyncQueue' },
       },
-    },
-    complianceSpreadsheetSyncHandler: {
-      handler:
-        './src/handlers/compliance-sheet/compliance-spreadsheet-sync-handler.handler',
-      timeout: 40,
-      reservedConcurrency: 1,
-      events: [
-        {
-          sqs: {
-            arn: {
-              'Fn::GetAtt': ['ComplianceDocSyncQueue', 'Arn'],
+      complianceSpreadsheetSyncHandler: {
+        handler:
+          './src/handlers/compliance-sheet/compliance-spreadsheet-sync-handler.handler',
+        timeout: 40,
+        reservedConcurrency: 1,
+        events: [
+          {
+            sqs: {
+              arn: {
+                'Fn::GetAtt': ['ComplianceDocSyncQueue', 'Arn'],
+              },
+              batchSize: 5,
             },
-            batchSize: 5,
           },
+        ],
+        environment: {
+          SENTRY_DSN: sentryDsnHandlers,
+          COMPLIANCE_LIVE_SHEET_ID: `\${ssm:compliance-live-sheet-id}`,
+          GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-test`,
         },
-      ],
-      environment: {
-        SENTRY_DSN: sentryDsnHandlers,
-        COMPLIANCE_LIVE_SHEET_ID: `\${ssm:compliance-live-sheet-id}`,
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-test`,
       },
-    },
+    }),
     contentfulWebhook: {
       handler: './src/handlers/webhooks/webhook-contentful.handler',
       events: [
@@ -1475,7 +1459,6 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: sentryDsnHandlers,
       },
     },
-
     cronjobSyncOrcidContentful: {
       handler: './src/handlers/user/cronjob-sync-orcid.handler',
       timeout: 120,
@@ -2364,28 +2347,30 @@ const serverlessConfig: AWS = {
           MessageRetentionPeriod: 1209600, // 14 days
         },
       },
-      ComplianceDocSyncQueue: {
-        Type: 'AWS::SQS::Queue',
-        Properties: {
-          QueueName:
-            '${self:service}-${self:provider.stage}-compliance-doc-sync-queue',
-          VisibilityTimeout: 120,
-          RedrivePolicy: {
-            maxReceiveCount: 5,
-            deadLetterTargetArn: {
-              'Fn::GetAtt': ['ComplianceDocSyncQueueDLQ', 'Arn'],
+      ...(isProd && {
+        ComplianceDocSyncQueue: {
+          Type: 'AWS::SQS::Queue',
+          Properties: {
+            QueueName:
+              '${self:service}-${self:provider.stage}-compliance-doc-sync-queue',
+            VisibilityTimeout: 120,
+            RedrivePolicy: {
+              maxReceiveCount: 5,
+              deadLetterTargetArn: {
+                'Fn::GetAtt': ['ComplianceDocSyncQueueDLQ', 'Arn'],
+              },
             },
           },
         },
-      },
-      ComplianceDocSyncQueueDLQ: {
-        Type: 'AWS::SQS::Queue',
-        Properties: {
-          QueueName:
-            '${self:service}-${self:provider.stage}-compliance-doc-sync-queue-dlq',
-          MessageRetentionPeriod: 1209600, // 14 days
+        ComplianceDocSyncQueueDLQ: {
+          Type: 'AWS::SQS::Queue',
+          Properties: {
+            QueueName:
+              '${self:service}-${self:provider.stage}-compliance-doc-sync-queue-dlq',
+            MessageRetentionPeriod: 1209600, // 14 days
+          },
         },
-      },
+      }),
       ...(shouldCreateDomain && {
         [opensearchDomain]: {
           Type: 'AWS::OpenSearchService::Domain',

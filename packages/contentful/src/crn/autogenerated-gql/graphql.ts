@@ -58910,6 +58910,17 @@ export const FetchComplianceManuscriptVersionsDocument = {
                   name: { kind: 'Name', value: 'where' },
                 },
               },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order' },
+                value: {
+                  kind: 'ListValue',
+                  values: [
+                    { kind: 'EnumValue', value: 'sys_publishedAt_ASC' },
+                    { kind: 'EnumValue', value: 'sys_id_ASC' },
+                  ],
+                },
+              },
             ],
             selectionSet: {
               kind: 'SelectionSet',

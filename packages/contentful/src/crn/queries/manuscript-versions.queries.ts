@@ -187,7 +187,12 @@ export const FETCH_COMPLIANCE_MANUSCRIPT_VERSIONS = gql`
     $skip: Int
     $where: ManuscriptVersionsFilter
   ) {
-    manuscriptVersionsCollection(limit: $limit, skip: $skip, where: $where) {
+    manuscriptVersionsCollection(
+      limit: $limit
+      skip: $skip
+      where: $where
+      order: [sys_publishedAt_ASC, sys_id_ASC]
+    ) {
       total
       items {
         sys {

@@ -12,21 +12,16 @@ export const aimNumbersAscSortScript = `
 `;
 
 export const aimNumbersDescSortScript = `
-  if (doc['aimNumbers'].size() == 0) { return '999|999|'; }
+  if (doc['aimNumbers'].size() == 0) { return ''; }
   def s = doc['aimNumbers'].value;
-  if (s == null || s.isEmpty()) { return '999|999|'; }
+  if (s == null || s.isEmpty()) { return ''; }
   def parts = s.splitOnToken(',');
-  int max = 0;
-  for (int i = 0; i < parts.length; i++) {
+  def out = new StringBuilder();
+  for (int i = parts.length - 1; i >= 0; i--) {
+    if (i < parts.length - 1) out.append('|');
     int n = Integer.parseInt(parts[i]);
-    if (n > max) max = n;
+    int inv = 999 - n;
+    out.append(String.format('%03d', new def[]{ inv }));
   }
-  int invMax = 999 - max;
-  int count = parts.length;
-  def aims = new StringBuilder();
-  for (int i = 0; i < parts.length; i++) {
-    if (i > 0) aims.append(',');
-    aims.append(String.format('%03d', new def[]{ Integer.parseInt(parts[i]) }));
-  }
-  return String.format('%03d|%03d|%s', new def[]{ invMax, count, aims.toString() });
+  return out.toString();
 `;

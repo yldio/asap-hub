@@ -891,7 +891,7 @@ describe('ProjectContentfulDataProvider', () => {
                   type: 'string',
                   order: 'asc',
                   script: expect.objectContaining({
-                    source: expect.stringContaining('999 - max'),
+                    source: expect.stringContaining('999 - n'),
                   }),
                 }),
               }),

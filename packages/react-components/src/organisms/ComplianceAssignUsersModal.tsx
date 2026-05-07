@@ -138,8 +138,7 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
   const watchedAssignedUsers = watch('assignedUsers');
   const isEditing = assignedUsers.length > 0;
 
-  const isButtonEnabled =
-    !isSubmitting && watchedAssignedUsers.length > 0;
+  const isButtonEnabled = !isSubmitting && watchedAssignedUsers.length > 0;
 
   return (
     <form>

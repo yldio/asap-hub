@@ -206,6 +206,10 @@ const ComplianceTable: React.FC<ComplianceTableProps> = ({
           PillId={PillId}
           teams={manuscriptDetails.teams ?? ''}
           manuscriptTitle={manuscriptDetails.title}
+          projectName={manuscriptDetails.project?.title}
+          isUserBasedProject={
+            manuscriptDetails.project?.isTeamBased === false
+          }
           getAssignedUsersSuggestions={getAssignedUsersSuggestions}
           assignedUsers={manuscriptDetails.assignedUsers.map((user) => ({
             author: {

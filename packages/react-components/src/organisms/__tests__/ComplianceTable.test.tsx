@@ -240,6 +240,55 @@ describe('ComplianceTable', () => {
       ).not.toBeInTheDocument();
     });
 
+    it('shows Project without Team(s) for user-based project manuscripts', async () => {
+      const userBasedProjectData = [
+        {
+          ...complianceData,
+          assignedUsers: [],
+          project: {
+            id: 'project-id',
+            title: 'User Project',
+            isTeamBased: false,
+          },
+        },
+      ];
+      const { getByLabelText, getByRole } = render(
+        <ComplianceTable {...defaultProps} data={userBasedProjectData} />,
+      );
+
+      await userEvent.click(getByLabelText(/Assign Users/i));
+      const dialog = getByRole('dialog');
+
+      expect(within(dialog).getByText('Project')).toBeInTheDocument();
+      expect(within(dialog).getByText('User Project')).toBeInTheDocument();
+      expect(within(dialog).queryByText('Team(s)')).not.toBeInTheDocument();
+    });
+
+    it('shows Project and Team(s) for team-based project manuscripts', async () => {
+      const teamBasedProjectData = [
+        {
+          ...complianceData,
+          assignedUsers: [],
+          project: {
+            id: 'project-id',
+            title: 'Team Project',
+            isTeamBased: true,
+          },
+        },
+      ];
+      const { getByLabelText, getByRole } = render(
+        <ComplianceTable {...defaultProps} data={teamBasedProjectData} />,
+      );
+
+      await userEvent.click(getByLabelText(/Assign Users/i));
+      const dialog = getByRole('dialog');
+
+      expect(within(dialog).getByText('Project')).toBeInTheDocument();
+      expect(within(dialog).getByText('Team Project')).toBeInTheDocument();
+      expect(within(dialog).getByText('Team(s)')).toBeInTheDocument();
+      expect(within(dialog).getByText('Test Team')).toBeInTheDocument();
+    });
+
     it('calls onUpdateManuscript when assigning users and closes modal', async () => {
       const { getByLabelText, getByRole, queryByText } = render(
         <ComplianceTable {...defaultProps} />,

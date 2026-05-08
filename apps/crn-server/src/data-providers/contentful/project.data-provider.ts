@@ -1098,14 +1098,17 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
     const articleIds = data.relatedArticleIds ?? [];
     const hasArticles = articleIds.length > 0;
+    const now = new Date();
 
     const milestoneEntry = await environment.createEntry('milestones', {
       fields: addLocaleToFields({
         description: data.description,
         status: data.status,
         relatedArticles: articleIds.map((id: string) => getLinkEntity(id)),
+        statusUpdatedAt: now,
+        statusUpdatedBy: getLinkEntity(userId),
         ...(hasArticles && {
-          outputsLinkedAt: new Date(),
+          outputsLinkedAt: now,
           outputsLinkedBy: getLinkEntity(userId),
         }),
       }),

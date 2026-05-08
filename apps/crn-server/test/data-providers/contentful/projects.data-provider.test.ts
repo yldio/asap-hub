@@ -2717,7 +2717,7 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
     ).rejects.toThrow('REST client not available');
   });
 
-  it('creates and publishes a milestone, recording outputs-linked audit fields when articles are associated', async () => {
+  it('creates and publishes a milestone, recording status and outputs-linked audit fields when articles are associated', async () => {
     jest.useFakeTimers().setSystemTime(new Date('2026-05-04T10:00:00.000Z'));
 
     const publish = jest.fn().mockResolvedValue({} as Entry);
@@ -2754,6 +2754,12 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
                 },
               },
             ],
+          },
+          statusUpdatedAt: { 'en-US': new Date('2026-05-04T10:00:00.000Z') },
+          statusUpdatedBy: {
+            'en-US': {
+              sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+            },
           },
           outputsLinkedAt: { 'en-US': new Date('2026-05-04T10:00:00.000Z') },
           outputsLinkedBy: {
@@ -2842,7 +2848,9 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
     ]);
   });
 
-  it('handles empty relatedArticleIds', async () => {
+  it('records status audit fields but not outputs-linked fields when no articles are associated', async () => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-05-04T10:00:00.000Z'));
+
     const publish = jest.fn().mockResolvedValue({} as Entry);
 
     const milestoneEntryMock = {
@@ -2874,9 +2882,21 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
           description: { 'en-US': milestoneData.description },
           status: { 'en-US': milestoneData.status },
           relatedArticles: { 'en-US': [] },
+          statusUpdatedAt: { 'en-US': new Date('2026-05-04T10:00:00.000Z') },
+          statusUpdatedBy: {
+            'en-US': {
+              sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+            },
+          },
         },
       }),
     );
+
+    const createCall = environmentMock.createEntry.mock.calls[0]?.[1];
+    expect(createCall?.fields).not.toHaveProperty('outputsLinkedAt');
+    expect(createCall?.fields).not.toHaveProperty('outputsLinkedBy');
+
+    jest.useRealTimers();
   });
 });
 

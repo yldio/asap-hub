@@ -44,6 +44,7 @@ const milestoneUpdateValidationSchema: JSONSchemaType<MilestoneUpdateRequest> =
     },
     required: [],
     additionalProperties: false,
+    anyOf: [{ required: ['status'] }, { required: ['articleIds'] }],
   };
 
 export const validateMilestoneUpdateRequest = validateInput(

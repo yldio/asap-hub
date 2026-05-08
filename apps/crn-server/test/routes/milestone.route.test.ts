@@ -309,4 +309,37 @@ describe('PATCH /milestones/:milestoneId', () => {
     expect(response.status).toBe(400);
     expect(milestoneControllerMock.update).not.toHaveBeenCalled();
   });
+
+  it('returns 400 when the body is empty (no status and no articleIds)', async () => {
+    const app = makeApp(makeUser('Project Manager'));
+
+    const response = await supertest(app)
+      .patch('/milestones/milestone-1')
+      .send({});
+
+    expect(response.status).toBe(400);
+    expect(milestoneControllerMock.update).not.toHaveBeenCalled();
+  });
+
+  it('accepts an articleIds-only payload (including empty array)', async () => {
+    const user = makeUser('Project Manager');
+    const app = makeApp(user);
+
+    milestoneControllerMock.fetchById.mockResolvedValueOnce({
+      projectId: project.id,
+    });
+    projectControllerMock.fetchById.mockResolvedValueOnce(project);
+    milestoneControllerMock.update.mockResolvedValueOnce(undefined);
+
+    const response = await supertest(app)
+      .patch('/milestones/milestone-1')
+      .send({ articleIds: [] });
+
+    expect(response.status).toBe(200);
+    expect(milestoneControllerMock.update).toHaveBeenCalledWith(
+      'milestone-1',
+      { articleIds: [] },
+      user.id,
+    );
+  });
 });

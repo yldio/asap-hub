@@ -61,10 +61,6 @@ import {
 import { haveSameIds, getCleanProjectTools } from '../../utils/project';
 import logger from '../../utils/logger';
 import OpensearchProvider from '../opensearch.data-provider';
-import {
-  aimNumbersAscSortScript,
-  aimNumbersDescSortScript,
-} from '../opensearch/aim-numbers-sort-scripts';
 import { deriveAimStatus } from '../../utils/aim-status';
 
 import {
@@ -73,6 +69,10 @@ import {
   ProjectUpdateDataObject,
 } from '../types/projects.data-provider.types';
 import { ProjectMilestonesDataObject } from '../../../scripts/opensearch/types';
+import {
+  aimNumbersAscSortScript,
+  aimNumbersDescSortScript,
+} from '../../utils/opensearch/aim-numbers-sort-scripts';
 
 // Type guards for Contentful GraphQL responses
 export type ProjectItem = NonNullable<FetchProjectByIdQuery['projects']>;

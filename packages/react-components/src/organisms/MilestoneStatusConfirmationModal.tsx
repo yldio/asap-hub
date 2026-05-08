@@ -1,0 +1,267 @@
+import { css, keyframes } from '@emotion/react';
+import { ComponentProps, useEffect, useState } from 'react';
+import { ArticleItem, ResearchOutputType } from '@asap-hub/model';
+
+import { LabeledMultiSelect, Modal } from '../molecules';
+import { crossIcon } from '../icons';
+import { Button, Headline3, Paragraph } from '../atoms';
+import { mobileScreen, rem } from '../pixels';
+import { error500, neutral300, neutral900 } from '../colors';
+import { ResearchOutputOption } from '../utils';
+import { articleSelectComponents } from '../utils/article-select-components';
+import { articlesToOptions } from './MilestoneArticlesModal';
+
+const headerStyles = css({
+  display: 'flex',
+  flexDirection: 'row-reverse',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+  gap: rem(16),
+});
+
+const controlsContainerStyles = css({
+  display: 'flex',
+  alignItems: 'flex-start',
+});
+
+const widerModalStyles = css({
+  width: '90%',
+  maxWidth: rem(1060),
+  boxSizing: 'content-box',
+});
+
+const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
+
+const buttonContainerStyles = (menuOpen: boolean) =>
+  css({
+    display: 'grid',
+    columnGap: rem(24),
+    gridTemplateRows: 'max-content 12px max-content',
+    [buttonMediaQuery]: {
+      gridTemplateColumns: 'max-content max-content',
+      gridTemplateRows: 'auto',
+      justifyContent: 'flex-end',
+    },
+    paddingTop: menuOpen ? rem(288) : rem(72),
+    transition: 'padding-top 0.2s ease',
+  });
+
+const confirmStyles = css({
+  display: 'flex',
+  justifyContent: 'center',
+  gridRow: '1 / span 2',
+  gridColumn: '1',
+  [buttonMediaQuery]: {
+    gridRow: '1',
+    gridColumn: '2',
+  },
+});
+
+const cancelStyles = css({
+  display: 'flex',
+  justifyContent: 'center',
+  gridRow: '2 / span 2',
+  gridColumn: '1',
+  [buttonMediaQuery]: {
+    gridRow: '1',
+  },
+});
+
+const mainWrapStyles = css({
+  padding: `${rem(32)} ${rem(24)}`,
+});
+
+const bodyParagraphStyles = css({
+  marginTop: rem(24),
+  marginBottom: 0,
+});
+
+const selectWrapperStyles = css({
+  marginTop: rem(32),
+});
+
+const spin = keyframes({
+  '0%': { transform: 'rotate(0deg)' },
+  '100%': { transform: 'rotate(360deg)' },
+});
+
+const loadingWrapperStyles = css({
+  marginTop: rem(72),
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: rem(12),
+  height: rem(40),
+});
+
+const spinnerStyles = css({
+  width: rem(18),
+  height: rem(18),
+  border: `${rem(3)} solid ${neutral300.rgb}`,
+  borderTop: `${rem(3)} solid ${neutral900.rgb}`,
+  borderRadius: '50%',
+  animation: `${spin} 1s linear infinite`,
+});
+
+const errorMessageStyles = css({
+  marginTop: rem(8),
+  color: error500.rgb,
+});
+
+const confirmButtonContentStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+});
+
+const inlineSpinnerStyles = css({
+  boxSizing: 'border-box',
+  width: rem(16),
+  height: rem(16),
+  border: `${rem(2)} solid transparent`,
+  borderTopColor: 'currentColor',
+  borderRightColor: 'currentColor',
+  borderRadius: '50%',
+  animation: `${spin} 1s linear infinite`,
+});
+
+export type MilestoneStatusConfirmationStatus = 'Complete' | 'Terminated';
+
+type MilestoneStatusConfirmationModalProps = {
+  readonly status: MilestoneStatusConfirmationStatus;
+  readonly loadCurrentArticles: () => Promise<ReadonlyArray<ArticleItem>>;
+  readonly onClose: () => void;
+  readonly onConfirm: (articles: ReadonlyArray<ArticleItem>) => Promise<void>;
+  readonly loadOptions: NonNullable<
+    ComponentProps<
+      typeof LabeledMultiSelect<ResearchOutputOption>
+    >['loadOptions']
+  >;
+};
+
+const optionsToArticles = (
+  options: ReadonlyArray<ResearchOutputOption>,
+): ReadonlyArray<ArticleItem> =>
+  options.map((o) => ({
+    id: o.value,
+    title: o.label,
+    href: `/shared-research/${o.value}`,
+    type: o.type as ResearchOutputType | undefined,
+  }));
+
+const MilestoneStatusConfirmationModal: React.FC<
+  MilestoneStatusConfirmationModalProps
+> = ({ status, loadCurrentArticles, onClose, onConfirm, loadOptions }) => {
+  const [selectedOptions, setSelectedOptions] = useState<
+    ResearchOutputOption[]
+  >([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoadingArticles, setIsLoadingArticles] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setIsLoadingArticles(true);
+    setLoadError(false);
+
+    loadCurrentArticles()
+      .then((articles) => {
+        if (cancelled) return;
+        setSelectedOptions(articlesToOptions(articles));
+        setIsLoadingArticles(false);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setLoadError(true);
+        setIsLoadingArticles(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loadCurrentArticles]);
+
+  const isConfirmDisabled = isLoadingArticles || loadError || isSaving;
+
+  return (
+    <Modal padding={false} overrideModalStyles={widerModalStyles}>
+      <div css={mainWrapStyles}>
+        <header css={headerStyles}>
+          <div css={controlsContainerStyles}>
+            <Button small noMargin enabled={!isSaving} onClick={onClose}>
+              {crossIcon}
+            </Button>
+          </div>
+          <Headline3 noMargin>
+            {`Set status to ${status}? This action is irreversible.`}
+          </Headline3>
+        </header>
+        <Paragraph accent="lead" styles={bodyParagraphStyles}>
+          {`Before marking a milestone as ${status}${
+            status === 'Terminated' ? '' : ','
+          } you may add any related articles associated with this milestone, if applicable. Once the status is set to ${status}, it cannot be changed, but related articles may still be added later. Relevant members will be notified via the CRN Hub and/or email. If further updates are required, please contact Technical Support.`}
+        </Paragraph>
+        {isLoadingArticles ? (
+          <div css={loadingWrapperStyles}>
+            <div css={spinnerStyles} />
+            <Paragraph noMargin>Loading...</Paragraph>
+          </div>
+        ) : (
+          <div css={selectWrapperStyles}>
+            <LabeledMultiSelect<ResearchOutputOption>
+              title="Related Articles"
+              subtitle="(optional)"
+              description="Add any articles associated with this milestone, if applicable. Only published articles on the CRN Hub will be available below. These articles will also be displayed in the corresponding Aim."
+              placeholder="Start typing..."
+              values={selectedOptions}
+              loadOptions={loadOptions}
+              onChange={(newValues) => setSelectedOptions([...newValues])}
+              noOptionsMessage={() => 'No articles found'}
+              components={articleSelectComponents}
+              onMenuOpen={() => setIsMenuOpen(true)}
+              onMenuClose={() => setIsMenuOpen(false)}
+            />
+            {loadError && (
+              <Paragraph accent="lead" styles={errorMessageStyles}>
+                Could not load existing articles. Please close this dialog and
+                try again.
+              </Paragraph>
+            )}
+          </div>
+        )}
+        <div css={buttonContainerStyles(isMenuOpen)}>
+          <div css={cancelStyles}>
+            <Button noMargin enabled={!isSaving} onClick={onClose}>
+              Keep Editing
+            </Button>
+          </div>
+          <div css={confirmStyles}>
+            <Button
+              primary
+              noMargin
+              enabled={!isConfirmDisabled}
+              onClick={async () => {
+                if (isConfirmDisabled) return;
+                setIsSaving(true);
+                try {
+                  await onConfirm(optionsToArticles(selectedOptions));
+                  onClose();
+                } catch {
+                  onClose();
+                }
+              }}
+            >
+              <span css={confirmButtonContentStyles}>
+                {isSaving && <div css={inlineSpinnerStyles} />}
+                Confirm and Notify
+              </span>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
+export default MilestoneStatusConfirmationModal;

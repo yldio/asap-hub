@@ -193,6 +193,7 @@ export {
   ProjectMilestonesTable,
   Aim,
   Milestone,
+  MilestoneStatusConfirmationModal,
   PublicationComplianceTable,
   PreprintComplianceTable,
   QuestionsSection,

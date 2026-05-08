@@ -101,6 +101,7 @@ export {
   LabeledTextArea,
   LabeledTextField,
   LabeledTypeahead,
+  MilestoneStatusDropdown,
   LinkHeadline,
   Loading,
   MembersList,

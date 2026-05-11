@@ -15,7 +15,7 @@ const mockArticles: ArticleItem[] = [
 
 const defaultProps = {
   onClose: jest.fn(),
-  onConfirm: jest.fn(),
+  onConfirm: jest.fn().mockResolvedValue(undefined),
   loadOptions: jest.fn().mockResolvedValue([]),
 };
 
@@ -87,7 +87,7 @@ describe('MilestoneArticlesModal', () => {
       <MilestoneArticlesModal
         articles={[]}
         onClose={onClose}
-        onConfirm={jest.fn()}
+        onConfirm={jest.fn().mockResolvedValue(undefined)}
         loadOptions={defaultProps.loadOptions}
       />,
     );
@@ -106,7 +106,7 @@ describe('MilestoneArticlesModal', () => {
       <MilestoneArticlesModal
         articles={[]}
         onClose={onClose}
-        onConfirm={jest.fn()}
+        onConfirm={jest.fn().mockResolvedValue(undefined)}
         loadOptions={defaultProps.loadOptions}
       />,
     );
@@ -127,9 +127,9 @@ describe('MilestoneArticlesModal', () => {
     });
   });
 
-  it('calls onClose and onConfirm when Confirm is clicked', async () => {
+  it('calls onConfirm and onClose when Confirm is clicked', async () => {
     const onClose = jest.fn();
-    const onConfirm = jest.fn();
+    const onConfirm = jest.fn().mockResolvedValue(undefined);
     render(
       <MilestoneArticlesModal
         articles={mockArticles}
@@ -139,7 +139,9 @@ describe('MilestoneArticlesModal', () => {
       />,
     );
     await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
-    expect(onClose).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(onClose).toHaveBeenCalledTimes(1);
+    });
     expect(onConfirm).toHaveBeenCalledTimes(1);
     expect(onConfirm).toHaveBeenCalledWith(
       expect.arrayContaining([
@@ -169,7 +171,7 @@ describe('MilestoneArticlesModal', () => {
       <MilestoneArticlesModal
         articles={[]}
         onClose={jest.fn()}
-        onConfirm={jest.fn()}
+        onConfirm={jest.fn().mockResolvedValue(undefined)}
         loadOptions={loadOptions}
       />,
     );
@@ -219,7 +221,7 @@ describe('MilestoneArticlesModal', () => {
           { id: 'no-type', title: 'Article without type', href: '/no-type' },
         ]}
         onClose={jest.fn()}
-        onConfirm={jest.fn()}
+        onConfirm={jest.fn().mockResolvedValue(undefined)}
         loadOptions={loadOptions}
       />,
     );
@@ -239,7 +241,7 @@ describe('MilestoneArticlesModal', () => {
       <MilestoneArticlesModal
         articles={[]}
         onClose={jest.fn()}
-        onConfirm={jest.fn()}
+        onConfirm={jest.fn().mockResolvedValue(undefined)}
         loadOptions={loadOptions}
       />,
     );
@@ -250,6 +252,203 @@ describe('MilestoneArticlesModal', () => {
     await userEvent.type(input, 'nonexistent');
     await waitFor(() => {
       expect(screen.getByText('No articles found')).toBeInTheDocument();
+    });
+  });
+
+  it('disables buttons while request is in progress', async () => {
+    const onConfirm = jest.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          setTimeout(resolve, 200);
+        }),
+    );
+    const onClose = jest.fn();
+
+    render(
+      <MilestoneArticlesModal
+        articles={mockArticles}
+        onClose={onClose}
+        onConfirm={onConfirm}
+        loadOptions={defaultProps.loadOptions}
+      />,
+    );
+
+    const confirmButton = screen.getByRole('button', { name: /confirm/i });
+    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+
+    expect(confirmButton).not.toBeDisabled();
+    expect(cancelButton).not.toBeDisabled();
+
+    await userEvent.click(confirmButton);
+
+    expect(confirmButton).toBeDisabled();
+    expect(cancelButton).toBeDisabled();
+
+    await waitFor(() => {
+      expect(onConfirm).toHaveBeenCalled();
+    });
+
+    await waitFor(() => {
+      expect(onClose).toHaveBeenCalled();
+    });
+  });
+
+  it('shows error message, keeps modal open, and re-enables inputs on save failure', async () => {
+    const onConfirm = jest.fn().mockRejectedValue(new Error('fail'));
+    const onClose = jest.fn();
+
+    render(
+      <MilestoneArticlesModal
+        articles={mockArticles}
+        onClose={onClose}
+        onConfirm={onConfirm}
+        loadOptions={defaultProps.loadOptions}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('An error has occurred. Please try again later.'),
+      ).toBeInTheDocument();
+    });
+
+    expect(onClose).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: /confirm/i })).not.toBeDisabled();
+  });
+
+  it('disables close button while request is in progress', async () => {
+    const onConfirm = jest.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          setTimeout(resolve, 200);
+        }),
+    );
+    const onClose = jest.fn();
+
+    render(
+      <MilestoneArticlesModal
+        articles={mockArticles}
+        onClose={onClose}
+        onConfirm={onConfirm}
+        loadOptions={defaultProps.loadOptions}
+      />,
+    );
+
+    const dialog = screen.getByRole('dialog');
+    const closeButton = within(dialog).getAllByRole('button')[0]!;
+
+    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+
+    expect(closeButton).toBeDisabled();
+
+    await waitFor(() => {
+      expect(onClose).toHaveBeenCalled();
+    });
+  });
+
+  it('disables select input while request is in progress', async () => {
+    const onConfirm = jest.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          setTimeout(resolve, 200);
+        }),
+    );
+    const onClose = jest.fn();
+
+    render(
+      <MilestoneArticlesModal
+        articles={[]}
+        onClose={onClose}
+        onConfirm={onConfirm}
+        loadOptions={defaultProps.loadOptions}
+      />,
+    );
+
+    const combobox = screen.getByRole('combobox');
+
+    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+
+    expect(combobox).toBeDisabled();
+
+    await waitFor(() => {
+      expect(onClose).toHaveBeenCalled();
+    });
+  });
+
+  it('clears error message when selection changes after failure', async () => {
+    const onConfirm = jest.fn().mockRejectedValue(new Error('fail'));
+    const loadOptions = jest.fn().mockResolvedValue([
+      {
+        label: 'New Article',
+        value: 'new-1',
+        documentType: 'Article',
+        type: 'Preprint',
+      },
+    ]);
+
+    render(
+      <MilestoneArticlesModal
+        articles={[]}
+        onClose={jest.fn()}
+        onConfirm={onConfirm}
+        loadOptions={loadOptions}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('An error has occurred. Please try again later.'),
+      ).toBeInTheDocument();
+    });
+
+    const input = screen.getByRole('combobox');
+    await userEvent.type(input, 'New');
+    await waitFor(() => {
+      expect(screen.getByText('New Article')).toBeInTheDocument();
+    });
+    await userEvent.click(screen.getByText('New Article'));
+
+    expect(
+      screen.queryByText('An error has occurred. Please try again later.'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('clears error message on retry', async () => {
+    const onConfirm = jest
+      .fn()
+      .mockRejectedValueOnce(new Error('fail'))
+      .mockResolvedValueOnce(undefined);
+    const onClose = jest.fn();
+
+    render(
+      <MilestoneArticlesModal
+        articles={mockArticles}
+        onClose={onClose}
+        onConfirm={onConfirm}
+        loadOptions={defaultProps.loadOptions}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await waitFor(() => {
+      expect(
+        screen.getByText('An error has occurred. Please try again later.'),
+      ).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+    await waitFor(() => {
+      expect(
+        screen.queryByText('An error has occurred. Please try again later.'),
+      ).not.toBeInTheDocument();
+    });
+
+    await waitFor(() => {
+      expect(onClose).toHaveBeenCalled();
     });
   });
 });

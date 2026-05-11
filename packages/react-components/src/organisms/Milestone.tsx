@@ -278,12 +278,9 @@ const Milestone: FC<MilestoneProps> = ({
         <MilestoneArticlesModal
           articles={articles ?? []}
           onClose={() => setIsModalOpen(false)}
-          onConfirm={(updated) => {
-            void onSaveArticles(milestoneId, updated)
-              .then(() => {
-                setArticles(updated);
-              })
-              .catch(noop);
+          onConfirm={async (updated) => {
+            await onSaveArticles(milestoneId, updated);
+            setArticles(updated);
           }}
           loadOptions={loadArticleOptions}
         />

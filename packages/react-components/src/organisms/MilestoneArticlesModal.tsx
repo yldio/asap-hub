@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { ArticleItem, ResearchOutputType } from '@asap-hub/model';
 
@@ -8,6 +8,8 @@ import { Button, Headline3 } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
 import { ResearchOutputOption } from '../utils';
 import { articleSelectComponents } from '../utils/article-select-components';
+import Toast from './Toast';
+import { neutral300 } from '../colors';
 
 const headerStyles = css({
   display: 'flex',
@@ -64,10 +66,34 @@ const cancelStyles = css({
   },
 });
 
+const confirmButtonContentStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+});
+
+const spin = keyframes`
+  from { transform: rotate(0deg) }
+  to { transform: rotate(360deg) }
+`;
+
+const spinnerStyles = css({
+  width: rem(16),
+  height: rem(16),
+  border: `${rem(2)} solid ${neutral300.rgb}`,
+  borderTop: `${rem(2)} solid white`,
+  borderRadius: '50%',
+  animation: `${spin} 1s linear infinite`,
+});
+
 const selectContainerStyles = css({});
 
-const mainWrapStyles = css({
-  padding: `${rem(32)} ${rem(24)}`,
+const headerWrapStyles = css({
+  padding: `${rem(32)} ${rem(24)} ${rem(16)}`,
+});
+
+const contentWrapStyles = css({
+  padding: `${rem(16)} ${rem(24)} ${rem(32)}`,
 });
 
 export const articlesToOptions = (
@@ -93,7 +119,7 @@ const optionsToArticles = (
 type MilestoneArticlesModalProps = {
   readonly articles: ReadonlyArray<ArticleItem>;
   readonly onClose: () => void;
-  readonly onConfirm: (articles: ReadonlyArray<ArticleItem>) => void;
+  readonly onConfirm: (articles: ReadonlyArray<ArticleItem>) => Promise<void>;
   readonly loadOptions: NonNullable<
     ComponentProps<
       typeof LabeledMultiSelect<ResearchOutputOption>
@@ -111,20 +137,45 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
     ResearchOutputOption[]
   >(articlesToOptions(initialArticles));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const hasArticles = initialArticles.length > 0;
   const title = hasArticles ? 'Edit Related Articles' : 'Add Related Articles';
 
+  const handleConfirm = async () => {
+    if (isRequestInProgress) return;
+    setHasError(false);
+    setIsRequestInProgress(true);
+    try {
+      await onConfirm(optionsToArticles(selectedOptions));
+      onClose();
+    } catch {
+      setIsRequestInProgress(false);
+      setHasError(true);
+    }
+  };
+
   return (
     <Modal padding={false} overrideModalStyles={widerModalStyles}>
-      <div css={mainWrapStyles}>
+      <div css={headerWrapStyles}>
         <header css={headerStyles}>
           <div css={controlsContainerStyles}>
-            <Button small noMargin onClick={onClose}>
+            <Button
+              small
+              noMargin
+              onClick={onClose}
+              enabled={!isRequestInProgress}
+            >
               {crossIcon}
             </Button>
           </div>
           <Headline3 noMargin>{title}</Headline3>
         </header>
+      </div>
+      {hasError && (
+        <Toast>An error has occurred. Please try again later.</Toast>
+      )}
+      <div css={contentWrapStyles}>
         <div>
           <div css={selectContainerStyles}>
             <LabeledMultiSelect<ResearchOutputOption>
@@ -133,16 +184,20 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
               placeholder="Start typing..."
               values={selectedOptions}
               loadOptions={loadOptions}
-              onChange={(newValues) => setSelectedOptions([...newValues])}
+              onChange={(newValues) => {
+                setSelectedOptions([...newValues]);
+                setHasError(false);
+              }}
               noOptionsMessage={() => 'No articles found'}
               components={articleSelectComponents}
               onMenuOpen={() => setIsMenuOpen(true)}
               onMenuClose={() => setIsMenuOpen(false)}
+              enabled={!isRequestInProgress}
             />
           </div>
           <div css={buttonContainerStyles(isMenuOpen)}>
             <div css={cancelStyles}>
-              <Button noMargin onClick={onClose}>
+              <Button noMargin onClick={onClose} enabled={!isRequestInProgress}>
                 Cancel
               </Button>
             </div>
@@ -150,12 +205,13 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
               <Button
                 primary
                 noMargin
-                onClick={() => {
-                  onClose();
-                  onConfirm(optionsToArticles(selectedOptions));
-                }}
+                enabled={!isRequestInProgress}
+                onClick={handleConfirm}
               >
-                Confirm
+                <span css={confirmButtonContentStyles}>
+                  {isRequestInProgress && <div css={spinnerStyles} />}
+                  Confirm
+                </span>
               </Button>
             </div>
           </div>

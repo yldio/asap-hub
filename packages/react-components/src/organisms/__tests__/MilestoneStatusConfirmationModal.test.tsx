@@ -1,10 +1,4 @@
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MilestoneStatusConfirmationModal from '../MilestoneStatusConfirmationModal';
 
@@ -126,12 +120,13 @@ describe('MilestoneStatusConfirmationModal', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('opens and closes the multi-select menu', async () => {
+  it('opens the menu on typing, shows the no-results message, and closes on Escape', async () => {
+    const localLoadOptions = jest.fn().mockResolvedValue([]);
     render(
       <MilestoneStatusConfirmationModal
         status="Complete"
         loadCurrentArticles={() => Promise.resolve([])}
-        loadOptions={loadOptions}
+        loadOptions={localLoadOptions}
         onClose={jest.fn()}
         onConfirm={jest.fn(() => Promise.resolve())}
       />,
@@ -141,17 +136,60 @@ describe('MilestoneStatusConfirmationModal', () => {
         screen.getByRole('button', { name: /Confirm and Notify/i }),
       ).toBeEnabled(),
     );
-    const select = screen.getByRole('combobox');
-    // Open the menu — covers onMenuOpen
-    await act(async () => {
-      select.focus();
-      fireEvent.mouseDown(select);
-    });
-    await waitFor(() => expect(loadOptions).toHaveBeenCalled());
-    // Close the menu — covers onMenuClose
-    await act(async () => {
-      fireEvent.blur(select);
-    });
+    const input = screen.getByRole('combobox');
+    await userEvent.type(input, 'nothing');
+    await waitFor(() =>
+      expect(screen.getByText('No articles found')).toBeInTheDocument(),
+    );
+    expect(localLoadOptions).toHaveBeenCalled();
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() =>
+      expect(screen.queryByText('No articles found')).not.toBeInTheDocument(),
+    );
+  });
+
+  it('adds a selected option to the selection and submits it on confirm', async () => {
+    const newArticle = {
+      label: 'New Article',
+      value: 'ro-new',
+      documentType: 'Article',
+      type: 'Preprint',
+    };
+    const localLoadOptions = jest.fn().mockResolvedValue([newArticle]);
+    const onConfirm = jest.fn(() => Promise.resolve());
+    const onClose = jest.fn();
+    render(
+      <MilestoneStatusConfirmationModal
+        status="Complete"
+        loadCurrentArticles={() => Promise.resolve([])}
+        loadOptions={localLoadOptions}
+        onClose={onClose}
+        onConfirm={onConfirm}
+      />,
+    );
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: /Confirm and Notify/i }),
+      ).toBeEnabled(),
+    );
+    const input = screen.getByRole('combobox');
+    await userEvent.type(input, 'New');
+    const option = await screen.findByText('New Article');
+    await userEvent.click(option);
+    // The option is now rendered as a selected pill (covers onChange)
+    expect(screen.getByLabelText('Remove New Article')).toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole('button', { name: /Confirm and Notify/i }),
+    );
+    await waitFor(() => expect(onClose).toHaveBeenCalled());
+    expect(onConfirm).toHaveBeenCalledWith([
+      expect.objectContaining({
+        id: 'ro-new',
+        title: 'New Article',
+        href: '/shared-research/ro-new',
+        type: 'Preprint',
+      }),
+    ]);
   });
 
   it('submits with the loaded articles when nothing is changed', async () => {

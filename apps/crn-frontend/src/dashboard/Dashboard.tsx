@@ -8,9 +8,6 @@ import { dashboard as dashboardRoute } from '@asap-hub/routing';
 import { FC, useState } from 'react';
 import { useMatch } from 'react-router';
 
-import { usePrefetchCalendars } from '../events/calendar/state';
-import { CARD_VIEW_PAGE_SIZE } from '../hooks';
-import { usePrefetchTeams } from '../network/teams/state';
 import { usePatchUserById, useUserById } from '../network/users/state';
 
 import Body from './Body';
@@ -30,21 +27,6 @@ const Dashboard: FC<Record<string, never>> = () => {
   const { items: reminders } = useReminderState();
 
   const roles = useCurrentUserTeamRolesCRN();
-  usePrefetchTeams({
-    currentPage: 0,
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    searchQuery: '',
-    status: [],
-    teamType: 'Discovery Team',
-  });
-  usePrefetchTeams({
-    currentPage: 0,
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    searchQuery: '',
-    status: [],
-    teamType: 'Resource Team',
-  });
-  usePrefetchCalendars();
   const patchUser = usePatchUserById(id);
   const user = useUserById(id);
 

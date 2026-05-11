@@ -105,6 +105,8 @@ type ComplianceAssignUsersModalProps = Pick<
   teams: string;
   manuscriptTitle: string;
   assignedUsers: OptionsType<AuthorOption>;
+  projectName?: string;
+  isUserBasedProject?: boolean;
 };
 
 const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
@@ -115,6 +117,8 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
   manuscriptTitle,
   getAssignedUsersSuggestions,
   assignedUsers,
+  projectName,
+  isUserBasedProject,
 }) => {
   const bottomDivRef = useRef<HTMLDivElement>(null);
   const { setValue, watch, handleSubmit } = useForm<AssignedUsersFormData>({
@@ -134,13 +138,7 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
   const watchedAssignedUsers = watch('assignedUsers');
   const isEditing = assignedUsers.length > 0;
 
-  const hasRemovedAllPreviousUsers =
-    watchedAssignedUsers.length === 0 && isEditing;
-
-  const hasAddedUsers = watchedAssignedUsers.length > 0;
-
-  const isButtonEnabled =
-    !isSubmitting && (hasAddedUsers || hasRemovedAllPreviousUsers);
+  const isButtonEnabled = !isSubmitting && watchedAssignedUsers.length > 0;
 
   return (
     <form>
@@ -160,7 +158,12 @@ const ComplianceAssignUsersModal: React.FC<ComplianceAssignUsersModalProps> = ({
             <InformationRow title="ID">
               <PillId />
             </InformationRow>
-            <InformationRow title="Team(s)" value={teams} />
+            {projectName && (
+              <InformationRow title="Project" value={projectName} />
+            )}
+            {!isUserBasedProject && (
+              <InformationRow title="Team(s)" value={teams} />
+            )}
 
             <AuthorSelect
               maxMenuHeight={170}

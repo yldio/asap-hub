@@ -190,7 +190,7 @@ describe('ComplianceAssignUsersModal', () => {
     expect(screen.getByRole('button', { name: /Assign/ })).toBeEnabled();
   });
 
-  it('displays Assign button as enabled when removing all previous assignedusers', async () => {
+  it('displays Update button as disabled when all assigned users are removed', async () => {
     render(
       <ComplianceAssignUsersModal
         onDismiss={onDismiss}
@@ -223,6 +223,63 @@ describe('ComplianceAssignUsersModal', () => {
       0,
     );
 
-    expect(screen.getByRole('button', { name: /Update/ })).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Update/ })).toBeDisabled();
+  });
+
+  it('displays Project and Team(s) for team-based project manuscripts', () => {
+    render(
+      <ComplianceAssignUsersModal
+        onDismiss={onDismiss}
+        onConfirm={onConfirm}
+        PillId={mockPillId}
+        teams="Team A"
+        manuscriptTitle="Test Manuscript"
+        getAssignedUsersSuggestions={mockGetAssignedUsersSuggestions}
+        assignedUsers={[]}
+        projectName="My Research Project"
+      />,
+    );
+
+    expect(screen.getByText('Project')).toBeInTheDocument();
+    expect(screen.getByText('My Research Project')).toBeInTheDocument();
+    expect(screen.getByText('Team(s)')).toBeInTheDocument();
+    expect(screen.getByText('Team A')).toBeInTheDocument();
+  });
+
+  it('displays Project without Team(s) for user-based project manuscripts', () => {
+    render(
+      <ComplianceAssignUsersModal
+        onDismiss={onDismiss}
+        onConfirm={onConfirm}
+        PillId={mockPillId}
+        teams="Team A"
+        manuscriptTitle="Test Manuscript"
+        getAssignedUsersSuggestions={mockGetAssignedUsersSuggestions}
+        assignedUsers={[]}
+        projectName="User Project"
+        isUserBasedProject
+      />,
+    );
+
+    expect(screen.getByText('Project')).toBeInTheDocument();
+    expect(screen.getByText('User Project')).toBeInTheDocument();
+    expect(screen.queryByText('Team(s)')).not.toBeInTheDocument();
+  });
+
+  it('displays Team(s) without Project when no project name', () => {
+    render(
+      <ComplianceAssignUsersModal
+        onDismiss={onDismiss}
+        onConfirm={onConfirm}
+        PillId={mockPillId}
+        teams="Team A"
+        manuscriptTitle="Test Manuscript"
+        getAssignedUsersSuggestions={mockGetAssignedUsersSuggestions}
+        assignedUsers={[]}
+      />,
+    );
+
+    expect(screen.getByText('Team(s)')).toBeInTheDocument();
+    expect(screen.queryByText('Project')).not.toBeInTheDocument();
   });
 });

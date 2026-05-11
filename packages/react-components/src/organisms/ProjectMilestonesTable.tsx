@@ -3,6 +3,7 @@ import {
   GrantType,
   Milestone as MilestoneType,
   MilestoneSortOption,
+  MilestoneStatus,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, FC, useMemo } from 'react';
@@ -150,7 +151,7 @@ type ProjectMilestonesProps = {
   ) => Promise<void>;
   readonly onChangeStatus?: (
     milestoneId: string,
-    status: import('@asap-hub/model').MilestoneStatus,
+    status: MilestoneStatus,
     articles?: ReadonlyArray<ArticleItem>,
   ) => Promise<void>;
   readonly selectedGrantType: GrantType;

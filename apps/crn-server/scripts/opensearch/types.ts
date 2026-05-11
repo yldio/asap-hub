@@ -52,10 +52,8 @@ export type PresenterRepresentationDataObject = EngagementDataObject & {
 export type ProjectMilestonesDataObject = {
   id: string;
   description: string;
-  /** Comma-separated aim numbers in ascending order, e.g. "1", "1,2", "2,3,4". */
-  aimNumbersAsc: string;
-  /** Same aim numbers but reversed, for descending sort, e.g. "4,3,2". */
-  aimNumbersDesc: string;
+  /** Comma-separated aim numbers in ascending order, e.g. "1", "1,2", "2,3,4". Sorting derives from this field at query time. */
+  aimNumbers: string;
   status: string;
   articleCount: number;
   /** Comma-separated list of unique related article DOIs for this milestone. */

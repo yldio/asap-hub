@@ -1,5 +1,11 @@
 import { SearchFrame } from '@asap-hub/frontend-utils';
-import { Aim, GrantType, milestoneStatuses } from '@asap-hub/model';
+import {
+  Aim,
+  GrantType,
+  MilestoneSortOption,
+  milestoneSortOptions,
+  milestoneStatuses,
+} from '@asap-hub/model';
 import {
   LabeledMultiSelect,
   ProjectDetailMilestones,
@@ -7,7 +13,7 @@ import {
   ResearchOutputOption,
   SearchAndFilter,
 } from '@asap-hub/react-components';
-import { ComponentProps, useCallback } from 'react';
+import { ComponentProps, useCallback, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useManuscriptToast } from '../network/teams/useManuscriptToast';
 import { usePagination, usePaginationParams, useSearch } from '../hooks';
@@ -41,6 +47,8 @@ type TableContentProps = {
       typeof LabeledMultiSelect<ResearchOutputOption>
     >['loadOptions']
   >;
+  sort: MilestoneSortOption;
+  onToggleSort: () => void;
 };
 
 const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
@@ -50,6 +58,8 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
   searchQuery,
   filters,
   loadArticleOptions,
+  sort,
+  onToggleSort,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const { items: milestones = [], total } = useProjectMilestones({
@@ -59,6 +69,7 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
     filters,
     currentPage,
     pageSize,
+    sort,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
@@ -93,6 +104,8 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
       selectedGrantType={selectedGrantType}
       total={total}
       hasAppliedSearch={searchQuery.trim().length > 0 || filters.size > 0}
+      sort={sort}
+      onToggleSort={onToggleSort}
     />
   );
 };
@@ -130,38 +143,56 @@ const ProjectMilestones: React.FC<{
     toggleFilter,
   } = useSearch();
 
+  const params = useMemo(() => new URLSearchParams(search), [search]);
+  const searchRef = useRef(search);
+  searchRef.current = search;
+
   const selectedGrantType: GrantType =
-    hasSupplementGrant &&
-    new URLSearchParams(search).get('grantType') !== 'original'
+    hasSupplementGrant && params.get('grantType') !== 'original'
       ? 'supplement'
       : 'original';
 
+  const sortParam = params.get('sort');
+  const sort: MilestoneSortOption = milestoneSortOptions.includes(
+    sortParam as MilestoneSortOption,
+  )
+    ? (sortParam as MilestoneSortOption)
+    : 'aim_asc';
+
   const handleGrantTypeChange = useCallback(
     (grantType: GrantType) => {
-      const newParams = new URLSearchParams(search);
+      const newParams = new URLSearchParams(searchRef.current);
       newParams.set('grantType', grantType);
       newParams.delete('currentPage');
-      void navigate({ search: `${newParams.toString()}` }, { replace: true });
+      void navigate({ search: newParams.toString() }, { replace: true });
     },
-    [search, navigate],
+    [navigate],
   );
+
+  const handleToggleSort = useCallback(() => {
+    const newParams = new URLSearchParams(searchRef.current);
+    const next = newParams.get('sort') === 'aim_desc' ? 'aim_asc' : 'aim_desc';
+    newParams.set('sort', next);
+    newParams.delete('currentPage');
+    void navigate({ search: newParams.toString() }, { replace: true });
+  }, [navigate]);
 
   const createProjectMilestone = useCreateProjectMilestone(projectId);
   const { setFormType } = useManuscriptToast();
 
-  const onSuccess = () => {
+  const onSuccess = useCallback(() => {
     setFormType({
       type: 'milestone-created',
       accent: 'successLarge',
     });
-  };
+  }, [setFormType]);
 
-  const onError = () => {
+  const onError = useCallback(() => {
     setFormType({
       type: 'default-error',
       accent: 'error',
     });
-  };
+  }, [setFormType]);
 
   return (
     <ProjectDetailMilestones
@@ -195,6 +226,8 @@ const ProjectMilestones: React.FC<{
             searchQuery={debouncedSearchQuery}
             filters={filters}
             loadArticleOptions={loadArticleOptions}
+            sort={sort}
+            onToggleSort={handleToggleSort}
           />
         </SearchFrame>
       </div>

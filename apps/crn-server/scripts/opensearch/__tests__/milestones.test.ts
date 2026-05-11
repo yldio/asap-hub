@@ -66,8 +66,7 @@ describe('exportMilestonesData', () => {
       articleCount: 3,
       createdDate: '2025-01-01T00:00:00.000Z',
       lastDate: '2025-02-01T00:00:00.000Z',
-      aimNumbersAsc: '1,2',
-      aimNumbersDesc: '2,1',
+      aimNumbers: '1,2',
       articlesDOI: '10.1000/xyz123,10.1000/xyz456',
       projectId: 'project-1',
       projectName: 'Project Alpha',
@@ -83,7 +82,7 @@ describe('exportMilestonesData', () => {
     );
   });
 
-  it('produces empty aimNumbersAsc and aimNumbersDesc when milestone has no linked aims', async () => {
+  it('produces empty aimNumbers when milestone has no linked aims', async () => {
     mockRequest.mockImplementation((query: any) => {
       const body = query?.loc?.source?.body ?? '';
       if (body.includes('projectsCollection'))
@@ -100,8 +99,7 @@ describe('exportMilestonesData', () => {
     const result = await exportMilestonesData();
 
     expect(result).toHaveLength(1);
-    expect(result[0]!.aimNumbersAsc).toBe('');
-    expect(result[0]!.aimNumbersDesc).toBe('');
+    expect(result[0]!.aimNumbers).toBe('');
   });
 
   it('warns when the aim order map is empty', async () => {

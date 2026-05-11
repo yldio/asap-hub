@@ -60,8 +60,7 @@ describe('Milestones sync integration', () => {
       {
         id: 'milestone-1',
         description: 'First milestone',
-        aimNumbersAsc: '1,2',
-        aimNumbersDesc: '2,1',
+        aimNumbers: '1,2',
         status: 'In Progress',
         articleCount: 3,
         articlesDOI: '10.1000/xyz123,10.1000/xyz456,10.1000/xyz789',
@@ -89,8 +88,7 @@ describe('Milestones sync integration', () => {
 
       expect(data.documents).toEqual(mockMilestoneDocs);
       expect(data.mapping.properties).toHaveProperty('description');
-      expect(data.mapping.properties).toHaveProperty('aimNumbersAsc');
-      expect(data.mapping.properties).toHaveProperty('aimNumbersDesc');
+      expect(data.mapping.properties).toHaveProperty('aimNumbers');
       expect(data.mapping.properties).toHaveProperty('status');
       expect(data.mapping.properties).toHaveProperty('articleCount');
       expect(data.mapping.properties).toHaveProperty('articlesDOI');

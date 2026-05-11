@@ -145,16 +145,9 @@ const fetchAllMilestones = async (
   return milestones;
 };
 
-const buildAimNumbersStrings = (numbers: number[] | undefined) => {
-  if (!numbers || numbers.length === 0) {
-    return { aimNumbersAsc: '', aimNumbersDesc: '' };
-  }
-
-  const sorted = [...numbers].sort((a, b) => a - b);
-  const aimNumbersAsc = sorted.join(',');
-  const aimNumbersDesc = [...sorted].reverse().join(',');
-
-  return { aimNumbersAsc, aimNumbersDesc };
+const buildAimNumbersString = (numbers: number[] | undefined) => {
+  if (!numbers || numbers.length === 0) return '';
+  return [...numbers].sort((a, b) => a - b).join(',');
 };
 
 export const exportMilestonesData = async (): Promise<
@@ -178,9 +171,7 @@ export const exportMilestonesData = async (): Promise<
     (milestone) => {
       const milestoneId = milestone.sys.id;
       const meta = milestoneMetaMap.get(milestoneId);
-      const { aimNumbersAsc, aimNumbersDesc } = buildAimNumbersStrings(
-        meta?.aimNumbers,
-      );
+      const aimNumbers = buildAimNumbersString(meta?.aimNumbers);
 
       const related = milestone.relatedArticlesCollection;
       const articleCount = related?.total ?? 0;
@@ -188,8 +179,7 @@ export const exportMilestonesData = async (): Promise<
       return {
         id: milestoneId,
         description: milestone.description?.trim() ?? '',
-        aimNumbersAsc,
-        aimNumbersDesc,
+        aimNumbers,
         status: milestone.status ?? '',
         articleCount,
         articlesDOI: extractDOIs(related?.items),

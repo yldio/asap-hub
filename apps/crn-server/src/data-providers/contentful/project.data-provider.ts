@@ -69,6 +69,10 @@ import {
   ProjectUpdateDataObject,
 } from '../types/projects.data-provider.types';
 import { ProjectMilestonesDataObject } from '../../../scripts/opensearch/types';
+import {
+  aimNumbersAscSortScript,
+  aimNumbersDescSortScript,
+} from '../../utils/opensearch/aim-numbers-sort-scripts';
 
 // Type guards for Contentful GraphQL responses
 export type ProjectItem = NonNullable<FetchProjectByIdQuery['projects']>;
@@ -1023,7 +1027,14 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
         'Opensearch Provider not configured for ProjectContentfulDataProvider',
       );
     }
-    const { take = 10, skip = 0, grantType, search, filter } = options;
+    const {
+      take = 10,
+      skip = 0,
+      grantType,
+      search,
+      filter,
+      sort = 'aim_asc',
+    } = options;
     const normalizedSearch = search?.trim();
     const statusFilters = (filter ?? []).filter(
       (value): value is MilestoneStatus =>
@@ -1034,6 +1045,11 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       grantType ? { term: { grantType } } : undefined,
       statusFilters.length ? { terms: { status: statusFilters } } : undefined,
     ]);
+
+    const isDescAimsSort = sort === 'aim_desc';
+    const sortScriptSource = isDescAimsSort
+      ? aimNumbersDescSortScript
+      : aimNumbersAscSortScript;
 
     const response = (await this.opensearchProvider.search({
       index: 'project-milestones',
@@ -1058,7 +1074,15 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
               : {}),
           },
         },
-        sort: [{ aimNumbersAsc: { order: 'asc' } }],
+        sort: [
+          {
+            _script: {
+              type: 'string',
+              order: 'asc',
+              script: { source: sortScriptSource },
+            },
+          },
+        ],
         from: skip,
         size: take,
       } satisfies OpensearchRequest,
@@ -1067,15 +1091,13 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     const hits = response.hits?.hits ?? [];
 
     const items: Milestone[] = hits.map((hit) => {
-      // eslint-disable-next-line no-underscore-dangle
-      const { aimNumbersAsc, aimNumbersDesc, status, ...fields } = hit._source;
-
-      // till we implement sorting the aims field used will be the one sorted in ascending order
-      const isDescAimsSort = false;
+      const {
+        _source: { aimNumbers, status, ...fields },
+      } = hit;
 
       return {
         ...fields,
-        aims: isDescAimsSort ? aimNumbersDesc : aimNumbersAsc,
+        aims: aimNumbers,
         status: status as MilestoneStatus,
       };
     });

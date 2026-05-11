@@ -2,16 +2,17 @@ import {
   ArticleItem,
   GrantType,
   Milestone as MilestoneType,
+  MilestoneSortOption,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { ComponentProps, FC } from 'react';
+import { ComponentProps, FC, useMemo } from 'react';
 import { Card, Headline3, Paragraph } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
 import { neutral1000, neutral200, steel } from '../colors';
 import type { ResearchOutputOption } from '../utils';
 import { LabeledMultiSelect, PageControls } from '../molecules';
-import { searchIcon } from '../icons';
+import { NumericalSortingIcon, searchIcon } from '../icons';
 
 const WRAPPER_TOP_PADDING = 32;
 
@@ -48,6 +49,18 @@ const headerLabelStyles = css({
   fontSize: rem(17),
   fontWeight: 'bold',
   color: neutral1000.rgb,
+});
+
+const sortButtonStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: rem(4),
+  background: 'none',
+  border: 'none',
+  padding: 0,
+  cursor: 'pointer',
+  font: 'inherit',
+  color: 'inherit',
 });
 
 const aimsHeaderStyles = css({
@@ -136,6 +149,8 @@ type ProjectMilestonesProps = {
     articles: ReadonlyArray<ArticleItem>,
   ) => Promise<void>;
   readonly selectedGrantType: GrantType;
+  readonly sort: MilestoneSortOption;
+  readonly onToggleSort: () => void;
 };
 
 const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
@@ -148,9 +163,26 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
   onSaveArticles,
   selectedGrantType,
   pageControlsProps,
+  sort,
+  onToggleSort,
 }) => {
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
+
+  const displayedMilestones = useMemo(
+    () =>
+      sort === 'aim_desc'
+        ? milestones.map((milestone) =>
+            milestone.aims
+              ? {
+                  ...milestone,
+                  aims: milestone.aims.split(',').reverse().join(','),
+                }
+              : milestone,
+          )
+        : milestones,
+    [milestones, sort],
+  );
 
   const resultsFoundText =
     total === 1 ? `${total} result found` : `${total} results found`;
@@ -191,19 +223,32 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
         <div css={contentStyles}>
           <div css={milestonesGridStyles}>
             <div css={tableHeaderStyles}>
-              <div css={[headerLabelStyles, aimsHeaderStyles]}>Aims</div>
+              <div css={[headerLabelStyles, aimsHeaderStyles]}>
+                <button
+                  type="button"
+                  css={sortButtonStyles}
+                  onClick={onToggleSort}
+                >
+                  Aims
+                  <NumericalSortingIcon
+                    active
+                    ascending={sort === 'aim_asc'}
+                    description="Aims"
+                  />
+                </button>
+              </div>
               <div css={[headerLabelStyles, milestoneHeaderStyles]}>
                 Milestone
               </div>
               <div css={[headerLabelStyles, statusHeaderStyles]}>Status</div>
             </div>
             <div css={milestonesListStyles}>
-              {milestones.map((milestone, index) => (
+              {displayedMilestones.map((milestone, index) => (
                 <div
                   key={milestone.id}
                   css={milestoneRowWrapperStyles(
                     index,
-                    index === milestones.length - 1,
+                    index === displayedMilestones.length - 1,
                   )}
                 >
                   <Milestone

@@ -642,8 +642,6 @@ describe('ProjectContentfulDataProvider', () => {
     const emptySearchResponse = { hits: { hits: [] } };
     const defaultProjectMilestonesOptions: FetchProjectMilestonesOptions = {
       grantType: 'supplement',
-      skip: 0,
-      take: 10,
     };
 
     beforeEach(() => {
@@ -658,8 +656,7 @@ describe('ProjectContentfulDataProvider', () => {
               _source: {
                 id: 'milestone-1',
                 description: 'First milestone',
-                aimNumbersAsc: '1',
-                aimNumbersDesc: '1',
+                aimNumbers: '1',
                 status: 'Complete',
                 articleCount: 4,
                 articlesDOI: '',
@@ -675,8 +672,7 @@ describe('ProjectContentfulDataProvider', () => {
                 id: 'milestone-2',
                 description: 'Second milestone',
                 status: 'In Progress',
-                aimNumbersAsc: '2,5',
-                aimNumbersDesc: '5,2',
+                aimNumbers: '2,5',
                 articleCount: 2,
                 articlesDOI: '',
                 projectId: 'project-1',
@@ -710,9 +706,19 @@ describe('ProjectContentfulDataProvider', () => {
                 ],
               },
             },
-            sort: [{ aimNumbersAsc: { order: 'asc' } }],
-            from: defaultProjectMilestonesOptions.skip,
-            size: defaultProjectMilestonesOptions.take,
+            sort: [
+              expect.objectContaining({
+                _script: expect.objectContaining({
+                  type: 'string',
+                  order: 'asc',
+                  script: expect.objectContaining({
+                    source: expect.stringContaining("doc['aimNumbers']"),
+                  }),
+                }),
+              }),
+            ],
+            from: 0,
+            size: 10,
           }),
         }),
       );
@@ -743,8 +749,7 @@ describe('ProjectContentfulDataProvider', () => {
               _source: {
                 id: 'milestone-1',
                 description: 'First milestone',
-                aimNumbersAsc: '1',
-                aimNumbersDesc: '1',
+                aimNumbers: '1',
                 status: 'Complete',
                 articleCount: 4,
                 articlesDOI: '',
@@ -760,8 +765,7 @@ describe('ProjectContentfulDataProvider', () => {
                 id: 'milestone-2',
                 description: 'Second milestone',
                 status: 'In Progress',
-                aimNumbersAsc: '2,5',
-                aimNumbersDesc: '5,2',
+                aimNumbers: '2,5',
                 articleCount: 2,
                 articlesDOI: '',
                 projectId: 'project-1',
@@ -795,7 +799,14 @@ describe('ProjectContentfulDataProvider', () => {
                 filter: [{ term: { projectId: 'project-with-milestones' } }],
               },
             },
-            sort: [{ aimNumbersAsc: { order: 'asc' } }],
+            sort: [
+              expect.objectContaining({
+                _script: expect.objectContaining({
+                  type: 'string',
+                  order: 'asc',
+                }),
+              }),
+            ],
             from: 10,
             size: 5,
           }),
@@ -837,6 +848,80 @@ describe('ProjectContentfulDataProvider', () => {
                 ],
               },
             },
+          }),
+        }),
+      );
+    });
+
+    it('sorts using descending aim numbers script when sort=aim_desc', async () => {
+      opensearchProviderMock.search.mockResolvedValueOnce({
+        hits: {
+          hits: [
+            {
+              _source: {
+                id: 'milestone-1',
+                description: 'First milestone',
+                aimNumbers: '1,2',
+                status: 'Complete',
+                articleCount: 0,
+                articlesDOI: '',
+                projectId: 'project-1',
+                projectName: 'Project One',
+                grantType: 'supplement',
+                createdDate: '2026-03-30T15:48:05.665Z',
+                lastDate: '2026-03-30T15:48:05.665Z',
+              },
+            },
+          ],
+          total: { value: 1 },
+        },
+      });
+
+      const result = await dataProvider.fetchProjectMilestones(
+        'project-with-milestones',
+        { ...defaultProjectMilestonesOptions, sort: 'aim_desc' },
+      );
+
+      expect(opensearchProviderMock.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: expect.objectContaining({
+            sort: [
+              expect.objectContaining({
+                _script: expect.objectContaining({
+                  type: 'string',
+                  order: 'asc',
+                  script: expect.objectContaining({
+                    source: expect.stringContaining('999 - n'),
+                  }),
+                }),
+              }),
+            ],
+          }),
+        }),
+      );
+      expect(result.items[0]?.aims).toBe('1,2');
+    });
+
+    it('sorts using ascending aim numbers script when sort=aim_asc explicitly', async () => {
+      await dataProvider.fetchProjectMilestones('project-with-milestones', {
+        ...defaultProjectMilestonesOptions,
+        sort: 'aim_asc',
+      });
+
+      expect(opensearchProviderMock.search).toHaveBeenCalledWith(
+        expect.objectContaining({
+          body: expect.objectContaining({
+            sort: [
+              expect.objectContaining({
+                _script: expect.objectContaining({
+                  type: 'string',
+                  order: 'asc',
+                  script: expect.objectContaining({
+                    source: expect.stringContaining("doc['aimNumbers']"),
+                  }),
+                }),
+              }),
+            ],
           }),
         }),
       );

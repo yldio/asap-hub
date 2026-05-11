@@ -608,6 +608,33 @@ describe('projects api', () => {
       );
     });
 
+    it('appends the sort query parameter when provided', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ total: 0, items: [] }),
+      });
+
+      await getProjectMilestones(
+        { ...options, sort: 'aim_desc' },
+        'Bearer token',
+      );
+
+      const calledUrl = mockFetch.mock.calls[0]?.[0] as string;
+      expect(calledUrl).toContain('sort=aim_desc');
+    });
+
+    it('omits the sort query parameter when not provided', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ total: 0, items: [] }),
+      });
+
+      await getProjectMilestones(options, 'Bearer token');
+
+      const calledUrl = mockFetch.mock.calls[0]?.[0] as string;
+      expect(calledUrl).not.toContain('sort=');
+    });
+
     it('throws BackendError when the response is not ok', async () => {
       const errorBody = { message: 'not found' };
       mockFetch.mockResolvedValueOnce({

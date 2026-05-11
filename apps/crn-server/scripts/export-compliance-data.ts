@@ -20,6 +20,7 @@ type ManuscriptVersionExport = {
   shortDescription: string;
   impact?: string;
   categories?: string;
+  projectName: string;
   teams: string;
   status: string;
   apcRequested?: string;
@@ -305,6 +306,7 @@ const formatComplianceData = (entries: GroupedEntries) => {
           : '',
         description: versionFields?.description?.['en-US'] || '',
         shortDescription: versionFields?.shortDescription?.['en-US'] || '',
+        projectName: submittingProject?.title?.['en-US'] || '',
         teams: versionFields?.teams
           ? getLinkedTeamNames(versionFields?.teams['en-US'])
           : '',

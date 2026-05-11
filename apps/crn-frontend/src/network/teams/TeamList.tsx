@@ -9,14 +9,8 @@ import {
 } from '@asap-hub/react-components';
 import { ReactElement } from 'react';
 
-import { usePrefetchTeams, useTeams } from './state';
-import {
-  usePaginationParams,
-  usePagination,
-  CARD_VIEW_PAGE_SIZE,
-} from '../../hooks';
-import { usePrefetchInterestGroups } from '../interest-groups/state';
-import { usePrefetchWorkingGroups } from '../working-groups/state';
+import { useTeams } from './state';
+import { usePaginationParams, usePagination } from '../../hooks';
 
 interface NetworkTeamListProps {
   filtersMap: FetchTeamsFilter;
@@ -56,25 +50,6 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
     researchTheme: filtersMap.researchTheme,
     resourceType: filtersMap.resourceType,
     status: filtersMap.status,
-  });
-  usePrefetchTeams({
-    currentPage: 0,
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    searchQuery: '',
-    status: filtersMap.status,
-    teamType: teamType === 'Resource Team' ? 'Discovery Team' : 'Resource Team',
-  });
-  usePrefetchInterestGroups({
-    currentPage: 0,
-    pageSize,
-    searchQuery,
-    filters: new Set(filtersMap.status),
-  });
-  usePrefetchWorkingGroups({
-    currentPage: 0,
-    pageSize,
-    searchQuery,
-    filters: new Set(),
   });
 
   const { numberOfPages, renderPageHref } = usePagination(

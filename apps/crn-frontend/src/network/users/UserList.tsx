@@ -8,14 +8,7 @@ import { useUsers } from './state';
 import { getUsers } from './api';
 import { userToCSV, MAX_ALGOLIA_RESULTS } from './export';
 import { useAlgolia } from '../../hooks/algolia';
-import {
-  usePaginationParams,
-  usePagination,
-  CARD_VIEW_PAGE_SIZE,
-} from '../../hooks';
-import { usePrefetchTeams } from '../teams/state';
-import { usePrefetchInterestGroups } from '../interest-groups/state';
-import { usePrefetchWorkingGroups } from '../working-groups/state';
+import { usePaginationParams, usePagination } from '../../hooks';
 
 interface UserListProps {
   searchQuery?: string;
@@ -35,32 +28,6 @@ const UserList: React.FC<UserListProps> = ({
     filters,
     currentPage,
     pageSize,
-  });
-  usePrefetchTeams({
-    currentPage: 0,
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    searchQuery: '',
-    status: [],
-    teamType: 'Discovery Team',
-  });
-  usePrefetchTeams({
-    currentPage: 0,
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    searchQuery: '',
-    status: [],
-    teamType: 'Resource Team',
-  });
-  usePrefetchInterestGroups({
-    currentPage: 0,
-    pageSize,
-    searchQuery,
-    filters: new Set(),
-  });
-  usePrefetchWorkingGroups({
-    currentPage: 0,
-    pageSize,
-    searchQuery,
-    filters: new Set(),
   });
 
   const { numberOfPages, renderPageHref } = usePagination(

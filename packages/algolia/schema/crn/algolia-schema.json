@@ -51,6 +51,7 @@
     "teamName",
     "members.displayName",
     "projectTitle",
+    "project.title",
     "linkedProjectId",
     "researchTheme",
     "resourceType"

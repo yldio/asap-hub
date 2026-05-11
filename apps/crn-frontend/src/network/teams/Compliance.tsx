@@ -21,6 +21,7 @@ import {
   ManuscriptByStatus,
   SearchField,
 } from '@asap-hub/react-components';
+import { useFlags } from '@asap-hub/react-context';
 import { format } from 'date-fns';
 import { ComponentProps, useState } from 'react';
 import { usePagination, usePaginationParams } from '../../hooks';
@@ -169,6 +170,7 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
 };
 
 const Compliance: React.FC = () => {
+  const { isEnabled } = useFlags();
   const {
     completedStatus,
     debouncedSearchQuery,
@@ -182,11 +184,14 @@ const Compliance: React.FC = () => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const isComplianceReviewer = useIsComplianceReviewer();
+  const searchPlaceholder = isEnabled('PROJECT_WORKSPACE')
+    ? 'Enter project name, team name, ID, assigned users...'
+    : 'Enter team name, ID, assigned users...';
 
   return (
     <article>
       <SearchField
-        placeholder="Enter team name, ID, assigned users..."
+        placeholder={searchPlaceholder}
         value={searchQuery}
         onChange={setSearchQuery}
       />

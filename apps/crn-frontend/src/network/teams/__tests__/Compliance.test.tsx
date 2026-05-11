@@ -201,6 +201,37 @@ it('shows the project column when PROJECT_WORKSPACE is enabled', async () => {
   );
 });
 
+it('does not show project name in the search placeholder when PROJECT_WORKSPACE is disabled', async () => {
+  mockGetManuscripts.mockResolvedValue({
+    items: [createPartialManuscriptResponse()],
+    total: 1,
+  });
+
+  await renderCompliancePage();
+
+  expect(screen.getByRole('searchbox')).toHaveAttribute(
+    'placeholder',
+    'Enter team name, ID, assigned users...',
+  );
+});
+
+it('shows project name in the search placeholder when PROJECT_WORKSPACE is enabled', async () => {
+  mockIsEnabled.mockImplementation(
+    (flag: string) => flag === 'PROJECT_WORKSPACE',
+  );
+  mockGetManuscripts.mockResolvedValue({
+    items: [createPartialManuscriptResponse()],
+    total: 1,
+  });
+
+  await renderCompliancePage();
+
+  expect(screen.getByRole('searchbox')).toHaveAttribute(
+    'placeholder',
+    'Enter project name, team name, ID, assigned users...',
+  );
+});
+
 it('updates manuscript and refreshes data when handleUpdateManuscript is called and the status is changed', async () => {
   const manuscriptId = 'manuscript-id-1';
   const mockManuscript: PartialManuscriptResponse = {

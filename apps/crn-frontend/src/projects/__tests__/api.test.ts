@@ -578,6 +578,22 @@ describe('projects api', () => {
         patchMilestone('milestone-1', { status: 'Complete' }, 'Bearer token'),
       ).rejects.toThrow(BackendError);
     });
+
+    it('throws BackendError with undefined body when the response body cannot be parsed', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+        json: jest.fn().mockRejectedValue(new Error('invalid json')),
+      });
+
+      await expect(
+        patchMilestone('milestone-1', { status: 'Complete' }, 'Bearer token'),
+      ).rejects.toMatchObject({
+        statusCode: 500,
+        response: undefined,
+      });
+    });
   });
 
   describe('getProjectMilestones', () => {

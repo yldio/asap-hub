@@ -1,9 +1,10 @@
-import type { ArticleItem } from '@asap-hub/model';
+import type { ArticleItem, MilestoneStatus } from '@asap-hub/model';
 import { atomFamily, useRecoilCallback } from 'recoil';
 import { authorizationState } from '../auth/state';
 import {
   getAimArticles,
   getMilestoneArticles,
+  patchMilestone,
   putMilestoneArticles,
 } from './api';
 import { projectMilestonesListItemState } from './state';
@@ -78,4 +79,36 @@ export const useUpdateMilestoneArticles = (): ((
     set(projectMilestonesListItemState(milestoneId), (current) =>
       current ? { ...current, articleCount: articles.length } : current,
     );
+  });
+
+export const useUpdateMilestone = (): ((
+  milestoneId: string,
+  update: { status?: MilestoneStatus; articles?: ReadonlyArray<ArticleItem> },
+) => Promise<void>) =>
+  useRecoilCallback(({ set, snapshot }) => async (milestoneId, update) => {
+    const authorization = await snapshot.getPromise(authorizationState);
+    const articleIds = update.articles?.map((a) => a.id);
+    await patchMilestone(
+      milestoneId,
+      {
+        ...(update.status !== undefined && { status: update.status }),
+        ...(articleIds !== undefined && { articleIds }),
+      },
+      authorization,
+    );
+
+    if (update.articles !== undefined) {
+      set(milestoneArticlesState(milestoneId), update.articles);
+    }
+
+    set(projectMilestonesListItemState(milestoneId), (current) => {
+      if (!current) return current;
+      return {
+        ...current,
+        ...(update.status !== undefined && { status: update.status }),
+        ...(update.articles !== undefined && {
+          articleCount: update.articles.length,
+        }),
+      };
+    });
   });

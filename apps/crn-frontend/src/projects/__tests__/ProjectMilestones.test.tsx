@@ -18,6 +18,7 @@ import {
   getProjectMilestones,
   getMilestoneArticles,
   createProjectMilestone,
+  patchMilestone,
   putMilestoneArticles,
 } from '../api';
 import {
@@ -50,6 +51,10 @@ const mockPutMilestoneArticles = putMilestoneArticles as jest.MockedFunction<
   typeof putMilestoneArticles
 >;
 
+const mockPatchMilestone = patchMilestone as jest.MockedFunction<
+  typeof patchMilestone
+>;
+
 const mockLoadArticleOptions = jest.fn(() =>
   Promise.resolve([
     {
@@ -68,6 +73,7 @@ beforeEach(() => {
   mockGetMilestoneArticles.mockResolvedValue([]);
   mockCreateProjectMilestone.mockResolvedValue({ id: 'milestone-1' });
   mockPutMilestoneArticles.mockResolvedValue(undefined);
+  mockPatchMilestone.mockResolvedValue(undefined);
 });
 
 const projectId = 'proj-1';
@@ -425,6 +431,48 @@ describe('ProjectMilestones', () => {
       name: /confirm and notify/i,
     });
     await userEvent.click(confirmButton);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('An error has occurred. Please try again later.'),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('updates milestone status via the inline dropdown', async () => {
+    await renderPage();
+
+    const triggers = await screen.findAllByRole('button', {
+      name: /Change status/i,
+    });
+    await userEvent.click(triggers[0]!);
+    const options = await screen.findAllByRole('option', {
+      name: /Pending/i,
+    });
+    await userEvent.click(options[0]!);
+
+    await waitFor(() =>
+      expect(mockPatchMilestone).toHaveBeenCalledWith(
+        'uuid-1',
+        { status: 'Pending' },
+        expect.any(String),
+      ),
+    );
+  });
+
+  it('displays error toast when updating milestone status fails', async () => {
+    mockPatchMilestone.mockRejectedValueOnce(new Error('status save failed'));
+
+    await renderPage();
+
+    const triggers = await screen.findAllByRole('button', {
+      name: /Change status/i,
+    });
+    await userEvent.click(triggers[0]!);
+    const options = await screen.findAllByRole('option', {
+      name: /Pending/i,
+    });
+    await userEvent.click(options[0]!);
 
     await waitFor(() => {
       expect(

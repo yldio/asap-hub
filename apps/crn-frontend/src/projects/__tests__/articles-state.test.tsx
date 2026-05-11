@@ -7,6 +7,7 @@ import {
   milestoneArticlesState,
   useFetchAimArticles,
   useFetchMilestoneArticles,
+  useUpdateMilestone,
   useUpdateMilestoneArticles,
 } from '../articles-state';
 import { projectMilestonesListItemState } from '../state';
@@ -14,6 +15,7 @@ import { projectMilestonesListItemState } from '../state';
 const mockGetAimArticles = jest.fn();
 const mockGetMilestoneArticles = jest.fn();
 const mockPutMilestoneArticles = jest.fn();
+const mockPatchMilestone = jest.fn();
 
 jest.mock('../api', () => ({
   ...jest.requireActual('../api'),
@@ -22,6 +24,7 @@ jest.mock('../api', () => ({
     mockGetMilestoneArticles(...args),
   putMilestoneArticles: (...args: unknown[]) =>
     mockPutMilestoneArticles(...args),
+  patchMilestone: (...args: unknown[]) => mockPatchMilestone(...args),
 }));
 
 jest.mock('../../auth/state', () => ({
@@ -265,6 +268,111 @@ describe('aim-articles-state', () => {
           await result.current('milestone-5', mockArticles);
         }),
       ).rejects.toThrow('save failed');
+    });
+  });
+
+  describe('useUpdateMilestone', () => {
+    const mockArticles = [
+      { id: 'ro-1', title: 'Article One', href: '/shared-research/ro-1' },
+    ];
+
+    const mockMilestone: Milestone = {
+      id: 'milestone-7',
+      description: 'Test milestone',
+      status: 'In Progress',
+      articleCount: 0,
+    };
+
+    function useUpdateAndRead(milestoneId: string) {
+      const updateMilestone = useUpdateMilestone();
+      const cachedArticles = useRecoilValue(
+        milestoneArticlesState(milestoneId),
+      );
+      const cachedMilestone = useRecoilValue(
+        projectMilestonesListItemState(milestoneId),
+      );
+      return { updateMilestone, cachedArticles, cachedMilestone };
+    }
+
+    it('calls patchMilestone with status only when articles are not provided', async () => {
+      mockPatchMilestone.mockResolvedValueOnce(undefined);
+
+      const { result } = renderHook(() => useUpdateAndRead('milestone-7'), {
+        wrapper,
+      });
+
+      await act(async () => {
+        await result.current.updateMilestone('milestone-7', {
+          status: 'Complete',
+        });
+      });
+
+      expect(mockPatchMilestone).toHaveBeenCalledWith(
+        'milestone-7',
+        { status: 'Complete' },
+        'Bearer test-token',
+      );
+    });
+
+    it('calls patchMilestone with status and articleIds when articles are provided', async () => {
+      mockPatchMilestone.mockResolvedValueOnce(undefined);
+
+      const { result } = renderHook(() => useUpdateAndRead('milestone-7'), {
+        wrapper,
+      });
+
+      await act(async () => {
+        await result.current.updateMilestone('milestone-7', {
+          status: 'Complete',
+          articles: mockArticles,
+        });
+      });
+
+      expect(mockPatchMilestone).toHaveBeenCalledWith(
+        'milestone-7',
+        { status: 'Complete', articleIds: ['ro-1'] },
+        'Bearer test-token',
+      );
+    });
+
+    it('updates the cached milestone status and articleCount on success', async () => {
+      mockPatchMilestone.mockResolvedValueOnce(undefined);
+
+      const wrapperWithMilestone = ({
+        children,
+      }: {
+        children: React.ReactNode;
+      }) => (
+        <RecoilRoot
+          initializeState={(snap) => {
+            snap.set(
+              projectMilestonesListItemState('milestone-7'),
+              mockMilestone,
+            );
+          }}
+        >
+          {children}
+        </RecoilRoot>
+      );
+
+      const { result } = renderHook(() => useUpdateAndRead('milestone-7'), {
+        wrapper: wrapperWithMilestone,
+      });
+
+      await act(async () => {
+        await result.current.updateMilestone('milestone-7', {
+          status: 'Complete',
+          articles: mockArticles,
+        });
+      });
+
+      await waitFor(() => {
+        expect(result.current.cachedMilestone).toMatchObject({
+          status: 'Complete',
+          articleCount: 1,
+        });
+        expect(result.current.cachedArticles).toEqual(mockArticles);
+      });
     });
   });
 

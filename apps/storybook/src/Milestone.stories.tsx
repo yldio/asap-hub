@@ -36,6 +36,7 @@ const defaultProps = {
   loadArticleOptions: mockLoadArticleOptions,
   fetchLinkedArticles: mockFetchArticles,
   onSaveArticles: () => Promise.resolve(),
+  onChangeStatus: () => Promise.resolve(),
 };
 
 const createMilestone = (
@@ -140,5 +141,44 @@ export const RealWorldPending = () => (
       'Conduct preliminary statistical analysis of collected biomarker data and prepare interim findings report.',
       'Pending',
     )}
+  />
+);
+
+// Editable-status dropdown — shown to leads on Pending / In Progress milestones
+export const EditableStatusPending = () => (
+  <MilestoneComponent
+    {...defaultProps}
+    milestone={createMilestone('1', mediumDescription, 'Pending')}
+  />
+);
+
+export const EditableStatusInProgress = () => (
+  <MilestoneComponent
+    {...defaultProps}
+    milestone={createMilestone('1', mediumDescription, 'In Progress')}
+  />
+);
+
+// Read-only status — Lead viewing a milestone in a final state, no chevron
+export const ReadOnlyStatusComplete = () => (
+  <MilestoneComponent
+    {...defaultProps}
+    milestone={createMilestone('1', mediumDescription, 'Complete')}
+  />
+);
+
+export const ReadOnlyStatusTerminated = () => (
+  <MilestoneComponent
+    {...defaultProps}
+    milestone={createMilestone('1', mediumDescription, 'Terminated')}
+  />
+);
+
+// Non-lead view — read-only regardless of status
+export const NonLeadViewer = () => (
+  <MilestoneComponent
+    {...defaultProps}
+    isLead={false}
+    milestone={createMilestone('1', mediumDescription, 'Pending')}
   />
 );

@@ -4,8 +4,8 @@ import {
   MilestoneStatus,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { ComponentProps, FC, useState } from 'react';
-import { Button, Link, Pill } from '../atoms';
+import { ComponentProps, FC, useCallback, useState } from 'react';
+import { Button, Link } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import { steel, info100, info500 } from '../colors';
 import { article as articleIcon, minusRectIcon, plusRectIcon } from '../icons';
@@ -34,7 +34,10 @@ import {
   editButtonStyles,
 } from './shared-aim-milestones-styles';
 import MilestoneArticlesModal from './MilestoneArticlesModal';
-import { LabeledMultiSelect } from '../molecules';
+import MilestoneStatusConfirmationModal, {
+  MilestoneStatusConfirmationStatus,
+} from './MilestoneStatusConfirmationModal';
+import { LabeledMultiSelect, MilestoneStatusDropdown } from '../molecules';
 
 function parseAimsString(aims: string | undefined): number[] {
   if (!aims || typeof aims !== 'string') return [];
@@ -106,6 +109,11 @@ type MilestoneProps = {
     milestoneId: string,
     articles: ReadonlyArray<ArticleItem>,
   ) => Promise<void>;
+  readonly onChangeStatus?: (
+    milestoneId: string,
+    status: MilestoneStatus,
+    articles?: ReadonlyArray<ArticleItem>,
+  ) => Promise<void>;
 };
 
 const Milestone: FC<MilestoneProps> = ({
@@ -114,6 +122,7 @@ const Milestone: FC<MilestoneProps> = ({
   isLead,
   loadArticleOptions,
   onSaveArticles,
+  onChangeStatus,
 }) => {
   const { ref, isExpanded, needsExpansion, toggle } = useTextTruncation(
     milestone.description,
@@ -124,6 +133,9 @@ const Milestone: FC<MilestoneProps> = ({
     ReadonlyArray<ArticleItem> | undefined
   >(undefined);
   const [isArticlesExpanded, setIsArticlesExpanded] = useState(false);
+  const [pendingFinalStatus, setPendingFinalStatus] =
+    useState<MilestoneStatusConfirmationStatus | null>(null);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   const articleCount =
     articles !== undefined ? articles.length : milestone.articleCount;
@@ -132,6 +144,12 @@ const Milestone: FC<MilestoneProps> = ({
     const result = await fetchLinkedArticles(milestoneId);
     setArticles(result);
   };
+
+  const loadCurrentArticlesForModal = useCallback(async () => {
+    const fetched = await fetchLinkedArticles(milestoneId);
+    setArticles(fetched);
+    return fetched;
+  }, [fetchLinkedArticles, milestoneId]);
 
   const aimNumbers = parseAimsString(milestone.aims);
 
@@ -238,9 +256,23 @@ const Milestone: FC<MilestoneProps> = ({
       </div>
       <div css={[statusContainerStyles, { paddingLeft: 0 }]}>
         <div css={mobileLabelStyles}>Status</div>
-        <Pill accent={getMilestoneStatusAccent(milestone.status)} noMargin>
-          {milestone.status}
-        </Pill>
+        <MilestoneStatusDropdown
+          status={milestone.status}
+          canEdit={isLead && !!onChangeStatus}
+          isPending={isUpdatingStatus}
+          onChange={(next) => {
+            if (next === milestone.status) return;
+            if (next === 'Complete' || next === 'Terminated') {
+              setPendingFinalStatus(next);
+              return;
+            }
+            if (!onChangeStatus) return;
+            setIsUpdatingStatus(true);
+            void onChangeStatus(milestoneId, next)
+              .catch(noop)
+              .finally(() => setIsUpdatingStatus(false));
+          }}
+        />
       </div>
       {isModalOpen && (
         <MilestoneArticlesModal
@@ -252,6 +284,20 @@ const Milestone: FC<MilestoneProps> = ({
                 setArticles(updated);
               })
               .catch(noop);
+          }}
+          loadOptions={loadArticleOptions}
+        />
+      )}
+      {pendingFinalStatus && (
+        <MilestoneStatusConfirmationModal
+          status={pendingFinalStatus}
+          loadCurrentArticles={loadCurrentArticlesForModal}
+          onClose={() => setPendingFinalStatus(null)}
+          onConfirm={async (updated) => {
+            const next = pendingFinalStatus;
+            if (!onChangeStatus) return;
+            await onChangeStatus(milestoneId, next, updated);
+            setArticles(updated);
           }}
           loadOptions={loadArticleOptions}
         />

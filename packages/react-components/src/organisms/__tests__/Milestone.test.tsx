@@ -555,4 +555,143 @@ describe('Milestone', () => {
       ).toBe('default');
     });
   });
+
+  describe('status interaction (lead)', () => {
+    const onChangeStatus = jest.fn(() => Promise.resolve());
+
+    beforeEach(() => {
+      onChangeStatus.mockClear();
+    });
+
+    const renderWith = (status: MilestoneStatus, isLead = true) =>
+      render(
+        <Milestone
+          milestone={{ ...mockMilestone, status }}
+          isLead={isLead}
+          loadArticleOptions={mockLoadArticleOptions}
+          fetchLinkedArticles={mockFetchArticles}
+          onSaveArticles={mockOnSaveArticles}
+          onChangeStatus={onChangeStatus}
+        />,
+      );
+
+    it('shows the chevron-down dropdown on Pending for a lead', () => {
+      renderWith('Pending');
+      expect(
+        screen.getByRole('button', { name: /Change status/i }),
+      ).toBeInTheDocument();
+    });
+
+    it('shows the chevron-down dropdown on In Progress for a lead', () => {
+      renderWith('In Progress');
+      expect(
+        screen.getByRole('button', { name: /Change status/i }),
+      ).toBeInTheDocument();
+    });
+
+    it('does not show the chevron-down dropdown on Complete for a lead', () => {
+      renderWith('Complete');
+      expect(
+        screen.queryByRole('button', { name: /Change status/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not show the chevron-down dropdown on Terminated for a lead', () => {
+      renderWith('Terminated');
+      expect(
+        screen.queryByRole('button', { name: /Change status/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not show the dropdown for non-lead viewers', () => {
+      renderWith('Pending', false);
+      expect(
+        screen.queryByRole('button', { name: /Change status/i }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('updates immediately without a modal when changing Pending → In Progress', async () => {
+      renderWith('Pending');
+      await userEvent.click(
+        screen.getByRole('button', { name: /Change status/i }),
+      );
+      await userEvent.click(
+        screen.getByRole('option', { name: /In Progress/i }),
+      );
+      expect(onChangeStatus).toHaveBeenCalledWith('1', 'In Progress');
+      expect(
+        screen.queryByText(/This action is irreversible/i),
+      ).not.toBeInTheDocument();
+    });
+
+    it('opens the confirmation modal when changing to Complete', async () => {
+      renderWith('Pending');
+      await userEvent.click(
+        screen.getByRole('button', { name: /Change status/i }),
+      );
+      await userEvent.click(screen.getByRole('option', { name: /Complete/i }));
+      await waitFor(() => {
+        expect(screen.getByText(/Set status to Complete/i)).toBeInTheDocument();
+      });
+      expect(onChangeStatus).not.toHaveBeenCalled();
+    });
+
+    it('opens the confirmation modal when changing to Terminated', async () => {
+      renderWith('In Progress');
+      await userEvent.click(
+        screen.getByRole('button', { name: /Change status/i }),
+      );
+      await userEvent.click(
+        screen.getByRole('option', { name: /Terminated/i }),
+      );
+      await waitFor(() => {
+        expect(
+          screen.getByText(/Set status to Terminated/i),
+        ).toBeInTheDocument();
+      });
+      expect(onChangeStatus).not.toHaveBeenCalled();
+    });
+
+    it('confirms with status and articles after the modal is submitted', async () => {
+      renderWith('In Progress');
+      await userEvent.click(
+        screen.getByRole('button', { name: /Change status/i }),
+      );
+      await userEvent.click(screen.getByRole('option', { name: /Complete/i }));
+      await waitFor(() =>
+        expect(screen.getByText(/Set status to Complete/i)).toBeInTheDocument(),
+      );
+      await waitFor(() =>
+        expect(
+          screen.getByRole('button', { name: /Confirm and Notify/i }),
+        ).toBeEnabled(),
+      );
+      await userEvent.click(
+        screen.getByRole('button', { name: /Confirm and Notify/i }),
+      );
+      await waitFor(() =>
+        expect(onChangeStatus).toHaveBeenCalledWith('1', 'Complete', []),
+      );
+    });
+
+    it('keeps editing when the user clicks Keep Editing', async () => {
+      renderWith('Pending');
+      await userEvent.click(
+        screen.getByRole('button', { name: /Change status/i }),
+      );
+      await userEvent.click(screen.getByRole('option', { name: /Complete/i }));
+      await waitFor(() =>
+        expect(screen.getByText(/Set status to Complete/i)).toBeInTheDocument(),
+      );
+      await userEvent.click(
+        screen.getByRole('button', { name: /Keep Editing/i }),
+      );
+      await waitFor(() =>
+        expect(
+          screen.queryByText(/Set status to Complete/i),
+        ).not.toBeInTheDocument(),
+      );
+      expect(onChangeStatus).not.toHaveBeenCalled();
+    });
+  });
 });

@@ -119,5 +119,6 @@ export type AimsMilestonesDataProvider = {
   updateArticlesForMilestone: (
     milestoneId: string,
     articleIds: string[],
+    userId: string,
   ) => Promise<void>;
 };

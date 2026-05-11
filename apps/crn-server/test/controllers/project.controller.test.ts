@@ -218,6 +218,7 @@ describe('Project Controller', () => {
       const result = await controller.createMilestone(
         project.id,
         milestoneData,
+        'user-1',
       );
 
       expect(projectDataProviderMock.fetchById).toHaveBeenCalledWith(
@@ -225,6 +226,7 @@ describe('Project Controller', () => {
       );
       expect(projectDataProviderMock.createMilestone).toHaveBeenCalledWith(
         milestoneData,
+        'user-1',
       );
       expect(result).toBe('milestone-1');
     });
@@ -240,15 +242,22 @@ describe('Project Controller', () => {
         'milestone-2',
       );
 
-      const result = await controller.createMilestone(project.id, {
-        ...milestoneData,
-        grantType: 'supplement',
-      });
+      const result = await controller.createMilestone(
+        project.id,
+        {
+          ...milestoneData,
+          grantType: 'supplement',
+        },
+        'user-1',
+      );
 
-      expect(projectDataProviderMock.createMilestone).toHaveBeenCalledWith({
-        ...milestoneData,
-        grantType: 'supplement',
-      });
+      expect(projectDataProviderMock.createMilestone).toHaveBeenCalledWith(
+        {
+          ...milestoneData,
+          grantType: 'supplement',
+        },
+        'user-1',
+      );
       expect(result).toBe('milestone-2');
     });
 
@@ -256,7 +265,7 @@ describe('Project Controller', () => {
       projectDataProviderMock.fetchById.mockResolvedValueOnce(null);
 
       await expect(
-        controller.createMilestone('missing-id', milestoneData),
+        controller.createMilestone('missing-id', milestoneData, 'user-1'),
       ).rejects.toThrow(NotFoundError);
     });
 
@@ -269,7 +278,7 @@ describe('Project Controller', () => {
       projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
 
       await expect(
-        controller.createMilestone(project.id, milestoneData),
+        controller.createMilestone(project.id, milestoneData, 'user-1'),
       ).rejects.toThrow(
         'Cannot create milestones for Original grant when a Supplement grant exists',
       );
@@ -286,10 +295,14 @@ describe('Project Controller', () => {
       projectDataProviderMock.fetchById.mockResolvedValueOnce(project);
 
       await expect(
-        controller.createMilestone(project.id, {
-          ...milestoneData,
-          grantType: 'supplement',
-        }),
+        controller.createMilestone(
+          project.id,
+          {
+            ...milestoneData,
+            grantType: 'supplement',
+          },
+          'user-1',
+        ),
       ).rejects.toThrow(
         'Cannot create milestones for Supplement grant when no Supplement grant exists',
       );

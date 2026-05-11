@@ -34,7 +34,11 @@ export const milestoneRouteFactory = (
       throw Boom.forbidden();
     }
 
-    await milestoneController.updateArticles(milestoneId, articleIds);
+    await milestoneController.updateArticles(
+      milestoneId,
+      articleIds,
+      req.loggedInUser.id,
+    );
     res.json({ success: true });
   });
 

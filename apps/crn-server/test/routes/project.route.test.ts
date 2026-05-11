@@ -312,6 +312,7 @@ describe('project routes', () => {
       expect(projectControllerMock.createMilestone).toHaveBeenCalledWith(
         'discovery-1',
         milestonePayload,
+        'user-id',
       );
     });
 

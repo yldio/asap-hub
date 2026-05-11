@@ -85,6 +85,7 @@ export default class ProjectController {
   async createMilestone(
     projectId: string,
     data: MilestoneCreateRequest,
+    userId: string,
   ): Promise<string> {
     const project = await this.fetchById(projectId);
 
@@ -102,7 +103,7 @@ export default class ProjectController {
         'Cannot create milestones for Supplement grant when no Supplement grant exists',
       );
     }
-    return this.projectDataProvider.createMilestone(data);
+    return this.projectDataProvider.createMilestone(data, userId);
   }
 
   async isProjectMilestonesSynced(id: string): Promise<boolean> {

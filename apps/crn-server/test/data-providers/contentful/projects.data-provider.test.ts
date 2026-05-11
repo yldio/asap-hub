@@ -2713,11 +2713,13 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
 
   it('throws when REST client is not available', async () => {
     await expect(
-      dataProviderWithoutRestClient.createMilestone(milestoneData),
+      dataProviderWithoutRestClient.createMilestone(milestoneData, 'user-1'),
     ).rejects.toThrow('REST client not available');
   });
 
-  it('creates and publishes a milestone', async () => {
+  it('creates and publishes a milestone, recording status and outputs-linked audit fields when articles are associated', async () => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-05-04T10:00:00.000Z'));
+
     const publish = jest.fn().mockResolvedValue({} as Entry);
 
     const milestoneEntryMock = {
@@ -2734,7 +2736,7 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
 
     environmentMock.getEntry.mockResolvedValue(aimEntryMock);
 
-    const result = await dataProvider.createMilestone(milestoneData);
+    const result = await dataProvider.createMilestone(milestoneData, 'user-1');
 
     expect(environmentMock.createEntry).toHaveBeenCalledWith(
       'milestones',
@@ -2753,12 +2755,26 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
               },
             ],
           },
+          statusUpdatedAt: { 'en-US': new Date('2026-05-04T10:00:00.000Z') },
+          statusUpdatedBy: {
+            'en-US': {
+              sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+            },
+          },
+          outputsLinkedAt: { 'en-US': new Date('2026-05-04T10:00:00.000Z') },
+          outputsLinkedBy: {
+            'en-US': {
+              sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+            },
+          },
         },
       }),
     );
 
     expect(publish).toHaveBeenCalled();
     expect(result).toBe('milestone-1');
+
+    jest.useRealTimers();
   });
 
   it('appends milestone link to each aim and publishes', async () => {
@@ -2789,7 +2805,7 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
       .mockResolvedValueOnce(aimEntryMock1)
       .mockResolvedValueOnce(aimEntryMock2);
 
-    await dataProvider.createMilestone(milestoneData);
+    await dataProvider.createMilestone(milestoneData, 'user-1');
 
     expect(environmentMock.getEntry).toHaveBeenCalledWith('aim-1');
     expect(environmentMock.getEntry).toHaveBeenCalledWith('aim-2');
@@ -2832,7 +2848,9 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
     ]);
   });
 
-  it('handles empty relatedArticleIds', async () => {
+  it('records status audit fields but not outputs-linked fields when no articles are associated', async () => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-05-04T10:00:00.000Z'));
+
     const publish = jest.fn().mockResolvedValue({} as Entry);
 
     const milestoneEntryMock = {
@@ -2849,10 +2867,13 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
 
     environmentMock.getEntry.mockResolvedValue(aimEntryMock);
 
-    await dataProvider.createMilestone({
-      ...milestoneData,
-      relatedArticleIds: [],
-    });
+    await dataProvider.createMilestone(
+      {
+        ...milestoneData,
+        relatedArticleIds: [],
+      },
+      'user-1',
+    );
 
     expect(environmentMock.createEntry).toHaveBeenCalledWith(
       'milestones',
@@ -2861,9 +2882,21 @@ describe('ProjectContentfulDataProvider - createMilestone', () => {
           description: { 'en-US': milestoneData.description },
           status: { 'en-US': milestoneData.status },
           relatedArticles: { 'en-US': [] },
+          statusUpdatedAt: { 'en-US': new Date('2026-05-04T10:00:00.000Z') },
+          statusUpdatedBy: {
+            'en-US': {
+              sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+            },
+          },
         },
       }),
     );
+
+    const createCall = environmentMock.createEntry.mock.calls[0]?.[1];
+    expect(createCall?.fields).not.toHaveProperty('outputsLinkedAt');
+    expect(createCall?.fields).not.toHaveProperty('outputsLinkedBy');
+
+    jest.useRealTimers();
   });
 });
 

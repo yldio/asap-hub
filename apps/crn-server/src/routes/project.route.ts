@@ -141,6 +141,7 @@ export const projectRouteFactory = (
       const milestoneId = await projectController.createMilestone(
         projectId,
         data,
+        loggedInUser.id,
       );
 
       res.status(201).json({ id: milestoneId });

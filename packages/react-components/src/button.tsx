@@ -1,4 +1,4 @@
-import { css, Theme } from '@emotion/react';
+import { css, keyframes, Theme } from '@emotion/react';
 
 import {
   charcoal,
@@ -7,6 +7,7 @@ import {
   error900,
   fern,
   lead,
+  neutral300,
   OpaqueColor,
   paper,
   pine,
@@ -280,6 +281,26 @@ export const getButtonStyles = ({
       (small ? smallIconOnlyStyles : largeIconOnlyStyles),
     fullWidth && fullWidthStyles,
   ]);
+
+const spin = keyframes`
+  from { transform: rotate(0deg) }
+  to { transform: rotate(360deg) }
+`;
+
+export const buttonSpinnerStyles = css({
+  width: rem(16),
+  height: rem(16),
+  border: `${rem(2)} solid ${neutral300.rgb}`,
+  borderTop: `${rem(2)} solid white`,
+  borderRadius: '50%',
+  animation: `${spin} 1s linear infinite`,
+});
+
+export const buttonLoadingContentStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  gap: rem(8),
+});
 
 export const getButtonChildren = (children = [] as React.ReactNode) =>
   Array.isArray(children) ? (

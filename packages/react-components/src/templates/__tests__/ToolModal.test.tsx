@@ -254,7 +254,7 @@ it('disables bottom buttons and shows spinner while submitting', async () => {
 
   expect(getByText('Add Tool').closest('button')).toBeDisabled();
   expect(
-    container.querySelector('[class*="spinnerStyles"]'),
+    container.querySelector('[class*="buttonSpinnerStyles"]'),
   ).toBeInTheDocument();
 
   act(resolveSubmit);

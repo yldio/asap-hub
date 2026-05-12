@@ -1,4 +1,4 @@
-import { css, keyframes } from '@emotion/react';
+import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 import { ArticleItem, ResearchOutputType } from '@asap-hub/model';
 
@@ -9,7 +9,6 @@ import { mobileScreen, rem } from '../pixels';
 import { ResearchOutputOption } from '../utils';
 import { articleSelectComponents } from '../utils/article-select-components';
 import Toast from './Toast';
-import { neutral300 } from '../colors';
 
 const headerStyles = css({
   display: 'flex',
@@ -64,26 +63,6 @@ const cancelStyles = css({
   [buttonMediaQuery]: {
     gridRow: '1',
   },
-});
-
-const confirmButtonContentStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(8),
-});
-
-const spin = keyframes`
-  from { transform: rotate(0deg) }
-  to { transform: rotate(360deg) }
-`;
-
-const spinnerStyles = css({
-  width: rem(16),
-  height: rem(16),
-  border: `${rem(2)} solid ${neutral300.rgb}`,
-  borderTop: `${rem(2)} solid white`,
-  borderRadius: '50%',
-  animation: `${spin} 1s linear infinite`,
 });
 
 const selectContainerStyles = css({});
@@ -206,12 +185,10 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
                 primary
                 noMargin
                 enabled={!isRequestInProgress}
+                loading={isRequestInProgress}
                 onClick={handleConfirm}
               >
-                <span css={confirmButtonContentStyles}>
-                  {isRequestInProgress && <div css={spinnerStyles} />}
-                  Confirm
-                </span>
+                Confirm
               </Button>
             </div>
           </div>

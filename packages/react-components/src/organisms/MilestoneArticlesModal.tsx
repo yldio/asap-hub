@@ -151,10 +151,10 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
           <Headline3 noMargin>{title}</Headline3>
         </header>
       </div>
-      {hasError && (
-        <Toast>An error has occurred. Please try again later.</Toast>
-      )}
       <div css={contentWrapStyles}>
+        {hasError && (
+          <Toast>An error has occurred. Please try again later.</Toast>
+        )}
         <div>
           <div css={selectContainerStyles}>
             <LabeledMultiSelect<ResearchOutputOption>

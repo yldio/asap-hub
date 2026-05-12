@@ -251,7 +251,13 @@ const formatComplianceData = (entries: GroupedEntries) => {
 
   for (const manuscriptEntry of manuscriptEntries) {
     const manuscriptFields = manuscriptEntry.fields;
-    const versionLinks = manuscriptEntry.fields.versions['en-US'];
+    const versionLinks = manuscriptFields.versions?.['en-US'];
+    if (!versionLinks?.length) {
+      console.warn(
+        `Manuscript ${manuscriptEntry.sys.id} has no versions, skipping`,
+      );
+      continue;
+    }
     versionLinks.forEach((versionLink: Link<'Entry'>) => {
       const versionEntry = versionEntries.find(
         (entry) => entry.sys.id === versionLink.sys.id,

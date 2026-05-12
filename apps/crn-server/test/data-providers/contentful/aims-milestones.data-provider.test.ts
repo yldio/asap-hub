@@ -953,4 +953,111 @@ describe('AimsMilestonesContentfulDataProvider', () => {
       });
     });
   });
+
+  describe('updateMilestone', () => {
+    beforeAll(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-05-04T10:00:00.000Z'));
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
+
+    const mockPatchAndPublish = patchAndPublish as jest.MockedFunction<
+      typeof patchAndPublish
+    >;
+
+    it('throws when REST client is not configured', async () => {
+      await expect(
+        dataProvider.updateMilestone(
+          'milestone-1',
+          { status: 'Complete' },
+          'user-1',
+        ),
+      ).rejects.toThrow(
+        'REST client not configured for AimsMilestonesContentfulDataProvider',
+      );
+    });
+
+    it('patches status, statusUpdatedAt and statusUpdatedBy when status is provided', async () => {
+      const entry = getEntry({});
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      await dataProviderWithRestClient.updateMilestone(
+        'milestone-1',
+        { status: 'Complete' },
+        'user-1',
+      );
+
+      expect(environmentMock.getEntry).toHaveBeenCalledWith('milestone-1');
+      expect(mockPatchAndPublish).toHaveBeenCalledWith(entry, {
+        status: 'Complete',
+        statusUpdatedAt: new Date('2026-05-04T10:00:00.000Z'),
+        statusUpdatedBy: {
+          sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+        },
+      });
+    });
+
+    it('patches relatedArticles and outputs-linked audit fields when articleIds is provided', async () => {
+      const entry = getEntry({});
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      await dataProviderWithRestClient.updateMilestone(
+        'milestone-1',
+        { articleIds: ['ro-1'] },
+        'user-1',
+      );
+
+      expect(mockPatchAndPublish).toHaveBeenCalledWith(entry, {
+        relatedArticles: [
+          { sys: { type: 'Link', linkType: 'Entry', id: 'ro-1' } },
+        ],
+        outputsLinkedAt: new Date('2026-05-04T10:00:00.000Z'),
+        outputsLinkedBy: {
+          sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+        },
+      });
+    });
+
+    it('patches both status and articles audit fields together', async () => {
+      const entry = getEntry({});
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      await dataProviderWithRestClient.updateMilestone(
+        'milestone-1',
+        { status: 'Terminated', articleIds: ['ro-1', 'ro-2'] },
+        'user-1',
+      );
+
+      expect(mockPatchAndPublish).toHaveBeenCalledWith(entry, {
+        status: 'Terminated',
+        statusUpdatedAt: new Date('2026-05-04T10:00:00.000Z'),
+        statusUpdatedBy: {
+          sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+        },
+        relatedArticles: [
+          { sys: { type: 'Link', linkType: 'Entry', id: 'ro-1' } },
+          { sys: { type: 'Link', linkType: 'Entry', id: 'ro-2' } },
+        ],
+        outputsLinkedAt: new Date('2026-05-04T10:00:00.000Z'),
+        outputsLinkedBy: {
+          sys: { type: 'Link', linkType: 'Entry', id: 'user-1' },
+        },
+      });
+    });
+
+    it('does nothing when neither status nor articleIds is provided', async () => {
+      const entry = getEntry({});
+      environmentMock.getEntry.mockResolvedValueOnce(entry);
+
+      await dataProviderWithRestClient.updateMilestone(
+        'milestone-1',
+        {},
+        'user-1',
+      );
+
+      expect(mockPatchAndPublish).not.toHaveBeenCalled();
+    });
+  });
 });

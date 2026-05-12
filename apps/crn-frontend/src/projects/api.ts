@@ -12,6 +12,7 @@ import {
   ListProjectResponse,
   MilestoneCreateRequest,
   MilestoneSortOption,
+  MilestoneUpdateRequest,
   ProjectDetail,
   ProjectStatus,
   ProjectTool,
@@ -180,6 +181,29 @@ export const putMilestoneArticles = async (
   if (!resp.ok) {
     throw new BackendError(
       `Failed to update articles for milestone ${milestoneId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+};
+
+export const patchMilestone = async (
+  milestoneId: string,
+  update: MilestoneUpdateRequest,
+  authorization: string,
+): Promise<void> => {
+  const resp = await fetch(`${API_BASE_URL}/milestones/${milestoneId}`, {
+    method: 'PATCH',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+    body: JSON.stringify(update),
+  });
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to update milestone ${milestoneId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       await resp.json().catch(() => undefined),
       resp.status,
     );

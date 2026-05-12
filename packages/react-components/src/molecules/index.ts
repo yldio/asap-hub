@@ -51,6 +51,7 @@ export { default as ListControls } from './ListControls';
 export { default as Loading } from './Loading';
 export { default as MembersList } from './MembersList';
 export { default as MenuButton } from './MenuButton';
+export { default as MilestoneStatusDropdown } from './MilestoneStatusDropdown';
 export { default as Modal } from './Modal';
 export { default as ModalEditHeaderDecorator } from './ModalEditHeaderDecorator';
 export { default as OrcidSigninButton } from './OrcidSigninButton';

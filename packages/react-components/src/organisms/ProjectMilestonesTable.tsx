@@ -3,6 +3,7 @@ import {
   GrantType,
   Milestone as MilestoneType,
   MilestoneSortOption,
+  MilestoneStatus,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, FC, useMemo } from 'react';
@@ -148,6 +149,11 @@ type ProjectMilestonesProps = {
     milestoneId: string,
     articles: ReadonlyArray<ArticleItem>,
   ) => Promise<void>;
+  readonly onChangeStatus?: (
+    milestoneId: string,
+    status: MilestoneStatus,
+    articles?: ReadonlyArray<ArticleItem>,
+  ) => Promise<void>;
   readonly selectedGrantType: GrantType;
   readonly sort: MilestoneSortOption;
   readonly onToggleSort: () => void;
@@ -161,6 +167,7 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
   loadArticleOptions,
   fetchLinkedArticles,
   onSaveArticles,
+  onChangeStatus,
   selectedGrantType,
   pageControlsProps,
   sort,
@@ -257,6 +264,7 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
                     isLead={isLead}
                     loadArticleOptions={loadArticleOptions}
                     onSaveArticles={onSaveArticles}
+                    onChangeStatus={onChangeStatus}
                   />
                 </div>
               ))}

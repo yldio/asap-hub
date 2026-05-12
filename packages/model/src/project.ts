@@ -317,3 +317,8 @@ export type MilestoneCreateRequest = {
   readonly aimIds: string[];
   readonly relatedArticleIds?: string[];
 };
+
+export type MilestoneUpdateRequest = {
+  readonly status?: MilestoneStatus;
+  readonly articleIds?: string[];
+};

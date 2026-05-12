@@ -52,6 +52,7 @@ export {
   articlesToOptions,
   default as MilestoneArticlesModal,
 } from './MilestoneArticlesModal';
+export { default as MilestoneStatusConfirmationModal } from './MilestoneStatusConfirmationModal';
 export { default as NewsCard } from './NewsCard';
 export { default as NewsSection } from './NewsSection';
 export { default as NoEvents } from './NoEvents';

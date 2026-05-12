@@ -15,6 +15,7 @@ import {
   getProjects,
   isProjectMilestonesSyncComplete,
   MilestonesListOptions,
+  patchMilestone,
   patchProject,
   ProjectListOptions,
   putMilestoneArticles,
@@ -530,6 +531,68 @@ describe('projects api', () => {
         statusCode: 500,
       });
       expect(json).toHaveBeenCalled();
+    });
+  });
+
+  describe('patchMilestone', () => {
+    const mockFetch = jest.fn();
+
+    beforeEach(() => {
+      (global as unknown as { fetch: typeof fetch }).fetch = mockFetch as never;
+    });
+
+    it('makes a PATCH request with the status and articleIds', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true });
+
+      await patchMilestone(
+        'milestone-1',
+        { status: 'Complete', articleIds: ['ro-1'] },
+        'Bearer token',
+      );
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://api.example.com/milestones/milestone-1',
+        expect.objectContaining({
+          method: 'PATCH',
+          headers: expect.objectContaining({
+            authorization: 'Bearer token',
+            'content-type': 'application/json',
+          }),
+          body: JSON.stringify({
+            status: 'Complete',
+            articleIds: ['ro-1'],
+          }),
+        }),
+      );
+    });
+
+    it('throws BackendError when the response is not ok', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        statusText: 'Forbidden',
+        json: jest.fn().mockResolvedValue({ message: 'forbidden' }),
+      });
+
+      await expect(
+        patchMilestone('milestone-1', { status: 'Complete' }, 'Bearer token'),
+      ).rejects.toThrow(BackendError);
+    });
+
+    it('throws BackendError with undefined body when the response body cannot be parsed', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+        json: jest.fn().mockRejectedValue(new Error('invalid json')),
+      });
+
+      await expect(
+        patchMilestone('milestone-1', { status: 'Complete' }, 'Bearer token'),
+      ).rejects.toMatchObject({
+        statusCode: 500,
+        response: undefined,
+      });
     });
   });
 

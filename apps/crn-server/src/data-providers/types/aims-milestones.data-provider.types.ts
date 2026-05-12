@@ -1,4 +1,8 @@
-import { ArticleItem, ListResponse } from '@asap-hub/model';
+import {
+  ArticleItem,
+  ListResponse,
+  MilestoneUpdateRequest,
+} from '@asap-hub/model';
 
 export type ProjectWithAimsDataObject = {
   sys: { id: string };
@@ -119,6 +123,11 @@ export type AimsMilestonesDataProvider = {
   updateArticlesForMilestone: (
     milestoneId: string,
     articleIds: string[],
+    userId: string,
+  ) => Promise<void>;
+  updateMilestone: (
+    milestoneId: string,
+    update: MilestoneUpdateRequest,
     userId: string,
   ) => Promise<void>;
 };

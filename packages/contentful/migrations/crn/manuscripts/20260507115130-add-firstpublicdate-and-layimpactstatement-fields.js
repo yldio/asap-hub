@@ -1,9 +1,10 @@
-module.exports.description = 'Add Date first made public and Lay Impact Statement fields';
+module.exports.description =
+  'Add Date first made public and Lay Impact Statement fields';
 
 module.exports.up = (migration) => {
   const manuscripts = migration.editContentType('manuscripts');
 
-    manuscripts
+  manuscripts
     .createField('layImpactStatement')
     .name('Lay Impact Statement')
     .type('Text')
@@ -24,6 +25,11 @@ module.exports.up = (migration) => {
     .omitted(false);
 
   manuscripts.moveField('layImpactStatement').afterField('impact');
+  manuscripts.changeFieldControl(
+    'layImpactStatement',
+    'builtin',
+    'multipleLine',
+  );
 };
 
 module.exports.down = (migration) => {

@@ -6,23 +6,17 @@ module.exports.up = (migration) => {
   manuscriptVersions
     .createField('complianceReportResponse')
     .name('Response to compliance report')
-    .type('Array')
+    .type('Link')
     .localized(false)
     .required(false)
+    .validations([
+      {
+        linkMimetypeGroup: ['pdfdocument', 'richtext'],
+      },
+    ])
     .disabled(false)
     .omitted(false)
-    .items({
-      type: 'Link',
-
-      validations: [
-        {
-          linkMimetypeGroup: ['pdfdocument', 'richtext'],
-        },
-      ],
-
-      linkType: 'Asset',
-    });
-
+    .linkType('Asset');
 };
 
 module.exports.down = (migration) => {

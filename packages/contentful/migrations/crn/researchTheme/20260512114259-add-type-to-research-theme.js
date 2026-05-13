@@ -1,11 +1,11 @@
-module.exports.description = 'Add type to research theme';
+module.exports.description = 'Add types to research theme';
 
 module.exports.up = (migration) => {
   const researchTheme = migration.editContentType('researchTheme');
 
   researchTheme
-    .createField('type')
-    .name('Type')
+    .createField('types')
+    .name('Types')
     .type('Array')
     .localized(false)
     .required(false)
@@ -27,12 +27,11 @@ module.exports.up = (migration) => {
   migration.transformEntries({
     contentType: 'researchTheme',
     from: ['name'],
-    to: ['type'],
-    shouldPublish: false,
+    to: ['types'],
     transformEntryForLocale: async (from) => {
       if (!from?.name || !from?.name?.['en-US']) return;
       return {
-        type:
+        types:
           from.name['en-US'] !== 'Tool Generation'
             ? ['Discovery']
             : ['Resource'],
@@ -40,12 +39,12 @@ module.exports.up = (migration) => {
     },
   });
 
-  researchTheme.editField('type').required(true);
+  researchTheme.editField('types').required(true);
 
-  researchTheme.changeFieldControl('type', 'builtin', 'checkbox', {});
+  researchTheme.changeFieldControl('types', 'builtin', 'checkbox', {});
 };
 
 module.exports.down = (migration) => {
   const researchTheme = migration.editContentType('researchTheme');
-  researchTheme.deleteField('type');
+  researchTheme.deleteField('types');
 };

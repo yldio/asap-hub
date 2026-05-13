@@ -129,8 +129,9 @@ const MilestoneArticlesModal: React.FC<MilestoneArticlesModalProps> = ({
       await onConfirm(optionsToArticles(selectedOptions));
       onClose();
     } catch {
-      setIsRequestInProgress(false);
       setHasError(true);
+    } finally {
+      setIsRequestInProgress(false);
     }
   };
 

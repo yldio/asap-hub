@@ -17,6 +17,7 @@ interface IndexConfig<T> {
     mapping: OpensearchMapping['mappings'];
   }>;
   batchSize?: number;
+  useDocumentIdAsOpensearchId?: boolean;
 }
 
 interface BulkIndexResult {
@@ -107,15 +108,31 @@ const indexBatch = async <T>(
   batchNumber: number,
   totalBatches: number,
   startIndex: number,
+  useDocumentIdAsOpensearchId: boolean,
 ): Promise<{ indexed: number; errors: number }> => {
   console.log(
     `Processing batch ${batchNumber}/${totalBatches} (${batch.length} documents)`,
   );
 
-  const bulkBody = batch.flatMap((doc) => [
-    { index: { _index: indexName } },
-    doc as Record<string, unknown>,
-  ]);
+  const hasId = (value: unknown): value is { id: string } =>
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    typeof (value as { id: unknown }).id === 'string';
+
+  const bulkBody = batch.flatMap((doc) => {
+    const setIndexId = useDocumentIdAsOpensearchId && hasId(doc);
+
+    return [
+      {
+        index: {
+          _index: indexName,
+          ...(setIndexId ? { _id: doc.id } : {}),
+        },
+      },
+      doc as Record<string, unknown>,
+    ];
+  });
 
   const bulkResponse = await client.bulk({ body: bulkBody });
 
@@ -143,6 +160,7 @@ const bulkIndexDocuments = async <T>(
   indexName: string,
   documents: T[],
   batchSize: number,
+  useDocumentIdAsOpensearchId: boolean,
 ): Promise<BulkIndexResult> => {
   if (documents.length === 0) {
     return { totalIndexed: 0, totalErrors: 0 };
@@ -167,6 +185,7 @@ const bulkIndexDocuments = async <T>(
       batchNumber,
       totalBatches,
       i,
+      useDocumentIdAsOpensearchId,
     );
 
     totalIndexed += indexed;
@@ -353,6 +372,7 @@ export const indexOpensearchData = async <T>({
   indexAlias,
   getData,
   batchSize = DEFAULT_BATCH_SIZE,
+  useDocumentIdAsOpensearchId = false,
 }: IndexConfig<T>): Promise<void> => {
   const client = await getClient(
     awsRegion,
@@ -365,7 +385,13 @@ export const indexOpensearchData = async <T>({
   const newIndexName = `${indexAlias}-${Date.now()}`;
 
   await createIndex(client, newIndexName, mapping);
-  await bulkIndexDocuments(client, newIndexName, documents, batchSize);
+  await bulkIndexDocuments(
+    client,
+    newIndexName,
+    documents,
+    batchSize,
+    useDocumentIdAsOpensearchId,
+  );
   await client.indices.refresh({ index: newIndexName });
   await updateAliasAndCleanup(client, newIndexName, indexAlias);
 };

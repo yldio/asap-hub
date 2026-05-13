@@ -388,6 +388,42 @@ describe('indexOpensearchData', () => {
       });
     });
 
+    test('should prepare bulk body correctly when set to use document id as index id', async () => {
+      mockClient.bulk.mockResolvedValue({
+        body: {
+          items: [
+            { index: { _index: 'test-index-1234567890' } },
+            { index: { _index: 'test-index-1234567890' } },
+          ],
+        },
+      } as any);
+
+      await indexOpensearchData({
+        awsRegion: 'us-east-1',
+        stage: 'dev',
+        opensearchUsername: 'testuser',
+        opensearchPassword: 'testpass',
+        indexAlias: mockIndexAlias,
+        getData: mockGetDataForBulkIndexing,
+        useDocumentIdAsOpensearchId: true,
+      });
+
+      const expectedBulkBody = [
+        {
+          index: { _index: expect.stringMatching(/test-index-\d+/), _id: '1' },
+        },
+        { id: '1', title: 'Test Document 1', content: 'Test content 1' },
+        {
+          index: { _index: expect.stringMatching(/test-index-\d+/), _id: '2' },
+        },
+        { id: '2', title: 'Test Document 2', content: 'Test content 2' },
+      ];
+
+      expect(mockClient.bulk).toHaveBeenCalledWith({
+        body: expectedBulkBody,
+      });
+    });
+
     test('should handle empty documents array', async () => {
       const emptyGetData = jest.fn().mockResolvedValue({
         documents: [],

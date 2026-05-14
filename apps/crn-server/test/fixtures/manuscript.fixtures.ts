@@ -112,7 +112,6 @@ export const getContentfulGraphqlManuscript = (
   teamsCollection: {
     items: [{ sys: { id: 'team-1' } }],
   },
-  // versionsCollection: getContentfulGraphqlManuscriptVersions(),
   ...props,
 });
 

@@ -3,7 +3,10 @@ import { alternativeAssignedOSEmail, openScienceDL } from '../../src/config';
 import { EmailNotificationService } from '../../src/data-providers/email-notification-service';
 
 import logger from '../../src/utils/logger';
-import { getContentfulGraphqlManuscript } from '../fixtures/manuscript.fixtures';
+import {
+  getContentfulGraphqlManuscript,
+  getContentfulGraphqlManuscriptVersions,
+} from '../fixtures/manuscript.fixtures';
 import { getContentfulGraphqlClientMock } from '../mocks/contentful-graphql-client.mock';
 
 jest.mock('@asap-hub/contentful', () => ({
@@ -54,9 +57,13 @@ describe('Email Notification Service', () => {
       },
     ],
   };
-  const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+  const manuscript = {
+    ...getContentfulGraphqlManuscript(),
+    versionsCollection: getContentfulGraphqlManuscriptVersions(),
+  } as NonNullable<
     NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
   >;
+
   manuscript.assignedUsersCollection = assignedUsers;
   manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
     {
@@ -325,7 +332,10 @@ describe('Email Notification Service', () => {
 
     test('sends email notification with active Project Managers and Lead PIs of contributing teams as recipients', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('production');
-      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+      const manuscript = {
+        ...getContentfulGraphqlManuscript(),
+        versionsCollection: getContentfulGraphqlManuscriptVersions(),
+      } as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
 
@@ -447,7 +457,10 @@ describe('Email Notification Service', () => {
     });
 
     test('sends email notification with correct Open Science team recipients based on environment', async () => {
-      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+      const manuscript = {
+        ...getContentfulGraphqlManuscript(),
+        versionsCollection: getContentfulGraphqlManuscriptVersions(),
+      } as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
 
@@ -490,7 +503,10 @@ describe('Email Notification Service', () => {
 
     test('sends email notification with active PIs of contributing labs as recipients', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('production');
-      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+      const manuscript = {
+        ...getContentfulGraphqlManuscript(),
+        versionsCollection: getContentfulGraphqlManuscriptVersions(),
+      } as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
 

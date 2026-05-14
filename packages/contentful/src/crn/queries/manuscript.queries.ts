@@ -39,6 +39,8 @@ export const manuscriptContentQueryFragment = gql`
       }
       name
     }
+    layImpactStatement
+    firstPublicDate
     categoriesCollection(limit: 2) {
       items {
         sys {
@@ -56,273 +58,6 @@ export const manuscriptContentQueryFragment = gql`
         lastName
         avatar {
           url
-        }
-      }
-    }
-    versionsCollection(limit: 10, order: sys_firstPublishedAt_DESC) {
-      items {
-        sys {
-          id
-          publishedAt
-          firstPublishedAt
-        }
-        type
-        lifecycle
-        description
-        shortDescription
-        count
-        url
-        manuscriptFile {
-          sys {
-            id
-          }
-          fileName
-          url
-        }
-        keyResourceTable {
-          sys {
-            id
-          }
-          fileName
-          url
-        }
-        additionalFilesCollection(limit: 5) {
-          items {
-            sys {
-              id
-            }
-            fileName
-            url
-          }
-        }
-        preprintDoi
-        publicationDoi
-        otherDetails
-        acknowledgedGrantNumber
-        acknowledgedGrantNumberDetails
-        asapAffiliationIncluded
-        asapAffiliationIncludedDetails
-        manuscriptLicense
-        manuscriptLicenseDetails
-        datasetsDeposited
-        datasetsDepositedDetails
-        codeDeposited
-        codeDepositedDetails
-        protocolsDeposited
-        protocolsDepositedDetails
-        labMaterialsRegistered
-        labMaterialsRegisteredDetails
-        availabilityStatement
-        availabilityStatementDetails
-        teamsCollection(limit: 10) {
-          items {
-            sys {
-              id
-            }
-            displayName
-            inactiveSince
-          }
-        }
-        labsCollection(limit: 10) {
-          items {
-            sys {
-              id
-            }
-            labPi {
-              sys {
-                id
-              }
-              teamsCollection(limit: 3) {
-                items {
-                  inactiveSinceDate
-                  team {
-                    sys {
-                      id
-                    }
-                    inactiveSince
-                  }
-                }
-              }
-            }
-            name
-          }
-        }
-        createdBy {
-          sys {
-            id
-          }
-          firstName
-          nickname
-          lastName
-          alumniSinceDate
-          avatar {
-            url
-          }
-          teamsCollection(limit: 3) {
-            items {
-              team {
-                sys {
-                  id
-                }
-                displayName
-              }
-            }
-          }
-        }
-        updatedBy {
-          sys {
-            id
-          }
-          firstName
-          nickname
-          lastName
-          alumniSinceDate
-          avatar {
-            url
-          }
-          teamsCollection(limit: 3) {
-            items {
-              team {
-                sys {
-                  id
-                }
-                displayName
-              }
-            }
-          }
-        }
-        firstAuthorsCollection(limit: 15) {
-          items {
-            __typename
-            ... on ExternalAuthors {
-              sys {
-                id
-              }
-              name
-              email
-            }
-            ... on Users {
-              sys {
-                id
-              }
-              avatar {
-                url
-              }
-              firstName
-              lastName
-              nickname
-              email
-              teamsCollection(limit: 3) {
-                items {
-                  team {
-                    sys {
-                      id
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        additionalAuthorsCollection(limit: 15) {
-          items {
-            __typename
-            ... on ExternalAuthors {
-              sys {
-                id
-              }
-              name
-              email
-            }
-            ... on Users {
-              sys {
-                id
-              }
-              avatar {
-                url
-              }
-              firstName
-              lastName
-              nickname
-              email
-              teamsCollection(limit: 3) {
-                items {
-                  team {
-                    sys {
-                      id
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        correspondingAuthorCollection(limit: 1) {
-          items {
-            __typename
-            ... on ExternalAuthors {
-              sys {
-                id
-              }
-              name
-              email
-            }
-            ... on Users {
-              sys {
-                id
-              }
-              avatar {
-                url
-              }
-              firstName
-              lastName
-              nickname
-              email
-              teamsCollection(limit: 3) {
-                items {
-                  team {
-                    sys {
-                      id
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        linkedFrom {
-          complianceReportsCollection(limit: 1) {
-            items {
-              sys {
-                id
-                firstPublishedAt
-              }
-              url
-              description
-              createdBy {
-                sys {
-                  id
-                }
-                firstName
-                nickname
-                lastName
-                alumniSinceDate
-                avatar {
-                  url
-                }
-                teamsCollection(limit: 3) {
-                  items {
-                    team {
-                      sys {
-                        id
-                      }
-                      displayName
-                    }
-                  }
-                }
-              }
-            }
-          }
         }
       }
     }
@@ -367,6 +102,287 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
   }
   ${manuscriptContentQueryFragment}
   ${discussionContentQueryFragment}
+`;
+
+export const FETCH_MANUSCRIPT_VERSIONS = gql`
+  query FetchManuscriptVersions($id: String!) {
+    manuscripts(id: $id) {
+      versionsCollection(limit: 10, order: sys_firstPublishedAt_DESC) {
+        items {
+          sys {
+            id
+            publishedAt
+            firstPublishedAt
+          }
+          type
+          lifecycle
+          description
+          shortDescription
+          count
+          url
+          manuscriptFile {
+            sys {
+              id
+            }
+            fileName
+            url
+          }
+          keyResourceTable {
+            sys {
+              id
+            }
+            fileName
+            url
+          }
+          complianceReportResponse {
+            sys {
+              id
+            }
+            fileName
+            url
+          }
+          additionalFilesCollection(limit: 5) {
+            items {
+              sys {
+                id
+              }
+              fileName
+              url
+            }
+          }
+          preprintDoi
+          publicationDoi
+          otherDetails
+          acknowledgedGrantNumber
+          acknowledgedGrantNumberDetails
+          asapAffiliationIncluded
+          asapAffiliationIncludedDetails
+          manuscriptLicense
+          manuscriptLicenseDetails
+          datasetsDeposited
+          datasetsDepositedDetails
+          codeDeposited
+          codeDepositedDetails
+          protocolsDeposited
+          protocolsDepositedDetails
+          labMaterialsRegistered
+          labMaterialsRegisteredDetails
+          availabilityStatement
+          availabilityStatementDetails
+          teamsCollection(limit: 10) {
+            items {
+              sys {
+                id
+              }
+              displayName
+              inactiveSince
+            }
+          }
+          labsCollection(limit: 10) {
+            items {
+              sys {
+                id
+              }
+              labPi {
+                sys {
+                  id
+                }
+                teamsCollection(limit: 3) {
+                  items {
+                    inactiveSinceDate
+                    team {
+                      sys {
+                        id
+                      }
+                      inactiveSince
+                    }
+                  }
+                }
+              }
+              name
+            }
+          }
+          createdBy {
+            sys {
+              id
+            }
+            firstName
+            nickname
+            lastName
+            alumniSinceDate
+            avatar {
+              url
+            }
+            teamsCollection(limit: 3) {
+              items {
+                team {
+                  sys {
+                    id
+                  }
+                  displayName
+                }
+              }
+            }
+          }
+          updatedBy {
+            sys {
+              id
+            }
+            firstName
+            nickname
+            lastName
+            alumniSinceDate
+            avatar {
+              url
+            }
+            teamsCollection(limit: 3) {
+              items {
+                team {
+                  sys {
+                    id
+                  }
+                  displayName
+                }
+              }
+            }
+          }
+          firstAuthorsCollection(limit: 15) {
+            items {
+              __typename
+              ... on ExternalAuthors {
+                sys {
+                  id
+                }
+                name
+                email
+              }
+              ... on Users {
+                sys {
+                  id
+                }
+                avatar {
+                  url
+                }
+                firstName
+                lastName
+                nickname
+                email
+                teamsCollection(limit: 3) {
+                  items {
+                    team {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          additionalAuthorsCollection(limit: 15) {
+            items {
+              __typename
+              ... on ExternalAuthors {
+                sys {
+                  id
+                }
+                name
+                email
+              }
+              ... on Users {
+                sys {
+                  id
+                }
+                avatar {
+                  url
+                }
+                firstName
+                lastName
+                nickname
+                email
+                teamsCollection(limit: 3) {
+                  items {
+                    team {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          correspondingAuthorCollection(limit: 1) {
+            items {
+              __typename
+              ... on ExternalAuthors {
+                sys {
+                  id
+                }
+                name
+                email
+              }
+              ... on Users {
+                sys {
+                  id
+                }
+                avatar {
+                  url
+                }
+                firstName
+                lastName
+                nickname
+                email
+                teamsCollection(limit: 3) {
+                  items {
+                    team {
+                      sys {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          linkedFrom {
+            complianceReportsCollection(limit: 1) {
+              items {
+                sys {
+                  id
+                  firstPublishedAt
+                }
+                url
+                description
+                createdBy {
+                  sys {
+                    id
+                  }
+                  firstName
+                  nickname
+                  lastName
+                  alumniSinceDate
+                  avatar {
+                    url
+                  }
+                  teamsCollection(limit: 3) {
+                    items {
+                      team {
+                        sys {
+                          id
+                        }
+                        displayName
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 `;
 
 export const FETCH_MANUSCRIPTS = gql`

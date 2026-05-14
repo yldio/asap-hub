@@ -1028,6 +1028,8 @@ enum CategoryLinkingCollectionsManuscriptsCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -1061,6 +1063,8 @@ enum CategoryLinkingCollectionsManuscriptsCursorCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -2009,6 +2013,8 @@ enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -2042,6 +2048,8 @@ enum DiscussionsLinkingCollectionsManuscriptsCursorCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -4327,6 +4335,8 @@ enum ImpactLinkingCollectionsManuscriptsCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -4360,6 +4370,8 @@ enum ImpactLinkingCollectionsManuscriptsCursorCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -5628,6 +5640,7 @@ type ManuscriptVersions implements Entry & _Node {
   availabilityStatementDetails(locale: String, useFallbackLocale: Boolean): String
   codeDeposited(locale: String, useFallbackLocale: Boolean): String
   codeDepositedDetails(locale: String, useFallbackLocale: Boolean): String
+  complianceReportResponse(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   contentfulMetadata: ContentfulMetadata!
   correspondingAuthorCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ManuscriptVersionsCorrespondingAuthorFilter): ManuscriptVersionsCorrespondingAuthorCollection
   correspondingAuthorCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ManuscriptVersionsCorrespondingAuthorFilter): ManuscriptVersionsCorrespondingAuthorCursorCollection
@@ -5810,6 +5823,7 @@ input ManuscriptVersionsFilter {
   codeDeposited_not: String
   codeDeposited_not_contains: String
   codeDeposited_not_in: [String]
+  complianceReportResponse_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   correspondingAuthor: cfcorrespondingAuthorMultiTypeNestedFilter
   correspondingAuthorCollection_exists: Boolean
@@ -6083,6 +6097,8 @@ enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -6116,6 +6132,8 @@ enum ManuscriptVersionsLinkingCollectionsManuscriptsCursorCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -6419,7 +6437,9 @@ type Manuscripts implements Entry & _Node {
   discussionsCollection(limit: Int = 100, locale: String, order: [ManuscriptsDiscussionsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: DiscussionsFilter): ManuscriptsDiscussionsCollection
   discussionsCursorCollection(limit: Int = 100, locale: String, order: [ManuscriptsDiscussionsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: DiscussionsFilter): ManuscriptsDiscussionsCursorCollection
   eligibilityReasons(locale: String, useFallbackLocale: Boolean): [String]
+  firstPublicDate(locale: String, useFallbackLocale: Boolean): DateTime
   impact(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: ImpactFilter): Impact
+  layImpactStatement(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): ManuscriptsLinkingCollections
   previousStatus(locale: String, useFallbackLocale: Boolean): String
   project(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: ProjectsFilter): Projects
@@ -6752,8 +6772,24 @@ input ManuscriptsFilter {
   eligibilityReasons_contains_none: [String]
   eligibilityReasons_contains_some: [String]
   eligibilityReasons_exists: Boolean
+  firstPublicDate: DateTime
+  firstPublicDate_exists: Boolean
+  firstPublicDate_gt: DateTime
+  firstPublicDate_gte: DateTime
+  firstPublicDate_in: [DateTime]
+  firstPublicDate_lt: DateTime
+  firstPublicDate_lte: DateTime
+  firstPublicDate_not: DateTime
+  firstPublicDate_not_in: [DateTime]
   impact: cfImpactNestedFilter
   impact_exists: Boolean
+  layImpactStatement: String
+  layImpactStatement_contains: String
+  layImpactStatement_exists: Boolean
+  layImpactStatement_in: [String]
+  layImpactStatement_not: String
+  layImpactStatement_not_contains: String
+  layImpactStatement_not_in: [String]
   previousStatus: String
   previousStatus_contains: String
   previousStatus_exists: Boolean
@@ -6822,6 +6858,8 @@ enum ManuscriptsOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -8275,6 +8313,8 @@ enum ProjectsLinkingCollectionsManuscriptsCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -8308,6 +8348,8 @@ enum ProjectsLinkingCollectionsManuscriptsCursorCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -9621,6 +9663,8 @@ enum ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -9654,6 +9698,8 @@ enum ResearchOutputsLinkingCollectionsManuscriptsCursorCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -12140,6 +12186,8 @@ enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -12173,6 +12221,8 @@ enum TeamsLinkingCollectionsManuscriptsCursorCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -13848,6 +13898,8 @@ enum UsersLinkingCollectionsManuscriptsCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -13881,6 +13933,8 @@ enum UsersLinkingCollectionsManuscriptsCursorCollectionOrder {
   count_DESC
   declinedReason_ASC
   declinedReason_DESC
+  firstPublicDate_ASC
+  firstPublicDate_DESC
   previousStatus_ASC
   previousStatus_DESC
   statusUpdatedAt_ASC
@@ -15686,6 +15740,7 @@ input cfManuscriptVersionsNestedFilter {
   codeDeposited_not: String
   codeDeposited_not_contains: String
   codeDeposited_not_in: [String]
+  complianceReportResponse_exists: Boolean
   contentfulMetadata: ContentfulMetadataFilter
   correspondingAuthorCollection_exists: Boolean
   count: Int

@@ -8,11 +8,14 @@ import {
   FetchManuscriptsQueryVariables,
   FetchManuscriptVersionCountByIdQuery,
   FetchManuscriptVersionCountByIdQueryVariables,
+  FetchManuscriptVersionsQuery,
+  FetchManuscriptVersionsQueryVariables,
   FetchResearchOutputByManuscriptVersionIdQuery,
   FetchResearchOutputByManuscriptVersionIdQueryVariables,
   FETCH_MANUSCRIPTS,
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
+  FETCH_MANUSCRIPT_VERSIONS,
   FETCH_MANUSCRIPT_VERSION_COUNT_BY_ID,
   FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
   getLinkAsset,
@@ -82,10 +85,14 @@ type ResolvedManuscriptProject = {
   project: GraphqlManuscriptProject;
 };
 
+type ManuscriptVersions = NonNullable<
+  FetchManuscriptVersionsQuery['manuscripts']
+>;
+
 type ComplianceReport = NonNullable<
   NonNullable<
     NonNullable<
-      NonNullable<ManuscriptItem['versionsCollection']>['items'][number]
+      NonNullable<ManuscriptVersions['versionsCollection']>['items'][number]
     >['linkedFrom']
   >['complianceReportsCollection']
 >['items'][number];
@@ -243,12 +250,21 @@ export class ManuscriptContentfulDataProvider
       return null;
     }
 
-    return parseGraphQLManuscript(manuscripts);
+    const { manuscripts: manuscriptVersions } =
+      await this.contentfulClient.request<
+        FetchManuscriptVersionsQuery,
+        FetchManuscriptVersionsQueryVariables
+      >(FETCH_MANUSCRIPT_VERSIONS, { id });
+
+    return parseGraphQLManuscript(manuscripts, manuscriptVersions || {});
   }
   private async createManuscriptAssets(
     version: Pick<
       ManuscriptCreateDataObject['versions'][number],
-      'manuscriptFile' | 'keyResourceTable' | 'additionalFiles'
+      | 'manuscriptFile'
+      | 'keyResourceTable'
+      | 'additionalFiles'
+      | 'complianceReportResponse'
     >,
   ) {
     const environment = await this.getRestClient();
@@ -263,6 +279,13 @@ export class ManuscriptContentfulDataProvider
         version.keyResourceTable.id,
       );
       await keyResourceTableAsset.publish();
+    }
+
+    if (version.complianceReportResponse) {
+      const complianceReportResponseAsset = await environment.getAsset(
+        version.complianceReportResponse.id,
+      );
+      await complianceReportResponseAsset.publish();
     }
 
     version.additionalFiles?.forEach(async (additionalFile) => {
@@ -294,6 +317,9 @@ export class ManuscriptContentfulDataProvider
           manuscriptFile: getLinkAsset(version.manuscriptFile.id),
           keyResourceTable: version.keyResourceTable
             ? getLinkAsset(version.keyResourceTable.id)
+            : null,
+          complianceReportResponse: version.complianceReportResponse
+            ? getLinkAsset(version.complianceReportResponse.id)
             : null,
           additionalFiles: version.additionalFiles?.length
             ? getLinkAssets(
@@ -403,6 +429,8 @@ export class ManuscriptContentfulDataProvider
       teams: getLinkEntities(version.teams),
       status: 'Manuscript Resubmitted',
       impact: getLinkEntity(input.impact || ''),
+      layImpactStatement: input.layImpactStatement,
+      firstPublicDate: input.firstPublicDate,
       categories: getLinkEntities(input.categories || []),
     });
 
@@ -476,6 +504,8 @@ export class ManuscriptContentfulDataProvider
         url: manuscriptData.url,
         teams: getLinkEntities(version.teams),
         impact: getLinkEntity(manuscriptData.impact || ''),
+        layImpactStatement: manuscriptData.layImpactStatement,
+        firstPublicDate: manuscriptData.firstPublicDate,
         categories: getLinkEntities(manuscriptData.categories || []),
       });
 
@@ -489,6 +519,9 @@ export class ManuscriptContentfulDataProvider
         manuscriptFile: getLinkAsset(version.manuscriptFile.id),
         keyResourceTable: version.keyResourceTable
           ? getLinkAsset(version.keyResourceTable.id)
+          : null,
+        complianceReportResponse: version.complianceReportResponse
+          ? getLinkAsset(version.complianceReportResponse.id)
           : null,
         additionalFiles: version.additionalFiles?.length
           ? getLinkAssets(
@@ -606,6 +639,7 @@ const parseGraphQLManuscriptDiscussions = (
 };
 const parseGraphQLManuscript = (
   manuscript: ManuscriptItem,
+  manuscriptVersions: ManuscriptVersions,
 ): ManuscriptDataObject => {
   const teamData = manuscript.teamsCollection?.items[0];
   const resolvedProject = resolveManuscriptProject(manuscript);
@@ -632,7 +666,7 @@ const parseGraphQLManuscript = (
     apcAmountPaid: manuscript.apcAmountPaid || undefined,
     declinedReason: manuscript.declinedReason || undefined,
     versions: parseGraphqlManuscriptVersion(
-      manuscript.versionsCollection?.items || [],
+      manuscriptVersions.versionsCollection?.items || [],
       grantId,
       projectId,
       count,
@@ -644,6 +678,7 @@ const parseGraphQLManuscript = (
             name: manuscript.impact.name,
           }
         : undefined,
+    layImpactStatement: manuscript.layImpactStatement || undefined,
     categories: (manuscript.categoriesCollection?.items || [])
       .filter(
         (category): category is { sys: { id: string }; name: string } =>
@@ -656,12 +691,15 @@ const parseGraphQLManuscript = (
         id: category.sys.id,
         name: category.name,
       })),
+    firstPublicDate: manuscript.firstPublicDate,
   };
 };
 
 type ManuscriptVersionItem = NonNullable<
   NonNullable<
-    NonNullable<FetchManuscriptByIdQuery['manuscripts']>['versionsCollection']
+    NonNullable<
+      FetchManuscriptVersionsQuery['manuscripts']
+    >['versionsCollection']
   >['items'][number]
 >;
 
@@ -756,7 +794,7 @@ const getQuickCheckDetails = (
 
 export const parseGraphqlManuscriptVersion = (
   versions: NonNullable<
-    NonNullable<ManuscriptItem['versionsCollection']>['items']
+    NonNullable<ManuscriptVersions['versionsCollection']>['items']
   >,
   teamGrantId?: string,
   teamIdCode?: string,
@@ -800,6 +838,13 @@ export const parseGraphqlManuscriptVersion = (
           id: file?.sys.id,
         }),
       ),
+      complianceReportResponse: version?.complianceReportResponse
+        ? {
+            url: version?.complianceReportResponse?.url,
+            filename: version?.complianceReportResponse?.fileName,
+            id: version?.complianceReportResponse?.sys.id,
+          }
+        : undefined,
       preprintDoi: version?.preprintDoi,
       publicationDoi: version?.publicationDoi,
       otherDetails: version?.otherDetails,

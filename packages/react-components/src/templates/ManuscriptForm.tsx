@@ -35,7 +35,7 @@ import {
   useRef,
 } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { colors } from '..';
+import { colors, LabeledDateField } from '..';
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { mobileScreen, rem } from '../pixels';
@@ -142,6 +142,7 @@ type OptionalVersionFields = Array<
     | 'type'
     | 'lifecycle'
     | 'complianceReport'
+    | 'complianceReportResponse'
     | 'count'
     | 'createdBy'
     | 'updatedBy'
@@ -263,11 +264,17 @@ type ManuscriptFormProps = Omit<
   | 'labs'
   | 'versionUID'
 > &
-  Partial<Pick<ManuscriptPostRequest, 'title' | 'url'>> & {
+  Partial<
+    Pick<
+      ManuscriptPostRequest,
+      'title' | 'url' | 'firstPublicDate' | 'layImpactStatement'
+    >
+  > & {
     isOpenScienceTeamMember?: boolean;
     type?: ManuscriptVersion['type'] | '';
     lifecycle?: ManuscriptVersion['lifecycle'] | '';
     manuscriptFile?: ManuscriptFileResponse;
+    complianceReportResponse?: ManuscriptFileResponse;
     keyResourceTable?: ManuscriptFileResponse;
     additionalFiles?: ManuscriptFileResponse[];
     description?: string | '';
@@ -321,6 +328,7 @@ type ManuscriptFormProps = Omit<
     impact?: MultiSelectOptionsType;
     categories: MultiSelectOptionsType[];
     onInvalid?: () => void;
+    versionsCount?: number;
   };
 
 const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
@@ -334,13 +342,16 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   teamId,
   isOpenScienceTeamMember,
   title,
+  firstPublicDate,
   url,
   impact,
+  layImpactStatement,
   categories,
   type,
   lifecycle,
   manuscriptFile,
   keyResourceTable,
+  complianceReportResponse,
   additionalFiles,
   eligibilityReasons,
   preprintDoi,
@@ -378,6 +389,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   getImpactSuggestions,
   getCategorySuggestions,
   onInvalid,
+  versionsCount = 0,
 }: ManuscriptFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
   const firstAuthorsWithoutTeamAdded = new Set();
@@ -417,12 +429,16 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   };
 
   const isEditMode = !!manuscriptId && !resubmitManuscript;
+  const canSubmitComplianceReportResponse =
+    resubmitManuscript || (isEditMode && versionsCount > 1);
 
   const methods = useForm<ManuscriptFormData>({
     mode: 'all',
     defaultValues: {
       title: title || '',
       url: url || undefined,
+      firstPublicDate: firstPublicDate ? new Date(firstPublicDate) : undefined,
+      layImpactStatement: layImpactStatement || '',
       impact,
       categories: categories || [],
       versions: [
@@ -434,6 +450,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           otherDetails: otherDetails || '',
           manuscriptFile: resubmitManuscript ? undefined : manuscriptFile,
           keyResourceTable: resubmitManuscript ? undefined : keyResourceTable,
+          complianceReportResponse: resubmitManuscript
+            ? undefined
+            : complianceReportResponse,
           additionalFiles: resubmitManuscript ? undefined : additionalFiles,
 
           acknowledgedGrantNumber: getDefaultQuickCheckValue(
@@ -513,6 +532,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     useState(false);
   const [isUploadingAdditionalFiles, setIsUploadingAdditionalFiles] =
     useState(false);
+  const [
+    isUploadingComplianceReportResponse,
+    setIsUploadingComplianceReportResponse,
+  ] = useState(false);
 
   const {
     handleSubmit,
@@ -839,6 +862,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         manuscriptFile: versionData.manuscriptFile!,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         keyResourceTable: versionData.keyResourceTable!,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        complianceReportResponse: versionData.complianceReportResponse!,
         url: urlValue,
       };
       try {
@@ -846,6 +871,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           await onCreate({
             ...data,
             url: urlValue,
+            firstPublicDate: data.firstPublicDate?.toISOString(),
             impact: data.impact?.value,
             categories:
               data.categories?.map((category) => category.value) || [],
@@ -863,8 +889,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             title: data.title,
             url: urlValue,
             impact: data.impact?.value,
+            firstPublicDate: data.firstPublicDate?.toISOString(),
             categories:
               data.categories?.map((category) => category.value) || [],
+            layImpactStatement: data.layImpactStatement,
             teamId,
             versions: [
               {
@@ -880,6 +908,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             impact: data.impact?.value,
             categories:
               data.categories?.map((category) => category.value) || [],
+            layImpactStatement: data.layImpactStatement,
             teamId,
             versions: [
               {
@@ -1075,6 +1104,41 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               </Suspense>
             )}
 
+            {watchType &&
+              watchLifecycle &&
+              manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
+                'firstPublicDate',
+              ) && (
+                <Suspense
+                  fallback={<div>Loading date first made public...</div>}
+                >
+                  <Controller
+                    name="firstPublicDate"
+                    control={control}
+                    rules={{
+                      required: 'This field is required.',
+                    }}
+                    render={({
+                      field: { value, onChange },
+                      fieldState: { error },
+                    }) => (
+                      <LabeledDateField
+                        title="Date first made public"
+                        subtitle="(required)"
+                        description="Enter the date this manuscript was first shared publicly, whether as a preprint or publication. This cannot be changed later."
+                        onChange={onChange}
+                        value={value}
+                        enabled={
+                          !isSubmitting &&
+                          (!resubmitManuscript || !firstPublicDate)
+                        }
+                        customValidationMessage={error?.message}
+                      />
+                    )}
+                  />
+                </Suspense>
+              )}
+
             <Controller
               name="url"
               control={control}
@@ -1223,47 +1287,77 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   />
                 </Suspense>
               )}
-            <div
-              css={css({
-                marginTop: rem(12),
-              })}
-            >
-              <Suspense fallback={<div>Loading impact...</div>}>
-                <Controller
-                  name="impact"
-                  control={control}
-                  rules={{
-                    required: 'This field is required.',
-                  }}
-                  render={({
-                    field: { value, onChange, onBlur },
-                    fieldState: { error },
-                  }) => (
-                    <LabeledDropdown
-                      title="Impact"
-                      subtitle="(required)"
-                      description="Select the option that best describes the impact of this manuscript on the PD field."
-                      options={impactOptions}
-                      onChange={(e) => {
-                        const impactOption = impactOptions.find(
-                          (option) => option.value === e,
-                        );
-                        onChange(impactOption);
-                      }}
-                      onBlur={onBlur}
-                      customValidationMessage={error?.message}
-                      value={value?.value}
-                      enabled={!isSubmitting}
-                      noOptionsMessage={(option) =>
-                        `Sorry, no impacts match ${option.inputValue}`
-                      }
-                      placeholder="Choose an impact"
-                    />
-                  )}
-                />
-              </Suspense>
-            </div>
 
+            <Suspense fallback={<div>Loading description...</div>}>
+              <Controller
+                name="versions.0.description"
+                control={control}
+                rules={{
+                  required: 'Please enter a manuscript description.',
+                }}
+                render={({
+                  field: { value, onChange, onBlur },
+                  fieldState: { error },
+                }) => (
+                  <LabeledTextArea
+                    title="Manuscript Description"
+                    subtitle="(required)"
+                    tip={
+                      <span>
+                        Please provide a description of the outcomes of your
+                        paper and how it relates to your ASAP project (view
+                        example{' '}
+                        <Link href="https://docs.google.com/document/d/1dU8VLqKjyJM_tBNWpxAAJyoALknQgbRlKm5PdqopFUM/edit">
+                          here
+                        </Link>
+                        ).
+                      </span>
+                    }
+                    customValidationMessage={error?.message}
+                    value={value || ''}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    enabled={!isSubmitting}
+                  />
+                )}
+              />
+            </Suspense>
+            <Suspense fallback={<div>Loading short description...</div>}>
+              <Controller
+                name="versions.0.shortDescription"
+                control={control}
+                rules={{
+                  required:
+                    'Please enter a short description or select Generate to create one.',
+                  maxLength: {
+                    value: 250,
+                    message:
+                      'The short description exceeds the character limit. Please limit it to 250 characters.',
+                  },
+                }}
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <ShortDescriptionCard
+                    buttonEnabled={!!watch('versions.0.description')}
+                    enabled={!isSubmitting}
+                    onChange={async (e) => {
+                      onChange(e);
+                      await trigger('versions.0.shortDescription');
+                    }}
+                    value={value}
+                    customValidationMessage={error?.message}
+                    tip="Use AI to generate a short description or write your own based on the description field above."
+                    getShortDescription={() =>
+                      getShortDescriptionFromDescription(
+                        watch('versions.0.description'),
+                      )
+                    }
+                  />
+                )}
+              />
+            </Suspense>
             <div
               css={css({
                 marginTop: rem(12),
@@ -1310,8 +1404,84 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                 />
               </Suspense>
             </div>
-
-            {watchType && (
+            <div
+              css={css({
+                marginTop: rem(12),
+              })}
+            >
+              <Suspense fallback={<div>Loading impact...</div>}>
+                <Controller
+                  name="impact"
+                  control={control}
+                  rules={{
+                    required: 'This field is required.',
+                  }}
+                  render={({
+                    field: { value, onChange, onBlur },
+                    fieldState: { error },
+                  }) => (
+                    <LabeledDropdown
+                      title="Impact"
+                      subtitle="(required)"
+                      description="Select the option that best describes the impact of this manuscript on the PD field."
+                      options={impactOptions}
+                      onChange={(e) => {
+                        const impactOption = impactOptions.find(
+                          (option) => option.value === e,
+                        );
+                        onChange(impactOption);
+                      }}
+                      onBlur={onBlur}
+                      customValidationMessage={error?.message}
+                      value={value?.value}
+                      enabled={!isSubmitting}
+                      noOptionsMessage={(option) =>
+                        `Sorry, no impacts match ${option.inputValue}`
+                      }
+                      placeholder="Choose an impact"
+                    />
+                  )}
+                />
+              </Suspense>
+            </div>
+            <Suspense fallback={<div>Loading lay impact statement...</div>}>
+              <Controller
+                name="layImpactStatement"
+                control={control}
+                rules={{
+                  required: 'Please enter a lay impact statement.',
+                  maxLength: {
+                    value: 100,
+                    message:
+                      'The lay impact statement exceeds the character limit. Please limit it to 100 characters.',
+                  },
+                }}
+                render={({
+                  field: { value, onChange, onBlur },
+                  fieldState: { error },
+                }) => (
+                  <LabeledTextArea
+                    title="Lay Impact Statement"
+                    subtitle="(required)"
+                    tip={
+                      <span>
+                        Explain in plain language why this work matters and how
+                        it may impact research, patients, or the wider
+                        community.
+                      </span>
+                    }
+                    customValidationMessage={error?.message}
+                    value={value || ''}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    enabled={!isSubmitting}
+                  />
+                )}
+              />
+            </Suspense>
+          </FormCard>
+          <Suspense fallback={<div>Loading manuscript files...</div>}>
+            <FormCard key="manuscriptFiles" title="Manuscript Files">
               <Suspense fallback={<div>Loading manuscript file...</div>}>
                 <Controller
                   name="versions.0.manuscriptFile"
@@ -1374,66 +1544,138 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   )}
                 />
               </Suspense>
-            )}
-            {watchType &&
-              watchLifecycle &&
-              manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
-                'keyResourceTable',
-              ) && (
-                <Suspense fallback={<div>Loading key resource table...</div>}>
+              {watchType &&
+                watchLifecycle &&
+                manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
+                  'keyResourceTable',
+                ) && (
+                  <Suspense fallback={<div>Loading key resource table...</div>}>
+                    <Controller
+                      name="versions.0.keyResourceTable"
+                      control={control}
+                      rules={{
+                        required: 'Please upload a key resource table.',
+                      }}
+                      render={({ field: { value }, fieldState: { error } }) => (
+                        <LabeledFileField
+                          title="Upload a key resource table"
+                          subtitle="(required)"
+                          description={
+                            <>
+                              The key resource table must be submitted as a
+                              single CSV file and should outline the resources
+                              used and generated in this study. View guidance{' '}
+                              {<Link href={KRT_GUIDANCE_FILE}>here</Link>}. The
+                              file size must not exceed 100 MB.
+                            </>
+                          }
+                          placeholder="Upload Key Resource Table"
+                          onRemove={async () => {
+                            resetField('versions.0.keyResourceTable', {
+                              defaultValue: null,
+                            });
+                            await trigger('versions.0.keyResourceTable');
+                          }}
+                          handleFileUpload={async (file: File) => {
+                            if (file.size > MAX_FILE_SIZE) {
+                              setError('versions.0.keyResourceTable', {
+                                type: 'custom',
+                                message:
+                                  'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+                              });
+                            } else {
+                              setIsUploadingKeyResourceTable(true);
+                              clearErrors('versions.0.keyResourceTable');
+
+                              const uploadedFile = await handleFileUpload(
+                                file,
+                                'Key Resource Table',
+                                (validationErrorMessage) => {
+                                  setError('versions.0.keyResourceTable', {
+                                    type: 'custom',
+                                    message: validationErrorMessage,
+                                  });
+                                },
+                              );
+                              setIsUploadingKeyResourceTable(false);
+
+                              if (!uploadedFile) return;
+
+                              setValue(
+                                'versions.0.keyResourceTable',
+                                uploadedFile,
+                                {
+                                  shouldValidate: true,
+                                },
+                              );
+                            }
+                          }}
+                          currentFiles={value ? [value] : []}
+                          accept="text/csv"
+                          customValidationMessage={error?.message}
+                          enabled={
+                            (!isEditMode || isOpenScienceTeamMember) &&
+                            !isSubmitting &&
+                            !isUploadingKeyResourceTable
+                          }
+                          tagEnabled={!isEditMode || isOpenScienceTeamMember}
+                        />
+                      )}
+                    />
+                  </Suspense>
+                )}
+              {canSubmitComplianceReportResponse && (
+                <Suspense
+                  fallback={<div>Loading compliance report response...</div>}
+                >
                   <Controller
-                    name="versions.0.keyResourceTable"
+                    name="versions.0.complianceReportResponse"
                     control={control}
                     rules={{
-                      required: 'Please upload a key resource table.',
+                      required: 'Please upload a response.',
                     }}
                     render={({ field: { value }, fieldState: { error } }) => (
                       <LabeledFileField
-                        title="Upload a key resource table"
+                        title="Upload a response to the compliance report"
                         subtitle="(required)"
-                        description={
-                          <>
-                            The key resource table must be submitted as a single
-                            CSV file and should outline the resources used and
-                            generated in this study. View guidance{' '}
-                            {<Link href={KRT_GUIDANCE_FILE}>here</Link>}. The
-                            file size must not exceed 100 MB.
-                          </>
-                        }
-                        placeholder="Upload Key Resource Table"
+                        description="The response must be submitted as a PDF or Word document and must include an itemized explanation of how each comment in the compliance report has been addressed (as is often done in responses to peer reviews). Maximum file size: 100 MB."
+                        placeholder="Upload Compliance Report Response"
                         onRemove={async () => {
-                          resetField('versions.0.keyResourceTable', {
+                          resetField('versions.0.complianceReportResponse', {
                             defaultValue: null,
                           });
-                          await trigger('versions.0.keyResourceTable');
+                          await trigger('versions.0.complianceReportResponse');
                         }}
                         handleFileUpload={async (file: File) => {
                           if (file.size > MAX_FILE_SIZE) {
-                            setError('versions.0.keyResourceTable', {
+                            setError('versions.0.complianceReportResponse', {
                               type: 'custom',
                               message:
                                 'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
                             });
                           } else {
-                            setIsUploadingKeyResourceTable(true);
-                            clearErrors('versions.0.keyResourceTable');
+                            setIsUploadingComplianceReportResponse(true);
+                            clearErrors('versions.0.complianceReportResponse');
 
                             const uploadedFile = await handleFileUpload(
                               file,
-                              'Key Resource Table',
+                              'Compliance Report Response',
                               (validationErrorMessage) => {
-                                setError('versions.0.keyResourceTable', {
-                                  type: 'custom',
-                                  message: validationErrorMessage,
-                                });
+                                setError(
+                                  'versions.0.complianceReportResponse',
+                                  {
+                                    type: 'custom',
+                                    message: validationErrorMessage,
+                                  },
+                                );
                               },
                             );
-                            setIsUploadingKeyResourceTable(false);
+                            setIsUploadingComplianceReportResponse(false);
 
                             if (!uploadedFile) return;
 
                             setValue(
-                              'versions.0.keyResourceTable',
+                              'versions.0.complianceReportResponse',
                               uploadedFile,
                               {
                                 shouldValidate: true,
@@ -1442,12 +1684,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                           }
                         }}
                         currentFiles={value ? [value] : []}
-                        accept="text/csv"
+                        accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                         customValidationMessage={error?.message}
                         enabled={
                           (!isEditMode || isOpenScienceTeamMember) &&
                           !isSubmitting &&
-                          !isUploadingKeyResourceTable
+                          !isUploadingComplianceReportResponse
                         }
                         tagEnabled={!isEditMode || isOpenScienceTeamMember}
                       />
@@ -1455,7 +1697,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   />
                 </Suspense>
               )}
-            {watchType && (
               <Suspense fallback={<div>Loading additional files...</div>}>
                 <Controller
                   name="versions.0.additionalFiles"
@@ -1544,78 +1785,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   )}
                 />
               </Suspense>
-            )}
-            <Suspense fallback={<div>Loading description...</div>}>
-              <Controller
-                name="versions.0.description"
-                control={control}
-                rules={{
-                  required: 'Please enter a manuscript description.',
-                }}
-                render={({
-                  field: { value, onChange, onBlur },
-                  fieldState: { error },
-                }) => (
-                  <LabeledTextArea
-                    title="Manuscript Description"
-                    subtitle="(required)"
-                    tip={
-                      <span>
-                        Please provide a description of the outcomes of your
-                        paper and how it relates to your ASAP project (view
-                        example{' '}
-                        <Link href="https://docs.google.com/document/d/1dU8VLqKjyJM_tBNWpxAAJyoALknQgbRlKm5PdqopFUM/edit">
-                          here
-                        </Link>
-                        ).
-                      </span>
-                    }
-                    customValidationMessage={error?.message}
-                    value={value || ''}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    enabled={!isSubmitting}
-                  />
-                )}
-              />
-            </Suspense>
-            <Suspense fallback={<div>Loading short description...</div>}>
-              <Controller
-                name="versions.0.shortDescription"
-                control={control}
-                rules={{
-                  required:
-                    'Please enter a short description or select Generate to create one.',
-                  maxLength: {
-                    value: 250,
-                    message:
-                      'The short description exceeds the character limit. Please limit it to 250 characters.',
-                  },
-                }}
-                render={({
-                  field: { value, onChange },
-                  fieldState: { error },
-                }) => (
-                  <ShortDescriptionCard
-                    buttonEnabled={!!watch('versions.0.description')}
-                    enabled={!isSubmitting}
-                    onChange={async (e) => {
-                      onChange(e);
-                      await trigger('versions.0.shortDescription');
-                    }}
-                    value={value}
-                    customValidationMessage={error?.message}
-                    tip="Use AI to generate a short description or write your own based on the description field above."
-                    getShortDescription={() =>
-                      getShortDescriptionFromDescription(
-                        watch('versions.0.description'),
-                      )
-                    }
-                  />
-                )}
-              />
-            </Suspense>
-          </FormCard>
+            </FormCard>
+          </Suspense>
           <Suspense fallback={<div>Loading contributors...</div>}>
             <FormCard key="contributors" title="Who were the contributors?">
               <Controller

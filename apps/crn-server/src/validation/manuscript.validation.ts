@@ -2,6 +2,7 @@ import {
   manuscriptPostRequestSchema,
   manuscriptPutRequestSchema,
   ManuscriptFileType,
+  manuscriptFileTypes,
 } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
@@ -82,7 +83,7 @@ const fileUploadFromUrlSchema: JSONSchemaType<FileUploadFromUrlRequest> = {
   properties: {
     fileType: {
       type: 'string',
-      enum: ['Manuscript File', 'Key Resource Table', 'Additional Files'],
+      enum: manuscriptFileTypes,
     },
     url: { type: 'string' },
     filename: { type: 'string' },

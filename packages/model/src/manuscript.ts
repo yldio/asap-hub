@@ -78,10 +78,11 @@ export type ManuscriptFileResponse = {
 
 type ManuscriptFile = ManuscriptFileResponse;
 
-const manuscriptFileTypes = [
+export const manuscriptFileTypes = [
   'Manuscript File',
   'Key Resource Table',
   'Additional Files',
+  'Compliance Report Response',
 ] as const;
 export type ManuscriptFileType = (typeof manuscriptFileTypes)[number];
 
@@ -98,6 +99,7 @@ export type ManuscriptVersion = {
   otherDetails?: string;
   manuscriptFile: ManuscriptFile;
   keyResourceTable?: ManuscriptFile;
+  complianceReportResponse?: ManuscriptFile;
   additionalFiles?: ManuscriptFile[];
 
   acknowledgedGrantNumber?: string;
@@ -157,20 +159,22 @@ export const manuscriptFormFieldsMapping: Record<
   Record<
     ManuscriptLifecycle,
     Array<
-      keyof Omit<
-        ManuscriptVersion,
-        | 'complianceReport'
-        | 'count'
-        | 'createdBy'
-        | 'createdDate'
-        | 'id'
-        | 'publishedAt'
-        | 'updatedBy'
-        | 'firstAuthors'
-        | 'correspondingAuthor'
-        | 'additionalAuthors'
-        | 'versionUID'
-      >
+      | keyof Omit<
+          ManuscriptVersion,
+          | 'complianceReport'
+          | 'complianceReportResponse'
+          | 'count'
+          | 'createdBy'
+          | 'createdDate'
+          | 'id'
+          | 'publishedAt'
+          | 'updatedBy'
+          | 'firstAuthors'
+          | 'correspondingAuthor'
+          | 'additionalAuthors'
+          | 'versionUID'
+        >
+      | 'firstPublicDate'
     >
   >
 > = {
@@ -196,6 +200,7 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'availabilityStatement',
       'keyResourceTable',
+      'firstPublicDate',
     ],
     'Typeset proof': [
       'acknowledgedGrantNumber',
@@ -220,6 +225,7 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'availabilityStatement',
       'keyResourceTable',
+      'firstPublicDate',
     ],
     'Publication with addendum or corrigendum': [
       'preprintDoi',
@@ -233,6 +239,7 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'availabilityStatement',
       'keyResourceTable',
+      'firstPublicDate',
     ],
     Other: [
       'otherDetails',
@@ -252,7 +259,7 @@ export const manuscriptFormFieldsMapping: Record<
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
     ],
-    Preprint: [],
+    Preprint: ['firstPublicDate'],
     'Typeset proof': [
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
@@ -263,12 +270,14 @@ export const manuscriptFormFieldsMapping: Record<
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
+      'firstPublicDate',
     ],
     'Publication with addendum or corrigendum': [
       'publicationDoi',
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
+      'firstPublicDate',
     ],
     Other: [
       'otherDetails',
@@ -336,6 +345,7 @@ export type ManuscriptCategory = {
 export type ManuscriptDataObject = {
   id: string;
   title: string;
+  firstPublicDate?: string;
   url?: string;
   status?: ManuscriptStatus;
   teamId: string;
@@ -349,6 +359,7 @@ export type ManuscriptDataObject = {
   apcAmountPaid?: number;
   declinedReason?: string;
   impact?: ManuscriptImpact;
+  layImpactStatement?: string;
   categories?: ManuscriptCategory[];
 };
 
@@ -370,7 +381,7 @@ export type ManuscriptPostAuthor =
 
 export type ManuscriptPostCreateRequest = Pick<
   ManuscriptDataObject,
-  'title' | 'teamId' | 'url'
+  'title' | 'teamId' | 'url' | 'firstPublicDate' | 'layImpactStatement'
 > & {
   eligibilityReasons: string[];
   impact: string;
@@ -385,6 +396,7 @@ export type ManuscriptPostCreateRequest = Pick<
     shortDescription: string;
     manuscriptFile: ManuscriptVersion['manuscriptFile'];
     keyResourceTable?: ManuscriptVersion['keyResourceTable'];
+    complianceReportResponse?: ManuscriptVersion['complianceReportResponse'];
     additionalFiles?: ManuscriptVersion['additionalFiles'];
 
     acknowledgedGrantNumber?: ManuscriptVersion['acknowledgedGrantNumber'];
@@ -481,8 +493,9 @@ export type AuthorEmailField = {
 
 export type ManuscriptFormData = Pick<
   ManuscriptPostCreateRequest,
-  'title' | 'teamId' | 'eligibilityReasons' | 'url'
+  'title' | 'teamId' | 'eligibilityReasons' | 'url' | 'layImpactStatement'
 > & {
+  firstPublicDate: Date;
   impact: MultiselectOption;
   categories: MultiselectOption[];
   versions: (Pick<
@@ -514,6 +527,7 @@ export type ManuscriptFormData = Pick<
   > & {
     manuscriptFile: ManuscriptVersion['manuscriptFile'] | null;
     keyResourceTable: ManuscriptVersion['keyResourceTable'] | null;
+    complianceReportResponse: ManuscriptVersion['manuscriptFile'] | null;
     additionalFiles?: ManuscriptVersion['additionalFiles'] | [];
 
     teams: MultiselectOption[];
@@ -604,6 +618,16 @@ export const manuscriptVersionSchema = {
         },
         required: ['id'],
       },
+    },
+    complianceReportResponse: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        filename: { type: 'string', nullable: true },
+        url: { type: 'string', nullable: true },
+      },
+      nullable: true,
+      required: ['id'],
     },
     acknowledgedGrantNumber: { type: 'string', nullable: true },
     asapAffiliationIncluded: { type: 'string', nullable: true },
@@ -718,7 +742,9 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
         items: manuscriptVersionSchema,
       },
       notificationList: { type: 'string', nullable: true },
+      firstPublicDate: { type: 'string' },
       impact: { type: 'string', nullable: true },
+      layImpactStatement: { type: 'string' },
       categories: { type: 'array', items: { type: 'string' }, nullable: true },
     },
     required: ['title', 'teamId', 'versions'],

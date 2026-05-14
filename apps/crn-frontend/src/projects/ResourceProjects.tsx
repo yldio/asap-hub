@@ -1,7 +1,11 @@
 import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { ProjectsPage, ResourceProjectsList } from '@asap-hub/react-components';
-import type { ProjectMember, ResourceProject } from '@asap-hub/model';
+import type {
+  ProjectMember,
+  ResearchThemeType,
+  ResourceProject,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
@@ -11,16 +15,23 @@ import {
   isResourceProject,
   ResourceProjectCSV,
   resourceProjectToCSV,
+  toDiscoveryThemeFilters,
   toResourceTypeFilters,
   toStatusFilters,
 } from './utils';
 import {
   FilterOption,
   STATUS_FILTER_OPTIONS,
+  createDiscoveryThemeFilterOptionsFromThemes,
   createResourceTypeFilterOptionsFromTypes,
 } from './filter-options';
-import { useResourceTypes } from '../shared-state/shared-research';
+import {
+  useResearchThemes,
+  useResourceTypes,
+} from '../shared-state/shared-research';
 import { useAlgolia } from '../hooks/algolia';
+
+const RESOURCE_THEME_TYPES: ReadonlyArray<ResearchThemeType> = ['Resource'];
 
 type ResourceProjectsProps = {
   searchQuery: string;
@@ -99,23 +110,33 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const resourceTypes = useResourceTypes();
+  const researchThemes = useResearchThemes(RESOURCE_THEME_TYPES);
   const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
   const resourceTypeFilters = useMemo(
     () => toResourceTypeFilters(filters, resourceTypes),
     [filters, resourceTypes],
+  );
+  const themeFilters = useMemo(
+    () => toDiscoveryThemeFilters(filters, researchThemes),
+    [filters, researchThemes],
   );
   const emptyFilters = useMemo(() => new Set<string>(), []);
   const normalizedFilters = useMemo(
     () => (filters ? new Set(filters) : undefined),
     [filters],
   );
-  const facetFilters = useMemo(
-    () =>
-      resourceTypeFilters.length
-        ? { resourceType: resourceTypeFilters as ReadonlyArray<string> }
-        : undefined,
-    [resourceTypeFilters],
-  );
+  const facetFilters = useMemo(() => {
+    const filtersByAttribute: Record<string, ReadonlyArray<string>> = {};
+    if (resourceTypeFilters.length) {
+      filtersByAttribute.resourceType = resourceTypeFilters;
+    }
+    if (themeFilters.length) {
+      filtersByAttribute.researchTheme = themeFilters;
+    }
+    return Object.keys(filtersByAttribute).length
+      ? filtersByAttribute
+      : undefined;
+  }, [resourceTypeFilters, themeFilters]);
   const listOptions = useMemo(
     () => ({
       projectType: 'Resource Project' as const,
@@ -140,9 +161,17 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
     () => createResourceTypeFilterOptionsFromTypes(resourceTypes),
     [resourceTypes],
   );
+  const themeFilterOptions: ReadonlyArray<FilterOption> = useMemo(
+    () => createDiscoveryThemeFilterOptionsFromThemes(researchThemes),
+    [researchThemes],
+  );
   const filterOptions = useMemo(
-    () => [...resourceFilterOptions, ...STATUS_FILTER_OPTIONS],
-    [resourceFilterOptions],
+    () => [
+      ...resourceFilterOptions,
+      ...themeFilterOptions,
+      ...STATUS_FILTER_OPTIONS,
+    ],
+    [resourceFilterOptions, themeFilterOptions],
   );
 
   return (

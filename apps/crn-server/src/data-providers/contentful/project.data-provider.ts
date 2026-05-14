@@ -302,6 +302,7 @@ export const parseContentfulProject = (
           teamId: teamMember.sys?.id,
           googleDriveLink: item.googleDriveLink || undefined,
           members: teamMembers,
+          researchTheme: teamMember.researchTheme?.name || undefined,
         } as ResourceProject;
       }
 
@@ -507,6 +508,7 @@ export const parseContentfulProjectDetail = (
           originalGrantProposalId,
           supplementGrant,
           fundedTeam,
+          researchTheme: fundedTeam?.researchTheme || undefined,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
           manuscripts: resourceManuscripts,
           collaborationManuscripts: resourceCollaborationManuscripts,

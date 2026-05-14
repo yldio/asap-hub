@@ -12,7 +12,10 @@ import { ResourceProject } from '@asap-hub/model';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import ResourceProjects from '../ResourceProjects';
 import { useProjects } from '../state';
-import { useResourceTypes } from '../../shared-state/shared-research';
+import {
+  useResearchThemes,
+  useResourceTypes,
+} from '../../shared-state/shared-research';
 import { getProjects } from '../api';
 
 jest.mock('../state');
@@ -44,6 +47,9 @@ const mockUseProjects = useProjects as jest.MockedFunction<typeof useProjects>;
 const mockUseResourceTypes = useResourceTypes as jest.MockedFunction<
   typeof useResourceTypes
 >;
+const mockUseResearchThemes = useResearchThemes as jest.MockedFunction<
+  typeof useResearchThemes
+>;
 
 const props: ComponentProps<typeof ResourceProjects> = {
   searchQuery: '',
@@ -54,6 +60,7 @@ const props: ComponentProps<typeof ResourceProjects> = {
 };
 
 const resourceTypeFilter = 'Dataset';
+const themeFilter = 'Neuro';
 const statusFilter = 'Active';
 
 const mockResourceProject = {
@@ -107,6 +114,11 @@ beforeEach(() => {
     { id: 'type-1', name: 'Database' },
     { id: 'type-2', name: 'Data Portal' },
     { id: 'type-3', name: 'Dataset' },
+  ]);
+  mockUseResearchThemes.mockReturnValue([
+    { id: 'theme-1', name: 'Neuro', types: ['Resource'] },
+    { id: 'theme-2', name: 'Neurodegeneration', types: ['Resource'] },
+    { id: 'theme-3', name: 'Cell Biology', types: ['Resource'] },
   ]);
 });
 
@@ -171,6 +183,44 @@ it('passes Algolia facet filters when the resource type filter is active', async
       }),
     ),
   );
+});
+
+it('passes Algolia facet filters when the research theme filter is active', async () => {
+  renderResourceProjects('', new Set([themeFilter]));
+
+  await waitFor(() =>
+    expect(mockUseProjects).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        facetFilters: { researchTheme: ['Neuro'] },
+      }),
+    ),
+  );
+});
+
+it('combines resource type and research theme facet filters', async () => {
+  renderResourceProjects('', new Set([resourceTypeFilter, themeFilter]));
+
+  await waitFor(() =>
+    expect(mockUseProjects).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        facetFilters: {
+          resourceType: ['Dataset'],
+          researchTheme: ['Neuro'],
+        },
+      }),
+    ),
+  );
+});
+
+it('renders the RESEARCH THEME filter section with available themes', async () => {
+  renderResourceProjects();
+
+  const filterButton = await screen.findByRole('button', { name: /filter/i });
+  await userEvent.click(filterButton);
+
+  expect(screen.getByText('RESEARCH THEME')).toBeVisible();
+  expect(screen.getByText('Neuro')).toBeVisible();
+  expect(screen.getByText('Cell Biology')).toBeVisible();
 });
 
 it('triggers export with the expected parameters', async () => {

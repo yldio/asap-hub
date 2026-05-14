@@ -17,6 +17,10 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false)
     .linkType('Asset');
+
+  manuscriptVersions
+    .moveField('complianceReportResponse')
+    .afterField('keyResourceTable');
 };
 
 module.exports.down = (migration) => {

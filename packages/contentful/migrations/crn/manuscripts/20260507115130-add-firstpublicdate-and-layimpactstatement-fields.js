@@ -10,7 +10,14 @@ module.exports.up = (migration) => {
     .type('Text')
     .localized(false)
     .required(false)
-    .validations([])
+    .validations([
+      {
+        size: {
+          min: null,
+          max: 100,
+        },
+      },
+    ])
     .disabled(false)
     .omitted(false);
 

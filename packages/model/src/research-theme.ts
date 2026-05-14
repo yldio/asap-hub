@@ -8,6 +8,11 @@ export const DISCOVERY_THEME_TYPES = ['Discovery' as const];
 
 export const RESOURCE_THEME_TYPES = ['Resource' as const];
 
+export const isResearchThemeType = (
+  value: unknown,
+): value is ResearchThemeType =>
+  (researchThemeTypes as readonly string[]).includes(value as string);
+
 export type ResearchThemeDataObject = {
   readonly id: string;
   readonly name: string;

@@ -1,5 +1,4 @@
 import ResearchThemeController from '../../src/controllers/research-theme.controller';
-import { ResearchThemeDataProvider } from '../../src/data-providers/types';
 import {
   getResearchThemeDataObject,
   getResearchThemeResponse,
@@ -47,29 +46,31 @@ describe('ResearchTheme controller', () => {
         skip: 5,
       });
 
-      const expectedParameters: Parameters<
-        ResearchThemeDataProvider['fetch']
-      >[0] = {
+      expect(researchThemeDataProvider.fetch).toHaveBeenCalledWith({
         skip: 5,
         take: 10,
-      };
+        filter: undefined,
+      });
+    });
+
+    test('Should forward the types filter to the data provider', async () => {
+      await researchThemeController.fetch({
+        filter: { types: ['Resource'] },
+      });
+
       expect(researchThemeDataProvider.fetch).toHaveBeenCalledWith(
-        expectedParameters,
+        expect.objectContaining({ filter: { types: ['Resource'] } }),
       );
     });
 
     test('Should use default parameters when none provided', async () => {
       await researchThemeController.fetch({});
 
-      const expectedParameters: Parameters<
-        ResearchThemeDataProvider['fetch']
-      >[0] = {
+      expect(researchThemeDataProvider.fetch).toHaveBeenCalledWith({
         skip: 0,
         take: 100,
-      };
-      expect(researchThemeDataProvider.fetch).toHaveBeenCalledWith(
-        expectedParameters,
-      );
+        filter: undefined,
+      });
     });
 
     test('Should use default parameter when fetch is called without arguments', async () => {
@@ -80,15 +81,11 @@ describe('ResearchTheme controller', () => {
 
       await researchThemeController.fetch();
 
-      const expectedParameters: Parameters<
-        ResearchThemeDataProvider['fetch']
-      >[0] = {
+      expect(researchThemeDataProvider.fetch).toHaveBeenCalledWith({
         skip: 0,
         take: 100,
-      };
-      expect(researchThemeDataProvider.fetch).toHaveBeenCalledWith(
-        expectedParameters,
-      );
+        filter: undefined,
+      });
     });
   });
 });

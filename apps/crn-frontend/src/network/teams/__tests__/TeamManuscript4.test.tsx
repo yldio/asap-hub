@@ -205,6 +205,11 @@ it('shows default error toast when submitting with any other error', async () =>
   await user.type(categoryInput, 'My Cat');
   await user.click(await screen.findByText(/^My Category$/i));
 
+  await user.type(
+    screen.getByRole('textbox', { name: /Lay Impact Statement/i }),
+    'an impact statement',
+  );
+
   // Description and short description
   await user.type(
     screen.getByRole('textbox', { name: /Manuscript Description/i }),

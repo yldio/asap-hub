@@ -215,13 +215,18 @@ it('shows server validation error toast and a message when submitting with dupli
   );
 
   // Impact and category
+  const categoryInput = screen.getByRole('combobox', { name: /Category/i });
+  await user.type(categoryInput, 'My Cat');
+  await user.click(await screen.findByText(/^My Category$/i));
+
   const impactInput = screen.getByRole('combobox', { name: /Impact/i });
   await user.type(impactInput, 'My Imp');
   await user.click(await screen.findByText(/^My Impact$/i));
 
-  const categoryInput = screen.getByRole('combobox', { name: /Category/i });
-  await user.type(categoryInput, 'My Cat');
-  await user.click(await screen.findByText(/^My Category$/i));
+  await user.type(
+    screen.getByRole('textbox', { name: /Lay Impact Statement/i }),
+    'an impact statement',
+  );
 
   // First authors
   await user.type(screen.getByLabelText(/First Authors/i), 'Jane Doe');

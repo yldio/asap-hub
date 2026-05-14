@@ -203,15 +203,6 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   await user.click(lifecycleCombobox);
   await user.type(lifecycleCombobox, 'Typeset{enter}');
 
-  // Impact and category
-  const impactInput = screen.getByRole('combobox', { name: /Impact/i });
-  await user.type(impactInput, 'My Imp');
-  await user.click(await screen.findByText(/^My Impact$/i));
-
-  const categoryInput = screen.getByRole('combobox', { name: /Category/i });
-  await user.type(categoryInput, 'My Cat');
-  await user.click(await screen.findByText(/^My Category$/i));
-
   // Description and short description
   await user.type(
     screen.getByRole('textbox', { name: /Manuscript Description/i }),
@@ -220,6 +211,20 @@ it('can publish a form when the data is valid and navigates to team workspace', 
   await user.type(
     screen.getByRole('textbox', { name: /Short Description/i }),
     'Some short description',
+  );
+
+  // Impact and category
+  const categoryInput = screen.getByRole('combobox', { name: /Category/i });
+  await user.type(categoryInput, 'My Cat');
+  await user.click(await screen.findByText(/^My Category$/i));
+
+  const impactInput = screen.getByRole('combobox', { name: /Impact/i });
+  await user.type(impactInput, 'My Imp');
+  await user.click(await screen.findByText(/^My Impact$/i));
+
+  await user.type(
+    screen.getByRole('textbox', { name: /Lay Impact Statement/i }),
+    'an impact statement',
   );
 
   // First authors
@@ -366,6 +371,7 @@ it('can publish a form when the data is valid and navigates to team workspace', 
         ],
         notificationList: '',
         impact: 'impact-id-1',
+        layImpactStatement: 'an impact statement',
         categories: ['category-id-1'],
       },
       expect.anything(),

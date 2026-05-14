@@ -107,6 +107,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   clearFormToast: jest.fn(),
   isOpenScienceTeamMember: false,
   impact: { value: 'impact-id-1', label: 'Impact A' },
+  layImpactStatement: 'manuscript impact statement',
   categories: [{ value: 'category-id-1', label: 'Category A' }],
   getImpactSuggestions: getImpactSuggestionsMock,
   getCategorySuggestions: getCategorySuggestionsMock,
@@ -182,6 +183,7 @@ describe('Manuscript form', () => {
         url: undefined,
         eligibilityReasons: [],
         impact: 'impact-id-1',
+        layImpactStatement: 'manuscript impact statement',
         categories: ['category-id-1'],
         versions: [
           expect.objectContaining({
@@ -274,6 +276,28 @@ describe('Manuscript form', () => {
 
     expect(
       await findByText(/Details cannot exceed 256 characters./i),
+    ).toBeVisible();
+  });
+
+  it('displays error message when lay impact statement exceeds 100 characters', async () => {
+    const { getByRole, findByText } = await renderManuscriptForm({
+      ...defaultProps,
+      type: 'Original Research',
+      lifecycle: 'Other',
+    });
+
+    const impactStatementInput = getByRole('textbox', {
+      name: /Lay Impact Statement/i,
+    });
+
+    await userEvent.clear(impactStatementInput);
+    await userEvent.type(impactStatementInput, 'A'.repeat(101));
+    impactStatementInput.blur();
+
+    expect(
+      await findByText(
+        /The lay impact statement exceeds the character limit. Please limit it to 100 characters./i,
+      ),
     ).toBeVisible();
   });
 
@@ -477,6 +501,27 @@ describe('Manuscript form', () => {
     expect(
       getByRole('textbox', { name: /Please provide details/i }),
     ).toBeDisabled();
+  });
+
+  it('should disable firstPublicDate field if user is resubmitting and firstPublicDate has already been provided', async () => {
+    const { findByLabelText, getByRole } = await renderManuscriptForm({
+      ...defaultProps,
+      firstPublicDate: '2022-01-03T10:00:00.000Z',
+      resubmitManuscript: true,
+      manuscriptId: 'test-id',
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    const lifecycleCombobox = getByRole('combobox', {
+      name: /Where is the manuscript in the life cycle/i,
+    });
+    await userEvent.click(lifecycleCombobox);
+    await userEvent.type(lifecycleCombobox, 'Preprint{enter}');
+
+    // await userEvent.type(screen.getByLabelText(/Date Published/i), '2020-12-02');
+    expect(await findByLabelText(/Date first made public/i)).toBeDisabled();
   });
 
   it('should default to false for isOpenScienceTeamMember if not provided', async () => {

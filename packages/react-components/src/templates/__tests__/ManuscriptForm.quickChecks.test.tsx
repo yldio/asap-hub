@@ -105,6 +105,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   url: 'http://example.com',
   isOpenScienceTeamMember: false,
   impact: { value: 'impact-id-1', label: 'Impact A' },
+  layImpactStatement: 'manuscript impact statement',
   categories: [{ value: 'category-id-1', label: 'Category A' }],
   getImpactSuggestions: getImpactSuggestionsMock,
   getCategorySuggestions: getCategorySuggestionsMock,
@@ -164,6 +165,7 @@ describe('QuickCheck logic', () => {
               type="Original Research"
               publicationDoi="10.0777"
               lifecycle="Publication"
+              firstPublicDate="2022-01-03T10:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -188,6 +190,8 @@ describe('QuickCheck logic', () => {
         url: 'http://example.com',
         eligibilityReasons: [],
         impact: 'impact-id-1',
+        layImpactStatement: 'manuscript impact statement',
+        firstPublicDate: '2022-01-03T10:00:00.000Z',
         categories: ['category-id-1'],
         versions: [
           {
@@ -274,6 +278,7 @@ describe('QuickCheck logic', () => {
               type="Original Research"
               publicationDoi="10.0777"
               lifecycle="Publication"
+              firstPublicDate="2022-01-03T10:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -298,6 +303,8 @@ describe('QuickCheck logic', () => {
         url: 'http://example.com',
         eligibilityReasons: [],
         impact: 'impact-id-1',
+        layImpactStatement: 'manuscript impact statement',
+        firstPublicDate: '2022-01-03T10:00:00.000Z',
         categories: ['category-id-1'],
         versions: [
           {
@@ -379,6 +386,7 @@ describe('QuickCheck logic', () => {
               type="Original Research"
               publicationDoi="10.0777"
               lifecycle="Publication"
+              firstPublicDate="2022-01-03T10:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -415,7 +423,9 @@ describe('QuickCheck logic', () => {
           url: 'http://example.com',
           eligibilityReasons: [],
           impact: 'impact-id-1',
+          layImpactStatement: 'manuscript impact statement',
           categories: ['category-id-1'],
+          firstPublicDate: '2022-01-03T10:00:00.000Z',
           versions: [
             expect.objectContaining({
               acknowledgedGrantNumber: 'Yes',

@@ -1,6 +1,7 @@
 import {
   FetchManuscriptByIdQuery,
   FetchManuscriptsQuery,
+  FetchManuscriptVersionsQuery,
 } from '@asap-hub/contentful';
 import { manuscriptAuthor } from '@asap-hub/fixtures';
 import {
@@ -111,7 +112,7 @@ export const getContentfulGraphqlManuscript = (
   teamsCollection: {
     items: [{ sys: { id: 'team-1' } }],
   },
-  versionsCollection: getContentfulGraphqlManuscriptVersions(),
+  // versionsCollection: getContentfulGraphqlManuscriptVersions(),
   ...props,
 });
 
@@ -134,7 +135,7 @@ export const getContentfulGraphqlManuscriptVersions = (
   teamId?: string,
 ): NonNullable<
   NonNullable<
-    NonNullable<FetchManuscriptByIdQuery>['manuscripts']
+    NonNullable<FetchManuscriptVersionsQuery>['manuscripts']
   >['versionsCollection']
 > => ({
   items: [
@@ -539,6 +540,8 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
     teamId,
     eligibilityReasons: [],
     impact: 'impact-id',
+    layImpactStatement: 'impact statement',
+    firstPublicDate: '2022-01-03T10:00:00.000Z',
     categories: ['category-id-1'],
     versions: [
       {

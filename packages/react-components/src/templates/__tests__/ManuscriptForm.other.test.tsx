@@ -100,6 +100,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   clearFormToast: jest.fn(),
   isOpenScienceTeamMember: false,
   impact: { value: 'impact-id-1', label: 'Impact A' },
+  layImpactStatement: 'manuscript impact statement',
   categories: [{ value: 'category-id-1', label: 'Category A' }],
   getImpactSuggestions: getImpactSuggestionsMock,
   getCategorySuggestions: getCategorySuggestionsMock,
@@ -152,6 +153,7 @@ describe('authors', () => {
               onCreate={onCreate}
               type="Original Research"
               lifecycle="Publication"
+              firstPublicDate="2022-01-03T10:00:00.000Z"
               url="http://example.com"
               preprintDoi="10.4444/test"
               publicationDoi="10.4467/test"
@@ -222,6 +224,7 @@ describe('authors', () => {
                 onCreate={onCreate}
                 type="Original Research"
                 lifecycle="Publication"
+                firstPublicDate="2022-01-03T10:00:00.000Z"
                 url="http://example.com"
                 preprintDoi="10.4444/test"
                 publicationDoi="10.4467/test"
@@ -301,6 +304,7 @@ describe('authors', () => {
                 onCreate={onCreate}
                 type="Original Research"
                 lifecycle="Publication"
+                firstPublicDate="2022-01-03T10:00:00.000Z"
                 url="http://example.com"
                 preprintDoi="10.4444/test"
                 publicationDoi="10.4467/test"
@@ -387,6 +391,7 @@ describe('renders the necessary fields', () => {
   const fieldInputMapping = {
     preprintDoi: 'Preprint DOI',
     publicationDoi: 'Publication DOI',
+    firstPublicDate: 'Date first made public',
     manuscriptFile: 'Upload the main manuscript file',
     keyResourceTable: 'Upload a key resource table',
     additionalFiles: 'Upload any additional files',
@@ -1045,6 +1050,190 @@ describe('additional files', () => {
   });
 });
 
+describe('compliance report response', () => {
+  it('should show error when file upload fails', async () => {
+    const handleFileUpload: jest.MockedFunction<
+      ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+    > = jest.fn();
+
+    const mockFile = new File([''], 'test.pdf', { type: 'application/pdf' });
+    const mockError = 'No file provided or file is not a PDF.';
+
+    handleFileUpload.mockImplementation(
+      (
+        _file: File,
+        _fileType: ManuscriptFileType,
+        handleError: (errorMessage: string) => void,
+      ) => {
+        handleError(mockError);
+        return Promise.resolve(undefined);
+      },
+    );
+    const { findByLabelText, getByText } = render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            handleFileUpload={handleFileUpload}
+            manuscriptId={'manuscript-id'}
+            versionsCount={2}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    const uploadInput = await findByLabelText(
+      /Upload Compliance Report Response/i,
+    );
+
+    await userEvent.upload(uploadInput, mockFile);
+
+    await waitFor(() => {
+      expect(getByText(mockError)).toBeInTheDocument();
+    });
+  });
+
+  it('should show error when file size is greater than 100MB', async () => {
+    const handleFileUpload: jest.MockedFunction<
+      ComponentProps<typeof ManuscriptForm>['handleFileUpload']
+    > = jest.fn();
+
+    const mockFileContent = new Array(1024).fill('x').join('');
+    const mockFile = new File([mockFileContent], 'test.pdf', {
+      type: 'application/pdf',
+    });
+    Object.defineProperty(mockFile, 'size', { value: 101 * 1024 * 1024 });
+
+    const { findByLabelText, getByText } = render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            handleFileUpload={handleFileUpload}
+            manuscriptId={'manuscript-id'}
+            versionsCount={2}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    const uploadInput = await findByLabelText(
+      /Upload Compliance Report Response/i,
+    );
+
+    await userEvent.upload(uploadInput, mockFile);
+
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('should upload and remove file when user clicks on upload compliance report response and remove button', async () => {
+    const { findByRole, findByLabelText, findByText, queryByText } = render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            resubmitManuscript
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    expect(queryByText(/test.pdf/i)).not.toBeInTheDocument();
+
+    const testFile = new File(['file content'], 'test.pdf', {
+      type: 'application/pdf',
+    });
+    const uploadInput = await findByLabelText(
+      /Upload Compliance Report Response/i,
+    );
+
+    await userEvent.upload(uploadInput, testFile);
+    expect(await findByText(/test.pdf/i)).toBeInTheDocument();
+
+    const removeFileButton = await findByRole('button', { name: /cross/i });
+    expect(removeFileButton).toBeInTheDocument();
+
+    await userEvent.click(removeFileButton);
+
+    await waitFor(() => {
+      expect(queryByText(/test.pdf/i)).not.toBeInTheDocument();
+    });
+  });
+
+  it('clears error when a valid manuscript file is uploaded after an error', async () => {
+    const { findByLabelText, queryByText, getByText } = render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Publication"
+            preprintDoi="10.4444/test"
+            publicationDoi="10.4467/test"
+            resubmitManuscript
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    const tooLargeFile = new File(['x'], 'too-big.pdf', {
+      type: 'application/pdf',
+    });
+    Object.defineProperty(tooLargeFile, 'size', { value: 101 * 1024 * 1024 });
+
+    const uploadInput = await findByLabelText(
+      /Upload Compliance Report Response/i,
+    );
+    await userEvent.upload(uploadInput, tooLargeFile);
+
+    await waitFor(() => {
+      expect(
+        getByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).toBeInTheDocument();
+    });
+
+    // Uploads a valid file
+    const validFile = new File(['valid content'], 'valid.pdf', {
+      type: 'application/pdf',
+    });
+
+    await userEvent.upload(uploadInput, validFile);
+
+    // Error message should disappear
+    await waitFor(() => {
+      expect(
+        queryByText(
+          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+        ),
+      ).not.toBeInTheDocument();
+    });
+  });
+});
+
 it('user can add teams', async () => {
   const onCreate = jest.fn();
   const getTeamSuggestionsMock = jest.fn().mockResolvedValue([
@@ -1060,6 +1249,7 @@ it('user can add teams', async () => {
           onCreate={onCreate}
           type="Original Research"
           lifecycle="Publication"
+          firstPublicDate="2022-01-03T10:00:00.000Z"
           url="http://example.com"
           preprintDoi="10.4444/test"
           publicationDoi="10.4467/test"
@@ -1121,6 +1311,7 @@ it('user can add labs', async () => {
           onCreate={onCreate}
           type="Original Research"
           lifecycle="Publication"
+          firstPublicDate="2022-01-03T10:00:00.000Z"
           url="http://example.com"
           preprintDoi="10.4444/test"
           publicationDoi="10.4467/test"
@@ -1235,6 +1426,7 @@ it('calls onUpdate when form is updated', async () => {
       title: 'manuscript title',
       url: undefined,
       impact: 'impact-id-1',
+      layImpactStatement: 'manuscript impact statement',
       categories: ['category-id-1'],
       versions: [
         {
@@ -1248,6 +1440,7 @@ it('calls onUpdate when form is updated', async () => {
           availabilityStatementDetails: '',
           codeDeposited: 'Yes',
           codeDepositedDetails: '',
+          complianceReportResponse: undefined,
           correspondingAuthor: undefined,
           datasetsDeposited: 'Yes',
           datasetsDepositedDetails: '',
@@ -1334,6 +1527,14 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
     type: 'text/csv',
   });
 
+  const testComplianceReportResponseFile = new File(
+    ['file content'],
+    'reportResponse.docx',
+    {
+      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    },
+  );
+
   await userEvent.upload(
     await findByLabelText(/Upload Manuscript File/i),
     testManuscriptFile,
@@ -1341,6 +1542,10 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
   await userEvent.upload(
     await findByLabelText(/Upload Key Resource Table/i),
     testKeyResourceFile,
+  );
+  await userEvent.upload(
+    await findByLabelText(/Upload Compliance Report Response/i),
+    testComplianceReportResponseFile,
   );
 
   const quickChecks = getByRole('region', { name: /quick checks/i });
@@ -1360,6 +1565,7 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
       title: 'manuscript title',
       url: undefined,
       impact: 'impact-id-1',
+      layImpactStatement: 'manuscript impact statement',
       categories: ['category-id-1'],
       versions: [
         {
@@ -1392,6 +1598,11 @@ it('calls onResubmit when form details are saved and resubmitManuscript prop is 
             filename: 'manuscript.pdf',
             id: 'some-id',
             url: 'https://example.com/manuscript.pdf',
+          },
+          complianceReportResponse: {
+            filename: 'reportResponse.docx',
+            id: 'some-id',
+            url: 'https://example.com/reportResponse.docx',
           },
           manuscriptLicense: undefined,
           manuscriptLicenseDetails: '',

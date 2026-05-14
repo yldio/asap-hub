@@ -83,6 +83,7 @@ const defaultProps: ComponentProps<typeof ManuscriptForm> = {
   clearFormToast: jest.fn(),
   isOpenScienceTeamMember: false,
   impact: { value: 'impact-id-1', label: 'Impact A' },
+  layImpactStatement: 'manuscript impact statement',
   categories: [{ value: 'category-id-1', label: 'Category A' }],
   getImpactSuggestions: getImpactSuggestionsMock,
   getCategorySuggestions: getCategorySuggestionsMock,

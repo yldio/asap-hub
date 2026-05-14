@@ -397,6 +397,12 @@ describe('/manuscripts/ route', () => {
         extension: 'png',
         acceptedExtension: 'csv',
       },
+      {
+        fileType: 'Compliance Report Response',
+        mimeType: 'image/png',
+        extension: 'png',
+        acceptedExtension: 'application/msword or application/pdf',
+      },
     ])(
       'should return 400 if file type is $fileType and the file mimetype is not $acceptedExtension',
       async ({ fileType, mimeType, extension }) => {

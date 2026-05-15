@@ -10,26 +10,6 @@ import { noop } from '../utils';
 import { EditModal } from '../organisms';
 import { GlobeIcon } from '../icons';
 import { mobileScreen, rem } from '../pixels';
-import { colors } from '..';
-
-const saveButtonContentStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  gap: rem(8),
-});
-
-const spinnerStyles = css({
-  '@keyframes toolModalSpin': {
-    '0%': { transform: 'rotate(0deg)' },
-    '100%': { transform: 'rotate(360deg)' },
-  },
-  width: rem(16),
-  height: rem(16),
-  border: `${rem(2)} solid ${colors.neutral300.rgb}`,
-  borderTop: `${rem(2)} solid white`,
-  borderRadius: '50%',
-  animation: 'toolModalSpin 1s linear infinite',
-});
 
 const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
 
@@ -176,6 +156,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
                   <Button
                     primary
                     enabled={!isSaving}
+                    loading={isSaving}
                     onClick={() =>
                       asyncFunctionWrapper(() =>
                         onSave({
@@ -187,10 +168,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
                       )
                     }
                   >
-                    <span css={saveButtonContentStyles}>
-                      {isSaving && <div css={spinnerStyles} />}
-                      {saveButtonText}
-                    </span>
+                    {saveButtonText}
                   </Button>
                 </div>
               </div>

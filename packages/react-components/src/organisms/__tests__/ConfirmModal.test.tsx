@@ -45,12 +45,13 @@ it('triggers the save function', async () => {
       onSave={jestFn}
     />,
   );
-  const publish = getByText(/Publish and Explore/i);
-  await userEvent.click(publish);
+  await userEvent.click(getByText(/Publish and Explore/i));
 
   expect(jestFn).toHaveBeenCalled();
 
-  await waitFor(() => expect(publish.closest('button')).toBeEnabled());
+  await waitFor(() =>
+    expect(getByText(/Publish and Explore/i).closest('button')).toBeEnabled(),
+  );
 });
 
 it('triggers the cancel function', async () => {
@@ -83,14 +84,15 @@ it('disables publish & back while submitting', async () => {
       onSave={handleSave}
     />,
   );
-  const publish = getByText(/Publish and Explore/i);
 
-  await userEvent.click(publish);
-  expect(publish.closest('button')).toBeDisabled();
+  await userEvent.click(getByText(/Publish and Explore/i));
+  expect(getByText(/Publish and Explore/i).closest('button')).toBeDisabled();
   expect(getByText(/back/i).closest('a')).not.toHaveAttribute('href');
 
   act(resolveSubmit);
-  await waitFor(() => expect(publish.closest('button')).toBeEnabled());
+  await waitFor(() =>
+    expect(getByText(/Publish and Explore/i).closest('button')).toBeEnabled(),
+  );
 });
 
 it('displays error message when save fails', async () => {
@@ -99,7 +101,7 @@ it('displays error message when save fails', async () => {
     new Promise<void>((_, reject) => {
       rejectSubmit = reject;
     });
-  const { getByText } = renderModal(
+  const { getByText, findByText } = renderModal(
     <ConfirmModal
       {...props}
       confirmText="Publish and Explore"
@@ -108,12 +110,12 @@ it('displays error message when save fails', async () => {
     />,
   );
 
-  const publish = getByText(/Publish and Explore/i);
-  await userEvent.click(publish);
+  await userEvent.click(getByText(/Publish and Explore/i));
   act(rejectSubmit);
 
-  await waitFor(() => {
-    expect(publish.closest('button')).toBeEnabled();
-    expect(getByText(/error.+publish/i)).toBeVisible();
-  });
+  const errorMsg = await findByText(/error.+publish/i);
+  expect(errorMsg).toBeVisible();
+  await waitFor(() =>
+    expect(getByText(/Publish and Explore/i).closest('button')).toBeEnabled(),
+  );
 });

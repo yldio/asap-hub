@@ -2,7 +2,12 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { InputHTMLAttributes } from 'react';
 
-import { getButtonChildren, getButtonStyles } from '../button';
+import {
+  buttonLoadingContentStyles,
+  buttonSpinnerStyles,
+  getButtonChildren,
+  getButtonStyles,
+} from '../button';
 import { defaultThemeVariant, ThemeVariant } from '../theme';
 import { noop } from '../utils';
 import { getLinkColors, styles as linkStyles } from './Link';
@@ -47,6 +52,7 @@ interface LinkStyleButtonProps {
 type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
   readonly preventDefault?: boolean;
   readonly submit?: boolean;
+  readonly loading?: boolean;
   readonly children?: React.ReactNode;
   readonly overrideStyles?: SerializedStyles;
   readonly onClick?: () => void;
@@ -63,6 +69,7 @@ const Button: React.FC<ButtonProps> = ({
   noMargin,
   theme = defaultThemeVariant,
   submit = primary,
+  loading = false,
   id,
   children,
   onClick = noop,
@@ -97,7 +104,14 @@ const Button: React.FC<ButtonProps> = ({
     ]}
     {...props}
   >
-    {getButtonChildren(children)}
+    {loading ? (
+      <span css={buttonLoadingContentStyles}>
+        <div css={buttonSpinnerStyles} />
+        {getButtonChildren(children)}
+      </span>
+    ) : (
+      getButtonChildren(children)
+    )}
   </button>
 );
 

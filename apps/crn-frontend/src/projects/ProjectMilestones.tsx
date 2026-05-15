@@ -75,21 +75,9 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   const fetchArticles = useFetchMilestoneArticles();
-  const rawSaveArticles = useUpdateMilestoneArticles();
+  const onSaveArticles = useUpdateMilestoneArticles();
   const rawUpdateMilestone = useUpdateMilestone();
   const { setFormType } = useManuscriptToast();
-
-  const onSaveArticles = useCallback<typeof rawSaveArticles>(
-    async (milestoneId, articles) => {
-      try {
-        await rawSaveArticles(milestoneId, articles);
-      } catch (e) {
-        setFormType({ type: 'default-error', accent: 'error' });
-        throw e;
-      }
-    },
-    [rawSaveArticles, setFormType],
-  );
 
   const onChangeStatus = useCallback(
     async (

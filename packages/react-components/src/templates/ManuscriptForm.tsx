@@ -586,6 +586,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     watchAdditionalAuthors,
   ]);
 
+  const authorValidationDependentFields: Parameters<typeof trigger>[0] =
+    projectMemberIds
+      ? ['versions.0.teams', 'versions.0.labs']
+      : 'versions.0.teams';
+
   type AllowedVersionFields = `versions.0.${OptionalVersionFields[number]}`;
 
   const updateOptionalFields = useCallback(
@@ -767,11 +772,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         firstAuthorsWithoutTeamAdded.add(author.label);
       });
 
-    await trigger(
-      projectMemberIds
-        ? ['versions.0.teams', 'versions.0.labs']
-        : 'versions.0.teams',
-    );
+    await trigger(authorValidationDependentFields);
 
     if (firstAuthorsWithoutTeamAdded.size > 0) {
       const errorPrefix = projectMemberIds
@@ -824,11 +825,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       }
     }
 
-    await trigger(
-      projectMemberIds
-        ? ['versions.0.teams', 'versions.0.labs']
-        : 'versions.0.teams',
-    );
+    await trigger(authorValidationDependentFields);
     if (correspondingAuthorWithoutTeamAdded.size > 0) {
       const errorPrefix = projectMemberIds
         ? 'The following corresponding author(s) are not part of this project. Please add at least one of their teams, or contact support if they don’t belong to any.'
@@ -879,11 +876,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         additionalAuthorsWithoutTeamAdded.add(author.label);
       });
 
-    await trigger(
-      projectMemberIds
-        ? ['versions.0.teams', 'versions.0.labs']
-        : 'versions.0.teams',
-    );
+    await trigger(authorValidationDependentFields);
 
     if (additionalAuthorsWithoutTeamAdded.size > 0) {
       const errorPrefix = projectMemberIds

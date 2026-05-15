@@ -229,6 +229,42 @@ describe('Manuscript form', () => {
     });
   });
 
+  it('submits with selectedTeams when projectMemberIds is set and Teams field is unmounted', async () => {
+    const onCreate = jest.fn(() => Promise.resolve());
+    const { findByRole } = await renderManuscriptForm({
+      ...defaultProps,
+      onCreate,
+      projectMemberIds: ['author-1'],
+      title: 'manuscript title',
+      type: 'Original Research',
+      lifecycle: 'Draft Manuscript (prior to Publication)',
+      manuscriptFile: {
+        id: '123',
+        filename: 'test.pdf',
+        url: 'http://example.com/test.pdf',
+      },
+      keyResourceTable: {
+        id: '124',
+        filename: 'test.csv',
+        url: 'http://example.com/test.csv',
+      },
+    });
+
+    await submitForm({ findByRole });
+
+    await waitFor(() => {
+      expect(onCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          versions: [
+            expect.objectContaining({
+              teams: ['1'],
+            }),
+          ],
+        }),
+      );
+    });
+  });
+
   it('displays error message when manuscript title is missing', async () => {
     const { getByRole, getAllByText } = await renderManuscriptForm({
       ...defaultProps,

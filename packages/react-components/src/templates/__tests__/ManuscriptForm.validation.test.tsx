@@ -318,21 +318,11 @@ describe('ManuscriptForm team validation', () => {
         </StaticRouter>,
       );
 
-      await waitFor(() => {
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
-      });
-
-      await userEvent.click(screen.getByLabelText(label));
-      await waitFor(() =>
-        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-      );
-
-      await userEvent.click(screen.getByText('Author A'));
+      await userEvent.click(await screen.findByLabelText(label));
+      await userEvent.click(await screen.findByText('Author A'));
       await userEvent.tab();
 
-      await waitFor(() => {
-        expect(screen.getByText(errorMessage)).toBeVisible();
-      });
+      expect(await screen.findByText(errorMessage)).toBeVisible();
     },
   );
 
@@ -376,26 +366,18 @@ describe('ManuscriptForm team validation', () => {
       </StaticRouter>,
     );
 
-    await waitFor(() => {
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
-    });
-
-    await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
-    await waitFor(() => {
-      expect(screen.getByText('Lab One')).toBeVisible();
-    });
-    await userEvent.click(screen.getByText('Lab One'));
+    await userEvent.click(
+      await screen.findByRole('combobox', { name: /Labs/i }),
+    );
+    await userEvent.click(await screen.findByText('Lab One'));
     await userEvent.tab();
 
     const labErrorMessage =
       'The following lab(s) do not list their corresponding PI as an author. • Lab One';
-    expect(container).toHaveTextContent(labErrorMessage);
+    expect(await screen.findByText(labErrorMessage)).toBeVisible();
 
-    await userEvent.click(screen.getByLabelText(/First Author/));
-    await waitFor(() =>
-      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
-    await userEvent.click(screen.getByText('PI User'));
+    await userEvent.click(await screen.findByLabelText(/First Author/));
+    await userEvent.click(await screen.findByText('PI User'));
     await userEvent.tab();
 
     await waitFor(() => {

@@ -110,6 +110,34 @@ describe('Labs data provider', () => {
       expect(result).toMatchObject({ items: [], total: 0 });
     });
 
+    test('Should expose labPrincipalInvestigatorId when labPi has a sys.id', async () => {
+      const graphqlResponse = getContentfulLabsGraphqlResponse();
+      graphqlResponse.labsCollection!.items[0]!.labPi = {
+        sys: { id: 'pi-user-id' },
+        teamsCollection: { items: [] },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        graphqlResponse,
+      );
+
+      const result = await labDataProvider.fetch({});
+
+      expect(result.items[0]).toMatchObject({
+        labPrincipalInvestigatorId: 'pi-user-id',
+      });
+    });
+
+    test('Should leave labPrincipalInvestigatorId undefined when labPi is missing', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulLabsGraphqlResponse(),
+      );
+
+      const result = await labDataProvider.fetch({});
+
+      expect(result.items[0]?.labPrincipalInvestigatorId).toBeUndefined();
+    });
+
     test('Should return an empty array when items is empty', async () => {
       const graphqlResponse = getContentfulLabsGraphqlResponse();
       graphqlResponse.labsCollection = {

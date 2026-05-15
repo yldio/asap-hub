@@ -2,6 +2,7 @@ import {
   isProjectType,
   projectTypes,
   isProjectLead,
+  isProjectMember,
   Project,
 } from '../src/project';
 
@@ -273,6 +274,97 @@ describe('Project Model', () => {
         teamName: 'Team A',
       };
       expect(isProjectLead('user-1', [], project)).toBe(false);
+    });
+  });
+
+  describe('isProjectMember', () => {
+    it('returns true when user is in the funded team of a Discovery Project', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Discovery Project',
+        researchTheme: 'theme',
+        teamName: 'Team A',
+        teamId: 'team-1',
+      };
+      expect(isProjectMember('user-1', [{ id: 'team-1' }], project)).toBe(true);
+    });
+
+    it('returns false when user is not in the funded team of a Discovery Project', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Discovery Project',
+        researchTheme: 'theme',
+        teamName: 'Team A',
+        teamId: 'team-1',
+      };
+      expect(isProjectMember('user-1', [{ id: 'team-other' }], project)).toBe(
+        false,
+      );
+    });
+
+    it('returns true when user is in the funded team of a team-based Resource Project', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Resource Project',
+        resourceType: 'Resource',
+        isTeamBased: true,
+        teamName: 'Team A',
+        teamId: 'team-1',
+      };
+      expect(isProjectMember('user-1', [{ id: 'team-1' }], project)).toBe(true);
+    });
+
+    it('returns true when user is listed as a member of a Trainee Project', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Test User',
+            role: 'Trainee Project - Mentor',
+          },
+        ],
+      };
+      expect(isProjectMember('user-1', [], project)).toBe(true);
+    });
+
+    it('returns false when user is not listed as a member of a Trainee Project', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [
+          {
+            id: 'other',
+            displayName: 'Other User',
+          },
+        ],
+      };
+      expect(isProjectMember('user-1', [], project)).toBe(false);
+    });
+
+    it('returns false when the project has neither a teamId nor a members list', () => {
+      const project = {
+        projectType: 'Resource Project' as const,
+      };
+      expect(isProjectMember('user-1', [], project)).toBe(false);
+    });
+
+    it('returns true when user is listed as a member of a user-based Resource Project', () => {
+      const project: Project = {
+        ...baseProject,
+        projectType: 'Resource Project',
+        resourceType: 'Resource',
+        isTeamBased: false,
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'Test User',
+            role: 'Key Personnel',
+          },
+        ],
+      };
+      expect(isProjectMember('user-1', [], project)).toBe(true);
     });
   });
 

@@ -31918,6 +31918,7 @@ export type FetchLabsQuery = {
           Pick<Labs, 'name'> & {
             sys: Pick<Sys, 'id'>;
             labPi?: Maybe<{
+              sys: Pick<Sys, 'id'>;
               teamsCollection?: Maybe<{
                 items: Array<
                   Maybe<
@@ -56601,6 +56602,19 @@ export const FetchLabsDocument = {
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'teamsCollection' },

@@ -67,6 +67,7 @@ export const parseContentfulGraphQlLabs = (
 ): LabDataObject & { labPITeamIds: string[] } => ({
   id: item.sys.id ?? '',
   name: item.name ?? '',
+  labPrincipalInvestigatorId: item.labPi?.sys?.id,
   labPITeamIds: (item.labPi?.teamsCollection?.items || []).reduce(
     (teamIds: string[], team) => {
       const isInactive =

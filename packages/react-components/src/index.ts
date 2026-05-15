@@ -92,6 +92,7 @@ export {
   LabeledCheckbox,
   LabeledCheckboxGroup,
   LabeledDateField,
+  LabeledDateInput,
   LabeledDropdown,
   LabeledFileField,
   LabeledMultiSelect,

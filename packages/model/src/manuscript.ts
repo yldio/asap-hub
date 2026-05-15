@@ -495,7 +495,7 @@ export type ManuscriptFormData = Pick<
   ManuscriptPostCreateRequest,
   'title' | 'teamId' | 'eligibilityReasons' | 'url' | 'layImpactStatement'
 > & {
-  firstPublicDate: Date;
+  firstPublicDate?: string;
   impact: MultiselectOption;
   categories: MultiselectOption[];
   versions: (Pick<
@@ -742,7 +742,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
         items: manuscriptVersionSchema,
       },
       notificationList: { type: 'string', nullable: true },
-      firstPublicDate: { type: 'string' },
+      firstPublicDate: { type: 'string', nullable: true },
       impact: { type: 'string', nullable: true },
       layImpactStatement: { type: 'string' },
       categories: { type: 'array', items: { type: 'string' }, nullable: true },
@@ -782,6 +782,8 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
       notificationList: { type: 'string', nullable: true },
       impact: { type: 'string', nullable: true },
       categories: { type: 'array', items: { type: 'string' }, nullable: true },
+      firstPublicDate: { type: 'string', nullable: true },
+      layImpactStatement: { type: 'string', nullable: true },
     },
     additionalProperties: false,
   };

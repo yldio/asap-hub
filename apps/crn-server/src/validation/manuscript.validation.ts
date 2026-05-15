@@ -89,7 +89,13 @@ const fileUploadFromUrlSchema: JSONSchemaType<FileUploadFromUrlRequest> = {
     filename: { type: 'string' },
     contentType: {
       type: 'string',
-      enum: ['application/pdf', 'text/csv', 'application/vnd.ms-excel'],
+      enum: [
+        'application/pdf',
+        'text/csv',
+        'application/vnd.ms-excel',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ],
     },
   },
   required: ['fileType', 'url', 'filename', 'contentType'],

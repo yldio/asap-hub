@@ -35,7 +35,7 @@ import {
   useRef,
 } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { colors, LabeledDateField } from '..';
+import { colors, LabeledDateInput } from '..';
 import { Button, Link, MultiSelectOptionsType } from '../atoms';
 import { defaultPageLayoutPaddingStyle } from '../layout';
 import { mobileScreen, rem } from '../pixels';
@@ -437,7 +437,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     defaultValues: {
       title: title || '',
       url: url || undefined,
-      firstPublicDate: firstPublicDate ? new Date(firstPublicDate) : undefined,
+      firstPublicDate: firstPublicDate ? firstPublicDate.slice(0, 10) : '',
       layImpactStatement: layImpactStatement || '',
       impact,
       categories: categories || [],
@@ -828,6 +828,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     clearFormToast();
     const versionData = data.versions[0];
     const urlValue = data.url || undefined;
+    const firstPublicDateValue = data.firstPublicDate
+      ? new Date(data.firstPublicDate).toISOString()
+      : undefined;
 
     if (versionData?.type && versionData.lifecycle) {
       const {
@@ -871,7 +874,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           await onCreate({
             ...data,
             url: urlValue,
-            firstPublicDate: data.firstPublicDate?.toISOString(),
+            firstPublicDate: firstPublicDateValue,
             impact: data.impact?.value,
             categories:
               data.categories?.map((category) => category.value) || [],
@@ -889,7 +892,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             title: data.title,
             url: urlValue,
             impact: data.impact?.value,
-            firstPublicDate: data.firstPublicDate?.toISOString(),
+            firstPublicDate: firstPublicDateValue,
             categories:
               data.categories?.map((category) => category.value) || [],
             layImpactStatement: data.layImpactStatement,
@@ -906,6 +909,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             title: data.title,
             url: urlValue,
             impact: data.impact?.value,
+            firstPublicDate: firstPublicDateValue,
             categories:
               data.categories?.map((category) => category.value) || [],
             layImpactStatement: data.layImpactStatement,
@@ -1122,7 +1126,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       field: { value, onChange },
                       fieldState: { error },
                     }) => (
-                      <LabeledDateField
+                      <LabeledDateInput
                         title="Date first made public"
                         subtitle="(required)"
                         description="Enter the date this manuscript was first shared publicly, whether as a preprint or publication. This cannot be changed later."

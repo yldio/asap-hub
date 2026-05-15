@@ -506,7 +506,7 @@ describe('Manuscript form', () => {
   it('should disable firstPublicDate field if user is resubmitting and firstPublicDate has already been provided', async () => {
     const { findByLabelText, getByRole } = await renderManuscriptForm({
       ...defaultProps,
-      firstPublicDate: '2022-01-03T10:00:00.000Z',
+      firstPublicDate: '2022-01-03T00:00:00.000Z',
       resubmitManuscript: true,
       manuscriptId: 'test-id',
       isOpenScienceTeamMember: false,

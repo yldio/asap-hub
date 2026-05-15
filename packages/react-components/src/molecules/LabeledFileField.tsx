@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { ComponentProps, useRef, useState } from 'react';
+import { ComponentProps, useId, useRef, useState } from 'react';
 import Lottie from 'react-lottie';
 import { Button, Label, Paragraph, Tag } from '../atoms';
 import { lead } from '../colors';
@@ -10,6 +10,11 @@ import loading from '../lotties/loading.json';
 
 const descriptionStyles = css({
   color: lead.rgb,
+});
+
+const descriptionContainerStyles = css({
+  flexBasis: '100%',
+  paddingBottom: rem(12),
 });
 
 const hintStyles = css({
@@ -84,6 +89,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   tagEnabled = true,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const descriptionId = useId();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -118,6 +124,13 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
         forContent={(id) => (
           <>
             <div style={{ width: '100%' }} />
+            {description ? (
+              <div id={descriptionId} css={descriptionContainerStyles}>
+                <Paragraph noMargin>
+                  <span css={descriptionStyles}>{description}</span>
+                </Paragraph>
+              </div>
+            ) : null}
             <div css={fileSelectionContainerStyles}>
               {currentFiles && (
                 <div css={currentFilesContainerStyles}>
@@ -140,6 +153,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
                 enabled={!!enabled && canUploadFile}
                 noMargin
                 id={id}
+                aria-describedby={description ? descriptionId : undefined}
                 preventDefault={false}
                 onClick={() => canUploadFile && fileInputRef.current?.click()}
               >
@@ -169,8 +183,6 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
         <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>
-          <br />
-          <span css={[descriptionStyles]}>{description}</span>
         </Paragraph>
       </Label>
       {customValidationMessage && (

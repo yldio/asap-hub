@@ -279,6 +279,35 @@ export const isProjectLead = (
   return false;
 };
 
+/**
+ * Determines if a user is a member of a project.
+ *
+ * For team-based projects (Discovery, team-based Resource): the user is a
+ * member if they belong to the project's funded team.
+ *
+ * For individual-based projects (Trainee, user-based Resource): the user is a
+ * member if they appear in the project's members list.
+ */
+export const isProjectMember = (
+  userId: string,
+  userTeams: ReadonlyArray<{ id: string }>,
+  project: Pick<Project, 'projectType'> &
+    Partial<{
+      teamId: string;
+      members: ReadonlyArray<Pick<ProjectMember, 'id'>>;
+    }>,
+): boolean => {
+  if ('teamId' in project && project.teamId) {
+    return userTeams.some((t) => t.id === project.teamId);
+  }
+
+  if (project.members) {
+    return project.members.some((m) => m.id === userId);
+  }
+
+  return false;
+};
+
 // Filter types
 export type FetchProjectsFilter =
   | {

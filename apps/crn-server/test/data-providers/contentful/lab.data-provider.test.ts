@@ -62,6 +62,7 @@ describe('Labs data provider', () => {
     test('Should filter labPi inactive teams', async () => {
       const graphqlResponse = getContentfulLabsGraphqlResponse();
       graphqlResponse.labsCollection!.items[0]!.labPi = {
+        sys: { id: 'lab-pi-id' },
         teamsCollection: {
           items: [
             {

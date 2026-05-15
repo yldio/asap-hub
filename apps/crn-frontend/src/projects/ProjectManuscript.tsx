@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React, { lazy, useMemo } from 'react';
 import { Frame } from '@asap-hub/frontend-utils';
 import {
   AuthorResponse,
@@ -55,6 +55,14 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
   const projectDetail = useProjectById(projectId);
 
   const user = useCurrentUserCRN();
+  const projectMembers =
+    projectDetail && 'members' in projectDetail
+      ? projectDetail.members
+      : undefined;
+  const projectMemberIds = useMemo(
+    () => projectMembers?.map((member) => member.id),
+    [projectMembers],
+  );
   const projectTeam =
     projectDetail && 'fundedTeam' in projectDetail
       ? projectDetail.fundedTeam
@@ -223,6 +231,7 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
           onInvalid={() => {
             setFormType({ type: 'server-validation-error', accent: 'error' });
           }}
+          projectMemberIds={projectMemberIds}
           {...manuscriptVersion}
           versionsCount={manuscript?.versions.length}
         />

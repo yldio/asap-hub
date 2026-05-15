@@ -8,6 +8,7 @@ export const researchThemesContentQueryFragment = gql`
       id
     }
     name
+    types
   }
 `;
 
@@ -17,8 +18,14 @@ export const FETCH_RESEARCH_THEMES = gql`
     $limit: Int
     $skip: Int
     $order: [ResearchThemeOrder]
+    $where: ResearchThemeFilter
   ) {
-    researchThemeCollection(limit: $limit, skip: $skip, order: $order) {
+    researchThemeCollection(
+      limit: $limit
+      skip: $skip
+      order: $order
+      where: $where
+    ) {
       total
       items {
         ...ResearchThemesContent

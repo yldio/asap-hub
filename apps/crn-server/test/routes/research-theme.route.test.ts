@@ -35,8 +35,16 @@ describe('/research-themes/ route', () => {
       const listResearchThemeResponse = {
         total: 2,
         items: [
-          { id: 'theme-1', name: 'Neurodegeneration' },
-          { id: 'theme-2', name: 'Cell Biology' },
+          {
+            id: 'theme-1',
+            name: 'Neurodegeneration',
+            types: ['Discovery' as const],
+          },
+          {
+            id: 'theme-2',
+            name: 'Cell Biology',
+            types: ['Discovery' as const],
+          },
         ],
       };
 
@@ -53,6 +61,28 @@ describe('/research-themes/ route', () => {
       await supertest(app).get('/research-themes');
 
       expect(researchThemeControllerMock.fetch).toHaveBeenCalled();
+    });
+
+    test('Should accept multiple types query params', async () => {
+      await supertest(app).get(
+        '/research-themes?types=Discovery&types=Resource',
+      );
+
+      expect(researchThemeControllerMock.fetch).toHaveBeenCalledWith({
+        filter: { types: ['Discovery', 'Resource'] },
+      });
+    });
+
+    test('Should return a validation error when additional fields exist', async () => {
+      const response = await supertest(app).get(
+        `/research-themes?name=Neurodegeneration`,
+      );
+      expect(response.status).toBe(400);
+    });
+
+    test('Should return a validation error when the filter is not valid', async () => {
+      const response = await supertest(app).get('/research-themes?types=Bogus');
+      expect(response.status).toBe(400);
     });
   });
 });

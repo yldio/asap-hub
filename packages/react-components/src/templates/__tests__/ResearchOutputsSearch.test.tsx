@@ -30,5 +30,8 @@ it('calls the onChangeFilter when filter is selected', async () => {
   await userEvent.click(getByText('Filters'));
   await userEvent.click(getByLabelText('Grant Document'));
 
-  expect(props.onChangeFilter).toHaveBeenCalledWith('Grant Document');
+  expect(props.onChangeFilter).toHaveBeenCalledWith(
+    'Grant Document',
+    undefined,
+  );
 });

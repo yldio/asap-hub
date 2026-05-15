@@ -2,18 +2,22 @@ import {
   FetchResearchThemesOptions,
   ListResearchThemeDataObject,
   ResearchThemeDataObject,
+  ResearchThemeType,
 } from '@asap-hub/model';
 import {
   GraphQLClient,
   FETCH_RESEARCH_THEMES,
+  FetchResearchThemesQuery,
   ResearchThemeOrder,
+  ResearchThemeFilter,
 } from '@asap-hub/contentful';
 import { ResearchThemeDataProvider } from '../types';
 
-type ResearchThemeItem = {
-  sys: { id: string };
-  name: string | null;
-};
+type ResearchThemeItem = NonNullable<
+  NonNullable<
+    FetchResearchThemesQuery['researchThemeCollection']
+  >['items'][number]
+>;
 
 export class ResearchThemeContentfulDataProvider
   implements ResearchThemeDataProvider
@@ -23,7 +27,11 @@ export class ResearchThemeContentfulDataProvider
   async fetch(
     options: FetchResearchThemesOptions,
   ): Promise<ListResearchThemeDataObject> {
-    const { take = 100, skip = 0 } = options;
+    const { take = 100, skip = 0, filter } = options;
+
+    const where: ResearchThemeFilter = filter?.types?.length
+      ? { types_contains_some: [...filter.types] }
+      : {};
 
     const response = await this.contentfulClient.request<{
       researchThemeCollection: {
@@ -34,6 +42,7 @@ export class ResearchThemeContentfulDataProvider
       limit: take,
       skip,
       order: [ResearchThemeOrder.NameAsc],
+      where,
     });
 
     const { researchThemeCollection } = response;
@@ -53,4 +62,5 @@ export const parseResearchTheme = (
 ): ResearchThemeDataObject => ({
   id: item.sys.id,
   name: item.name || '',
+  types: item.types?.filter((t): t is ResearchThemeType => t != null) ?? [],
 });

@@ -80,7 +80,7 @@ it('emits value changes', async () => {
     />,
   );
   await userEvent.click(getByLabelText('Gatwick'));
-  expect(handleChange).toHaveBeenLastCalledWith('LGW');
+  expect(handleChange).toHaveBeenLastCalledWith('LGW', undefined);
 });
 
 it('renders the validation message', () => {

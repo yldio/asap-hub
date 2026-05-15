@@ -4,7 +4,10 @@ import { network } from '@asap-hub/routing';
 import { FC, Suspense, lazy, useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 import { useSearch } from '../hooks';
-import { useResearchThemes } from '../shared-state/shared-research';
+import {
+  useResearchThemes,
+  useResourceTypes,
+} from '../shared-state/shared-research';
 import InterestGroupProfile from './interest-groups/InterestGroupProfile';
 import WorkingGroupProfile from './working-groups/WorkingGroupProfile';
 
@@ -62,10 +65,12 @@ const Network: FC<Record<string, never>> = () => {
     debouncedSearchQuery,
     setSearchQuery,
     filters,
+    filtersMap,
     toggleFilter,
-  } = useSearch();
+  } = useSearch(['filter', 'status', 'resourceType', 'researchTheme']);
 
   const researchThemes = useResearchThemes();
+  const resourceTypes = useResourceTypes();
   const [currentTime] = useState(new Date());
   const { pathname } = useLocation();
   return (
@@ -125,7 +130,7 @@ const Network: FC<Record<string, never>> = () => {
             >
               <SearchFrame title="Discovery Teams">
                 <TeamList
-                  filters={filters}
+                  filtersMap={filtersMap}
                   searchQuery={debouncedSearchQuery}
                 />
               </SearchFrame>
@@ -141,6 +146,8 @@ const Network: FC<Record<string, never>> = () => {
               onChangeSearchQuery={setSearchQuery}
               filters={filters}
               onChangeFilter={toggleFilter}
+              researchThemes={researchThemes}
+              resourceTypes={resourceTypes}
               pageDescription={
                 <Paragraph noMargin accent="lead">
                   Resource Teams support the development of tools, services, and
@@ -151,7 +158,7 @@ const Network: FC<Record<string, never>> = () => {
             >
               <SearchFrame title="Resource Teams">
                 <TeamList
-                  filters={filters}
+                  filtersMap={filtersMap}
                   searchQuery={debouncedSearchQuery}
                 />
               </SearchFrame>

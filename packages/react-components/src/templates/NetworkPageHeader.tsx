@@ -5,6 +5,9 @@ import {
   UserMembershipStatus,
   activeUserMembershipStatus,
   inactiveUserMembershipStatus,
+  ResearchThemeType,
+  ResearchThemeDataObject,
+  ResourceTypeDataObject,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { ReactNode, useMemo } from 'react';
@@ -36,6 +39,11 @@ type Page =
   | 'resource-teams'
   | 'working-groups';
 
+type FilterOptionsAndPlaceholder = {
+  filterOptions: ReadonlyArray<Option<string> | Title>;
+  searchPlaceholder: string;
+};
+
 type NetworkPageHeaderProps = {
   page: Page;
   filters?: Set<string>;
@@ -44,7 +52,8 @@ type NetworkPageHeaderProps = {
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   showSearch?: boolean;
   pageDescription?: ReactNode;
-  researchThemes?: ReadonlyArray<{ id: string; name: string }>;
+  researchThemes?: ReadonlyArray<ResearchThemeDataObject>;
+  resourceTypes?: ReadonlyArray<ResourceTypeDataObject>;
 };
 
 const userFilters: ReadonlyArray<
@@ -79,7 +88,8 @@ const workingGroupFilters: ReadonlyArray<
 ];
 
 const createResearchThemeFilters = (
-  researchThemes?: ReadonlyArray<{ id: string; name: string }>,
+  researchThemes: ReadonlyArray<ResearchThemeDataObject>,
+  researchThemeType: ResearchThemeType,
 ): ReadonlyArray<Option<string> | Title> => {
   const title: Title = { title: 'RESEARCH THEME' };
 
@@ -89,23 +99,46 @@ const createResearchThemeFilters = (
 
   return [
     title,
-    ...researchThemes.map((theme) => ({
-      label: theme.name,
-      value: theme.name,
+    ...researchThemes
+      .filter((theme) => theme.types.includes(researchThemeType))
+      .map((theme) => ({
+        filterName: 'researchTheme',
+        label: theme.name,
+        value: theme.name,
+      })),
+  ];
+};
+
+const createResourceTypeFilters = (
+  resourceTypes: ReadonlyArray<ResourceTypeDataObject>,
+): ReadonlyArray<Option<string> | Title> => {
+  const title: Title = { title: 'RESOURCE TYPE' };
+
+  if (!resourceTypes || resourceTypes.length === 0) {
+    return [title];
+  }
+
+  return [
+    title,
+    ...resourceTypes.map((type) => ({
+      filterName: 'resourceType',
+      label: type.name,
+      value: type.name,
     })),
   ];
 };
 
 const teamFilters: ReadonlyArray<Option<'Active' | 'Inactive'> | Title> = [
   { title: 'TEAM STATUS' },
-  { label: 'Active', value: 'Active' },
-  { label: 'Inactive', value: 'Inactive' },
+  { label: 'Active', value: 'Active', filterName: 'status' },
+  { label: 'Inactive', value: 'Inactive', filterName: 'status' },
 ];
 
 const getFilterOptionsAndPlaceholder = (
   page: Page,
-  researchThemes?: ReadonlyArray<{ id: string; name: string }>,
-) => {
+  researchThemes?: ReadonlyArray<ResearchThemeDataObject>,
+  resourceTypes?: ReadonlyArray<ResourceTypeDataObject>,
+): FilterOptionsAndPlaceholder => {
   switch (page) {
     case 'users':
       return {
@@ -127,13 +160,17 @@ const getFilterOptionsAndPlaceholder = (
 
     case 'resource-teams':
       return {
-        filterOptions: teamFilters,
+        filterOptions: [
+          ...createResourceTypeFilters(resourceTypes || []),
+          ...createResearchThemeFilters(researchThemes || [], 'Resource'),
+          ...teamFilters,
+        ],
         searchPlaceholder: 'Enter name, keyword, method, …',
       };
     case 'discovery-teams':
       return {
         filterOptions: [
-          ...createResearchThemeFilters(researchThemes),
+          ...createResearchThemeFilters(researchThemes || [], 'Discovery'),
           ...teamFilters,
         ],
         searchPlaceholder: 'Enter name, keyword, method, …',
@@ -154,10 +191,11 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   showSearch = true,
   pageDescription,
   researchThemes,
+  resourceTypes,
 }) => {
   const { filterOptions, searchPlaceholder } = useMemo(
-    () => getFilterOptionsAndPlaceholder(page, researchThemes),
-    [page, researchThemes],
+    () => getFilterOptionsAndPlaceholder(page, researchThemes, resourceTypes),
+    [page, researchThemes, resourceTypes],
   );
 
   return (

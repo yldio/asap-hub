@@ -1,4 +1,4 @@
-import { AlgoliaClient } from '@asap-hub/algolia';
+import { AlgoliaClient, buildAlgoliaFilters } from '@asap-hub/algolia';
 import {
   BackendError,
   createSentryHeaders,
@@ -28,7 +28,7 @@ import {
   ListManuscriptVersionResponse,
   ManuscriptVersionResponse,
   TeamType,
-  teamStatus,
+  TeamStatus,
 } from '@asap-hub/model';
 import { isResearchOutputWorkingGroupRequest } from '@asap-hub/validation';
 import { getPresignedUrl } from '../../shared-api/files';
@@ -56,8 +56,11 @@ export const getTeam = async (
   return resp.json();
 };
 
-export type GetTeamsListOptions = GetListOptions & {
+export type GetTeamsListOptions = Omit<GetListOptions, 'filters'> & {
   teamType: TeamType | 'all';
+  status?: TeamStatus[];
+  researchTheme?: string[];
+  resourceType?: string[];
 };
 
 const apiEndpointMapper: Record<TeamType | 'all', string> = {
@@ -70,10 +73,21 @@ export const getTeams = async (
   options: GetTeamsListOptions,
   authorization: string,
 ): Promise<ListTeamResponse> => {
+  const listOptions: GetListOptions = {
+    searchQuery: options.searchQuery,
+    currentPage: options.currentPage,
+    pageSize: options.pageSize,
+    filters: new Set<string>([
+      ...(options.status ?? []),
+      ...(options.researchTheme ?? []),
+      ...(options.resourceType ?? []),
+    ]),
+  };
+
   const resp = await fetch(
     createListApiUrl(
       apiEndpointMapper[options.teamType ?? 'all'],
-      options,
+      listOptions,
     ).toString(),
     {
       headers: {
@@ -101,50 +115,30 @@ export const getAlgoliaTeams = async (
   {
     searchQuery,
     teamType,
-    filters,
+    status,
+    researchTheme,
+    resourceType,
     currentPage,
     pageSize,
   }: GetTeamsListOptions,
 ): Promise<ListTeamResponse> => {
-  const isTeamStatusFilter = (filter: string) =>
-    (teamStatus as unknown as string[]).includes(filter);
-  const filterArray = Array.from(filters);
-
-  const teamStatusFilter = filterArray
-    .filter(isTeamStatusFilter)
-    .map((filter) => `teamStatus:"${filter}"`)
-    .join(' OR ');
-
-  // Research theme filters are any filters that are not team status filters
-  const researchThemeFilters = filterArray
-    .filter((filter: string) => !isTeamStatusFilter(filter))
-    .map((filter: string) => `researchTheme:"${filter}"`)
-    .join(' OR ');
-
   const teamTypeFilter = getTeamTypeAlgoliaFilter(teamType);
 
-  // Build combined filter string
-  const filterParts: string[] = [];
-
-  if (teamStatusFilter || researchThemeFilters) {
-    filterParts.push(`(${teamTypeFilter})`);
-  } else {
-    filterParts.push(teamTypeFilter);
-  }
-
-  if (teamStatusFilter) {
-    filterParts.push(`(${teamStatusFilter})`);
-  }
-
-  if (researchThemeFilters) {
-    filterParts.push(`(${researchThemeFilters})`);
-  }
+  const facetParts = [
+    buildAlgoliaFilters('teamStatus', status),
+    buildAlgoliaFilters('researchTheme', researchTheme),
+    buildAlgoliaFilters('resourceType', resourceType),
+  ].filter(Boolean) as string[];
 
   const algoliaFilters =
-    filterParts.length > 1 ? filterParts.join(' AND ') : teamTypeFilter;
+    facetParts.length === 0
+      ? teamTypeFilter
+      : [`(${teamTypeFilter})`, ...facetParts.map((part) => `(${part})`)].join(
+          ' AND ',
+        );
 
   const result = await algoliaClient.search(['team'], searchQuery, {
-    filters: algoliaFilters.length > 0 ? algoliaFilters : undefined,
+    filters: algoliaFilters,
     page: currentPage ?? undefined,
     hitsPerPage: pageSize ?? undefined,
   });

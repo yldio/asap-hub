@@ -235,8 +235,8 @@ it('does not render page description when not provided', () => {
 describe('Research Theme Filters', () => {
   it('renders research theme filters when researchThemes are provided', () => {
     const researchThemes = [
-      { id: '1', name: 'Theme 1' },
-      { id: '2', name: 'Theme 2' },
+      { id: '1', name: 'Theme 1', types: ['Discovery' as const] },
+      { id: '2', name: 'Theme 2', types: ['Discovery' as const] },
     ];
     const { getByText } = render(
       <MemoryRouter initialEntries={[network({}).discoveryTeams({}).$]}>
@@ -274,5 +274,50 @@ describe('Research Theme Filters', () => {
     );
     expect(getByText('RESEARCH THEME')).toBeInTheDocument();
     expect(queryByText('Theme 1')).not.toBeInTheDocument();
+  });
+});
+
+describe('Resource Type Filters', () => {
+  it('renders resource type filters when resourceTypes are provided', () => {
+    const resourceTypes = [
+      { id: '1', name: 'Type 1' },
+      { id: '2', name: 'Type 2' },
+    ];
+    const { getByText } = render(
+      <MemoryRouter initialEntries={[network({}).resourceTeams({}).$]}>
+        <NetworkPageHeader
+          {...props}
+          page="resource-teams"
+          resourceTypes={resourceTypes}
+        />
+      </MemoryRouter>,
+    );
+    expect(getByText('RESOURCE TYPE')).toBeInTheDocument();
+    expect(getByText('Type 1')).toBeInTheDocument();
+    expect(getByText('Type 2')).toBeInTheDocument();
+  });
+
+  it('renders only the title when resourceTypes are empty', () => {
+    const { getByText, queryByText } = render(
+      <MemoryRouter initialEntries={[network({}).resourceTeams({}).$]}>
+        <NetworkPageHeader
+          {...props}
+          page="resource-teams"
+          resourceTypes={[]}
+        />
+      </MemoryRouter>,
+    );
+    expect(getByText('RESOURCE TYPE')).toBeInTheDocument();
+    expect(queryByText('Type 1')).not.toBeInTheDocument();
+  });
+
+  it('renders only the title when resourceTypes are undefined', () => {
+    const { getByText, queryByText } = render(
+      <MemoryRouter initialEntries={[network({}).resourceTeams({}).$]}>
+        <NetworkPageHeader {...props} page="resource-teams" />
+      </MemoryRouter>,
+    );
+    expect(getByText('RESOURCE TYPE')).toBeInTheDocument();
+    expect(queryByText('Type 1')).not.toBeInTheDocument();
   });
 });

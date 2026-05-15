@@ -8,7 +8,7 @@ export const useTeamSuggestions = () => {
     getTeams(
       {
         searchQuery,
-        filters: new Set(),
+        status: [],
         currentPage: null,
         pageSize: null,
         teamType: 'all',

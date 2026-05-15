@@ -34,14 +34,14 @@ const Dashboard: FC<Record<string, never>> = () => {
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
     searchQuery: '',
-    filters: new Set(),
+    status: [],
     teamType: 'Discovery Team',
   });
   usePrefetchTeams({
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
     searchQuery: '',
-    filters: new Set(),
+    status: [],
     teamType: 'Resource Team',
   });
   usePrefetchCalendars();

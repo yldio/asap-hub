@@ -10,6 +10,7 @@ import {
   ResearchOutputResponse,
   ResearchTagResponse,
   ResearchThemeResponse,
+  ResearchThemeType,
   ResourceTypeResponse,
 } from '@asap-hub/model';
 import qs from 'qs';
@@ -175,8 +176,12 @@ export const getResearchTags = async (
 
 export const getResearchThemes = async (
   authorization: string,
+  types?: ReadonlyArray<ResearchThemeType>,
 ): Promise<ResearchThemeResponse[]> => {
-  const resp = await fetch(`${API_BASE_URL}/research-themes`, {
+  const url = new URL(`${API_BASE_URL}/research-themes`);
+  types?.forEach((value) => url.searchParams.append('types', value));
+
+  const resp = await fetch(url.toString(), {
     headers: {
       authorization,
       ...createSentryHeaders(),

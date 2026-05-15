@@ -39,7 +39,9 @@ const renderTeamList = async (
           teamsState({
             currentPage: 0,
             pageSize: CARD_VIEW_PAGE_SIZE,
-            filters: new Set(),
+            status: [],
+            researchTheme: [],
+            resourceType: [],
             searchQuery: '',
             teamType,
           }),
@@ -55,7 +57,13 @@ const renderTeamList = async (
                   path={route}
                   element={
                     <Frame title={null}>
-                      <Teams filters={new Set()} />
+                      <Teams
+                        filtersMap={{
+                          status: [],
+                          researchTheme: [],
+                          resourceType: [],
+                        }}
+                      />
                     </Frame>
                   }
                 />

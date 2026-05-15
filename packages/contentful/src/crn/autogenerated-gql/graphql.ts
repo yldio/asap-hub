@@ -17548,6 +17548,7 @@ export type ResearchTheme = Entry &
     linkedFrom?: Maybe<ResearchThemeLinkingCollections>;
     name?: Maybe<Scalars['String']>;
     sys: Sys;
+    types?: Maybe<Array<Maybe<Scalars['String']>>>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTheme) */
@@ -17557,6 +17558,12 @@ export type ResearchThemeLinkedFromArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTheme) */
 export type ResearchThemeNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchTheme) */
+export type ResearchThemeTypesArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -17586,6 +17593,10 @@ export type ResearchThemeFilter = {
   name_not_contains?: InputMaybe<Scalars['String']>;
   name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+  types_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  types_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  types_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  types_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type ResearchThemeLinkingCollections = {
@@ -25031,6 +25042,10 @@ export type CfResearchThemeNestedFilter = {
   name_not_contains?: InputMaybe<Scalars['String']>;
   name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
+  types_contains_all?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  types_contains_none?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  types_contains_some?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  types_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type CfResourceTypeNestedFilter = {
@@ -36587,9 +36602,10 @@ export type FetchResearchTagsByIdQuery = {
   >;
 };
 
-export type ResearchThemesContentFragment = Pick<ResearchTheme, 'name'> & {
-  sys: Pick<Sys, 'id'>;
-};
+export type ResearchThemesContentFragment = Pick<
+  ResearchTheme,
+  'name' | 'types'
+> & { sys: Pick<Sys, 'id'> };
 
 export type FetchResearchThemesQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -36597,13 +36613,14 @@ export type FetchResearchThemesQueryVariables = Exact<{
   order?: InputMaybe<
     Array<InputMaybe<ResearchThemeOrder>> | InputMaybe<ResearchThemeOrder>
   >;
+  where?: InputMaybe<ResearchThemeFilter>;
 }>;
 
 export type FetchResearchThemesQuery = {
   researchThemeCollection?: Maybe<
     Pick<ResearchThemeCollection, 'total'> & {
       items: Array<
-        Maybe<Pick<ResearchTheme, 'name'> & { sys: Pick<Sys, 'id'> }>
+        Maybe<Pick<ResearchTheme, 'name' | 'types'> & { sys: Pick<Sys, 'id'> }>
       >;
     }
   >;
@@ -46904,6 +46921,7 @@ export const ResearchThemesContentFragmentDoc = {
             },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'types' } },
         ],
       },
     },
@@ -66390,6 +66408,17 @@ export const FetchResearchThemesDocument = {
             },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'ResearchThemeFilter' },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -66420,6 +66449,14 @@ export const FetchResearchThemesDocument = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'order' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
                 },
               },
             ],

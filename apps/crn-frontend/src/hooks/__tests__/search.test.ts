@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter, useLocation } from 'react-router';
 import { searchQueryParam } from '@asap-hub/routing';
 import React, { ComponentProps } from 'react';
 
@@ -145,6 +145,28 @@ describe('useSearch', () => {
         result.current.useSearch.toggleFilter('test123');
       });
       expect(result.current.usePaginationParams.currentPage).toBe(0);
+    });
+
+    it('toggles the given query param when filterName is passed', () => {
+      const { result } = renderHook(
+        () => {
+          const search = useSearch();
+          const { search: locationSearch } = useLocation();
+          return { search, locationSearch };
+        },
+        {
+          wrapper: createWrapper(['/test?resourceType=Data']),
+        },
+      );
+      act(() => {
+        result.current.search.toggleFilter('Infrastructure', 'resourceType');
+      });
+      expect(result.current.search.filters).toEqual(new Set());
+      expect(
+        new URLSearchParams(result.current.locationSearch).getAll(
+          'resourceType',
+        ),
+      ).toEqual(['Data', 'Infrastructure']);
     });
   });
 

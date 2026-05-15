@@ -586,10 +586,15 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     watchAdditionalAuthors,
   ]);
 
-  const authorValidationDependentFields: Parameters<typeof trigger>[0] =
-    projectMemberIds
-      ? ['versions.0.teams', 'versions.0.labs']
-      : 'versions.0.teams';
+  const authorValidationDependentFields = useMemo<
+    Parameters<typeof trigger>[0]
+  >(
+    () =>
+      projectMemberIds
+        ? ['versions.0.teams', 'versions.0.labs']
+        : 'versions.0.teams',
+    [projectMemberIds],
+  );
 
   type AllowedVersionFields = `versions.0.${OptionalVersionFields[number]}`;
 

@@ -336,6 +336,73 @@ describe('ManuscriptForm team validation', () => {
     },
   );
 
+  it('displays error when a lab is added without its PI as an author and projectMemberIds is provided, and hides it once PI is added as first author', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const labPiUserId = 'lab-pi-user';
+    const getLabsWithPiMock = jest.fn().mockResolvedValue([
+      {
+        label: 'Lab One',
+        value: 'lab-1',
+        labPITeamIds: ['team-a'],
+        labPrincipalInvestigatorId: labPiUserId,
+      },
+    ]);
+    const getAuthorsIncludingPiMock = jest.fn().mockResolvedValue([
+      {
+        label: 'PI User',
+        value: labPiUserId,
+        id: labPiUserId,
+        displayName: 'PI User',
+        author: {
+          firstName: 'PI',
+          lastName: 'User',
+          teams: [{ id: 'team-a', name: 'Team A' }],
+          __meta: { type: 'user' },
+        },
+      },
+    ]);
+
+    const { container } = render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            getTeamSuggestions={getTeamSuggestionsMock}
+            getLabSuggestions={getLabsWithPiMock}
+            getAuthorSuggestions={getAuthorsIncludingPiMock}
+            projectMemberIds={['some-project-member']}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
+    await waitFor(() => {
+      expect(screen.getByText('Lab One')).toBeVisible();
+    });
+    await userEvent.click(screen.getByText('Lab One'));
+    await userEvent.tab();
+
+    const labErrorMessage =
+      'The following lab(s) do not list their corresponding PI as an author. • Lab One';
+    expect(container).toHaveTextContent(labErrorMessage);
+
+    await userEvent.click(screen.getByLabelText(/First Author/));
+    await waitFor(() =>
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
+    await userEvent.click(screen.getByText('PI User'));
+    await userEvent.tab();
+
+    await waitFor(() => {
+      expect(container).not.toHaveTextContent(labErrorMessage);
+    });
+  });
+
   it('when there are missing teams for both lab and author, the error is displayed and hidden accordingly', async () => {
     const consoleErrorSpy = mockActWarningsInConsole('error');
     const { container } = render(

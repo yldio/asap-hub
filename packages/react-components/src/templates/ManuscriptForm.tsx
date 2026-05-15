@@ -133,6 +133,7 @@ const buttonsInnerContainerStyles = css({
 
 type LabOption = MultiSelectOptionsType & {
   labPITeamIds: string[];
+  labPrincipalInvestigatorId?: string;
 };
 
 type OptionalVersionFields = Array<
@@ -634,6 +635,41 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     }
 
     if (projectMemberIds) {
+      const firstAuthorIds = (getValues('versions.0.firstAuthors') || []).map(
+        (author) => author.value,
+      );
+      const correspondingAuthorIds = (
+        getValues('versions.0.correspondingAuthor') || []
+      ).map((author) => author.value);
+      const additionalAuthorIds = (
+        getValues('versions.0.additionalAuthors') || []
+      ).map((author) => author.value);
+      const allAuthorIds = [
+        ...firstAuthorIds,
+        ...correspondingAuthorIds,
+        ...additionalAuthorIds,
+      ];
+
+      labs
+        .filter((lab) => {
+          const { labPrincipalInvestigatorId } = lab as LabOption;
+          return (
+            !!labPrincipalInvestigatorId &&
+            !allAuthorIds.includes(labPrincipalInvestigatorId)
+          );
+        })
+        .forEach((lab) => {
+          labsWithoutTeamAdded.add(lab.label);
+        });
+
+      if (labsWithoutTeamAdded.size > 0) {
+        const labErrorMessage = `The following lab(s) do not list their corresponding PI as an author.\n${Array.from(
+          labsWithoutTeamAdded,
+        )
+          .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
+          .join('\n')}`;
+        return labErrorMessage;
+      }
       return true;
     }
 
@@ -731,7 +767,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         firstAuthorsWithoutTeamAdded.add(author.label);
       });
 
-    await trigger('versions.0.teams');
+    await trigger(
+      projectMemberIds
+        ? ['versions.0.teams', 'versions.0.labs']
+        : 'versions.0.teams',
+    );
 
     if (firstAuthorsWithoutTeamAdded.size > 0) {
       const errorPrefix = projectMemberIds
@@ -784,7 +824,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       }
     }
 
-    await trigger('versions.0.teams');
+    await trigger(
+      projectMemberIds
+        ? ['versions.0.teams', 'versions.0.labs']
+        : 'versions.0.teams',
+    );
     if (correspondingAuthorWithoutTeamAdded.size > 0) {
       const errorPrefix = projectMemberIds
         ? 'The following corresponding author(s) are not part of this project. Please add at least one of their teams, or contact support if they don’t belong to any.'
@@ -835,7 +879,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         additionalAuthorsWithoutTeamAdded.add(author.label);
       });
 
-    await trigger('versions.0.teams');
+    await trigger(
+      projectMemberIds
+        ? ['versions.0.teams', 'versions.0.labs']
+        : 'versions.0.teams',
+    );
 
     if (additionalAuthorsWithoutTeamAdded.size > 0) {
       const errorPrefix = projectMemberIds

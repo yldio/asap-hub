@@ -278,6 +278,64 @@ describe('ManuscriptForm team validation', () => {
     },
   );
 
+  it.each`
+    authorType                | label                     | errorMessage
+    ${'first author'}         | ${/First Author/}         | ${/The following first author\(s\) are not part of this project/i}
+    ${'corresponding author'} | ${/Corresponding Author/} | ${/The following corresponding author\(s\) are not part of this project/i}
+    ${'additional author'}    | ${/Additional Author/}    | ${/The following additional author\(s\) are not part of this project/i}
+  `(
+    'displays error message when $authorType without a team is added and projectMemberIds is provided',
+    async ({ label, errorMessage }) => {
+      jest.spyOn(console, 'error').mockImplementation();
+      const getAuthorSuggestionsWithoutTeamMock = jest.fn().mockResolvedValue([
+        {
+          label: 'Author A',
+          value: 'author-a',
+          id: 'author-a',
+          displayName: 'Author A',
+          author: {
+            firstName: 'Author',
+            lastName: 'A',
+            teams: [],
+            __meta: {
+              type: 'user',
+            },
+          },
+        },
+      ]);
+
+      render(
+        <StaticRouter location="/">
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...defaultProps}
+              getTeamSuggestions={getTeamSuggestionsMock}
+              getLabSuggestions={getLabSuggestionsMock}
+              getAuthorSuggestions={getAuthorSuggestionsWithoutTeamMock}
+              projectMemberIds={['other-member-id']}
+            />
+          </Suspense>
+        </StaticRouter>,
+      );
+
+      await waitFor(() => {
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+      });
+
+      await userEvent.click(screen.getByLabelText(label));
+      await waitFor(() =>
+        expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+      );
+
+      await userEvent.click(screen.getByText('Author A'));
+      await userEvent.tab();
+
+      await waitFor(() => {
+        expect(screen.getByText(errorMessage)).toBeVisible();
+      });
+    },
+  );
+
   it('when there are missing teams for both lab and author, the error is displayed and hidden accordingly', async () => {
     const consoleErrorSpy = mockActWarningsInConsole('error');
     const { container } = render(

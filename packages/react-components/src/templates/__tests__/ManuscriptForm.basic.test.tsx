@@ -520,7 +520,6 @@ describe('Manuscript form', () => {
     await userEvent.click(lifecycleCombobox);
     await userEvent.type(lifecycleCombobox, 'Preprint{enter}');
 
-    // await userEvent.type(screen.getByLabelText(/Date Published/i), '2020-12-02');
     expect(await findByLabelText(/Date first made public/i)).toBeDisabled();
   });
 

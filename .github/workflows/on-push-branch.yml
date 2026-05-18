@@ -23,7 +23,7 @@ jobs:
       gp2-contentful-limit-reached: ${{ steps.get-gp2-contentful-state.outputs.contentful-limit-reached }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -159,7 +159,7 @@ jobs:
     steps:
       - name: Checkout
         if: ${{ success() }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment

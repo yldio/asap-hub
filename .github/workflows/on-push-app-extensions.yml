@@ -17,7 +17,7 @@ jobs:
       GIT_DIFF: ${{ steps.diff.outputs.diff }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: Re-Build
         uses: ./.github/actions/build-rebuild
       - name: Cache build typecheck output
@@ -47,7 +47,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: Run contentful app extension tests
         run: yarn workspaces foreach -j 2 --include "*/contentful-app-*" -vp run test:no-watch
 
@@ -83,7 +83,7 @@ jobs:
           - project-membership-role
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment

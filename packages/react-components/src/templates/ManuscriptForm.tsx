@@ -398,7 +398,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const firstAuthorsWithoutTeamAdded = new Set();
   const correspondingAuthorWithoutTeamAdded = new Set();
   const additionalAuthorsWithoutTeamAdded = new Set();
-  const labsWithoutTeamAdded = new Set();
+  const labsWithValidationIssues = new Set();
 
   const [impactOptions, setImpactOptions] = useState<
     {
@@ -565,13 +565,22 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const watchCorrespondingAuthor = watch('versions.0.correspondingAuthor');
   const watchAdditionalAuthors = watch('versions.0.additionalAuthors');
 
-  const hasNonProjectMemberAuthors = useMemo(() => {
-    if (!projectMemberIds) return false;
-    const allAuthors = [
+  const allAuthors = useMemo(
+    () => [
       ...(watchFirstAuthors || []),
       ...(watchCorrespondingAuthor || []),
       ...(watchAdditionalAuthors || []),
-    ];
+    ],
+    [watchFirstAuthors, watchCorrespondingAuthor, watchAdditionalAuthors],
+  );
+
+  const allAuthorIds = useMemo(
+    () => allAuthors.map((author) => author.value),
+    [allAuthors],
+  );
+
+  const hasNonProjectMemberAuthors = useMemo(() => {
+    if (!projectMemberIds) return false;
     return allAuthors.some(
       (authorOption) =>
         'author' in authorOption &&
@@ -579,12 +588,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         'teams' in authorOption.author &&
         !projectMemberIds.includes(authorOption.value),
     );
-  }, [
-    projectMemberIds,
-    watchFirstAuthors,
-    watchCorrespondingAuthor,
-    watchAdditionalAuthors,
-  ]);
+  }, [projectMemberIds, allAuthors]);
 
   const authorValidationDependentFields = useMemo<
     Parameters<typeof trigger>[0]
@@ -628,7 +632,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
     const teamFormIds = teams.map((team) => team.value);
 
-    labsWithoutTeamAdded.clear();
+    labsWithValidationIssues.clear();
     const hasTouchedLabs = touchedFields?.versions?.[0]?.labs;
 
     // --- Required field check ---
@@ -645,21 +649,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     }
 
     if (projectMemberIds) {
-      const firstAuthorIds = (getValues('versions.0.firstAuthors') || []).map(
-        (author) => author.value,
-      );
-      const correspondingAuthorIds = (
-        getValues('versions.0.correspondingAuthor') || []
-      ).map((author) => author.value);
-      const additionalAuthorIds = (
-        getValues('versions.0.additionalAuthors') || []
-      ).map((author) => author.value);
-      const allAuthorIds = [
-        ...firstAuthorIds,
-        ...correspondingAuthorIds,
-        ...additionalAuthorIds,
-      ];
-
       labs
         .filter((lab) => {
           const { labPrincipalInvestigatorId } = lab as LabOption;
@@ -669,12 +658,12 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           );
         })
         .forEach((lab) => {
-          labsWithoutTeamAdded.add(lab.label);
+          labsWithValidationIssues.add(lab.label);
         });
 
-      if (labsWithoutTeamAdded.size > 0) {
+      if (labsWithValidationIssues.size > 0) {
         const labErrorMessage = `The following lab(s) do not list their corresponding PI as an author.\n${Array.from(
-          labsWithoutTeamAdded,
+          labsWithValidationIssues,
         )
           .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
           .join('\n')}`;
@@ -694,14 +683,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         );
       })
       .forEach((lab) => {
-        labsWithoutTeamAdded.add(lab.label);
+        labsWithValidationIssues.add(lab.label);
       });
 
     await trigger('versions.0.teams');
 
-    if (labsWithoutTeamAdded.size > 0) {
+    if (labsWithValidationIssues.size > 0) {
       const labErrorMessage = `The following lab(s) do not list their corresponding PI’s team as a contributor. Please add at least one of their teams to the Teams field.\n${Array.from(
-        labsWithoutTeamAdded,
+        labsWithValidationIssues,
       )
         .map((lab) => `${BIG_SPACE}•${BIG_SPACE}${lab}`)
         .join('\n')}`;
@@ -715,7 +704,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       firstAuthorsWithoutTeamAdded.size === 0 &&
       correspondingAuthorWithoutTeamAdded.size === 0 &&
       additionalAuthorsWithoutTeamAdded.size === 0 &&
-      labsWithoutTeamAdded.size === 0
+      labsWithValidationIssues.size === 0
     ) {
       return true;
     }

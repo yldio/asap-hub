@@ -9,8 +9,7 @@
       "outputs": [
         "{apps,packages}/**/build/**/*.d.ts",
         "{apps,packages}/**/*.tsbuildinfo"
-      ],
-      "cache": false
+      ]
     },
     "topo": {
       "dependsOn": ["^topo"]

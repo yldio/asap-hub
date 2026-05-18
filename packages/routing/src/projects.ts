@@ -32,11 +32,13 @@ const createProjectRoute = () => {
     },
   );
   const milestones = route('/milestones', {}, {});
+  const outputs = route('/outputs', {}, {});
+  const draftOutputs = route('/draft-outputs', {}, {});
 
   return route(
     '/:projectId',
     { projectId: stringParser },
-    { about, workspace, milestones },
+    { about, workspace, milestones, outputs, draftOutputs },
   );
 };
 

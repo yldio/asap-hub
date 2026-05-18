@@ -48,7 +48,7 @@ describe('Research Themes Data Provider', () => {
           {
             id: 'theme-2',
             name: 'Cell Biology',
-            types: ['Discovery', 'Resource'],
+            types: ['Discovery, Resource'],
           },
           { id: 'theme-3', name: 'Genetics', types: ['Resource'] },
         ],

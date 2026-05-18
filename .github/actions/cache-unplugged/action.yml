@@ -7,8 +7,10 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - uses: actions/cache@v3
+    - uses: actions/cache@v5
       with:
         path: |
           .yarn/unplugged/
-        key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+        key: rebuild-output-${{ inputs.environment-name }}-${{ hashFiles('yarn.lock') }}
+        restore-keys: |
+          rebuild-output-${{ inputs.environment-name }}-

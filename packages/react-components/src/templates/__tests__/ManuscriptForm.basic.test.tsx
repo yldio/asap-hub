@@ -348,14 +348,16 @@ describe('Manuscript form', () => {
     });
 
     it('project flow: selecting a team triggers cross-field validation', async () => {
-      const { getAllByRole } = await renderManuscriptForm(projectFlowProps);
+      const { getAllByRole, getByText } =
+        await renderManuscriptForm(projectFlowProps);
 
       const teamsComboboxes = getAllByRole('combobox', { name: /Teams/i });
       const teamsCombobox = teamsComboboxes[teamsComboboxes.length - 1]!;
-      await userEvent.click(teamsCombobox);
+      await userEvent.type(teamsCombobox, 'Two');
       await waitFor(() => {
-        expect(getTeamSuggestions).toHaveBeenCalled();
+        expect(getByText('Two Team')).toBeVisible();
       });
+      await userEvent.click(getByText('Two Team'));
     });
 
     it('project flow: Teams shows no-match message', async () => {

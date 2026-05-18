@@ -265,6 +265,93 @@ describe('Manuscript form', () => {
     });
   });
 
+  describe('contributors section field order', () => {
+    const fieldLabels = [
+      'Teams',
+      'First Author Full Name',
+      'Labs',
+      'Corresponding Author',
+      'Additional Authors',
+    ];
+
+    const getFieldOrder = (container: HTMLElement) => {
+      const text = container.textContent!;
+      return fieldLabels
+        .filter((label) => text.includes(label))
+        .sort((a, b) => text.indexOf(a) - text.indexOf(b));
+    };
+
+    it('team flow: Teams appears first', async () => {
+      const { container } = await renderManuscriptForm(defaultProps);
+
+      expect(getFieldOrder(container)).toEqual([
+        'Teams',
+        'First Author Full Name',
+        'Labs',
+        'Corresponding Author',
+        'Additional Authors',
+      ]);
+    });
+
+    it('team flow: Teams always visible even with no authors', async () => {
+      const { getByText } = await renderManuscriptForm({
+        ...defaultProps,
+        firstAuthors: [],
+        correspondingAuthor: [],
+        additionalAuthors: [],
+      });
+
+      expect(getByText('Teams')).toBeVisible();
+    });
+
+    it('project flow: Teams appears last when non-project authors exist', async () => {
+      const { container } = await renderManuscriptForm({
+        ...defaultProps,
+        projectMemberIds: ['other-member'],
+        firstAuthors: [
+          {
+            label: 'Author 1',
+            value: 'author-1',
+            id: 'author-1',
+            displayName: 'Author 1',
+            author: {
+              id: 'author-1',
+              firstName: 'Author',
+              lastName: '1',
+              displayName: 'Author 1',
+              email: 'author1@example.com',
+              teams: [
+                {
+                  id: 'team-1',
+                  displayName: 'Team 1',
+                  role: 'Key Personnel',
+                },
+              ],
+              __meta: { type: 'user' as const },
+            },
+          } as AuthorResponse & AuthorSelectOption,
+        ],
+      });
+
+      expect(getFieldOrder(container)).toEqual([
+        'First Author Full Name',
+        'Labs',
+        'Corresponding Author',
+        'Additional Authors',
+        'Teams',
+      ]);
+    });
+
+    it('project flow: Teams hidden when all authors are project members', async () => {
+      const { queryByText } = await renderManuscriptForm({
+        ...defaultProps,
+        projectMemberIds: ['author-1'],
+      });
+
+      expect(queryByText('Teams')).not.toBeInTheDocument();
+    });
+  });
+
   it('displays error message when manuscript title is missing', async () => {
     const { getByRole, getAllByText } = await renderManuscriptForm({
       ...defaultProps,

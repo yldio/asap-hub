@@ -292,9 +292,7 @@ describe('Manuscript form', () => {
         lastName: '1',
         displayName: 'Author 1',
         email: 'author1@example.com',
-        teams: [
-          { id: 'team-1', displayName: 'Team 1', role: 'Key Personnel' },
-        ],
+        teams: [{ id: 'team-1', displayName: 'Team 1', role: 'Key Personnel' }],
         __meta: { type: 'user' as const },
       },
     } as AuthorResponse & AuthorSelectOption;

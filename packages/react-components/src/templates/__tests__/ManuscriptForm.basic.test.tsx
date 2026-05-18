@@ -281,6 +281,30 @@ describe('Manuscript form', () => {
         .sort((a, b) => text.indexOf(a) - text.indexOf(b));
     };
 
+    const nonProjectAuthor = {
+      label: 'Author 1',
+      value: 'author-1',
+      id: 'author-1',
+      displayName: 'Author 1',
+      author: {
+        id: 'author-1',
+        firstName: 'Author',
+        lastName: '1',
+        displayName: 'Author 1',
+        email: 'author1@example.com',
+        teams: [
+          { id: 'team-1', displayName: 'Team 1', role: 'Key Personnel' },
+        ],
+        __meta: { type: 'user' as const },
+      },
+    } as AuthorResponse & AuthorSelectOption;
+
+    const projectFlowProps = {
+      ...defaultProps,
+      projectMemberIds: ['other-member'],
+      firstAuthors: [nonProjectAuthor],
+    };
+
     it('team flow: Teams appears first', async () => {
       const { container } = await renderManuscriptForm(defaultProps);
 
@@ -305,33 +329,7 @@ describe('Manuscript form', () => {
     });
 
     it('project flow: Teams appears last when non-project authors exist', async () => {
-      const { container } = await renderManuscriptForm({
-        ...defaultProps,
-        projectMemberIds: ['other-member'],
-        firstAuthors: [
-          {
-            label: 'Author 1',
-            value: 'author-1',
-            id: 'author-1',
-            displayName: 'Author 1',
-            author: {
-              id: 'author-1',
-              firstName: 'Author',
-              lastName: '1',
-              displayName: 'Author 1',
-              email: 'author1@example.com',
-              teams: [
-                {
-                  id: 'team-1',
-                  displayName: 'Team 1',
-                  role: 'Key Personnel',
-                },
-              ],
-              __meta: { type: 'user' as const },
-            },
-          } as AuthorResponse & AuthorSelectOption,
-        ],
-      });
+      const { container } = await renderManuscriptForm(projectFlowProps);
 
       expect(getFieldOrder(container)).toEqual([
         'First Author Full Name',
@@ -349,6 +347,37 @@ describe('Manuscript form', () => {
       });
 
       expect(queryByText('Teams')).not.toBeInTheDocument();
+    });
+
+    it('project flow: selecting a team triggers cross-field validation', async () => {
+      const { getAllByRole } = await renderManuscriptForm(projectFlowProps);
+
+      const teamsComboboxes = getAllByRole('combobox', { name: /Teams/i });
+      const teamsCombobox = teamsComboboxes[teamsComboboxes.length - 1]!;
+      await userEvent.click(teamsCombobox);
+      await waitFor(() => {
+        expect(getTeamSuggestions).toHaveBeenCalled();
+      });
+    });
+
+    it('project flow: Teams shows no-match message', async () => {
+      getTeamSuggestions.mockResolvedValue([]);
+
+      const { getAllByRole, getByText } =
+        await renderManuscriptForm(projectFlowProps);
+
+      const teamsComboboxes = getAllByRole('combobox', { name: /Teams/i });
+      const teamsCombobox = teamsComboboxes[teamsComboboxes.length - 1]!;
+      await userEvent.type(teamsCombobox, 'nonexistent');
+
+      await waitFor(() => {
+        expect(getByText(/Sorry, no teams match nonexistent/)).toBeVisible();
+      });
+
+      getTeamSuggestions.mockResolvedValue([
+        { label: 'One Team', value: '1' },
+        { label: 'Two Team', value: '2' },
+      ]);
     });
   });
 

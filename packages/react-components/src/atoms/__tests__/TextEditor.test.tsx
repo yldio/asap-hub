@@ -376,6 +376,70 @@ describe('TextEditorToolbar', () => {
         expect(queryByLabelText('Remove Link')).toBeInTheDocument();
       });
 
+      it('updates the popover URL when the Lexical selection moves to another link', async () => {
+        stubSelectionRect();
+        const { getByLabelText, queryByText } = render(
+          <TextEditor
+            onChange={onChange}
+            value="see [first](https://first.com) and [second](https://second.com)"
+          />,
+        );
+
+        const { editorRef } = await import('../EditorRefPluginWrapper');
+        const lexical = await import('lexical');
+        const linkModule = await import('@lexical/link');
+
+        const selectLinkAt = async (index: number) => {
+          await act(async () => {
+            editorRef.current?.update(() => {
+              const root = lexical.$getRoot();
+              const links: InstanceType<typeof linkModule.LinkNode>[] = [];
+              root.getChildren().forEach((para) => {
+                if ('getChildren' in para) {
+                  (para as { getChildren: () => unknown[] })
+                    .getChildren()
+                    .forEach((node) => {
+                      if (linkModule.$isLinkNode(node)) {
+                        links.push(
+                          node as InstanceType<typeof linkModule.LinkNode>,
+                        );
+                      }
+                    });
+                }
+              });
+              const child = links[index]?.getFirstDescendant();
+              if (child && lexical.$isTextNode(child)) {
+                child.select(0, child.getTextContentSize());
+              }
+            });
+          });
+          // Lexical fires SELECTION_CHANGE_COMMAND on the next microtask after
+          // the update commits; flush by yielding once.
+          await act(async () => {
+            await Promise.resolve();
+            editorRef.current?.dispatchCommand(
+              lexical.SELECTION_CHANGE_COMMAND,
+              undefined,
+            );
+          });
+        };
+
+        await selectLinkAt(0);
+        await act(async () => {
+          await userEvent.click(getByLabelText('Insert Link'));
+        });
+
+        // The popover is now open. Drive the SELECTION_CHANGE listener by
+        // moving Lexical selection between the two links and asserting that
+        // the popover URL tracks the current link.
+        await selectLinkAt(0);
+        expect(queryByText('https://first.com')).toBeInTheDocument();
+        await selectLinkAt(1);
+        expect(queryByText('https://second.com')).toBeInTheDocument();
+        await selectLinkAt(0);
+        expect(queryByText('https://first.com')).toBeInTheDocument();
+      });
+
       it('closes the floating editor when clicking outside after opening', async () => {
         stubSelectionRect();
         const { getByLabelText, queryByLabelText } = render(

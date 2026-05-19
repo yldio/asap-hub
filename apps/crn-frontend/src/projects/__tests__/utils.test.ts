@@ -10,7 +10,7 @@ import {
   isResourceProject,
   isTraineeProject,
   resourceProjectToCSV,
-  toDiscoveryThemeFilters,
+  toResearchThemeFilters,
   toResourceTypeFilters,
   toStatusFilters,
   traineeProjectToCSV,
@@ -105,13 +105,13 @@ describe('project utils', () => {
       });
     });
 
-    describe('toDiscoveryThemeFilters', () => {
+    describe('toResearchThemeFilters', () => {
       it('returns empty array when filters are undefined', () => {
-        expect(toDiscoveryThemeFilters(undefined, [])).toEqual([]);
+        expect(toResearchThemeFilters(undefined, [])).toEqual([]);
       });
 
       it('returns empty array when filters is empty Set', () => {
-        expect(toDiscoveryThemeFilters(new Set(), [])).toEqual([]);
+        expect(toResearchThemeFilters(new Set(), [])).toEqual([]);
       });
 
       it('extracts theme filters and excludes status filters', () => {
@@ -121,7 +121,7 @@ describe('project utils', () => {
           { id: 'theme-2', name: 'Alzheimer' },
         ];
 
-        expect(toDiscoveryThemeFilters(filters, availableThemes)).toEqual([
+        expect(toResearchThemeFilters(filters, availableThemes)).toEqual([
           'Parkinson',
         ]);
       });
@@ -133,14 +133,14 @@ describe('project utils', () => {
           { id: 'theme-2', name: 'Alzheimer' },
         ];
 
-        expect(toDiscoveryThemeFilters(filters, availableThemes)).toEqual([]);
+        expect(toResearchThemeFilters(filters, availableThemes)).toEqual([]);
       });
 
       it('returns empty array when available themes is empty', () => {
         const filters = new Set(['Parkinson', 'Alzheimer']);
         const availableThemes: Array<{ id: string; name: string }> = [];
 
-        expect(toDiscoveryThemeFilters(filters, availableThemes)).toEqual([]);
+        expect(toResearchThemeFilters(filters, availableThemes)).toEqual([]);
       });
     });
 

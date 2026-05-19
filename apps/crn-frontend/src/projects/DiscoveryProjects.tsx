@@ -12,14 +12,14 @@ import {
   discoveryProjectToCSV,
   exportProjects,
   isDiscoveryProject,
-  toDiscoveryThemeFilters,
+  toResearchThemeFilters,
   toStatusFilters,
 } from './utils';
 import { ProjectListOptions } from './api';
 import {
   FilterOption,
   STATUS_FILTER_OPTIONS,
-  createDiscoveryThemeFilterOptionsFromThemes,
+  createResearchThemeFilterOptions,
 } from './filter-options';
 import { useResearchThemes } from '../shared-state/shared-research';
 import { useAlgolia } from '../hooks/algolia';
@@ -85,7 +85,7 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
   const researchThemes = useResearchThemes(DISCOVERY_THEME_TYPES);
   const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
   const themeFilters = useMemo(
-    () => toDiscoveryThemeFilters(filters, researchThemes),
+    () => toResearchThemeFilters(filters, researchThemes),
     [filters, researchThemes],
   );
   const emptyFilters = useMemo(() => new Set<string>(), []);
@@ -122,7 +122,7 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
     ],
   );
   const themeFilterOptions: ReadonlyArray<FilterOption> = useMemo(
-    () => createDiscoveryThemeFilterOptionsFromThemes(researchThemes),
+    () => createResearchThemeFilterOptions(researchThemes),
     [researchThemes],
   );
   const filterOptions = useMemo(

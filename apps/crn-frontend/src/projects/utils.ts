@@ -45,7 +45,7 @@ export const toStatusFilters = (
 };
 
 // Helper function to extract discovery theme filters from a set of filters
-export const toDiscoveryThemeFilters = (
+export const toResearchThemeFilters = (
   filters: ReadonlySet<string> | undefined,
   availableThemes: ReadonlyArray<{ id: string; name: string }>,
 ): string[] => {

@@ -15,14 +15,14 @@ import {
   isResourceProject,
   ResourceProjectCSV,
   resourceProjectToCSV,
-  toDiscoveryThemeFilters,
+  toResearchThemeFilters,
   toResourceTypeFilters,
   toStatusFilters,
 } from './utils';
 import {
   FilterOption,
   STATUS_FILTER_OPTIONS,
-  createDiscoveryThemeFilterOptionsFromThemes,
+  createResearchThemeFilterOptions,
   createResourceTypeFilterOptionsFromTypes,
 } from './filter-options';
 import {
@@ -117,7 +117,7 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
     [filters, resourceTypes],
   );
   const themeFilters = useMemo(
-    () => toDiscoveryThemeFilters(filters, researchThemes),
+    () => toResearchThemeFilters(filters, researchThemes),
     [filters, researchThemes],
   );
   const emptyFilters = useMemo(() => new Set<string>(), []);
@@ -162,7 +162,7 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
     [resourceTypes],
   );
   const themeFilterOptions: ReadonlyArray<FilterOption> = useMemo(
-    () => createDiscoveryThemeFilterOptionsFromThemes(researchThemes),
+    () => createResearchThemeFilterOptions(researchThemes),
     [researchThemes],
   );
   const filterOptions = useMemo(

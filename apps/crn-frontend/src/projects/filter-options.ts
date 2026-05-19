@@ -10,7 +10,7 @@ export const STATUS_FILTER_OPTIONS: ReadonlyArray<FilterOption> = [
   })),
 ];
 
-export const createDiscoveryThemeFilterOptionsFromThemes = (
+export const createResearchThemeFilterOptions = (
   themes: ReadonlyArray<{ id: string; name: string }>,
 ): ReadonlyArray<FilterOption> => {
   if (!themes.length) {

@@ -1,6 +1,6 @@
 import {
   STATUS_FILTER_OPTIONS,
-  createDiscoveryThemeFilterOptionsFromThemes,
+  createResearchThemeFilterOptions,
   createResourceTypeFilterOptionsFromTypes,
 } from '../filter-options';
 import { PROJECT_STATUSES } from '../utils';
@@ -20,13 +20,13 @@ describe('projects filter options', () => {
   });
 
   it('returns an empty array when themes array is empty', () => {
-    expect(createDiscoveryThemeFilterOptionsFromThemes([])).toEqual([]);
+    expect(createResearchThemeFilterOptions([])).toEqual([]);
   });
 
   it('handles single theme correctly', () => {
     const themes = [{ id: 'theme-1', name: 'Single Theme' }];
 
-    const options = createDiscoveryThemeFilterOptionsFromThemes(themes);
+    const options = createResearchThemeFilterOptions(themes);
 
     expect(options).toEqual([
       { title: 'RESEARCH THEME' },
@@ -43,7 +43,7 @@ describe('projects filter options', () => {
       { id: 'theme-2', name: 'Alpha Theme' },
     ];
 
-    const options = createDiscoveryThemeFilterOptionsFromThemes(themes);
+    const options = createResearchThemeFilterOptions(themes);
 
     expect(options).toEqual([
       { title: 'RESEARCH THEME' },

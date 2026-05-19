@@ -1,6 +1,6 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { CodeNode } from '@lexical/code';
-import { AutoLinkNode, LinkNode } from '@lexical/link';
+import { $isLinkNode, AutoLinkNode, LinkNode } from '@lexical/link';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
@@ -205,6 +205,24 @@ const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
   return <></>;
 };
 
+const LinkTargetPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(
+    () =>
+      editor.registerNodeTransform(LinkNode, (node) => {
+        if (!$isLinkNode(node)) return;
+        if (node.getTarget() !== '_blank') {
+          node.setTarget('_blank');
+        }
+        if (node.getRel() !== 'noopener noreferrer') {
+          node.setRel('noopener noreferrer');
+        }
+      }),
+    [editor],
+  );
+  return <></>;
+};
+
 const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
   (
     {
@@ -325,6 +343,7 @@ const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
             )}
             <ListPlugin />
             <LinkPlugin />
+            <LinkTargetPlugin />
             <HistoryPlugin />
             {autofocus && <AutoFocusPlugin />}
             <EditorRefPluginWrapper />

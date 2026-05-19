@@ -100,7 +100,6 @@ describe('TextEditorToolbar', () => {
       expect(onChange.mock.calls).toEqual([
         [''], // Focus/initialization events
         [''],
-        [''],
         ['**text**'], // After typing with bold format
         ['**text**'], // Blur event
         [''], // After undo

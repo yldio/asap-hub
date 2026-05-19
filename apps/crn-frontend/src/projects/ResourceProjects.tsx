@@ -2,7 +2,9 @@ import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { ProjectsPage, ResourceProjectsList } from '@asap-hub/react-components';
 import type {
+  FetchTeamsFilter,
   ProjectMember,
+  ProjectStatus,
   ResearchThemeType,
   ResourceProject,
 } from '@asap-hub/model';
@@ -13,11 +15,9 @@ import { ProjectListOptions } from './api';
 import {
   exportProjects,
   isResourceProject,
+  PROJECT_STATUSES,
   ResourceProjectCSV,
   resourceProjectToCSV,
-  toResearchThemeFilters,
-  toResourceTypeFilters,
-  toStatusFilters,
 } from './utils';
 import {
   FilterOption,
@@ -38,7 +38,8 @@ type ResourceProjectsProps = {
   debouncedSearchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   filters?: Set<string>;
-  onChangeFilter?: (filter: string) => void;
+  filtersMap?: FetchTeamsFilter;
+  onChangeFilter?: (filter: string, filterName?: string) => void;
 };
 
 type ResourceProjectsListContentProps = {
@@ -106,20 +107,30 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
   debouncedSearchQuery,
   onChangeSearchQuery,
   filters,
+  filtersMap,
   onChangeFilter,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const resourceTypes = useResourceTypes();
   const researchThemes = useResearchThemes(RESOURCE_THEME_TYPES);
-  const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
+
+  const statusFilters = useMemo(
+    () =>
+      ((filtersMap?.status ?? []) as string[]).filter(
+        (value): value is ProjectStatus =>
+          (PROJECT_STATUSES as readonly string[]).includes(value),
+      ),
+    [filtersMap?.status],
+  );
   const resourceTypeFilters = useMemo(
-    () => toResourceTypeFilters(filters, resourceTypes),
-    [filters, resourceTypes],
+    () => filtersMap?.resourceType ?? [],
+    [filtersMap?.resourceType],
   );
   const themeFilters = useMemo(
-    () => toResearchThemeFilters(filters, researchThemes),
-    [filters, researchThemes],
+    () => filtersMap?.researchTheme ?? [],
+    [filtersMap?.researchTheme],
   );
+
   const emptyFilters = useMemo(() => new Set<string>(), []);
   const normalizedFilters = useMemo(
     () => (filters ? new Set(filters) : undefined),

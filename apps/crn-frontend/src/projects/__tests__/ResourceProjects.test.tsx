@@ -7,7 +7,7 @@ import { RecoilRoot } from 'recoil';
 
 import { EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
-import { ResourceProject } from '@asap-hub/model';
+import { FetchTeamsFilter, ResourceProject } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import ResourceProjects from '../ResourceProjects';
@@ -56,6 +56,7 @@ const props: ComponentProps<typeof ResourceProjects> = {
   debouncedSearchQuery: '',
   onChangeSearchQuery: jest.fn(),
   filters: new Set(),
+  filtersMap: {},
   onChangeFilter: jest.fn(),
 };
 
@@ -124,7 +125,7 @@ beforeEach(() => {
 
 const renderResourceProjects = (
   searchQuery: string = '',
-  filters?: Set<string>,
+  filtersMap: FetchTeamsFilter = {},
 ) =>
   render(
     <RecoilRoot>
@@ -135,7 +136,7 @@ const renderResourceProjects = (
               <ResourceProjects
                 {...props}
                 debouncedSearchQuery={searchQuery}
-                filters={filters}
+                filtersMap={filtersMap}
               />
             </MemoryRouter>
           </WhenReady>
@@ -174,7 +175,7 @@ it('renders resource project members as links when the project is not team-based
 });
 
 it('passes Algolia facet filters when the resource type filter is active', async () => {
-  renderResourceProjects('', new Set([resourceTypeFilter]));
+  renderResourceProjects('', { resourceType: [resourceTypeFilter] });
 
   await waitFor(() =>
     expect(mockUseProjects).toHaveBeenLastCalledWith(
@@ -186,7 +187,7 @@ it('passes Algolia facet filters when the resource type filter is active', async
 });
 
 it('passes Algolia facet filters when the research theme filter is active', async () => {
-  renderResourceProjects('', new Set([themeFilter]));
+  renderResourceProjects('', { researchTheme: [themeFilter] });
 
   await waitFor(() =>
     expect(mockUseProjects).toHaveBeenLastCalledWith(
@@ -198,7 +199,10 @@ it('passes Algolia facet filters when the research theme filter is active', asyn
 });
 
 it('combines resource type and research theme facet filters', async () => {
-  renderResourceProjects('', new Set([resourceTypeFilter, themeFilter]));
+  renderResourceProjects('', {
+    resourceType: [resourceTypeFilter],
+    researchTheme: [themeFilter],
+  });
 
   await waitFor(() =>
     expect(mockUseProjects).toHaveBeenLastCalledWith(
@@ -238,10 +242,10 @@ it('triggers export with the expected parameters', async () => {
     ],
   });
   const searchQuery = 'searched project name';
-  renderResourceProjects(
-    searchQuery,
-    new Set([resourceTypeFilter, statusFilter]),
-  );
+  renderResourceProjects(searchQuery, {
+    resourceType: [resourceTypeFilter],
+    status: [statusFilter],
+  });
 
   const csvButton = await screen.findByRole('button', { name: /csv/i });
   await userEvent.click(csvButton);

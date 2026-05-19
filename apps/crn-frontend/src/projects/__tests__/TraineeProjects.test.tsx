@@ -73,6 +73,7 @@ const props: ComponentProps<typeof TraineeProjects> = {
   debouncedSearchQuery: '',
   onChangeSearchQuery: jest.fn(),
   filters: new Set(),
+  filtersMap: {},
   onChangeFilter: jest.fn(),
 };
 
@@ -90,7 +91,7 @@ beforeEach(() => {
 
 const renderTraineeProjects = (
   searchQuery: string = '',
-  filters?: Set<string>,
+  filtersMap: import('@asap-hub/model').FetchTeamsFilter = {},
 ) =>
   render(
     <RecoilRoot>
@@ -101,7 +102,7 @@ const renderTraineeProjects = (
               <TraineeProjects
                 {...props}
                 debouncedSearchQuery={searchQuery}
-                filters={filters}
+                filtersMap={filtersMap}
               />
             </MemoryRouter>
           </WhenReady>
@@ -164,7 +165,7 @@ it('triggers export with the expected parameters', async () => {
     ],
   });
   const searchQuery = 'searched project name';
-  renderTraineeProjects(searchQuery, new Set([statusFilter]));
+  renderTraineeProjects(searchQuery, { status: [statusFilter] });
 
   const csvButton = await screen.findByRole('button', { name: /csv/i });
   await userEvent.click(csvButton);

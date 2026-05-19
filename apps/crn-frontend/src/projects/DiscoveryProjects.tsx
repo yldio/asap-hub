@@ -4,7 +4,12 @@ import {
   ProjectsPage,
   DiscoveryProjectsList,
 } from '@asap-hub/react-components';
-import { DiscoveryProject, DISCOVERY_THEME_TYPES } from '@asap-hub/model';
+import {
+  DiscoveryProject,
+  DISCOVERY_THEME_TYPES,
+  FetchTeamsFilter,
+  ProjectStatus,
+} from '@asap-hub/model';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
 import {
@@ -12,8 +17,7 @@ import {
   discoveryProjectToCSV,
   exportProjects,
   isDiscoveryProject,
-  toResearchThemeFilters,
-  toStatusFilters,
+  PROJECT_STATUSES,
 } from './utils';
 import { ProjectListOptions } from './api';
 import {
@@ -29,7 +33,8 @@ type DiscoveryProjectsProps = {
   debouncedSearchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   filters?: Set<string>;
-  onChangeFilter?: (filter: string) => void;
+  filtersMap?: FetchTeamsFilter;
+  onChangeFilter?: (filter: string, filterName?: string) => void;
 };
 
 type DiscoveryProjectsListContentProps = {
@@ -79,15 +84,25 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
   debouncedSearchQuery,
   onChangeSearchQuery,
   filters,
+  filtersMap,
   onChangeFilter,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const researchThemes = useResearchThemes(DISCOVERY_THEME_TYPES);
-  const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
-  const themeFilters = useMemo(
-    () => toResearchThemeFilters(filters, researchThemes),
-    [filters, researchThemes],
+
+  const statusFilters = useMemo(
+    () =>
+      ((filtersMap?.status ?? []) as string[]).filter(
+        (value): value is ProjectStatus =>
+          (PROJECT_STATUSES as readonly string[]).includes(value),
+      ),
+    [filtersMap?.status],
   );
+  const themeFilters = useMemo(
+    () => filtersMap?.researchTheme ?? [],
+    [filtersMap?.researchTheme],
+  );
+
   const emptyFilters = useMemo(() => new Set<string>(), []);
   const normalizedFilters = useMemo(
     () => (filters ? new Set(filters) : undefined),

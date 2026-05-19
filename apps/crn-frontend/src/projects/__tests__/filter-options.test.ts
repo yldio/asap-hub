@@ -9,14 +9,22 @@ describe('projects filter options', () => {
   it('exposes static status filters including header', () => {
     expect(STATUS_FILTER_OPTIONS[0]).toEqual({ title: 'PROJECT STATUS' });
     const labeledOptions = STATUS_FILTER_OPTIONS.slice(1).filter(
-      (option): option is { label: string; value: string } =>
-        'label' in option && 'value' in option,
+      (
+        option,
+      ): option is {
+        label: string;
+        value: string;
+        filterName?: string;
+      } => 'label' in option && 'value' in option,
     );
     expect(labeledOptions).toHaveLength(PROJECT_STATUSES.length);
     const labels = labeledOptions.map((option) => option.label);
     expect(labels).toEqual(PROJECT_STATUSES);
     const values = labeledOptions.map((option) => option.value);
     expect(values).toEqual(PROJECT_STATUSES);
+    labeledOptions.forEach((option) =>
+      expect(option.filterName).toBe('status'),
+    );
   });
 
   it('returns an empty array when themes array is empty', () => {
@@ -33,6 +41,7 @@ describe('projects filter options', () => {
       {
         label: 'Single Theme',
         value: 'Single Theme',
+        filterName: 'researchTheme',
       },
     ]);
   });
@@ -50,10 +59,12 @@ describe('projects filter options', () => {
       {
         label: 'Beta Theme',
         value: 'Beta Theme',
+        filterName: 'researchTheme',
       },
       {
         label: 'Alpha Theme',
         value: 'Alpha Theme',
+        filterName: 'researchTheme',
       },
     ]);
   });
@@ -76,14 +87,17 @@ describe('projects filter options', () => {
       {
         label: 'Database',
         value: 'Database',
+        filterName: 'resourceType',
       },
       {
         label: 'Data Portal',
         value: 'Data Portal',
+        filterName: 'resourceType',
       },
       {
         label: 'Dataset',
         value: 'Dataset',
+        filterName: 'resourceType',
       },
     ]);
   });
@@ -98,6 +112,7 @@ describe('projects filter options', () => {
       {
         label: 'Database',
         value: 'Database',
+        filterName: 'resourceType',
       },
     ]);
   });

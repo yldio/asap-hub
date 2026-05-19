@@ -7,14 +7,26 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
+import DiscussionModal from '../DiscussionModal';
 import DiscussionsTab from '../DiscussionsTab';
 
 describe('DiscussionsTab', () => {
   const mockCreateDiscussion = jest.fn();
   const mockOnMarkDiscussionAsRead = jest.fn();
+  const mockHandleFileUpload: ComponentProps<
+    typeof DiscussionModal
+  >['handleFileUpload'] = jest.fn(() =>
+    Promise.resolve({
+      id: 'file-id',
+      filename: 'test.pdf',
+      url: 'https://example.com/test.pdf',
+    }),
+  );
+
   const defaultProps: ComponentProps<typeof DiscussionsTab> = {
     manuscriptId: 'test-manuscript-id',
     createDiscussion: mockCreateDiscussion,
+    handleFileUpload: mockHandleFileUpload,
     discussions: [],
     onReplyToDiscussion: jest.fn(),
     canParticipateInDiscussion: true,
@@ -73,6 +85,7 @@ describe('DiscussionsTab', () => {
         'test-manuscript-id',
         'Test Discussion',
         'Test Message',
+        [],
       );
     });
 

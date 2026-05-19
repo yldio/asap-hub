@@ -7,6 +7,7 @@ import {
   ListPartialManuscriptResponse,
   ListTeamResponse,
   ManuscriptDataObject,
+  ManuscriptFileResponse,
   ManuscriptFileType,
   ManuscriptPostRequest,
   ManuscriptPutRequest,
@@ -562,6 +563,7 @@ export const useCreateDiscussion = () => {
     manuscriptId: string,
     title: string,
     text: string,
+    files?: ManuscriptFileResponse[],
   ): Promise<string | undefined> => {
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
@@ -572,6 +574,7 @@ export const useCreateDiscussion = () => {
           manuscriptId,
           title,
           text,
+          files,
           notificationList,
         },
         authorization,

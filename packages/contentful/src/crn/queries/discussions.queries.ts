@@ -14,6 +14,15 @@ export const discussionContentQueryFragment = gql`
         publishedAt
       }
       text
+      filesCollection(limit: 5) {
+        items {
+          sys {
+            id
+          }
+          fileName
+          url
+        }
+      }
       createdBy {
         sys {
           id
@@ -43,6 +52,15 @@ export const discussionContentQueryFragment = gql`
           publishedAt
         }
         text
+        filesCollection(limit: 5) {
+          items {
+            sys {
+              id
+            }
+            fileName
+            url
+          }
+        }
         createdBy {
           sys {
             id

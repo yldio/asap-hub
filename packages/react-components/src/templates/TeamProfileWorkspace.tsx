@@ -1,4 +1,9 @@
-import { ManuscriptDataObject, TeamResponse, TeamTool } from '@asap-hub/model';
+import {
+  ManuscriptDataObject,
+  ManuscriptFileResponse,
+  TeamResponse,
+  TeamTool,
+} from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -20,6 +25,7 @@ import { plusIcon } from '../icons';
 import { createMailTo, mailToSupport } from '../mail';
 import { EligibilityModal, ToolCard } from '../organisms';
 import DiscussionCard from '../organisms/DiscussionCard';
+import DiscussionModal from '../organisms/DiscussionModal';
 import ManuscriptCard from '../organisms/ManuscriptCard';
 import { mobileScreen, rem } from '../pixels';
 import { getActiveProjectManager } from '../utils';
@@ -124,7 +130,11 @@ type TeamProfileWorkspaceProps = Readonly<
       manuscriptId: string,
       title: string,
       message: string,
+      files?: ManuscriptFileResponse[],
     ) => Promise<string | undefined>;
+    readonly handleFileUpload: ComponentProps<
+      typeof DiscussionModal
+    >['handleFileUpload'];
     readonly useManuscriptById: (
       id: string,
     ) => [
@@ -148,6 +158,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   isComplianceReviewer,
   isTeamMember,
   createDiscussion,
+  handleFileUpload,
   useManuscriptById,
   onReplyToDiscussion,
   onMarkDiscussionAsRead,
@@ -236,6 +247,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                         onUpdateManuscript={onUpdateManuscript}
                         isActiveTeam={!inactiveSince}
                         createDiscussion={createDiscussion}
+                        handleFileUpload={handleFileUpload}
                         useManuscriptById={useManuscriptById}
                         onReplyToDiscussion={onReplyToDiscussion}
                         onMarkDiscussionAsRead={onMarkDiscussionAsRead}
@@ -274,6 +286,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                         isActiveTeam={!inactiveSince}
                         onUpdateManuscript={onUpdateManuscript}
                         createDiscussion={createDiscussion}
+                        handleFileUpload={handleFileUpload}
                         useManuscriptById={useManuscriptById}
                         onReplyToDiscussion={onReplyToDiscussion}
                         onMarkDiscussionAsRead={onMarkDiscussionAsRead}

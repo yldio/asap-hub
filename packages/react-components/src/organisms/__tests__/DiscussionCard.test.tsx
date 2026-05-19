@@ -53,6 +53,13 @@ const mockDiscussion: ManuscriptDiscussion = {
 };
 
 const mockOnReplyToDiscussion = jest.fn();
+const mockHandleFileUpload = jest.fn(() =>
+  Promise.resolve({
+    id: 'file-id',
+    filename: 'test.pdf',
+    url: 'https://example.com/test.pdf',
+  }),
+);
 
 describe('DiscussionCard', () => {
   beforeEach(() => {
@@ -66,6 +73,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
       />,
     );
 
@@ -86,6 +94,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         showTeamName={false}
       />,
     );
@@ -101,6 +110,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
       />,
     );
 
@@ -207,6 +217,7 @@ describe('DiscussionCard', () => {
         discussion={discussionWithSeveralReplies}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
       />,
     );
 
@@ -245,6 +256,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
       />,
     );
 
@@ -267,6 +279,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={true}
       />,
     );
@@ -288,6 +301,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={false}
       />,
     );
@@ -309,6 +323,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={true}
       />,
     );
@@ -337,6 +352,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={true}
       />,
     );
@@ -365,7 +381,7 @@ describe('DiscussionCard', () => {
       expect(mockOnReplyToDiscussion).toHaveBeenCalledWith(
         'manuscript-1',
         'discussion-1',
-        { text: 'test message', manuscriptId: 'manuscript-1' },
+        { text: 'test message', manuscriptId: 'manuscript-1', files: [] },
       );
     });
 
@@ -384,6 +400,7 @@ describe('DiscussionCard', () => {
         discussion={discussionWithoutReplies}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={true}
       />,
     );
@@ -410,6 +427,7 @@ describe('DiscussionCard', () => {
         discussion={discussionWithoutReplies}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={false}
       />,
     );
@@ -431,6 +449,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         isLast={true}
       />,
     );
@@ -448,6 +467,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
       />,
     );
 

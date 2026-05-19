@@ -1,3 +1,4 @@
+import { ManuscriptFileResponse } from './manuscript';
 import { UserResponse } from './user';
 
 type DiscussionUser = Pick<
@@ -14,6 +15,7 @@ type DiscussionUser = Pick<
 
 export type Message = {
   text: string;
+  files?: ManuscriptFileResponse[];
   createdDate: string;
   createdBy: DiscussionUser;
 };
@@ -24,7 +26,11 @@ export type DiscussionDataObject = {
   replies?: Message[];
 };
 
-export type Reply = { text: string; isOpenScienceMember: boolean };
+export type Reply = {
+  text: string;
+  isOpenScienceMember: boolean;
+  files?: ManuscriptFileResponse[];
+};
 
 export type DiscussionUpdateDataObject = {
   userId: string;
@@ -35,6 +41,7 @@ export type DiscussionUpdateDataObject = {
 
 export type DiscussionRequest = {
   text: string;
+  files?: ManuscriptFileResponse[];
   manuscriptId: string;
   notificationList?: string;
 };
@@ -47,6 +54,7 @@ export type DiscussionCreateRequest = {
   manuscriptId: string;
   title: string;
   text: string;
+  files?: ManuscriptFileResponse[];
   notificationList?: string;
 };
 
@@ -63,6 +71,7 @@ export type ManuscriptDiscussion = {
   createdDate: string;
   lastUpdatedAt: string;
   text: string;
+  files?: ManuscriptFileResponse[];
   replies: Message[];
   read: boolean;
 };

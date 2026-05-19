@@ -1,5 +1,9 @@
 import { NotFoundError } from '@asap-hub/errors';
-import { DiscussionResponse, Reply } from '@asap-hub/model';
+import {
+  DiscussionResponse,
+  ManuscriptFileResponse,
+  Reply,
+} from '@asap-hub/model';
 
 import { DiscussionDataProvider } from '../data-providers/types';
 
@@ -48,6 +52,7 @@ export default class DiscussionController {
     manuscriptId: string,
     title: string,
     text: string,
+    files: ManuscriptFileResponse[] | undefined,
     notificationList: string,
   ): Promise<DiscussionResponse> {
     const id = await this.discussionDataProvider.create({
@@ -55,6 +60,7 @@ export default class DiscussionController {
       manuscriptId,
       title,
       text,
+      files,
       notificationList,
     });
 

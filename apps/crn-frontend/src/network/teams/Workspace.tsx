@@ -17,6 +17,7 @@ import {
   useIsComplianceReviewer,
   useManuscriptById,
   usePutManuscript,
+  useUploadManuscriptFileViaPresignedUrl,
 } from './state';
 import { usePatchProjectById, useProjectById } from '../../projects/state';
 import { useEligibilityReason } from './useEligibilityReason';
@@ -43,6 +44,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
     handleReplyToDiscussion,
     handleMarkDiscussionAsRead,
   } = useDiscussionHandlers();
+  const handleFileUpload = useUploadManuscriptFileViaPresignedUrl();
   const user = useCurrentUserCRN();
   const isTeamMember = !!user?.teams.find(({ id }) => team.id === id);
 
@@ -81,6 +83,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
         }
         isComplianceReviewer={isComplianceReviewer}
         createDiscussion={handleCreateDiscussion}
+        handleFileUpload={handleFileUpload}
         useManuscriptById={useManuscriptById}
         onReplyToDiscussion={handleReplyToDiscussion}
         onMarkDiscussionAsRead={handleMarkDiscussionAsRead}

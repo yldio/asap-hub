@@ -428,6 +428,8 @@ type AssetLinkingCollections {
   interestGroupsCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): InterestGroupsCursorCollection
   manuscriptVersionsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ManuscriptVersionsCollection
   manuscriptVersionsCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ManuscriptVersionsCursorCollection
+  messagesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): MessagesCollection
+  messagesCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): MessagesCursorCollection
   newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): NewsCollection
   newsCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): NewsCursorCollection
   tutorialsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): TutorialsCollection
@@ -7133,6 +7135,8 @@ type Messages implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
   createdBy(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
+  filesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): AssetCollection
+  filesCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): AssetCursorCollection
   linkedFrom(allowedLocales: [String]): MessagesLinkingCollections
   sys: Sys!
   text(locale: String, useFallbackLocale: Boolean): String
@@ -7157,6 +7161,7 @@ input MessagesFilter {
   contentfulMetadata: ContentfulMetadataFilter
   createdBy: cfUsersNestedFilter
   createdBy_exists: Boolean
+  filesCollection_exists: Boolean
   sys: SysFilter
   text: String
   text_contains: String
@@ -15891,6 +15896,7 @@ input cfMessagesNestedFilter {
   OR: [cfMessagesNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
   createdBy_exists: Boolean
+  filesCollection_exists: Boolean
   sys: SysFilter
   text: String
   text_contains: String

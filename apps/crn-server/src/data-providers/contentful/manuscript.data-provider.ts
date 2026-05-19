@@ -3,6 +3,8 @@ import {
   Environment,
   FetchManuscriptByIdQuery,
   FetchManuscriptByIdQueryVariables,
+  FetchManuscriptDiscussionsByIdQuery,
+  FetchManuscriptDiscussionsByIdQueryVariables,
   FetchManuscriptsByTeamIdQuery,
   FetchManuscriptsQuery,
   FetchManuscriptsQueryVariables,
@@ -16,6 +18,7 @@ import {
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
   FETCH_MANUSCRIPT_VERSIONS,
+  FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID,
   FETCH_MANUSCRIPT_VERSION_COUNT_BY_ID,
   FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
   getLinkAsset,
@@ -58,6 +61,13 @@ import { ManuscriptDataProvider } from '../types';
 import { parseGraphQLResearchOutput } from './research-output.data-provider';
 
 type ManuscriptItem = NonNullable<FetchManuscriptByIdQuery['manuscripts']>;
+type ManuscriptItemWithDiscussions = ManuscriptItem & {
+  discussionsCollection?: NonNullable<
+    NonNullable<
+      FetchManuscriptDiscussionsByIdQuery['manuscripts']
+    >['discussionsCollection']
+  > | null;
+};
 type ManuscriptListItem = NonNullable<
   NonNullable<FetchManuscriptsQuery['manuscriptsCollection']>['items'][number]
 >;
@@ -241,10 +251,17 @@ export class ManuscriptContentfulDataProvider
     id: string,
     userId: string,
   ): Promise<ManuscriptDataObject | null> {
-    const { manuscripts } = await this.contentfulClient.request<
-      FetchManuscriptByIdQuery,
-      FetchManuscriptByIdQueryVariables
-    >(FETCH_MANUSCRIPT_BY_ID, { id, userId });
+    const [{ manuscripts }, { manuscripts: manuscriptsWithDiscussions }] =
+      await Promise.all([
+        this.contentfulClient.request<
+          FetchManuscriptByIdQuery,
+          FetchManuscriptByIdQueryVariables
+        >(FETCH_MANUSCRIPT_BY_ID, { id }),
+        this.contentfulClient.request<
+          FetchManuscriptDiscussionsByIdQuery,
+          FetchManuscriptDiscussionsByIdQueryVariables
+        >(FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID, { id, userId }),
+      ]);
 
     if (!manuscripts) {
       return null;
@@ -256,7 +273,14 @@ export class ManuscriptContentfulDataProvider
         FetchManuscriptVersionsQueryVariables
       >(FETCH_MANUSCRIPT_VERSIONS, { id });
 
-    return parseGraphQLManuscript(manuscripts, manuscriptVersions || {});
+    return parseGraphQLManuscript(
+      {
+        ...manuscripts,
+        discussionsCollection:
+          manuscriptsWithDiscussions?.discussionsCollection ?? null,
+      },
+      manuscriptVersions || {},
+    );
   }
   private async createManuscriptAssets(
     version: Pick<
@@ -539,7 +563,7 @@ export class ManuscriptContentfulDataProvider
       this.contentfulClient.request<
         FetchManuscriptByIdQuery,
         FetchManuscriptByIdQueryVariables
-      >(FETCH_MANUSCRIPT_BY_ID, { id, userId });
+      >(FETCH_MANUSCRIPT_BY_ID, { id });
 
     await pollContentfulGql<FetchManuscriptByIdQuery>(
       published.sys.publishedVersion || Infinity,
@@ -595,10 +619,16 @@ const parseGraphQLManuscriptProject = (
   };
 };
 
+type ManuscriptDiscussionItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      FetchManuscriptDiscussionsByIdQuery['manuscripts']
+    >['discussionsCollection']
+  >['items']
+>[number];
+
 const parseGraphQLManuscriptDiscussions = (
-  discussionItems:
-    | NonNullable<NonNullable<ManuscriptItem['discussionsCollection']>['items']>
-    | undefined,
+  discussionItems: ManuscriptDiscussionItem[] | null | undefined,
 ): ManuscriptDiscussion[] => {
   if (!discussionItems) return [];
 
@@ -608,6 +638,11 @@ const parseGraphQLManuscriptDiscussions = (
         text: reply?.text || '',
         createdBy: parseGraphqlManuscriptUser(reply?.createdBy || undefined),
         createdDate: reply?.sys.publishedAt,
+        files: reply?.filesCollection?.items.map((file) => ({
+          id: file?.sys.id || '',
+          filename: file?.fileName || '',
+          url: file?.url || '',
+        })),
       })) || [];
 
     const createdDate = discussion?.message?.sys.publishedAt;
@@ -624,6 +659,11 @@ const parseGraphQLManuscriptDiscussions = (
       createdBy: parseGraphqlManuscriptUser(
         discussion?.message?.createdBy || undefined,
       ),
+      files: discussion?.message?.filesCollection?.items.map((file) => ({
+        id: file?.sys.id || '',
+        filename: file?.fileName || '',
+        url: file?.url || '',
+      })),
       createdDate,
       lastUpdatedAt,
       text: discussion?.message?.text || '',
@@ -638,7 +678,7 @@ const parseGraphQLManuscriptDiscussions = (
   );
 };
 const parseGraphQLManuscript = (
-  manuscript: ManuscriptItem,
+  manuscript: ManuscriptItemWithDiscussions,
   manuscriptVersions: ManuscriptVersions,
 ): ManuscriptDataObject => {
   const teamData = manuscript.teamsCollection?.items[0];

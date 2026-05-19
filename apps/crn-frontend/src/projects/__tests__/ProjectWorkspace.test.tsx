@@ -24,6 +24,9 @@ jest.mock('../../network/teams/state', () => ({
   useReplyToDiscussion: jest.fn(() => mockReplyToDiscussion),
   useMarkDiscussionAsRead: jest.fn(() => mockMarkDiscussionAsRead),
   useManuscriptById: jest.fn(() => [undefined, jest.fn()]),
+  useUploadManuscriptFileViaPresignedUrl: jest
+    .fn()
+    .mockReturnValue(jest.fn().mockResolvedValue({ id: 'file-1' })),
 }));
 
 jest.mock('../../network/teams/useManuscriptToast', () => ({
@@ -212,6 +215,7 @@ describe('ProjectWorkspace', () => {
         'ms-1',
         'Test Title',
         'Test message',
+        undefined,
       );
       expect(result).toBe('disc-1');
       expect(mockSetFormType).toHaveBeenCalledWith({

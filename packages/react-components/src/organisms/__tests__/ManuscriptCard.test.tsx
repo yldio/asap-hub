@@ -51,6 +51,13 @@ const props: ComponentProps<typeof ManuscriptCard> & {
   onUpdateManuscript: jest.fn(),
   isActiveTeam: true,
   createDiscussion: jest.fn(),
+  handleFileUpload: jest.fn(() =>
+    Promise.resolve({
+      id: 'file-id',
+      filename: 'test.pdf',
+      url: 'https://example.com/test.pdf',
+    }),
+  ),
   onReplyToDiscussion: jest.fn(),
   onMarkDiscussionAsRead: jest.fn(),
 };

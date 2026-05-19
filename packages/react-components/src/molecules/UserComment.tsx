@@ -1,4 +1,4 @@
-import { Message } from '@asap-hub/model';
+import { ManuscriptFileResponse, Message } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { FC } from 'react';
@@ -7,9 +7,11 @@ import { UserCommentHeader } from '.';
 import { colors, ExpandableText } from '..';
 import { TextEditor } from '../atoms';
 import { rem } from '../pixels';
+import DiscussionAttachedFiles from './DiscussionAttachedFiles';
 
 type UserCommentProps = Message & {
   showTeamName?: boolean;
+  files?: ManuscriptFileResponse[];
 };
 
 const containerStyles = css({
@@ -41,6 +43,7 @@ const UserComment: FC<UserCommentProps> = ({
   createdDate,
   text,
   showTeamName,
+  files,
 }) => (
   <div css={containerStyles}>
     <UserCommentHeader
@@ -60,6 +63,7 @@ const UserComment: FC<UserCommentProps> = ({
           editorStyles={textEditorStyles}
         />
       </ExpandableText>
+      {files?.length ? <DiscussionAttachedFiles files={files} /> : null}
     </div>
   </div>
 );

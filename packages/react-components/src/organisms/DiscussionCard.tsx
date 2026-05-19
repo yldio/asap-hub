@@ -1,6 +1,6 @@
 import { DiscussionRequest, ManuscriptDiscussion } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { ComponentProps, useState } from 'react';
 
 import {
   colors,
@@ -11,6 +11,7 @@ import {
 } from '..';
 import { Anchor, Avatar, Button, Subtitle, TextEditor } from '../atoms';
 import { minusRectIcon, plusRectIcon, replyIcon } from '../icons';
+import DiscussionAttachedFiles from '../molecules/DiscussionAttachedFiles';
 import UserComment from '../molecules/UserComment';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, rem } from '../pixels';
@@ -154,6 +155,7 @@ interface DiscussionCardProps {
   isLast?: boolean;
   displayReplyButton?: boolean;
   showTeamName?: boolean;
+  handleFileUpload: ComponentProps<typeof DiscussionModal>['handleFileUpload'];
 }
 
 const DiscussionCard: React.FC<DiscussionCardProps> = ({
@@ -164,6 +166,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({
   isLast = false,
   displayReplyButton = false,
   showTeamName,
+  handleFileUpload,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -191,6 +194,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({
             onReplyToDiscussion={onReplyToDiscussion}
             displayReplyButton={displayReplyButton}
             showTeamName={showTeamName}
+            handleFileUpload={handleFileUpload}
           />
         ) : (
           <CollapsedView
@@ -254,10 +258,11 @@ const ExpandedView = ({
   onReplyToDiscussion,
   displayReplyButton,
   showTeamName,
+  handleFileUpload,
 }: Omit<DiscussionCardProps, 'onMarkDiscussionAsRead'>) => {
   const userHref = getUserHref(discussion.createdBy.id);
   const [displayReplyModal, setDisplayReplyModal] = useState<boolean>(false);
-  const { text, replies } = discussion;
+  const { text, replies, files } = discussion;
   const hasReplies = replies && replies.length > 0;
 
   const replyButton = (
@@ -281,9 +286,11 @@ const ExpandedView = ({
           onSave={(data) =>
             onReplyToDiscussion(manuscriptId, discussion.id, {
               text: data.text,
+              files: data.files,
               manuscriptId,
             })
           }
+          handleFileUpload={handleFileUpload}
         />
       )}
       <div css={expandedViewContainerStyles}>
@@ -319,10 +326,17 @@ const ExpandedView = ({
           </ExpandableText>
         </span>
 
+        {files?.length ? <DiscussionAttachedFiles files={files} /> : null}
+
         {hasReplies ? (
           <div css={replyContainerStyles}>
             {replies.map((reply, index) => (
-              <UserComment {...reply} showTeamName={showTeamName} key={index} />
+              <UserComment
+                {...reply}
+                files={reply.files}
+                showTeamName={showTeamName}
+                key={index}
+              />
             ))}
             {displayReplyButton && replyButton}
           </div>

@@ -24,6 +24,13 @@ export const getDiscussionCreateRequestObject =
     userId: 'user-id-0',
     manuscriptId: 'manuscript-id-1',
     title: 'Test discussion title',
+    files: [
+      {
+        id: 'file-id-1',
+        filename: 'document.pdf',
+        url: 'https://example.com/document.pdf',
+      },
+    ],
   });
 
 export const getContentfulGraphqlCreatedBy = () => ({

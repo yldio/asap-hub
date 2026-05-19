@@ -6,6 +6,7 @@ import {
   ManuscriptResponse,
   ManuscriptStatus,
   manuscriptStatus,
+  ManuscriptFileResponse,
   ManuscriptVersion,
   statusButtonOptions,
   TeamManuscript,
@@ -35,6 +36,7 @@ import { mobileScreen, rem, smallDesktopScreen } from '../pixels';
 import { getReviewerStatusType } from '../utils';
 import ConfirmStatusChangeModal from './ConfirmStatusChangeModal';
 import DiscussionCard from './DiscussionCard';
+import DiscussionModal from './DiscussionModal';
 import ManuscriptVersionCard from './ManuscriptVersionCard';
 
 const VERSION_LIMIT = 3;
@@ -56,7 +58,11 @@ type ManuscriptCardProps = Pick<TeamManuscript, 'id'> &
       manuscriptId: string,
       title: string,
       message: string,
+      files?: ManuscriptFileResponse[],
     ) => Promise<string | undefined>;
+    handleFileUpload: ComponentProps<
+      typeof DiscussionModal
+    >['handleFileUpload'];
     useManuscriptById: (
       id: string,
     ) => [
@@ -238,6 +244,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   onUpdateManuscript,
   user,
   createDiscussion,
+  handleFileUpload,
   useManuscriptById,
   onReplyToDiscussion,
   onMarkDiscussionAsRead,
@@ -545,6 +552,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                   discussions={manuscript?.discussions || []}
                   manuscriptId={id}
                   createDiscussion={createDiscussion}
+                  handleFileUpload={handleFileUpload}
                   onReplyToDiscussion={onReplyToDiscussion}
                   onMarkDiscussionAsRead={onMarkDiscussionAsRead}
                   canParticipateInDiscussion={

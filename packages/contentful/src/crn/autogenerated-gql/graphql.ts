@@ -662,6 +662,8 @@ export type AssetLinkingCollections = {
   interestGroupsCursorCollection?: Maybe<InterestGroupsCursorCollection>;
   manuscriptVersionsCollection?: Maybe<ManuscriptVersionsCollection>;
   manuscriptVersionsCursorCollection?: Maybe<ManuscriptVersionsCursorCollection>;
+  messagesCollection?: Maybe<MessagesCollection>;
+  messagesCursorCollection?: Maybe<MessagesCursorCollection>;
   newsCollection?: Maybe<NewsCollection>;
   newsCursorCollection?: Maybe<NewsCursorCollection>;
   tutorialsCollection?: Maybe<TutorialsCollection>;
@@ -747,6 +749,23 @@ export type AssetLinkingCollectionsManuscriptVersionsCollectionArgs = {
 };
 
 export type AssetLinkingCollectionsManuscriptVersionsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AssetLinkingCollectionsMessagesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AssetLinkingCollectionsMessagesCursorCollectionArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   locale?: InputMaybe<Scalars['String']>;
   pageNext?: InputMaybe<Scalars['String']>;
@@ -10431,6 +10450,8 @@ export type Messages = Entry &
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
     createdBy?: Maybe<Users>;
+    filesCollection?: Maybe<AssetCollection>;
+    filesCursorCollection?: Maybe<AssetCursorCollection>;
     linkedFrom?: Maybe<MessagesLinkingCollections>;
     sys: Sys;
     text?: Maybe<Scalars['String']>;
@@ -10442,6 +10463,25 @@ export type MessagesCreatedByArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<UsersFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/messages) */
+export type MessagesFilesCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/messages) */
+export type MessagesFilesCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/messages) */
@@ -10474,6 +10514,7 @@ export type MessagesFilter = {
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   createdBy?: InputMaybe<CfUsersNestedFilter>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
+  filesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
   text?: InputMaybe<Scalars['String']>;
   text_contains?: InputMaybe<Scalars['String']>;
@@ -24541,6 +24582,7 @@ export type CfMessagesNestedFilter = {
   OR?: InputMaybe<Array<InputMaybe<CfMessagesNestedFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   createdBy_exists?: InputMaybe<Scalars['Boolean']>;
+  filesCollection_exists?: InputMaybe<Scalars['Boolean']>;
   sys?: InputMaybe<SysFilter>;
   text?: InputMaybe<Scalars['String']>;
   text_contains?: InputMaybe<Scalars['String']>;
@@ -27544,6 +27586,11 @@ export type DiscussionsContentFragment = Pick<Discussions, 'title'> & {
   message?: Maybe<
     Pick<Messages, 'text'> & {
       sys: Pick<Sys, 'publishedAt'>;
+      filesCollection?: Maybe<{
+        items: Array<
+          Maybe<Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }>
+        >;
+      }>;
       createdBy?: Maybe<
         Pick<
           Users,
@@ -27569,6 +27616,11 @@ export type DiscussionsContentFragment = Pick<Discussions, 'title'> & {
       Maybe<
         Pick<Messages, 'text'> & {
           sys: Pick<Sys, 'publishedAt'>;
+          filesCollection?: Maybe<{
+            items: Array<
+              Maybe<Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }>
+            >;
+          }>;
           createdBy?: Maybe<
             Pick<
               Users,
@@ -27604,6 +27656,11 @@ export type FetchDiscussionByIdQuery = {
       message?: Maybe<
         Pick<Messages, 'text'> & {
           sys: Pick<Sys, 'publishedAt'>;
+          filesCollection?: Maybe<{
+            items: Array<
+              Maybe<Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }>
+            >;
+          }>;
           createdBy?: Maybe<
             Pick<
               Users,
@@ -27629,6 +27686,13 @@ export type FetchDiscussionByIdQuery = {
           Maybe<
             Pick<Messages, 'text'> & {
               sys: Pick<Sys, 'publishedAt'>;
+              filesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Asset, 'fileName' | 'url'> & { sys: Pick<Sys, 'id'> }
+                  >
+                >;
+              }>;
               createdBy?: Maybe<
                 Pick<
                   Users,
@@ -32894,6 +32958,106 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
   }>;
 };
 
+export type FetchManuscriptDiscussionsByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+  userId?: InputMaybe<Scalars['String']>;
+}>;
+
+export type FetchManuscriptDiscussionsByIdQuery = {
+  manuscripts?: Maybe<{
+    sys: Pick<Sys, 'id'>;
+    discussionsCollection?: Maybe<
+      Pick<ManuscriptsDiscussionsCollection, 'total'> & {
+        items: Array<
+          Maybe<
+            Pick<Discussions, 'title'> & {
+              readByCollection?: Maybe<
+                Pick<DiscussionsReadByCollection, 'total'>
+              >;
+              sys: Pick<Sys, 'id' | 'publishedVersion'>;
+              message?: Maybe<
+                Pick<Messages, 'text'> & {
+                  sys: Pick<Sys, 'publishedAt'>;
+                  filesCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        Pick<Asset, 'fileName' | 'url'> & {
+                          sys: Pick<Sys, 'id'>;
+                        }
+                      >
+                    >;
+                  }>;
+                  createdBy?: Maybe<
+                    Pick<
+                      Users,
+                      'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+                    > & {
+                      sys: Pick<Sys, 'id'>;
+                      avatar?: Maybe<Pick<Asset, 'url'>>;
+                      teamsCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{
+                            team?: Maybe<
+                              Pick<Teams, 'displayName'> & {
+                                sys: Pick<Sys, 'id'>;
+                              }
+                            >;
+                          }>
+                        >;
+                      }>;
+                    }
+                  >;
+                }
+              >;
+              repliesCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Messages, 'text'> & {
+                      sys: Pick<Sys, 'publishedAt'>;
+                      filesCollection?: Maybe<{
+                        items: Array<
+                          Maybe<
+                            Pick<Asset, 'fileName' | 'url'> & {
+                              sys: Pick<Sys, 'id'>;
+                            }
+                          >
+                        >;
+                      }>;
+                      createdBy?: Maybe<
+                        Pick<
+                          Users,
+                          | 'firstName'
+                          | 'nickname'
+                          | 'lastName'
+                          | 'alumniSinceDate'
+                        > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }>;
+            }
+          >
+        >;
+      }
+    >;
+  }>;
+};
+
 export type ManuscriptProjectFragment = Pick<
   Projects,
   'title' | 'projectType' | 'projectId' | 'grantId'
@@ -32937,7 +33101,6 @@ export type ManuscriptsContentFragment = Pick<
 
 export type FetchManuscriptByIdQueryVariables = Exact<{
   id: Scalars['String'];
-  userId?: InputMaybe<Scalars['String']>;
 }>;
 
 export type FetchManuscriptByIdQuery = {
@@ -32956,80 +33119,6 @@ export type FetchManuscriptByIdQuery = {
       | 'layImpactStatement'
       | 'firstPublicDate'
     > & {
-      discussionsCollection?: Maybe<
-        Pick<ManuscriptsDiscussionsCollection, 'total'> & {
-          items: Array<
-            Maybe<
-              Pick<Discussions, 'title'> & {
-                readByCollection?: Maybe<
-                  Pick<DiscussionsReadByCollection, 'total'>
-                >;
-                sys: Pick<Sys, 'id' | 'publishedVersion'>;
-                message?: Maybe<
-                  Pick<Messages, 'text'> & {
-                    sys: Pick<Sys, 'publishedAt'>;
-                    createdBy?: Maybe<
-                      Pick<
-                        Users,
-                        | 'firstName'
-                        | 'nickname'
-                        | 'lastName'
-                        | 'alumniSinceDate'
-                      > & {
-                        sys: Pick<Sys, 'id'>;
-                        avatar?: Maybe<Pick<Asset, 'url'>>;
-                        teamsCollection?: Maybe<{
-                          items: Array<
-                            Maybe<{
-                              team?: Maybe<
-                                Pick<Teams, 'displayName'> & {
-                                  sys: Pick<Sys, 'id'>;
-                                }
-                              >;
-                            }>
-                          >;
-                        }>;
-                      }
-                    >;
-                  }
-                >;
-                repliesCollection?: Maybe<{
-                  items: Array<
-                    Maybe<
-                      Pick<Messages, 'text'> & {
-                        sys: Pick<Sys, 'publishedAt'>;
-                        createdBy?: Maybe<
-                          Pick<
-                            Users,
-                            | 'firstName'
-                            | 'nickname'
-                            | 'lastName'
-                            | 'alumniSinceDate'
-                          > & {
-                            sys: Pick<Sys, 'id'>;
-                            avatar?: Maybe<Pick<Asset, 'url'>>;
-                            teamsCollection?: Maybe<{
-                              items: Array<
-                                Maybe<{
-                                  team?: Maybe<
-                                    Pick<Teams, 'displayName'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
-                                  >;
-                                }>
-                              >;
-                            }>;
-                          }
-                        >;
-                      }
-                    >
-                  >;
-                }>;
-              }
-            >
-          >;
-        }
-      >;
       teamsCollection?: Maybe<{
         items: Array<
           Maybe<{
@@ -39370,6 +39459,52 @@ export const DiscussionsContentFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'text' } },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'filesCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '5' },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'fileName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'createdBy' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -39512,6 +39647,52 @@ export const DiscussionsContentFragmentDoc = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'filesCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '5' },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sys' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'fileName' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'createdBy' },
@@ -58865,13 +59046,13 @@ export const FetchResearchOutputByManuscriptVersionIdDocument = {
   FetchResearchOutputByManuscriptVersionIdQuery,
   FetchResearchOutputByManuscriptVersionIdQueryVariables
 >;
-export const FetchManuscriptByIdDocument = {
+export const FetchManuscriptDiscussionsByIdDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'FetchManuscriptById' },
+      name: { kind: 'Name', value: 'FetchManuscriptDiscussionsById' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -58913,8 +59094,14 @@ export const FetchManuscriptByIdDocument = {
               kind: 'SelectionSet',
               selections: [
                 {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'ManuscriptsContent' },
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'sys' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
                 },
                 {
                   kind: 'Field',
@@ -59000,6 +59187,61 @@ export const FetchManuscriptByIdDocument = {
                       },
                     ],
                   },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...DiscussionsContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchManuscriptDiscussionsByIdQuery,
+  FetchManuscriptDiscussionsByIdQueryVariables
+>;
+export const FetchManuscriptByIdDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchManuscriptById' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'manuscripts' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'ManuscriptsContent' },
                 },
                 {
                   kind: 'Field',
@@ -59144,7 +59386,6 @@ export const FetchManuscriptByIdDocument = {
       },
     },
     ...ManuscriptsContentFragmentDoc.definitions,
-    ...DiscussionsContentFragmentDoc.definitions,
     ...ManuscriptProjectFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<

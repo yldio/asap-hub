@@ -2,6 +2,26 @@
 
 import { gql } from 'graphql-tag';
 import { discussionContentQueryFragment } from './discussions.queries';
+
+export const FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID = gql`
+  query FetchManuscriptDiscussionsById($id: String!, $userId: String) {
+    manuscripts(id: $id) {
+      sys {
+        id
+      }
+      discussionsCollection(limit: 10) {
+        total
+        items {
+          ...DiscussionsContent
+          readByCollection(limit: 1, where: { sys: { id: $userId } }) {
+            total
+          }
+        }
+      }
+    }
+  }
+  ${discussionContentQueryFragment}
+`;
 // // TODO: Increase limit to 10. We have to reduced it to 5 for now to avoid break down of the application.
 export const manuscriptProjectQueryFragment = gql`
   fragment ManuscriptProject on Projects {
@@ -66,18 +86,9 @@ export const manuscriptContentQueryFragment = gql`
 `;
 
 export const FETCH_MANUSCRIPT_BY_ID = gql`
-  query FetchManuscriptById($id: String!, $userId: String) {
+  query FetchManuscriptById($id: String!) {
     manuscripts(id: $id) {
       ...ManuscriptsContent
-      discussionsCollection(limit: 10) {
-        total
-        items {
-          ...DiscussionsContent
-          readByCollection(limit: 1, where: { sys: { id: $userId } }) {
-            total
-          }
-        }
-      }
       teamsCollection(limit: 10) {
         items {
           sys {
@@ -101,7 +112,6 @@ export const FETCH_MANUSCRIPT_BY_ID = gql`
     }
   }
   ${manuscriptContentQueryFragment}
-  ${discussionContentQueryFragment}
 `;
 
 export const FETCH_MANUSCRIPT_VERSIONS = gql`

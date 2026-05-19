@@ -112,6 +112,7 @@ describe('Discussion Controller', () => {
         input.manuscriptId,
         input.title,
         input.text,
+        undefined,
         '',
       );
 
@@ -128,6 +129,7 @@ describe('Discussion Controller', () => {
         input.manuscriptId,
         input.title,
         input.text,
+        undefined,
         '',
       );
 

@@ -257,5 +257,24 @@ describe('TextEditorToolbar', () => {
         expect(onChange).toHaveBeenLastCalledWith('- text');
       });
     });
+
+    describe('link', () => {
+      it('renders the Insert Link toolbar button', () => {
+        const { getByLabelText } = render(
+          <TextEditor onChange={onChange} value="" />,
+        );
+        expect(getByLabelText('Insert Link')).toBeInTheDocument();
+      });
+
+      it('renders markdown links from initial value', () => {
+        const { getByTestId } = render(
+          <TextEditor
+            onChange={onChange}
+            value="see [example](https://example.com)"
+          />,
+        );
+        expect(getByTestId('editor')).toHaveTextContent('see example');
+      });
+    });
   });
 });

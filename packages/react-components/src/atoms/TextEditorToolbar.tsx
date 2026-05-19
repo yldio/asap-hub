@@ -14,6 +14,7 @@ import {
   ListNode,
 } from '@lexical/list';
 
+import { $isLinkNode } from '@lexical/link';
 import { $setBlocksType, $isAtNodeEnd } from '@lexical/selection';
 import {
   ElementNode,
@@ -38,6 +39,7 @@ import {
   arrowClockwise,
   arrowCounterclockwise,
   indent,
+  link as linkIcon,
   listOL,
   listUL,
   outdent,
@@ -45,6 +47,7 @@ import {
   typeItalic,
   typeStrikethrough,
 } from '../icons/editor';
+import FloatingLinkEditor from './FloatingLinkEditor';
 
 /* istanbul ignore next */
 export function getSelectedNode(
@@ -132,6 +135,9 @@ export default function ToolbarPlugin() {
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isStrikethrough, setIsStrikethrough] = useState(false);
+  const [isLink, setIsLink] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
+  const [isLinkEditorOpen, setIsLinkEditorOpen] = useState(false);
 
   /* istanbul ignore next */
   const $updateToolbar = useCallback(() => {
@@ -179,6 +185,19 @@ export default function ToolbarPlugin() {
       setIsBold(selection.hasFormat('bold'));
       setIsItalic(selection.hasFormat('italic'));
       setIsStrikethrough(selection.hasFormat('strikethrough'));
+
+      const node = getSelectedNode(selection);
+      const parent = node.getParent();
+      if ($isLinkNode(parent)) {
+        setIsLink(true);
+        setLinkUrl(parent.getURL());
+      } else if ($isLinkNode(node)) {
+        setIsLink(true);
+        setLinkUrl(node.getURL());
+      } else {
+        setIsLink(false);
+        setLinkUrl('');
+      }
     }
   }, [activeEditor]);
 
@@ -253,6 +272,24 @@ export default function ToolbarPlugin() {
       editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
     } else {
       formatParagraph();
+    }
+  };
+
+  const openLinkEditor = () => {
+    if (isLink) {
+      setIsLinkEditorOpen(true);
+    } else {
+      activeEditor.getEditorState().read(() => {
+        const selection = $getSelection();
+        if (
+          $isRangeSelection(selection) &&
+          !selection.isCollapsed() &&
+          selection.getTextContent().length > 0
+        ) {
+          setLinkUrl('');
+          setIsLinkEditorOpen(true);
+        }
+      });
     }
   };
 
@@ -364,6 +401,21 @@ export default function ToolbarPlugin() {
         {indent}
       </button>
       <Divider />
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          openLinkEditor();
+        }}
+        css={toolbarItemStyles({ spaced: true, active: isLink })}
+        aria-label="Insert Link"
+      >
+        {linkIcon}
+      </button>
+      <FloatingLinkEditor
+        isOpen={isLinkEditorOpen}
+        initialUrl={linkUrl}
+        onClose={() => setIsLinkEditorOpen(false)}
+      />
     </div>
   );
 }

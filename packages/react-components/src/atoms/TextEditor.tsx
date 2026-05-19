@@ -4,6 +4,7 @@ import { AutoLinkNode, LinkNode } from '@lexical/link';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
@@ -323,6 +324,7 @@ const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
               />
             )}
             <ListPlugin />
+            <LinkPlugin />
             <HistoryPlugin />
             {autofocus && <AutoFocusPlugin />}
             <EditorRefPluginWrapper />

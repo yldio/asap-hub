@@ -553,6 +553,46 @@ describe.each(variants)(
     });
 
     it('renders create compliance report route via lazy loading', async () => {
+      const openScienceUser = {
+        projects: [],
+        teams: [],
+        role: 'Staff',
+        openScienceTeamMember: true,
+      };
+      enable('PROJECT_WORKSPACE');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        openScienceUser,
+        'workspace/create-compliance-report/ms-1',
+      );
+      expect(
+        await screen.findByTestId('mock-compliance-report-form'),
+      ).toBeInTheDocument();
+    });
+
+    it('does not render create manuscript route for Open Science non-members', async () => {
+      const openScienceUser = {
+        projects: [],
+        teams: [],
+        role: 'Staff',
+        openScienceTeamMember: true,
+      };
+      enable('PROJECT_WORKSPACE');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        openScienceUser,
+        'workspace/create-manuscript',
+      );
+      expect(
+        screen.queryByTestId('mock-manuscript-form'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render create compliance report route for project members without OS access', async () => {
       enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
@@ -562,8 +602,8 @@ describe.each(variants)(
         'workspace/create-compliance-report/ms-1',
       );
       expect(
-        await screen.findByTestId('mock-compliance-report-form'),
-      ).toBeInTheDocument();
+        screen.queryByTestId('mock-compliance-report-form'),
+      ).not.toBeInTheDocument();
     });
 
     it('renders milestones route and covers hasSupplementGrant logic', async () => {

@@ -62,16 +62,24 @@ const linkPreviewStyles = css({
   color: 'rgb(33, 111, 219)',
 });
 
+const SAFE_URL_PATTERN = /^(?:https?:\/\/|mailto:)/i;
+const HAS_SCHEME_PATTERN = /^[a-z][a-z0-9+.-]*:/i;
+const BARE_HOSTNAME_PATTERN = /^[\w-]+(\.[\w-]+)+/;
+
 export const sanitizeUrl = (url: string): string => {
   const trimmed = url.trim();
   if (!trimmed) return '';
-  if (/^https?:\/\//i.test(trimmed) || /^mailto:/i.test(trimmed)) {
+  if (SAFE_URL_PATTERN.test(trimmed)) {
     return trimmed;
   }
-  if (/^[\w-]+(\.[\w-]+)+/.test(trimmed)) {
+  if (HAS_SCHEME_PATTERN.test(trimmed)) {
+    // Reject unsupported schemes (e.g. javascript:, data:, file:)
+    return '';
+  }
+  if (BARE_HOSTNAME_PATTERN.test(trimmed)) {
     return `https://${trimmed}`;
   }
-  return trimmed;
+  return '';
 };
 
 export type FloatingLinkEditorProps = {

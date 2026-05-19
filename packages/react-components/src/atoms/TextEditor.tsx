@@ -21,7 +21,7 @@ import {
   TRANSFORMERS,
 } from '@lexical/markdown';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
-import { EditorState } from 'lexical';
+import { $nodesOfType, EditorState } from 'lexical';
 import { ember, lead, rose, silver } from '../colors';
 import { styles, useValidation, validationMessageStyles } from '../form';
 import { noop } from '../utils';
@@ -205,21 +205,28 @@ const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
   return <></>;
 };
 
+const applyLinkTarget = (node: LinkNode) => {
+  if (node.getTarget() !== '_blank') {
+    node.setTarget('_blank');
+  }
+  if (node.getRel() !== 'noopener noreferrer') {
+    node.setRel('noopener noreferrer');
+  }
+};
+
 const LinkTargetPlugin = () => {
   const [editor] = useLexicalComposerContext();
-  useEffect(
-    () =>
-      editor.registerNodeTransform(LinkNode, (node) => {
-        if (!$isLinkNode(node)) return;
-        if (node.getTarget() !== '_blank') {
-          node.setTarget('_blank');
-        }
-        if (node.getRel() !== 'noopener noreferrer') {
-          node.setRel('noopener noreferrer');
-        }
-      }),
-    [editor],
-  );
+  useEffect(() => {
+    const unregister = editor.registerNodeTransform(LinkNode, (node) => {
+      if ($isLinkNode(node)) applyLinkTarget(node);
+    });
+    // Apply to nodes already present from initial parse (transforms only fire
+    // on dirty nodes, so we walk the current state once on mount).
+    editor.update(() => {
+      $nodesOfType(LinkNode).forEach(applyLinkTarget);
+    });
+    return unregister;
+  }, [editor]);
   return <></>;
 };
 
@@ -252,6 +259,7 @@ const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
     const initialConfig = {
       editorState: () => {
         $convertFromMarkdownString(value, TRANSFORMERS);
+        $nodesOfType(LinkNode).forEach(applyLinkTarget);
       },
       namespace: 'Editor',
       nodes: [

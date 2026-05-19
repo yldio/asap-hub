@@ -4,7 +4,7 @@ import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import FloatingLinkEditor, { sanitizeUrl } from '../FloatingLinkEditor';
 
@@ -76,7 +76,7 @@ const Harness = ({
   initialUrl?: string;
   onClose?: () => void;
   onDispatch?: (payload: unknown) => void;
-}): ReactNode => {
+}) => {
   const config = {
     namespace: 'TestEditor',
     nodes: [LinkNode],
@@ -161,8 +161,21 @@ describe('sanitizeUrl', () => {
     expect(sanitizeUrl('  https://example.com  ')).toBe('https://example.com');
   });
 
-  it('returns non-URL strings unchanged', () => {
-    expect(sanitizeUrl('not a url')).toBe('not a url');
+  it('rejects unrecognized inputs', () => {
+    expect(sanitizeUrl('not a url')).toBe('');
+  });
+
+  it.each([
+    /* eslint-disable no-script-url */
+    'javascript:alert(1)',
+    'JAVASCRIPT:alert(1)',
+    /* eslint-enable no-script-url */
+    'data:text/html,<script>alert(1)</script>',
+    'file:///etc/passwd',
+    'vbscript:msgbox(1)',
+    'ftp://example.com',
+  ])('rejects unsafe / unsupported scheme %s', (input) => {
+    expect(sanitizeUrl(input)).toBe('');
   });
 });
 

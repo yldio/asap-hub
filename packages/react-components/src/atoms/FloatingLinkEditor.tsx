@@ -157,11 +157,15 @@ const FloatingLinkEditor = ({
   }, [editor, isOpen]);
 
   useEffect(() => {
-    if (isOpen && isEditing) {
-      inputRef.current?.focus();
-      inputRef.current?.select();
+    if (isOpen && isEditing && position) {
+      const id = window.requestAnimationFrame(() => {
+        inputRef.current?.focus();
+        inputRef.current?.select();
+      });
+      return () => window.cancelAnimationFrame(id);
     }
-  }, [isOpen, isEditing]);
+    return undefined;
+  }, [isOpen, isEditing, position]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -204,7 +208,11 @@ const FloatingLinkEditor = ({
       ref={editorRef}
       css={editorContainerStyles}
       style={{ top: position.top, left: position.left }}
-      onMouseDown={(e) => e.preventDefault()}
+      onMouseDown={(e) => {
+        if (e.target !== inputRef.current) {
+          e.preventDefault();
+        }
+      }}
     >
       {isEditing ? (
         <>

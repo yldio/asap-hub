@@ -1,12 +1,25 @@
-import { LinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
+import { $createLinkNode, LinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {
+  $createParagraphNode,
+  $createRangeSelection,
+  $createTextNode,
+  $getRoot,
+  $getSelection,
+  $setSelection,
+  createEditor,
+  LexicalEditor,
+} from 'lexical';
 import { useEffect } from 'react';
 
-import FloatingLinkEditor, { sanitizeUrl } from '../FloatingLinkEditor';
+import FloatingLinkEditor, {
+  getUrlFromSelection,
+  sanitizeUrl,
+} from '../FloatingLinkEditor';
 
 let consoleSpy: jest.SpyInstance;
 
@@ -118,12 +131,122 @@ beforeEach(() => {
   jest
     .spyOn(window, 'cancelAnimationFrame')
     .mockImplementation(() => undefined);
-  stubSelectionRect();
 });
 
 afterEach(() => {
   consoleSpy.mockRestore();
   jest.restoreAllMocks();
+});
+
+describe('getUrlFromSelection', () => {
+  const makeEditor = (): LexicalEditor => {
+    const editor = createEditor({
+      namespace: 'test',
+      nodes: [LinkNode],
+      // eslint-disable-next-line no-console
+      onError: console.error,
+    });
+    // Attach a real root element so $setSelection works
+    const root = document.createElement('div');
+    root.contentEditable = 'true';
+    document.body.appendChild(root);
+    editor.setRootElement(root);
+    return editor;
+  };
+
+  const readWith = <T,>(
+    editor: LexicalEditor,
+    inUpdate: () => void,
+    inRead: () => T,
+  ): T => {
+    let result: T;
+    editor.update(
+      () => {
+        inUpdate();
+      },
+      { discrete: true },
+    );
+    editor.getEditorState().read(() => {
+      result = inRead();
+    });
+    return result!;
+  };
+
+  it('returns the URL when the selection sits in a text node whose parent is a LinkNode', () => {
+    const editor = makeEditor();
+    const url = readWith(
+      editor,
+      () => {
+        const root = $getRoot();
+        const para = $createParagraphNode();
+        const link = $createLinkNode('https://parent-link.com');
+        const text = $createTextNode('hi');
+        link.append(text);
+        para.append(link);
+        root.append(para);
+        text.select(0, text.getTextContentSize());
+      },
+      () => getUrlFromSelection($getSelection()),
+    );
+    expect(url).toBe('https://parent-link.com');
+  });
+
+  it('returns the URL when the selected node itself is a LinkNode', () => {
+    const editor = makeEditor();
+    const url = readWith(
+      editor,
+      () => {
+        const root = $getRoot();
+        const para = $createParagraphNode();
+        const link = $createLinkNode('https://self-link.com');
+        link.append($createTextNode('hi'));
+        para.append(link);
+        root.append(para);
+        // Build a RangeSelection whose anchor and focus both resolve directly
+        // to the LinkNode (element points), so getSelectedNode returns the
+        // link rather than its descendant text node.
+        const selection = $createRangeSelection();
+        selection.anchor.set(link.getKey(), 0, 'element');
+        selection.focus.set(link.getKey(), 1, 'element');
+        $setSelection(selection);
+      },
+      () => getUrlFromSelection($getSelection()),
+    );
+    expect(url).toBe('https://self-link.com');
+  });
+
+  it('returns null when the selected node is not in a link', () => {
+    const editor = makeEditor();
+    const url = readWith(
+      editor,
+      () => {
+        const root = $getRoot();
+        const para = $createParagraphNode();
+        const text = $createTextNode('not a link');
+        para.append(text);
+        root.append(para);
+        text.select(0, text.getTextContentSize());
+      },
+      () => getUrlFromSelection($getSelection()),
+    );
+    expect(url).toBeNull();
+  });
+
+  it('returns null when there is no range selection', () => {
+    const editor = makeEditor();
+    const url = readWith(
+      editor,
+      () => {
+        const root = $getRoot();
+        const para = $createParagraphNode();
+        para.append($createTextNode('hi'));
+        root.append(para);
+        $setSelection(null);
+      },
+      () => getUrlFromSelection($getSelection()),
+    );
+    expect(url).toBeNull();
+  });
 });
 
 describe('sanitizeUrl', () => {
@@ -180,6 +303,10 @@ describe('sanitizeUrl', () => {
 });
 
 describe('FloatingLinkEditor', () => {
+  beforeEach(() => {
+    stubSelectionRect();
+  });
+
   it('does not render when closed', () => {
     const { queryByLabelText } = render(<Harness isOpen={false} />);
     expect(queryByLabelText('Link URL')).not.toBeInTheDocument();

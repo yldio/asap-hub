@@ -5,6 +5,7 @@ import { mergeRegister } from '@lexical/utils';
 import {
   $getSelection,
   $isRangeSelection,
+  BaseSelection,
   COMMAND_PRIORITY_LOW,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
@@ -65,6 +66,17 @@ const linkPreviewStyles = css({
 const SAFE_URL_PATTERN = /^(?:https?:\/\/|mailto:)/i;
 const HAS_SCHEME_PATTERN = /^[a-z][a-z0-9+.-]*:/i;
 const BARE_HOSTNAME_PATTERN = /^[\w-]+(\.[\w-]+)+/;
+
+export const getUrlFromSelection = (
+  selection: BaseSelection | null,
+): string | null => {
+  if (!$isRangeSelection(selection)) return null;
+  const node = getSelectedNode(selection);
+  const parent = node.getParent();
+  if ($isLinkNode(parent)) return parent.getURL();
+  if ($isLinkNode(node)) return node.getURL();
+  return null;
+};
 
 export const sanitizeUrl = (url: string): string => {
   const trimmed = url.trim();
@@ -144,18 +156,9 @@ const FloatingLinkEditor = ({
       editor.registerCommand(
         SELECTION_CHANGE_COMMAND,
         () => {
-          // Refresh URL state when selection moves to another link
           editor.getEditorState().read(() => {
-            const selection = $getSelection();
-            if ($isRangeSelection(selection)) {
-              const node = getSelectedNode(selection);
-              const parent = node.getParent();
-              if ($isLinkNode(parent)) {
-                setUrl(parent.getURL());
-              } else if ($isLinkNode(node)) {
-                setUrl(node.getURL());
-              }
-            }
+            const next = getUrlFromSelection($getSelection());
+            if (next !== null) setUrl(next);
           });
           return false;
         },

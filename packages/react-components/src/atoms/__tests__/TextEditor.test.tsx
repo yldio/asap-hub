@@ -399,7 +399,7 @@ describe('TextEditorToolbar', () => {
                   (para as { getChildren: () => unknown[] })
                     .getChildren()
                     .forEach((node) => {
-                      if (linkModule.$isLinkNode(node)) {
+                      if (linkModule.$isLinkNode(node as never)) {
                         links.push(
                           node as InstanceType<typeof linkModule.LinkNode>,
                         );

@@ -38,8 +38,9 @@ const Projects: FC<Record<string, never>> = () => {
     debouncedSearchQuery,
     setSearchQuery,
     filters,
+    filtersMap,
     toggleFilter,
-  } = useSearch();
+  } = useSearch(['status', 'researchTheme', 'resourceType']);
 
   const { pathname } = useLocation();
 
@@ -66,6 +67,7 @@ const Projects: FC<Record<string, never>> = () => {
               debouncedSearchQuery={debouncedSearchQuery}
               onChangeSearchQuery={setSearchQuery}
               filters={filters}
+              filtersMap={filtersMap}
               onChangeFilter={toggleFilter}
             />
           }
@@ -78,6 +80,7 @@ const Projects: FC<Record<string, never>> = () => {
               debouncedSearchQuery={debouncedSearchQuery}
               onChangeSearchQuery={setSearchQuery}
               filters={filters}
+              filtersMap={filtersMap}
               onChangeFilter={toggleFilter}
             />
           }
@@ -90,6 +93,7 @@ const Projects: FC<Record<string, never>> = () => {
               debouncedSearchQuery={debouncedSearchQuery}
               onChangeSearchQuery={setSearchQuery}
               filters={filters}
+              filtersMap={filtersMap}
               onChangeFilter={toggleFilter}
             />
           }

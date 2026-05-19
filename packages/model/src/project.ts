@@ -293,19 +293,16 @@ export const isProjectLead = (
 export const isProjectMember = (
   userId: string,
   userTeams: ReadonlyArray<{ id: string }>,
-  project: Pick<Project, 'projectType'> &
-    Partial<{
-      teamId: string;
-      fundedTeam: Pick<FundedTeam, 'id'>;
-      members: ReadonlyArray<Pick<ProjectMember, 'id'>>;
-    }>,
+  project: Project & Partial<{ fundedTeam: Pick<FundedTeam, 'id'> }>,
 ): boolean => {
-  const fundedTeamId = project.teamId ?? project.fundedTeam?.id;
+  const fundedTeamId =
+    ('teamId' in project ? project.teamId : undefined) ??
+    project.fundedTeam?.id;
   if (fundedTeamId) {
     return userTeams.some((t) => t.id === fundedTeamId);
   }
 
-  if (project.members) {
+  if ('members' in project && project.members) {
     return project.members.some((m) => m.id === userId);
   }
 

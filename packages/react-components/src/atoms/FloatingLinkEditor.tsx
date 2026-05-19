@@ -62,7 +62,7 @@ const linkPreviewStyles = css({
   color: 'rgb(33, 111, 219)',
 });
 
-const sanitizeUrl = (url: string): string => {
+export const sanitizeUrl = (url: string): string => {
   const trimmed = url.trim();
   if (!trimmed) return '';
   if (/^https?:\/\//i.test(trimmed) || /^mailto:/i.test(trimmed)) {

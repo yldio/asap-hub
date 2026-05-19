@@ -32,42 +32,6 @@ export const PROJECT_STATUSES: readonly ProjectStatus[] = [
   'Closed',
 ];
 
-// Helper function to extract status filters from a set of filters
-export const toStatusFilters = (
-  filters: ReadonlySet<string> | undefined,
-): ProjectStatus[] => {
-  if (!filters) {
-    return [];
-  }
-  return Array.from(filters).filter((filter): filter is ProjectStatus =>
-    PROJECT_STATUSES.includes(filter as ProjectStatus),
-  );
-};
-
-// Helper function to extract discovery theme filters from a set of filters
-export const toResearchThemeFilters = (
-  filters: ReadonlySet<string> | undefined,
-  availableThemes: ReadonlyArray<{ id: string; name: string }>,
-): string[] => {
-  if (!filters) {
-    return [];
-  }
-  const themeNames = new Set(availableThemes.map((theme) => theme.name));
-  return Array.from(filters).filter((filter) => themeNames.has(filter));
-};
-
-// Helper function to extract resource type filters from a set of filters
-export const toResourceTypeFilters = (
-  filters: ReadonlySet<string> | undefined,
-  availableTypes: ReadonlyArray<{ id: string; name: string }>,
-): string[] => {
-  if (!filters) {
-    return [];
-  }
-  const typeNames = new Set(availableTypes.map((type) => type.name));
-  return Array.from(filters).filter((filter) => typeNames.has(filter));
-};
-
 export const exportProjects = async <
   T extends ProjectResponse,
   U extends Record<string, unknown>,

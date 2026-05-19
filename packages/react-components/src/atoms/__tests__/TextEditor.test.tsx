@@ -258,6 +258,44 @@ describe('TextEditorToolbar', () => {
     });
 
     describe('link', () => {
+      const fakeRect: DOMRect = {
+        top: 100,
+        left: 50,
+        bottom: 120,
+        right: 200,
+        width: 150,
+        height: 20,
+        x: 50,
+        y: 100,
+        toJSON: () => ({}),
+      } as DOMRect;
+      let originalGetBoundingClientRect: (() => DOMRect) | undefined;
+      const stubSelectionRect = () => {
+        originalGetBoundingClientRect = (
+          Range.prototype as unknown as {
+            getBoundingClientRect?: () => DOMRect;
+          }
+        ).getBoundingClientRect;
+        (
+          Range.prototype as unknown as { getBoundingClientRect: () => DOMRect }
+        ).getBoundingClientRect = () => fakeRect;
+      };
+      afterEach(() => {
+        if (originalGetBoundingClientRect === undefined) {
+          delete (
+            Range.prototype as unknown as {
+              getBoundingClientRect?: () => DOMRect;
+            }
+          ).getBoundingClientRect;
+        } else {
+          (
+            Range.prototype as unknown as {
+              getBoundingClientRect: () => DOMRect;
+            }
+          ).getBoundingClientRect = originalGetBoundingClientRect;
+        }
+      });
+
       it('renders the Insert Link toolbar button', () => {
         const { getByLabelText } = render(
           <TextEditor onChange={onChange} value="" />,
@@ -273,6 +311,110 @@ describe('TextEditorToolbar', () => {
           />,
         );
         expect(getByTestId('editor')).toHaveTextContent('see example');
+      });
+
+      it('opens the floating editor when text is selected and Insert Link is clicked', async () => {
+        stubSelectionRect();
+        const { getByLabelText, getByTestId, queryByLabelText } = render(
+          <TextEditor onChange={onChange} value="hello world" />,
+        );
+
+        // Place a non-collapsed Lexical selection over the existing text
+        await act(async () => {
+          const { editorRef } = await import('../EditorRefPluginWrapper');
+          const lexical = await import('lexical');
+          editorRef.current?.update(() => {
+            const root = lexical.$getRoot();
+            const textNode = root.getFirstDescendant();
+            if (textNode && lexical.$isTextNode(textNode)) {
+              textNode.select(0, textNode.getTextContentSize());
+            }
+          });
+        });
+
+        // Make sure the editor used for the toolbar selection lookup is the
+        // one that just had its selection set.
+        getByTestId('editor');
+
+        await act(async () => {
+          await userEvent.click(getByLabelText('Insert Link'));
+        });
+
+        expect(queryByLabelText('Link URL')).toBeInTheDocument();
+      });
+
+      it('reopens the floating editor in view mode when selection sits inside an existing link', async () => {
+        stubSelectionRect();
+        const { getByLabelText, queryByLabelText } = render(
+          <TextEditor
+            onChange={onChange}
+            value="see [example](https://example.com)"
+          />,
+        );
+
+        await act(async () => {
+          const { editorRef } = await import('../EditorRefPluginWrapper');
+          const lexical = await import('lexical');
+          const linkModule = await import('@lexical/link');
+          editorRef.current?.update(() => {
+            const links = lexical.$nodesOfType(linkModule.LinkNode);
+            const first = links[0];
+            if (first) {
+              const child = first.getFirstDescendant();
+              if (child && lexical.$isTextNode(child)) {
+                child.select(0, child.getTextContentSize());
+              }
+            }
+          });
+        });
+
+        await act(async () => {
+          await userEvent.click(getByLabelText('Insert Link'));
+        });
+
+        expect(queryByLabelText('Edit Link')).toBeInTheDocument();
+        expect(queryByLabelText('Remove Link')).toBeInTheDocument();
+      });
+
+      it('closes the floating editor when clicking outside after opening', async () => {
+        stubSelectionRect();
+        const { getByLabelText, queryByLabelText } = render(
+          <TextEditor onChange={onChange} value="hello world" />,
+        );
+
+        await act(async () => {
+          const { editorRef } = await import('../EditorRefPluginWrapper');
+          const lexical = await import('lexical');
+          editorRef.current?.update(() => {
+            const root = lexical.$getRoot();
+            const textNode = root.getFirstDescendant();
+            if (textNode && lexical.$isTextNode(textNode)) {
+              textNode.select(0, textNode.getTextContentSize());
+            }
+          });
+        });
+
+        await act(async () => {
+          await userEvent.click(getByLabelText('Insert Link'));
+        });
+        expect(queryByLabelText('Link URL')).toBeInTheDocument();
+
+        await act(async () => {
+          fireEvent.mouseDown(document.body);
+        });
+        expect(queryByLabelText('Link URL')).not.toBeInTheDocument();
+      });
+
+      it('does not open the floating editor when nothing is selected', async () => {
+        const { getByLabelText, queryByLabelText } = render(
+          <TextEditor onChange={onChange} value="hello" />,
+        );
+
+        await act(async () => {
+          await userEvent.click(getByLabelText('Insert Link'));
+        });
+
+        expect(queryByLabelText('Link URL')).not.toBeInTheDocument();
       });
     });
   });

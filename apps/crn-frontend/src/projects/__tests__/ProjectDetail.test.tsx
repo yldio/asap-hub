@@ -304,14 +304,7 @@ type TestVariant = {
   noContactMemberUser: Record<string, unknown>;
 };
 
-const discoveryMemberUser = {
-  id: 'user-team',
-  projects: [],
-  teams: [{ id: 'team-1', role: 'Project Manager' }],
-  role: 'Grantee',
-};
-
-const resourceMemberUser = {
+const teamBasedMemberUser = {
   id: 'user-team',
   projects: [],
   teams: [{ id: 'team-1', role: 'Project Manager' }],
@@ -335,8 +328,8 @@ const variants: TestVariant[] = [
     noContactProjectId: 'discovery-no-contact',
     wrongTypeProjectId: 'resource-1',
     supplementProjectId: 'discovery-supplement',
-    memberUser: discoveryMemberUser,
-    noContactMemberUser: discoveryMemberUser,
+    memberUser: teamBasedMemberUser,
+    noContactMemberUser: teamBasedMemberUser,
   },
   {
     name: 'ResourceProjectDetail',
@@ -347,8 +340,8 @@ const variants: TestVariant[] = [
     noContactProjectId: 'resource-no-contact',
     wrongTypeProjectId: 'discovery-1',
     supplementProjectId: 'resource-supplement',
-    memberUser: resourceMemberUser,
-    noContactMemberUser: resourceMemberUser,
+    memberUser: teamBasedMemberUser,
+    noContactMemberUser: teamBasedMemberUser,
   },
   {
     name: 'TraineeProjectDetail',

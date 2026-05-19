@@ -343,6 +343,26 @@ describe('Project Model', () => {
       expect(isProjectMember('user-1', [], project)).toBe(false);
     });
 
+    it('returns true when the project only carries fundedTeam (no teamId)', () => {
+      const project = {
+        projectType: 'Discovery Project' as const,
+        fundedTeam: { id: 'team-1' },
+      };
+      expect(
+        isProjectMember('user-1', [{ id: 'team-1' }], project),
+      ).toBe(true);
+    });
+
+    it('returns false when the user is not in the project fundedTeam', () => {
+      const project = {
+        projectType: 'Discovery Project' as const,
+        fundedTeam: { id: 'team-1' },
+      };
+      expect(
+        isProjectMember('user-1', [{ id: 'team-other' }], project),
+      ).toBe(false);
+    });
+
     it('returns false when the project has neither a teamId nor a members list', () => {
       const project = {
         projectType: 'Resource Project' as const,

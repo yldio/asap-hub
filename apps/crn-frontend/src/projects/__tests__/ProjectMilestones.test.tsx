@@ -339,7 +339,7 @@ describe('ProjectMilestones', () => {
     );
   });
 
-  it('downloads the full dataset without any filters or sort applied', async () => {
+  it('downloads the full dataset for the selected grant type without filters or sort applied', async () => {
     await renderPage(
       'grantType=original&searchQuery=alpha&filter=Complete&sort=aim_desc',
     );
@@ -352,7 +352,7 @@ describe('ProjectMilestones', () => {
       expect(downloadProjectMilestonesXlsx).toHaveBeenCalledWith(
         'Alessi Project',
         expect.any(Function),
-        {},
+        { grantType: 'original' },
       ),
     );
   });

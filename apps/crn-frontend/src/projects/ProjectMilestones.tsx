@@ -96,8 +96,11 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
   );
 
   const exportFullDataset = useCallback(
-    () => downloadProjectMilestonesXlsx(projectName, fetchExport, {}),
-    [fetchExport, projectName],
+    () =>
+      downloadProjectMilestonesXlsx(projectName, fetchExport, {
+        grantType: selectedGrantType,
+      }),
+    [fetchExport, projectName, selectedGrantType],
   );
 
   const downloadSection = (

@@ -5,7 +5,7 @@ import { ComponentProps, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
-import { DiscoveryProject, FetchTeamsFilter } from '@asap-hub/model';
+import { DiscoveryProject, FetchListFilter } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import DiscoveryProjects from '../DiscoveryProjects';
@@ -87,7 +87,7 @@ const statusFilter = 'Active';
 
 const renderDiscoveryProjects = (
   searchQuery: string = '',
-  filtersMap: FetchTeamsFilter = {},
+  filtersMap: FetchListFilter = {},
 ) =>
   render(
     <RecoilRoot>

@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { ProjectsPage, TraineeProjectsList } from '@asap-hub/react-components';
 import type {
-  FetchTeamsFilter,
+  FetchListFilter,
   ProjectMember,
   ProjectStatus,
   TraineeProject,
@@ -26,7 +26,7 @@ type TraineeProjectsProps = {
   debouncedSearchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   filters?: Set<string>;
-  filtersMap?: FetchTeamsFilter;
+  filtersMap?: FetchListFilter;
   onChangeFilter?: (filter: string, filterName?: string) => void;
 };
 
@@ -96,9 +96,8 @@ const TraineeProjects: FC<TraineeProjectsProps> = ({
   const { currentPage, pageSize } = usePaginationParams();
   const statusFilters = useMemo(
     () =>
-      ((filtersMap?.status ?? []) as string[]).filter(
-        (value): value is ProjectStatus =>
-          (PROJECT_STATUSES as readonly string[]).includes(value),
+      (filtersMap?.status ?? []).filter((value): value is ProjectStatus =>
+        (PROJECT_STATUSES as readonly string[]).includes(value),
       ),
     [filtersMap?.status],
   );

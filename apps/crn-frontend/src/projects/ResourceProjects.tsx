@@ -2,7 +2,7 @@ import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { ProjectsPage, ResourceProjectsList } from '@asap-hub/react-components';
 import type {
-  FetchTeamsFilter,
+  FetchListFilter,
   ProjectMember,
   ProjectStatus,
   ResearchThemeType,
@@ -38,7 +38,7 @@ type ResourceProjectsProps = {
   debouncedSearchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   filters?: Set<string>;
-  filtersMap?: FetchTeamsFilter;
+  filtersMap?: FetchListFilter;
   onChangeFilter?: (filter: string, filterName?: string) => void;
 };
 
@@ -116,9 +116,8 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
 
   const statusFilters = useMemo(
     () =>
-      ((filtersMap?.status ?? []) as string[]).filter(
-        (value): value is ProjectStatus =>
-          (PROJECT_STATUSES as readonly string[]).includes(value),
+      (filtersMap?.status ?? []).filter((value): value is ProjectStatus =>
+        (PROJECT_STATUSES as readonly string[]).includes(value),
       ),
     [filtersMap?.status],
   );

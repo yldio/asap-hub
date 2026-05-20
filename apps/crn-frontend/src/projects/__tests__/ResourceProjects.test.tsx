@@ -7,7 +7,7 @@ import { RecoilRoot } from 'recoil';
 
 import { EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
-import { FetchTeamsFilter, ResourceProject } from '@asap-hub/model';
+import { FetchListFilter, ResourceProject } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import ResourceProjects from '../ResourceProjects';
@@ -125,7 +125,7 @@ beforeEach(() => {
 
 const renderResourceProjects = (
   searchQuery: string = '',
-  filtersMap: FetchTeamsFilter = {},
+  filtersMap: FetchListFilter = {},
 ) =>
   render(
     <RecoilRoot>

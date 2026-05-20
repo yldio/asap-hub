@@ -7,7 +7,7 @@ import {
 import {
   DiscoveryProject,
   DISCOVERY_THEME_TYPES,
-  FetchTeamsFilter,
+  FetchListFilter,
   ProjectStatus,
 } from '@asap-hub/model';
 import { usePagination, usePaginationParams } from '../hooks';
@@ -33,7 +33,7 @@ type DiscoveryProjectsProps = {
   debouncedSearchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   filters?: Set<string>;
-  filtersMap?: FetchTeamsFilter;
+  filtersMap?: FetchListFilter;
   onChangeFilter?: (filter: string, filterName?: string) => void;
 };
 
@@ -92,9 +92,8 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
 
   const statusFilters = useMemo(
     () =>
-      ((filtersMap?.status ?? []) as string[]).filter(
-        (value): value is ProjectStatus =>
-          (PROJECT_STATUSES as readonly string[]).includes(value),
+      (filtersMap?.status ?? []).filter((value): value is ProjectStatus =>
+        (PROJECT_STATUSES as readonly string[]).includes(value),
       ),
     [filtersMap?.status],
   );

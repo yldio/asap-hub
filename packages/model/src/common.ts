@@ -21,6 +21,12 @@ export type FetchOptions<TFilter = string[]> = {
   filter?: TFilter;
 } & FetchPaginationOptions;
 
+export type FetchListFilter = {
+  status?: string[];
+  resourceType?: string[];
+  researchTheme?: string[];
+};
+
 export interface RorInstitutionName {
   readonly value: string;
   readonly types?: ReadonlyArray<string>;

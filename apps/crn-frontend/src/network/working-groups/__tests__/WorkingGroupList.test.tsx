@@ -12,8 +12,6 @@ import {
 
 import WorkingGroupList from '../WorkingGroupList';
 import { getWorkingGroups } from '../api';
-import { workingGroupsState } from '../state';
-import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
 jest.mock('../../teams/api');
@@ -33,18 +31,7 @@ const renderWorkingGroupList = async (
   });
   const result = render(
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot
-        initializeState={({ reset }) =>
-          reset(
-            workingGroupsState({
-              currentPage: 0,
-              pageSize: CARD_VIEW_PAGE_SIZE,
-              filters: new Set(),
-              searchQuery: '',
-            }),
-          )
-        }
-      >
+      <RecoilRoot>
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>

@@ -5,6 +5,7 @@ import {
 import {
   createResearchOutputResponse,
   createUserResponse,
+  createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
@@ -14,13 +15,7 @@ import {
 } from '@asap-hub/model';
 import { editorRef } from '@asap-hub/react-components';
 import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
@@ -32,7 +27,6 @@ import {
 } from '../../teams/api';
 import { getWorkingGroup } from '../api';
 import { getImpacts } from '../../../shared-api/impact';
-import { refreshWorkingGroupState } from '../state';
 import WorkingGroupOutput from '../WorkingGroupOutput';
 
 jest.setTimeout(30000);
@@ -239,11 +233,7 @@ const renderPage = async ({
   });
   render(
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot
-        initializeState={({ set }) =>
-          set(refreshWorkingGroupState(workingGroupId), Math.random())
-        }
-      >
+      <RecoilRoot>
         <Suspense fallback="loading">
           <Auth0Provider user={user}>
             <WhenReady>
@@ -269,7 +259,12 @@ const renderPage = async ({
       </RecoilRoot>
     </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/auth0 loading/i)).not.toBeInTheDocument(),
+  );
+  await waitFor(() =>
+    expect(screen.queryByText('loading')).not.toBeInTheDocument(),
+  );
 };
 
 beforeEach(() => {
@@ -277,6 +272,10 @@ beforeEach(() => {
   mockGetImpacts.mockResolvedValue({
     total: 0,
     items: [],
+  });
+  mockGetWorkingGroup.mockResolvedValue({
+    ...createWorkingGroupResponse({}),
+    id: 'wg1',
   });
 });
 

@@ -34,7 +34,6 @@ import {
   getResearchOutputs,
 } from '../../../shared-research/api';
 import { getWorkingGroup } from '../api';
-import { refreshWorkingGroupState } from '../state';
 import WorkingGroupProfile from '../WorkingGroupProfile';
 import { getEvents } from '../../../events/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
@@ -119,7 +118,6 @@ const renderWorkingGroupProfile = async (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot
         initializeState={({ set }) => {
-          set(refreshWorkingGroupState(workingGroupResponse.id), Math.random());
           set(auth0State, {
             getTokenSilently: jest.fn().mockResolvedValue('test_token'),
           } as never);

@@ -15,11 +15,8 @@ import {
 } from '@lexical/list';
 
 import { $isLinkNode } from '@lexical/link';
-import { $setBlocksType, $isAtNodeEnd } from '@lexical/selection';
+import { $setBlocksType } from '@lexical/selection';
 import {
-  ElementNode,
-  RangeSelection,
-  TextNode,
   $createParagraphNode,
   $getSelection,
   $isRangeSelection,
@@ -48,23 +45,7 @@ import {
   typeStrikethrough,
 } from '../icons/editor';
 import FloatingLinkEditor from './FloatingLinkEditor';
-
-/* istanbul ignore next */
-export function getSelectedNode(
-  selection: RangeSelection,
-): TextNode | ElementNode {
-  const { anchor, focus } = selection;
-  const anchorNode = selection.anchor.getNode();
-  const focusNode = selection.focus.getNode();
-  if (anchorNode === focusNode) {
-    return anchorNode;
-  }
-  const isBackward = selection.isBackward();
-  if (isBackward) {
-    return $isAtNodeEnd(focus) ? anchorNode : focusNode;
-  }
-  return $isAtNodeEnd(anchor) ? anchorNode : focusNode;
-}
+import { getSelectedNode } from './lexical-utils';
 
 const dividerStyles = css({
   width: '1px',

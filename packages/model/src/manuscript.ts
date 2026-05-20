@@ -1049,10 +1049,12 @@ export type ManuscriptVersionExport = {
   description: string;
   shortDescription: string;
   impact?: string;
+  layImpactStatement?: string;
   categories?: string;
   mainProject: string;
   teams: string;
   status: string;
+  firstPublicDate?: string;
   apcRequested?: string;
   apcAmountRequested?: string;
   apcCoverageRequestStatus?: string;
@@ -1081,6 +1083,7 @@ export type ManuscriptVersionExport = {
   labs?: string;
   complianceReportUrl?: string;
   complianceReportDescription?: string;
+  complianceReportResponse?: string;
   versionLastUpdatedDate: string;
 };
 

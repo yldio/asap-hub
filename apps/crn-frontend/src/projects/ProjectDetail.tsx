@@ -181,6 +181,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                           <Frame title="Project Milestones">
                             <ProjectMilestones
                               projectId={projectId}
+                              projectName={projectDetail.title || ''}
                               seeAimsHref={route.about({}).$}
                               hasSupplementGrant={hasSupplementGrant}
                               aims={activeProjectAims}

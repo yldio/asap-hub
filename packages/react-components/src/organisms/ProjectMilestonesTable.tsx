@@ -6,7 +6,7 @@ import {
   MilestoneStatus,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { ComponentProps, FC, useMemo } from 'react';
+import { ComponentProps, FC, ReactNode, useMemo } from 'react';
 import { Card, Headline3, Paragraph } from '../atoms';
 import { rem, tabletScreen } from '../pixels';
 import Milestone from './Milestone';
@@ -25,6 +25,14 @@ const contentStyles = css({
 const containerStyles = css({
   display: 'grid',
   rowGap: rem(32),
+});
+
+const resultsRowStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: rem(16),
+  flexWrap: 'wrap',
 });
 
 const milestonesGridStyles = css({
@@ -157,6 +165,7 @@ type ProjectMilestonesProps = {
   readonly selectedGrantType: GrantType;
   readonly sort: MilestoneSortOption;
   readonly onToggleSort: () => void;
+  readonly downloadSection?: ReactNode;
 };
 
 const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
@@ -172,6 +181,7 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
   pageControlsProps,
   sort,
   onToggleSort,
+  downloadSection,
 }) => {
   const grantLabel =
     selectedGrantType === 'supplement' ? 'Supplement' : 'Original';
@@ -206,7 +216,10 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
 
     return (
       <div css={containerStyles}>
-        <strong>{resultsFoundText}</strong>
+        <div css={resultsRowStyles}>
+          <strong>{resultsFoundText}</strong>
+          {downloadSection}
+        </div>
         <div css={noResultsStyles}>
           <div css={noResultsIconStyles} aria-hidden>
             {searchIcon}
@@ -225,7 +238,10 @@ const ProjectMilestonesTable: FC<ProjectMilestonesProps> = ({
 
   return (
     <div css={containerStyles}>
-      <strong>{resultsFoundText}</strong>
+      <div css={resultsRowStyles}>
+        <strong>{resultsFoundText}</strong>
+        {downloadSection}
+      </div>
       <Card padding={false}>
         <div css={contentStyles}>
           <div css={milestonesGridStyles}>

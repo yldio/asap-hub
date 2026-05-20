@@ -527,5 +527,23 @@ describe('project routes', () => {
         projectControllerMock.exportProjectMilestones,
       ).not.toHaveBeenCalled();
     });
+
+    it('wraps a single filter value into an array before validation', async () => {
+      projectControllerMock.exportProjectMilestones.mockResolvedValueOnce(
+        exportResponse,
+      );
+
+      const response = await supertest(app)
+        .get('/projects/project-1/milestones-export')
+        .query({ filter: 'Complete' });
+
+      expect(response.status).toBe(200);
+      expect(
+        projectControllerMock.exportProjectMilestones,
+      ).toHaveBeenCalledWith(
+        'project-1',
+        expect.objectContaining({ filter: ['Complete'] }),
+      );
+    });
   });
 });

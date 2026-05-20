@@ -14,6 +14,7 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
@@ -22,7 +23,6 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useAlgolia } from '../../hooks/algolia';
 
 import { getTagSearch } from '../api';
-import { refreshTagSearchIndex } from '../state';
 
 import Routes from '../Routes';
 
@@ -59,22 +59,23 @@ beforeEach(() => {
 });
 
 const renderTagsPage = async (query = '') => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshTagSearchIndex, Math.random());
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname: '/', search: query }]}>
-              <Routes />
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[{ pathname: '/', search: query }]}>
+                <Routes />
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };

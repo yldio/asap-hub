@@ -1,7 +1,8 @@
-import { Suspense } from 'react';
-import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { createListTeamResponse } from '@asap-hub/fixtures';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, waitFor } from '@testing-library/react';
+import { Suspense } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
@@ -32,47 +33,52 @@ const renderTeamList = async (
   route: string,
   teamType: TeamType | 'all' = 'all',
 ) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          teamsState({
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-            status: [],
-            researchTheme: [],
-            resourceType: [],
-            searchQuery: '',
-            teamType,
-          }),
-        );
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[route]}>
-              <Routes>
-                <Route
-                  path={route}
-                  element={
-                    <Frame title={null}>
-                      <Teams
-                        filtersMap={{
-                          status: [],
-                          researchTheme: [],
-                          resourceType: [],
-                        }}
-                      />
-                    </Frame>
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ reset }) => {
+          reset(
+            teamsState({
+              currentPage: 0,
+              pageSize: CARD_VIEW_PAGE_SIZE,
+              status: [],
+              researchTheme: [],
+              resourceType: [],
+              searchQuery: '',
+              teamType,
+            }),
+          );
+        }}
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[route]}>
+                <Routes>
+                  <Route
+                    path={route}
+                    element={
+                      <Frame title={null}>
+                        <Teams
+                          filtersMap={{
+                            status: [],
+                            researchTheme: [],
+                            resourceType: [],
+                          }}
+                        />
+                      </Frame>
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

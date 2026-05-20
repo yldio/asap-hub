@@ -1,9 +1,10 @@
-import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { createWorkingGroupListResponse } from '@asap-hub/fixtures';
 import { WorkingGroupListResponse } from '@asap-hub/model';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, waitFor } from '@testing-library/react';
+import { Suspense } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
   WhenReady,
@@ -27,34 +28,39 @@ const renderWorkingGroupList = async (
 ) => {
   mockGetWorkingGroups.mockResolvedValue(listWorkingGroupResponse);
 
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) =>
-        reset(
-          workingGroupsState({
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-            filters: new Set(),
-            searchQuery: '',
-          }),
-        )
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={['/working-groups/']}>
-              <Routes>
-                <Route
-                  path="/working-groups"
-                  element={<WorkingGroupList filters={new Set()} />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ reset }) =>
+          reset(
+            workingGroupsState({
+              currentPage: 0,
+              pageSize: CARD_VIEW_PAGE_SIZE,
+              filters: new Set(),
+              searchQuery: '',
+            }),
+          )
+        }
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={['/working-groups/']}>
+                <Routes>
+                  <Route
+                    path="/working-groups"
+                    element={<WorkingGroupList filters={new Set()} />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

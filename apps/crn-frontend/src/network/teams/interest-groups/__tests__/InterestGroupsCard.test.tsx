@@ -1,16 +1,16 @@
-import { ReactNode, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { StaticRouter } from 'react-router';
-import { createInterestGroupResponse } from '@asap-hub/fixtures';
-import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
+import { createInterestGroupResponse } from '@asap-hub/fixtures';
 import { ErrorBoundary } from '@asap-hub/frontend-utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, waitFor } from '@testing-library/react';
+import { ReactNode, Suspense } from 'react';
+import { StaticRouter } from 'react-router';
+import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../../auth/test-utils';
 
 import { getTeamInterestGroups } from '../api';
 import InterestGroupsCard from '../InterestGroupsCard';
-import { teamInterestGroupsState } from '../state';
 
 jest.mock('../api');
 const mockGetTeamInterestGroups = getTeamInterestGroups as jest.MockedFunction<
@@ -21,20 +21,24 @@ mockConsoleError();
 
 const id = 't42';
 
-const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
-  render(
-    <RecoilRoot
-      initializeState={({ reset }) => reset(teamInterestGroupsState(id))}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{ id: 'u42' }}>
-          <WhenReady>
-            <StaticRouter location="/">{children}</StaticRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{ id: 'u42' }}>
+            <WhenReady>
+              <StaticRouter location="/">{children}</StaticRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
+};
 
 afterEach(() => {
   mockGetTeamInterestGroups.mockClear();

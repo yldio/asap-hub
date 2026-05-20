@@ -1,19 +1,18 @@
-import { ReactNode, Suspense } from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import {
   createListInterestGroupResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { ErrorBoundary } from '@asap-hub/frontend-utils';
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, waitFor } from '@testing-library/react';
+import { ReactNode, Suspense } from 'react';
 import { StaticRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
-import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
 import { Auth0Provider, WhenReady } from '../../../../auth/test-utils';
-import InterestGroupsCard from '../InterestGroupsCard';
 import { getUserInterestGroups } from '../api';
-import { userInterestGroupsState } from '../state';
+import InterestGroupsCard from '../InterestGroupsCard';
 
 jest.mock('../api');
 const mockGetUserInterestGroups = getUserInterestGroups as jest.MockedFunction<
@@ -24,20 +23,24 @@ mockConsoleError();
 
 const userId = 'u42';
 
-const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> =>
-  render(
-    <RecoilRoot
-      initializeState={({ reset }) => reset(userInterestGroupsState(userId))}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{ id: '42' }}>
-          <WhenReady>
-            <StaticRouter location="/">{children}</StaticRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+const renderWithWrapper = (children: ReactNode): ReturnType<typeof render> => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{ id: '42' }}>
+            <WhenReady>
+              <StaticRouter location="/">{children}</StaticRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
+};
 
 it('is not rendered when there are no groups', async () => {
   mockGetUserInterestGroups.mockResolvedValue(

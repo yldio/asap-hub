@@ -1,91 +1,25 @@
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import {
-  InterestGroupResponse,
-  ListInterestGroupResponse,
-} from '@asap-hub/model';
+import { ListInterestGroupResponse } from '@asap-hub/model';
+import { useAuth0CRN } from '@asap-hub/react-context';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { interestGroupListState } from '../../interest-groups/state';
-import { authorizationState } from '../../../auth/state';
 import { getTeamInterestGroups } from './api';
 
-const teamInterestGroupIndexState = atomFamily<
-  | { ids: ReadonlyArray<string>; total: number }
-  | Error
-  | 'noSuchTeam'
-  | undefined,
-  string
->({
-  key: 'teamInterestGroupIndex',
-  default: undefined,
-});
-export const teamInterestGroupsState = selectorFamily<
-  ListInterestGroupResponse | Error | 'noSuchTeam' | undefined,
-  string
->({
-  key: 'teamInterestGroups',
-  get:
-    (teamId) =>
-    ({ get }) => {
-      const index = get(teamInterestGroupIndexState(teamId));
-      if (
-        index === undefined ||
-        index === 'noSuchTeam' ||
-        index instanceof Error
-      )
-        return index;
-      const interestGroups: InterestGroupResponse[] = [];
-      for (const id of index.ids) {
-        const interestGroup = get(interestGroupListState(id));
-        if (interestGroup === undefined) return undefined;
-        interestGroups.push(interestGroup);
-      }
-      return { total: index.total, items: interestGroups };
-    },
-  set:
-    (teamId) =>
-    ({ get, set, reset }, newInterestGroups) => {
-      if (
-        newInterestGroups === undefined ||
-        newInterestGroups instanceof DefaultValue
-      ) {
-        reset(teamInterestGroupIndexState(teamId));
-      } else if (
-        newInterestGroups instanceof Error ||
-        newInterestGroups === 'noSuchTeam'
-      ) {
-        set(teamInterestGroupIndexState(teamId), newInterestGroups);
-      } else {
-        newInterestGroups?.items.forEach((interestGroup) =>
-          set(interestGroupListState(interestGroup.id), interestGroup),
-        );
-        set(teamInterestGroupIndexState(teamId), {
-          total: newInterestGroups.total,
-          ids: newInterestGroups.items.map((group) => group.id),
-        });
-      }
-    },
-});
+export const teamInterestGroupsQueryKey = (teamId: string) =>
+  ['interest-groups', 'by-team', teamId] as const;
 
-export const useTeamInterestGroupsById = (teamId: string) => {
-  const authorization = useRecoilValue(authorizationState);
-  const [teamInterestGroups, setTeamInterestGroups] = useRecoilState(
-    teamInterestGroupsState(teamId),
-  );
-  if (teamInterestGroups === undefined) {
-    throw getTeamInterestGroups(teamId, authorization)
-      .then((newTeamInterestGroups) =>
-        setTeamInterestGroups(newTeamInterestGroups ?? 'noSuchTeam'),
-      )
-      .catch(setTeamInterestGroups);
-  }
-  if (teamInterestGroups instanceof Error) {
-    throw teamInterestGroups;
-  }
-  return teamInterestGroups;
+export type TeamInterestGroupsResult = ListInterestGroupResponse | 'noSuchTeam';
+
+export const useTeamInterestGroupsById = (
+  teamId: string,
+): TeamInterestGroupsResult => {
+  const auth0 = useAuth0CRN();
+  const { data } = useSuspenseQuery({
+    queryKey: teamInterestGroupsQueryKey(teamId),
+    queryFn: async (): Promise<TeamInterestGroupsResult> => {
+      const token = await auth0.getTokenSilently();
+      const result = await getTeamInterestGroups(teamId, `Bearer ${token}`);
+      return result ?? 'noSuchTeam';
+    },
+  });
+  return data;
 };

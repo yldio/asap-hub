@@ -1,19 +1,19 @@
-import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route, Routes } from 'react-router';
-import { render, waitFor, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import {
   createInterestGroupResponse,
   createListEventResponse,
 } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Suspense } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { RecoilRoot } from 'recoil';
 
-import InterestGroupProfile from '../InterestGroupProfile';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
-import { refreshInterestGroupState } from '../state';
-import { getInterestGroup } from '../api';
 import { getEvents } from '../../../events/api';
+import { getInterestGroup } from '../api';
+import InterestGroupProfile from '../InterestGroupProfile';
 
 jest.mock('../api');
 jest.mock('../../../events/api');
@@ -35,35 +35,38 @@ const renderGroupProfile = async (
     id === interestGroupResponse.id ? interestGroupResponse : undefined,
   );
 
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshInterestGroupState(interestGroupResponse.id), Math.random())
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                network({})
-                  .interestGroups({})
-                  .interestGroup({ interestGroupId }).$,
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={`${network.template}${
-                    network({}).interestGroups.template
-                  }${network({}).interestGroups({}).interestGroup.template}/*`}
-                  element={<InterestGroupProfile currentTime={new Date()} />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  network({})
+                    .interestGroups({})
+                    .interestGroup({ interestGroupId }).$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={`${network.template}${
+                      network({}).interestGroups.template
+                    }${
+                      network({}).interestGroups({}).interestGroup.template
+                    }/*`}
+                    element={<InterestGroupProfile currentTime={new Date()} />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -201,41 +204,43 @@ it('renders the not-found page when the interest group is not found', async () =
   const nonExistentId = 'non-existent-id';
   mockGetInterestGroup.mockResolvedValueOnce(undefined);
 
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshInterestGroupState(nonExistentId), Math.random())
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                network({})
-                  .interestGroups({})
-                  .interestGroup({ interestGroupId: nonExistentId }).$,
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={`${network.template}${
-                    network({}).interestGroups.template
-                  }${network({}).interestGroups({}).interestGroup.template}/*`}
-                  element={<InterestGroupProfile currentTime={new Date()} />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  network({})
+                    .interestGroups({})
+                    .interestGroup({ interestGroupId: nonExistentId }).$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={`${network.template}${
+                      network({}).interestGroups.template
+                    }${
+                      network({}).interestGroups({}).interestGroup.template
+                    }/*`}
+                    element={<InterestGroupProfile currentTime={new Date()} />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
 
   await waitFor(() => {
     expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
   });
 
-  // This covers line 94: return <NotFoundPage />;
   expect(await screen.findByText(/sorry.+page/i)).toBeVisible();
 });

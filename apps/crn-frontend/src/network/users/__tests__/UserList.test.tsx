@@ -1,10 +1,11 @@
-import { Suspense } from 'react';
-import { render, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { User } from '@asap-hub/auth';
 import { createListUserResponse } from '@asap-hub/fixtures';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
-import { User } from '@asap-hub/auth';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Suspense } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
@@ -36,31 +37,36 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
 >;
 
 const renderUserList = async (user: Partial<User> = {}) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          usersState({
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-            filters: new Set(),
-            searchQuery: '',
-          }),
-        );
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter initialEntries={['/users']}>
-              <Routes>
-                <Route path="/users" element={<UserList />} />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ reset }) => {
+          reset(
+            usersState({
+              currentPage: 0,
+              pageSize: CARD_VIEW_PAGE_SIZE,
+              filters: new Set(),
+              searchQuery: '',
+            }),
+          );
+        }}
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter initialEntries={['/users']}>
+                <Routes>
+                  <Route path="/users" element={<UserList />} />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

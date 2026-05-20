@@ -1,15 +1,15 @@
-import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { createListInterestGroupResponse } from '@asap-hub/fixtures';
 import { ListInterestGroupResponse } from '@asap-hub/model';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
+import { Suspense } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { RecoilRoot } from 'recoil';
+
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 
-import InterestGroupList from '../InterestGroupList';
 import { getInterestGroups } from '../api';
-import { interestGroupsState } from '../state';
-import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
+import InterestGroupList from '../InterestGroupList';
 
 jest.mock('../api');
 jest.mock('../../users/api');
@@ -25,34 +25,28 @@ const renderInterestGroupList = async (
 ) => {
   mockGetInterestGroups.mockResolvedValue(listGroupResponse);
 
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) =>
-        reset(
-          interestGroupsState({
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-            filters: new Set(),
-            searchQuery: '',
-          }),
-        )
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={['/interest-groups/']}>
-              <Routes>
-                <Route
-                  path="/interest-groups"
-                  element={<InterestGroupList filters={new Set()} />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={['/interest-groups/']}>
+                <Routes>
+                  <Route
+                    path="/interest-groups"
+                    element={<InterestGroupList filters={new Set()} />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

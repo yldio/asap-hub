@@ -850,7 +850,6 @@ describe('projects api', () => {
     });
   });
 
-
   describe('createProjectMilestone', () => {
     const mockFetch = jest.fn();
     const milestoneData: MilestoneCreateRequest = {

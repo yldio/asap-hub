@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { ReactNode, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
@@ -14,15 +15,22 @@ const mockGetResearchThemes = getResearchThemes as jest.MockedFunction<
   typeof getResearchThemes
 >;
 
-const wrapper = ({ children }: { children: ReactNode }) => (
-  <RecoilRoot>
-    <Suspense fallback={null}>
-      <Auth0Provider user={{}}>
-        <WhenReady>{children}</WhenReady>
-      </Auth0Provider>
-    </Suspense>
-  </RecoilRoot>
-);
+const wrapper = ({ children }: { children: ReactNode }) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback={null}>
+          <Auth0Provider user={{}}>
+            <WhenReady>{children}</WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>
+  );
+};
 
 describe('useResearchThemes', () => {
   beforeEach(() => {

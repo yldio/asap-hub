@@ -147,9 +147,7 @@ export const useResearchTags = () => {
   return data ?? [];
 };
 
-export const useResearchThemes = (
-  types?: ReadonlyArray<ResearchThemeType>,
-) => {
+export const useResearchThemes = (types?: ReadonlyArray<ResearchThemeType>) => {
   const auth0 = useAuth0CRN();
   const typesKey = types ? [...types].sort().join(',') : '';
   const { data } = useQuery({

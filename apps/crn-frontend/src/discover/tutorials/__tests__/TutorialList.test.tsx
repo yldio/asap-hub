@@ -1,19 +1,19 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { ReactNode, Suspense } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router';
-import { render, waitFor, screen, renderHook } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import {
-  createTutorialsResponse,
   createListTutorialsResponse,
+  createTutorialsResponse,
 } from '@asap-hub/fixtures';
 import { Frame } from '@asap-hub/frontend-utils';
-import { usePagination, usePaginationParams } from '../../../hooks';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, renderHook, screen, waitFor } from '@testing-library/react';
+import { ReactNode, Suspense } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { RecoilRoot } from 'recoil';
 
-import TutorialList from '../TutorialList';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { usePagination, usePaginationParams } from '../../../hooks';
 import { getTutorials } from '../api';
-import { tutorialsListState } from '../state';
+import TutorialList from '../TutorialList';
 
 const MemoryRouterWithFuture = ({ children }: { children: ReactNode }) => (
   <MemoryRouter>{children}</MemoryRouter>
@@ -33,38 +33,32 @@ const mockGetTutorials = getTutorials as jest.MockedFunction<
 const pageSize = 10;
 
 const renderTutorials = async (searchQuery = '') => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   const result = render(
-    <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ reset }) => {
-          reset(
-            tutorialsListState({
-              searchQuery,
-              currentPage: 0,
-              filters: new Set(),
-              pageSize: 10,
-            }),
-          );
-        }}
-      >
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={['/guides-tutorials/tutorials']}>
-              <Routes>
-                <Route
-                  path="/guides-tutorials/tutorials"
-                  element={
-                    <Frame title={null}>
-                      <TutorialList searchQuery={searchQuery} />
-                    </Frame>
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </RecoilRoot>
-    </Suspense>,
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback="loading">
+        <RecoilRoot>
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={['/guides-tutorials/tutorials']}>
+                <Routes>
+                  <Route
+                    path="/guides-tutorials/tutorials"
+                    element={
+                      <Frame title={null}>
+                        <TutorialList searchQuery={searchQuery} />
+                      </Frame>
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </RecoilRoot>
+      </Suspense>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

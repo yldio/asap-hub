@@ -1,15 +1,14 @@
-import { RecoilRoot } from 'recoil';
-import { Suspense } from 'react';
-import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { TutorialsResponse } from '@asap-hub/model';
 import { discover } from '@asap-hub/routing';
-
-import Tutorial from '../Tutorial';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, waitFor } from '@testing-library/react';
+import { Suspense } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getTutorialById } from '../api';
-import { refreshTutorialItemState } from '../state';
+import Tutorial from '../Tutorial';
 
 jest.mock('../api');
 
@@ -29,36 +28,38 @@ const mockGetTutorialById = getTutorialById as jest.MockedFunction<
 >;
 
 const renderPage = async () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshTutorialItemState(tutorial.id), Math.random())
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                discover({}).tutorials({}).tutorial({ tutorialId: tutorial.id })
-                  .$,
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={
-                    discover.template +
-                    discover({}).tutorials.template +
-                    discover({}).tutorials({}).tutorial.template
-                  }
-                  element={<Tutorial />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  discover({}).tutorials({}).tutorial({
+                    tutorialId: tutorial.id,
+                  }).$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={
+                      discover.template +
+                      discover({}).tutorials.template +
+                      discover({}).tutorials({}).tutorial.template
+                    }
+                    element={<Tutorial />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

@@ -1,102 +1,42 @@
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import { ListTutorialsResponse, TutorialsResponse } from '@asap-hub/model';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilValue,
-  useRecoilState,
-} from 'recoil';
-import { authorizationState } from '../../auth/state';
+import { useAuth0CRN } from '@asap-hub/react-context';
+import { useSuspenseQuery } from '@tanstack/react-query';
+
 import { getTutorialById, getTutorials } from './api';
 
-export const tutorialsIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  GetListOptions
->({
-  key: 'tutorialsIndex',
-  default: undefined,
-});
+export const tutorialsQueryKey = (options: GetListOptions) =>
+  ['tutorials', 'list', options] as const;
 
-export const refreshTutorialItemState = atomFamily<number, string>({
-  key: 'refreshTutorialItem',
-  default: 0,
-});
+export const tutorialQueryKey = (id: string) =>
+  ['tutorials', 'item', id] as const;
 
-export const fetchTutorialState = selectorFamily<
-  TutorialsResponse | undefined,
-  string
->({
-  key: 'fetchTutorial',
-  get:
-    (id) =>
-    ({ get }) => {
-      get(refreshTutorialItemState(id));
-      const authorization = get(authorizationState);
-      return getTutorialById(id, authorization);
+export const useTutorials = (
+  options: GetListOptions,
+): ListTutorialsResponse => {
+  const auth0 = useAuth0CRN();
+  const { data } = useSuspenseQuery({
+    queryKey: tutorialsQueryKey(options),
+    queryFn: async (): Promise<ListTutorialsResponse> => {
+      const token = await auth0.getTokenSilently();
+      return getTutorials(options, `Bearer ${token}`);
     },
-});
-
-const tutorialState = atomFamily<TutorialsResponse | undefined, string>({
-  key: 'tutorial',
-  default: fetchTutorialState,
-});
-
-export const tutorialsListState = selectorFamily<
-  ListTutorialsResponse | Error | undefined,
-  GetListOptions
->({
-  key: 'tutorialsList',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(tutorialsIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const tutorialsList: TutorialsResponse[] = [];
-      for (const id of index.ids) {
-        const tutorialItem = get(tutorialState(id));
-        if (tutorialItem === undefined) return undefined;
-        tutorialsList.push(tutorialItem);
-      }
-      return { total: index.total, items: tutorialsList };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, updatedTutorials) => {
-      if (
-        updatedTutorials === undefined ||
-        updatedTutorials instanceof DefaultValue
-      ) {
-        reset(tutorialsIndexState(options));
-      } else if (updatedTutorials instanceof Error) {
-        set(tutorialsIndexState(options), updatedTutorials);
-      } else {
-        updatedTutorials?.items.forEach((tutorial) =>
-          set(tutorialState(tutorial.id), tutorial),
-        );
-        set(tutorialsIndexState(options), {
-          total: updatedTutorials.total,
-          ids: updatedTutorials.items.map((tutorial) => tutorial.id),
-        });
-      }
-    },
-});
-
-export const useTutorials = (options: GetListOptions) => {
-  const authorization = useRecoilValue(authorizationState);
-  const [tutorialsList, setTutorialsList] = useRecoilState(
-    tutorialsListState(options),
-  );
-  if (tutorialsList === undefined) {
-    throw getTutorials(options, authorization)
-      .then(setTutorialsList)
-      .catch(setTutorialsList);
-  }
-  if (tutorialsList instanceof Error) {
-    throw tutorialsList;
-  }
-  return tutorialsList;
+  });
+  return data;
 };
 
-export const useTutorialById = (id: string) =>
-  useRecoilValue(tutorialState(id));
+export const useTutorialById = (id: string): TutorialsResponse | undefined => {
+  const auth0 = useAuth0CRN();
+  // useSuspenseQuery requires a non-undefined queryFn result, so we normalise
+  // the "not found" case to `null` inside the cache and back to `undefined`
+  // at the boundary to preserve the consumer-facing contract.
+  const { data } = useSuspenseQuery({
+    queryKey: tutorialQueryKey(id),
+    queryFn: async (): Promise<TutorialsResponse | null> => {
+      const token = await auth0.getTokenSilently();
+      const tutorial = await getTutorialById(id, `Bearer ${token}`);
+      return tutorial ?? null;
+    },
+  });
+  return data ?? undefined;
+};

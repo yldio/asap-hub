@@ -160,4 +160,21 @@ describe('downloadProjectMilestonesXlsx', () => {
     writeBufferSpy.mockRestore();
     clickSpy.mockRestore();
   });
+
+  it('defaults to an empty options object when none is provided', async () => {
+    const fetchExport = jest.fn().mockResolvedValue(exportData);
+    const writeBufferSpy = jest
+      .spyOn(ExcelJS.Workbook.prototype.xlsx, 'writeBuffer')
+      .mockResolvedValue(new ArrayBuffer(0));
+    const clickSpy = jest
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(() => {});
+
+    await downloadProjectMilestonesXlsx('Alessi Project', fetchExport);
+
+    expect(fetchExport).toHaveBeenCalledWith({});
+
+    writeBufferSpy.mockRestore();
+    clickSpy.mockRestore();
+  });
 });

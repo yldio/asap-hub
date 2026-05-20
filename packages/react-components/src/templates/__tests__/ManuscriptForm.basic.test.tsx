@@ -504,15 +504,16 @@ describe('Manuscript form', () => {
   });
 
   it('should disable firstPublicDate field if user is resubmitting and firstPublicDate has already been provided', async () => {
-    const { findByLabelText, getByRole } = await renderManuscriptForm({
-      ...defaultProps,
-      firstPublicDate: '2022-01-03T00:00:00.000Z',
-      resubmitManuscript: true,
-      manuscriptId: 'test-id',
-      isOpenScienceTeamMember: false,
-      type: 'Original Research',
-      lifecycle: 'Publication',
-    });
+    const { findByLabelText, getByRole, getByText } =
+      await renderManuscriptForm({
+        ...defaultProps,
+        firstPublicDate: '2022-01-03T00:00:00.000Z',
+        resubmitManuscript: true,
+        manuscriptId: 'test-id',
+        isOpenScienceTeamMember: false,
+        type: 'Original Research',
+        lifecycle: 'Publication',
+      });
 
     const lifecycleCombobox = getByRole('combobox', {
       name: /Where is the manuscript in the life cycle/i,
@@ -521,6 +522,11 @@ describe('Manuscript form', () => {
     await userEvent.type(lifecycleCombobox, 'Preprint{enter}');
 
     expect(await findByLabelText(/Date first made public/i)).toBeDisabled();
+    expect(
+      getByText(
+        'The date this manuscript was first shared publicly. Set on a previous version and cannot be edited.',
+      ),
+    ).toBeInTheDocument();
   });
 
   it('should default to false for isOpenScienceTeamMember if not provided', async () => {

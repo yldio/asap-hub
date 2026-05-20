@@ -431,6 +431,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const isEditMode = !!manuscriptId && !resubmitManuscript;
   const canSubmitComplianceReportResponse =
     resubmitManuscript || (isEditMode && versionsCount > 1);
+  const shouldEnableFirstPublicDateField =
+    !resubmitManuscript || !firstPublicDate;
+  const firstPublicDateFieldDescription = shouldEnableFirstPublicDateField
+    ? 'Enter the date this manuscript was first shared publicly, whether as a preprint or publication. This cannot be changed later.'
+    : 'The date this manuscript was first shared publicly. Set on a previous version and cannot be edited.';
 
   const methods = useForm<ManuscriptFormData>({
     mode: 'all',
@@ -1129,12 +1134,11 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       <LabeledDateInput
                         title="Date first made public"
                         subtitle="(required)"
-                        description="Enter the date this manuscript was first shared publicly, whether as a preprint or publication. This cannot be changed later."
+                        description={firstPublicDateFieldDescription}
                         onChange={onChange}
                         value={value}
                         enabled={
-                          !isSubmitting &&
-                          (!resubmitManuscript || !firstPublicDate)
+                          !isSubmitting && shouldEnableFirstPublicDateField
                         }
                         customValidationMessage={error?.message}
                       />

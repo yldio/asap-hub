@@ -1142,11 +1142,6 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       (value): value is MilestoneStatus =>
         milestoneStatuses.includes(value as MilestoneStatus),
     );
-    const hasTableFilters =
-      !!grantType ||
-      !!normalizedSearch ||
-      statusFilters.length > 0 ||
-      sort !== 'aim_asc';
 
     const milestoneFilters = cleanArray([
       { term: { projectId: id } },
@@ -1235,33 +1230,16 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     // eslint-disable-next-line no-underscore-dangle
     const aimSources = aimHits.map((hit) => hit._source);
 
-    const referencedAimNumbers = hasTableFilters
-      ? new Set(
-          milestones.flatMap((m) =>
-            m.relatedAimNumbers
-              .split(';')
-              .map((value) => value.trim().replace(/^A/, ''))
-              .filter(Boolean),
-          ),
-        )
-      : null;
-
-    const aims: ProjectAimExportRow[] = aimSources
-      .filter((source) =>
-        referencedAimNumbers
-          ? referencedAimNumbers.has(String(source.aimOrder))
-          : true,
-      )
-      .map((source) => ({
-        projectName: source.projectName,
-        grantType: source.grantType as GrantType,
-        aimNumber: `A${source.aimOrder}`,
-        description: source.description,
-        articlesDOI: source.articlesDOI ?? '',
-        createdDate: source.createdDate,
-        lastUpdated: source.lastDate,
-        status: source.status as ProjectAimExportRow['status'],
-      }));
+    const aims: ProjectAimExportRow[] = aimSources.map((source) => ({
+      projectName: source.projectName,
+      grantType: source.grantType as GrantType,
+      aimNumber: `A${source.aimOrder}`,
+      description: source.description,
+      articlesDOI: source.articlesDOI ?? '',
+      createdDate: source.createdDate,
+      lastUpdated: source.lastDate,
+      status: source.status as ProjectAimExportRow['status'],
+    }));
 
     return { aims, milestones };
   }

@@ -5,6 +5,7 @@ import ProjectController from '../controllers/project.controller';
 import {
   validateProjectFetchParameters,
   validateProjectMilestoneCreateRequest,
+  validateProjectMilestonesExportOptions,
   validateProjectMilestonesFetchOptions,
   validateProjectParameters,
   validateProjectPatchRequest,
@@ -97,6 +98,34 @@ export const projectRouteFactory = (
         filter,
         sort,
       });
+
+      res.json(result);
+    },
+  );
+
+  projectRoutes.get<{ projectId: string }>(
+    '/projects/:projectId/milestones-export',
+    async (req, res) => {
+      if (!req.loggedInUser) throw Boom.forbidden();
+      const { projectId } = validateProjectParameters(req.params);
+
+      const normalizeToStringArray = (
+        value: unknown,
+      ): string[] | undefined => {
+        if (value === undefined) return undefined;
+        if (Array.isArray(value)) return value.map((item) => String(item));
+        return [String(value)];
+      };
+
+      const options = validateProjectMilestonesExportOptions({
+        ...req.query,
+        filter: normalizeToStringArray(req.query.filter),
+      });
+
+      const result = await projectController.exportProjectMilestones(
+        projectId,
+        options,
+      );
 
       res.json(result);
     },

@@ -109,9 +109,7 @@ export const projectRouteFactory = (
       if (!req.loggedInUser) throw Boom.forbidden();
       const { projectId } = validateProjectParameters(req.params);
 
-      const normalizeToStringArray = (
-        value: unknown,
-      ): string[] | undefined => {
+      const normalizeToStringArray = (value: unknown): string[] | undefined => {
         if (value === undefined) return undefined;
         if (Array.isArray(value)) return value.map((item) => String(item));
         return [String(value)];

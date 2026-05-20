@@ -1198,6 +1198,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
 
     const milestoneHits = milestonesResponse.hits?.hits ?? [];
     const milestones: ProjectMilestoneExportRow[] = milestoneHits.map((hit) => {
+      // eslint-disable-next-line no-underscore-dangle
       const source = hit._source;
       return {
         projectName: source.projectName,
@@ -1231,6 +1232,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     })) as unknown as OpensearchHitsResponse<ProjectAimsDataObject>;
 
     const aimHits = aimsResponse.hits?.hits ?? [];
+    // eslint-disable-next-line no-underscore-dangle
     const aimSources = aimHits.map((hit) => hit._source);
 
     const referencedAimNumbers = hasTableFilters

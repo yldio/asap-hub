@@ -1,5 +1,14 @@
 import { ProjectMilestonesExportResponse } from '@asap-hub/model';
 import * as XLSX from 'xlsx';
+
+jest.mock('xlsx', () => {
+  const actual = jest.requireActual('xlsx');
+  return {
+    ...actual,
+    writeFile: jest.fn(),
+  };
+});
+
 import {
   buildExportFileName,
   buildMilestonesWorkbook,
@@ -62,9 +71,8 @@ describe('buildMilestonesWorkbook', () => {
     expect(workbook.SheetNames).toEqual(['Aims', 'Milestones']);
 
     const aimsSheet = workbook.Sheets.Aims!;
-    const aimsRows = XLSX.utils.sheet_to_json<Record<string, string>>(
-      aimsSheet,
-    );
+    const aimsRows =
+      XLSX.utils.sheet_to_json<Record<string, string>>(aimsSheet);
     expect(aimsRows[0]).toMatchObject({
       'Project Title': 'Alessi Project',
       'Grant Type': 'Original Grant',
@@ -77,9 +85,8 @@ describe('buildMilestonesWorkbook', () => {
     });
 
     const milestonesSheet = workbook.Sheets.Milestones!;
-    const milestoneRows = XLSX.utils.sheet_to_json<Record<string, string>>(
-      milestonesSheet,
-    );
+    const milestoneRows =
+      XLSX.utils.sheet_to_json<Record<string, string>>(milestonesSheet);
     expect(milestoneRows[0]).toMatchObject({
       'Project Title': 'Alessi Project',
       'Grant Type': 'Supplement Grant',
@@ -93,11 +100,14 @@ describe('buildMilestonesWorkbook', () => {
 });
 
 describe('downloadProjectMilestonesXlsx', () => {
-  it('passes the requested options to the fetcher and writes the file', async () => {
+  const writeFile = XLSX.writeFile as jest.MockedFunction<typeof XLSX.writeFile>;
+
+  beforeEach(() => {
+    writeFile.mockReset();
+  });
+
+  it('passes the requested options to the fetcher and builds the workbook', async () => {
     const fetchExport = jest.fn().mockResolvedValue(exportData);
-    const writeFileSpy = jest
-      .spyOn(XLSX, 'writeFile')
-      .mockImplementation(() => {});
 
     await downloadProjectMilestonesXlsx('Alessi Project', fetchExport, {
       grantType: 'supplement',
@@ -112,11 +122,9 @@ describe('downloadProjectMilestonesXlsx', () => {
       filter: ['Complete'],
       sort: 'aim_desc',
     });
-    expect(writeFileSpy).toHaveBeenCalledWith(
+    expect(writeFile).toHaveBeenCalledWith(
       expect.objectContaining({ SheetNames: ['Aims', 'Milestones'] }),
       expect.stringMatching(/^aims_and_milestones_Alessi_Project_\d{6}\.xlsx$/),
     );
-
-    writeFileSpy.mockRestore();
   });
 });

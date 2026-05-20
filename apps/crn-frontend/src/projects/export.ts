@@ -7,13 +7,11 @@ import {
 import { format } from 'date-fns';
 import * as XLSX from 'xlsx';
 
-const GRANT_TYPE_LABEL: Record<
-  ProjectMilestoneExportRow['grantType'],
-  string
-> = {
-  original: 'Original Grant',
-  supplement: 'Supplement Grant',
-};
+const GRANT_TYPE_LABEL: Record<ProjectMilestoneExportRow['grantType'], string> =
+  {
+    original: 'Original Grant',
+    supplement: 'Supplement Grant',
+  };
 
 const formatDate = (value: string | null): string => {
   if (!value) return '';

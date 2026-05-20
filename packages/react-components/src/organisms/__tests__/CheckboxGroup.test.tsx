@@ -90,5 +90,5 @@ it('emits value changes', async () => {
     />,
   );
   await userEvent.click(getByLabelText('Red'));
-  expect(handleChange).toHaveBeenLastCalledWith('red');
+  expect(handleChange).toHaveBeenLastCalledWith('red', undefined);
 });

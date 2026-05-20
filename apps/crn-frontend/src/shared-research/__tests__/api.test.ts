@@ -362,6 +362,23 @@ describe('getResearchThemes', () => {
       `"Failed to fetch research themes. Expected status 2xx. Received status 500."`,
     );
   });
+
+  it('forwards the types filter as a query param', async () => {
+    nock(API_BASE_URL)
+      .get('/research-themes')
+      .query({ types: 'Resource' })
+      .reply(200, { items: [] });
+    await getResearchThemes('', ['Resource']);
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('appends each types value as a separate query param', async () => {
+    nock(API_BASE_URL)
+      .get('/research-themes?types=Discovery&types=Resource')
+      .reply(200, { items: [] });
+    await getResearchThemes('', ['Discovery', 'Resource']);
+    expect(nock.isDone()).toBe(true);
+  });
 });
 
 describe('getResourceTypes', () => {

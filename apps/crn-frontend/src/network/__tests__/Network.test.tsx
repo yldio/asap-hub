@@ -205,7 +205,11 @@ describe.each([
         expect.anything(),
         expect.objectContaining({
           searchQuery: 'test123',
-          filters: new Set(),
+          status: [],
+          resourceType: [],
+          researchTheme: [],
+          teamType:
+            teamType === 'discovery teams' ? 'Discovery Team' : 'Resource Team',
         }),
       );
     });
@@ -294,7 +298,7 @@ describe.each([
       expect(mockGetAlgoliaTeams).toHaveBeenLastCalledWith(
         expect.anything(),
         expect.objectContaining({
-          filters: new Set(['Active']),
+          status: ['Active'],
         }),
       ),
     );
@@ -320,7 +324,7 @@ it('allows toggling between discovery teams and resource teams', async () => {
       expect.anything(),
       expect.objectContaining({
         searchQuery: 'test123',
-        filters: new Set(),
+        teamType: 'Resource Team',
       }),
     );
   });

@@ -1,6 +1,7 @@
 import { ListResearchThemeResponse } from '@asap-hub/model';
-import { Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import ResearchThemeController from '../controllers/research-theme.controller';
+import { validateResearchThemeFetchParameters } from '../validation/research-theme.validation';
 
 export const researchThemeRouteFactory = (
   researchThemeController: ResearchThemeController,
@@ -9,8 +10,16 @@ export const researchThemeRouteFactory = (
 
   researchThemesRoutes.get(
     '/research-themes',
-    async (_req, res: Response<ListResearchThemeResponse>) => {
-      const result = await researchThemeController.fetch();
+    async (req: Request, res: Response<ListResearchThemeResponse>) => {
+      const { types } = validateResearchThemeFetchParameters(req.query);
+
+      const result = await researchThemeController.fetch(
+        types
+          ? {
+              filter: { types },
+            }
+          : {},
+      );
       res.json(result);
     },
   );

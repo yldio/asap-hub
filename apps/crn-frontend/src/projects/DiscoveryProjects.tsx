@@ -4,7 +4,7 @@ import {
   ProjectsPage,
   DiscoveryProjectsList,
 } from '@asap-hub/react-components';
-import { DiscoveryProject } from '@asap-hub/model';
+import { DiscoveryProject, DISCOVERY_THEME_TYPES } from '@asap-hub/model';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
 import {
@@ -82,7 +82,7 @@ const DiscoveryProjects: FC<DiscoveryProjectsProps> = ({
   onChangeFilter,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const researchThemes = useResearchThemes();
+  const researchThemes = useResearchThemes(DISCOVERY_THEME_TYPES);
   const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
   const themeFilters = useMemo(
     () => toDiscoveryThemeFilters(filters, researchThemes),

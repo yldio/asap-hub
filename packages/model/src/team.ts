@@ -42,6 +42,12 @@ export const teamStatus = ['Active', 'Inactive'] as const;
 
 export type TeamStatus = (typeof teamStatus)[number];
 
+export type FetchTeamsFilter = {
+  status?: TeamStatus[];
+  resourceType?: string[];
+  researchTheme?: string[];
+};
+
 export interface TeamCreateRequest {
   displayName: string;
   inactiveSince?: string;

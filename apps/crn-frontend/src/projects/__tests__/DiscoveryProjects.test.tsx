@@ -75,9 +75,9 @@ beforeEach(() => {
     algoliaQueryId: 'query',
   });
   mockUseResearchThemes.mockReturnValue([
-    { id: 'theme-1', name: 'Neuro' },
-    { id: 'theme-2', name: 'Neurodegeneration' },
-    { id: 'theme-3', name: 'Cell Biology' },
+    { id: 'theme-1', name: 'Neuro', types: ['Discovery'] },
+    { id: 'theme-2', name: 'Neurodegeneration', types: ['Discovery'] },
+    { id: 'theme-3', name: 'Cell Biology', types: ['Discovery'] },
   ]);
 });
 

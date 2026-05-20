@@ -1,6 +1,6 @@
 import { network } from '@asap-hub/routing';
 import { useLocation } from 'react-router';
-import { TeamDataObject } from '@asap-hub/model';
+import { FetchTeamsFilter, TeamDataObject } from '@asap-hub/model';
 import {
   NetworkTeams,
   DiscoveryTeamIcon,
@@ -19,7 +19,7 @@ import { usePrefetchInterestGroups } from '../interest-groups/state';
 import { usePrefetchWorkingGroups } from '../working-groups/state';
 
 interface NetworkTeamListProps {
-  filters: Set<string>;
+  filtersMap: FetchTeamsFilter;
   searchQuery?: string;
 }
 
@@ -29,7 +29,7 @@ const NoResultsIcon: Record<TeamDataObject['teamType'], ReactElement> = {
 };
 
 const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
-  filters,
+  filtersMap,
   searchQuery = '',
 }) => {
   const location = useLocation();
@@ -52,21 +52,23 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
     searchQuery,
     currentPage,
     pageSize,
-    filters,
     teamType,
+    researchTheme: filtersMap.researchTheme,
+    resourceType: filtersMap.resourceType,
+    status: filtersMap.status,
   });
   usePrefetchTeams({
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
     searchQuery: '',
-    filters: new Set(),
+    status: filtersMap.status,
     teamType: teamType === 'Resource Team' ? 'Discovery Team' : 'Resource Team',
   });
   usePrefetchInterestGroups({
     currentPage: 0,
     pageSize,
     searchQuery,
-    filters,
+    filters: new Set(filtersMap.status),
   });
   usePrefetchWorkingGroups({
     currentPage: 0,

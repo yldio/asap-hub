@@ -10,11 +10,12 @@ export default class ResearchThemeController {
   async fetch(
     options: FetchResearchThemesOptions = {},
   ): Promise<ListResearchThemeResponse> {
-    const { take = 100, skip = 0 } = options;
+    const { take = 100, skip = 0, filter } = options;
 
     return this.researchThemeDataProvider.fetch({
       take,
       skip,
+      filter,
     });
   }
 }

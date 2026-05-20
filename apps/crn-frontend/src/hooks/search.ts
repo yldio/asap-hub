@@ -1,16 +1,32 @@
-import { useNavigate, useLocation } from 'react-router';
+import { FetchTeamsFilter } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
+import { useLocation, useNavigate } from 'react-router';
 import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from './pagination';
 
-export const useSearch = () => {
+type Filter = {
+  filter?: string[];
+} & FetchTeamsFilter;
+
+export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
   const location = useLocation();
   const currentUrlParams = new URLSearchParams(location.search);
   const navigate = useNavigate();
 
   const { resetPagination } = usePaginationParams();
 
-  const filters = new Set<string>(currentUrlParams.getAll('filter'));
+  const filtersMap = filterNames.reduce(
+    (filterObject, filterName) => ({
+      ...filterObject,
+      [filterName]: currentUrlParams.getAll(filterName),
+    }),
+    {} as Filter,
+  );
+
+  const filters = new Set<string>(
+    Object.values(filtersMap).flatMap((value) => value),
+  );
+
   const tags = currentUrlParams.getAll('tag');
   const searchQuery = currentUrlParams.get(searchQueryParam) || '';
 
@@ -24,13 +40,13 @@ export const useSearch = () => {
     });
   };
 
-  const toggleFilter = (filter: string) => {
-    const currentFilters = currentUrlParams.getAll('filter');
+  const toggleFilter = (filter: string, filterName = 'filter') => {
+    const currentFilters = currentUrlParams.getAll(filterName);
     const filterIndex = currentFilters.indexOf(filter);
     filterIndex > -1
       ? currentFilters.splice(filterIndex, 1)
       : currentFilters.push(filter);
-    replaceArrayParams('filter', currentFilters);
+    replaceArrayParams(filterName, currentFilters);
   };
 
   const setTags = (newTags: string[]) => {
@@ -56,6 +72,7 @@ export const useSearch = () => {
     debouncedSearchQuery,
     setSearchQuery,
     filters,
+    filtersMap,
     toggleFilter,
     tags,
     setTags,

@@ -11,10 +11,11 @@ import {
   ResearchOutputPutRequest,
   ResearchTagResponse,
   ResearchThemeResponse,
+  ResearchThemeType,
   ResourceTypeResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { atom, selector, useRecoilValue } from 'recoil';
+import { atom, selector, selectorFamily, useRecoilValue } from 'recoil';
 import { authorizationState } from '../auth/state';
 import { useAlgolia } from '../hooks/algolia';
 import {
@@ -162,16 +163,27 @@ const researchThemesState = atom<ResearchThemeResponse[]>({
   default: [],
 });
 
-export const researchThemesSelector = selector({
-  key: 'researchThemes',
-  get: ({ get }) => {
-    get(researchThemesState);
-    const authorization = get(authorizationState);
-    return getResearchThemes(authorization);
-  },
+export const researchThemesByTypesSelector = selectorFamily<
+  ResearchThemeResponse[],
+  string
+>({
+  key: 'researchThemesByTypes',
+  get:
+    (typesKey) =>
+    ({ get }) => {
+      get(researchThemesState);
+      const authorization = get(authorizationState);
+      const types = typesKey
+        ? (typesKey.split(',') as ResearchThemeType[])
+        : undefined;
+      return getResearchThemes(authorization, types);
+    },
 });
 
-export const useResearchThemes = () => useRecoilValue(researchThemesSelector);
+export const useResearchThemes = (
+  types?: ReadonlyArray<ResearchThemeType>,
+): ResearchThemeResponse[] =>
+  useRecoilValue(researchThemesByTypesSelector(types ? types.join(',') : ''));
 
 const resourceTypesState = atom<ResourceTypeResponse[]>({
   key: 'resourceTypesState',

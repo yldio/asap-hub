@@ -11,6 +11,7 @@ export {
   EMPTY_ALGOLIA_RESPONSE,
   EMPTY_ALGOLIA_FACET_HITS,
 } from './no-token-client';
+export * from './utils';
 export { gp2 };
 
 export * from './fixtures';

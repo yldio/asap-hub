@@ -26,6 +26,7 @@ import {
   ResearchOutputPostRequest,
   TeamResponse,
 } from '@asap-hub/model';
+import { GetListOptions } from '@asap-hub/frontend-utils';
 import nock from 'nock';
 import { getPresignedUrl } from '../../../shared-api/files';
 
@@ -67,7 +68,6 @@ afterEach(() => {
 });
 
 const options: GetTeamsListOptions = {
-  filters: new Set(),
   pageSize: CARD_VIEW_PAGE_SIZE,
   currentPage: 0,
   searchQuery: '',
@@ -162,7 +162,7 @@ describe('getAlgoliaTeams', () => {
     await getAlgoliaTeams(algoliaSearchClient, {
       ...options,
       teamType: 'Discovery Team',
-      filters: new Set(['Active']),
+      status: ['Active'],
     });
     expect(search).toHaveBeenCalledWith(
       ['team'],
@@ -177,7 +177,7 @@ describe('getAlgoliaTeams', () => {
     await getAlgoliaTeams(algoliaSearchClient, {
       ...options,
       teamType: 'Discovery Team',
-      filters: new Set(['Active', 'Inactive']),
+      status: ['Active', 'Inactive'],
     });
     expect(search).toHaveBeenCalledWith(
       ['team'],
@@ -198,7 +198,6 @@ describe('getAlgoliaTeams', () => {
     await getAlgoliaTeams(algoliaSearchClient, {
       ...options,
       teamType,
-      filters: new Set(), // No filters to test the else branch
     });
     expect(search).toHaveBeenCalledWith(
       ['team'],
@@ -214,7 +213,7 @@ describe('getAlgoliaTeams', () => {
     await getAlgoliaTeams(algoliaSearchClient, {
       ...options,
       teamType,
-      filters: new Set(['Inactive']),
+      status: ['Inactive'],
     });
     expect(search).toHaveBeenCalledWith(
       ['team'],
@@ -229,7 +228,7 @@ describe('getAlgoliaTeams', () => {
     await getAlgoliaTeams(algoliaSearchClient, {
       ...options,
       teamType: 'Discovery Team',
-      filters: new Set(['Theme1']),
+      researchTheme: ['Theme1'],
     });
     expect(search).toHaveBeenCalledWith(
       ['team'],
@@ -244,7 +243,8 @@ describe('getAlgoliaTeams', () => {
     await getAlgoliaTeams(algoliaSearchClient, {
       ...options,
       teamType: 'Discovery Team',
-      filters: new Set(['Active', 'Theme1', 'Theme2']),
+      status: ['Active'],
+      researchTheme: ['Theme1', 'Theme2'],
     });
     expect(search).toHaveBeenCalledWith(
       ['team'],
@@ -462,12 +462,18 @@ describe('createPreprintResearchOutput', () => {
   });
 });
 describe('getLabs', () => {
+  const labOptions: GetListOptions = {
+    searchQuery: '',
+    currentPage: 0,
+    pageSize: 10,
+    filters: new Set(),
+  };
   it('makes an authorized GET request for labs', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/labs')
       .query({ take: '10', skip: '0' })
       .reply(200, {});
-    await getLabs(options, 'Bearer x');
+    await getLabs(labOptions, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -477,12 +483,12 @@ describe('getLabs', () => {
       .get('/labs')
       .query({ take: '10', skip: '0' })
       .reply(200, labs);
-    expect(await getLabs(options, '')).toEqual(labs);
+    expect(await getLabs(labOptions, '')).toEqual(labs);
   });
   it('errors for error status', async () => {
     nock(API_BASE_URL).get('/labs').query({ take: '10', skip: '0' }).reply(500);
     await expect(
-      getLabs(options, ''),
+      getLabs(labOptions, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch labs. Expected status 2xx. Received status 500."`,
     );

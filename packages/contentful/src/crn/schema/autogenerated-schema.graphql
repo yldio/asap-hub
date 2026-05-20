@@ -11037,6 +11037,7 @@ type ResearchTheme implements Entry & _Node {
   linkedFrom(allowedLocales: [String]): ResearchThemeLinkingCollections
   name(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
+  types(locale: String, useFallbackLocale: Boolean): [String]
 }
 
 type ResearchThemeCollection {
@@ -11064,6 +11065,10 @@ input ResearchThemeFilter {
   name_not_contains: String
   name_not_in: [String]
   sys: SysFilter
+  types_contains_all: [String]
+  types_contains_none: [String]
+  types_contains_some: [String]
+  types_exists: Boolean
 }
 
 type ResearchThemeLinkingCollections {
@@ -16404,6 +16409,10 @@ input cfResearchThemeNestedFilter {
   name_not_contains: String
   name_not_in: [String]
   sys: SysFilter
+  types_contains_all: [String]
+  types_contains_none: [String]
+  types_contains_some: [String]
+  types_exists: Boolean
 }
 
 input cfResourceTypeNestedFilter {

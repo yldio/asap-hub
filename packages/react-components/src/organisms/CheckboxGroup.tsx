@@ -9,6 +9,7 @@ export interface Option<V extends string> {
   value: V;
   label: string;
   enabled?: boolean;
+  filterName?: string;
 }
 
 export interface Title {
@@ -20,7 +21,7 @@ export interface Title {
 interface CheckboxGroupProps<V extends string> {
   readonly options: ReadonlyArray<Option<V> | Title>;
   readonly values?: ReadonlySet<V>;
-  readonly onChange?: (newValue: V) => void;
+  readonly onChange?: (newValue: V, filterName?: string) => void;
 }
 export default function CheckboxGroup<V extends string>({
   options,
@@ -45,7 +46,7 @@ export default function CheckboxGroup<V extends string>({
               title={option.label}
               enabled={option.enabled}
               checked={values.has(option.value)}
-              onSelect={() => onChange(option.value)}
+              onSelect={() => onChange(option.value, option?.filterName)}
             />
           )}
         </Fragment>

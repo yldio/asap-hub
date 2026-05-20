@@ -11,9 +11,17 @@ describe('Research Themes Data Provider', () => {
   const getContentfulGraphqlResearchThemeResponse = () => ({
     total: 3,
     items: [
-      { sys: { id: 'theme-1' }, name: 'Neurodegeneration' },
-      { sys: { id: 'theme-2' }, name: 'Cell Biology' },
-      { sys: { id: 'theme-3' }, name: 'Genetics' },
+      {
+        sys: { id: 'theme-1' },
+        name: 'Neurodegeneration',
+        types: ['Discovery'],
+      },
+      {
+        sys: { id: 'theme-2' },
+        name: 'Cell Biology',
+        types: ['Discovery, Resource'],
+      },
+      { sys: { id: 'theme-3' }, name: 'Genetics', types: ['Resource'] },
     ],
   });
 
@@ -36,9 +44,13 @@ describe('Research Themes Data Provider', () => {
       expect(result).toEqual({
         total: 3,
         items: [
-          { id: 'theme-1', name: 'Neurodegeneration' },
-          { id: 'theme-2', name: 'Cell Biology' },
-          { id: 'theme-3', name: 'Genetics' },
+          { id: 'theme-1', name: 'Neurodegeneration', types: ['Discovery'] },
+          {
+            id: 'theme-2',
+            name: 'Cell Biology',
+            types: ['Discovery, Resource'],
+          },
+          { id: 'theme-3', name: 'Genetics', types: ['Resource'] },
         ],
       });
     });
@@ -84,6 +96,7 @@ describe('Research Themes Data Provider', () => {
                 id: 'theme-1',
               },
               name: null,
+              types: [],
             },
           ],
         },
@@ -96,9 +109,36 @@ describe('Research Themes Data Provider', () => {
           {
             id: 'theme-1',
             name: '',
+            types: [],
           },
         ],
       });
+    });
+
+    test('forwards the types filter to contentful as types_contains_some', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchThemeCollection: getContentfulGraphqlResearchThemeResponse(),
+      });
+      await researchThemesDataProvider.fetch({
+        filter: { types: ['Resource'] },
+      });
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          where: { types_contains_some: ['Resource'] },
+        }),
+      );
+    });
+
+    test('sets the where clause to an empty object when no types filter is provided', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchThemeCollection: getContentfulGraphqlResearchThemeResponse(),
+      });
+      await researchThemesDataProvider.fetch({});
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({ where: {} }),
+      );
     });
 
     test('should filter out null items from the collection', async () => {
@@ -106,7 +146,7 @@ describe('Research Themes Data Provider', () => {
         researchThemeCollection: {
           total: 2,
           items: [
-            { sys: { id: 'theme-1' }, name: 'Neurodegeneration' },
+            { sys: { id: 'theme-1' }, name: 'Neurodegeneration', types: null },
             null,
             { sys: { id: 'theme-2' }, name: 'Cell Biology' },
           ],
@@ -117,8 +157,8 @@ describe('Research Themes Data Provider', () => {
       expect(result).toEqual({
         total: 2,
         items: [
-          { id: 'theme-1', name: 'Neurodegeneration' },
-          { id: 'theme-2', name: 'Cell Biology' },
+          { id: 'theme-1', name: 'Neurodegeneration', types: [] },
+          { id: 'theme-2', name: 'Cell Biology', types: [] },
         ],
       });
     });

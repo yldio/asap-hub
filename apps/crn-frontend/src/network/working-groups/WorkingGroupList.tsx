@@ -30,14 +30,14 @@ const NetworkWorkingGroupList: React.FC<NetworkWorkingGroupListProps> = ({
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
     searchQuery: '',
-    filters: new Set(),
+    status: [],
     teamType: 'Discovery Team',
   });
   usePrefetchTeams({
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
     searchQuery: '',
-    filters: new Set(),
+    status: [],
     teamType: 'Resource Team',
   });
 

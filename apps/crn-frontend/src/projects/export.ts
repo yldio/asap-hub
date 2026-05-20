@@ -5,7 +5,12 @@ import {
   ProjectMilestonesExportResponse,
 } from '@asap-hub/model';
 import { format } from 'date-fns';
-import ExcelJS from 'exceljs';
+import type ExcelJS from 'exceljs';
+
+const loadExcelJS = () =>
+  import(/* webpackChunkName: "exceljs" */ 'exceljs').then(
+    (mod) => mod.default ?? mod,
+  );
 
 type GrantType = ProjectMilestoneExportRow['grantType'];
 
@@ -187,10 +192,11 @@ const writeSheet = <T>(
   };
 };
 
-export const buildMilestonesWorkbook = (
+export const buildMilestonesWorkbook = async (
   data: ProjectMilestonesExportResponse,
-): ExcelJS.Workbook => {
-  const workbook = new ExcelJS.Workbook();
+): Promise<ExcelJS.Workbook> => {
+  const ExcelJSModule = await loadExcelJS();
+  const workbook = new ExcelJSModule.Workbook();
   workbook.creator = 'ASAP Hub';
   workbook.created = new Date();
 
@@ -234,7 +240,7 @@ export const downloadProjectMilestonesXlsx = async (
   options: FetchProjectMilestonesExportOptions = {},
 ): Promise<void> => {
   const data = await fetchExport(options);
-  const workbook = buildMilestonesWorkbook(data);
+  const workbook = await buildMilestonesWorkbook(data);
   const buffer = await workbook.xlsx.writeBuffer();
   const blob = new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

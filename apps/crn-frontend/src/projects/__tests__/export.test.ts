@@ -56,8 +56,8 @@ describe('buildExportFileName', () => {
 });
 
 describe('buildMilestonesWorkbook', () => {
-  it('writes Aims and Milestones sheets with the agreed columns and styles', () => {
-    const workbook = buildMilestonesWorkbook(exportData);
+  it('writes Aims and Milestones sheets with the agreed columns and styles', async () => {
+    const workbook = await buildMilestonesWorkbook(exportData);
 
     expect(workbook.worksheets.map((sheet) => sheet.name)).toEqual([
       'Aims',

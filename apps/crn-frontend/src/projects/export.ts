@@ -124,6 +124,7 @@ const milestoneColumns: ColumnSpec<ProjectMilestoneExportRow>[] = [
   },
 ];
 
+/* eslint-disable no-param-reassign */
 const writeSheet = <T>(
   worksheet: ExcelJS.Worksheet,
   rows: ReadonlyArray<T>,
@@ -191,6 +192,7 @@ const writeSheet = <T>(
     to: { row: 1, column: columns.length },
   };
 };
+/* eslint-enable no-param-reassign */
 
 export const buildMilestonesWorkbook = async (
   data: ProjectMilestonesExportResponse,

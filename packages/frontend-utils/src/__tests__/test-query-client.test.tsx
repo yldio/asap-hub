@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { createTestQueryClient, TestQueryClientWrapper } from '../test-utils';
+import {
+  createTestQueryClient,
+  TestQueryClientWrapper,
+} from '../test-query-client';
 
 const Probe = () => {
   const { data } = useQuery({

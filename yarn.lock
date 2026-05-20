@@ -1299,6 +1299,7 @@ __metadata:
     "@babel/preset-react": 7.28.5
     "@babel/runtime-corejs3": 7.28.6
     "@sentry/react": ^8.0.0
+    "@tanstack/react-query": 5.90.21
     "@testing-library/dom": 10.4.1
     "@testing-library/jest-dom": ^6.9.0
     "@testing-library/react": 16.3.1
@@ -1324,6 +1325,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@sentry/react": ^8.0.0
+    "@tanstack/react-query": ^5.0.0
     core-js: 3.34.0
     react-error-boundary: 4.1.2
     react-router: 7.13.0
@@ -1791,29 +1793,6 @@ __metadata:
     react-test-renderer: 18.3.1
   peerDependencies:
     react: ^18.3.0
-  languageName: unknown
-  linkType: soft
-
-"@asap-hub/react-query-hooks@workspace:packages/react-query-hooks":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/react-query-hooks@workspace:packages/react-query-hooks"
-  dependencies:
-    "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@babel/core": 7.28.6
-    "@babel/preset-react": 7.28.5
-    "@babel/runtime-corejs3": 7.28.6
-    "@tanstack/react-query": 5.90.21
-    "@testing-library/dom": 10.4.1
-    "@testing-library/jest-dom": ^6.9.0
-    "@testing-library/react": 16.3.1
-    "@types/jest": 29.5.14
-    "@types/node": 20.10.5
-    "@types/react": 18.3.12
-    react: 18.3.1
-    react-dom: 18.3.1
-  peerDependencies:
-    "@tanstack/react-query": ^5.0.0
-    react: 18.3.1
   languageName: unknown
   linkType: soft
 

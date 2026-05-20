@@ -1,5 +1,4 @@
 import { createListCalendarResponse } from '@asap-hub/fixtures';
-import { getEventListOptions } from '@asap-hub/frontend-utils';
 import { events } from '@asap-hub/routing';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -11,8 +10,6 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../api';
 import { getCalendars } from '../calendar/api';
 import Events from '../Events';
-
-import { eventsState } from '../state';
 
 jest.mock('../calendar/api');
 jest.mock('../api');
@@ -30,11 +27,7 @@ const renderEventsPage = (pathname = events({}).$, search?: string) => {
   });
   return render(
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot
-        initializeState={({ reset }) => {
-          reset(eventsState(getEventListOptions(new Date(), { past: false })));
-        }}
-      >
+      <RecoilRoot>
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search }]}>

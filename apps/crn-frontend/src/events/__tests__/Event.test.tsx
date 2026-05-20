@@ -1,21 +1,21 @@
-import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
-import { Route, Routes, StaticRouter } from 'react-router';
-import { render } from '@testing-library/react';
 import {
   createCalendarResponse,
   createEventResponse,
   createInterestGroupResponse,
 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render } from '@testing-library/react';
+import { Suspense } from 'react';
+import { Route, Routes, StaticRouter } from 'react-router';
+import { RecoilRoot } from 'recoil';
 
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
-import Event from '../Event';
 import { getEvent } from '../api';
-import { refreshEventState } from '../state';
+import Event from '../Event';
 
 jest.mock('../api');
 
@@ -30,26 +30,31 @@ beforeEach(() => {
   });
 });
 
-const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <RecoilRoot
-    initializeState={({ set }) => set(refreshEventState(id), Math.random())}
-  >
-    <Auth0Provider user={{}}>
-      <WhenReady>
-        <Suspense fallback="Loading...">
-          <StaticRouter location={events({}).event({ eventId: id }).$}>
-            <Routes>
-              <Route
-                path={events.template + events({}).event.template}
-                element={children}
-              />
-            </Routes>
-          </StaticRouter>
-        </Suspense>
-      </WhenReady>
-    </Auth0Provider>
-  </RecoilRoot>
-);
+const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <Suspense fallback="Loading...">
+              <StaticRouter location={events({}).event({ eventId: id }).$}>
+                <Routes>
+                  <Route
+                    path={events.template + events({}).event.template}
+                    element={children}
+                  />
+                </Routes>
+              </StaticRouter>
+            </Suspense>
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>
+    </QueryClientProvider>
+  );
+};
 
 it('displays the event with given id', async () => {
   mockGetEvent.mockResolvedValue({

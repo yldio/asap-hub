@@ -1,13 +1,12 @@
 import { createListEventResponse } from '@asap-hub/fixtures';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, waitFor } from '@testing-library/react';
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../api';
-import { eventsState } from '../state';
-import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import EventList from '../EventList';
 
 jest.mock('../api');
@@ -17,41 +16,34 @@ const renderEventsListPage = async (
   currentTime = new Date(),
   past?: boolean,
 ) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          eventsState({
-            searchQuery,
-            currentPage: 0,
-            filters: new Set(),
-            pageSize: CARD_VIEW_PAGE_SIZE,
-            after: new Date().toISOString(),
-          }),
-        );
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname: '/' }]}>
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <EventList
-                      searchQuery={searchQuery}
-                      currentTime={currentTime}
-                      past={past}
-                    />
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[{ pathname: '/' }]}>
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      <EventList
+                        searchQuery={searchQuery}
+                        currentTime={currentTime}
+                        past={past}
+                      />
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),

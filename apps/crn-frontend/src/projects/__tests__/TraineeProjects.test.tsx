@@ -7,7 +7,7 @@ import { RecoilRoot } from 'recoil';
 
 import { EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
-import { TraineeProject } from '@asap-hub/model';
+import { FetchListFilter, TraineeProject } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import TraineeProjects from '../TraineeProjects';
@@ -91,7 +91,7 @@ beforeEach(() => {
 
 const renderTraineeProjects = (
   searchQuery: string = '',
-  filtersMap: import('@asap-hub/model').FetchTeamsFilter = {},
+  filtersMap: FetchListFilter = {},
 ) =>
   render(
     <RecoilRoot>

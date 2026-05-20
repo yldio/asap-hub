@@ -311,6 +311,40 @@ export type FetchProjectMilestonesOptions = FetchOptions & {
   sort?: MilestoneSortOption;
 };
 
+export type FetchProjectMilestonesExportOptions = {
+  grantType?: GrantType;
+  search?: string;
+  filter?: string[];
+  sort?: MilestoneSortOption;
+};
+
+export type ProjectMilestoneExportRow = {
+  readonly projectName: string;
+  readonly grantType: GrantType;
+  readonly description: string;
+  readonly relatedAimNumbers: string;
+  readonly articlesDOI: string;
+  readonly createdDate: string | null;
+  readonly lastUpdated: string | null;
+  readonly status: MilestoneStatus;
+};
+
+export type ProjectAimExportRow = {
+  readonly projectName: string;
+  readonly grantType: GrantType;
+  readonly aimNumber: string;
+  readonly description: string;
+  readonly articlesDOI: string;
+  readonly createdDate: string | null;
+  readonly lastUpdated: string | null;
+  readonly status: AimStatus;
+};
+
+export type ProjectMilestonesExportResponse = {
+  readonly aims: ReadonlyArray<ProjectAimExportRow>;
+  readonly milestones: ReadonlyArray<ProjectMilestoneExportRow>;
+};
+
 export type MilestoneCreateRequest = {
   readonly grantType: GrantType;
   readonly description: string;

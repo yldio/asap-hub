@@ -7,6 +7,7 @@ import {
 } from '@asap-hub/frontend-utils';
 import {
   ArticleItem,
+  FetchProjectMilestonesExportOptions,
   GrantType,
   ListProjectMilestonesResponse,
   ListProjectResponse,
@@ -14,6 +15,7 @@ import {
   MilestoneSortOption,
   MilestoneUpdateRequest,
   ProjectDetail,
+  ProjectMilestonesExportResponse,
   ProjectStatus,
   ProjectTool,
   ProjectType,
@@ -259,6 +261,34 @@ export const getProjectMilestones = async (
   if (!resp.ok) {
     throw new BackendError(
       `Failed to fetch milestones for project with id ${projectId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      await resp.json().catch(() => undefined),
+      resp.status,
+    );
+  }
+  return resp.json();
+};
+
+export const getProjectMilestonesExport = async (
+  projectId: string,
+  options: FetchProjectMilestonesExportOptions,
+  authorization: string,
+): Promise<ProjectMilestonesExportResponse> => {
+  const url = new URL(
+    `${API_BASE_URL}/projects/${projectId}/milestones-export`,
+  );
+
+  const { grantType, search, filter, sort } = options;
+  if (grantType) url.searchParams.set('grantType', grantType);
+  if (search) url.searchParams.set('search', search);
+  if (sort) url.searchParams.set('sort', sort);
+  (filter ?? []).forEach((value) => url.searchParams.append('filter', value));
+
+  const resp = await fetch(url.toString(), {
+    headers: { authorization },
+  });
+  if (!resp.ok) {
+    throw new BackendError(
+      `Failed to export milestones for project with id ${projectId}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
       await resp.json().catch(() => undefined),
       resp.status,
     );

@@ -746,4 +746,84 @@ describe('ProjectDetailHeader', () => {
       expect(screen.queryByText('Workspace')).not.toBeInTheDocument();
     });
   });
+
+  describe('Outputs tab', () => {
+    it('renders Outputs tab when flag is enabled and outputsHref is provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+          outputsHref="/projects/discovery/1/outputs"
+        />,
+      );
+      expect(screen.getByText('Outputs')).toBeInTheDocument();
+    });
+
+    it('does not render Outputs tab when flag is disabled', () => {
+      mockIsEnabled.mockReturnValue(false);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+          outputsHref="/projects/discovery/1/outputs"
+        />,
+      );
+      expect(screen.queryByText('Outputs')).not.toBeInTheDocument();
+    });
+
+    it('does not render Outputs tab when outputsHref is not provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+        />,
+      );
+      expect(screen.queryByText('Outputs')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Draft Outputs tab', () => {
+    it('renders Draft Outputs tab when flag is enabled and draftOutputsHref is provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+          draftOutputsHref="/projects/discovery/1/draft-outputs"
+        />,
+      );
+      expect(screen.getByText('Draft Outputs')).toBeInTheDocument();
+    });
+
+    it('does not render Draft Outputs tab when flag is disabled', () => {
+      mockIsEnabled.mockReturnValue(false);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+          draftOutputsHref="/projects/discovery/1/draft-outputs"
+        />,
+      );
+      expect(screen.queryByText('Draft Outputs')).not.toBeInTheDocument();
+    });
+
+    it('does not render Draft Outputs tab when draftOutputsHref is not provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+        />,
+      );
+      expect(screen.queryByText('Draft Outputs')).not.toBeInTheDocument();
+    });
+  });
 });

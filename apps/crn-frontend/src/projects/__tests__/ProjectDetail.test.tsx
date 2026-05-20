@@ -521,6 +521,81 @@ describe.each(variants)(
       ).toBeInTheDocument();
     });
 
+    it('renders Outputs tab when flag is enabled', async () => {
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(Component, routeKeyword, mainProjectId);
+      expect(screen.getByText('Outputs')).toBeInTheDocument();
+    });
+
+    it('renders Draft Outputs tab when flag is enabled', async () => {
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(Component, routeKeyword, mainProjectId);
+      expect(screen.getByText('Draft Outputs')).toBeInTheDocument();
+    });
+
+    it('does not render Outputs or Draft Outputs tabs when flag is disabled', async () => {
+      disable('PROJECT_OUTPUTS');
+      await renderProjectDetail(Component, routeKeyword, mainProjectId);
+      expect(screen.queryByText('Outputs')).not.toBeInTheDocument();
+      expect(screen.queryByText('Draft Outputs')).not.toBeInTheDocument();
+    });
+
+    it('renders outputs empty state when navigating to outputs route', async () => {
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        {},
+        'outputs',
+      );
+      expect(
+        await screen.findByText('No outputs available.'),
+      ).toBeInTheDocument();
+    });
+
+    it('renders draft outputs empty state when navigating to draft-outputs route', async () => {
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        {},
+        'draft-outputs',
+      );
+      expect(
+        await screen.findByText('No draft outputs available.'),
+      ).toBeInTheDocument();
+    });
+
+    it('does not render outputs empty state when flag is disabled', async () => {
+      disable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        {},
+        'outputs',
+      );
+      expect(
+        screen.queryByText('No outputs available.'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render draft outputs empty state when flag is disabled', async () => {
+      disable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        {},
+        'draft-outputs',
+      );
+      expect(
+        screen.queryByText('No draft outputs available.'),
+      ).not.toBeInTheDocument();
+    });
+
     it('renders milestones route and covers hasSupplementGrant logic', async () => {
       enable('PROJECT_AIMS_AND_MILESTONES');
       await renderProjectDetail(

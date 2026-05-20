@@ -6,6 +6,7 @@ import {
   ProjectDetailPage,
   ProjectDetailAbout,
   NotFoundPage,
+  NoOutputsPage,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import { useProjectArticlesSuggestions, useProjectById } from './state';
@@ -68,6 +69,8 @@ const ProjectDetail: FC<Props> = ({ config }) => {
 
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
   const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
+  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
+
   const hasSupplementGrant =
     'supplementGrant' in projectDetail && !!projectDetail.supplementGrant;
   const activeProjectAims =
@@ -148,6 +151,14 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                   aboutHref={route.about({}).$}
                   workspaceHref={workspaceHref}
                   milestonesHref={route.milestones({}).$}
+                  outputsHref={
+                    isProjectOutputsEnabled ? route.outputs({}).$ : undefined
+                  }
+                  draftOutputsHref={
+                    isProjectOutputsEnabled
+                      ? route.draftOutputs({}).$
+                      : undefined
+                  }
                 >
                   <Routes>
                     <Route
@@ -235,6 +246,38 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                         }
                       />
                     )}
+                    <Route
+                      path="outputs"
+                      element={
+                        isProjectOutputsEnabled ? (
+                          <Frame title="Project Outputs">
+                            <NoOutputsPage
+                              title="No outputs available."
+                              description="When this project shares an output, it will be listed here."
+                              hideExploreButton
+                            />
+                          </Frame>
+                        ) : (
+                          <NotFoundPage />
+                        )
+                      }
+                    />
+                    <Route
+                      path="draft-outputs"
+                      element={
+                        isProjectOutputsEnabled ? (
+                          <Frame title="Project Draft Outputs">
+                            <NoOutputsPage
+                              title="No draft outputs available."
+                              description="When this project shares a draft output, it will be listed here."
+                              hideExploreButton
+                            />
+                          </Frame>
+                        ) : (
+                          <NotFoundPage />
+                        )
+                      }
+                    />
                     <Route
                       index
                       element={<Navigate to={route.about({}).$} replace />}

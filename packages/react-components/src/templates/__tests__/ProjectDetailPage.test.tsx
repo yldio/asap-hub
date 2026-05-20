@@ -167,4 +167,41 @@ describe('ProjectDetailPage', () => {
     const milestonesLink = screen.getByRole('link', { name: 'Milestones' });
     expect(milestonesLink).toHaveAttribute('href', '/projects/1/milestones');
   });
+
+  it('passes outputsHref to ProjectDetailHeader', () => {
+    render(
+      <ProjectDetailPage
+        {...mockProject}
+        aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
+        outputsHref="/projects/1/outputs"
+      >
+        <div>Test Content</div>
+      </ProjectDetailPage>,
+    );
+
+    const outputsLink = screen.getByRole('link', { name: 'Outputs' });
+    expect(outputsLink).toHaveAttribute('href', '/projects/1/outputs');
+  });
+
+  it('passes draftOutputsHref to ProjectDetailHeader', () => {
+    render(
+      <ProjectDetailPage
+        {...mockProject}
+        aboutHref="/projects/1/about"
+        milestonesHref="/projects/1/milestones"
+        draftOutputsHref="/projects/1/draft-outputs"
+      >
+        <div>Test Content</div>
+      </ProjectDetailPage>,
+    );
+
+    const draftOutputsLink = screen.getByRole('link', {
+      name: 'Draft Outputs',
+    });
+    expect(draftOutputsLink).toHaveAttribute(
+      'href',
+      '/projects/1/draft-outputs',
+    );
+  });
 });

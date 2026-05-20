@@ -50,7 +50,7 @@ describe('buildExportFileName', () => {
   it('produces the agreed naming pattern', () => {
     const fileName = buildExportFileName('Alessi Project');
     expect(fileName).toMatch(
-      /^aims_and_milestones_Alessi_Project_\d{6}\.xlsx$/,
+      /^aims_and_milestones_Alessi_Project_\d{2}-\d{2}-\d{4}\.xlsx$/,
     );
   });
 });

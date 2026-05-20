@@ -212,7 +212,7 @@ export const sanitizeProjectName = (projectName: string): string =>
 export const buildExportFileName = (projectName: string): string =>
   `aims_and_milestones_${sanitizeProjectName(projectName)}_${format(
     new Date(),
-    'MMddyy',
+    'MM-dd-yyyy',
   )}.xlsx`;
 
 const triggerDownload = (fileName: string, blob: Blob): void => {

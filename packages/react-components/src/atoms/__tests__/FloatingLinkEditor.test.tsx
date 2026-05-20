@@ -272,12 +272,30 @@ describe('sanitizeUrl', () => {
     expect(sanitizeUrl('mailto:a@b.com')).toBe('mailto:a@b.com');
   });
 
+  it('passes through tel: URLs', () => {
+    expect(sanitizeUrl('tel:+1-800-555-0100')).toBe('tel:+1-800-555-0100');
+  });
+
   it('prefixes bare hostnames with https://', () => {
     expect(sanitizeUrl('example.com')).toBe('https://example.com');
   });
 
   it('prefixes hostnames with paths', () => {
     expect(sanitizeUrl('example.com/foo')).toBe('https://example.com/foo');
+  });
+
+  it('accepts hostnames with ports', () => {
+    expect(sanitizeUrl('example.com:8080')).toBe('https://example.com:8080');
+  });
+
+  it('accepts localhost with a port', () => {
+    expect(sanitizeUrl('localhost:3000')).toBe('https://localhost:3000');
+  });
+
+  it('preserves http URLs with ports unchanged', () => {
+    expect(sanitizeUrl('http://localhost:3000/path')).toBe(
+      'http://localhost:3000/path',
+    );
   });
 
   it('trims surrounding whitespace', () => {
@@ -378,6 +396,31 @@ describe('FloatingLinkEditor', () => {
     });
     expect(onDispatch).not.toHaveBeenCalled();
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('shows a validation error and keeps the popover open for invalid URLs', async () => {
+    const onDispatch = jest.fn();
+    const onClose = jest.fn();
+    const { getByLabelText, getByRole, queryByRole } = render(
+      <Harness isOpen onDispatch={onDispatch} onClose={onClose} />,
+    );
+    const input = getByLabelText('Link URL') as HTMLInputElement;
+    await act(async () => {
+      // eslint-disable-next-line no-script-url
+      fireEvent.change(input, { target: { value: 'javascript:alert(1)' } });
+      await userEvent.click(getByLabelText('Apply Link'));
+    });
+
+    expect(onDispatch).not.toHaveBeenCalled();
+    expect(onClose).not.toHaveBeenCalled();
+    expect(getByRole('alert')).toHaveTextContent(/valid URL/i);
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+
+    // Typing again clears the error
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'https://ok.com' } });
+    });
+    expect(queryByRole('alert')).not.toBeInTheDocument();
   });
 
   it('does not dispatch when Apply is clicked with empty input', async () => {

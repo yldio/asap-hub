@@ -18,7 +18,8 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 
-import { getSelectedNode } from './TextEditorToolbar';
+import { silver } from '../colors';
+import { getSelectedNode } from './lexical-utils';
 
 const editorContainerStyles = css({
   position: 'absolute',
@@ -29,7 +30,13 @@ const editorContainerStyles = css({
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
   padding: '6px',
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
+  gap: '4px',
+});
+
+const inputColumnStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
   gap: '4px',
 });
 
@@ -42,6 +49,16 @@ const inputStyles = css({
   minWidth: '240px',
 });
 
+const inputErrorStyles = css({
+  borderColor: '#d6453d',
+});
+
+const errorStyles = css({
+  color: '#d6453d',
+  fontSize: '12px',
+  maxWidth: '300px',
+});
+
 const buttonStyles = css({
   border: '0',
   background: 'transparent',
@@ -50,7 +67,7 @@ const buttonStyles = css({
   borderRadius: '4px',
   fontSize: '13px',
   '&:hover': {
-    background: 'rgba(223, 232, 250, 0.6)',
+    background: silver.rgb,
   },
 });
 
@@ -63,9 +80,12 @@ const linkPreviewStyles = css({
   color: 'rgb(33, 111, 219)',
 });
 
-const SAFE_URL_PATTERN = /^(?:https?:\/\/|mailto:)/i;
+const SAFE_URL_PATTERN = /^(?:https?:\/\/|mailto:|tel:)/i;
+const UNSAFE_SCHEME_PATTERN = /^(?:javascript|data|vbscript|file):/i;
 const HAS_SCHEME_PATTERN = /^[a-z][a-z0-9+.-]*:/i;
-const BARE_HOSTNAME_PATTERN = /^[\w-]+(\.[\w-]+)+/;
+// Bare hostname (with optional port and path), or localhost with optional port
+const BARE_URL_PATTERN =
+  /^(?:[\w-]+(?:\.[\w-]+)+|localhost)(?::\d+)?(?:[/?#].*)?$/i;
 
 export const getUrlFromSelection = (
   selection: BaseSelection | null,
@@ -81,15 +101,21 @@ export const getUrlFromSelection = (
 export const sanitizeUrl = (url: string): string => {
   const trimmed = url.trim();
   if (!trimmed) return '';
+  if (UNSAFE_SCHEME_PATTERN.test(trimmed)) {
+    return '';
+  }
   if (SAFE_URL_PATTERN.test(trimmed)) {
     return trimmed;
   }
-  if (HAS_SCHEME_PATTERN.test(trimmed)) {
-    // Reject unsupported schemes (e.g. javascript:, data:, file:)
-    return '';
-  }
-  if (BARE_HOSTNAME_PATTERN.test(trimmed)) {
+  // Match bare hostnames (e.g. example.com, example.com:8080, localhost:3000)
+  // before falling into the scheme check, since "example.com:8080" otherwise
+  // looks like an unknown scheme due to the colon.
+  if (BARE_URL_PATTERN.test(trimmed)) {
     return `https://${trimmed}`;
+  }
+  if (HAS_SCHEME_PATTERN.test(trimmed)) {
+    // Reject any scheme we don't explicitly recognize as safe
+    return '';
   }
   return '';
 };
@@ -110,6 +136,7 @@ const FloatingLinkEditor = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [url, setUrl] = useState(initialUrl);
   const [isEditing, setIsEditing] = useState(!initialUrl);
+  const [error, setError] = useState<string | null>(null);
   const [position, setPosition] = useState<{
     top: number;
     left: number;
@@ -118,6 +145,7 @@ const FloatingLinkEditor = ({
   useEffect(() => {
     setUrl(initialUrl);
     setIsEditing(!initialUrl);
+    setError(null);
   }, [initialUrl, isOpen]);
 
   const updatePosition = useCallback(() => {
@@ -192,10 +220,18 @@ const FloatingLinkEditor = ({
   if (!isOpen || !position) return null;
 
   const applyLink = () => {
-    const sanitized = sanitizeUrl(url);
-    if (sanitized) {
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitized);
+    const trimmed = url.trim();
+    if (!trimmed) {
+      // Empty input — treat as a cancel rather than a validation failure
+      onClose();
+      return;
     }
+    const sanitized = sanitizeUrl(trimmed);
+    if (!sanitized) {
+      setError('Please enter a valid URL (http://, https://, mailto:, tel:).');
+      return;
+    }
+    editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitized);
     onClose();
   };
 
@@ -227,16 +263,28 @@ const FloatingLinkEditor = ({
     >
       {isEditing ? (
         <>
-          <input
-            ref={inputRef}
-            css={inputStyles}
-            type="text"
-            value={url}
-            placeholder="https://example.com"
-            onChange={(e) => setUrl(e.target.value)}
-            onKeyDown={handleKeyDown}
-            aria-label="Link URL"
-          />
+          <div css={inputColumnStyles}>
+            <input
+              ref={inputRef}
+              css={[inputStyles, error ? inputErrorStyles : undefined]}
+              type="text"
+              value={url}
+              placeholder="https://example.com"
+              onChange={(e) => {
+                setUrl(e.target.value);
+                if (error) setError(null);
+              }}
+              onKeyDown={handleKeyDown}
+              aria-label="Link URL"
+              aria-invalid={error ? true : undefined}
+              aria-describedby={error ? 'link-url-error' : undefined}
+            />
+            {error && (
+              <div id="link-url-error" role="alert" css={errorStyles}>
+                {error}
+              </div>
+            )}
+          </div>
           <button
             type="button"
             css={buttonStyles}

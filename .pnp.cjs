@@ -240,6 +240,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/react-context"\
       },\
       {\
+        "name": "@asap-hub/react-query-hooks",\
+        "reference": "workspace:packages/react-query-hooks"\
+      },\
+      {\
         "name": "@asap-hub/routing",\
         "reference": "workspace:packages/routing"\
       },\
@@ -310,6 +314,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/postmark", ["workspace:packages/postmark"]],\
       ["@asap-hub/react-components", ["virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/react-components", "virtual:6b16901317bbf82c02ae3bcae29b5893b6e826cd09655789efdb8fd1062cadce911b7d0ecb8757fa5931069d18153edc842886686fbae7c22495d49c2e0084fa#workspace:packages/react-components", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#workspace:packages/react-components", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#workspace:packages/react-components", "virtual:b9766507666be4010671ee2190faed6bc1e1bba026ace8a3e292be54fd00ee648610196672c48b579b2aea2c59b0ad3daed31031cdd891b6671ff43547e8da22#workspace:packages/react-components", "workspace:packages/react-components"]],\
       ["@asap-hub/react-context", ["virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/react-context", "workspace:packages/react-context"]],\
+      ["@asap-hub/react-query-hooks", ["workspace:packages/react-query-hooks"]],\
       ["@asap-hub/routing", ["virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/routing", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/routing", "virtual:b09dff234a8d41526156a9c113e5b12bcc69471aba634580b1e50808d22ba1c050b6af429d6e7530dd1e40599673c5e0bf8115d5c53448ebd1875cdefe5030cf#workspace:packages/routing", "workspace:packages/routing"]],\
       ["@asap-hub/server-common", ["workspace:packages/server-common"]],\
       ["@asap-hub/services-common", ["workspace:packages/services-common"]],\
@@ -602,6 +607,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [\
         "@asap-hub/react-context",\
         "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#workspace:packages/react-context"\
+      ],\
+      [\
+        "@asap-hub/react-query-hooks",\
+        "workspace:packages/react-query-hooks"\
       ],\
       [\
         "@asap-hub/routing",\
@@ -14272,6 +14281,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:18.3.1"],\
             ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"],\
             ["react-test-renderer", "virtual:3a393e218825bde954376ca1a828a8b21ca2967b8d720dd56f28d8017fc081fa726c0b293069a94a55394c33a36ded19a9a4675c0d537b344c90f8add76eb926#npm:18.3.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@asap-hub/react-query-hooks", [\
+        ["workspace:packages/react-query-hooks", {\
+          "packageLocation": "./packages/react-query-hooks/",\
+          "packageDependencies": [\
+            ["@asap-hub/react-query-hooks", "workspace:packages/react-query-hooks"],\
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],\
+            ["@babel/core", "npm:7.28.6"],\
+            ["@babel/preset-react", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.28.5"],\
+            ["@babel/runtime-corejs3", "npm:7.28.6"],\
+            ["@tanstack/react-query", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.90.21"],\
+            ["@testing-library/dom", "npm:10.4.1"],\
+            ["@testing-library/jest-dom", "npm:6.9.1"],\
+            ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.1"],\
+            ["@types/jest", "npm:29.5.14"],\
+            ["@types/node", "npm:20.10.5"],\
+            ["@types/react", "npm:18.3.12"],\
+            ["react", "npm:18.3.1"],\
+            ["react-dom", "virtual:70ee702ae21962651e36bbfc38610149cb09f8829834f72efabf6ff499ef36bdf828f0ce38bc9269076bac68bed4fbc3b604042ba63016aed4c3a27d5308300f#npm:18.3.1"]\
           ],\
           "linkType": "SOFT"\
         }]\

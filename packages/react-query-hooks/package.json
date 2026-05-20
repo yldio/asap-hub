@@ -1,0 +1,39 @@
+{
+  "name": "@asap-hub/react-query-hooks",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "20.x"
+  },
+  "module": "build/index.js",
+  "main": "build-cjs/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch",
+    "test": "WORKSPACE_PATH=packages/react-query-hooks yarn workspace asap-hub test:workspace",
+    "test:coverage": "WORKSPACE_PATH=packages/react-query-hooks; yarn workspace asap-hub test:workspace --coverage --coverageDirectory=./$WORKSPACE_PATH/coverage/"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "18.3.1"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "7.28.6"
+  },
+  "devDependencies": {
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@babel/core": "7.28.6",
+    "@babel/preset-react": "7.28.5",
+    "@tanstack/react-query": "5.90.21",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/jest-dom": "^6.9.0",
+    "@testing-library/react": "16.3.1",
+    "@types/jest": "29.5.14",
+    "@types/node": "20.10.5",
+    "@types/react": "18.3.12",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "sideEffects": false
+}

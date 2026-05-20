@@ -189,7 +189,7 @@ it('calls setFormType with server validation error when form validation fails on
   await userEvent.clear(titleInput);
 
   // Click submit button
-  const submitBtn = screen.getByRole('button', { name: /Submit/i });
+  const submitBtn = screen.getByRole('button', { name: 'Submit' });
   await userEvent.click(submitBtn);
 
   // Check that setFormType was called with server validation error

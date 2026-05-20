@@ -35,6 +35,7 @@ export { default as InformationSection } from './InformationSection';
 export { default as LabeledCheckbox } from './LabeledCheckbox';
 export { default as LabeledCheckboxGroup } from './LabeledCheckboxGroup';
 export { default as LabeledDateField } from './LabeledDateField';
+export { default as LabeledDateInput } from './LabeledDateInput';
 export { default as LabeledDropdown } from './LabeledDropdown';
 export { default as LabeledFileField } from './LabeledFileField';
 export { default as LabeledMultiSelect } from './LabeledMultiSelect';

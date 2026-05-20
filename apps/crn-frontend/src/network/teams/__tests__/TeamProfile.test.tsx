@@ -420,6 +420,10 @@ it('displays manuscript success toast message and user can dismiss toast', async
   await user.click(
     await screen.findByText(/^My Impact$/i, {}, { timeout: 5000 }),
   );
+  await user.type(
+    screen.getByRole('textbox', { name: /Lay Impact Statement/i }),
+    'an impact statement',
+  );
 
   const categoryInput = screen.getByRole('combobox', {
     name: /Category/i,

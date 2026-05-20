@@ -171,6 +171,8 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           title={manuscript?.title}
           url={manuscript?.url}
           impact={selectedImpact}
+          layImpactStatement={manuscript?.layImpactStatement}
+          firstPublicDate={manuscript?.firstPublicDate}
           categories={selectedCategories}
           firstAuthors={convertAuthorsToSelectOptions(manuscriptFirstAuthors)}
           correspondingAuthor={convertAuthorsToSelectOptions(
@@ -189,6 +191,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
             setFormType({ type: 'server-validation-error', accent: 'error' });
           }}
           {...manuscriptVersion}
+          versionsCount={manuscript?.versions.length}
         />
       </Frame>
     </FormProvider>

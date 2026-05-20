@@ -63,7 +63,7 @@ const validationContainerStyles = css({
 });
 
 const extrasStyles = css({
-  paddingTop: rem(16),
+  paddingBottom: rem(16),
 });
 
 type TextAreaProps = {
@@ -108,6 +108,7 @@ const TextArea: React.FC<TextAreaProps> = ({
 
   return (
     <div css={containerStyles}>
+      {extras && <div css={extrasStyles}>{extras}</div>}
       <textarea
         {...props}
         {...validationTargetProps}
@@ -148,8 +149,6 @@ const TextArea: React.FC<TextAreaProps> = ({
           </div>
         )}
       </div>
-
-      {extras && <div css={extrasStyles}>{extras}</div>}
     </div>
   );
 };

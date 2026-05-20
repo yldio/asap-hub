@@ -73,7 +73,10 @@ const invalidStyles = css({
   },
 });
 
-const textFieldStyles = ({ primary900 = pine }: Theme['colors'] = {}) =>
+const textFieldStyles = (
+  hasValue: boolean,
+  { primary900 = pine }: Theme['colors'] = {},
+) =>
   css({
     backgroundPosition: `right ${rem(paddingLeftRight)} top ${rem(
       paddingTopBottom,
@@ -83,6 +86,9 @@ const textFieldStyles = ({ primary900 = pine }: Theme['colors'] = {}) =>
 
     '::placeholder': {
       color: tin.rgb,
+    },
+    '&[type="date"]': {
+      color: hasValue ? '#000' : '#92999E',
     },
 
     // see invalid
@@ -195,7 +201,7 @@ const TextField: React.FC<TextFieldProps> = ({
         }
         css={({ colors }) => [
           styles,
-          textFieldStyles(colors),
+          textFieldStyles(Boolean(value), colors),
           enabled || disabledStyles,
 
           validationMessage && invalidStyles,

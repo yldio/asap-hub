@@ -164,6 +164,9 @@ describe('Manuscripts Contentful Data Provider', () => {
       keyResourceTable: {
         'en-US': null,
       },
+      complianceReportResponse: {
+        'en-US': null,
+      },
       additionalFiles: {
         'en-US': null,
       },
@@ -492,9 +495,13 @@ describe('Manuscripts Contentful Data Provider', () => {
         jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
         const manuscriptId = 'manuscript-id-1';
 
-        const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+        const manuscript = {
+          ...getContentfulGraphqlManuscript(),
+          versionsCollection: getContentfulGraphqlManuscriptVersions(),
+        } as NonNullable<
           NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
         >;
+
         manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items =
           [
             {
@@ -543,7 +550,10 @@ describe('Manuscripts Contentful Data Provider', () => {
       jest.setSystemTime(new Date('2025-01-03T10:00:00.000Z'));
       const manuscriptId = 'manuscript-id-1';
 
-      const manuscript = getContentfulGraphqlManuscript() as NonNullable<
+      const manuscript = {
+        ...getContentfulGraphqlManuscript(),
+        versionsCollection: getContentfulGraphqlManuscriptVersions(),
+      } as NonNullable<
         NonNullable<FetchManuscriptNotificationDetailsQuery>['manuscripts']
       >;
       manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
@@ -637,6 +647,8 @@ describe('Manuscripts Contentful Data Provider', () => {
           url: 'https://example.com/manuscript',
           impact: 'impact-id',
           categories: ['category-id-1'],
+          firstPublicDate: '2022-01-03T10:00:00.000Z',
+          layImpactStatement: 'impact statement',
           versions: [
             {
               lifecycle: 'Preprint',
@@ -653,6 +665,11 @@ describe('Manuscripts Contentful Data Provider', () => {
                 filename: 'manuscript.csv',
                 url: 'https://example.com/manuscript.csv',
                 id: 'file-table-id',
+              },
+              complianceReportResponse: {
+                filename: 'response.pdf',
+                url: 'https://example.com/response.pdf',
+                id: 'report-response-id',
               },
               additionalFiles: [
                 {
@@ -713,6 +730,20 @@ describe('Manuscripts Contentful Data Provider', () => {
                 type: 'Link',
               },
             },
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/layImpactStatement',
+          value: {
+            'en-US': 'impact statement',
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/firstPublicDate',
+          value: {
+            'en-US': '2022-01-03T10:00:00.000Z',
           },
         },
         {
@@ -791,6 +822,19 @@ describe('Manuscripts Contentful Data Provider', () => {
               'en-US': {
                 sys: {
                   id: 'file-table-id',
+                  linkType: 'Asset',
+                  type: 'Link',
+                },
+              },
+            },
+          },
+          {
+            op: 'add',
+            path: '/fields/complianceReportResponse',
+            value: {
+              'en-US': {
+                sys: {
+                  id: 'report-response-id',
                   linkType: 'Asset',
                   type: 'Link',
                 },
@@ -934,6 +978,8 @@ describe('Manuscripts Contentful Data Provider', () => {
           title: 'New Title',
           impact: 'impact-id',
           categories: ['category-id-1'],
+          firstPublicDate: '2022-01-03T10:00:00.000Z',
+          layImpactStatement: 'impact statement',
           versions: [
             {
               lifecycle: 'Preprint',
@@ -969,7 +1015,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(environmentMock.getEntry).not.toHaveBeenCalledWith(oldVersionId);
     });
 
-    test('can update the manuscript when keyResourceTable and additionalFiles are not passed', async () => {
+    test('can update the manuscript when keyResourceTable, complianceReportResponse and additionalFiles are not passed', async () => {
       const manuscriptId = 'manuscript-id-1';
       const versionId = 'version-id-1';
       const manuscriptEntry = {
@@ -1019,6 +1065,8 @@ describe('Manuscripts Contentful Data Provider', () => {
           url: 'https://example.com/manuscript',
           impact: 'impact-id',
           categories: ['category-id-1'],
+          firstPublicDate: '2022-01-03T10:00:00.000Z',
+          layImpactStatement: 'impact statement',
           versions: [
             {
               lifecycle: 'Preprint',
@@ -1080,6 +1128,20 @@ describe('Manuscripts Contentful Data Provider', () => {
         },
         {
           op: 'add',
+          path: '/fields/layImpactStatement',
+          value: {
+            'en-US': 'impact statement',
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/firstPublicDate',
+          value: {
+            'en-US': '2022-01-03T10:00:00.000Z',
+          },
+        },
+        {
+          op: 'add',
           path: '/fields/categories',
           value: {
             'en-US': [
@@ -1106,6 +1168,11 @@ describe('Manuscripts Contentful Data Provider', () => {
           {
             op: 'add',
             path: '/fields/additionalFiles',
+            value: { 'en-US': null },
+          },
+          {
+            op: 'add',
+            path: '/fields/complianceReportResponse',
             value: { 'en-US': null },
           },
         ]),
@@ -1306,8 +1373,16 @@ describe('Manuscripts Contentful Data Provider', () => {
         },
       });
 
-      contentfulGraphqlClientMock.request.mockResolvedValue({
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscripts: manuscript,
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: {
+          versionsCollection: {
+            ...getContentfulGraphqlManuscriptVersions(),
+          },
+        },
       });
 
       const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
@@ -1345,11 +1420,20 @@ describe('Manuscripts Contentful Data Provider', () => {
       }) => {
         const manuscript = getContentfulGraphqlManuscript();
 
-        manuscript.versionsCollection!.items[0]![field] = 'No';
-        manuscript.versionsCollection!.items[0]![fieldDetails] = 'text';
-
-        contentfulGraphqlClientMock.request.mockResolvedValue({
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscripts: manuscript,
+        });
+
+        const manuscriptVersions = {
+          versionsCollection: {
+            ...getContentfulGraphqlManuscriptVersions(),
+          },
+        };
+        manuscriptVersions.versionsCollection!.items[0]![field] = 'No';
+        manuscriptVersions.versionsCollection!.items[0]![fieldDetails] = 'text';
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          manuscripts: manuscriptVersions,
         });
 
         const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
@@ -1379,11 +1463,20 @@ describe('Manuscripts Contentful Data Provider', () => {
       }) => {
         const manuscript = getContentfulGraphqlManuscript();
 
-        manuscript.versionsCollection!.items[0]![field] = 'Yes';
-        manuscript.versionsCollection!.items[0]![fieldDetails] = 'text';
-
-        contentfulGraphqlClientMock.request.mockResolvedValue({
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscripts: manuscript,
+        });
+
+        const manuscriptVersions = {
+          versionsCollection: {
+            ...getContentfulGraphqlManuscriptVersions(),
+          },
+        };
+        manuscriptVersions.versionsCollection!.items[0]![field] = 'Yes';
+        manuscriptVersions.versionsCollection!.items[0]![fieldDetails] = 'text';
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          manuscripts: manuscriptVersions,
         });
 
         const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
@@ -1394,29 +1487,40 @@ describe('Manuscripts Contentful Data Provider', () => {
 
     test('returns authors', async () => {
       const manuscript = getContentfulGraphqlManuscript();
-      manuscript.versionsCollection!.items[0]!.firstAuthorsCollection!.items = [
-        {
-          __typename: 'Users',
-          sys: {
-            id: 'user-id-1',
-          },
-          avatar: null,
-          firstName: 'Fiona',
-          lastName: 'First',
-          nickname: null,
-          email: 'fiona.first@email.com',
-        },
-        {
-          __typename: 'ExternalAuthors',
-          sys: {
-            id: 'external-id-1',
-          },
-          name: 'First External',
-          email: 'first.external@email.com',
-        },
-      ];
 
-      manuscript.versionsCollection!.items[0]!.correspondingAuthorCollection!.items =
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      const manuscriptVersions = {
+        versionsCollection: {
+          ...getContentfulGraphqlManuscriptVersions(),
+        },
+      };
+      manuscriptVersions.versionsCollection!.items[0]!.firstAuthorsCollection!.items =
+        [
+          {
+            __typename: 'Users',
+            sys: {
+              id: 'user-id-1',
+            },
+            avatar: null,
+            firstName: 'Fiona',
+            lastName: 'First',
+            nickname: null,
+            email: 'fiona.first@email.com',
+          },
+          {
+            __typename: 'ExternalAuthors',
+            sys: {
+              id: 'external-id-1',
+            },
+            name: 'First External',
+            email: 'first.external@email.com',
+          },
+        ];
+
+      manuscriptVersions.versionsCollection!.items[0]!.correspondingAuthorCollection!.items =
         [
           {
             __typename: 'Users',
@@ -1431,7 +1535,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         ];
 
-      manuscript.versionsCollection!.items[0]!.additionalAuthorsCollection!.items =
+      manuscriptVersions.versionsCollection!.items[0]!.additionalAuthorsCollection!.items =
         [
           {
             __typename: 'Users',
@@ -1464,8 +1568,8 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         ];
 
-      contentfulGraphqlClientMock.request.mockResolvedValue({
-        manuscripts: manuscript,
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscriptVersions,
       });
 
       const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
@@ -1521,14 +1625,18 @@ describe('Manuscripts Contentful Data Provider', () => {
       manuscript.title = null;
       manuscript.url = null;
       manuscript.teamsCollection = null;
-      manuscript.versionsCollection = null;
       manuscript.status = null;
       manuscript.assignedUsersCollection = null;
       manuscript.discussionsCollection = null;
       manuscript.apcRequested = undefined;
       manuscript.apcAmountPaid = undefined;
-      contentfulGraphqlClientMock.request.mockResolvedValue({
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscripts: manuscript,
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: {
+          versionsCollection: null,
+        },
       });
 
       const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
@@ -1548,10 +1656,20 @@ describe('Manuscripts Contentful Data Provider', () => {
 
     test('should skip versions with invalid type', async () => {
       const manuscript = getContentfulGraphqlManuscript();
-      manuscript.versionsCollection!.items[0]!.type = 'invalid type';
 
-      contentfulGraphqlClientMock.request.mockResolvedValue({
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscripts: manuscript,
+      });
+
+      const manuscriptVersions = {
+        versionsCollection: {
+          ...getContentfulGraphqlManuscriptVersions(),
+        },
+      };
+      manuscriptVersions.versionsCollection!.items[0]!.type = 'invalid type';
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscriptVersions,
       });
 
       const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
@@ -1580,10 +1698,20 @@ describe('Manuscripts Contentful Data Provider', () => {
 
     test('Should default key resource table to undefined if not present', async () => {
       const manuscript = getContentfulGraphqlManuscript();
-      manuscript.versionsCollection!.items[0]!.keyResourceTable = undefined;
-
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscripts: manuscript,
+      });
+
+      const manuscriptVersions = {
+        versionsCollection: {
+          ...getContentfulGraphqlManuscriptVersions(),
+        },
+      };
+      manuscriptVersions.versionsCollection!.items[0]!.keyResourceTable =
+        undefined;
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscriptVersions,
       });
 
       const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
@@ -1857,6 +1985,12 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         ],
       },
+      layImpactStatement: {
+        'en-US': 'impact statement',
+      },
+      firstPublicDate: {
+        'en-US': '2022-01-03T10:00:00.000Z',
+      },
     };
 
     test('should throw if no versions are provided', async () => {
@@ -1925,7 +2059,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(result).toEqual(manuscriptId);
     });
 
-    test('can create a manuscript with key resource table and additional files', async () => {
+    test('can create a manuscript with key resource table, compliance report response and additional files', async () => {
       const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       manuscriptCreateDataObject.versions[0]!.additionalFiles = [
         {
@@ -1934,6 +2068,12 @@ describe('Manuscripts Contentful Data Provider', () => {
           id: 'file-table-id',
         },
       ];
+
+      manuscriptCreateDataObject.versions[0]!.complianceReportResponse = {
+        filename: 'report-response.pdf',
+        url: 'https://example.com/report-response.pdf',
+        id: 'report-response-id',
+      };
 
       const manuscriptType = manuscriptCreateDataObject.versions[0]!
         .type as ManuscriptType;
@@ -1966,6 +2106,11 @@ describe('Manuscripts Contentful Data Provider', () => {
           manuscriptCreateDataObject.versions[0]!.keyResourceTable!.id,
         )
         .mockResolvedValue(assetMock);
+      when(environmentMock.getAsset)
+        .calledWith(
+          manuscriptCreateDataObject.versions[0]!.complianceReportResponse!.id,
+        )
+        .mockResolvedValue(assetMock);
 
       const result = await manuscriptDataProviderMockGraphql.create({
         ...manuscriptCreateDataObject,
@@ -1987,6 +2132,15 @@ describe('Manuscripts Contentful Data Provider', () => {
                   type: 'Link',
                   linkType: 'Asset',
                   id: 'file-table-id',
+                },
+              },
+            },
+            complianceReportResponse: {
+              'en-US': {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Asset',
+                  id: 'report-response-id',
                 },
               },
             },
@@ -2253,6 +2407,20 @@ describe('Manuscripts Contentful Data Provider', () => {
                 type: 'Link',
               },
             },
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/layImpactStatement',
+          value: {
+            'en-US': 'impact statement',
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/firstPublicDate',
+          value: {
+            'en-US': '2022-01-03T10:00:00.000Z',
           },
         },
         {

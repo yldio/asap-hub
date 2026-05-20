@@ -92,6 +92,18 @@ export const manuscriptRouteFactory = (
         throw Boom.badRequest('No file provided or file is not a CSV.');
       }
       if (
+        fileType === 'Compliance Report Response' &&
+        (!file ||
+          (file.mimetype !== 'application/msword' &&
+            file.mimetype !==
+              'application/vnd.openxmlformats-officedocument.wordprocessingml.document' &&
+            file.mimetype !== 'application/pdf'))
+      ) {
+        throw Boom.badRequest(
+          'No file provided or file is not a PDF or Word Document.',
+        );
+      }
+      if (
         fileType === 'Additional Files' &&
         (!file ||
           (file.mimetype !== 'text/csv' && file.mimetype !== 'application/pdf'))

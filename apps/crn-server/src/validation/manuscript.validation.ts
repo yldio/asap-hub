@@ -2,6 +2,7 @@ import {
   manuscriptPostRequestSchema,
   manuscriptPutRequestSchema,
   ManuscriptFileType,
+  manuscriptFileTypes,
 } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
@@ -82,13 +83,19 @@ const fileUploadFromUrlSchema: JSONSchemaType<FileUploadFromUrlRequest> = {
   properties: {
     fileType: {
       type: 'string',
-      enum: ['Manuscript File', 'Key Resource Table', 'Additional Files'],
+      enum: manuscriptFileTypes,
     },
     url: { type: 'string' },
     filename: { type: 'string' },
     contentType: {
       type: 'string',
-      enum: ['application/pdf', 'text/csv', 'application/vnd.ms-excel'],
+      enum: [
+        'application/pdf',
+        'text/csv',
+        'application/vnd.ms-excel',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ],
     },
   },
   required: ['fileType', 'url', 'filename', 'contentType'],

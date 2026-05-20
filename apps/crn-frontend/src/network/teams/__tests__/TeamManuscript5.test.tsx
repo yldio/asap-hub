@@ -125,6 +125,14 @@ beforeEach(() => {
         };
         return result;
       }
+      if (fileType === 'Compliance Report Response') {
+        const result = {
+          filename: 'compliance-report-response.pdf',
+          url: 'https://example.com/compliance-report-response.pdf',
+          id: 'compliance-report-response-id',
+        };
+        return result;
+      }
       // Fallback: use the file name from the File object
       const result = {
         filename: file.name,
@@ -212,6 +220,8 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
 
   manuscript.impact = { id: 'impact-id-1', name: 'My Impact' };
   manuscript.categories = [{ id: 'category-id-1', name: 'My Category' }];
+  manuscript.layImpactStatement = 'an impact statement';
+  manuscript.firstPublicDate = '2023-01-03T10:00:00.000Z';
 
   mockGetManuscript.mockResolvedValue(manuscript);
   mockResubmitManuscript.mockResolvedValue(manuscript);
@@ -264,9 +274,19 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
       type: 'text/csv',
     },
   );
+  const complianceReportResponseFile = new File(
+    ['compliance report response content'],
+    'compliance-report-response.pdf',
+    {
+      type: 'application/pdf',
+    },
+  );
   const manuscriptFileInput = screen.getByLabelText(/Upload Manuscript File/i);
   const keyResourceTableInput = screen.getByLabelText(
     /Upload Key Resource Table/i,
+  );
+  const complianceReportResponseInput = screen.getByLabelText(
+    /Upload Compliance Report Response/i,
   );
 
   // Upload manuscript file and wait for upload to complete
@@ -275,10 +295,18 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
   // Upload key resource table file and wait for upload to complete
   await user.upload(keyResourceTableInput, keyResourceTableFile);
 
+  await user.upload(
+    complianceReportResponseInput,
+    complianceReportResponseFile,
+  );
+
   await waitFor(
     () => {
       expect(screen.getByText('key-resource-table.csv')).toBeInTheDocument();
       expect(screen.getByText('manuscript.pdf')).toBeInTheDocument();
+      expect(
+        screen.getByText('compliance-report-response.pdf'),
+      ).toBeInTheDocument();
     },
     { timeout: 15000 },
   );

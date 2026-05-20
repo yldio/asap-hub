@@ -5,13 +5,24 @@ import {
   ProjectMilestonesExportResponse,
 } from '@asap-hub/model';
 import { format } from 'date-fns';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 
-const GRANT_TYPE_LABEL: Record<ProjectMilestoneExportRow['grantType'], string> =
-  {
-    original: 'Original Grant',
-    supplement: 'Supplement Grant',
-  };
+type GrantType = ProjectMilestoneExportRow['grantType'];
+
+const GRANT_TYPE_LABEL: Record<GrantType, string> = {
+  original: 'Original Grant',
+  supplement: 'Supplement Grant',
+};
+
+const HEADER_FILL = 'FFD9D9D9';
+const FONT_NAME = 'Arial';
+
+const BORDER: Partial<ExcelJS.Borders> = {
+  top: { style: 'thin', color: { argb: 'FFB7B7B7' } },
+  left: { style: 'thin', color: { argb: 'FFB7B7B7' } },
+  bottom: { style: 'thin', color: { argb: 'FFB7B7B7' } },
+  right: { style: 'thin', color: { argb: 'FFB7B7B7' } },
+};
 
 const formatDate = (value: string | null): string => {
   if (!value) return '';
@@ -19,42 +30,176 @@ const formatDate = (value: string | null): string => {
   return Number.isNaN(date.getTime()) ? '' : format(date, 'yyyy-MM-dd');
 };
 
-const aimRow = (aim: ProjectAimExportRow) => ({
-  'Project Title': aim.projectName,
-  'Grant Type': GRANT_TYPE_LABEL[aim.grantType] ?? aim.grantType,
-  'Aim Number': aim.aimNumber,
-  'Aim Description': aim.description,
-  'Articles Linked (DOI)': aim.articlesDOI,
-  'Created Date': formatDate(aim.createdDate),
-  'Last Updated': formatDate(aim.lastUpdated),
-  'Aim Status': aim.status,
-});
+type ColumnSpec<T> = {
+  header: string;
+  width: number;
+  wrap?: boolean;
+  value: (row: T) => string;
+};
 
-const milestoneRow = (milestone: ProjectMilestoneExportRow) => ({
-  'Project Title': milestone.projectName,
-  'Grant Type': GRANT_TYPE_LABEL[milestone.grantType] ?? milestone.grantType,
-  'Milestone Description': milestone.description,
-  'Related Aim Number(s)': milestone.relatedAimNumbers,
-  'Articles Linked (DOI)': milestone.articlesDOI,
-  'Created Date': formatDate(milestone.createdDate),
-  'Last Updated': formatDate(milestone.lastUpdated),
-  'Milestone Status': milestone.status,
-});
+const NON_BOLD_HEADERS = new Set([
+  'Aim Description',
+  'Milestone Description',
+  'Articles Linked (DOI)',
+  'Created Date',
+  'Last Updated',
+]);
+
+const aimColumns: ColumnSpec<ProjectAimExportRow>[] = [
+  { header: 'Project Title', width: 22, value: (a) => a.projectName },
+  {
+    header: 'Grant Type',
+    width: 16,
+    value: (a) => GRANT_TYPE_LABEL[a.grantType] ?? a.grantType,
+  },
+  { header: 'Aim Number', width: 12, value: (a) => a.aimNumber },
+  {
+    header: 'Aim Description',
+    width: 60,
+    wrap: true,
+    value: (a) => a.description,
+  },
+  {
+    header: 'Articles Linked (DOI)',
+    width: 40,
+    wrap: true,
+    value: (a) => a.articlesDOI,
+  },
+  {
+    header: 'Created Date',
+    width: 14,
+    value: (a) => formatDate(a.createdDate),
+  },
+  {
+    header: 'Last Updated',
+    width: 14,
+    value: (a) => formatDate(a.lastUpdated),
+  },
+  { header: 'Aim Status', width: 14, value: (a) => a.status },
+];
+
+const milestoneColumns: ColumnSpec<ProjectMilestoneExportRow>[] = [
+  { header: 'Project Title', width: 22, value: (m) => m.projectName },
+  {
+    header: 'Grant Type',
+    width: 16,
+    value: (m) => GRANT_TYPE_LABEL[m.grantType] ?? m.grantType,
+  },
+  {
+    header: 'Milestone Description',
+    width: 60,
+    wrap: true,
+    value: (m) => m.description,
+  },
+  {
+    header: 'Related Aim Number(s)',
+    width: 18,
+    value: (m) => m.relatedAimNumbers,
+  },
+  {
+    header: 'Articles Linked (DOI)',
+    width: 40,
+    wrap: true,
+    value: (m) => m.articlesDOI,
+  },
+  {
+    header: 'Created Date',
+    width: 14,
+    value: (m) => formatDate(m.createdDate),
+  },
+  {
+    header: 'Last Updated',
+    width: 14,
+    value: (m) => formatDate(m.lastUpdated),
+  },
+  {
+    header: 'Milestone Status',
+    width: 16,
+    value: (m) => m.status,
+  },
+];
+
+const writeSheet = <T>(
+  worksheet: ExcelJS.Worksheet,
+  rows: ReadonlyArray<T>,
+  columns: ColumnSpec<T>[],
+): void => {
+  worksheet.columns = columns.map((column) => ({
+    header: column.header,
+    key: column.header,
+    width: column.width,
+  }));
+
+  const headerRow = worksheet.getRow(1);
+  headerRow.height = 36;
+  headerRow.eachCell((cell, columnNumber) => {
+    if (columnNumber > columns.length) return;
+    cell.font = {
+      name: FONT_NAME,
+      bold: true,
+      size: 10,
+      color: { argb: 'FF000000' },
+    };
+    cell.alignment = {
+      vertical: 'middle',
+      horizontal: 'center',
+      wrapText: true,
+    };
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: HEADER_FILL },
+    };
+    cell.border = BORDER;
+  });
+
+  rows.forEach((row) => {
+    const excelRow = worksheet.addRow(
+      columns.reduce<Record<string, string>>((acc, column) => {
+        acc[column.header] = column.value(row);
+        return acc;
+      }, {}),
+    );
+
+    excelRow.height = 48;
+    excelRow.eachCell((cell, columnNumber) => {
+      const column = columns[columnNumber - 1];
+      if (!column) return;
+      cell.border = BORDER;
+      cell.font = {
+        name: FONT_NAME,
+        bold: !NON_BOLD_HEADERS.has(column.header),
+        size: 10,
+        color: { argb: 'FF000000' },
+      };
+      const centered = !column.wrap;
+      cell.alignment = {
+        vertical: 'middle',
+        horizontal: centered ? 'center' : 'left',
+        wrapText: true,
+      };
+    });
+  });
+
+  worksheet.autoFilter = {
+    from: { row: 1, column: 1 },
+    to: { row: 1, column: columns.length },
+  };
+};
 
 export const buildMilestonesWorkbook = (
   data: ProjectMilestonesExportResponse,
-): XLSX.WorkBook => {
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.json_to_sheet(data.aims.map(aimRow)),
-    'Aims',
-  );
-  XLSX.utils.book_append_sheet(
-    workbook,
-    XLSX.utils.json_to_sheet(data.milestones.map(milestoneRow)),
-    'Milestones',
-  );
+): ExcelJS.Workbook => {
+  const workbook = new ExcelJS.Workbook();
+  workbook.creator = 'ASAP Hub';
+  workbook.created = new Date();
+
+  const aimsSheet = workbook.addWorksheet('Aims');
+  writeSheet(aimsSheet, data.aims, aimColumns);
+
+  const milestonesSheet = workbook.addWorksheet('Milestones');
+  writeSheet(milestonesSheet, data.milestones, milestoneColumns);
+
   return workbook;
 };
 
@@ -70,6 +215,17 @@ export const buildExportFileName = (projectName: string): string =>
     'MMddyy',
   )}.xlsx`;
 
+const triggerDownload = (fileName: string, blob: Blob): void => {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
 export const downloadProjectMilestonesXlsx = async (
   projectName: string,
   fetchExport: (
@@ -79,5 +235,9 @@ export const downloadProjectMilestonesXlsx = async (
 ): Promise<void> => {
   const data = await fetchExport(options);
   const workbook = buildMilestonesWorkbook(data);
-  XLSX.writeFile(workbook, buildExportFileName(projectName));
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+  triggerDownload(buildExportFileName(projectName), blob);
 };

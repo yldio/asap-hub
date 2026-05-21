@@ -87,6 +87,7 @@ export { default as RemindersCard } from './RemindersCard';
 export { default as RepresentationOfPresentersTable } from './RepresentationOfPresentersTable';
 export { default as ResearchOutputExtraInformationCard } from './ResearchOutputExtraInformationCard';
 export { default as ResearchOutputFormSharingCard } from './ResearchOutputFormSharingCard';
+export { default as ResearchOutputPublishingCard } from './ResearchOutputPublishingCard';
 export { default as ResearchOutputHeader } from './ResearchOutputHeader';
 export { default as ResearchOutputRelatedEventsCard } from './ResearchOutputRelatedEventsCard';
 export { default as ResearchOutputRelatedResearchCard } from './ResearchOutputRelatedResearchCard';

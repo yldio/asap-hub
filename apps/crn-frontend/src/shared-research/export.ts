@@ -145,6 +145,7 @@ export const researchOutputToCSV = (
   statusChangedAt: output.statusChangedAt,
   isInReview: output.isInReview,
   impact: output.impact?.name,
+  layImpactStatement: output.layImpactStatement,
   categories: output.categories?.map((category) => category.name).join(','),
   ...getFirstVersionData(output.versions),
 });

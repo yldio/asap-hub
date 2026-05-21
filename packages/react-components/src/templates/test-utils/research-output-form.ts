@@ -52,6 +52,7 @@ export const expectedRequest: ResearchOutputPostRequest = {
   relatedEvents: [],
   categories: [],
   impact: '',
+  layImpactStatement: '',
 };
 
 export const initialResearchOutputData = {

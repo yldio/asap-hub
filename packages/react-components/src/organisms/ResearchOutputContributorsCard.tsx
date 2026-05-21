@@ -68,19 +68,6 @@ const ResearchOutputContributorsCard: React.FC<
         `Sorry, no teams match ${inputValue}`
       }
     />
-    <LabeledMultiSelect
-      title="Labs"
-      description="Add ASAP labs that contributed to this output. Only labs whose PI is part of the CRN will appear."
-      subtitle="(optional)"
-      enabled={!isSaving}
-      placeholder="Start typing..."
-      loadOptions={getLabSuggestions}
-      onChange={onChangeLabs as MultiSelectOnChange<MultiSelectOptionsType>}
-      values={labs as OptionsType<MultiSelectOptionsType>}
-      noOptionsMessage={({ inputValue }) =>
-        `Sorry, no labs match ${inputValue}`
-      }
-    />
     <AuthorSelect
       title="Authors"
       description=""
@@ -93,6 +80,19 @@ const ResearchOutputContributorsCard: React.FC<
       required={authorsRequired}
       noOptionsMessage={({ inputValue }) =>
         `Sorry, no authors match ${inputValue}`
+      }
+    />
+    <LabeledMultiSelect
+      title="Labs"
+      description="Add ASAP labs that contributed to this output. Only labs whose PI is part of the CRN will appear."
+      subtitle="(optional)"
+      enabled={!isSaving}
+      placeholder="Start typing..."
+      loadOptions={getLabSuggestions}
+      onChange={onChangeLabs as MultiSelectOnChange<MultiSelectOptionsType>}
+      values={labs as OptionsType<MultiSelectOptionsType>}
+      noOptionsMessage={({ inputValue }) =>
+        `Sorry, no labs match ${inputValue}`
       }
     />
   </FormCard>

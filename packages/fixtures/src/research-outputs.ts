@@ -20,6 +20,7 @@ const researchOutputResponse: Omit<
   documentType: 'Grant Document',
   type: '3D Printing',
   impact: { id: 'impact-id-1', name: 'Impact 1' },
+  layImpactStatement: 'lay impact statement',
   categories: [{ id: 'category-id-1', name: 'Category 1' }],
   authors: [
     {

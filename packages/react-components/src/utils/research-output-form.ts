@@ -159,6 +159,7 @@ export type ResearchOutputPayload = {
     ComponentProps<typeof ResearchOutputRelatedEventsCard>['relatedEvents']
   >;
   impact?: string;
+  layImpactStatement?: string;
   categories?: string[];
   relatedManuscriptVersion?: string;
   relatedManuscript?: string;
@@ -193,6 +194,7 @@ export const getPayload = ({
   published,
   relatedEvents,
   impact,
+  layImpactStatement,
   categories,
   relatedManuscriptVersion,
   relatedManuscript,
@@ -227,6 +229,7 @@ export const getPayload = ({
   published,
   relatedEvents: relatedEvents.map(({ value }) => value),
   impact,
+  layImpactStatement,
   categories,
   relatedManuscriptVersion,
   relatedManuscript,

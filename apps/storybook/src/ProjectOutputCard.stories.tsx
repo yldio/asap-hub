@@ -10,19 +10,22 @@ export default {
   title: 'Organisms / Project Outputs / Card',
 };
 
-const PROJECT_POOL = [
-  { id: 'p1', title: 'Project Alpha', href: '/projects/discovery/p1' },
-  {
-    id: 'p2',
-    title: 'Cross-cohort Synuclein Imaging',
-    href: '/projects/resource/p2',
-  },
-  {
-    id: 'p3',
-    title: 'Neuro-immune Trainee Initiative',
-    href: '/projects/trainee/p3',
-  },
-];
+const PROJECT_ALPHA = {
+  id: 'p1',
+  title: 'Project Alpha',
+  href: '/projects/discovery/p1',
+};
+const PROJECT_BETA = {
+  id: 'p2',
+  title: 'Cross-cohort Synuclein Imaging',
+  href: '/projects/resource/p2',
+};
+const PROJECT_GAMMA = {
+  id: 'p3',
+  title: 'Neuro-immune Trainee Initiative',
+  href: '/projects/trainee/p3',
+};
+const PROJECT_POOL = [PROJECT_ALPHA, PROJECT_BETA, PROJECT_GAMMA];
 
 export const Normal = () => (
   <ProjectOutputCard
@@ -87,7 +90,7 @@ export const Draft = () => (
     lastModifiedDate={new Date(2025, 1, 1).toISOString()}
     teams={[]}
     authors={createListUserResponse(3).items}
-    projects={[PROJECT_POOL[0]!]}
+    projects={[PROJECT_ALPHA]}
     source="project"
     published={false}
     isInReview={false}
@@ -107,7 +110,7 @@ export const InReview = () => (
     lastModifiedDate={new Date(2025, 0, 10).toISOString()}
     teams={createListTeamResponse(1).items}
     authors={createListUserResponse(5).items}
-    projects={[PROJECT_POOL[0]!]}
+    projects={[PROJECT_ALPHA]}
     source="team"
     published={false}
     isInReview={true}
@@ -145,7 +148,7 @@ export const Minimal = () => (
     addedDate={new Date(2024, 3, 2).toISOString()}
     teams={[]}
     authors={createListUserResponse(1).items}
-    projects={[PROJECT_POOL[0]!]}
+    projects={[PROJECT_ALPHA]}
     source="project"
     published
     isInReview={false}

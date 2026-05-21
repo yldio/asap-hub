@@ -4,16 +4,15 @@ import { render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 
 import ProjectOutputs from '../ProjectOutputs';
+import {
+  createProjectOutputsMock,
+  createProjectDraftOutputsMock,
+} from '../projectOutputs.mock';
 
 jest.mock('../projectOutputs.mock', () => ({
   createProjectOutputsMock: jest.fn(),
   createProjectDraftOutputsMock: jest.fn(),
 }));
-
-import {
-  createProjectOutputsMock,
-  createProjectDraftOutputsMock,
-} from '../projectOutputs.mock';
 
 const mockedOutputs = createProjectOutputsMock as jest.Mock;
 const mockedDrafts = createProjectDraftOutputsMock as jest.Mock;

@@ -278,6 +278,179 @@ describe('ManuscriptForm team validation', () => {
     },
   );
 
+  it.each`
+    authorType                | label                     | errorMessage
+    ${'first author'}         | ${/First Author/}         | ${/The following first author\(s\) are not part of this project/i}
+    ${'corresponding author'} | ${/Corresponding Author/} | ${/The following corresponding author\(s\) are not part of this project/i}
+    ${'additional author'}    | ${/Additional Author/}    | ${/The following additional author\(s\) are not part of this project/i}
+  `(
+    'displays error message when $authorType without a team is added and projectMemberIds is provided',
+    async ({ label, errorMessage }) => {
+      jest.spyOn(console, 'error').mockImplementation();
+      const getAuthorSuggestionsWithoutTeamMock = jest.fn().mockResolvedValue([
+        {
+          label: 'Author A',
+          value: 'author-a',
+          id: 'author-a',
+          displayName: 'Author A',
+          author: {
+            firstName: 'Author',
+            lastName: 'A',
+            teams: [],
+            __meta: {
+              type: 'user',
+            },
+          },
+        },
+      ]);
+
+      render(
+        <StaticRouter location="/">
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...defaultProps}
+              getTeamSuggestions={getTeamSuggestionsMock}
+              getLabSuggestions={getLabSuggestionsMock}
+              getAuthorSuggestions={getAuthorSuggestionsWithoutTeamMock}
+              projectMemberIds={['other-member-id']}
+            />
+          </Suspense>
+        </StaticRouter>,
+      );
+
+      await userEvent.click(await screen.findByLabelText(label));
+      await userEvent.click(await screen.findByText('Author A'));
+      await userEvent.tab();
+
+      expect(await screen.findByText(errorMessage)).toBeVisible();
+    },
+  );
+
+  it('displays error when a lab is added without its PI as an author and projectMemberIds is provided, and hides it once PI is added as first author', async () => {
+    jest.spyOn(console, 'error').mockImplementation();
+    const labPiUserId = 'lab-pi-user';
+    const getLabsWithPiMock = jest.fn().mockResolvedValue([
+      {
+        label: 'Lab One',
+        value: 'lab-1',
+        labPITeamIds: ['team-a'],
+        labPrincipalInvestigatorId: labPiUserId,
+      },
+    ]);
+    const getAuthorsIncludingPiMock = jest.fn().mockResolvedValue([
+      {
+        label: 'PI User',
+        value: labPiUserId,
+        id: labPiUserId,
+        displayName: 'PI User',
+        author: {
+          firstName: 'PI',
+          lastName: 'User',
+          teams: [{ id: 'team-a', name: 'Team A' }],
+          __meta: { type: 'user' },
+        },
+      },
+    ]);
+
+    const { container } = render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            getTeamSuggestions={getTeamSuggestionsMock}
+            getLabSuggestions={getLabsWithPiMock}
+            getAuthorSuggestions={getAuthorsIncludingPiMock}
+            projectMemberIds={['some-project-member']}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    await userEvent.click(
+      await screen.findByRole('combobox', { name: /Labs/i }),
+    );
+    await userEvent.click(await screen.findByText('Lab One'));
+    await userEvent.tab();
+
+    const labErrorMessage =
+      'The following lab(s) do not list their corresponding PI as an author. • Lab One';
+    expect(await screen.findByText(labErrorMessage)).toBeVisible();
+
+    await userEvent.click(await screen.findByLabelText(/First Author/));
+    await userEvent.click(await screen.findByText('PI User'));
+    await userEvent.tab();
+
+    await waitFor(() => {
+      expect(container).not.toHaveTextContent(labErrorMessage);
+    });
+  });
+
+  it.each`
+    role                      | label
+    ${'corresponding author'} | ${/Corresponding Author/}
+    ${'additional author'}    | ${/Additional Author/}
+  `(
+    'clears the lab PI error when the PI is added as $role in project flow',
+    async ({ label }) => {
+      jest.spyOn(console, 'error').mockImplementation();
+      const labPiUserId = 'lab-pi-user';
+      const getLabsWithPiMock = jest.fn().mockResolvedValue([
+        {
+          label: 'Lab One',
+          value: 'lab-1',
+          labPITeamIds: ['team-a'],
+          labPrincipalInvestigatorId: labPiUserId,
+        },
+      ]);
+      const getAuthorsIncludingPiMock = jest.fn().mockResolvedValue([
+        {
+          label: 'PI User',
+          value: labPiUserId,
+          id: labPiUserId,
+          displayName: 'PI User',
+          author: {
+            firstName: 'PI',
+            lastName: 'User',
+            teams: [{ id: 'team-a', name: 'Team A' }],
+            __meta: { type: 'user' },
+          },
+        },
+      ]);
+
+      const { container } = render(
+        <StaticRouter location="/">
+          <Suspense fallback={<div>Loading...</div>}>
+            <ManuscriptForm
+              {...defaultProps}
+              getTeamSuggestions={getTeamSuggestionsMock}
+              getLabSuggestions={getLabsWithPiMock}
+              getAuthorSuggestions={getAuthorsIncludingPiMock}
+              projectMemberIds={['some-project-member']}
+            />
+          </Suspense>
+        </StaticRouter>,
+      );
+
+      await userEvent.click(
+        await screen.findByRole('combobox', { name: /Labs/i }),
+      );
+      await userEvent.click(await screen.findByText('Lab One'));
+      await userEvent.tab();
+
+      const labErrorMessage =
+        'The following lab(s) do not list their corresponding PI as an author. • Lab One';
+      expect(await screen.findByText(labErrorMessage)).toBeVisible();
+
+      await userEvent.click(await screen.findByLabelText(label));
+      await userEvent.click(await screen.findByText('PI User'));
+      await userEvent.tab();
+
+      await waitFor(() => {
+        expect(container).not.toHaveTextContent(labErrorMessage);
+      });
+    },
+  );
+
   it('when there are missing teams for both lab and author, the error is displayed and hidden accordingly', async () => {
     const consoleErrorSpy = mockActWarningsInConsole('error');
     const { container } = render(

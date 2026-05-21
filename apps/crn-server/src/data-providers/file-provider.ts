@@ -7,13 +7,19 @@ import {
 import { region, environment } from '../config';
 import logger from '../utils/logger';
 
+// Environments that should target the deployed `dev` stage Lambda.
+// `serverless deploy --stage dev` produces functions named asap-hub-dev-*,
+// but the local config reports `development` and `serverless offline`
+// reports `local`. Both should map to the same `dev` stage.
+const DEV_STAGE_ENVIRONMENTS = new Set(['development', 'local']);
+
 export default class FileProvider {
   private lambda: LambdaClient;
   private stage: string;
 
   constructor() {
     this.lambda = new LambdaClient({ region });
-    this.stage = environment === 'development' ? 'dev' : environment;
+    this.stage = DEV_STAGE_ENVIRONMENTS.has(environment) ? 'dev' : environment;
   }
 
   isASCII(str: string) {

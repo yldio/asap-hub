@@ -434,4 +434,24 @@ describe('ProjectManuscript', () => {
       ]);
     });
   });
+
+  it('passes projectMemberIds when projectDetail has members', async () => {
+    mockUseProjectById.mockReturnValueOnce({
+      members: [{ id: 'member-1' }, { id: 'member-2' }],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    await renderPage('resource');
+
+    expect(capturedFormProps.projectMemberIds).toEqual([
+      'member-1',
+      'member-2',
+    ]);
+  });
+
+  it('leaves projectMemberIds undefined when projectDetail has no members', async () => {
+    await renderPage('discovery');
+
+    expect(capturedFormProps.projectMemberIds).toBeUndefined();
+  });
 });

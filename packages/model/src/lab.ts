@@ -14,6 +14,7 @@ export type LabDataProviderDataObject = {
   id: string;
   name: string;
   labPITeamIds: string[];
+  labPrincipalInvestigatorId?: string;
 };
 export type ListLabDataProviderDataObject =
   ListResponse<LabDataProviderDataObject>;

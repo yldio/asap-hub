@@ -5,10 +5,10 @@ import {
   render,
   screen,
   waitFor,
-  waitForElementToBeRemoved,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import { projects } from '@asap-hub/routing';
 
@@ -134,49 +134,59 @@ const renderPage = async (
   }).$;
   const workspacePath = workspaceRoutes.$;
 
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: 0 } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshProjectState(projectId), Math.random());
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                {
-                  pathname: createCompliancePath,
-                  state: state ?? { fromButton: true },
-                },
-              ]}
-            >
-              <LocationCapture />
-              <RefreshProjectStateObserver />
-              <Routes>
-                <Route
-                  path={`${workspacePath}/create-compliance-report/:manuscriptId`}
-                  element={
-                    <ManuscriptToastProvider>
-                      <ProjectComplianceReport
-                        projectId={projectId}
-                        projectType={projectType}
-                      />
-                    </ManuscriptToastProvider>
-                  }
-                />
-                <Route
-                  path={`${workspacePath}/*`}
-                  element={<div>Workspace</div>}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot
+        initializeState={({ set }) => {
+          set(refreshProjectState(projectId), Math.random());
+        }}
+      >
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  {
+                    pathname: createCompliancePath,
+                    state: state ?? { fromButton: true },
+                  },
+                ]}
+              >
+                <LocationCapture />
+                <RefreshProjectStateObserver />
+                <Routes>
+                  <Route
+                    path={`${workspacePath}/create-compliance-report/:manuscriptId`}
+                    element={
+                      <ManuscriptToastProvider>
+                        <ProjectComplianceReport
+                          projectId={projectId}
+                          projectType={projectType}
+                        />
+                      </ManuscriptToastProvider>
+                    }
+                  />
+                  <Route
+                    path={`${workspacePath}/*`}
+                    element={<div>Workspace</div>}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/auth0 loading/i)).not.toBeInTheDocument(),
+  );
+  await waitFor(() =>
+    expect(screen.queryByText('loading')).not.toBeInTheDocument(),
+  );
   return result;
 };
 

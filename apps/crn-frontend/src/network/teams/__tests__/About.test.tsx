@@ -13,12 +13,12 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import { network } from '@asap-hub/routing';
 
 import About from '../About';
-import { refreshTeamState } from '../state';
 import { getTeamInterestGroups } from '../interest-groups/api';
 
 jest.mock('../api');
@@ -37,42 +37,43 @@ const renderTeamAbout = async (
     'teamListElementId' | 'isAsapTeam'
   >,
 ) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshTeamState(aboutProps.team.id), Math.random())
-      }
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                network({}).teams({}).team({ teamId }).about({}).$,
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={
-                    network.template +
-                    network({}).teams.template +
-                    network({}).teams({}).team.template +
-                    network({}).teams({}).team({ teamId }).about.template
-                  }
-                  element={
-                    <About
-                      teamListElementId="uuid"
-                      isAsapTeam={false}
-                      {...aboutProps}
-                    />
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  network({}).teams({}).team({ teamId }).about({}).$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={
+                      network.template +
+                      network({}).teams.template +
+                      network({}).teams({}).team.template +
+                      network({}).teams({}).team({ teamId }).about.template
+                    }
+                    element={
+                      <About
+                        teamListElementId="uuid"
+                        isAsapTeam={false}
+                        {...aboutProps}
+                      />
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };

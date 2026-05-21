@@ -15,8 +15,6 @@ import { TeamType } from '@asap-hub/model';
 
 import Teams from '../TeamList';
 import { getAlgoliaTeams } from '../api';
-import { teamsState } from '../state';
-import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
 jest.mock('../../users/api');
@@ -38,21 +36,7 @@ const renderTeamList = async (
   });
   const result = render(
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot
-        initializeState={({ reset }) => {
-          reset(
-            teamsState({
-              currentPage: 0,
-              pageSize: CARD_VIEW_PAGE_SIZE,
-              status: [],
-              researchTheme: [],
-              resourceType: [],
-              searchQuery: '',
-              teamType,
-            }),
-          );
-        }}
-      >
+      <RecoilRoot>
         <Suspense fallback="loading">
           <Auth0Provider user={{}}>
             <WhenReady>

@@ -13,6 +13,7 @@ import userEvent from '@testing-library/user-event';
 import { Stringifier } from 'csv-stringify';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import { getPresignedUrl } from '../../../shared-api/files';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
@@ -21,7 +22,6 @@ import { getOpenScienceMembers } from '../../users/api';
 import { getManuscripts, updateManuscript } from '../api';
 import Compliance from '../Compliance';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
-import { manuscriptsState } from '../state';
 
 const mockIsEnabled = jest.fn();
 
@@ -88,42 +88,34 @@ user.role = 'Staff';
 user.openScienceTeamMember = true;
 
 const renderCompliancePage = async () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          manuscriptsState({
-            currentPage: 0,
-            pageSize: 10,
-            requestedAPCCoverage: 'all',
-            completedStatus: 'show',
-            searchQuery: '',
-            selectedStatuses: [],
-          }),
-        );
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname: '/' }]}>
-              <ManuscriptToastProvider>
-                <Routes>
-                  <Route
-                    path="/"
-                    element={
-                      <Frame title={null}>
-                        <Compliance />
-                      </Frame>
-                    }
-                  />
-                </Routes>
-              </ManuscriptToastProvider>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[{ pathname: '/' }]}>
+                <ManuscriptToastProvider>
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={
+                        <Frame title={null}>
+                          <Compliance />
+                        </Frame>
+                      }
+                    />
+                  </Routes>
+                </ManuscriptToastProvider>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitFor(() => {
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument();

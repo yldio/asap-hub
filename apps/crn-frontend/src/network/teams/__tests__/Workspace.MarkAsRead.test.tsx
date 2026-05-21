@@ -5,6 +5,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
@@ -34,34 +35,40 @@ const id = '42';
 const renderWithWrapper = (
   children: ReactNode,
   user = {},
-): ReturnType<typeof render> =>
-  render(
-    <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                network({}).teams({}).team({ teamId: id }).workspace({}).$,
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={`${network.template}${network({}).teams.template}${
-                    network({}).teams({}).team.template
-                  }${
-                    network({}).teams({}).team({ teamId: id }).workspace
-                      .template
-                  }/*`}
-                  element={children}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+): ReturnType<typeof render> => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  network({}).teams({}).team({ teamId: id }).workspace({}).$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={`${network.template}${network({}).teams.template}${
+                      network({}).teams({}).team.template
+                    }${
+                      network({}).teams({}).team({ teamId: id }).workspace
+                        .template
+                    }/*`}
+                    element={children}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
+};
 
 const mockSetFormType = jest.fn();
 

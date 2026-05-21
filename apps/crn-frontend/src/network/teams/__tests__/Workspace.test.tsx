@@ -1,4 +1,5 @@
 import { ReactNode, Suspense } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import {
@@ -70,34 +71,40 @@ const manuscriptId = 'manuscript_0';
 const renderWithWrapper = (
   children: ReactNode,
   user = {},
-): ReturnType<typeof render> =>
-  render(
-    <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                network({}).teams({}).team({ teamId: id }).workspace({}).$,
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={`${network.template}${network({}).teams.template}${
-                    network({}).teams({}).team.template
-                  }${
-                    network({}).teams({}).team({ teamId: id }).workspace
-                      .template
-                  }/*`}
-                  element={children}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+): ReturnType<typeof render> => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  network({}).teams({}).team({ teamId: id }).workspace({}).$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={`${network.template}${network({}).teams.template}${
+                      network({}).teams({}).team.template
+                    }${
+                      network({}).teams({}).team({ teamId: id }).workspace
+                        .template
+                    }/*`}
+                    element={children}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
+};
 
 const user = {
   id: 'test-user-1',
@@ -548,37 +555,42 @@ describe('the edit tool dialog', () => {
       tools: [tool],
     };
 
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+    });
     render(
-      <RecoilRoot>
-        <Suspense fallback="loading">
-          <Auth0Provider user={user as never}>
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[
-                  network({})
-                    .teams({})
-                    .team({ teamId: id })
-                    .workspace({})
-                    .tools({})
-                    .tool({ toolIndex: '99' }).$,
-                ]}
-              >
-                <Routes>
-                  <Route
-                    path={`${network.template}${network({}).teams.template}${
-                      network({}).teams({}).team.template
-                    }${
-                      network({}).teams({}).team({ teamId: id }).workspace
-                        .template
-                    }/*`}
-                    element={<Workspace team={teamWithTools} />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </RecoilRoot>,
+      <QueryClientProvider client={queryClient}>
+        <RecoilRoot>
+          <Suspense fallback="loading">
+            <Auth0Provider user={user as never}>
+              <WhenReady>
+                <MemoryRouter
+                  initialEntries={[
+                    network({})
+                      .teams({})
+                      .team({ teamId: id })
+                      .workspace({})
+                      .tools({})
+                      .tool({ toolIndex: '99' }).$,
+                  ]}
+                >
+                  <Routes>
+                    <Route
+                      path={`${network.template}${network({}).teams.template}${
+                        network({}).teams({}).team.template
+                      }${
+                        network({}).teams({}).team({ teamId: id }).workspace
+                          .template
+                      }/*`}
+                      element={<Workspace team={teamWithTools} />}
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </RecoilRoot>
+      </QueryClientProvider>,
     );
 
     await waitFor(() => {

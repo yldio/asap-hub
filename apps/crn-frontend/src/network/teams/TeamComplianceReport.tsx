@@ -9,11 +9,10 @@ import {
 import { network } from '@asap-hub/routing';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams, useLocation } from 'react-router';
-import { useSetRecoilState } from 'recoil';
 import {
-  refreshTeamState,
   useManuscriptById,
   usePostComplianceReport,
+  useRefreshTeamById,
 } from './state';
 import { useManuscriptToast } from './useManuscriptToast';
 
@@ -30,7 +29,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
   const pushFromHere = usePushFromHere();
   const { state } = useLocation();
 
-  const setRefreshTeamState = useSetRecoilState(refreshTeamState(teamId));
+  const refreshTeam = useRefreshTeamById(teamId);
   const form = useForm();
   const createComplianceReport = usePostComplianceReport();
 
@@ -54,7 +53,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
         type: 'compliance-report',
         accent: 'successLarge',
       });
-      setRefreshTeamState((value) => value + 1);
+      void refreshTeam();
       void pushFromHere(teamWorkspacePath, { replace: true });
     };
 

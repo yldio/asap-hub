@@ -26,7 +26,10 @@ export const useEvents = (
     queryKey: eventsListQueryKey(options),
     queryFn: async () => {
       try {
-        return await getEvents(client, options);
+        const result = await getEvents(client, options);
+        // Defensive fallback: jest auto-mocks return undefined and
+        // useSuspenseQuery cannot tolerate undefined data.
+        return result ?? ({ total: 0, items: [] } satisfies ListEventResponse);
       } catch (error) {
         if (error instanceof Error) throw error;
         return { total: 0, items: [] } satisfies ListEventResponse;

@@ -13,13 +13,13 @@ import {
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 
 import { createManuscript, uploadManuscriptFileViaPresignedUrl } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
 import { ManuscriptToastProvider } from '../ManuscriptToastProvider';
 import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
-import { refreshTeamState } from '../state';
 import TeamManuscript from '../TeamManuscript';
 
 jest.mock('../../../shared-api/content-generator');
@@ -137,37 +137,38 @@ const renderPage = async (
     network({}).teams({}).team({ teamId }).workspace({}).createManuscript
       .template,
 ) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+  });
   const { container } = render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshTeamState(teamId), Math.random());
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[path]}>
-              <LocationCapture />
-              <Routes>
-                <Route
-                  path={path}
-                  element={
-                    <ManuscriptToastProvider>
-                      <EligibilityReasonProvider>
-                        <TeamManuscript
-                          teamId={teamId}
-                          resubmitManuscript={resubmit}
-                        />
-                      </EligibilityReasonProvider>
-                    </ManuscriptToastProvider>
-                  }
-                ></Route>
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[path]}>
+                <LocationCapture />
+                <Routes>
+                  <Route
+                    path={path}
+                    element={
+                      <ManuscriptToastProvider>
+                        <EligibilityReasonProvider>
+                          <TeamManuscript
+                            teamId={teamId}
+                            resubmitManuscript={resubmit}
+                          />
+                        </EligibilityReasonProvider>
+                      </ManuscriptToastProvider>
+                    }
+                  ></Route>
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>
+    </QueryClientProvider>,
   );
   await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
   return { container };

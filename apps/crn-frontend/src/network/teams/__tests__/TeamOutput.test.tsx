@@ -16,13 +16,7 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { editorRef } from '@asap-hub/react-components';
 import { Suspense, useEffect } from 'react';
@@ -37,7 +31,7 @@ import {
   updateTeamResearchOutput,
 } from '../api';
 import { getImpacts } from '../../../shared-api/impact';
-import { refreshTeamState, usePostPreprintResearchOutput } from '../state';
+import { usePostPreprintResearchOutput } from '../state';
 import TeamOutput from '../TeamOutput';
 
 jest.setTimeout(60000);
@@ -1476,11 +1470,7 @@ async function renderPage({
   });
   render(
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot
-        initializeState={({ set }) =>
-          set(refreshTeamState(teamId), Math.random())
-        }
-      >
+      <RecoilRoot>
         <Suspense fallback="loading">
           <Auth0Provider user={user}>
             <WhenReady>
@@ -1507,5 +1497,10 @@ async function renderPage({
       </RecoilRoot>
     </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(() =>
+    expect(screen.queryByText(/auth0 loading/i)).not.toBeInTheDocument(),
+  );
+  await waitFor(() =>
+    expect(screen.queryByText('loading')).not.toBeInTheDocument(),
+  );
 }

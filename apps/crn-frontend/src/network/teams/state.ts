@@ -13,24 +13,14 @@ import {
   ManuscriptResponse,
   PartialManuscriptResponse,
   ResearchOutputResponse,
-  TeamListItemResponse,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
-import { useCurrentUserCRN } from '@asap-hub/react-context';
-import { useCallback, useState } from 'react';
-import {
-  atom,
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilCallback,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from 'recoil';
+import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { authorizationState } from '../../auth/state';
+
 import { useAlgolia } from '../../hooks/algolia';
 import { getPresignedUrl } from '../../shared-api/files';
 import { useSetResearchOutputItem } from '../../shared-research/state';
@@ -40,12 +30,14 @@ import {
   createManuscript,
   createPreprintResearchOutput,
   downloadFullComplianceDataset,
+  getAlgoliaTeams,
   getManuscript,
-  getManuscriptsByIds,
   getManuscripts,
-  getManuscriptVersions,
+  getManuscriptsByIds,
   getManuscriptVersionByManuscriptId,
+  getManuscriptVersions,
   getTeam,
+  GetTeamsListOptions,
   ManuscriptsOptions,
   markDiscussionAsRead,
   patchTeam,
@@ -53,230 +45,195 @@ import {
   updateDiscussion,
   updateManuscript,
   uploadManuscriptFileViaPresignedUrl,
-  GetTeamsListOptions,
-  getAlgoliaTeams,
 } from './api';
 
-const teamIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  GetTeamsListOptions
->({
-  key: 'teamIndex',
-  default: undefined,
-});
-export const teamsState = selectorFamily<
-  ListTeamResponse | Error | undefined,
-  GetTeamsListOptions
->({
-  key: 'teams',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(teamIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const teams: TeamListItemResponse[] = [];
-      for (const id of index.ids) {
-        const team = get(teamListState(id));
-        if (team === undefined) return undefined;
-        teams.push(team);
-      }
-      return { total: index.total, items: teams };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newTeams) => {
-      if (newTeams === undefined || newTeams instanceof DefaultValue) {
-        reset(teamIndexState(options));
-      } else if (newTeams instanceof Error) {
-        set(teamIndexState(options), newTeams);
-      } else {
-        newTeams?.items.forEach((team) => set(teamListState(team.id), team));
-        set(teamIndexState(options), {
-          total: newTeams.total,
-          ids: newTeams.items.map((team) => team.id),
-        });
-      }
-    },
-});
-export const refreshTeamState = atomFamily<number, string>({
-  key: 'refreshTeam',
-  default: 0,
-});
-const initialTeamState = selectorFamily<TeamResponse | undefined, string>({
-  key: 'initialTeam',
-  get:
-    (id) =>
-    async ({ get }) => {
-      get(refreshTeamState(id));
-      const authorization = get(authorizationState);
-      return getTeam(id, authorization);
-    },
-});
+const NOTIFICATION_LIST_OVERRIDE = () =>
+  getOverrides().COMPLIANCE_NOTIFICATION_LIST as string;
 
-export const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
-  key: 'patchedTeam',
-  default: undefined,
-});
+// --- Query keys ----------------------------------------------------------
 
-export const teamState = selectorFamily<TeamResponse | undefined, string>({
-  key: 'team',
-  get:
-    (id) =>
-    ({ get }) =>
-      get(patchedTeamState(id)) ?? get(initialTeamState(id)),
-  set:
-    (id: string) =>
-    ({ set, reset }, newValue: TeamResponse | DefaultValue | undefined) => {
-      if (newValue === undefined || newValue instanceof DefaultValue) {
-        reset(patchedTeamState(id) ?? initialTeamState(id));
-      } else {
-        set(patchedTeamState(id) ?? initialTeamState(id), (prev) => {
-          if (prev) {
-            return { ...prev, ...newValue };
-          }
-          return newValue;
-        });
-      }
-    },
-});
+export const teamsListQueryKey = (options: GetTeamsListOptions) =>
+  ['teams', 'list', options] as const;
 
-export const teamListState = atomFamily<
-  TeamListItemResponse | undefined,
-  string
->({
-  key: 'teamList',
-  default: undefined,
-});
+export const teamQueryKey = (id: string) => ['teams', 'item', id] as const;
+
+export const manuscriptsListQueryKey = (options: ManuscriptsOptions) =>
+  ['manuscripts', 'list', options] as const;
+
+export const manuscriptQueryKey = (id: string) =>
+  ['manuscripts', 'item', id] as const;
+
+export const manuscriptBatchQueryKey = (ids: ReadonlyArray<string>) =>
+  ['manuscripts', 'batch', ids] as const;
+
+export const discussionQueryKey = (id: string) =>
+  ['discussions', 'item', id] as const;
+
+// --- Teams: list ---------------------------------------------------------
 
 export const usePrefetchTeams = (options: GetTeamsListOptions) => {
-  const algoliaClient = useAlgolia();
-  const [teams, setTeams] = useRecoilState(teamsState(options));
+  const { client } = useAlgolia();
+  const queryClient = useQueryClient();
 
   useDeepCompareEffect(() => {
-    if (teams === undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      getAlgoliaTeams(algoliaClient.client, options).then(setTeams).catch();
-    }
-  }, [options, teams, setTeams]);
-};
-export const useTeams = (options: GetTeamsListOptions): ListTeamResponse => {
-  const algoliaClient = useAlgolia();
-  const [teams, setTeams] = useRecoilState(teamsState(options));
-  if (teams === undefined) {
-    throw getAlgoliaTeams(algoliaClient.client, options)
-      .then(setTeams)
-      .catch(setTeams);
-  }
-  if (teams instanceof Error) {
-    throw teams;
-  }
-  return teams;
+    const key = teamsListQueryKey(options);
+    if (queryClient.getQueryData(key) !== undefined) return;
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    queryClient.prefetchQuery({
+      queryKey: key,
+      queryFn: () => getAlgoliaTeams(client, options),
+    });
+  }, [options, client, queryClient]);
 };
 
-export const useTeamById = (id: string) => useRecoilValue(teamState(id));
+export const useTeams = (options: GetTeamsListOptions): ListTeamResponse => {
+  const { client } = useAlgolia();
+  const { data } = useSuspenseQuery({
+    queryKey: teamsListQueryKey(options),
+    queryFn: () => getAlgoliaTeams(client, options),
+  });
+  return data;
+};
+
+// --- Teams: by id --------------------------------------------------------
+
+export const useTeamById = (id: string): TeamResponse | undefined => {
+  const auth0 = useAuth0CRN();
+  const { data } = useSuspenseQuery({
+    queryKey: teamQueryKey(id),
+    queryFn: async (): Promise<TeamResponse | null> => {
+      const token = await auth0.getTokenSilently();
+      const team = await getTeam(id, `Bearer ${token}`);
+      return team ?? null;
+    },
+    staleTime: Infinity,
+  });
+  return data ?? undefined;
+};
+
+export const useRefreshTeamById = (id: string) => {
+  const queryClient = useQueryClient();
+  return () => queryClient.invalidateQueries({ queryKey: teamQueryKey(id) });
+};
+
 export const usePatchTeamById = (id: string) => {
-  const authorization = useRecoilValue(authorizationState);
-  const setPatchedTeam = useSetRecoilState(patchedTeamState(id));
+  const auth0 = useAuth0CRN();
+  const queryClient = useQueryClient();
   return async (patch: TeamPatchRequest) => {
-    setPatchedTeam(await patchTeam(id, patch, authorization));
+    const token = await auth0.getTokenSilently();
+    const updated = await patchTeam(id, patch, `Bearer ${token}`);
+    if (updated) {
+      // Merge into the existing cached team so other tabs see the patch
+      // without an extra fetch (mirrors the prior Recoil overlay).
+      queryClient.setQueryData<TeamResponse | null>(teamQueryKey(id), (prev) =>
+        prev ? { ...prev, ...updated } : updated,
+      );
+    }
   };
 };
 
-export const refreshManuscriptIndex = atom<number>({
-  key: 'refreshManuscriptIndex',
-  default: 0,
-});
-
-export const refreshManuscriptState = atomFamily<number, string>({
-  key: 'refreshManuscript',
-  default: 0,
-});
-
-const fetchManuscriptState = selectorFamily<
-  ManuscriptResponse | undefined,
-  string
->({
-  key: 'fetchManuscript',
-  get:
-    (id) =>
-    ({ get }) => {
-      get(refreshManuscriptState(id));
-      const authorization = get(authorizationState);
-      return getManuscript(id, authorization);
-    },
-});
-
-export const manuscriptState = atomFamily<
-  ManuscriptResponse | undefined,
-  string
->({
-  key: 'manuscript',
-  default: fetchManuscriptState,
-});
+// --- Manuscripts: single + invalidation ----------------------------------
 
 export const useInvalidateManuscriptIndex = () => {
-  const [refresh, setRefresh] = useRecoilState(refreshManuscriptIndex);
-
+  const queryClient = useQueryClient();
   return useCallback(() => {
-    setRefresh(refresh + 1);
-  }, [refresh, setRefresh]);
-};
-
-export const useManuscriptById = (id: string) =>
-  useRecoilState(manuscriptState(id));
-
-const batchManuscriptsResolvedState = atomFamily<boolean, string>({
-  key: 'batchManuscriptsResolved',
-  default: false,
-});
-
-export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
-  const authorization = useRecoilValue(authorizationState);
-  const deduplicatedIds = [...new Set(ids.filter(Boolean))].sort();
-  const key = deduplicatedIds.join(',');
-  const [resolved, setResolved] = useRecoilState(
-    batchManuscriptsResolvedState(key),
-  );
-
-  const hydrateManuscripts = useRecoilCallback(
-    ({ set }) =>
-      async (manuscriptIds: ReadonlyArray<string>) => {
-        const manuscripts = await getManuscriptsByIds(
-          manuscriptIds,
-          authorization,
-        );
-        manuscripts.forEach((manuscript) => {
-          set(manuscriptState(manuscript.id), manuscript);
-        });
-        setResolved(true);
-      },
-    [authorization, setResolved],
-  );
-
-  if (!deduplicatedIds.length || resolved) {
-    return;
-  }
-
-  throw hydrateManuscripts(deduplicatedIds);
+    // Invalidate all manuscript-list queries; per-id caches stay valid.
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    queryClient.invalidateQueries({ queryKey: ['manuscripts', 'list'] });
+  }, [queryClient]);
 };
 
 export const useSetManuscriptItem = () => {
-  const [refresh, setRefresh] = useRecoilState(refreshManuscriptIndex);
-  return useRecoilCallback(({ set }) => (manuscript: ManuscriptResponse) => {
-    setRefresh(refresh + 1);
-    set(manuscriptState(manuscript.id), manuscript);
+  const queryClient = useQueryClient();
+  return useCallback(
+    (manuscript: ManuscriptResponse) => {
+      queryClient.setQueryData(manuscriptQueryKey(manuscript.id), manuscript);
+    },
+    [queryClient],
+  );
+};
+
+// Mirrors React's useState setter shape so consumers built around
+// useRecoilState (which returns a SetterOrUpdater) keep compiling.
+export type ManuscriptByIdResult = [
+  ManuscriptResponse | undefined,
+  Dispatch<SetStateAction<ManuscriptResponse | undefined>>,
+];
+
+export const useManuscriptById = (id: string): ManuscriptByIdResult => {
+  const auth0 = useAuth0CRN();
+  const queryClient = useQueryClient();
+  const { data } = useSuspenseQuery({
+    queryKey: manuscriptQueryKey(id),
+    queryFn: async (): Promise<ManuscriptResponse | null> => {
+      if (!id) return null;
+      const token = await auth0.getTokenSilently();
+      const manuscript = await getManuscript(id, `Bearer ${token}`);
+      return manuscript ?? null;
+    },
+  });
+
+  const setManuscript = useCallback<
+    Dispatch<SetStateAction<ManuscriptResponse | undefined>>
+  >(
+    (next) => {
+      queryClient.setQueryData<ManuscriptResponse | null>(
+        manuscriptQueryKey(id),
+        (current) => {
+          const previous = current ?? undefined;
+          const resolved =
+            typeof next === 'function'
+              ? (
+                  next as (
+                    prev: ManuscriptResponse | undefined,
+                  ) => ManuscriptResponse | undefined
+                )(previous)
+              : next;
+          return resolved ?? null;
+        },
+      );
+    },
+    [queryClient, id],
+  );
+
+  return [data ?? undefined, setManuscript];
+};
+
+export const useBatchManuscriptsByIds = (ids: ReadonlyArray<string>): void => {
+  const auth0 = useAuth0CRN();
+  const queryClient = useQueryClient();
+  const deduplicatedIds = [...new Set(ids.filter(Boolean))].sort();
+
+  // useSuspenseQuery throws a promise on the first call; once resolved, the
+  // per-manuscript caches are seeded so individual useManuscriptById calls
+  // for these ids do not refetch.
+  useSuspenseQuery({
+    queryKey: manuscriptBatchQueryKey(deduplicatedIds),
+    queryFn: async (): Promise<true> => {
+      if (!deduplicatedIds.length) return true;
+      const token = await auth0.getTokenSilently();
+      const manuscripts = await getManuscriptsByIds(
+        deduplicatedIds,
+        `Bearer ${token}`,
+      );
+      manuscripts.forEach((manuscript) => {
+        queryClient.setQueryData(manuscriptQueryKey(manuscript.id), manuscript);
+      });
+      return true;
+    },
   });
 };
 
+// --- Manuscripts: mutations ----------------------------------------------
+
 export const usePostManuscript = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const auth0 = useAuth0CRN();
   const setManuscriptItem = useSetManuscriptItem();
   return async (payload: ManuscriptPostRequest) => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
+    const token = await auth0.getTokenSilently();
     const manuscript = await createManuscript(
-      { ...payload, notificationList },
-      authorization,
+      { ...payload, notificationList: NOTIFICATION_LIST_OVERRIDE() },
+      `Bearer ${token}`,
     );
     setManuscriptItem(manuscript);
     return manuscript;
@@ -284,15 +241,14 @@ export const usePostManuscript = () => {
 };
 
 export const useResubmitManuscript = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const auth0 = useAuth0CRN();
   const setManuscriptItem = useSetManuscriptItem();
   return async (id: string, payload: ManuscriptPostRequest) => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
+    const token = await auth0.getTokenSilently();
     const manuscript = await resubmitManuscript(
       id,
-      { ...payload, notificationList },
-      authorization,
+      { ...payload, notificationList: NOTIFICATION_LIST_OVERRIDE() },
+      `Bearer ${token}`,
     );
     setManuscriptItem(manuscript);
     return manuscript;
@@ -300,35 +256,108 @@ export const useResubmitManuscript = () => {
 };
 
 export const usePutManuscript = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const auth0 = useAuth0CRN();
   const setManuscriptItem = useSetManuscriptItem();
-  const invalidateManuscriptIndex = useInvalidateManuscriptIndex();
-
   return async (id: string, payload: ManuscriptPutRequest) => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
+    const token = await auth0.getTokenSilently();
     const manuscript = await updateManuscript(
       id,
-      { ...payload, notificationList },
-      authorization,
+      { ...payload, notificationList: NOTIFICATION_LIST_OVERRIDE() },
+      `Bearer ${token}`,
     );
     setManuscriptItem(manuscript);
-    invalidateManuscriptIndex();
+    // Note: list-level cache invalidation is deliberately omitted here.
+    // Consumers (Compliance, ProjectComplianceReport) call
+    // useManuscripts(...).refresh(updated) to merge the new status into the
+    // current list snapshot. Invalidating would trigger a refetch that
+    // replaces those local updates with the original list response.
     return manuscript;
   };
 };
 
-export const usePostComplianceReport = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return async (payload: ComplianceReportPostRequest) => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
+// --- Manuscripts: list (per-team workspace) ------------------------------
 
-    const complianceReport = await createComplianceReport(
-      { ...payload, notificationList },
-      authorization,
+export type UseManuscriptsResult = ListPartialManuscriptResponse & {
+  refresh: (manuscript: ManuscriptDataObject) => void;
+};
+
+export const useManuscripts = (
+  options: ManuscriptsOptions,
+): UseManuscriptsResult => {
+  const { client } = useAlgolia();
+  const queryClient = useQueryClient();
+  const queryKey = manuscriptsListQueryKey(options);
+
+  const { data } = useSuspenseQuery({
+    queryKey,
+    queryFn: () => getManuscripts(client, options),
+  });
+  const resolved = data;
+
+  const refresh = useCallback(
+    (updatedManuscriptItem: ManuscriptDataObject) => {
+      queryClient.setQueryData<ListPartialManuscriptResponse>(
+        queryKey,
+        (previous) => {
+          if (!previous) return previous;
+          return {
+            ...previous,
+            items: previous.items.map(
+              (previousItem: PartialManuscriptResponse) =>
+                previousItem.id === updatedManuscriptItem.id
+                  ? {
+                      ...previousItem,
+                      status: updatedManuscriptItem.status,
+                      assignedUsers: updatedManuscriptItem.assignedUsers,
+                      apcAmountPaid: updatedManuscriptItem.apcAmountPaid,
+                      apcAmountRequested:
+                        updatedManuscriptItem.apcAmountRequested,
+                      apcCoverageRequestStatus:
+                        updatedManuscriptItem.apcCoverageRequestStatus,
+                      apcRequested: updatedManuscriptItem.apcRequested,
+                      declinedReason: updatedManuscriptItem.declinedReason,
+                    }
+                  : previousItem,
+            ),
+          };
+        },
+      );
+    },
+    [queryClient, queryKey],
+  );
+
+  return { ...resolved, refresh };
+};
+
+// --- Manuscript versions / suggestions -----------------------------------
+
+export const useManuscriptVersionSuggestions = () => {
+  const { client } = useAlgolia();
+  return (searchQuery: string, teamId?: string) =>
+    getManuscriptVersions(client, {
+      searchQuery,
+      currentPage: null,
+      pageSize: 100,
+      teamId,
+    }).then(({ items }) => items);
+};
+
+export const useLatestManuscriptVersionByManuscriptId = () => {
+  const { client } = useAlgolia();
+  return (manuscriptId: string) =>
+    getManuscriptVersionByManuscriptId(client, manuscriptId);
+};
+
+// --- Compliance ----------------------------------------------------------
+
+export const usePostComplianceReport = () => {
+  const auth0 = useAuth0CRN();
+  return async (payload: ComplianceReportPostRequest) => {
+    const token = await auth0.getTokenSilently();
+    return createComplianceReport(
+      { ...payload, notificationList: NOTIFICATION_LIST_OVERRIDE() },
+      `Bearer ${token}`,
     );
-    return complianceReport;
   };
 };
 
@@ -337,55 +366,54 @@ export const useIsComplianceReviewer = (): boolean => {
   return role === 'Staff' && !!openScienceTeamMember;
 };
 
-// Uses S3 presigned URL to upload file
 export const useUploadManuscriptFileViaPresignedUrl = () => {
-  const authorization = useRecoilValue(authorizationState);
-
-  return (
+  const auth0 = useAuth0CRN();
+  return async (
     file: File,
     fileType: ManuscriptFileType,
     handleError: (errorMessage: string) => void,
-  ) =>
-    uploadManuscriptFileViaPresignedUrl(
+  ) => {
+    const token = await auth0.getTokenSilently();
+    return uploadManuscriptFileViaPresignedUrl(
       file,
       fileType,
-      authorization,
+      `Bearer ${token}`,
       handleError,
     );
+  };
 };
 
 export const useDownloadFullComplianceDataset = () => {
-  const authorization = useRecoilValue(authorizationState);
-
-  return () => downloadFullComplianceDataset(authorization);
+  const auth0 = useAuth0CRN();
+  return async () => {
+    const token = await auth0.getTokenSilently();
+    return downloadFullComplianceDataset(`Bearer ${token}`);
+  };
 };
 
-export const discussionState = atomFamily<
-  DiscussionResponse | undefined,
-  string
->({
-  key: 'discussion',
-  default: undefined,
-});
+// --- Discussions ---------------------------------------------------------
 
-export const useSetDiscussion = () =>
-  useRecoilCallback(({ set }) => (discussion: DiscussionResponse) => {
-    set(discussionState(discussion.id), discussion);
-  });
+export const useSetDiscussion = () => {
+  const queryClient = useQueryClient();
+  return useCallback(
+    (discussion: DiscussionResponse) => {
+      queryClient.setQueryData(discussionQueryKey(discussion.id), discussion);
+    },
+    [queryClient],
+  );
+};
 
 export const useReplyToDiscussion = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const auth0 = useAuth0CRN();
   const setDiscussion = useSetDiscussion();
   const setManuscriptItem = useSetManuscriptItem();
-
   return async (manuscriptId: string, id: string, patch: DiscussionRequest) => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
-
+    const token = await auth0.getTokenSilently();
+    const authorization = `Bearer ${token}`;
     try {
       const discussion = await updateDiscussion(
         id,
-        { ...patch, notificationList },
+        { ...patch, notificationList: NOTIFICATION_LIST_OVERRIDE() },
         authorization,
       );
       setDiscussion(discussion);
@@ -395,10 +423,7 @@ export const useReplyToDiscussion = () => {
       );
       if (updatedManuscript) setManuscriptItem(updatedManuscript);
     } catch (error) {
-      if (
-        error instanceof BackendError &&
-        (error as BackendError).response?.statusCode === 403
-      ) {
+      if (error instanceof BackendError && error.response?.statusCode === 403) {
         const updatedManuscript = await getManuscript(
           manuscriptId,
           authorization,
@@ -411,180 +436,50 @@ export const useReplyToDiscussion = () => {
 };
 
 export const useMarkDiscussionAsRead = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const auth0 = useAuth0CRN();
+  const queryClient = useQueryClient();
   const setDiscussion = useSetDiscussion();
   const setManuscriptItem = useSetManuscriptItem();
-  const getManuscriptById = useRecoilCallback(
-    ({ snapshot }) =>
-      (manuscriptId: string) =>
-        snapshot.getLoadable(manuscriptState(manuscriptId)).getValue(),
-  );
 
   return async (manuscriptId: string, discussionId: string) => {
-    const manuscript = getManuscriptById(manuscriptId);
-
+    const manuscript = queryClient.getQueryData<ManuscriptResponse>(
+      manuscriptQueryKey(manuscriptId),
+    );
     if (manuscript) {
-      const discussions = manuscript.discussions.map((discussion) => {
-        if (discussion.id === discussionId) {
-          return { ...discussion, read: true };
-        }
-        return discussion;
-      });
-
+      const discussions = manuscript.discussions.map((discussion) =>
+        discussion.id === discussionId
+          ? { ...discussion, read: true }
+          : discussion,
+      );
       setManuscriptItem({ ...manuscript, discussions });
     }
 
-    const discussion = await markDiscussionAsRead(discussionId, authorization);
+    const token = await auth0.getTokenSilently();
+    const discussion = await markDiscussionAsRead(
+      discussionId,
+      `Bearer ${token}`,
+    );
     setDiscussion(discussion);
   };
 };
 
-export const manuscriptListState = atomFamily<
-  PartialManuscriptResponse | undefined,
-  string
->({
-  key: 'manuscriptList',
-  default: undefined,
-});
-
-const manuscriptIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  ManuscriptsOptions
->({
-  key: 'manuscriptIndex',
-  default: undefined,
-});
-
-export const manuscriptsState = selectorFamily<
-  ListPartialManuscriptResponse | Error | undefined,
-  ManuscriptsOptions
->({
-  key: 'manuscripts',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(manuscriptIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const manuscripts: PartialManuscriptResponse[] = [];
-      for (const id of index.ids) {
-        const manuscript = get(manuscriptListState(id));
-        if (manuscript === undefined) return undefined;
-        manuscripts.push(manuscript);
-      }
-      return { total: index.total, items: manuscripts };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newManuscripts) => {
-      if (
-        newManuscripts === undefined ||
-        newManuscripts instanceof DefaultValue
-      ) {
-        reset(manuscriptIndexState(options));
-      } else if (newManuscripts instanceof Error) {
-        set(manuscriptIndexState(options), newManuscripts);
-      } else {
-        newManuscripts?.items.forEach((manuscript) =>
-          set(manuscriptListState(manuscript.id), manuscript),
-        );
-        set(manuscriptIndexState(options), {
-          total: newManuscripts.total,
-          ids: newManuscripts.items.map((team) => team.id),
-        });
-      }
-    },
-});
-
-export const useManuscripts = (
-  options: ManuscriptsOptions,
-): ListPartialManuscriptResponse & {
-  refresh: (manuscript: ManuscriptDataObject) => void;
-} => {
-  const [manuscripts, setManuscripts] = useRecoilState(
-    manuscriptsState(options),
-  );
-
-  const algoliaClient = useAlgolia();
-
-  const refreshManuscripts = useCallback(
-    (updatedManuscriptItem: ManuscriptDataObject) => {
-      setManuscripts((previousManuscripts) => {
-        /* istanbul ignore next */
-        if (!previousManuscripts || previousManuscripts instanceof Error)
-          return undefined;
-
-        return {
-          ...previousManuscripts,
-          items: previousManuscripts.items.map((previousManuscriptItem) =>
-            previousManuscriptItem.id === updatedManuscriptItem.id
-              ? {
-                  ...previousManuscriptItem,
-                  status: updatedManuscriptItem.status,
-                  assignedUsers: updatedManuscriptItem.assignedUsers,
-                  apcAmountPaid: updatedManuscriptItem.apcAmountPaid,
-                  apcAmountRequested: updatedManuscriptItem.apcAmountRequested,
-                  apcCoverageRequestStatus:
-                    updatedManuscriptItem.apcCoverageRequestStatus,
-                  apcRequested: updatedManuscriptItem.apcRequested,
-                  declinedReason: updatedManuscriptItem.declinedReason,
-                }
-              : previousManuscriptItem,
-          ),
-        };
-      });
-    },
-    [setManuscripts],
-  );
-
-  if (manuscripts === undefined) {
-    throw getManuscripts(algoliaClient.client, options)
-      .then(setManuscripts)
-      .catch(setManuscripts);
-  }
-  if (manuscripts instanceof Error) {
-    throw manuscripts;
-  }
-  return { ...manuscripts, refresh: refreshManuscripts };
-};
-
-export const useManuscriptVersionSuggestions = () => {
-  const algoliaClient = useAlgolia();
-
-  return (searchQuery: string, teamId?: string) =>
-    getManuscriptVersions(algoliaClient.client, {
-      searchQuery,
-      currentPage: null,
-      pageSize: 100,
-      teamId,
-    }).then(({ items }) => items);
-};
-
-export const useLatestManuscriptVersionByManuscriptId = () => {
-  const algoliaClient = useAlgolia();
-
-  return (manuscriptId: string) =>
-    getManuscriptVersionByManuscriptId(algoliaClient.client, manuscriptId);
-};
-
 export const useCreateDiscussion = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const auth0 = useAuth0CRN();
   const setManuscriptItem = useSetManuscriptItem();
-
   return async (
     manuscriptId: string,
     title: string,
     text: string,
   ): Promise<string | undefined> => {
-    const notificationList = getOverrides()
-      .COMPLIANCE_NOTIFICATION_LIST as string;
-
+    const token = await auth0.getTokenSilently();
+    const authorization = `Bearer ${token}`;
     try {
       const discussion = await createDiscussion(
         {
           manuscriptId,
           title,
           text,
-          notificationList,
+          notificationList: NOTIFICATION_LIST_OVERRIDE(),
         },
         authorization,
       );
@@ -595,10 +490,7 @@ export const useCreateDiscussion = () => {
       if (updatedManuscript) setManuscriptItem(updatedManuscript);
       return discussion.id;
     } catch (error) {
-      if (
-        error instanceof BackendError &&
-        (error as BackendError).response?.statusCode === 403
-      ) {
+      if (error instanceof BackendError && error.response?.statusCode === 403) {
         const updatedManuscript = await getManuscript(
           manuscriptId,
           authorization,
@@ -610,18 +502,21 @@ export const useCreateDiscussion = () => {
   };
 };
 
+// --- Files ---------------------------------------------------------------
+
 export const usePresignedUrl = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const authorization = useRecoilValue(authorizationState);
+  const auth0 = useAuth0CRN();
 
   const fetchPresignedUrl = async (filename: string, contentType: string) => {
     setLoading(true);
     setError(null);
     try {
+      const token = await auth0.getTokenSilently();
       const { presignedUrl: uploadUrl } = await getPresignedUrl(
         filename,
-        authorization,
+        `Bearer ${token}`,
         contentType,
       );
       return uploadUrl;
@@ -636,14 +531,16 @@ export const usePresignedUrl = () => {
   return { fetchPresignedUrl, loading, error };
 };
 
-export const usePostPreprintResearchOutput = () => {
-  const authorization = useRecoilValue(authorizationState);
-  const setResearchOutputItem = useSetResearchOutputItem();
+// --- Preprint research output -------------------------------------------
 
+export const usePostPreprintResearchOutput = () => {
+  const auth0 = useAuth0CRN();
+  const setResearchOutputItem = useSetResearchOutputItem();
   return async (manuscriptId: string): Promise<ResearchOutputResponse> => {
+    const token = await auth0.getTokenSilently();
     const preprintResearchOutput = await createPreprintResearchOutput(
       manuscriptId,
-      authorization,
+      `Bearer ${token}`,
     );
     await setResearchOutputItem(preprintResearchOutput);
     return preprintResearchOutput;

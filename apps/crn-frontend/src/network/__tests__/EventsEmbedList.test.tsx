@@ -16,7 +16,6 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import Events from '../EventsEmbedList';
-import { refreshTeamState } from '../teams/state';
 import { refreshUserState } from '../users/state';
 
 jest.mock('../../events/api');
@@ -41,9 +40,6 @@ const renderEvents = async ({
   hasEvents?: boolean;
   noEventsComponent?: React.ReactNode;
 }) => {
-  const state = constraint.userId
-    ? refreshUserState(constraint.userId)
-    : refreshTeamState(constraint.teamId || '');
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
   });
@@ -51,7 +47,9 @@ const renderEvents = async ({
     <QueryClientProvider client={queryClient}>
       <RecoilRoot
         initializeState={({ set }) => {
-          set(state, Math.random());
+          if (constraint.userId) {
+            set(refreshUserState(constraint.userId), Math.random());
+          }
         }}
       >
         <Suspense fallback="loading">
@@ -92,9 +90,9 @@ const userPath = (userId: string) =>
 const teamPath = (teamId: string) =>
   network({}).teams({}).team({ teamId }).upcoming({}).$;
 it.each`
-  description                     | constraint            | getPath     | refreshState        | after                         | before
-  ${'upcoming events by userId '} | ${{ userId: '1013' }} | ${userPath} | ${refreshUserState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
-  ${'upcoming events by teamId '} | ${{ teamId: '1009' }} | ${teamPath} | ${refreshTeamState} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
+  description                     | constraint            | getPath     | after                         | before
+  ${'upcoming events by userId '} | ${{ userId: '1013' }} | ${userPath} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
+  ${'upcoming events by teamId '} | ${{ teamId: '1009' }} | ${teamPath} | ${'2021-12-28T13:00:00.000Z'} | ${undefined}
 `(
   'renders a list of $description',
   async ({ constraint, getPath, after, before }) => {

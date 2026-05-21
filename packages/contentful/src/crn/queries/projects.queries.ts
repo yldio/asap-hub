@@ -176,6 +176,7 @@ export const projectsContentQueryFragment = gql`
                 limit: 50
                 order: sys_firstPublishedAt_DESC
               ) {
+                total
                 items {
                   sys {
                     id
@@ -318,6 +319,41 @@ export const FETCH_PROJECT_BY_ID = gql`
   query FetchProjectById($id: String!) {
     projects(id: $id) {
       ...ProjectsContentData
+    }
+  }
+`;
+
+// Fetches a team's research outputs page-by-page so callers can paginate
+// past the inline projection on FETCH_PROJECT_BY_ID (capped at 50).
+export const FETCH_TEAM_RESEARCH_OUTPUTS = gql`
+  query FetchTeamResearchOutputs($teamId: String!, $limit: Int!, $skip: Int!) {
+    teams(id: $teamId) {
+      linkedFrom {
+        researchOutputsCollection(
+          limit: $limit
+          skip: $skip
+          order: sys_firstPublishedAt_DESC
+        ) {
+          total
+          items {
+            sys {
+              id
+            }
+            title
+            documentType
+            type
+            teamsCollection(limit: 10) {
+              items {
+                sys {
+                  id
+                }
+                displayName
+                inactiveSince
+              }
+            }
+          }
+        }
+      }
     }
   }
 `;

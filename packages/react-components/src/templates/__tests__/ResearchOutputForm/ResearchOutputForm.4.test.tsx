@@ -143,7 +143,7 @@ describe('on submit', () => {
     await userEvent.click(
       within(sharingStatus).getByRole('radio', { name: 'Public' }),
     );
-    fireEvent.change(screen.getByLabelText(/date published/i), {
+    fireEvent.change(screen.getByLabelText(/published date/i), {
       target: { value: '2022-03-24' },
     });
     await submitForm();

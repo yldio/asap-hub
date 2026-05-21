@@ -250,6 +250,7 @@ describe('transformResearchOutputResponseToRequest', () => {
         : undefined,
       isInReview: true,
       impact: researchOutputResponse.impact?.id,
+      layImpactStatement: researchOutputResponse.layImpactStatement,
       categories: researchOutputResponse.categories?.map(
         (category) => category.id,
       ),

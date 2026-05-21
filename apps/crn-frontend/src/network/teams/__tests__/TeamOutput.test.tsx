@@ -377,6 +377,7 @@ it('can publish a form when the data is valid', async () => {
       published: true,
       categories: [],
       impact: '',
+      layImpactStatement: '',
     },
     expect.anything(),
   );
@@ -455,6 +456,7 @@ it('can save draft when form data is valid', async () => {
       published: false,
       categories: [],
       impact: '',
+      layImpactStatement: '',
     },
     expect.anything(),
   );
@@ -901,6 +903,7 @@ describe('manuscript outputs flow', () => {
       id: 'impact-id-1',
       name: 'New method/model to explore PD mechanism',
     };
+    const layImpactStatement = 'lay impact statement';
     const description = 'example42 description';
     const shortDescription = 'example42 short description';
     const teams = [
@@ -924,6 +927,7 @@ describe('manuscript outputs flow', () => {
       description,
       shortDescription,
       impact,
+      layImpactStatement,
       teams,
     };
 
@@ -1232,6 +1236,7 @@ describe('manuscript outputs flow', () => {
       id: 'impact-id-1',
       name: 'New method/model to explore PD mechanism',
     };
+    const layImpactStatement = 'lay impact statement';
     const description = 'example42 description';
     const shortDescription = 'example42 short description';
     const teams = [
@@ -1259,6 +1264,7 @@ describe('manuscript outputs flow', () => {
           description,
           shortDescription,
           impact,
+          layImpactStatement,
           teams,
         },
       ],
@@ -1325,6 +1331,7 @@ describe('manuscript outputs flow', () => {
         published: true,
         categories: ['category-id-1'],
         impact: 'impact-id-1',
+        layImpactStatement,
         relatedManuscript: 'manuscript-id-1',
         relatedManuscriptVersion: versionId,
         doi,
@@ -1343,6 +1350,7 @@ describe('manuscript outputs flow', () => {
     const latestManuscriptVersion = {
       ...createManuscriptVersionResponse(),
       impact: { id: 'impact-id-1', name: 'Impact 1' },
+      layImpactStatement: 'version impact statement',
       categories: [{ id: 'category-id-1', name: 'Category 1' }],
       description,
       shortDescription,

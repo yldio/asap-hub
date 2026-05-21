@@ -59,7 +59,9 @@ it('renders impact input and does not throw when getImpactSuggestions is noop', 
     </MemoryRouter>,
   );
 
-  const impactInput = screen.getByRole('combobox', { name: /impact/i });
+  const impactInput = screen.getByRole('combobox', {
+    name: /impact/i,
+  });
   expect(impactInput).toBeInTheDocument();
   await userEvent.click(impactInput);
   await userEvent.type(impactInput, 'Test');

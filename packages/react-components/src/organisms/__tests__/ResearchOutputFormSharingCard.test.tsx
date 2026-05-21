@@ -1,4 +1,3 @@
-import { ResearchOutputSharingStatus } from '@asap-hub/model';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
@@ -16,12 +15,9 @@ const defaultProps: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   descriptionMD: '',
   shortDescription: '',
   changelog: '',
-  sharingStatus: 'Network Only' as ResearchOutputSharingStatus,
   subtype: '',
   displayChangelog: true,
   isSaving: false,
-  asapFunded: 'No' as const,
-  usedInPublication: 'No' as const,
   researchTags: [],
   typeOptions: [],
   getShortDescriptionFromDescription: jest.fn(),
@@ -32,10 +28,6 @@ const defaultProps: ComponentProps<typeof ResearchOutputFormSharingCard> = {
   onChangeChangelog: jest.fn(),
   onChangeType: jest.fn(),
   onChangeSubtype: jest.fn(),
-  onChangeAsapFunded: jest.fn(),
-  onChangeUsedInPublication: jest.fn(),
-  onChangeSharingStatus: jest.fn(),
-  onChangePublishDate: jest.fn(),
   getImpactSuggestions: jest.fn().mockResolvedValue([]),
   impact: undefined,
   onChangeImpact: jest.fn(),
@@ -244,7 +236,7 @@ it('disables impact and category fields when isCreatingNewVersion is true', () =
       isCreatingNewVersion={true}
     />,
   );
-  expect(screen.getByLabelText(/impact/i)).toBeDisabled();
+  expect(screen.getByLabelText(/impact\(required\)/i)).toBeDisabled();
   expect(screen.getByLabelText(/category/i)).toBeDisabled();
 
   rerender(
@@ -257,7 +249,7 @@ it('disables impact and category fields when isCreatingNewVersion is true', () =
       isCreatingNewVersion={false}
     />,
   );
-  expect(screen.getByLabelText(/impact/i)).toBeEnabled();
+  expect(screen.getByLabelText(/impact\(required\)/i)).toBeEnabled();
   expect(screen.getByLabelText(/category/i)).toBeEnabled();
 });
 
@@ -283,7 +275,7 @@ it('calls onChangeImpact with the correct option when an impact is selected', as
     expect(getImpactSuggestions).toHaveBeenCalled();
   });
 
-  const impactField = screen.getByLabelText(/impact/i);
+  const impactField = screen.getByLabelText(/impact\(required\)/i);
   await userEvent.click(impactField);
 
   await waitFor(() => {

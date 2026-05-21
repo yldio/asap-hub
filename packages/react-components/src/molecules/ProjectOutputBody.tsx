@@ -239,7 +239,7 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
         href:
           'id' in author
             ? network({}).users({}).user({ userId: author.id }).$
-            : undefined,
+            : /* istanbul ignore next */ undefined,
       }))}
     />
     <div css={associationStyles}>

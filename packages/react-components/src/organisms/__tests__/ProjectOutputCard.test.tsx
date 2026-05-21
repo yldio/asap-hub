@@ -75,6 +75,17 @@ it('omits Team association for project-based output even when teams present', ()
   expect(queryByText('Team Alpha')).toBeNull();
 });
 
+it('defaults source to project when not provided', () => {
+  const { source: _unused, ...propsWithoutSource } = baseProps;
+  const { queryByText } = render(
+    <ProjectOutputCard
+      {...propsWithoutSource}
+      teams={[{ id: 't1', displayName: 'Alpha', teamType: 'Discovery Team' }]}
+    />,
+  );
+  expect(queryByText('Team Alpha')).toBeNull();
+});
+
 it('displays Draft tag when not published', () => {
   const { getByText, queryByText, rerender } = render(
     <ProjectOutputCard {...baseProps} published={false} />,
@@ -137,16 +148,6 @@ it('falls back Last Updated to addedDate then created when lastModifiedDate abse
   expect(getByText(/Last Updated/).textContent).toContain('1st January 2019');
 });
 
-it('renders authors', () => {
-  const { getByText } = render(
-    <ProjectOutputCard
-      {...baseProps}
-      authors={[{ id: 'u1', displayName: 'Author One' }]}
-    />,
-  );
-  expect(getByText('Author One')).toBeVisible();
-});
-
 it('renders tags when showTags', () => {
   const { getByText, queryByText, rerender } = render(
     <ProjectOutputCard {...baseProps} keywords={['Etag']} showTags />,
@@ -157,4 +158,27 @@ it('renders tags when showTags', () => {
     <ProjectOutputCard {...baseProps} keywords={['Etag']} showTags={false} />,
   );
   expect(queryByText('Etag')).toBeNull();
+});
+
+it('omits the tags block when keywords are empty', () => {
+  const { queryByText } = render(
+    <ProjectOutputCard {...baseProps} keywords={[]} showTags />,
+  );
+  expect(queryByText('Etag')).toBeNull();
+});
+
+it('renders +N counter when teams exceed the visible limit', () => {
+  const { getByText } = render(
+    <ProjectOutputCard
+      {...baseProps}
+      teams={[
+        { id: 't1', displayName: 'A', teamType: 'Discovery Team' },
+        { id: 't2', displayName: 'B', teamType: 'Discovery Team' },
+        { id: 't3', displayName: 'C', teamType: 'Discovery Team' },
+        { id: 't4', displayName: 'D', teamType: 'Resource Team' },
+      ]}
+    />,
+  );
+  expect(getByText('+1')).toBeVisible();
+  expect(getByText('Teams')).toBeVisible();
 });

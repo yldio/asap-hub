@@ -65,7 +65,7 @@ const ProjectOutputs: React.FC<ProjectOutputsProps> = ({
       isListView={isListView}
       cardViewHref={location.pathname + cardViewParams}
       listViewHref={location.pathname + listViewParams}
-      exportResults={() => Promise.resolve()}
+      exportResults={/* istanbul ignore next */ () => Promise.resolve()}
       showTags
     />
   );

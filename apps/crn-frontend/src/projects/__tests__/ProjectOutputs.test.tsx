@@ -18,20 +18,23 @@ const mockedOutputs = createProjectOutputsMock as jest.Mock;
 const mockedDrafts = createProjectDraftOutputsMock as jest.Mock;
 
 const renderProjectOutputs = (
-  draftOutputs = false,
+  draftOutputs?: boolean,
   initialEntries: string[] = ['/'],
 ) => {
   const router = createMemoryRouter(
     [
       {
         path: '*',
-        element: (
-          <ProjectOutputs
-            projectId="p1"
-            projectTitle="Project Alpha"
-            draftOutputs={draftOutputs}
-          />
-        ),
+        element:
+          draftOutputs === undefined ? (
+            <ProjectOutputs projectId="p1" projectTitle="Project Alpha" />
+          ) : (
+            <ProjectOutputs
+              projectId="p1"
+              projectTitle="Project Alpha"
+              draftOutputs={draftOutputs}
+            />
+          ),
       },
     ],
     { initialEntries },
@@ -53,36 +56,13 @@ beforeEach(() => {
 describe('Published outputs', () => {
   it('renders NoOutputsPage when no outputs', () => {
     mockedOutputs.mockReturnValue([]);
-    renderProjectOutputs(false);
+    renderProjectOutputs();
     expect(screen.getByText('No outputs available.')).toBeInTheDocument();
     expect(
       screen.getByText(
         'When this project shares an output, it will be listed here.',
       ),
     ).toBeInTheDocument();
-  });
-
-  it('renders the list when there are outputs', () => {
-    mockedOutputs.mockReturnValue([
-      {
-        id: 'o1',
-        title: 'Example output',
-        documentType: 'Article',
-        type: 'Preprint',
-        authors: [],
-        teams: [],
-        keywords: [],
-        published: true,
-        isInReview: false,
-        created: new Date(2024, 0, 1).toISOString(),
-        addedDate: new Date(2024, 0, 1).toISOString(),
-        source: 'project',
-        projects: [{ id: 'p1', title: 'Project Alpha', href: '/projects/p1' }],
-      },
-    ]);
-    renderProjectOutputs(false);
-    expect(screen.getByText('Example output')).toBeInTheDocument();
-    expect(screen.queryByText('No outputs available.')).not.toBeInTheDocument();
   });
 });
 
@@ -121,5 +101,40 @@ describe('Draft outputs', () => {
     expect(
       screen.queryByText('No draft outputs available.'),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe('Pagination and view', () => {
+  const buildOutput = (i: number) => ({
+    id: `o${i}`,
+    title: `Output ${i}`,
+    documentType: 'Article',
+    type: 'Preprint',
+    authors: [],
+    teams: [],
+    keywords: [],
+    published: true,
+    isInReview: false,
+    created: new Date(2024, 0, 1).toISOString(),
+    addedDate: new Date(2024, 0, 1).toISOString(),
+    source: 'project' as const,
+    projects: [{ id: 'p1', title: 'Project Alpha', href: '/projects/p1' }],
+  });
+
+  it('paginates outputs into pages of the card page size', () => {
+    mockedOutputs.mockReturnValue(
+      Array.from({ length: 15 }, (_, i) => buildOutput(i + 1)),
+    );
+    renderProjectOutputs(false, ['/?currentPage=1']);
+    // Card page size = 10; second page (currentPage=1) shows items 11..15
+    expect(screen.getByText('Output 11')).toBeInTheDocument();
+    expect(screen.queryByText('Output 1')).not.toBeInTheDocument();
+  });
+
+  it('switches to list view when the view URL param is set', () => {
+    mockedOutputs.mockReturnValue([buildOutput(1)]);
+    renderProjectOutputs(false, ['/?view=list']);
+    // List variant wraps each output in a <li>; card variant does not.
+    expect(screen.getByText('Output 1').closest('li')).not.toBeNull();
   });
 });

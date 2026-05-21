@@ -250,3 +250,34 @@ it('renders category associations', () => {
   expect(screen.getByText('Cat Two')).toBeInTheDocument();
   expect(screen.getByTitle('Category icon')).toBeInTheDocument();
 });
+
+describe('Projects', () => {
+  it('renders project name with link when href is provided', () => {
+    render(
+      <AssociationList
+        inline
+        type="Project"
+        associations={[
+          { displayName: 'Project Alpha', id: 'p1', href: '/projects/p1' },
+        ]}
+      />,
+    );
+    expect(
+      screen.getByRole('link', { name: 'Project Alpha' }),
+    ).toHaveAttribute('href', '/projects/p1');
+  });
+
+  it('renders project name as plain text when href is absent', () => {
+    render(
+      <AssociationList
+        inline
+        type="Project"
+        associations={[{ displayName: 'Project Alpha', id: 'p1' }]}
+      />,
+    );
+    expect(screen.getByText('Project Alpha')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'Project Alpha' }),
+    ).toBeNull();
+  });
+});

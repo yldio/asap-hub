@@ -9,6 +9,7 @@ import {
   WorkingGroupsIcon,
   ImpactIcon,
   CategoryIcon,
+  DiscoveryProjectIcon,
 } from '../icons';
 import { Avatar, Link } from '../atoms';
 import { rem } from '../pixels';
@@ -85,8 +86,15 @@ interface AssociationListProps {
     displayName: string;
     id: string;
     inactiveSince?: string;
+    href?: string;
   }>;
-  readonly type: 'Team' | 'Lab' | 'Working Group' | 'Impact' | 'Category';
+  readonly type:
+    | 'Team'
+    | 'Lab'
+    | 'Working Group'
+    | 'Impact'
+    | 'Category'
+    | 'Project';
   readonly inline?: boolean;
   readonly max?: number;
   readonly more?: number;
@@ -97,6 +105,7 @@ const icon: Record<AssociationListProps['type'], React.ReactElement> = {
   'Working Group': <WorkingGroupsIcon />,
   Impact: <ImpactIcon />,
   Category: <CategoryIcon />,
+  Project: <DiscoveryProjectIcon />,
 };
 const Indicator = ({ type }: { type: AssociationListProps['type'] }) => (
   <div css={iconStyles}>{icon[type]}</div>
@@ -129,7 +138,7 @@ const AssociationList: FC<AssociationListProps> = ({
     <div>
       {inline && <Indicator type={type} />}
       <ul css={[containerStyles, inline && inlineContainerStyles]}>
-        {associations.map(({ displayName, id, inactiveSince }) => (
+        {associations.map(({ displayName, id, inactiveSince, href }) => (
           <li key={id} css={[itemStyles, inline && inlineItemStyles]}>
             {inline || <Indicator type={type} />}
             {type === 'Team' && (
@@ -161,6 +170,8 @@ const AssociationList: FC<AssociationListProps> = ({
                 {displayName}
               </Link>
             )}
+            {type === 'Project' &&
+              (href ? <Link href={href}>{displayName}</Link> : displayName)}
             {inline && <span css={bulletStyles}>•</span>}
           </li>
         ))}

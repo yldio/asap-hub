@@ -10,10 +10,7 @@ import TagList from './TagList';
 import UsersList from './UsersList';
 import { formatDate } from '../date';
 import { rem } from '../pixels';
-import {
-  DiscoveryProjectIcon,
-  TeamIcon,
-} from '../icons';
+import { DiscoveryProjectIcon, TeamIcon } from '../icons';
 
 const PROJECT_ICON = <DiscoveryProjectIcon />;
 const TEAM_ICON = <TeamIcon />;
@@ -208,12 +205,7 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
         ]}
       />
       {link && (
-        <ExternalLink
-          href={link}
-          label="Access Output"
-          size="large"
-          noMargin
-        />
+        <ExternalLink href={link} label="Access Output" size="large" noMargin />
       )}
     </div>
     <div css={titleStyles}>

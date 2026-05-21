@@ -154,11 +154,7 @@ it('renders tags when showTags', () => {
   expect(getByText('Etag')).toBeVisible();
 
   rerender(
-    <ProjectOutputCard
-      {...baseProps}
-      keywords={['Etag']}
-      showTags={false}
-    />,
+    <ProjectOutputCard {...baseProps} keywords={['Etag']} showTags={false} />,
   );
   expect(queryByText('Etag')).toBeNull();
 });

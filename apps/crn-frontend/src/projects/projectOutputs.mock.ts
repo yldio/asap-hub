@@ -5,12 +5,36 @@ import {
 import type { ProjectOutput } from '@asap-hub/react-components';
 
 const TEAM_POOL = [
-  { id: 'team-1', displayName: 'Jakobsson, J', teamType: 'Discovery Team' as const },
-  { id: 'team-2', displayName: 'Smith, A', teamType: 'Discovery Team' as const },
-  { id: 'team-3', displayName: 'Okafor, B', teamType: 'Resource Team' as const },
-  { id: 'team-4', displayName: 'Müller, K', teamType: 'Discovery Team' as const },
-  { id: 'team-5', displayName: 'Ribeiro, L', teamType: 'Resource Team' as const },
-  { id: 'team-6', displayName: 'Yamamoto, H', teamType: 'Discovery Team' as const },
+  {
+    id: 'team-1',
+    displayName: 'Jakobsson, J',
+    teamType: 'Discovery Team' as const,
+  },
+  {
+    id: 'team-2',
+    displayName: 'Smith, A',
+    teamType: 'Discovery Team' as const,
+  },
+  {
+    id: 'team-3',
+    displayName: 'Okafor, B',
+    teamType: 'Resource Team' as const,
+  },
+  {
+    id: 'team-4',
+    displayName: 'Müller, K',
+    teamType: 'Discovery Team' as const,
+  },
+  {
+    id: 'team-5',
+    displayName: 'Ribeiro, L',
+    teamType: 'Resource Team' as const,
+  },
+  {
+    id: 'team-6',
+    displayName: 'Yamamoto, H',
+    teamType: 'Discovery Team' as const,
+  },
 ];
 
 const EXTRA_PROJECTS = [

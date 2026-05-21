@@ -12,8 +12,16 @@ export default {
 
 const PROJECT_POOL = [
   { id: 'p1', title: 'Project Alpha', href: '/projects/discovery/p1' },
-  { id: 'p2', title: 'Cross-cohort Synuclein Imaging', href: '/projects/resource/p2' },
-  { id: 'p3', title: 'Neuro-immune Trainee Initiative', href: '/projects/trainee/p3' },
+  {
+    id: 'p2',
+    title: 'Cross-cohort Synuclein Imaging',
+    href: '/projects/resource/p2',
+  },
+  {
+    id: 'p3',
+    title: 'Neuro-immune Trainee Initiative',
+    href: '/projects/trainee/p3',
+  },
 ];
 
 export const Normal = () => (
@@ -26,12 +34,27 @@ export const Normal = () => (
     link={text('Link', 'https://hub.asap.science')}
     documentType={select(
       'Document type',
-      ['Article', 'Protocol', 'Dataset', 'Bioinformatics', 'Lab Material', 'Presentation', 'Grant Document', 'Report'],
+      [
+        'Article',
+        'Protocol',
+        'Dataset',
+        'Bioinformatics',
+        'Lab Material',
+        'Presentation',
+        'Grant Document',
+        'Report',
+      ],
       'Article',
     )}
     type={select(
       'Type',
-      ['Preprint', 'Code', 'Antibody', 'Cell Culture & Differentiation', 'Genetic Data - RNA'],
+      [
+        'Preprint',
+        'Code',
+        'Antibody',
+        'Cell Culture & Differentiation',
+        'Genetic Data - RNA',
+      ],
       'Preprint',
     )}
     source={select('Source', ['project', 'team'], 'project')}
@@ -43,7 +66,10 @@ export const Normal = () => (
     ).toISOString()}
     teams={createListTeamResponse(number('Number of Teams', 2)).items}
     authors={createListUserResponse(number('Number of Authors', 5)).items}
-    projects={PROJECT_POOL.slice(0, number('Number of Projects', 1, { min: 1, max: 3 }))}
+    projects={PROJECT_POOL.slice(
+      0,
+      number('Number of Projects', 1, { min: 1, max: 3 }),
+    )}
     published={boolean('Published', true)}
     isInReview={boolean('In Review', false)}
   />

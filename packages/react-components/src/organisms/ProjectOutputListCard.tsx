@@ -43,11 +43,7 @@ const ProjectOutputListCard: React.FC<ProjectOutputListCardProps> = ({
             algoliaQueryId={algoliaQueryId}
             objectId={output.id}
           >
-            <ProjectOutputBody
-              variant="list"
-              showTags={showTags}
-              {...output}
-            />
+            <ProjectOutputBody variant="list" showTags={showTags} {...output} />
           </AlgoliaHit>
         </li>
       ))}

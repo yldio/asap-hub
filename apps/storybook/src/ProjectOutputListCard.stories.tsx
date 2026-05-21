@@ -18,7 +18,11 @@ const projectAlpha = {
 };
 
 const teamPool = [
-  { id: 't1', displayName: 'Jakobsson, J', teamType: 'Discovery Team' as const },
+  {
+    id: 't1',
+    displayName: 'Jakobsson, J',
+    teamType: 'Discovery Team' as const,
+  },
   { id: 't2', displayName: 'Smith, A', teamType: 'Discovery Team' as const },
   { id: 't3', displayName: 'Okafor, B', teamType: 'Resource Team' as const },
 ];
@@ -83,6 +87,4 @@ export const Mixed = () => (
   />
 );
 
-export const Empty = () => (
-  <ProjectOutputListCard researchOutputs={[]} />
-);
+export const Empty = () => <ProjectOutputListCard researchOutputs={[]} />;

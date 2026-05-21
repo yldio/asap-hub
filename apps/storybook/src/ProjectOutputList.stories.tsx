@@ -69,10 +69,7 @@ export const ListView = () => {
 
 export const Paginated = () => (
   <StaticRouter location="/">
-    <ProjectOutputList
-      {...buildProps(25, 0, 10)}
-      isListView={false}
-    />
+    <ProjectOutputList {...buildProps(25, 0, 10)} isListView={false} />
   </StaticRouter>
 );
 

@@ -1,9 +1,6 @@
 import { useMemo } from 'react';
 import { useLocation } from 'react-router';
-import {
-  NoOutputsPage,
-  ProjectOutputList,
-} from '@asap-hub/react-components';
+import { NoOutputsPage, ProjectOutputList } from '@asap-hub/react-components';
 
 import { usePagination, usePaginationParams } from '../hooks';
 import {

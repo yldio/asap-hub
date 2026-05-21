@@ -13,14 +13,22 @@ it('renders one entry per research output', () => {
     <ProjectOutputListCard
       {...baseProps}
       researchOutputs={[
-        { ...createResearchOutputResponse(0), source: 'team', title: 'Output 1' },
-        { ...createResearchOutputResponse(1), source: 'team', title: 'Output 2' },
+        {
+          ...createResearchOutputResponse(0),
+          source: 'team',
+          title: 'Output 1',
+        },
+        {
+          ...createResearchOutputResponse(1),
+          source: 'team',
+          title: 'Output 2',
+        },
       ]}
     />,
   );
-  expect(
-    getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(['Output 1', 'Output 2']);
+  expect(getAllByRole('heading').map(({ textContent }) => textContent)).toEqual(
+    ['Output 1', 'Output 2'],
+  );
 });
 
 it('links each title to the research output detail page', () => {

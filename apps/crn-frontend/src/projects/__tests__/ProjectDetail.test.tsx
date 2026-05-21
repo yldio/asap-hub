@@ -658,9 +658,7 @@ describe.each(variants)(
         'outputs',
       );
       expect(
-        screen.queryByText(
-          /Tracing the Origin and Progression of Parkinson/i,
-        ),
+        screen.queryByText(/Tracing the Origin and Progression of Parkinson/i),
       ).not.toBeInTheDocument();
     });
 

@@ -262,9 +262,10 @@ describe('Projects', () => {
         ]}
       />,
     );
-    expect(
-      screen.getByRole('link', { name: 'Project Alpha' }),
-    ).toHaveAttribute('href', '/projects/p1');
+    expect(screen.getByRole('link', { name: 'Project Alpha' })).toHaveAttribute(
+      'href',
+      '/projects/p1',
+    );
   });
 
   it('renders project name as plain text when href is absent', () => {
@@ -276,8 +277,6 @@ describe('Projects', () => {
       />,
     );
     expect(screen.getByText('Project Alpha')).toBeInTheDocument();
-    expect(
-      screen.queryByRole('link', { name: 'Project Alpha' }),
-    ).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Project Alpha' })).toBeNull();
   });
 });

@@ -130,7 +130,6 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
     await onSave(data as DiscussionCreateRequest);
     onDismiss();
   };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Modal padding={false}>
@@ -280,7 +279,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
                   <Button
                     noMargin
                     primary
-                    enabled={!isSubmitting && isValid}
+                    enabled={!isSubmitting && !isUploadingFiles && isValid}
                     overrideStyles={buttonOverrideStyles}
                     submit
                     preventDefault={false}

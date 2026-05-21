@@ -200,6 +200,59 @@ it('send button is disabled when text is not provided', async () => {
   });
 });
 
+it('send button is disabled when uploading files', async () => {
+  const uploadedFile = {
+    id: 'file-id',
+    filename: 'test.pdf',
+    url: 'https://example.com/test.pdf',
+  };
+  let resolveUpload!: (value: typeof uploadedFile) => void;
+  const handleFileUpload = jest.fn(
+    () =>
+      new Promise<typeof uploadedFile>((resolve) => {
+        resolveUpload = resolve;
+      }),
+  );
+
+  render(
+    <DiscussionModal {...defaultProps} handleFileUpload={handleFileUpload} />,
+  );
+
+  const titleInput = screen.getByRole('textbox', { name: /Title/i });
+  await userEvent.type(titleInput, 'test title');
+
+  const textInput = screen.getByTestId('editor');
+  await userEvent.click(textInput);
+  await userEvent.tab();
+  fireEvent.input(textInput, { data: 'test message' });
+  await userEvent.tab();
+
+  const fileInput = screen.getByLabelText(/Attach File/i, {
+    selector: 'input[type="file"]',
+  });
+  const mockFile = new File(['test'], 'test.pdf', {
+    type: 'application/pdf',
+  });
+
+  expect(screen.queryByText(/test.pdf/i)).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Send/i })).toBeEnabled();
+
+  const uploadPromise = userEvent.upload(fileInput, mockFile);
+
+  await waitFor(() => {
+    expect(screen.getByRole('button', { name: /Send/i })).toBeDisabled();
+  });
+
+  resolveUpload(uploadedFile);
+  await uploadPromise;
+
+  await waitFor(() => {
+    expect(screen.getByText(/test.pdf/i)).toBeInTheDocument();
+  });
+
+  expect(screen.getByRole('button', { name: /Send/i })).toBeEnabled();
+});
+
 it('displays error message when title is bigger than 100 characters', async () => {
   render(<DiscussionModal {...defaultProps} />);
 

@@ -1,8 +1,17 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { CodeNode } from '@lexical/code';
-import { $isLinkNode, AutoLinkNode, LinkNode } from '@lexical/link';
+import {
+  $isAutoLinkNode,
+  $isLinkNode,
+  AutoLinkNode,
+  LinkNode,
+} from '@lexical/link';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import {
+  AutoLinkPlugin,
+  createLinkMatcherWithRegExp,
+} from '@lexical/react/LexicalAutoLinkPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -214,18 +223,39 @@ const applyLinkTarget = (node: LinkNode) => {
   }
 };
 
+const URL_REGEX =
+  /(https?:\/\/[^\s]+|www\.[a-zA-Z0-9][a-zA-Z0-9-]*(?:\.[a-zA-Z0-9-]+)+[^\s]*)/;
+const EMAIL_REGEX = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+)/;
+
+const AUTO_LINK_MATCHERS = [
+  createLinkMatcherWithRegExp(URL_REGEX, (text) =>
+    text.startsWith('http') ? text : `https://${text}`,
+  ),
+  createLinkMatcherWithRegExp(EMAIL_REGEX, (text) => `mailto:${text}`),
+];
+
 const LinkTargetPlugin = () => {
   const [editor] = useLexicalComposerContext();
   useEffect(() => {
-    const unregister = editor.registerNodeTransform(LinkNode, (node) => {
+    const unregisterLink = editor.registerNodeTransform(LinkNode, (node) => {
       if ($isLinkNode(node)) applyLinkTarget(node);
     });
+    const unregisterAutoLink = editor.registerNodeTransform(
+      AutoLinkNode,
+      (node) => {
+        if ($isAutoLinkNode(node)) applyLinkTarget(node);
+      },
+    );
     // Apply to nodes already present from initial parse (transforms only fire
     // on dirty nodes, so we walk the current state once on mount).
     editor.update(() => {
       $nodesOfType(LinkNode).forEach(applyLinkTarget);
+      $nodesOfType(AutoLinkNode).forEach(applyLinkTarget);
     });
-    return unregister;
+    return () => {
+      unregisterLink();
+      unregisterAutoLink();
+    };
   }, [editor]);
   return <></>;
 };
@@ -351,6 +381,7 @@ const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
             )}
             <ListPlugin />
             <LinkPlugin />
+            <AutoLinkPlugin matchers={AUTO_LINK_MATCHERS} />
             <LinkTargetPlugin />
             <HistoryPlugin />
             {autofocus && <AutoFocusPlugin />}

@@ -114,6 +114,7 @@ export {
   ProjectDuration,
   ProjectMemberCard,
   ProjectMembers,
+  ProjectOutputBody,
   ReminderItem,
   SearchField,
   StatusBadge,
@@ -192,6 +193,8 @@ export {
   ProjectContributors,
   ProjectDetailOverview,
   ProjectAims,
+  ProjectOutputCard,
+  ProjectOutputListCard,
   ProjectMilestonesTable,
   Aim,
   Milestone,
@@ -306,6 +309,7 @@ export {
   PasswordResetEmailSentPage,
   PersonalInfoModal,
   ProfileOutputs,
+  ProjectOutputList,
   ProjectDetailAbout,
   ProjectDetailHeader,
   ProjectDetailPage,
@@ -357,7 +361,12 @@ export {
 } from './utils';
 export { pixels, text, authTestUtils, utils, mail, ajvErrors, colors };
 export type { AccentVariant, SwitchProps } from './atoms';
-export type { ItemType, StatusType, ReminderEntity } from './molecules';
+export type {
+  ItemType,
+  StatusType,
+  ReminderEntity,
+  ProjectOutput,
+} from './molecules';
 export type {
   Association,
   AuthorOption,

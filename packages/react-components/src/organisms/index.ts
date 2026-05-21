@@ -99,6 +99,8 @@ export {
   SharedOutputDropdownBase,
   SharedOutputDropdownWrapper,
 } from './SharedOutputDropdown';
+export { default as ProjectOutputCard } from './ProjectOutputCard';
+export { default as ProjectOutputListCard } from './ProjectOutputListCard';
 export { default as SharedResearchAdditionalInformationCard } from './SharedResearchAdditionalInformationCard';
 export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as SharedResearchDetailsTagsCard } from './SharedResearchDetailsTagsCard';

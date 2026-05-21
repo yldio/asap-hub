@@ -70,6 +70,7 @@ export { default as OpenQuestionsModal } from './OpenQuestionsModal';
 export { default as PasswordResetEmailSentPage } from './PasswordResetEmailSentPage';
 export { default as PersonalInfoModal } from './PersonalInfoModal';
 export { default as ProfileOutputs } from './ProfileOutputs';
+export { default as ProjectOutputList } from './ProjectOutputList';
 export { default as ResearchOutputForm } from './ResearchOutputForm';
 export { default as ResearchOutputsSearch } from './ResearchOutputsSearch';
 export { default as RoleModal } from './RoleModal';

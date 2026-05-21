@@ -20,8 +20,8 @@ module.exports.up = (migration) => {
     .disabled(false)
     .omitted(false);
 
-  manuscripts.moveField('layImpactStatement').afterField('impact');
-  manuscripts.changeFieldControl(
+  researchOutputs.moveField('layImpactStatement').afterField('impact');
+  researchOutputs.changeFieldControl(
     'layImpactStatement',
     'builtin',
     'multipleLine',

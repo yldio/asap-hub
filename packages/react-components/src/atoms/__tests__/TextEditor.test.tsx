@@ -469,6 +469,42 @@ describe('TextEditorToolbar', () => {
         expect(queryByLabelText('Link URL')).not.toBeInTheDocument();
       });
 
+      it('applies target=_blank and rel to AutoLinkNodes', async () => {
+        const { container } = render(
+          <TextEditor onChange={onChange} value="hello" />,
+        );
+
+        const { editorRef } = await import('../EditorRefPluginWrapper');
+        const lexical = await import('lexical');
+        const linkModule = await import('@lexical/link');
+
+        await act(async () => {
+          editorRef.current?.update(
+            () => {
+              const root = lexical.$getRoot();
+              root.clear();
+              const para = lexical.$createParagraphNode();
+              const autoLink = linkModule.$createAutoLinkNode(
+                'https://auto.example.com',
+              );
+              autoLink.append(
+                lexical.$createTextNode('https://auto.example.com'),
+              );
+              para.append(autoLink);
+              root.append(para);
+            },
+            { discrete: true },
+          );
+        });
+
+        const anchor = container.querySelector(
+          'a[href="https://auto.example.com"]',
+        );
+        expect(anchor).not.toBeNull();
+        expect(anchor).toHaveAttribute('target', '_blank');
+        expect(anchor).toHaveAttribute('rel', 'noopener noreferrer');
+      });
+
       it('does not open the floating editor when nothing is selected', async () => {
         const { getByLabelText, queryByLabelText } = render(
           <TextEditor onChange={onChange} value="hello" />,

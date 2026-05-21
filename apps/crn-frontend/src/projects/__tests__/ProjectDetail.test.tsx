@@ -618,7 +618,7 @@ describe.each(variants)(
       expect(screen.queryByText('Draft Outputs')).not.toBeInTheDocument();
     });
 
-    it('renders outputs empty state when navigating to outputs route', async () => {
+    it('renders outputs list when navigating to outputs route', async () => {
       enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         Component,
@@ -628,11 +628,13 @@ describe.each(variants)(
         'outputs',
       );
       expect(
-        await screen.findByText('No outputs available.'),
+        await screen.findByText(
+          /Tracing the Origin and Progression of Parkinson/i,
+        ),
       ).toBeInTheDocument();
     });
 
-    it('renders draft outputs empty state when navigating to draft-outputs route', async () => {
+    it('renders draft outputs list when navigating to draft-outputs route', async () => {
       enable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         Component,
@@ -642,11 +644,11 @@ describe.each(variants)(
         'draft-outputs',
       );
       expect(
-        await screen.findByText('No draft outputs available.'),
+        await screen.findByText(/Draft: Longitudinal cohort analysis/i),
       ).toBeInTheDocument();
     });
 
-    it('does not render outputs empty state when flag is disabled', async () => {
+    it('does not render outputs list when flag is disabled', async () => {
       disable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         Component,
@@ -656,11 +658,13 @@ describe.each(variants)(
         'outputs',
       );
       expect(
-        screen.queryByText('No outputs available.'),
+        screen.queryByText(
+          /Tracing the Origin and Progression of Parkinson/i,
+        ),
       ).not.toBeInTheDocument();
     });
 
-    it('does not render draft outputs empty state when flag is disabled', async () => {
+    it('does not render draft outputs list when flag is disabled', async () => {
       disable('PROJECT_OUTPUTS');
       await renderProjectDetail(
         Component,
@@ -670,7 +674,7 @@ describe.each(variants)(
         'draft-outputs',
       );
       expect(
-        screen.queryByText('No draft outputs available.'),
+        screen.queryByText(/Draft: Longitudinal cohort analysis/i),
       ).not.toBeInTheDocument();
     });
 

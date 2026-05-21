@@ -6,7 +6,6 @@ import {
   ProjectDetailPage,
   ProjectDetailAbout,
   NotFoundPage,
-  NoOutputsPage,
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import { useProjectArticlesSuggestions, useProjectById } from './state';
@@ -14,6 +13,7 @@ import { useFetchAimArticles } from './articles-state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
+import ProjectOutputs from './ProjectOutputs';
 import type { ProjectDetailConfig } from './projectDetailConfig';
 
 const loadProjectManuscript = () =>
@@ -257,10 +257,9 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       element={
                         isProjectOutputsEnabled ? (
                           <Frame title="Project Outputs">
-                            <NoOutputsPage
-                              title="No outputs available."
-                              description="When this project shares an output, it will be listed here."
-                              hideExploreButton
+                            <ProjectOutputs
+                              projectId={projectId}
+                              projectTitle={projectDetail.title || ''}
                             />
                           </Frame>
                         ) : (
@@ -273,10 +272,10 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                       element={
                         isProjectOutputsEnabled ? (
                           <Frame title="Project Draft Outputs">
-                            <NoOutputsPage
-                              title="No draft outputs available."
-                              description="When this project shares a draft output, it will be listed here."
-                              hideExploreButton
+                            <ProjectOutputs
+                              projectId={projectId}
+                              projectTitle={projectDetail.title || ''}
+                              draftOutputs
                             />
                           </Frame>
                         ) : (

@@ -62,6 +62,7 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
         <ProjectContributors
           fundedTeam={project.fundedTeam}
           collaborators={project.collaborators}
+          collaboratingTeams={project.collaboratingTeams}
         />
       )}
 
@@ -71,6 +72,7 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
           <ProjectContributors
             fundedTeam={project.fundedTeam}
             collaborators={project.collaborators}
+            collaboratingTeams={project.collaboratingTeams}
           />
         )}
 

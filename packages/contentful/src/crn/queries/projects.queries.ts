@@ -172,6 +172,28 @@ export const projectsContentQueryFragment = gql`
                   }
                 }
               }
+              researchOutputsCollection(
+                limit: 200
+                order: sys_firstPublishedAt_DESC
+              ) {
+                items {
+                  sys {
+                    id
+                  }
+                  title
+                  documentType
+                  type
+                  teamsCollection(limit: 20) {
+                    items {
+                      sys {
+                        id
+                      }
+                      displayName
+                      inactiveSince
+                    }
+                  }
+                }
+              }
             }
           }
         }

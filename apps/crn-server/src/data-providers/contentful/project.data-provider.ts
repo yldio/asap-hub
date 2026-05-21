@@ -421,14 +421,11 @@ type ProjectResearchOutputItem = {
   documentType?: string | null;
   type?: string | null;
   teamsCollection?: {
-    items: Array<
-      | {
-          sys: { id: string };
-          displayName?: string | null;
-          inactiveSince?: string | null;
-        }
-      | null
-    >;
+    items: Array<{
+      sys: { id: string };
+      displayName?: string | null;
+      inactiveSince?: string | null;
+    } | null>;
   } | null;
 };
 
@@ -884,9 +881,18 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
             : undefined,
       } as ProjectDetailDataObject;
     } catch (error) {
-      logger.info('error:::', error);
-
-      logger.error('Failed to fetch project by id', { id, error });
+      const err = error as Error & {
+        response?: { errors?: unknown };
+      };
+      logger.error(
+        `Failed to fetch project by id: ${err?.message ?? String(error)}`,
+        {
+          id,
+          message: err?.message,
+          stack: err?.stack,
+          gqlErrors: err?.response?.errors,
+        },
+      );
       return null;
     }
   }

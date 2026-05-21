@@ -1,8 +1,4 @@
-import {
-  CollaboratingTeam,
-  FundedTeam,
-  ProjectMember,
-} from '@asap-hub/model';
+import { CollaboratingTeam, FundedTeam, ProjectMember } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
@@ -262,8 +258,7 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
     showAllCollaborators || collaboratorsCount <= INITIAL_COLLABORATORS_COUNT
       ? collaboratingTeams ?? []
       : (collaboratingTeams ?? []).slice(0, INITIAL_COLLABORATORS_COUNT);
-  const hasMoreCollaborators =
-    collaboratorsCount > INITIAL_COLLABORATORS_COUNT;
+  const hasMoreCollaborators = collaboratorsCount > INITIAL_COLLABORATORS_COUNT;
 
   return (
     <Card padding={false}>

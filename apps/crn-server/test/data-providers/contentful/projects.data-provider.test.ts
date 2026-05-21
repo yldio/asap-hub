@@ -2324,7 +2324,9 @@ describe('parseContentfulProjectDetail', () => {
 
       const result = parseContentfulProjectDetail(graphqlItem);
 
-      expect(result.collaboratingTeams).toBeUndefined();
+      expect(
+        (result as { collaboratingTeams?: unknown }).collaboratingTeams,
+      ).toBeUndefined();
     });
 
     it('omits collaboratingTeams when there are no co-authors', () => {
@@ -2343,7 +2345,9 @@ describe('parseContentfulProjectDetail', () => {
 
       const result = parseContentfulProjectDetail(graphqlItem);
 
-      expect(result.collaboratingTeams).toBeUndefined();
+      expect(
+        (result as { collaboratingTeams?: unknown }).collaboratingTeams,
+      ).toBeUndefined();
     });
   });
 

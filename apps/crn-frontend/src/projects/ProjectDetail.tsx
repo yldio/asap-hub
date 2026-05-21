@@ -14,6 +14,10 @@ import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvide
 import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonProvider';
 import ProjectWorkspace from './ProjectWorkspace';
 import ProjectOutputs from './ProjectOutputs';
+import {
+  createProjectDraftOutputsMock,
+  createProjectOutputsMock,
+} from './projectOutputs.mock';
 import type { ProjectDetailConfig } from './projectDetailConfig';
 
 const loadProjectManuscript = () =>
@@ -163,6 +167,22 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                   draftOutputsHref={
                     isProjectOutputsEnabled
                       ? route.draftOutputs({}).$
+                      : undefined
+                  }
+                  outputsCount={
+                    isProjectOutputsEnabled
+                      ? createProjectOutputsMock(
+                          projectId,
+                          projectDetail.title || '',
+                        ).length
+                      : undefined
+                  }
+                  draftOutputsCount={
+                    isProjectOutputsEnabled
+                      ? createProjectDraftOutputsMock(
+                          projectId,
+                          projectDetail.title || '',
+                        ).length
                       : undefined
                   }
                 >

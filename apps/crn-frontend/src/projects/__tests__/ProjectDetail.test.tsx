@@ -599,23 +599,23 @@ describe.each(variants)(
       ).not.toBeInTheDocument();
     });
 
-    it('renders Outputs tab when flag is enabled', async () => {
+    it('renders Outputs tab with count when flag is enabled', async () => {
       enable('PROJECT_OUTPUTS');
       await renderProjectDetail(Component, routeKeyword, mainProjectId);
-      expect(screen.getByText('Outputs')).toBeInTheDocument();
+      expect(screen.getByText(/^Outputs \(\d+\)$/)).toBeInTheDocument();
     });
 
-    it('renders Draft Outputs tab when flag is enabled', async () => {
+    it('renders Draft Outputs tab with count when flag is enabled', async () => {
       enable('PROJECT_OUTPUTS');
       await renderProjectDetail(Component, routeKeyword, mainProjectId);
-      expect(screen.getByText('Draft Outputs')).toBeInTheDocument();
+      expect(screen.getByText(/^Draft Outputs \(\d+\)$/)).toBeInTheDocument();
     });
 
     it('does not render Outputs or Draft Outputs tabs when flag is disabled', async () => {
       disable('PROJECT_OUTPUTS');
       await renderProjectDetail(Component, routeKeyword, mainProjectId);
-      expect(screen.queryByText('Outputs')).not.toBeInTheDocument();
-      expect(screen.queryByText('Draft Outputs')).not.toBeInTheDocument();
+      expect(screen.queryByText(/^Outputs/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/^Draft Outputs/)).not.toBeInTheDocument();
     });
 
     it('renders outputs list when navigating to outputs route', async () => {

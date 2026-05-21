@@ -214,6 +214,9 @@ export const FETCH_COMPLIANCE_MANUSCRIPT_VERSIONS = gql`
         keyResourceTable {
           url
         }
+        complianceReportResponse {
+          url
+        }
         additionalFilesCollection(limit: 5) {
           items {
             url
@@ -300,6 +303,8 @@ export const FETCH_COMPLIANCE_MANUSCRIPT_VERSIONS = gql`
               url
               count
               status
+              layImpactStatement
+              firstPublicDate
               assignedUsersCollection(limit: 5) {
                 items {
                   firstName

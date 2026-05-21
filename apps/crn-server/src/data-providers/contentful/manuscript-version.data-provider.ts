@@ -440,6 +440,8 @@ const parseGraphQLComplianceManuscriptVersion = (
     manuscriptLicenseDetails: manuscriptVersion.manuscriptLicenseDetails || '',
     complianceReportDescription: linkedComplianceReport?.description || '',
     complianceReportUrl: linkedComplianceReport?.url || '',
+    complianceReportResponse:
+      manuscriptVersion.complianceReportResponse?.url || '',
     apcRequested: String(!!manuscript?.apcRequested),
     apcAmountRequested:
       manuscript?.apcAmountRequested != null
@@ -462,6 +464,8 @@ const parseGraphQLComplianceManuscriptVersion = (
       )
       .join(', '),
     impact: manuscript?.impact?.name || '',
+    layImpactStatement: manuscript?.layImpactStatement || '',
+    firstPublicDate: manuscript?.firstPublicDate || '',
     categories: cleanArray(manuscript?.categoriesCollection?.items)
       .map((category) => category.name)
       .join(', '),

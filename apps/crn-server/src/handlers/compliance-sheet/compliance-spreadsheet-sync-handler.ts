@@ -13,7 +13,11 @@ import {
 } from '../../config';
 import ManuscriptVersionController from '../../controllers/manuscript-version.controller';
 import { getManuscriptVersionsDataProvider } from '../../dependencies/manuscript-versions.dependencies';
-import { mapToSheetRow } from '../../utils/compliance-sheet';
+import {
+  COMPLIANCE_SHEET_COLUMN_LENGTH,
+  COMPLIANCE_SHEET_END_COLUMN,
+  mapToSheetRow,
+} from '../../utils/compliance-sheet';
 import logger from '../../utils/logger';
 import { sentryWrapper } from '../../utils/sentry-wrapper';
 
@@ -62,21 +66,25 @@ const syncRows = async (
     const rowIndex = idRowMap.get(id);
     const mv = mvMap.get(id);
 
+    const rowRange = rowIndex
+      ? `${sheetName}!A${rowIndex}:${COMPLIANCE_SHEET_END_COLUMN}${rowIndex}`
+      : null;
+
     // Invalid if missing or no manuscript title
     if (!mv || !mv.title) {
-      if (rowIndex) {
+      if (rowRange) {
         updates.push({
-          range: `${sheetName}!A${rowIndex}:AV${rowIndex}`,
-          values: [Array(48).fill('')],
+          range: rowRange,
+          values: [Array(COMPLIANCE_SHEET_COLUMN_LENGTH).fill('')],
         });
       }
     } else {
       const row = mapToSheetRow(mv);
 
       // exists in sheet → update
-      if (rowIndex) {
+      if (rowRange) {
         updates.push({
-          range: `${sheetName}!A${rowIndex}:AV${rowIndex}`,
+          range: rowRange,
           values: [row],
         });
       } else {

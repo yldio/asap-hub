@@ -12,7 +12,10 @@ import {
 } from '../src/config';
 import ManuscriptVersionController from '../src/controllers/manuscript-version.controller';
 import { getManuscriptVersionsDataProvider } from '../src/dependencies/manuscript-versions.dependencies';
-import { mapToSheetRow } from '../src/utils/compliance-sheet';
+import {
+  COMPLIANCE_SHEET_END_COLUMN,
+  mapToSheetRow,
+} from '../src/utils/compliance-sheet';
 import { paginate } from './opensearch/shared-utils';
 
 const getJWTCredentials = getJWTCredentialsFactory({
@@ -31,7 +34,7 @@ const controller = new ManuscriptVersionController(
 const clearSheet = async (sheets: Awaited<SheetsClient>, sheetName: string) => {
   await sheets.spreadsheets.values.clear({
     spreadsheetId,
-    range: `${sheetName}!A2:AW`,
+    range: `${sheetName}!A2:${COMPLIANCE_SHEET_END_COLUMN}`,
   });
 
   console.log('Sheet cleared');

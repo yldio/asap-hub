@@ -32235,6 +32235,7 @@ export type FetchComplianceManuscriptVersionsQuery = {
             sys: Pick<Sys, 'id' | 'publishedAt'>;
             manuscriptFile?: Maybe<Pick<Asset, 'url'>>;
             keyResourceTable?: Maybe<Pick<Asset, 'url'>>;
+            complianceReportResponse?: Maybe<Pick<Asset, 'url'>>;
             additionalFilesCollection?: Maybe<{
               items: Array<Maybe<Pick<Asset, 'url'>>>;
             }>;
@@ -32299,6 +32300,8 @@ export type FetchComplianceManuscriptVersionsQuery = {
                       | 'url'
                       | 'count'
                       | 'status'
+                      | 'layImpactStatement'
+                      | 'firstPublicDate'
                       | 'apcRequested'
                       | 'apcAmountRequested'
                       | 'apcCoverageRequestStatus'
@@ -57319,6 +57322,22 @@ export const FetchComplianceManuscriptVersionsDocument = {
                         kind: 'Field',
                         name: {
                           kind: 'Name',
+                          value: 'complianceReportResponse',
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
                           value: 'additionalFilesCollection',
                         },
                         arguments: [
@@ -57859,6 +57878,20 @@ export const FetchComplianceManuscriptVersionsDocument = {
                                           name: {
                                             kind: 'Name',
                                             value: 'status',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'layImpactStatement',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'firstPublicDate',
                                           },
                                         },
                                         {

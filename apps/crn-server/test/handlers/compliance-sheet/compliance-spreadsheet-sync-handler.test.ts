@@ -1,4 +1,5 @@
 import { sqsComplianceSheetSyncHandlerFactory } from '../../../src/handlers/compliance-sheet/compliance-spreadsheet-sync-handler';
+import { COMPLIANCE_SHEET_COLUMN_LENGTH } from '../../../src/utils/compliance-sheet';
 
 jest.mock('@asap-hub/server-common', () => {
   const actual = jest.requireActual('@asap-hub/server-common');
@@ -171,7 +172,7 @@ describe('Compliance Spreadsheet Sync Handler', () => {
         requestBody: expect.objectContaining({
           data: expect.arrayContaining([
             expect.objectContaining({
-              values: [Array(48).fill('')],
+              values: [Array(COMPLIANCE_SHEET_COLUMN_LENGTH).fill('')],
             }),
           ]),
         }),

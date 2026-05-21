@@ -46,6 +46,7 @@ export const mapToSheetRow = (
     safe(manuscriptVersion.manuscriptLicenseDetails),
     safe(manuscriptVersion.complianceReportDescription),
     safe(manuscriptVersion.complianceReportUrl),
+    safe(manuscriptVersion.complianceReportResponse),
     safe(manuscriptVersion.apcRequested),
     safe(manuscriptVersion.apcAmountRequested),
     safe(manuscriptVersion.apcCoverageRequestStatus),
@@ -53,7 +54,12 @@ export const mapToSheetRow = (
     safe(manuscriptVersion.declinedReason),
     safe(manuscriptVersion.assignedUsers),
     safe(manuscriptVersion.impact),
+    safe(manuscriptVersion.layImpactStatement),
     safe(manuscriptVersion.categories),
+    safe(manuscriptVersion.firstPublicDate),
     safe(manuscriptVersion.versionLastUpdatedDate),
   ];
 };
+
+export const COMPLIANCE_SHEET_END_COLUMN = 'AY';
+export const COMPLIANCE_SHEET_COLUMN_LENGTH = 51;

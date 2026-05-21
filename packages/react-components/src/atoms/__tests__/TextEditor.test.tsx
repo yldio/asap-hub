@@ -1,7 +1,34 @@
 import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import TextEditor from '../TextEditor';
+import TextEditor, {
+  autoLinkEmailToHref,
+  autoLinkUrlToHref,
+} from '../TextEditor';
+
+describe('autoLinkUrlToHref', () => {
+  it('returns http URLs unchanged', () => {
+    expect(autoLinkUrlToHref('http://example.com')).toBe('http://example.com');
+  });
+  it('returns https URLs unchanged', () => {
+    expect(autoLinkUrlToHref('https://example.com/foo')).toBe(
+      'https://example.com/foo',
+    );
+  });
+  it('prefixes www. hosts with https://', () => {
+    expect(autoLinkUrlToHref('www.example.com')).toBe(
+      'https://www.example.com',
+    );
+  });
+});
+
+describe('autoLinkEmailToHref', () => {
+  it('prefixes emails with mailto:', () => {
+    expect(autoLinkEmailToHref('jane@example.com')).toBe(
+      'mailto:jane@example.com',
+    );
+  });
+});
 
 // Suppress React 18 act() warnings from Lexical editor's async state updates
 // Lexical's internal event loop triggers state updates via microtasks that run

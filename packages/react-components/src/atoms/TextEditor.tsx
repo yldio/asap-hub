@@ -227,11 +227,14 @@ const URL_REGEX =
   /(https?:\/\/[^\s]+|www\.[a-zA-Z0-9][a-zA-Z0-9-]*(?:\.[a-zA-Z0-9-]+)+[^\s]*)/;
 const EMAIL_REGEX = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+)/;
 
+export const autoLinkUrlToHref = (text: string): string =>
+  text.startsWith('http') ? text : `https://${text}`;
+
+export const autoLinkEmailToHref = (text: string): string => `mailto:${text}`;
+
 const AUTO_LINK_MATCHERS = [
-  createLinkMatcherWithRegExp(URL_REGEX, (text) =>
-    text.startsWith('http') ? text : `https://${text}`,
-  ),
-  createLinkMatcherWithRegExp(EMAIL_REGEX, (text) => `mailto:${text}`),
+  createLinkMatcherWithRegExp(URL_REGEX, autoLinkUrlToHref),
+  createLinkMatcherWithRegExp(EMAIL_REGEX, autoLinkEmailToHref),
 ];
 
 const LinkTargetPlugin = () => {

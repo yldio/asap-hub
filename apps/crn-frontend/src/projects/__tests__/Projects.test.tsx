@@ -140,8 +140,8 @@ jest.mock('../../shared-research/api', () => ({
   ...jest.requireActual('../../shared-research/api'),
   getResearchThemes: jest.fn(() =>
     Promise.resolve([
-      { id: 'theme-1', name: 'Theme One' },
-      { id: 'theme-2', name: 'Theme Two' },
+      { id: 'theme-1', name: 'Theme One', types: ['Discovery'] },
+      { id: 'theme-2', name: 'Theme Two', types: ['Resource'] },
     ]),
   ),
   getResourceTypes: jest.fn(() =>

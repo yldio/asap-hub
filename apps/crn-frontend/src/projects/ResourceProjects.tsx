@@ -1,7 +1,13 @@
 import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { ProjectsPage, ResourceProjectsList } from '@asap-hub/react-components';
-import type { ProjectMember, ResourceProject } from '@asap-hub/model';
+import type {
+  FetchListFilter,
+  ProjectMember,
+  ProjectStatus,
+  ResearchThemeType,
+  ResourceProject,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
@@ -9,25 +15,31 @@ import { ProjectListOptions } from './api';
 import {
   exportProjects,
   isResourceProject,
+  PROJECT_STATUSES,
   ResourceProjectCSV,
   resourceProjectToCSV,
-  toResourceTypeFilters,
-  toStatusFilters,
 } from './utils';
 import {
   FilterOption,
   STATUS_FILTER_OPTIONS,
+  createResearchThemeFilterOptions,
   createResourceTypeFilterOptionsFromTypes,
 } from './filter-options';
-import { useResourceTypes } from '../shared-state/shared-research';
+import {
+  useResearchThemes,
+  useResourceTypes,
+} from '../shared-state/shared-research';
 import { useAlgolia } from '../hooks/algolia';
+
+const RESOURCE_THEME_TYPES: ReadonlyArray<ResearchThemeType> = ['Resource'];
 
 type ResourceProjectsProps = {
   searchQuery: string;
   debouncedSearchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   filters?: Set<string>;
-  onChangeFilter?: (filter: string) => void;
+  filtersMap?: FetchListFilter;
+  onChangeFilter?: (filter: string, filterName?: string) => void;
 };
 
 type ResourceProjectsListContentProps = {
@@ -95,27 +107,46 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
   debouncedSearchQuery,
   onChangeSearchQuery,
   filters,
+  filtersMap,
   onChangeFilter,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const resourceTypes = useResourceTypes();
-  const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
-  const resourceTypeFilters = useMemo(
-    () => toResourceTypeFilters(filters, resourceTypes),
-    [filters, resourceTypes],
+  const researchThemes = useResearchThemes(RESOURCE_THEME_TYPES);
+
+  const statusFilters = useMemo(
+    () =>
+      (filtersMap?.status ?? []).filter((value): value is ProjectStatus =>
+        (PROJECT_STATUSES as readonly string[]).includes(value),
+      ),
+    [filtersMap?.status],
   );
+  const resourceTypeFilters = useMemo(
+    () => filtersMap?.resourceType ?? [],
+    [filtersMap?.resourceType],
+  );
+  const themeFilters = useMemo(
+    () => filtersMap?.researchTheme ?? [],
+    [filtersMap?.researchTheme],
+  );
+
   const emptyFilters = useMemo(() => new Set<string>(), []);
   const normalizedFilters = useMemo(
     () => (filters ? new Set(filters) : undefined),
     [filters],
   );
-  const facetFilters = useMemo(
-    () =>
-      resourceTypeFilters.length
-        ? { resourceType: resourceTypeFilters as ReadonlyArray<string> }
-        : undefined,
-    [resourceTypeFilters],
-  );
+  const facetFilters = useMemo(() => {
+    const filtersByAttribute: Record<string, ReadonlyArray<string>> = {};
+    if (resourceTypeFilters.length) {
+      filtersByAttribute.resourceType = resourceTypeFilters;
+    }
+    if (themeFilters.length) {
+      filtersByAttribute.researchTheme = themeFilters;
+    }
+    return Object.keys(filtersByAttribute).length
+      ? filtersByAttribute
+      : undefined;
+  }, [resourceTypeFilters, themeFilters]);
   const listOptions = useMemo(
     () => ({
       projectType: 'Resource Project' as const,
@@ -140,9 +171,17 @@ const ResourceProjects: FC<ResourceProjectsProps> = ({
     () => createResourceTypeFilterOptionsFromTypes(resourceTypes),
     [resourceTypes],
   );
+  const themeFilterOptions: ReadonlyArray<FilterOption> = useMemo(
+    () => createResearchThemeFilterOptions(researchThemes),
+    [researchThemes],
+  );
   const filterOptions = useMemo(
-    () => [...resourceFilterOptions, ...STATUS_FILTER_OPTIONS],
-    [resourceFilterOptions],
+    () => [
+      ...resourceFilterOptions,
+      ...themeFilterOptions,
+      ...STATUS_FILTER_OPTIONS,
+    ],
+    [resourceFilterOptions, themeFilterOptions],
   );
 
   return (

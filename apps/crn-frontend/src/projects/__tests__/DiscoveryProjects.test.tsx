@@ -5,7 +5,7 @@ import { ComponentProps, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
-import { DiscoveryProject } from '@asap-hub/model';
+import { DiscoveryProject, FetchListFilter } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import DiscoveryProjects from '../DiscoveryProjects';
@@ -63,6 +63,7 @@ const props: ComponentProps<typeof DiscoveryProjects> = {
   debouncedSearchQuery: '',
   onChangeSearchQuery: jest.fn(),
   filters: new Set(),
+  filtersMap: {},
   onChangeFilter: jest.fn(),
 };
 
@@ -86,7 +87,7 @@ const statusFilter = 'Active';
 
 const renderDiscoveryProjects = (
   searchQuery: string = '',
-  filters?: Set<string>,
+  filtersMap: FetchListFilter = {},
 ) =>
   render(
     <RecoilRoot>
@@ -97,7 +98,7 @@ const renderDiscoveryProjects = (
               <DiscoveryProjects
                 {...props}
                 debouncedSearchQuery={searchQuery}
-                filters={filters}
+                filtersMap={filtersMap}
               />
             </MemoryRouter>
           </WhenReady>
@@ -119,7 +120,7 @@ it('renders the Discovery Projects page', async () => {
 });
 
 it('passes Algolia facet filters when the discovery theme filter is active', async () => {
-  renderDiscoveryProjects('', new Set([themeFilter]));
+  renderDiscoveryProjects('', { researchTheme: [themeFilter] });
 
   await waitFor(() =>
     expect(mockUseProjects).toHaveBeenLastCalledWith(
@@ -145,7 +146,10 @@ it('triggers export with the expected parameters', async () => {
     ],
   });
   const searchQuery = 'searched project name';
-  renderDiscoveryProjects(searchQuery, new Set([themeFilter, statusFilter]));
+  renderDiscoveryProjects(searchQuery, {
+    researchTheme: [themeFilter],
+    status: [statusFilter],
+  });
 
   const csvButton = await screen.findByRole('button', { name: /csv/i });
   await userEvent.click(csvButton);

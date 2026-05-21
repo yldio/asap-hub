@@ -7,12 +7,15 @@ import { RecoilRoot } from 'recoil';
 
 import { EMPTY_ALGOLIA_RESPONSE } from '@asap-hub/algolia';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
-import { ResourceProject } from '@asap-hub/model';
+import { FetchListFilter, ResourceProject } from '@asap-hub/model';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import ResourceProjects from '../ResourceProjects';
 import { useProjects } from '../state';
-import { useResourceTypes } from '../../shared-state/shared-research';
+import {
+  useResearchThemes,
+  useResourceTypes,
+} from '../../shared-state/shared-research';
 import { getProjects } from '../api';
 
 jest.mock('../state');
@@ -44,16 +47,21 @@ const mockUseProjects = useProjects as jest.MockedFunction<typeof useProjects>;
 const mockUseResourceTypes = useResourceTypes as jest.MockedFunction<
   typeof useResourceTypes
 >;
+const mockUseResearchThemes = useResearchThemes as jest.MockedFunction<
+  typeof useResearchThemes
+>;
 
 const props: ComponentProps<typeof ResourceProjects> = {
   searchQuery: '',
   debouncedSearchQuery: '',
   onChangeSearchQuery: jest.fn(),
   filters: new Set(),
+  filtersMap: {},
   onChangeFilter: jest.fn(),
 };
 
 const resourceTypeFilter = 'Dataset';
+const themeFilter = 'Neuro';
 const statusFilter = 'Active';
 
 const mockResourceProject = {
@@ -108,11 +116,16 @@ beforeEach(() => {
     { id: 'type-2', name: 'Data Portal' },
     { id: 'type-3', name: 'Dataset' },
   ]);
+  mockUseResearchThemes.mockReturnValue([
+    { id: 'theme-1', name: 'Neuro', types: ['Resource'] },
+    { id: 'theme-2', name: 'Neurodegeneration', types: ['Resource'] },
+    { id: 'theme-3', name: 'Cell Biology', types: ['Resource'] },
+  ]);
 });
 
 const renderResourceProjects = (
   searchQuery: string = '',
-  filters?: Set<string>,
+  filtersMap: FetchListFilter = {},
 ) =>
   render(
     <RecoilRoot>
@@ -123,7 +136,7 @@ const renderResourceProjects = (
               <ResourceProjects
                 {...props}
                 debouncedSearchQuery={searchQuery}
-                filters={filters}
+                filtersMap={filtersMap}
               />
             </MemoryRouter>
           </WhenReady>
@@ -162,7 +175,7 @@ it('renders resource project members as links when the project is not team-based
 });
 
 it('passes Algolia facet filters when the resource type filter is active', async () => {
-  renderResourceProjects('', new Set([resourceTypeFilter]));
+  renderResourceProjects('', { resourceType: [resourceTypeFilter] });
 
   await waitFor(() =>
     expect(mockUseProjects).toHaveBeenLastCalledWith(
@@ -171,6 +184,47 @@ it('passes Algolia facet filters when the resource type filter is active', async
       }),
     ),
   );
+});
+
+it('passes Algolia facet filters when the research theme filter is active', async () => {
+  renderResourceProjects('', { researchTheme: [themeFilter] });
+
+  await waitFor(() =>
+    expect(mockUseProjects).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        facetFilters: { researchTheme: ['Neuro'] },
+      }),
+    ),
+  );
+});
+
+it('combines resource type and research theme facet filters', async () => {
+  renderResourceProjects('', {
+    resourceType: [resourceTypeFilter],
+    researchTheme: [themeFilter],
+  });
+
+  await waitFor(() =>
+    expect(mockUseProjects).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        facetFilters: {
+          resourceType: ['Dataset'],
+          researchTheme: ['Neuro'],
+        },
+      }),
+    ),
+  );
+});
+
+it('renders the RESEARCH THEME filter section with available themes', async () => {
+  renderResourceProjects();
+
+  const filterButton = await screen.findByRole('button', { name: /filter/i });
+  await userEvent.click(filterButton);
+
+  expect(screen.getByText('RESEARCH THEME')).toBeVisible();
+  expect(screen.getByText('Neuro')).toBeVisible();
+  expect(screen.getByText('Cell Biology')).toBeVisible();
 });
 
 it('triggers export with the expected parameters', async () => {
@@ -188,10 +242,10 @@ it('triggers export with the expected parameters', async () => {
     ],
   });
   const searchQuery = 'searched project name';
-  renderResourceProjects(
-    searchQuery,
-    new Set([resourceTypeFilter, statusFilter]),
-  );
+  renderResourceProjects(searchQuery, {
+    resourceType: [resourceTypeFilter],
+    status: [statusFilter],
+  });
 
   const csvButton = await screen.findByRole('button', { name: /csv/i });
   await userEvent.click(csvButton);

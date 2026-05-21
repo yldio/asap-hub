@@ -97,6 +97,7 @@ export type ResourceProject = BaseProject & {
   readonly members?: ReadonlyArray<ProjectMember>;
   readonly googleDriveLink?: string;
   readonly fundedTeam?: FundedTeam;
+  readonly researchTheme?: string;
 };
 
 export type TraineeProject = BaseProject & {

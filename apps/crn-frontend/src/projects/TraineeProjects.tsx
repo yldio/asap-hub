@@ -1,7 +1,12 @@
 import { FC, useMemo } from 'react';
 import { SearchFrame } from '@asap-hub/frontend-utils';
 import { ProjectsPage, TraineeProjectsList } from '@asap-hub/react-components';
-import type { ProjectMember, TraineeProject } from '@asap-hub/model';
+import type {
+  FetchListFilter,
+  ProjectMember,
+  ProjectStatus,
+  TraineeProject,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { usePagination, usePaginationParams } from '../hooks';
 import { useProjects } from './state';
@@ -9,7 +14,7 @@ import { ProjectListOptions } from './api';
 import {
   exportProjects,
   isTraineeProject,
-  toStatusFilters,
+  PROJECT_STATUSES,
   TraineeProjectCSV,
   traineeProjectToCSV,
 } from './utils';
@@ -21,7 +26,8 @@ type TraineeProjectsProps = {
   debouncedSearchQuery: string;
   onChangeSearchQuery?: (newSearchQuery: string) => void;
   filters?: Set<string>;
-  onChangeFilter?: (filter: string) => void;
+  filtersMap?: FetchListFilter;
+  onChangeFilter?: (filter: string, filterName?: string) => void;
 };
 
 type TraineeProjectsListContentProps = {
@@ -84,10 +90,17 @@ const TraineeProjects: FC<TraineeProjectsProps> = ({
   debouncedSearchQuery,
   onChangeSearchQuery,
   filters,
+  filtersMap,
   onChangeFilter,
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const statusFilters = useMemo(() => toStatusFilters(filters), [filters]);
+  const statusFilters = useMemo(
+    () =>
+      (filtersMap?.status ?? []).filter((value): value is ProjectStatus =>
+        (PROJECT_STATUSES as readonly string[]).includes(value),
+      ),
+    [filtersMap?.status],
+  );
   const emptyFilters = useMemo(() => new Set<string>(), []);
   const normalizedFilters = useMemo(
     () => (filters ? new Set(filters) : emptyFilters),

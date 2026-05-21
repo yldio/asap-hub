@@ -409,6 +409,7 @@ export const parseGraphQLResearchOutput = (
           name: researchOutputs.impact.name || '',
         }
       : undefined,
+    layImpactStatement: researchOutputs.layImpactStatement || undefined,
     categories: cleanArray(
       researchOutputs.categoriesCollection?.items || [],
     ).map((category) => ({

@@ -147,6 +147,7 @@ export default class ResearchOutputController {
       usedInPublication: normalisedResearchOutputCreateData.usedInPublication,
       workingGroups: normalisedResearchOutputCreateData.workingGroups,
       impact: normalisedResearchOutputCreateData.impact,
+      layImpactStatement: normalisedResearchOutputCreateData.layImpactStatement,
       categories: normalisedResearchOutputCreateData.categories,
       relatedManuscriptVersion:
         normalisedResearchOutputCreateData.relatedManuscriptVersion,

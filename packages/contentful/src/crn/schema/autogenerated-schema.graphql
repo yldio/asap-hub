@@ -9145,6 +9145,7 @@ type ResearchOutputs implements Entry & _Node {
   labsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLabsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: LabsFilter): ResearchOutputsLabsCollection
   labsCursorCollection(limit: Int = 100, locale: String, order: [ResearchOutputsLabsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: LabsFilter): ResearchOutputsLabsCursorCollection
   lastUpdatedPartial(locale: String, useFallbackLocale: Boolean): DateTime
+  layImpactStatement(locale: String, useFallbackLocale: Boolean): String
   link(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): ResearchOutputsLinkingCollections
   methodsCollection(limit: Int = 100, locale: String, order: [ResearchOutputsMethodsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResearchTagsFilter): ResearchOutputsMethodsCollection
@@ -9455,6 +9456,13 @@ input ResearchOutputsFilter {
   lastUpdatedPartial_lte: DateTime
   lastUpdatedPartial_not: DateTime
   lastUpdatedPartial_not_in: [DateTime]
+  layImpactStatement: String
+  layImpactStatement_contains: String
+  layImpactStatement_exists: Boolean
+  layImpactStatement_in: [String]
+  layImpactStatement_not: String
+  layImpactStatement_not_contains: String
+  layImpactStatement_not_in: [String]
   link: String
   link_contains: String
   link_exists: Boolean
@@ -16341,6 +16349,13 @@ input cfResearchOutputsNestedFilter {
   lastUpdatedPartial_lte: DateTime
   lastUpdatedPartial_not: DateTime
   lastUpdatedPartial_not_in: [DateTime]
+  layImpactStatement: String
+  layImpactStatement_contains: String
+  layImpactStatement_exists: Boolean
+  layImpactStatement_in: [String]
+  layImpactStatement_not: String
+  layImpactStatement_not_contains: String
+  layImpactStatement_not_in: [String]
   link: String
   link_contains: String
   link_exists: Boolean

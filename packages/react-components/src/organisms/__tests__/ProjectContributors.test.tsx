@@ -1,6 +1,24 @@
-import { render, screen } from '@testing-library/react';
-import { FundedTeam, ProjectMember } from '@asap-hub/model';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
+import { CollaboratingTeam, FundedTeam, ProjectMember } from '@asap-hub/model';
 import ProjectContributors from '../ProjectContributors';
+
+const renderWithRouter = (ui: React.ReactElement) =>
+  render(<MemoryRouter>{ui}</MemoryRouter>);
+
+const makeCollaboratingTeams = (count: number): CollaboratingTeam[] =>
+  Array.from({ length: count }, (_, i) => ({
+    id: `team-${i + 1}`,
+    displayName: `Team ${String.fromCharCode(65 + i)}`,
+    articles: [
+      {
+        id: `article-${i}-1`,
+        title: `Article ${i}-1`,
+        type: 'Preprint' as const,
+      },
+    ],
+  }));
 
 const mockFundedTeam: FundedTeam = {
   id: 'team-1',
@@ -83,6 +101,83 @@ describe('ProjectContributors', () => {
         <ProjectContributors fundedTeam={undefined as unknown as FundedTeam} />,
       );
       expect(container.firstChild).toBeNull();
+    });
+  });
+
+  describe('Collaborators tab', () => {
+    it('shows team count in the tab label', () => {
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={makeCollaboratingTeams(3)}
+        />,
+      );
+      expect(screen.getByText('Collaborators (3)')).toBeInTheDocument();
+    });
+
+    it('renders empty state when there are no collaborating teams', async () => {
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={[]}
+        />,
+      );
+      await userEvent.click(screen.getByText('Collaborators (0)'));
+      expect(
+        screen.getByText(/no team collaborations on this project/i),
+      ).toBeInTheDocument();
+    });
+
+    it('renders collaborating teams with article counts and expands to show articles', async () => {
+      const teams: CollaboratingTeam[] = [
+        {
+          id: 'team-a',
+          displayName: 'Team Alpha',
+          articles: [
+            { id: 'a-1', title: 'Alpha One', type: 'Preprint' },
+            { id: 'a-2', title: 'Alpha Two', type: 'Published' },
+          ],
+        },
+      ];
+
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={teams}
+        />,
+      );
+      await userEvent.click(screen.getByText('Collaborators (1)'));
+      const teamButton = screen.getByRole('button', { name: /Team Alpha/i });
+      expect(within(teamButton).getByText(/2 Articles/)).toBeInTheDocument();
+
+      await userEvent.click(teamButton);
+      expect(screen.getByText('Alpha One')).toBeInTheDocument();
+      expect(screen.getByText('Alpha Two')).toBeInTheDocument();
+      // 'Published' renders as 'Publication' pill
+      expect(screen.getByText('Publication')).toBeInTheDocument();
+      expect(screen.getByText('Preprint')).toBeInTheDocument();
+    });
+
+    it('shows View More when there are more than 10 collaborating teams', async () => {
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={makeCollaboratingTeams(12)}
+        />,
+      );
+      await userEvent.click(screen.getByText('Collaborators (12)'));
+
+      // Only first 10 visible initially
+      expect(
+        screen.getAllByRole('button', { name: /Team [A-Z]/ }),
+      ).toHaveLength(10);
+
+      await userEvent.click(
+        screen.getByRole('button', { name: /View More Collaborators/i }),
+      );
+      expect(
+        screen.getAllByRole('button', { name: /Team [A-Z]/ }),
+      ).toHaveLength(12);
     });
   });
 });

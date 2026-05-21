@@ -2231,6 +2231,122 @@ describe('parseContentfulProjectDetail', () => {
     });
   });
 
+  describe('parseContentfulProjectDetail - collaboratingTeams', () => {
+    const setFundedTeamResearchOutputs = (
+      graphqlItem: ReturnType<typeof getDiscoveryProjectDetailGraphqlItem>,
+      items: unknown[],
+    ) => {
+      const teamMember = (graphqlItem as Record<string, unknown>)
+        .membersCollection as {
+        items: Array<{ projectMember: Record<string, unknown> }>;
+      };
+      const team = teamMember.items.find(
+        (m) =>
+          (m.projectMember as { __typename?: string }).__typename === 'Teams',
+      );
+      const existing =
+        (team!.projectMember.linkedFrom as Record<string, unknown>) || {};
+      team!.projectMember.linkedFrom = {
+        ...existing,
+        researchOutputsCollection: { items },
+      };
+    };
+
+    it('groups co-author teams from funded team Articles', () => {
+      const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
+      setFundedTeamResearchOutputs(graphqlItem, [
+        {
+          sys: { id: 'ro-1' },
+          title: 'Shared Article 1',
+          documentType: 'Article',
+          type: 'Preprint',
+          teamsCollection: {
+            items: [
+              { sys: { id: 'team-1' }, displayName: 'Funded' },
+              { sys: { id: 'team-b' }, displayName: 'Team B' },
+            ],
+          },
+        },
+        {
+          sys: { id: 'ro-2' },
+          title: 'Shared Article 2',
+          documentType: 'Article',
+          type: 'Published',
+          teamsCollection: {
+            items: [
+              { sys: { id: 'team-1' }, displayName: 'Funded' },
+              { sys: { id: 'team-a' }, displayName: 'Team A' },
+              { sys: { id: 'team-b' }, displayName: 'Team B' },
+            ],
+          },
+        },
+      ]);
+
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result).toMatchObject({
+        collaboratingTeams: [
+          {
+            id: 'team-a',
+            displayName: 'Team A',
+            articles: [
+              { id: 'ro-2', title: 'Shared Article 2', type: 'Published' },
+            ],
+          },
+          {
+            id: 'team-b',
+            displayName: 'Team B',
+            articles: [
+              { id: 'ro-1', title: 'Shared Article 1', type: 'Preprint' },
+              { id: 'ro-2', title: 'Shared Article 2', type: 'Published' },
+            ],
+          },
+        ],
+      });
+    });
+
+    it('ignores research outputs that are not Articles', () => {
+      const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
+      setFundedTeamResearchOutputs(graphqlItem, [
+        {
+          sys: { id: 'ro-dataset' },
+          title: 'A dataset',
+          documentType: 'Dataset',
+          type: 'Code',
+          teamsCollection: {
+            items: [
+              { sys: { id: 'team-1' }, displayName: 'Funded' },
+              { sys: { id: 'team-b' }, displayName: 'Team B' },
+            ],
+          },
+        },
+      ]);
+
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result.collaboratingTeams).toBeUndefined();
+    });
+
+    it('omits collaboratingTeams when there are no co-authors', () => {
+      const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
+      setFundedTeamResearchOutputs(graphqlItem, [
+        {
+          sys: { id: 'ro-solo' },
+          title: 'Solo Article',
+          documentType: 'Article',
+          type: 'Preprint',
+          teamsCollection: {
+            items: [{ sys: { id: 'team-1' }, displayName: 'Funded' }],
+          },
+        },
+      ]);
+
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result.collaboratingTeams).toBeUndefined();
+    });
+  });
+
   describe('ProjectContentfulDataProvider - fetch with projectMembershipId filter', () => {
     const contentfulClientMock = getContentfulGraphqlClientMock();
     const dataProvider = new ProjectContentfulDataProvider(

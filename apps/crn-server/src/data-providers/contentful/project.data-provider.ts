@@ -27,6 +27,8 @@ import {
 import {
   Aim,
   AimStatus,
+  CollaboratingTeam,
+  CollaboratingTeamArticle,
   DiscoveryProject,
   FetchPaginationOptions,
   DiscoveryProjectDetail,
@@ -38,6 +40,7 @@ import {
   ProjectStatus,
   ProjectTool,
   ProjectType,
+  ResearchOutputType,
   ResearchTag,
   ResourceProject,
   ResourceProjectDetail,
@@ -412,6 +415,93 @@ const parseProjectManuscripts = (
   };
 };
 
+type ProjectResearchOutputItem = {
+  sys: { id: string };
+  title?: string | null;
+  documentType?: string | null;
+  type?: string | null;
+  teamsCollection?: {
+    items: Array<
+      | {
+          sys: { id: string };
+          displayName?: string | null;
+          inactiveSince?: string | null;
+        }
+      | null
+    >;
+  } | null;
+};
+
+type ProjectMemberWithLinkedResearchOutputs = NonNullable<
+  ProjectMembershipItem['projectMember']
+> & {
+  linkedFrom?: {
+    researchOutputsCollection?: {
+      items: Array<ProjectResearchOutputItem | null>;
+    };
+  };
+};
+
+const getResearchOutputItemsFromProjectMember = (
+  projectMember: NonNullable<ProjectMembershipItem['projectMember']>,
+): ProjectResearchOutputItem[] => {
+  const memberWithLinkedFrom =
+    projectMember as ProjectMemberWithLinkedResearchOutputs;
+  return cleanArray(
+    memberWithLinkedFrom.linkedFrom?.researchOutputsCollection?.items,
+  );
+};
+
+export const parseCollaboratingTeams = (
+  researchOutputItems: ProjectResearchOutputItem[],
+  fundedTeamId: string,
+): CollaboratingTeam[] => {
+  const teamsById = new Map<
+    string,
+    {
+      id: string;
+      displayName: string;
+      inactiveSince?: string;
+      articles: CollaboratingTeamArticle[];
+    }
+  >();
+
+  researchOutputItems
+    .filter((ro) => ro.documentType === 'Article')
+    .forEach((ro) => {
+      const article: CollaboratingTeamArticle = {
+        id: ro.sys.id,
+        title: ro.title || '',
+        type: (ro.type as ResearchOutputType | null) ?? undefined,
+      };
+
+      const coauthors = cleanArray(ro.teamsCollection?.items).filter(
+        (team) => team.sys.id !== fundedTeamId,
+      );
+
+      coauthors.forEach((team) => {
+        const existing = teamsById.get(team.sys.id);
+        if (existing) {
+          existing.articles.push(article);
+        } else {
+          teamsById.set(team.sys.id, {
+            id: team.sys.id,
+            displayName: team.displayName || '',
+            inactiveSince: team.inactiveSince || undefined,
+            articles: [article],
+          });
+        }
+      });
+    });
+
+  return Array.from(teamsById.values())
+    .sort((a, b) => a.displayName.localeCompare(b.displayName))
+    .map((team) => ({
+      ...team,
+      articles: team.articles,
+    }));
+};
+
 // Parse Contentful project to ProjectDetail format with all additional fields
 export const parseContentfulProjectDetail = (
   item: ProjectItem,
@@ -458,12 +548,22 @@ export const parseContentfulProjectDetail = (
         const { manuscripts, collaborationManuscripts } =
           parseProjectManuscripts(manuscriptItems, teamMember.sys.id);
 
+        // Parse collaborating teams from funded team's research outputs
+        const researchOutputItems =
+          getResearchOutputItemsFromProjectMember(teamMember);
+        const collaboratingTeams = parseCollaboratingTeams(
+          researchOutputItems,
+          teamMember.sys.id,
+        );
+
         return {
           ...baseProject,
           originalGrantProposalId,
           supplementGrant,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
+          collaboratingTeams:
+            collaboratingTeams.length > 0 ? collaboratingTeams : undefined,
           manuscripts,
           collaborationManuscripts,
         } as DiscoveryProjectDetail;
@@ -503,6 +603,14 @@ export const parseContentfulProjectDetail = (
           collaborationManuscripts: resourceCollaborationManuscripts,
         } = parseProjectManuscripts(resourceManuscriptItems, teamMember.sys.id);
 
+        // Parse collaborating teams from funded team's research outputs
+        const resourceResearchOutputItems =
+          getResearchOutputItemsFromProjectMember(teamMember);
+        const resourceCollaboratingTeams = parseCollaboratingTeams(
+          resourceResearchOutputItems,
+          teamMember.sys.id,
+        );
+
         return {
           ...baseProject,
           originalGrantProposalId,
@@ -510,6 +618,10 @@ export const parseContentfulProjectDetail = (
           fundedTeam,
           researchTheme: fundedTeam?.researchTheme || undefined,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
+          collaboratingTeams:
+            resourceCollaboratingTeams.length > 0
+              ? resourceCollaboratingTeams
+              : undefined,
           manuscripts: resourceManuscripts,
           collaborationManuscripts: resourceCollaborationManuscripts,
         } as ResourceProjectDetail;

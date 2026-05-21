@@ -173,7 +173,7 @@ export const projectsContentQueryFragment = gql`
                 }
               }
               researchOutputsCollection(
-                limit: 200
+                limit: 50
                 order: sys_firstPublishedAt_DESC
               ) {
                 items {
@@ -183,7 +183,7 @@ export const projectsContentQueryFragment = gql`
                   title
                   documentType
                   type
-                  teamsCollection(limit: 20) {
+                  teamsCollection(limit: 10) {
                     items {
                       sys {
                         id

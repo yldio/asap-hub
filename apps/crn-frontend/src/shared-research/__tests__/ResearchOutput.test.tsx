@@ -98,7 +98,7 @@ const defaultUser: User = {
   ...createUserResponse({}, 1),
   teams,
   workingGroups,
-  algoliaApiKey: 'algolia-mock-key',
+  algoliaApiKey: null,
 };
 
 const researchOutputRoute = sharedResearch({}).researchOutput({

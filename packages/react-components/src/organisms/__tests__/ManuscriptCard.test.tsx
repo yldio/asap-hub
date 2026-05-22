@@ -90,7 +90,7 @@ const user = {
       role: 'Project Manager',
     },
   ] as UserTeam[],
-  algoliaApiKey: 'algolia-mock-key',
+  algoliaApiKey: null,
 };
 
 beforeEach(() => {

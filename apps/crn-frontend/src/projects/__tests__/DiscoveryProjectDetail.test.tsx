@@ -235,7 +235,7 @@ describe('DiscoveryProjectDetail', () => {
     const mockUser = {
       ...createUserResponse({}, 1),
       onboarded: true,
-      algoliaApiKey: 'algolia-mock-key',
+      algoliaApiKey: null,
       teams: [
         {
           displayName: 'Discovery Team',

@@ -463,6 +463,15 @@ describe('FloatingLinkEditor', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
+  it('does not close on right-click outside (browser context menu / paste)', async () => {
+    const onClose = jest.fn();
+    render(<Harness isOpen onClose={onClose} />);
+    await act(async () => {
+      fireEvent.mouseDown(document.body, { button: 2 });
+    });
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
   it('does not render when the selection has no bounding rect', () => {
     stubSelectionRect({
       top: 0,

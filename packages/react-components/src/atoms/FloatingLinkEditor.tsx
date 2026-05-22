@@ -5,17 +5,12 @@ import { mergeRegister } from '@lexical/utils';
 import {
   $getSelection,
   $isRangeSelection,
+  $setSelection,
   BaseSelection,
   COMMAND_PRIORITY_LOW,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { silver } from '../colors';
@@ -98,8 +93,12 @@ export const getUrlFromSelection = (
   return null;
 };
 
+const ZERO_WIDTH_AND_BIDI_RE = /[​-‍﻿‪-‮]/g;
+
 export const sanitizeUrl = (url: string): string => {
-  const trimmed = url.trim();
+  // Strip zero-width and bidi control characters that can sneak in via copy
+  // & paste, then trim regular whitespace.
+  const trimmed = url.replace(ZERO_WIDTH_AND_BIDI_RE, '').trim();
   if (!trimmed) return '';
   if (UNSAFE_SCHEME_PATTERN.test(trimmed)) {
     return '';
@@ -134,6 +133,7 @@ const FloatingLinkEditor = ({
   const [editor] = useLexicalComposerContext();
   const editorRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const savedSelectionRef = useRef<BaseSelection | null>(null);
   const [url, setUrl] = useState(initialUrl);
   const [isEditing, setIsEditing] = useState(!initialUrl);
   const [error, setError] = useState<string | null>(null);
@@ -142,20 +142,44 @@ const FloatingLinkEditor = ({
     left: number;
   } | null>(null);
 
+  // Only reset state when the popover transitions from closed to open. Once
+  // open we intentionally ignore subsequent prop changes (e.g. the toolbar
+  // updating linkUrl in response to Lexical SELECTION_CHANGE events while the
+  // user is editing the URL field in our floating input).
+  const wasOpenRef = useRef(false);
   useEffect(() => {
+    const wasOpen = wasOpenRef.current;
+    wasOpenRef.current = isOpen;
+    if (!isOpen || wasOpen) return;
     setUrl(initialUrl);
     setIsEditing(!initialUrl);
     setError(null);
-  }, [initialUrl, isOpen]);
+    // Capture the editor selection so we can restore it before applying.
+    // Once the user clicks into our floating input the DOM selection moves
+    // out of the contenteditable, and Lexical will replace its internal
+    // selection with `null`, breaking TOGGLE_LINK_COMMAND.
+    editor.getEditorState().read(() => {
+      const current = $getSelection();
+      savedSelectionRef.current = current ? current.clone() : null;
+    });
+  }, [editor, initialUrl, isOpen]);
 
-  const updatePosition = useCallback(() => {
+  // Position the popover once when it opens, based on the editor's current
+  // text selection rectangle. We deliberately do NOT track resize/scroll
+  // afterwards: as soon as the user clicks into our floating input the DOM
+  // selection moves out of the editor and `getBoundingClientRect()` returns
+  // a zero-size rect, which would otherwise unmount the popover mid-paste.
+  useLayoutEffect(() => {
+    if (!isOpen) {
+      setPosition(null);
+      return;
+    }
     const nativeSelection = window.getSelection();
     if (!nativeSelection || nativeSelection.rangeCount === 0) {
       setPosition(null);
       return;
     }
-    const domRange = nativeSelection.getRangeAt(0);
-    const rect = domRange.getBoundingClientRect();
+    const rect = nativeSelection.getRangeAt(0).getBoundingClientRect();
     if (rect.width === 0 && rect.height === 0) {
       setPosition(null);
       return;
@@ -164,22 +188,10 @@ const FloatingLinkEditor = ({
       top: rect.bottom + window.scrollY + 8,
       left: rect.left + window.scrollX,
     });
-  }, []);
-
-  useLayoutEffect(() => {
-    if (!isOpen) return undefined;
-    updatePosition();
-    const handler = () => updatePosition();
-    window.addEventListener('resize', handler);
-    window.addEventListener('scroll', handler, true);
-    return () => {
-      window.removeEventListener('resize', handler);
-      window.removeEventListener('scroll', handler, true);
-    };
-  }, [isOpen, updatePosition]);
+  }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen) return undefined;
+    if (!isOpen || isEditing) return undefined;
     return mergeRegister(
       editor.registerCommand(
         SELECTION_CHANGE_COMMAND,
@@ -193,7 +205,7 @@ const FloatingLinkEditor = ({
         COMMAND_PRIORITY_LOW,
       ),
     );
-  }, [editor, isOpen]);
+  }, [editor, isOpen, isEditing]);
 
   useEffect(() => {
     if (isOpen && isEditing && position) {
@@ -209,6 +221,10 @@ const FloatingLinkEditor = ({
   useEffect(() => {
     if (!isOpen) return undefined;
     const handleClickOutside = (e: MouseEvent) => {
+      // Ignore non-primary buttons (right-click opens the browser context
+      // menu for "Paste"; closing the popover on that mousedown would tear
+      // the input down before the paste lands).
+      if (e.button !== 0) return;
       if (editorRef.current && !editorRef.current.contains(e.target as Node)) {
         onClose();
       }
@@ -218,6 +234,16 @@ const FloatingLinkEditor = ({
   }, [isOpen, onClose]);
 
   if (!isOpen || !position) return null;
+
+  const withSavedSelection = (cb: () => void) => {
+    const saved = savedSelectionRef.current;
+    if (saved) {
+      editor.update(() => {
+        $setSelection(saved.clone());
+      });
+    }
+    cb();
+  };
 
   const applyLink = () => {
     const trimmed = url.trim();
@@ -231,12 +257,24 @@ const FloatingLinkEditor = ({
       setError('Please enter a valid URL (http://, https://, mailto:, tel:).');
       return;
     }
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitized);
+    try {
+      withSavedSelection(() =>
+        editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitized),
+      );
+    } catch {
+      // If Lexical rejects the link (e.g. because the editor selection is no
+      // longer valid), surface a recoverable error instead of leaving the
+      // popover in a broken state.
+      setError(
+        'Could not apply the link. Please try selecting the text again.',
+      );
+      return;
+    }
     onClose();
   };
 
   const removeLink = () => {
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+    withSavedSelection(() => editor.dispatchCommand(TOGGLE_LINK_COMMAND, null));
     onClose();
   };
 

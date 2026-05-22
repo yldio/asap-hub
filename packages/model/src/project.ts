@@ -1,6 +1,6 @@
 import { FetchOptions, ListResponse } from './common';
 import { ResearchOutputType } from './research-output';
-import { TeamDataObject, TeamRole } from './team';
+import { TeamDataObject, TeamRole, TeamType } from './team';
 
 export type ProjectTool = {
   id?: string;
@@ -188,6 +188,7 @@ export type CollaboratingTeamArticle = {
 export type CollaboratingTeam = {
   readonly id: string;
   readonly displayName: string;
+  readonly teamType?: TeamType;
   readonly inactiveSince?: string;
   readonly articles: ReadonlyArray<CollaboratingTeamArticle>;
 };

@@ -190,6 +190,7 @@ export const projectsContentQueryFragment = gql`
                         id
                       }
                       displayName
+                      teamType
                       inactiveSince
                     }
                   }
@@ -348,6 +349,7 @@ export const FETCH_TEAM_RESEARCH_OUTPUTS = gql`
                   id
                 }
                 displayName
+                teamType
                 inactiveSince
               }
             }

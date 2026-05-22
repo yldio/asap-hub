@@ -2420,6 +2420,52 @@ describe('parseContentfulProjectDetail', () => {
       ).toBeUndefined();
     });
 
+    it('captures each collaborating team’s own teamType', () => {
+      const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
+      setFundedTeamResearchOutputs(graphqlItem, [
+        {
+          sys: { id: 'ro-mix' },
+          title: 'Mixed Article',
+          documentType: 'Article',
+          type: 'Preprint',
+          teamsCollection: {
+            items: [
+              {
+                sys: { id: 'team-1' },
+                displayName: 'Funded',
+                teamType: 'Discovery Team',
+              },
+              {
+                sys: { id: 'team-discovery' },
+                displayName: 'Team Discovery',
+                teamType: 'Discovery Team',
+              },
+              {
+                sys: { id: 'team-resource' },
+                displayName: 'Team Resource',
+                teamType: 'Resource Team',
+              },
+            ],
+          },
+        },
+      ]);
+
+      const result = parseContentfulProjectDetail(graphqlItem) as {
+        collaboratingTeams?: Array<{ id: string; teamType?: string }>;
+      };
+
+      expect(result.collaboratingTeams).toEqual([
+        expect.objectContaining({
+          id: 'team-discovery',
+          teamType: 'Discovery Team',
+        }),
+        expect.objectContaining({
+          id: 'team-resource',
+          teamType: 'Resource Team',
+        }),
+      ]);
+    });
+
     it('omits collaboratingTeams when there are no co-authors', () => {
       const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
       setFundedTeamResearchOutputs(graphqlItem, [

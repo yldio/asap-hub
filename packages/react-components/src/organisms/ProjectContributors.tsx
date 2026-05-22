@@ -168,10 +168,13 @@ export const memberTabs = ['Project Members'] as const;
 export type Tabs = (typeof tabs)[number];
 export type MemberTabs = (typeof memberTabs)[number];
 
+const teamTypeIconFor = (teamType?: string): React.FC =>
+  teamType === 'Resource Team' ? ResourceTeamIcon : DiscoveryTeamIcon;
+
 const CollaboratingTeamRow: React.FC<{
   team: CollaboratingTeam;
-  TeamTypeIcon: React.FC;
-}> = ({ team, TeamTypeIcon }) => {
+}> = ({ team }) => {
+  const TeamTypeIcon = teamTypeIconFor(team.teamType);
   const [expanded, setExpanded] = useState(false);
   const articleCount = team.articles.length;
 
@@ -290,10 +293,6 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
       ? collaboratingTeams ?? []
       : (collaboratingTeams ?? []).slice(0, INITIAL_COLLABORATORS_COUNT);
   const hasMoreCollaborators = collaboratorsCount > INITIAL_COLLABORATORS_COUNT;
-  const TeamTypeIcon =
-    fundedTeam.teamType === 'Resource Team'
-      ? ResourceTeamIcon
-      : DiscoveryTeamIcon;
 
   return (
     <Card padding={false}>
@@ -343,11 +342,7 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
             <>
               <div css={collaboratorsListStyles}>
                 {visibleCollaborators.map((team) => (
-                  <CollaboratingTeamRow
-                    key={team.id}
-                    team={team}
-                    TeamTypeIcon={TeamTypeIcon}
-                  />
+                  <CollaboratingTeamRow key={team.id} team={team} />
                 ))}
               </div>
               {hasMoreCollaborators && (

@@ -34335,7 +34335,9 @@ export type ProjectsContentDataFragment = Pick<
                                     Maybe<
                                       Pick<
                                         Teams,
-                                        'displayName' | 'inactiveSince'
+                                        | 'displayName'
+                                        | 'teamType'
+                                        | 'inactiveSince'
                                       > & { sys: Pick<Sys, 'id'> }
                                     >
                                   >;
@@ -34666,7 +34668,9 @@ export type FetchProjectByIdQuery = {
                                         Maybe<
                                           Pick<
                                             Teams,
-                                            'displayName' | 'inactiveSince'
+                                            | 'displayName'
+                                            | 'teamType'
+                                            | 'inactiveSince'
                                           > & { sys: Pick<Sys, 'id'> }
                                         >
                                       >;
@@ -34734,9 +34738,10 @@ export type FetchTeamResearchOutputsQuery = {
                 teamsCollection?: Maybe<{
                   items: Array<
                     Maybe<
-                      Pick<Teams, 'displayName' | 'inactiveSince'> & {
-                        sys: Pick<Sys, 'id'>;
-                      }
+                      Pick<
+                        Teams,
+                        'displayName' | 'teamType' | 'inactiveSince'
+                      > & { sys: Pick<Sys, 'id'> }
                     >
                   >;
                 }>;
@@ -43394,6 +43399,14 @@ export const ProjectsContentDataFragmentDoc = {
                                                                     kind: 'Name',
                                                                     value:
                                                                       'displayName',
+                                                                  },
+                                                                },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'teamType',
                                                                   },
                                                                 },
                                                                 {
@@ -63340,6 +63353,13 @@ export const FetchTeamResearchOutputsDocument = {
                                                 name: {
                                                   kind: 'Name',
                                                   value: 'displayName',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'teamType',
                                                 },
                                               },
                                               {

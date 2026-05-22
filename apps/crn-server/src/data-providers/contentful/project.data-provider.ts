@@ -45,6 +45,7 @@ import {
   ProjectType,
   ResearchOutputType,
   ResearchTag,
+  TeamType,
   ResourceProject,
   ResourceProjectDetail,
   SupplementGrantInfo,
@@ -427,6 +428,7 @@ type ProjectResearchOutputItem = {
     items: Array<{
       sys: { id: string };
       displayName?: string | null;
+      teamType?: string | null;
       inactiveSince?: string | null;
     } | null>;
   } | null;
@@ -470,6 +472,7 @@ export const parseCollaboratingTeams = (
     {
       id: string;
       displayName: string;
+      teamType?: TeamType;
       inactiveSince?: string;
       articles: CollaboratingTeamArticle[];
     }
@@ -496,6 +499,7 @@ export const parseCollaboratingTeams = (
           teamsById.set(team.sys.id, {
             id: team.sys.id,
             displayName: team.displayName || '',
+            teamType: (team.teamType as TeamType | null) ?? undefined,
             inactiveSince: team.inactiveSince || undefined,
             articles: [article],
           });

@@ -267,6 +267,45 @@ describe('ProjectContributors', () => {
       );
     });
 
+    it('uses each collaborating team’s own type to pick its icon', async () => {
+      const teams: CollaboratingTeam[] = [
+        {
+          id: 'discovery-team',
+          displayName: 'Discovery Co',
+          teamType: 'Discovery Team',
+          articles: [{ id: 'a-1', title: 'A1', type: 'Preprint' }],
+        },
+        {
+          id: 'resource-team',
+          displayName: 'Resource Co',
+          teamType: 'Resource Team',
+          articles: [{ id: 'a-2', title: 'A2', type: 'Preprint' }],
+        },
+      ];
+
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={teams}
+        />,
+      );
+      await userEvent.click(screen.getByText('Collaborators (2)'));
+
+      const discoveryRow = screen
+        .getByRole('link', { name: 'Discovery Co' })
+        .closest('[role="button"]') as HTMLElement;
+      const resourceRow = screen
+        .getByRole('link', { name: 'Resource Co' })
+        .closest('[role="button"]') as HTMLElement;
+
+      expect(discoveryRow.querySelector('title')?.textContent).toBe(
+        'Discovery Team Icon',
+      );
+      expect(resourceRow.querySelector('title')?.textContent).toBe(
+        'Resource Team Icon',
+      );
+    });
+
     it('expands when clicking anywhere on the row, but not on the team link', async () => {
       const teams: CollaboratingTeam[] = [
         {

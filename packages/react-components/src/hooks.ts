@@ -118,12 +118,13 @@ export const useInterval = (
 };
 
 /**
- * Calls `onOutside` when a `mousedown` happens outside every provided ref.
- * The listener is only attached while `enabled` is true.
+ * Calls `onDismiss` when the user dismisses an open UI element — either by
+ * pressing ESC or clicking outside every provided ref. Listeners are only
+ * attached while `enabled` is true.
  */
-export const useClickOutside = (
+export const useDismiss = (
   refs: ReadonlyArray<RefObject<HTMLElement>>,
-  onOutside: () => void,
+  onDismiss: () => void,
   enabled: boolean,
 ): void => {
   useEffect(() => {
@@ -131,9 +132,16 @@ export const useClickOutside = (
     const handleMouseDown = (event: MouseEvent) => {
       const target = event.target as Node;
       if (refs.some((ref) => ref.current?.contains(target))) return;
-      onOutside();
+      onDismiss();
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onDismiss();
     };
     document.addEventListener('mousedown', handleMouseDown);
-    return () => document.removeEventListener('mousedown', handleMouseDown);
-  }, [enabled, onOutside, refs]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [enabled, onDismiss, refs]);
 };

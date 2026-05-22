@@ -31,7 +31,7 @@ import {
   networkContentTopPadding,
 } from '../layout';
 import { Loading } from '../molecules';
-import { usePrevious, useClickOutside } from '../hooks';
+import { usePrevious, useDismiss } from '../hooks';
 import { tagSearchIcon } from '../icons';
 import { rem } from '../pixels';
 import { Navigation } from '../atoms/NavigationLink';
@@ -270,7 +270,7 @@ const Layout: FC<LayoutProps> = ({
     setUserMenuShown(false);
   }, [location]);
 
-  useClickOutside(
+  useDismiss(
     [userButtonRef, userMenuRef],
     () => setUserMenuShown(false),
     userMenuShown,

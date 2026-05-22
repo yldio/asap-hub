@@ -111,6 +111,20 @@ it('closes the user menu when clicking outside of it', async () => {
   expect(queryByTitle('Chevron Up')).not.toBeInTheDocument();
 });
 
+it('closes the user menu when pressing Escape', async () => {
+  const { getByLabelText, queryByTitle } = render(
+    <MemoryRouter>
+      <Layout {...props} />
+    </MemoryRouter>,
+  );
+
+  await userEvent.click(getByLabelText(/toggle.+user menu/i));
+  expect(queryByTitle('Chevron Up')).toBeInTheDocument();
+
+  await userEvent.keyboard('{Escape}');
+  expect(queryByTitle('Chevron Up')).not.toBeInTheDocument();
+});
+
 it('closes the drawer when clicking the overlay', async () => {
   const { getByLabelText } = render(
     <MemoryRouter>

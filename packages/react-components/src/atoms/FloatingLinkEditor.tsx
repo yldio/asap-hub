@@ -93,7 +93,9 @@ export const getUrlFromSelection = (
   return null;
 };
 
-const ZERO_WIDTH_AND_BIDI_RE = /[​-‍﻿‪-‮]/g;
+// Zero-width characters (U+200B..U+200D, U+FEFF) and bidi controls
+// (U+202A..U+202E) sometimes hitch a ride on copy-pasted URLs.
+const ZERO_WIDTH_AND_BIDI_RE = /[\u200B-\u200D\uFEFF\u202A-\u202E]/g;
 
 export const sanitizeUrl = (url: string): string => {
   // Strip zero-width and bidi control characters that can sneak in via copy

@@ -170,14 +170,18 @@ describe('ProjectContributors', () => {
 
       // Only first 10 visible initially
       expect(
-        screen.getAllByRole('button', { name: /Expand Team [A-Z] articles/ }),
+        screen.getAllByRole('button', {
+          name: /Expand Team [A-Z] articles/,
+        }),
       ).toHaveLength(10);
 
       await userEvent.click(
         screen.getByRole('button', { name: /View More Collaborators/i }),
       );
       expect(
-        screen.getAllByRole('button', { name: /Expand Team [A-Z] articles/ }),
+        screen.getAllByRole('button', {
+          name: /Expand Team [A-Z] articles/,
+        }),
       ).toHaveLength(12);
     });
 
@@ -261,6 +265,32 @@ describe('ProjectContributors', () => {
         'href',
         '/network/teams/team-xyz',
       );
+    });
+
+    it('expands when clicking anywhere on the row, but not on the team link', async () => {
+      const teams: CollaboratingTeam[] = [
+        {
+          id: 'team-a',
+          displayName: 'Team Alpha',
+          articles: [{ id: 'a-1', title: 'Alpha One', type: 'Preprint' }],
+        },
+      ];
+
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={teams}
+        />,
+      );
+      await userEvent.click(screen.getByText('Collaborators (1)'));
+
+      // Clicking the link itself does NOT toggle the row
+      await userEvent.click(screen.getByRole('link', { name: 'Team Alpha' }));
+      expect(screen.queryByText('Alpha One')).not.toBeInTheDocument();
+
+      // Clicking the article-count area (anywhere else in the row) DOES toggle
+      await userEvent.click(screen.getByText(/1 Article$/));
+      expect(screen.getByText('Alpha One')).toBeInTheDocument();
     });
   });
 });

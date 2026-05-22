@@ -70,6 +70,7 @@ const collaboratorHeaderStyles = css({
   justifyContent: 'space-between',
   gap: rem(12),
   padding: `${rem(16)} 0`,
+  cursor: 'pointer',
 });
 
 const chevronButtonStyles = css({
@@ -174,14 +175,36 @@ const CollaboratingTeamRow: React.FC<{
   const [expanded, setExpanded] = useState(false);
   const articleCount = team.articles.length;
 
+  const toggle = () => setExpanded((v) => !v);
+
   return (
     <div css={collaboratorRowStyles}>
-      <div css={collaboratorHeaderStyles}>
+      <div
+        css={collaboratorHeaderStyles}
+        role="button"
+        tabIndex={0}
+        aria-expanded={expanded}
+        aria-label={
+          expanded
+            ? `Collapse ${team.displayName} articles`
+            : `Expand ${team.displayName} articles`
+        }
+        onClick={toggle}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggle();
+          }
+        }}
+      >
         <span css={collaboratorHeaderLeftStyles}>
           <span aria-hidden="true">
             <TeamTypeIcon />
           </span>
-          <span css={collaboratorNameStyles}>
+          <span
+            css={collaboratorNameStyles}
+            onClick={(e) => e.stopPropagation()}
+          >
             <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
               {team.displayName}
             </Link>
@@ -192,19 +215,9 @@ const CollaboratingTeamRow: React.FC<{
             • {articleCount} {articleCount === 1 ? 'Article' : 'Articles'}
           </span>
         </span>
-        <button
-          type="button"
-          css={chevronButtonStyles}
-          onClick={() => setExpanded((v) => !v)}
-          aria-expanded={expanded}
-          aria-label={
-            expanded
-              ? `Collapse ${team.displayName} articles`
-              : `Expand ${team.displayName} articles`
-          }
-        >
+        <span css={chevronButtonStyles} aria-hidden="true">
           {expanded ? chevronUpIcon : chevronDownIcon}
-        </button>
+        </span>
       </div>
       {expanded && (
         <ul css={articlesListStyles(articleCount)}>

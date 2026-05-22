@@ -56,8 +56,10 @@ const collaboratorsListStyles = css({
 
 const collaboratorRowStyles = css({
   borderTop: `1px solid ${steel.rgb}`,
+  padding: `${rem(16)} 0`,
   ':first-of-type': {
     borderTop: 'none',
+    paddingTop: 8,
   },
 });
 
@@ -66,7 +68,6 @@ const collaboratorHeaderStyles = css({
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: rem(12),
-  padding: `${rem(16)} 0`,
   cursor: 'pointer',
 });
 
@@ -103,7 +104,7 @@ const articlesListStyles = (count: number) =>
   css({
     listStyle: 'none',
     margin: 0,
-    padding: `0 0 ${rem(16)} ${rem(32)}`,
+    padding: `${rem(12)} 0 ${rem(20)} ${rem(32)}`,
     display: 'flex',
     flexDirection: 'column',
     gap: rem(8),

@@ -2486,6 +2486,58 @@ describe('parseContentfulProjectDetail', () => {
         (result as { collaboratingTeams?: unknown }).collaboratingTeams,
       ).toBeUndefined();
     });
+
+    it('populates collaboratingTeams on a team-based Resource project', () => {
+      const graphqlItem = getResourceTeamProjectDetailGraphqlItem();
+      const teamMember = (graphqlItem as Record<string, unknown>)
+        .membersCollection as {
+        items: Array<{ projectMember: Record<string, unknown> }>;
+      };
+      const team = teamMember.items.find(
+        (m) =>
+          (m.projectMember as { __typename?: string }).__typename === 'Teams',
+      );
+      const existing =
+        (team!.projectMember.linkedFrom as Record<string, unknown>) || {};
+      team!.projectMember.linkedFrom = {
+        ...existing,
+        researchOutputsCollection: {
+          items: [
+            {
+              sys: { id: 'ro-resource-1' },
+              title: 'Resource Article 1',
+              documentType: 'Article',
+              type: 'Preprint',
+              teamsCollection: {
+                items: [
+                  {
+                    sys: { id: 'resource-team-main' },
+                    displayName: 'Resource Team',
+                    teamType: 'Resource Team',
+                  },
+                  {
+                    sys: { id: 'team-collab' },
+                    displayName: 'Collab Team',
+                    teamType: 'Discovery Team',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      };
+
+      const result = parseContentfulProjectDetail(graphqlItem) as {
+        collaboratingTeams?: Array<{ id: string; displayName: string }>;
+      };
+
+      expect(result.collaboratingTeams).toEqual([
+        expect.objectContaining({
+          id: 'team-collab',
+          displayName: 'Collab Team',
+        }),
+      ]);
+    });
   });
 
   describe('ProjectContentfulDataProvider - fetch with projectMembershipId filter', () => {

@@ -331,5 +331,58 @@ describe('ProjectContributors', () => {
       await userEvent.click(screen.getByText(/1 Article$/));
       expect(screen.getByText('Alpha One')).toBeInTheDocument();
     });
+
+    it('toggles row via Enter and Space keys', async () => {
+      const teams: CollaboratingTeam[] = [
+        {
+          id: 'team-a',
+          displayName: 'Team Alpha',
+          articles: [{ id: 'a-1', title: 'Alpha One', type: 'Preprint' }],
+        },
+      ];
+
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={teams}
+        />,
+      );
+      await userEvent.click(screen.getByText('Collaborators (1)'));
+
+      const row = screen.getByRole('button', {
+        name: /Expand Team Alpha articles/i,
+      });
+      row.focus();
+
+      await userEvent.keyboard('{Enter}');
+      expect(screen.getByText('Alpha One')).toBeInTheDocument();
+
+      await userEvent.keyboard(' ');
+      expect(screen.queryByText('Alpha One')).not.toBeInTheDocument();
+    });
+
+    it('switches back to the Funded Team tab from Collaborators', async () => {
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={makeCollaboratingTeams(2)}
+        />,
+      );
+
+      // Default tab shows funded team's description
+      expect(
+        screen.getByText(mockFundedTeam.teamDescription ?? ''),
+      ).toBeInTheDocument();
+
+      await userEvent.click(screen.getByText('Collaborators (2)'));
+      expect(
+        screen.queryByText(mockFundedTeam.teamDescription ?? ''),
+      ).not.toBeInTheDocument();
+
+      await userEvent.click(screen.getByText('Funded Team'));
+      expect(
+        screen.getByText(mockFundedTeam.teamDescription ?? ''),
+      ).toBeInTheDocument();
+    });
   });
 });

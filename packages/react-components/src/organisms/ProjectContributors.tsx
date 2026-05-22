@@ -70,11 +70,15 @@ const collaboratorHeaderStyles = css({
   justifyContent: 'space-between',
   gap: rem(12),
   padding: `${rem(16)} 0`,
+});
+
+const chevronButtonStyles = css({
   background: 'none',
   border: 'none',
   cursor: 'pointer',
-  width: '100%',
-  textAlign: 'left',
+  padding: 0,
+  display: 'inline-flex',
+  alignItems: 'center',
 });
 
 const collaboratorHeaderLeftStyles = css({
@@ -172,12 +176,7 @@ const CollaboratingTeamRow: React.FC<{
 
   return (
     <div css={collaboratorRowStyles}>
-      <button
-        type="button"
-        css={collaboratorHeaderStyles}
-        onClick={() => setExpanded((v) => !v)}
-        aria-expanded={expanded}
-      >
+      <div css={collaboratorHeaderStyles}>
         <span css={collaboratorHeaderLeftStyles}>
           <span aria-hidden="true">
             <TeamTypeIcon />
@@ -193,10 +192,20 @@ const CollaboratingTeamRow: React.FC<{
             • {articleCount} {articleCount === 1 ? 'Article' : 'Articles'}
           </span>
         </span>
-        <span aria-hidden="true">
+        <button
+          type="button"
+          css={chevronButtonStyles}
+          onClick={() => setExpanded((v) => !v)}
+          aria-expanded={expanded}
+          aria-label={
+            expanded
+              ? `Collapse ${team.displayName} articles`
+              : `Expand ${team.displayName} articles`
+          }
+        >
           {expanded ? chevronUpIcon : chevronDownIcon}
-        </span>
-      </button>
+        </button>
+      </div>
       {expanded && (
         <ul css={articlesListStyles(articleCount)}>
           {team.articles.map((article) => {
@@ -213,7 +222,11 @@ const CollaboratingTeamRow: React.FC<{
                 >
                   {article.title}
                 </Link>
-                {label && <Pill noMargin>{label}</Pill>}
+                {label && (
+                  <Pill noMargin accent="gray">
+                    {label}
+                  </Pill>
+                )}
               </li>
             );
           })}

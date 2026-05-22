@@ -315,6 +315,29 @@ const FloatingLinkEditor = ({
                 if (error) setError(null);
               }}
               onKeyDown={handleKeyDown}
+              // Stop input events from bubbling up to any Lexical handlers
+              // attached to ancestor contenteditables. Otherwise pasting or
+              // typing in the URL field can be misread by the editor and
+              // collapse its selection / tear the popover down.
+              onMouseDown={(e) => e.stopPropagation()}
+              onPaste={(e) => e.stopPropagation()}
+              onCut={(e) => e.stopPropagation()}
+              onCopy={(e) => e.stopPropagation()}
+              onInput={(e) => e.stopPropagation()}
+              onFocus={(e) => e.stopPropagation()}
+              onBlur={(e) => {
+                // If focus leaves the input but the popover is still open
+                // (e.g. browser autofill pulled focus away momentarily),
+                // pull it back so the user can keep typing.
+                const next = e.relatedTarget as Node | null;
+                if (
+                  isEditing &&
+                  editorRef.current &&
+                  (!next || !editorRef.current.contains(next))
+                ) {
+                  requestAnimationFrame(() => inputRef.current?.focus());
+                }
+              }}
               aria-label="Link URL"
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? 'link-url-error' : undefined}

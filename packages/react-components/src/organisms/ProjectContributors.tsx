@@ -103,7 +103,7 @@ const articlesListStyles = (count: number) =>
   css({
     listStyle: 'none',
     margin: 0,
-    padding: `0 0 ${rem(16)} ${rem(28)}`,
+    padding: `0 0 ${rem(16)} ${rem(32)}`,
     display: 'flex',
     flexDirection: 'column',
     gap: rem(8),
@@ -133,6 +133,9 @@ const viewMoreContainerStyles = css({
   justifyContent: 'center',
   marginTop: rem(16),
   paddingTop: rem(14),
+  // Negative horizontal margins cancel the parent card's 24px horizontal
+  // padding so the divider spans the full card width.
+  marginInline: `-${rem(24)}`,
   marginBottom: `-${rem(14)}`,
   borderTop: `1px solid ${steel.rgb}`,
 });

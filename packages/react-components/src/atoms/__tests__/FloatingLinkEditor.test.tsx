@@ -55,16 +55,27 @@ const stubSelectionRect = (
 
 const CommandSpy = ({
   onDispatch,
+  throwOnToggleLink,
+  editorOut,
 }: {
   onDispatch: (payload: unknown) => void;
+  throwOnToggleLink?: boolean;
+  editorOut?: { current: LexicalEditor | null };
 }) => {
   const [editor] = useLexicalComposerContext();
   useEffect(() => {
+    if (editorOut) {
+      // eslint-disable-next-line no-param-reassign
+      editorOut.current = editor;
+    }
     const originalDispatch = editor.dispatchCommand.bind(editor);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (editor as any).dispatchCommand = (command: unknown, payload: unknown) => {
       if (command === TOGGLE_LINK_COMMAND) {
         onDispatch(payload);
+        if (throwOnToggleLink) {
+          throw new Error('forced toggle-link failure');
+        }
       }
       return originalDispatch(
         command as Parameters<typeof originalDispatch>[0],
@@ -75,7 +86,7 @@ const CommandSpy = ({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (editor as any).dispatchCommand = originalDispatch;
     };
-  }, [editor, onDispatch]);
+  }, [editor, onDispatch, throwOnToggleLink, editorOut]);
   return null;
 };
 
@@ -84,11 +95,15 @@ const Harness = ({
   initialUrl = '',
   onClose = jest.fn(),
   onDispatch = jest.fn(),
+  throwOnToggleLink,
+  editorOut,
 }: {
   isOpen: boolean;
   initialUrl?: string;
   onClose?: () => void;
   onDispatch?: (payload: unknown) => void;
+  throwOnToggleLink?: boolean;
+  editorOut?: { current: LexicalEditor | null };
 }) => {
   const config = {
     namespace: 'TestEditor',
@@ -99,7 +114,11 @@ const Harness = ({
   return (
     <LexicalComposer initialConfig={config}>
       <LinkPlugin />
-      <CommandSpy onDispatch={onDispatch} />
+      <CommandSpy
+        onDispatch={onDispatch}
+        throwOnToggleLink={throwOnToggleLink}
+        editorOut={editorOut}
+      />
       <FloatingLinkEditor
         isOpen={isOpen}
         initialUrl={initialUrl}
@@ -452,6 +471,109 @@ describe('FloatingLinkEditor', () => {
     });
     expect(onDispatch).toHaveBeenCalledWith(null);
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('restores the captured Lexical selection before dispatching TOGGLE_LINK_COMMAND', async () => {
+    const onDispatch = jest.fn();
+    const editorOut: { current: LexicalEditor | null } = { current: null };
+    let captured: ReturnType<typeof $getSelection> = null;
+    // Render with isOpen=false so we can plant a selection before the popover
+    // opens and captures it.
+    const { rerender, getByLabelText } = render(
+      <Harness isOpen={false} onDispatch={onDispatch} editorOut={editorOut} />,
+    );
+    await act(async () => {
+      editorOut.current?.update(
+        () => {
+          const root = $getRoot();
+          root.clear();
+          const para = $createParagraphNode();
+          const text = $createTextNode('selected text');
+          para.append(text);
+          root.append(para);
+          text.select(0, text.getTextContentSize());
+        },
+        { discrete: true },
+      );
+    });
+
+    rerender(<Harness isOpen onDispatch={onDispatch} editorOut={editorOut} />);
+
+    // Once the popover is open, blow away the editor selection — this is the
+    // state that breaks dispatchCommand if we don't restore.
+    await act(async () => {
+      editorOut.current?.update(
+        () => {
+          $setSelection(null);
+        },
+        { discrete: true },
+      );
+    });
+
+    const input = getByLabelText('Link URL') as HTMLInputElement;
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'https://restored.com' } });
+      await userEvent.click(getByLabelText('Apply Link'));
+    });
+
+    expect(onDispatch).toHaveBeenCalledWith('https://restored.com');
+    // The selection should have been restored to the original range before
+    // dispatch — verify by inspecting the editor state after Apply.
+    editorOut.current?.getEditorState().read(() => {
+      captured = $getSelection();
+    });
+    expect(captured).not.toBeNull();
+  });
+
+  it('keeps the popover open and shows an error when dispatch throws', async () => {
+    const onDispatch = jest.fn();
+    const onClose = jest.fn();
+    const editorOut: { current: LexicalEditor | null } = { current: null };
+    const { rerender, getByLabelText, getByRole } = render(
+      <Harness
+        isOpen={false}
+        onDispatch={onDispatch}
+        onClose={onClose}
+        throwOnToggleLink
+        editorOut={editorOut}
+      />,
+    );
+
+    // Plant a selection so withSavedSelection takes its branch (line 241-242).
+    await act(async () => {
+      editorOut.current?.update(
+        () => {
+          const root = $getRoot();
+          root.clear();
+          const para = $createParagraphNode();
+          const text = $createTextNode('boom');
+          para.append(text);
+          root.append(para);
+          text.select(0, text.getTextContentSize());
+        },
+        { discrete: true },
+      );
+    });
+
+    rerender(
+      <Harness
+        isOpen
+        onDispatch={onDispatch}
+        onClose={onClose}
+        throwOnToggleLink
+        editorOut={editorOut}
+      />,
+    );
+
+    const input = getByLabelText('Link URL') as HTMLInputElement;
+    await act(async () => {
+      fireEvent.change(input, { target: { value: 'https://ok.com' } });
+      await userEvent.click(getByLabelText('Apply Link'));
+    });
+
+    expect(onDispatch).toHaveBeenCalledWith('https://ok.com');
+    expect(onClose).not.toHaveBeenCalled();
+    expect(getByRole('alert')).toHaveTextContent(/Could not apply/i);
   });
 
   it('closes when clicking outside', async () => {

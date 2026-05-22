@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import { CollaboratingTeam, FundedTeam, ProjectMember } from '@asap-hub/model';
@@ -147,10 +147,11 @@ describe('ProjectContributors', () => {
         />,
       );
       await userEvent.click(screen.getByText('Collaborators (1)'));
-      const teamButton = screen.getByRole('button', { name: /Team Alpha/i });
-      expect(within(teamButton).getByText(/2 Articles/)).toBeInTheDocument();
+      expect(screen.getByText(/2 Articles/)).toBeInTheDocument();
 
-      await userEvent.click(teamButton);
+      await userEvent.click(
+        screen.getByRole('button', { name: /Expand Team Alpha articles/i }),
+      );
       expect(screen.getByText('Alpha One')).toBeInTheDocument();
       expect(screen.getByText('Alpha Two')).toBeInTheDocument();
       // 'Published' renders as 'Publication' pill
@@ -169,15 +170,97 @@ describe('ProjectContributors', () => {
 
       // Only first 10 visible initially
       expect(
-        screen.getAllByRole('button', { name: /Team [A-Z]/ }),
+        screen.getAllByRole('button', { name: /Expand Team [A-Z] articles/ }),
       ).toHaveLength(10);
 
       await userEvent.click(
         screen.getByRole('button', { name: /View More Collaborators/i }),
       );
       expect(
-        screen.getAllByRole('button', { name: /Team [A-Z]/ }),
+        screen.getAllByRole('button', { name: /Expand Team [A-Z] articles/ }),
       ).toHaveLength(12);
+    });
+
+    it('AC02: makes the articles list scrollable when there are more than 7 articles', async () => {
+      const teams: CollaboratingTeam[] = [
+        {
+          id: 'team-many',
+          displayName: 'Team Many',
+          articles: Array.from({ length: 8 }, (_, i) => ({
+            id: `m-${i}`,
+            title: `Many ${i}`,
+            type: 'Preprint' as const,
+          })),
+        },
+      ];
+
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={teams}
+        />,
+      );
+      await userEvent.click(screen.getByText('Collaborators (1)'));
+      await userEvent.click(
+        screen.getByRole('button', { name: /Expand Team Many articles/i }),
+      );
+
+      // The articles list is the only <ul> containing the article titles
+      const list = screen.getByText('Many 0').closest('ul');
+      expect(list).not.toBeNull();
+      expect(list as HTMLElement).toHaveStyleRule('overflow-y', 'auto');
+      expect(list as HTMLElement).toHaveStyleRule(
+        'max-height',
+        expect.stringMatching(/em$/),
+      );
+    });
+
+    it('AC03: links each article title to its research output detail page', async () => {
+      const teams: CollaboratingTeam[] = [
+        {
+          id: 'team-a',
+          displayName: 'Team Alpha',
+          articles: [{ id: 'ro-42', title: 'Some Article', type: 'Preprint' }],
+        },
+      ];
+
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={teams}
+        />,
+      );
+      await userEvent.click(screen.getByText('Collaborators (1)'));
+      await userEvent.click(
+        screen.getByRole('button', { name: /Expand Team Alpha articles/i }),
+      );
+
+      expect(
+        screen.getByRole('link', { name: 'Some Article' }),
+      ).toHaveAttribute('href', '/shared-research/ro-42');
+    });
+
+    it('AC04: links each collaborating team name to its team detail page', async () => {
+      const teams: CollaboratingTeam[] = [
+        {
+          id: 'team-xyz',
+          displayName: 'Team XYZ',
+          articles: [{ id: 'a-1', title: 'A1', type: 'Preprint' }],
+        },
+      ];
+
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={teams}
+        />,
+      );
+      await userEvent.click(screen.getByText('Collaborators (1)'));
+
+      expect(screen.getByRole('link', { name: 'Team XYZ' })).toHaveAttribute(
+        'href',
+        '/network/teams/team-xyz',
+      );
     });
   });
 });

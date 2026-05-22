@@ -395,6 +395,97 @@ describe('ProjectContentfulDataProvider', () => {
         original: '2025-04-01T00:00:00.000Z',
       });
     });
+
+    describe('funded team research outputs pagination', () => {
+      const makeArticle = (i: number, coauthorTeamId: string) => ({
+        sys: { id: `ro-${i}` },
+        title: `Article ${i}`,
+        documentType: 'Article',
+        type: 'Preprint',
+        teamsCollection: {
+          items: [
+            { sys: { id: 'team-1' }, displayName: 'Funded' },
+            { sys: { id: coauthorTeamId }, displayName: coauthorTeamId },
+          ],
+        },
+      });
+
+      const setFundedTeamResearchOutputsWithTotal = (
+        graphqlItem: ReturnType<typeof getDiscoveryProjectDetailGraphqlItem>,
+        items: unknown[],
+        total: number,
+      ) => {
+        const teamMember = (graphqlItem as Record<string, unknown>)
+          .membersCollection as {
+          items: Array<{ projectMember: Record<string, unknown> }>;
+        };
+        const team = teamMember.items.find(
+          (m) =>
+            (m.projectMember as { __typename?: string }).__typename === 'Teams',
+        );
+        const existing =
+          (team!.projectMember.linkedFrom as Record<string, unknown>) || {};
+        team!.projectMember.linkedFrom = {
+          ...existing,
+          researchOutputsCollection: { total, items },
+        };
+      };
+
+      it('does not request additional pages when total fits in first page', async () => {
+        const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
+        const firstPage = Array.from({ length: 3 }, (_, i) =>
+          makeArticle(i, 'team-a'),
+        );
+        setFundedTeamResearchOutputsWithTotal(graphqlItem, firstPage, 3);
+        contentfulClientMock.request.mockResolvedValueOnce({
+          projects: graphqlItem,
+        });
+
+        await dataProvider.fetchById('discovery-1');
+
+        expect(contentfulClientMock.request).toHaveBeenCalledTimes(1);
+      });
+
+      it('paginates remaining pages and merges all collaborating teams', async () => {
+        const graphqlItem = getDiscoveryProjectDetailGraphqlItem();
+        const firstPage = Array.from({ length: 50 }, (_, i) =>
+          makeArticle(i, 'team-a'),
+        );
+        setFundedTeamResearchOutputsWithTotal(graphqlItem, firstPage, 75);
+
+        contentfulClientMock.request.mockResolvedValueOnce({
+          projects: graphqlItem,
+        });
+        contentfulClientMock.request.mockResolvedValueOnce({
+          teams: {
+            linkedFrom: {
+              researchOutputsCollection: {
+                total: 75,
+                items: Array.from({ length: 25 }, (_, i) =>
+                  makeArticle(50 + i, 'team-b'),
+                ),
+              },
+            },
+          },
+        });
+
+        const result = await dataProvider.fetchById('discovery-1');
+
+        expect(contentfulClientMock.request).toHaveBeenCalledTimes(2);
+        expect(contentfulClientMock.request).toHaveBeenLastCalledWith(
+          expect.anything(),
+          { teamId: 'team-1', limit: 50, skip: 50 },
+        );
+
+        const collaboratingTeams =
+          (result as { collaboratingTeams?: Array<{ id: string }> })
+            .collaboratingTeams ?? [];
+        expect(collaboratingTeams.map((t) => t.id).sort()).toEqual([
+          'team-a',
+          'team-b',
+        ]);
+      });
+    });
   });
 
   it('parses each concrete project type into the expected model', () => {

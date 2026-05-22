@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { ComponentProps } from 'react';
+import { ComponentProps, forwardRef } from 'react';
 
 import { Avatar, Paragraph } from '../atoms';
 import { chevronDownIcon, chevronUpIcon, verticalDividerIcon } from '../icons';
@@ -32,37 +32,45 @@ type UserMenuButtonProps = {
     ? 'avatarUrl'
     : K]: AvatarProps[K];
 };
-const UserMenuButton: React.FC<UserMenuButtonProps> = ({
-  onClick = noop,
-  open = false,
-  displayName = 'Unknown User',
-  firstName = 'Unknown',
-  lastName = 'User',
-  avatarUrl,
-  children,
-}) => (
-  <button
-    aria-label="Toggle User Menu"
-    css={[buttonResetStyles, styles]}
-    onClick={(event) => {
-      onClick();
-      event.preventDefault();
-    }}
-  >
-    <Paragraph>
-      <strong css={{ paddingRight: rem(15) }}>{children || displayName}</strong>
-    </Paragraph>
-    <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
-    <div
-      css={{
-        paddingLeft: rem(12),
-        paddingRight: rem(9),
+const UserMenuButton = forwardRef<HTMLButtonElement, UserMenuButtonProps>(
+  (
+    {
+      onClick = noop,
+      open = false,
+      displayName = 'Unknown User',
+      firstName = 'Unknown',
+      lastName = 'User',
+      avatarUrl,
+      children,
+    },
+    ref,
+  ) => (
+    <button
+      ref={ref}
+      aria-label="Toggle User Menu"
+      css={[buttonResetStyles, styles]}
+      onClick={(event) => {
+        onClick();
+        event.preventDefault();
       }}
     >
-      {verticalDividerIcon}
-    </div>
-    {open ? chevronUpIcon : chevronDownIcon}
-  </button>
+      <Paragraph>
+        <strong css={{ paddingRight: rem(15) }}>
+          {children || displayName}
+        </strong>
+      </Paragraph>
+      <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
+      <div
+        css={{
+          paddingLeft: rem(12),
+          paddingRight: rem(9),
+        }}
+      >
+        {verticalDividerIcon}
+      </div>
+      {open ? chevronUpIcon : chevronDownIcon}
+    </button>
+  ),
 );
 
 export default UserMenuButton;

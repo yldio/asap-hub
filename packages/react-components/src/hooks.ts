@@ -116,3 +116,24 @@ export const useInterval = (
     return () => clearTimeout(timeoutId);
   }, [delay]);
 };
+
+/**
+ * Calls `onOutside` when a `mousedown` happens outside every provided ref.
+ * The listener is only attached while `enabled` is true.
+ */
+export const useClickOutside = (
+  refs: ReadonlyArray<RefObject<HTMLElement>>,
+  onOutside: () => void,
+  enabled: boolean,
+): void => {
+  useEffect(() => {
+    if (!enabled) return undefined;
+    const handleMouseDown = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (refs.some((ref) => ref.current?.contains(target))) return;
+      onOutside();
+    };
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => document.removeEventListener('mousedown', handleMouseDown);
+  }, [enabled, onOutside, refs]);
+};

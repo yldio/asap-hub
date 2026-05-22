@@ -76,19 +76,39 @@ it('renders a menu button that toggles the drawer', async () => {
   expect(queryByTitle(/close/i)).not.toBeInTheDocument();
 });
 
-it('renders a user menu button that toggles the drawer', async () => {
-  const { getByLabelText } = render(
+it('renders a user menu button that toggles the user menu', async () => {
+  const { getByLabelText, queryByTitle } = render(
     <MemoryRouter>
       <Layout {...props} />
     </MemoryRouter>,
   );
-  expect(getByLabelText(/close/i)).not.toBeVisible();
+  expect(queryByTitle('Chevron Up')).not.toBeInTheDocument();
 
   await userEvent.click(getByLabelText(/toggle.+user menu/i));
-  expect(getByLabelText(/close/i)).toBeVisible();
+  expect(queryByTitle('Chevron Up')).toBeInTheDocument();
 
   await userEvent.click(getByLabelText(/toggle.+user menu/i));
-  expect(getByLabelText(/close/i)).not.toBeVisible();
+  expect(queryByTitle('Chevron Up')).not.toBeInTheDocument();
+});
+
+it('closes the user menu when clicking outside of it', async () => {
+  const { getByLabelText, getByText, getByTestId, queryByTitle } = render(
+    <MemoryRouter>
+      <Layout {...props}>Content</Layout>
+    </MemoryRouter>,
+  );
+
+  await userEvent.click(getByLabelText(/toggle.+user menu/i));
+  expect(queryByTitle('Chevron Up')).toBeInTheDocument();
+
+  await userEvent.click(getByText('Content'));
+  expect(queryByTitle('Chevron Up')).not.toBeInTheDocument();
+
+  await userEvent.click(getByLabelText(/toggle.+user menu/i));
+  expect(queryByTitle('Chevron Up')).toBeInTheDocument();
+
+  await userEvent.click(getByTestId('menu-header-testid'));
+  expect(queryByTitle('Chevron Up')).not.toBeInTheDocument();
 });
 
 it('closes the drawer when clicking the overlay', async () => {

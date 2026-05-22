@@ -22,7 +22,7 @@ it('renders a labeled button when no file is selected', () => {
   );
   expect(screen.getByLabelText(/Title/i)).toBeVisible();
   expect(screen.getByLabelText(/Subtitle/i)).toBeVisible();
-  expect(screen.getByLabelText(/Description/i)).toBeVisible();
+  expect(screen.getByText(/Description/i)).toBeVisible();
   expect(screen.getByText('Add File')).toBeVisible();
 });
 
@@ -193,6 +193,37 @@ it('calls the onRemove function when the remove button is clicked and allows for
   });
   await userEvent.upload(uploadInput, differentFile);
   expect(handleFileUploadMock).toHaveBeenCalledTimes(2);
+});
+
+it('renders the description outside the label to prevent unintended button activation', () => {
+  render(
+    <LabeledFileField
+      title="Title"
+      description="Description"
+      handleFileUpload={handleFileUploadMock}
+      enabled
+    />,
+  );
+  expect(screen.getByText('Description').closest('label')).toBeNull();
+});
+
+it('does not open file picker when clicking the description text', async () => {
+  const user = userEvent.setup();
+  render(
+    <LabeledFileField
+      title="Title"
+      description="Description"
+      handleFileUpload={handleFileUploadMock}
+      placeholder="Upload File"
+      enabled
+    />,
+  );
+  const uploadInput = screen.getByLabelText(/Upload File/i);
+  const clickSpy = jest.spyOn(uploadInput, 'click');
+
+  await user.click(screen.getByText('Description'));
+
+  expect(clickSpy).not.toHaveBeenCalled();
 });
 
 it('trigger file upload when clicking on the add file button', async () => {

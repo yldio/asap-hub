@@ -59,9 +59,6 @@ const collaboratorRowStyles = css({
   ':first-of-type': {
     borderTop: 'none',
   },
-  ':last-of-type': {
-    borderBottom: `1px solid ${steel.rgb}`,
-  },
 });
 
 const collaboratorHeaderStyles = css({
@@ -134,7 +131,10 @@ const emptyStateStyles = css({
 const viewMoreContainerStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  paddingTop: rem(16),
+  marginTop: rem(16),
+  paddingTop: rem(14),
+  marginBottom: `-${rem(14)}`,
+  borderTop: `1px solid ${steel.rgb}`,
 });
 
 const INITIAL_COLLABORATORS_COUNT = 10;

@@ -7,7 +7,8 @@ import { Button, Card, Headline3, Link, Pill, TabButton } from '../atoms';
 import { lead, steel } from '../colors';
 import {
   article as articleIcon,
-  TeamIcon,
+  DiscoveryTeamIcon,
+  ResourceTeamIcon,
   InactiveBadgeIcon,
   chevronUpIcon,
   chevronDownIcon,
@@ -55,6 +56,9 @@ const collaboratorsListStyles = css({
 
 const collaboratorRowStyles = css({
   borderTop: `1px solid ${steel.rgb}`,
+  ':first-of-type': {
+    borderTop: 'none',
+  },
   ':last-of-type': {
     borderBottom: `1px solid ${steel.rgb}`,
   },
@@ -159,9 +163,10 @@ export const memberTabs = ['Project Members'] as const;
 export type Tabs = (typeof tabs)[number];
 export type MemberTabs = (typeof memberTabs)[number];
 
-const CollaboratingTeamRow: React.FC<{ team: CollaboratingTeam }> = ({
-  team,
-}) => {
+const CollaboratingTeamRow: React.FC<{
+  team: CollaboratingTeam;
+  TeamTypeIcon: React.FC;
+}> = ({ team, TeamTypeIcon }) => {
   const [expanded, setExpanded] = useState(false);
   const articleCount = team.articles.length;
 
@@ -175,7 +180,7 @@ const CollaboratingTeamRow: React.FC<{ team: CollaboratingTeam }> = ({
       >
         <span css={collaboratorHeaderLeftStyles}>
           <span aria-hidden="true">
-            <TeamIcon />
+            <TeamTypeIcon />
           </span>
           <span css={collaboratorNameStyles}>
             <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
@@ -259,6 +264,10 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
       ? collaboratingTeams ?? []
       : (collaboratingTeams ?? []).slice(0, INITIAL_COLLABORATORS_COUNT);
   const hasMoreCollaborators = collaboratorsCount > INITIAL_COLLABORATORS_COUNT;
+  const TeamTypeIcon =
+    fundedTeam.teamType === 'Resource Team'
+      ? ResourceTeamIcon
+      : DiscoveryTeamIcon;
 
   return (
     <Card padding={false}>
@@ -308,7 +317,11 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
             <>
               <div css={collaboratorsListStyles}>
                 {visibleCollaborators.map((team) => (
-                  <CollaboratingTeamRow key={team.id} team={team} />
+                  <CollaboratingTeamRow
+                    key={team.id}
+                    team={team}
+                    TeamTypeIcon={TeamTypeIcon}
+                  />
                 ))}
               </div>
               {hasMoreCollaborators && (

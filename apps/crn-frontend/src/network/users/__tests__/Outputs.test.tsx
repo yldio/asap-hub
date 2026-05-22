@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
@@ -197,22 +197,21 @@ it('triggers export with the same parameters and custom filename', async () => {
     }),
   );
 
-  await act(async () => {
-    await userEvent.click(getByText(/csv/i));
-  });
-  await waitFor(() => {
-    expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
-      expect.stringMatching(/SharedOutputs_JohnSmith_\d+\.csv/),
-      expect.anything(),
-    );
-  });
-  await waitFor(() =>
-    expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
-      searchQuery,
-      filters,
-      userId,
-      currentPage: 0,
-      pageSize: MAX_ALGOLIA_RESULTS,
-    }),
+  const csvButton = getByText(/csv/i).closest('button');
+  await userEvent.click(getByText(/csv/i));
+  // ExportButton disables the button while the export is in flight; wait for
+  // it to re-enable so the trailing setLoading(false) is flushed inside act.
+  await waitFor(() => expect(csvButton).toBeEnabled());
+
+  expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
+    expect.stringMatching(/SharedOutputs_JohnSmith_\d+\.csv/),
+    expect.anything(),
   );
+  expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
+    searchQuery,
+    filters,
+    userId,
+    currentPage: 0,
+    pageSize: MAX_ALGOLIA_RESULTS,
+  });
 });

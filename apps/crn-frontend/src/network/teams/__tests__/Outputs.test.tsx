@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   createListResearchOutputResponse,
@@ -204,24 +204,23 @@ it('triggers export with the same parameters and custom file name', async () => 
   );
 
   const csvButton = await findByText(/csv/i);
-  await act(async () => {
-    await userEvent.click(csvButton);
-  });
-  await waitFor(() => {
-    expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
-      expect.stringMatching(/SharedOutputs_Team_ExampleTeam123_\d+\.csv/),
-      expect.anything(),
-    );
-  });
-  await waitFor(() =>
-    expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
-      searchQuery,
-      filters,
-      teamId,
-      currentPage: 0,
-      pageSize: CARD_VIEW_PAGE_SIZE,
-    }),
+  const csvButtonEl = csvButton.closest('button');
+  await userEvent.click(csvButton);
+  // ExportButton disables the button while the export is in flight; wait for
+  // it to re-enable so the trailing setLoading(false) is flushed inside act.
+  await waitFor(() => expect(csvButtonEl).toBeEnabled());
+
+  expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
+    expect.stringMatching(/SharedOutputs_Team_ExampleTeam123_\d+\.csv/),
+    expect.anything(),
   );
+  expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
+    searchQuery,
+    filters,
+    teamId,
+    currentPage: 0,
+    pageSize: CARD_VIEW_PAGE_SIZE,
+  });
 });
 
 it('triggers draft research output export with custom file name', async () => {
@@ -243,20 +242,22 @@ it('triggers draft research output export with custom file name', async () => {
     true,
   );
 
-  await userEvent.click(getByText(/csv/i));
-  await waitFor(() =>
-    expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
-      {
-        searchQuery: '',
-        filters,
-        teamId,
-        draftsOnly: true,
-        userAssociationMember: true,
-        currentPage: 0,
-        pageSize: MAX_CONTENTFUL_RESULTS,
-      },
-      expect.anything(),
-    ),
+  const csvBtn = getByText(/csv/i);
+  const csvBtnEl = csvBtn.closest('button');
+  await userEvent.click(csvBtn);
+  await waitFor(() => expect(csvBtnEl).toBeEnabled());
+
+  expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
+    {
+      searchQuery: '',
+      filters,
+      teamId,
+      draftsOnly: true,
+      userAssociationMember: true,
+      currentPage: 0,
+      pageSize: MAX_CONTENTFUL_RESULTS,
+    },
+    expect.anything(),
   );
   expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
     expect.stringMatching(/SharedOutputs_Drafts_Team_Team123_\d+\.csv/),

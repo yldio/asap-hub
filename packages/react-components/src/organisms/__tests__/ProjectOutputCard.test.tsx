@@ -26,7 +26,14 @@ it('renders projects with clickable link when href present', () => {
   const { getByRole } = render(
     <ProjectOutputCard
       {...baseProps}
-      projects={[{ id: 'p1', title: 'My Project', href: '/projects/p1' }]}
+      projects={[
+        {
+          id: 'p1',
+          title: 'My Project',
+          projectType: 'discovery',
+          href: '/projects/p1',
+        },
+      ]}
     />,
   );
   const link = getByRole('link', { name: 'My Project' });
@@ -37,7 +44,9 @@ it('renders projects as plain text when href absent', () => {
   const { getByText, queryByRole } = render(
     <ProjectOutputCard
       {...baseProps}
-      projects={[{ id: 'p1', title: 'No-link Project' }]}
+      projects={[
+        { id: 'p1', title: 'No-link Project', projectType: 'discovery' },
+      ]}
     />,
   );
   expect(getByText('No-link Project')).toBeVisible();

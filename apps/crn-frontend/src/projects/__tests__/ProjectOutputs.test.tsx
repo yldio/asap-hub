@@ -93,7 +93,14 @@ describe('Draft outputs', () => {
         created: new Date(2024, 0, 1).toISOString(),
         addedDate: new Date(2024, 0, 1).toISOString(),
         source: 'project',
-        projects: [{ id: 'p1', title: 'Project Alpha', href: '/projects/p1' }],
+        projects: [
+          {
+            id: 'p1',
+            title: 'Project Alpha',
+            projectType: 'discovery',
+            href: '/projects/p1',
+          },
+        ],
       },
     ]);
     renderProjectOutputs(true);
@@ -118,7 +125,14 @@ describe('Pagination and view', () => {
     created: new Date(2024, 0, 1).toISOString(),
     addedDate: new Date(2024, 0, 1).toISOString(),
     source: 'project' as const,
-    projects: [{ id: 'p1', title: 'Project Alpha', href: '/projects/p1' }],
+    projects: [
+      {
+        id: 'p1',
+        title: 'Project Alpha',
+        projectType: 'discovery',
+        href: '/projects/p1',
+      },
+    ],
   });
 
   it('paginates outputs into pages of the card page size', () => {

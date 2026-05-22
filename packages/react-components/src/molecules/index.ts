@@ -63,7 +63,7 @@ export { default as ProjectDuration } from './ProjectDuration';
 export { default as ProjectMemberCard } from './ProjectMemberCard';
 export { default as ProjectMembers } from './ProjectMembers';
 export { default as ProjectOutputBody } from './ProjectOutputBody';
-export type { ProjectOutput } from './ProjectOutputBody';
+export type { ProjectOutput, ProjectOutputType } from './ProjectOutputBody';
 export { default as ReminderItem } from './ReminderItem';
 export { default as SearchField } from './SearchField';
 export { default as SocialIcons } from './SocialIcons';

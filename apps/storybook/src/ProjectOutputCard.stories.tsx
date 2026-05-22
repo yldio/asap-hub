@@ -13,16 +13,19 @@ export default {
 const PROJECT_ALPHA = {
   id: 'p1',
   title: 'Project Alpha',
+  projectType: 'discovery' as const,
   href: '/projects/discovery/p1',
 };
 const PROJECT_BETA = {
   id: 'p2',
   title: 'Cross-cohort Synuclein Imaging',
+  projectType: 'resource' as const,
   href: '/projects/resource/p2',
 };
 const PROJECT_GAMMA = {
   id: 'p3',
   title: 'Neuro-immune Trainee Initiative',
+  projectType: 'trainee' as const,
   href: '/projects/trainee/p3',
 };
 const PROJECT_POOL = [PROJECT_ALPHA, PROJECT_BETA, PROJECT_GAMMA];

@@ -13,6 +13,7 @@ export default {
 const projectAlpha = {
   id: 'p1',
   title: 'Project Alpha',
+  projectType: 'discovery' as const,
   href: '/projects/discovery/p1',
 };
 

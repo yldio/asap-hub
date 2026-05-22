@@ -41,11 +41,13 @@ const EXTRA_PROJECTS = [
   {
     id: 'mock-project-2',
     title: 'Cross-cohort Synuclein Imaging',
+    projectType: 'resource' as const,
     href: '/projects/resource/mock-project-2',
   },
   {
     id: 'mock-project-3',
     title: 'Neuro-immune Trainee Initiative',
+    projectType: 'trainee' as const,
     href: '/projects/trainee/mock-project-3',
   },
 ];
@@ -53,6 +55,7 @@ const EXTRA_PROJECTS = [
 const currentProject = (id: string, title: string) => ({
   id,
   title,
+  projectType: 'discovery' as const,
   href: `/projects/discovery/${id}`,
 });
 

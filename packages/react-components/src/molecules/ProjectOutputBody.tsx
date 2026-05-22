@@ -10,10 +10,22 @@ import TagList from './TagList';
 import UsersList from './UsersList';
 import { formatDate } from '../date';
 import { rem } from '../pixels';
-import { DiscoveryProjectIcon, TeamIcon } from '../icons';
+import {
+  DiscoveryProjectIcon,
+  ResourceProjectIcon,
+  TeamIcon,
+  TraineeProjectIcon,
+} from '../icons';
 
-const PROJECT_ICON = <DiscoveryProjectIcon />;
 const TEAM_ICON = <TeamIcon />;
+
+export type ProjectOutputType = 'discovery' | 'resource' | 'trainee';
+
+const PROJECT_ICONS: Record<ProjectOutputType, React.ReactElement> = {
+  discovery: <DiscoveryProjectIcon />,
+  resource: <ResourceProjectIcon />,
+  trainee: <TraineeProjectIcon />,
+};
 
 export type ProjectOutput = Pick<
   ResearchOutputResponse,
@@ -30,7 +42,12 @@ export type ProjectOutput = Pick<
   | 'isInReview'
   | 'keywords'
 > & {
-  projects?: ReadonlyArray<{ id: string; title: string; href?: string }>;
+  projects?: ReadonlyArray<{
+    id: string;
+    title: string;
+    projectType: ProjectOutputType;
+    href?: string;
+  }>;
   lastModifiedDate?: string;
   source?: 'team' | 'project';
 };
@@ -193,100 +210,109 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
   keywords,
   showTags = true,
   projects,
-}) => (
-  <>
-    <div css={metadataRowStyles}>
-      <PillList
-        small
-        pills={[
-          'Project',
-          ...(documentType ? [documentType] : []),
-          ...(type ? [type] : []),
-        ]}
-      />
-      {link && (
-        <ExternalLink href={link} label="Access Output" size="large" noMargin />
-      )}
-    </div>
-    <div css={titleStyles}>
-      {variant === 'card' ? (
-        <LinkHeadline
-          level={2}
-          styleAsHeading={4}
-          href={sharedResearch({}).researchOutput({ researchOutputId }).$}
-        >
-          {title}
-        </LinkHeadline>
-      ) : (
-        <Anchor
-          href={sharedResearch({}).researchOutput({ researchOutputId }).$}
-        >
-          <Headline2 styleAsHeading={5}>{title}</Headline2>
-        </Anchor>
-      )}
-      {!published && (
-        <StateTag
-          label={isInReview ? 'In Review' : 'Draft'}
-          accent={isInReview ? 'blue' : undefined}
+}) => {
+  const primaryProject = projects?.[0];
+
+  return (
+    <>
+      <div css={metadataRowStyles}>
+        <PillList
+          small
+          pills={[
+            'Project',
+            ...(documentType ? [documentType] : []),
+            ...(type ? [type] : []),
+          ]}
         />
-      )}
-    </div>
-    <UsersList
-      max={3}
-      noMargin
-      users={authors.map((author) => ({
-        ...author,
-        href:
-          'id' in author
-            ? network({}).users({}).user({ userId: author.id }).$
-            : /* istanbul ignore next */ undefined,
-      }))}
-    />
-    <div css={associationStyles}>
-      {projects && projects.length > 0 && (
-        <AssociationRow
-          icon={PROJECT_ICON}
-          max={1}
-          label="Projects"
-          items={projects.map(({ id, title: displayName, href }) => ({
-            id,
-            displayName,
-            href,
-          }))}
-        />
-      )}
-      {source === 'team' && teams.length > 0 && (
-        <AssociationRow
-          icon={TEAM_ICON}
-          max={3}
-          label="Teams"
-          separator="•"
-          items={teams.map(({ id, displayName }) => ({
-            id,
-            displayName: `Team ${displayName}`,
-            href: network({}).teams({}).team({ teamId: id }).$,
-          }))}
-        />
-      )}
-    </div>
-    {showTags && keywords.length > 0 && (
-      <div
-        css={variant === 'list' ? listTagContainerStyles : tagContainerStyles}
-      >
-        <TagList max={3} tags={keywords} />
+        {link && (
+          <ExternalLink
+            href={link}
+            label="Access Output"
+            size="large"
+            noMargin
+          />
+        )}
       </div>
-    )}
-    <div css={variant === 'list' ? listDatesStyles : datesStyles}>
-      <Caption accent={'lead'} asParagraph>
-        Date Added: {formatDate(new Date(addedDate || created))}
-      </Caption>
-      <Caption accent={'lead'} asParagraph>
-        <span css={dateSeparatorStyles}>• </span>
-        Last Updated:{' '}
-        {formatDate(new Date(lastModifiedDate || addedDate || created))}
-      </Caption>
-    </div>
-  </>
-);
+      <div css={titleStyles}>
+        {variant === 'card' ? (
+          <LinkHeadline
+            level={2}
+            styleAsHeading={4}
+            href={sharedResearch({}).researchOutput({ researchOutputId }).$}
+          >
+            {title}
+          </LinkHeadline>
+        ) : (
+          <Anchor
+            href={sharedResearch({}).researchOutput({ researchOutputId }).$}
+          >
+            <Headline2 styleAsHeading={5}>{title}</Headline2>
+          </Anchor>
+        )}
+        {!published && (
+          <StateTag
+            label={isInReview ? 'In Review' : 'Draft'}
+            accent={isInReview ? 'blue' : undefined}
+          />
+        )}
+      </div>
+      <UsersList
+        max={3}
+        noMargin
+        users={authors.map((author) => ({
+          ...author,
+          href:
+            'id' in author
+              ? network({}).users({}).user({ userId: author.id }).$
+              : /* istanbul ignore next */ undefined,
+        }))}
+      />
+      <div css={associationStyles}>
+        {primaryProject && (
+          <AssociationRow
+            icon={PROJECT_ICONS[primaryProject.projectType]}
+            max={1}
+            label="Projects"
+            items={(projects ?? []).map(({ id, title: displayName, href }) => ({
+              id,
+              displayName,
+              href,
+            }))}
+          />
+        )}
+        {source === 'team' && teams.length > 0 && (
+          <AssociationRow
+            icon={TEAM_ICON}
+            max={3}
+            label="Teams"
+            separator="•"
+            items={teams.map(({ id, displayName }) => ({
+              id,
+              displayName: `Team ${displayName}`,
+              href: network({}).teams({}).team({ teamId: id }).$,
+            }))}
+          />
+        )}
+      </div>
+      {showTags && keywords.length > 0 && (
+        <div
+          css={variant === 'list' ? listTagContainerStyles : tagContainerStyles}
+        >
+          <TagList max={3} tags={keywords} />
+        </div>
+      )}
+      <div css={variant === 'list' ? listDatesStyles : datesStyles}>
+        <Caption accent={'lead'} asParagraph>
+          Date Added: {formatDate(new Date(addedDate || created))}
+        </Caption>
+        <Caption accent={'lead'} asParagraph>
+          <span css={dateSeparatorStyles}>• </span>
+          Last Updated:{' '}
+          {formatDate(new Date(lastModifiedDate || addedDate || created))}
+        </Caption>
+      </div>
+    </>
+  );
+};
 
 export default ProjectOutputBody;

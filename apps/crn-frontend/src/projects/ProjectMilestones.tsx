@@ -95,12 +95,12 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
     [fetchExport, filters, projectName, searchQuery, selectedGrantType, sort],
   );
 
+  // "Full Dataset" intentionally omits grantType so the workbook contains
+  // every aim and milestone for the project across both Original and
+  // Supplement grants — that's the meaning the PO assigned to the name.
   const exportFullDataset = useCallback(
-    () =>
-      downloadProjectMilestonesXlsx(projectName, fetchExport, {
-        grantType: selectedGrantType,
-      }),
-    [fetchExport, projectName, selectedGrantType],
+    () => downloadProjectMilestonesXlsx(projectName, fetchExport, {}),
+    [fetchExport, projectName],
   );
 
   const downloadSection = (

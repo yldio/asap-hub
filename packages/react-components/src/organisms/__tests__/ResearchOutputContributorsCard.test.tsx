@@ -144,20 +144,20 @@ describe('Teams Multiselect', () => {
       <ResearchOutputContributorsCard
         {...props}
         teams={[
-          { label: 'One Team', value: '1' },
-          { label: 'Two Team', value: '2' },
+          { label: 'Team One', value: '1' },
+          { label: 'Team Two', value: '2' },
         ]}
       />,
     );
-    expect(getByText(/one team/i)).toBeVisible();
-    expect(getByText(/two team/i)).toBeVisible();
+    expect(getByText(/team one/i)).toBeVisible();
+    expect(getByText(/team two/i)).toBeVisible();
   });
   it('should be able to select from the list of options', async () => {
     const loadOptions = jest.fn();
     const mockOnChange = jest.fn();
     loadOptions.mockResolvedValue([
-      { label: 'One Team', value: '1' },
-      { label: 'Two Team', value: '2' },
+      { label: 'Team One', value: '1' },
+      { label: 'Team Two', value: '2' },
     ]);
 
     const { getByText, getByLabelText, queryByText } = render(
@@ -167,17 +167,17 @@ describe('Teams Multiselect', () => {
         onChangeTeams={mockOnChange}
       />,
     );
-    await userEvent.click(getByLabelText(/teams/i));
+    await userEvent.click(getByLabelText(/teams\(required\)/i));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );
-    await userEvent.click(getByText('One Team'));
+    await userEvent.click(getByText('Team One'));
     expect(mockOnChange).toHaveBeenCalledWith(
-      [{ label: 'One Team', value: '1' }],
+      [{ label: 'Team One', value: '1' }],
       {
         action: 'select-option',
         name: undefined,
-        option: { label: 'One Team', value: '1' },
+        option: { label: 'Team One', value: '1' },
       },
     );
   });
@@ -190,7 +190,7 @@ describe('Teams Multiselect', () => {
         getTeamSuggestions={loadOptions}
       />,
     );
-    await userEvent.click(getByLabelText(/Teams/i));
+    await userEvent.click(getByLabelText(/Teams\(required\)/i));
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );

@@ -119,19 +119,22 @@ const ResearchOutputFormSharingCard: React.FC<
     useState<string>();
   const [categoryValidationMessage, setCategoryValidationMessage] =
     useState<string>();
+  const [layImpactValidationMessage, setLayImpactValidationMessage] =
+    useState<string>();
 
   const subtypeSuggestions = researchTags.filter(
     (tag) => tag.category === 'Subtype',
   );
 
-  const validateFieldWith250CharLimit = (
+  const validateFieldWithCharLimit = (
     newValue: string,
     field: string,
+    limit: number,
     setValidationMessage: (message: string | undefined) => void,
   ) => {
     setValidationMessage(
-      newValue.length >= 250
-        ? `The ${field} exceeds the character limit. Please limit it to 250 characters.`
+      newValue.length >= limit
+        ? `The ${field} exceeds the character limit. Please limit it to ${limit} characters.`
         : newValue.trim().length === 0
           ? `Please enter a ${field}`
           : undefined,
@@ -275,6 +278,7 @@ const ResearchOutputFormSharingCard: React.FC<
         <LabeledDropdown
           title="Subtype"
           subtitle="(required)"
+          description="Select the subtype that matches your output the best."
           options={subtypeSuggestions.map((sub) => ({
             label: sub.name,
             value: sub.name,
@@ -290,7 +294,7 @@ const ResearchOutputFormSharingCard: React.FC<
       <LabeledTextEditor
         title="Description"
         subtitle="(required)"
-        tip="Add an abstract or a summary that describes this work."
+        tip="Add an abstract or a summary that describes this work. You can format your text by using markup language."
         onChange={onChangeDescription}
         getValidationMessage={() => 'Please enter a description'}
         required
@@ -307,15 +311,17 @@ const ResearchOutputFormSharingCard: React.FC<
       <ShortDescriptionCard
         onChange={(shortDescriptionNewValue) => {
           onChangeShortDescription(shortDescriptionNewValue);
-          validateFieldWith250CharLimit(
+          validateFieldWithCharLimit(
             shortDescriptionNewValue,
             'short description',
+            250,
             setShortDescriptionValidationMessage,
           );
         }}
         buttonEnabled={descriptionMD.length > 0}
         enabled={!isSaving}
         value={shortDescription}
+        tip="Use AI to generate a short description or write your own based on the description field above."
         getShortDescription={() =>
           getShortDescriptionFromDescription(descriptionMD)
         }
@@ -324,6 +330,32 @@ const ResearchOutputFormSharingCard: React.FC<
 
       {documentType === 'Article' && (
         <>
+          <LabeledMultiSelect
+            required
+            getValidationMessage={(validationState) =>
+              validationState.valueMissing
+                ? 'Please add at least one category.'
+                : 'You can select up to two categories only.'
+            }
+            title="Category"
+            description="Select up to two options that best describe the scientific category of this manuscript."
+            subtitle="(required)"
+            enabled={!isSaving && !isCreatingNewVersion}
+            placeholder="Start typing..."
+            loadOptions={getCategorySuggestions}
+            onChange={(newValues) => {
+              onChangeCategories(
+                newValues as MultiSelectOptionsType &
+                  OptionsType<MultiSelectOptionsType>,
+              );
+              validateCategories(newValues);
+            }}
+            customValidationMessage={categoryValidationMessage}
+            values={categories as OptionsType<MultiSelectOptionsType>}
+            noOptionsMessage={({ inputValue }) =>
+              `Sorry, no category options match ${inputValue}`
+            }
+          />
           <LabeledDropdown
             required
             getValidationMessage={() => 'Please choose an impact.'}
@@ -351,44 +383,23 @@ const ResearchOutputFormSharingCard: React.FC<
           />
           <LabeledTextArea
             value={layImpactStatement ?? ''}
-            onChange={onChangeLayImpactStatement}
+            onChange={(layImpactNewValue) => {
+              onChangeLayImpactStatement(layImpactNewValue);
+              validateFieldWithCharLimit(
+                layImpactNewValue,
+                'lay impact statement',
+                100,
+                setLayImpactValidationMessage,
+              );
+            }}
             enabled={!isSaving}
             required
-            maxLength={100}
             title="Lay Impact Statement"
             subtitle="(required)"
             tip={
-              <span>
-                Explain in plain language why this work matters and how it may
-                impact research, patients, or the wider community.
-              </span>
+              'Explain in plain language why this work matters and how it may impact research, patients, or the wider community.'
             }
-          />
-          <LabeledMultiSelect
-            required
-            getValidationMessage={(validationState) =>
-              validationState.valueMissing
-                ? 'Please add at least one category.'
-                : 'You can select up to two categories only.'
-            }
-            title="Category"
-            description="Select up to two options that best describe the scientific category of this manuscript."
-            subtitle="(required)"
-            enabled={!isSaving && !isCreatingNewVersion}
-            placeholder="Start typing..."
-            loadOptions={getCategorySuggestions}
-            onChange={(newValues) => {
-              onChangeCategories(
-                newValues as MultiSelectOptionsType &
-                  OptionsType<MultiSelectOptionsType>,
-              );
-              validateCategories(newValues);
-            }}
-            customValidationMessage={categoryValidationMessage}
-            values={categories as OptionsType<MultiSelectOptionsType>}
-            noOptionsMessage={({ inputValue }) =>
-              `Sorry, no category options match ${inputValue}`
-            }
+            customValidationMessage={layImpactValidationMessage}
           />
         </>
       )}
@@ -401,9 +412,10 @@ const ResearchOutputFormSharingCard: React.FC<
           value={changelog ?? ''}
           onChange={(changelogNewValue) => {
             onChangeChangelog(changelogNewValue);
-            validateFieldWith250CharLimit(
+            validateFieldWithCharLimit(
               changelogNewValue,
               'changelog',
+              250,
               setChangelogValidationMessage,
             );
           }}

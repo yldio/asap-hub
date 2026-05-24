@@ -65,7 +65,7 @@ const ResearchOutputFormSharingCard: React.FC<
     />
 
     <LabeledRadioButtonGroup
-      title="Has this output been used in a publication"
+      title="Has this output been used in a publication?"
       subtitle="(required)"
       options={[
         { value: 'Yes', label: 'Yes' },
@@ -110,7 +110,7 @@ const ResearchOutputFormSharingCard: React.FC<
 
     {sharingStatus === 'Public' ? (
       <LabeledDateField
-        title={'Public Repository Published Date (optional)'}
+        title={'Public Repository Published Date'}
         subtitle={'(optional)'}
         description={
           'This should be the date your output was shared publicly on its repository.'

@@ -138,7 +138,9 @@ const mandatoryFields = async (
     await screen.findByText('Person A 3', {}, { timeout: 5000 }),
   );
 
-  await user.click(screen.getByRole('combobox', { name: /Teams/i }));
+  await user.click(
+    screen.getByRole('combobox', { name: /Teams \(required\) /i }),
+  );
   await user.click(
     await screen.findByText('Abu-Remaileh, M 1', {}, { timeout: 5000 }),
   );
@@ -283,10 +285,10 @@ it('Renders the working group research output form with relevant fields', async 
     screen.getByRole('heading', { name: /Share a Working Group Article/i }),
   ).toBeInTheDocument();
   expect(
-    screen.getByRole('combobox', { name: 'Authors (required)' }),
+    screen.getByRole('combobox', { name: /Authors \(required\)/i }),
   ).toBeVisible();
   expect(
-    screen.getByText('Add an abstract or a summary that describes this work.'),
+    screen.getByText(/Add an abstract or a summary that describes this work./i),
   ).toBeVisible();
 });
 

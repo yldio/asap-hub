@@ -334,3 +334,22 @@ it('does not show impact validation message when impact is selected', async () =
     ).not.toBeInTheDocument();
   });
 });
+
+it('shows validation message when lay impact statement exceeds 100 characters', async () => {
+  render(
+    <ResearchOutputFormSharingCard {...defaultProps} documentType="Article" />,
+  );
+
+  const longText = 'a'.repeat(101);
+  const layImpactInput = screen.getByRole('textbox', {
+    name: /lay impact statement/i,
+  });
+  fireEvent.change(layImpactInput, { target: { value: longText } });
+  fireEvent.blur(layImpactInput);
+
+  expect(
+    await screen.findByText(
+      'The lay impact statement exceeds the character limit. Please limit it to 100 characters.',
+    ),
+  ).toBeInTheDocument();
+});

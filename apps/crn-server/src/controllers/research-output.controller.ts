@@ -263,6 +263,7 @@ export default class ResearchOutputController {
       usedInPublication: normalisedResearchOutputUpdateData.usedInPublication,
       workingGroups: normalisedResearchOutputUpdateData.workingGroups,
       impact: normalisedResearchOutputUpdateData.impact,
+      layImpactStatement: normalisedResearchOutputUpdateData.layImpactStatement,
       categories: normalisedResearchOutputUpdateData.categories,
       versions:
         currentResearchOutput?.versions?.map(

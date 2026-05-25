@@ -31,7 +31,7 @@ import {
   networkContentTopPadding,
 } from '../layout';
 import { Loading } from '../molecules';
-import { usePrevious } from '../hooks';
+import { usePrevious, useDismiss } from '../hooks';
 import { tagSearchIcon } from '../icons';
 import { rem } from '../pixels';
 import { Navigation } from '../atoms/NavigationLink';
@@ -244,11 +244,16 @@ const Layout: FC<LayoutProps> = ({
   canViewAnalytics,
   ...userNavProps
 }) => {
-  const [menuShown, setMenuShown] = useState(false);
+  // Mobile-only hamburger drawer (left side navigation)
+  const [drawerShown, setDrawerShown] = useState(false);
+  // Desktop user menu dropdown (top-right profile)
+  const [userMenuShown, setUserMenuShown] = useState(false);
 
   let location: ReturnType<typeof useLocation> | undefined;
   let prevLocation: ReturnType<typeof useLocation> | undefined;
   const mainRef = useRef<HTMLDivElement>(null);
+  const userButtonRef = useRef<HTMLButtonElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   // This hook *is* called unconditionally despite what rules-of-hooks says
   /* eslint-disable react-hooks/rules-of-hooks */
   try {
@@ -261,8 +266,15 @@ const Layout: FC<LayoutProps> = ({
   /* eslint-enable react-hooks/rules-of-hooks */
 
   useEffect(() => {
-    setMenuShown(false);
+    setDrawerShown(false);
+    setUserMenuShown(false);
   }, [location]);
+
+  useDismiss(
+    [userButtonRef, userMenuRef],
+    () => setUserMenuShown(false),
+    userMenuShown,
+  );
   useEffect(() => {
     if (location?.pathname !== prevLocation?.pathname && mainRef.current) {
       mainRef.current.scrollTo(0, 0);
@@ -281,21 +293,22 @@ const Layout: FC<LayoutProps> = ({
     <ToastStack>
       <article
         data-testid="layout-article-testid"
-        css={[styles, menuShown || { overflow: 'hidden' }]}
+        css={[styles, drawerShown || userMenuShown || { overflow: 'hidden' }]}
       >
         {/* order relevant for overlap */}
-        <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
+        <div css={[headerStyles, drawerShown && headerMenuShownStyles]}>
           <MenuHeader
             enabled={userNavProps.userOnboarded}
-            menuOpen={menuShown}
-            onToggleMenu={() => setMenuShown(!menuShown)}
+            menuOpen={drawerShown}
+            onToggleMenu={() => setDrawerShown((prev) => !prev)}
           />
         </div>
         <div css={userButtonStyles}>
           <Suspense fallback={<LoadingUserButton />}>
             <UserMenuButton
-              onClick={() => setMenuShown(!menuShown)}
-              open={menuShown}
+              ref={userButtonRef}
+              onClick={() => setUserMenuShown((prev) => !prev)}
+              open={userMenuShown}
               {...userNavProps}
             />
           </Suspense>
@@ -310,10 +323,10 @@ const Layout: FC<LayoutProps> = ({
             {children}
           </main>
         </ScrollContext.Provider>
-        <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
-          <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
+        <div css={[overlayStyles, drawerShown && overlayMenuShownStyles]}>
+          <Overlay shown={drawerShown} onClick={() => setDrawerShown(false)} />
         </div>
-        <div css={[menuStyles, menuShown && menuMenuShownStyles]}>
+        <div css={[menuStyles, drawerShown && menuMenuShownStyles]}>
           <div css={[mainMenuStyles]}>
             <Suspense fallback={<LoadingMenu />}>
               <MainNavigation
@@ -322,7 +335,13 @@ const Layout: FC<LayoutProps> = ({
               />
             </Suspense>
           </div>
-          <div css={[userMenuStyles, menuShown && userMenuShownStyles]}>
+          <div
+            css={[
+              userMenuStyles,
+              (drawerShown || userMenuShown) && userMenuShownStyles,
+            ]}
+            ref={userMenuRef}
+          >
             <Suspense fallback={<Loading />}>
               <UserNavigation {...userNavProps} />
             </Suspense>

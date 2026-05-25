@@ -116,3 +116,32 @@ export const useInterval = (
     return () => clearTimeout(timeoutId);
   }, [delay]);
 };
+
+/**
+ * Calls `onDismiss` when the user dismisses an open UI element — either by
+ * pressing ESC or clicking outside every provided ref. Listeners are only
+ * attached while `enabled` is true.
+ */
+export const useDismiss = (
+  refs: ReadonlyArray<RefObject<HTMLElement>>,
+  onDismiss: () => void,
+  enabled: boolean,
+): void => {
+  useEffect(() => {
+    if (!enabled) return undefined;
+    const handleMouseDown = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (refs.some((ref) => ref.current?.contains(target))) return;
+      onDismiss();
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onDismiss();
+    };
+    document.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [enabled, onDismiss, refs]);
+};

@@ -190,7 +190,10 @@ const AuthorRow: React.FC<AuthorRowProps> = ({ authors, max }) => {
       {visible.map((author, index) => {
         const isInternal = 'firstName' in author;
         return (
-          <span key={isInternal ? author.id : `ext-${index}`} css={authorItemStyles}>
+          <span
+            key={isInternal ? author.id : `ext-${index}`}
+            css={authorItemStyles}
+          >
             <Avatar
               firstName={isInternal ? author.firstName : undefined}
               lastName={isInternal ? author.lastName : undefined}
@@ -326,7 +329,9 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
           <Anchor
             href={sharedResearch({}).researchOutput({ researchOutputId }).$}
           >
-            <Headline2 styleAsHeading={5} noMargin>{title}</Headline2>
+            <Headline2 styleAsHeading={5} noMargin>
+              {title}
+            </Headline2>
           </Anchor>
         )}
         {!published && (

@@ -12,3 +12,9 @@ runs:
         path: |
           .yarn/unplugged/
         key: rebuild-output-${{ inputs.environment-name }}-${{ github.sha }}
+        # Unplugged deps are dependency binaries keyed by package version, not
+        # by source revision, so a previous commit's cache is a safe starting
+        # point. Without this fallback, any miss on the exact-SHA key forces a
+        # full cold rebuild (the ~36min vs ~3min warm-cache discrepancy).
+        restore-keys: |
+          rebuild-output-${{ inputs.environment-name }}-

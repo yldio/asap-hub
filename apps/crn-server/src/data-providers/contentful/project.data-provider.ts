@@ -507,12 +507,9 @@ export const parseCollaboratingTeams = (
       });
     });
 
-  return Array.from(teamsById.values())
-    .sort((a, b) => a.displayName.localeCompare(b.displayName))
-    .map((team) => ({
-      ...team,
-      articles: team.articles,
-    }));
+  return Array.from(teamsById.values()).sort((a, b) =>
+    a.displayName.localeCompare(b.displayName),
+  );
 };
 
 // Parse Contentful project to ProjectDetail format with all additional fields

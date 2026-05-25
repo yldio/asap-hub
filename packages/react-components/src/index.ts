@@ -144,6 +144,7 @@ export {
   ConfirmModal,
   CookiesModal,
   DashboardRecommendedUsers,
+  DashboardSection,
   DashboardUpcomingEvents,
   DeliverablesCard,
   DiscussionModal,

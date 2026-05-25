@@ -13,6 +13,7 @@ export { default as ConfirmModal } from './ConfirmModal';
 export { default as ComplianceAssignUsersModal } from './ComplianceAssignUsersModal';
 export { default as CookiesModal } from './CookiesModal';
 export { default as DashboardRecommendedUsers } from './DashboardRecommendedUsers';
+export { default as DashboardSection } from './DashboardSection';
 export { default as DashboardUpcomingEvents } from './DashboardUpcomingEvents';
 export { default as DeliverablesCard } from './DeliverablesCard';
 export { default as DiscussionsTab } from './DiscussionsTab';

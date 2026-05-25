@@ -1,12 +1,6 @@
 import { NetworkWorkingGroups } from '@asap-hub/react-components';
 import { useWorkingGroups } from './state';
-import {
-  CARD_VIEW_PAGE_SIZE,
-  usePagination,
-  usePaginationParams,
-} from '../../hooks';
-import { usePrefetchTeams } from '../teams/state';
-import { usePrefetchInterestGroups } from '../interest-groups/state';
+import { usePagination, usePaginationParams } from '../../hooks';
 
 interface NetworkWorkingGroupListProps {
   filters: Set<string>;
@@ -24,28 +18,6 @@ const NetworkWorkingGroupList: React.FC<NetworkWorkingGroupListProps> = ({
     currentPage,
     pageSize,
     filters,
-  });
-
-  usePrefetchTeams({
-    currentPage: 0,
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    searchQuery: '',
-    status: [],
-    teamType: 'Discovery Team',
-  });
-  usePrefetchTeams({
-    currentPage: 0,
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    searchQuery: '',
-    status: [],
-    teamType: 'Resource Team',
-  });
-
-  usePrefetchInterestGroups({
-    currentPage: 0,
-    pageSize,
-    searchQuery,
-    filters: new Set(),
   });
 
   const { numberOfPages, renderPageHref } = usePagination(

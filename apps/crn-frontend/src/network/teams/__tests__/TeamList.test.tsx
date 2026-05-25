@@ -121,26 +121,6 @@ describe.each([
     });
   });
 
-  it('prefetches the opposite team type', async () => {
-    mockGetAlgoliaTeams.mockResolvedValue(createListTeamResponse(0));
-
-    await renderTeamList(route, teamType);
-
-    const oppositeTeamType =
-      teamType === 'Resource Team' ? 'Discovery Team' : 'Resource Team';
-
-    await waitFor(() => {
-      expect(mockGetAlgoliaTeams).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          teamType: oppositeTeamType,
-          currentPage: 0,
-          searchQuery: '',
-        }),
-      );
-    });
-  });
-
   it('renders error message when the response is not a 2XX', async () => {
     const errorText = 'error fetching teams';
     mockGetAlgoliaTeams.mockRejectedValueOnce(new Error(errorText));

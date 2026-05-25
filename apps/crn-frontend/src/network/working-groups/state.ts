@@ -10,7 +10,6 @@ import {
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { useAlgolia } from '../../hooks/algolia';
 import { getWorkingGroup, getWorkingGroups } from './api';
@@ -98,22 +97,6 @@ export const workingGroupListState = atomFamily<
 
 export const useWorkingGroupById = (id: string) =>
   useRecoilValue(workingGroupState(id));
-
-export const usePrefetchWorkingGroups = (options: GetListOptions) => {
-  const algoliaClient = useAlgolia();
-
-  const [workingGroups, setWorkingGroups] = useRecoilState(
-    workingGroupsState(options),
-  );
-  useDeepCompareEffect(() => {
-    if (workingGroups === undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      getWorkingGroups(algoliaClient.client, options)
-        .then(setWorkingGroups)
-        .catch();
-    }
-  }, [workingGroups, options, setWorkingGroups]);
-};
 
 export const useWorkingGroups = (options: GetListOptions) => {
   const [workingGroups, setWorkingGroups] = useRecoilState(

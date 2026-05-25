@@ -29,7 +29,6 @@ import {
   useRecoilValue,
   useSetRecoilState,
 } from 'recoil';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import { authorizationState } from '../../auth/state';
 import { useAlgolia } from '../../hooks/algolia';
 import { getPresignedUrl } from '../../shared-api/files';
@@ -148,17 +147,6 @@ export const teamListState = atomFamily<
   default: undefined,
 });
 
-export const usePrefetchTeams = (options: GetTeamsListOptions) => {
-  const algoliaClient = useAlgolia();
-  const [teams, setTeams] = useRecoilState(teamsState(options));
-
-  useDeepCompareEffect(() => {
-    if (teams === undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      getAlgoliaTeams(algoliaClient.client, options).then(setTeams).catch();
-    }
-  }, [options, teams, setTeams]);
-};
 export const useTeams = (options: GetTeamsListOptions): ListTeamResponse => {
   const algoliaClient = useAlgolia();
   const [teams, setTeams] = useRecoilState(teamsState(options));

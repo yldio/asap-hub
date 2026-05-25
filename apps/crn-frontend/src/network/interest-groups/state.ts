@@ -10,10 +10,8 @@ import {
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 
 import { authorizationState } from '../../auth/state';
-import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { getInterestGroup, getInterestGroups } from './api';
 
 const interestGroupIndexState = atomFamily<
@@ -95,25 +93,6 @@ export const interestGroupListState = atomFamily<
   default: interestGroupState,
 });
 
-export const usePrefetchInterestGroups = (
-  options: GetListOptions = {
-    filters: new Set(),
-    searchQuery: '',
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    currentPage: 0,
-  },
-) => {
-  const authorization = useRecoilValue(authorizationState);
-  const [interestGroups, setInterestGroups] = useRecoilState(
-    interestGroupsState(options),
-  );
-  useDeepCompareEffect(() => {
-    if (interestGroups === undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      getInterestGroups(options, authorization).then(setInterestGroups).catch();
-    }
-  }, [authorization, interestGroups, options, setInterestGroups]);
-};
 export const useInterestGroups = (options: GetListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [interestGroups, setInterestGroups] = useRecoilState(

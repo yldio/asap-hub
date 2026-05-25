@@ -7,10 +7,10 @@ import ExternalLink from './ExternalLink';
 import LinkHeadline from './LinkHeadline';
 import PillList from './PillList';
 import TagList from './TagList';
-import UsersList from './UsersList';
 import { formatDate } from '../date';
 import { rem } from '../pixels';
 import {
+  alumniBadgeIcon,
   DiscoveryProjectIcon,
   ResourceProjectIcon,
   TeamIcon,
@@ -67,16 +67,21 @@ const metadataRowStyles = css({
   height: rem(32),
 });
 
-const listTagContainerStyles = css({
-  marginTop: rem(24),
-});
-
-const listDatesStyles = css({
+const externalLinkWrapperStyles = css({
   display: 'flex',
-  flexWrap: 'wrap',
-  columnGap: rem(12),
-  '& > *': {
-    lineHeight: rem(16),
+  alignItems: 'center',
+  height: rem(32),
+  '& > div': {
+    height: '100%',
+  },
+  '& a': {
+    display: 'flex',
+    alignItems: 'center',
+    height: '100%',
+  },
+  '& a > span': {
+    height: '100%',
+    boxSizing: 'border-box',
   },
 });
 
@@ -104,16 +109,22 @@ const associationBulletStyles = css({
   marginLeft: rem(8),
 });
 
-const counterStyles = css({
+const counterBaseStyles = css({
   display: 'inline-flex',
   alignItems: 'center',
   columnGap: rem(8),
-  marginLeft: rem(8),
+});
+
+const associationCounterStyles = css(counterBaseStyles, {
+  marginLeft: rem(32),
 });
 
 const counterAvatarStyles = css({
   width: rem(24),
   flex: 'none',
+  '& > p': {
+    margin: 0,
+  },
 });
 
 const titleStyles = css({
@@ -121,8 +132,8 @@ const titleStyles = css({
   columnGap: rem(15),
   flexWrap: 'wrap',
   alignItems: 'center',
-  marginTop: rem(16),
-  marginBottom: rem(16),
+  marginTop: rem(4),
+  marginBottom: rem(4),
 });
 
 const tagContainerStyles = css({
@@ -142,6 +153,73 @@ const datesStyles = css({
 const dateSeparatorStyles = css({
   alignSelf: 'center',
 });
+
+const authorRowStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  columnGap: rem(40),
+  rowGap: rem(8),
+});
+
+const authorItemStyles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  columnGap: rem(8),
+  '& > div:first-of-type': {
+    width: rem(24),
+    height: rem(24),
+    flex: 'none',
+    margin: 0,
+    '& > p': {
+      margin: 0,
+    },
+  },
+});
+
+type AuthorRowProps = {
+  authors: ProjectOutput['authors'];
+  max: number;
+};
+
+const AuthorRow: React.FC<AuthorRowProps> = ({ authors, max }) => {
+  const visible = authors.slice(0, max);
+  const remaining = authors.length - visible.length;
+  return (
+    <div css={authorRowStyles}>
+      {visible.map((author, index) => {
+        const isInternal = 'firstName' in author;
+        return (
+          <span key={isInternal ? author.id : `ext-${index}`} css={authorItemStyles}>
+            <Avatar
+              firstName={isInternal ? author.firstName : undefined}
+              lastName={isInternal ? author.lastName : undefined}
+              imageUrl={isInternal ? author.avatarUrl : undefined}
+            />
+            {isInternal ? (
+              <Link href={network({}).users({}).user({ userId: author.id }).$}>
+                {author.displayName}
+              </Link>
+            ) : (
+              author.displayName
+            )}
+            {isInternal && author.alumniSinceDate && (
+              <span css={{ display: 'inline-flex' }}>{alumniBadgeIcon}</span>
+            )}
+          </span>
+        );
+      })}
+      {remaining > 0 && (
+        <span css={counterBaseStyles}>
+          <span css={counterAvatarStyles}>
+            <Avatar placeholder={`+${remaining}`} />
+          </span>
+          <span>Authors</span>
+        </span>
+      )}
+    </div>
+  );
+};
 
 type AssociationRowProps = {
   icon: React.ReactNode;
@@ -176,7 +254,7 @@ const AssociationRow: React.FC<AssociationRowProps> = ({
         </span>
       ))}
       {remaining > 0 && (
-        <span css={counterStyles}>
+        <span css={associationCounterStyles}>
           <span css={counterAvatarStyles}>
             <Avatar placeholder={`+${remaining}`} />
           </span>
@@ -225,12 +303,14 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
           ]}
         />
         {link && (
-          <ExternalLink
-            href={link}
-            label="Access Output"
-            size="large"
-            noMargin
-          />
+          <div css={externalLinkWrapperStyles}>
+            <ExternalLink
+              href={link}
+              label="Access Output"
+              size="large"
+              noMargin
+            />
+          </div>
         )}
       </div>
       <div css={titleStyles}>
@@ -246,7 +326,7 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
           <Anchor
             href={sharedResearch({}).researchOutput({ researchOutputId }).$}
           >
-            <Headline2 styleAsHeading={5}>{title}</Headline2>
+            <Headline2 styleAsHeading={5} noMargin>{title}</Headline2>
           </Anchor>
         )}
         {!published && (
@@ -256,17 +336,7 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
           />
         )}
       </div>
-      <UsersList
-        max={3}
-        noMargin
-        users={authors.map((author) => ({
-          ...author,
-          href:
-            'id' in author
-              ? network({}).users({}).user({ userId: author.id }).$
-              : /* istanbul ignore next */ undefined,
-        }))}
-      />
+      <AuthorRow authors={authors} max={3} />
       <div css={associationStyles}>
         {primaryProject && (
           <AssociationRow
@@ -295,17 +365,15 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
         )}
       </div>
       {showTags && keywords.length > 0 && (
-        <div
-          css={variant === 'list' ? listTagContainerStyles : tagContainerStyles}
-        >
+        <div css={tagContainerStyles}>
           <TagList max={3} tags={keywords} />
         </div>
       )}
-      <div css={variant === 'list' ? listDatesStyles : datesStyles}>
-        <Caption accent={'lead'} asParagraph>
+      <div css={datesStyles}>
+        <Caption accent={'lead'} asParagraph noMargin>
           Date Added: {formatDate(new Date(addedDate || created))}
         </Caption>
-        <Caption accent={'lead'} asParagraph>
+        <Caption accent={'lead'} asParagraph noMargin>
           <span css={dateSeparatorStyles}>• </span>
           Last Updated:{' '}
           {formatDate(new Date(lastModifiedDate || addedDate || created))}

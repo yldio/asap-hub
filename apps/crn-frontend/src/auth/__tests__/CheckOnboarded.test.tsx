@@ -42,7 +42,7 @@ const LocationDisplay = () => {
 const user = {
   ...createUserResponse({}, 1),
   onboarded: false,
-  algoliaApiKey: 'algolia-mock-key',
+  algoliaApiKey: null,
 };
 
 const ownProfilePath = network({})

@@ -1,9 +1,19 @@
 import { css, SerializedStyles } from '@emotion/react';
 import { CodeNode } from '@lexical/code';
-import { AutoLinkNode, LinkNode } from '@lexical/link';
+import {
+  $isAutoLinkNode,
+  $isLinkNode,
+  AutoLinkNode,
+  LinkNode,
+} from '@lexical/link';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
+import {
+  AutoLinkPlugin,
+  createLinkMatcherWithRegExp,
+} from '@lexical/react/LexicalAutoLinkPlugin';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
@@ -20,7 +30,7 @@ import {
   TRANSFORMERS,
 } from '@lexical/markdown';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
-import { EditorState } from 'lexical';
+import { $nodesOfType, EditorState } from 'lexical';
 import { ember, lead, rose, silver } from '../colors';
 import { styles, useValidation, validationMessageStyles } from '../form';
 import { noop } from '../utils';
@@ -204,6 +214,55 @@ const EnablePlugin = ({ enabled }: { enabled: boolean }) => {
   return <></>;
 };
 
+const applyLinkTarget = (node: LinkNode) => {
+  if (node.getTarget() !== '_blank') {
+    node.setTarget('_blank');
+  }
+  if (node.getRel() !== 'noopener noreferrer') {
+    node.setRel('noopener noreferrer');
+  }
+};
+
+const URL_REGEX =
+  /(https?:\/\/[^\s]+|www\.[a-zA-Z0-9][a-zA-Z0-9-]*(?:\.[a-zA-Z0-9-]+)+[^\s]*)/;
+const EMAIL_REGEX = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+)/;
+
+export const autoLinkUrlToHref = (text: string): string =>
+  text.startsWith('http') ? text : `https://${text}`;
+
+export const autoLinkEmailToHref = (text: string): string => `mailto:${text}`;
+
+const AUTO_LINK_MATCHERS = [
+  createLinkMatcherWithRegExp(URL_REGEX, autoLinkUrlToHref),
+  createLinkMatcherWithRegExp(EMAIL_REGEX, autoLinkEmailToHref),
+];
+
+const LinkTargetPlugin = () => {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
+    const unregisterLink = editor.registerNodeTransform(LinkNode, (node) => {
+      if ($isLinkNode(node)) applyLinkTarget(node);
+    });
+    const unregisterAutoLink = editor.registerNodeTransform(
+      AutoLinkNode,
+      (node) => {
+        if ($isAutoLinkNode(node)) applyLinkTarget(node);
+      },
+    );
+    // Apply to nodes already present from initial parse (transforms only fire
+    // on dirty nodes, so we walk the current state once on mount).
+    editor.update(() => {
+      $nodesOfType(LinkNode).forEach(applyLinkTarget);
+      $nodesOfType(AutoLinkNode).forEach(applyLinkTarget);
+    });
+    return () => {
+      unregisterLink();
+      unregisterAutoLink();
+    };
+  }, [editor]);
+  return <></>;
+};
+
 const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
   (
     {
@@ -233,6 +292,7 @@ const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
     const initialConfig = {
       editorState: () => {
         $convertFromMarkdownString(value, TRANSFORMERS);
+        $nodesOfType(LinkNode).forEach(applyLinkTarget);
       },
       namespace: 'Editor',
       nodes: [
@@ -323,6 +383,9 @@ const TextEditor = forwardRef<HTMLDivElement, TextEditorProps>(
               />
             )}
             <ListPlugin />
+            <LinkPlugin />
+            <AutoLinkPlugin matchers={AUTO_LINK_MATCHERS} />
+            <LinkTargetPlugin />
             <HistoryPlugin />
             {autofocus && <AutoFocusPlugin />}
             <EditorRefPluginWrapper />

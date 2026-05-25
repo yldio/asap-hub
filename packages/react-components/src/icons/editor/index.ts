@@ -19,3 +19,5 @@ export { default as listUL } from './list-ul';
 
 export { default as indent } from './indent';
 export { default as outdent } from './outdent';
+
+export { default as link } from './link';

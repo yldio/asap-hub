@@ -8,7 +8,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { flushSync } from 'react-dom';
 import { Button } from '../atoms';
 import { lead, neutral500 } from '../colors';
 import { ExportIcon } from '../icons';
@@ -114,12 +113,16 @@ const ExportButton: React.FC<ExportButtonProps> = ({
   // been unmounted (e.g. tests that finish the click then unmount without
   // awaiting the export's resolution).
   const mountedRef = useRef(true);
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    // Re-assert mounted on every mount. Under React 18 StrictMode the dev
+    // double-invoke runs the cleanup once (setting this false), and useRef's
+    // initializer does NOT re-run on the remount — so without this the ref
+    // stays false forever and setLoading silently no-ops.
+    mountedRef.current = true;
+    return () => {
       mountedRef.current = false;
-    },
-    [],
-  );
+    };
+  }, []);
   const setLoading = useCallback((buttonText: string, value: boolean) => {
     if (!mountedRef.current) return;
     setLoadingButtons((previous) => ({
@@ -151,12 +154,12 @@ const ExportButton: React.FC<ExportButtonProps> = ({
             enabled={!isLoading}
             onClick={async () => {
               if (isLoading) return;
-              // flushSync forces React to paint the loading state before the
-              // export starts; otherwise React 18 automatic batching can
-              // group setLoading(true) and setLoading(false) into a single
-              // render and the spinner never appears.
-              flushSync(() => {
-                setLoading(button.buttonText, true);
+              // Show the spinner, then yield a macrotask before starting the
+              // export so the loading render commits and paints before any
+              // synchronous export work (CSV/XLSX stringify) blocks the thread.
+              setLoading(button.buttonText, true);
+              await new Promise<void>((resolve) => {
+                setTimeout(resolve, 0);
               });
               const startedAt = Date.now();
               try {

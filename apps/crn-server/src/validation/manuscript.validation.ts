@@ -108,7 +108,9 @@ const fileUploadFromUrlBaseSchema: JSONSchemaType<FileUploadFromUrlRequest> = {
   additionalProperties: false,
 };
 
-const validateFileUploadFromUrlBase = validateInput(fileUploadFromUrlBaseSchema);
+const validateFileUploadFromUrlBase = validateInput(
+  fileUploadFromUrlBaseSchema,
+);
 
 export const validateFileUploadFromUrl = (
   data: Record<string, unknown>,

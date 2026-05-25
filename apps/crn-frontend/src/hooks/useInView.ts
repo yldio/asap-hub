@@ -1,22 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
 type UseInViewOptions = {
-  /**
-   * Margin around the root used to grow/shrink the area used to detect
-   * intersection. A positive value triggers the callback before the element
-   * is actually visible, so data can start loading slightly ahead of time.
-   */
+  /** Positive value triggers before the element is fully visible. */
   rootMargin?: string;
 };
 
-/**
- * Observes an element and reports once it has come (close to) being in view.
- * The returned flag latches to `true` on first intersection and never flips
- * back, so deferred content does not unmount/refetch when scrolled away.
- *
- * Falls back to always-in-view when IntersectionObserver is unavailable
- * (e.g. jsdom/older browsers) so content is never permanently hidden.
- */
+// Latches to true on first intersection; defaults to true when
+// IntersectionObserver is unavailable (e.g. jsdom).
 export const useInView = <T extends Element = HTMLDivElement>({
   rootMargin = '200px',
 }: UseInViewOptions = {}): [React.RefObject<T>, boolean] => {

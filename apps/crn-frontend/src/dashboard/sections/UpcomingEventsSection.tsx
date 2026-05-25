@@ -14,7 +14,7 @@ type UpcomingEventsSectionProps = {
 };
 
 const UpcomingEventsSection: FC<UpcomingEventsSectionProps> = ({ date }) => {
-  const { items } = useEvents(
+  const { items, total } = useEvents(
     getEventListOptions(date, {
       past: false,
       pageSize: 3,
@@ -26,9 +26,7 @@ const UpcomingEventsSection: FC<UpcomingEventsSectionProps> = ({ date }) => {
     <DashboardSection
       title="Upcoming Events"
       description="Here are some upcoming events."
-      viewAllHref={
-        upcomingEvents.length > 3 ? eventsRoute({}).upcoming({}).$ : undefined
-      }
+      viewAllHref={total > 3 ? eventsRoute({}).upcoming({}).$ : undefined}
       viewAllTestId="view-upcoming-events"
     >
       <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />

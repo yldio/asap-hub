@@ -300,6 +300,22 @@ type TestVariant = {
   noContactProjectId: string;
   wrongTypeProjectId: string;
   supplementProjectId: string;
+  memberUser: Record<string, unknown>;
+  noContactMemberUser: Record<string, unknown>;
+};
+
+const teamBasedMemberUser = {
+  id: 'user-team',
+  projects: [],
+  teams: [{ id: 'team-1', role: 'Project Manager' }],
+  role: 'Grantee',
+};
+
+const traineeMemberUser = {
+  id: 'trainer-1',
+  projects: [],
+  teams: [],
+  role: 'Grantee',
 };
 
 const variants: TestVariant[] = [
@@ -312,6 +328,8 @@ const variants: TestVariant[] = [
     noContactProjectId: 'discovery-no-contact',
     wrongTypeProjectId: 'resource-1',
     supplementProjectId: 'discovery-supplement',
+    memberUser: teamBasedMemberUser,
+    noContactMemberUser: teamBasedMemberUser,
   },
   {
     name: 'ResourceProjectDetail',
@@ -322,6 +340,8 @@ const variants: TestVariant[] = [
     noContactProjectId: 'resource-no-contact',
     wrongTypeProjectId: 'discovery-1',
     supplementProjectId: 'resource-supplement',
+    memberUser: teamBasedMemberUser,
+    noContactMemberUser: teamBasedMemberUser,
   },
   {
     name: 'TraineeProjectDetail',
@@ -332,6 +352,14 @@ const variants: TestVariant[] = [
     noContactProjectId: 'trainee-no-contact',
     wrongTypeProjectId: 'discovery-1',
     supplementProjectId: 'trainee-supplement',
+    memberUser: traineeMemberUser,
+    noContactMemberUser: {
+      id: 'no-one',
+      projects: [],
+      teams: [],
+      role: 'Staff',
+      openScienceTeamMember: true,
+    },
   },
 ];
 
@@ -354,6 +382,8 @@ describe.each(variants)(
     noContactProjectId,
     wrongTypeProjectId,
     supplementProjectId,
+    memberUser,
+    noContactMemberUser,
   }) => {
     it('renders project detail page when project type matches', async () => {
       await renderProjectDetail(Component, routeKeyword, mainProjectId);
@@ -378,10 +408,6 @@ describe.each(variants)(
     });
 
     it('renders Workspace tab when user is a project member and flag is enabled', async () => {
-      const memberUser = {
-        projects: [{ id: mainProjectId }],
-        role: 'Grantee',
-      };
       enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
@@ -399,10 +425,6 @@ describe.each(variants)(
     });
 
     it('renders workspace route with Compliance Review heading', async () => {
-      const memberUser = {
-        projects: [{ id: mainProjectId }],
-        role: 'Grantee',
-      };
       enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
@@ -416,10 +438,29 @@ describe.each(variants)(
       ).toBeInTheDocument();
     });
 
-    it('renders Workspace tab for Staff users even without project membership', async () => {
+    it('renders Workspace tab for Open Science Staff users even without project membership', async () => {
+      const openScienceUser = {
+        projects: [],
+        teams: [],
+        role: 'Staff',
+        openScienceTeamMember: true,
+      };
+      enable('PROJECT_WORKSPACE');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        openScienceUser,
+      );
+      expect(screen.getByText('Workspace')).toBeInTheDocument();
+    });
+
+    it('does not render Workspace tab for non-Open-Science Staff users', async () => {
       const staffUser = {
         projects: [],
+        teams: [],
         role: 'Staff',
+        openScienceTeamMember: false,
       };
       enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
@@ -428,14 +469,27 @@ describe.each(variants)(
         mainProjectId,
         staffUser,
       );
-      expect(screen.getByText('Workspace')).toBeInTheDocument();
+      expect(screen.queryByText('Workspace')).not.toBeInTheDocument();
+    });
+
+    it('does not render Workspace tab for users who are neither members nor Open Science', async () => {
+      const outsider = {
+        projects: [],
+        teams: [],
+        role: 'Grantee',
+        openScienceTeamMember: false,
+      };
+      enable('PROJECT_WORKSPACE');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        outsider,
+      );
+      expect(screen.queryByText('Workspace')).not.toBeInTheDocument();
     });
 
     it('renders create manuscript route via lazy loading', async () => {
-      const memberUser = {
-        projects: [{ id: mainProjectId }],
-        role: 'Grantee',
-      };
       enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
@@ -450,10 +504,6 @@ describe.each(variants)(
     });
 
     it('renders edit manuscript route via lazy loading', async () => {
-      const memberUser = {
-        projects: [{ id: mainProjectId }],
-        role: 'Grantee',
-      };
       enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
@@ -468,16 +518,12 @@ describe.each(variants)(
     });
 
     it('renders workspace when project has no contactEmail', async () => {
-      const memberUser = {
-        projects: [{ id: noContactProjectId }],
-        role: 'Grantee',
-      };
       enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
         routeKeyword,
         noContactProjectId,
-        memberUser,
+        noContactMemberUser,
         'workspace',
       );
       expect(
@@ -486,10 +532,6 @@ describe.each(variants)(
     });
 
     it('renders resubmit manuscript route via lazy loading', async () => {
-      const memberUser = {
-        projects: [{ id: mainProjectId }],
-        role: 'Grantee',
-      };
       enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
@@ -504,10 +546,46 @@ describe.each(variants)(
     });
 
     it('renders create compliance report route via lazy loading', async () => {
-      const memberUser = {
-        projects: [{ id: mainProjectId }],
-        role: 'Grantee',
+      const openScienceUser = {
+        projects: [],
+        teams: [],
+        role: 'Staff',
+        openScienceTeamMember: true,
       };
+      enable('PROJECT_WORKSPACE');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        openScienceUser,
+        'workspace/create-compliance-report/ms-1',
+      );
+      expect(
+        await screen.findByTestId('mock-compliance-report-form'),
+      ).toBeInTheDocument();
+    });
+
+    it('does not render create manuscript route for Open Science non-members', async () => {
+      const openScienceUser = {
+        projects: [],
+        teams: [],
+        role: 'Staff',
+        openScienceTeamMember: true,
+      };
+      enable('PROJECT_WORKSPACE');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        openScienceUser,
+        'workspace/create-manuscript',
+      );
+      expect(
+        screen.queryByTestId('mock-manuscript-form'),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not render create compliance report route for project members without OS access', async () => {
       enable('PROJECT_WORKSPACE');
       await renderProjectDetail(
         Component,
@@ -517,8 +595,8 @@ describe.each(variants)(
         'workspace/create-compliance-report/ms-1',
       );
       expect(
-        await screen.findByTestId('mock-compliance-report-form'),
-      ).toBeInTheDocument();
+        screen.queryByTestId('mock-compliance-report-form'),
+      ).not.toBeInTheDocument();
     });
 
     it('renders Outputs tab when flag is enabled', async () => {
@@ -615,7 +693,9 @@ describe.each(variants)(
 describe('Workspace href callbacks', () => {
   it('builds edit, resubmit, and create-compliance-report hrefs from manuscriptId', async () => {
     const memberUser = {
-      projects: [{ id: 'discovery-1' }],
+      id: 'user-team',
+      projects: [],
+      teams: [{ id: 'team-1', role: 'Project Manager' }],
       role: 'Grantee',
     };
     enable('PROJECT_WORKSPACE');
@@ -660,7 +740,9 @@ describe('Workspace href callbacks', () => {
 describe('DiscoveryProjectDetail - specific', () => {
   it('passes manuscripts and collaborationManuscripts to ProjectWorkspace', async () => {
     const memberUser = {
-      projects: [{ id: 'discovery-1' }],
+      id: 'user-team',
+      projects: [],
+      teams: [{ id: 'team-1', role: 'Project Manager' }],
       role: 'Grantee',
     };
     enable('PROJECT_WORKSPACE');
@@ -678,7 +760,9 @@ describe('DiscoveryProjectDetail - specific', () => {
 
   it('renders workspace with contact name from collaborators', async () => {
     const memberUser = {
-      projects: [{ id: 'discovery-1' }],
+      id: 'user-team',
+      projects: [],
+      teams: [{ id: 'team-1', role: 'Project Manager' }],
       role: 'Grantee',
     };
     enable('PROJECT_WORKSPACE');
@@ -697,7 +781,9 @@ describe('DiscoveryProjectDetail - specific', () => {
 describe('ResourceProjectDetail - specific', () => {
   it('resolves contactName from collaborators when no member matches contactEmail', async () => {
     const memberUser = {
-      projects: [{ id: 'resource-collab' }],
+      id: 'user-team',
+      projects: [],
+      teams: [{ id: 'team-1', role: 'Project Manager' }],
       role: 'Grantee',
     };
     enable('PROJECT_WORKSPACE');

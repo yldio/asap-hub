@@ -1,7 +1,7 @@
 import { FC, lazy } from 'react';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Frame } from '@asap-hub/frontend-utils';
-import { isProjectLead } from '@asap-hub/model';
+import { isProjectLead, isProjectMember } from '@asap-hub/model';
 import {
   ProjectDetailPage,
   ProjectDetailAbout,
@@ -40,7 +40,8 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const fetchArticles = useFetchAimArticles();
   const { isEnabled } = useFlags();
   const user = useCurrentUserCRN();
-  const isStaff = user?.role === 'Staff';
+  const isOpenScienceMember =
+    user?.role === 'Staff' && !!user?.openScienceTeamMember;
   const { hash: targetManuscript } = useLocation();
 
   const teamId =
@@ -61,11 +62,16 @@ const ProjectDetail: FC<Props> = ({ config }) => {
 
   const route = config.getRoute(projectId);
 
-  const isProjectMember = !!user?.projects.find(({ id }) => id === projectId);
+  const isMember =
+    !!user && isProjectMember(user.id, user.teams ?? [], projectDetail);
   const isLead =
     !!user && isProjectLead(user.id, user.teams ?? [], projectDetail);
   const showWorkspace =
-    isEnabled('PROJECT_WORKSPACE') && (isProjectMember || isStaff);
+    isEnabled('PROJECT_WORKSPACE') && (isMember || isOpenScienceMember);
+  const canSubmitManuscript = showWorkspace && isMember;
+  const canEditOrResubmitManuscript =
+    showWorkspace && (isMember || isOpenScienceMember);
+  const canCreateComplianceReport = showWorkspace && isOpenScienceMember;
 
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
   const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
@@ -83,7 +89,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
       <ManuscriptToastProvider>
         <EligibilityReasonProvider>
           <Routes>
-            {showWorkspace && (
+            {canSubmitManuscript && (
               <Route
                 path={`workspace${
                   route.workspace({}).createManuscript.template
@@ -98,7 +104,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                 }
               />
             )}
-            {showWorkspace && (
+            {canEditOrResubmitManuscript && (
               <Route
                 path={`workspace${route.workspace({}).editManuscript.template}`}
                 element={
@@ -111,7 +117,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                 }
               />
             )}
-            {showWorkspace && (
+            {canEditOrResubmitManuscript && (
               <Route
                 path={`workspace${
                   route.workspace({}).resubmitManuscript.template
@@ -127,7 +133,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                 }
               />
             )}
-            {showWorkspace && (
+            {canCreateComplianceReport && (
               <Route
                 path={`workspace${
                   route.workspace({}).createComplianceReport.template
@@ -202,7 +208,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                         element={
                           <ProjectWorkspace
                             id={projectId}
-                            isProjectMember={isProjectMember}
+                            isProjectMember={isMember}
                             isTeamBased={config.getIsTeamBased(projectDetail)}
                             manuscripts={projectDetail.manuscripts ?? []}
                             collaborationManuscripts={

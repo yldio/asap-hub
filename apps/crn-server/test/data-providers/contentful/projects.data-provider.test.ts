@@ -1087,7 +1087,42 @@ describe('ProjectContentfulDataProvider', () => {
       ]);
     });
 
-    it('narrows aims to those referenced by exported milestones when table filters are applied', async () => {
+    it('narrows aims to those referenced by exported milestones when a status filter is applied', async () => {
+      mockSearchResponses(
+        [milestoneHit({ aimNumbers: '2' })],
+        [
+          aimHit({ aimOrder: 1, description: 'A1' }),
+          aimHit({ aimOrder: 2, description: 'A2' }),
+          aimHit({ aimOrder: 3, description: 'A3' }),
+        ],
+      );
+
+      const result = await dataProvider.exportProjectMilestones('project-1', {
+        grantType: 'supplement',
+        filter: ['Complete'],
+      });
+
+      expect(result.aims.map((a) => a.aimNumber)).toEqual(['A2']);
+    });
+
+    it('narrows aims to those referenced by exported milestones when a search query is applied', async () => {
+      mockSearchResponses(
+        [milestoneHit({ aimNumbers: '2' })],
+        [
+          aimHit({ aimOrder: 1, description: 'A1' }),
+          aimHit({ aimOrder: 2, description: 'A2' }),
+          aimHit({ aimOrder: 3, description: 'A3' }),
+        ],
+      );
+
+      const result = await dataProvider.exportProjectMilestones('project-1', {
+        search: 'alpha',
+      });
+
+      expect(result.aims.map((a) => a.aimNumber)).toEqual(['A2']);
+    });
+
+    it('returns all aims when only grant type and sort are applied, regardless of milestone references', async () => {
       mockSearchResponses(
         [milestoneHit({ aimNumbers: '2' })],
         [
@@ -1102,7 +1137,7 @@ describe('ProjectContentfulDataProvider', () => {
         sort: 'aim_desc',
       });
 
-      expect(result.aims.map((a) => a.aimNumber)).toEqual(['A2']);
+      expect(result.aims.map((a) => a.aimNumber)).toEqual(['A1', 'A2', 'A3']);
     });
 
     it('returns all aims when no table filters are applied', async () => {

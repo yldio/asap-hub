@@ -1142,11 +1142,8 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       (value): value is MilestoneStatus =>
         milestoneStatuses.includes(value as MilestoneStatus),
     );
-    const hasTableFilters =
-      !!grantType ||
-      !!normalizedSearch ||
-      statusFilters.length > 0 ||
-      sort !== 'aim_asc';
+
+    const hasTableFilters = !!normalizedSearch || statusFilters.length > 0;
 
     const milestoneFilters = cleanArray([
       { term: { projectId: id } },

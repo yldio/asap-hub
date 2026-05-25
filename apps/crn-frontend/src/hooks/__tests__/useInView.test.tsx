@@ -13,6 +13,12 @@ const TestComponent = () => {
   );
 };
 
+// Calls the hook but never attaches the ref to an element.
+const DetachedComponent = () => {
+  const [, inView] = useInView<HTMLDivElement>();
+  return <span data-testid="detached">{inView ? 'in view' : 'hidden'}</span>;
+};
+
 describe('useInView', () => {
   const originalIO = global.IntersectionObserver;
   let observerCallback: ObserverCallback;
@@ -63,5 +69,10 @@ describe('useInView', () => {
       undefined as unknown as typeof IntersectionObserver;
     render(<TestComponent />);
     expect(screen.getByTestId('target')).toHaveTextContent('in view');
+  });
+
+  it('stays hidden when the ref is never attached to an element', () => {
+    render(<DetachedComponent />);
+    expect(screen.getByTestId('detached')).toHaveTextContent('hidden');
   });
 });

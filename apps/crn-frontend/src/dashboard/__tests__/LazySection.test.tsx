@@ -28,7 +28,7 @@ describe('LazySection', () => {
 
   it('does not render children until the section is in view', () => {
     render(
-      <LazySection title="Latest Users">
+      <LazySection>
         <div>section content</div>
       </LazySection>,
     );
@@ -37,7 +37,7 @@ describe('LazySection', () => {
 
   it('renders children once the section comes into view', () => {
     render(
-      <LazySection title="Latest Users">
+      <LazySection>
         <div>section content</div>
       </LazySection>,
     );
@@ -45,5 +45,18 @@ describe('LazySection', () => {
       observerCallback([{ isIntersecting: true }]);
     });
     expect(screen.getByText('section content')).toBeInTheDocument();
+  });
+
+  it('does not change the document title when a section mounts', () => {
+    document.title = 'Dashboard';
+    render(
+      <LazySection>
+        <div>section content</div>
+      </LazySection>,
+    );
+    act(() => {
+      observerCallback([{ isIntersecting: true }]);
+    });
+    expect(document.title).toBe('Dashboard');
   });
 });

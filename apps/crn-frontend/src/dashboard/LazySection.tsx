@@ -1,26 +1,26 @@
-import { Frame } from '@asap-hub/frontend-utils';
-import { FC, ReactNode } from 'react';
+import { ErrorBoundary } from '@asap-hub/frontend-utils';
+import { Loading } from '@asap-hub/react-components';
+import { FC, ReactNode, Suspense } from 'react';
 
 import { useInView } from '../hooks/useInView';
 
 type LazySectionProps = {
-  title: string;
   /** Height reserved before load, to avoid layout jump. */
   minHeight?: number;
   children: ReactNode;
 };
 
 // Mounts (and fetches) its children only once near the viewport.
-const LazySection: FC<LazySectionProps> = ({
-  title,
-  minHeight = 200,
-  children,
-}) => {
+const LazySection: FC<LazySectionProps> = ({ minHeight = 200, children }) => {
   const [ref, inView] = useInView<HTMLDivElement>();
 
   return (
     <div ref={ref} style={{ minHeight: inView ? undefined : minHeight }}>
-      {inView && <Frame title={title}>{children}</Frame>}
+      {inView && (
+        <ErrorBoundary>
+          <Suspense fallback={<Loading />}>{children}</Suspense>
+        </ErrorBoundary>
+      )}
     </div>
   );
 };

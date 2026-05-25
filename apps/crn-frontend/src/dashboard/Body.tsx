@@ -27,16 +27,16 @@ const Body: FC<BodyProps> = ({ date, user, ...props }) => {
       guides={guides ? guides.items : []}
       dynamicSections={
         <>
-          <LazySection title="Upcoming Events">
+          <LazySection>
             <UpcomingEventsSection date={date} />
           </LazySection>
-          <LazySection title="Past Events">
+          <LazySection>
             <PastEventsSection date={date} user={user} />
           </LazySection>
-          <LazySection title="Recent Shared Research">
+          <LazySection>
             <RecentSharedResearchSection />
           </LazySection>
-          <LazySection title="Latest Users">
+          <LazySection>
             <LatestUsersSection />
           </LazySection>
         </>

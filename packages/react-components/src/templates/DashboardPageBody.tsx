@@ -1,35 +1,19 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
-import {
-  network,
-  news as newsRoute,
-  sharedResearch,
-  dashboard,
-  events as eventsRoute,
-} from '@asap-hub/routing';
+import { news as newsRoute, dashboard } from '@asap-hub/routing';
 import {
   TeamRole,
   UserResponse,
-  ListResearchOutputResponse,
   NewsResponse,
   GuideDataObject,
-  EventResponse,
-  UserListItemResponse,
 } from '@asap-hub/model';
-import {
-  NewsSection,
-  HelpSection,
-  RemindersCard,
-  DashboardUpcomingEvents,
-  PastEventsDashboardCard,
-  RecentSharedOutputs,
-} from '../organisms';
+import { NewsSection, HelpSection, RemindersCard } from '../organisms';
 import { rem } from '../pixels';
 import { Link, Headline2, Card, Paragraph, Icon } from '../atoms';
-import { DashboardRecommendedUsers, lead } from '..';
+import { lead } from '..';
 import { Accordion } from '../molecules';
 import { ExternalLinkIcon } from '../icons';
-import { getIconForDocumentType, isInternalLink } from '../utils';
+import { isInternalLink } from '../utils';
 
 const styles = css({
   display: 'grid',
@@ -53,17 +37,15 @@ type DashboardPageBodyProps = Pick<
 > & {
   announcements: ComponentProps<typeof RemindersCard>['reminders'];
 } & Pick<ComponentProps<typeof RemindersCard>, 'reminders'> &
-  ComponentProps<typeof DashboardUpcomingEvents> &
   Omit<ComponentProps<typeof NewsSection>, 'title' | 'type' | 'news'> & {
     readonly userId: string;
     readonly teamId?: string;
     readonly news: ReadonlyArray<NewsResponse>;
   } & Pick<UserResponse, 'dismissedGettingStarted'> & {
-    pastEvents: ComponentProps<typeof PastEventsDashboardCard>['events'];
     roles: TeamRole[];
     guides: GuideDataObject[];
-    recentSharedOutputs?: ListResearchOutputResponse;
-    recommendedUsers: UserListItemResponse[];
+    /** Lazily-loaded sections rendered between Reminders and News. */
+    dynamicSections?: ReactNode;
   };
 
 const publishRoles: TeamRole[] = ['ASAP Staff', 'Project Manager'];
@@ -74,11 +56,8 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   roles,
   reminders,
   guides,
-  pastEvents,
   dismissedGettingStarted,
-  upcomingEvents,
-  recentSharedOutputs,
-  recommendedUsers,
+  dynamicSections,
 }) => {
   const canPublish = roles.some((role) => publishRoles.includes(role));
 
@@ -144,51 +123,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           canPublish={canPublish}
         />
       </div>
-      <div>
-        <Headline2 styleAsHeading={3}>Upcoming Events</Headline2>
-        <div css={infoStyles}>Here are some upcoming events.</div>
-        <DashboardUpcomingEvents upcomingEvents={upcomingEvents} />
-        {upcomingEvents && upcomingEvents.length > 3 && (
-          <p css={viewAllStyles} data-testid="view-upcoming-events">
-            <Link href={eventsRoute({}).upcoming({}).$}>View All →</Link>
-          </p>
-        )}
-      </div>
-      <div>
-        <Headline2 styleAsHeading={3}>Past Events</Headline2>
-        <div css={infoStyles}>
-          Explore previous events and learn about what was discussed.
-        </div>
-        <PastEventsDashboardCard events={pastEvents} />
-        <p css={viewAllStyles} data-testid="view-past-events">
-          <Link href={eventsRoute({}).past({}).$}>View All →</Link>
-        </p>
-      </div>
-      <div>
-        <Headline2 styleAsHeading={3}>Recent Shared Research</Headline2>
-        <div css={infoStyles}>
-          Explore and learn more about the latest Shared Research.
-        </div>
-        <RecentSharedOutputs<EventResponse['relatedResearch']>
-          getIconForDocumentType={getIconForDocumentType}
-          outputs={recentSharedOutputs?.items}
-        />
-        {recentSharedOutputs && recentSharedOutputs.total > 5 && (
-          <p css={viewAllStyles} data-testid="view-recent-shared-outputs">
-            <Link href={sharedResearch({}).$}>View All →</Link>
-          </p>
-        )}
-      </div>
-      <div>
-        <Headline2 styleAsHeading={3}>Latest Users</Headline2>
-        <div css={infoStyles}>
-          Explore and learn more about the latest users on the hub.
-        </div>
-        <DashboardRecommendedUsers recommendedUsers={recommendedUsers} />
-        <p css={viewAllStyles}>
-          <Link href={network({}).users({}).$}>View All →</Link>
-        </p>
-      </div>
+      {dynamicSections}
       {news.length ? (
         <div>
           <NewsSection

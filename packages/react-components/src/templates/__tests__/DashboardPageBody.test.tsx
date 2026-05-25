@@ -1,12 +1,6 @@
 import { ComponentProps } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { GuideDataObject } from '@asap-hub/model';
-import {
-  createListEventResponse,
-  createListResearchOutputResponse,
-  createListUserResponse,
-  createResearchOutputResponse,
-} from '@asap-hub/fixtures';
 import DashboardPageBody from '../DashboardPageBody';
 
 const props: ComponentProps<typeof DashboardPageBody> = {
@@ -24,7 +18,6 @@ const props: ComponentProps<typeof DashboardPageBody> = {
       tags: [],
     },
   ],
-  pastEvents: [],
   userId: '42',
   teamId: '1337',
   roles: [],
@@ -32,9 +25,6 @@ const props: ComponentProps<typeof DashboardPageBody> = {
   announcements: [],
   guides: [],
   dismissedGettingStarted: false,
-  upcomingEvents: undefined,
-  recentSharedOutputs: createListResearchOutputResponse(5),
-  recommendedUsers: createListUserResponse(3).items,
 };
 
 it('renders guides', async () => {
@@ -102,112 +92,30 @@ it('renders news section', () => {
 
   expect(screen.getByText('Latest News from ASAP')).toBeVisible();
   expect(screen.getByText('News Title')).toBeVisible();
-  expect(
-    screen
-      .getAllByText('View All →', { selector: 'a' })
-      .map(({ textContent }) => textContent),
-    // There are two View all links because the past events one is always shown
-  ).toEqual(expect.arrayContaining(['View All →', 'View All →']));
+  expect(screen.getByText('View All →', { selector: 'a' })).toBeInTheDocument();
 });
 
-it('displays events cards or placeholder if there are no events', () => {
-  const { rerender } = render(
-    <DashboardPageBody
-      {...props}
-      upcomingEvents={createListEventResponse(4, {
-        customTitle: 'TestEvent',
-      }).items.map((event) => ({
-        ...event,
-        hasSpeakersToBeAnnounced: false,
-        eventOwner: <div>ASAP Team</div>,
-        tags: event.tags.map((k) => k.name),
-      }))}
-    />,
-  );
-  expect(screen.getByText('Upcoming Events')).toBeVisible();
-  expect(screen.getByText('Here are some upcoming events.')).toBeVisible();
-  expect(screen.getByText('TestEvent 1')).toBeVisible();
-  expect(screen.getByText('TestEvent 2')).toBeVisible();
-  expect(screen.getByText('TestEvent 3')).toBeVisible();
-  expect(
-    screen.getByTestId('view-upcoming-events').querySelector('a'),
-  ).toHaveTextContent('View All');
-
-  rerender(<DashboardPageBody {...props} upcomingEvents={undefined} />);
-  expect(screen.getByText('Upcoming Events')).toBeVisible();
-  expect(screen.getByText('Here are some upcoming events.')).toBeVisible();
-
-  expect(screen.getByText('There are no upcoming events.')).toBeVisible();
-});
-
-describe('the past events card', () => {
-  const events = createListEventResponse(3).items;
-  it('renders multiple past events', () => {
-    render(<DashboardPageBody {...props} pastEvents={events} />);
-    expect(
-      screen.getAllByRole('link').map(({ textContent }) => textContent),
-    ).toEqual(expect.arrayContaining(['Event 0', 'Event 1', 'Event 2']));
-  });
-
-  it('renders the link to view all past events', () => {
-    render(<DashboardPageBody {...props} pastEvents={events} />);
-
-    expect(
-      screen.getByTestId('view-past-events').querySelector('a'),
-    ).toHaveTextContent('View All');
-    expect(
-      screen.getByTestId('view-past-events').querySelector('a'),
-    ).toHaveAttribute('href', '/events/past');
-  });
-});
-
-describe('the recent shared outputs card', () => {
-  it('renders multiple recent outputs', () => {
-    const { getByText } = render(
-      <DashboardPageBody
-        {...props}
-        recentSharedOutputs={{
-          items: [
-            {
-              ...createResearchOutputResponse(0),
-              title: 'Shared 1',
-              documentType: 'Article',
-            },
-            {
-              ...createResearchOutputResponse(1),
-              title: 'Shared 2',
-              documentType: 'Article',
-            },
-            {
-              ...createResearchOutputResponse(2),
-              title: 'Shared 3',
-              documentType: 'Article',
-            },
-          ],
-          total: 3,
-        }}
-      />,
-    );
-
-    expect(getByText('Shared 1')).toBeVisible();
-    expect(getByText('Shared 2')).toBeVisible();
-    expect(getByText('Shared 3')).toBeVisible();
-  });
-
-  it('renders the link to view all shared research', () => {
+describe('the dynamic sections slot', () => {
+  it('renders the lazily-loaded sections passed in', () => {
     render(
       <DashboardPageBody
         {...props}
-        recentSharedOutputs={createListResearchOutputResponse(6)}
+        dynamicSections={<div>lazy dashboard sections</div>}
       />,
     );
+    expect(screen.getByText('lazy dashboard sections')).toBeVisible();
+  });
 
-    expect(
-      screen.getByTestId('view-recent-shared-outputs').querySelector('a'),
-    ).toHaveTextContent('View All');
-    expect(
-      screen.getByTestId('view-recent-shared-outputs').querySelector('a'),
-    ).toHaveAttribute('href', '/shared-research');
+  it('renders the static sections around the slot', () => {
+    render(
+      <DashboardPageBody
+        {...props}
+        dynamicSections={<div>lazy dashboard sections</div>}
+      />,
+    );
+    // static sections still render even when no dynamic content resolves
+    expect(screen.getByText('Reminders')).toBeVisible();
+    expect(screen.getByText('Latest News from ASAP')).toBeVisible();
   });
 });
 
@@ -244,17 +152,5 @@ describe('the announcements card', () => {
     );
     expect(screen.getByText('Announcements')).toBeVisible();
     expect(screen.getByText('Latest admin announcements.')).toBeVisible();
-  });
-});
-
-describe('the recommended users card', () => {
-  it('shows the recommended users card', () => {
-    render(<DashboardPageBody {...props} />);
-    expect(screen.getByText('Latest Users')).toBeVisible();
-    expect(
-      screen.getByText(
-        'Explore and learn more about the latest users on the hub.',
-      ),
-    ).toBeVisible();
   });
 });

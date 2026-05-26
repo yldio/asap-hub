@@ -181,7 +181,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
           </>
         )}
       >
-        <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
+        <Paragraph noMargin>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>
         </Paragraph>

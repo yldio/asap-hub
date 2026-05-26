@@ -182,6 +182,7 @@ const titleStyles = css({
   marginBottom: rem(4),
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     marginTop: 0,
+    marginBottom: rem(16),
   },
 });
 
@@ -195,7 +196,7 @@ const datesStyles = css({
   columnGap: rem(12),
   marginTop: rem(24),
   color: neutral800.rgb,
-  '& > *': {
+  '& > *, & p': {
     lineHeight: rem(16),
   },
   [`@media (max-width: ${mobileScreen.max}px)`]: {
@@ -204,7 +205,6 @@ const datesStyles = css({
 });
 
 const dateSeparatorStyles = css({
-  alignSelf: 'center',
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     display: 'none',
   },
@@ -484,8 +484,8 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
             Date Added: {formatDate(new Date(addedDate || created))}
           </Caption>
         </span>
+        <span css={dateSeparatorStyles}>•</span>
         <Caption asParagraph noMargin>
-          <span css={dateSeparatorStyles}>• </span>
           Last Updated:{' '}
           {formatDate(new Date(lastModifiedDate || addedDate || created))}
         </Caption>

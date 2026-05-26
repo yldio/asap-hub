@@ -362,6 +362,7 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
   projects,
 }) => {
   const primaryProject = projects?.[0];
+  const firstTeam = teams[0];
 
   const externalLinkElement = link ? (
     <div css={externalLinkWrapperStyles}>
@@ -456,15 +457,17 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
               {teams.length > 1 ? (
                 <span css={associationItemStyles}>{teams.length} Teams</span>
               ) : (
-                <span css={associationItemStyles}>
-                  <Link
-                    href={
-                      network({}).teams({}).team({ teamId: teams[0]!.id }).$
-                    }
-                  >
-                    Team {teams[0]!.displayName}
-                  </Link>
-                </span>
+                firstTeam && (
+                  <span css={associationItemStyles}>
+                    <Link
+                      href={
+                        network({}).teams({}).team({ teamId: firstTeam.id }).$
+                      }
+                    >
+                      Team {firstTeam.displayName}
+                    </Link>
+                  </span>
+                )
               )}
             </div>
           </>

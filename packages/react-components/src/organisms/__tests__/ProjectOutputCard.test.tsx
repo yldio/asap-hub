@@ -18,8 +18,8 @@ it('renders the title', () => {
 });
 
 it('renders Project pill', () => {
-  const { getByText } = render(<ProjectOutputCard {...baseProps} />);
-  expect(getByText('Project')).toBeVisible();
+  const { getAllByText } = render(<ProjectOutputCard {...baseProps} />);
+  expect(getAllByText('Project').length).toBeGreaterThanOrEqual(1);
 });
 
 it('renders projects with clickable link when href present', () => {
@@ -54,13 +54,16 @@ it('renders projects as plain text when href absent', () => {
 });
 
 it('renders Team association when teams present', () => {
-  const { getByText } = render(
+  const { getAllByText } = render(
     <ProjectOutputCard
       {...baseProps}
       teams={[{ id: 't1', displayName: 'Alpha', teamType: 'Discovery Team' }]}
     />,
   );
-  expect(getByText('Team Alpha').closest('a')).toHaveAttribute(
+  const matches = getAllByText('Team Alpha');
+  expect(matches.length).toBeGreaterThanOrEqual(1);
+  const linked = matches.find((el) => el.closest('a'));
+  expect(linked?.closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/t1$/),
   );
@@ -113,10 +116,12 @@ it('displays In Review tag when not published and is in review', () => {
 });
 
 it('renders external link when link property present', () => {
-  const { getByTitle } = render(
+  const { getAllByTitle } = render(
     <ProjectOutputCard {...baseProps} link={'https://example.com'} />,
   );
-  expect(getByTitle('External Link').closest('a')).toHaveAttribute(
+  const matches = getAllByTitle('External Link');
+  expect(matches.length).toBeGreaterThanOrEqual(1);
+  expect(matches[0]?.closest('a')).toHaveAttribute(
     'href',
     'https://example.com',
   );

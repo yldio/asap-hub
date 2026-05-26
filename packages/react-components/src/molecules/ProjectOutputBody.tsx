@@ -2,13 +2,22 @@ import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 
-import { Anchor, Avatar, Caption, Headline2, Link, StateTag } from '../atoms';
+import {
+  Anchor,
+  Avatar,
+  Caption,
+  Headline2,
+  Link,
+  Pill,
+  StateTag,
+} from '../atoms';
 import ExternalLink from './ExternalLink';
 import LinkHeadline from './LinkHeadline';
 import PillList from './PillList';
 import TagList from './TagList';
 import { formatDate } from '../date';
-import { rem } from '../pixels';
+import { neutral800 } from '../colors';
+import { mobileScreen, rem } from '../pixels';
 import {
   alumniBadgeIcon,
   DiscoveryProjectIcon,
@@ -52,6 +61,32 @@ export type ProjectOutput = Pick<
   source?: 'team' | 'project';
 };
 
+const mobileOnlyStyles = css({
+  display: 'none',
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    display: 'flex',
+  },
+});
+
+const mobilePillStyles = css({
+  '& > span': {
+    margin: 0,
+  },
+});
+
+const mobilePillListStyles = css({
+  '& > ul': {
+    marginTop: rem(8),
+    marginBottom: 0,
+  },
+});
+
+const desktopOnlyStyles = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+
 const associationStyles = css({
   display: 'flex',
   flexDirection: 'column',
@@ -65,6 +100,10 @@ const metadataRowStyles = css({
   justifyContent: 'space-between',
   columnGap: rem(12),
   height: rem(32),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    height: 'auto',
+    flexWrap: 'wrap',
+  },
 });
 
 const externalLinkWrapperStyles = css({
@@ -91,6 +130,9 @@ const associationRowStyles = css({
   alignItems: 'center',
   columnGap: rem(8),
   rowGap: rem(8),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    rowGap: rem(16),
+  },
 });
 
 const associationIconStyles = css({
@@ -117,6 +159,10 @@ const counterBaseStyles = css({
 
 const associationCounterStyles = css(counterBaseStyles, {
   marginLeft: rem(32),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    marginLeft: 0,
+    flexBasis: '100%',
+  },
 });
 
 const counterAvatarStyles = css({
@@ -134,6 +180,9 @@ const titleStyles = css({
   alignItems: 'center',
   marginTop: rem(4),
   marginBottom: rem(4),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    marginTop: 0,
+  },
 });
 
 const tagContainerStyles = css({
@@ -145,13 +194,28 @@ const datesStyles = css({
   flexWrap: 'wrap',
   columnGap: rem(12),
   marginTop: rem(24),
+  color: neutral800.rgb,
   '& > *': {
     lineHeight: rem(16),
+  },
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
   },
 });
 
 const dateSeparatorStyles = css({
   alignSelf: 'center',
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
+
+const dateAddedStyles = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    '& > p::after': {
+      content: '"  •"',
+    },
+  },
 });
 
 const authorRowStyles = css({
@@ -160,6 +224,11 @@ const authorRowStyles = css({
   alignItems: 'center',
   columnGap: rem(40),
   rowGap: rem(8),
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    rowGap: rem(16),
+  },
 });
 
 const authorItemStyles = css({
@@ -294,9 +363,15 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
 }) => {
   const primaryProject = projects?.[0];
 
+  const externalLinkElement = link ? (
+    <div css={externalLinkWrapperStyles}>
+      <ExternalLink href={link} label="Access Output" size="large" noMargin />
+    </div>
+  ) : null;
+
   return (
     <>
-      <div css={metadataRowStyles}>
+      <div css={[metadataRowStyles, desktopOnlyStyles]}>
         <PillList
           small
           pills={[
@@ -305,17 +380,23 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
             ...(type ? [type] : []),
           ]}
         />
-        {link && (
-          <div css={externalLinkWrapperStyles}>
-            <ExternalLink
-              href={link}
-              label="Access Output"
-              size="large"
-              noMargin
-            />
-          </div>
-        )}
+        {externalLinkElement}
       </div>
+      <div css={[metadataRowStyles, mobileOnlyStyles, mobilePillStyles]}>
+        <Pill small>Project</Pill>
+        {externalLinkElement}
+      </div>
+      {(documentType || type) && (
+        <div css={[mobileOnlyStyles, mobilePillListStyles]}>
+          <PillList
+            small
+            pills={[
+              ...(documentType ? [documentType] : []),
+              ...(type ? [type] : []),
+            ]}
+          />
+        </div>
+      )}
       <div css={titleStyles}>
         {variant === 'card' ? (
           <LinkHeadline
@@ -356,17 +437,37 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
           />
         )}
         {source === 'team' && teams.length > 0 && (
-          <AssociationRow
-            icon={TEAM_ICON}
-            max={3}
-            label="Teams"
-            separator="•"
-            items={teams.map(({ id, displayName }) => ({
-              id,
-              displayName: `Team ${displayName}`,
-              href: network({}).teams({}).team({ teamId: id }).$,
-            }))}
-          />
+          <>
+            <div css={desktopOnlyStyles}>
+              <AssociationRow
+                icon={TEAM_ICON}
+                max={3}
+                label="Teams"
+                separator="•"
+                items={teams.map(({ id, displayName }) => ({
+                  id,
+                  displayName: `Team ${displayName}`,
+                  href: network({}).teams({}).team({ teamId: id }).$,
+                }))}
+              />
+            </div>
+            <div css={[associationRowStyles, mobileOnlyStyles]}>
+              <span css={associationIconStyles}>{TEAM_ICON}</span>
+              {teams.length > 1 ? (
+                <span css={associationItemStyles}>{teams.length} Teams</span>
+              ) : (
+                <span css={associationItemStyles}>
+                  <Link
+                    href={
+                      network({}).teams({}).team({ teamId: teams[0]!.id }).$
+                    }
+                  >
+                    Team {teams[0]!.displayName}
+                  </Link>
+                </span>
+              )}
+            </div>
+          </>
         )}
       </div>
       {showTags && keywords.length > 0 && (
@@ -375,10 +476,12 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
         </div>
       )}
       <div css={datesStyles}>
-        <Caption accent={'lead'} asParagraph noMargin>
-          Date Added: {formatDate(new Date(addedDate || created))}
-        </Caption>
-        <Caption accent={'lead'} asParagraph noMargin>
+        <span css={dateAddedStyles}>
+          <Caption asParagraph noMargin>
+            Date Added: {formatDate(new Date(addedDate || created))}
+          </Caption>
+        </span>
+        <Caption asParagraph noMargin>
           <span css={dateSeparatorStyles}>• </span>
           Last Updated:{' '}
           {formatDate(new Date(lastModifiedDate || addedDate || created))}

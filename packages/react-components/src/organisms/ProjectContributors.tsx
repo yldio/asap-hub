@@ -126,7 +126,7 @@ const emptyStateStyles = css({
   color: lead.rgb,
   margin: 0,
   padding: `${rem(24)} 0`,
-  textAlign: 'center',
+  textAlign: 'left',
 });
 
 const viewMoreContainerStyles = css({

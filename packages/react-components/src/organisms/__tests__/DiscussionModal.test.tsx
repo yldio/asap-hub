@@ -34,7 +34,7 @@ it('renders the attach files field', async () => {
   expect(screen.getByText(/\(optional\)/i)).toBeVisible();
   expect(
     screen.getByText(
-      /Add any files related to this discussion. The file size must not exceed 100 MB./i,
+      /Add any files related to this discussion. You can upload up to 5 files, each no larger than 100 MB./i,
     ),
   ).toBeVisible();
 });

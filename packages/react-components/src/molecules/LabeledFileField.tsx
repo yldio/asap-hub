@@ -114,7 +114,6 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
     <div>
       <input
         onChange={handleFileChange}
-        multiple={maxFiles > 1}
         ref={fileInputRef}
         type="file"
         aria-label={placeholder}

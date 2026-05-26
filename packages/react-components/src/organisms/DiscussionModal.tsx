@@ -196,7 +196,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
                   buttonText="Add"
                   title="Attach files"
                   subtitle="(optional)"
-                  description="Add any files related to this discussion. The file size must not exceed 100 MB."
+                  description="Add any files related to this discussion. You can upload up to 5 files, each no larger than 100 MB."
                   placeholder="Attach File"
                   onRemove={(id?: string) => {
                     setValue('files', value?.filter((file) => file.id !== id));

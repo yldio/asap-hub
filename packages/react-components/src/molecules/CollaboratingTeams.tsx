@@ -103,7 +103,7 @@ const articlesListStyles = (count: number) =>
     display: 'flex',
     flexDirection: 'column',
     marginBlockStart: rem(16),
-    gap: rem(8),
+    gap: rem(16),
     ...(count > ARTICLES_BEFORE_SCROLL
       ? {
           maxHeight: rem(ARTICLES_BEFORE_SCROLL * ARTICLE_ROW_HEIGHT),
@@ -117,10 +117,11 @@ const articleRowStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
-  gap: rem(8),
+  gap: 0,
   [nonMobileQuery]: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: rem(8),
   },
 });
 

@@ -6,8 +6,11 @@ import {
   FETCH_PROJECTS_BY_TEAM_ID,
   FETCH_PROJECTS_BY_USER_ID,
   FETCH_PROJECT_BY_ID,
+  FETCH_TEAM_RESEARCH_OUTPUTS,
   FetchProjectByIdQuery,
   FetchProjectByIdQueryVariables,
+  FetchTeamResearchOutputsQuery,
+  FetchTeamResearchOutputsQueryVariables,
   FetchProjectsByMembershipIdQuery,
   FetchProjectsByMembershipIdQueryVariables,
   FetchProjectsByTeamIdQuery,
@@ -27,6 +30,8 @@ import {
 import {
   Aim,
   AimStatus,
+  CollaboratingTeam,
+  CollaboratingTeamArticle,
   DiscoveryProject,
   FetchPaginationOptions,
   DiscoveryProjectDetail,
@@ -38,7 +43,9 @@ import {
   ProjectStatus,
   ProjectTool,
   ProjectType,
+  ResearchOutputType,
   ResearchTag,
+  TeamType,
   ResourceProject,
   ResourceProjectDetail,
   SupplementGrantInfo,
@@ -420,6 +427,99 @@ const parseProjectManuscripts = (
   };
 };
 
+type ProjectResearchOutputItem = {
+  sys: { id: string };
+  title?: string | null;
+  documentType?: string | null;
+  type?: string | null;
+  teamsCollection?: {
+    items: Array<{
+      sys: { id: string };
+      displayName?: string | null;
+      teamType?: string | null;
+      inactiveSince?: string | null;
+    } | null>;
+  } | null;
+};
+
+type ProjectMemberWithLinkedResearchOutputs = NonNullable<
+  ProjectMembershipItem['projectMember']
+> & {
+  linkedFrom?: {
+    researchOutputsCollection?: {
+      total?: number | null;
+      items: Array<ProjectResearchOutputItem | null>;
+    };
+  };
+};
+
+const getResearchOutputItemsFromProjectMember = (
+  projectMember: NonNullable<ProjectMembershipItem['projectMember']>,
+): ProjectResearchOutputItem[] => {
+  const memberWithLinkedFrom =
+    projectMember as ProjectMemberWithLinkedResearchOutputs;
+  return cleanArray(
+    memberWithLinkedFrom.linkedFrom?.researchOutputsCollection?.items,
+  );
+};
+
+const getResearchOutputsTotalFromProjectMember = (
+  projectMember: NonNullable<ProjectMembershipItem['projectMember']>,
+): number => {
+  const memberWithLinkedFrom =
+    projectMember as ProjectMemberWithLinkedResearchOutputs;
+  return memberWithLinkedFrom.linkedFrom?.researchOutputsCollection?.total ?? 0;
+};
+
+export const parseCollaboratingTeams = (
+  researchOutputItems: ProjectResearchOutputItem[],
+  fundedTeamId: string,
+): CollaboratingTeam[] => {
+  const teamsById = new Map<
+    string,
+    {
+      id: string;
+      displayName: string;
+      teamType?: TeamType;
+      inactiveSince?: string;
+      articles: CollaboratingTeamArticle[];
+    }
+  >();
+
+  researchOutputItems
+    .filter((ro) => ro.documentType === 'Article')
+    .forEach((ro) => {
+      const article: CollaboratingTeamArticle = {
+        id: ro.sys.id,
+        title: ro.title || '',
+        type: (ro.type as ResearchOutputType | null) ?? undefined,
+      };
+
+      const coauthors = cleanArray(ro.teamsCollection?.items).filter(
+        (team) => team.sys.id !== fundedTeamId,
+      );
+
+      coauthors.forEach((team) => {
+        const existing = teamsById.get(team.sys.id);
+        if (existing) {
+          existing.articles.push(article);
+        } else {
+          teamsById.set(team.sys.id, {
+            id: team.sys.id,
+            displayName: team.displayName || '',
+            teamType: (team.teamType as TeamType | null) ?? undefined,
+            inactiveSince: team.inactiveSince || undefined,
+            articles: [article],
+          });
+        }
+      });
+    });
+
+  return Array.from(teamsById.values()).sort((a, b) =>
+    a.displayName.localeCompare(b.displayName),
+  );
+};
+
 // Parse Contentful project to ProjectDetail format with all additional fields
 export const parseContentfulProjectDetail = (
   item: ProjectItem,
@@ -466,12 +566,22 @@ export const parseContentfulProjectDetail = (
         const { manuscripts, collaborationManuscripts } =
           parseProjectManuscripts(manuscriptItems, teamMember.sys.id);
 
+        // Parse collaborating teams from funded team's research outputs
+        const researchOutputItems =
+          getResearchOutputItemsFromProjectMember(teamMember);
+        const collaboratingTeams = parseCollaboratingTeams(
+          researchOutputItems,
+          teamMember.sys.id,
+        );
+
         return {
           ...baseProject,
           originalGrantProposalId,
           supplementGrant,
           fundedTeam,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
+          collaboratingTeams:
+            collaboratingTeams.length > 0 ? collaboratingTeams : undefined,
           manuscripts,
           collaborationManuscripts,
         } as DiscoveryProjectDetail;
@@ -511,6 +621,14 @@ export const parseContentfulProjectDetail = (
           collaborationManuscripts: resourceCollaborationManuscripts,
         } = parseProjectManuscripts(resourceManuscriptItems, teamMember.sys.id);
 
+        // Parse collaborating teams from funded team's research outputs
+        const resourceResearchOutputItems =
+          getResearchOutputItemsFromProjectMember(teamMember);
+        const resourceCollaboratingTeams = parseCollaboratingTeams(
+          resourceResearchOutputItems,
+          teamMember.sys.id,
+        );
+
         return {
           ...baseProject,
           originalGrantProposalId,
@@ -518,6 +636,10 @@ export const parseContentfulProjectDetail = (
           fundedTeam,
           researchTheme: fundedTeam?.researchTheme || undefined,
           collaborators: collaborators.length > 0 ? collaborators : undefined,
+          collaboratingTeams:
+            resourceCollaboratingTeams.length > 0
+              ? resourceCollaboratingTeams
+              : undefined,
           manuscripts: resourceManuscripts,
           collaborationManuscripts: resourceCollaborationManuscripts,
         } as ResourceProjectDetail;
@@ -711,6 +833,68 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     return [...ids];
   }
 
+  /**
+   * Page size for the funded team's linked research outputs. Matches the
+   * inline projection in FETCH_PROJECT_BY_ID and stays under Contentful's
+   * 100k query-complexity budget (50 ROs * 10 teamsCollection items each).
+   */
+  private static readonly RESEARCH_OUTPUTS_PAGE_SIZE = 50;
+
+  /**
+   * If the funded team has more research outputs than fit in the first page
+   * inlined on FETCH_PROJECT_BY_ID, fetch the remaining pages and recompute
+   * collaboratingTeams over the full set. No extra requests are made when
+   * the first page already contains everything.
+   */
+  private async augmentCollaboratingTeams(
+    projects: NonNullable<FetchProjectByIdQuery['projects']>,
+    baseResult: ProjectDetailDataObject,
+  ): Promise<ProjectDetailDataObject> {
+    const members = cleanArray(projects.membersCollection?.items || []);
+    const teamMember = members.find(
+      (m) => m.projectMember?.__typename === 'Teams',
+    )?.projectMember;
+    if (!teamMember || teamMember.__typename !== 'Teams') return baseResult;
+
+    const firstPageItems = getResearchOutputItemsFromProjectMember(teamMember);
+    const total = getResearchOutputsTotalFromProjectMember(teamMember);
+    const pageSize = ProjectContentfulDataProvider.RESEARCH_OUTPUTS_PAGE_SIZE;
+
+    if (total <= firstPageItems.length) return baseResult;
+
+    const fundedTeamId = teamMember.sys.id;
+    const extraPageRequests: Array<Promise<FetchTeamResearchOutputsQuery>> = [];
+    for (let skip = pageSize; skip < total; skip += pageSize) {
+      extraPageRequests.push(
+        this.contentfulClient.request<
+          FetchTeamResearchOutputsQuery,
+          FetchTeamResearchOutputsQueryVariables
+        >(FETCH_TEAM_RESEARCH_OUTPUTS, {
+          teamId: fundedTeamId,
+          limit: pageSize,
+          skip,
+        }),
+      );
+    }
+
+    const extraResponses = await Promise.all(extraPageRequests);
+    const extraItems = extraResponses.flatMap((r) =>
+      cleanArray(r.teams?.linkedFrom?.researchOutputsCollection?.items),
+    );
+
+    const allItems = [
+      ...firstPageItems,
+      ...(extraItems as ProjectResearchOutputItem[]),
+    ];
+    const collaboratingTeams = parseCollaboratingTeams(allItems, fundedTeamId);
+
+    return {
+      ...baseResult,
+      collaboratingTeams:
+        collaboratingTeams.length > 0 ? collaboratingTeams : undefined,
+    } as ProjectDetailDataObject;
+  }
+
   async fetchById(id: string): Promise<ProjectDataObject | null> {
     try {
       const [
@@ -753,6 +937,10 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       };
 
       const baseResult = parseContentfulProjectDetail(projects);
+      const augmentedResult = await this.augmentCollaboratingTeams(
+        projects,
+        baseResult,
+      );
       const originalGrantAims = toAims(originalAimsHits);
       const supplementGrant = baseResult.supplementGrant
         ? {
@@ -771,7 +959,7 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       };
 
       return {
-        ...baseResult,
+        ...augmentedResult,
         originalGrantAims,
         supplementGrant,
         milestonesLastUpdated:
@@ -780,9 +968,18 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
             : undefined,
       } as ProjectDetailDataObject;
     } catch (error) {
-      logger.info('error:::', error);
-
-      logger.error('Failed to fetch project by id', { id, error });
+      const err = error as Error & {
+        response?: { errors?: unknown };
+      };
+      logger.error(
+        `Failed to fetch project by id: ${err?.message ?? String(error)}`,
+        {
+          id,
+          message: err?.message,
+          stack: err?.stack,
+          gqlErrors: err?.response?.errors,
+        },
+      );
       return null;
     }
   }

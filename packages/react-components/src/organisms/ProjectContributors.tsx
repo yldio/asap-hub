@@ -1,13 +1,24 @@
-import { ProjectMember, FundedTeam } from '@asap-hub/model';
+import { CollaboratingTeam, FundedTeam, ProjectMember } from '@asap-hub/model';
 import { css } from '@emotion/react';
+import { useState } from 'react';
 
-import { Card, Headline3, Pill, TabButton } from '../atoms';
+import { Card, Headline3, Paragraph, Pill, TabButton } from '../atoms';
 import { lead, steel } from '../colors';
-import { TabNav, ProjectMembers, LinkHeadline } from '../molecules';
+import {
+  TabNav,
+  ProjectMembers,
+  LinkHeadline,
+  CollaboratingTeams,
+} from '../molecules';
 import { rem } from '../pixels';
 
 const cardContentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
+});
+
+const subtitleStyles = css({
+  marginTop: rem(24),
+  marginBottom: rem(12),
 });
 
 const tabsContainerStyles = css({
@@ -43,12 +54,14 @@ type ProjectContributorsProps =
   | {
       fundedTeam: FundedTeam;
       collaborators?: ReadonlyArray<ProjectMember>;
+      collaboratingTeams?: ReadonlyArray<CollaboratingTeam>;
       projectMembers?: never;
       showTeamInfo?: never;
     }
   | {
       fundedTeam?: never;
       collaborators?: never;
+      collaboratingTeams?: never;
       projectMembers: ReadonlyArray<ProjectMember>;
       /** Show team info (true for trainee, false for resource not team-based) */
       showTeamInfo?: boolean;
@@ -62,9 +75,12 @@ export type MemberTabs = (typeof memberTabs)[number];
 
 const ProjectContributors: React.FC<ProjectContributorsProps> = ({
   fundedTeam,
+  collaboratingTeams,
   projectMembers,
   showTeamInfo = false,
 }) => {
+  const [activeTab, setActiveTab] = useState<Tabs>('Funded Team');
+
   if (projectMembers) {
     // Trainee or Resource individual-based projects - show Project Members only
     return (
@@ -91,18 +107,35 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
     return null;
   }
 
+  const collaboratorsCount = collaboratingTeams?.length ?? 0;
+
   return (
     <Card padding={false}>
       <div css={cardContentStyles}>
         <Headline3 noMargin>Contributors</Headline3>
+        <Paragraph noMargin accent="lead" styles={subtitleStyles}>
+          View the funded team leading this project and the teams that have
+          collaborated on its articles.
+        </Paragraph>
 
-        <>
-          <div css={tabsContainerStyles}>
-            <TabNav>
-              <TabButton active={true}>Funded Team</TabButton>
-            </TabNav>
-          </div>
-          <div css={tabContentStyles}>
+        <div css={tabsContainerStyles}>
+          <TabNav>
+            <TabButton
+              active={activeTab === 'Funded Team'}
+              onClick={() => setActiveTab('Funded Team')}
+            >
+              Funded Team
+            </TabButton>
+            <TabButton
+              active={activeTab === 'Collaborators'}
+              onClick={() => setActiveTab('Collaborators')}
+            >
+              Collaborators ({collaboratorsCount})
+            </TabButton>
+          </TabNav>
+        </div>
+        <div css={tabContentStyles}>
+          {activeTab === 'Funded Team' ? (
             <div css={teamSectionStyles}>
               <div css={teamHeaderStyles}>
                 <Pill noMargin>{fundedTeam.teamType}</Pill>
@@ -120,8 +153,10 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
               </LinkHeadline>
               <p css={teamDescriptionStyles}>{fundedTeam.teamDescription}</p>
             </div>
-          </div>
-        </>
+          ) : (
+            <CollaboratingTeams collaboratingTeams={collaboratingTeams} />
+          )}
+        </div>
       </div>
     </Card>
   );

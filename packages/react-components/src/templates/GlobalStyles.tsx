@@ -5,6 +5,7 @@ import emotionNormalize from 'emotion-normalize';
 import { fontStyles } from '../text';
 import { themes } from '../theme';
 import { rem } from '../pixels';
+import { neutral300, neutral700, neutral800 } from '../colors';
 
 const styles = {
   html: {
@@ -17,6 +18,25 @@ const styles = {
   },
   p: {
     letterSpacing: rem(0.1),
+  },
+
+  // WebKit/Chromium...
+  '*::-webkit-scrollbar': {
+    width: rem(8),
+    height: rem(8),
+  },
+  '*::-webkit-scrollbar-track': {
+    background: neutral300.rgb,
+    borderRadius: rem(4),
+  },
+  '*::-webkit-scrollbar-thumb': {
+    background: neutral700.rgb,
+    borderRadius: rem(4),
+    innerWidth: 8,
+    outerWidth: 8,
+  },
+  '*::-webkit-scrollbar-thumb:hover': {
+    background: neutral800.rgb,
   },
 } as const;
 const GlobalStyles: FC<Record<string, never>> = () => (

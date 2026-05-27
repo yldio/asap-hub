@@ -71,6 +71,7 @@ export {
   BannerCard,
   CalendarLink,
   CaptionItem,
+  CollaboratingTeams,
   Collapsible,
   ComplianceControls,
   CtaCard,

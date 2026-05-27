@@ -40,6 +40,10 @@ const fileLinkStyles = css({
   border: `1px solid ${colors.neutral500.rgb}`,
   borderRadius: rem(24),
   padding: `${rem(8)} ${rem(12)} ${rem(8)} ${rem(8)}`,
+  transition: 'border-color 0.2s ease-in-out',
+  ':hover': {
+    borderColor: colors.tin.rgb,
+  },
 });
 
 const fileIconStyles = css({
@@ -55,6 +59,9 @@ const fileNameStyles = css({
   fontWeight: 400,
   lineHeight: rem(16),
   color: colors.neutral1000.rgb,
+  ':hover': {
+    textDecoration: 'underline',
+  },
 });
 
 const downloadIconStyles = css({

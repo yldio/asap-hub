@@ -14,7 +14,9 @@ import {
   chevronDownIcon,
 } from '../icons';
 import { TabNav, ProjectMembers, LinkHeadline } from '../molecules';
-import { rem } from '../pixels';
+import { rem, tabletScreen } from '../pixels';
+
+const nonMobileQuery = `@media (min-width: ${tabletScreen.min}px)`;
 
 const cardContentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
@@ -65,10 +67,14 @@ const collaboratorRowStyles = css({
 
 const collaboratorHeaderStyles = css({
   display: 'flex',
-  alignItems: 'center',
+  // Mobile: chevron aligns to the bottom line (the article count).
+  alignItems: 'flex-end',
   justifyContent: 'space-between',
   gap: rem(12),
   cursor: 'pointer',
+  [nonMobileQuery]: {
+    alignItems: 'center',
+  },
 });
 
 const chevronButtonStyles = css({
@@ -82,9 +88,21 @@ const chevronButtonStyles = css({
 
 const collaboratorHeaderLeftStyles = css({
   display: 'flex',
+  // Mobile: team name on the first line, article count on the next.
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  gap: rem(8),
+  [nonMobileQuery]: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+  },
+});
+
+const teamNameGroupStyles = css({
+  display: 'inline-flex',
   alignItems: 'center',
   gap: rem(8),
-  flexWrap: 'wrap',
 });
 
 const collaboratorNameStyles = css({
@@ -95,6 +113,15 @@ const collaboratorNameStyles = css({
 
 const articleCountStyles = css({
   color: lead.rgb,
+  paddingLeft: rem(16),
+  '& > [data-bullet]': {
+    display: 'none',
+  },
+  [nonMobileQuery]: {
+    '& > [data-bullet]': {
+      display: 'inline',
+    },
+  },
 });
 
 const ARTICLES_BEFORE_SCROLL = 7;
@@ -117,7 +144,19 @@ const articlesListStyles = (count: number) =>
   });
 
 const articleRowStyles = css({
+  // Mobile: title row on top, pill flush-left underneath.
   display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  gap: rem(8),
+  [nonMobileQuery]: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+});
+
+const articleTitleGroupStyles = css({
+  display: 'inline-flex',
   alignItems: 'center',
   gap: rem(8),
 });
@@ -205,21 +244,25 @@ const CollaboratingTeamRow: React.FC<{
         }}
       >
         <span css={collaboratorHeaderLeftStyles}>
-          <span aria-hidden="true">
-            <TeamTypeIcon />
-          </span>
-          <span
-            css={collaboratorNameStyles}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
-              {team.displayName}
-            </Link>
-            {team.inactiveSince && <InactiveBadgeIcon />}
+          <span css={teamNameGroupStyles}>
+            <span aria-hidden="true">
+              <TeamTypeIcon />
+            </span>
+            <span
+              css={collaboratorNameStyles}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+                {team.displayName}
+              </Link>
+              {team.inactiveSince && <InactiveBadgeIcon />}
+            </span>
           </span>
           <span css={articleCountStyles}>
-            {' '}
-            • {articleCount} {articleCount === 1 ? 'Article' : 'Articles'}
+            <span data-bullet aria-hidden="true">
+              {'• '}
+            </span>
+            {articleCount} {articleCount === 1 ? 'Article' : 'Articles'}
           </span>
         </span>
         <span css={chevronButtonStyles} aria-hidden="true">
@@ -232,16 +275,18 @@ const CollaboratingTeamRow: React.FC<{
             const label = articleTypeLabel(article.type);
             return (
               <li key={article.id} css={articleRowStyles}>
-                <span aria-hidden="true">{articleIcon}</span>
-                <Link
-                  href={
-                    sharedResearch({}).researchOutput({
-                      researchOutputId: article.id,
-                    }).$
-                  }
-                >
-                  {article.title}
-                </Link>
+                <span css={articleTitleGroupStyles}>
+                  <span aria-hidden="true">{articleIcon}</span>
+                  <Link
+                    href={
+                      sharedResearch({}).researchOutput({
+                        researchOutputId: article.id,
+                      }).$
+                    }
+                  >
+                    {article.title}
+                  </Link>
+                </span>
                 {label && (
                   <Pill noMargin accent="gray">
                     {label}

@@ -1,0 +1,154 @@
+import { Suspense } from 'react';
+import { createMemoryRouter, RouterProvider } from 'react-router';
+import { render, screen } from '@testing-library/react';
+import { RecoilRoot } from 'recoil';
+
+import ProjectOutputs from '../ProjectOutputs';
+import {
+  createProjectOutputsMock,
+  createProjectDraftOutputsMock,
+} from '../projectOutputs.mock';
+
+jest.mock('../projectOutputs.mock', () => ({
+  createProjectOutputsMock: jest.fn(),
+  createProjectDraftOutputsMock: jest.fn(),
+}));
+
+const mockedOutputs = createProjectOutputsMock as jest.Mock;
+const mockedDrafts = createProjectDraftOutputsMock as jest.Mock;
+
+const renderProjectOutputs = (
+  draftOutputs?: boolean,
+  initialEntries: string[] = ['/'],
+) => {
+  const router = createMemoryRouter(
+    [
+      {
+        path: '*',
+        element:
+          draftOutputs === undefined ? (
+            <ProjectOutputs projectId="p1" projectTitle="Project Alpha" />
+          ) : (
+            <ProjectOutputs
+              projectId="p1"
+              projectTitle="Project Alpha"
+              draftOutputs={draftOutputs}
+            />
+          ),
+      },
+    ],
+    { initialEntries },
+  );
+  return render(
+    <RecoilRoot>
+      <Suspense fallback={null}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </RecoilRoot>,
+  );
+};
+
+beforeEach(() => {
+  mockedOutputs.mockReset();
+  mockedDrafts.mockReset();
+});
+
+describe('Published outputs', () => {
+  it('renders NoOutputsPage when no outputs', () => {
+    mockedOutputs.mockReturnValue([]);
+    renderProjectOutputs();
+    expect(screen.getByText('No outputs available.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'When this project shares an output, it will be listed here.',
+      ),
+    ).toBeInTheDocument();
+  });
+});
+
+describe('Draft outputs', () => {
+  it('renders NoOutputsPage with draft copy when no drafts', () => {
+    mockedDrafts.mockReturnValue([]);
+    renderProjectOutputs(true);
+    expect(screen.getByText('No draft outputs available.')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'When this project shares a draft output, it will be listed here.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('renders the list when there are draft outputs', () => {
+    mockedDrafts.mockReturnValue([
+      {
+        id: 'd1',
+        title: 'Example draft',
+        documentType: 'Article',
+        type: 'Preprint',
+        authors: [],
+        teams: [],
+        keywords: [],
+        published: false,
+        isInReview: false,
+        created: new Date(2024, 0, 1).toISOString(),
+        addedDate: new Date(2024, 0, 1).toISOString(),
+        source: 'project',
+        projects: [
+          {
+            id: 'p1',
+            title: 'Project Alpha',
+            projectType: 'discovery',
+            href: '/projects/p1',
+          },
+        ],
+      },
+    ]);
+    renderProjectOutputs(true);
+    expect(screen.getByText('Example draft')).toBeInTheDocument();
+    expect(
+      screen.queryByText('No draft outputs available.'),
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('Pagination and view', () => {
+  const buildOutput = (i: number) => ({
+    id: `o${i}`,
+    title: `Output ${i}`,
+    documentType: 'Article',
+    type: 'Preprint',
+    authors: [],
+    teams: [],
+    keywords: [],
+    published: true,
+    isInReview: false,
+    created: new Date(2024, 0, 1).toISOString(),
+    addedDate: new Date(2024, 0, 1).toISOString(),
+    source: 'project' as const,
+    projects: [
+      {
+        id: 'p1',
+        title: 'Project Alpha',
+        projectType: 'discovery',
+        href: '/projects/p1',
+      },
+    ],
+  });
+
+  it('paginates outputs into pages of the card page size', () => {
+    mockedOutputs.mockReturnValue(
+      Array.from({ length: 15 }, (_, i) => buildOutput(i + 1)),
+    );
+    renderProjectOutputs(false, ['/?currentPage=1']);
+    // Card page size = 10; second page (currentPage=1) shows items 11..15
+    expect(screen.getByText('Output 11')).toBeInTheDocument();
+    expect(screen.queryByText('Output 1')).not.toBeInTheDocument();
+  });
+
+  it('switches to list view when the view URL param is set', () => {
+    mockedOutputs.mockReturnValue([buildOutput(1)]);
+    renderProjectOutputs(false, ['/?view=list']);
+    // List variant wraps each output in a <li>; card variant does not.
+    expect(screen.getByText('Output 1').closest('li')).not.toBeNull();
+  });
+});

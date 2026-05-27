@@ -133,6 +133,8 @@ type ProjectDetailHeaderProps = ProjectDetail & {
   readonly milestonesHref: string;
   readonly outputsHref?: string;
   readonly draftOutputsHref?: string;
+  readonly outputsCount?: number;
+  readonly draftOutputsCount?: number;
 };
 
 export const getTeamIcon = (project: ProjectDetail) => {
@@ -161,6 +163,8 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
     milestonesHref,
     outputsHref,
     draftOutputsHref,
+    outputsCount,
+    draftOutputsCount,
   } = project;
   const { isEnabled } = useFlags();
   const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
@@ -197,10 +201,16 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
                 <TabLink href={workspaceHref}>Workspace</TabLink>
               ) : null}
               {isProjectOutputsEnabled && outputsHref ? (
-                <TabLink href={outputsHref}>Outputs</TabLink>
+                <TabLink href={outputsHref}>
+                  Outputs
+                  {outputsCount !== undefined && ` (${outputsCount})`}
+                </TabLink>
               ) : null}
               {isProjectOutputsEnabled && draftOutputsHref ? (
-                <TabLink href={draftOutputsHref}>Draft Outputs</TabLink>
+                <TabLink href={draftOutputsHref}>
+                  Draft Outputs
+                  {draftOutputsCount !== undefined && ` (${draftOutputsCount})`}
+                </TabLink>
               ) : null}
             </TabNav>
           }

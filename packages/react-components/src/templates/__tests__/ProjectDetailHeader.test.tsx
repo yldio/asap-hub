@@ -785,6 +785,20 @@ describe('ProjectDetailHeader', () => {
       );
       expect(screen.queryByText('Outputs')).not.toBeInTheDocument();
     });
+
+    it('renders Outputs tab with count when outputsCount is provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+          outputsHref="/projects/discovery/1/outputs"
+          outputsCount={12}
+        />,
+      );
+      expect(screen.getByText('Outputs (12)')).toBeInTheDocument();
+    });
   });
 
   describe('Draft Outputs tab', () => {
@@ -824,6 +838,20 @@ describe('ProjectDetailHeader', () => {
         />,
       );
       expect(screen.queryByText('Draft Outputs')).not.toBeInTheDocument();
+    });
+
+    it('renders Draft Outputs tab with count when draftOutputsCount is provided', () => {
+      mockIsEnabled.mockReturnValue(true);
+      render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+          draftOutputsHref="/projects/discovery/1/draft-outputs"
+          draftOutputsCount={5}
+        />,
+      );
+      expect(screen.getByText('Draft Outputs (5)')).toBeInTheDocument();
     });
   });
 });

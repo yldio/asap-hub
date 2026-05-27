@@ -7,7 +7,7 @@ import {
   completedStatusOptions,
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { DropdownButton, ExportButton } from '.';
+import { DropdownButton, ExportButton, ExportTooltip } from '.';
 import { dropdownChevronIcon } from '../icons';
 import { rem, tabletScreen } from '../pixels';
 
@@ -95,14 +95,10 @@ const ComplianceControls = ({
       : `${manuscriptCount} results found`;
 
   const tooltip = (
-    <>
-      <strong>Data in Table:</strong> Download the data you can currently see in
-      the table;
-      <br />
-      <br />
-      <strong>Full Dataset:</strong> Download the data you can currently see in
-      the table and additional data from the CMS.
-    </>
+    <ExportTooltip
+      dataInTable="Download the data you can currently see in the table;"
+      fullDataset="Download the data you can currently see in the table and additional data from the CMS."
+    />
   );
 
   return (

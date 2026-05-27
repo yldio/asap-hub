@@ -8,6 +8,7 @@ import {
 } from '@asap-hub/model';
 import {
   ExportButton,
+  ExportTooltip,
   LabeledMultiSelect,
   ProjectDetailMilestones,
   ProjectMilestonesTable,
@@ -105,7 +106,12 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
 
   const downloadSection = (
     <ExportButton
-      info="Data in Table downloads the milestones currently shown (with your filters, search and sort applied) along with their related aims. Full Dataset downloads every aim and milestone for this project."
+      info={
+        <ExportTooltip
+          dataInTable="Downloads the milestones currently shown (with your filters, search and sort applied) along with their related aims."
+          fullDataset="Downloads every aim and milestone for this project."
+        />
+      }
       buttons={[
         {
           buttonText: 'Data in Table',

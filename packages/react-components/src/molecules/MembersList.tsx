@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, ReactNode, isValidElement } from 'react';
 import { css, SerializedStyles } from '@emotion/react';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
@@ -15,15 +15,22 @@ const containerStyles = css({
   margin: 0,
   padding: 0,
   display: 'grid',
-
-  gridTemplateColumns: `${rem(48)} 1fr`,
-  gridColumnGap: rem(18),
-  gridAutoFlow: 'row dense',
+  gridTemplateColumns: '1fr',
+  listStyle: 'none',
 });
 const multiColumnContainerStyles = css({
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: `${rem(48)} 1fr ${rem(48)} 1fr`,
+    gridTemplateColumns: '1fr 1fr',
+    columnGap: rem(18),
   },
+});
+
+const memberGridStyles = css({
+  display: 'grid',
+  gridTemplateColumns: `${rem(48)} 1fr`,
+  gridColumnGap: rem(18),
+  gridAutoFlow: 'row dense',
+  alignSelf: 'start',
 });
 
 const avatarStyles = css({
@@ -43,13 +50,6 @@ const badgeStyles = css({
 const addToColumnStyles = css({
   gridColumn: 2,
 });
-const multiColumnAddToColumnStyles = css({
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    'li:nth-of-type(2n) &': {
-      gridColumn: 4,
-    },
-  },
-});
 const textStyles = css({
   color: lead.rgb,
   minHeight: rem(24),
@@ -63,8 +63,11 @@ interface MembersListProps {
   readonly members: ReadonlyArray<
     {
       firstLine: string;
-      secondLine?: string;
-      thirdLine?: string | ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
+      secondLine?: string | ReactNode;
+      thirdLine?:
+        | string
+        | ReactNode
+        | ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
     } & Pick<UserResponse, 'id'> &
       Partial<
         Pick<
@@ -104,7 +107,7 @@ const MembersList: React.FC<MembersListProps> = ({
           />
         );
         return (
-          <li key={id} css={{ display: 'contents' }}>
+          <li key={id} css={memberGridStyles}>
             <Anchor href={href} css={{ display: 'contents' }}>
               <div css={[avatarStyles, hoverStyle]}>{userAvatar}</div>
             </Anchor>
@@ -122,42 +125,39 @@ const MembersList: React.FC<MembersListProps> = ({
                 <span css={badgeStyles}>{alumniBadgeIcon}</span>
               )}
             </Anchor>
-            <Anchor href={href} css={{ display: 'contents' }}>
-              <div
-                css={[
-                  addToColumnStyles,
-                  singleColumn || multiColumnAddToColumnStyles,
-                  secondLine && textStyles,
-                ]}
-              >
-                <Ellipsis>{secondLine}</Ellipsis>
-              </div>
-            </Anchor>
-            <div
-              css={[
-                addToColumnStyles,
-                singleColumn || multiColumnAddToColumnStyles,
-                textStyles,
-                labStyles,
-              ]}
-            >
-              <Ellipsis>
-                {thirdLine instanceof Array ? (
-                  thirdLine.map((team) => (
-                    <Fragment key={team.id}>
-                      <Link
-                        href={network({}).teams({}).team({ teamId: team.id }).$}
-                      >
-                        Team {team.displayName}
-                      </Link>{' '}
-                    </Fragment>
-                  ))
-                ) : (
-                  <Anchor href={href} css={{ display: 'contents' }}>
-                    {thirdLine}
-                  </Anchor>
-                )}
-              </Ellipsis>
+            {isValidElement(secondLine) ? (
+              <div css={[addToColumnStyles, textStyles]}>{secondLine}</div>
+            ) : (
+              <Anchor href={href} css={{ display: 'contents' }}>
+                <div css={[addToColumnStyles, secondLine && textStyles]}>
+                  <Ellipsis>{secondLine}</Ellipsis>
+                </div>
+              </Anchor>
+            )}
+            <div css={[addToColumnStyles, thirdLine && textStyles, labStyles]}>
+              {isValidElement(thirdLine) ? (
+                thirdLine
+              ) : (
+                <Ellipsis>
+                  {thirdLine instanceof Array ? (
+                    thirdLine.map((team) => (
+                      <Fragment key={team.id}>
+                        <Link
+                          href={
+                            network({}).teams({}).team({ teamId: team.id }).$
+                          }
+                        >
+                          Team {team.displayName}
+                        </Link>{' '}
+                      </Fragment>
+                    ))
+                  ) : (
+                    <Anchor href={href} css={{ display: 'contents' }}>
+                      {thirdLine}
+                    </Anchor>
+                  )}
+                </Ellipsis>
+              )}
             </div>
           </li>
         );

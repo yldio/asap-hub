@@ -2,7 +2,7 @@ import { CollaboratingTeam, FundedTeam, ProjectMember } from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 
-import { Card, Headline3, Pill, TabButton } from '../atoms';
+import { Card, Headline3, Paragraph, Pill, TabButton } from '../atoms';
 import { lead, steel } from '../colors';
 import {
   TabNav,
@@ -14,6 +14,11 @@ import { rem } from '../pixels';
 
 const cardContentStyles = css({
   padding: `${rem(32)} ${rem(24)}`,
+});
+
+const subtitleStyles = css({
+  marginTop: rem(24),
+  marginBottom: rem(12),
 });
 
 const tabsContainerStyles = css({
@@ -108,6 +113,10 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
     <Card padding={false}>
       <div css={cardContentStyles}>
         <Headline3 noMargin>Contributors</Headline3>
+        <Paragraph noMargin accent="lead" styles={subtitleStyles}>
+          View the funded team leading this project and the teams that have
+          collaborated on its articles.
+        </Paragraph>
 
         <div css={tabsContainerStyles}>
           <TabNav>

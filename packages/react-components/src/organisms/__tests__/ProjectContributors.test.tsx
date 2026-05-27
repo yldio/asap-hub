@@ -74,6 +74,21 @@ describe('ProjectContributors', () => {
       expect(screen.getByText('Discovery Team')).toBeInTheDocument();
       expect(screen.queryByText('Neurodegeneration')).not.toBeInTheDocument();
     });
+
+    it('shows the subtitle and keeps it across both tabs', async () => {
+      const subtitle =
+        /view the funded team leading this project and the teams that have collaborated on its articles/i;
+      renderWithRouter(
+        <ProjectContributors
+          fundedTeam={mockFundedTeam}
+          collaboratingTeams={makeCollaboratingTeams(2)}
+        />,
+      );
+      expect(screen.getByText(subtitle)).toBeInTheDocument();
+
+      await userEvent.click(screen.getByText('Collaborators (2)'));
+      expect(screen.getByText(subtitle)).toBeInTheDocument();
+    });
   });
 
   describe('Individual-based projects (Project Members)', () => {
@@ -92,6 +107,13 @@ describe('ProjectContributors', () => {
       render(<ProjectContributors projectMembers={mockProjectMembers} />);
       expect(screen.queryByText('Funded Team')).not.toBeInTheDocument();
       expect(screen.queryByText(/Collaborators/)).not.toBeInTheDocument();
+    });
+
+    it('does not render the team-based subtitle', () => {
+      render(<ProjectContributors projectMembers={mockProjectMembers} />);
+      expect(
+        screen.queryByText(/view the funded team leading this project/i),
+      ).not.toBeInTheDocument();
     });
   });
 

@@ -14,7 +14,6 @@ type DiscussionAttachedFilesProps = {
 const containerStyles = css({
   marginTop: rem(16),
   marginLeft: rem(24),
-  marginBottom: rem(12),
 });
 
 const titleStyles = css({

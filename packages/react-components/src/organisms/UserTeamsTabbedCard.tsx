@@ -106,10 +106,11 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
   userAlumni,
   teams,
 }) => {
-  const groupedTeams = useMemo(() => groupUserTeamsByTeamId(teams), [teams]);
-  const sortedTeams = [...groupedTeams].sort(
-    (a, b) => priorities[a.roles[0]!] - priorities[b.roles[0]!],
-  );
+  const sortedTeams = useMemo(() => {
+    const grouped = groupUserTeamsByTeamId(teams);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion - roles always has at least one entry from groupUserTeamsByTeamId
+    return [...grouped].sort((a, b) => priorities[a.roles[0]!] - priorities[b.roles[0]!]);
+  }, [teams]);
   const teamHref = (id: string) => network({}).teams({}).team({ teamId: id }).$;
   const [inactiveTeams, activeTeams] = splitListBy(
     sortedTeams,

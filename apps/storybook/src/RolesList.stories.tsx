@@ -30,17 +30,14 @@ export const FourRolesWithOverflow = () => (
   />
 );
 
-export const InlineSingleRole = () => (
-  <RolesList roles={['Lead PI (Core Leadership)']} inline />
-);
-
-export const InlineTwoRoles = () => (
-  <RolesList roles={['Lead PI (Core Leadership)', 'Project Manager']} inline />
-);
-
-export const InlineThreeRolesWithOverflow = () => (
+export const CustomMaxVisible = () => (
   <RolesList
-    roles={['Lead PI (Core Leadership)', 'Project Manager', 'Collaborating PI']}
-    inline
+    roles={[
+      'Lead PI (Core Leadership)',
+      'Project Manager',
+      'Collaborating PI',
+      'Co-PI (Core Leadership)',
+    ]}
+    maxVisible={3}
   />
 );

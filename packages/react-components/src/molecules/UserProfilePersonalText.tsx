@@ -4,10 +4,9 @@ import { UserListItemResponse, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
-import { Link, Ellipsis, Anchor, Subtitle } from '../atoms';
+import { Link, Ellipsis, Anchor, Subtitle, OverflowBadge } from '../atoms';
 import { alumniBadgeIcon, locationIcon } from '../icons';
 import { rem, lineHeight } from '../pixels';
-import { OverflowBadge } from '../atoms';
 import { lead, tin } from '../colors';
 import {
   formatUserLocation,

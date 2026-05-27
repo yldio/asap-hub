@@ -360,7 +360,11 @@ const ExpandedView = ({
         {hasReplies ? (
           <div css={replyContainerStyles}>
             <div css={replyCountDividerStyles}>
-              <span css={replyCountStyles}>{`${replies.length} replies`}</span>
+              <span css={replyCountStyles}>
+                {`${replies.length} ${
+                  replies.length === 1 ? 'reply' : 'replies'
+                }`}
+              </span>
               <div css={replyLineSeparatorStyles} />
             </div>
             {replies.map((reply, index) => (

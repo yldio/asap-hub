@@ -37,6 +37,13 @@ export const Normal = () => {
       isComplianceReviewer={false}
       onUpdateManuscript={() => Promise.resolve(createManuscriptResponse())}
       createDiscussion={() => Promise.resolve('compliance-discussion-id')}
+      handleFileUpload={() =>
+        Promise.resolve({
+          id: 'file-id',
+          filename: 'test.pdf',
+          url: 'https://example.com/test.pdf',
+        })
+      }
       useManuscriptById={() => [undefined, () => {}]}
       onReplyToDiscussion={() => Promise.resolve()}
       onMarkDiscussionAsRead={() => Promise.resolve()}

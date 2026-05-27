@@ -1,4 +1,4 @@
-import { DiscussionRequest } from '@asap-hub/model';
+import { DiscussionRequest, ManuscriptFileResponse } from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   useCreateDiscussion,
@@ -17,9 +17,15 @@ const useDiscussionHandlers = () => {
     manuscriptId: string,
     title: string,
     message: string,
+    files?: ManuscriptFileResponse[],
   ): Promise<string | undefined> => {
     try {
-      const discussionId = await createDiscussion(manuscriptId, title, message);
+      const discussionId = await createDiscussion(
+        manuscriptId,
+        title,
+        message,
+        files,
+      );
       setFormType({ type: 'discussion-started', accent: 'successLarge' });
       return discussionId;
     } catch (error: unknown) {

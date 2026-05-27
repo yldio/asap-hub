@@ -33,6 +33,13 @@ const defaultProps: ComponentProps<typeof ProjectProfileWorkspace> = {
   onUpdateManuscript: noopUpdateManuscript,
   isComplianceReviewer: false,
   createDiscussion: noopCreateDiscussion,
+  handleFileUpload: jest.fn(() =>
+    Promise.resolve({
+      id: 'file-id',
+      filename: 'test.pdf',
+      url: 'https://example.com/test.pdf',
+    }),
+  ),
   useManuscriptById: useManuscriptByIdStub,
   onReplyToDiscussion: noopReplyToDiscussion,
   onMarkDiscussionAsRead: noopMarkDiscussionAsRead,

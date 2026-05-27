@@ -322,6 +322,71 @@ describe('/manuscripts/ route', () => {
         contentType: 'application/pdf',
       });
     });
+
+    test('should allow any content type for Discussion Files', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+      });
+      manuscriptControllerMock.createFile.mockResolvedValueOnce(
+        manuscriptFileResponse,
+      );
+
+      const response = await supertest(app)
+        .post('/manuscripts/file-upload-from-url')
+        .send({
+          fileType: 'Discussion Files',
+          filename: 'screenshot.png',
+          contentType: 'image/png',
+          url: 'https://example.com/screenshot.png',
+        });
+
+      expect(response.status).toBe(201);
+      expect(manuscriptControllerMock.createFile).toHaveBeenCalledWith({
+        fileType: 'Discussion Files',
+        filename: 'screenshot.png',
+        content: 'https://example.com/screenshot.png',
+        contentType: 'image/png',
+      });
+    });
+
+    it.each([
+      {
+        fileType: 'Manuscript File',
+        contentType: 'text/csv',
+        acceptedContentType: 'application/pdf',
+      },
+      {
+        fileType: 'Key Resource Table',
+        contentType: 'application/pdf',
+        acceptedContentType: 'text/csv',
+      },
+      {
+        fileType: 'Additional Files',
+        contentType: 'image/png',
+        acceptedContentType: 'text/csv or application/pdf',
+      },
+      {
+        fileType: 'Compliance Report Response',
+        contentType: 'image/png',
+        acceptedContentType:
+          'application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, or application/pdf',
+      },
+    ])(
+      'should return 400 if file type is $fileType and content type is not $acceptedContentType',
+      async ({ fileType, contentType }) => {
+        const response = await supertest(app)
+          .post('/manuscripts/file-upload-from-url')
+          .send({
+            fileType,
+            filename: 'file',
+            contentType,
+            url: 'https://example.com/file',
+          });
+
+        expect(response.status).toBe(400);
+        expect(manuscriptControllerMock.createFile).not.toHaveBeenCalled();
+      },
+    );
   });
 
   describe('POST /manuscripts/file-upload', () => {

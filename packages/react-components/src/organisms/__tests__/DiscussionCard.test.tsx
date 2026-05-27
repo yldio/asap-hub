@@ -53,6 +53,13 @@ const mockDiscussion: ManuscriptDiscussion = {
 };
 
 const mockOnReplyToDiscussion = jest.fn();
+const mockHandleFileUpload = jest.fn(() =>
+  Promise.resolve({
+    id: 'file-id',
+    filename: 'test.pdf',
+    url: 'https://example.com/test.pdf',
+  }),
+);
 
 describe('DiscussionCard', () => {
   beforeEach(() => {
@@ -66,6 +73,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
       />,
     );
 
@@ -86,12 +94,68 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         showTeamName={false}
       />,
     );
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.queryByText('Team 1')).not.toBeInTheDocument();
+  });
+
+  it('shows singular reply count when there is one reply', async () => {
+    render(
+      <DiscussionCard
+        manuscriptId="manuscript-1"
+        discussion={mockDiscussion}
+        onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
+      />,
+    );
+
+    const expandButton = screen.getByTestId(
+      'discussion-collapsible-button-discussion-1',
+    );
+    await userEvent.click(expandButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('1 reply')).toBeInTheDocument();
+      expect(screen.queryByText('1 replies')).not.toBeInTheDocument();
+    });
+  });
+
+  it('shows plural reply count when there are multiple replies', async () => {
+    const baseReply = mockDiscussion.replies[0];
+
+    render(
+      <DiscussionCard
+        manuscriptId="manuscript-1"
+        discussion={{
+          ...mockDiscussion,
+          replies: [
+            baseReply!,
+            {
+              ...baseReply!,
+              text: 'Second reply',
+              createdDate: '2024-01-01T02:00:00Z',
+            },
+          ],
+        }}
+        onReplyToDiscussion={mockOnReplyToDiscussion}
+        onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
+      />,
+    );
+
+    const expandButton = screen.getByTestId(
+      'discussion-collapsible-button-discussion-1',
+    );
+    await userEvent.click(expandButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('2 replies')).toBeInTheDocument();
+    });
   });
 
   it('expands when clicking the expand button', async () => {
@@ -101,6 +165,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
       />,
     );
 
@@ -207,6 +272,7 @@ describe('DiscussionCard', () => {
         discussion={discussionWithSeveralReplies}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
       />,
     );
 
@@ -245,6 +311,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
       />,
     );
 
@@ -267,6 +334,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={true}
       />,
     );
@@ -288,6 +356,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={false}
       />,
     );
@@ -309,6 +378,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={true}
       />,
     );
@@ -337,6 +407,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={true}
       />,
     );
@@ -365,7 +436,7 @@ describe('DiscussionCard', () => {
       expect(mockOnReplyToDiscussion).toHaveBeenCalledWith(
         'manuscript-1',
         'discussion-1',
-        { text: 'test message', manuscriptId: 'manuscript-1' },
+        { text: 'test message', manuscriptId: 'manuscript-1', files: [] },
       );
     });
 
@@ -384,6 +455,7 @@ describe('DiscussionCard', () => {
         discussion={discussionWithoutReplies}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={true}
       />,
     );
@@ -410,6 +482,7 @@ describe('DiscussionCard', () => {
         discussion={discussionWithoutReplies}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         displayReplyButton={false}
       />,
     );
@@ -431,6 +504,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
         isLast={true}
       />,
     );
@@ -448,6 +522,7 @@ describe('DiscussionCard', () => {
         discussion={mockDiscussion}
         onReplyToDiscussion={mockOnReplyToDiscussion}
         onMarkDiscussionAsRead={mockOnMarkDiscussionAsRead}
+        handleFileUpload={mockHandleFileUpload}
       />,
     );
 

@@ -83,6 +83,7 @@ export const manuscriptFileTypes = [
   'Key Resource Table',
   'Additional Files',
   'Compliance Report Response',
+  'Discussion Files',
 ] as const;
 export type ManuscriptFileType = (typeof manuscriptFileTypes)[number];
 

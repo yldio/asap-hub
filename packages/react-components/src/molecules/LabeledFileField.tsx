@@ -71,6 +71,7 @@ type LabeledFileFieldProps = {
   readonly handleFileUpload: (file: File) => Promise<void>;
   readonly accept?: string;
   readonly tagEnabled?: boolean;
+  readonly buttonText?: string;
 } & Pick<ComponentProps<typeof Button>, 'enabled'>;
 
 const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
@@ -87,6 +88,7 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
   customValidationMessage,
   handleFileUpload,
   tagEnabled = true,
+  buttonText = 'Add File',
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const descriptionId = useId();
@@ -112,7 +114,6 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
     <div>
       <input
         onChange={handleFileChange}
-        multiple={maxFiles > 1}
         ref={fileInputRef}
         type="file"
         aria-label={placeholder}
@@ -174,13 +175,13 @@ const LabeledFileField: React.FC<LabeledFileFieldProps> = ({
                 ) : (
                   <div css={iconStyles}>{plusIcon}</div>
                 )}
-                Add File
+                {buttonText}
               </Button>
             </div>
           </>
         )}
       >
-        <Paragraph noMargin styles={css({ paddingBottom: rem(16) })}>
+        <Paragraph noMargin>
           <strong>{title}</strong>
           <span css={subtitleStyles}>{subtitle}</span>
         </Paragraph>

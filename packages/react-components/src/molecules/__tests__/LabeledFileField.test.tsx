@@ -46,6 +46,21 @@ it('renders a file tag and a disabled button when a file is selected', () => {
   expect(screen.getByText('Add File').parentNode).toBeDisabled();
 });
 
+it('does not allow multi-select in the file picker when maxFiles is greater than 1', () => {
+  render(
+    <LabeledFileField
+      title="Title"
+      subtitle="Subtitle"
+      handleFileUpload={handleFileUploadMock}
+      enabled
+      maxFiles={5}
+      placeholder="Upload File"
+    />,
+  );
+
+  expect(screen.getByLabelText(/Upload File/i)).not.toHaveAttribute('multiple');
+});
+
 it('renders a file tag and an enabled button when a file is selected and maxFiles is greater than 1', () => {
   render(
     <LabeledFileField

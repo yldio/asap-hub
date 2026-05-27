@@ -1,4 +1,8 @@
-import { DiscussionCreateRequest } from '@asap-hub/model';
+import {
+  DiscussionCreateRequest,
+  ManuscriptFileResponse,
+  ManuscriptFileType,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -6,6 +10,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Button } from '../atoms';
 import {
   FormSection,
+  LabeledFileField,
   LabeledTextEditor,
   LabeledTextField,
   Modal,
@@ -73,30 +78,41 @@ const cancelTextStyles = css({
   },
 });
 
-type DiscussionModalProps = {
-  type: 'start' | 'reply';
-  onDismiss: () => void;
-  onSave: (data: DiscussionCreateRequest) => Promise<void>;
-};
+const MAX_FILE_SIZE = 100_000_000;
 
 type DiscussionModalData = {
   title?: string;
   text: string;
+  files?: ManuscriptFileResponse[];
+};
+
+type DiscussionModalProps = {
+  type: 'start' | 'reply';
+  onDismiss: () => void;
+  onSave: (data: DiscussionCreateRequest) => Promise<void>;
+  handleFileUpload: (
+    file: File,
+    fileType: ManuscriptFileType,
+    handleError: (errorMessage: string) => void,
+  ) => Promise<ManuscriptFileResponse | undefined>;
 };
 
 const DiscussionModal: React.FC<DiscussionModalProps> = ({
   type,
   onDismiss,
   onSave,
+  handleFileUpload,
 }) => {
   const methods = useForm<DiscussionModalData>({
     mode: 'onChange',
     defaultValues: {
       title: '',
       text: '',
+      files: [],
     },
   });
   const [isCancelling, setIsCancelling] = useState(false);
+  const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 
   const modalTitle = type === 'start' ? 'Start Discussion' : 'Reply';
 
@@ -104,13 +120,16 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
     control,
     formState: { isSubmitting, isValid },
     handleSubmit,
+    setValue,
+    setError,
+    clearErrors,
+    getValues,
   } = methods;
 
   const onSubmit = async (data: DiscussionModalData) => {
     await onSave(data as DiscussionCreateRequest);
     onDismiss();
   };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Modal padding={false}>
@@ -168,6 +187,62 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
                 />
               )}
             />
+
+            <Controller
+              name="files"
+              control={control}
+              render={({ field: { value }, fieldState: { error } }) => (
+                <LabeledFileField
+                  buttonText="Add"
+                  title="Attach files"
+                  subtitle="(optional)"
+                  description="Add any files related to this discussion. You can upload up to 5 files, each no larger than 100 MB."
+                  placeholder="Attach File"
+                  onRemove={(id?: string) => {
+                    setValue('files', value?.filter((file) => file.id !== id));
+                  }}
+                  maxFiles={5}
+                  handleFileUpload={async (file: File) => {
+                    if (file.size > MAX_FILE_SIZE) {
+                      setError('files', {
+                        type: 'custom',
+                        message:
+                          'The file size exceeds the limit of 100 MB. Please upload a smaller file.',
+                      });
+                      return;
+                    }
+
+                    setIsUploadingFiles(true);
+                    clearErrors('files');
+
+                    const uploadedFile = await handleFileUpload(
+                      file,
+                      'Discussion Files',
+                      (validationErrorMessage) => {
+                        setError('files', {
+                          type: 'custom',
+                          message: validationErrorMessage,
+                        });
+                      },
+                    );
+                    setIsUploadingFiles(false);
+
+                    if (!uploadedFile) return;
+
+                    setValue(
+                      'files',
+                      [...(getValues('files') || []), uploadedFile],
+                      {
+                        shouldValidate: true,
+                      },
+                    );
+                  }}
+                  currentFiles={value}
+                  customValidationMessage={error?.message}
+                  enabled={!(isSubmitting || isCancelling) && !isUploadingFiles}
+                />
+              )}
+            />
           </FormSection>
           <div css={footerStyles(isCancelling)}>
             <div css={cancelTextStyles}>
@@ -204,7 +279,7 @@ const DiscussionModal: React.FC<DiscussionModalProps> = ({
                   <Button
                     noMargin
                     primary
-                    enabled={!isSubmitting && isValid}
+                    enabled={!isSubmitting && !isUploadingFiles && isValid}
                     overrideStyles={buttonOverrideStyles}
                     submit
                     preventDefault={false}

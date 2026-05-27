@@ -1,4 +1,8 @@
-import { DiscussionCreateRequest, ManuscriptDiscussion } from '@asap-hub/model';
+import {
+  DiscussionCreateRequest,
+  ManuscriptDiscussion,
+  ManuscriptFileResponse,
+} from '@asap-hub/model';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
 
@@ -59,7 +63,9 @@ type DiscussionsTabProps = Pick<
     manuscriptId: string,
     title: string,
     message: string,
+    files?: ManuscriptFileResponse[],
   ) => Promise<string | undefined>;
+  handleFileUpload: ComponentProps<typeof DiscussionModal>['handleFileUpload'];
   discussions: ManuscriptDiscussion[];
   canParticipateInDiscussion: boolean;
   isActiveManuscript: boolean;
@@ -67,6 +73,7 @@ type DiscussionsTabProps = Pick<
 
 const DiscussionsTab: React.FC<DiscussionsTabProps> = ({
   createDiscussion,
+  handleFileUpload,
   manuscriptId,
   discussions,
   onReplyToDiscussion,
@@ -80,7 +87,7 @@ const DiscussionsTab: React.FC<DiscussionsTabProps> = ({
 
   const handleSave = async (data: DiscussionCreateRequest) => {
     if (!data.title) return;
-    await createDiscussion(manuscriptId, data.title, data.text);
+    await createDiscussion(manuscriptId, data.title, data.text, data.files);
   };
 
   const displayedDiscussions = showAllDiscussions
@@ -133,6 +140,7 @@ const DiscussionsTab: React.FC<DiscussionsTabProps> = ({
           manuscriptId={manuscriptId}
           key={discussion.id}
           discussion={discussion}
+          handleFileUpload={handleFileUpload}
           onReplyToDiscussion={onReplyToDiscussion}
           onMarkDiscussionAsRead={onMarkDiscussionAsRead}
           isLast={index === displayedDiscussions.length - 1}
@@ -157,6 +165,7 @@ const DiscussionsTab: React.FC<DiscussionsTabProps> = ({
           type="start"
           onDismiss={() => setDisplayDiscussionModal(false)}
           onSave={handleSave}
+          handleFileUpload={handleFileUpload}
         />
       )}
     </div>

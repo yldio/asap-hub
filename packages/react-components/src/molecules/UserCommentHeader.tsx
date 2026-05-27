@@ -8,6 +8,7 @@ import { formatDate } from '../date';
 import { rem } from '../pixels';
 import { ImageLink } from '.';
 import UserTeamInfo from './UserTeamInfo';
+import { colors } from '..';
 
 const containerStyles = css({
   display: 'flex',
@@ -27,8 +28,12 @@ const userContainerStyles = css({
 const userInfoStyles = css({
   display: 'inline-flex',
   flexDirection: 'row',
+});
+
+const separatorStyles = css({
   fontSize: rem(14),
   fontWeight: 400,
+  color: colors.neutral900.rgb,
 });
 
 const dateStyles = css({
@@ -80,7 +85,7 @@ const UserCommentHeader: FC<UserCommentHeaderProps> = ({
           showTeamName={showTeamName}
         />
       </div>
-      <span> · </span>
+      <span css={separatorStyles}> • </span>
       <span css={dateStyles}>{formatDate(new Date(date))}</span>
     </div>
   </div>

@@ -4,6 +4,7 @@ import {
   FetchDiscussionByIdQuery,
   FetchDiscussionByIdQueryVariables,
   FETCH_DISCUSSION_BY_ID,
+  getLinkAssets,
   getLinkEntity,
   GraphQLClient,
   Link,
@@ -14,6 +15,7 @@ import {
   DiscussionDataObject,
   DiscussionUpdateDataObject,
   ListResponse,
+  ManuscriptFileResponse,
   Message,
 } from '@asap-hub/model';
 import { parseUserDisplayName } from '@asap-hub/server-common';
@@ -56,11 +58,13 @@ export class DiscussionContentfulDataProvider
 
   async create(input: DiscussionCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
-    const { userId, manuscriptId, title, text, notificationList } = input;
+    const { userId, manuscriptId, title, text, files, notificationList } =
+      input;
 
     const messageId = await createAndPublishMessage(environment, {
       text,
       userId,
+      files,
     });
 
     const discussionEntry = await environment.createEntry('discussions', {
@@ -113,6 +117,7 @@ export class DiscussionContentfulDataProvider
       const publishedReplyId = await createAndPublishMessage(environment, {
         text: reply.text,
         userId,
+        files: reply.files,
       });
 
       const previousReplies = discussion.fields.replies
@@ -163,15 +168,22 @@ export class DiscussionContentfulDataProvider
 
 const createAndPublishMessage = async (
   environment: Environment,
-  message: { text: string; userId: string },
+  message: {
+    text: string;
+    userId: string;
+    files?: ManuscriptFileResponse[];
+  },
 ) => {
-  const { text, userId } = message;
+  const { text, userId, files } = message;
   const user = getLinkEntity(userId);
 
   const messageEntry = await environment.createEntry('messages', {
     fields: addLocaleToFields({
       text,
       createdBy: user,
+      ...(files?.length
+        ? { files: getLinkAssets(files.map((file) => file.id)) }
+        : {}),
     }),
   });
 

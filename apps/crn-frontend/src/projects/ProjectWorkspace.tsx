@@ -12,6 +12,7 @@ import {
   useIsComplianceReviewer,
   useManuscriptById,
   usePutManuscript,
+  useUploadManuscriptFileViaPresignedUrl,
 } from '../network/teams/state';
 import { usePatchProjectById } from './state';
 import { useEligibilityReason } from '../network/teams/useEligibilityReason';
@@ -33,6 +34,7 @@ type ProjectWorkspaceProps = Omit<
   | 'onUpdateManuscript'
   | 'isComplianceReviewer'
   | 'createDiscussion'
+  | 'handleFileUpload'
   | 'onReplyToDiscussion'
   | 'onMarkDiscussionAsRead'
   | 'onDeleteTool'
@@ -59,6 +61,7 @@ const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({
     handleReplyToDiscussion,
     handleMarkDiscussionAsRead,
   } = useDiscussionHandlers();
+  const handleFileUpload = useUploadManuscriptFileViaPresignedUrl();
 
   const [deleteToolIndex, setDeleteToolIndex] = useState<number | null>(null);
   const patchProject = usePatchProjectById(props.id);
@@ -101,6 +104,7 @@ const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({
         useManuscriptById={useManuscriptById}
         onUpdateManuscript={updateManuscript}
         createDiscussion={handleCreateDiscussion}
+        handleFileUpload={handleFileUpload}
         onReplyToDiscussion={handleReplyToDiscussion}
         onMarkDiscussionAsRead={handleMarkDiscussionAsRead}
         onDeleteTool={async (toolIndex) => setDeleteToolIndex(toolIndex)}

@@ -4,6 +4,8 @@ import {
   Environment,
   FetchManuscriptNotificationDetailsQuery,
   FETCH_MANUSCRIPT_BY_ID,
+  FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID,
+  FETCH_MANUSCRIPT_VERSIONS,
   FETCH_RESEARCH_OUTPUT_BY_MANUSCRIPT_VERSION_ID,
   getContentfulGraphqlClientMockServer,
   pollContentfulGql,
@@ -16,6 +18,7 @@ import {
 } from '@asap-hub/model';
 import { GraphQLError } from 'graphql';
 import { when } from 'jest-when';
+import { RequestOptions } from 'openai/core';
 
 import {
   getLifecycleCode,
@@ -58,6 +61,54 @@ jest.mock('@asap-hub/contentful', () => ({
       return Promise.resolve();
     }),
 }));
+
+type ContentfulGraphqlManuscript = ReturnType<
+  typeof getContentfulGraphqlManuscript
+>;
+
+const mockFetchManuscriptById = (
+  contentfulGraphqlClientMock: ReturnType<
+    typeof getContentfulGraphqlClientMock
+  >,
+  manuscript: ContentfulGraphqlManuscript,
+) => {
+  const { discussionsCollection, ...manuscriptWithoutDiscussions } = manuscript;
+
+  jest
+    .spyOn(contentfulGraphqlClientMock, 'request')
+    .mockImplementation(async (query) => {
+      if (query === (FETCH_MANUSCRIPT_BY_ID as unknown as RequestOptions)) {
+        return {
+          manuscripts: manuscriptWithoutDiscussions,
+        };
+      }
+
+      if (
+        query ===
+        (FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID as unknown as RequestOptions)
+      ) {
+        return {
+          manuscripts: {
+            sys: { id: manuscript.sys.id },
+            discussionsCollection: discussionsCollection ?? null,
+          },
+        };
+      }
+
+      if (query === (FETCH_MANUSCRIPT_VERSIONS as unknown as RequestOptions)) {
+        return {
+          manuscripts: {
+            versionsCollection: {
+              ...getContentfulGraphqlManuscriptVersions(),
+            },
+          },
+        };
+      }
+
+      throw new Error('Unexpected query');
+    });
+};
+
 const mockedPostmark = jest.fn();
 jest.mock('postmark', () => ({
   ServerClient: jest.fn().mockImplementation(() => ({
@@ -344,7 +395,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       );
       expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
         FETCH_MANUSCRIPT_BY_ID,
-        { id: manuscriptId, userId: 'user-id-1' },
+        { id: manuscriptId },
       );
       expect(mockedPostmark).not.toHaveBeenCalled();
     });
@@ -1379,6 +1430,13 @@ describe('Manuscripts Contentful Data Provider', () => {
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscripts: {
+          sys: { id: manuscript.sys.id },
+          discussionsCollection: null,
+        },
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: {
           versionsCollection: {
             ...getContentfulGraphqlManuscriptVersions(),
           },
@@ -1397,6 +1455,37 @@ describe('Manuscripts Contentful Data Provider', () => {
       );
 
       expect(result!.versions[0]!.versionUID).toEqual('ID01-grant-001-org-P-1');
+    });
+
+    test('Should return the discussions when the client returns a non-empty array of discussions', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: {
+          sys: { id: manuscript.sys.id },
+          discussionsCollection: {
+            items: [getContentfulGraphqlManuscriptDiscussion()],
+          },
+        },
+      });
+
+      const manuscriptVersions = {
+        versionsCollection: {
+          ...getContentfulGraphqlManuscriptVersions(),
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscriptVersions,
+      });
+
+      const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
+
+      expect(result!.discussions).toEqual([getManuscriptDiscussions()]);
     });
 
     test.each`
@@ -1422,6 +1511,13 @@ describe('Manuscripts Contentful Data Provider', () => {
 
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           manuscripts: manuscript,
+        });
+
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          manuscripts: {
+            sys: { id: manuscript.sys.id },
+            discussionsCollection: null,
+          },
         });
 
         const manuscriptVersions = {
@@ -1467,6 +1563,13 @@ describe('Manuscripts Contentful Data Provider', () => {
           manuscripts: manuscript,
         });
 
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          manuscripts: {
+            sys: { id: manuscript.sys.id },
+            discussionsCollection: null,
+          },
+        });
+
         const manuscriptVersions = {
           versionsCollection: {
             ...getContentfulGraphqlManuscriptVersions(),
@@ -1490,6 +1593,13 @@ describe('Manuscripts Contentful Data Provider', () => {
 
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscripts: manuscript,
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: {
+          sys: { id: manuscript.sys.id },
+          discussionsCollection: null,
+        },
       });
 
       const manuscriptVersions = {
@@ -1635,6 +1745,12 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscripts: {
+          sys: { id: manuscript.sys.id },
+          discussionsCollection: null,
+        },
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: {
           versionsCollection: null,
         },
       });
@@ -1661,6 +1777,13 @@ describe('Manuscripts Contentful Data Provider', () => {
         manuscripts: manuscript,
       });
 
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: {
+          sys: { id: manuscript.sys.id },
+          discussionsCollection: null,
+        },
+      });
+
       const manuscriptVersions = {
         versionsCollection: {
           ...getContentfulGraphqlManuscriptVersions(),
@@ -1677,8 +1800,17 @@ describe('Manuscripts Contentful Data Provider', () => {
     });
 
     test('returns null if query does not return a result', async () => {
-      contentfulGraphqlClientMock.request.mockResolvedValue({
-        manuscripts: null,
+      contentfulGraphqlClientMock.request.mockImplementation((query) => {
+        if (query === (FETCH_MANUSCRIPT_BY_ID as unknown as RequestOptions)) {
+          return Promise.resolve({ manuscripts: null });
+        }
+
+        return Promise.resolve({
+          manuscripts: {
+            sys: { id: 'manuscript-id-1' },
+            discussionsCollection: null,
+          },
+        });
       });
 
       const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
@@ -1700,6 +1832,13 @@ describe('Manuscripts Contentful Data Provider', () => {
       const manuscript = getContentfulGraphqlManuscript();
       contentfulGraphqlClientMock.request.mockResolvedValueOnce({
         manuscripts: manuscript,
+      });
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: {
+          sys: { id: manuscript.sys.id },
+          discussionsCollection: null,
+        },
       });
 
       const manuscriptVersions = {
@@ -1724,9 +1863,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         const manuscript = getContentfulGraphqlManuscript();
         manuscript.discussionsCollection = null;
 
-        contentfulGraphqlClientMock.request.mockResolvedValue({
-          manuscripts: manuscript,
-        });
+        mockFetchManuscriptById(contentfulGraphqlClientMock, manuscript);
 
         const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
         expect(result!.discussions).toEqual([]);
@@ -1751,9 +1888,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           total: 1,
         };
 
-        contentfulGraphqlClientMock.request.mockResolvedValue({
-          manuscripts: manuscript,
-        });
+        mockFetchManuscriptById(contentfulGraphqlClientMock, manuscript);
 
         const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
         expect(result!.discussions[0]?.createdBy.teams).toEqual([]);
@@ -1766,9 +1901,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           total: 1,
         };
 
-        contentfulGraphqlClientMock.request.mockResolvedValue({
-          manuscripts: manuscript,
-        });
+        mockFetchManuscriptById(contentfulGraphqlClientMock, manuscript);
 
         const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
         expect(result!.discussions).toEqual([getManuscriptDiscussions()]);
@@ -1799,9 +1932,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           total: 2,
         };
 
-        contentfulGraphqlClientMock.request.mockResolvedValue({
-          manuscripts: manuscript,
-        });
+        mockFetchManuscriptById(contentfulGraphqlClientMock, manuscript);
 
         const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
         expect(result!.discussions).toEqual([

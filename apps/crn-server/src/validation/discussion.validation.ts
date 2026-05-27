@@ -2,6 +2,17 @@ import { DiscussionCreateRequest, DiscussionRequest } from '@asap-hub/model';
 import { validateInput } from '@asap-hub/server-common';
 import { JSONSchemaType } from 'ajv';
 
+const fileSchema = {
+  type: 'object',
+  properties: {
+    id: { type: 'string' },
+    filename: { type: 'string' },
+    url: { type: 'string' },
+  },
+  required: ['id', 'filename', 'url'],
+  additionalProperties: false,
+} as const;
+
 type DiscussionParameters = {
   discussionId: string;
 };
@@ -29,6 +40,11 @@ const DiscussionRequestValidationSchema: JSONSchemaType<DiscussionRequest> = {
   properties: {
     manuscriptId: { type: 'string' },
     text: { type: 'string' },
+    files: {
+      type: 'array',
+      items: fileSchema,
+      nullable: true,
+    },
     notificationList: { type: 'string', nullable: true },
   },
   required: ['text'],
@@ -50,6 +66,11 @@ const discussionCreateRequestValidationSchema: JSONSchemaType<DiscussionCreateRe
       manuscriptId: { type: 'string', maxLength: 256 },
       title: { type: 'string', maxLength: 100 },
       text: { type: 'string' },
+      files: {
+        type: 'array',
+        items: fileSchema,
+        nullable: true,
+      },
       notificationList: { type: 'string', nullable: true },
     },
     required: ['manuscriptId', 'title', 'text'],

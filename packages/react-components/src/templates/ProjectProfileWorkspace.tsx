@@ -1,4 +1,4 @@
-import { ManuscriptDataObject, TeamTool } from '@asap-hub/model';
+import { TeamTool } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
@@ -116,7 +116,11 @@ const hubStaffCopy = {
 
 type ProjectProfileWorkspaceProps = Pick<
   ComponentProps<typeof ManuscriptCard>,
-  'onUpdateManuscript' | 'isComplianceReviewer'
+  | 'onUpdateManuscript'
+  | 'isComplianceReviewer'
+  | 'createDiscussion'
+  | 'handleFileUpload'
+  | 'useManuscriptById'
 > &
   Pick<
     ComponentProps<typeof DiscussionCard>,
@@ -136,17 +140,6 @@ type ProjectProfileWorkspaceProps = Pick<
     readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
     readonly toolsHref: string;
     readonly editToolHref: (toolIndex: number) => string;
-    readonly createDiscussion: (
-      manuscriptId: string,
-      title: string,
-      message: string,
-    ) => Promise<string | undefined>;
-    readonly useManuscriptById: (
-      id: string,
-    ) => [
-      ManuscriptDataObject | undefined,
-      React.Dispatch<React.SetStateAction<ManuscriptDataObject | undefined>>,
-    ];
     readonly isActiveProject?: boolean;
     readonly targetManuscriptId?: string;
     readonly setEligibilityReasons?: (
@@ -176,6 +169,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
   onUpdateManuscript,
   isComplianceReviewer,
   createDiscussion,
+  handleFileUpload,
   useManuscriptById,
   onReplyToDiscussion,
   onMarkDiscussionAsRead,
@@ -279,6 +273,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                             onUpdateManuscript={onUpdateManuscript}
                             isActiveTeam={isActiveProject}
                             createDiscussion={createDiscussion}
+                            handleFileUpload={handleFileUpload}
                             useManuscriptById={useManuscriptById}
                             onReplyToDiscussion={onReplyToDiscussion}
                             onMarkDiscussionAsRead={onMarkDiscussionAsRead}
@@ -326,6 +321,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                             isActiveTeam={isActiveProject}
                             onUpdateManuscript={onUpdateManuscript}
                             createDiscussion={createDiscussion}
+                            handleFileUpload={handleFileUpload}
                             useManuscriptById={useManuscriptById}
                             onReplyToDiscussion={onReplyToDiscussion}
                             onMarkDiscussionAsRead={onMarkDiscussionAsRead}
@@ -362,6 +358,7 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
                     onUpdateManuscript={onUpdateManuscript}
                     isActiveTeam={isActiveProject}
                     createDiscussion={createDiscussion}
+                    handleFileUpload={handleFileUpload}
                     useManuscriptById={useManuscriptById}
                     onReplyToDiscussion={onReplyToDiscussion}
                     onMarkDiscussionAsRead={onMarkDiscussionAsRead}

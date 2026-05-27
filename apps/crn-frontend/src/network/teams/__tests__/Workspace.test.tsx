@@ -210,6 +210,7 @@ describe('Manuscript', () => {
     await waitFor(() => {
       expect(createDiscussion).toHaveBeenCalledWith(
         {
+          files: [],
           manuscriptId: 'manuscript_0',
           notificationList: undefined,
           text: 'test message',
@@ -295,7 +296,7 @@ describe('Manuscript', () => {
       expect(mockReplyToDiscussion).toHaveBeenCalledWith(
         'manuscript_0',
         'discussion-id-1',
-        { text: 'test message', manuscriptId: 'manuscript_0' },
+        { text: 'test message', manuscriptId: 'manuscript_0', files: [] },
       );
     });
     await waitFor(() => {

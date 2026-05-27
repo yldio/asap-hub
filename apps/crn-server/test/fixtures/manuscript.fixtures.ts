@@ -1,5 +1,6 @@
 import {
   FetchManuscriptByIdQuery,
+  FetchManuscriptDiscussionsByIdQuery,
   FetchManuscriptsQuery,
   FetchManuscriptVersionsQuery,
 } from '@asap-hub/contentful';
@@ -95,11 +96,19 @@ export const getManuscriptGraphqlAssignedUsersCollection = (): NonNullable<
   ],
 });
 
+type ContentfulGraphqlManuscript = NonNullable<
+  NonNullable<FetchManuscriptByIdQuery>['manuscripts']
+> & {
+  discussionsCollection?: NonNullable<
+    NonNullable<
+      NonNullable<FetchManuscriptDiscussionsByIdQuery>['manuscripts']
+    >['discussionsCollection']
+  > | null;
+};
+
 export const getContentfulGraphqlManuscript = (
-  props: Partial<
-    NonNullable<NonNullable<FetchManuscriptByIdQuery>['manuscripts']>
-  > = {},
-): NonNullable<NonNullable<FetchManuscriptByIdQuery>['manuscripts']> => ({
+  props: Partial<ContentfulGraphqlManuscript> = {},
+): ContentfulGraphqlManuscript => ({
   sys: {
     id: 'manuscript-id-1',
   },
@@ -299,6 +308,13 @@ export const getManuscriptDiscussions = (): ManuscriptDiscussion => ({
   text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
   lastUpdatedAt: '2025-04-01T15:00:00.000Z',
   createdDate: '2025-03-31T10:00:00.000Z',
+  files: [
+    {
+      id: 'file-id-1',
+      filename: 'file1.pdf',
+      url: 'https://example.com/file1.pdf',
+    },
+  ],
   createdBy: {
     alumniSinceDate: undefined,
     avatarUrl: undefined,
@@ -315,6 +331,18 @@ export const getManuscriptDiscussions = (): ManuscriptDiscussion => ({
   },
   replies: [
     {
+      files: [
+        {
+          id: 'file-id-2',
+          filename: 'file2.pdf',
+          url: 'https://example.com/file2.pdf',
+        },
+        {
+          id: 'file-id-3',
+          filename: 'file3.pdf',
+          url: 'https://example.com/file3.pdf',
+        },
+      ],
       createdBy: {
         alumniSinceDate: undefined,
         avatarUrl: undefined,
@@ -338,7 +366,7 @@ export const getManuscriptDiscussions = (): ManuscriptDiscussion => ({
 export const getContentfulGraphqlManuscriptDiscussion = (): NonNullable<
   NonNullable<
     NonNullable<
-      NonNullable<FetchManuscriptByIdQuery>['manuscripts']
+      NonNullable<FetchManuscriptDiscussionsByIdQuery>['manuscripts']
     >['discussionsCollection']
   >['items'][number]
 > => ({
@@ -352,6 +380,15 @@ export const getContentfulGraphqlManuscriptDiscussion = (): NonNullable<
       publishedAt: '2025-03-31T10:00:00.000Z',
     },
     text: 'It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.',
+    filesCollection: {
+      items: [
+        {
+          sys: { id: 'file-id-1' },
+          fileName: 'file1.pdf',
+          url: 'https://example.com/file1.pdf',
+        },
+      ],
+    },
     createdBy: {
       sys: {
         id: 'user-id-1',
@@ -382,6 +419,20 @@ export const getContentfulGraphqlManuscriptDiscussion = (): NonNullable<
           publishedAt: '2025-04-01T15:00:00.000Z',
         },
         text: 'A new comment',
+        filesCollection: {
+          items: [
+            {
+              sys: { id: 'file-id-2' },
+              fileName: 'file2.pdf',
+              url: 'https://example.com/file2.pdf',
+            },
+            {
+              sys: { id: 'file-id-3' },
+              fileName: 'file3.pdf',
+              url: 'https://example.com/file3.pdf',
+            },
+          ],
+        },
         createdBy: {
           sys: {
             id: 'user-id-2',

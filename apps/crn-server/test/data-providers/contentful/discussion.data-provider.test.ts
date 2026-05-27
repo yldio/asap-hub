@@ -163,6 +163,17 @@ describe('Discussions Contentful Data Provider', () => {
             text: {
               'en-US': discussionRequestObject.text,
             },
+            files: {
+              'en-US': [
+                {
+                  sys: {
+                    id: discussionRequestObject.files![0]!.id,
+                    linkType: 'Asset',
+                    type: 'Link',
+                  },
+                },
+              ],
+            },
           },
         },
       );

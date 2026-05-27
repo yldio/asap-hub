@@ -48,6 +48,13 @@ const team: ComponentProps<typeof TeamProfileWorkspace> = {
   onUpdateManuscript: jest.fn(),
   isTeamMember: true,
   createDiscussion: jest.fn(),
+  handleFileUpload: jest.fn(() =>
+    Promise.resolve({
+      id: 'file-id',
+      filename: 'test.pdf',
+      url: 'https://example.com/test.pdf',
+    }),
+  ),
   useManuscriptById: useManuscriptByIdMock,
   onReplyToDiscussion: jest.fn(),
   onMarkDiscussionAsRead: jest.fn(),

@@ -1,6 +1,6 @@
 import { DiscussionRequest, ManuscriptDiscussion } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { ComponentProps, useState } from 'react';
 
 import {
   colors,
@@ -11,6 +11,7 @@ import {
 } from '..';
 import { Anchor, Avatar, Button, Subtitle, TextEditor } from '../atoms';
 import { minusRectIcon, plusRectIcon, replyIcon } from '../icons';
+import DiscussionAttachedFiles from '../molecules/DiscussionAttachedFiles';
 import UserComment from '../molecules/UserComment';
 import UserTeamInfo from '../molecules/UserTeamInfo';
 import { mobileScreen, rem } from '../pixels';
@@ -45,7 +46,6 @@ const avatarStyles = css({
 const replyContainerStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(24),
   marginTop: rem(24),
   marginLeft: rem(32),
 });
@@ -135,6 +135,36 @@ const replySingleContainerStyles = css({
   marginTop: rem(24),
 });
 
+const replyCountDividerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  paddingBottom: rem(32),
+});
+
+const replyContainerSeparatorStyles = css({
+  paddingTop: rem(32),
+  paddingBottom: rem(32),
+});
+
+const replyButtonContainerStyles = css({
+  marginTop: rem(32),
+});
+
+const replyCountStyles = css({
+  fontSize: rem(14),
+  lineHeight: rem(16),
+  fontWeight: 700,
+  color: colors.neutral900.rgb,
+  marginRight: rem(8),
+  flexShrink: 0,
+});
+
+const replyLineSeparatorStyles = css({
+  flexGrow: 1,
+  height: rem(1),
+  backgroundColor: colors.steel.rgb,
+});
+
 const fullWidthStyles = css({
   width: '100%',
 });
@@ -154,6 +184,7 @@ interface DiscussionCardProps {
   isLast?: boolean;
   displayReplyButton?: boolean;
   showTeamName?: boolean;
+  handleFileUpload: ComponentProps<typeof DiscussionModal>['handleFileUpload'];
 }
 
 const DiscussionCard: React.FC<DiscussionCardProps> = ({
@@ -164,6 +195,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({
   isLast = false,
   displayReplyButton = false,
   showTeamName,
+  handleFileUpload,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -191,6 +223,7 @@ const DiscussionCard: React.FC<DiscussionCardProps> = ({
             onReplyToDiscussion={onReplyToDiscussion}
             displayReplyButton={displayReplyButton}
             showTeamName={showTeamName}
+            handleFileUpload={handleFileUpload}
           />
         ) : (
           <CollapsedView
@@ -254,10 +287,11 @@ const ExpandedView = ({
   onReplyToDiscussion,
   displayReplyButton,
   showTeamName,
+  handleFileUpload,
 }: Omit<DiscussionCardProps, 'onMarkDiscussionAsRead'>) => {
   const userHref = getUserHref(discussion.createdBy.id);
   const [displayReplyModal, setDisplayReplyModal] = useState<boolean>(false);
-  const { text, replies } = discussion;
+  const { text, replies, files } = discussion;
   const hasReplies = replies && replies.length > 0;
 
   const replyButton = (
@@ -281,9 +315,11 @@ const ExpandedView = ({
           onSave={(data) =>
             onReplyToDiscussion(manuscriptId, discussion.id, {
               text: data.text,
+              files: data.files,
               manuscriptId,
             })
           }
+          handleFileUpload={handleFileUpload}
         />
       )}
       <div css={expandedViewContainerStyles}>
@@ -319,12 +355,35 @@ const ExpandedView = ({
           </ExpandableText>
         </span>
 
+        {files?.length ? <DiscussionAttachedFiles files={files} /> : null}
+
         {hasReplies ? (
           <div css={replyContainerStyles}>
+            <div css={replyCountDividerStyles}>
+              <span css={replyCountStyles}>
+                {`${replies.length} ${
+                  replies.length === 1 ? 'reply' : 'replies'
+                }`}
+              </span>
+              <div css={replyLineSeparatorStyles} />
+            </div>
             {replies.map((reply, index) => (
-              <UserComment {...reply} showTeamName={showTeamName} key={index} />
+              <div key={index}>
+                <UserComment
+                  {...reply}
+                  files={reply.files}
+                  showTeamName={showTeamName}
+                />
+                {index < replies.length - 1 && (
+                  <div css={replyContainerSeparatorStyles}>
+                    <div css={replyLineSeparatorStyles} />
+                  </div>
+                )}
+              </div>
             ))}
-            {displayReplyButton && replyButton}
+            {displayReplyButton && (
+              <div css={replyButtonContainerStyles}>{replyButton}</div>
+            )}
           </div>
         ) : (
           <div css={replySingleContainerStyles}>

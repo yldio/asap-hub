@@ -1,12 +1,13 @@
 import { TeamRole, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import React, { Fragment } from 'react';
+import React, { Fragment, useMemo } from 'react';
 import { Divider, Link, Paragraph } from '../atoms';
 import { InactiveBadgeIcon } from '../icons';
 import { TabbedCard } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
-import { splitListBy } from '../utils';
+import { neutral900 } from '../colors';
+import { groupUserTeamsByTeamId, splitListBy } from '../utils';
 import { formatDateToTimezone } from '../date';
 
 const MAX_TEAMS = 5;
@@ -22,11 +23,13 @@ const listItemStyle = css({
 
   gridTemplateColumns: '1fr',
   gridTemplateRows: '1fr 1fr',
-  rowGap: rem(12),
+  rowGap: rem(16),
 
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridAutoFlow: 'column',
     gridTemplateColumns: '1fr 1fr',
+    gridTemplateRows: 'auto 1fr',
+    rowGap: rem(12),
 
     '&:not(:first-of-type)': {
       gridTemplateRows: '1fr',
@@ -44,7 +47,11 @@ const containerStyle = css({
   columnGap: rem(12),
 
   margin: 0,
-  marginTop: rem(24),
+  marginTop: rem(32),
+
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    marginTop: rem(24),
+  },
 
   padding: 0,
   listStyle: 'none',
@@ -52,6 +59,30 @@ const containerStyle = css({
 
 const titleStyle = css({
   fontWeight: 'bold',
+});
+
+const dividerMobileStyle = css({
+  marginBottom: rem(8),
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    marginBottom: 0,
+  },
+});
+
+const roleTitleMobileStyle = css({
+  marginTop: rem(16),
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    marginTop: 0,
+  },
+});
+
+const rolesColumnStyle = css({
+  color: neutral900.rgb,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: rem(16),
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    gap: 0,
+  },
 });
 
 const priorities: Record<TeamRole, number> = {
@@ -75,8 +106,9 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
   userAlumni,
   teams,
 }) => {
-  const sortedTeams = [...teams].sort(
-    (a, b) => priorities[a.role] - priorities[b.role],
+  const groupedTeams = useMemo(() => groupUserTeamsByTeamId(teams), [teams]);
+  const sortedTeams = [...groupedTeams].sort(
+    (a, b) => priorities[a.roles[0]!] - priorities[b.roles[0]!],
   );
   const teamHref = (id: string) => network({}).teams({}).team({ teamId: id }).$;
   const [inactiveTeams, activeTeams] = splitListBy(
@@ -131,7 +163,7 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
                     id,
                     displayName,
                     teamInactiveSince,
-                    role: teamRole,
+                    roles: teamRoles,
                     inactiveSinceDate,
                   },
                   idx,
@@ -146,9 +178,13 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
                     );
                   return (
                     <Fragment key={`team-${idx}`}>
-                      {idx === 0 || <Divider />}
+                      {idx === 0 || (
+                        <div css={dividerMobileStyle}>
+                          <Divider />
+                        </div>
+                      )}
                       <li key={idx} css={listItemStyle}>
-                        <div css={[titleStyle]}>Team</div>
+                        <div css={titleStyle}>Team</div>
                         <div>
                           <Link href={teamHref(id)}>Team {displayName}</Link>
                           {teamInactiveSince && (
@@ -157,11 +193,15 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
                             </span>
                           )}
                         </div>
-                        <div css={[titleStyle]}>Role</div>
-                        <div>{teamRole}</div>
+                        <div css={[titleStyle, roleTitleMobileStyle]}>Role</div>
+                        <div css={rolesColumnStyle}>
+                          {teamRoles.map((role) => (
+                            <div key={role}>{role}</div>
+                          ))}
+                        </div>
                         {showDateLeftColumn && (
                           <>
-                            <div css={[titleStyle]}>Date Left</div>
+                            <div css={titleStyle}>Date Left</div>
                             <div>{formattedDateLeft}</div>
                           </>
                         )}

@@ -6,6 +6,45 @@ import {
   UserTeam,
 } from '@asap-hub/model';
 
+const mergeInactiveSinceDate = (
+  existing: string | undefined,
+  incoming: string | undefined,
+): string | undefined => {
+  if (!incoming) {
+    return undefined;
+  }
+
+  if (!existing) {
+    return existing;
+  }
+
+  return incoming > existing ? incoming : existing;
+};
+
+const mergeById = <T extends { id: string }>(
+  target: T[] | undefined,
+  source: readonly T[] | undefined,
+): T[] | undefined => {
+  if (!source?.length) {
+    return target;
+  }
+
+  const ids = new Set((target || []).map((t) => t.id));
+  const newItems = source.filter((s) => !ids.has(s.id));
+
+  if (!newItems.length) {
+    return target;
+  }
+
+  if (!target) {
+    return [...newItems];
+  }
+
+  target.push(...newItems);
+
+  return target;
+};
+
 export type GroupedUserTeam = {
   id: string;
   displayName?: string;
@@ -26,14 +65,10 @@ export const groupUserTeamsByTeamId = (
       if (!existing.roles.includes(team.role)) {
         existing.roles.push(team.role);
       }
-      if (team.inactiveSinceDate && existing.inactiveSinceDate) {
-        existing.inactiveSinceDate =
-          team.inactiveSinceDate > existing.inactiveSinceDate
-            ? team.inactiveSinceDate
-            : existing.inactiveSinceDate;
-      } else if (!team.inactiveSinceDate) {
-        existing.inactiveSinceDate = undefined;
-      }
+      existing.inactiveSinceDate = mergeInactiveSinceDate(
+        existing.inactiveSinceDate,
+        team.inactiveSinceDate,
+      );
     } else {
       teamMap.set(team.id, {
         id: team.id,
@@ -64,20 +99,11 @@ export const groupTeamMembersByUserId = (
       if (!existing.roles.includes(member.role)) {
         existing.roles.push(member.role);
       }
-      const newLabs = (member.labs || []).filter(
-        (lab) => !(existing.labs || []).some((l) => l.id === lab.id),
+      existing.labs = mergeById(existing.labs, member.labs);
+      existing.inactiveSinceDate = mergeInactiveSinceDate(
+        existing.inactiveSinceDate,
+        member.inactiveSinceDate,
       );
-      if (newLabs.length) {
-        existing.labs = [...(existing.labs || []), ...newLabs];
-      }
-      if (member.inactiveSinceDate && existing.inactiveSinceDate) {
-        existing.inactiveSinceDate =
-          member.inactiveSinceDate > existing.inactiveSinceDate
-            ? member.inactiveSinceDate
-            : existing.inactiveSinceDate;
-      } else if (!member.inactiveSinceDate) {
-        existing.inactiveSinceDate = undefined;
-      }
       if (!member.alumniSinceDate) {
         existing.alumniSinceDate = undefined;
       }
@@ -114,12 +140,7 @@ export const groupProjectMembersByUserId = (
       if (member.role && !existing.roles.includes(member.role)) {
         existing.roles.push(member.role);
       }
-      const newTeams = (member.teams || []).filter(
-        (t) => !(existing.teams || []).some((et) => et.id === t.id),
-      );
-      if (newTeams.length) {
-        existing.teams = [...(existing.teams || []), ...newTeams];
-      }
+      existing.teams = mergeById(existing.teams, member.teams);
     } else {
       memberMap.set(member.id, {
         id: member.id,

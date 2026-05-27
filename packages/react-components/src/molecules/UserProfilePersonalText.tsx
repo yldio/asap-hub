@@ -7,10 +7,11 @@ import { UserProfileContext } from '@asap-hub/react-context';
 import { Link, Ellipsis, Anchor, Subtitle } from '../atoms';
 import { alumniBadgeIcon, locationIcon } from '../icons';
 import { rem, lineHeight } from '../pixels';
+import { OverflowBadge } from '../atoms';
 import { lead, tin } from '../colors';
 import {
   formatUserLocation,
-  getUniqueCommaStringWithSuffix,
+  groupUserTeamsByTeamId,
   splitListBy,
 } from '../utils';
 import TagList from './TagList';
@@ -48,6 +49,28 @@ const tagsContainerStyles = css({
   paddingBottom: rem(12),
 });
 
+const formatInlineList = (
+  items: string[],
+  { trailingSpace }: { trailingSpace?: boolean } = {},
+): React.ReactNode => {
+  if (items.length === 0) return null;
+  if (items.length === 1) return trailingSpace ? `${items[0]} ` : items[0];
+  if (items.length === 2)
+    return trailingSpace
+      ? `${items[0]} and ${items[1]} `
+      : `${items[0]} and ${items[1]}`;
+  const overflow = items.length - 2;
+  return (
+    <>
+      {items[0]},{' '}
+      <span style={{ whiteSpace: 'nowrap' }}>
+        {items[1]}
+        <OverflowBadge count={overflow} />
+      </span>
+    </>
+  );
+};
+
 type UserProfilePersonalTextProps = Pick<
   UserListItemResponse,
   | 'institution'
@@ -73,13 +96,13 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   const [showAllActive, setShowAllActive] = useState(false);
   const [showAllInactive, setShowAllInactive] = useState(false);
 
-  const labsList = getUniqueCommaStringWithSuffix(
-    labs.map((lab) => lab.name),
-    'Lab',
-  );
+  const uniqueLabNames = [...new Set(labs.map((lab) => `${lab.name} Lab`))];
+  const labsList = formatInlineList(uniqueLabNames);
+
+  const groupedTeams = groupUserTeamsByTeamId(teams);
 
   const [inactiveTeams, activeTeams] = splitListBy(
-    teams,
+    groupedTeams,
     (team) =>
       isAlumni || !!team?.teamInactiveSince || !!team?.inactiveSinceDate,
   );
@@ -106,12 +129,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
           </span>
         ) : null}
 
-        {!!labsList.length && (
-          <>
-            <br />
-            <span>{labsList}</span>
-          </>
-        )}
+        {labsList && <div>{labsList}</div>}
         {teams.length === 0 ? (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <em>No team affiliation</em>
@@ -122,9 +140,9 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
           </div>
         ) : (
           <>
-            {visibleActiveTeams.map(({ id, role: teamRole, displayName }) => (
-              <div style={{ display: 'flex' }} key={id}>
-                <div>{teamRole} on&nbsp;</div>
+            {visibleActiveTeams.map(({ id, roles: teamRoles, displayName }) => (
+              <div key={id}>
+                {formatInlineList(teamRoles, { trailingSpace: true })}on{' '}
                 <Link href={network({}).teams({}).team({ teamId: id }).$}>
                   Team {displayName}
                 </Link>
@@ -165,14 +183,16 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
                 <span css={badgeStyles}>{alumniBadgeIcon}</span>
               </div>
             ) : null}
-            {visibleInactiveTeams.map(({ id, role: teamRole, displayName }) => (
-              <div style={{ display: 'flex' }} key={id}>
-                <div>{teamRole} on&nbsp;</div>
-                <Link href={network({}).teams({}).team({ teamId: id }).$}>
-                  Team {displayName}
-                </Link>
-              </div>
-            ))}
+            {visibleInactiveTeams.map(
+              ({ id, roles: teamRoles, displayName }) => (
+                <div key={id}>
+                  {formatInlineList(teamRoles, { trailingSpace: true })}on{' '}
+                  <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                    Team {displayName}
+                  </Link>
+                </div>
+              ),
+            )}
             {inactiveTeams.length > MAX_TEAMS && (
               <Anchor
                 href="#"

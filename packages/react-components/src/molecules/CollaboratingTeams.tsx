@@ -99,7 +99,7 @@ const articlesListStyles = (count: number) =>
     listStyle: 'none',
     margin: 0,
     padding: `${rem(0)} ${rem(12)} ${rem(20)} ${rem(32)}`,
-    marginRight: rem(4),
+    marginRight: rem(8),
     display: 'flex',
     flexDirection: 'column',
     marginBlockStart: rem(16),

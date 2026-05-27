@@ -108,8 +108,8 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
     <ExportButton
       info={
         <ExportTooltip
-          dataInTable="Downloads the milestones currently shown (with your filters, search and sort applied) along with their related aims."
-          fullDataset="Downloads every aim and milestone for this project."
+          dataInTable="Download the data you can currently see in the table;"
+          fullDataset="Download the complete milestone set for this project, including all grant data."
         />
       }
       buttons={[

@@ -7,6 +7,8 @@ import {
   milestoneStatuses,
 } from '@asap-hub/model';
 import {
+  ExportButton,
+  ExportTooltip,
   LabeledMultiSelect,
   ProjectDetailMilestones,
   ProjectMilestonesTable,
@@ -22,7 +24,12 @@ import {
   useUpdateMilestone,
   useUpdateMilestoneArticles,
 } from './articles-state';
-import { useCreateProjectMilestone, useProjectMilestones } from './state';
+import {
+  useCreateProjectMilestone,
+  useExportProjectMilestones,
+  useProjectMilestones,
+} from './state';
+import { downloadProjectMilestonesXlsx } from './export';
 
 const milestoneControlsStyles = {
   display: 'grid',
@@ -39,6 +46,7 @@ const milestoneStatusFilterOptions = [
 
 type TableContentProps = {
   projectId: string;
+  projectName: string;
   selectedGrantType: GrantType;
   isLead: boolean;
   searchQuery: string;
@@ -54,6 +62,7 @@ type TableContentProps = {
 
 const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
   projectId,
+  projectName,
   selectedGrantType,
   isLead,
   searchQuery,
@@ -74,6 +83,52 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
+  const fetchExport = useExportProjectMilestones(projectId);
+
+  const exportTableData = useCallback(
+    () =>
+      downloadProjectMilestonesXlsx(projectName, fetchExport, {
+        grantType: selectedGrantType,
+        search: searchQuery,
+        filter: Array.from(filters),
+        sort,
+      }),
+    [fetchExport, filters, projectName, searchQuery, selectedGrantType, sort],
+  );
+
+  // "Full Dataset" intentionally omits grantType so the workbook contains
+  // every aim and milestone for the project across both Original and
+  // Supplement grants — that's the meaning the PO assigned to the name.
+  const exportFullDataset = useCallback(
+    () => downloadProjectMilestonesXlsx(projectName, fetchExport, {}),
+    [fetchExport, projectName],
+  );
+
+  const downloadSection = (
+    <ExportButton
+      info={
+        <ExportTooltip
+          dataInTable="Download the data you can currently see in the table;"
+          fullDataset="Download the complete milestone set for this project, including all grant data."
+        />
+      }
+      buttons={[
+        {
+          buttonText: 'Data in Table',
+          errorMessage:
+            'There was an issue exporting the table data. Please try again.',
+          exportResults: exportTableData,
+        },
+        {
+          buttonText: 'Full Dataset',
+          errorMessage:
+            'There was an issue exporting the full dataset. Please try again.',
+          exportResults: exportFullDataset,
+        },
+      ]}
+    />
+  );
+
   const fetchArticles = useFetchMilestoneArticles();
   const onSaveArticles = useUpdateMilestoneArticles();
   const rawUpdateMilestone = useUpdateMilestone();
@@ -116,12 +171,14 @@ const ProjectMilestonesTableContent: React.FC<TableContentProps> = ({
       hasAppliedSearch={searchQuery.trim().length > 0 || filters.size > 0}
       sort={sort}
       onToggleSort={onToggleSort}
+      downloadSection={downloadSection}
     />
   );
 };
 
 const ProjectMilestones: React.FC<{
   readonly projectId: string;
+  readonly projectName: string;
   readonly isLead: boolean;
   readonly hasSupplementGrant: boolean;
   readonly aims: ReadonlyArray<Aim>;
@@ -135,6 +192,7 @@ const ProjectMilestones: React.FC<{
   >;
 }> = ({
   projectId,
+  projectName,
   hasSupplementGrant,
   seeAimsHref,
   aims,
@@ -231,6 +289,7 @@ const ProjectMilestones: React.FC<{
         <SearchFrame title="Project Milestones">
           <ProjectMilestonesTableContent
             projectId={projectId}
+            projectName={projectName}
             selectedGrantType={selectedGrantType}
             isLead={isLead}
             searchQuery={debouncedSearchQuery}

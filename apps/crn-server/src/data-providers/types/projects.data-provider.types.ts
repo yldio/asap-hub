@@ -2,12 +2,14 @@ import {
   DataProvider,
   FetchOptions,
   FetchPaginationOptions,
+  FetchProjectMilestonesExportOptions,
   FetchProjectMilestonesOptions,
   FetchProjectsFilter,
   ListProjectDataObject,
   ListProjectMilestonesResponse,
   MilestoneCreateRequest,
   ProjectDataObject,
+  ProjectMilestonesExportResponse,
   ProjectTool,
 } from '@asap-hub/model';
 
@@ -35,6 +37,10 @@ export type ProjectDataProvider = DataProvider<
     id: string,
     options: FetchProjectMilestonesOptions,
   ) => Promise<ListProjectMilestonesResponse>;
+  exportProjectMilestones: (
+    id: string,
+    options: FetchProjectMilestonesExportOptions,
+  ) => Promise<ProjectMilestonesExportResponse>;
   createMilestone: (
     data: MilestoneCreateRequest,
     userId: string,

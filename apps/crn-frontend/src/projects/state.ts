@@ -1,9 +1,11 @@
 import {
+  FetchProjectMilestonesExportOptions,
   ListProjectMilestonesResponse,
   ListProjectResponse,
   Milestone,
   MilestoneCreateRequest,
   ProjectDetail,
+  ProjectMilestonesExportResponse,
   ProjectResponse,
   ProjectTool,
   ResearchOutputResponse,
@@ -25,6 +27,7 @@ import {
   createProjectMilestone,
   getProject,
   getProjectMilestones,
+  getProjectMilestonesExport,
   getProjects,
   MilestonesListOptions,
   patchProject,
@@ -287,6 +290,18 @@ export const useProjectMilestones = (options: MilestonesListOptions) => {
   }
 
   return projectMilestones;
+};
+
+export const useExportProjectMilestones = (
+  projectId: string,
+): ((
+  options: FetchProjectMilestonesExportOptions,
+) => Promise<ProjectMilestonesExportResponse>) => {
+  const authorization = useRecoilValue(authorizationState);
+  return useCallback(
+    (options) => getProjectMilestonesExport(projectId, options, authorization),
+    [authorization, projectId],
+  );
 };
 
 export const useProjectArticlesSuggestions = (teamId: string) => {

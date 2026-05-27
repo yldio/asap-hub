@@ -953,6 +953,226 @@ describe('ProjectContentfulDataProvider', () => {
       );
     });
   });
+
+  describe('exportProjectMilestones', () => {
+    const milestoneHit = (overrides: Record<string, unknown> = {}) => ({
+      _source: {
+        id: 'milestone-1',
+        description: 'A milestone',
+        aimNumbers: '1, 2',
+        status: 'Complete',
+        articleCount: 1,
+        articlesDOI: '10.1093/brain/awad214',
+        projectId: 'project-1',
+        projectName: 'Project One',
+        grantType: 'supplement',
+        createdDate: '2026-03-01T00:00:00Z',
+        lastDate: '2026-03-30T00:00:00Z',
+        ...overrides,
+      },
+    });
+
+    const aimHit = (overrides: Record<string, unknown> = {}) => ({
+      _source: {
+        id: 'aim-1',
+        aimOrder: 1,
+        description: 'Aim description',
+        articlesDOI: '10.1093/brain/awad214',
+        projectId: 'project-1',
+        projectName: 'Project One',
+        grantType: 'supplement',
+        status: 'Complete',
+        createdDate: '2026-02-14T00:00:00Z',
+        lastDate: '2026-03-21T00:00:00Z',
+        ...overrides,
+      },
+    });
+
+    const mockSearchResponses = (
+      milestones: ReturnType<typeof milestoneHit>[],
+      aims: ReturnType<typeof aimHit>[],
+    ) => {
+      opensearchProviderMock.search.mockImplementation(
+        ({ index }: { index: string }) =>
+          Promise.resolve(
+            index === 'project-milestones'
+              ? {
+                  hits: {
+                    hits: milestones,
+                    total: { value: milestones.length },
+                  },
+                }
+              : { hits: { hits: aims, total: { value: aims.length } } },
+          ),
+      );
+    };
+
+    it('throws when opensearch provider is not configured', async () => {
+      const dataProviderWithoutOpenSearch = new ProjectContentfulDataProvider(
+        contentfulClientMock,
+        undefined,
+      );
+      await expect(
+        dataProviderWithoutOpenSearch.exportProjectMilestones('project-1', {}),
+      ).rejects.toThrow(
+        'Opensearch Provider not configured for ProjectContentfulDataProvider',
+      );
+    });
+
+    it('maps milestone and aim hits into export rows', async () => {
+      mockSearchResponses([milestoneHit()], [aimHit()]);
+
+      const result = await dataProvider.exportProjectMilestones('project-1', {
+        grantType: 'supplement',
+      });
+
+      expect(result.milestones).toEqual([
+        {
+          projectName: 'Project One',
+          grantType: 'supplement',
+          description: 'A milestone',
+          relatedAimNumbers: 'A1; A2',
+          articlesDOI: '10.1093/brain/awad214',
+          createdDate: '2026-03-01T00:00:00Z',
+          lastUpdated: '2026-03-30T00:00:00Z',
+          status: 'Complete',
+        },
+      ]);
+      expect(result.aims).toEqual([
+        {
+          projectName: 'Project One',
+          grantType: 'supplement',
+          aimNumber: 'A1',
+          description: 'Aim description',
+          articlesDOI: '10.1093/brain/awad214',
+          createdDate: '2026-02-14T00:00:00Z',
+          lastUpdated: '2026-03-21T00:00:00Z',
+          status: 'Complete',
+        },
+      ]);
+    });
+
+    it('applies grant type, status filters and search query to the milestone query', async () => {
+      mockSearchResponses([], []);
+
+      await dataProvider.exportProjectMilestones('project-1', {
+        grantType: 'original',
+        search: '  alpha  ',
+        filter: ['Complete', 'In Progress'],
+        sort: 'aim_desc',
+      });
+
+      const milestoneCall = opensearchProviderMock.search.mock.calls.find(
+        ([arg]) => arg.index === 'project-milestones',
+      );
+      expect(milestoneCall).toBeDefined();
+      const milestoneBody = milestoneCall![0].body;
+      expect(milestoneBody.query.bool.filter).toEqual(
+        expect.arrayContaining([
+          { term: { projectId: 'project-1' } },
+          { term: { grantType: 'original' } },
+          { terms: { status: ['Complete', 'In Progress'] } },
+        ]),
+      );
+      expect(milestoneBody.query.bool.must).toEqual([
+        {
+          match: {
+            description: {
+              query: 'alpha',
+              fuzziness: 'AUTO',
+              operator: 'and',
+            },
+          },
+        },
+      ]);
+    });
+
+    it('narrows aims to those referenced by exported milestones when a status filter is applied', async () => {
+      mockSearchResponses(
+        [milestoneHit({ aimNumbers: '2' })],
+        [
+          aimHit({ aimOrder: 1, description: 'A1' }),
+          aimHit({ aimOrder: 2, description: 'A2' }),
+          aimHit({ aimOrder: 3, description: 'A3' }),
+        ],
+      );
+
+      const result = await dataProvider.exportProjectMilestones('project-1', {
+        grantType: 'supplement',
+        filter: ['Complete'],
+      });
+
+      expect(result.aims.map((a) => a.aimNumber)).toEqual(['A2']);
+    });
+
+    it('narrows aims to those referenced by exported milestones when a search query is applied', async () => {
+      mockSearchResponses(
+        [milestoneHit({ aimNumbers: '2' })],
+        [
+          aimHit({ aimOrder: 1, description: 'A1' }),
+          aimHit({ aimOrder: 2, description: 'A2' }),
+          aimHit({ aimOrder: 3, description: 'A3' }),
+        ],
+      );
+
+      const result = await dataProvider.exportProjectMilestones('project-1', {
+        search: 'alpha',
+      });
+
+      expect(result.aims.map((a) => a.aimNumber)).toEqual(['A2']);
+    });
+
+    it('returns all aims when only grant type and sort are applied, regardless of milestone references', async () => {
+      mockSearchResponses(
+        [milestoneHit({ aimNumbers: '2' })],
+        [
+          aimHit({ aimOrder: 1, description: 'A1' }),
+          aimHit({ aimOrder: 2, description: 'A2' }),
+          aimHit({ aimOrder: 3, description: 'A3' }),
+        ],
+      );
+
+      const result = await dataProvider.exportProjectMilestones('project-1', {
+        grantType: 'supplement',
+        sort: 'aim_desc',
+      });
+
+      expect(result.aims.map((a) => a.aimNumber)).toEqual(['A1', 'A2', 'A3']);
+    });
+
+    it('returns all aims when no table filters are applied', async () => {
+      mockSearchResponses(
+        [milestoneHit({ aimNumbers: '2' })],
+        [
+          aimHit({ aimOrder: 1, description: 'A1' }),
+          aimHit({ aimOrder: 2, description: 'A2' }),
+          aimHit({ aimOrder: 3, description: 'A3' }),
+        ],
+      );
+
+      const result = await dataProvider.exportProjectMilestones(
+        'project-1',
+        {},
+      );
+
+      expect(result.aims.map((a) => a.aimNumber)).toEqual(['A1', 'A2', 'A3']);
+    });
+
+    it('ignores filter values that are not valid milestone statuses', async () => {
+      mockSearchResponses([], []);
+
+      await dataProvider.exportProjectMilestones('project-1', {
+        filter: ['Complete', 'NotAStatus' as never],
+      });
+
+      const milestoneCall = opensearchProviderMock.search.mock.calls.find(
+        ([arg]) => arg.index === 'project-milestones',
+      );
+      expect(milestoneCall![0].body.query.bool.filter).toEqual(
+        expect.arrayContaining([{ terms: { status: ['Complete'] } }]),
+      );
+    });
+  });
 });
 
 describe('parseContentfulProject - tools parsing', () => {

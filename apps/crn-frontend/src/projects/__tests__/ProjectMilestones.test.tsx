@@ -14,8 +14,10 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import ProjectMilestones from '../ProjectMilestones';
+import { downloadProjectMilestonesXlsx } from '../export';
 import {
   getProjectMilestones,
+  getProjectMilestonesExport,
   getMilestoneArticles,
   createProjectMilestone,
   patchMilestone,
@@ -30,6 +32,11 @@ import {
 import { ManuscriptToastProvider } from '../../network/teams/ManuscriptToastProvider';
 
 jest.mock('../api');
+jest.mock('../export', () => ({
+  __esModule: true,
+  ...jest.requireActual('../export'),
+  downloadProjectMilestonesXlsx: jest.fn(() => Promise.resolve()),
+}));
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -39,6 +46,11 @@ mockConsoleError();
 const mockGetProjectMilestones = getProjectMilestones as jest.MockedFunction<
   typeof getProjectMilestones
 >;
+
+const mockGetProjectMilestonesExport =
+  getProjectMilestonesExport as jest.MockedFunction<
+    typeof getProjectMilestonesExport
+  >;
 
 const mockGetMilestoneArticles = getMilestoneArticles as jest.MockedFunction<
   typeof getMilestoneArticles
@@ -74,6 +86,10 @@ beforeEach(() => {
   mockCreateProjectMilestone.mockResolvedValue({ id: 'milestone-1' });
   mockPutMilestoneArticles.mockResolvedValue(undefined);
   mockPatchMilestone.mockResolvedValue(undefined);
+  mockGetProjectMilestonesExport.mockResolvedValue({
+    aims: [],
+    milestones: [],
+  });
 });
 
 const projectId = 'proj-1';
@@ -120,6 +136,7 @@ const renderPage = async (queryString = '', waitForLoad = true) => {
                     element={
                       <ProjectMilestones
                         projectId={projectId}
+                        projectName="Alessi Project"
                         isLead={true}
                         hasSupplementGrant={true}
                         aims={[
@@ -297,6 +314,47 @@ describe('ProjectMilestones', () => {
     );
 
     expect(screen.getByText('Article 1')).toBeInTheDocument();
+  });
+
+  it('downloads the table data with the current filters, search and sort applied', async () => {
+    await renderPage(
+      'grantType=original&searchQuery=alpha&filter=Complete&sort=aim_desc',
+    );
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: /Data in Table/i }),
+    );
+
+    await waitFor(() =>
+      expect(downloadProjectMilestonesXlsx).toHaveBeenCalledWith(
+        'Alessi Project',
+        expect.any(Function),
+        {
+          grantType: 'original',
+          search: 'alpha',
+          filter: ['Complete'],
+          sort: 'aim_desc',
+        },
+      ),
+    );
+  });
+
+  it('downloads the full dataset across both grant types without filters or sort applied', async () => {
+    await renderPage(
+      'grantType=original&searchQuery=alpha&filter=Complete&sort=aim_desc',
+    );
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: /Full Dataset/i }),
+    );
+
+    await waitFor(() =>
+      expect(downloadProjectMilestonesXlsx).toHaveBeenCalledWith(
+        'Alessi Project',
+        expect.any(Function),
+        {},
+      ),
+    );
   });
 
   it('throws error when fetching project milestones fails', async () => {

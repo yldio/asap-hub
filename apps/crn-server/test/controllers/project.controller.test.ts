@@ -215,6 +215,32 @@ describe('Project Controller', () => {
     });
   });
 
+  describe('exportProjectMilestones', () => {
+    it('forwards the options to the data provider and returns the export payload', async () => {
+      const exportResponse = { aims: [], milestones: [] };
+      projectDataProviderMock.exportProjectMilestones.mockResolvedValueOnce(
+        exportResponse,
+      );
+
+      const result = await controller.exportProjectMilestones('project-1', {
+        grantType: 'supplement',
+        search: 'alpha',
+        filter: ['Complete'],
+        sort: 'aim_desc',
+      });
+
+      expect(result).toBe(exportResponse);
+      expect(
+        projectDataProviderMock.exportProjectMilestones,
+      ).toHaveBeenCalledWith('project-1', {
+        grantType: 'supplement',
+        search: 'alpha',
+        filter: ['Complete'],
+        sort: 'aim_desc',
+      });
+    });
+  });
+
   describe('createMilestone', () => {
     const milestoneData: MilestoneCreateRequest = {
       description: 'Milestone 1',

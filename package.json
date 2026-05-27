@@ -134,7 +134,7 @@
     "files": [
       {
         "path": "apps/crn-frontend/dist/**/*.js",
-        "maxSize": "256 kB"
+        "maxSize": "280 kB"
       },
       {
         "path": "apps/gp2-frontend/dist/**/*.js",

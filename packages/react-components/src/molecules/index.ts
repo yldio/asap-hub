@@ -24,6 +24,7 @@ export { default as EventTeams } from './EventTeams';
 export { default as EventTime } from './EventTime';
 export { default as ExpandableText } from './ExpandableText';
 export { default as ExportButton } from './ExportButton';
+export { default as ExportTooltip } from './ExportTooltip';
 export { default as ExternalLink } from './ExternalLink';
 export { default as FormCard } from './FormCard';
 export { default as FormSection } from './FormSection';

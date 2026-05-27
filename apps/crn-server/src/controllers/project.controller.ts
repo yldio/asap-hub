@@ -1,11 +1,13 @@
 import { NotFoundError } from '@asap-hub/errors';
 import {
   FetchPaginationOptions,
+  FetchProjectMilestonesExportOptions,
   FetchProjectMilestonesOptions,
   FetchProjectsFilter,
   ListProjectMilestonesResponse,
   ListProjectResponse,
   MilestoneCreateRequest,
+  ProjectMilestonesExportResponse,
   ProjectResponse,
   ProjectTool,
 } from '@asap-hub/model';
@@ -80,6 +82,13 @@ export default class ProjectController {
       total,
       items,
     };
+  }
+
+  async exportProjectMilestones(
+    id: string,
+    options: FetchProjectMilestonesExportOptions,
+  ): Promise<ProjectMilestonesExportResponse> {
+    return this.projectDataProvider.exportProjectMilestones(id, options);
   }
 
   async createMilestone(

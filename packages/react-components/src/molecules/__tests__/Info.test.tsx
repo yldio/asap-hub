@@ -18,3 +18,34 @@ it('shows a the children when clicking the info icon', async () => {
   await userEvent.click(getByTitle(/info/i));
   expect(getByText('text')).toBeVisible();
 });
+
+it('hides the children again when clicking the info icon a second time', async () => {
+  const { getByTitle, getByText } = render(<Info>text</Info>);
+  await userEvent.click(getByTitle(/info/i));
+  expect(getByText('text')).toBeVisible();
+  await userEvent.click(getByTitle(/info/i));
+  expect(getByText('text')).not.toBeVisible();
+});
+
+it('hides the children when clicking outside', async () => {
+  const { getByTitle, getByText } = render(
+    <div>
+      <Info>text</Info>
+      <button type="button">outside</button>
+    </div>,
+  );
+  await userEvent.click(getByTitle(/info/i));
+  expect(getByText('text')).toBeVisible();
+
+  await userEvent.click(getByText('outside'));
+  expect(getByText('text')).not.toBeVisible();
+});
+
+it('hides the children when pressing Escape', async () => {
+  const { getByTitle, getByText } = render(<Info>text</Info>);
+  await userEvent.click(getByTitle(/info/i));
+  expect(getByText('text')).toBeVisible();
+
+  await userEvent.keyboard('{Escape}');
+  expect(getByText('text')).not.toBeVisible();
+});

@@ -12,6 +12,7 @@ import {
   getMilestoneArticles,
   getProject,
   getProjectMilestones,
+  getProjectMilestonesExport,
   getProjects,
   isProjectMilestonesSyncComplete,
   MilestonesListOptions,
@@ -733,6 +734,119 @@ describe('projects api', () => {
         statusCode: 500,
       });
       expect(json).toHaveBeenCalled();
+    });
+  });
+
+  describe('getProjectMilestonesExport', () => {
+    const mockFetch = jest.fn();
+
+    beforeEach(() => {
+      (global as unknown as { fetch: typeof fetch }).fetch = mockFetch as never;
+    });
+
+    it('returns the export payload when the response is ok', async () => {
+      const payload = { aims: [], milestones: [] };
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue(payload),
+      });
+
+      const result = await getProjectMilestonesExport(
+        'project-1',
+        {},
+        'Bearer token',
+      );
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://api.example.com/projects/project-1/milestones-export',
+        expect.objectContaining({
+          headers: expect.objectContaining({ authorization: 'Bearer token' }),
+        }),
+      );
+      expect(result).toEqual(payload);
+    });
+
+    it('serialises all option fields into query params', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ aims: [], milestones: [] }),
+      });
+
+      await getProjectMilestonesExport(
+        'project-1',
+        {
+          grantType: 'supplement',
+          search: 'alpha',
+          sort: 'aim_desc',
+          filter: ['Complete', 'Pending'],
+        },
+        'Bearer token',
+      );
+
+      const calledUrl = mockFetch.mock.calls[0]?.[0] as string;
+      expect(calledUrl).toContain('grantType=supplement');
+      expect(calledUrl).toContain('search=alpha');
+      expect(calledUrl).toContain('sort=aim_desc');
+      expect(calledUrl).toContain('filter=Complete');
+      expect(calledUrl).toContain('filter=Pending');
+    });
+
+    it('omits query params when no options are provided', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ aims: [], milestones: [] }),
+      });
+
+      await getProjectMilestonesExport('project-1', {}, 'Bearer token');
+
+      const calledUrl = mockFetch.mock.calls[0]?.[0] as string;
+      expect(calledUrl).not.toContain('grantType=');
+      expect(calledUrl).not.toContain('search=');
+      expect(calledUrl).not.toContain('sort=');
+      expect(calledUrl).not.toContain('filter=');
+    });
+
+    it('throws BackendError when the response is not ok', async () => {
+      const errorBody = { message: 'boom' };
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Server Error',
+        json: jest.fn().mockResolvedValue(errorBody),
+      });
+
+      const promise = getProjectMilestonesExport(
+        'project-1',
+        {},
+        'Bearer token',
+      );
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: errorBody,
+        statusCode: 500,
+      });
+    });
+
+    it('throws BackendError when the error body cannot be parsed', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 502,
+        statusText: 'Bad Gateway',
+        json: jest.fn().mockRejectedValue(new Error('parse failure')),
+      });
+
+      const promise = getProjectMilestonesExport(
+        'project-1',
+        {},
+        'Bearer token',
+      );
+
+      await expect(promise).rejects.toThrow(BackendError);
+      await expect(promise).rejects.toMatchObject({
+        response: undefined,
+        statusCode: 502,
+      });
     });
   });
 

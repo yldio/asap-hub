@@ -1,4 +1,5 @@
 import {
+  FetchProjectMilestonesExportOptions,
   FetchProjectMilestonesOptions,
   grantTypes,
   MilestoneCreateRequest,
@@ -143,6 +144,30 @@ const projectMilestonesFetchOptionsValidationSchema: JSONSchemaType<FetchProject
 
 export const validateProjectMilestonesFetchOptions = validateInput(
   projectMilestonesFetchOptionsValidationSchema,
+  {
+    skipNull: true,
+    coerce: true,
+  },
+);
+
+const projectMilestonesExportOptionsValidationSchema: JSONSchemaType<FetchProjectMilestonesExportOptions> =
+  {
+    type: 'object',
+    properties: {
+      grantType: { type: 'string', enum: grantTypes, nullable: true },
+      search: { type: 'string', nullable: true },
+      filter: {
+        type: 'array',
+        nullable: true,
+        items: { type: 'string' },
+      },
+      sort: { type: 'string', enum: milestoneSortOptions, nullable: true },
+    },
+    additionalProperties: false,
+  };
+
+export const validateProjectMilestonesExportOptions = validateInput(
+  projectMilestonesExportOptionsValidationSchema,
   {
     skipNull: true,
     coerce: true,

@@ -22,6 +22,7 @@ const projectControllerMock = {
   fetch: jest.fn(),
   fetchById: jest.fn(),
   fetchProjectMilestones: jest.fn(),
+  exportProjectMilestones: jest.fn(),
   update: jest.fn(),
   createMilestone: jest.fn(),
   isProjectMilestonesSynced: jest.fn(),
@@ -471,6 +472,78 @@ describe('project routes', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({ syncComplete: false });
+    });
+  });
+
+  describe('GET /projects/:projectId/milestones-export', () => {
+    const exportResponse = { aims: [], milestones: [] };
+
+    it('returns the export payload with the requested options', async () => {
+      projectControllerMock.exportProjectMilestones.mockResolvedValueOnce(
+        exportResponse,
+      );
+
+      const response = await supertest(app)
+        .get('/projects/project-1/milestones-export')
+        .query({
+          grantType: 'original',
+          search: 'alpha',
+          sort: 'aim_desc',
+          filter: ['Complete', 'Pending'],
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(exportResponse);
+      expect(
+        projectControllerMock.exportProjectMilestones,
+      ).toHaveBeenCalledWith('project-1', {
+        grantType: 'original',
+        search: 'alpha',
+        sort: 'aim_desc',
+        filter: ['Complete', 'Pending'],
+      });
+    });
+
+    it('returns 403 when there is no logged in user', async () => {
+      const appNoUser = createApp();
+
+      const response = await supertest(appNoUser).get(
+        '/projects/project-1/milestones-export',
+      );
+
+      expect(response.status).toBe(403);
+      expect(
+        projectControllerMock.exportProjectMilestones,
+      ).not.toHaveBeenCalled();
+    });
+
+    it('returns 400 when the sort value is invalid', async () => {
+      const response = await supertest(app)
+        .get('/projects/project-1/milestones-export')
+        .query({ sort: 'invalid' });
+
+      expect(response.status).toBe(400);
+      expect(
+        projectControllerMock.exportProjectMilestones,
+      ).not.toHaveBeenCalled();
+    });
+
+    it('wraps a single filter value into an array before validation', async () => {
+      projectControllerMock.exportProjectMilestones.mockResolvedValueOnce(
+        exportResponse,
+      );
+
+      const response = await supertest(app)
+        .get('/projects/project-1/milestones-export')
+        .query({ filter: 'Complete' });
+
+      expect(response.status).toBe(200);
+      expect(
+        projectControllerMock.exportProjectMilestones,
+      ).toHaveBeenCalledWith(
+        'project-1',
+        expect.objectContaining({ filter: ['Complete'] }),
+      );
     });
   });
 });

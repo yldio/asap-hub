@@ -23,6 +23,7 @@ import {
   projectMilestonesListItemState,
   projectMilestonesState,
   projectMilestonesIndexState,
+  useExportProjectMilestones,
 } from '../state';
 import { auth0State } from '../../auth/state';
 
@@ -35,6 +36,7 @@ jest.mock('../api', () => ({
   getProject: jest.fn(),
   patchProject: jest.fn(),
   toListProjectResponse: jest.fn(),
+  getProjectMilestonesExport: jest.fn(),
 }));
 
 const { useAlgolia } = jest.requireMock('../../hooks/algolia') as jest.Mocked<
@@ -45,6 +47,7 @@ const {
   getProject: mockGetProject,
   patchProject: mockPatchProject,
   toListProjectResponse: mockToListProjectResponse,
+  getProjectMilestonesExport: mockGetProjectMilestonesExport,
 } = jest.requireMock('../api') as jest.Mocked<typeof import('../api')>;
 
 const mockAlgoliaClient = { search: jest.fn() };
@@ -628,5 +631,36 @@ describe('project milestones state hooks for coverage', () => {
 
     expect(result.current.state[0]).toBeUndefined();
     expect(result.current.item).toBeUndefined();
+  });
+
+  it('calls getProjectMilestonesExport with the projectId, options and auth token', async () => {
+    const payload = { aims: [], milestones: [] };
+    (mockGetProjectMilestonesExport as jest.Mock).mockResolvedValue(payload);
+
+    const getTokenSilently = jest.fn().mockResolvedValue('token-xyz');
+    const wrapper = createWrapper(({ set }: MutableSnapshot) => {
+      set(auth0State, { getTokenSilently } as never);
+    });
+
+    const { result } = renderHook(
+      () => useExportProjectMilestones('project-1'),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(typeof result.current).toBe('function'));
+
+    const exportOptions = {
+      grantType: 'supplement' as const,
+      filter: ['Complete'],
+    };
+    await act(async () => {
+      await result.current(exportOptions);
+    });
+
+    expect(mockGetProjectMilestonesExport).toHaveBeenCalledWith(
+      'project-1',
+      exportOptions,
+      'Bearer token-xyz',
+    );
   });
 });

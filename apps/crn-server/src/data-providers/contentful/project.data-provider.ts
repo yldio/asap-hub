@@ -45,13 +45,18 @@ import {
   TraineeProject,
   TraineeProjectDetail,
   ProjectStatusRank,
+  FetchProjectMilestonesExportOptions,
   FetchProjectMilestonesOptions,
+  GrantType,
   ListProjectMilestonesResponse,
   OpensearchHitsResponse,
   Milestone,
   MilestoneStatus,
   milestoneStatuses,
   MilestoneCreateRequest,
+  ProjectAimExportRow,
+  ProjectMilestoneExportRow,
+  ProjectMilestonesExportResponse,
 } from '@asap-hub/model';
 import {
   cleanArray,
@@ -61,14 +66,17 @@ import {
 import { haveSameIds, getCleanProjectTools } from '../../utils/project';
 import logger from '../../utils/logger';
 import OpensearchProvider from '../opensearch.data-provider';
-import { deriveAimStatus } from '../../utils/aim-status';
 
 import {
   FetchProjectsOptions,
   ProjectDataProvider,
   ProjectUpdateDataObject,
 } from '../types/projects.data-provider.types';
-import { ProjectMilestonesDataObject } from '../../../scripts/opensearch/types';
+import {
+  ProjectAimsDataObject,
+  ProjectMilestonesDataObject,
+} from '../../../scripts/opensearch/types';
+import { deriveAimStatus } from '../../utils/aim-status';
 import {
   aimNumbersAscSortScript,
   aimNumbersDescSortScript,
@@ -1108,6 +1116,151 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       total: response.hits?.total?.value || 0,
       items,
     };
+  }
+
+  private formatAimNumbers(aimNumbers: string | undefined | null): string {
+    return (aimNumbers ?? '')
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean)
+      .map((value) => `A${value}`)
+      .join('; ');
+  }
+
+  async exportProjectMilestones(
+    id: string,
+    options: FetchProjectMilestonesExportOptions,
+  ): Promise<ProjectMilestonesExportResponse> {
+    if (!this.opensearchProvider) {
+      throw new Error(
+        'Opensearch Provider not configured for ProjectContentfulDataProvider',
+      );
+    }
+    const { grantType, search, filter, sort = 'aim_asc' } = options;
+    const normalizedSearch = search?.trim();
+    const statusFilters = (filter ?? []).filter(
+      (value): value is MilestoneStatus =>
+        milestoneStatuses.includes(value as MilestoneStatus),
+    );
+
+    const hasTableFilters = !!normalizedSearch || statusFilters.length > 0;
+
+    const milestoneFilters = cleanArray([
+      { term: { projectId: id } },
+      grantType ? { term: { grantType } } : undefined,
+      statusFilters.length ? { terms: { status: statusFilters } } : undefined,
+    ]);
+
+    const isDescAimsSort = sort === 'aim_desc';
+    const sortScriptSource = isDescAimsSort
+      ? aimNumbersDescSortScript
+      : aimNumbersAscSortScript;
+
+    const milestonesResponse = (await this.opensearchProvider.search({
+      index: 'project-milestones',
+      body: {
+        query: {
+          bool: {
+            filter: milestoneFilters,
+            ...(normalizedSearch
+              ? {
+                  must: [
+                    {
+                      match: {
+                        description: {
+                          query: normalizedSearch,
+                          fuzziness: 'AUTO',
+                          operator: 'and',
+                        },
+                      },
+                    },
+                  ],
+                }
+              : {}),
+          },
+        },
+        sort: [
+          {
+            _script: {
+              type: 'string',
+              order: 'asc',
+              script: { source: sortScriptSource },
+            },
+          },
+        ],
+        from: 0,
+        size: 10000,
+      } satisfies OpensearchRequest,
+    })) as unknown as OpensearchHitsResponse<ProjectMilestonesDataObject>;
+
+    const milestoneHits = milestonesResponse.hits?.hits ?? [];
+    const milestones: ProjectMilestoneExportRow[] = milestoneHits.map((hit) => {
+      // eslint-disable-next-line no-underscore-dangle
+      const source = hit._source;
+      return {
+        projectName: source.projectName,
+        grantType: source.grantType as GrantType,
+        description: source.description,
+        relatedAimNumbers: this.formatAimNumbers(source.aimNumbers),
+        articlesDOI: source.articlesDOI ?? '',
+        createdDate: source.createdDate,
+        lastUpdated: source.lastDate,
+        status: source.status as MilestoneStatus,
+      };
+    });
+
+    const aimsFilter = cleanArray([
+      { term: { projectId: id } },
+      grantType ? { term: { grantType } } : undefined,
+    ]);
+
+    const aimsResponse = (await this.opensearchProvider.search({
+      index: 'project-aims',
+      body: {
+        query: {
+          bool: {
+            filter: aimsFilter,
+          },
+        },
+        sort: [{ aimOrder: { order: 'asc', missing: '_last' } }],
+        from: 0,
+        size: 1000,
+      } satisfies OpensearchRequest,
+    })) as unknown as OpensearchHitsResponse<ProjectAimsDataObject>;
+
+    const aimHits = aimsResponse.hits?.hits ?? [];
+    // eslint-disable-next-line no-underscore-dangle
+    const aimSources = aimHits.map((hit) => hit._source);
+
+    const referencedAimNumbers = hasTableFilters
+      ? new Set(
+          milestones.flatMap((m) =>
+            m.relatedAimNumbers
+              .split(';')
+              .map((value) => value.trim().replace(/^A/, ''))
+              .filter(Boolean),
+          ),
+        )
+      : null;
+
+    const aims: ProjectAimExportRow[] = aimSources
+      .filter((source) =>
+        referencedAimNumbers
+          ? referencedAimNumbers.has(String(source.aimOrder))
+          : true,
+      )
+      .map((source) => ({
+        projectName: source.projectName,
+        grantType: source.grantType as GrantType,
+        aimNumber: `A${source.aimOrder}`,
+        description: source.description,
+        articlesDOI: source.articlesDOI ?? '',
+        createdDate: source.createdDate,
+        lastUpdated: source.lastDate,
+        status: source.status as ProjectAimExportRow['status'],
+      }));
+
+    return { aims, milestones };
   }
 
   async createMilestone(

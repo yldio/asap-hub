@@ -109,7 +109,7 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
   const sortedTeams = useMemo(() => {
     const grouped = groupUserTeamsByTeamId(teams);
     return [...grouped].sort(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion - roles always has at least one entry from groupUserTeamsByTeamId
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       (a, b) => priorities[a.roles[0]!] - priorities[b.roles[0]!],
     );
   }, [teams]);

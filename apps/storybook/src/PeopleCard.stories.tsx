@@ -58,3 +58,45 @@ export const Alumni = () => (
     ).toISOString()}
   />
 );
+
+export const MultipleRolesSameTeam = () => (
+  <PeopleCard
+    {...props}
+    teams={[
+      {
+        id: 't1',
+        role: 'Lead PI (Core Leadership)',
+        displayName: 'Team Alpha',
+      },
+      { id: 't1', role: 'Project Manager', displayName: 'Team Alpha' },
+      { id: 't1', role: 'Collaborating PI', displayName: 'Team Alpha' },
+    ]}
+  />
+);
+
+export const MultipleRolesMultipleTeams = () => (
+  <PeopleCard
+    {...props}
+    teams={[
+      {
+        id: 't1',
+        role: 'Lead PI (Core Leadership)',
+        displayName: 'Team Alpha',
+      },
+      { id: 't1', role: 'Project Manager', displayName: 'Team Alpha' },
+      { id: 't2', role: 'Collaborating PI', displayName: 'Team Beta' },
+      { id: 't3', role: 'Key Personnel', displayName: 'Team Gamma' },
+    ]}
+  />
+);
+
+export const MultipleLabs = () => (
+  <PeopleCard
+    {...props}
+    labs={[
+      { id: 'lab-1', name: 'Bhatt' },
+      { id: 'lab-2', name: 'Anderson' },
+      { id: 'lab-3', name: 'Smith' },
+    ]}
+  />
+);

@@ -1,8 +1,9 @@
 import { css } from '@emotion/react';
-import { ProjectMember } from '@asap-hub/model';
-import { Avatar, Link } from '../atoms';
+import { Avatar, Link, OverflowBadge } from '../atoms';
 import { rem } from '../pixels';
-import { fern, lead, neutral500, neutral900 } from '../colors';
+import { fern } from '../colors';
+import { GroupedProjectMember } from '../utils';
+import RolesList from './RolesList';
 
 const memberCardStyles = css({
   display: 'flex',
@@ -19,7 +20,6 @@ const avatarStyles = css({
 const memberInfoStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  gap: rem(4),
   flex: 1,
 });
 
@@ -33,11 +33,6 @@ const nameStyles = css({
   },
 });
 
-const roleStyles = css({
-  fontSize: rem(17),
-  color: lead.rgb,
-});
-
 const teamInfoStyles = css({
   display: 'flex',
   alignItems: 'center',
@@ -46,24 +41,8 @@ const teamInfoStyles = css({
   color: fern.rgb,
 });
 
-const additionalTeamsBadgeStyles = css({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: rem(24),
-  height: rem(24),
-  borderRadius: '50%',
-  color: neutral900.rgb,
-  border: `1px solid ${neutral500.rgba}!important`,
-  backgroundColor: 'transparent',
-  fontSize: rem(14),
-  fontWeight: 700,
-  lineHeight: 1,
-  padding: rem(2),
-});
-
 type ProjectMemberCardProps = {
-  readonly member: ProjectMember;
+  readonly member: GroupedProjectMember;
   /** Whether to show team information (true for trainee, false for resource not team-based) */
   readonly showTeamInfo?: boolean;
 };
@@ -89,14 +68,14 @@ const ProjectMemberCard: React.FC<ProjectMemberCardProps> = ({
         <Link href={'#'}>
           <span css={nameStyles}>{member.displayName}</span>
         </Link>
-        {member.role && <div css={roleStyles}>{member.role}</div>}
+        {member.roles.length > 0 && (
+          <RolesList roles={member.roles} maxVisible={2} />
+        )}
         {showTeamInfo && firstTeam && (
           <div css={teamInfoStyles}>
             <Link href={'#'}>{firstTeam.displayName}</Link>
             {additionalTeamsCount > 0 && (
-              <div css={additionalTeamsBadgeStyles}>
-                +{additionalTeamsCount}
-              </div>
+              <OverflowBadge count={additionalTeamsCount} />
             )}
           </div>
         )}

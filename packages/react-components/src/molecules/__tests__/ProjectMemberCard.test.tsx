@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import { ProjectMember } from '@asap-hub/model';
+import { GroupedProjectMember } from '../../utils';
 import ProjectMemberCard from '../ProjectMemberCard';
 
-const mockMember: ProjectMember = {
+const mockMember: GroupedProjectMember = {
   id: '1',
   displayName: 'John Doe',
   firstName: 'John',
   lastName: 'Doe',
-  role: 'Principal Investigator',
+  roles: ['Principal Investigator'],
   href: '/users/john-doe',
   avatarUrl: undefined,
 };
@@ -21,17 +21,17 @@ describe('ProjectMemberCard', () => {
   });
 
   it('renders member role', () => {
-    render(<ProjectMemberCard member={mockMember} showTeamInfo={false} />);
-    expect(screen.getByText(mockMember.role!)).toBeInTheDocument();
+    render(<ProjectMemberCard member={mockMember} />);
+    expect(screen.getByText('Principal Investigator')).toBeInTheDocument();
   });
 
   it('renders avatar with initials', () => {
-    render(<ProjectMemberCard member={mockMember} showTeamInfo={false} />);
+    render(<ProjectMemberCard member={mockMember} />);
     expect(screen.getByText('JD')).toBeInTheDocument();
   });
 
-  it('does not render role when not provided', () => {
-    const memberWithoutRole = { ...mockMember, role: undefined };
+  it('does not render role when roles is empty', () => {
+    const memberWithoutRole = { ...mockMember, roles: [] };
     const { container } = render(
       <ProjectMemberCard member={memberWithoutRole} showTeamInfo={false} />,
     );
@@ -93,6 +93,18 @@ describe('ProjectMemberCard', () => {
     render(<ProjectMemberCard member={mockMember} showTeamInfo={true} />);
     expect(screen.queryByText(/Lab/)).not.toBeInTheDocument();
     expect(screen.queryByText(/\+\d+/)).not.toBeInTheDocument();
+  });
+
+  it('renders avatar with empty initials when firstName and lastName are undefined', () => {
+    const memberWithoutNames = {
+      ...mockMember,
+      firstName: undefined,
+      lastName: undefined,
+    };
+    render(
+      <ProjectMemberCard member={memberWithoutNames} showTeamInfo={false} />,
+    );
+    expect(screen.getByText(mockMember.displayName)).toBeInTheDocument();
   });
 
   it('renders with avatar when avatarUrl is provided', () => {

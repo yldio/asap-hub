@@ -79,7 +79,7 @@ const teamNameStyles = css({
 
 const articleCountStyles = css({
   color: lead.rgb,
-  paddingLeft: rem(16),
+  paddingLeft: rem(22),
   '& > [data-bullet]': {
     display: 'none',
   },

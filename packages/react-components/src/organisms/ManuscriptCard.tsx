@@ -256,12 +256,12 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
 }) => {
   const [tooltipHoverShown, setTooltipHoverShown] = useState<boolean>(false);
 
-  const { search } = useLocation();
+  const { pathname, search, hash } = useLocation();
   const targetTabFromUrl =
     new URLSearchParams(search).get('tab') === 'discussions'
       ? 'discussions'
       : 'manuscripts-and-reports';
-  const [activeTab, setActiveTab] = useState<
+  const [activeTab, setInternalActiveTab] = useState<
     'manuscripts-and-reports' | 'discussions'
   >(isTargetManuscript ? targetTabFromUrl : 'manuscripts-and-reports');
   const [manuscript, setManuscript] = useManuscriptById(id);
@@ -270,7 +270,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     useState(false);
   const targetManuscriptRef = useRef<HTMLDivElement>(null);
 
-  const [expanded, setExpanded] = useState(isTargetManuscript);
+  const [expandedState, setExpandedState] = useState(isTargetManuscript);
   const [showMore, setShowMore] = useState(false);
 
   const [newSelectedStatus, setNewSelectedStatus] =
@@ -278,6 +278,33 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   const navigate = useNavigate();
 
   const discussionTabRef = useRef<HTMLButtonElement>(null);
+
+  // keep URL in sync so the user can copy/share the open state
+  const syncUrl = (
+    nextExpanded: boolean,
+    nextTab: 'manuscripts-and-reports' | 'discussions',
+  ) => {
+    if (!nextExpanded) {
+      // only clear the URL if it currently points at this card; otherwise
+      // another card on the page owns it and we shouldn't stomp on its state.
+      if (hash === `#${id}`) {
+        void navigate(pathname, { replace: true });
+      }
+      return;
+    }
+    const tabQuery = nextTab === 'discussions' ? '?tab=discussions' : '';
+    void navigate(`${pathname}${tabQuery}#${id}`, { replace: true });
+  };
+
+  const setExpanded = (next: boolean) => {
+    setExpandedState(next);
+    syncUrl(next, activeTab);
+  };
+
+  const setActiveTab = (next: 'manuscripts-and-reports' | 'discussions') => {
+    setInternalActiveTab(next);
+    if (expandedState) syncUrl(true, next);
+  };
 
   const complianceReportRoute = getCreateComplianceReportHref
     ? getCreateComplianceReportHref(id)
@@ -381,9 +408,9 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
             <Button
               data-testid="collapsible-button"
               linkStyle
-              onClick={() => setExpanded(!expanded)}
+              onClick={() => setExpanded(!expandedState)}
             >
-              <span>{expanded ? minusRectIcon : plusRectIcon}</span>
+              <span>{expandedState ? minusRectIcon : plusRectIcon}</span>
             </Button>
           </span>
           <span css={{ width: '100%' }}>
@@ -423,7 +450,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           </span>
         </div>
 
-        {expanded && (
+        {expandedState && (
           <div>
             <div
               style={{

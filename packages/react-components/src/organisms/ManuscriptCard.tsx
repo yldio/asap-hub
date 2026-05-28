@@ -14,7 +14,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css, Theme } from '@emotion/react';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { DiscussionsTab } from '.';
 import {
   Button,
@@ -256,9 +256,14 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
 }) => {
   const [tooltipHoverShown, setTooltipHoverShown] = useState<boolean>(false);
 
+  const { search } = useLocation();
+  const targetTabFromUrl =
+    new URLSearchParams(search).get('tab') === 'discussions'
+      ? 'discussions'
+      : 'manuscripts-and-reports';
   const [activeTab, setActiveTab] = useState<
     'manuscripts-and-reports' | 'discussions'
-  >('manuscripts-and-reports');
+  >(isTargetManuscript ? targetTabFromUrl : 'manuscripts-and-reports');
   const [manuscript, setManuscript] = useManuscriptById(id);
   const { title, status, versions } = manuscript ?? { versions: [] };
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
@@ -331,20 +336,35 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       ? manuscript?.discussions.some((discussion) => !discussion.read)
       : false;
 
+  // scroll only once per page load when the URL pointed at this card.
+  // wait until the manuscript data is loaded so the layout is stable; never
+  // re-scroll on later expand/collapse cycles or tab switches.
+  const hasAutoScrolledRef = useRef(false);
+  const initialTabRef = useRef(activeTab);
   /* istanbul ignore next */
   useEffect(() => {
+    if (!isTargetManuscript || hasAutoScrolledRef.current || !manuscript) {
+      return undefined;
+    }
+
+    // give the layout one paint to settle (refs attach, tab content mounts)
+    // before measuring, then scroll to the target.
     const timer = setTimeout(() => {
-      if (isTargetManuscript && targetManuscriptRef.current) {
-        window.scrollTo({
-          top: targetManuscriptRef.current.offsetTop,
-          behavior: 'smooth',
-        });
-        window.history.replaceState({}, '', window.location.pathname);
+      const scrollTarget =
+        initialTabRef.current === 'discussions' && discussionTabRef.current
+          ? discussionTabRef.current
+          : targetManuscriptRef.current;
+
+      if (scrollTarget) {
+        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        hasAutoScrolledRef.current = true;
       }
-    }, 500);
+    }, 100);
 
     return () => clearTimeout(timer);
-  }, [isTargetManuscript]);
+    // intentionally only re-evaluates on isTargetManuscript flips or manuscript
+    // arriving; the ref guard prevents repeat scrolls after the first success.
+  }, [isTargetManuscript, manuscript]);
 
   return (
     <>

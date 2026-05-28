@@ -865,6 +865,52 @@ describe('Tabs', () => {
     await userActions.click(openDiscussionsButton);
     expect(getByRole('button', { name: 'Discussions' })).toHaveClass('active');
   });
+
+  describe('opening from an email discussion link', () => {
+    it('opens the Discussions tab when isTargetManuscript and ?tab=discussions', () => {
+      const { getByRole } = render(
+        <MemoryRouter
+          initialEntries={['/workspace?tab=discussions#manuscript_0']}
+        >
+          <ManuscriptCard {...props} isTargetManuscript />
+        </MemoryRouter>,
+      );
+
+      expect(getByRole('button', { name: 'Discussions' })).toHaveClass(
+        'active',
+      );
+      expect(
+        getByRole('button', { name: 'Manuscripts and Reports' }),
+      ).not.toHaveClass('active');
+    });
+
+    it('keeps the default tab when isTargetManuscript but tab query is missing', () => {
+      const { getByRole } = render(
+        <MemoryRouter initialEntries={['/workspace#manuscript_0']}>
+          <ManuscriptCard {...props} isTargetManuscript />
+        </MemoryRouter>,
+      );
+
+      expect(
+        getByRole('button', { name: 'Manuscripts and Reports' }),
+      ).toHaveClass('active');
+    });
+
+    it('ignores ?tab=discussions when manuscript is not the target', async () => {
+      const userActions = userEvent.setup({ delay: null });
+      const { getByRole, getByTestId } = render(
+        <MemoryRouter initialEntries={['/workspace?tab=discussions']}>
+          <ManuscriptCard {...props} />
+        </MemoryRouter>,
+      );
+
+      await userActions.click(getByTestId('collapsible-button'));
+
+      expect(
+        getByRole('button', { name: 'Manuscripts and Reports' }),
+      ).toHaveClass('active');
+    });
+  });
 });
 
 describe('Discussion Notification', () => {

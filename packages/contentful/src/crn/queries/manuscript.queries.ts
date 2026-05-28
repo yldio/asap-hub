@@ -500,7 +500,11 @@ export const FETCH_MANUSCRIPT_NOTIFICATION_DETAILS = gql`
                 linkedFrom {
                   projectsCollection(limit: 1) {
                     items {
+                      sys {
+                        id
+                      }
                       projectId
+                      projectType
                       grantId
                     }
                   }

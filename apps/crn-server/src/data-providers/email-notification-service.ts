@@ -42,7 +42,30 @@ type TemplateModel = {
   discussion?: {
     title: string;
     submitterName: string;
+    link: string;
   };
+};
+
+const projectTypeUrlSegment: Record<string, string> = {
+  'Discovery Project': 'discovery',
+  'Resource Project': 'resource',
+  'Trainee Project': 'trainee',
+};
+
+const getProjectWorkspaceUrl = (
+  project:
+    | {
+        sys?: { id?: string | null } | null;
+        projectType?: string | null;
+      }
+    | null
+    | undefined,
+): string | null => {
+  const segment = project?.projectType
+    ? projectTypeUrlSegment[project.projectType]
+    : undefined;
+  if (!segment || !project?.sys?.id) return null;
+  return `${origin}/projects/${segment}/${project.sys.id}/workspace`;
 };
 
 type DiscussionNotificationInfo = {
@@ -155,6 +178,14 @@ export class EmailNotificationService {
       discussionTitle = discussions?.title || '';
     }
 
+    const teamWorkspaceUrl = `${origin}/network/teams/${submittingTeam?.sys.id}/workspace`;
+    const projectWorkspaceUrl = getProjectWorkspaceUrl(project);
+    // discussion link prefers the project workspace when the manuscript belongs
+    // to one, otherwise falls back to the team workspace.
+    const discussionLink = `${
+      projectWorkspaceUrl ?? teamWorkspaceUrl
+    }?tab=discussions#${manuscriptId}`;
+
     const notificationData = (
       recipientType: 'open_science_team' | 'grantee',
     ): TemplateModel => ({
@@ -164,12 +195,13 @@ export class EmailNotificationService {
           recipientType === 'open_science_team'
             ? submittingTeam?.displayName || ''
             : getCommaAndString(contributingTeamNames),
-        workspace: `${origin}/network/teams/${submittingTeam?.sys.id}/workspace`,
+        workspace: teamWorkspaceUrl,
       },
       assignedOSMembers: getCommaAndString(assignedOSMembers || []),
       discussion: {
         title: discussionTitle,
         submitterName: discussionDetails?.userName || '',
+        link: discussionLink,
       },
     });
 

@@ -80,7 +80,7 @@ jobs:
   rebuild:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -98,7 +98,7 @@ jobs:
     needs: [rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -136,7 +136,7 @@ jobs:
     needs: [rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -172,7 +172,7 @@ jobs:
     needs: [definitions, transpile]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -270,7 +270,7 @@ jobs:
     needs: [rebuild, definitions]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -306,7 +306,7 @@ jobs:
     needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -355,7 +355,7 @@ jobs:
     needs: [definitions, transpile, rebuild]
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

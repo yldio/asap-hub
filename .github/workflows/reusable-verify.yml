@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -91,7 +91,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
       # fixes git directory ownership issue
       # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
       options: --user 1001

@@ -97,7 +97,7 @@ jobs:
       url: ${{ steps.setup.outputs.crn-app-url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -151,7 +151,7 @@ jobs:
       url: ${{ steps.setup.outputs.app-url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -201,7 +201,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-unplugged
         with:
@@ -244,7 +244,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Cache build typecheck output
         uses: ./.github/actions/cache-unplugged
         with:
@@ -289,7 +289,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -319,7 +319,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -346,7 +346,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -376,7 +376,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -401,7 +401,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -438,7 +438,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -522,7 +522,7 @@ jobs:
       name: ${{ inputs.environment-name }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Push templates to Postmark
         uses: ./.github/actions/push-postmark-templates
         with:

@@ -26,7 +26,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment
@@ -46,7 +46,7 @@ jobs:
     if: ${{ failure() && inputs.environment-name=='Production' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: ./.github/actions/slack/
         with:
           message: Migrate user labs rollback failed

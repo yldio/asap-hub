@@ -21,9 +21,10 @@ FROM base AS integration
 
 RUN curl -sL https://deb.nodesource.com/setup_24.x | bash \
   && apt-get update && apt-get install -yqq \
-  nodejs \
+  # Pin 24.16.0: NodeSource's 24.x still defaults to 24.15.0, which has an
+  # ESM-loader regression that breaks Yarn PnP with EBADF on fstat
+  # (nodejs/node#62012). Bump this pin as newer fixed patches ship.
+  nodejs=24.16.0-1nodesource1 \
   git \
   && corepack enable \
-  # Node 24.15.0 has an ESM-loader regression that breaks Yarn PnP with
-  # EBADF on fstat (nodejs/node#62012); require the fixed 24.16.0+.
   && node -e 'process.exit(process.versions.node.localeCompare("24.16.0", undefined, { numeric: true }) < 0 ? 1 : 0)'

@@ -151,6 +151,8 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
               }
               name
             }
+            layImpactStatement
+            firstPublicDate
             categoriesCollection(limit: 2) {
               items {
                 sys {

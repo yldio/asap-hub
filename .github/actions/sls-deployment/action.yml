@@ -111,9 +111,26 @@ runs:
       with:
         name: ${{ inputs.app }}-sls-package-${{ inputs.environment-name }}
         path: '${{ inputs.app }}-sls-package'
+    # Serverless v3 bundles the EOL aws-sdk v2, whose S3 client stalls on
+    # Node 24 (RequestTimeout, "idle connections will be closed") when
+    # uploading deploy artifacts. The deployed Lambda runtime is still
+    # nodejs24.x (set in serverless.ts) — only the deploy CLI runs on Node 20,
+    # where aws-sdk v2 uploads work. Self-installing Node as a build tool is
+    # explicitly supported by GitHub (separate from the JS-action runtime).
+    # Pin 20.11.1: it predates the Node >=20.12 Yarn-PnP fs.rmSync bug
+    # (yarnpkg/berry#6247) that otherwise crashes serverless' cleanupTempDir.
+    - name: Install Node 20 for the deploy CLI
+      shell: bash
+      run: |
+        curl -fsSL "https://nodejs.org/dist/v20.11.1/node-v20.11.1-linux-x64.tar.xz" -o /tmp/node20.tar.xz
+        mkdir -p /tmp/node20
+        tar -xJf /tmp/node20.tar.xz -C /tmp/node20 --strip-components=1 --no-same-owner
+        /tmp/node20/bin/node --version
     - name: Deploy
       shell: bash
       run: |
+        export PATH="/tmp/node20/bin:$PATH"
+        node --version
         yarn workspace @asap-hub/${{ inputs.app }} run pnpify serverless deploy --package $PWD/${{ inputs.app }}-sls-package
       env:
         ACTIVE_CAMPAIGN_ACCOUNT: ${{ inputs.active-campaign-account }}

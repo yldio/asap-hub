@@ -213,6 +213,8 @@ jobs:
         uses: ./.github/actions/cache-unplugged
         with:
           environment-name: ${{ inputs.environment-name }}
+      - name: Re-Build
+        uses: ./.github/actions/build-rebuild
       - name: Restore transpile output
         uses: ./.github/actions/cache-build
         with:

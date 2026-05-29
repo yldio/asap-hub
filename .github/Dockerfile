@@ -23,4 +23,4 @@ RUN curl -sL https://deb.nodesource.com/setup_24.x | bash \
   && apt-get update && apt-get install -yqq \
   nodejs \
   git \
-  && npm i -g npm@^6 yarn
+  && corepack enable

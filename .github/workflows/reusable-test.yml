@@ -29,7 +29,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
+      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -52,7 +52,7 @@ jobs:
   extensions:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
+      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -64,7 +64,7 @@ jobs:
   setup-turbo:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
+      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -85,7 +85,7 @@ jobs:
     needs: setup-turbo
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
+      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -221,7 +221,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment-name }}
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:5f45bf82c9dcc74308a5739563174900865ccf91
+      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

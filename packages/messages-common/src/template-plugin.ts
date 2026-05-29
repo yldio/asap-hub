@@ -52,14 +52,14 @@ const apply = async (stats: Stats, appOrigin: string) => {
   const tasks = files
     .filter((file) => path.extname(file) === '.js')
     .map(async (file) => {
-      const key = file;
+      const { name } = path.parse(file);
+      const key = name.toLowerCase().replace(/[^a-z-]/g, '-');
       const cache = createCache({ key });
       const { extractCritical } = createEmotionServer(cache);
       const template = require(path.resolve(outputDir, file)) as Record<
         string,
         unknown
       >;
-      const { name } = path.parse(file);
 
       const reactElement = template.default as React.ReactElement;
       if (

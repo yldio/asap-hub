@@ -124,6 +124,9 @@
     },
     "thrift": {
       "unplugged": false
+    },
+    "unrs-resolver": {
+      "built": false
     }
   },
   "prettier": {

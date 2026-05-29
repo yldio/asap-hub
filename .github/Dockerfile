@@ -23,4 +23,7 @@ RUN curl -sL https://deb.nodesource.com/setup_24.x | bash \
   && apt-get update && apt-get install -yqq \
   nodejs \
   git \
-  && corepack enable
+  && corepack enable \
+  # Node 24.15.0 has an ESM-loader regression that breaks Yarn PnP with
+  # EBADF on fstat (nodejs/node#62012); require the fixed 24.16.0+.
+  && node -e 'process.exit(process.versions.node.localeCompare("24.16.0", undefined, { numeric: true }) < 0 ? 1 : 0)'

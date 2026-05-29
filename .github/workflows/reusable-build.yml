@@ -1,5 +1,10 @@
 name: Reusable build
 
+# Trusted internal CI: opt out of Yarn 4 hardened mode, which otherwise
+# re-resolves the git-based contentful-migrate dep and fails zero-install.
+env:
+  YARN_ENABLE_HARDENED_MODE: 'false'
+
 on:
   workflow_call:
     inputs:

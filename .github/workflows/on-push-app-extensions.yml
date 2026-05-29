@@ -49,7 +49,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Run contentful app extension tests
-        run: yarn workspaces foreach -j 2 --include "*/contentful-app-*" -vp run test:no-watch
+        run: yarn workspaces foreach -A -j 2 --include "*/contentful-app-*" -vp run test:no-watch
 
   build-and-deploy:
     needs: [test]

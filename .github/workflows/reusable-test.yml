@@ -55,7 +55,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Run contentful app extension tests
-        run: yarn workspaces foreach --include "*/contentful-app-*" -v run test:no-watch
+        run: yarn workspaces foreach -A --include "*/contentful-app-*" -v run test:no-watch
   setup-turbo:
     runs-on: ubuntu-latest
     container:

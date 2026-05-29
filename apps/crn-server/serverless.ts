@@ -140,7 +140,7 @@ const serverlessConfig: AWS = {
   plugins,
   provider: {
     name: 'aws',
-    runtime: stage === 'local' ? 'nodejs16.x' : 'nodejs20.x',
+    runtime: 'nodejs24.x' as AWS['provider']['runtime'],
     architecture: 'arm64',
     timeout: 16,
     memorySize: 1024,
@@ -457,7 +457,7 @@ const serverlessConfig: AWS = {
     esbuild: {
       packager: 'yarn',
       platform: 'node',
-      target: 'node20',
+      target: 'node24',
       bundle: true,
       concurrency: 8,
     },

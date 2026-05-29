@@ -110,10 +110,10 @@
     "fsevents": {
       "built": false
     },
-    "serverless-offline@8.8.1": {
+    "serverless-offline@13.10.0": {
       "unplugged": true
     },
-    "serverless-offline-aws-eventbridge@1.6.7": {
+    "serverless-offline-aws-eventbridge@2.2.4": {
       "unplugged": true
     },
     "serverless-offline-ssm@6.2.0": {

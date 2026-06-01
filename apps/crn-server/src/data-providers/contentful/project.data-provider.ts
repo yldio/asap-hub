@@ -562,7 +562,7 @@ export const parseContentfulProjectDetail = (
         };
 
         // Parse collaborators (user members)
-        // TODO: team-based projects should not have user members, investigate and fix
+        // TODO: team-based projects should not have user members, investigate if being used elsewhere and fix
         const collaborators: ProjectMember[] = members
           .filter((m) => m.projectMember?.__typename === 'Users')
           .map((m) => parseProjectUserMember(m));

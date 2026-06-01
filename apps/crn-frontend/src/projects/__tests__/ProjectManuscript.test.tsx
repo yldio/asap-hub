@@ -439,11 +439,11 @@ describe('ProjectManuscript', () => {
       ]);
     });
 
-    it('maps teams to select options properly when manuscript is project based', async () => {
+    it('maps teams to select options properly when manuscript is from a user-based project', async () => {
       mockUseManuscriptById.mockReturnValueOnce([
         {
           id: 'manuscript-1',
-          project: 'project-1',
+          projectId: 'project-1',
           versions: [
             {
               teams: [

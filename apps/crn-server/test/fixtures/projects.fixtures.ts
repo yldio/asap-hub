@@ -445,18 +445,6 @@ export const getExpectedDiscoveryProject = (): DiscoveryProject => ({
 // Expected discovery project detail (for fetchById) with additional detail fields
 export const getExpectedDiscoveryProjectDetail = () => ({
   ...getExpectedDiscoveryProject(),
-  collaborators: [
-    {
-      id: 'user-1',
-      displayName: 'Alex (Al) Smith',
-      firstName: 'Alex',
-      lastName: 'Smith',
-      avatarUrl: 'https://example.com/alex.png',
-      role: 'Researcher',
-      email: 'alex@example.com',
-      alumniSinceDate: undefined,
-    },
-  ],
   fundedTeam: {
     id: 'team-1',
     displayName: 'Discovery Team',
@@ -491,12 +479,6 @@ export const getExpectedDiscoveryProjectDetailWithAllFields = () => ({
     researchTheme: 'Theme One',
     teamDescription: 'Team description for discovery',
   },
-  collaborators: [
-    {
-      id: 'user-1',
-      displayName: 'Alex (Al) Smith',
-    },
-  ],
   manuscripts: [],
   collaborationManuscripts: [],
 });

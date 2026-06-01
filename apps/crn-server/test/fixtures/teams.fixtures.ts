@@ -447,6 +447,7 @@ export const getContentfulGraphqlManuscripts = (
           },
         ],
       },
+      project: null,
     },
     {
       sys: { id: 'manuscript-id-2' },
@@ -457,6 +458,7 @@ export const getContentfulGraphqlManuscripts = (
           },
         ],
       },
+      project: null,
     },
   ],
 });

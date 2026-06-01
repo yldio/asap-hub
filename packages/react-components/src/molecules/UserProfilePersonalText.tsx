@@ -98,13 +98,13 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   const uniqueLabNames = [...new Set(labs.map((lab) => `${lab.name} Lab`))];
   const labsList = formatInlineList(uniqueLabNames);
 
-  const groupedTeams = groupUserTeamsByTeamId(teams);
-
-  const [inactiveTeams, activeTeams] = splitListBy(
-    groupedTeams,
+  const [rawInactive, rawActive] = splitListBy(
+    teams,
     (team) =>
       isAlumni || !!team?.teamInactiveSince || !!team?.inactiveSinceDate,
   );
+  const activeTeams = groupUserTeamsByTeamId(rawActive);
+  const inactiveTeams = groupUserTeamsByTeamId(rawInactive);
 
   const visibleActiveTeams = showAllActive
     ? activeTeams

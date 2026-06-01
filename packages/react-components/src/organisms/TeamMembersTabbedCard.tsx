@@ -41,18 +41,21 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
   members,
   isTeamInactive,
 }) => {
-  const grouped = useMemo(
-    () => groupTeamMembersByUserId([...members]),
-    [members],
-  );
-
-  const [pastMembers, activeMembers] = splitListBy(
-    grouped,
-    (member) =>
-      isTeamInactive ||
-      !!member?.alumniSinceDate ||
-      !!member?.inactiveSinceDate,
-  );
+  const { activeMembers, pastMembers } = useMemo(() => {
+    const [rawPast, rawActive] = splitListBy(
+      [...members],
+      (member) =>
+        isTeamInactive ||
+        !!member?.alumniSinceDate ||
+        !!member?.inactiveSinceDate,
+    );
+    const active = groupTeamMembersByUserId(rawActive);
+    const activeIdSet = new Set(active.map((m) => m.id));
+    const past = groupTeamMembersByUserId(rawPast).filter(
+      (m) => !activeIdSet.has(m.id),
+    );
+    return { activeMembers: active, pastMembers: past };
+  }, [members, isTeamInactive]);
 
   return (
     <TabbedCard
@@ -74,10 +77,8 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
           ),
         },
         {
-          tabTitle: `Past Team Members (${
-            isTeamInactive ? grouped.length : pastMembers.length
-          })`,
-          items: isTeamInactive ? grouped : pastMembers,
+          tabTitle: `Past Team Members (${pastMembers.length})`,
+          items: pastMembers,
           truncateFrom: 8,
           disabled: pastMembers.length === 0,
           empty: (

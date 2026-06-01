@@ -1,13 +1,13 @@
 import { TeamRole, UserTeam } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import React, { Fragment, useMemo } from 'react';
+import React, { Fragment } from 'react';
 import { Divider, Link, Paragraph } from '../atoms';
 import { InactiveBadgeIcon } from '../icons';
 import { TabbedCard } from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { neutral900 } from '../colors';
-import { groupUserTeamsByTeamId, splitListBy } from '../utils';
+import { groupUserTeamsByTeamId, GroupedUserTeam, splitListBy } from '../utils';
 import { formatDateToTimezone } from '../date';
 
 const MAX_TEAMS = 5;
@@ -106,19 +106,18 @@ const UserTeamsTabbedCard: React.FC<UserTeamsTabbedCardProps> = ({
   userAlumni,
   teams,
 }) => {
-  const sortedTeams = useMemo(() => {
-    const grouped = groupUserTeamsByTeamId(teams);
-    return [...grouped].sort(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      (a, b) => priorities[a.roles[0]!] - priorities[b.roles[0]!],
-    );
-  }, [teams]);
   const teamHref = (id: string) => network({}).teams({}).team({ teamId: id }).$;
-  const [inactiveTeams, activeTeams] = splitListBy(
-    sortedTeams,
+  const [rawInactive, rawActive] = splitListBy(
+    teams,
     (team) =>
       userAlumni || !!team?.teamInactiveSince || !!team?.inactiveSinceDate,
   );
+  const sortByPriority = (a: GroupedUserTeam, b: GroupedUserTeam) =>
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    priorities[a.roles[0]!] - priorities[b.roles[0]!];
+  const activeTeams = groupUserTeamsByTeamId(rawActive).sort(sortByPriority);
+  const inactiveTeams =
+    groupUserTeamsByTeamId(rawInactive).sort(sortByPriority);
   return (
     <div id="user-teams-tabbed-card">
       <TabbedCard

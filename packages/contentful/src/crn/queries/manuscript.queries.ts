@@ -612,6 +612,25 @@ export const FETCH_MANUSCRIPTS_BY_TEAM_ID = gql`
               }
             }
             count
+            project {
+              sys {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const FETCH_MANUSCRIPTS_BY_PROJECT_ID = gql`
+  query FetchManuscriptsByProjectId($id: String!) {
+    projects(id: $id) {
+      linkedFrom {
+        manuscriptsCollection(limit: 500, order: count_DESC) {
+          items {
+            count
           }
         }
       }

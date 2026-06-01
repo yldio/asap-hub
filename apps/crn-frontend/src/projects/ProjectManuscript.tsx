@@ -67,10 +67,38 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
     projectDetail && 'fundedTeam' in projectDetail
       ? projectDetail.fundedTeam
       : undefined;
-  const teamId =
-    manuscript?.teamId ?? projectTeam?.id ?? user?.teams[0]?.id ?? '';
-  const teamDisplayName =
-    projectTeam?.displayName ?? user?.teams[0]?.displayName ?? '';
+
+  const ownership = useMemo(() => {
+    // Creating
+    if (!manuscript) {
+      if (projectTeam) {
+        return {
+          type: 'team' as const,
+          teamId: projectTeam.id,
+          projectId: undefined,
+        };
+      }
+
+      return {
+        type: 'project' as const,
+        teamId: undefined,
+        projectId,
+      };
+    }
+
+    // Existing manuscript
+    return {
+      type: manuscript.teamId ? ('team' as const) : ('project' as const),
+      teamId: manuscript.teamId,
+      projectId: manuscript.projectId,
+    };
+  }, [manuscript, projectTeam, projectId]);
+
+  const manuscriptTeamId =
+    ownership.type === 'team' ? ownership.teamId : undefined;
+
+  const manuscriptProjectId =
+    ownership.type === 'project' ? ownership.projectId : undefined;
 
   const { eligibilityReasons } = useEligibilityReason();
   const { setFormType } = useManuscriptToast();
@@ -150,17 +178,32 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
     label: category.name,
   }));
 
-  const selectedTeams = manuscriptTeams?.map((selectedTeam, index) => ({
-    value: selectedTeam.id,
-    label: selectedTeam.displayName,
-    isFixed: index === 0,
-  })) || [
-    {
-      value: teamId,
-      label: teamDisplayName,
-      isFixed: true,
-    },
-  ];
+  const selectedTeams = useMemo(() => {
+    // Existing manuscript
+    if (manuscriptTeams?.length) {
+      return manuscriptTeams.map((team, index) => ({
+        value: team.id,
+        label: team.displayName,
+
+        // Only lock first team when manuscript itself is team-owned
+        isFixed: ownership.type === 'team' && index === 0,
+      }));
+    }
+
+    // New team-owned manuscript
+    if (ownership.type === 'team' && projectTeam) {
+      return [
+        {
+          value: projectTeam.id,
+          label: projectTeam.displayName,
+          isFixed: true,
+        },
+      ];
+    }
+
+    // New user-owned manuscript
+    return [];
+  }, [manuscriptTeams, ownership.type, projectTeam]);
 
   const selectedLabs = (manuscriptLabs || []).map((lab) => ({
     value: lab.id,
@@ -192,7 +235,8 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
           onError={onError}
           onUpdate={updateManuscript}
           onResubmit={handleResubmitManuscript}
-          teamId={teamId}
+          teamId={manuscriptTeamId}
+          projectId={manuscriptProjectId}
           isOpenScienceTeamMember={user?.openScienceTeamMember}
           handleFileUpload={handleFileUpload}
           eligibilityReasons={eligibilityReasons}

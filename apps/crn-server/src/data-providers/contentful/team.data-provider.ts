@@ -656,11 +656,15 @@ export const parseContentfulGraphQlTeam = (
     );
 
     const teamManuscripts = manuscripts.filter(
-      (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id === teamId,
+      (manuscript) =>
+        manuscript.teamsCollection?.items[0]?.sys.id === teamId &&
+        !manuscript.project?.sys.id,
     );
 
     const collaborationManuscripts = manuscripts.filter(
-      (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id !== teamId,
+      (manuscript) =>
+        manuscript.teamsCollection?.items[0]?.sys.id !== teamId ||
+        manuscript.project?.sys.id,
     );
 
     return {

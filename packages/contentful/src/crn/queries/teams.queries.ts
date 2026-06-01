@@ -45,6 +45,11 @@ export const FETCH_TEAM_BY_ID = gql`
                 }
               }
             }
+            project {
+              sys {
+                id
+              }
+            }
           }
         }
         teamMembershipCollection(limit: 100) {

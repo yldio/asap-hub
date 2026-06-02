@@ -309,7 +309,11 @@ describe('For a CRN login', () => {
         ...baseUser,
         id: '42',
         teams: [
-          { id: 'team-1', displayName: 'Team 1', role: 'Lead PI (Core Leadership)' },
+          {
+            id: 'team-1',
+            displayName: 'Team 1',
+            role: 'Lead PI (Core Leadership)',
+          },
           { id: 'team-1', displayName: 'Team 1', role: 'Project Manager' },
         ],
         workingGroups: [
@@ -331,7 +335,12 @@ describe('For a CRN login', () => {
           },
         ],
         workingGroups: [
-          { id: 'wg-1', name: 'WG 1', active: true, roles: ['Chair', 'Member'] },
+          {
+            id: 'wg-1',
+            name: 'WG 1',
+            active: true,
+            roles: ['Chair', 'Member'],
+          },
         ],
       }),
     );

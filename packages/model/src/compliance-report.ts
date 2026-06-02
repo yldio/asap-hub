@@ -1,9 +1,13 @@
-import { ManuscriptStatus } from './manuscript';
+import { ManuscriptStatus, ManuscriptType } from './manuscript';
 import { UserResponse } from './user';
+
+export const complianceReportUrlRequiredManuscriptTypes: ManuscriptType[] = [
+  'Original Research',
+];
 
 export type ComplianceReportDataObject = {
   id?: string;
-  url: string;
+  url?: string;
   description: string;
   count: number;
   createdDate: string;

@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { User } from '@asap-hub/auth';
 import { createAuthUser } from '@asap-hub/fixtures';
 import { UserTeam, WorkingGroupMembership, gp2 } from '@asap-hub/model';
 
@@ -61,8 +62,8 @@ describe('ShareOutputDropdown', () => {
     groups = [],
     teams = [],
   }: {
-    groups?: WorkingGroupMembership[];
-    teams?: UserTeam[];
+    groups?: User['workingGroups'];
+    teams?: User['teams'];
   }) => {
     const user = createAuthUser();
 
@@ -81,9 +82,9 @@ describe('ShareOutputDropdown', () => {
             name: 'Correct group',
             id: '1',
             active: true,
-            role: 'Project Manager',
+            roles: ['Project Manager'],
           },
-          { name: 'Wrong group', id: '2', active: false, role: 'Member' },
+          { name: 'Wrong group', id: '2', active: false, roles: ['Member'] },
         ],
       });
 
@@ -97,12 +98,12 @@ describe('ShareOutputDropdown', () => {
           {
             displayName: 'Correct team',
             id: '1',
-            role: 'Project Manager',
+            roles: ['Project Manager'],
           },
           {
             displayName: 'Wrong team',
             id: '2',
-            role: 'Collaborating PI',
+            roles: ['Collaborating PI'],
             inactiveSinceDate: 'date',
           },
         ],
@@ -119,14 +120,14 @@ describe('ShareOutputDropdown', () => {
             name: 'Wrong group',
             id: '2',
             active: false,
-            role: 'Member',
+            roles: ['Member'],
           },
         ],
         teams: [
           {
             displayName: 'Wrong team',
             id: '2',
-            role: 'Collaborating PI',
+            roles: ['Collaborating PI'],
             inactiveSinceDate: 'date',
           },
         ],
@@ -139,8 +140,8 @@ describe('ShareOutputDropdown', () => {
     it('let you select a team', async () => {
       const { getByText, getByTitle } = renderWithContent({
         teams: [
-          { displayName: 'Team One', id: '1', role: 'Project Manager' },
-          { displayName: 'Team Two', id: '2', role: 'Project Manager' },
+          { displayName: 'Team One', id: '1', roles: ['Project Manager'] },
+          { displayName: 'Team Two', id: '2', roles: ['Project Manager'] },
         ],
       });
 
@@ -154,7 +155,7 @@ describe('ShareOutputDropdown', () => {
             name: 'Group One',
             id: '1',
             active: true,
-            role: 'Project Manager',
+            roles: ['Project Manager'],
           },
         ],
       });
@@ -164,9 +165,9 @@ describe('ShareOutputDropdown', () => {
     });
   });
   describe('detail view', () => {
-    const teams: UserTeam[] = [
-      { displayName: 'Team One', id: '1', role: 'Project Manager' },
-      { displayName: 'Team Two', id: '2', role: 'Project Manager' },
+    const teams: User['teams'] = [
+      { displayName: 'Team One', id: '1', roles: ['Project Manager'] },
+      { displayName: 'Team Two', id: '2', roles: ['Project Manager'] },
     ];
 
     it('let you create an output', async () => {
@@ -177,13 +178,13 @@ describe('ShareOutputDropdown', () => {
             name: 'Group One',
             id: '1',
             active: true,
-            role: 'Project Manager',
+            roles: ['Project Manager'],
           },
           {
             name: 'Group Two',
             id: '2',
             active: true,
-            role: 'Project Manager',
+            roles: ['Project Manager'],
           },
         ],
       });

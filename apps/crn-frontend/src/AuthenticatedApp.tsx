@@ -142,25 +142,21 @@ const AuthenticatedApp: FC<{
             projects={
               user.projects
                 ? user.projects.map(({ id, title, projectType }) => ({
-                      name: title,
-                      href:
-                        projectType === 'Discovery Project'
-                          ? projects({})
-                              .discoveryProjects({})
-                              .discoveryProject({
-                                projectId: id,
-                              }).$
-                          : projectType === 'Resource Project'
-                            ? projects({})
-                                .resourceProjects({})
-                                .resourceProject({
-                                  projectId: id,
-                                }).$
-                            : projects({}).traineeProjects({}).traineeProject({
-                                projectId: id,
-                              }).$,
-                      projectType,
-                    }))
+                    name: title,
+                    href:
+                      projectType === 'Discovery Project'
+                        ? projects({}).discoveryProjects({}).discoveryProject({
+                            projectId: id,
+                          }).$
+                        : projectType === 'Resource Project'
+                          ? projects({}).resourceProjects({}).resourceProject({
+                              projectId: id,
+                            }).$
+                          : projects({}).traineeProjects({}).traineeProject({
+                              projectId: id,
+                            }).$,
+                    projectType,
+                  }))
                 : undefined
             }
             aboutHref="https://www.parkinsonsroadmap.org/"

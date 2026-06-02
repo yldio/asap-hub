@@ -1,4 +1,3 @@
-import { User } from '@asap-hub/auth';
 import {
   UserRole,
   UserResponse,
@@ -7,7 +6,18 @@ import {
 } from '@asap-hub/model';
 
 type AssociationType = 'teams' | 'workingGroups';
-type UserInput = Omit<User, 'algoliaApiKey'> | UserResponse | null;
+
+/**
+ * Accepts any user whose teams/working groups carry a single `role` per row.
+ * The grouped token `User` must be expanded via `expandUserTeamRoles` /
+ * `expandUserWorkingGroupRoles` before being passed here.
+ */
+type UserInput =
+  | (Pick<UserResponse, 'role'> & {
+      teams: ReadonlyArray<UserTeam>;
+      workingGroups: ReadonlyArray<WorkingGroupMembership>;
+    })
+  | null;
 
 export const isActiveAndBelongsToAssociation = (
   user: UserTeam | WorkingGroupMembership,

@@ -55,7 +55,9 @@ export type User = Pick<
 export const expandUserTeamRoles = (
   teams: ReadonlyArray<UserTeamRoles>,
 ): UserResponse['teams'] =>
-  teams.flatMap(({ roles, ...team }) => roles.map((role) => ({ ...team, role })));
+  teams.flatMap(({ roles, ...team }) =>
+    roles.map((role) => ({ ...team, role })),
+  );
 
 export const expandUserWorkingGroupRoles = (
   workingGroups: ReadonlyArray<UserWorkingGroupRoles>,
@@ -63,6 +65,21 @@ export const expandUserWorkingGroupRoles = (
   workingGroups.flatMap(({ roles, ...workingGroup }) =>
     roles.map((role) => ({ ...workingGroup, role })),
   );
+
+/**
+ * Expands a whole token user's grouped teams and working groups back into the
+ * per-role row shape expected by shared permission helpers.
+ */
+export const expandUserRoles = (
+  user: User,
+): Omit<User, 'teams' | 'workingGroups'> & {
+  teams: UserResponse['teams'];
+  workingGroups: WorkingGroupMembership[];
+} => ({
+  ...user,
+  teams: expandUserTeamRoles(user.teams),
+  workingGroups: expandUserWorkingGroupRoles(user.workingGroups),
+});
 
 export interface Auth0User<T = User> {
   readonly sub: string;

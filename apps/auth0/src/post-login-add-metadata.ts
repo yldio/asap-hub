@@ -52,28 +52,25 @@ const parseGP2UserMetadata = ({
   projects,
 });
 // Collapse one-row-per-role membership lists into one entry per entity,
-// collecting every role the user holds. Keeps the latest non-role fields seen.
+// collecting every role the user holds. Keeps the first non-role fields seen.
 const groupRolesById = <
-  TInput extends { id: string; role: TRole },
   TRole,
+  TInput extends { id: string; role: TRole },
   TOutput extends { id: string; roles: TRole[] },
 >(
   items: TInput[],
   toEntry: (item: TInput) => TOutput,
-): TOutput[] => {
-  const byId = new Map<string, TOutput>();
-  for (const item of items) {
-    const existing = byId.get(item.id);
+): TOutput[] =>
+  items.reduce<TOutput[]>((grouped, item) => {
+    const existing = grouped.find((entry) => entry.id === item.id);
     if (existing) {
       if (!existing.roles.includes(item.role)) {
         existing.roles.push(item.role);
       }
-    } else {
-      byId.set(item.id, toEntry(item));
+      return grouped;
     }
-  }
-  return Array.from(byId.values());
-};
+    return [...grouped, toEntry(item)];
+  }, []);
 
 const groupTeams = (teams: UserTeam[]): UserTeamRoles[] =>
   groupRolesById(teams, ({ id, displayName, inactiveSinceDate, role }) => ({

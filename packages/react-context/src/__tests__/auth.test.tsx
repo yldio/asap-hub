@@ -333,9 +333,7 @@ describe('useCurrentUserTeamRoles', () => {
           firstName: 'John',
           lastName: 'Doe',
           displayName: 'John Doe',
-          teams: [
-            { ...userTeam, roles: ['ASAP Staff', 'Collaborating PI'] },
-          ],
+          teams: [{ ...userTeam, roles: ['ASAP Staff', 'Collaborating PI'] }],
           algoliaApiKey: 'asdasda',
           workingGroups: [],
           interestGroups: [],

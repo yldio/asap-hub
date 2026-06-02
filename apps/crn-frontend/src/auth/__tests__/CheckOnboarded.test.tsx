@@ -1,6 +1,6 @@
 import { useEffect, act } from 'react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { createUserResponse } from '@asap-hub/fixtures';
+import { createUserResponse, toAuthUser } from '@asap-hub/fixtures';
 import {
   dashboard,
   network,
@@ -40,9 +40,8 @@ const LocationDisplay = () => {
 };
 
 const user = {
-  ...createUserResponse({}, 1),
+  ...toAuthUser(createUserResponse({}, 1)),
   onboarded: false,
-  algoliaApiKey: null,
 };
 
 const ownProfilePath = network({})

@@ -499,7 +499,7 @@ describe('a research output linked to a manuscript', () => {
         teams: [
           {
             id: researchOutput.teams[0]!.id,
-            role: 'Project Manager',
+            roles: ['Project Manager'],
             displayName: researchOutput.teams[0]!.displayName,
           },
         ],
@@ -539,7 +539,7 @@ describe('a research output linked to a manuscript', () => {
         teams: [
           {
             id: researchOutput.teams[0]!.id,
-            role: 'Project Manager',
+            roles: ['Project Manager'],
             displayName: researchOutput.teams[0]!.displayName,
           },
         ],
@@ -578,7 +578,7 @@ describe('a research output linked to a manuscript', () => {
         teams: [
           {
             id: researchOutput.teams[0]!.id,
-            role: 'Project Manager',
+            roles: ['Project Manager'],
             displayName: researchOutput.teams[0]!.displayName,
           },
         ],

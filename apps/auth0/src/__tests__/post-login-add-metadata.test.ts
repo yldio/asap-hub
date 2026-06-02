@@ -346,6 +346,44 @@ describe('For a CRN login', () => {
     );
   });
 
+  it('deduplicates repeated projects by id', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, {
+        ...baseUser,
+        id: '42',
+        projects: [
+          {
+            id: 'project-1',
+            title: 'Project 1',
+            projectType: 'Discovery Project',
+            status: 'Active',
+          },
+          {
+            id: 'project-1',
+            title: 'Project 1',
+            projectType: 'Discovery Project',
+            status: 'Active',
+          },
+        ],
+      });
+
+    await onExecutePostLogin(eventBase, apiBase);
+    expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
+      'http://example.com/user',
+      expect.objectContaining({
+        projects: [
+          {
+            id: 'project-1',
+            title: 'Project 1',
+            projectType: 'Discovery Project',
+            status: 'Active',
+          },
+        ],
+      }),
+    );
+  });
+
   it('rejects the login for alumni users', async () => {
     nock(apiUrl)
       .get(`/webhook/users/${user.user_id}`)

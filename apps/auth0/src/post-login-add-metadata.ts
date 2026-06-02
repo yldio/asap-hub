@@ -7,6 +7,7 @@ import type {
 import type {
   gp2 as gp2Model,
   UserMetadataResponse,
+  UserProjectMembership,
   UserTeam,
   WorkingGroupMembership,
 } from '@asap-hub/model';
@@ -90,6 +91,18 @@ const groupWorkingGroups = (
     roles: [role],
   }));
 
+// Projects carry no role, so collapsing repeats to one entry per id is lossless.
+const uniqueProjectsById = (
+  projects: UserProjectMembership[],
+): UserProjectMembership[] =>
+  projects.reduce<UserProjectMembership[]>(
+    (unique, project) =>
+      unique.some((existing) => existing.id === project.id)
+        ? unique
+        : [...unique, project],
+    [],
+  );
+
 const parseUserMetadata = ({
   teams,
   workingGroups,
@@ -101,7 +114,7 @@ const parseUserMetadata = ({
   teams: groupTeams(teams),
   workingGroups: groupWorkingGroups(workingGroups),
   interestGroups,
-  projects,
+  projects: uniqueProjectsById(projects),
   role,
   openScienceTeamMember,
 });

@@ -67,6 +67,7 @@ const TeamComplianceReport: React.FC<TeamComplianceReportProps> = ({
             onSave={createComplianceReport}
             manuscriptTitle={manuscript.title}
             manuscriptVersionId={manuscript.versions[0].id}
+            manuscriptType={manuscript.versions[0].type}
             setManuscript={setManuscript}
             manuscriptId={manuscriptId ?? ''}
           />

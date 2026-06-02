@@ -20,6 +20,7 @@ const defaultProps = {
   setManuscript: jest.fn(),
   manuscriptTitle: 'manuscript title',
   manuscriptVersionId: 'manuscript-version-1',
+  manuscriptType: 'Original Research',
 } as unknown as ComponentProps<typeof ComplianceReportForm>;
 
 it('renders the form', async () => {
@@ -460,4 +461,53 @@ it('renders the status subtext', async () => {
       /Select the status that will be shown after sharing the compliance report./i,
     ),
   ).toBeVisible();
+});
+
+it('shows URL as required for Original Research manuscripts', () => {
+  render(
+    <StaticRouter location="/">
+      <ComplianceReportForm
+        {...defaultProps}
+        manuscriptType="Original Research"
+      />
+    </StaticRouter>,
+  );
+  const urlField = screen.getByRole('textbox', { name: /url/i });
+  const label = urlField.closest('[data-testid]');
+  expect(label).toHaveTextContent('(required)');
+});
+
+it('shows URL as optional for Review manuscripts', () => {
+  render(
+    <StaticRouter location="/">
+      <ComplianceReportForm
+        {...defaultProps}
+        manuscriptType="Review / Op-Ed / Letter / Hot Topic"
+      />
+    </StaticRouter>,
+  );
+  const urlField = screen.getByRole('textbox', { name: /url/i });
+  const label = urlField.closest('[data-testid]');
+  expect(label).toHaveTextContent('(optional)');
+});
+
+it('does not require URL for Review manuscripts', async () => {
+  render(
+    <StaticRouter location="/">
+      <ComplianceReportForm
+        {...defaultProps}
+        manuscriptType="Review / Op-Ed / Letter / Hot Topic"
+      />
+    </StaticRouter>,
+  );
+
+  const input = screen.getByRole('textbox', { name: /url/i });
+
+  await act(async () => {
+    fireEvent.blur(input);
+  });
+
+  await waitFor(() => {
+    expect(screen.queryByText(/Please enter a url/i)).toBeNull();
+  });
 });

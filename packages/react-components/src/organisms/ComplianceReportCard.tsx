@@ -177,15 +177,17 @@ const ComplianceReportCard: React.FC<ComplianceReportCardProps> = ({
                 isMarkdown
               />
             </ExpandableText>
-            <div css={buttonsWrapperStyles}>
-              <div css={buttonStyles}>
-                <Link buttonStyle fullWidth small primary href={url}>
-                  <span css={externalIconStyle}>
-                    <ExternalLinkIcon /> View Report
-                  </span>
-                </Link>
+            {url && (
+              <div css={buttonsWrapperStyles}>
+                <div css={buttonStyles}>
+                  <Link buttonStyle fullWidth small primary href={url}>
+                    <span css={externalIconStyle}>
+                      <ExternalLinkIcon /> View Report
+                    </span>
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}

@@ -10,6 +10,7 @@ const complianceReportPostRequestValidationSchema: JSONSchemaType<ComplianceRepo
       description: { type: 'string' },
       url: {
         type: 'string',
+        nullable: true,
         pattern: urlExpression,
       },
       manuscriptVersionId: { type: 'string' },
@@ -19,13 +20,7 @@ const complianceReportPostRequestValidationSchema: JSONSchemaType<ComplianceRepo
       status: { enum: manuscriptStatus, type: 'string' },
       notificationList: { type: 'string', nullable: true },
     },
-    required: [
-      'description',
-      'url',
-      'manuscriptVersionId',
-      'status',
-      'manuscriptId',
-    ],
+    required: ['description', 'manuscriptVersionId', 'status', 'manuscriptId'],
     additionalProperties: false,
   };
 

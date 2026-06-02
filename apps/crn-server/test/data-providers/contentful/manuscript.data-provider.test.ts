@@ -1770,6 +1770,41 @@ describe('Manuscripts Contentful Data Provider', () => {
       });
     });
 
+    test('should return compliance report url as undefined when url is null', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: manuscript,
+      });
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: {
+          sys: { id: manuscript.sys.id },
+          discussionsCollection: null,
+        },
+      });
+
+      const versions = getContentfulGraphqlManuscriptVersions();
+      (versions.items[0] as Record<string, unknown>).linkedFrom = {
+        complianceReportsCollection: {
+          items: [
+            {
+              sys: { id: 'cr-1', firstPublishedAt: '2024-01-01' },
+              url: null,
+              description: 'A report',
+              createdBy: null,
+            },
+          ],
+        },
+      };
+
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        manuscripts: { versionsCollection: versions },
+      });
+
+      const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
+      expect(result!.versions[0]!.complianceReport!.url).toBeUndefined();
+    });
+
     test('should skip versions with invalid type', async () => {
       const manuscript = getContentfulGraphqlManuscript();
 

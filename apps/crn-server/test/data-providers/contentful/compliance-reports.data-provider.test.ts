@@ -117,6 +117,19 @@ describe('Compliance Reports Contentful Data Provider', () => {
       expect(result).toEqual(getComplianceReportDataObject());
     });
 
+    test('should return url as undefined when url is null', async () => {
+      const response = getComplianceReportGraphqlResponse();
+      response!.url = null;
+
+      when(contentfulGraphqlClientMock.request).mockResolvedValue({
+        complianceReports: response,
+      });
+
+      const result = await complianceReportDataProvider.fetchById('report-1');
+
+      expect(result!.url).toBeUndefined();
+    });
+
     test('should return team as an empty array when teamsCollection is null', async () => {
       const complianceReport = getComplianceReportGraphqlResponse();
       complianceReport!.createdBy!.teamsCollection = null;

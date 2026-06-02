@@ -1,5 +1,6 @@
 import { FC, lazy } from 'react';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
+import { expandUserTeamRoles } from '@asap-hub/auth';
 import { Frame } from '@asap-hub/frontend-utils';
 import { isProjectLead, isProjectMember } from '@asap-hub/model';
 import {
@@ -69,7 +70,12 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const isMember =
     !!user && isProjectMember(user.id, user.teams ?? [], projectDetail);
   const isLead =
-    !!user && isProjectLead(user.id, user.teams ?? [], projectDetail);
+    !!user &&
+    isProjectLead(
+      user.id,
+      expandUserTeamRoles(user.teams ?? []),
+      projectDetail,
+    );
   const showWorkspace =
     isEnabled('PROJECT_WORKSPACE') && (isMember || isOpenScienceMember);
   const canSubmitManuscript = showWorkspace && isMember;

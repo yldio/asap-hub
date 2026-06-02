@@ -22,6 +22,7 @@ import {
   createProjectMilestone,
   patchMilestone,
   putMilestoneArticles,
+  waitForMilestonesSync,
 } from '../api';
 import {
   projectMilestonesIndexState,
@@ -39,6 +40,7 @@ jest.mock('../export', () => ({
 }));
 
 afterEach(() => {
+  jest.useRealTimers();
   jest.clearAllMocks();
 });
 mockConsoleError();
@@ -67,6 +69,10 @@ const mockPatchMilestone = patchMilestone as jest.MockedFunction<
   typeof patchMilestone
 >;
 
+const mockWaitForMilestonesSync = waitForMilestonesSync as jest.MockedFunction<
+  typeof waitForMilestonesSync
+>;
+
 const mockLoadArticleOptions = jest.fn(() =>
   Promise.resolve([
     {
@@ -90,6 +96,7 @@ beforeEach(() => {
     aims: [],
     milestones: [],
   });
+  mockWaitForMilestonesSync.mockResolvedValue(true);
 });
 
 const projectId = 'proj-1';
@@ -449,8 +456,6 @@ describe('ProjectMilestones', () => {
     expect(
       screen.getByText(/Milestone added successfully./i),
     ).toBeInTheDocument();
-
-    jest.useRealTimers();
   });
 
   it('displays error toast when there is an error creating a manuscript', async () => {

@@ -62927,7 +62927,7 @@ export const FetchManuscriptsByProjectIdDocument = {
                           {
                             kind: 'Argument',
                             name: { kind: 'Name', value: 'limit' },
-                            value: { kind: 'IntValue', value: '500' },
+                            value: { kind: 'IntValue', value: '1' },
                           },
                           {
                             kind: 'Argument',

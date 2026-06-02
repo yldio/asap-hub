@@ -60,3 +60,6 @@ tramp
 .turbo
 
 *storybook.log
+
+.claude/*
+.gitnexus/*

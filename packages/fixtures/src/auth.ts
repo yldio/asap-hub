@@ -12,7 +12,7 @@ export const createAuthUser = (): User => ({
     {
       id: 'team-id-1',
       displayName: 'Awesome Team',
-      role: 'Project Manager',
+      roles: ['Project Manager'],
     },
   ],
   algoliaApiKey: 'test-mock-key',
@@ -20,7 +20,7 @@ export const createAuthUser = (): User => ({
     {
       id: 'wg-id-1',
       name: 'Working Group',
-      role: 'Project Manager',
+      roles: ['Project Manager'],
       active: true,
     },
   ],

@@ -13,8 +13,7 @@ import {
   hasShareResearchOutputPermission,
 } from '@asap-hub/validation';
 import {
-  expandUserTeamRoles,
-  expandUserWorkingGroupRoles,
+  expandUserRoles,
   type User,
   type UserTeamRoles,
   type UserWorkingGroupRoles,
@@ -171,11 +170,7 @@ export const SharedOutputDropdownWrapper: React.FC<
 > = ({ user }) => {
   // Permission helpers expect one row per role; expand the grouped token user
   // back to that shape for the role lookups.
-  const expandedUser = user && {
-    ...user,
-    teams: expandUserTeamRoles(user.teams),
-    workingGroups: expandUserWorkingGroupRoles(user.workingGroups),
-  };
+  const expandedUser = user && expandUserRoles(user);
   const associations = [
     ...(user?.teams ?? [])
       .concat()

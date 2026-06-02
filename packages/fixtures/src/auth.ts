@@ -1,5 +1,49 @@
 import { User } from '@asap-hub/auth';
+import type { UserResponse } from '@asap-hub/model';
 import { JwtPayload } from 'jsonwebtoken';
+
+/**
+ * Converts a model `UserResponse` into the token `User` shape, grouping team
+ * and working-group roles by entity (one entry each, carrying `roles[]`).
+ */
+export const toAuthUser = (
+  user: UserResponse,
+): Pick<
+  User,
+  | 'id'
+  | 'onboarded'
+  | 'displayName'
+  | 'email'
+  | 'firstName'
+  | 'lastName'
+  | 'avatarUrl'
+  | 'interestGroups'
+  | 'projects'
+  | 'role'
+  | 'openScienceTeamMember'
+> & {
+  teams: User['teams'];
+  workingGroups: User['workingGroups'];
+  algoliaApiKey: null;
+} => ({
+  id: user.id,
+  onboarded: !!user.onboarded,
+  displayName: user.displayName,
+  email: user.email,
+  firstName: user.firstName,
+  lastName: user.lastName,
+  avatarUrl: user.avatarUrl,
+  interestGroups: user.interestGroups,
+  projects: user.projects,
+  role: user.role,
+  openScienceTeamMember: user.openScienceTeamMember,
+  algoliaApiKey: null,
+  teams: user.teams.map(({ role, ...team }) => ({ ...team, roles: [role] })),
+  workingGroups: user.workingGroups.map(({ role, ...wg }) => ({
+    ...wg,
+    roles: [role],
+  })),
+});
 
 export const createAuthUser = (): User => ({
   id: 'test-id-11',

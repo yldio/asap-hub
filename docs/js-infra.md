@@ -39,3 +39,20 @@ The `jest` directory contains the configuration and scripts to automatically gen
 Projects can have their own `jest.config.js`, completely replacing the default one and also making it their responsibility to inherit from the base config.
 
 There are some special `jest-*.config`s in the root or in projects, which run test files with a name matching their particular pattern.
+
+## Known bundle issues
+
+### `react-router` pulled into the server bundles
+
+The server Lambda bundles (`crn-server`, `gp2-server`) include `react-router`
+(~180 KB) even though no backend code uses routing. It enters via
+`@asap-hub/routing`: server controllers import route constants
+(`events`, `network`, …) from that package, but its entry (`packages/routing/src/index.ts`)
+imports `useLocation`/`useParams` from `react-router` at the top level. Because
+the package is consumed as CJS, the eager `require('react-router')` is not
+tree-shaken, so the whole module is bundled.
+
+To fix, split the pure route-path builders from the React-hook helpers in
+`@asap-hub/routing` (or expose them via a subpath the server can import without
+transiting the React imports). Deferred — it touches a shared package consumed
+by the frontend, components, and server, so it warrants its own change.

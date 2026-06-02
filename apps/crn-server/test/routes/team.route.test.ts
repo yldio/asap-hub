@@ -20,7 +20,7 @@ describe('/teams/ route', () => {
     teams: [
       {
         id: 'team-id-1',
-        role: 'Project Manager',
+        roles: ['Project Manager'],
       },
     ],
   };

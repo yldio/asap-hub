@@ -39,6 +39,11 @@ const loadNews = () => import(/* webpackChunkName: "news" */ './news/Routes');
 
 const loadTags = () => import(/* webpackChunkName: "tags" */ './tags/Routes');
 
+const uniqueById = <T extends { id: string }>(items: ReadonlyArray<T>): T[] => {
+  const seen = new Set<string>();
+  return items.filter(({ id }) => !seen.has(id) && seen.add(id));
+};
+
 const Dashboard = lazy(loadDashboard);
 const WorkingGroups = lazy(loadWorkingGroups);
 const Projects = lazy(loadProjects);
@@ -69,13 +74,16 @@ const OnboardedApp: FC<Record<string, never>> = () => {
       .then(loadTags);
   });
 
-  const { projects = [], workingGroups = [] } =
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    useUserById(user!.id) || {};
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const userId = user!.id;
+  const { projects = [], workingGroups = [] } = useUserById(userId) || {};
 
   return (
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    <Layout userId={user!.id} projects={projects} workingGroups={workingGroups}>
+    <Layout
+      userId={userId}
+      projects={uniqueById(projects)}
+      workingGroups={uniqueById(workingGroups)}
+    >
       <Suspense key={topLevelRoute} fallback={<Loading />}>
         <Routes>
           <Route

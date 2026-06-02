@@ -47,10 +47,10 @@ export const useCurrentUserProjectRolesGP2 =
   };
 
 export const useCurrentUserTeamRolesCRN = (): Array<
-  User['teams'][number]['role']
+  User['teams'][number]['roles'][number]
 > => {
   const user = useCurrentUserCRN();
-  return user ? user.teams.map(({ role }) => role) : [];
+  return user ? user.teams.flatMap(({ roles }) => roles) : [];
 };
 
 function parseUser<T>(auth0User: Auth0User<T> | undefined) {

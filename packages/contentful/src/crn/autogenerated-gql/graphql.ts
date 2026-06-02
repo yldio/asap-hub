@@ -14828,6 +14828,7 @@ export type ResearchOutputs = Entry &
     labsCollection?: Maybe<ResearchOutputsLabsCollection>;
     labsCursorCollection?: Maybe<ResearchOutputsLabsCursorCollection>;
     lastUpdatedPartial?: Maybe<Scalars['DateTime']>;
+    layImpactStatement?: Maybe<Scalars['String']>;
     link?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ResearchOutputsLinkingCollections>;
     methodsCollection?: Maybe<ResearchOutputsMethodsCollection>;
@@ -15075,6 +15076,12 @@ export type ResearchOutputsLabsCursorCollectionArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
 export type ResearchOutputsLastUpdatedPartialArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputs) */
+export type ResearchOutputsLayImpactStatementArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -15626,6 +15633,13 @@ export type ResearchOutputsFilter = {
   lastUpdatedPartial_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['DateTime']>>
   >;
+  layImpactStatement?: InputMaybe<Scalars['String']>;
+  layImpactStatement_contains?: InputMaybe<Scalars['String']>;
+  layImpactStatement_exists?: InputMaybe<Scalars['Boolean']>;
+  layImpactStatement_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  layImpactStatement_not?: InputMaybe<Scalars['String']>;
+  layImpactStatement_not_contains?: InputMaybe<Scalars['String']>;
+  layImpactStatement_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   link?: InputMaybe<Scalars['String']>;
   link_contains?: InputMaybe<Scalars['String']>;
   link_exists?: InputMaybe<Scalars['Boolean']>;
@@ -25029,6 +25043,13 @@ export type CfResearchOutputsNestedFilter = {
   lastUpdatedPartial_not_in?: InputMaybe<
     Array<InputMaybe<Scalars['DateTime']>>
   >;
+  layImpactStatement?: InputMaybe<Scalars['String']>;
+  layImpactStatement_contains?: InputMaybe<Scalars['String']>;
+  layImpactStatement_exists?: InputMaybe<Scalars['Boolean']>;
+  layImpactStatement_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  layImpactStatement_not?: InputMaybe<Scalars['String']>;
+  layImpactStatement_not_contains?: InputMaybe<Scalars['String']>;
+  layImpactStatement_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   link?: InputMaybe<Scalars['String']>;
   link_contains?: InputMaybe<Scalars['String']>;
   link_exists?: InputMaybe<Scalars['Boolean']>;
@@ -32109,7 +32130,14 @@ export type FetchManuscriptVersionByIdQuery = {
       manuscriptsCollection?: Maybe<{
         items: Array<
           Maybe<
-            Pick<Manuscripts, 'title' | 'url' | 'count'> & {
+            Pick<
+              Manuscripts,
+              | 'title'
+              | 'url'
+              | 'count'
+              | 'layImpactStatement'
+              | 'firstPublicDate'
+            > & {
               sys: Pick<Sys, 'id'>;
               relatedResearchOutput?: Maybe<{ sys: Pick<Sys, 'id'> }>;
               teamsCollection?: Maybe<{
@@ -32444,7 +32472,10 @@ export type FetchVersionsByManuscriptQuery = {
     Pick<ManuscriptsCollection, 'total'> & {
       items: Array<
         Maybe<
-          Pick<Manuscripts, 'title' | 'url' | 'count'> & {
+          Pick<
+            Manuscripts,
+            'title' | 'url' | 'count' | 'layImpactStatement' | 'firstPublicDate'
+          > & {
             sys: Pick<Sys, 'id'>;
             relatedResearchOutput?: Maybe<{ sys: Pick<Sys, 'id'> }>;
             teamsCollection?: Maybe<{
@@ -32623,6 +32654,7 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
               | 'usedInAPublication'
               | 'type'
               | 'publishDate'
+              | 'layImpactStatement'
               | 'usageNotes'
               | 'statusChangedAt'
               | 'isInReview'
@@ -35712,6 +35744,7 @@ export type ResearchOutputsContentFragment = Pick<
   | 'usedInAPublication'
   | 'type'
   | 'publishDate'
+  | 'layImpactStatement'
   | 'usageNotes'
   | 'statusChangedAt'
   | 'isInReview'
@@ -35972,6 +36005,7 @@ export type FetchResearchOutputByIdQuery = {
       | 'usedInAPublication'
       | 'type'
       | 'publishDate'
+      | 'layImpactStatement'
       | 'usageNotes'
       | 'statusChangedAt'
       | 'isInReview'
@@ -36262,6 +36296,7 @@ export type FetchResearchOutputsQuery = {
             | 'usedInAPublication'
             | 'type'
             | 'publishDate'
+            | 'layImpactStatement'
             | 'usageNotes'
             | 'statusChangedAt'
             | 'isInReview'
@@ -44450,6 +44485,10 @@ export const ResearchOutputsContentFragmentDoc = {
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
               ],
             },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'layImpactStatement' },
           },
           {
             kind: 'Field',
@@ -57472,6 +57511,20 @@ export const FetchManuscriptVersionByIdDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
+                                      value: 'layImpactStatement',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'firstPublicDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
                                       value: 'categoriesCollection',
                                     },
                                     arguments: [
@@ -59067,6 +59120,10 @@ export const FetchVersionsByManuscriptDocument = {
                       },
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'layImpactStatement' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'categoriesCollection' },
                         arguments: [
                           {
@@ -59106,6 +59163,10 @@ export const FetchVersionsByManuscriptDocument = {
                             },
                           ],
                         },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'firstPublicDate' },
                       },
                       {
                         kind: 'Field',

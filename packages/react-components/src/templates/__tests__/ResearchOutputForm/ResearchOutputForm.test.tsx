@@ -24,7 +24,7 @@ it('sets authors to required', () => {
     </StaticRouter>,
   );
   expect(
-    screen.getByRole('combobox', { name: 'Authors (optional)' }),
+    screen.getByRole('combobox', { name: /Authors \(optional\)/i }),
   ).toBeVisible();
   render(
     <StaticRouter location="/">
@@ -32,7 +32,7 @@ it('sets authors to required', () => {
     </StaticRouter>,
   );
   expect(
-    screen.getByRole('combobox', { name: 'Authors (required)' }),
+    screen.getByRole('combobox', { name: /Authors \(required\)/i }),
   ).toBeVisible();
 });
 

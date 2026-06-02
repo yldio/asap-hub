@@ -45,8 +45,10 @@ export const mapManuscriptVersionToResearchOutput = (
   lastUpdatedPartial: '',
   workingGroups: undefined,
   impact: manuscriptVersion.impact,
+  layImpactStatement: manuscriptVersion.layImpactStatement,
   categories: manuscriptVersion.categories,
   relatedManuscriptVersion: manuscriptVersion.versionId,
   relatedManuscript: manuscriptVersion.id.split('mv-')[1],
   doi: manuscriptVersion.doi,
+  publishDate: manuscriptVersion.firstPublicDate,
 });

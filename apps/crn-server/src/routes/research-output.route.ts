@@ -248,9 +248,11 @@ export const researchOutputRouteFactory = (
       keywords: [],
       workingGroups: [],
       impact: manuscript.impact?.id,
+      layImpactStatement: manuscript.layImpactStatement,
       categories: manuscript.categories?.map((category) => category.id),
       relatedManuscriptVersion: preprintManuscriptVersion.id,
       relatedManuscript: manuscript.id,
+      publishDate: manuscript.firstPublicDate,
       published: true,
     });
 

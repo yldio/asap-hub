@@ -265,6 +265,7 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   id: string;
   labs: LabResponse[];
   impact?: ImpactResponse;
+  layImpactStatement?: string;
   categories?: CategoryResponse[];
   lastUpdatedPartial: string;
   methods: string[];
@@ -316,6 +317,7 @@ export type ResearchOutputCreateDataObject = ResearchOutputCoreObject & {
   relatedResearchIds: string[];
   relatedEventIds: string[];
   impact?: string;
+  layImpactStatement?: string;
   categories?: string[];
   relatedManuscript?: string;
 };
@@ -347,6 +349,7 @@ export type ResearchOutputUpdateDataObject = ResearchOutputCoreObject & {
   statusChangedAt?: string;
   versions?: string[];
   impact?: string;
+  layImpactStatement?: string;
   categories?: string[];
   relatedManuscriptVersion?: string;
   relatedManuscript?: string;
@@ -429,6 +432,7 @@ export type ResearchOutputPostRequest = {
   labCatalogNumber?: string;
   labs?: string[];
   impact?: string;
+  layImpactStatement?: string;
   categories?: string[];
   link?: string;
   methods: string[];

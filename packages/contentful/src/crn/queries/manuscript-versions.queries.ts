@@ -151,6 +151,8 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
               }
               name
             }
+            layImpactStatement
+            firstPublicDate
             categoriesCollection(limit: 2) {
               items {
                 sys {
@@ -408,6 +410,7 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
           }
           name
         }
+        layImpactStatement
         categoriesCollection(limit: 2) {
           items {
             sys {
@@ -416,6 +419,7 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
             name
           }
         }
+        firstPublicDate
         versionsCollection(
           order: count_DESC
           where: {

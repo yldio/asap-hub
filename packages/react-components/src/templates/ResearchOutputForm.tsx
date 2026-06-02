@@ -25,6 +25,7 @@ import {
   Form,
   ResearchOutputExtraInformationCard,
   ResearchOutputFormSharingCard,
+  ResearchOutputPublishingCard,
   ResearchOutputRelatedEventsCard,
 } from '../organisms';
 import ResearchOutputContributorsCard from '../organisms/ResearchOutputContributorsCard';
@@ -290,6 +291,10 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     ResearchOutputPostRequest['shortDescription']
   >(researchOutputData?.shortDescription || '');
 
+  const [layImpactStatement, setLayImpactStatement] = useState<
+    ResearchOutputPostRequest['layImpactStatement']
+  >(researchOutputData?.layImpactStatement || '');
+
   const [changelog, setChangelog] = useState<
     ResearchOutputPostRequest['changelog']
   >(versionAction === 'create' ? '' : researchOutputData?.changelog || '');
@@ -429,6 +434,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
     published,
     relatedEvents,
     impact: (impact as MultiSelectOptionsType)?.value,
+    layImpactStatement,
     categories: (categories as MultiSelectOptionsType[]).map(
       (category) => category.value,
     ),
@@ -570,8 +576,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   isCreatingNewVersion={versionAction === 'create'}
                   displayChangelog={displayChangelog}
                   documentType={documentType}
-                  isCreatingOutputRoute={!!isCreatingOutput}
-                  researchOutputData={researchOutputData}
                   serverValidationErrors={serverValidationErrors}
                   clearServerValidationError={clearServerValidationError}
                   isSaving={isSaving}
@@ -583,6 +587,8 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangeChangelog={setChangelog}
                   impact={impact}
                   onChangeImpact={setImpact}
+                  layImpactStatement={layImpactStatement}
+                  onChangeLayImpactStatement={setLayImpactStatement}
                   categories={categories}
                   onChangeCategories={setCategories}
                   getImpactSuggestions={
@@ -610,6 +616,14 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   subtype={subtype}
                   onChangeSubtype={setSubtype}
                   researchTags={filteredResearchTags}
+                  typeOptions={typeOptions}
+                  urlRequired={urlRequired}
+                  typeDescription="Select the type that matches your output the best."
+                />
+                <ResearchOutputPublishingCard
+                  documentType={documentType}
+                  isCreatingOutputRoute={!!isCreatingOutput}
+                  researchOutputData={researchOutputData}
                   asapFunded={asapFunded}
                   onChangeAsapFunded={setAsapFunded}
                   usedInPublication={usedInPublication}
@@ -620,9 +634,6 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   onChangePublishDate={(date) =>
                     setPublishDate(date ? new Date(date) : undefined)
                   }
-                  typeOptions={typeOptions}
-                  urlRequired={urlRequired}
-                  typeDescription="Select the type that matches your output the best."
                   isImportedFromManuscript={isImportedFromManuscript}
                 />
                 <ResearchOutputExtraInformationCard

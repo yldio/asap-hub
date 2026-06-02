@@ -968,6 +968,7 @@ export type ManuscriptVersionResponse = {
   title: string;
   url: string;
   impact?: ImpactResponse;
+  layImpactStatement?: string;
   categories?: CategoryResponse[];
   labs?: { id: string; name: string }[];
   authors?: (
@@ -991,6 +992,7 @@ export type ManuscriptVersionResponse = {
   versionId?: string;
   doi?: string;
   researchOutputId?: string;
+  firstPublicDate?: string;
 };
 
 export type ListManuscriptVersionResponse =

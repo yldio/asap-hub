@@ -304,6 +304,7 @@ const parseGraphQLManucriptVersion = (
           name: manuscript.impact.name || '',
         }
       : undefined,
+    layImpactStatement: manuscript.layImpactStatement || undefined,
     categories: cleanArray(manuscript.categoriesCollection?.items || []).map(
       (category) => ({
         id: category.sys.id,
@@ -354,6 +355,7 @@ const parseGraphQLManucriptVersion = (
       ) === 'Preprint'
         ? latestVersion?.preprintDoi
         : latestVersion?.publicationDoi) || undefined,
+    firstPublicDate: manuscript.firstPublicDate || undefined,
   };
 };
 

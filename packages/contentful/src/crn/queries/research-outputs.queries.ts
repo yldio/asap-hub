@@ -32,6 +32,7 @@ export const researchOutputContentQueryFragment = gql`
       }
       name
     }
+    layImpactStatement
     categoriesCollection(limit: 2) {
       items {
         sys {

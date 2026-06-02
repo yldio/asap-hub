@@ -56,7 +56,7 @@ const ResearchOutputContributorsCard: React.FC<
   <FormCard title="Who were the contributors?">
     <LabeledMultiSelect
       title="Teams"
-      description="Add other teams that contributed to this output. Those teams will also then be able to edit."
+      description="Add other teams that contributed to this output. Each author and each lab's Lead PI must have one team listed. Those teams will also then be able to edit."
       subtitle="(required)"
       required
       enabled={!isSaving || !isEditMode}
@@ -68,22 +68,9 @@ const ResearchOutputContributorsCard: React.FC<
         `Sorry, no teams match ${inputValue}`
       }
     />
-    <LabeledMultiSelect
-      title="Labs"
-      description="Add ASAP labs that contributed to this output. Only labs whose PI is part of the CRN will appear."
-      subtitle="(optional)"
-      enabled={!isSaving}
-      placeholder="Start typing..."
-      loadOptions={getLabSuggestions}
-      onChange={onChangeLabs as MultiSelectOnChange<MultiSelectOptionsType>}
-      values={labs as OptionsType<MultiSelectOptionsType>}
-      noOptionsMessage={({ inputValue }) =>
-        `Sorry, no labs match ${inputValue}`
-      }
-    />
     <AuthorSelect
       title="Authors"
-      description=""
+      description="Add the contributing authors. Each author must have one of their teams listed in the Teams field."
       subtitle={authorsRequired ? '(required)' : '(optional)'}
       enabled={!isSaving}
       placeholder="Start typing..."
@@ -93,6 +80,19 @@ const ResearchOutputContributorsCard: React.FC<
       required={authorsRequired}
       noOptionsMessage={({ inputValue }) =>
         `Sorry, no authors match ${inputValue}`
+      }
+    />
+    <LabeledMultiSelect
+      title="Labs"
+      description="Add ASAP labs that contributed to this output. The Lead PI of each lab must have one of their teams listed in the Teams field. Only labs with ASAP registered PI's will appear."
+      subtitle="(optional)"
+      enabled={!isSaving}
+      placeholder="Start typing..."
+      loadOptions={getLabSuggestions}
+      onChange={onChangeLabs as MultiSelectOnChange<MultiSelectOptionsType>}
+      values={labs as OptionsType<MultiSelectOptionsType>}
+      noOptionsMessage={({ inputValue }) =>
+        `Sorry, no labs match ${inputValue}`
       }
     />
   </FormCard>

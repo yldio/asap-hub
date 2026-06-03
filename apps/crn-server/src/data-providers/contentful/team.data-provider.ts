@@ -42,6 +42,7 @@ import {
   TeamType,
   TeamUpdateDataObject,
   isPIRole,
+  TeamStatusRank,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
@@ -406,11 +407,14 @@ export const parseContentfulGraphQlTeamListItem = (
     item.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
       ?.projectsCollection?.items[0];
 
+  const teamStatus = item.inactiveSince ? 'Inactive' : 'Active';
+
   return {
     id: item.sys.id ?? '',
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
-    teamStatus: item.inactiveSince ? 'Inactive' : 'Active',
+    teamStatus,
+    statusRank: TeamStatusRank[teamStatus],
     projectTitle: linkedProject?.title ?? '',
     linkedProjectId: linkedProject?.sys.id ?? '',
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
@@ -673,6 +677,8 @@ export const parseContentfulGraphQlTeam = (
     };
   };
 
+  const teamStatus = item.inactiveSince ? 'Inactive' : 'Active';
+
   return {
     id: item.sys.id ?? '',
     grantId: linkedProject?.grantId ?? undefined,
@@ -680,7 +686,8 @@ export const parseContentfulGraphQlTeam = (
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
-    teamStatus: item.inactiveSince ? 'Inactive' : 'Active',
+    teamStatus,
+    statusRank: TeamStatusRank[teamStatus],
     projectTitle: linkedProject?.title ?? '',
     linkedProjectId: linkedProject?.sys.id ?? '',
     projectStatus: (linkedProject?.status as ProjectStatus) ?? undefined,

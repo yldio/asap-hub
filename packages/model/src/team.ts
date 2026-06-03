@@ -42,6 +42,11 @@ export const teamStatus = ['Active', 'Inactive'] as const;
 
 export type TeamStatus = (typeof teamStatus)[number];
 
+export const TeamStatusRank: Record<TeamStatus, number> = {
+  Active: 1,
+  Inactive: 2,
+};
+
 export type FetchTeamsFilter = {
   status?: TeamStatus[];
   resourceType?: string[];
@@ -115,6 +120,7 @@ export type TeamDataObject = Omit<TeamCreateRequest, 'applicationNumber'> & {
   labs: LabResponse[];
   inactiveSince?: string;
   teamStatus: TeamStatus;
+  statusRank?: number;
   linkedProjectId?: string;
   projectStatus?: ProjectStatus;
   supplementGrant?: TeamSupplementGrant;
@@ -155,6 +161,7 @@ export type TeamListItemDataObject = Pick<
   | 'displayName'
   | 'inactiveSince'
   | 'teamStatus'
+  | 'statusRank'
   | 'projectTitle'
   | 'linkedProjectId'
   | 'teamType'

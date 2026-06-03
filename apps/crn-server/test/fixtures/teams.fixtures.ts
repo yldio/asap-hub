@@ -555,6 +555,7 @@ export const getTeamDataObject = (): TeamDataObject => ({
   displayName: 'Team A',
   teamType: 'Discovery Team',
   teamStatus: 'Active',
+  statusRank: 1,
   lastModifiedDate: '2020-11-26T11:56:04.000Z',
   labCount: 2,
   tags: [
@@ -669,6 +670,7 @@ export const getTeamListItemDataObject = (): TeamListItemDataObject => ({
   displayName: 'Team A',
   teamType: 'Discovery Team',
   teamStatus: 'Active',
+  statusRank: 1,
   labCount: 2,
   tags: [{ id: 'tag-1', name: 'Animal resources 1' }],
   memberCount: 1,

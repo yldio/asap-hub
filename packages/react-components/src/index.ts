@@ -108,6 +108,7 @@ export {
   MilestoneStatusDropdown,
   LinkHeadline,
   Loading,
+  LabsList,
   MembersList,
   MenuButton,
   Modal,
@@ -119,6 +120,7 @@ export {
   ProjectMembers,
   ProjectOutputBody,
   ReminderItem,
+  RolesList,
   SearchField,
   StatusBadge,
   StatusButton,
@@ -378,4 +380,9 @@ export type {
   TeamCollaborationMetric,
 } from './organisms';
 export type { ResearchOutputOption } from './utils';
+export type {
+  GroupedProjectMember,
+  GroupedTeamMember,
+  GroupedUserTeam,
+} from './utils';
 export type { MetricOption } from './templates/AnalyticsLeadershipPageBody';

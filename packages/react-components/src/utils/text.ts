@@ -25,12 +25,6 @@ export const getCommaAndString = (array: string[]): string => {
   }
 };
 
-export const getUniqueCommaStringWithSuffix = (
-  array: string[],
-  suffix: string,
-): string =>
-  getCommaAndString(getUniqueList(array).map((s) => appendSuffix(s, suffix)));
-
 export const titleCase = (string: string): string =>
   string.replace(
     /\w\S*/g,

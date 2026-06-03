@@ -25,6 +25,7 @@ export { default as MaterialAvailability } from './MaterialAvailability';
 export { default as Markdown } from './Markdown';
 export { default as MultiSelect } from './MultiSelect';
 export { default as NavigationLink } from './NavigationLink';
+export { default as OverflowBadge } from './OverflowBadge';
 export { default as Overlay } from './Overlay';
 export { default as Paragraph } from './Paragraph';
 export { default as Pill } from './Pill';

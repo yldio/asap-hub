@@ -1,4 +1,8 @@
-import { ProjectMembers, ProjectMemberCard } from '@asap-hub/react-components';
+import {
+  ProjectMembers,
+  ProjectMemberCard,
+  GroupedProjectMember,
+} from '@asap-hub/react-components';
 import { ProjectMember } from '@asap-hub/model';
 
 export default {
@@ -84,17 +88,23 @@ export const TwoMembers = () => (
 );
 
 // ProjectMemberCard (Individual) Stories
+const mockGroupedMember: GroupedProjectMember = {
+  id: '1',
+  displayName: 'John Doe',
+  firstName: 'John',
+  lastName: 'Doe',
+  roles: ['Principal Investigator'],
+  href: '/users/john-doe',
+};
+
 export const IndividualMemberCard = () => (
-  <ProjectMemberCard
-    member={mockMembers[0] as ProjectMember}
-    showTeamInfo={false}
-  />
+  <ProjectMemberCard member={mockGroupedMember} showTeamInfo={false} />
 );
 
 export const MemberCardWithTeam = () => (
   <ProjectMemberCard
     member={{
-      ...(mockMembers[0] as ProjectMember),
+      ...mockGroupedMember,
       teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
     }}
     showTeamInfo={true}
@@ -104,7 +114,7 @@ export const MemberCardWithTeam = () => (
 export const MemberCardWithTeamAndBadge = () => (
   <ProjectMemberCard
     member={{
-      ...(mockMembers[0] as ProjectMember),
+      ...mockGroupedMember,
       teams: [
         { id: 'team-1', displayName: 'Anderson Research Team' },
         { id: 'team-2', displayName: 'Team 2' },
@@ -120,10 +130,7 @@ export const MemberCardWithTeamAndBadge = () => (
 
 export const MemberCardWithoutRole = () => (
   <ProjectMemberCard
-    member={{
-      ...(mockMembers[0] as ProjectMember),
-      role: undefined,
-    }}
+    member={{ ...mockGroupedMember, roles: [] }}
     showTeamInfo={false}
   />
 );
@@ -131,12 +138,114 @@ export const MemberCardWithoutRole = () => (
 export const MemberCardWithLongRole = () => (
   <ProjectMemberCard
     member={{
-      ...(mockMembers[0] as ProjectMember),
-      role: 'Senior Research Scientist and Laboratory Director',
+      ...mockGroupedMember,
+      roles: ['Senior Research Scientist and Laboratory Director'],
       teams: [
         { id: 'team-1', displayName: 'Neuroscience Research Consortium' },
       ],
     }}
+    showTeamInfo={true}
+  />
+);
+
+export const MembersWithMultipleRoles = () => (
+  <ProjectMembers
+    members={[
+      {
+        id: '1',
+        displayName: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
+        role: 'Principal Investigator',
+        href: '/users/john-doe',
+      },
+      {
+        id: '1',
+        displayName: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
+        role: 'Co-Investigator',
+        href: '/users/john-doe',
+      },
+      {
+        id: '2',
+        displayName: 'Jane Smith',
+        firstName: 'Jane',
+        lastName: 'Smith',
+        role: 'Research Associate',
+        href: '/users/jane-smith',
+      },
+      {
+        id: '2',
+        displayName: 'Jane Smith',
+        firstName: 'Jane',
+        lastName: 'Smith',
+        role: 'Data Analyst',
+        href: '/users/jane-smith',
+      },
+      {
+        id: '2',
+        displayName: 'Jane Smith',
+        firstName: 'Jane',
+        lastName: 'Smith',
+        role: 'Lab Manager',
+        href: '/users/jane-smith',
+      },
+      {
+        id: '2',
+        displayName: 'Jane Smith',
+        firstName: 'Jane',
+        lastName: 'Smith',
+        role: 'Coordinator',
+        href: '/users/jane-smith',
+      },
+      {
+        id: '3',
+        displayName: 'Michael Johnson',
+        firstName: 'Michael',
+        lastName: 'Johnson',
+        role: 'Contributor',
+        href: '/users/michael-johnson',
+      },
+    ]}
+    showTeamInfo={false}
+  />
+);
+
+export const TraineeWithMultipleRolesAndTeams = () => (
+  <ProjectMembers
+    members={[
+      {
+        id: '1',
+        displayName: 'Alex Chen',
+        firstName: 'Alex',
+        lastName: 'Chen',
+        role: 'Trainee Project - Lead',
+        href: '/users/alex-chen',
+        teams: [
+          { id: 'team-1', displayName: 'Alpha Team' },
+          { id: 'team-2', displayName: 'Genomics Lab' },
+        ],
+      },
+      {
+        id: '1',
+        displayName: 'Alex Chen',
+        firstName: 'Alex',
+        lastName: 'Chen',
+        role: 'Trainee Project - Mentor',
+        href: '/users/alex-chen',
+        teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
+      },
+      {
+        id: '2',
+        displayName: 'Maria Garcia',
+        firstName: 'Maria',
+        lastName: 'Garcia',
+        role: 'Trainee Project - Key Personnel',
+        href: '/users/maria-garcia',
+        teams: [{ id: 'team-1', displayName: 'Alpha Team' }],
+      },
+    ]}
     showTeamInfo={true}
   />
 );

@@ -51,27 +51,6 @@ it('shows "No team affiliation" in italic with info tooltip when the user has no
   expect(getByRole('button', { name: /info/i })).toBeInTheDocument();
 });
 
-it("generates information about the user's team", async () => {
-  const { container } = render(
-    <UserProfilePersonalText
-      {...props}
-      teams={[
-        {
-          id: '42',
-          displayName: 'Team',
-          role: 'Lead PI (Core Leadership)',
-        },
-        {
-          id: '1337',
-          displayName: 'Meat',
-          role: 'Collaborating PI',
-        },
-      ]}
-    />,
-  );
-  expect(container).toHaveTextContent(/Lead PI \(Core Leadership\) on Team/);
-});
-
 it('only show lab information if the user is on a lab', async () => {
   const { container, rerender } = render(
     <UserProfilePersonalText {...props} />,
@@ -444,4 +423,84 @@ it('toggles inactive teams between expanded and collapsed', () => {
   expect(container).not.toHaveTextContent('Key Personnel on');
   expect(container).not.toHaveTextContent('Trainee on');
   expect(getByText('View all former roles')).toBeInTheDocument();
+});
+
+it('renders two roles inline with "and" for a team with exactly 2 roles', () => {
+  const { container } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Alpha',
+          role: 'Lead PI (Core Leadership)',
+        },
+        {
+          id: '42',
+          displayName: 'Alpha',
+          role: 'Project Manager',
+        },
+      ]}
+    />,
+  );
+  expect(container).toHaveTextContent(
+    'Lead PI (Core Leadership) and Project Manager on Team Alpha',
+  );
+});
+
+it('renders two labs inline with "and"', () => {
+  const { container } = render(
+    <UserProfilePersonalText
+      {...props}
+      labs={[
+        { id: 'l1', name: 'Glasgow' },
+        { id: 'l2', name: 'Cambridge' },
+      ]}
+    />,
+  );
+  expect(container).toHaveTextContent('Glasgow Lab and Cambridge Lab');
+});
+
+it('renders 3+ roles with overflow badge for a team with multiple roles', () => {
+  const { container, getByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Alpha',
+          role: 'Lead PI (Core Leadership)',
+        },
+        {
+          id: '42',
+          displayName: 'Alpha',
+          role: 'Project Manager',
+        },
+        {
+          id: '42',
+          displayName: 'Alpha',
+          role: 'Data Manager',
+        },
+      ]}
+    />,
+  );
+  expect(container).toHaveTextContent('Lead PI (Core Leadership),');
+  expect(container).toHaveTextContent('Project Manager');
+  expect(getByText('+1')).toBeInTheDocument();
+});
+
+it('renders 3+ labs with overflow badge', () => {
+  const { container, getByText } = render(
+    <UserProfilePersonalText
+      {...props}
+      labs={[
+        { id: 'l1', name: 'Glasgow' },
+        { id: 'l2', name: 'Cambridge' },
+        { id: 'l3', name: 'Oxford' },
+      ]}
+    />,
+  );
+  expect(container).toHaveTextContent('Glasgow Lab,');
+  expect(container).toHaveTextContent('Cambridge Lab');
+  expect(getByText('+1')).toBeInTheDocument();
 });

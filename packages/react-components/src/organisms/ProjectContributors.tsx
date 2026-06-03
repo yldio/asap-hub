@@ -28,7 +28,7 @@ const tabsContainerStyles = css({
 });
 
 const tabContentStyles = css({
-  paddingTop: rem(24),
+  paddingTop: rem(32),
 });
 
 const teamSectionStyles = css({

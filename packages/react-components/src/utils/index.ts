@@ -6,5 +6,6 @@ export * from './manuscripts';
 export * from './portal';
 export * from './project';
 export * from './research-output-form';
+export * from './group';
 export * from './text';
 export * from './user';

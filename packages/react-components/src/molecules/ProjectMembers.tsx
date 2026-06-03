@@ -1,6 +1,8 @@
 import { css } from '@emotion/react';
 import { ProjectMember } from '@asap-hub/model';
+import { useMemo } from 'react';
 import { rem, tabletScreen } from '../pixels';
+import { groupProjectMembersByUserId } from '../utils';
 import ProjectMemberCard from './ProjectMemberCard';
 
 const membersListStyles = css({
@@ -21,16 +23,23 @@ type ProjectMembersProps = {
 const ProjectMembers: React.FC<ProjectMembersProps> = ({
   members,
   showTeamInfo = false,
-}) => (
-  <div css={membersListStyles}>
-    {members.map((member) => (
-      <ProjectMemberCard
-        key={member.id}
-        member={member}
-        showTeamInfo={showTeamInfo}
-      />
-    ))}
-  </div>
-);
+}) => {
+  const grouped = useMemo(
+    () => groupProjectMembersByUserId(members),
+    [members],
+  );
+
+  return (
+    <div css={membersListStyles}>
+      {grouped.map((member) => (
+        <ProjectMemberCard
+          key={member.id}
+          member={member}
+          showTeamInfo={showTeamInfo}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default ProjectMembers;

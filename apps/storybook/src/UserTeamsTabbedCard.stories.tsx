@@ -24,3 +24,46 @@ export const Normal = () => {
 
   return <UserTeamsTabbedCard {...props} />;
 };
+
+export const MultipleRolesPerTeam = () => {
+  const props: ComponentProps<typeof UserTeamsTabbedCard> = {
+    userAlumni: false,
+    teams: [
+      { id: '1', displayName: 'Team Alpha', role: 'Lead PI (Core Leadership)' },
+      { id: '1', displayName: 'Team Alpha', role: 'Project Manager' },
+      { id: '2', displayName: 'Team Beta', role: 'Collaborating PI' },
+      { id: '2', displayName: 'Team Beta', role: 'Co-PI (Core Leadership)' },
+      { id: '2', displayName: 'Team Beta', role: 'ASAP Staff' },
+      { id: '3', displayName: 'Team Gamma', role: 'Key Personnel' },
+    ],
+  };
+
+  return <UserTeamsTabbedCard {...props} />;
+};
+
+export const MixedActiveInactive = () => {
+  const props: ComponentProps<typeof UserTeamsTabbedCard> = {
+    userAlumni: false,
+    teams: [
+      { id: '1', displayName: 'Team Alpha', role: 'Lead PI (Core Leadership)' },
+      { id: '1', displayName: 'Team Alpha', role: 'Project Manager' },
+      {
+        id: '2',
+        displayName: 'Team Beta',
+        role: 'Collaborating PI',
+        teamInactiveSince: '2024-06-01',
+        inactiveSinceDate: '2024-06-01',
+      },
+      {
+        id: '2',
+        displayName: 'Team Beta',
+        role: 'Co-PI (Core Leadership)',
+        teamInactiveSince: '2024-06-01',
+        inactiveSinceDate: '2024-03-01',
+      },
+      { id: '3', displayName: 'Team Gamma', role: 'Key Personnel' },
+    ],
+  };
+
+  return <UserTeamsTabbedCard {...props} />;
+};

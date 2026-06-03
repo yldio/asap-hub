@@ -1,11 +1,14 @@
 import { TeamMember } from '@asap-hub/model';
 import { css } from '@emotion/react';
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, useMemo } from 'react';
 import { rem, tabletScreen } from '../pixels';
-import { MembersList, TabbedCard } from '../molecules';
-import { getUniqueCommaStringWithSuffix } from '../utils/text';
+import { LabsList, MembersList, RolesList, TabbedCard } from '../molecules';
 import { fern } from '../colors';
-import { splitListBy } from '../utils';
+import {
+  groupTeamMembersByUserId,
+  GroupedTeamMember,
+  splitListBy,
+} from '../utils';
 import { Paragraph } from '../atoms';
 
 const containerStyles = css({
@@ -38,13 +41,21 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
   members,
   isTeamInactive,
 }) => {
-  const [pastMembers, activeMembers] = splitListBy(
-    members,
-    (member) =>
-      isTeamInactive ||
-      !!member?.alumniSinceDate ||
-      !!member?.inactiveSinceDate,
-  );
+  const { activeMembers, pastMembers } = useMemo(() => {
+    const [rawPast, rawActive] = splitListBy(
+      [...members],
+      (member) =>
+        isTeamInactive ||
+        !!member?.alumniSinceDate ||
+        !!member?.inactiveSinceDate,
+    );
+    const active = groupTeamMembersByUserId(rawActive);
+    const activeIdSet = new Set(active.map((m) => m.id));
+    const past = groupTeamMembersByUserId(rawPast).filter(
+      (m) => !activeIdSet.has(m.id),
+    );
+    return { activeMembers: active, pastMembers: past };
+  }, [members, isTeamInactive]);
 
   return (
     <TabbedCard
@@ -66,10 +77,8 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
           ),
         },
         {
-          tabTitle: `Past Team Members (${
-            isTeamInactive ? members.length : pastMembers.length
-          })`,
-          items: isTeamInactive ? members : pastMembers,
+          tabTitle: `Past Team Members (${pastMembers.length})`,
+          items: pastMembers,
           truncateFrom: 8,
           disabled: pastMembers.length === 0,
           empty: (
@@ -81,13 +90,13 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
         `View ${showMore ? 'Less' : 'More'} Members`
       }
     >
-      {({ data }) => (
+      {({ data }: { data: GroupedTeamMember[] }) => (
         <div css={containerStyles}>
           <MembersList
             members={data.map(
               ({
                 displayName,
-                role,
+                roles,
                 labs = [],
                 avatarUrl,
                 firstName,
@@ -96,11 +105,11 @@ const TeamMembersTabbedCard: React.FC<TeamMembersTabbedCardProps> = ({
                 alumniSinceDate,
               }) => ({
                 firstLine: displayName,
-                secondLine: role,
-                thirdLine: getUniqueCommaStringWithSuffix(
-                  labs.map((lab) => lab.name),
-                  'Lab',
-                ),
+                secondLine: <RolesList roles={roles} maxVisible={2} />,
+                thirdLine:
+                  labs.length > 0 ? (
+                    <LabsList labs={labs} maxVisible={2} />
+                  ) : undefined,
                 avatarUrl,
                 firstName,
                 lastName,

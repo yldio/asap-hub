@@ -384,6 +384,29 @@ describe('For a CRN login', () => {
     );
   });
 
+  it('deduplicates repeated interest groups by id', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, {
+        ...baseUser,
+        id: '42',
+        interestGroups: [
+          { id: 'ig-1', name: 'Interest Group 1', active: true },
+          { id: 'ig-1', name: 'Interest Group 1', active: true },
+        ],
+      });
+
+    await onExecutePostLogin(eventBase, apiBase);
+    expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
+      'http://example.com/user',
+      expect.objectContaining({
+        interestGroups: [
+          { id: 'ig-1', name: 'Interest Group 1', active: true },
+        ],
+      }),
+    );
+  });
+
   it('rejects the login for alumni users', async () => {
     nock(apiUrl)
       .get(`/webhook/users/${user.user_id}`)

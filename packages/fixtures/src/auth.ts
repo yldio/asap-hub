@@ -2,9 +2,40 @@ import { User } from '@asap-hub/auth';
 import type { UserResponse } from '@asap-hub/model';
 import { JwtPayload } from 'jsonwebtoken';
 
+const uniqueById = <T extends { id: string }>(items: ReadonlyArray<T>): T[] =>
+  items.reduce<T[]>(
+    (unique, item) =>
+      unique.some((existing) => existing.id === item.id)
+        ? unique
+        : [...unique, item],
+    [],
+  );
+
+// Collapse one-row-per-role memberships into one entry per entity, collecting
+// every role — mirrors the grouping the real token builder performs.
+const groupRolesById = <
+  TRole,
+  TInput extends { id: string; role: TRole },
+  TOutput extends { id: string; roles: TRole[] },
+>(
+  items: ReadonlyArray<TInput>,
+  toEntry: (item: TInput) => TOutput,
+): TOutput[] =>
+  items.reduce<TOutput[]>((grouped, item) => {
+    const existing = grouped.find((entry) => entry.id === item.id);
+    if (existing) {
+      if (!existing.roles.includes(item.role)) {
+        existing.roles.push(item.role);
+      }
+      return grouped;
+    }
+    return [...grouped, toEntry(item)];
+  }, []);
+
 /**
  * Converts a model `UserResponse` into the token `User` shape, grouping team
- * and working-group roles by entity (one entry each, carrying `roles[]`).
+ * and working-group roles by entity (one entry each, carrying `roles[]`) and
+ * deduplicating interest groups and projects by id.
  */
 export const toAuthUser = (
   user: UserResponse,
@@ -33,13 +64,16 @@ export const toAuthUser = (
   firstName: user.firstName,
   lastName: user.lastName,
   avatarUrl: user.avatarUrl,
-  interestGroups: user.interestGroups,
-  projects: user.projects,
+  interestGroups: uniqueById(user.interestGroups),
+  projects: uniqueById(user.projects),
   role: user.role,
   openScienceTeamMember: user.openScienceTeamMember,
   algoliaApiKey: null,
-  teams: user.teams.map(({ role, ...team }) => ({ ...team, roles: [role] })),
-  workingGroups: user.workingGroups.map(({ role, ...wg }) => ({
+  teams: groupRolesById(user.teams, ({ role, ...team }) => ({
+    ...team,
+    roles: [role],
+  })),
+  workingGroups: groupRolesById(user.workingGroups, ({ role, ...wg }) => ({
     ...wg,
     roles: [role],
   })),

@@ -349,7 +349,8 @@ export type ManuscriptDataObject = {
   firstPublicDate?: string;
   url?: string;
   status?: ManuscriptStatus;
-  teamId: string;
+  teamId?: string;
+  projectId?: string;
   versions: ManuscriptVersion[];
   count: number;
   assignedUsers: ManuscriptAssignedUser[];
@@ -382,7 +383,12 @@ export type ManuscriptPostAuthor =
 
 export type ManuscriptPostCreateRequest = Pick<
   ManuscriptDataObject,
-  'title' | 'teamId' | 'url' | 'firstPublicDate' | 'layImpactStatement'
+  | 'title'
+  | 'teamId'
+  | 'projectId'
+  | 'url'
+  | 'firstPublicDate'
+  | 'layImpactStatement'
 > & {
   eligibilityReasons: string[];
   impact: string;
@@ -647,7 +653,7 @@ export const manuscriptVersionSchema = {
     labMaterialsRegisteredDetails: { type: 'string', nullable: true },
     availabilityStatementDetails: { type: 'string', nullable: true },
 
-    teams: { type: 'array', minItems: 1, items: { type: 'string' } },
+    teams: { type: 'array', items: { type: 'string' } },
     labs: { type: 'array', minItems: 1, items: { type: 'string' } },
     firstAuthors: {
       type: 'array',
@@ -731,6 +737,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
       title: { type: 'string' },
       url: { type: 'string', nullable: true },
       teamId: { type: 'string' },
+      projectId: { type: 'string' },
       eligibilityReasons: {
         type: 'array',
         items: { type: 'string' },
@@ -748,8 +755,18 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
       layImpactStatement: { type: 'string' },
       categories: { type: 'array', items: { type: 'string' }, nullable: true },
     },
-    required: ['title', 'teamId', 'versions'],
+    required: ['title', 'versions'],
     additionalProperties: false,
+    oneOf: [
+      {
+        type: 'object',
+        required: ['teamId'],
+      },
+      {
+        type: 'object',
+        required: ['projectId'],
+      },
+    ],
   } as unknown as JSONSchemaType<ManuscriptPostRequest>;
 
 export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
@@ -759,6 +776,7 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
       title: { type: 'string', nullable: true },
       url: { type: 'string', nullable: true },
       teamId: { type: 'string', nullable: true },
+      projectId: { type: 'string', nullable: true },
       assignedUsers: {
         type: 'array',
         items: { type: 'string' },
@@ -787,6 +805,9 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
       layImpactStatement: { type: 'string', nullable: true },
     },
     additionalProperties: false,
+    not: {
+      required: ['teamId', 'projectId'],
+    },
   };
 
 export const questionChecksOptions = ['Yes', 'No', 'Not applicable'] as const;

@@ -342,17 +342,6 @@ describe('ProjectManuscript', () => {
     expect(mockUseManuscriptById).toHaveBeenCalledWith('ms-1');
   });
 
-  it('falls back to empty teamId when user has no teams', async () => {
-    await renderPage('discovery', false, { teams: [] });
-    await waitFor(() => {
-      expect(screen.getByText(/what are you sharing/i)).toBeInTheDocument();
-    });
-    expect(capturedFormProps.teamId).toBe('');
-    expect(capturedFormProps.selectedTeams).toEqual([
-      { value: '', label: '', isFixed: true },
-    ]);
-  });
-
   it('uses fundedTeam from projectDetail for teamId and team display name', async () => {
     mockUseProjectById.mockReturnValueOnce({
       fundedTeam: {
@@ -369,9 +358,24 @@ describe('ProjectManuscript', () => {
       expect(screen.getByText(/what are you sharing/i)).toBeInTheDocument();
     });
     expect(capturedFormProps.teamId).toBe('funded-team-1');
+    expect(capturedFormProps.projectId).toBeUndefined();
     expect(capturedFormProps.selectedTeams).toEqual([
       { value: 'funded-team-1', label: 'Funded Team', isFixed: true },
     ]);
+  });
+
+  it('passes projectId and not teamId when creating a user-based project manuscript', async () => {
+    mockUseProjectById.mockReturnValueOnce({
+      members: [{ id: 'member-1' }, { id: 'member-2' }],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    await renderPage('resource', false);
+    await waitFor(() => {
+      expect(screen.getByText(/what are you sharing/i)).toBeInTheDocument();
+    });
+    expect(capturedFormProps.teamId).toBeUndefined();
+    expect(capturedFormProps.projectId).toBe('proj-1');
   });
 
   describe('with existing manuscript data', () => {
@@ -381,6 +385,7 @@ describe('ProjectManuscript', () => {
           id: 'manuscript-1',
           impact: { id: 'impact-1', name: 'High Impact' },
           categories: [{ id: 'cat-1', name: 'Genetics' }],
+          teamId: 'team-1',
           versions: [
             {
               teams: [
@@ -431,6 +436,32 @@ describe('ProjectManuscript', () => {
           label: 'Author One',
           value: 'auth-1',
         },
+      ]);
+    });
+
+    it('maps teams to select options properly when manuscript is from a user-based project', async () => {
+      mockUseManuscriptById.mockReturnValueOnce([
+        {
+          id: 'manuscript-1',
+          projectId: 'project-1',
+          versions: [
+            {
+              teams: [
+                { id: 'team-1', displayName: 'Team Alpha' },
+                { id: 'team-2', displayName: 'Team Beta' },
+              ],
+            },
+          ],
+        },
+        jest.fn(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ] as any);
+
+      await renderPage();
+
+      expect(capturedFormProps.selectedTeams).toEqual([
+        { value: 'team-1', label: 'Team Alpha', isFixed: false },
+        { value: 'team-2', label: 'Team Beta', isFixed: false },
       ]);
     });
   });

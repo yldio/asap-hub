@@ -5,7 +5,10 @@ import {
   FetchManuscriptByIdQueryVariables,
   FetchManuscriptDiscussionsByIdQuery,
   FetchManuscriptDiscussionsByIdQueryVariables,
+  FetchManuscriptsByProjectIdQuery,
+  FetchManuscriptsByProjectIdQueryVariables,
   FetchManuscriptsByTeamIdQuery,
+  FetchManuscriptsByTeamIdQueryVariables,
   FetchManuscriptsQuery,
   FetchManuscriptsQueryVariables,
   FetchManuscriptVersionCountByIdQuery,
@@ -15,6 +18,7 @@ import {
   FetchResearchOutputByManuscriptVersionIdQuery,
   FetchResearchOutputByManuscriptVersionIdQueryVariables,
   FETCH_MANUSCRIPTS,
+  FETCH_MANUSCRIPTS_BY_PROJECT_ID,
   FETCH_MANUSCRIPTS_BY_TEAM_ID,
   FETCH_MANUSCRIPT_BY_ID,
   FETCH_MANUSCRIPT_VERSIONS,
@@ -237,14 +241,25 @@ export class ManuscriptContentfulDataProvider
   async fetchCountByTeamId(id: string) {
     const { teams } = await this.contentfulClient.request<
       FetchManuscriptsByTeamIdQuery,
-      FetchManuscriptByIdQueryVariables
+      FetchManuscriptsByTeamIdQueryVariables
     >(FETCH_MANUSCRIPTS_BY_TEAM_ID, { id });
 
     return (
       teams?.linkedFrom?.manuscriptsCollection?.items.filter(
-        (item) => item?.teamsCollection?.items[0]?.sys.id === id,
+        (item) =>
+          item?.teamsCollection?.items[0]?.sys.id === id &&
+          !item.project?.sys.id,
       )[0]?.count || 0
     );
+  }
+
+  async fetchCountByProjectId(id: string) {
+    const { projects } = await this.contentfulClient.request<
+      FetchManuscriptsByProjectIdQuery,
+      FetchManuscriptsByProjectIdQueryVariables
+    >(FETCH_MANUSCRIPTS_BY_PROJECT_ID, { id });
+
+    return projects?.linkedFrom?.manuscriptsCollection?.items[0]?.count || 0;
   }
 
   async fetchById(
@@ -369,6 +384,7 @@ export class ManuscriptContentfulDataProvider
 
     const {
       teamId,
+      projectId,
       userId,
       notificationList = '',
       versions: [version],
@@ -379,7 +395,14 @@ export class ManuscriptContentfulDataProvider
       throw new Error('No versions provided');
     }
 
-    const currentCount = (await this.fetchCountByTeamId(teamId)) || 0;
+    let currentCount = 0;
+
+    if (teamId) {
+      currentCount = (await this.fetchCountByTeamId(teamId)) || 0;
+    }
+    if (projectId) {
+      currentCount = (await this.fetchCountByProjectId(projectId)) || 0;
+    }
 
     const manuscriptVersionId = await this.createManuscriptVersion(
       version,
@@ -391,6 +414,7 @@ export class ManuscriptContentfulDataProvider
       fields: addLocaleToFields({
         ...plainFields,
         count: currentCount + 1,
+        project: projectId ? getLinkEntity(projectId) : null,
         teams: getLinkEntities(version.teams),
         versions: getLinkEntities([manuscriptVersionId]),
         impact: getLinkEntity(input.impact || ''),
@@ -681,6 +705,7 @@ const parseGraphQLManuscript = (
   manuscript: ManuscriptItemWithDiscussions,
   manuscriptVersions: ManuscriptVersions,
 ): ManuscriptDataObject => {
+  const isProjectManuscript = !!manuscript.project?.sys.id;
   const teamData = manuscript.teamsCollection?.items[0];
   const resolvedProject = resolveManuscriptProject(manuscript);
   const projectId = resolvedProject?.project.projectId || '';
@@ -691,7 +716,8 @@ const parseGraphQLManuscript = (
     count,
     title: manuscript.title || '',
     url: manuscript.url || undefined,
-    teamId: teamData?.sys.id || '',
+    teamId: isProjectManuscript ? undefined : teamData?.sys.id,
+    projectId: isProjectManuscript ? manuscript.project?.sys.id : undefined,
     status: manuscriptMapStatus(manuscript.status) || undefined,
     discussions: parseGraphQLManuscriptDiscussions(
       manuscript.discussionsCollection?.items,

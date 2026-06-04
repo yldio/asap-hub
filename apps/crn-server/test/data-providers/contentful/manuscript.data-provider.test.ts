@@ -1759,7 +1759,8 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(result).toEqual({
         id: 'manuscript-id-1',
         count: 1,
-        teamId: '',
+        teamId: undefined,
+        projectId: undefined,
         title: '',
         url: undefined,
         versions: [],
@@ -2076,6 +2077,9 @@ describe('Manuscripts Contentful Data Provider', () => {
           },
         ],
       },
+      project: {
+        'en-US': null,
+      },
       eligibilityReasons: {
         'en-US': [],
       },
@@ -2183,6 +2187,75 @@ describe('Manuscripts Contentful Data Provider', () => {
       expect(environmentMock.createEntry).toHaveBeenCalledWith('manuscripts', {
         fields: {
           ...manuscriptCreateGraphQlObject,
+        },
+      });
+      expect(assetMock.publish).toHaveBeenCalled();
+      expect(publish).toHaveBeenCalled();
+      expect(result).toEqual(manuscriptId);
+    });
+
+    test('can create a project-based manuscript', async () => {
+      const manuscriptCreateDataObject = getManuscriptCreateDataObject();
+      manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
+      manuscriptCreateDataObject.teamId = undefined;
+      manuscriptCreateDataObject.projectId = 'project-1';
+
+      const manuscriptType = manuscriptCreateDataObject.versions[0]!
+        .type as ManuscriptType;
+      const manuscriptLifecycle = manuscriptCreateDataObject.versions[0]!
+        .lifecycle as ManuscriptLifecycle;
+
+      const publish = jest.fn();
+
+      when(environmentMock.createEntry)
+        .calledWith('manuscriptVersions', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptVersionId },
+          publish,
+        } as unknown as Entry);
+      when(environmentMock.createEntry)
+        .calledWith('manuscripts', expect.anything())
+        .mockResolvedValue({
+          sys: { id: manuscriptId },
+          publish,
+        } as unknown as Entry);
+      const assetMock = {
+        sys: { id: manuscriptId },
+        publish: jest.fn(),
+      } as unknown as Asset;
+      when(environmentMock.getAsset)
+        .calledWith(manuscriptCreateDataObject.versions[0]!.manuscriptFile.id)
+        .mockResolvedValue(assetMock);
+
+      const result = await manuscriptDataProviderMockGraphql.create({
+        ...manuscriptCreateDataObject,
+        userId: 'user-id-0',
+      });
+
+      expect(environmentMock.createEntry).toHaveBeenNthCalledWith(
+        1,
+        'manuscriptVersions',
+        {
+          fields: {
+            ...getManuscriptVersionCreateGraphQlObject(
+              manuscriptType,
+              manuscriptLifecycle,
+            ),
+          },
+        },
+      );
+      expect(environmentMock.createEntry).toHaveBeenCalledWith('manuscripts', {
+        fields: {
+          ...manuscriptCreateGraphQlObject,
+          project: {
+            'en-US': {
+              sys: {
+                id: 'project-1',
+                type: 'Link',
+                linkType: 'Entry',
+              },
+            },
+          },
         },
       });
       expect(assetMock.publish).toHaveBeenCalled();

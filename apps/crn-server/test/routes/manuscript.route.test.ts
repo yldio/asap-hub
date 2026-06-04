@@ -128,6 +128,32 @@ describe('/manuscripts/ route', () => {
       expect(response.status).toEqual(403);
     });
 
+    test('Should return 403 when not allowed to create a manuscript because user does not belong to the project', async () => {
+      const createManuscriptRequest: ManuscriptPostRequest = {
+        ...getManuscriptPostBody(),
+        teamId: undefined,
+        projectId: 'project-1',
+      };
+
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        projects: [
+          {
+            status: 'Active',
+            projectType: 'Resource Project',
+            title: 'Project 2',
+            id: 'project-2',
+          },
+        ],
+      });
+
+      const response = await supertest(app)
+        .post('/manuscripts')
+        .send(createManuscriptRequest)
+        .set('Accept', 'application/json');
+      expect(response.status).toEqual(403);
+    });
+
     test('Should return a 201 and pass input to the controller', async () => {
       const teamId = 'team-1';
 
@@ -176,9 +202,24 @@ describe('/manuscripts/ route', () => {
         expect(response.status).toEqual(400);
       });
 
-      test('Should return 400 when teamId is missing', async () => {
+      test('Should return 400 when both teamId and projectId are missing', async () => {
         const { teamId: _teamId, ...createManuscriptRequest } =
           getManuscriptCreateDataObject();
+
+        const response = await supertest(app)
+          .post('/manuscripts')
+          .send(createManuscriptRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
+
+      test('Should return 400 when both teamId and projectId are present', async () => {
+        const createManuscriptRequest = {
+          ...getManuscriptCreateDataObject(),
+          teamId: 'team-1',
+          projectId: 'project-1',
+        };
 
         const response = await supertest(app)
           .post('/manuscripts')
@@ -678,6 +719,25 @@ describe('/manuscripts/ route', () => {
           .send({
             ...manuscriptPutRequest,
             eligibilityReasons: ['New reason'],
+          })
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
+
+      test('Should return 400 when additional parameters are sent', async () => {
+        userMockFactory.mockReturnValueOnce({
+          ...createUserResponse(),
+          role: 'Staff',
+          openScienceTeamMember: true,
+        });
+
+        const response = await supertest(app)
+          .put(`/manuscripts/${manuscriptId}`)
+          .send({
+            ...manuscriptPutRequest,
+            teamId: 'team-1',
+            projectId: 'project-1',
           })
           .set('Accept', 'application/json');
 

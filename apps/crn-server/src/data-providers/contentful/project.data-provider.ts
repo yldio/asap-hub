@@ -355,6 +355,7 @@ type ProjectManuscriptItem = {
   teamsCollection?: {
     items: Array<{ sys: { id: string } } | null>;
   } | null;
+  project?: { sys: { id: string } } | null;
 };
 
 type ProjectMemberWithLinkedManuscripts = NonNullable<
@@ -414,10 +415,14 @@ const parseProjectManuscripts = (
   teamId: string,
 ) => {
   const teamManuscripts = manuscriptItems.filter(
-    (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id === teamId,
+    (manuscript) =>
+      manuscript.teamsCollection?.items[0]?.sys.id === teamId &&
+      !manuscript.project?.sys.id,
   );
   const collaborationManuscripts = manuscriptItems.filter(
-    (manuscript) => manuscript.teamsCollection?.items[0]?.sys.id !== teamId,
+    (manuscript) =>
+      manuscript.teamsCollection?.items[0]?.sys.id !== teamId ||
+      manuscript.project?.sys.id,
   );
   return {
     manuscripts: sortProjectManuscripts(teamManuscripts).map((m) => m.sys.id),
@@ -557,6 +562,7 @@ export const parseContentfulProjectDetail = (
         };
 
         // Parse collaborators (user members)
+        // TODO: team-based projects should not have user members, investigate if being used elsewhere and fix
         const collaborators: ProjectMember[] = members
           .filter((m) => m.projectMember?.__typename === 'Users')
           .map((m) => parseProjectUserMember(m));

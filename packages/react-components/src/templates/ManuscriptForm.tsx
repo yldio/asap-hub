@@ -303,7 +303,8 @@ type ManuscriptFormProps = Omit<
       fileType: ManuscriptFileType,
       handleError: (errorMessage: string) => void,
     ) => Promise<ManuscriptFileResponse | undefined>;
-    teamId: string;
+    teamId?: string;
+    projectId?: string;
     getTeamSuggestions?: ComponentProps<
       typeof LabeledMultiSelect
     >['loadOptions'];
@@ -342,6 +343,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   onError,
   handleFileUpload,
   teamId,
+  projectId,
   isOpenScienceTeamMember,
   title,
   firstPublicDate,
@@ -957,7 +959,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         description: versionData.description || '',
 
         ...getSubmittingQuickChecks(versionData),
-        teams: (versionData.teams || selectedTeams).map((team) => team.value),
+        teams: (versionData.teams ?? []).map((team) => team.value),
         labs: versionData.labs.map((lab) => lab.value),
         firstAuthors: getPostAuthors(
           versionData.firstAuthors,
@@ -988,7 +990,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             impact: data.impact?.value,
             categories:
               data.categories?.map((category) => category.value) || [],
-            teamId,
+            ...(teamId ? { teamId } : { projectId }),
             eligibilityReasons: [...eligibilityReasons],
             versions: [
               {
@@ -1006,7 +1008,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             categories:
               data.categories?.map((category) => category.value) || [],
             layImpactStatement: data.layImpactStatement,
-            teamId,
+            ...(teamId ? { teamId } : { projectId }),
             versions: [
               {
                 ...requestVersionData,
@@ -1023,7 +1025,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             categories:
               data.categories?.map((category) => category.value) || [],
             layImpactStatement: data.layImpactStatement,
-            teamId,
+            ...(teamId ? { teamId } : { projectId }),
             versions: [
               {
                 ...requestVersionData,
@@ -2038,7 +2040,6 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   control={control}
                   shouldUnregister
                   rules={{
-                    required: 'Please add at least one team.',
                     validate: validateTeams,
                   }}
                   render={({

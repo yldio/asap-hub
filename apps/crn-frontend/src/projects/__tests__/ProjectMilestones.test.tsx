@@ -40,7 +40,6 @@ jest.mock('../export', () => ({
 }));
 
 afterEach(() => {
-  jest.useRealTimers();
   jest.clearAllMocks();
 });
 mockConsoleError();
@@ -386,53 +385,40 @@ describe('ProjectMilestones', () => {
   });
 
   it('can create a milestone when the data is valid', async () => {
-    jest.useFakeTimers();
-
-    const user = userEvent.setup({
-      advanceTimers: jest.advanceTimersByTime,
-    });
     await renderPage();
 
     const addNewMilestoneButton = await screen.findByRole('button', {
       name: /Add New Milestone/i,
     });
 
-    await user.click(addNewMilestoneButton);
+    await userEvent.click(addNewMilestoneButton);
 
-    await user.type(
+    await userEvent.type(
       screen.getByRole('textbox', { name: /Description/i }),
       'Some description',
     );
 
-    await user.click(screen.getByRole('button', { name: '#1' }));
+    await userEvent.click(screen.getByRole('button', { name: '#1' }));
 
     const relatedArticlesLabel = screen
       .getByText('Related Articles')
       .closest('div')!;
 
     const articlesInput = within(relatedArticlesLabel!).getByRole('combobox');
-    await user.click(articlesInput);
+    await userEvent.click(articlesInput);
 
     const option = await screen.findByText(/Project Article 1/i);
-    await user.click(option);
+    await userEvent.click(option);
 
     const submitButton = await screen.findByRole('button', {
       name: 'Confirm',
     });
-    await user.click(submitButton);
+    await userEvent.click(submitButton);
 
     const confirmButton = await screen.findByRole('button', {
       name: /confirm and notify/i,
     });
-    await user.click(confirmButton);
-
-    await act(async () => {
-      jest.advanceTimersByTime(5000);
-    });
-
-    await act(async () => {
-      jest.runAllTimers();
-    });
+    await userEvent.click(confirmButton);
 
     await waitFor(() => {
       expect(mockCreateProjectMilestone).toHaveBeenCalledWith(

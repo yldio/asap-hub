@@ -1,5 +1,4 @@
-module.exports.description =
-  'Add inactiveSinceDate to workingGroupMembership';
+module.exports.description = 'Add inactiveSinceDate to workingGroupMembership';
 
 module.exports.up = (migration) => {
   const workingGroupMembership = migration.editContentType(

@@ -192,9 +192,7 @@ describe('Field component', () => {
 
     render(<Field />);
 
-    expect(sdk.field.setValue).toHaveBeenCalledWith(
-      '2026-06-03T10:00:00.000Z',
-    );
+    expect(sdk.field.setValue).toHaveBeenCalledWith('2026-06-03T10:00:00.000Z');
   });
 
   it('clears the timestamp when the observed field is emptied', () => {

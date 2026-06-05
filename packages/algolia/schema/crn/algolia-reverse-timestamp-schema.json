@@ -22,7 +22,8 @@
     "complete",
     "openScienceTeamMember",
     "apcRequested",
-    "apcCoverageRequestStatus"
+    "apcCoverageRequestStatus",
+    "project.id"
   ],
   "attributesToIndex": [
     "displayName",

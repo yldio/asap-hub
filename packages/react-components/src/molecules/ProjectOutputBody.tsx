@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { ProjectType, ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 
 import {
@@ -25,15 +25,14 @@ import {
   TeamIcon,
   TraineeProjectIcon,
 } from '../icons';
+import { utils } from '..';
 
 const TEAM_ICON = <TeamIcon />;
 
-export type ProjectOutputType = 'discovery' | 'resource' | 'trainee';
-
-const PROJECT_ICONS: Record<ProjectOutputType, React.ReactElement> = {
-  discovery: <DiscoveryProjectIcon />,
-  resource: <ResourceProjectIcon />,
-  trainee: <TraineeProjectIcon />,
+const PROJECT_ICONS: Record<ProjectType, React.ReactElement> = {
+  'Discovery Project': <DiscoveryProjectIcon />,
+  'Resource Project': <ResourceProjectIcon />,
+  'Trainee Project': <TraineeProjectIcon />,
 };
 
 export type ProjectOutput = Pick<
@@ -51,12 +50,12 @@ export type ProjectOutput = Pick<
   | 'isInReview'
   | 'keywords'
 > & {
-  projects?: ReadonlyArray<{
+  project?: {
     id: string;
     title: string;
-    projectType: ProjectOutputType;
+    projectType: ProjectType;
     href?: string;
-  }>;
+  };
   lastModifiedDate?: string;
   source?: 'team' | 'project';
 };
@@ -359,10 +358,21 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
   isInReview,
   keywords,
   showTags = true,
-  projects,
+  project,
 }) => {
-  const primaryProject = projects?.[0];
+  const primaryProject = project;
   const firstTeam = teams[0];
+
+  const otherProjects = teams
+    .filter((team) => !!team.project?.id)
+    .map((team) => ({
+      id: team.project?.id as string,
+      displayName: team.project?.title as string,
+      href: utils.getProjectRoute({
+        projectId: team.project?.id as string,
+        projectType: team.project?.projectType as ProjectType,
+      }) as string,
+    }));
 
   const externalLinkElement = link ? (
     <div css={externalLinkWrapperStyles}>
@@ -430,14 +440,17 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
             icon={PROJECT_ICONS[primaryProject.projectType]}
             max={1}
             label="Projects"
-            items={(projects ?? []).map(({ id, title: displayName, href }) => ({
-              id,
-              displayName,
-              href,
-            }))}
+            items={[
+              {
+                id: primaryProject.id,
+                displayName: primaryProject.title,
+                href: primaryProject.href,
+              },
+              ...otherProjects,
+            ]}
           />
         )}
-        {source === 'team' && teams.length > 0 && (
+        {teams.length > 0 && (
           <>
             <div css={desktopOnlyStyles}>
               <AssociationRow

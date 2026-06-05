@@ -4,6 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { enable, disable, reset } from '@asap-hub/flags';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import type {
   DiscoveryProjectDetail as DiscoveryProjectDetailType,
   ResourceProjectDetail as ResourceProjectDetailType,
@@ -229,6 +230,21 @@ const mockTraineeProjectNoContact: TraineeProjectDetailType = {
 
 // --- Combined state mock ---
 
+const mockPublishedResearchOutput = {
+  ...createResearchOutputResponse(1),
+  id: 'published-output-1',
+  title:
+    "Tracing the Origin and Progression of Parkinson's Disease through the Neuro-Immune Interactome",
+  published: true,
+};
+
+const mockDraftResearchOutput = {
+  ...createResearchOutputResponse(2),
+  id: 'draft-output-1',
+  title: 'Draft: Longitudinal cohort analysis (work in progress)',
+  published: false,
+};
+
 jest.mock('../state', () => ({
   __esModule: true,
   useProjectById: jest.fn((id: string) => {
@@ -252,6 +268,15 @@ jest.mock('../state', () => ({
   }),
   useProjectArticlesSuggestions: jest.fn().mockResolvedValue([]),
   useCreateProjectMilestone: jest.fn().mockReturnValue(jest.fn()),
+}));
+
+jest.mock('../../shared-research/state', () => ({
+  __esModule: true,
+  useResearchOutputs: jest.fn((options: { draftsOnly?: boolean }) =>
+    options.draftsOnly
+      ? { items: [mockDraftResearchOutput], total: 1 }
+      : { items: [mockPublishedResearchOutput], total: 1 },
+  ),
 }));
 
 // --- Test helper ---
@@ -316,6 +341,14 @@ const traineeMemberUser = {
   projects: [],
   teams: [],
   role: 'Grantee',
+};
+
+const nonMemberUser = {
+  id: 'non-member-user',
+  projects: [],
+  teams: [],
+  role: 'Grantee',
+  openScienceTeamMember: false,
 };
 
 const variants: TestVariant[] = [
@@ -605,10 +638,38 @@ describe.each(variants)(
       expect(screen.getByText(/^Outputs \(\d+\)$/)).toBeInTheDocument();
     });
 
-    it('renders Draft Outputs tab with count when flag is enabled', async () => {
+    it('renders Draft Outputs tab with count when flag is enabled and user is a project member', async () => {
       enable('PROJECT_OUTPUTS');
-      await renderProjectDetail(Component, routeKeyword, mainProjectId);
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        memberUser,
+      );
       expect(screen.getByText(/^Draft Outputs \(\d+\)$/)).toBeInTheDocument();
+    });
+
+    it('renders Draft Outputs tab with count when flag is enabled and user is a staff', async () => {
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(Component, routeKeyword, mainProjectId, {
+        ...memberUser,
+        projects: [],
+        teams: [],
+        role: 'Staff',
+        openScienceTeamMember: false,
+      });
+      expect(screen.getByText(/^Draft Outputs \(\d+\)$/)).toBeInTheDocument();
+    });
+
+    it('does not render Draft Outputs tabs when user is not a project member or staff', async () => {
+      enable('PROJECT_OUTPUTS');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        nonMemberUser,
+      );
+      expect(screen.queryByText(/^Draft Outputs/)).not.toBeInTheDocument();
     });
 
     it('does not render Outputs or Draft Outputs tabs when flag is disabled', async () => {
@@ -640,7 +701,7 @@ describe.each(variants)(
         Component,
         routeKeyword,
         mainProjectId,
-        {},
+        memberUser,
         'draft-outputs',
       );
       expect(

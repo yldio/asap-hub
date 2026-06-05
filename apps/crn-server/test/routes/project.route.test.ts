@@ -21,6 +21,7 @@ import ProjectController from '../../src/controllers/project.controller';
 const projectControllerMock = {
   fetch: jest.fn(),
   fetchById: jest.fn(),
+  fetchProjectResearchOutputs: jest.fn(),
   fetchProjectMilestones: jest.fn(),
   exportProjectMilestones: jest.fn(),
   update: jest.fn(),

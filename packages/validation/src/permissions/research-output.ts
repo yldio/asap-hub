@@ -19,6 +19,8 @@ type UserInput =
     })
   | null;
 
+export const isStaff = (user: UserInput): boolean => user?.role === 'Staff';
+
 export const isActiveAndBelongsToAssociation = (
   user: UserTeam | WorkingGroupMembership,
   association: AssociationType,
@@ -48,7 +50,7 @@ export const getUserRole = (
 ): UserRole => {
   if (!user) return 'None';
 
-  if (user.role === 'Staff') return 'Staff';
+  if (isStaff(user)) return 'Staff';
 
   const isUserActiveProjectManager = user[association].some(
     (teamOrWorkingGroup) =>

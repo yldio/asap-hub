@@ -14,7 +14,7 @@ export default {
 const projectAlpha = {
   id: 'p1',
   title: 'Project Alpha',
-  projectType: 'discovery' as const,
+  projectType: 'Discovery Project' as const,
   href: '/projects/discovery/p1',
 };
 
@@ -32,7 +32,7 @@ const baseOutput = (i: number): ProjectOutput => ({
   ...createResearchOutputResponse(i),
   source: 'project',
   teams: [],
-  projects: [projectAlpha],
+  project: projectAlpha,
 });
 
 export const ProjectBasedOnly = () => (

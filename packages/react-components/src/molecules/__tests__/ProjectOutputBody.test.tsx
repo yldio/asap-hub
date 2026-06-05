@@ -100,11 +100,11 @@ it('hides mobile pill list when documentType and type are absent', () => {
   expect(queryAllByText('Project')).toHaveLength(2);
 });
 
-it('hides teams section when source is project', () => {
-  const { queryByText } = render(
+it('renders teams section when teams present and source is project', () => {
+  const { getAllByText } = render(
     <ProjectOutputBody {...baseProps} source="project" />,
   );
-  expect(queryByText(/Team Jakobsson/)).toBeNull();
+  expect(getAllByText(/Team Jakobsson/).length).toBeGreaterThanOrEqual(1);
 });
 
 it('renders multiple teams count on mobile layout', () => {
@@ -124,17 +124,60 @@ it('renders project association row', () => {
   const { getByText } = render(
     <ProjectOutputBody
       {...baseProps}
-      projects={[
-        {
-          id: 'p1',
-          title: 'My Project',
-          projectType: 'discovery',
-          href: '/projects/p1',
-        },
-      ]}
+      project={{
+        id: 'p1',
+        title: 'My Project',
+        projectType: 'Discovery Project',
+        href: '/projects/p1',
+      }}
     />,
   );
   expect(getByText('My Project')).toBeVisible();
+});
+
+it('renders primary project with team-linked projects in the projects row', () => {
+  const { getByRole, getByText, queryByText } = render(
+    <ProjectOutputBody
+      {...baseProps}
+      teams={[
+        {
+          id: 't1',
+          displayName: 'Alpha',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'p2',
+            title: 'Linked Project A',
+            projectType: 'Discovery Project',
+          },
+        },
+        {
+          id: 't2',
+          displayName: 'Beta',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'p3',
+            title: 'Linked Project B',
+            projectType: 'Resource Project',
+          },
+        },
+      ]}
+      project={{
+        id: 'p1',
+        title: 'Primary Project',
+        projectType: 'Discovery Project',
+        href: '/projects/p1',
+      }}
+    />,
+  );
+
+  expect(getByRole('link', { name: 'Primary Project' })).toHaveAttribute(
+    'href',
+    '/projects/p1',
+  );
+  expect(queryByText('Linked Project A')).toBeNull();
+  expect(queryByText('Linked Project B')).toBeNull();
+  expect(getByText('+2')).toBeVisible();
+  expect(getByText('Projects')).toBeVisible();
 });
 
 it('hides tags when showTags is false', () => {

@@ -217,6 +217,29 @@ describe('Research Outputs Data Provider', () => {
           );
         });
 
+        test('Should pass the parameters to filter by project as expected', async () => {
+          await researchOutputDataProvider.fetch({
+            take: 13,
+            skip: 7,
+            filter: {
+              projectId: 'project-0',
+            },
+          });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              where: {
+                project: {
+                  sys: {
+                    id: 'project-0',
+                  },
+                },
+              },
+            }),
+          );
+        });
+
         test('Should pass the parameters to filter by document type as expected', async () => {
           await researchOutputDataProvider.fetch({
             take: 13,
@@ -420,6 +443,57 @@ describe('Research Outputs Data Provider', () => {
       expect(result!.teams[0]?.displayName).toEqual('');
     });
 
+    test('Should parse team project from linked project membership', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.teamsCollection!.items[0]!.linkedFrom = {
+        projectMembershipCollection: {
+          items: [
+            {
+              linkedFrom: {
+                projectsCollection: {
+                  items: [
+                    {
+                      sys: { id: 'team-project-id' },
+                      title: 'Team Discovery Project',
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      const result = await researchOutputDataProvider.fetchById('1');
+
+      expect(result!.teams[0]).toEqual({
+        id: 'team-id-0',
+        displayName: 'Team A',
+        teamType: 'Discovery Team',
+        project: {
+          id: 'team-project-id',
+          title: 'Team Discovery Project',
+        },
+      });
+    });
+
+    test('Should omit team project when team has no linked project membership', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.teamsCollection!.items[0]!.linkedFrom = {
+        projectMembershipCollection: { items: [] },
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      const result = await researchOutputDataProvider.fetchById('1');
+
+      expect(result!.teams[0]?.project).toBeUndefined();
+    });
+
     test('Should default type to Grant Document and title to an empty string when missing', async () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
       researchOutputs.documentType = null;
@@ -500,6 +574,47 @@ describe('Research Outputs Data Provider', () => {
         { id: 'wg-1', title: 'Working Group 1' },
       ]);
     });
+
+    test('Should parse project reference', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.project = {
+        sys: { id: 'project-id-1' },
+        title: 'Discovery Project Alpha',
+        projectType: 'Discovery Project',
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      const result = await researchOutputDataProvider.fetchById('1');
+
+      expect(result!.project).toEqual({
+        id: 'project-id-1',
+        title: 'Discovery Project Alpha',
+        projectType: 'Discovery Project',
+      });
+    });
+
+    test('Should default project title to an empty string when missing', async () => {
+      const researchOutputs = getContentfulResearchOutputGraphqlResponse();
+      researchOutputs.project = {
+        sys: { id: 'project-id-1' },
+        title: null,
+        projectType: 'Resource Project',
+      };
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        researchOutputs,
+      });
+
+      const result = await researchOutputDataProvider.fetchById('1');
+
+      expect(result!.project).toEqual({
+        id: 'project-id-1',
+        title: '',
+        projectType: 'Resource Project',
+      });
+    });
+
     test('Should default sharingStatus to Network Only when missing', async () => {
       const researchOutputs = getContentfulResearchOutputGraphqlResponse();
       researchOutputs.sharingStatus = null;

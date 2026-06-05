@@ -6,4 +6,5 @@ export const projectDataProviderMock = {
   exportProjectMilestones: jest.fn(),
   createMilestone: jest.fn(),
   isProjectMilestonesSynced: jest.fn(),
+  fetchProjectResearchOutputs: jest.fn(),
 };

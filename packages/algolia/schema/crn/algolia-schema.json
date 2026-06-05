@@ -86,7 +86,8 @@
     "resourceType",
     "researchTheme",
     "teamStatus",
-    "teamType"
+    "teamType",
+    "project.id"
   ],
   "attributesToSnippet": null,
   "attributesToHighlight": null,

@@ -42,6 +42,7 @@ const researchOutputResponse: Omit<
       title: 'Example Working Group',
     },
   ],
+  project: undefined,
   relatedEvents: [
     {
       id: 'e12729e0-bfdd-471f-a554-7b58eae83a8d',

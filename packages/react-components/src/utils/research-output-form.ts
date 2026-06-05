@@ -250,6 +250,7 @@ export function transformResearchOutputResponseToRequest(
     contactEmails: _contactEmails,
     versions: _versions,
     statusChangedAt: _statusChangedAt,
+    project: _project,
 
     authors,
     descriptionMD,

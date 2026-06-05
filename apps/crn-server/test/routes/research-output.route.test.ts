@@ -111,7 +111,9 @@ describe('/research-outputs/ route', () => {
         take: 15,
         skip: 5,
         search: 'something',
-        filter: ['one', 'two'],
+        filter: {
+          documentType: ['one', 'two'],
+        },
       };
 
       expect(researchOutputControllerMock.fetch).toBeCalledWith(expectedParams);
@@ -189,6 +191,37 @@ describe('/research-outputs/ route', () => {
         );
       });
 
+      test('Should call the controller with projectId when listing drafts', async () => {
+        userMockFactory.mockReturnValueOnce({
+          ...createUserResponse(),
+          projects: [
+            {
+              id: 'project-id-0',
+              title: 'Test Project',
+              projectType: 'Resource Project',
+              status: 'Active',
+            },
+          ],
+        });
+
+        await supertest(app).get('/research-outputs').query({
+          take: 15,
+          skip: 5,
+          status: 'draft',
+          projectId: 'project-id-0',
+        });
+
+        expect(researchOutputControllerMock.fetch).toBeCalledWith({
+          take: 15,
+          skip: 5,
+          filter: {
+            status: 'draft',
+            projectId: 'project-id-0',
+          },
+          includeDrafts: true,
+        });
+      });
+
       test("Should return 403 if user is not associated to output's team", async () => {
         const response = await supertest(app).get('/research-outputs').query({
           take: 15,
@@ -206,6 +239,17 @@ describe('/research-outputs/ route', () => {
           skip: 5,
           status: 'draft',
           workingGroupId: 'workingGroup-id-403',
+        });
+
+        expect(response.status).toBe(403);
+      });
+
+      test('Should return 403 if user is not a member of the project', async () => {
+        const response = await supertest(app).get('/research-outputs').query({
+          take: 15,
+          skip: 5,
+          status: 'draft',
+          projectId: 'project-id-403',
         });
 
         expect(response.status).toBe(403);

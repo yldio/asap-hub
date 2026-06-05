@@ -34,7 +34,7 @@ export const researchOutputRouteFactory = (
     '/research-outputs',
     async (req, res: Response<ListResearchOutputResponse>) => {
       const { query, loggedInUser } = req;
-      const { teamId, status, workingGroupId, filter, ...options } =
+      const { teamId, status, workingGroupId, projectId, filter, ...options } =
         validateResearchOutputFetchOptions(query);
       const isRequestingDrafts = status === 'draft';
 
@@ -50,10 +50,21 @@ export const researchOutputRouteFactory = (
             'None'
           : false;
 
-        if (!hasTeamRole && !hasWorkingGroupRole) {
+        const hasProjectMembership = projectId
+          ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            loggedInUser!.projects.some((project) => project.id === projectId)
+          : false;
+
+        if (!hasTeamRole && !hasWorkingGroupRole && !hasProjectMembership) {
           throw Boom.forbidden();
         }
       }
+
+      const scopeFilter = {
+        ...(teamId && { teamId }),
+        ...(workingGroupId && { workingGroupId }),
+        ...(projectId && { projectId }),
+      };
 
       const result = await researchOutputController.fetch({
         ...options,
@@ -63,11 +74,15 @@ export const researchOutputRouteFactory = (
               filter: {
                 documentType: filter,
                 status,
-                workingGroupId,
-                teamId,
+                ...scopeFilter,
               },
             }
-          : { filter }),
+          : {
+              filter: {
+                ...(Array.isArray(filter) ? { documentType: filter } : filter),
+                ...scopeFilter,
+              },
+            }),
       });
 
       res.json(result);

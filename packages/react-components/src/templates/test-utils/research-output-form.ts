@@ -70,6 +70,7 @@ export const initialResearchOutputData = {
   teams: [],
   publishingEntity: 'Working Group' as const,
   workingGroups: undefined,
+  projects: [],
   relatedEvents: [],
   relatedResearch: [],
   sharingStatus: 'Public' as const,

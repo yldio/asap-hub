@@ -38,6 +38,8 @@ export const getUserResponse = (
     },
   ],
   onboarded: true,
+  alumniSinceDate: '2022-06-30T00:00:00.000Z',
+  alumniLocation: 'London',
   outputs: [
     {
       id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',

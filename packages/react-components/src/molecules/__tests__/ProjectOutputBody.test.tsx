@@ -135,6 +135,44 @@ it('renders project association row', () => {
   expect(getByText('My Project')).toBeVisible();
 });
 
+it('renders first team project as primary when output has no project', () => {
+  const { getByRole, getByText, queryByText } = render(
+    <ProjectOutputBody
+      {...baseProps}
+      teams={[
+        {
+          id: 't1',
+          displayName: 'Alpha',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'p1',
+            title: 'First Team Project',
+            projectType: 'Discovery Project',
+          },
+        },
+        {
+          id: 't2',
+          displayName: 'Beta',
+          teamType: 'Discovery Team',
+          project: {
+            id: 'p2',
+            title: 'Second Team Project',
+            projectType: 'Resource Project',
+          },
+        },
+      ]}
+    />,
+  );
+
+  expect(getByRole('link', { name: 'First Team Project' })).toHaveAttribute(
+    'href',
+    expect.stringContaining('p1'),
+  );
+  expect(queryByText('Second Team Project')).toBeNull();
+  expect(getByText('+1')).toBeVisible();
+  expect(getByText('Projects')).toBeVisible();
+});
+
 it('renders primary project with team-linked projects in the projects row', () => {
   const { getByRole, getByText, queryByText } = render(
     <ProjectOutputBody

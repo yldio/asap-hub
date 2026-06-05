@@ -360,18 +360,31 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
   showTags = true,
   project,
 }) => {
-  const primaryProject = project;
   const firstTeam = teams[0];
 
-  const otherProjects = teams
+  const primaryProject =
+    project ??
+    (firstTeam?.project
+      ? {
+          id: firstTeam.project.id,
+          title: firstTeam.project.title,
+          projectType: firstTeam.project.projectType,
+          href: utils.getProjectRoute({
+            projectId: firstTeam.project.id,
+            projectType: firstTeam.project.projectType,
+          }),
+        }
+      : undefined);
+
+  const otherProjects = (project ? teams : teams.slice(1))
     .filter((team) => !!team.project?.id)
     .map((team) => ({
-      id: team.project?.id as string,
-      displayName: team.project?.title as string,
+      id: team.project!.id,
+      displayName: team.project!.title,
       href: utils.getProjectRoute({
-        projectId: team.project?.id as string,
-        projectType: team.project?.projectType as ProjectType,
-      }) as string,
+        projectId: team.project!.id,
+        projectType: team.project!.projectType,
+      }),
     }));
 
   const externalLinkElement = link ? (

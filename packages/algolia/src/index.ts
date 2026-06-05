@@ -21,7 +21,7 @@ export type AlgoliaClient<App extends Apps> =
   | NoTokenAlgoliaClient<App>;
 
 type AlgoliaSearchClientNativeFactoryParams = {
-  algoliaApiKey: string | null;
+  algoliaApiKey: string | null | undefined;
   algoliaAppId: string;
 };
 
@@ -29,7 +29,7 @@ export const algoliaSearchClientNativeFactory = ({
   algoliaApiKey,
   algoliaAppId,
 }: AlgoliaSearchClientNativeFactoryParams): SearchClient => {
-  if (algoliaApiKey === null) {
+  if (!algoliaApiKey) {
     throw new Error('Algolia API key is not set');
   }
   return algoliasearch(algoliaAppId, algoliaApiKey);
@@ -49,7 +49,7 @@ export const algoliaSearchClientFactory = <App extends Apps>({
   userToken,
   clickAnalytics,
 }: AlgoliaSearchClientFactoryParams): AlgoliaClient<App> => {
-  if (algoliaApiKey === null) {
+  if (!algoliaApiKey) {
     return new NoTokenAlgoliaClient(
       algoliaIndex,
       `${algoliaIndex}-reverse-timestamp`,

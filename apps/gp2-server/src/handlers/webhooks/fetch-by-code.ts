@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-import { algoliaSearchClientNativeFactory } from '@asap-hub/algolia';
 import { ValidationError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { validateAuth0Request } from '@asap-hub/server-common';
@@ -8,16 +6,9 @@ import { SearchClient } from 'algoliasearch';
 import {
   algoliaApiKey,
   algoliaApiKeyTtl,
-  algoliaAppId,
   auth0SharedSecret,
 } from '../../config';
 import UserController from '../../controllers/user.controller';
-import { getContentfulGraphQLClientFactory } from '../../dependencies/clients.dependency';
-import {
-  getAssetDataProvider,
-  getUserDataProvider,
-} from '../../dependencies/user.dependency';
-import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
@@ -60,18 +51,6 @@ export const getValidUntilTimestampInSeconds = ({
   ttl,
 }: GetValidUntilTimestampInSecondsArgs): number =>
   Math.floor(date.getTime() / 1000) + Math.floor(ttl);
-
-const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
-const userDataProvider = getUserDataProvider(contentfulGraphQLClient);
-const assetDataProvider = getAssetDataProvider();
-
-/* istanbul ignore next */
-export const handler = sentryWrapper(
-  fetchUserByCodeHandlerFactory(
-    new UserController(userDataProvider, assetDataProvider),
-    algoliaSearchClientNativeFactory({ algoliaAppId, algoliaApiKey }),
-  ),
-);
 
 const validateParams = (
   params:

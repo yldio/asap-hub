@@ -265,18 +265,17 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
           </div>
 
           <div
-            css={[
-              rowStyles,
-              { gridArea: 'headline', overflowWrap: 'anywhere' },
-            ]}
+            css={[{ gridArea: 'headline', overflowWrap: 'anywhere' }]}
           >
-            <Headline3 noMargin>
-              {fullDisplayName}
-              {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
-            </Headline3>
-            {alumniSinceDate && (
-              <StateTag icon={alumniBadgeIcon} label="Alumni" />
-            )}
+            <div css={{ display: 'flex', alignItems: 'center', gap: rem(8), flexWrap: 'wrap' }}>
+              <Headline3 noMargin>
+                {fullDisplayName}
+                {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
+              </Headline3>
+              {alumniSinceDate && (
+                <StateTag icon={alumniBadgeIcon} label="Alumni" />
+              )}
+            </div>
           </div>
           <div css={[rowContainerStyles, { gridArea: 'details' }]}>
             <div css={rowStyles}>

@@ -8,28 +8,36 @@ const Field = () => {
   const sdk = useSDK<FieldExtensionSDK>();
 
   const { observedField } = sdk.parameters.instance;
+  const observedFields: string[] = String(observedField)
+    .split(',')
+    .map((name) => name.trim())
+    .filter(Boolean);
+
   const [field, setField] = useState(sdk.field.getValue());
 
-  const initialValue = documentToHtmlString(
-    sdk.entry.fields[observedField].getValue(),
-  );
+  const readObserved = () =>
+    observedFields.map((name) =>
+      documentToHtmlString(sdk.entry.fields[name].getValue()),
+    );
+
+  const initialValues = readObserved();
   const initialPublishedVersion = sdk.entry.getSys().publishedCounter;
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  let unsubscribe = () => {};
-  unsubscribe = sdk.entry.onSysChanged(async (sys: EntrySys) => {
+  const unsubscribe = sdk.entry.onSysChanged(async (sys: EntrySys) => {
     const currentPublishedVersion = sys.publishedCounter;
-    const currentValue = documentToHtmlString(
-      sdk.entry.fields[observedField].getValue(),
+    const currentValues = readObserved();
+    const anyChanged = currentValues.some(
+      (value, index) => value !== initialValues[index],
     );
+    const anyPresent = currentValues.some(Boolean);
 
     if (
       currentPublishedVersion &&
       initialPublishedVersion &&
       currentPublishedVersion > initialPublishedVersion &&
-      currentValue !== initialValue
+      anyChanged
     ) {
-      setField(currentValue ? sys.publishedAt : undefined);
+      setField(anyPresent ? sys.publishedAt : undefined);
       await sdk.field.setValue(sys.publishedAt);
       await sdk.entry.publish();
       unsubscribe();

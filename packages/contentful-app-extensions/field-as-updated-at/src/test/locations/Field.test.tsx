@@ -9,6 +9,26 @@ jest.mock('@contentful/react-apps-toolkit', () => ({
   useSDK: jest.fn(),
 }));
 
+const makeSdk = (
+  observedField: string,
+  fields: Record<string, { getValue: jest.Mock }>,
+) => ({
+  field: {
+    getValue: jest.fn(() => '2023-04-13T16:05:00.000Z'),
+    setValue: jest.fn(),
+  },
+  parameters: { instance: { observedField } },
+  entry: {
+    publish: jest.fn(),
+    getSys: jest.fn(() => ({ publishedCounter: 1 })),
+    onSysChanged: jest.fn((cb) => {
+      cb({ publishedCounter: 2, publishedAt: '2026-06-03T10:00:00.000Z' });
+      return jest.fn();
+    }),
+    fields,
+  },
+});
+
 describe('Field component', () => {
   it('renders the field initial value', () => {
     (useSDK as jest.Mock).mockImplementation(() => ({
@@ -139,5 +159,74 @@ describe('Field component', () => {
     waitFor(() => {
       expect(mockTestSdk.entry.publish).toHaveBeenCalled();
     });
+  });
+
+  const makeDoc = (value: string) => ({
+    content: [
+      {
+        content: [{ data: {}, marks: [], value, nodeType: 'text' }],
+        data: {},
+        nodeType: 'paragraph',
+      },
+    ],
+    data: {},
+    nodeType: 'document',
+  });
+
+  it('updates when any of the comma-separated observed fields change', () => {
+    const sdk = makeSdk('alumniSinceDate, alumniLocation', {
+      alumniSinceDate: {
+        getValue: jest
+          .fn()
+          .mockReturnValueOnce(makeDoc('2024-01-01'))
+          .mockReturnValueOnce(makeDoc('2024-01-01')),
+      },
+      alumniLocation: {
+        getValue: jest
+          .fn()
+          .mockReturnValueOnce(makeDoc('Old City'))
+          .mockReturnValueOnce(makeDoc('New City')),
+      },
+    });
+    (useSDK as jest.Mock).mockReturnValue(sdk);
+
+    render(<Field />);
+
+    expect(sdk.field.setValue).toHaveBeenCalledWith(
+      '2026-06-03T10:00:00.000Z',
+    );
+  });
+
+  it('clears the timestamp when the observed field is emptied', () => {
+    const sdk = makeSdk('alumniLocation', {
+      alumniLocation: {
+        getValue: jest
+          .fn()
+          .mockReturnValueOnce(makeDoc('something'))
+          .mockReturnValueOnce(undefined),
+      },
+    });
+    (useSDK as jest.Mock).mockReturnValue(sdk);
+
+    render(<Field />);
+
+    expect(sdk.field.setValue).toHaveBeenCalledWith('2026-06-03T10:00:00.000Z');
+    expect(
+      screen.queryByText('2026-06-03T10:00:00.000Z'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not update when none of the observed fields change', () => {
+    const sameDoc = makeDoc('unchanged');
+    const sdk = makeSdk('alumniSinceDate,alumniLocation', {
+      alumniSinceDate: { getValue: jest.fn(() => sameDoc) },
+      alumniLocation: { getValue: jest.fn(() => sameDoc) },
+    });
+    (useSDK as jest.Mock).mockReturnValue(sdk);
+
+    render(<Field />);
+
+    expect(sdk.field.setValue).not.toHaveBeenCalled();
+    expect(sdk.entry.publish).not.toHaveBeenCalled();
   });
 });

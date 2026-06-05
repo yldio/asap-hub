@@ -93,7 +93,7 @@ const UserCard: React.FC<UserCardProps> = ({
   const userHref = gp2Routing.users({}).user({ userId: id }).$;
 
   return (
-    <Card>
+    <Card accent={alumniSinceDate ? 'neutral200' : undefined}>
       <div css={containerStyles}>
         <Anchor href={userHref}>
           <Avatar

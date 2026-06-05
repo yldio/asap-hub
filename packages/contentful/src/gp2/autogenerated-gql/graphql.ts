@@ -15305,6 +15305,13 @@ export const EventsContentDataFragmentDoc = {
                                   },
                                   {
                                     kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'alumniSinceDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
                                     name: { kind: 'Name', value: 'avatar' },
                                     selectionSet: {
                                       kind: 'SelectionSet',

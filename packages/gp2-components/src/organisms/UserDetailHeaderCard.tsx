@@ -8,8 +8,8 @@ import {
   Link,
   pixels,
   StateTag,
+  Toast,
   uploadIcon,
-  WarningIcon,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { addIcon, editIcon, locationIcon, roleIcon } from '../icons';
@@ -97,20 +97,6 @@ const addIconStyles = css({
   'svg > path': { fill: 'white' },
 });
 
-const alumnibannerStyles = css({
-  display: 'flex',
-  gap: rem(12),
-  padding: rem(16),
-  marginBottom: rem(16),
-  backgroundColor: colors.warning100.rgb,
-  borderRadius: rem(8),
-  color: colors.warning900.rgb,
-});
-
-const alumniBannerIconStyles = css({
-  flexShrink: 0,
-  marginTop: rem(2),
-});
 
 const validateCompleted = ({
   firstName,
@@ -179,11 +165,8 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   return (
     <>
       {alumniSinceDate && (
-        <div css={alumnibannerStyles}>
-          <span css={alumniBannerIconStyles}>
-            <WarningIcon />
-          </span>
-          <p css={{ margin: 0 }}>
+        <div css={{ marginBottom: rem(16) }}>
+          <Toast accent="warning" rounded>
             This alumni might not have all content updated or available. This
             user became alumni on the{' '}
             <strong>{formatDate(new Date(alumniSinceDate))}</strong>, their
@@ -196,7 +179,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
               </>
             )}
             .
-          </p>
+          </Toast>
         </div>
       )}
       <CardWithBackground image={usersHeaderImage}>

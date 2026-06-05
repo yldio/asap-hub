@@ -124,7 +124,7 @@ export const useEvents = (options: EventListOptions) => {
       pendingPromise = getEvents(client, options)
         .then(
           (data): gp2.ListEventResponse => ({
-            total: data.nbHits,
+            total: data.nbHits ?? 0,
             items: data.hits,
             algoliaQueryId: data.queryID,
             algoliaIndexName: data.index,

@@ -101,7 +101,7 @@ export const useUsers = (options: UserListOptions) => {
       pendingPromise = getAlgoliaUsers(client, options)
         .then(
           (data): gp2.ListUserResponse => ({
-            total: data.nbHits,
+            total: data.nbHits ?? 0,
             items: data.hits,
             algoliaIndexName: data.index,
             algoliaQueryId: data.queryID,

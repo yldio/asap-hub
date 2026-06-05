@@ -96,7 +96,7 @@ export const getProjects = async (
 export const toListProjectResponse = (
   response: Awaited<ReturnType<typeof getProjects>>,
 ): ListProjectResponse => ({
-  total: response.nbHits,
+  total: response.nbHits ?? 0,
   items: response.hits,
   algoliaQueryId: response.queryID,
   algoliaIndexName: response.index,

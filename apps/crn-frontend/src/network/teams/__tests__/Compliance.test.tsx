@@ -439,7 +439,7 @@ it('fetches assigned users suggestions and displays them properly', async () => 
   ]);
   mockGetOpenScienceMembers.mockResolvedValue({
     items: algoliaUsersResponse.hits,
-    total: algoliaUsersResponse.nbHits,
+    total: algoliaUsersResponse.nbHits ?? 0,
   });
 
   await renderCompliancePage();

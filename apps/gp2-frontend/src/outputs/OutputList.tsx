@@ -39,7 +39,7 @@ const OutputList: React.FC<OutputListProps> = ({
           ...paginationParams,
           filters,
           searchQuery,
-        }).then((data) => ({ items: data.hits, total: data.nbHits })),
+        }).then((data) => ({ items: data.hits, total: data.nbHits ?? 0 })),
       outputToCSV,
     );
 

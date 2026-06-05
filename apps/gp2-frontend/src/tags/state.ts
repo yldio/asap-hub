@@ -81,7 +81,7 @@ export const useTagSearchResults = (options: TagSearchOptions) => {
     throw getTagSearchResults(client, options)
       .then(
         (data): gp2.ListEntityResponse => ({
-          total: data.nbHits,
+          total: data.nbHits ?? 0,
           items: data.hits,
           algoliaQueryId: data.queryID,
           algoliaIndexName: data.index,

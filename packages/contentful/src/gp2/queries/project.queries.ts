@@ -47,6 +47,7 @@ export const projectsContentQueryFragment = gql`
           nickname
           lastName
           onboarded
+          alumniSinceDate
           avatar {
             url
           }

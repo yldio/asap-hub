@@ -33,6 +33,7 @@ export const workingGroupsContentQueryFragment = gql`
           nickname
           lastName
           onboarded
+          alumniSinceDate
           avatar {
             url
           }

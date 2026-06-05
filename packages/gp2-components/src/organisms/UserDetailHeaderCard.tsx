@@ -165,7 +165,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   return (
     <>
       {alumniSinceDate && (
-        <div css={{ marginBottom: rem(16) }}>
+        <div css={{ marginBottom: rem(32) }}>
           <Toast accent="warning" rounded>
             This alumni might not have all content updated or available. This
             user became alumni on the{' '}

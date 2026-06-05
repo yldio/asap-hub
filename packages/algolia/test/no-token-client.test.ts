@@ -1,5 +1,4 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { SearchIndex } from 'algoliasearch';
 import { RESEARCH_OUTPUT_ENTITY_TYPE } from '../src';
 import {
   NoTokenAlgoliaClient,
@@ -9,15 +8,12 @@ import {
 } from '../src/no-token-client';
 
 describe('NoTokenAlgoliaClient', () => {
-  let mockSearchIndex: jest.Mocked<SearchIndex>;
   beforeEach(() => {
-    mockSearchIndex = {} as any;
-
     jest.clearAllMocks();
   });
 
   const createClient = () =>
-    new NoTokenAlgoliaClient<CRN>(mockSearchIndex, mockSearchIndex);
+    new NoTokenAlgoliaClient<CRN>('index', 'reverseIndex');
 
   test('should throw error on save', async () => {
     const client = createClient();

@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import algoliasearch from 'algoliasearch';
+import { algoliasearch } from 'algoliasearch';
 import fs from 'fs/promises';
 import { resolve } from 'path';
 import prettier from 'prettier';
@@ -22,8 +22,9 @@ export const getAlgoliaSettings = async ({
     `../../../../../packages/algolia/schema/${appName}`,
   );
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
-  const index = client.initIndex(indexName);
-  const { replicas: _, ...indexSettings } = await index.getSettings();
+  const { replicas: _, ...indexSettings } = await client.getSettings({
+    indexName,
+  });
   const formattedIndexSettings = await prettier.format(
     JSON.stringify(indexSettings),
     { parser: 'json' },
@@ -31,16 +32,15 @@ export const getAlgoliaSettings = async ({
   await fs.writeFile(`${path}/algolia-schema.json`, formattedIndexSettings);
 
   const replicaIndexName = `${indexName}-reverse-timestamp`;
-  const replicaIndex = client.initIndex(replicaIndexName);
 
-  const { customRanking, attributesForFaceting, attributesToIndex } =
-    await replicaIndex.getSettings();
+  const { customRanking, attributesForFaceting, searchableAttributes } =
+    await client.getSettings({ indexName: replicaIndexName });
 
   const formattedReplicaSettings = await prettier.format(
     JSON.stringify({
       customRanking,
       attributesForFaceting,
-      attributesToIndex,
+      searchableAttributes,
     }),
     {
       parser: 'json',

@@ -22,7 +22,7 @@ const successfulApiGatewayEvent = getApiGatewayEvent({
 describe('Fetch-user-by-code handler', () => {
   const algoliaClientMock = {
     generateSecuredApiKey: jest.fn(),
-  } as unknown as jest.Mocked<SearchClient>;
+  } as unknown as jest.Mocked<Pick<SearchClient, 'generateSecuredApiKey'>>;
   const handler = fetchUserByCodeHandlerFactory(
     userControllerMock,
     algoliaClientMock,
@@ -43,12 +43,12 @@ describe('Fetch-user-by-code handler', () => {
 
     await customHandler(successfulApiGatewayEvent);
 
-    expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-      algoliaApiKey,
-      {
+    expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith({
+      parentApiKey: algoliaApiKey,
+      restrictions: {
         validUntil: expect.any(Number),
       },
-    );
+    });
   });
   describe('Validation', () => {
     test("return 400 when code isn't present", async () => {
@@ -169,12 +169,12 @@ describe('Fetch-user-by-code handler', () => {
       expect(JSON.parse(result.body)).toMatchObject({
         algoliaApiKey: mockApiKey,
       });
-      expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-        algoliaApiKey,
-        {
+      expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith({
+        parentApiKey: algoliaApiKey,
+        restrictions: {
           validUntil: expect.any(Number),
         },
-      );
+      });
     });
 
     describe('Algolia token expiration', () => {
@@ -216,12 +216,12 @@ describe('Fetch-user-by-code handler', () => {
           tenHoursOneMinuteLater.getTime() / 1000,
         );
 
-        expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-          algoliaApiKey,
-          {
+        expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith({
+          parentApiKey: algoliaApiKey,
+          restrictions: {
             validUntil: expectedValidUntil,
           },
-        );
+        });
       });
     });
 

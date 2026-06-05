@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import algoliasearch from 'algoliasearch';
+import { algoliasearch } from 'algoliasearch';
 
 export type RemoveAlgoliaRecords = {
   algoliaAppId: string;
@@ -15,9 +15,9 @@ export const removeAlgoliaRecords = async ({
   entityType,
 }: RemoveAlgoliaRecords): Promise<void> => {
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
-  const index = client.initIndex(indexName);
 
-  await index.deleteBy({
-    filters: `__meta.type:"${entityType}"`,
+  await client.deleteBy({
+    indexName,
+    deleteByParams: { filters: `__meta.type:"${entityType}"` },
   });
 };

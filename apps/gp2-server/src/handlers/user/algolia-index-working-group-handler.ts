@@ -43,7 +43,7 @@ export const indexUserWorkingGroupHandler = (
       });
       return {
         userIds: users.hits.map(({ id }) => id),
-        nbPages: users.nbPages,
+        nbPages: users.nbPages ?? 0,
       };
     };
     const { userIds: previousUserIds, nbPages } = await searchUsers();

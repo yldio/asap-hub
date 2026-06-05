@@ -1,6 +1,5 @@
 /* istanbul ignore file */
-import { Settings } from '@algolia/client-search';
-import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch';
+import { algoliasearch, SearchClient } from 'algoliasearch';
 import fs from 'fs/promises';
 import { resolve } from 'path';
 
@@ -19,8 +18,7 @@ export const getIndexSchema = async ({
 }: SetAlgoliaSettings): Promise<{
   path: string;
   client: SearchClient;
-  index: SearchIndex;
-  indexSchema: Settings;
+  indexSchema: Record<string, unknown>;
 }> => {
   const path = resolve(
     __dirname,
@@ -28,7 +26,6 @@ export const getIndexSchema = async ({
   );
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
 
-  const index = client.initIndex(indexName);
   const indexSchemaRaw = await fs.readFile(
     `${path}/algolia-schema.json`,
     'utf8',
@@ -38,7 +35,6 @@ export const getIndexSchema = async ({
   return {
     path,
     client,
-    index,
     indexSchema,
   };
 };
@@ -49,7 +45,7 @@ export const setAlgoliaSettings = async ({
   indexName,
   appName,
 }: SetAlgoliaSettings): Promise<void> => {
-  const { path, client, index, indexSchema } = await getIndexSchema({
+  const { path, client, indexSchema } = await getIndexSchema({
     algoliaAppId,
     algoliaCiApiKey,
     indexName,
@@ -57,19 +53,26 @@ export const setAlgoliaSettings = async ({
   });
 
   const replicaIndexName = `${indexName}-reverse-timestamp`;
-  await index
-    .setSettings({
+  const mainTask = await client.setSettings({
+    indexName,
+    indexSettings: {
       ...indexSchema,
       replicas: [replicaIndexName],
-    })
-    .wait();
+    },
+  });
+  await client.waitForTask({ indexName, taskID: mainTask.taskID });
 
-  const replicaIndex = client.initIndex(replicaIndexName);
   const replicaIndexSchemaRaw = await fs.readFile(
     `${path}/algolia-reverse-timestamp-schema.json`,
     'utf8',
   );
-
   const replicaIndexSchema = JSON.parse(replicaIndexSchemaRaw);
-  await replicaIndex.setSettings(replicaIndexSchema);
+  const replicaTask = await client.setSettings({
+    indexName: replicaIndexName,
+    indexSettings: replicaIndexSchema,
+  });
+  await client.waitForTask({
+    indexName: replicaIndexName,
+    taskID: replicaTask.taskID,
+  });
 };

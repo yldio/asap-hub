@@ -11,6 +11,11 @@ import { getApiGatewayEvent } from '../../../helpers/events';
 import { userControllerMock } from '../../../mocks/user.controller.mock';
 
 jest.mock('../../../../src/utils/logger');
+
+const algoliaClientMock = {
+  generateSecuredApiKey: jest.fn(),
+} as unknown as jest.Mocked<Pick<SearchClient, 'generateSecuredApiKey'>>;
+
 const successfulApiGatewayEvent = getApiGatewayEvent({
   pathParameters: {
     code: 'welcomeCode',
@@ -21,9 +26,6 @@ const successfulApiGatewayEvent = getApiGatewayEvent({
 });
 
 describe('Fetch-user-by-code handler', () => {
-  const algoliaClientMock = {
-    generateSecuredApiKey: jest.fn(),
-  } as unknown as jest.Mocked<SearchClient>;
   const handler = fetchUserByCodeHandlerFactory(
     userControllerMock,
     algoliaClientMock,
@@ -46,12 +48,12 @@ describe('Fetch-user-by-code handler', () => {
 
     await customHandler(successfulApiGatewayEvent);
 
-    expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-      algoliaApiKey,
-      {
+    expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith({
+      parentApiKey: algoliaApiKey,
+      restrictions: {
         validUntil: expect.any(Number),
       },
-    );
+    });
   });
 
   describe('Validation', () => {
@@ -191,17 +193,16 @@ describe('Fetch-user-by-code handler', () => {
       expect(JSON.parse(result.body)).toMatchObject({
         algoliaApiKey: mockApiKey,
       });
-      expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-        algoliaApiKey,
-        {
+      expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith({
+        parentApiKey: algoliaApiKey,
+        restrictions: {
           validUntil: expect.any(Number),
         },
-      );
+      });
     });
 
     describe('Algolia token expiration', () => {
       beforeAll(() => {
-        // this is to prevent from real time elapse
         jest.useFakeTimers();
       });
       afterAll(() => {
@@ -233,17 +234,16 @@ describe('Fetch-user-by-code handler', () => {
           }),
         );
 
-        // get the unix timestamp in seconds and round it
         const expectedValidUntil = Math.floor(
           tenHoursOneMinuteLater.getTime() / 1000,
         );
 
-        expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
-          algoliaApiKey,
-          {
+        expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith({
+          parentApiKey: algoliaApiKey,
+          restrictions: {
             validUntil: expectedValidUntil,
           },
-        );
+        });
       });
     });
 

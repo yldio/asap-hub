@@ -21,7 +21,7 @@ import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
-  algoliaClient: SearchClient,
+  algoliaClient: Pick<SearchClient, 'generateSecuredApiKey'>,
   date = new Date(),
   ttl = algoliaApiKeyTtl,
 ): lambda.Handler =>
@@ -32,11 +32,14 @@ export const fetchUserByCodeHandlerFactory = (
 
     const user = await userController.fetchByCode(code);
     const apiKey = user.onboarded
-      ? algoliaClient.generateSecuredApiKey(algoliaApiKey, {
-          validUntil: getValidUntilTimestampInSeconds({
-            date,
-            ttl,
-          }),
+      ? algoliaClient.generateSecuredApiKey({
+          parentApiKey: algoliaApiKey,
+          restrictions: {
+            validUntil: getValidUntilTimestampInSeconds({
+              date,
+              ttl,
+            }),
+          },
         })
       : null;
 

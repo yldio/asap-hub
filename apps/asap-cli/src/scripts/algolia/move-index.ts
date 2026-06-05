@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import algoliasearch from 'algoliasearch';
+import { algoliasearch } from 'algoliasearch';
 
 export type MoveAlgoliaIndex = {
   algoliaAppId: string;
@@ -16,5 +16,8 @@ export const moveAlgoliaIndex = async ({
 }: MoveAlgoliaIndex): Promise<void> => {
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
 
-  await client.moveIndex(indexNameFrom, indexNameTo);
+  await client.operationIndex({
+    indexName: indexNameFrom,
+    operationIndexParams: { operation: 'move', destination: indexNameTo },
+  });
 };

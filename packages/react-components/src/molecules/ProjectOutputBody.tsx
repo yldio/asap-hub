@@ -379,11 +379,11 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
   const otherProjects = (project ? teams : teams.slice(1))
     .filter((team) => !!team.project?.id)
     .map((team) => ({
-      id: team.project!.id,
-      displayName: team.project!.title,
+      id: team.project?.id as string,
+      displayName: team.project?.title as string,
       href: utils.getProjectRoute({
-        projectId: team.project!.id,
-        projectType: team.project!.projectType,
+        projectId: team.project?.id as string,
+        projectType: team.project?.projectType as ProjectType,
       }),
     }));
 

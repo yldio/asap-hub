@@ -29,4 +29,35 @@ describe('EventSpeakers', () => {
     expect(screen.getByText('John')).toBeVisible();
     expect(screen.getByText('To be announced')).toBeVisible();
   });
+
+  it('does not show Alumni badge when speaker is not alumni', () => {
+    renderEventSpeakers([
+      {
+        speaker: {
+          id: 'user-id-0',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          avatarUrl: undefined,
+        },
+      },
+    ]);
+    expect(screen.queryByText('Alumni')).not.toBeInTheDocument();
+  });
+
+  it('shows Alumni badge when speaker has alumniSinceDate', () => {
+    renderEventSpeakers([
+      {
+        speaker: {
+          id: 'user-id-0',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          avatarUrl: undefined,
+          alumniSinceDate: '2022-06-30T00:00:00.000Z',
+        },
+      },
+    ]);
+    expect(screen.getByText('Alumni')).toBeInTheDocument();
+  });
 });

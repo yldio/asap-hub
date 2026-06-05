@@ -55,4 +55,14 @@ describe('UserCard', () => {
       screen.getAllByRole('listitem').map(({ textContent }) => textContent),
     ).toMatchObject(['Genetics', 'Neurology', 'Operations', '']);
   });
+  it('does not show Alumni badge when alumniSinceDate is not set', () => {
+    render(<UserCard {...defaultProps} />);
+    expect(screen.queryByText('Alumni')).not.toBeInTheDocument();
+  });
+  it('shows Alumni badge when alumniSinceDate is set', () => {
+    render(
+      <UserCard {...defaultProps} alumniSinceDate="2022-06-30T00:00:00.000Z" />,
+    );
+    expect(screen.getByText('Alumni')).toBeInTheDocument();
+  });
 });

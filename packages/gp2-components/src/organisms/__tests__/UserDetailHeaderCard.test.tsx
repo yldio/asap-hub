@@ -145,12 +145,8 @@ describe('UserDetailHeaderCard', () => {
           alumniLocation="University College London"
         />,
       );
-      expect(
-        screen.getByText(/their next role was at/),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText('University College London'),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/their next role was at/)).toBeInTheDocument();
+      expect(screen.getByText('University College London')).toBeInTheDocument();
     });
     it('omits next role sentence when alumniLocation is not set', () => {
       render(

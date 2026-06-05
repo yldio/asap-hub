@@ -1,4 +1,5 @@
-module.exports.description = 'Add alumniSinceDate and alumniLocation fields to GP2 users';
+module.exports.description =
+  'Add alumniSinceDate and alumniLocation fields to GP2 users';
 
 module.exports.up = (migration) => {
   const users = migration.editContentType('users');

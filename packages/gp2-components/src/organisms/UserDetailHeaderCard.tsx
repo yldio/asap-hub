@@ -2,12 +2,14 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import {
   alumniBadgeIcon,
   Avatar,
+  formatDate,
   formatUserLocation,
   Headline3,
   Link,
   pixels,
   StateTag,
   uploadIcon,
+  WarningIcon,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
 import { addIcon, editIcon, locationIcon, roleIcon } from '../icons';
@@ -37,6 +39,8 @@ type UserDetailHeaderCardProps = Pick<
   | 'positions'
   | 'social'
   | 'alumniSinceDate'
+  | 'alumniLocation'
+  | 'lastModifiedDate'
 > & {
   editHref?: string;
   readonly onImageSelect?: (file: File) => void;
@@ -93,6 +97,21 @@ const addIconStyles = css({
   'svg > path': { fill: 'white' },
 });
 
+const alumnibannerStyles = css({
+  display: 'flex',
+  gap: rem(12),
+  padding: rem(16),
+  marginBottom: rem(16),
+  backgroundColor: colors.warning100.rgb,
+  borderRadius: rem(8),
+  color: colors.warning900.rgb,
+});
+
+const alumniBannerIconStyles = css({
+  flexShrink: 0,
+  marginTop: rem(2),
+});
+
 const validateCompleted = ({
   firstName,
   lastName,
@@ -139,6 +158,8 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   positions,
   social,
   alumniSinceDate,
+  alumniLocation,
+  lastModifiedDate,
   editHref,
   onImageSelect,
   avatarSaving = false,
@@ -156,130 +177,158 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   });
 
   return (
-    <CardWithBackground image={usersHeaderImage}>
-      <div css={containerStyles}>
-        <div
-          css={css({
-            gridArea: 'avatar',
-            display: 'grid',
-            width: rem(avatarSize),
-            height: rem(avatarSize),
-          })}
-        >
-          <div css={css({ gridRow: 1, gridColumn: 1 })}>
-            <Avatar
-              imageUrl={avatarUrl}
-              firstName={firstName}
-              lastName={lastName}
-              overrideStyles={avatarStyles}
-            />
-          </div>
+    <>
+      {alumniSinceDate && (
+        <div css={alumnibannerStyles}>
+          <span css={alumniBannerIconStyles}>
+            <WarningIcon />
+          </span>
+          <p css={{ margin: 0 }}>
+            This alumni might not have all content updated or available. This
+            user became alumni on the{' '}
+            <strong>{formatDate(new Date(alumniSinceDate))}</strong>, their
+            contact details were last updated on the{' '}
+            <strong>{formatDate(new Date(lastModifiedDate))}</strong>
+            {alumniLocation && (
+              <>
+                {' '}
+                and their next role was at <strong>{alumniLocation}</strong>
+              </>
+            )}
+            .
+          </p>
+        </div>
+      )}
+      <CardWithBackground image={usersHeaderImage}>
+        <div css={containerStyles}>
           <div
             css={css({
-              gridRow: 1,
-              gridColumn: 1,
-              alignSelf: 'flex-end',
-              justifySelf: 'flex-end',
+              gridArea: 'avatar',
+              display: 'grid',
+              width: rem(avatarSize),
+              height: rem(avatarSize),
             })}
           >
-            {onImageSelect && (
-              <label>
-                <Link
-                  small
-                  buttonStyle
-                  noMargin
-                  href={undefined}
-                  label="Edit Avatar"
-                  enabled={!avatarSaving}
-                >
-                  <span
-                    css={css({
-                      display: 'flex',
-                      margin: `${rem(3)} 0`,
-                      svg: {
-                        stroke: colors.neutral900.rgb,
-                      },
-                    })}
+            <div css={css({ gridRow: 1, gridColumn: 1 })}>
+              <Avatar
+                imageUrl={avatarUrl}
+                firstName={firstName}
+                lastName={lastName}
+                overrideStyles={avatarStyles}
+              />
+            </div>
+            <div
+              css={css({
+                gridRow: 1,
+                gridColumn: 1,
+                alignSelf: 'flex-end',
+                justifySelf: 'flex-end',
+              })}
+            >
+              {onImageSelect && (
+                <label>
+                  <Link
+                    small
+                    buttonStyle
+                    noMargin
+                    href={undefined}
+                    label="Edit Avatar"
+                    enabled={!avatarSaving}
                   >
-                    {uploadIcon}
-                  </span>
-                  <input
-                    disabled={avatarSaving}
-                    type="file"
-                    accept="image/x-png,image/jpeg"
-                    aria-label="Upload Avatar"
-                    onChange={(event) =>
-                      event.target.files?.length &&
-                      event.target.files[0] &&
-                      onImageSelect(event.target.files[0])
-                    }
-                    css={{ display: 'none' }}
-                  />
-                </Link>
-              </label>
+                    <span
+                      css={css({
+                        display: 'flex',
+                        margin: `${rem(3)} 0`,
+                        svg: {
+                          stroke: colors.neutral900.rgb,
+                        },
+                      })}
+                    >
+                      {uploadIcon}
+                    </span>
+                    <input
+                      disabled={avatarSaving}
+                      type="file"
+                      accept="image/x-png,image/jpeg"
+                      aria-label="Upload Avatar"
+                      onChange={(event) =>
+                        event.target.files?.length &&
+                        event.target.files[0] &&
+                        onImageSelect(event.target.files[0])
+                      }
+                      css={{ display: 'none' }}
+                    />
+                  </Link>
+                </label>
+              )}
+            </div>
+          </div>
+
+          <div
+            css={[
+              rowStyles,
+              { gridArea: 'headline', overflowWrap: 'anywhere' },
+            ]}
+          >
+            <Headline3 noMargin>
+              {fullDisplayName}
+              {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
+            </Headline3>
+            {alumniSinceDate && (
+              <StateTag icon={alumniBadgeIcon} label="Alumni" />
             )}
           </div>
-        </div>
-
-        <div
-          css={[rowStyles, { gridArea: 'headline', overflowWrap: 'anywhere' }]}
-        >
-          <Headline3 noMargin>
-            {fullDisplayName}
-            {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
-          </Headline3>
-          {alumniSinceDate && (
-            <StateTag icon={alumniBadgeIcon} label="Alumni" />
-          )}
-        </div>
-        <div css={[rowContainerStyles, { gridArea: 'details' }]}>
-          <div css={rowStyles}>
-            <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
-            <UserRegion region={region} />
+          <div css={[rowContainerStyles, { gridArea: 'details' }]}>
+            <div css={rowStyles}>
+              <IconWithLabel icon={roleIcon}>{role}</IconWithLabel>
+              <UserRegion region={region} />
+            </div>
+            <div css={rowContainerStyles}>
+              <IconWithLabel icon={locationIcon}>
+                <span>
+                  {formatUserLocation(city, stateOrProvince, country)}
+                </span>
+              </IconWithLabel>
+            </div>
+            {positions.map(
+              ({ role: positionRole, department, institution }, idx) => (
+                <div css={rowContainerStyles} key={`position-${idx}`}>
+                  {positionRole} in {department} at {institution}
+                </div>
+              ),
+            )}
+            <SocialIcons {...social} />
           </div>
-          <div css={rowContainerStyles}>
-            <IconWithLabel icon={locationIcon}>
-              <span>{formatUserLocation(city, stateOrProvince, country)}</span>
-            </IconWithLabel>
-          </div>
-          {positions.map(
-            ({ role: positionRole, department, institution }, idx) => (
-              <div css={rowContainerStyles} key={`position-${idx}`}>
-                {positionRole} in {department} at {institution}
-              </div>
-            ),
-          )}
-          <SocialIcons {...social} />
-        </div>
-        {editHref && (
-          <div css={[{ gridArea: 'edit' }, editButtonStyles]}>
-            <Link
-              href={editHref}
-              buttonStyle
-              {...(completed ? {} : { primary: true })}
-              noMargin
-              small
-              fullWidth
-            >
-              <span
-                css={{
-                  display: 'inline-flex',
-                  gap: rem(8),
-                  marginLeft: rem(6),
-                }}
+          {editHref && (
+            <div css={[{ gridArea: 'edit' }, editButtonStyles]}>
+              <Link
+                href={editHref}
+                buttonStyle
+                {...(completed ? {} : { primary: true })}
+                noMargin
+                small
+                fullWidth
               >
-                {completed ? 'Edit' : 'Add'}
-                {completed ? (
-                  editIcon
-                ) : (
-                  <span css={addIconStyles}>{addIcon}</span>
-                )}
-              </span>
-            </Link>
-          </div>
-        )}
-      </div>
-    </CardWithBackground>
+                <span
+                  css={{
+                    display: 'inline-flex',
+                    gap: rem(8),
+                    marginLeft: rem(6),
+                  }}
+                >
+                  {completed ? 'Edit' : 'Add'}
+                  {completed ? (
+                    editIcon
+                  ) : (
+                    <span css={addIconStyles}>{addIcon}</span>
+                  )}
+                </span>
+              </Link>
+            </div>
+          )}
+        </div>
+      </CardWithBackground>
+    </>
   );
 };
 export default UserDetailHeaderCard;

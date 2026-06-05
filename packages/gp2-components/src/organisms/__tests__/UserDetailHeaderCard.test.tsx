@@ -20,6 +20,7 @@ describe('UserDetailHeaderCard', () => {
     country: 'USA',
     stateOrProvince: 'Massachusetts',
     city: 'Springfield',
+    lastModifiedDate: '2023-01-08T00:00:00.000Z',
   };
   it('renders only the name', () => {
     render(<UserDetailHeaderCard {...defaultProps} degrees={[]} />);

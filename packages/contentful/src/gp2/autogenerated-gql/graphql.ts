@@ -16368,6 +16368,7 @@ export type UsersContentDataFragment = Pick<
   | 'role'
   | 'onboarded'
   | 'alumniSinceDate'
+  | 'alumniLocation'
   | 'positions'
 > & {
   sys: Pick<
@@ -16516,6 +16517,7 @@ export type FetchUserByIdQuery = {
       | 'role'
       | 'onboarded'
       | 'alumniSinceDate'
+      | 'alumniLocation'
       | 'positions'
     > & {
       sys: Pick<
@@ -16672,6 +16674,7 @@ export type FetchUsersQuery = {
             | 'role'
             | 'onboarded'
             | 'alumniSinceDate'
+            | 'alumniLocation'
             | 'positions'
           > & {
             sys: Pick<
@@ -20112,6 +20115,7 @@ export const UsersContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniSinceDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'alumniLocation' } },
           { kind: 'Field', name: { kind: 'Name', value: 'positions' } },
           { kind: 'Field', name: { kind: 'Name', value: 'activatedDate' } },
           {

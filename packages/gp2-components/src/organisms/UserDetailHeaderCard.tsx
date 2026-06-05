@@ -97,7 +97,6 @@ const addIconStyles = css({
   'svg > path': { fill: 'white' },
 });
 
-
 const validateCompleted = ({
   firstName,
   lastName,
@@ -247,10 +246,15 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
             </div>
           </div>
 
-          <div
-            css={[{ gridArea: 'headline', overflowWrap: 'anywhere' }]}
-          >
-            <div css={{ display: 'flex', alignItems: 'center', gap: rem(8), flexWrap: 'wrap' }}>
+          <div css={[{ gridArea: 'headline', overflowWrap: 'anywhere' }]}>
+            <div
+              css={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: rem(8),
+                flexWrap: 'wrap',
+              }}
+            >
               <Headline3 noMargin>
                 {fullDisplayName}
                 {degrees && !!degrees.length && `, ${degrees.join(', ')}`}

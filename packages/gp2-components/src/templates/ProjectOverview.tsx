@@ -120,6 +120,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
               lastName,
               displayName,
               avatarUrl,
+              alumniSinceDate,
               userId: id,
             }) => ({
               firstLine: displayName,
@@ -127,6 +128,7 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
               avatarUrl,
               firstName,
               lastName,
+              alumniSinceDate,
               id,
             }),
           )}

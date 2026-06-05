@@ -6044,6 +6044,7 @@ export type Users = Entry &
     activatedDate?: Maybe<Scalars['DateTime']>;
     activeCampaignCreatedAt?: Maybe<Scalars['DateTime']>;
     activeCampaignId?: Maybe<Scalars['String']>;
+    alumniSinceDate?: Maybe<Scalars['DateTime']>;
     alternativeEmail?: Maybe<Scalars['String']>;
     avatar?: Maybe<Asset>;
     biography?: Maybe<Scalars['String']>;
@@ -6396,6 +6397,15 @@ export type UsersFilter = {
   activeCampaignId_not?: InputMaybe<Scalars['String']>;
   activeCampaignId_not_contains?: InputMaybe<Scalars['String']>;
   activeCampaignId_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  alumniSinceDate?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  alumniSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  alumniSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  alumniSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   alternativeEmail?: InputMaybe<Scalars['String']>;
   alternativeEmail_contains?: InputMaybe<Scalars['String']>;
   alternativeEmail_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6766,6 +6776,8 @@ export enum UsersOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniSinceDateAsc = 'alumniSinceDate_ASC',
+  AlumniSinceDateDesc = 'alumniSinceDate_DESC',
   AlternativeEmailAsc = 'alternativeEmail_ASC',
   AlternativeEmailDesc = 'alternativeEmail_DESC',
   BlogAsc = 'blog_ASC',
@@ -9053,7 +9065,7 @@ export type EventsContentDataFragment = Pick<
               > & { sys: Pick<Sys, 'id'> })
             | ({ __typename: 'Users' } & Pick<
                 Users,
-                'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
               > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
           >;
         }
@@ -9338,7 +9350,7 @@ export type FetchEventByIdQuery = {
                   > & { sys: Pick<Sys, 'id'> })
                 | ({ __typename: 'Users' } & Pick<
                     Users,
-                    'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                    'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
                   > & {
                       sys: Pick<Sys, 'id'>;
                       avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -9725,7 +9737,7 @@ export type FetchEventsQuery = {
                         > & { sys: Pick<Sys, 'id'> })
                       | ({ __typename: 'Users' } & Pick<
                           Users,
-                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
                         > & {
                             sys: Pick<Sys, 'id'>;
                             avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -10179,6 +10191,7 @@ export type FetchEventsByUserIdQuery = {
                                       | 'nickname'
                                       | 'lastName'
                                       | 'onboarded'
+                                      | 'alumniSinceDate'
                                     > & {
                                         sys: Pick<Sys, 'id'>;
                                         avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -10642,6 +10655,7 @@ export type FetchEventsByExternalUserIdQuery = {
                                       | 'nickname'
                                       | 'lastName'
                                       | 'onboarded'
+                                      | 'alumniSinceDate'
                                     > & {
                                         sys: Pick<Sys, 'id'>;
                                         avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -10876,7 +10890,12 @@ export type OutputsContentDataFragment = Pick<
               })
           | ({ __typename: 'Users' } & Pick<
               Users,
-              'firstName' | 'nickname' | 'lastName' | 'email' | 'onboarded'
+              | 'firstName'
+              | 'nickname'
+              | 'lastName'
+              | 'email'
+              | 'onboarded'
+              | 'alumniSinceDate'
             > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> })
         >
       >;
@@ -11023,7 +11042,12 @@ export type FetchOutputByIdQuery = {
                 > & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Users' } & Pick<
                   Users,
-                  'firstName' | 'nickname' | 'lastName' | 'email' | 'onboarded'
+                  | 'firstName'
+                  | 'nickname'
+                  | 'lastName'
+                  | 'email'
+                  | 'onboarded'
+                  | 'alumniSinceDate'
                 > & {
                     sys: Pick<Sys, 'id'>;
                     avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -11191,6 +11215,7 @@ export type FetchOutputsQuery = {
                         | 'lastName'
                         | 'email'
                         | 'onboarded'
+                        | 'alumniSinceDate'
                       > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -11365,6 +11390,7 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                             | 'lastName'
                             | 'email'
                             | 'onboarded'
+                            | 'alumniSinceDate'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -11544,6 +11570,7 @@ export type FetchOutputsByUserIdQuery = {
                             | 'lastName'
                             | 'email'
                             | 'onboarded'
+                            | 'alumniSinceDate'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -11723,6 +11750,7 @@ export type FetchOutputsByExternalUserIdQuery = {
                             | 'lastName'
                             | 'email'
                             | 'onboarded'
+                            | 'alumniSinceDate'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -11902,6 +11930,7 @@ export type FetchOutputsByProjectIdQuery = {
                             | 'lastName'
                             | 'email'
                             | 'onboarded'
+                            | 'alumniSinceDate'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -12081,6 +12110,7 @@ export type FetchOutputsByEventIdQuery = {
                             | 'lastName'
                             | 'email'
                             | 'onboarded'
+                            | 'alumniSinceDate'
                           > & {
                               sys: Pick<Sys, 'id'>;
                               avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -12416,7 +12446,7 @@ export type ProjectsContentFieldsFragment = Pick<
             user?: Maybe<
               Pick<
                 Users,
-                'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
               > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> }
             >;
           }
@@ -12490,7 +12520,7 @@ export type FetchProjectByIdQuery = {
                 user?: Maybe<
                   Pick<
                     Users,
-                    'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                    'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
                   > & {
                     sys: Pick<Sys, 'id'>;
                     avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -12577,7 +12607,7 @@ export type FetchProjectsQuery = {
                       user?: Maybe<
                         Pick<
                           Users,
-                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
                         > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -12681,6 +12711,7 @@ export type FetchProjectsByUserQuery = {
                                     | 'nickname'
                                     | 'lastName'
                                     | 'onboarded'
+                                    | 'alumniSinceDate'
                                   > & {
                                     sys: Pick<Sys, 'id'>;
                                     avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -12897,6 +12928,7 @@ export type UsersContentDataFragment = Pick<
   | 'connections'
   | 'role'
   | 'onboarded'
+  | 'alumniSinceDate'
   | 'positions'
 > & {
   sys: Pick<
@@ -13044,6 +13076,7 @@ export type FetchUserByIdQuery = {
       | 'connections'
       | 'role'
       | 'onboarded'
+      | 'alumniSinceDate'
       | 'positions'
     > & {
       sys: Pick<
@@ -13199,6 +13232,7 @@ export type FetchUsersQuery = {
             | 'connections'
             | 'role'
             | 'onboarded'
+            | 'alumniSinceDate'
             | 'positions'
           > & {
             sys: Pick<
@@ -13410,7 +13444,7 @@ export type WorkingGroupNetworkContentDataFragment = {
                       user?: Maybe<
                         Pick<
                           Users,
-                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
                         > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -13486,7 +13520,7 @@ export type WorkingGroupNetworkContentDataFragment = {
                       user?: Maybe<
                         Pick<
                           Users,
-                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
                         > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -13562,7 +13596,7 @@ export type WorkingGroupNetworkContentDataFragment = {
                       user?: Maybe<
                         Pick<
                           Users,
-                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
                         > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -13638,7 +13672,7 @@ export type WorkingGroupNetworkContentDataFragment = {
                       user?: Maybe<
                         Pick<
                           Users,
-                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
                         > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -14067,7 +14101,7 @@ export type WorkingGroupsContentDataFragment = Pick<
             user?: Maybe<
               Pick<
                 Users,
-                'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
               > & { sys: Pick<Sys, 'id'>; avatar?: Maybe<Pick<Asset, 'url'>> }
             >;
           }
@@ -14134,7 +14168,7 @@ export type FetchWorkingGroupByIdQuery = {
                 user?: Maybe<
                   Pick<
                     Users,
-                    'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                    'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
                   > & {
                     sys: Pick<Sys, 'id'>;
                     avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -14208,7 +14242,7 @@ export type FetchWorkingGroupsQuery = {
                       user?: Maybe<
                         Pick<
                           Users,
-                          'firstName' | 'nickname' | 'lastName' | 'onboarded'
+                          'firstName' | 'nickname' | 'lastName' | 'onboarded' | 'alumniSinceDate'
                         > & {
                           sys: Pick<Sys, 'id'>;
                           avatar?: Maybe<Pick<Asset, 'url'>>;
@@ -15602,6 +15636,10 @@ export const OutputsContentDataFragmentDoc = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'onboarded' },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'alumniSinceDate' },
+                            },
                           ],
                         },
                       },
@@ -16627,6 +16665,7 @@ export const UsersContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'connections' } },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'alumniSinceDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'positions' } },
           { kind: 'Field', name: { kind: 'Name', value: 'activatedDate' } },
           {

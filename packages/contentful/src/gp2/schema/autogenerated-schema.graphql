@@ -3903,6 +3903,7 @@ type Users implements Entry & _Node {
   activatedDate(locale: String, useFallbackLocale: Boolean): DateTime
   activeCampaignCreatedAt(locale: String, useFallbackLocale: Boolean): DateTime
   activeCampaignId(locale: String, useFallbackLocale: Boolean): String
+  alumniSinceDate(locale: String, useFallbackLocale: Boolean): DateTime
   alternativeEmail(locale: String, useFallbackLocale: Boolean): String
   avatar(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   biography(locale: String, useFallbackLocale: Boolean): String
@@ -3983,6 +3984,15 @@ input UsersFilter {
   activatedDate_lte: DateTime
   activatedDate_not: DateTime
   activatedDate_not_in: [DateTime]
+  alumniSinceDate: DateTime
+  alumniSinceDate_exists: Boolean
+  alumniSinceDate_gt: DateTime
+  alumniSinceDate_gte: DateTime
+  alumniSinceDate_in: [DateTime]
+  alumniSinceDate_lt: DateTime
+  alumniSinceDate_lte: DateTime
+  alumniSinceDate_not: DateTime
+  alumniSinceDate_not_in: [DateTime]
   activeCampaignCreatedAt: DateTime
   activeCampaignCreatedAt_exists: Boolean
   activeCampaignCreatedAt_gt: DateTime
@@ -4311,6 +4321,8 @@ enum UsersOrder {
   activeCampaignCreatedAt_DESC
   activeCampaignId_ASC
   activeCampaignId_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
   blog_ASC

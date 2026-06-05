@@ -256,6 +256,7 @@ export const getUserDataObject = (): Required<gp2Model.UserDataObject> => ({
     },
   ],
   onboarded: true,
+  alumniSinceDate: '2022-06-30T00:00:00.000Z',
   outputs: [
     {
       id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
@@ -460,6 +461,7 @@ export const getContentfulGraphqlUser = (
   },
   biography: 'a biography of Tony Stark',
   onboarded: true,
+  alumniSinceDate: '2022-06-30T00:00:00.000Z',
   connections: ['some-code'],
   questions: [
     'What color was Iron Mans original armour?',

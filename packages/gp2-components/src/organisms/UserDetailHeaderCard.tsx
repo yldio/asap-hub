@@ -1,10 +1,12 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
+  alumniBadgeIcon,
   Avatar,
   formatUserLocation,
   Headline3,
   Link,
   pixels,
+  StateTag,
   uploadIcon,
 } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
@@ -34,6 +36,7 @@ type UserDetailHeaderCardProps = Pick<
   | 'country'
   | 'positions'
   | 'social'
+  | 'alumniSinceDate'
 > & {
   editHref?: string;
   readonly onImageSelect?: (file: File) => void;
@@ -135,6 +138,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   country,
   positions,
   social,
+  alumniSinceDate,
   editHref,
   onImageSelect,
   avatarSaving = false,
@@ -224,6 +228,9 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
             {fullDisplayName}
             {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
           </Headline3>
+          {alumniSinceDate && (
+            <StateTag icon={alumniBadgeIcon} label="Alumni" />
+          )}
         </div>
         <div css={[rowContainerStyles, { gridArea: 'details' }]}>
           <div css={rowStyles}>

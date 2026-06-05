@@ -145,6 +145,7 @@ export type UserAuthor = {
   displayName: string;
   onboarded: boolean;
   avatarUrl?: string;
+  alumniSinceDate?: string;
 };
 export type OutputAuthor = UserAuthor | ExternalUserResponse;
 export type OutputDataObject = OutputCoreObject & {

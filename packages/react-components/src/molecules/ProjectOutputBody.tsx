@@ -399,7 +399,7 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
         <PillList
           small
           pills={[
-            'Project',
+            'Project Output',
             ...(documentType ? [documentType] : []),
             ...(type ? [type] : []),
           ]}
@@ -407,7 +407,7 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
         {externalLinkElement}
       </div>
       <div css={[metadataRowStyles, mobileOnlyStyles, mobilePillStyles]}>
-        <Pill small>Project</Pill>
+        <Pill small>Project Output</Pill>
         {externalLinkElement}
       </div>
       {(documentType || type) && (

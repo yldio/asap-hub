@@ -97,7 +97,7 @@ it('hides mobile pill list when documentType and type are absent', () => {
       type={undefined as never}
     />,
   );
-  expect(queryAllByText('Project')).toHaveLength(2);
+  expect(queryAllByText('Project Output')).toHaveLength(2);
 });
 
 it('renders teams section when teams present and source is project', () => {

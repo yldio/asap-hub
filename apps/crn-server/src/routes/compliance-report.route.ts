@@ -1,3 +1,4 @@
+import { complianceReportUrlRequiredManuscriptTypes } from '@asap-hub/model';
 import { isCMSAdministrator } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Router } from 'express';
@@ -24,6 +25,17 @@ export const complianceReportRouteFactory = (
       manuscriptId,
       loggedInUser.id,
     );
+
+    const manuscriptType = manuscript?.versions[0]?.type;
+    if (
+      manuscriptType &&
+      complianceReportUrlRequiredManuscriptTypes.includes(manuscriptType) &&
+      !createRequest.url
+    ) {
+      throw Boom.badRequest(
+        'URL is required for Original Research manuscripts',
+      );
+    }
 
     const complianceReport = await complianceReportController.create({
       ...createRequest,

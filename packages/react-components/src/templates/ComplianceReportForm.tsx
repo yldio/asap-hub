@@ -4,6 +4,8 @@ import {
   ComplianceReportResponse,
   ManuscriptDataObject,
   ManuscriptStatus,
+  ManuscriptType,
+  complianceReportUrlRequiredManuscriptTypes,
   statusButtonOptions,
 } from '@asap-hub/model';
 
@@ -66,6 +68,7 @@ const buttonsInnerContainerStyles = css({
 type ComplianceReportFormProps = {
   manuscriptTitle: string;
   manuscriptVersionId: string;
+  manuscriptType: ManuscriptType;
   url?: string;
   description?: string | '';
   manuscriptId: string;
@@ -138,11 +141,15 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   setManuscript,
   manuscriptTitle,
   manuscriptVersionId,
+  manuscriptType,
   url,
   description,
   manuscriptId,
 }) => {
   const navigate = useNavigate();
+
+  const isURLRequired =
+    complianceReportUrlRequiredManuscriptTypes.includes(manuscriptType);
 
   const methods = useForm<ComplianceReportFormData>({
     mode: 'onBlur',
@@ -165,6 +172,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
   const onSubmit = async (data: ComplianceReportFormData) => {
     const response = await onSave({
       ...data,
+      url: data.url || undefined,
       manuscriptVersionId,
       manuscriptId,
     });
@@ -234,7 +242,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                   message:
                     'Please enter a valid URL, starting with http:// or https://',
                 },
-                required: 'Please enter a url.',
+                required: isURLRequired ? 'Please enter a url.' : false,
               }}
               render={({
                 field: { value, onBlur, onChange },
@@ -247,7 +255,7 @@ const ComplianceReportForm: React.FC<ComplianceReportFormProps> = ({
                 >
                   <LabeledTextField
                     title="URL"
-                    subtitle={'(required)'}
+                    subtitle={isURLRequired ? '(required)' : '(optional)'}
                     onChange={onChange}
                     onBlur={onBlur}
                     customValidationMessage={error?.message}

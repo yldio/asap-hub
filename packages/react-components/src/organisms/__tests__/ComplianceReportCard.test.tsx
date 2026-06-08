@@ -40,6 +40,17 @@ it('displays compliance report description and url when expanded', async () => {
   );
 });
 
+it('does not show View Report button when url is not provided', async () => {
+  jest.spyOn(console, 'error').mockImplementation();
+  const { queryByText, getByRole } = render(
+    <ComplianceReportCard {...props} url={undefined} />,
+  );
+
+  await userEvent.click(getByRole('button'));
+
+  expect(queryByText(/View Report/i)).not.toBeInTheDocument();
+});
+
 it('hides the submitter team name when showTeamName is false', () => {
   const { getByText, queryByText } = render(
     <ComplianceReportCard {...props} showTeamName={false} />,

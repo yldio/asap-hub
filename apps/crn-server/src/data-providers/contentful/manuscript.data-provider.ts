@@ -1017,7 +1017,7 @@ const parseComplianceReport = (
 ) =>
   complianceReport && {
     id: complianceReport.sys.id,
-    url: complianceReport.url,
+    url: complianceReport.url || undefined,
     description: complianceReport.description,
     count: versionCount,
     createdDate: complianceReport.sys.firstPublishedAt,

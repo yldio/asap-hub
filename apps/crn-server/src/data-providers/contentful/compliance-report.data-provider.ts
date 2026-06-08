@@ -92,7 +92,7 @@ const parseComplianceReport = (
   >,
 ): ComplianceReportDataObject => ({
   id: complianceReport.sys.id,
-  url: complianceReport.url || '',
+  url: complianceReport.url || undefined,
   description: complianceReport.description || '',
   count:
     complianceReport.manuscriptVersion?.linkedFrom?.manuscriptsCollection

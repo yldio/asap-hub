@@ -187,9 +187,23 @@ describe('/compliance-reports/ route', () => {
     });
 
     describe('Validation', () => {
-      test('Should return 400 when url is missing', async () => {
-        const { url: _url, ...createComplianceReportRequest } =
-          getComplianceReportCreateDataObject();
+      test('Should return 400 when url is missing for Original Research manuscript', async () => {
+        const {
+          url: _url,
+          userId: _userId,
+          ...createComplianceReportRequest
+        } = getComplianceReportCreateDataObject();
+
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce({
+          id: 'manuscript-1',
+          title: 'Manuscript 1',
+          teamId: 'team-1',
+          versions: [{ type: 'Original Research' }],
+          count: 1,
+          assignedUsers: [],
+          status: 'Review Compliance Report',
+          discussions: [],
+        } as never);
 
         const response = await supertest(app)
           .post('/compliance-reports')
@@ -197,6 +211,36 @@ describe('/compliance-reports/ route', () => {
           .set('Accept', 'application/json');
 
         expect(response.status).toEqual(400);
+      });
+
+      test('Should return 201 when url is missing for Review manuscript', async () => {
+        const {
+          url: _url,
+          userId: _userId,
+          ...createComplianceReportRequest
+        } = getComplianceReportCreateDataObject();
+
+        complianceReportControllerMock.create.mockResolvedValueOnce(
+          getComplianceReportDataObject(),
+        );
+
+        manuscriptControllerMock.fetchById.mockResolvedValueOnce({
+          id: 'manuscript-1',
+          title: 'Manuscript 1',
+          teamId: 'team-1',
+          versions: [{ type: 'Review / Op-Ed / Letter / Hot Topic' }],
+          count: 1,
+          assignedUsers: [],
+          status: 'Review Compliance Report',
+          discussions: [],
+        } as never);
+
+        const response = await supertest(app)
+          .post('/compliance-reports')
+          .send(createComplianceReportRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(201);
       });
 
       test('Should return 400 when description is missing', async () => {

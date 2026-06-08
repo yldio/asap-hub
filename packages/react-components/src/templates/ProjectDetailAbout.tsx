@@ -84,6 +84,7 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
 
       {project.projectType === 'Trainee Project' && (
         <ProjectContributors
+          collaboratingMembers={project.collaboratingMembers}
           projectMembers={project.members}
           showTeamInfo={true}
         />

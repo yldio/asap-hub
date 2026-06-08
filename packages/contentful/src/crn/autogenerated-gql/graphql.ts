@@ -34523,6 +34523,36 @@ export type FetchPagesQuery = {
   >;
 };
 
+export type CollaboratingMembersResearchOutputContentFragment = Pick<
+  ResearchOutputs,
+  'title' | 'documentType' | 'type'
+> & {
+  sys: Pick<Sys, 'id'>;
+  authorsCollection?: Maybe<{
+    items: Array<
+      Maybe<
+        | { __typename: 'ExternalAuthors' }
+        | ({ __typename: 'Users' } & Pick<
+            Users,
+            'firstName' | 'nickname' | 'lastName' | 'alumniSinceDate'
+          > & {
+              sys: Pick<Sys, 'id'>;
+              avatar?: Maybe<Pick<Asset, 'url'>>;
+              teamsCollection?: Maybe<{
+                items: Array<
+                  Maybe<{
+                    team?: Maybe<
+                      Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
+                    >;
+                  }>
+                >;
+              }>;
+            })
+      >
+    >;
+  }>;
+};
+
 export type ProjectsContentDataFragment = Pick<
   Projects,
   | 'title'
@@ -34587,6 +34617,45 @@ export type ProjectsContentDataFragment = Pick<
         >
       >;
     }>;
+    researchOutputsCollection?: Maybe<
+      Pick<ResearchOutputsCollection, 'total'> & {
+        items: Array<
+          Maybe<
+            Pick<ResearchOutputs, 'title' | 'documentType' | 'type'> & {
+              sys: Pick<Sys, 'id'>;
+              authorsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    | { __typename: 'ExternalAuthors' }
+                    | ({ __typename: 'Users' } & Pick<
+                        Users,
+                        | 'firstName'
+                        | 'nickname'
+                        | 'lastName'
+                        | 'alumniSinceDate'
+                      > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        })
+                  >
+                >;
+              }>;
+            }
+          >
+        >;
+      }
+    >;
   }>;
   membersCollection?: Maybe<
     Pick<ProjectsMembersCollection, 'total'> & {
@@ -34905,6 +34974,45 @@ export type FetchProjectByIdQuery = {
             >
           >;
         }>;
+        researchOutputsCollection?: Maybe<
+          Pick<ResearchOutputsCollection, 'total'> & {
+            items: Array<
+              Maybe<
+                Pick<ResearchOutputs, 'title' | 'documentType' | 'type'> & {
+                  sys: Pick<Sys, 'id'>;
+                  authorsCollection?: Maybe<{
+                    items: Array<
+                      Maybe<
+                        | { __typename: 'ExternalAuthors' }
+                        | ({ __typename: 'Users' } & Pick<
+                            Users,
+                            | 'firstName'
+                            | 'nickname'
+                            | 'lastName'
+                            | 'alumniSinceDate'
+                          > & {
+                              sys: Pick<Sys, 'id'>;
+                              avatar?: Maybe<Pick<Asset, 'url'>>;
+                              teamsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<{
+                                    team?: Maybe<
+                                      Pick<Teams, 'displayName'> & {
+                                        sys: Pick<Sys, 'id'>;
+                                      }
+                                    >;
+                                  }>
+                                >;
+                              }>;
+                            })
+                      >
+                    >;
+                  }>;
+                }
+              >
+            >;
+          }
+        >;
       }>;
       membersCollection?: Maybe<
         Pick<ProjectsMembersCollection, 'total'> & {
@@ -35015,6 +35123,56 @@ export type FetchTeamResearchOutputsQuery = {
           >;
         }
       >;
+    }>;
+  }>;
+};
+
+export type FetchProjectMemberResearchOutputsQueryVariables = Exact<{
+  projectId: Scalars['String'];
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+}>;
+
+export type FetchProjectMemberResearchOutputsQuery = {
+  projects?: Maybe<{
+    linkedFrom?: Maybe<{
+      researchOutputsCollection?: Maybe<{
+        items: Array<
+          Maybe<
+            Pick<ResearchOutputs, 'title' | 'documentType' | 'type'> & {
+              sys: Pick<Sys, 'id'>;
+              authorsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    | { __typename: 'ExternalAuthors' }
+                    | ({ __typename: 'Users' } & Pick<
+                        Users,
+                        | 'firstName'
+                        | 'nickname'
+                        | 'lastName'
+                        | 'alumniSinceDate'
+                      > & {
+                          sys: Pick<Sys, 'id'>;
+                          avatar?: Maybe<Pick<Asset, 'url'>>;
+                          teamsCollection?: Maybe<{
+                            items: Array<
+                              Maybe<{
+                                team?: Maybe<
+                                  Pick<Teams, 'displayName'> & {
+                                    sys: Pick<Sys, 'id'>;
+                                  }
+                                >;
+                              }>
+                            >;
+                          }>;
+                        })
+                  >
+                >;
+              }>;
+            }
+          >
+        >;
+      }>;
     }>;
   }>;
 };
@@ -42821,6 +42979,186 @@ export const PageContentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<PageContentFragment, unknown>;
+export const CollaboratingMembersResearchOutputContentFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: {
+        kind: 'Name',
+        value: 'CollaboratingMembersResearchOutputContent',
+      },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'ResearchOutputs' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'sys' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'documentType' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'authorsCollection' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '20' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: '__typename' },
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Users' },
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sys' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'firstName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nickname' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastName' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'alumniSinceDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'avatar' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'teamsCollection' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '2' },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'team' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'sys',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'id',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'displayName',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CollaboratingMembersResearchOutputContentFragment,
+  unknown
+>;
 export const ProjectsContentDataFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -43199,6 +43537,48 @@ export const ProjectsContentDataFragmentDoc = {
                                     },
                                   },
                                 ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'researchOutputsCollection' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'limit' },
+                      value: { kind: 'IntValue', value: '50' },
+                    },
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'order' },
+                      value: {
+                        kind: 'EnumValue',
+                        value: 'sys_firstPublishedAt_DESC',
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'items' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value:
+                                  'CollaboratingMembersResearchOutputContent',
                               },
                             },
                           ],
@@ -43754,6 +44134,7 @@ export const ProjectsContentDataFragmentDoc = {
         ],
       },
     },
+    ...CollaboratingMembersResearchOutputContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<ProjectsContentDataFragment, unknown>;
 export const ProjectsMinimalContentDataFragmentDoc = {
@@ -64068,6 +64449,143 @@ export const FetchTeamResearchOutputsDocument = {
 } as unknown as DocumentNode<
   FetchTeamResearchOutputsQuery,
   FetchTeamResearchOutputsQueryVariables
+>;
+export const FetchProjectMemberResearchOutputsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchProjectMemberResearchOutputs' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'projectId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'projects' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'projectId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'linkedFrom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'researchOutputsCollection',
+                        },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'limit' },
+                            },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'skip' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'skip' },
+                            },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order' },
+                            value: {
+                              kind: 'EnumValue',
+                              value: 'sys_firstPublishedAt_DESC',
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value:
+                                        'CollaboratingMembersResearchOutputContent',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    ...CollaboratingMembersResearchOutputContentFragmentDoc.definitions,
+  ],
+} as unknown as DocumentNode<
+  FetchProjectMemberResearchOutputsQuery,
+  FetchProjectMemberResearchOutputsQueryVariables
 >;
 export const FetchProjectsByTeamIdDocument = {
   kind: 'Document',

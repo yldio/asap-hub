@@ -1,7 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import { CollaboratingTeam, FundedTeam, ProjectMember } from '@asap-hub/model';
+import {
+  CollaboratingMember,
+  CollaboratingTeam,
+  FundedTeam,
+  ProjectMember,
+} from '@asap-hub/model';
 import ProjectContributors from '../ProjectContributors';
 
 const renderWithRouter = (ui: React.ReactElement) =>
@@ -28,6 +33,17 @@ const mockFundedTeam: FundedTeam = {
   teamDescription:
     'This is a test team description explaining their research focus and goals.',
 };
+
+const makeCollaboratingMembers = (count: number): CollaboratingMember[] =>
+  Array.from({ length: count }, (_, i) => ({
+    id: `collab-user-${i + 1}`,
+    displayName: `Collaborator ${String.fromCharCode(65 + i)}`,
+    isAlumni: false,
+    teams: [{ id: `team-${i}`, displayName: `Team ${i}` }],
+    articles: [
+      { id: `article-${i}-1`, title: `Article ${i}-1`, type: 'Preprint' },
+    ],
+  }));
 
 const mockProjectMembers: ProjectMember[] = [
   {
@@ -114,6 +130,27 @@ describe('ProjectContributors', () => {
       expect(
         screen.queryByText(/view the funded team leading this project/i),
       ).not.toBeInTheDocument();
+    });
+
+    it('switches back to the Project Members tab from Collaborators', async () => {
+      renderWithRouter(
+        <ProjectContributors
+          projectMembers={mockProjectMembers}
+          collaboratingMembers={makeCollaboratingMembers(2)}
+        />,
+      );
+
+      expect(screen.getByText('Alice Johnson')).toBeInTheDocument();
+      expect(screen.getByText('Bob Williams')).toBeInTheDocument();
+
+      await userEvent.click(screen.getByText('Collaborators (2)'));
+      expect(screen.getByText('Collaborator A')).toBeInTheDocument();
+      expect(screen.queryByText('Alice Johnson')).not.toBeInTheDocument();
+
+      await userEvent.click(screen.getByText('Project Members'));
+      expect(screen.getByText('Alice Johnson')).toBeInTheDocument();
+      expect(screen.getByText('Bob Williams')).toBeInTheDocument();
+      expect(screen.queryByText('Collaborator A')).not.toBeInTheDocument();
     });
   });
 

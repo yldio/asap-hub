@@ -7,6 +7,7 @@ import {
   FETCH_PROJECTS_BY_USER_ID,
   FETCH_PROJECT_BY_ID,
   FETCH_TEAM_RESEARCH_OUTPUTS,
+  FETCH_PROJECT_MEMBER_RESEARCH_OUTPUTS,
   FetchTeamResearchOutputsQuery,
   FetchTeamResearchOutputsQueryVariables,
   FetchProjectByIdQuery,
@@ -26,10 +27,14 @@ import {
   FETCH_PROJECT_MILESTONE_IDS,
   FetchProjectMilestoneIdsQuery,
   FetchProjectMilestoneIdsQueryVariables,
+  FetchProjectMemberResearchOutputsQuery,
+  FetchProjectMemberResearchOutputsQueryVariables,
 } from '@asap-hub/contentful';
 import {
   Aim,
   AimStatus,
+  CollaboratingMember,
+  CollaboratingMemberArticle,
   CollaboratingTeam,
   CollaboratingTeamArticle,
   DiscoveryProject,
@@ -432,6 +437,28 @@ const parseProjectManuscripts = (
   };
 };
 
+type ProjectResearchOutputWithAuthorsItem = NonNullable<
+  NonNullable<
+    NonNullable<
+      NonNullable<NonNullable<FetchProjectByIdQuery['projects']>>['linkedFrom']
+    >['researchOutputsCollection']
+  >['items'][number]
+>;
+
+type ProjectResearchOutputAuthorItem = NonNullable<
+  ProjectResearchOutputWithAuthorsItem['authorsCollection']
+>['items'][number];
+
+type ProjectResearchOutputUserAuthorItem = Extract<
+  NonNullable<ProjectResearchOutputAuthorItem>,
+  { __typename: 'Users' }
+>;
+
+const isProjectResearchOutputUserAuthor = (
+  author: ProjectResearchOutputAuthorItem,
+): author is ProjectResearchOutputUserAuthorItem =>
+  author?.__typename === 'Users';
+
 type ProjectResearchOutputItem = {
   sys: { id: string };
   title?: string | null;
@@ -524,6 +551,76 @@ export const parseCollaboratingTeams = (
     a.displayName.localeCompare(b.displayName),
   );
 };
+
+export const parseCollaboratingMembers = (
+  researchOutputItems: ProjectResearchOutputWithAuthorsItem[],
+  projectMemberUserIds: Set<string>,
+): CollaboratingMember[] => {
+  const membersById = new Map<
+    string,
+    {
+      id: string;
+      displayName: string;
+      alumniSinceDate?: string;
+      teams: {
+        id: string;
+        displayName: string;
+      }[];
+      avatarUrl?: string;
+      articles: CollaboratingMemberArticle[];
+    }
+  >();
+
+  researchOutputItems
+    .filter((ro) => ro.documentType === 'Article')
+    .forEach((ro) => {
+      const article: CollaboratingMemberArticle = {
+        id: ro.sys.id,
+        title: ro.title || '',
+        type: (ro.type as ResearchOutputType | null) ?? undefined,
+      };
+
+      const coauthors = cleanArray(ro.authorsCollection?.items)
+        .filter(isProjectResearchOutputUserAuthor)
+        .filter((author) => !projectMemberUserIds.has(author.sys.id));
+
+      coauthors.forEach((author) => {
+        const displayName = parseUserDisplayName(
+          author.firstName || '',
+          author.lastName || '',
+          author.nickname || undefined,
+        );
+        const existing = membersById.get(author.sys.id);
+        if (existing) {
+          const alreadyLinked = existing.articles.some(
+            (a) => a.id === article.id,
+          );
+          if (!alreadyLinked) existing.articles.push(article);
+        } else {
+          membersById.set(author.sys.id, {
+            id: author.sys.id,
+            displayName,
+            alumniSinceDate: author.alumniSinceDate || undefined,
+            teams: cleanArray(author.teamsCollection?.items).map((team) => ({
+              id: team.team?.sys.id || '',
+              displayName: team.team?.displayName || '',
+            })),
+            avatarUrl: author.avatar?.url || undefined,
+            articles: [article],
+          });
+        }
+      });
+    });
+
+  return Array.from(membersById.values()).sort((a, b) =>
+    a.displayName.localeCompare(b.displayName),
+  );
+};
+
+const getResearchOutputsFromProjectLinkedFrom = (
+  item: ProjectItem,
+): ProjectResearchOutputWithAuthorsItem[] =>
+  cleanArray(item?.linkedFrom?.researchOutputsCollection?.items);
 
 // Parse Contentful project to ProjectDetail format with all additional fields
 export const parseContentfulProjectDetail = (
@@ -658,12 +755,22 @@ export const parseContentfulProjectDetail = (
 
       const manuscripts = getManuscriptIdsFromProjectLinkedFrom(item);
 
+      const projectMemberUserIds = new Set(userMembers.map((m) => m.id));
+      const projectResearchOutputItems =
+        getResearchOutputsFromProjectLinkedFrom(item);
+      const collaboratingMembers = parseCollaboratingMembers(
+        projectResearchOutputItems,
+        projectMemberUserIds,
+      );
+
       return {
         ...baseProject,
         originalGrantProposalId,
         supplementGrant,
         members: userMembers.length > 0 ? userMembers : undefined,
         manuscripts,
+        collaboratingMembers:
+          collaboratingMembers.length > 0 ? collaboratingMembers : undefined,
       } as ResourceProjectDetail;
     }
 
@@ -671,8 +778,19 @@ export const parseContentfulProjectDetail = (
       const allMembers = processTraineeProjectMembers(members);
       const manuscripts = getManuscriptIdsFromProjectLinkedFrom(item);
 
+      const projectMemberUserIds = new Set(allMembers.map((m) => m.id));
+      const projectResearchOutputItems =
+        getResearchOutputsFromProjectLinkedFrom(item);
+
+      const collaboratingMembers = parseCollaboratingMembers(
+        projectResearchOutputItems,
+        projectMemberUserIds,
+      );
+
       return {
         ...baseProject,
+        collaboratingMembers:
+          collaboratingMembers.length > 0 ? collaboratingMembers : undefined,
         originalGrantProposalId,
         supplementGrant,
         members: allMembers,
@@ -901,6 +1019,74 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
     } as ProjectDetailDataObject;
   }
 
+  /**
+   * If the project has more research outputs than fit in the first page
+   * inlined on FETCH_PROJECT_BY_ID, fetch the remaining pages and recompute
+   * collaboratingMembers over the full set.
+   * Applies to user-based Resource Projects and Trainee Projects.
+   */
+  private async augmentCollaboratingMembers(
+    projectId: string,
+    projects: NonNullable<FetchProjectByIdQuery['projects']>,
+    baseResult: ProjectDetailDataObject,
+  ): Promise<ProjectDetailDataObject> {
+    const isUserBasedResource =
+      baseResult.projectType === 'Resource Project' &&
+      !(baseResult as ResourceProjectDetail).fundedTeam;
+    const isTrainee = baseResult.projectType === 'Trainee Project';
+
+    if (!isUserBasedResource && !isTrainee) {
+      return baseResult;
+    }
+
+    const firstPageItems = getResearchOutputsFromProjectLinkedFrom(projects);
+    const total = projects.linkedFrom?.researchOutputsCollection?.total ?? 0;
+    const pageSize = ProjectContentfulDataProvider.RESEARCH_OUTPUTS_PAGE_SIZE;
+
+    if (total <= firstPageItems.length) return baseResult;
+
+    const extraPageRequests: Array<
+      Promise<FetchProjectMemberResearchOutputsQuery>
+    > = [];
+    for (let skip = pageSize; skip < total; skip += pageSize) {
+      extraPageRequests.push(
+        this.contentfulClient.request<
+          FetchProjectMemberResearchOutputsQuery,
+          FetchProjectMemberResearchOutputsQueryVariables
+        >(FETCH_PROJECT_MEMBER_RESEARCH_OUTPUTS, {
+          projectId,
+          limit: pageSize,
+          skip,
+        }),
+      );
+    }
+
+    const extraResponses = await Promise.all(extraPageRequests);
+    const extraItems = extraResponses.flatMap((r) =>
+      cleanArray(r.projects?.linkedFrom?.researchOutputsCollection?.items),
+    );
+
+    const allItems = [
+      ...firstPageItems,
+      ...(extraItems as ProjectResearchOutputWithAuthorsItem[]),
+    ];
+
+    const projectMembers = isTrainee
+      ? (baseResult as TraineeProjectDetail).members ?? []
+      : (baseResult as ResourceProjectDetail).members ?? [];
+    const projectMemberUserIds = new Set(projectMembers.map((m) => m.id));
+    const collaboratingMembers = parseCollaboratingMembers(
+      allItems,
+      projectMemberUserIds,
+    );
+
+    return {
+      ...baseResult,
+      collaboratingMembers:
+        collaboratingMembers.length > 0 ? collaboratingMembers : undefined,
+    } as ProjectDetailDataObject;
+  }
+
   async fetchById(id: string): Promise<ProjectDataObject | null> {
     try {
       const [
@@ -943,9 +1129,14 @@ export class ProjectContentfulDataProvider implements ProjectDataProvider {
       };
 
       const baseResult = parseContentfulProjectDetail(projects);
-      const augmentedResult = await this.augmentCollaboratingTeams(
+      const augmentedWithTeams = await this.augmentCollaboratingTeams(
         projects,
         baseResult,
+      );
+      const augmentedResult = await this.augmentCollaboratingMembers(
+        id,
+        projects,
+        augmentedWithTeams,
       );
       const originalGrantAims = toAims(originalAimsHits);
       const supplementGrant = baseResult.supplementGrant

@@ -14,6 +14,7 @@ import {
   type ProjectMembershipItem,
 } from '../../../src/data-providers/contentful/project.data-provider';
 import {
+  CollaboratingMember,
   FetchProjectMilestonesOptions,
   MilestoneCreateRequest,
   TraineeProject,
@@ -483,6 +484,208 @@ describe('ProjectContentfulDataProvider', () => {
         expect(collaboratingTeams.map((t) => t.id).sort()).toEqual([
           'team-a',
           'team-b',
+        ]);
+      });
+    });
+
+    describe('project member research outputs pagination', () => {
+      const makeArticle = (i: number, coauthorUserId: string) => ({
+        sys: { id: `ro-${i}` },
+        title: `Article ${i}`,
+        documentType: 'Article',
+        type: 'Preprint',
+        authorsCollection: {
+          items: [
+            {
+              __typename: 'Users',
+              sys: { id: 'user-2' },
+              firstName: 'Jamie',
+              lastName: 'Lee',
+              nickname: '',
+              alumniSinceDate: '2025-01-01',
+              avatar: { url: null },
+              teamsCollection: { items: [] },
+            },
+            {
+              __typename: 'Users',
+              sys: { id: coauthorUserId },
+              firstName: coauthorUserId,
+              lastName: 'Author',
+              nickname: '',
+              alumniSinceDate: null,
+              avatar: { url: null },
+              teamsCollection: { items: [] },
+            },
+          ],
+        },
+      });
+
+      const setProjectResearchOutputsWithTotal = (
+        graphqlItem: ReturnType<
+          typeof getResourceIndividualProjectDetailGraphqlItem
+        >,
+        items: unknown[],
+        total?: number | null,
+      ) => {
+        (graphqlItem as { linkedFrom?: unknown }).linkedFrom = {
+          researchOutputsCollection: {
+            ...(total !== undefined && { total }),
+            items,
+          },
+        };
+      };
+
+      it('does not request additional pages when total fits in first page', async () => {
+        const graphqlItem = getResourceIndividualProjectDetailGraphqlItem();
+        const firstPage = Array.from({ length: 3 }, (_, i) =>
+          makeArticle(i, 'user-collab-a'),
+        );
+        setProjectResearchOutputsWithTotal(graphqlItem, firstPage, 3);
+        contentfulClientMock.request.mockResolvedValueOnce({
+          projects: graphqlItem,
+        });
+
+        await dataProvider.fetchById('resource-individual-1');
+
+        expect(contentfulClientMock.request).toHaveBeenCalledTimes(1);
+      });
+
+      it('does not request additional pages when total is missing', async () => {
+        const graphqlItem = getResourceIndividualProjectDetailGraphqlItem();
+        const firstPage = Array.from({ length: 3 }, (_, i) =>
+          makeArticle(i, 'user-collab-a'),
+        );
+        setProjectResearchOutputsWithTotal(graphqlItem, firstPage);
+        contentfulClientMock.request.mockResolvedValueOnce({
+          projects: graphqlItem,
+        });
+
+        await dataProvider.fetchById('resource-individual-1');
+
+        expect(contentfulClientMock.request).toHaveBeenCalledTimes(1);
+      });
+
+      it('does not request additional pages when linkedFrom is absent', async () => {
+        const graphqlItem = getResourceIndividualProjectDetailGraphqlItem();
+        contentfulClientMock.request.mockResolvedValueOnce({
+          projects: graphqlItem,
+        });
+
+        await dataProvider.fetchById('resource-individual-1');
+
+        expect(contentfulClientMock.request).toHaveBeenCalledTimes(1);
+      });
+
+      it('paginates remaining pages and merges all collaborating members', async () => {
+        const graphqlItem = getResourceIndividualProjectDetailGraphqlItem();
+        const firstPage = Array.from({ length: 50 }, (_, i) =>
+          makeArticle(i, 'user-collab-a'),
+        );
+        setProjectResearchOutputsWithTotal(graphqlItem, firstPage, 75);
+
+        contentfulClientMock.request.mockResolvedValueOnce({
+          projects: graphqlItem,
+        });
+        contentfulClientMock.request.mockResolvedValueOnce({
+          projects: {
+            linkedFrom: {
+              researchOutputsCollection: {
+                items: Array.from({ length: 25 }, (_, i) =>
+                  makeArticle(50 + i, 'user-collab-b'),
+                ),
+              },
+            },
+          },
+        });
+
+        const result = await dataProvider.fetchById('resource-individual-1');
+
+        expect(contentfulClientMock.request).toHaveBeenCalledTimes(2);
+        expect(contentfulClientMock.request).toHaveBeenLastCalledWith(
+          expect.anything(),
+          { projectId: 'resource-individual-1', limit: 50, skip: 50 },
+        );
+
+        const collaboratingMembers =
+          (result as { collaboratingMembers?: Array<{ id: string }> })
+            .collaboratingMembers ?? [];
+        expect(collaboratingMembers.map((m) => m.id).sort()).toEqual([
+          'user-collab-a',
+          'user-collab-b',
+        ]);
+      });
+    });
+
+    describe('trainee project member research outputs pagination', () => {
+      const makeTraineeArticle = (i: number, coauthorUserId: string) => ({
+        sys: { id: `ro-${i}` },
+        title: `Article ${i}`,
+        documentType: 'Article',
+        type: 'Preprint',
+        authorsCollection: {
+          items: [
+            {
+              __typename: 'Users',
+              sys: { id: 'user-trainee' },
+              firstName: 'Dana',
+              lastName: 'Lopez',
+              nickname: '',
+              alumniSinceDate: null,
+              avatar: { url: null },
+              teamsCollection: { items: [] },
+            },
+            {
+              __typename: 'Users',
+              sys: { id: coauthorUserId },
+              firstName: coauthorUserId,
+              lastName: 'Author',
+              nickname: '',
+              alumniSinceDate: null,
+              avatar: { url: null },
+              teamsCollection: { items: [] },
+            },
+          ],
+        },
+      });
+
+      it('paginates remaining pages and merges collaborating members for trainee projects', async () => {
+        const graphqlItem = getTraineeProjectDetailGraphqlItem();
+        const firstPage = Array.from({ length: 50 }, (_, i) =>
+          makeTraineeArticle(i, 'user-collab-a'),
+        );
+        (graphqlItem as { linkedFrom?: unknown }).linkedFrom = {
+          researchOutputsCollection: { total: 75, items: firstPage },
+        };
+
+        contentfulClientMock.request.mockResolvedValueOnce({
+          projects: graphqlItem,
+        });
+        contentfulClientMock.request.mockResolvedValueOnce({
+          projects: {
+            linkedFrom: {
+              researchOutputsCollection: {
+                items: Array.from({ length: 25 }, (_, i) =>
+                  makeTraineeArticle(50 + i, 'user-collab-b'),
+                ),
+              },
+            },
+          },
+        });
+
+        const result = await dataProvider.fetchById('trainee-1');
+
+        expect(contentfulClientMock.request).toHaveBeenCalledTimes(2);
+        expect(contentfulClientMock.request).toHaveBeenLastCalledWith(
+          expect.anything(),
+          { projectId: 'trainee-1', limit: 50, skip: 50 },
+        );
+
+        const collaboratingMembers =
+          (result as { collaboratingMembers?: Array<{ id: string }> })
+            .collaboratingMembers ?? [];
+        expect(collaboratingMembers.map((m) => m.id).sort()).toEqual([
+          'user-collab-a',
+          'user-collab-b',
         ]);
       });
     });
@@ -2755,6 +2958,287 @@ describe('parseContentfulProjectDetail', () => {
         expect.objectContaining({
           id: 'team-collab',
           displayName: 'Collab Team',
+        }),
+      ]);
+    });
+  });
+
+  describe('parseContentfulProjectDetail - collaboratingMembers', () => {
+    const setProjectResearchOutputs = (
+      graphqlItem: { linkedFrom?: unknown },
+      items: unknown[],
+    ) => {
+      (graphqlItem as { linkedFrom?: unknown }).linkedFrom = {
+        researchOutputsCollection: { items },
+      };
+    };
+
+    it('groups co-author members from project Articles', () => {
+      const graphqlItem = getTraineeProjectDetailGraphqlItem();
+      setProjectResearchOutputs(graphqlItem, [
+        {
+          sys: { id: 'ro-1' },
+          title: 'Shared Article 1',
+          documentType: 'Article',
+          type: 'Preprint',
+          authorsCollection: {
+            items: [
+              {
+                __typename: 'Users',
+                sys: { id: 'user-trainee' },
+                firstName: 'Dana',
+                lastName: 'Lopez',
+                nickname: '',
+                alumniSinceDate: undefined,
+                avatar: { url: null },
+                teamsCollection: { items: [] },
+              },
+              {
+                __typename: 'Users',
+                sys: { id: 'user-collab-b' },
+                firstName: 'Bob',
+                lastName: 'Green',
+                nickname: '',
+                alumniSinceDate: null,
+                avatar: { url: null },
+                teamsCollection: { items: [] },
+              },
+            ],
+          },
+        },
+        {
+          sys: { id: 'ro-2' },
+          title: 'Shared Article 2',
+          documentType: 'Article',
+          type: 'Published',
+          authorsCollection: {
+            items: [
+              {
+                __typename: 'Users',
+                sys: { id: 'user-trainer' },
+                firstName: 'Taylor',
+                lastName: 'Mills',
+                nickname: 'Tay',
+                alumniSinceDate: undefined,
+                avatar: { url: null },
+                teamsCollection: { items: [] },
+              },
+              {
+                __typename: 'Users',
+                sys: { id: 'user-collab-a' },
+                firstName: 'Alice',
+                lastName: 'Brown',
+                nickname: '',
+                alumniSinceDate: null,
+                avatar: { url: null },
+                teamsCollection: { items: [] },
+              },
+              {
+                __typename: 'Users',
+                sys: { id: 'user-collab-b' },
+                firstName: 'Bob',
+                lastName: 'Green',
+                nickname: '',
+                alumniSinceDate: null,
+                avatar: { url: null },
+                teamsCollection: { items: [] },
+              },
+            ],
+          },
+        },
+      ]);
+
+      const result = parseContentfulProjectDetail(graphqlItem);
+
+      expect(result).toMatchObject({
+        collaboratingMembers: [
+          {
+            id: 'user-collab-a',
+            displayName: 'Alice Brown',
+            articles: [
+              { id: 'ro-2', title: 'Shared Article 2', type: 'Published' },
+            ],
+          },
+          {
+            id: 'user-collab-b',
+            displayName: 'Bob Green',
+            articles: [
+              { id: 'ro-1', title: 'Shared Article 1', type: 'Preprint' },
+              { id: 'ro-2', title: 'Shared Article 2', type: 'Published' },
+            ],
+          },
+        ],
+      });
+    });
+
+    it('ignores research outputs that are not Articles', () => {
+      const graphqlItem = getResourceIndividualProjectDetailGraphqlItem();
+      setProjectResearchOutputs(graphqlItem, [
+        {
+          sys: { id: 'ro-dataset' },
+          title: 'A dataset',
+          documentType: 'Dataset',
+          type: 'Code',
+          authorsCollection: {
+            items: [
+              {
+                __typename: 'Users',
+                sys: { id: 'user-collab-b' },
+                firstName: 'Bob',
+                lastName: 'Green',
+                nickname: '',
+                alumniSinceDate: null,
+                avatar: { url: null },
+                teamsCollection: { items: [] },
+              },
+            ],
+          },
+        },
+      ]);
+
+      const result = parseContentfulProjectDetail(graphqlItem) as {
+        collaboratingMembers?: CollaboratingMember[];
+      };
+
+      expect(result.collaboratingMembers).toBeUndefined();
+    });
+
+    it('captures each collaborating member’s alumniSinceDate, teams, and avatarUrl', () => {
+      const graphqlItem = getTraineeProjectDetailGraphqlItem();
+      setProjectResearchOutputs(graphqlItem, [
+        {
+          sys: { id: 'ro-mix' },
+          title: 'Mixed Article',
+          documentType: 'Article',
+          type: 'Preprint',
+          authorsCollection: {
+            items: [
+              {
+                __typename: 'Users',
+                sys: { id: 'user-collab-alumni' },
+                firstName: 'Alumni',
+                lastName: 'Author',
+                nickname: '',
+                alumniSinceDate: '2024-01-01',
+                avatar: { url: 'https://example.com/alumni.png' },
+                teamsCollection: {
+                  items: [
+                    {
+                      team: {
+                        sys: { id: 'team-discovery' },
+                        displayName: 'Team Discovery',
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                __typename: 'Users',
+                sys: { id: 'user-collab-active' },
+                firstName: 'Active',
+                lastName: 'Author',
+                nickname: '',
+                alumniSinceDate: null,
+                avatar: { url: null },
+                teamsCollection: {
+                  items: [
+                    {
+                      team: {
+                        sys: { id: 'team-resource' },
+                        displayName: 'Team Resource',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ]);
+
+      const result = parseContentfulProjectDetail(graphqlItem) as {
+        collaboratingMembers?: CollaboratingMember[];
+      };
+
+      expect(result.collaboratingMembers).toEqual([
+        expect.objectContaining({
+          id: 'user-collab-active',
+          alumniSinceDate: undefined,
+          teams: [{ id: 'team-resource', displayName: 'Team Resource' }],
+        }),
+        expect.objectContaining({
+          id: 'user-collab-alumni',
+          alumniSinceDate: '2024-01-01',
+          avatarUrl: 'https://example.com/alumni.png',
+          teams: [{ id: 'team-discovery', displayName: 'Team Discovery' }],
+        }),
+      ]);
+    });
+
+    it('omits collaboratingMembers when there are no co-authors', () => {
+      const graphqlItem = getResourceIndividualProjectDetailGraphqlItem();
+      setProjectResearchOutputs(graphqlItem, [
+        {
+          sys: { id: 'ro-solo' },
+          title: 'Solo Article',
+          documentType: 'Article',
+          type: 'Preprint',
+          authorsCollection: {
+            items: [],
+          },
+        },
+      ]);
+
+      const result = parseContentfulProjectDetail(graphqlItem) as {
+        collaboratingMembers?: CollaboratingMember[];
+      };
+
+      expect(result.collaboratingMembers).toBeUndefined();
+    });
+
+    it('populates collaboratingMembers on a Resource individual project', () => {
+      const graphqlItem = getResourceIndividualProjectDetailGraphqlItem();
+      setProjectResearchOutputs(graphqlItem, [
+        {
+          sys: { id: 'ro-resource-1' },
+          title: 'Resource Article 1',
+          documentType: 'Article',
+          type: 'Preprint',
+          authorsCollection: {
+            items: [
+              {
+                __typename: 'Users',
+                sys: { id: 'user-2' },
+                firstName: 'Jamie',
+                lastName: 'Lee',
+                nickname: '',
+                alumniSinceDate: '2025-01-01',
+                avatar: { url: null },
+                teamsCollection: { items: [] },
+              },
+              {
+                __typename: 'Users',
+                sys: { id: 'user-collab' },
+                firstName: 'Collab',
+                lastName: 'Member',
+                nickname: '',
+                alumniSinceDate: null,
+                avatar: { url: null },
+                teamsCollection: { items: [] },
+              },
+            ],
+          },
+        },
+      ]);
+
+      const result = parseContentfulProjectDetail(graphqlItem) as {
+        collaboratingMembers?: CollaboratingMember[];
+      };
+
+      expect(result.collaboratingMembers).toEqual([
+        expect.objectContaining({
+          id: 'user-collab',
+          displayName: 'Collab Member',
         }),
       ]);
     });

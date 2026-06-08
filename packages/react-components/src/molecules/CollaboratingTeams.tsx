@@ -3,8 +3,8 @@ import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useState } from 'react';
 
-import { Button, Link, Pill } from '../atoms';
-import { lead, steel } from '../colors';
+import { Link, Pill } from '../atoms';
+import { lead } from '../colors';
 import {
   article as articleIcon,
   DiscoveryTeamIcon,
@@ -13,44 +13,17 @@ import {
   chevronUpIcon,
   chevronDownIcon,
 } from '../icons';
-import { rem, tabletScreen } from '../pixels';
-
-const nonMobileQuery = `@media (min-width: ${tabletScreen.min}px)`;
-
-const listStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-});
-
-const rowStyles = css({
-  borderTop: `1px solid ${steel.rgb}`,
-  padding: `${rem(16)} 0`,
-  ':first-of-type': {
-    borderTop: 'none',
-    paddingTop: 8,
-  },
-});
-
-const headerStyles = css({
-  display: 'flex',
-  // Mobile: chevron aligns to the bottom line (the article count).
-  alignItems: 'flex-end',
-  justifyContent: 'space-between',
-  gap: rem(12),
-  cursor: 'pointer',
-  [nonMobileQuery]: {
-    alignItems: 'center',
-  },
-});
-
-const chevronStyles = css({
-  background: 'none',
-  border: 'none',
-  cursor: 'pointer',
-  padding: 0,
-  display: 'inline-flex',
-  alignItems: 'center',
-});
+import { rem } from '../pixels';
+import CollaboratingList, {
+  nonMobileQuery,
+  ARTICLES_BEFORE_SCROLL,
+  ARTICLE_ROW_HEIGHT,
+  articleTypeLabel,
+  rowStyles,
+  headerStyles,
+  chevronStyles,
+  articleRowStyles,
+} from './CollaboratingList';
 
 const headerLeftStyles = css({
   display: 'flex',
@@ -91,9 +64,6 @@ const articleCountStyles = css({
   },
 });
 
-const ARTICLES_BEFORE_SCROLL = 7;
-const ARTICLE_ROW_HEIGHT = 40;
-
 const articlesListStyles = (count: number) =>
   css({
     listStyle: 'none',
@@ -112,51 +82,11 @@ const articlesListStyles = (count: number) =>
       : {}),
   });
 
-const articleRowStyles = css({
-  // Mobile: title row on top, pill flush-left underneath.
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  gap: 0,
-  [nonMobileQuery]: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: rem(8),
-  },
-});
-
 const articleTitleGroupStyles = css({
   display: 'inline-flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   gap: rem(8),
 });
-
-const emptyStateStyles = css({
-  color: lead.rgb,
-  margin: 0,
-  padding: `${rem(24)} 0`,
-  textAlign: 'left',
-});
-
-const viewMoreContainerStyles = css({
-  display: 'flex',
-  justifyContent: 'center',
-  marginTop: rem(16),
-  paddingTop: rem(14),
-  // Negative horizontal margins cancel the parent card's 24px horizontal
-  // padding so the divider spans the full card width.
-  marginInline: `-${rem(24)}`,
-  marginBottom: `-${rem(14)}`,
-  borderTop: `1px solid ${steel.rgb}`,
-});
-
-const INITIAL_COLLABORATORS_COUNT = 10;
-
-const articleTypeLabel = (type?: string) => {
-  if (!type) return undefined;
-  if (type === 'Published') return 'Publication';
-  return type;
-};
 
 const teamTypeIconFor = (teamType?: string): React.FC =>
   teamType === 'Resource Team' ? ResourceTeamIcon : DiscoveryTeamIcon;
@@ -253,37 +183,13 @@ type CollaboratingTeamsProps = {
 const CollaboratingTeams: React.FC<CollaboratingTeamsProps> = ({
   collaboratingTeams,
   emptyStateMessage = 'There are no team collaborations on this project yet.',
-}) => {
-  const [showAll, setShowAll] = useState(false);
-
-  const count = collaboratingTeams?.length ?? 0;
-  if (count === 0) {
-    return <p css={emptyStateStyles}>{emptyStateMessage}</p>;
-  }
-
-  const teams = collaboratingTeams ?? [];
-  const visibleTeams =
-    showAll || count <= INITIAL_COLLABORATORS_COUNT
-      ? teams
-      : teams.slice(0, INITIAL_COLLABORATORS_COUNT);
-  const hasMore = count > INITIAL_COLLABORATORS_COUNT;
-
-  return (
-    <>
-      <div css={listStyles}>
-        {visibleTeams.map((team) => (
-          <CollaboratingTeamRow key={team.id} team={team} />
-        ))}
-      </div>
-      {hasMore && (
-        <div css={viewMoreContainerStyles}>
-          <Button linkStyle onClick={() => setShowAll((v) => !v)}>
-            {showAll ? 'View Less Collaborators' : 'View More Collaborators'}
-          </Button>
-        </div>
-      )}
-    </>
-  );
-};
+}) => (
+  <CollaboratingList
+    items={collaboratingTeams}
+    initialCount={10}
+    emptyStateMessage={emptyStateMessage}
+    renderRow={(team) => <CollaboratingTeamRow key={team.id} team={team} />}
+  />
+);
 
 export default CollaboratingTeams;

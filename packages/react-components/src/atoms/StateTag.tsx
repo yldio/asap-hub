@@ -43,7 +43,7 @@ const labelStyles = (withIcon: boolean) =>
   });
 
 type StateTagProps = {
-  label: string;
+  label?: string;
   icon?: JSX.Element;
   accent?: AccentVariant;
 };
@@ -55,7 +55,7 @@ const StateTag: React.FC<StateTagProps> = ({
 }) => (
   <span css={[styles, accents[accent]]}>
     {icon && <span css={iconStyles}>{icon}</span>}
-    <span css={labelStyles(!!icon)}>{label}</span>
+    {label && <span css={labelStyles(!!icon)}>{label}</span>}
   </span>
 );
 

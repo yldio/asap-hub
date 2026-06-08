@@ -78,9 +78,7 @@ const UserSpeaker = ({ speaker }: UserSpeakerProps) => (
         <Avatar {...speaker} imageUrl={speaker.avatarUrl} />
       </div>
       {speaker.displayName}
-      {speaker.alumniSinceDate && (
-        <StateTag icon={alumniBadgeIcon} label="Alumni" />
-      )}
+      {speaker.alumniSinceDate && <StateTag icon={alumniBadgeIcon} />}
     </div>
   </Link>
 );

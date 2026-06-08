@@ -30,7 +30,7 @@ describe('EventSpeakers', () => {
     expect(screen.getByText('To be announced')).toBeVisible();
   });
 
-  it('does not show Alumni badge when speaker is not alumni', () => {
+  it('does not show alumni icon when speaker is not alumni', () => {
     renderEventSpeakers([
       {
         speaker: {
@@ -42,10 +42,10 @@ describe('EventSpeakers', () => {
         },
       },
     ]);
-    expect(screen.queryByText('Alumni')).not.toBeInTheDocument();
+    expect(screen.queryByTitle('Alumni Member')).not.toBeInTheDocument();
   });
 
-  it('shows Alumni badge when speaker has alumniSinceDate', () => {
+  it('shows alumni icon when speaker has alumniSinceDate', () => {
     renderEventSpeakers([
       {
         speaker: {
@@ -58,6 +58,6 @@ describe('EventSpeakers', () => {
         },
       },
     ]);
-    expect(screen.getByText('Alumni')).toBeInTheDocument();
+    expect(screen.getByTitle('Alumni Member')).toBeInTheDocument();
   });
 });

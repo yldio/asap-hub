@@ -33547,7 +33547,12 @@ export type FetchManuscriptNotificationDetailsQuery = {
                       linkedFrom?: Maybe<{
                         projectsCollection?: Maybe<{
                           items: Array<
-                            Maybe<Pick<Projects, 'projectId' | 'grantId'>>
+                            Maybe<
+                              Pick<
+                                Projects,
+                                'projectId' | 'projectType' | 'grantId'
+                              > & { sys: Pick<Sys, 'id'> }
+                            >
                           >;
                         }>;
                       }>;
@@ -62077,7 +62082,38 @@ export const FetchManuscriptNotificationDetailsDocument = {
                                                                   name: {
                                                                     kind: 'Name',
                                                                     value:
+                                                                      'sys',
+                                                                  },
+                                                                  selectionSet:
+                                                                    {
+                                                                      kind: 'SelectionSet',
+                                                                      selections:
+                                                                        [
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'id',
+                                                                            },
+                                                                          },
+                                                                        ],
+                                                                    },
+                                                                },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
                                                                       'projectId',
+                                                                  },
+                                                                },
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'projectType',
                                                                   },
                                                                 },
                                                                 {

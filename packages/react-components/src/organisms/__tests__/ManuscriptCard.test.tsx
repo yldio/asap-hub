@@ -11,11 +11,19 @@ import { ComponentProps, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import ManuscriptCard from '../ManuscriptCard';
 
-let currentLocation: { pathname: string; search: string } | null = null;
+let currentLocation: {
+  pathname: string;
+  search: string;
+  hash: string;
+} | null = null;
 const LocationCapture = () => {
   const location = useLocation();
   useEffect(() => {
-    currentLocation = { pathname: location.pathname, search: location.search };
+    currentLocation = {
+      pathname: location.pathname,
+      search: location.search,
+      hash: location.hash,
+    };
   }, [location]);
   return null;
 };
@@ -864,6 +872,125 @@ describe('Tabs', () => {
 
     await userActions.click(openDiscussionsButton);
     expect(getByRole('button', { name: 'Discussions' })).toHaveClass('active');
+  });
+
+  describe('opening from an email discussion link', () => {
+    it('opens the Discussions tab when isTargetManuscript and ?tab=discussions', () => {
+      const { getByRole } = render(
+        <MemoryRouter
+          initialEntries={['/workspace?tab=discussions#manuscript_0']}
+        >
+          <ManuscriptCard {...props} isTargetManuscript />
+        </MemoryRouter>,
+      );
+
+      expect(getByRole('button', { name: 'Discussions' })).toHaveClass(
+        'active',
+      );
+      expect(
+        getByRole('button', { name: 'Manuscripts and Reports' }),
+      ).not.toHaveClass('active');
+    });
+
+    it('keeps the default tab when isTargetManuscript but tab query is missing', () => {
+      const { getByRole } = render(
+        <MemoryRouter initialEntries={['/workspace#manuscript_0']}>
+          <ManuscriptCard {...props} isTargetManuscript />
+        </MemoryRouter>,
+      );
+
+      expect(
+        getByRole('button', { name: 'Manuscripts and Reports' }),
+      ).toHaveClass('active');
+    });
+
+    it('ignores ?tab=discussions when manuscript is not the target', async () => {
+      const userActions = userEvent.setup({ delay: null });
+      const { getByRole, getByTestId } = render(
+        <MemoryRouter initialEntries={['/workspace?tab=discussions']}>
+          <ManuscriptCard {...props} />
+        </MemoryRouter>,
+      );
+
+      await userActions.click(getByTestId('collapsible-button'));
+
+      expect(
+        getByRole('button', { name: 'Manuscripts and Reports' }),
+      ).toHaveClass('active');
+    });
+  });
+
+  describe('URL sync', () => {
+    beforeEach(() => {
+      currentLocation = null;
+    });
+
+    it('puts the manuscript id in the hash when the card is expanded', async () => {
+      const userActions = userEvent.setup({ delay: null });
+      const { getByTestId } = render(
+        <MemoryRouter initialEntries={['/workspace']}>
+          <LocationCapture />
+          <ManuscriptCard {...props} />
+        </MemoryRouter>,
+      );
+
+      await userActions.click(getByTestId('collapsible-button'));
+
+      expect(currentLocation?.hash).toBe('#manuscript_0');
+      expect(currentLocation?.search).toBe('');
+    });
+
+    it('adds ?tab=discussions when the user switches to Discussions', async () => {
+      const userActions = userEvent.setup({ delay: null });
+      const { getByRole, getByTestId } = render(
+        <MemoryRouter initialEntries={['/workspace']}>
+          <LocationCapture />
+          <ManuscriptCard {...props} />
+        </MemoryRouter>,
+      );
+
+      await userActions.click(getByTestId('collapsible-button'));
+      await userActions.click(getByRole('button', { name: 'Discussions' }));
+
+      expect(currentLocation?.search).toBe('?tab=discussions');
+      expect(currentLocation?.hash).toBe('#manuscript_0');
+    });
+
+    it('drops the tab query when the user switches back to Manuscripts and Reports', async () => {
+      const userActions = userEvent.setup({ delay: null });
+      const { getByRole, getByTestId } = render(
+        <MemoryRouter initialEntries={['/workspace']}>
+          <LocationCapture />
+          <ManuscriptCard {...props} />
+        </MemoryRouter>,
+      );
+
+      await userActions.click(getByTestId('collapsible-button'));
+      await userActions.click(getByRole('button', { name: 'Discussions' }));
+      await userActions.click(
+        getByRole('button', { name: 'Manuscripts and Reports' }),
+      );
+
+      expect(currentLocation?.search).toBe('');
+      expect(currentLocation?.hash).toBe('#manuscript_0');
+    });
+
+    it('clears the URL when the user collapses the card', async () => {
+      const userActions = userEvent.setup({ delay: null });
+      const { getByTestId } = render(
+        <MemoryRouter initialEntries={['/workspace']}>
+          <LocationCapture />
+          <ManuscriptCard {...props} />
+        </MemoryRouter>,
+      );
+
+      await userActions.click(getByTestId('collapsible-button')); // expand
+      expect(currentLocation?.hash).toBe('#manuscript_0');
+
+      await userActions.click(getByTestId('collapsible-button')); // collapse
+      expect(currentLocation?.hash).toBe('');
+      expect(currentLocation?.search).toBe('');
+    });
   });
 });
 

@@ -14,7 +14,7 @@ import {
 import { network } from '@asap-hub/routing';
 import { css, Theme } from '@emotion/react';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { DiscussionsTab } from '.';
 import {
   Button,
@@ -200,8 +200,9 @@ const isManuscriptLead = ({ version, user }: VersionUserProps) =>
     version.teams.find(
       (versionTeam) =>
         versionTeam.id === team.id &&
-        (team.roles.includes('Lead PI (Core Leadership)') ||
-          team.roles.includes('Project Manager')),
+        team.roles.some(
+          (r) => r === 'Lead PI (Core Leadership)' || r === 'Project Manager',
+        ),
     ),
   );
 
@@ -256,16 +257,21 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
 }) => {
   const [tooltipHoverShown, setTooltipHoverShown] = useState<boolean>(false);
 
-  const [activeTab, setActiveTab] = useState<
+  const { pathname, search, hash } = useLocation();
+  const targetTabFromUrl =
+    new URLSearchParams(search).get('tab') === 'discussions'
+      ? 'discussions'
+      : 'manuscripts-and-reports';
+  const [activeTab, setInternalActiveTab] = useState<
     'manuscripts-and-reports' | 'discussions'
-  >('manuscripts-and-reports');
+  >(isTargetManuscript ? targetTabFromUrl : 'manuscripts-and-reports');
   const [manuscript, setManuscript] = useManuscriptById(id);
   const { title, status, versions } = manuscript ?? { versions: [] };
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
   const targetManuscriptRef = useRef<HTMLDivElement>(null);
 
-  const [expanded, setExpanded] = useState(isTargetManuscript);
+  const [expandedState, setExpandedState] = useState(isTargetManuscript);
   const [showMore, setShowMore] = useState(false);
 
   const [newSelectedStatus, setNewSelectedStatus] =
@@ -273,6 +279,33 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   const navigate = useNavigate();
 
   const discussionTabRef = useRef<HTMLButtonElement>(null);
+
+  // keep URL in sync so the user can copy/share the open state
+  const syncUrl = (
+    nextExpanded: boolean,
+    nextTab: 'manuscripts-and-reports' | 'discussions',
+  ) => {
+    if (!nextExpanded) {
+      // only clear the URL if it currently points at this card; otherwise
+      // another card on the page owns it and we shouldn't stomp on its state.
+      if (hash === `#${id}`) {
+        void navigate(pathname, { replace: true });
+      }
+      return;
+    }
+    const tabQuery = nextTab === 'discussions' ? '?tab=discussions' : '';
+    void navigate(`${pathname}${tabQuery}#${id}`, { replace: true });
+  };
+
+  const setExpanded = (next: boolean) => {
+    setExpandedState(next);
+    syncUrl(next, activeTab);
+  };
+
+  const setActiveTab = (next: 'manuscripts-and-reports' | 'discussions') => {
+    setInternalActiveTab(next);
+    if (expandedState) syncUrl(true, next);
+  };
 
   const complianceReportRoute = getCreateComplianceReportHref
     ? getCreateComplianceReportHref(id)
@@ -331,20 +364,35 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
       ? manuscript?.discussions.some((discussion) => !discussion.read)
       : false;
 
+  // scroll only once per page load when the URL pointed at this card.
+  // wait until the manuscript data is loaded so the layout is stable; never
+  // re-scroll on later expand/collapse cycles or tab switches.
+  const hasAutoScrolledRef = useRef(false);
+  const initialTabRef = useRef(activeTab);
   /* istanbul ignore next */
   useEffect(() => {
+    if (!isTargetManuscript || hasAutoScrolledRef.current || !manuscript) {
+      return undefined;
+    }
+
+    // give the layout one paint to settle (refs attach, tab content mounts)
+    // before measuring, then scroll to the target.
     const timer = setTimeout(() => {
-      if (isTargetManuscript && targetManuscriptRef.current) {
-        window.scrollTo({
-          top: targetManuscriptRef.current.offsetTop,
-          behavior: 'smooth',
-        });
-        window.history.replaceState({}, '', window.location.pathname);
+      const scrollTarget =
+        initialTabRef.current === 'discussions' && discussionTabRef.current
+          ? discussionTabRef.current
+          : targetManuscriptRef.current;
+
+      if (scrollTarget) {
+        scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        hasAutoScrolledRef.current = true;
       }
-    }, 500);
+    }, 100);
 
     return () => clearTimeout(timer);
-  }, [isTargetManuscript]);
+    // intentionally only re-evaluates on isTargetManuscript flips or manuscript
+    // arriving; the ref guard prevents repeat scrolls after the first success.
+  }, [isTargetManuscript, manuscript]);
 
   return (
     <>
@@ -361,9 +409,9 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
             <Button
               data-testid="collapsible-button"
               linkStyle
-              onClick={() => setExpanded(!expanded)}
+              onClick={() => setExpanded(!expandedState)}
             >
-              <span>{expanded ? minusRectIcon : plusRectIcon}</span>
+              <span>{expandedState ? minusRectIcon : plusRectIcon}</span>
             </Button>
           </span>
           <span css={{ width: '100%' }}>
@@ -403,7 +451,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
           </span>
         </div>
 
-        {expanded && (
+        {expandedState && (
           <div>
             <div
               style={{

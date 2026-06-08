@@ -28,6 +28,7 @@ const parseMember = <T extends string>(
   lastName: string;
   displayName: string;
   avatarUrl?: string;
+  alumniSinceDate?: string;
 } => ({
   id,
   userId: user.sys.id,
@@ -41,6 +42,7 @@ const parseMember = <T extends string>(
     user.nickname ?? '',
   ),
   avatarUrl: user.avatar?.url ?? undefined,
+  alumniSinceDate: user.alumniSinceDate ?? undefined,
 });
 
 export const parseMembers = <T extends string>(members: MembersItem) =>

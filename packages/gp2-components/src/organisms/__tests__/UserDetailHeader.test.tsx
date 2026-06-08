@@ -20,6 +20,7 @@ describe('UserDetailHeader', () => {
     country: 'USA',
     stateOrProvince: 'Massachusetts',
     city: 'Springfield',
+    lastModifiedDate: '2023-01-08T00:00:00.000Z',
     outputsTotal: 0,
     upcomingTotal: 0,
     pastTotal: 0,

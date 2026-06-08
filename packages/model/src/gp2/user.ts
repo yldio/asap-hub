@@ -98,6 +98,8 @@ export interface UserSocial
 export type UserDataObject = {
   activatedDate?: string;
   activeCampaignId?: string;
+  alumniSinceDate?: string;
+  alumniLocation?: string;
   alternativeEmail?: string;
   avatarUrl?: string;
   biography?: string;
@@ -167,6 +169,8 @@ export type UserUpdateDataObject = Partial<
 
 export type UserPatchRequest = Omit<
   UserUpdateDataObject,
+  | 'alumniSinceDate'
+  | 'alumniLocation'
   | 'avatar'
   | 'connections'
   | 'email'

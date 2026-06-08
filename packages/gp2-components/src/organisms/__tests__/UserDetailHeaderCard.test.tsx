@@ -20,6 +20,7 @@ describe('UserDetailHeaderCard', () => {
     country: 'USA',
     stateOrProvince: 'Massachusetts',
     city: 'Springfield',
+    lastModifiedDate: '2023-01-08T00:00:00.000Z',
   };
   it('renders only the name', () => {
     render(<UserDetailHeaderCard {...defaultProps} degrees={[]} />);
@@ -112,6 +113,51 @@ describe('UserDetailHeaderCard', () => {
         <UserDetailHeaderCard {...defaultProps} editHref="/" degrees={[]} />,
       );
       expect(screen.getByRole('link', { name: /add.+add/i })).toBeVisible();
+    });
+  });
+
+  describe('alumni', () => {
+    it('does not show alumni banner when alumniSinceDate is not set', () => {
+      render(<UserDetailHeaderCard {...defaultProps} />);
+      expect(
+        screen.queryByText(/This alumni might not have/),
+      ).not.toBeInTheDocument();
+      expect(screen.queryByText('Alumni')).not.toBeInTheDocument();
+    });
+    it('shows alumni banner and badge when alumniSinceDate is set', () => {
+      render(
+        <UserDetailHeaderCard
+          {...defaultProps}
+          alumniSinceDate="2022-06-30T00:00:00.000Z"
+        />,
+      );
+      expect(
+        screen.getByText(/This alumni might not have/),
+      ).toBeInTheDocument();
+      expect(screen.getByText(/30th June 2022/)).toBeInTheDocument();
+      expect(screen.getByText('Alumni')).toBeInTheDocument();
+    });
+    it('includes next role location in banner when alumniLocation is set', () => {
+      render(
+        <UserDetailHeaderCard
+          {...defaultProps}
+          alumniSinceDate="2022-06-30T00:00:00.000Z"
+          alumniLocation="University College London"
+        />,
+      );
+      expect(screen.getByText(/their next role was at/)).toBeInTheDocument();
+      expect(screen.getByText('University College London')).toBeInTheDocument();
+    });
+    it('omits next role sentence when alumniLocation is not set', () => {
+      render(
+        <UserDetailHeaderCard
+          {...defaultProps}
+          alumniSinceDate="2022-06-30T00:00:00.000Z"
+        />,
+      );
+      expect(
+        screen.queryByText(/their next role was at/),
+      ).not.toBeInTheDocument();
     });
   });
 

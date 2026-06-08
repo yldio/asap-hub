@@ -12,6 +12,7 @@ export interface EventSpeakerUser {
   lastName?: string;
   displayName: string;
   avatarUrl?: string;
+  alumniSinceDate?: string;
 }
 export interface EventSpeakerExternalUser {
   name: string;

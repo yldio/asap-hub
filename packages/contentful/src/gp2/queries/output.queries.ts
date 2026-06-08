@@ -66,6 +66,7 @@ export const outputsContentQueryFragment = gql`
             url
           }
           onboarded
+          alumniSinceDate
         }
         ... on ExternalUsers {
           sys {

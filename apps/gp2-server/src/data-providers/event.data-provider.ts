@@ -265,6 +265,7 @@ export const parseEventSpeakerUser = (
     user.nickname ?? '',
   ),
   avatarUrl: user.avatar?.url ?? undefined,
+  alumniSinceDate: user.alumniSinceDate ?? undefined,
 });
 
 export const parseEventSpeakerExternalUser = (

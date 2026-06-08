@@ -1,9 +1,11 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
+  alumniBadgeIcon,
   Anchor,
   Avatar,
   Card,
   pixels,
+  StateTag,
   TagList,
 } from '@asap-hub/react-components';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
@@ -28,6 +30,7 @@ type UserCardProps = Pick<
   | 'stateOrProvince'
   | 'city'
   | 'role'
+  | 'alumniSinceDate'
 > &
   Pick<ComponentProps<typeof UserCardInfo>, 'projects' | 'workingGroups'> & {
     tags?: string[];
@@ -63,6 +66,13 @@ const avatarStyles = css({
   height: rem(avatarSize),
 });
 
+const titleRowStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  gap: rem(8),
+});
+
 const UserCard: React.FC<UserCardProps> = ({
   id,
   fullDisplayName,
@@ -77,12 +87,13 @@ const UserCard: React.FC<UserCardProps> = ({
   city,
   workingGroups,
   projects,
+  alumniSinceDate,
   tags = [],
 }) => {
   const userHref = gp2Routing.users({}).user({ userId: id }).$;
 
   return (
-    <Card>
+    <Card accent={alumniSinceDate ? 'neutral200' : undefined}>
       <div css={containerStyles}>
         <Anchor href={userHref}>
           <Avatar
@@ -94,12 +105,17 @@ const UserCard: React.FC<UserCardProps> = ({
         </Anchor>
 
         <div css={textContainerStyles}>
-          <Anchor href={userHref}>
-            <h3 css={titleStyles}>
-              {fullDisplayName}
-              {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
-            </h3>
-          </Anchor>
+          <div css={titleRowStyles}>
+            <Anchor href={userHref}>
+              <h3 css={titleStyles}>
+                {fullDisplayName}
+                {degrees && !!degrees.length && `, ${degrees.join(', ')}`}
+              </h3>
+            </Anchor>
+            {alumniSinceDate && (
+              <StateTag icon={alumniBadgeIcon} label="Alumni" />
+            )}
+          </div>
           <UserCardInfo
             projects={projects}
             role={role}

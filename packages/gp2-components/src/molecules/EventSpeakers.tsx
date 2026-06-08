@@ -2,6 +2,7 @@ import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import {
+  alumniBadgeIcon,
   Avatar,
   Collapsible,
   Divider,
@@ -71,11 +72,12 @@ type UserSpeakerProps = {
 
 const UserSpeaker = ({ speaker }: UserSpeakerProps) => (
   <Link href={gp2Routing.users({}).user({ userId: speaker.id }).$}>
-    <div css={[{ gap: 9, display: 'flex' }, textWrap]}>
+    <div css={[{ gap: 9, display: 'flex', alignItems: 'center' }, textWrap]}>
       <div>
         <Avatar {...speaker} imageUrl={speaker.avatarUrl} />
       </div>
       {speaker.displayName}
+      {speaker.alumniSinceDate && <span>{alumniBadgeIcon}</span>}
     </div>
   </Link>
 );

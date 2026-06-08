@@ -121,6 +121,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
               lastName,
               displayName,
               avatarUrl,
+              alumniSinceDate,
               userId: id,
             }) => ({
               firstLine: displayName,
@@ -128,6 +129,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
               avatarUrl,
               firstName,
               lastName,
+              alumniSinceDate,
               id,
             }),
           )}

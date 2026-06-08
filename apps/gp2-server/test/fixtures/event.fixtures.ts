@@ -217,6 +217,7 @@ export const getContentfulGraphqlEvent = (): NonNullable<
           nickname: null,
           lastName: 'Brown',
           onboarded: true,
+          alumniSinceDate: null,
           avatar: null,
         },
       },

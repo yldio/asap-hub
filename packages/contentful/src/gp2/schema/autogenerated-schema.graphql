@@ -4,10 +4,22 @@ schema {
 
 directive @contentSourceMaps on QUERY
 
+directive @contentfulSchemaMetadata(contentTypePublishedCounters: JSON) on SCHEMA
+
+directive @delegatedResourceLink(contentTypeId: String, field: JSON) on FIELD_DEFINITION | OBJECT
+
+directive @enumMapper(value: JSON) on ENUM_VALUE
+
+directive @featureFlag(featureName: String) on FIELD
+
+directive @fieldResolver(data: JSON, kind: String) on FIELD_DEFINITION
+
 "Indicates exactly one field must be supplied and this field must not be `null`."
 directive @oneOf on INPUT_OBJECT
 
 directive @timeline(where: TimelineFilterInput!) on QUERY
+
+directive @typeIdentifier(contentTypeId: String) on OBJECT
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/announcements)"""
 type Announcements implements Entry & _Node {
@@ -25,6 +37,12 @@ type AnnouncementsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type AnnouncementsCursorCollection {
+  items: [Announcements]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input AnnouncementsFilter {
@@ -59,10 +77,23 @@ input AnnouncementsFilter {
 
 type AnnouncementsLinkingCollections {
   dashboardCollection(limit: Int = 100, locale: String, order: [AnnouncementsLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): DashboardCollection
+  dashboardCursorCollection(limit: Int = 100, locale: String, order: [AnnouncementsLinkingCollectionsDashboardCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): DashboardCursorCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
 }
 
 enum AnnouncementsLinkingCollectionsDashboardCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum AnnouncementsLinkingCollectionsDashboardCursorCollectionOrder {
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -110,6 +141,12 @@ type AssetCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type AssetCursorCollection {
+  items: [Asset]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input AssetFilter {
@@ -183,10 +220,15 @@ input AssetFilter {
 
 type AssetLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   eventsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventsCollection
+  eventsCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EventsCursorCollection
   guideCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): GuideCollection
+  guideCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): GuideCursorCollection
   newsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): NewsCollection
+  newsCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): NewsCursorCollection
   usersCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): UsersCollection
+  usersCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): UsersCursorCollection
 }
 
 enum AssetOrder {
@@ -231,6 +273,12 @@ type CalendarsCollection {
   total: Int!
 }
 
+type CalendarsCursorCollection {
+  items: [Calendars]!
+  limit: Int!
+  pages: CursorPages!
+}
+
 input CalendarsFilter {
   AND: [CalendarsFilter]
   OR: [CalendarsFilter]
@@ -262,12 +310,65 @@ input CalendarsFilter {
 
 type CalendarsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   eventsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventsCollection
+  eventsCursorCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsEventsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EventsCursorCollection
   projectsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+  projectsCursorCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsProjectsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectsCursorCollection
   workingGroupsCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
+  workingGroupsCursorCollection(limit: Int = 100, locale: String, order: [CalendarsLinkingCollectionsWorkingGroupsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupsCursorCollection
 }
 
 enum CalendarsLinkingCollectionsEventsCollectionOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+enum CalendarsLinkingCollectionsEventsCursorCollectionOrder {
   copyMeetingLink_ASC
   copyMeetingLink_DESC
   endDateTimeZone_ASC
@@ -351,7 +452,63 @@ enum CalendarsLinkingCollectionsProjectsCollectionOrder {
   traineeProject_DESC
 }
 
+enum CalendarsLinkingCollectionsProjectsCursorCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
+}
+
 enum CalendarsLinkingCollectionsWorkingGroupsCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum CalendarsLinkingCollectionsWorkingGroupsCursorCollectionOrder {
   leadingMembers_ASC
   leadingMembers_DESC
   primaryEmail_ASC
@@ -446,6 +603,12 @@ type ContributingCohortsCollection {
   total: Int!
 }
 
+type ContributingCohortsCursorCollection {
+  items: [ContributingCohorts]!
+  limit: Int!
+  pages: CursorPages!
+}
+
 input ContributingCohortsFilter {
   AND: [ContributingCohortsFilter]
   OR: [ContributingCohortsFilter]
@@ -469,8 +632,11 @@ input ContributingCohortsFilter {
 
 type ContributingCohortsLinkingCollections {
   contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ContributingCohortsMembershipCollection
+  contributingCohortsMembershipCursorCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsContributingCohortsMembershipCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ContributingCohortsMembershipCursorCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   outputsCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  outputsCursorCollection(limit: Int = 100, locale: String, order: [ContributingCohortsLinkingCollectionsOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): OutputsCursorCollection
 }
 
 enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectionOrder {
@@ -486,7 +652,59 @@ enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCollectio
   sys_publishedVersion_DESC
 }
 
+enum ContributingCohortsLinkingCollectionsContributingCohortsMembershipCursorCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 enum ContributingCohortsLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum ContributingCohortsLinkingCollectionsOutputsCursorCollectionOrder {
   accessionNumber_ASC
   accessionNumber_DESC
   addedDate_ASC
@@ -542,6 +760,12 @@ type ContributingCohortsMembershipCollection {
   total: Int!
 }
 
+type ContributingCohortsMembershipCursorCollection {
+  items: [ContributingCohortsMembership]!
+  limit: Int!
+  pages: CursorPages!
+}
+
 input ContributingCohortsMembershipFilter {
   AND: [ContributingCohortsMembershipFilter]
   OR: [ContributingCohortsMembershipFilter]
@@ -560,7 +784,9 @@ input ContributingCohortsMembershipFilter {
 
 type ContributingCohortsMembershipLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   usersCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): UsersCollection
+  usersCursorCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipLinkingCollectionsUsersCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): UsersCursorCollection
 }
 
 enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
@@ -572,6 +798,83 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  blog_ASC
+  blog_DESC
+  blueSky_ASC
+  blueSky_DESC
+  city_ASC
+  city_DESC
+  country_ASC
+  country_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  lastName_ASC
+  lastName_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
+  onboarded_ASC
+  onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  region_ASC
+  region_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  telephoneCountryCode_ASC
+  telephoneCountryCode_DESC
+  telephoneNumber_ASC
+  telephoneNumber_DESC
+  threads_ASC
+  threads_DESC
+  twitter_ASC
+  twitter_DESC
+}
+
+enum ContributingCohortsMembershipLinkingCollectionsUsersCursorCollectionOrder {
+  activatedDate_ASC
+  activatedDate_DESC
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
+  alternativeEmail_ASC
+  alternativeEmail_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
   blog_ASC
   blog_DESC
   blueSky_ASC
@@ -660,12 +963,19 @@ enum ContributingCohortsOrder {
   sys_publishedVersion_DESC
 }
 
+type CursorPages {
+  next: String
+  prev: String
+}
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/dashboard)"""
 type Dashboard implements Entry & _Node {
   _id: ID!
   announcementsCollection(limit: Int = 100, locale: String, order: [DashboardAnnouncementsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: AnnouncementsFilter): DashboardAnnouncementsCollection
+  announcementsCursorCollection(limit: Int = 100, locale: String, order: [DashboardAnnouncementsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: AnnouncementsFilter): DashboardAnnouncementsCursorCollection
   contentfulMetadata: ContentfulMetadata!
   guidesCollection(limit: Int = 100, locale: String, order: [DashboardGuidesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: GuideFilter): DashboardGuidesCollection
+  guidesCursorCollection(limit: Int = 100, locale: String, order: [DashboardGuidesCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: GuideFilter): DashboardGuidesCursorCollection
   latestStats(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: LatestStatsFilter): LatestStats
   linkedFrom(allowedLocales: [String]): DashboardLinkingCollections
   sys: Sys!
@@ -695,11 +1005,40 @@ enum DashboardAnnouncementsCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+type DashboardAnnouncementsCursorCollection {
+  items: [Announcements]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum DashboardAnnouncementsCursorCollectionOrder {
+  deadline_ASC
+  deadline_DESC
+  description_ASC
+  description_DESC
+  link_ASC
+  link_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 type DashboardCollection {
   items: [Dashboard]!
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type DashboardCursorCollection {
+  items: [Dashboard]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input DashboardFilter {
@@ -735,8 +1074,28 @@ enum DashboardGuidesCollectionOrder {
   title_DESC
 }
 
+type DashboardGuidesCursorCollection {
+  items: [Guide]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum DashboardGuidesCursorCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 type DashboardLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
 }
 
 enum DashboardOrder {
@@ -771,6 +1130,12 @@ type EntryCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type EntryCursorCollection {
+  items: [Entry]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input EntryFilter {
@@ -808,6 +1173,12 @@ type EventSpeakersCollection {
   total: Int!
 }
 
+type EventSpeakersCursorCollection {
+  items: [EventSpeakers]!
+  limit: Int!
+  pages: CursorPages!
+}
+
 input EventSpeakersFilter {
   AND: [EventSpeakersFilter]
   OR: [EventSpeakersFilter]
@@ -826,10 +1197,61 @@ input EventSpeakersFilter {
 
 type EventSpeakersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   eventsCollection(limit: Int = 100, locale: String, order: [EventSpeakersLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventsCollection
+  eventsCursorCollection(limit: Int = 100, locale: String, order: [EventSpeakersLinkingCollectionsEventsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EventsCursorCollection
 }
 
 enum EventSpeakersLinkingCollectionsEventsCollectionOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+enum EventSpeakersLinkingCollectionsEventsCursorCollectionOrder {
   copyMeetingLink_ASC
   copyMeetingLink_DESC
   endDateTimeZone_ASC
@@ -931,11 +1353,13 @@ type Events implements Entry & _Node {
   presentationPermanentlyUnavailable(locale: String, useFallbackLocale: Boolean): Boolean
   presentationUpdatedAt(locale: String, useFallbackLocale: Boolean): DateTime
   speakersCollection(limit: Int = 100, locale: String, order: [EventsSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EventSpeakersFilter): EventsSpeakersCollection
+  speakersCursorCollection(limit: Int = 100, locale: String, order: [EventsSpeakersCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: EventSpeakersFilter): EventsSpeakersCursorCollection
   startDate(locale: String, useFallbackLocale: Boolean): DateTime
   startDateTimeZone(locale: String, useFallbackLocale: Boolean): String
   status(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
   tagsCollection(limit: Int = 100, locale: String, order: [EventsTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): EventsTagsCollection
+  tagsCursorCollection(limit: Int = 100, locale: String, order: [EventsTagsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: TagsFilter): EventsTagsCursorCollection
   thumbnail(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   title(locale: String, useFallbackLocale: Boolean): String
   videoRecording(locale: String, useFallbackLocale: Boolean): EventsVideoRecording
@@ -948,6 +1372,12 @@ type EventsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type EventsCursorCollection {
+  items: [Events]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input EventsFilter {
@@ -1098,10 +1528,51 @@ input EventsFilter {
 
 type EventsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   outputsCollection(limit: Int = 100, locale: String, order: [EventsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  outputsCursorCollection(limit: Int = 100, locale: String, order: [EventsLinkingCollectionsOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): OutputsCursorCollection
 }
 
 enum EventsLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum EventsLinkingCollectionsOutputsCursorCollectionOrder {
   accessionNumber_ASC
   accessionNumber_DESC
   addedDate_ASC
@@ -1289,6 +1760,25 @@ enum EventsSpeakersCollectionOrder {
   title_DESC
 }
 
+type EventsSpeakersCursorCollection {
+  items: [EventSpeakers]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum EventsSpeakersCursorCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 type EventsTagsCollection {
   items: [Tags]!
   limit: Int!
@@ -1297,6 +1787,25 @@ type EventsTagsCollection {
 }
 
 enum EventsTagsCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type EventsTagsCursorCollection {
+  items: [Tags]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum EventsTagsCursorCollectionOrder {
   name_ASC
   name_DESC
   sys_firstPublishedAt_ASC
@@ -1366,6 +1875,12 @@ type ExternalUsersCollection {
   total: Int!
 }
 
+type ExternalUsersCursorCollection {
+  items: [ExternalUsers]!
+  limit: Int!
+  pages: CursorPages!
+}
+
 input ExternalUsersFilter {
   AND: [ExternalUsersFilter]
   OR: [ExternalUsersFilter]
@@ -1389,8 +1904,11 @@ input ExternalUsersFilter {
 
 type ExternalUsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventSpeakersCollection
+  eventSpeakersCursorCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsEventSpeakersCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EventSpeakersCursorCollection
   outputsCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  outputsCursorCollection(limit: Int = 100, locale: String, order: [ExternalUsersLinkingCollectionsOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): OutputsCursorCollection
 }
 
 enum ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder {
@@ -1406,7 +1924,59 @@ enum ExternalUsersLinkingCollectionsEventSpeakersCollectionOrder {
   title_DESC
 }
 
+enum ExternalUsersLinkingCollectionsEventSpeakersCursorCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 enum ExternalUsersLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum ExternalUsersLinkingCollectionsOutputsCursorCollectionOrder {
   accessionNumber_ASC
   accessionNumber_DESC
   addedDate_ASC
@@ -1460,11 +2030,12 @@ enum ExternalUsersOrder {
   sys_publishedVersion_DESC
 }
 
-"""Model for Tools and Tutorials guides [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide)"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guide)"""
 type Guide implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
   descriptionCollection(limit: Int = 100, locale: String, order: [GuideDescriptionCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: GuideDescriptionFilter): GuideDescriptionCollection
+  descriptionCursorCollection(limit: Int = 100, locale: String, order: [GuideDescriptionCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: GuideDescriptionFilter): GuideDescriptionCursorCollection
   icon(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   linkedFrom(allowedLocales: [String]): GuideLinkingCollections
   sys: Sys!
@@ -1476,6 +2047,12 @@ type GuideCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type GuideCursorCollection {
+  items: [Guide]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/guideDescription)"""
@@ -1498,6 +2075,29 @@ type GuideDescriptionCollection {
 }
 
 enum GuideDescriptionCollectionOrder {
+  linkText_ASC
+  linkText_DESC
+  linkUrl_ASC
+  linkUrl_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+type GuideDescriptionCursorCollection {
+  items: [GuideDescription]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum GuideDescriptionCursorCollectionOrder {
   linkText_ASC
   linkText_DESC
   linkUrl_ASC
@@ -1551,10 +2151,25 @@ input GuideDescriptionFilter {
 
 type GuideDescriptionLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   guideCollection(limit: Int = 100, locale: String, order: [GuideDescriptionLinkingCollectionsGuideCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): GuideCollection
+  guideCursorCollection(limit: Int = 100, locale: String, order: [GuideDescriptionLinkingCollectionsGuideCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): GuideCursorCollection
 }
 
 enum GuideDescriptionLinkingCollectionsGuideCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum GuideDescriptionLinkingCollectionsGuideCursorCollectionOrder {
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -1603,10 +2218,23 @@ input GuideFilter {
 
 type GuideLinkingCollections {
   dashboardCollection(limit: Int = 100, locale: String, order: [GuideLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): DashboardCollection
+  dashboardCursorCollection(limit: Int = 100, locale: String, order: [GuideLinkingCollectionsDashboardCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): DashboardCursorCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
 }
 
 enum GuideLinkingCollectionsDashboardCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum GuideLinkingCollectionsDashboardCursorCollectionOrder {
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -1750,6 +2378,12 @@ type LatestStatsCollection {
   total: Int!
 }
 
+type LatestStatsCursorCollection {
+  items: [LatestStats]!
+  limit: Int!
+  pages: CursorPages!
+}
+
 input LatestStatsFilter {
   AND: [LatestStatsFilter]
   OR: [LatestStatsFilter]
@@ -1786,10 +2420,23 @@ input LatestStatsFilter {
 
 type LatestStatsLinkingCollections {
   dashboardCollection(limit: Int = 100, locale: String, order: [LatestStatsLinkingCollectionsDashboardCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): DashboardCollection
+  dashboardCursorCollection(limit: Int = 100, locale: String, order: [LatestStatsLinkingCollectionsDashboardCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): DashboardCursorCollection
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
 }
 
 enum LatestStatsLinkingCollectionsDashboardCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum LatestStatsLinkingCollectionsDashboardCursorCollectionOrder {
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -1817,7 +2464,7 @@ enum LatestStatsOrder {
   sys_publishedVersion_DESC
 }
 
-"""Videos and PDFs [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media)"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/media)"""
 type Media implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -1831,6 +2478,12 @@ type MediaCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type MediaCursorCollection {
+  items: [Media]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input MediaFilter {
@@ -1849,6 +2502,7 @@ input MediaFilter {
 
 type MediaLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
 }
 
 enum MediaOrder {
@@ -1864,7 +2518,7 @@ enum MediaOrder {
   url_DESC
 }
 
-"""Meta data to store the state of content model through migrations [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration)"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/migration)"""
 type Migration implements Entry & _Node {
   _id: ID!
   contentTypeId(locale: String, useFallbackLocale: Boolean): String
@@ -1879,6 +2533,12 @@ type MigrationCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type MigrationCursorCollection {
+  items: [Migration]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input MigrationFilter {
@@ -1898,6 +2558,7 @@ input MigrationFilter {
 
 type MigrationLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
 }
 
 enum MigrationOrder {
@@ -1930,6 +2591,12 @@ type MilestonesCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type MilestonesCursorCollection {
+  items: [Milestones]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input MilestonesFilter {
@@ -1969,11 +2636,49 @@ input MilestonesFilter {
 
 type MilestonesLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   projectsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+  projectsCursorCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsProjectsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectsCursorCollection
   workingGroupsCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
+  workingGroupsCursorCollection(limit: Int = 100, locale: String, order: [MilestonesLinkingCollectionsWorkingGroupsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupsCursorCollection
 }
 
 enum MilestonesLinkingCollectionsProjectsCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
+}
+
+enum MilestonesLinkingCollectionsProjectsCursorCollectionOrder {
   endDate_ASC
   endDate_DESC
   leadEmail_ASC
@@ -2029,6 +2734,27 @@ enum MilestonesLinkingCollectionsWorkingGroupsCollectionOrder {
   title_DESC
 }
 
+enum MilestonesLinkingCollectionsWorkingGroupsCursorCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 enum MilestonesOrder {
   description_ASC
   description_DESC
@@ -2048,7 +2774,7 @@ enum MilestonesOrder {
   title_DESC
 }
 
-"""Hub News [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)"""
+"""[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/news)"""
 type News implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
@@ -2059,6 +2785,7 @@ type News implements Entry & _Node {
   shortText(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
   tagsCollection(limit: Int = 100, locale: String, order: [NewsTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): NewsTagsCollection
+  tagsCursorCollection(limit: Int = 100, locale: String, order: [NewsTagsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: TagsFilter): NewsTagsCursorCollection
   thumbnail(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   title(locale: String, useFallbackLocale: Boolean): String
   type(locale: String, useFallbackLocale: Boolean): String
@@ -2069,6 +2796,12 @@ type NewsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type NewsCursorCollection {
+  items: [News]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input NewsFilter {
@@ -2127,6 +2860,7 @@ input NewsFilter {
 
 type NewsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
 }
 
 enum NewsOrder {
@@ -2168,6 +2902,25 @@ enum NewsTagsCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+type NewsTagsCursorCollection {
+  items: [Tags]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum NewsTagsCursorCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/outputVersion)"""
 type OutputVersion implements Entry & _Node {
   _id: ID!
@@ -2189,6 +2942,12 @@ type OutputVersionCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type OutputVersionCursorCollection {
+  items: [OutputVersion]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input OutputVersionFilter {
@@ -2258,10 +3017,51 @@ input OutputVersionFilter {
 
 type OutputVersionLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   outputsCollection(limit: Int = 100, locale: String, order: [OutputVersionLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  outputsCursorCollection(limit: Int = 100, locale: String, order: [OutputVersionLinkingCollectionsOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): OutputsCursorCollection
 }
 
 enum OutputVersionLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum OutputVersionLinkingCollectionsOutputsCursorCollectionOrder {
   accessionNumber_ASC
   accessionNumber_DESC
   addedDate_ASC
@@ -2334,8 +3134,10 @@ type Outputs implements Entry & _Node {
   addedDate(locale: String, useFallbackLocale: Boolean): DateTime
   adminNotes(locale: String, useFallbackLocale: Boolean): String
   authorsCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputsAuthorsFilter): OutputsAuthorsCollection
+  authorsCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: OutputsAuthorsFilter): OutputsAuthorsCursorCollection
   contentfulMetadata: ContentfulMetadata!
   contributingCohortsCollection(limit: Int = 100, locale: String, order: [OutputsContributingCohortsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ContributingCohortsFilter): OutputsContributingCohortsCollection
+  contributingCohortsCursorCollection(limit: Int = 100, locale: String, order: [OutputsContributingCohortsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ContributingCohortsFilter): OutputsContributingCohortsCursorCollection
   createdBy(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
   description(locale: String, useFallbackLocale: Boolean): String
   documentType(locale: String, useFallbackLocale: Boolean): String
@@ -2346,18 +3148,23 @@ type Outputs implements Entry & _Node {
   linkedFrom(allowedLocales: [String]): OutputsLinkingCollections
   publishDate(locale: String, useFallbackLocale: Boolean): DateTime
   relatedEntitiesCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputsRelatedEntitiesFilter): OutputsRelatedEntitiesCollection
+  relatedEntitiesCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: OutputsRelatedEntitiesFilter): OutputsRelatedEntitiesCursorCollection
   relatedEventsCollection(limit: Int = 100, locale: String, order: [OutputsRelatedEventsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EventsFilter): OutputsRelatedEventsCollection
+  relatedEventsCursorCollection(limit: Int = 100, locale: String, order: [OutputsRelatedEventsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: EventsFilter): OutputsRelatedEventsCursorCollection
   relatedOutputsCollection(limit: Int = 100, locale: String, order: [OutputsRelatedOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputsFilter): OutputsRelatedOutputsCollection
+  relatedOutputsCursorCollection(limit: Int = 100, locale: String, order: [OutputsRelatedOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: OutputsFilter): OutputsRelatedOutputsCursorCollection
   rrid(locale: String, useFallbackLocale: Boolean): String
   sharingStatus(locale: String, useFallbackLocale: Boolean): String
   shortDescription(locale: String, useFallbackLocale: Boolean): String
   subtype(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
   tagsCollection(limit: Int = 100, locale: String, order: [OutputsTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): OutputsTagsCollection
+  tagsCursorCollection(limit: Int = 100, locale: String, order: [OutputsTagsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: TagsFilter): OutputsTagsCursorCollection
   title(locale: String, useFallbackLocale: Boolean): String
   type(locale: String, useFallbackLocale: Boolean): String
   updatedBy(locale: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): Users
   versionsCollection(limit: Int = 100, locale: String, order: [OutputsVersionsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputVersionFilter): OutputsVersionsCollection
+  versionsCursorCollection(limit: Int = 100, locale: String, order: [OutputsVersionsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: OutputVersionFilter): OutputsVersionsCursorCollection
 }
 
 type OutputsAuthorsCollection {
@@ -2365,6 +3172,12 @@ type OutputsAuthorsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type OutputsAuthorsCursorCollection {
+  items: [OutputsAuthorsItem]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input OutputsAuthorsFilter {
@@ -2410,6 +3223,33 @@ enum OutputsContributingCohortsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+type OutputsContributingCohortsCursorCollection {
+  items: [ContributingCohorts]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum OutputsContributingCohortsCursorCollectionOrder {
+  name_ASC
+  name_DESC
+  studyLink_ASC
+  studyLink_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type OutputsCursorCollection {
+  items: [Outputs]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input OutputsFilter {
@@ -2557,10 +3397,51 @@ input OutputsFilter {
 
 type OutputsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   outputsCollection(limit: Int = 100, locale: String, order: [OutputsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  outputsCursorCollection(limit: Int = 100, locale: String, order: [OutputsLinkingCollectionsOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): OutputsCursorCollection
 }
 
 enum OutputsLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum OutputsLinkingCollectionsOutputsCursorCollectionOrder {
   accessionNumber_ASC
   accessionNumber_DESC
   addedDate_ASC
@@ -2645,6 +3526,12 @@ type OutputsRelatedEntitiesCollection {
   total: Int!
 }
 
+type OutputsRelatedEntitiesCursorCollection {
+  items: [OutputsRelatedEntitiesItem]!
+  limit: Int!
+  pages: CursorPages!
+}
+
 input OutputsRelatedEntitiesFilter {
   AND: [OutputsRelatedEntitiesFilter]
   OR: [OutputsRelatedEntitiesFilter]
@@ -2673,6 +3560,61 @@ type OutputsRelatedEventsCollection {
 }
 
 enum OutputsRelatedEventsCollectionOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+type OutputsRelatedEventsCursorCollection {
+  items: [Events]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum OutputsRelatedEventsCursorCollectionOrder {
   copyMeetingLink_ASC
   copyMeetingLink_DESC
   endDateTimeZone_ASC
@@ -2767,6 +3709,51 @@ enum OutputsRelatedOutputsCollectionOrder {
   type_DESC
 }
 
+type OutputsRelatedOutputsCursorCollection {
+  items: [Outputs]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum OutputsRelatedOutputsCursorCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
 type OutputsTagsCollection {
   items: [Tags]!
   limit: Int!
@@ -2775,6 +3762,25 @@ type OutputsTagsCollection {
 }
 
 enum OutputsTagsCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type OutputsTagsCursorCollection {
+  items: [Tags]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum OutputsTagsCursorCollectionOrder {
   name_ASC
   name_DESC
   sys_firstPublishedAt_ASC
@@ -2821,6 +3827,39 @@ enum OutputsVersionsCollectionOrder {
   type_DESC
 }
 
+type OutputsVersionsCursorCollection {
+  items: [OutputVersion]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum OutputsVersionsCursorCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  link_ASC
+  link_DESC
+  rrid_ASC
+  rrid_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/pages)"""
 type Pages implements Entry & _Node {
   _id: ID!
@@ -2840,6 +3879,12 @@ type PagesCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type PagesCursorCollection {
+  items: [Pages]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input PagesFilter {
@@ -2889,6 +3934,7 @@ input PagesFilter {
 
 type PagesLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
 }
 
 enum PagesOrder {
@@ -2965,6 +4011,12 @@ type ProjectMembershipCollection {
   total: Int!
 }
 
+type ProjectMembershipCursorCollection {
+  items: [ProjectMembership]!
+  limit: Int!
+  pages: CursorPages!
+}
+
 input ProjectMembershipFilter {
   AND: [ProjectMembershipFilter]
   OR: [ProjectMembershipFilter]
@@ -2983,10 +4035,47 @@ input ProjectMembershipFilter {
 
 type ProjectMembershipLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   projectsCollection(limit: Int = 100, locale: String, order: [ProjectMembershipLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+  projectsCursorCollection(limit: Int = 100, locale: String, order: [ProjectMembershipLinkingCollectionsProjectsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectsCursorCollection
 }
 
 enum ProjectMembershipLinkingCollectionsProjectsCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
+}
+
+enum ProjectMembershipLinkingCollectionsProjectsCursorCollectionOrder {
   endDate_ASC
   endDate_DESC
   leadEmail_ASC
@@ -3044,7 +4133,9 @@ type Projects implements Entry & _Node {
   leadEmail(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): ProjectsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ProjectMembershipFilter): ProjectsMembersCollection
+  membersCursorCollection(limit: Int = 100, locale: String, order: [ProjectsMembersCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ProjectMembershipFilter): ProjectsMembersCursorCollection
   milestonesCollection(limit: Int = 100, locale: String, order: [ProjectsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MilestonesFilter): ProjectsMilestonesCollection
+  milestonesCursorCollection(limit: Int = 100, locale: String, order: [ProjectsMilestonesCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: MilestonesFilter): ProjectsMilestonesCursorCollection
   opportunitiesAvailable(locale: String, useFallbackLocale: Boolean): Boolean
   opportunitiesLink(locale: String, useFallbackLocale: Boolean): String
   opportunitiesLinkName(locale: String, useFallbackLocale: Boolean): String
@@ -3052,10 +4143,12 @@ type Projects implements Entry & _Node {
   pmEmail(locale: String, useFallbackLocale: Boolean): String
   projectProposal(locale: String, useFallbackLocale: Boolean): String
   resourcesCollection(limit: Int = 100, locale: String, order: [ProjectsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResourcesFilter): ProjectsResourcesCollection
+  resourcesCursorCollection(limit: Int = 100, locale: String, order: [ProjectsResourcesCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ResourcesFilter): ProjectsResourcesCursorCollection
   startDate(locale: String, useFallbackLocale: Boolean): DateTime
   status(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
   tagsCollection(limit: Int = 100, locale: String, order: [ProjectsTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): ProjectsTagsCollection
+  tagsCursorCollection(limit: Int = 100, locale: String, order: [ProjectsTagsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: TagsFilter): ProjectsTagsCursorCollection
   title(locale: String, useFallbackLocale: Boolean): String
   traineeProject(locale: String, useFallbackLocale: Boolean): Boolean
 }
@@ -3065,6 +4158,12 @@ type ProjectsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type ProjectsCursorCollection {
+  items: [Projects]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input ProjectsFilter {
@@ -3173,10 +4272,51 @@ input ProjectsFilter {
 
 type ProjectsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   outputsCollection(limit: Int = 100, locale: String, order: [ProjectsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  outputsCursorCollection(limit: Int = 100, locale: String, order: [ProjectsLinkingCollectionsOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): OutputsCursorCollection
 }
 
 enum ProjectsLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum ProjectsLinkingCollectionsOutputsCursorCollectionOrder {
   accessionNumber_ASC
   accessionNumber_DESC
   addedDate_ASC
@@ -3235,6 +4375,25 @@ enum ProjectsMembersCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+type ProjectsMembersCursorCollection {
+  items: [ProjectMembership]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum ProjectsMembersCursorCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 type ProjectsMilestonesCollection {
   items: [Milestones]!
   limit: Int!
@@ -3243,6 +4402,31 @@ type ProjectsMilestonesCollection {
 }
 
 enum ProjectsMilestonesCollectionOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+type ProjectsMilestonesCursorCollection {
+  items: [Milestones]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum ProjectsMilestonesCursorCollectionOrder {
   description_ASC
   description_DESC
   externalLink_ASC
@@ -3322,6 +4506,31 @@ enum ProjectsResourcesCollectionOrder {
   type_DESC
 }
 
+type ProjectsResourcesCursorCollection {
+  items: [Resources]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum ProjectsResourcesCursorCollectionOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
 type ProjectsTagsCollection {
   items: [Tags]!
   limit: Int!
@@ -3342,6 +4551,25 @@ enum ProjectsTagsCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+type ProjectsTagsCursorCollection {
+  items: [Tags]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum ProjectsTagsCursorCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """The 'Quality' type represents quality as whole numeric values between `1` and `100`."""
 scalar Quality
 
@@ -3350,59 +4578,87 @@ type Query {
   _nodes(ids: [ID!]!, locale: String, preview: Boolean, useFallbackLocale: Boolean): [_Node]!
   announcements(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Announcements
   announcementsCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: AnnouncementsFilter): AnnouncementsCollection
+  announcementsCursorCollection(limit: Int = 100, locale: String, order: [AnnouncementsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: AnnouncementsFilter): AnnouncementsCursorCollection
   asset(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   assetCollection(limit: Int = 100, locale: String, order: [AssetOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: AssetFilter): AssetCollection
+  assetCursorCollection(limit: Int = 100, locale: String, order: [AssetOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: AssetFilter): AssetCursorCollection
   calendars(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Calendars
   calendarsCollection(limit: Int = 100, locale: String, order: [CalendarsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: CalendarsFilter): CalendarsCollection
+  calendarsCursorCollection(limit: Int = 100, locale: String, order: [CalendarsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: CalendarsFilter): CalendarsCursorCollection
   contributingCohorts(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): ContributingCohorts
   contributingCohortsCollection(limit: Int = 100, locale: String, order: [ContributingCohortsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ContributingCohortsFilter): ContributingCohortsCollection
+  contributingCohortsCursorCollection(limit: Int = 100, locale: String, order: [ContributingCohortsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ContributingCohortsFilter): ContributingCohortsCursorCollection
   contributingCohortsMembership(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): ContributingCohortsMembership
   contributingCohortsMembershipCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ContributingCohortsMembershipFilter): ContributingCohortsMembershipCollection
+  contributingCohortsMembershipCursorCollection(limit: Int = 100, locale: String, order: [ContributingCohortsMembershipOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ContributingCohortsMembershipFilter): ContributingCohortsMembershipCursorCollection
   dashboard(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Dashboard
   dashboardCollection(limit: Int = 100, locale: String, order: [DashboardOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: DashboardFilter): DashboardCollection
+  dashboardCursorCollection(limit: Int = 100, locale: String, order: [DashboardOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: DashboardFilter): DashboardCursorCollection
   entryCollection(limit: Int = 100, locale: String, order: [EntryOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EntryFilter): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, order: [EntryOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: EntryFilter): EntryCursorCollection
   eventSpeakers(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): EventSpeakers
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [EventSpeakersOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EventSpeakersFilter): EventSpeakersCollection
+  eventSpeakersCursorCollection(limit: Int = 100, locale: String, order: [EventSpeakersOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: EventSpeakersFilter): EventSpeakersCursorCollection
   events(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Events
   eventsCollection(limit: Int = 100, locale: String, order: [EventsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: EventsFilter): EventsCollection
+  eventsCursorCollection(limit: Int = 100, locale: String, order: [EventsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: EventsFilter): EventsCursorCollection
   externalUsers(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): ExternalUsers
   externalUsersCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ExternalUsersFilter): ExternalUsersCollection
+  externalUsersCursorCollection(limit: Int = 100, locale: String, order: [ExternalUsersOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ExternalUsersFilter): ExternalUsersCursorCollection
   guide(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Guide
   guideCollection(limit: Int = 100, locale: String, order: [GuideOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: GuideFilter): GuideCollection
+  guideCursorCollection(limit: Int = 100, locale: String, order: [GuideOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: GuideFilter): GuideCursorCollection
   guideDescription(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): GuideDescription
   guideDescriptionCollection(limit: Int = 100, locale: String, order: [GuideDescriptionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: GuideDescriptionFilter): GuideDescriptionCollection
+  guideDescriptionCursorCollection(limit: Int = 100, locale: String, order: [GuideDescriptionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: GuideDescriptionFilter): GuideDescriptionCursorCollection
   latestStats(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): LatestStats
   latestStatsCollection(limit: Int = 100, locale: String, order: [LatestStatsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: LatestStatsFilter): LatestStatsCollection
+  latestStatsCursorCollection(limit: Int = 100, locale: String, order: [LatestStatsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: LatestStatsFilter): LatestStatsCursorCollection
   media(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Media
   mediaCollection(limit: Int = 100, locale: String, order: [MediaOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MediaFilter): MediaCollection
+  mediaCursorCollection(limit: Int = 100, locale: String, order: [MediaOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: MediaFilter): MediaCursorCollection
   migration(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Migration
   migrationCollection(limit: Int = 100, locale: String, order: [MigrationOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MigrationFilter): MigrationCollection
+  migrationCursorCollection(limit: Int = 100, locale: String, order: [MigrationOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: MigrationFilter): MigrationCursorCollection
   milestones(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Milestones
   milestonesCollection(limit: Int = 100, locale: String, order: [MilestonesOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MilestonesFilter): MilestonesCollection
+  milestonesCursorCollection(limit: Int = 100, locale: String, order: [MilestonesOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: MilestonesFilter): MilestonesCursorCollection
   news(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): News
   newsCollection(limit: Int = 100, locale: String, order: [NewsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: NewsFilter): NewsCollection
+  newsCursorCollection(limit: Int = 100, locale: String, order: [NewsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: NewsFilter): NewsCursorCollection
   outputVersion(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): OutputVersion
   outputVersionCollection(limit: Int = 100, locale: String, order: [OutputVersionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputVersionFilter): OutputVersionCollection
+  outputVersionCursorCollection(limit: Int = 100, locale: String, order: [OutputVersionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: OutputVersionFilter): OutputVersionCursorCollection
   outputs(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Outputs
   outputsCollection(limit: Int = 100, locale: String, order: [OutputsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: OutputsFilter): OutputsCollection
+  outputsCursorCollection(limit: Int = 100, locale: String, order: [OutputsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: OutputsFilter): OutputsCursorCollection
   pages(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Pages
   pagesCollection(limit: Int = 100, locale: String, order: [PagesOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: PagesFilter): PagesCollection
+  pagesCursorCollection(limit: Int = 100, locale: String, order: [PagesOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: PagesFilter): PagesCursorCollection
   projectMembership(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): ProjectMembership
   projectMembershipCollection(limit: Int = 100, locale: String, order: [ProjectMembershipOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ProjectMembershipFilter): ProjectMembershipCollection
+  projectMembershipCursorCollection(limit: Int = 100, locale: String, order: [ProjectMembershipOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ProjectMembershipFilter): ProjectMembershipCursorCollection
   projects(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Projects
   projectsCollection(limit: Int = 100, locale: String, order: [ProjectsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ProjectsFilter): ProjectsCollection
+  projectsCursorCollection(limit: Int = 100, locale: String, order: [ProjectsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ProjectsFilter): ProjectsCursorCollection
   resources(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Resources
   resourcesCollection(limit: Int = 100, locale: String, order: [ResourcesOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResourcesFilter): ResourcesCollection
+  resourcesCursorCollection(limit: Int = 100, locale: String, order: [ResourcesOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ResourcesFilter): ResourcesCursorCollection
   tags(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Tags
   tagsCollection(limit: Int = 100, locale: String, order: [TagsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): TagsCollection
+  tagsCursorCollection(limit: Int = 100, locale: String, order: [TagsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: TagsFilter): TagsCursorCollection
   users(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): Users
   usersCollection(limit: Int = 100, locale: String, order: [UsersOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: UsersFilter): UsersCollection
+  usersCursorCollection(limit: Int = 100, locale: String, order: [UsersOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: UsersFilter): UsersCursorCollection
   workingGroupMembership(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupMembership
   workingGroupMembershipCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupMembershipFilter): WorkingGroupMembershipCollection
+  workingGroupMembershipCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: WorkingGroupMembershipFilter): WorkingGroupMembershipCursorCollection
   workingGroupNetwork(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupNetwork
   workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupNetworkFilter): WorkingGroupNetworkCollection
+  workingGroupNetworkCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: WorkingGroupNetworkFilter): WorkingGroupNetworkCursorCollection
   workingGroups(id: String!, locale: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroups
   workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupsCollection
+  workingGroupsCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupsOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupsCursorCollection
 }
 
 interface ResourceLink {
@@ -3431,6 +4687,12 @@ type ResourcesCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type ResourcesCursorCollection {
+  items: [Resources]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input ResourcesFilter {
@@ -3470,8 +4732,11 @@ input ResourcesFilter {
 
 type ResourcesLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   projectsCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+  projectsCursorCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsProjectsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectsCursorCollection
   workingGroupsCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
+  workingGroupsCursorCollection(limit: Int = 100, locale: String, order: [ResourcesLinkingCollectionsWorkingGroupsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupsCursorCollection
 }
 
 enum ResourcesLinkingCollectionsProjectsCollectionOrder {
@@ -3509,7 +4774,63 @@ enum ResourcesLinkingCollectionsProjectsCollectionOrder {
   traineeProject_DESC
 }
 
+enum ResourcesLinkingCollectionsProjectsCursorCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
+}
+
 enum ResourcesLinkingCollectionsWorkingGroupsCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum ResourcesLinkingCollectionsWorkingGroupsCursorCollectionOrder {
   leadingMembers_ASC
   leadingMembers_DESC
   primaryEmail_ASC
@@ -3613,6 +4934,12 @@ type TagsCollection {
   total: Int!
 }
 
+type TagsCursorCollection {
+  items: [Tags]!
+  limit: Int!
+  pages: CursorPages!
+}
+
 input TagsFilter {
   AND: [TagsFilter]
   OR: [TagsFilter]
@@ -3629,15 +4956,71 @@ input TagsFilter {
 
 type TagsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   eventsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsEventsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventsCollection
+  eventsCursorCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsEventsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EventsCursorCollection
   newsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsNewsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): NewsCollection
+  newsCursorCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsNewsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): NewsCursorCollection
   outputsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  outputsCursorCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): OutputsCursorCollection
   projectsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsProjectsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectsCollection
+  projectsCursorCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsProjectsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectsCursorCollection
   usersCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsUsersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): UsersCollection
+  usersCursorCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsUsersCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): UsersCursorCollection
   workingGroupsCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
+  workingGroupsCursorCollection(limit: Int = 100, locale: String, order: [TagsLinkingCollectionsWorkingGroupsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupsCursorCollection
 }
 
 enum TagsLinkingCollectionsEventsCollectionOrder {
+  copyMeetingLink_ASC
+  copyMeetingLink_DESC
+  endDateTimeZone_ASC
+  endDateTimeZone_DESC
+  endDate_ASC
+  endDate_DESC
+  eventLink_ASC
+  eventLink_DESC
+  googleId_ASC
+  googleId_DESC
+  hidden_ASC
+  hidden_DESC
+  hideMeetingLink_ASC
+  hideMeetingLink_DESC
+  meetingLink_ASC
+  meetingLink_DESC
+  meetingMaterialsPermanentlyUnavailable_ASC
+  meetingMaterialsPermanentlyUnavailable_DESC
+  notesPermanentlyUnavailable_ASC
+  notesPermanentlyUnavailable_DESC
+  notesUpdatedAt_ASC
+  notesUpdatedAt_DESC
+  presentationPermanentlyUnavailable_ASC
+  presentationPermanentlyUnavailable_DESC
+  presentationUpdatedAt_ASC
+  presentationUpdatedAt_DESC
+  startDateTimeZone_ASC
+  startDateTimeZone_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  videoRecordingPermanentlyUnavailable_ASC
+  videoRecordingPermanentlyUnavailable_DESC
+  videoRecordingUpdatedAt_ASC
+  videoRecordingUpdatedAt_DESC
+}
+
+enum TagsLinkingCollectionsEventsCursorCollectionOrder {
   copyMeetingLink_ASC
   copyMeetingLink_DESC
   endDateTimeZone_ASC
@@ -3705,7 +5088,65 @@ enum TagsLinkingCollectionsNewsCollectionOrder {
   type_DESC
 }
 
+enum TagsLinkingCollectionsNewsCursorCollectionOrder {
+  linkText_ASC
+  linkText_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  type_ASC
+  type_DESC
+}
+
 enum TagsLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum TagsLinkingCollectionsOutputsCursorCollectionOrder {
   accessionNumber_ASC
   accessionNumber_DESC
   addedDate_ASC
@@ -3779,6 +5220,41 @@ enum TagsLinkingCollectionsProjectsCollectionOrder {
   traineeProject_DESC
 }
 
+enum TagsLinkingCollectionsProjectsCursorCollectionOrder {
+  endDate_ASC
+  endDate_DESC
+  leadEmail_ASC
+  leadEmail_DESC
+  opportunitiesAvailable_ASC
+  opportunitiesAvailable_DESC
+  opportunitiesLinkName_ASC
+  opportunitiesLinkName_DESC
+  opportunitiesLink_ASC
+  opportunitiesLink_DESC
+  opportunitiesShortText_ASC
+  opportunitiesShortText_DESC
+  pmEmail_ASC
+  pmEmail_DESC
+  projectProposal_ASC
+  projectProposal_DESC
+  startDate_ASC
+  startDate_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  traineeProject_ASC
+  traineeProject_DESC
+}
+
 enum TagsLinkingCollectionsUsersCollectionOrder {
   activatedDate_ASC
   activatedDate_DESC
@@ -3788,6 +5264,83 @@ enum TagsLinkingCollectionsUsersCollectionOrder {
   activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
+  blog_ASC
+  blog_DESC
+  blueSky_ASC
+  blueSky_DESC
+  city_ASC
+  city_DESC
+  country_ASC
+  country_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  github_ASC
+  github_DESC
+  googleScholar_ASC
+  googleScholar_DESC
+  lastName_ASC
+  lastName_DESC
+  linkedIn_ASC
+  linkedIn_DESC
+  middleName_ASC
+  middleName_DESC
+  nickname_ASC
+  nickname_DESC
+  onboarded_ASC
+  onboarded_DESC
+  orcidLastModifiedDate_ASC
+  orcidLastModifiedDate_DESC
+  orcidLastSyncDate_ASC
+  orcidLastSyncDate_DESC
+  orcid_ASC
+  orcid_DESC
+  region_ASC
+  region_DESC
+  researchGate_ASC
+  researchGate_DESC
+  researcherId_ASC
+  researcherId_DESC
+  role_ASC
+  role_DESC
+  stateOrProvince_ASC
+  stateOrProvince_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  telephoneCountryCode_ASC
+  telephoneCountryCode_DESC
+  telephoneNumber_ASC
+  telephoneNumber_DESC
+  threads_ASC
+  threads_DESC
+  twitter_ASC
+  twitter_DESC
+}
+
+enum TagsLinkingCollectionsUsersCursorCollectionOrder {
+  activatedDate_ASC
+  activatedDate_DESC
+  activeCampaignCreatedAt_ASC
+  activeCampaignCreatedAt_DESC
+  activeCampaignId_ASC
+  activeCampaignId_DESC
+  alternativeEmail_ASC
+  alternativeEmail_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
   blog_ASC
   blog_DESC
   blueSky_ASC
@@ -3869,6 +5422,27 @@ enum TagsLinkingCollectionsWorkingGroupsCollectionOrder {
   title_DESC
 }
 
+enum TagsLinkingCollectionsWorkingGroupsCursorCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 enum TagsOrder {
   name_ASC
   name_DESC
@@ -3904,6 +5478,8 @@ type Users implements Entry & _Node {
   activeCampaignCreatedAt(locale: String, useFallbackLocale: Boolean): DateTime
   activeCampaignId(locale: String, useFallbackLocale: Boolean): String
   alternativeEmail(locale: String, useFallbackLocale: Boolean): String
+  alumniLocation(locale: String, useFallbackLocale: Boolean): String
+  alumniSinceDate(locale: String, useFallbackLocale: Boolean): DateTime
   avatar(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   biography(locale: String, useFallbackLocale: Boolean): String
   blog(locale: String, useFallbackLocale: Boolean): String
@@ -3912,6 +5488,7 @@ type Users implements Entry & _Node {
   connections(locale: String, useFallbackLocale: Boolean): [String]
   contentfulMetadata: ContentfulMetadata!
   contributingCohortsCollection(limit: Int = 100, locale: String, order: [UsersContributingCohortsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ContributingCohortsMembershipFilter): UsersContributingCohortsCollection
+  contributingCohortsCursorCollection(limit: Int = 100, locale: String, order: [UsersContributingCohortsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ContributingCohortsMembershipFilter): UsersContributingCohortsCursorCollection
   country(locale: String, useFallbackLocale: Boolean): String
   degrees(locale: String, useFallbackLocale: Boolean): [String]
   email(locale: String, useFallbackLocale: Boolean): String
@@ -3938,6 +5515,7 @@ type Users implements Entry & _Node {
   stateOrProvince(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
   tagsCollection(limit: Int = 100, locale: String, order: [UsersTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): UsersTagsCollection
+  tagsCursorCollection(limit: Int = 100, locale: String, order: [UsersTagsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: TagsFilter): UsersTagsCursorCollection
   telephoneCountryCode(locale: String, useFallbackLocale: Boolean): String
   telephoneNumber(locale: String, useFallbackLocale: Boolean): String
   threads(locale: String, useFallbackLocale: Boolean): String
@@ -3969,6 +5547,31 @@ enum UsersContributingCohortsCollectionOrder {
   sys_publishedAt_DESC
   sys_publishedVersion_ASC
   sys_publishedVersion_DESC
+}
+
+type UsersContributingCohortsCursorCollection {
+  items: [ContributingCohortsMembership]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum UsersContributingCohortsCursorCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type UsersCursorCollection {
+  items: [Users]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input UsersFilter {
@@ -4006,6 +5609,22 @@ input UsersFilter {
   alternativeEmail_not: String
   alternativeEmail_not_contains: String
   alternativeEmail_not_in: [String]
+  alumniLocation: String
+  alumniLocation_contains: String
+  alumniLocation_exists: Boolean
+  alumniLocation_in: [String]
+  alumniLocation_not: String
+  alumniLocation_not_contains: String
+  alumniLocation_not_in: [String]
+  alumniSinceDate: DateTime
+  alumniSinceDate_exists: Boolean
+  alumniSinceDate_gt: DateTime
+  alumniSinceDate_gte: DateTime
+  alumniSinceDate_in: [DateTime]
+  alumniSinceDate_lt: DateTime
+  alumniSinceDate_lte: DateTime
+  alumniSinceDate_not: DateTime
+  alumniSinceDate_not_in: [DateTime]
   avatar_exists: Boolean
   biography: String
   biography_contains: String
@@ -4220,13 +5839,31 @@ input UsersFilter {
 
 type UsersLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   eventSpeakersCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EventSpeakersCollection
+  eventSpeakersCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsEventSpeakersCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EventSpeakersCursorCollection
   outputsCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  outputsCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): OutputsCursorCollection
   projectMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): ProjectMembershipCollection
+  projectMembershipCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsProjectMembershipCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): ProjectMembershipCursorCollection
   workingGroupMembershipCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupMembershipCollection
+  workingGroupMembershipCursorCollection(limit: Int = 100, locale: String, order: [UsersLinkingCollectionsWorkingGroupMembershipCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupMembershipCursorCollection
 }
 
 enum UsersLinkingCollectionsEventSpeakersCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum UsersLinkingCollectionsEventSpeakersCursorCollectionOrder {
   sys_firstPublishedAt_ASC
   sys_firstPublishedAt_DESC
   sys_id_ASC
@@ -4278,7 +5915,59 @@ enum UsersLinkingCollectionsOutputsCollectionOrder {
   type_DESC
 }
 
+enum UsersLinkingCollectionsOutputsCursorCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
 enum UsersLinkingCollectionsProjectMembershipCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+enum UsersLinkingCollectionsProjectMembershipCursorCollectionOrder {
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -4304,6 +5993,19 @@ enum UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+enum UsersLinkingCollectionsWorkingGroupMembershipCursorCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 enum UsersOrder {
   activatedDate_ASC
   activatedDate_DESC
@@ -4313,6 +6015,10 @@ enum UsersOrder {
   activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
+  alumniLocation_ASC
+  alumniLocation_DESC
+  alumniSinceDate_ASC
+  alumniSinceDate_DESC
   blog_ASC
   blog_DESC
   blueSky_ASC
@@ -4393,6 +6099,25 @@ enum UsersTagsCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+type UsersTagsCursorCollection {
+  items: [Tags]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum UsersTagsCursorCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership)"""
 type WorkingGroupMembership implements Entry & _Node {
   _id: ID!
@@ -4408,6 +6133,12 @@ type WorkingGroupMembershipCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type WorkingGroupMembershipCursorCollection {
+  items: [WorkingGroupMembership]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 input WorkingGroupMembershipFilter {
@@ -4428,10 +6159,33 @@ input WorkingGroupMembershipFilter {
 
 type WorkingGroupMembershipLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   workingGroupsCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupsCollection
+  workingGroupsCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupMembershipLinkingCollectionsWorkingGroupsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupsCursorCollection
 }
 
 enum WorkingGroupMembershipLinkingCollectionsWorkingGroupsCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+enum WorkingGroupMembershipLinkingCollectionsWorkingGroupsCursorCollectionOrder {
   leadingMembers_ASC
   leadingMembers_DESC
   primaryEmail_ASC
@@ -4469,11 +6223,15 @@ enum WorkingGroupMembershipOrder {
 type WorkingGroupNetwork implements Entry & _Node {
   _id: ID!
   complexDiseaseCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkComplexDiseaseCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkComplexDiseaseCollection
+  complexDiseaseCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkComplexDiseaseCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkComplexDiseaseCursorCollection
   contentfulMetadata: ContentfulMetadata!
   linkedFrom(allowedLocales: [String]): WorkingGroupNetworkLinkingCollections
   monogenicCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkMonogenicCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkMonogenicCollection
+  monogenicCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkMonogenicCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkMonogenicCursorCollection
   operationalCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOperationalCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkOperationalCollection
+  operationalCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkOperationalCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkOperationalCursorCollection
   supportCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkSupportCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkSupportCollection
+  supportCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupNetworkSupportCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: WorkingGroupsFilter): WorkingGroupNetworkSupportCursorCollection
   sys: Sys!
 }
 
@@ -4512,6 +6270,39 @@ enum WorkingGroupNetworkComplexDiseaseCollectionOrder {
   title_DESC
 }
 
+type WorkingGroupNetworkComplexDiseaseCursorCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum WorkingGroupNetworkComplexDiseaseCursorCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+type WorkingGroupNetworkCursorCollection {
+  items: [WorkingGroupNetwork]!
+  limit: Int!
+  pages: CursorPages!
+}
+
 input WorkingGroupNetworkFilter {
   AND: [WorkingGroupNetworkFilter]
   OR: [WorkingGroupNetworkFilter]
@@ -4529,6 +6320,7 @@ input WorkingGroupNetworkFilter {
 
 type WorkingGroupNetworkLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
 }
 
 type WorkingGroupNetworkMonogenicCollection {
@@ -4559,6 +6351,33 @@ enum WorkingGroupNetworkMonogenicCollectionOrder {
   title_DESC
 }
 
+type WorkingGroupNetworkMonogenicCursorCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum WorkingGroupNetworkMonogenicCursorCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 type WorkingGroupNetworkOperationalCollection {
   items: [WorkingGroups]!
   limit: Int!
@@ -4567,6 +6386,33 @@ type WorkingGroupNetworkOperationalCollection {
 }
 
 enum WorkingGroupNetworkOperationalCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+type WorkingGroupNetworkOperationalCursorCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum WorkingGroupNetworkOperationalCursorCollectionOrder {
   leadingMembers_ASC
   leadingMembers_DESC
   primaryEmail_ASC
@@ -4626,6 +6472,33 @@ enum WorkingGroupNetworkSupportCollectionOrder {
   title_DESC
 }
 
+type WorkingGroupNetworkSupportCursorCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum WorkingGroupNetworkSupportCursorCollectionOrder {
+  leadingMembers_ASC
+  leadingMembers_DESC
+  primaryEmail_ASC
+  primaryEmail_DESC
+  secondaryEmail_ASC
+  secondaryEmail_DESC
+  shortDescription_ASC
+  shortDescription_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
 """[See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroups)"""
 type WorkingGroups implements Entry & _Node {
   _id: ID!
@@ -4635,13 +6508,17 @@ type WorkingGroups implements Entry & _Node {
   leadingMembers(locale: String, useFallbackLocale: Boolean): String
   linkedFrom(allowedLocales: [String]): WorkingGroupsLinkingCollections
   membersCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMembersCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: WorkingGroupMembershipFilter): WorkingGroupsMembersCollection
+  membersCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMembersCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: WorkingGroupMembershipFilter): WorkingGroupsMembersCursorCollection
   milestonesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMilestonesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: MilestonesFilter): WorkingGroupsMilestonesCollection
+  milestonesCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupsMilestonesCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: MilestonesFilter): WorkingGroupsMilestonesCursorCollection
   primaryEmail(locale: String, useFallbackLocale: Boolean): String
   resourcesCollection(limit: Int = 100, locale: String, order: [WorkingGroupsResourcesCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: ResourcesFilter): WorkingGroupsResourcesCollection
+  resourcesCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupsResourcesCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: ResourcesFilter): WorkingGroupsResourcesCursorCollection
   secondaryEmail(locale: String, useFallbackLocale: Boolean): String
   shortDescription(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
   tagsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsTagsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean, where: TagsFilter): WorkingGroupsTagsCollection
+  tagsCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupsTagsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean, where: TagsFilter): WorkingGroupsTagsCursorCollection
   title(locale: String, useFallbackLocale: Boolean): String
 }
 
@@ -4650,6 +6527,12 @@ type WorkingGroupsCollection {
   limit: Int!
   skip: Int!
   total: Int!
+}
+
+type WorkingGroupsCursorCollection {
+  items: [WorkingGroups]!
+  limit: Int!
+  pages: CursorPages!
 }
 
 type WorkingGroupsDescription {
@@ -4749,11 +6632,53 @@ input WorkingGroupsFilter {
 
 type WorkingGroupsLinkingCollections {
   entryCollection(limit: Int = 100, locale: String, preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): EntryCollection
+  entryCursorCollection(limit: Int = 100, locale: String, pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): EntryCursorCollection
   outputsCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsOutputsCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): OutputsCollection
+  outputsCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsOutputsCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): OutputsCursorCollection
   workingGroupNetworkCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionOrder], preview: Boolean, skip: Int = 0, useFallbackLocale: Boolean): WorkingGroupNetworkCollection
+  workingGroupNetworkCursorCollection(limit: Int = 100, locale: String, order: [WorkingGroupsLinkingCollectionsWorkingGroupNetworkCursorCollectionOrder], pageNext: String, pagePrev: String, preview: Boolean, useFallbackLocale: Boolean): WorkingGroupNetworkCursorCollection
 }
 
 enum WorkingGroupsLinkingCollectionsOutputsCollectionOrder {
+  accessionNumber_ASC
+  accessionNumber_DESC
+  addedDate_ASC
+  addedDate_DESC
+  adminNotes_ASC
+  adminNotes_DESC
+  documentType_ASC
+  documentType_DESC
+  doi_ASC
+  doi_DESC
+  gp2Supported_ASC
+  gp2Supported_DESC
+  lastUpdatedPartial_ASC
+  lastUpdatedPartial_DESC
+  link_ASC
+  link_DESC
+  publishDate_ASC
+  publishDate_DESC
+  rrid_ASC
+  rrid_DESC
+  sharingStatus_ASC
+  sharingStatus_DESC
+  subtype_ASC
+  subtype_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
+enum WorkingGroupsLinkingCollectionsOutputsCursorCollectionOrder {
   accessionNumber_ASC
   accessionNumber_DESC
   addedDate_ASC
@@ -4803,6 +6728,17 @@ enum WorkingGroupsLinkingCollectionsWorkingGroupNetworkCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+enum WorkingGroupsLinkingCollectionsWorkingGroupNetworkCursorCollectionOrder {
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 type WorkingGroupsMembersCollection {
   items: [WorkingGroupMembership]!
   limit: Int!
@@ -4823,6 +6759,25 @@ enum WorkingGroupsMembersCollectionOrder {
   sys_publishedVersion_DESC
 }
 
+type WorkingGroupsMembersCursorCollection {
+  items: [WorkingGroupMembership]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum WorkingGroupsMembersCursorCollectionOrder {
+  role_ASC
+  role_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
 type WorkingGroupsMilestonesCollection {
   items: [Milestones]!
   limit: Int!
@@ -4831,6 +6786,31 @@ type WorkingGroupsMilestonesCollection {
 }
 
 enum WorkingGroupsMilestonesCollectionOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  status_ASC
+  status_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+}
+
+type WorkingGroupsMilestonesCursorCollection {
+  items: [Milestones]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum WorkingGroupsMilestonesCursorCollectionOrder {
   description_ASC
   description_DESC
   externalLink_ASC
@@ -4896,6 +6876,31 @@ enum WorkingGroupsResourcesCollectionOrder {
   type_DESC
 }
 
+type WorkingGroupsResourcesCursorCollection {
+  items: [Resources]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum WorkingGroupsResourcesCursorCollectionOrder {
+  description_ASC
+  description_DESC
+  externalLink_ASC
+  externalLink_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+  title_ASC
+  title_DESC
+  type_ASC
+  type_DESC
+}
+
 type WorkingGroupsTagsCollection {
   items: [Tags]!
   limit: Int!
@@ -4904,6 +6909,25 @@ type WorkingGroupsTagsCollection {
 }
 
 enum WorkingGroupsTagsCollectionOrder {
+  name_ASC
+  name_DESC
+  sys_firstPublishedAt_ASC
+  sys_firstPublishedAt_DESC
+  sys_id_ASC
+  sys_id_DESC
+  sys_publishedAt_ASC
+  sys_publishedAt_DESC
+  sys_publishedVersion_ASC
+  sys_publishedVersion_DESC
+}
+
+type WorkingGroupsTagsCursorCollection {
+  items: [Tags]!
+  limit: Int!
+  pages: CursorPages!
+}
+
+enum WorkingGroupsTagsCursorCollectionOrder {
   name_ASC
   name_DESC
   sys_firstPublishedAt_ASC
@@ -5591,6 +7615,22 @@ input cfUsersNestedFilter {
   alternativeEmail_not: String
   alternativeEmail_not_contains: String
   alternativeEmail_not_in: [String]
+  alumniLocation: String
+  alumniLocation_contains: String
+  alumniLocation_exists: Boolean
+  alumniLocation_in: [String]
+  alumniLocation_not: String
+  alumniLocation_not_contains: String
+  alumniLocation_not_in: [String]
+  alumniSinceDate: DateTime
+  alumniSinceDate_exists: Boolean
+  alumniSinceDate_gt: DateTime
+  alumniSinceDate_gte: DateTime
+  alumniSinceDate_in: [DateTime]
+  alumniSinceDate_lt: DateTime
+  alumniSinceDate_lte: DateTime
+  alumniSinceDate_not: DateTime
+  alumniSinceDate_not_in: [DateTime]
   avatar_exists: Boolean
   biography: String
   biography_contains: String

@@ -171,6 +171,7 @@ export const eventsContentQueryFragment = gql`
             nickname
             lastName
             onboarded
+            alumniSinceDate
             avatar {
               url
             }

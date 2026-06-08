@@ -352,6 +352,7 @@ const getAuthors = (authors?: GraphQLAuthors) =>
             email: author.email ?? '',
             onboarded: author.onboarded ?? true,
             avatarUrl: author.avatar?.url ?? undefined,
+            alumniSinceDate: author.alumniSinceDate ?? undefined,
           }
         : {
             id: author.sys.id,

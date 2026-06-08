@@ -8,7 +8,6 @@ import {
   Divider,
   Link,
   pixels,
-  StateTag,
   Subtitle,
   userPlaceholderIcon,
 } from '@asap-hub/react-components';
@@ -78,7 +77,7 @@ const UserSpeaker = ({ speaker }: UserSpeakerProps) => (
         <Avatar {...speaker} imageUrl={speaker.avatarUrl} />
       </div>
       {speaker.displayName}
-      {speaker.alumniSinceDate && <StateTag icon={alumniBadgeIcon} />}
+      {speaker.alumniSinceDate && <span>{alumniBadgeIcon}</span>}
     </div>
   </Link>
 );

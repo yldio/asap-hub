@@ -12,7 +12,12 @@ import {
   getUserRole,
   hasShareResearchOutputPermission,
 } from '@asap-hub/validation';
-import type { User } from '@asap-hub/auth';
+import {
+  expandUserRoles,
+  type User,
+  type UserTeamRoles,
+  type UserWorkingGroupRoles,
+} from '@asap-hub/auth';
 import {
   article,
   bioinformatics,
@@ -42,6 +47,8 @@ const iconStyles = css({
 });
 
 export type Association =
+  | UserWorkingGroupRoles
+  | UserTeamRoles
   | WorkingGroupMembership
   | UserTeam
   | gp2Model.UserProject
@@ -49,10 +56,12 @@ export type Association =
 
 const isWGMembership = (
   association: Association,
-): association is WorkingGroupMembership =>
+): association is WorkingGroupMembership | UserWorkingGroupRoles =>
   (association as WorkingGroupMembership).name !== undefined;
 
-const isUserTeam = (association: Association): association is UserTeam =>
+const isUserTeam = (
+  association: Association,
+): association is UserTeam | UserTeamRoles =>
   (association as UserTeam).displayName !== undefined;
 
 const isUserProject = (
@@ -159,18 +168,23 @@ export const SharedOutputDropdownBase: React.FC<
 export const SharedOutputDropdownWrapper: React.FC<
   SharedOutputDropdownProps
 > = ({ user }) => {
+  // Permission helpers expect one row per role; expand the grouped token user
+  // back to that shape for the role lookups.
+  const expandedUser = user && expandUserRoles(user);
   const associations = [
     ...(user?.teams ?? [])
       .concat()
       .filter((team) => {
-        const userRole = getUserRole(user, 'teams', [team.id]);
+        const userRole = getUserRole(expandedUser, 'teams', [team.id]);
         return hasShareResearchOutputPermission(userRole);
       })
       .sort((a, b) => (a.displayName ?? '').localeCompare(b.displayName ?? '')),
     ...(user?.workingGroups ?? [])
       .concat()
       .filter((workingGroup) => {
-        const userRole = getUserRole(user, 'workingGroups', [workingGroup.id]);
+        const userRole = getUserRole(expandedUser, 'workingGroups', [
+          workingGroup.id,
+        ]);
         return hasShareResearchOutputPermission(userRole);
       })
       .sort((a, b) => a.name.localeCompare(b.name)),

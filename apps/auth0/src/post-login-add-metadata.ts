@@ -1,8 +1,14 @@
-import type { gp2 as gp2Auth, User } from '@asap-hub/auth';
+import type {
+  gp2 as gp2Auth,
+  User,
+  UserTeamRoles,
+  UserWorkingGroupRoles,
+} from '@asap-hub/auth';
 import type {
   gp2 as gp2Model,
   UserMetadataResponse,
   UserTeam,
+  WorkingGroupMembership,
 } from '@asap-hub/model';
 import { Auth0PostLoginApi } from '@vedicium/auth0-actions-sdk';
 import got from 'got';
@@ -45,12 +51,56 @@ const parseGP2UserMetadata = ({
   workingGroups,
   projects,
 });
-const parseTeam = ({ id, displayName, role, inactiveSinceDate }: UserTeam) => ({
-  id,
-  displayName,
-  role,
-  inactiveSinceDate,
-});
+// Collapse one-row-per-role membership lists into one entry per entity,
+// collecting every role the user holds. Keeps the first non-role fields seen.
+const groupRolesById = <
+  TRole,
+  TInput extends { id: string; role: TRole },
+  TOutput extends { id: string; roles: TRole[] },
+>(
+  items: TInput[],
+  toEntry: (item: TInput) => TOutput,
+): TOutput[] =>
+  items.reduce<TOutput[]>((grouped, item) => {
+    const existing = grouped.find((entry) => entry.id === item.id);
+    if (existing) {
+      if (!existing.roles.includes(item.role)) {
+        existing.roles.push(item.role);
+      }
+      return grouped;
+    }
+    return [...grouped, toEntry(item)];
+  }, []);
+
+const groupTeams = (teams: UserTeam[]): UserTeamRoles[] =>
+  groupRolesById(teams, ({ id, displayName, inactiveSinceDate, role }) => ({
+    id,
+    displayName,
+    inactiveSinceDate,
+    roles: [role],
+  }));
+
+const groupWorkingGroups = (
+  workingGroups: WorkingGroupMembership[],
+): UserWorkingGroupRoles[] =>
+  groupRolesById(workingGroups, ({ id, name, active, role }) => ({
+    id,
+    name,
+    active,
+    roles: [role],
+  }));
+
+// Projects and interest groups carry no role used in the nav, so collapsing
+// repeats to one entry per id is lossless.
+const uniqueById = <T extends { id: string }>(items: T[]): T[] =>
+  items.reduce<T[]>(
+    (unique, item) =>
+      unique.some((existing) => existing.id === item.id)
+        ? unique
+        : [...unique, item],
+    [],
+  );
+
 const parseUserMetadata = ({
   teams,
   workingGroups,
@@ -59,10 +109,10 @@ const parseUserMetadata = ({
   role,
   openScienceTeamMember,
 }: UserMetadataResponse) => ({
-  teams: teams.map(parseTeam),
-  workingGroups,
-  interestGroups,
-  projects,
+  teams: groupTeams(teams),
+  workingGroups: groupWorkingGroups(workingGroups),
+  interestGroups: uniqueById(interestGroups),
+  projects: uniqueById(projects),
   role,
   openScienceTeamMember,
 });

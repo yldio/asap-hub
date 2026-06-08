@@ -302,6 +302,111 @@ describe('For a CRN login', () => {
     );
   });
 
+  it('groups multiple roles in the same team and working group into one entry', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, {
+        ...baseUser,
+        id: '42',
+        teams: [
+          {
+            id: 'team-1',
+            displayName: 'Team 1',
+            role: 'Lead PI (Core Leadership)',
+          },
+          { id: 'team-1', displayName: 'Team 1', role: 'Project Manager' },
+        ],
+        workingGroups: [
+          { id: 'wg-1', name: 'WG 1', role: 'Chair', active: true },
+          { id: 'wg-1', name: 'WG 1', role: 'Member', active: true },
+        ],
+      });
+
+    await onExecutePostLogin(eventBase, apiBase);
+    expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
+      'http://example.com/user',
+      expect.objectContaining({
+        teams: [
+          {
+            id: 'team-1',
+            displayName: 'Team 1',
+            inactiveSinceDate: undefined,
+            roles: ['Lead PI (Core Leadership)', 'Project Manager'],
+          },
+        ],
+        workingGroups: [
+          {
+            id: 'wg-1',
+            name: 'WG 1',
+            active: true,
+            roles: ['Chair', 'Member'],
+          },
+        ],
+      }),
+    );
+  });
+
+  it('deduplicates repeated projects by id', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, {
+        ...baseUser,
+        id: '42',
+        projects: [
+          {
+            id: 'project-1',
+            title: 'Project 1',
+            projectType: 'Discovery Project',
+            status: 'Active',
+          },
+          {
+            id: 'project-1',
+            title: 'Project 1',
+            projectType: 'Discovery Project',
+            status: 'Active',
+          },
+        ],
+      });
+
+    await onExecutePostLogin(eventBase, apiBase);
+    expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
+      'http://example.com/user',
+      expect.objectContaining({
+        projects: [
+          {
+            id: 'project-1',
+            title: 'Project 1',
+            projectType: 'Discovery Project',
+            status: 'Active',
+          },
+        ],
+      }),
+    );
+  });
+
+  it('deduplicates repeated interest groups by id', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, {
+        ...baseUser,
+        id: '42',
+        interestGroups: [
+          { id: 'ig-1', name: 'Interest Group 1', active: true },
+          { id: 'ig-1', name: 'Interest Group 1', active: true },
+        ],
+      });
+
+    await onExecutePostLogin(eventBase, apiBase);
+    expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
+      'http://example.com/user',
+      expect.objectContaining({
+        interestGroups: [
+          { id: 'ig-1', name: 'Interest Group 1', active: true },
+        ],
+      }),
+    );
+  });
+
   it('rejects the login for alumni users', async () => {
     nock(apiUrl)
       .get(`/webhook/users/${user.user_id}`)

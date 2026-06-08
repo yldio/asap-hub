@@ -311,7 +311,7 @@ describe('useCurrentUserProjectRolesGP2', () => {
 describe('useCurrentUserTeamRoles', () => {
   const userTeam: User['teams'][number] = {
     displayName: 'Jakobsson, J',
-    role: 'Project Manager' as const,
+    roles: ['Project Manager'],
     id: '1',
   };
   it('returns an empty array when there is no current user', async () => {
@@ -333,10 +333,7 @@ describe('useCurrentUserTeamRoles', () => {
           firstName: 'John',
           lastName: 'Doe',
           displayName: 'John Doe',
-          teams: [
-            { ...userTeam, role: 'ASAP Staff' },
-            { ...userTeam, role: 'Collaborating PI' },
-          ],
+          teams: [{ ...userTeam, roles: ['ASAP Staff', 'Collaborating PI'] }],
           algoliaApiKey: 'asdasda',
           workingGroups: [],
           interestGroups: [],

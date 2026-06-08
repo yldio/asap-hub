@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 import type { Auth0, Auth0User, User } from '@asap-hub/auth';
+import type { UserResponse } from '@asap-hub/model';
 import { Auth0ContextCRN, getUserClaimKey } from '@asap-hub/react-context';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
 import { useContext, useEffect } from 'react';
@@ -17,9 +18,32 @@ const notReady = (method: string) => () => {
   throw new Error(`Auth0 test fixture loading, not ready for ${method}`);
 };
 
+// Tests build users from both the token `User` (teams carry `roles[]`) and the
+// model `UserResponse` (teams carry a single `role`). Accept either and
+// normalise to the token shape.
+type TestUser =
+  | Partial<User>
+  | (Partial<Omit<User, 'teams' | 'workingGroups'>> &
+      Partial<Pick<UserResponse, 'teams' | 'workingGroups'>>);
+
+type GroupedRoles = Record<string, unknown> & { roles: unknown[] };
+
+const groupRoles = (
+  items: ReadonlyArray<Record<string, unknown>> | undefined,
+): GroupedRoles[] =>
+  (items ?? []).reduce<GroupedRoles[]>((grouped, { role, roles, ...rest }) => {
+    const incoming = (roles as unknown[]) ?? (role === undefined ? [] : [role]);
+    const existing = grouped.find((entry) => entry.id === rest.id);
+    if (existing) {
+      existing.roles.push(...incoming);
+      return grouped;
+    }
+    return [...grouped, { ...rest, roles: [...incoming] }];
+  }, []);
+
 const createAuth0 = (
   auth0Client?: Auth0Client,
-  user?: Partial<User>,
+  user?: TestUser,
   auth0Overrides?: (
     auth0ClientOverride?: Auth0Client,
     auth0UserOverride?: Auth0User,
@@ -27,6 +51,7 @@ const createAuth0 = (
 ): Auth0 => {
   let auth0User: Auth0User | undefined;
   if (user) {
+    const { teams, workingGroups, ...rest } = user;
     const completeUser: User = {
       id: 'testuserid',
       onboarded: true,
@@ -38,7 +63,7 @@ const createAuth0 = (
         {
           id: 'team-1',
           displayName: 'Team 1',
-          role: 'Lead PI (Core Leadership)',
+          roles: ['Lead PI (Core Leadership)'],
         },
       ],
       algoliaApiKey: null,
@@ -47,7 +72,17 @@ const createAuth0 = (
       projects: [],
       role: 'Grantee',
       openScienceTeamMember: false,
-      ...user,
+      ...rest,
+      ...(teams && {
+        teams: groupRoles(
+          teams as unknown as Record<string, unknown>[],
+        ) as unknown as User['teams'],
+      }),
+      ...(workingGroups && {
+        workingGroups: groupRoles(
+          workingGroups as unknown as Record<string, unknown>[],
+        ) as unknown as User['workingGroups'],
+      }),
     };
     auth0User = {
       sub: 'testuser',
@@ -93,7 +128,7 @@ const createAuth0 = (
 
 export const Auth0Provider: React.FC<{
   // no property ommission, only explicit undefined allowed if you really want the 'user-not-yet-fetched' state
-  readonly user: Partial<User> | undefined;
+  readonly user: TestUser | undefined;
   readonly children: React.ReactNode;
   readonly auth0Overrides?: (
     auth0Client?: Auth0Client,

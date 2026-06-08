@@ -3,11 +3,8 @@ import {
   createUserResponse,
   manuscriptAuthor,
 } from '@asap-hub/fixtures';
-import {
-  ManuscriptDiscussion,
-  ManuscriptVersion,
-  UserTeam,
-} from '@asap-hub/model';
+import { User } from '@asap-hub/auth';
+import { ManuscriptDiscussion, ManuscriptVersion } from '@asap-hub/model';
 import { cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, useEffect } from 'react';
@@ -46,7 +43,18 @@ const props: ComponentProps<typeof ManuscriptCard> & {
   teamId: 'team-1',
   useManuscriptById,
   id: `manuscript_0`,
-  user: { ...baseUser, algoliaApiKey: 'algolia-mock-key' },
+  user: {
+    ...baseUser,
+    teams: baseUser.teams.map(({ role, ...team }) => ({
+      ...team,
+      roles: [role],
+    })),
+    workingGroups: baseUser.workingGroups.map(({ role, ...wg }) => ({
+      ...wg,
+      roles: [role],
+    })),
+    algoliaApiKey: 'algolia-mock-key',
+  },
   isComplianceReviewer: false,
   onUpdateManuscript: jest.fn(),
   isActiveTeam: true,
@@ -88,15 +96,16 @@ const mockVersionWithReport = {
 
 const useManuscriptByIdWithReport = jest.fn();
 
-const user = {
+const user: User = {
   ...baseUser,
   teams: [
     {
-      ...baseUser.teams[0],
       id: 'team-1',
-      role: 'Project Manager',
+      displayName: baseUser.teams[0]?.displayName,
+      roles: ['Project Manager'],
     },
-  ] as UserTeam[],
+  ],
+  workingGroups: [],
   algoliaApiKey: null,
 };
 
@@ -253,14 +262,14 @@ it('shows tooltip on hover over disabled Submit Revised Manuscript button when n
 
 it('displays submit revised manuscript button if user is team Lead PI', async () => {
   const userActions = userEvent.setup({ delay: null });
-  const piUser = {
+  const piUser: User = {
     ...user,
     teams: [
       {
-        ...user.teams[0],
-        role: 'Lead PI (Core Leadership)',
+        ...user.teams[0]!,
+        roles: ['Lead PI (Core Leadership)'],
       },
-    ] as UserTeam[],
+    ],
   };
   const { getByRole, getByTestId } = render(
     <MemoryRouter>

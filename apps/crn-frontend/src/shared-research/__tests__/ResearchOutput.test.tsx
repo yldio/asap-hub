@@ -3,7 +3,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { sharedResearch } from '@asap-hub/routing';
-import { UserTeam, WorkingGroupMembership } from '@asap-hub/model';
 import * as flags from '@asap-hub/flags';
 import {
   createResearchOutputResponse,
@@ -77,19 +76,19 @@ beforeEach(() => {
   });
 });
 
-const teams: UserTeam[] = [
+const teams: User['teams'] = [
   {
     id: 't0',
     displayName: 'Jakobsson, J',
-    role: 'Project Manager',
+    roles: ['Project Manager'],
   },
 ];
 
-const workingGroups: WorkingGroupMembership[] = [
+const workingGroups: User['workingGroups'] = [
   {
     id: 'wg0',
     name: 'Working Group',
-    role: 'Project Manager',
+    roles: ['Project Manager'],
     active: true,
   },
 ];
@@ -244,14 +243,14 @@ describe('a working group research output', () => {
         teams: [
           {
             id: 'any',
-            role: 'Key Personnel',
+            roles: ['Key Personnel'],
           },
         ],
         workingGroups: [
           {
             id: 'wg1',
             name: 'Example Working Group',
-            role: 'Chair',
+            roles: ['Chair'],
             active: true,
           },
         ],
@@ -276,7 +275,7 @@ describe('a working group research output', () => {
           {
             id: 'wg0',
             name: 'Example Working Group',
-            role: 'Project Manager',
+            roles: ['Project Manager'],
             active: true,
           },
         ],
@@ -301,7 +300,7 @@ describe('a working group research output', () => {
           {
             id: 'not-related-to-research-output',
             name: 'Example Working Group',
-            role: 'Project Manager',
+            roles: ['Project Manager'],
             active: true,
           },
         ],
@@ -324,7 +323,7 @@ describe('a working group research output', () => {
           {
             id: 'wg1',
             name: 'Example Working Group',
-            role: 'Project Manager',
+            roles: ['Project Manager'],
             active: true,
           },
         ],
@@ -356,7 +355,7 @@ it('switches a draft research output to in review', async () => {
       teams: [
         {
           id: researchOutput.teams[0]!.id,
-          role: 'Key Personnel',
+          roles: ['Key Personnel'],
           displayName: researchOutput.teams[0]!.displayName,
         },
       ],
@@ -402,7 +401,7 @@ it('switches a in review research output back to draft', async () => {
       teams: [
         {
           id: researchOutput.teams[0]!.id,
-          role: 'Project Manager',
+          roles: ['Project Manager'],
           displayName: researchOutput.teams[0]!.displayName,
         },
       ],
@@ -449,7 +448,7 @@ it('publishes a research output', async () => {
       teams: [
         {
           id: researchOutput.teams[0]!.id,
-          role: 'Project Manager',
+          roles: ['Project Manager'],
           displayName: researchOutput.teams[0]!.displayName,
         },
       ],
@@ -500,7 +499,7 @@ describe('a research output linked to a manuscript', () => {
         teams: [
           {
             id: researchOutput.teams[0]!.id,
-            role: 'Project Manager',
+            roles: ['Project Manager'],
             displayName: researchOutput.teams[0]!.displayName,
           },
         ],
@@ -540,7 +539,7 @@ describe('a research output linked to a manuscript', () => {
         teams: [
           {
             id: researchOutput.teams[0]!.id,
-            role: 'Project Manager',
+            roles: ['Project Manager'],
             displayName: researchOutput.teams[0]!.displayName,
           },
         ],
@@ -579,7 +578,7 @@ describe('a research output linked to a manuscript', () => {
         teams: [
           {
             id: researchOutput.teams[0]!.id,
-            role: 'Project Manager',
+            roles: ['Project Manager'],
             displayName: researchOutput.teams[0]!.displayName,
           },
         ],

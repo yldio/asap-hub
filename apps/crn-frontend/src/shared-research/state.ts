@@ -1,3 +1,4 @@
+import { expandUserRoles } from '@asap-hub/auth';
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
@@ -200,7 +201,11 @@ export const useCanShareResearchOutput = (
   activeAssociation: boolean,
 ): boolean => {
   const user = useCurrentUserCRN();
-  const userRole = getUserRole(user, association, associationIds);
+  const userRole = getUserRole(
+    user && expandUserRoles(user),
+    association,
+    associationIds,
+  );
   return hasShareResearchOutputPermission(userRole) && activeAssociation;
 };
 
@@ -210,7 +215,7 @@ export const useCanDuplicateResearchOutput = (
 ): boolean => {
   const user = useCurrentUserCRN();
   const originalAssociationUserRole = getUserRole(
-    user,
+    user && expandUserRoles(user),
     association,
     associationIds[0] ? [associationIds[0]] : [],
   );
@@ -224,9 +229,10 @@ export const useResearchOutputPermissions = (
   isManuscriptOutput: boolean = false,
 ) => {
   const user = useCurrentUserCRN();
-  const userRole = getUserRole(user, association, associationIds);
+  const expandedUser = user && expandUserRoles(user);
+  const userRole = getUserRole(expandedUser, association, associationIds);
   const originalAssociationUserRole = getUserRole(
-    user,
+    expandedUser,
     association,
     associationIds[0] ? [associationIds[0]] : [],
   );

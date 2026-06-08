@@ -4,7 +4,6 @@ import {
   TeamResponse,
   TeamTool,
 } from '@asap-hub/model';
-import { expandUserRoles } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
@@ -167,8 +166,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const navigate = useNavigate();
-  const rawUser = useCurrentUserCRN();
-  const user = rawUser && expandUserRoles(rawUser);
+  const user = useCurrentUserCRN();
 
   const {
     manuscriptSubmissions,

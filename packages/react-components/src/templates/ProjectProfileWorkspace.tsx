@@ -1,4 +1,5 @@
 import { TeamTool } from '@asap-hub/model';
+import { expandUserRoles } from '@asap-hub/auth';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ComponentProps, useState } from 'react';
@@ -183,7 +184,8 @@ const ProjectProfileWorkspace: React.FC<ProjectProfileWorkspaceProps> = ({
 }) => {
   const [displayEligibilityModal, setDisplayEligibilityModal] = useState(false);
   const navigate = useNavigate();
-  const user = useCurrentUserCRN();
+  const rawUser = useCurrentUserCRN();
+  const user = rawUser && expandUserRoles(rawUser);
 
   const handleShareManuscript = () => {
     setDisplayEligibilityModal(true);

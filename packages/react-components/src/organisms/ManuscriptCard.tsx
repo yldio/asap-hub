@@ -200,8 +200,8 @@ const isManuscriptLead = ({ version, user }: VersionUserProps) =>
     version.teams.find(
       (versionTeam) =>
         versionTeam.id === team.id &&
-        ((team.roles ?? []).includes('Lead PI (Core Leadership)') ||
-          (team.roles ?? []).includes('Project Manager')),
+        (team.roles.includes('Lead PI (Core Leadership)') ||
+          team.roles.includes('Project Manager')),
     ),
   );
 

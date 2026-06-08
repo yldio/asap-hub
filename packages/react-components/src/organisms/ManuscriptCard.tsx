@@ -201,8 +201,7 @@ const isManuscriptLead = ({ version, user }: VersionUserProps) =>
       (versionTeam) =>
         versionTeam.id === team.id &&
         team.roles.some(
-          (r) =>
-            r === 'Lead PI (Core Leadership)' || r === 'Project Manager',
+          (r) => r === 'Lead PI (Core Leadership)' || r === 'Project Manager',
         ),
     ),
   );

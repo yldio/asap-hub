@@ -54,6 +54,7 @@ export const researchOutputRouteFactory = (
         const hasProjectMembership = projectId
           ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             isStaff(loggedInUser!) ||
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             loggedInUser!.projects.some((project) => project.id === projectId)
           : false;
 

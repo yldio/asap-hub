@@ -331,7 +331,7 @@ export class EmailNotificationService {
               ? assignedOSMembersEmails
               : []),
           ] as string[])
-        : [];
+        : emailList.split(',').map((e) => e.trim()).filter(Boolean);
 
       if (!isProduction) {
         granteeRecipients = granteeRecipients.filter(

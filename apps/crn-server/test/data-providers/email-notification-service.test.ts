@@ -404,6 +404,41 @@ describe('Email Notification Service', () => {
       );
     });
 
+    test('sends OS discussion email only to notification list addresses on non-prod', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('development');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'discussion_created_by_grantee',
+        manuscript.sys.id,
+        'tester@yld.com',
+        { id: 'discussion-id-1', userName: 'Jane Doe' },
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledTimes(1);
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({ To: 'tester@yld.com' }),
+      );
+    });
+
+    test('does not send OS discussion email on non-prod when notification list is empty', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('development');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'discussion_created_by_grantee',
+        manuscript.sys.id,
+        '',
+        { id: 'discussion-id-1', userName: 'Jane Doe' },
+      );
+
+      expect(mockedPostmark).not.toHaveBeenCalled();
+    });
+
     test('sends email notification with contributing authors as recipients', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('production');
       const recipients =

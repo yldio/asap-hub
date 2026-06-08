@@ -8,7 +8,6 @@ import {
   ProjectDetailAbout,
   NotFoundPage,
 } from '@asap-hub/react-components';
-import { isStaff } from '@asap-hub/validation';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import { useProjectArticlesSuggestions, useProjectById } from './state';
 import { useResearchOutputs } from '../shared-research/state';
@@ -153,7 +152,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
       ? projectDetail.supplementGrant?.aims
       : projectDetail.originalGrantAims) || [];
 
-  const isMemberOrStaff = isMember || isStaff(user);
+  const isMemberOrStaff = isMember || user?.role === 'Staff';
   const displayDraftOutputs = isProjectOutputsEnabled && isMemberOrStaff;
 
   return (

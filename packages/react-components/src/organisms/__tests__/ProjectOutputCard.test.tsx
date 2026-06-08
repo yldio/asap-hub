@@ -19,7 +19,7 @@ it('renders the title', () => {
 
 it('renders Project pill', () => {
   const { getAllByText } = render(<ProjectOutputCard {...baseProps} />);
-  expect(getAllByText('Project').length).toBeGreaterThanOrEqual(1);
+  expect(getAllByText('Project Output').length).toBeGreaterThanOrEqual(1);
 });
 
 it('renders projects with clickable link when href present', () => {

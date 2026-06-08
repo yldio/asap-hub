@@ -254,6 +254,33 @@ describe('/research-outputs/ route', () => {
 
         expect(response.status).toBe(403);
       });
+
+      test('Should allow ASAP staff to list project drafts without project membership', async () => {
+        userMockFactory.mockReturnValueOnce({
+          ...createUserResponse(),
+          role: 'Staff',
+          projects: [],
+        });
+
+        researchOutputControllerMock.fetch.mockResolvedValueOnce({
+          items: [],
+          total: 0,
+        });
+
+        const response = await supertest(app).get('/research-outputs').query({
+          status: 'draft',
+          projectId: 'project-id-1',
+        });
+
+        expect(response.status).toBe(200);
+        expect(researchOutputControllerMock.fetch).toHaveBeenCalledWith({
+          filter: {
+            status: 'draft',
+            projectId: 'project-id-1',
+          },
+          includeDrafts: true,
+        });
+      });
     });
   });
 

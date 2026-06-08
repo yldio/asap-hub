@@ -10,6 +10,7 @@ import {
 import {
   getUserRole,
   hasEditResearchOutputPermission,
+  isStaff,
 } from '@asap-hub/validation';
 import Boom from '@hapi/boom';
 import { Response, Router } from 'express';
@@ -52,6 +53,7 @@ export const researchOutputRouteFactory = (
 
         const hasProjectMembership = projectId
           ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            isStaff(loggedInUser!) ||
             loggedInUser!.projects.some((project) => project.id === projectId)
           : false;
 

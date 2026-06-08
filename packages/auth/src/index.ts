@@ -56,14 +56,14 @@ export const expandUserTeamRoles = (
   teams: ReadonlyArray<UserTeamRoles>,
 ): UserResponse['teams'] =>
   teams.flatMap(({ roles, ...team }) =>
-    roles.map((role) => ({ ...team, role })),
+    (roles ?? []).map((role) => ({ ...team, role })),
   );
 
 export const expandUserWorkingGroupRoles = (
   workingGroups: ReadonlyArray<UserWorkingGroupRoles>,
 ): WorkingGroupMembership[] =>
   workingGroups.flatMap(({ roles, ...workingGroup }) =>
-    roles.map((role) => ({ ...workingGroup, role })),
+    (roles ?? []).map((role) => ({ ...workingGroup, role })),
   );
 
 /**

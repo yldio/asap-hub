@@ -120,9 +120,11 @@ const parseUserMetadata = ({
 const parseKRSyncMetadata = ({
   teams,
   openScienceTeamMember,
+  role,
 }: UserMetadataResponse) => ({
   teams: groupTeams(teams),
   openScienceTeamMember,
+  role,
 });
 const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => ({
   ...parseCommonUserMetadata(response),

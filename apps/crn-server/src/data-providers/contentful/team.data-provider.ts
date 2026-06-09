@@ -42,7 +42,7 @@ import {
   TeamType,
   TeamUpdateDataObject,
   isPIRole,
-  TeamStatusRank,
+  teamStatusRank,
 } from '@asap-hub/model';
 import { cleanArray, parseUserDisplayName } from '@asap-hub/server-common';
 import { DateTime } from 'luxon';
@@ -414,7 +414,7 @@ export const parseContentfulGraphQlTeamListItem = (
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
     teamStatus,
-    statusRank: TeamStatusRank[teamStatus],
+    statusRank: teamStatusRank[teamStatus],
     projectTitle: linkedProject?.title ?? '',
     linkedProjectId: linkedProject?.sys.id ?? '',
     teamType: (item.teamType as TeamType) ?? 'Discovery Team',
@@ -687,7 +687,7 @@ export const parseContentfulGraphQlTeam = (
     displayName: item.displayName ?? '',
     inactiveSince: item.inactiveSince ?? undefined,
     teamStatus,
-    statusRank: TeamStatusRank[teamStatus],
+    statusRank: teamStatusRank[teamStatus],
     projectTitle: linkedProject?.title ?? '',
     linkedProjectId: linkedProject?.sys.id ?? '',
     projectStatus: (linkedProject?.status as ProjectStatus) ?? undefined,

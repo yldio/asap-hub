@@ -42,7 +42,7 @@ export const teamStatus = ['Active', 'Inactive'] as const;
 
 export type TeamStatus = (typeof teamStatus)[number];
 
-export const TeamStatusRank: Record<TeamStatus, number> = {
+export const teamStatusRank: Record<TeamStatus, number> = {
   Active: 1,
   Inactive: 2,
 };

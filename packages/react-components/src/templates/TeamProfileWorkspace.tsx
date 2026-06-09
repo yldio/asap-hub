@@ -197,7 +197,9 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
 
   const contactPM = getActiveProjectManager(members);
   const targetProps = (manuscriptId: string) =>
-    manuscriptId === targetManuscriptId ? { isTargetManuscript: true as const } : {};
+    manuscriptId === targetManuscriptId
+      ? { isTargetManuscript: true as const }
+      : {};
 
   return (
     <div css={containerStyles}>

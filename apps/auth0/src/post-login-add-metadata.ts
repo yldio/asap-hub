@@ -116,6 +116,14 @@ const parseUserMetadata = ({
   role,
   openScienceTeamMember,
 });
+
+const parseKRSyncMetadata = ({
+  teams,
+  openScienceTeamMember,
+}: UserMetadataResponse) => ({
+  teams: groupTeams(teams),
+  openScienceTeamMember,
+});
 const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => ({
   ...parseCommonUserMetadata(response),
   ...(isUserMetadataResponse(response)
@@ -167,6 +175,13 @@ export const onExecutePostLogin = async (
   try {
     if (event.client.name === 'ASAP KR-Sync') {
       const apiUrl = event.secrets.API_URL ?? '##API_URL##';
+      const queryRedirectUri = new URLSearchParams(event.request.query).get(
+        'redirect_uri',
+      );
+      const redirect_uri = queryRedirectUri ?? event.request.body.redirect_uri;
+      if (!redirect_uri) {
+        throw new Error('Missing redirect_uri');
+      }
       const response = await fetchUserMetadata(apiUrl, event);
 
       if (isUserMetadataResponse(response) && response.alumniSinceDate) {
@@ -174,7 +189,18 @@ export const onExecutePostLogin = async (
         return api.access.deny('alumni-user-access-denied');
       }
 
-      console.log('Successfully verified KR-Sync user');
+      if (isUserMetadataResponse(response)) {
+        const dataSeerUser = parseKRSyncMetadata(response);
+        api.idToken.setCustomClaim(
+          new URL('/user', redirect_uri).toString(),
+          dataSeerUser,
+        );
+        console.log(
+          `KR-Sync user metadata set: ${JSON.stringify(dataSeerUser)}`,
+        );
+      } else {
+        console.log('Successfully verified KR-Sync user');
+      }
       return true;
     }
     const [apiUrl, redirect_uri] = getApiUrls(event);

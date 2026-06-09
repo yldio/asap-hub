@@ -79,14 +79,88 @@ describe('For an ASAP KR-Sync login', () => {
     },
   };
 
-  it('verifies the user against the webhook without setting custom claims', async () => {
-    nock(apiUrl).get(`/webhook/users/${user.user_id}`).reply(200, { id: '42' });
+  const baseUser: UserMetadataResponse = {
+    onboarded: true,
+    displayName: 'Joao Tiago',
+    firstName: 'Joao',
+    lastName: 'Tiago',
+    email: 'joao.tiago@yld.io',
+    id: 'myRandomId123',
+    lastModifiedDate: '2020-08-21T14:23:31.924Z',
+    createdDate: '2020-08-21T14:23:31.924Z',
+    teams: [
+      {
+        id: 'team-1',
+        displayName: 'Team 1',
+        role: 'Lead PI (Core Leadership)',
+      },
+    ],
+    tags: [],
+    questions: [],
+    workingGroups: [],
+    interestGroups: [],
+    projects: [],
+    role: 'Grantee',
+    openScienceTeamMember: false,
+    algoliaApiKey: 'test-api-key',
+  };
+
+  it('sets team and openScienceTeamMember claims for CRN users', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, { ...baseUser, id: '42', openScienceTeamMember: true });
 
     await onExecutePostLogin(krSyncEvent, apiBase);
 
     expect(nock.isDone()).toBe(true);
-    expect(apiBase.idToken.setCustomClaim).not.toHaveBeenCalled();
+    expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
+      'http://example.com/user',
+      {
+        teams: [
+          {
+            id: 'team-1',
+            displayName: 'Team 1',
+            inactiveSinceDate: undefined,
+            roles: ['Lead PI (Core Leadership)'],
+          },
+        ],
+        openScienceTeamMember: true,
+      },
+    );
     expect(apiBase.access.deny).not.toHaveBeenCalled();
+  });
+
+  it('groups multiple roles in the same team into one entry', async () => {
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, {
+        ...baseUser,
+        id: '42',
+        teams: [
+          {
+            id: 'team-1',
+            displayName: 'Team 1',
+            role: 'Lead PI (Core Leadership)',
+          },
+          { id: 'team-1', displayName: 'Team 1', role: 'Project Manager' },
+        ],
+      });
+
+    await onExecutePostLogin(krSyncEvent, apiBase);
+
+    expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
+      'http://example.com/user',
+      expect.objectContaining({
+        teams: [
+          {
+            id: 'team-1',
+            displayName: 'Team 1',
+            inactiveSinceDate: undefined,
+            roles: ['Lead PI (Core Leadership)', 'Project Manager'],
+          },
+        ],
+      }),
+    );
   });
 
   it('passes the AUTH0_SHARED_SECRET as a basic auth token', async () => {
@@ -95,7 +169,7 @@ describe('For an ASAP KR-Sync login', () => {
       reqheaders: { authorization: `Basic ${token}` },
     })
       .get(`/webhook/users/${user.user_id}`)
-      .reply(200, { id: '42' });
+      .reply(200, { ...baseUser, id: '42' });
 
     await onExecutePostLogin(
       {
@@ -109,11 +183,12 @@ describe('For an ASAP KR-Sync login', () => {
   });
 
   it('denies access for alumni users', async () => {
-    nock(apiUrl).get(`/webhook/users/${user.user_id}`).reply(200, {
-      id: '42',
-      teams: [],
-      alumniSinceDate: '2024-01-01',
-    });
+    nock(apiUrl)
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, {
+        ...baseUser,
+        alumniSinceDate: '2024-01-01',
+      });
 
     await onExecutePostLogin(krSyncEvent, apiBase);
 
@@ -134,7 +209,19 @@ describe('For an ASAP KR-Sync login', () => {
     expect(apiBase.idToken.setCustomClaim).not.toHaveBeenCalled();
   });
 
-  it('allows non-alumni GP2 users (no teams field on response)', async () => {
+  it('denies access if redirect_uri is missing', async () => {
+    await onExecutePostLogin(
+      {
+        ...krSyncEvent,
+        request: { ...krSyncEvent.request, query: {}, body: {} },
+      },
+      apiBase,
+    );
+
+    expect(apiBase.access.deny).toHaveBeenCalledWith('Missing redirect_uri');
+  });
+
+  it('does not set claims for non-CRN (GP2) users', async () => {
     nock(apiUrl)
       .get(`/webhook/users/${user.user_id}`)
       .reply(200, { id: '42', role: 'Trainee' });

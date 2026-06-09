@@ -114,7 +114,7 @@ describe('For an ASAP KR-Sync login', () => {
 
     expect(nock.isDone()).toBe(true);
     expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
-      'http://example.com/user',
+      `${apiUrl}/user`,
       {
         teams: [
           {
@@ -124,6 +124,7 @@ describe('For an ASAP KR-Sync login', () => {
             roles: ['Lead PI (Core Leadership)'],
           },
         ],
+        role: 'Grantee',
         openScienceTeamMember: true,
       },
     );
@@ -149,7 +150,7 @@ describe('For an ASAP KR-Sync login', () => {
     await onExecutePostLogin(krSyncEvent, apiBase);
 
     expect(apiBase.idToken.setCustomClaim).toHaveBeenCalledWith(
-      'http://example.com/user',
+      `${apiUrl}/user`,
       expect.objectContaining({
         teams: [
           {
@@ -207,18 +208,6 @@ describe('For an ASAP KR-Sync login', () => {
       'Response code 404 (Not Found)',
     );
     expect(apiBase.idToken.setCustomClaim).not.toHaveBeenCalled();
-  });
-
-  it('denies access if redirect_uri is missing', async () => {
-    await onExecutePostLogin(
-      {
-        ...krSyncEvent,
-        request: { ...krSyncEvent.request, query: {}, body: {} },
-      },
-      apiBase,
-    );
-
-    expect(apiBase.access.deny).toHaveBeenCalledWith('Missing redirect_uri');
   });
 
   it('does not set claims for non-CRN (GP2) users', async () => {

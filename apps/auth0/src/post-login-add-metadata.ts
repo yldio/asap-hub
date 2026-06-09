@@ -119,12 +119,12 @@ const parseUserMetadata = ({
 
 const parseKRSyncMetadata = ({
   teams,
-  openScienceTeamMember,
   role,
+  openScienceTeamMember,
 }: UserMetadataResponse) => ({
   teams: groupTeams(teams),
-  openScienceTeamMember,
   role,
+  openScienceTeamMember,
 });
 const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => ({
   ...parseCommonUserMetadata(response),
@@ -177,13 +177,6 @@ export const onExecutePostLogin = async (
   try {
     if (event.client.name === 'ASAP KR-Sync') {
       const apiUrl = event.secrets.API_URL ?? '##API_URL##';
-      const queryRedirectUri = new URLSearchParams(event.request.query).get(
-        'redirect_uri',
-      );
-      const redirect_uri = queryRedirectUri ?? event.request.body.redirect_uri;
-      if (!redirect_uri) {
-        throw new Error('Missing redirect_uri');
-      }
       const response = await fetchUserMetadata(apiUrl, event);
 
       if (isUserMetadataResponse(response) && response.alumniSinceDate) {
@@ -194,7 +187,7 @@ export const onExecutePostLogin = async (
       if (isUserMetadataResponse(response)) {
         const dataSeerUser = parseKRSyncMetadata(response);
         api.idToken.setCustomClaim(
-          new URL('/user', redirect_uri).toString(),
+          new URL('/user', apiUrl).toString(),
           dataSeerUser,
         );
         console.log(

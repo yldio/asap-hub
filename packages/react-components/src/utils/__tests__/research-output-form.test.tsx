@@ -239,6 +239,7 @@ describe('transformResearchOutputResponseToRequest', () => {
       workingGroups: researchOutputResponse.workingGroups
         ? researchOutputResponse.workingGroups.map((wg) => wg.id)
         : [],
+
       relatedResearch: researchOutputResponse.relatedResearch.map(
         (research) => research.id,
       ),

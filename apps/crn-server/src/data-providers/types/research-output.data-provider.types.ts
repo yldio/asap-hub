@@ -16,6 +16,7 @@ export type FetchResearchOutputFilter = {
   status?: string;
   teamId?: string;
   workingGroupId?: string;
+  projectId?: string;
   sharingStatus?: ResearchOutputSharingStatus;
   asapFunded?: 'Yes' | 'No' | 'Not Sure';
 };

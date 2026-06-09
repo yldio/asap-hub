@@ -1,20 +1,40 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { enable, disable, reset } from '@asap-hub/flags';
+import {
+  createResearchOutputResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
+import userEvent from '@testing-library/user-event';
 import type {
   DiscoveryProjectDetail as DiscoveryProjectDetailType,
   ResourceProject,
   TeamRole,
 } from '@asap-hub/model';
-import { createUserResponse } from '@asap-hub/fixtures';
+import type { AlgoliaSearchClient } from '@asap-hub/algolia';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import DiscoveryProjectDetail from '../DiscoveryProjectDetail';
-import { getResearchOutputs } from '../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { useAlgolia } from '../../hooks/algolia';
+import { getResearchOutputs } from '../../shared-research/api';
+import DiscoveryProjectDetail from '../DiscoveryProjectDetail';
+
+jest.mock('../../hooks/algolia', () => ({
+  useAlgolia: jest.fn(),
+}));
+
+jest.mock('../../shared-research/api', () => ({
+  ...jest.requireActual('../../shared-research/api'),
+  getResearchOutputs: jest.fn(),
+}));
+
+const mockUseAlgolia = useAlgolia as jest.MockedFunction<typeof useAlgolia>;
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
+const mockAlgoliaClient = { search: jest.fn() };
 
 const mockDiscoveryProject: DiscoveryProjectDetailType = {
   id: 'discovery-1',
@@ -67,6 +87,18 @@ const mockResourceProject: ResourceProject = {
   googleDriveLink: undefined,
 };
 
+const mockPublishedResearchOutput = {
+  ...createResearchOutputResponse(1),
+  id: 'published-output-1',
+  published: true,
+};
+
+const mockDraftResearchOutput = {
+  ...createResearchOutputResponse(2),
+  id: 'draft-output-1',
+  published: false,
+};
+
 jest.mock('../state', () => {
   const actual = jest.requireActual('../state');
   const useProjectById = jest.fn((id: string) => {
@@ -82,16 +114,22 @@ jest.mock('../state', () => {
   return {
     ...actual,
     useProjectById,
+    useProjectMilestones: jest.fn().mockResolvedValue({
+      items: [],
+      total: 0,
+    }),
     useCreateProjectMilestone: jest.fn().mockReturnValue(jest.fn()),
   };
 });
-jest.mock('../../shared-research/api', () => ({
-  getResearchOutputs: jest.fn(),
-}));
 
-const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
-  typeof getResearchOutputs
->;
+jest.mock('../../shared-research/state', () => ({
+  __esModule: true,
+  useResearchOutputs: jest.fn((options: { draftsOnly?: boolean }) =>
+    options.draftsOnly
+      ? { items: [mockDraftResearchOutput], total: 1 }
+      : { items: [mockPublishedResearchOutput], total: 1 },
+  ),
+}));
 
 const renderDiscoveryProjectDetail = async (projectId: string) => {
   const path = `${projects.template}/discovery/${projectId}/about`;
@@ -123,15 +161,12 @@ const renderDiscoveryProjectDetail = async (projectId: string) => {
 describe('DiscoveryProjectDetail', () => {
   beforeEach(() => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
-    mockGetResearchOutputs.mockResolvedValue({
-      ...createResearchOutputListAlgoliaResponse(2),
-      hits: createResearchOutputListAlgoliaResponse(2).hits.map(
-        (hit, index) => ({
-          ...hit,
-          title: `Project Article ${index}`,
-        }),
-      ),
+    mockUseAlgolia.mockReturnValue({
+      client: mockAlgoliaClient as unknown as AlgoliaSearchClient<'crn'>,
     });
+    mockGetResearchOutputs.mockResolvedValue(
+      createResearchOutputListAlgoliaResponse(0),
+    );
   });
 
   afterEach(() => {
@@ -231,6 +266,15 @@ describe('DiscoveryProjectDetail', () => {
 
   it('can fetch the projects articles', async () => {
     enable('PROJECT_AIMS_AND_MILESTONES');
+    mockGetResearchOutputs.mockResolvedValue({
+      ...createResearchOutputListAlgoliaResponse(2),
+      hits: createResearchOutputListAlgoliaResponse(2).hits.map(
+        (hit, index) => ({
+          ...hit,
+          title: `Project Article ${index}`,
+        }),
+      ),
+    });
     const path = `${projects.template}/discovery/discovery-1/milestones`;
     const mockUser = {
       ...createUserResponse({}, 1),

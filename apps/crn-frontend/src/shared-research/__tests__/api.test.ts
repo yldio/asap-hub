@@ -164,6 +164,37 @@ describe('getResearchOutputs', () => {
     );
   });
 
+  it('uses projectId as a filter', async () => {
+    await getResearchOutputs(mockAlgoliaSearchClient, {
+      ...options,
+      projectId: 'proj-1',
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
+      '',
+      expect.objectContaining({
+        filters: 'project.id:"proj-1"',
+      }),
+    );
+  });
+
+  it('adds projectId to documentType filter', async () => {
+    await getResearchOutputs(mockAlgoliaSearchClient, {
+      ...options,
+      filters: new Set<ResearchOutputFilterOptionTypes>(['Article']),
+      projectId: 'proj-1',
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['research-output'],
+      '',
+      expect.objectContaining({
+        filters: '(documentType:"Article") AND project.id:"proj-1"',
+      }),
+    );
+  });
+
   it('adds workingGroupId to documentType filter', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
@@ -482,6 +513,33 @@ describe('getDraftResearchOutputs', () => {
           searchQuery: '',
           userAssociationMember: true,
           workingGroupId: '123',
+          currentPage: 0,
+          draftsOnly: true,
+          filters: new Set(),
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('does a draft project research outputs query and returns results for user association members', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        status: 'draft',
+        projectId: 'project-123',
+        take: 10,
+        skip: 0,
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getDraftResearchOutputs(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          userAssociationMember: true,
+          projectId: 'project-123',
           currentPage: 0,
           draftsOnly: true,
           filters: new Set(),

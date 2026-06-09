@@ -118,6 +118,21 @@ export const researchOutputContentQueryFragment = gql`
           name
         }
         linkedFrom {
+          projectMembershipCollection(limit: 1) {
+            items {
+              linkedFrom {
+                projectsCollection(limit: 1) {
+                  items {
+                    sys {
+                      id
+                    }
+                    title
+                    projectType
+                  }
+                }
+              }
+            }
+          }
           teamMembershipCollection @include(if: $fetchPMs) {
             items {
               role
@@ -133,6 +148,13 @@ export const researchOutputContentQueryFragment = gql`
           }
         }
       }
+    }
+    project {
+      sys {
+        id
+      }
+      title
+      projectType
     }
     workingGroup {
       sys {

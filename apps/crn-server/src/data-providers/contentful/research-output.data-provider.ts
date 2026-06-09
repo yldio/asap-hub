@@ -3,6 +3,7 @@ import {
   convertDecisionToBoolean,
   isResearchOutputDocumentType,
   ListResearchOutputDataObject,
+  ProjectType,
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
   researchOutputMapType,
@@ -113,6 +114,9 @@ export class ResearchOutputContentfulDataProvider
       }
       if (filter.workingGroupId) {
         where.workingGroup = { sys: { id: filter.workingGroupId } };
+      }
+      if (filter.projectId) {
+        where.project = { sys: { id: filter.projectId } };
       }
       if (filter.documentType) {
         if (Array.isArray(filter.documentType)) {
@@ -321,11 +325,24 @@ export class ResearchOutputContentfulDataProvider
 const mapTeams = (items: (TeamItem | null)[]) =>
   items
     .filter((team: TeamItem | null): team is TeamItem => team !== null)
-    .map((team) => ({
-      id: team.sys.id,
-      displayName: team.displayName || '',
-      teamType: (team.teamType || 'Discovery Team') as TeamType,
-    }));
+    .map((team) => {
+      const projectItem =
+        team.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
+          ?.projectsCollection?.items[0] ?? null;
+
+      return {
+        id: team.sys.id,
+        displayName: team.displayName || '',
+        teamType: (team.teamType || 'Discovery Team') as TeamType,
+        project: projectItem
+          ? {
+              id: projectItem.sys.id,
+              title: projectItem.title || '',
+              projectType: projectItem.projectType as ProjectType,
+            }
+          : undefined,
+      };
+    });
 
 export const mapOutputVersions = (items: (OutputVersionItem | null)[]) =>
   items
@@ -456,6 +473,13 @@ export const parseGraphQLResearchOutput = (
           },
         ]
       : [],
+    project: researchOutputs.project
+      ? {
+          id: researchOutputs.project.sys.id,
+          title: researchOutputs.project.title || '',
+          projectType: researchOutputs.project.projectType as ProjectType,
+        }
+      : undefined,
     authors:
       researchOutputs.authorsCollection?.items
         ?.filter((author): author is AuthorItem => author !== null)

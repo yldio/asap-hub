@@ -9,6 +9,7 @@ import {
 } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
 import {
   Auth0Provider,
@@ -92,6 +93,18 @@ const mockTraineeProject: TraineeProject = {
   members: mockTraineeProjectMembers,
 };
 
+const mockPublishedResearchOutput = {
+  ...createResearchOutputResponse(1),
+  id: 'published-output-1',
+  published: true,
+};
+
+const mockDraftResearchOutput = {
+  ...createResearchOutputResponse(2),
+  id: 'draft-output-1',
+  published: false,
+};
+
 jest.mock('../state', () => {
   const createMockListResponse = (
     items: ReadonlyArray<DiscoveryProject | ResourceProject | TraineeProject>,
@@ -149,6 +162,15 @@ jest.mock('../../shared-research/api', () => ({
       { id: 'type-1', name: 'Data Portal' },
       { id: 'type-2', name: 'Dataset' },
     ]),
+  ),
+}));
+
+jest.mock('../../shared-research/state', () => ({
+  __esModule: true,
+  useResearchOutputs: jest.fn((options: { draftsOnly?: boolean }) =>
+    options.draftsOnly
+      ? { items: [mockDraftResearchOutput], total: 1 }
+      : { items: [mockPublishedResearchOutput], total: 1 },
   ),
 }));
 

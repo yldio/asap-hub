@@ -3,38 +3,53 @@ import { useLocation } from 'react-router';
 import { NoOutputsPage, ProjectOutputList } from '@asap-hub/react-components';
 
 import { usePagination, usePaginationParams } from '../hooks';
-import {
-  createProjectOutputsMock,
-  createProjectDraftOutputsMock,
-} from './projectOutputs.mock';
+import { useResearchOutputs } from '../shared-research/state';
+import { getProjectResearchOutputListScope } from './projectResearchOutputScope';
+import { researchOutputToProjectOutput } from './researchOutputToProjectOutput';
 
 type ProjectOutputsProps = {
   projectId: string;
-  projectTitle: string;
+  teamId?: string;
   draftOutputs?: boolean;
+  userAssociationMember: boolean;
 };
 
 const ProjectOutputs: React.FC<ProjectOutputsProps> = ({
   projectId,
-  projectTitle,
+  teamId,
   draftOutputs = false,
+  userAssociationMember,
 }) => {
   const location = useLocation();
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
 
-  const researchOutputs = useMemo(
-    () =>
-      draftOutputs
-        ? createProjectDraftOutputsMock(projectId, projectTitle)
-        : createProjectOutputsMock(projectId, projectTitle),
-    [projectId, projectTitle, draftOutputs],
+  const listScope = getProjectResearchOutputListScope({ projectId, teamId });
+  const listOptions = {
+    searchQuery: '',
+    filters: new Set<string>(),
+    currentPage,
+    pageSize,
+    ...listScope,
+  };
+
+  const result = useResearchOutputs(
+    draftOutputs
+      ? { ...listOptions, draftsOnly: true as const, userAssociationMember }
+      : listOptions,
   );
 
-  const total = researchOutputs.length;
-  const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
+  const researchOutputs = useMemo(
+    () => result.items.map(researchOutputToProjectOutput),
+    [result.items],
+  );
 
-  if (total === 0) {
+  const { numberOfPages, renderPageHref } = usePagination(
+    result.total,
+    pageSize,
+  );
+
+  if (result.total === 0) {
     return (
       <NoOutputsPage
         title={
@@ -50,15 +65,10 @@ const ProjectOutputs: React.FC<ProjectOutputsProps> = ({
     );
   }
 
-  const pageItems = researchOutputs.slice(
-    currentPage * pageSize,
-    currentPage * pageSize + pageSize,
-  );
-
   return (
     <ProjectOutputList
-      researchOutputs={pageItems}
-      numberOfItems={total}
+      researchOutputs={researchOutputs}
+      numberOfItems={result.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}

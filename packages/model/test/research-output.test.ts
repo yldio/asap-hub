@@ -1,11 +1,10 @@
 import {
   convertBooleanToDecision,
   convertDecisionToBoolean,
+  getProjectResearchOutputDisplaySource,
   isResearchOutputDocumentType,
   isResearchOutputType,
   researchOutputMapType,
-  ResearchOutputResponse,
-  teamResearchOutput,
 } from '../src/research-output';
 
 describe('Research Output Model', () => {
@@ -16,6 +15,29 @@ describe('Research Output Model', () => {
 
     it('should not recognise incorrect type', () => {
       expect(isResearchOutputDocumentType('NotADataset')).toEqual(false);
+    });
+  });
+
+  describe('project research output association', () => {
+    it('treats outputs without project or working group as team-based', () => {
+      expect(
+        getProjectResearchOutputDisplaySource({
+          project: undefined,
+          workingGroups: undefined,
+        }),
+      ).toBe('team');
+    });
+
+    it('maps user-based outputs to project display source', () => {
+      expect(
+        getProjectResearchOutputDisplaySource({
+          project: {
+            id: 'p1',
+            title: 'Project',
+            projectType: 'Resource Project',
+          },
+        }),
+      ).toBe('project');
     });
   });
 

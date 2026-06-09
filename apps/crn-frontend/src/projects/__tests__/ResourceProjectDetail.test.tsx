@@ -4,6 +4,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { enable, disable, reset } from '@asap-hub/flags';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import type {
   DiscoveryProject,
   ResourceProjectDetail as ResourceProjectDetailType,
@@ -53,6 +54,18 @@ const mockDiscoveryProject: DiscoveryProject = {
   teamId: 'team-1',
 };
 
+const mockPublishedResearchOutput = {
+  ...createResearchOutputResponse(1),
+  id: 'published-output-1',
+  published: true,
+};
+
+const mockDraftResearchOutput = {
+  ...createResearchOutputResponse(2),
+  id: 'draft-output-1',
+  published: false,
+};
+
 jest.mock('../state', () => {
   const useProjectById = jest.fn((id: string) => {
     if (id === 'resource-1') {
@@ -71,6 +84,15 @@ jest.mock('../state', () => {
     useCreateProjectMilestone: jest.fn().mockReturnValue(jest.fn()),
   };
 });
+
+jest.mock('../../shared-research/state', () => ({
+  __esModule: true,
+  useResearchOutputs: jest.fn((options: { draftsOnly?: boolean }) =>
+    options.draftsOnly
+      ? { items: [mockDraftResearchOutput], total: 1 }
+      : { items: [mockPublishedResearchOutput], total: 1 },
+  ),
+}));
 
 const renderResourceProjectDetail = async (projectId: string) => {
   const path = `${projects.template}/resource/${projectId}/about`;

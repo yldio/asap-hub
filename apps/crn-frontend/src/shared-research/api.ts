@@ -23,6 +23,7 @@ export type ResearchOutputListOptions =
 
 type BasicOptions = {
   teamId?: string;
+  projectId?: string;
   workingGroupId?: string;
   tags?: string[];
   noResultsWithoutCriteria?: boolean;
@@ -65,6 +66,7 @@ export const getAllFilters = (
   teamId?: string,
   userId?: string,
   workingGroupId?: string,
+  projectId?: string,
 ) => {
   const filterArray = Array.from(filters);
   const isSourceFilter = (filter: string) =>
@@ -94,10 +96,11 @@ export const getAllFilters = (
           : '';
 
   const teamFilter = teamId ? `teams.id:"${teamId}"` : '';
+  const projectFilter = projectId ? `project.id:"${projectId}"` : '';
   const wgFilter = workingGroupId ? `workingGroups.id:"${workingGroupId}"` : '';
   const authorFilter = userId ? `authors.id:"${userId}"` : '';
 
-  return [algoliaFilters, teamFilter, authorFilter, wgFilter]
+  return [algoliaFilters, teamFilter, projectFilter, authorFilter, wgFilter]
     .filter(Boolean)
     .join(' AND ');
 };
@@ -115,6 +118,7 @@ export const getResearchOutputs = (
       options.teamId,
       options.userId,
       options.workingGroupId,
+      options.projectId,
     ),
   });
 
@@ -130,6 +134,9 @@ export const getDraftResearchOutputs = async (
     }
     if (options.teamId) {
       url.searchParams.set('teamId', options.teamId);
+    }
+    if (options.projectId) {
+      url.searchParams.set('projectId', options.projectId);
     }
 
     const resp = await fetch(url.toString(), {

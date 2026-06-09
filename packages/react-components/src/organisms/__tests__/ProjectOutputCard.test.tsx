@@ -19,21 +19,19 @@ it('renders the title', () => {
 
 it('renders Project pill', () => {
   const { getAllByText } = render(<ProjectOutputCard {...baseProps} />);
-  expect(getAllByText('Project').length).toBeGreaterThanOrEqual(1);
+  expect(getAllByText('Project Output').length).toBeGreaterThanOrEqual(1);
 });
 
 it('renders projects with clickable link when href present', () => {
   const { getByRole } = render(
     <ProjectOutputCard
       {...baseProps}
-      projects={[
-        {
-          id: 'p1',
-          title: 'My Project',
-          projectType: 'discovery',
-          href: '/projects/p1',
-        },
-      ]}
+      project={{
+        id: 'p1',
+        title: 'My Project',
+        projectType: 'Discovery Project',
+        href: '/projects/p1',
+      }}
     />,
   );
   const link = getByRole('link', { name: 'My Project' });
@@ -44,9 +42,11 @@ it('renders projects as plain text when href absent', () => {
   const { getByText, queryByRole } = render(
     <ProjectOutputCard
       {...baseProps}
-      projects={[
-        { id: 'p1', title: 'No-link Project', projectType: 'discovery' },
-      ]}
+      project={{
+        id: 'p1',
+        title: 'No-link Project',
+        projectType: 'Discovery Project',
+      }}
     />,
   );
   expect(getByText('No-link Project')).toBeVisible();
@@ -76,26 +76,26 @@ it('omits Team association when teams empty (team-based output)', () => {
   expect(queryByText(/^Team\s/)).toBeNull();
 });
 
-it('omits Team association for project-based output even when teams present', () => {
-  const { queryByText } = render(
+it('renders Team association when teams present and source is project', () => {
+  const { getAllByText } = render(
     <ProjectOutputCard
       {...baseProps}
       source="project"
       teams={[{ id: 't1', displayName: 'Alpha', teamType: 'Discovery Team' }]}
     />,
   );
-  expect(queryByText('Team Alpha')).toBeNull();
+  expect(getAllByText('Team Alpha').length).toBeGreaterThanOrEqual(1);
 });
 
-it('defaults source to project when not provided', () => {
+it('renders Team association when source is omitted', () => {
   const { source: _unused, ...propsWithoutSource } = baseProps;
-  const { queryByText } = render(
+  const { getAllByText } = render(
     <ProjectOutputCard
       {...propsWithoutSource}
       teams={[{ id: 't1', displayName: 'Alpha', teamType: 'Discovery Team' }]}
     />,
   );
-  expect(queryByText('Team Alpha')).toBeNull();
+  expect(getAllByText('Team Alpha').length).toBeGreaterThanOrEqual(1);
 });
 
 it('displays Draft tag when not published', () => {

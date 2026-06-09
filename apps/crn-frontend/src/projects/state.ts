@@ -48,6 +48,7 @@ const serializeMilestonesOptions = (options: MilestonesListOptions): string =>
     projectId: options.projectId,
     sort: options.sort,
   });
+
 // Separate cache for list data (incomplete, from Algolia)
 const projectListCacheState = atomFamily<
   | {

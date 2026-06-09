@@ -108,6 +108,7 @@ export const getResearchOutputDataObject =
     ],
     publishingEntity: 'Team',
     workingGroups: [],
+    project: undefined,
     methods: ['Activity Assay'],
     organisms: ['Rat'],
     environments: ['In Vitro'],
@@ -229,6 +230,7 @@ export const getResearchOutputPostRequest = (): ResearchOutputPostRequest => {
     authors,
     teams,
     workingGroups,
+    project: _project,
     relatedResearch,
     published: _published,
     relatedEvents,
@@ -288,6 +290,7 @@ export const getResearchOutputCreateDataObject =
       publishingEntity: _publishingEntity,
       impact: _impact,
       categories: _categories,
+      project: _project,
       ...researchOutputPostRequest
     } = getResearchOutputResponse();
 

@@ -111,7 +111,9 @@ describe('/research-outputs/ route', () => {
         take: 15,
         skip: 5,
         search: 'something',
-        filter: ['one', 'two'],
+        filter: {
+          documentType: ['one', 'two'],
+        },
       };
 
       expect(researchOutputControllerMock.fetch).toBeCalledWith(expectedParams);
@@ -189,6 +191,37 @@ describe('/research-outputs/ route', () => {
         );
       });
 
+      test('Should call the controller with projectId when listing drafts', async () => {
+        userMockFactory.mockReturnValueOnce({
+          ...createUserResponse(),
+          projects: [
+            {
+              id: 'project-id-0',
+              title: 'Test Project',
+              projectType: 'Resource Project',
+              status: 'Active',
+            },
+          ],
+        });
+
+        await supertest(app).get('/research-outputs').query({
+          take: 15,
+          skip: 5,
+          status: 'draft',
+          projectId: 'project-id-0',
+        });
+
+        expect(researchOutputControllerMock.fetch).toBeCalledWith({
+          take: 15,
+          skip: 5,
+          filter: {
+            status: 'draft',
+            projectId: 'project-id-0',
+          },
+          includeDrafts: true,
+        });
+      });
+
       test("Should return 403 if user is not associated to output's team", async () => {
         const response = await supertest(app).get('/research-outputs').query({
           take: 15,
@@ -209,6 +242,44 @@ describe('/research-outputs/ route', () => {
         });
 
         expect(response.status).toBe(403);
+      });
+
+      test('Should return 403 if user is not a member of the project', async () => {
+        const response = await supertest(app).get('/research-outputs').query({
+          take: 15,
+          skip: 5,
+          status: 'draft',
+          projectId: 'project-id-403',
+        });
+
+        expect(response.status).toBe(403);
+      });
+
+      test('Should allow ASAP staff to list project drafts without project membership', async () => {
+        userMockFactory.mockReturnValueOnce({
+          ...createUserResponse(),
+          role: 'Staff',
+          projects: [],
+        });
+
+        researchOutputControllerMock.fetch.mockResolvedValueOnce({
+          items: [],
+          total: 0,
+        });
+
+        const response = await supertest(app).get('/research-outputs').query({
+          status: 'draft',
+          projectId: 'project-id-1',
+        });
+
+        expect(response.status).toBe(200);
+        expect(researchOutputControllerMock.fetch).toHaveBeenCalledWith({
+          filter: {
+            status: 'draft',
+            projectId: 'project-id-1',
+          },
+          includeDrafts: true,
+        });
       });
     });
   });

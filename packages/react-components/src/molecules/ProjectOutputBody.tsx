@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { ProjectType, ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 
 import {
@@ -25,15 +25,14 @@ import {
   TeamIcon,
   TraineeProjectIcon,
 } from '../icons';
+import { utils } from '..';
 
 const TEAM_ICON = <TeamIcon />;
 
-export type ProjectOutputType = 'discovery' | 'resource' | 'trainee';
-
-const PROJECT_ICONS: Record<ProjectOutputType, React.ReactElement> = {
-  discovery: <DiscoveryProjectIcon />,
-  resource: <ResourceProjectIcon />,
-  trainee: <TraineeProjectIcon />,
+const PROJECT_ICONS: Record<ProjectType, React.ReactElement> = {
+  'Discovery Project': <DiscoveryProjectIcon />,
+  'Resource Project': <ResourceProjectIcon />,
+  'Trainee Project': <TraineeProjectIcon />,
 };
 
 export type ProjectOutput = Pick<
@@ -51,12 +50,12 @@ export type ProjectOutput = Pick<
   | 'isInReview'
   | 'keywords'
 > & {
-  projects?: ReadonlyArray<{
+  project?: {
     id: string;
     title: string;
-    projectType: ProjectOutputType;
+    projectType: ProjectType;
     href?: string;
-  }>;
+  };
   lastModifiedDate?: string;
   source?: 'team' | 'project';
 };
@@ -359,10 +358,34 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
   isInReview,
   keywords,
   showTags = true,
-  projects,
+  project,
 }) => {
-  const primaryProject = projects?.[0];
   const firstTeam = teams[0];
+
+  const primaryProject =
+    project ??
+    (firstTeam?.project
+      ? {
+          id: firstTeam.project.id,
+          title: firstTeam.project.title,
+          projectType: firstTeam.project.projectType,
+          href: utils.getProjectRoute({
+            projectId: firstTeam.project.id,
+            projectType: firstTeam.project.projectType,
+          }),
+        }
+      : undefined);
+
+  const otherProjects = (project ? teams : teams.slice(1))
+    .filter((team) => !!team.project?.id)
+    .map((team) => ({
+      id: team.project?.id as string,
+      displayName: team.project?.title as string,
+      href: utils.getProjectRoute({
+        projectId: team.project?.id as string,
+        projectType: team.project?.projectType as ProjectType,
+      }),
+    }));
 
   const externalLinkElement = link ? (
     <div css={externalLinkWrapperStyles}>
@@ -376,7 +399,7 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
         <PillList
           small
           pills={[
-            'Project',
+            'Project Output',
             ...(documentType ? [documentType] : []),
             ...(type ? [type] : []),
           ]}
@@ -384,7 +407,7 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
         {externalLinkElement}
       </div>
       <div css={[metadataRowStyles, mobileOnlyStyles, mobilePillStyles]}>
-        <Pill small>Project</Pill>
+        <Pill small>Project Output</Pill>
         {externalLinkElement}
       </div>
       {(documentType || type) && (
@@ -430,14 +453,17 @@ const ProjectOutputBody: React.FC<ProjectOutputBodyProps> = ({
             icon={PROJECT_ICONS[primaryProject.projectType]}
             max={1}
             label="Projects"
-            items={(projects ?? []).map(({ id, title: displayName, href }) => ({
-              id,
-              displayName,
-              href,
-            }))}
+            items={[
+              {
+                id: primaryProject.id,
+                displayName: primaryProject.title,
+                href: primaryProject.href,
+              },
+              ...otherProjects,
+            ]}
           />
         )}
-        {source === 'team' && teams.length > 0 && (
+        {teams.length > 0 && (
           <>
             <div css={desktopOnlyStyles}>
               <AssociationRow

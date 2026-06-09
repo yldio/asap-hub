@@ -13,22 +13,9 @@ export default {
 const PROJECT_ALPHA = {
   id: 'p1',
   title: 'Project Alpha',
-  projectType: 'discovery' as const,
+  projectType: 'Discovery Project' as const,
   href: '/projects/discovery/p1',
 };
-const PROJECT_BETA = {
-  id: 'p2',
-  title: 'Cross-cohort Synuclein Imaging',
-  projectType: 'resource' as const,
-  href: '/projects/resource/p2',
-};
-const PROJECT_GAMMA = {
-  id: 'p3',
-  title: 'Neuro-immune Trainee Initiative',
-  projectType: 'trainee' as const,
-  href: '/projects/trainee/p3',
-};
-const PROJECT_POOL = [PROJECT_ALPHA, PROJECT_BETA, PROJECT_GAMMA];
 
 export const Normal = () => (
   <ProjectOutputCard
@@ -72,10 +59,7 @@ export const Normal = () => (
     ).toISOString()}
     teams={createListTeamResponse(number('Number of Teams', 2)).items}
     authors={createListUserResponse(number('Number of Authors', 5)).items}
-    projects={PROJECT_POOL.slice(
-      0,
-      number('Number of Projects', 1, { min: 1, max: 3 }),
-    )}
+    project={PROJECT_ALPHA}
     published={boolean('Published', true)}
     isInReview={boolean('In Review', false)}
   />
@@ -93,7 +77,7 @@ export const Draft = () => (
     lastModifiedDate={new Date(2025, 1, 1).toISOString()}
     teams={[]}
     authors={createListUserResponse(3).items}
-    projects={[PROJECT_ALPHA]}
+    project={PROJECT_ALPHA}
     source="project"
     published={false}
     isInReview={false}
@@ -113,7 +97,7 @@ export const InReview = () => (
     lastModifiedDate={new Date(2025, 0, 10).toISOString()}
     teams={createListTeamResponse(1).items}
     authors={createListUserResponse(5).items}
-    projects={[PROJECT_ALPHA]}
+    project={PROJECT_ALPHA}
     source="team"
     published={false}
     isInReview={true}
@@ -133,7 +117,7 @@ export const TeamBasedWithOverflow = () => (
     lastModifiedDate={new Date(2024, 10, 1).toISOString()}
     teams={createListTeamResponse(5).items}
     authors={createListUserResponse(6).items}
-    projects={PROJECT_POOL}
+    project={PROJECT_ALPHA}
     source="team"
     published
     isInReview={false}
@@ -151,7 +135,7 @@ export const Minimal = () => (
     addedDate={new Date(2024, 3, 2).toISOString()}
     teams={[]}
     authors={createListUserResponse(1).items}
-    projects={[PROJECT_ALPHA]}
+    project={PROJECT_ALPHA}
     source="project"
     published
     isInReview={false}

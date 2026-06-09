@@ -4,6 +4,7 @@ import { EventDataObject } from './event';
 import { ExternalAuthorResponse } from './external-author';
 import { ImpactResponse } from './impact';
 import { LabResponse } from './lab';
+import { ProjectDataObject } from './project';
 import { TeamResponse, TeamType } from './team';
 import { UserDataObject, UserResponse } from './user';
 import { WorkingGroupResponse } from './working-group';
@@ -272,8 +273,12 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   organisms: string[];
   subtype?: string;
   keywords: string[];
-  teams: (Pick<TeamResponse, 'id' | 'displayName'> & { teamType?: TeamType })[];
+  teams: (Pick<TeamResponse, 'id' | 'displayName'> & {
+    teamType?: TeamType;
+    project?: Pick<ProjectDataObject, 'id' | 'title' | 'projectType'>;
+  })[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
+  project?: Pick<ProjectDataObject, 'id' | 'title' | 'projectType'>;
   published: boolean;
   relatedResearch: Array<
     Pick<
@@ -298,6 +303,10 @@ export type ResearchOutputPublishedDataObject = ResearchOutputDataObject & {
 
 export type ListResearchOutputDataObject =
   ListResponse<ResearchOutputDataObject>;
+
+export const getProjectResearchOutputDisplaySource = (
+  researchOutput: Partial<ResearchOutputDataObject>,
+): 'project' | 'team' => (researchOutput.project ? 'project' : 'team');
 
 export type AuthorUpsertDataObject =
   | { userId: string }

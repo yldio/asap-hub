@@ -371,7 +371,6 @@ export type {
   StatusType,
   ReminderEntity,
   ProjectOutput,
-  ProjectOutputType,
 } from './molecules';
 export type {
   Association,

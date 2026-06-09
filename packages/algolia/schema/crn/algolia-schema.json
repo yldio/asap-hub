@@ -112,8 +112,8 @@
     "desc(addedDate)",
     "desc(createdDate)",
     "asc(team.displayName)",
-    "asc(displayName)",
     "asc(statusRank)",
+    "asc(displayName)",
     "asc(title)"
   ],
   "separatorsToIndex": "",

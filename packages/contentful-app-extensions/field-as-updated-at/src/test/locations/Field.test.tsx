@@ -208,7 +208,7 @@ describe('Field component', () => {
 
     render(<Field />);
 
-    expect(sdk.field.setValue).toHaveBeenCalledWith('2026-06-03T10:00:00.000Z');
+    expect(sdk.field.setValue).toHaveBeenCalledWith(undefined);
     expect(
       screen.queryByText('2026-06-03T10:00:00.000Z'),
     ).not.toBeInTheDocument();

@@ -37,8 +37,9 @@ const Field = () => {
       currentPublishedVersion > initialPublishedVersion &&
       anyChanged
     ) {
-      setField(anyPresent ? sys.publishedAt : undefined);
-      await sdk.field.setValue(sys.publishedAt);
+      const newValue = anyPresent ? sys.publishedAt : undefined;
+      setField(newValue);
+      await sdk.field.setValue(newValue);
       await sdk.entry.publish();
       unsubscribe();
     }

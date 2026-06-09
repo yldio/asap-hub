@@ -196,6 +196,8 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   };
 
   const contactPM = getActiveProjectManager(members);
+  const targetProps = (manuscriptId: string) =>
+    manuscriptId === targetManuscriptId ? { isTargetManuscript: true as const } : {};
 
   return (
     <div css={containerStyles}>
@@ -251,9 +253,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                         useManuscriptById={useManuscriptById}
                         onReplyToDiscussion={onReplyToDiscussion}
                         onMarkDiscussionAsRead={onMarkDiscussionAsRead}
-                        {...(manuscriptId === targetManuscriptId
-                          ? { isTargetManuscript: true }
-                          : {})}
+                        {...targetProps(manuscriptId)}
                       />
                     </div>
                   ))}
@@ -290,6 +290,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                         useManuscriptById={useManuscriptById}
                         onReplyToDiscussion={onReplyToDiscussion}
                         onMarkDiscussionAsRead={onMarkDiscussionAsRead}
+                        {...targetProps(manuscriptId)}
                       />
                     </div>
                   ))}

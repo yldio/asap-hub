@@ -20,7 +20,7 @@ const REQUIRED_MILESTONES_COLUMNS = [
   'Project Title',
   'Milestone Description',
   'Related Aim Number(s)',
-  'Status',
+  'Milestone Status',
 ];
 
 type MilestoneImport = {
@@ -93,7 +93,7 @@ const app = async () => {
     projectTitle: col(milestoneHeaders, 'Project Title'),
     milestoneDescription: col(milestoneHeaders, 'Milestone Description'),
     aimNumbers: col(milestoneHeaders, 'Related Aim Number(s)'),
-    status: col(milestoneHeaders, 'Status'),
+    status: col(milestoneHeaders, 'Milestone Status'),
   };
 
   const projects: Record<string, ProjectImport> = {};

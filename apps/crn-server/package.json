@@ -17,6 +17,7 @@
     "import:new-users": "ts-node ./scripts/import-new-users.ts",
     "import:add-users-to-teams": "ts-node ./scripts/import-add-users-to-teams.ts",
     "publish:team-entities": "ts-node ./scripts/publish-team-entities.ts",
+    "import:aims-milestones": "ts-node ./scripts/import-aims-and-milestones.ts",
     "sync:opensearch": "ts-node ./scripts/opensearch/sync-opensearch-analytics.ts",
     "sync:compliance-sheet": "ts-node ./scripts/sync-compliance-sheet.ts",
     "sync:preprint-compliance-local": "ts-node ./scripts/opensearch/sync-opensearch-preprint-compliance-local.ts",

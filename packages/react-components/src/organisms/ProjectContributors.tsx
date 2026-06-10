@@ -93,6 +93,7 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
     useState<MemberTabs>('Project Members');
 
   if (projectMembers) {
+    const projectMembersCount = new Set(projectMembers.map((m) => m.id)).size;
     const memberCollaboratorsCount = collaboratingMembers?.length ?? 0;
     const showCollaboratorsTab = collaboratingMembers !== undefined;
 
@@ -100,13 +101,18 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
       <Card padding={false}>
         <div css={cardContentStyles}>
           <Headline3 noMargin>Contributors</Headline3>
+          <Paragraph noMargin accent="lead" styles={subtitleStyles}>
+            View the members of this project and the scientists who have
+            co-authored its published articles.
+          </Paragraph>
+
           <div css={tabsContainerStyles}>
             <TabNav>
               <TabButton
                 active={activeMemberTab === 'Project Members'}
                 onClick={() => setActiveMemberTab('Project Members')}
               >
-                Project Members
+                Project Members ({projectMembersCount})
               </TabButton>
               {showCollaboratorsTab && (
                 <TabButton

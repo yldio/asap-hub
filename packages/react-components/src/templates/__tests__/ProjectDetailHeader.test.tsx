@@ -1,5 +1,4 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { disable, reset } from '@asap-hub/flags';
 import { ProjectDetail, ProjectType } from '@asap-hub/model';
 import ProjectDetailHeader, { getTeamIcon } from '../ProjectDetailHeader';
 
@@ -210,10 +209,6 @@ describe('ProjectDetailHeader', () => {
   };
 
   describe('Common elements', () => {
-    afterEach(() => {
-      reset();
-    });
-
     it('renders the project title', () => {
       render(
         <ProjectDetailHeader
@@ -249,10 +244,7 @@ describe('ProjectDetailHeader', () => {
       expect(aboutLink).toHaveAttribute('href', '/projects/discovery/1/about');
     });
 
-    it('renders Milestones tab when feature flag is enabled and milestonesHref is provided', () => {
-      mockIsEnabled.mockImplementation(
-        (flag: string) => flag === 'PROJECT_AIMS_AND_MILESTONES',
-      );
+    it('renders Milestones tab when milestonesHref is provided', () => {
       render(
         <ProjectDetailHeader
           {...mockDiscoveryProject}
@@ -266,21 +258,6 @@ describe('ProjectDetailHeader', () => {
         'href',
         '/projects/discovery/1/milestones',
       );
-    });
-
-    it('does not render Milestones tab when feature flag is disabled', () => {
-      disable('PROJECT_AIMS_AND_MILESTONES');
-
-      render(
-        <ProjectDetailHeader
-          {...mockDiscoveryProject}
-          aboutHref="/projects/discovery/1/about"
-          milestonesHref="/projects/discovery/1/milestones"
-        />,
-      );
-      expect(
-        screen.queryByRole('link', { name: 'Milestones' }),
-      ).not.toBeInTheDocument();
     });
 
     it('renders or hides Contact button when point of contact email is provided and project status is Active or not', () => {

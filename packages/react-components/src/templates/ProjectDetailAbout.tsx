@@ -1,5 +1,4 @@
 import { ArticleItem, ProjectDetail } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { rem } from '../pixels';
 import {
@@ -26,7 +25,6 @@ type ProjectDetailAboutProps = ProjectDetail & {
 
 const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
   const { pointOfContactEmail, fetchArticles, seeMilestonesHref } = project;
-  const { isEnabled } = useFlags();
 
   return (
     <div css={styles}>
@@ -47,15 +45,12 @@ const ProjectDetailAbout: React.FC<ProjectDetailAboutProps> = (project) => {
         />
       )}
 
-      {/* Aims Section */}
-      {isEnabled('PROJECT_AIMS_AND_MILESTONES') && (
-        <ProjectAims
-          originalGrantAims={project.originalGrantAims ?? []}
-          supplementGrantAims={project.supplementGrant?.aims ?? []}
-          fetchArticles={fetchArticles}
-          seeMilestonesHref={seeMilestonesHref}
-        />
-      )}
+      <ProjectAims
+        originalGrantAims={project.originalGrantAims ?? []}
+        supplementGrantAims={project.supplementGrant?.aims ?? []}
+        fetchArticles={fetchArticles}
+        seeMilestonesHref={seeMilestonesHref}
+      />
 
       {/* Contributors Section */}
       {project.projectType === 'Discovery Project' && (

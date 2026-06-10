@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, screen, waitFor, within } from '@testing-library/react';
-import { enable, disable, reset } from '@asap-hub/flags';
 import {
   createResearchOutputResponse,
   createUserResponse,
@@ -171,7 +170,6 @@ describe('DiscoveryProjectDetail', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
-    reset();
   });
 
   it('renders Discovery Project detail page when project type matches', async () => {
@@ -203,39 +201,7 @@ describe('DiscoveryProjectDetail', () => {
     ).toBe(true);
   });
 
-  it('does not allow accessing milestones route when PROJECT_AIMS_AND_MILESTONES flag is disabled', async () => {
-    disable('PROJECT_AIMS_AND_MILESTONES');
-    const path = `${projects.template}/discovery/discovery-1/milestones`;
-
-    render(
-      <RecoilRoot>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter initialEntries={[path]}>
-                <Routes>
-                  <Route
-                    path={`${projects.template}/discovery/:projectId/*`}
-                    element={<DiscoveryProjectDetail />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </RecoilRoot>,
-    );
-
-    const headings = await screen.findAllByRole('heading');
-    expect(
-      headings.some((h) =>
-        (h.textContent || '').match(/Sorry! We can.+t seem to find that page/),
-      ),
-    ).toBe(true);
-  });
-
-  it('allows accessing milestones route when PROJECT_AIMS_AND_MILESTONES flag is enabled', async () => {
-    enable('PROJECT_AIMS_AND_MILESTONES');
+  it('allows accessing milestones route', async () => {
     const path = `${projects.template}/discovery/discovery-1/milestones`;
 
     render(
@@ -265,7 +231,6 @@ describe('DiscoveryProjectDetail', () => {
   });
 
   it('can fetch the projects articles', async () => {
-    enable('PROJECT_AIMS_AND_MILESTONES');
     mockGetResearchOutputs.mockResolvedValue({
       ...createResearchOutputListAlgoliaResponse(2),
       hits: createResearchOutputListAlgoliaResponse(2).hits.map(

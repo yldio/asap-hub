@@ -128,37 +128,39 @@ const app = async () => {
   }
 
   for (const row of milestoneRows) {
-    const projectId = cell(row, milestoneColumns.projectId);
-    const milestoneKey = cell(row, milestoneColumns.milestoneDescription);
-    const status = cell(row, milestoneColumns.status);
+    if (!isEmptyRow(row)) {
+      const projectId = cell(row, milestoneColumns.projectId);
+      const milestoneKey = cell(row, milestoneColumns.milestoneDescription);
+      const status = cell(row, milestoneColumns.status);
 
-    const project = projects[projectId];
+      const project = projects[projectId];
 
-    if (project) {
-      project.milestones[milestoneKey] = {
-        description: milestoneKey,
-        status,
-      };
+      if (project) {
+        project.milestones[milestoneKey] = {
+          description: milestoneKey,
+          status,
+        };
 
-      const relatedAimNumbers = cell(row, milestoneColumns.aimNumbers)
-        .split(',')
-        .map((x) => Number(x.trim()));
+        const relatedAimNumbers = cell(row, milestoneColumns.aimNumbers)
+          .split(',')
+          .map((x) => Number(x.trim()));
 
-      for (const aimNumber of relatedAimNumbers) {
-        const aim = project.aims[aimNumber];
+        for (const aimNumber of relatedAimNumbers) {
+          const aim = project.aims[aimNumber];
 
-        if (!aim) {
-          throw new Error(
-            `Milestone "${milestoneKey}" references missing aim ${aimNumber} on project ${projectId}`,
-          );
+          if (!aim) {
+            throw new Error(
+              `Milestone "${milestoneKey}" references missing aim ${aimNumber} on project ${projectId}`,
+            );
+          }
+
+          aim.milestoneKeys.push(milestoneKey);
         }
-
-        aim.milestoneKeys.push(milestoneKey);
+      } else {
+        throw new Error(
+          `Milestone references project ${projectId} that does not exist in aims CSV`,
+        );
       }
-    } else {
-      throw new Error(
-        `Milestone references project ${projectId} that does not exist in aims CSV`,
-      );
     }
   }
 

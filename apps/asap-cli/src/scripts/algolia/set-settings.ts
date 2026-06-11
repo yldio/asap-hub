@@ -13,7 +13,6 @@ export type SetAlgoliaSettings = {
 export const getIndexSchema = async ({
   algoliaAppId,
   algoliaCiApiKey,
-  indexName: _indexName,
   appName,
 }: SetAlgoliaSettings): Promise<{
   path: string;

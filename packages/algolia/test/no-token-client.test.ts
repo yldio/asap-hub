@@ -2,7 +2,6 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { RESEARCH_OUTPUT_ENTITY_TYPE } from '../src';
 import {
   NoTokenAlgoliaClient,
-  CRN,
   EMPTY_ALGOLIA_FACET_HITS,
   EMPTY_ALGOLIA_RESPONSE,
 } from '../src/no-token-client';
@@ -13,7 +12,7 @@ describe('NoTokenAlgoliaClient', () => {
   });
 
   const createClient = () =>
-    new NoTokenAlgoliaClient<CRN>('index', 'reverseIndex');
+    new NoTokenAlgoliaClient<'crn'>('index', 'reverseIndex');
 
   test('should throw error on save', async () => {
     const client = createClient();

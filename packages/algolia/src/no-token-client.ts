@@ -30,8 +30,6 @@ export const EMPTY_ALGOLIA_FACET_HITS = {
   exhaustiveFacetsCount: true,
 };
 
-export type CRN = 'crn';
-
 /*
     This is a dummy client that is used when the Algolia API key is not available so that the app does not crash.
     It is used in case the user is not onboarded yet.

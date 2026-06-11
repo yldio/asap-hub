@@ -128,9 +128,9 @@ describe.each`
                 role: 'Grantee',
                 workingGroups: [
                   {
-                    ...user.workingGroups[0],
                     id: associationId,
-                    role: leaderRole,
+                    name: 'Working Group',
+                    role: leaderRole as 'Lead' | 'Co-Lead',
                     active: true,
                   },
                 ],

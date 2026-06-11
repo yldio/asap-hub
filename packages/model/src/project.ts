@@ -197,6 +197,28 @@ type CollaboratingTeams = {
   readonly collaboratingTeams?: ReadonlyArray<CollaboratingTeam>;
 };
 
+export type CollaboratingMemberArticle = {
+  readonly id: string;
+  readonly title: string;
+  readonly type?: ResearchOutputType;
+};
+
+export type CollaboratingMember = {
+  readonly id: string;
+  readonly displayName: string;
+  readonly alumniSinceDate?: string;
+  readonly teams: ReadonlyArray<{
+    readonly id: string;
+    readonly displayName: string;
+  }>;
+  readonly avatarUrl?: string;
+  readonly articles: ReadonlyArray<CollaboratingMemberArticle>;
+};
+
+type CollaboratingMembers = {
+  readonly collaboratingMembers?: ReadonlyArray<CollaboratingMember>;
+};
+
 export type DiscoveryProjectDetail = DiscoveryProject &
   BaseProjectDetail &
   TeamCollaborators &
@@ -207,11 +229,14 @@ export type DiscoveryProjectDetail = DiscoveryProject &
 export type ResourceProjectDetail = ResourceProject &
   BaseProjectDetail &
   TeamCollaborators &
-  CollaboratingTeams & {
+  CollaboratingTeams &
+  CollaboratingMembers & {
     readonly fundedTeam?: FundedTeam;
   };
 
-export type TraineeProjectDetail = TraineeProject & BaseProjectDetail;
+export type TraineeProjectDetail = TraineeProject &
+  BaseProjectDetail &
+  CollaboratingMembers;
 
 export type ProjectDetail =
   | DiscoveryProjectDetail

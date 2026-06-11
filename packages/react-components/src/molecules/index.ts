@@ -8,6 +8,7 @@ export { default as BackLink } from './BackLink';
 export { default as BannerCard } from './BannerCard';
 export { default as CalendarLink } from './CalendarLink';
 export { default as CaptionItem } from './CaptionItem';
+export { default as CollaboratingMembers } from './CollaboratingMembers';
 export { default as CollaboratingTeams } from './CollaboratingTeams';
 export { default as Collapsible } from './Collapsible';
 export { default as ComplianceControls } from './ComplianceControls';

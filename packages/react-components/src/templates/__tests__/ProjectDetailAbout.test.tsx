@@ -196,6 +196,68 @@ describe('ProjectDetailAbout', () => {
       render(<ProjectDetailAbout {...resourceMemberProjectNoMembers} />);
       expect(screen.queryByText('Contributors')).not.toBeInTheDocument();
     });
+
+    it('renders Collaborators tab when collaboratingMembers is provided', () => {
+      const resourceMemberProject: ProjectDetailWithFetch = {
+        ...baseProject,
+        projectType: 'Resource Project',
+        resourceType: 'Software Tool',
+        isTeamBased: false,
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'John Doe',
+            firstName: 'John',
+            lastName: 'Doe',
+            href: '/users/john-doe',
+          },
+        ],
+        collaboratingMembers: [
+          {
+            id: 'collab-1',
+            displayName: 'Collaborator One',
+            teams: [{ id: 'team-1', displayName: 'Team One' }],
+            articles: [
+              { id: 'article-1', title: 'Article 1', type: 'Preprint' },
+            ],
+          },
+          {
+            id: 'collab-2',
+            displayName: 'Collaborator Two',
+            teams: [{ id: 'team-2', displayName: 'Team Two' }],
+            articles: [
+              { id: 'article-2', title: 'Article 2', type: 'Preprint' },
+            ],
+          },
+        ],
+      };
+
+      render(<ProjectDetailAbout {...resourceMemberProject} />);
+      expect(screen.getByText('Contributors')).toBeInTheDocument();
+      expect(screen.getByText('Collaborators (2)')).toBeInTheDocument();
+    });
+
+    it('renders Collaborators tab with empty state message when collaboratingMembers is not provided', () => {
+      const resourceMemberProject: ProjectDetailWithFetch = {
+        ...baseProject,
+        projectType: 'Resource Project',
+        resourceType: 'Software Tool',
+        isTeamBased: false,
+        members: [
+          {
+            id: 'user-1',
+            displayName: 'John Doe',
+            firstName: 'John',
+            lastName: 'Doe',
+            href: '/users/john-doe',
+          },
+        ],
+      };
+
+      render(<ProjectDetailAbout {...resourceMemberProject} />);
+      expect(screen.getByText('Contributors')).toBeInTheDocument();
+      expect(screen.getByText('Collaborators (0)')).toBeInTheDocument();
+    });
   });
 
   describe('Contributors Section - Trainee Projects', () => {
@@ -227,6 +289,66 @@ describe('ProjectDetailAbout', () => {
       expect(screen.getByText('Contributors')).toBeInTheDocument();
       expect(screen.getByText('Dr. Sarah Mentor')).toBeInTheDocument();
       expect(screen.getByText('Emily Trainee')).toBeInTheDocument();
+    });
+
+    it('renders Collaborators tab when collaboratingMembers is provided', () => {
+      const traineeProject: ProjectDetailWithFetch = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [
+          {
+            id: 'trainee-1',
+            displayName: 'Emily Trainee',
+            firstName: 'Emily',
+            lastName: 'Trainee',
+            href: '/users/trainee-1',
+            role: 'Trainee',
+          },
+        ],
+        collaboratingMembers: [
+          {
+            id: 'collab-1',
+            displayName: 'Collaborator One',
+            teams: [{ id: 'team-1', displayName: 'Team One' }],
+            articles: [
+              { id: 'article-1', title: 'Article 1', type: 'Preprint' },
+            ],
+          },
+          {
+            id: 'collab-2',
+            displayName: 'Collaborator Two',
+            teams: [{ id: 'team-2', displayName: 'Team Two' }],
+            articles: [
+              { id: 'article-2', title: 'Article 2', type: 'Preprint' },
+            ],
+          },
+        ],
+      };
+
+      render(<ProjectDetailAbout {...traineeProject} />);
+      expect(screen.getByText('Contributors')).toBeInTheDocument();
+      expect(screen.getByText('Collaborators (2)')).toBeInTheDocument();
+    });
+
+    it('renders Collaborators tab with empty state message when collaboratingMembers is not provided', () => {
+      const traineeProject: ProjectDetailWithFetch = {
+        ...baseProject,
+        projectType: 'Trainee Project',
+        members: [
+          {
+            id: 'trainee-1',
+            displayName: 'Emily Trainee',
+            firstName: 'Emily',
+            lastName: 'Trainee',
+            href: '/users/trainee-1',
+            role: 'Trainee',
+          },
+        ],
+      };
+
+      render(<ProjectDetailAbout {...traineeProject} />);
+      expect(screen.getByText('Contributors')).toBeInTheDocument();
+      expect(screen.getByText('Collaborators (0)')).toBeInTheDocument();
     });
   });
 

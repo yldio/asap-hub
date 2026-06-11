@@ -1,7 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import { CollaboratingTeam, FundedTeam, ProjectMember } from '@asap-hub/model';
+import {
+  CollaboratingMember,
+  CollaboratingTeam,
+  FundedTeam,
+  ProjectMember,
+} from '@asap-hub/model';
 import ProjectContributors from '../ProjectContributors';
 
 const renderWithRouter = (ui: React.ReactElement) =>
@@ -29,6 +34,17 @@ const mockFundedTeam: FundedTeam = {
     'This is a test team description explaining their research focus and goals.',
 };
 
+const makeCollaboratingMembers = (count: number): CollaboratingMember[] =>
+  Array.from({ length: count }, (_, i) => ({
+    id: `collab-user-${i + 1}`,
+    displayName: `Collaborator ${String.fromCharCode(65 + i)}`,
+    isAlumni: false,
+    teams: [{ id: `team-${i}`, displayName: `Team ${i}` }],
+    articles: [
+      { id: `article-${i}-1`, title: `Article ${i}-1`, type: 'Preprint' },
+    ],
+  }));
+
 const mockProjectMembers: ProjectMember[] = [
   {
     id: 'user-3',
@@ -36,6 +52,7 @@ const mockProjectMembers: ProjectMember[] = [
     firstName: 'Alice',
     lastName: 'Johnson',
     href: '/users/user-3',
+    role: 'Principal Investigator',
   },
   {
     id: 'user-4',
@@ -43,6 +60,7 @@ const mockProjectMembers: ProjectMember[] = [
     firstName: 'Bob',
     lastName: 'Williams',
     href: '/users/user-4',
+    role: 'Co-Investigator',
   },
 ];
 
@@ -94,7 +112,7 @@ describe('ProjectContributors', () => {
   describe('Individual-based projects (Project Members)', () => {
     it('renders Project Members tab', () => {
       render(<ProjectContributors projectMembers={mockProjectMembers} />);
-      expect(screen.getByText('Project Members')).toBeInTheDocument();
+      expect(screen.getByText('Project Members (2)')).toBeInTheDocument();
     });
 
     it('renders all project members', () => {
@@ -103,17 +121,75 @@ describe('ProjectContributors', () => {
       expect(screen.getByText('Bob Williams')).toBeInTheDocument();
     });
 
-    it('does not render Funded Team or Collaborators tabs', () => {
+    it('does not render Funded Team tab', () => {
       render(<ProjectContributors projectMembers={mockProjectMembers} />);
       expect(screen.queryByText('Funded Team')).not.toBeInTheDocument();
-      expect(screen.queryByText(/Collaborators/)).not.toBeInTheDocument();
     });
 
-    it('does not render the team-based subtitle', () => {
+    it('does not render the team-based subtitle, it renders user-based subtitle', () => {
       render(<ProjectContributors projectMembers={mockProjectMembers} />);
       expect(
         screen.queryByText(/view the funded team leading this project/i),
       ).not.toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /view the members of this project and the scientists who have co-authored its published articles./i,
+        ),
+      ).toBeInTheDocument();
+    });
+
+    it('switches back to the Project Members tab from Collaborators', async () => {
+      renderWithRouter(
+        <ProjectContributors
+          projectMembers={mockProjectMembers}
+          collaboratingMembers={makeCollaboratingMembers(2)}
+        />,
+      );
+
+      expect(screen.getByText('Alice Johnson')).toBeInTheDocument();
+      expect(screen.getByText('Bob Williams')).toBeInTheDocument();
+
+      await userEvent.click(screen.getByText('Collaborators (2)'));
+      expect(screen.getByText('Collaborator A')).toBeInTheDocument();
+      expect(screen.queryByText('Alice Johnson')).not.toBeInTheDocument();
+
+      await userEvent.click(screen.getByText('Project Members (2)'));
+      expect(screen.getByText('Alice Johnson')).toBeInTheDocument();
+      expect(screen.getByText('Bob Williams')).toBeInTheDocument();
+      expect(screen.queryByText('Collaborator A')).not.toBeInTheDocument();
+    });
+
+    it('counts the number of project members properly when members are duplicated due to multiple roles', async () => {
+      renderWithRouter(
+        <ProjectContributors
+          projectMembers={[
+            ...mockProjectMembers,
+            {
+              ...mockProjectMembers[0]!,
+              role: 'Co-Investigator',
+            },
+          ]}
+          collaboratingMembers={makeCollaboratingMembers(2)}
+        />,
+      );
+
+      expect(screen.getByText('Project Members (2)')).toBeInTheDocument();
+    });
+
+    it('renders the Collaborators tab with empty state message when collaboratingMembers is empty', async () => {
+      renderWithRouter(
+        <ProjectContributors
+          projectMembers={mockProjectMembers}
+          collaboratingMembers={[]}
+        />,
+      );
+      expect(screen.getByText('Collaborators (0)')).toBeInTheDocument();
+      await userEvent.click(screen.getByText('Collaborators (0)'));
+      expect(
+        screen.getByText(
+          /There are no member collaborations on this project yet/i,
+        ),
+      ).toBeInTheDocument();
     });
   });
 

@@ -10,18 +10,25 @@ const Field = () => {
   const { observedField } = sdk.parameters.instance;
   const [field, setField] = useState(sdk.field.getValue());
 
-  const initialValue = documentToHtmlString(
-    sdk.entry.fields[observedField].getValue(),
-  );
+  const observedFieldType = sdk.contentType.fields.find(
+    (f) => f.id === observedField,
+  )?.type;
+
+  const readObservedValue = () => {
+    const raw = sdk.entry.fields[observedField].getValue();
+    return observedFieldType === 'RichText'
+      ? documentToHtmlString(raw)
+      : (raw ?? '');
+  };
+
+  const initialValue = readObservedValue();
   const initialPublishedVersion = sdk.entry.getSys().publishedCounter;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   let unsubscribe = () => {};
   unsubscribe = sdk.entry.onSysChanged(async (sys: EntrySys) => {
     const currentPublishedVersion = sys.publishedCounter;
-    const currentValue = documentToHtmlString(
-      sdk.entry.fields[observedField].getValue(),
-    );
+    const currentValue = readObservedValue();
 
     if (
       currentPublishedVersion &&

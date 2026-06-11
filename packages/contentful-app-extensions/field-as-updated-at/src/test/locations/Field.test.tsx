@@ -20,6 +20,9 @@ describe('Field component', () => {
           observedField: 'video',
         },
       },
+      contentType: {
+        fields: [{ id: 'video', type: 'RichText' }],
+      },
       entry: {
         getSys: jest.fn(() => ({
           publishedCounter: 1,
@@ -46,7 +49,7 @@ describe('Field component', () => {
     expect(screen.getByText('2023-04-12T16:05:00.000Z')).toBeInTheDocument();
   });
 
-  it('updates the field value when observed field changes', () => {
+  it('updates the field value when observed RichText field changes', () => {
     const textDocument = {
       content: [
         {
@@ -106,6 +109,9 @@ describe('Field component', () => {
           observedField: 'video',
         },
       },
+      contentType: {
+        fields: [{ id: 'video', type: 'RichText' }],
+      },
       entry: {
         publish: jest.fn(),
         getSys: jest.fn(() => ({
@@ -139,5 +145,195 @@ describe('Field component', () => {
     waitFor(() => {
       expect(mockTestSdk.entry.publish).toHaveBeenCalled();
     });
+  });
+
+  it('updates the field value when observed Date field changes', () => {
+    const getMockContent = () => ({
+      id: '456',
+      publishedCounter: 2,
+      space: { sys: { id: '123' } },
+      publishedAt: '2026-06-11T18:00:00.000Z',
+    });
+
+    const mockTestSdk = {
+      field: {
+        getValue: jest.fn(() => undefined),
+        setValue: jest.fn(),
+      },
+      parameters: {
+        instance: {
+          observedField: 'alumniSinceDate',
+        },
+      },
+      contentType: {
+        fields: [{ id: 'alumniSinceDate', type: 'Date' }],
+      },
+      entry: {
+        publish: jest.fn(),
+        getSys: jest.fn(() => ({ publishedCounter: 1 })),
+        onSysChanged: jest.fn((cb) => {
+          cb(getMockContent());
+          return jest.fn();
+        }),
+        fields: {
+          alumniSinceDate: {
+            getValue: jest
+              .fn()
+              .mockReturnValueOnce(undefined)
+              .mockReturnValueOnce('2026-06-10T00:00:00.000Z'),
+          },
+        },
+      },
+    };
+    (useSDK as jest.Mock).mockReturnValue(mockTestSdk);
+
+    render(<Field />);
+
+    expect(screen.getByText('2026-06-11T18:00:00.000Z')).toBeInTheDocument();
+    expect(mockTestSdk.field.setValue).toHaveBeenCalledWith(
+      '2026-06-11T18:00:00.000Z',
+    );
+    waitFor(() => {
+      expect(mockTestSdk.entry.publish).toHaveBeenCalled();
+    });
+  });
+
+  it('updates the field value when observed Symbol field changes', () => {
+    const getMockContent = () => ({
+      id: '456',
+      publishedCounter: 2,
+      space: { sys: { id: '123' } },
+      publishedAt: '2026-06-11T18:00:00.000Z',
+    });
+
+    const mockTestSdk = {
+      field: {
+        getValue: jest.fn(() => undefined),
+        setValue: jest.fn(),
+      },
+      parameters: {
+        instance: {
+          observedField: 'orcid',
+        },
+      },
+      contentType: {
+        fields: [{ id: 'orcid', type: 'Symbol' }],
+      },
+      entry: {
+        publish: jest.fn(),
+        getSys: jest.fn(() => ({ publishedCounter: 1 })),
+        onSysChanged: jest.fn((cb) => {
+          cb(getMockContent());
+          return jest.fn();
+        }),
+        fields: {
+          orcid: {
+            getValue: jest
+              .fn()
+              .mockReturnValueOnce('0000-0000-0000-0001')
+              .mockReturnValueOnce('0000-0000-0000-0002'),
+          },
+        },
+      },
+    };
+    (useSDK as jest.Mock).mockReturnValue(mockTestSdk);
+
+    render(<Field />);
+
+    expect(screen.getByText('2026-06-11T18:00:00.000Z')).toBeInTheDocument();
+    expect(mockTestSdk.field.setValue).toHaveBeenCalledWith(
+      '2026-06-11T18:00:00.000Z',
+    );
+  });
+
+  it('does not stamp when publishedCounter has not increased', () => {
+    const mockTestSdk = {
+      field: {
+        getValue: jest.fn(() => undefined),
+        setValue: jest.fn(),
+      },
+      parameters: {
+        instance: {
+          observedField: 'alumniSinceDate',
+        },
+      },
+      contentType: {
+        fields: [{ id: 'alumniSinceDate', type: 'Date' }],
+      },
+      entry: {
+        publish: jest.fn(),
+        getSys: jest.fn(() => ({ publishedCounter: 2 })),
+        onSysChanged: jest.fn((cb) => {
+          cb({
+            id: '456',
+            publishedCounter: 2,
+            space: { sys: { id: '123' } },
+            publishedAt: '2026-06-11T18:00:00.000Z',
+          });
+          return jest.fn();
+        }),
+        fields: {
+          alumniSinceDate: {
+            getValue: jest
+              .fn()
+              .mockReturnValueOnce('2026-06-10T00:00:00.000Z')
+              .mockReturnValueOnce('2026-06-11T00:00:00.000Z'),
+          },
+        },
+      },
+    };
+    (useSDK as jest.Mock).mockReturnValue(mockTestSdk);
+
+    render(<Field />);
+
+    expect(mockTestSdk.field.setValue).not.toHaveBeenCalled();
+    expect(mockTestSdk.entry.publish).not.toHaveBeenCalled();
+  });
+
+  it('clears the displayed field when observed value is cleared on publish', () => {
+    const getMockContent = () => ({
+      id: '456',
+      publishedCounter: 2,
+      space: { sys: { id: '123' } },
+      publishedAt: '2026-06-11T18:00:00.000Z',
+    });
+
+    const mockTestSdk = {
+      field: {
+        getValue: jest.fn(() => '2026-06-10T18:00:00.000Z'),
+        setValue: jest.fn(),
+      },
+      parameters: {
+        instance: {
+          observedField: 'alumniSinceDate',
+        },
+      },
+      contentType: {
+        fields: [{ id: 'alumniSinceDate', type: 'Date' }],
+      },
+      entry: {
+        publish: jest.fn(),
+        getSys: jest.fn(() => ({ publishedCounter: 1 })),
+        onSysChanged: jest.fn((cb) => {
+          cb(getMockContent());
+          return jest.fn();
+        }),
+        fields: {
+          alumniSinceDate: {
+            getValue: jest
+              .fn()
+              .mockReturnValueOnce('2026-06-10T00:00:00.000Z')
+              .mockReturnValueOnce(undefined),
+          },
+        },
+      },
+    };
+    (useSDK as jest.Mock).mockReturnValue(mockTestSdk);
+
+    render(<Field />);
+
+    expect(mockTestSdk.field.setValue).toHaveBeenCalledWith(
+      '2026-06-11T18:00:00.000Z',
+    );
   });
 });

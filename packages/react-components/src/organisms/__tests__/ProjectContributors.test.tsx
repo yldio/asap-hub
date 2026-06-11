@@ -121,10 +121,9 @@ describe('ProjectContributors', () => {
       expect(screen.getByText('Bob Williams')).toBeInTheDocument();
     });
 
-    it('does not render Funded Team or Collaborators tabs', () => {
+    it('does not render Funded Team tab', () => {
       render(<ProjectContributors projectMembers={mockProjectMembers} />);
       expect(screen.queryByText('Funded Team')).not.toBeInTheDocument();
-      expect(screen.queryByText(/Collaborators/)).not.toBeInTheDocument();
     });
 
     it('does not render the team-based subtitle, it renders user-based subtitle', () => {
@@ -175,6 +174,22 @@ describe('ProjectContributors', () => {
       );
 
       expect(screen.getByText('Project Members (2)')).toBeInTheDocument();
+    });
+
+    it('renders the Collaborators tab with empty state message when collaboratingMembers is empty', async () => {
+      renderWithRouter(
+        <ProjectContributors
+          projectMembers={mockProjectMembers}
+          collaboratingMembers={[]}
+        />,
+      );
+      expect(screen.getByText('Collaborators (0)')).toBeInTheDocument();
+      await userEvent.click(screen.getByText('Collaborators (0)'));
+      expect(
+        screen.getByText(
+          /There are no member collaborations on this project yet/i,
+        ),
+      ).toBeInTheDocument();
     });
   });
 

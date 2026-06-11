@@ -95,7 +95,6 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
   if (projectMembers) {
     const projectMembersCount = new Set(projectMembers.map((m) => m.id)).size;
     const memberCollaboratorsCount = collaboratingMembers?.length ?? 0;
-    const showCollaboratorsTab = collaboratingMembers !== undefined;
 
     return (
       <Card padding={false}>
@@ -114,14 +113,12 @@ const ProjectContributors: React.FC<ProjectContributorsProps> = ({
               >
                 Project Members ({projectMembersCount})
               </TabButton>
-              {showCollaboratorsTab && (
-                <TabButton
-                  active={activeMemberTab === 'Collaborators'}
-                  onClick={() => setActiveMemberTab('Collaborators')}
-                >
-                  Collaborators ({memberCollaboratorsCount})
-                </TabButton>
-              )}
+              <TabButton
+                active={activeMemberTab === 'Collaborators'}
+                onClick={() => setActiveMemberTab('Collaborators')}
+              >
+                Collaborators ({memberCollaboratorsCount})
+              </TabButton>
             </TabNav>
           </div>
           <div css={tabContentStyles}>

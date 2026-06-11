@@ -18,7 +18,7 @@ const Field = () => {
     const raw = sdk.entry.fields[observedField].getValue();
     return observedFieldType === 'RichText'
       ? documentToHtmlString(raw)
-      : (raw ?? '');
+      : raw ?? '';
   };
 
   const initialValue = readObservedValue();

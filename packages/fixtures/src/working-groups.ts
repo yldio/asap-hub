@@ -28,7 +28,6 @@ export const createWorkingGroupMembers = (
       ...createUserResponse({}, itemIndex),
       id: `user-member-${itemIndex}`,
     },
-    workstreamRole: `member role - ${itemIndex}`,
     isActive: true,
   }));
 
@@ -40,7 +39,7 @@ export const createWorkingGroupLeaders = (
       ...createUserResponse({}, itemIndex),
       id: `user-leader-${itemIndex}`,
     },
-    role: 'Project Manager' as const,
+    role: 'Lead' as const,
     workstreamRole: `leader role - ${itemIndex}`,
     isActive: true,
   }));

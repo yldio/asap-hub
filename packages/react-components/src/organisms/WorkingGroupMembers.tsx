@@ -83,11 +83,11 @@ const GroupLeadersTabbedCard: React.FC<GroupLeadersTabbedCardProps> = ({
             <MembersList
               members={data
                 .filter((member) => member.user !== undefined)
-                .map(({ user, workstreamRole }) => ({
+                .map(({ user, role }) => ({
                   ...user,
                   id: user?.id || '',
                   firstLine: user.displayName || '',
-                  secondLine: workstreamRole,
+                  secondLine: role,
                   thirdLine:
                     user.teams.length <= 1 ? user.teams : 'Multiple Teams',
                 }))}

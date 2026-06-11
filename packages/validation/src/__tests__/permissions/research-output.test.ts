@@ -20,6 +20,12 @@ describe('isProjectManagerAndActive', () => {
     ${'Project Manager'}  | ${'2023-07-26'}   | ${undefined} | ${'teams'}         | ${false}
     ${'Project Manager'}  | ${undefined}      | ${true}      | ${'workingGroups'} | ${true}
     ${'Project Manager'}  | ${undefined}      | ${false}     | ${'workingGroups'} | ${false}
+    ${'Lead'}             | ${undefined}      | ${true}      | ${'workingGroups'} | ${true}
+    ${'Lead'}             | ${undefined}      | ${false}     | ${'workingGroups'} | ${false}
+    ${'Lead'}             | ${undefined}      | ${undefined} | ${'teams'}         | ${false}
+    ${'Co-Lead'}          | ${undefined}      | ${true}      | ${'workingGroups'} | ${true}
+    ${'Co-Lead'}          | ${undefined}      | ${false}     | ${'workingGroups'} | ${false}
+    ${'Co-Lead'}          | ${undefined}      | ${undefined} | ${'teams'}         | ${false}
     ${'Collaborating PI'} | ${undefined}      | ${undefined} | ${'teams'}         | ${false}
     ${'Collaborating PI'} | ${'2023-07-26'}   | ${undefined} | ${'teams'}         | ${false}
     ${'Collaborating PI'} | ${undefined}      | ${true}      | ${'workingGroups'} | ${false}
@@ -110,6 +116,32 @@ describe.each`
         ),
       ).toEqual('Staff');
     });
+
+    if (association === 'workingGroups') {
+      test.each(['Lead', 'Co-Lead'])(
+        'returns Staff when user is active %s of workingGroups',
+        (leaderRole) => {
+          expect(
+            getUserRole(
+              {
+                ...user,
+                role: 'Grantee',
+                workingGroups: [
+                  {
+                    ...user.workingGroups[0],
+                    id: associationId,
+                    role: leaderRole,
+                    active: true,
+                  },
+                ],
+              },
+              'workingGroups',
+              [associationId],
+            ),
+          ).toEqual('Staff');
+        },
+      );
+    }
 
     test(`returns Member when user is active and belongs to ${association} and they are not a PM`, () => {
       const userRole = association === 'teams' ? {} : { active: true };

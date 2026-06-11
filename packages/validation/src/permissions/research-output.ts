@@ -35,12 +35,20 @@ export const isActiveAndBelongsToAssociation = (
   return belongsToAssociation && isActive;
 };
 
+const ELEVATED_WORKING_GROUP_ROLES = new Set([
+  'Project Manager',
+  'Lead',
+  'Co-Lead',
+]);
+
 export const isProjectManagerAndActive = (
   user: UserTeam | WorkingGroupMembership,
   association: AssociationType,
   associationIds: string[],
 ): boolean =>
-  user.role === 'Project Manager' &&
+  (association === 'workingGroups'
+    ? ELEVATED_WORKING_GROUP_ROLES.has(user.role)
+    : user.role === 'Project Manager') &&
   isActiveAndBelongsToAssociation(user, association, associationIds);
 
 export const getUserRole = (

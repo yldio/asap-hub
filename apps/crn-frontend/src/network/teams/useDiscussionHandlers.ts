@@ -19,12 +19,14 @@ const useDiscussionHandlers = () => {
     message: string,
     files?: ManuscriptFileResponse[],
   ): Promise<string | undefined> => {
+    const workspaceLink = `${window.location.origin}${window.location.pathname}`;
     try {
       const discussionId = await createDiscussion(
         manuscriptId,
         title,
         message,
         files,
+        workspaceLink,
       );
       setFormType({ type: 'discussion-started', accent: 'successLarge' });
       return discussionId;
@@ -47,8 +49,12 @@ const useDiscussionHandlers = () => {
     discussionId: string,
     patch: DiscussionRequest,
   ): Promise<void> => {
+    const workspaceLink = `${window.location.origin}${window.location.pathname}`;
     try {
-      await replyToDiscussion(manuscriptId, discussionId, patch);
+      await replyToDiscussion(manuscriptId, discussionId, {
+        ...patch,
+        workspaceLink,
+      });
       setFormType({ type: 'reply-to-discussion', accent: 'successLarge' });
     } catch (error: unknown) {
       if (

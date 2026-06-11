@@ -564,6 +564,7 @@ export const useCreateDiscussion = () => {
     title: string,
     text: string,
     files?: ManuscriptFileResponse[],
+    workspaceLink?: string,
   ): Promise<string | undefined> => {
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
@@ -576,6 +577,7 @@ export const useCreateDiscussion = () => {
           text,
           files,
           notificationList,
+          workspaceLink,
         },
         authorization,
       );

@@ -37,6 +37,7 @@ export type DiscussionUpdateDataObject = {
   reply?: Reply;
   manuscriptId?: string;
   notificationList?: string;
+  workspaceLink?: string;
 };
 
 export type DiscussionRequest = {
@@ -44,6 +45,7 @@ export type DiscussionRequest = {
   files?: ManuscriptFileResponse[];
   manuscriptId: string;
   notificationList?: string;
+  workspaceLink?: string;
 };
 
 export type DiscussionEndRequest = {
@@ -56,6 +58,7 @@ export type DiscussionCreateRequest = {
   text: string;
   files?: ManuscriptFileResponse[];
   notificationList?: string;
+  workspaceLink?: string;
 };
 
 export type DiscussionCreateDataObject = DiscussionCreateRequest & {

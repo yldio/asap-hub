@@ -111,6 +111,7 @@ export class EmailNotificationService {
     manuscriptId: string,
     emailList: string,
     discussionDetails?: DiscussionNotificationInfo,
+    workspaceLink?: string,
   ): Promise<void> {
     const isProduction = environmentName === 'production';
     const isDiscussionCreatedAction = [
@@ -180,11 +181,9 @@ export class EmailNotificationService {
 
     const teamWorkspaceUrl = `${origin}/network/teams/${submittingTeam?.sys.id}/workspace`;
     const projectWorkspaceUrl = getProjectWorkspaceUrl(project);
-    // discussion link prefers the project workspace when the manuscript belongs
-    // to one, otherwise falls back to the team workspace.
-    const discussionLink = `${
-      projectWorkspaceUrl ?? teamWorkspaceUrl
-    }?tab=discussions#${manuscriptId}`;
+    const baseWorkspaceUrl =
+      workspaceLink || projectWorkspaceUrl || teamWorkspaceUrl;
+    const discussionLink = `${baseWorkspaceUrl}?tab=discussions#${manuscriptId}`;
 
     const notificationData = (
       recipientType: 'open_science_team' | 'grantee',

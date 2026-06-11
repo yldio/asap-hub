@@ -56,14 +56,8 @@ const columnStyles = css({
   },
 });
 
-const memberGridStyles = css({
-  display: 'grid',
-  columnGap: rem(32),
-  rowGap: rem(16),
+const memberListStyles = css({
   paddingTop: rem(16),
-  [crossQuery]: {
-    gridTemplateColumns: '1fr 1fr',
-  },
 });
 
 const tabDescriptionStyles = css({
@@ -172,7 +166,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
           ]}
         >
           {({ data }: MemberListProps) => (
-            <div css={memberGridStyles}>
+            <div css={memberListStyles}>
               <MembersList
                 members={data.map(
                   ({
@@ -230,7 +224,7 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
           }
         >
           {({ data }: MemberListProps) => (
-            <div css={memberGridStyles}>
+            <div css={memberListStyles}>
               <MembersList
                 members={data.map(
                   ({

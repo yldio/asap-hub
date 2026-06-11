@@ -55,6 +55,19 @@ jest.mock('../../../shared-api/category', () => ({
   }),
 }));
 
+const mockIsEnabled = jest.fn();
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
+beforeEach(() => {
+  mockIsEnabled.mockReturnValue(false);
+});
+afterAll(() => {
+  mockIsEnabled.mockClear();
+});
+
 const manuscriptResponse = {
   id: 'manuscript-1',
   title: 'The Manuscript',
@@ -482,7 +495,16 @@ it('does not allow navigating to the workspace tab when team tools are not avail
 });
 
 describe('Share Output', () => {
-  it('shows share outputs button and page when the user has permissions user clicks an option', async () => {
+  it('does not show share outputs button when flag PROJECT_OUTPUTS is enabled', async () => {
+    mockIsEnabled.mockImplementation(
+      (flag: string) => flag === 'PROJECT_OUTPUTS',
+    );
+    await renderPage(createTeamResponse());
+    expect(screen.queryByText(/share an output/i)).not.toBeInTheDocument();
+  });
+
+  it('shows share outputs button and page when the user has permissions user clicks an option and flag PROJECT_OUTPUTS is not enabled', async () => {
+    mockIsEnabled.mockReturnValue(false);
     jest.useRealTimers();
     jest.spyOn(console, 'error').mockImplementation(); // Suppress act() warnings from Suspense
     const teamResponse = createTeamResponse();

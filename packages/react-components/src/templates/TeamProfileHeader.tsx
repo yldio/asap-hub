@@ -1,5 +1,8 @@
 import { TeamResponse, TeamTool } from '@asap-hub/model';
-import { ResearchOutputPermissionsContext } from '@asap-hub/react-context';
+import {
+  ResearchOutputPermissionsContext,
+  useFlags,
+} from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { useContext } from 'react';
@@ -172,6 +175,8 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   projectType,
   linkedProjectId,
 }) => {
+  const { isEnabled } = useFlags();
+  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
   const route = network({}).teams({}).team({ teamId: id });
   const projectLink =
     linkedProjectId && projectType
@@ -284,7 +289,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               <span>{getCounterString(labCount, 'Lab')}</span>
             </div>
           )}
-          {canShareResearchOutput && (
+          {canShareResearchOutput && !isProjectOutputsEnabled && (
             <div css={createStyles}>
               <DropdownButton
                 buttonChildren={() => (

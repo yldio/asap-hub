@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useFlags } from '@asap-hub/react-context';
 
 import { Display, Paragraph } from '../atoms';
 import { mobileScreen, rem, smallDesktopScreen } from '../pixels';
@@ -37,32 +38,39 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
   searchQuery,
   filters,
   onChangeFilter = noop,
-}) => (
-  <header>
-    <PageInfoContainer>
-      <Display styleAsHeading={2}>Shared Research</Display>
-      <div css={textStyles}>
-        <Paragraph accent="lead">
-          This page contains all shared research outputs. As grantees begin to
-          share more items, this library will grow. Grantees should be mindful
-          to respect intellectual boundaries and not share private outputs
-          outside of the Network.
-        </Paragraph>
-        <div css={buttonStyles}>
-          <SharedOutputDropdown />
-        </div>
-      </div>
-    </PageInfoContainer>
+}) => {
+  const { isEnabled } = useFlags();
+  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
 
-    <PageConstraints noPaddingBottom>
-      <ResearchOutputsSearch
-        onChangeSearch={onChangeSearch}
-        searchQuery={searchQuery}
-        onChangeFilter={onChangeFilter}
-        filters={filters}
-      />
-    </PageConstraints>
-  </header>
-);
+  return (
+    <header>
+      <PageInfoContainer>
+        <Display styleAsHeading={2}>Shared Research</Display>
+        <div css={textStyles}>
+          <Paragraph accent="lead">
+            This page contains all shared research outputs. As grantees begin to
+            share more items, this library will grow. Grantees should be mindful
+            to respect intellectual boundaries and not share private outputs
+            outside of the Network.
+          </Paragraph>
+          {!isProjectOutputsEnabled && (
+            <div css={buttonStyles}>
+              <SharedOutputDropdown />
+            </div>
+          )}
+        </div>
+      </PageInfoContainer>
+
+      <PageConstraints noPaddingBottom>
+        <ResearchOutputsSearch
+          onChangeSearch={onChangeSearch}
+          searchQuery={searchQuery}
+          onChangeFilter={onChangeFilter}
+          filters={filters}
+        />
+      </PageConstraints>
+    </header>
+  );
+};
 
 export default SharedResearchPageHeader;

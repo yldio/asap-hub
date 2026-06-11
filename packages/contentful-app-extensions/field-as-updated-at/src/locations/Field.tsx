@@ -10,34 +10,41 @@ const Field = () => {
   const { observedField } = sdk.parameters.instance;
   const [field, setField] = useState(sdk.field.getValue());
 
-  const observedFieldType = sdk.contentType.fields.find(
-    (f) => f.id === observedField,
-  )?.type;
+  const observedFieldNames = String(observedField)
+    .split(',')
+    .map((name) => name.trim())
+    .filter(Boolean);
 
-  const readObservedValue = () => {
-    const raw = sdk.entry.fields[observedField].getValue();
-    return observedFieldType === 'RichText'
-      ? documentToHtmlString(raw)
-      : raw ?? '';
+  const readValue = (name: string) => {
+    const fieldType = sdk.contentType.fields.find((f) => f.id === name)?.type;
+    const raw = sdk.entry.fields[name].getValue();
+    return fieldType === 'RichText' ? documentToHtmlString(raw) : (raw ?? '');
   };
 
-  const initialValue = readObservedValue();
+  const readObservedValues = () => observedFieldNames.map(readValue);
+
+  const initialValues = readObservedValues();
   const initialPublishedVersion = sdk.entry.getSys().publishedCounter;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   let unsubscribe = () => {};
   unsubscribe = sdk.entry.onSysChanged(async (sys: EntrySys) => {
     const currentPublishedVersion = sys.publishedCounter;
-    const currentValue = readObservedValue();
+    const currentValues = readObservedValues();
+    const anyChanged = currentValues.some(
+      (value, index) => value !== initialValues[index],
+    );
+    const anyPresent = currentValues.some(Boolean);
 
     if (
       currentPublishedVersion &&
       initialPublishedVersion &&
       currentPublishedVersion > initialPublishedVersion &&
-      currentValue !== initialValue
+      anyChanged
     ) {
-      setField(currentValue ? sys.publishedAt : undefined);
-      await sdk.field.setValue(sys.publishedAt);
+      const newValue = anyPresent ? sys.publishedAt : undefined;
+      setField(newValue);
+      await sdk.field.setValue(newValue);
       await sdk.entry.publish();
       unsubscribe();
     }

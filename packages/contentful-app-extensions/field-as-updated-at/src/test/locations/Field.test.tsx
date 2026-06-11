@@ -332,8 +332,149 @@ describe('Field component', () => {
 
     render(<Field />);
 
-    expect(mockTestSdk.field.setValue).toHaveBeenCalledWith(
-      '2026-06-11T18:00:00.000Z',
-    );
+    expect(mockTestSdk.field.setValue).toHaveBeenCalledWith(undefined);
+  });
+
+  describe('multi-field observedField', () => {
+    const buildSdk = (
+      observedField: string,
+      fields: Record<
+        string,
+        { type: string; values: [unknown, unknown] }
+      >,
+    ) => ({
+      field: {
+        getValue: jest.fn(() => undefined),
+        setValue: jest.fn(),
+      },
+      parameters: {
+        instance: { observedField },
+      },
+      contentType: {
+        fields: Object.entries(fields).map(([id, { type }]) => ({ id, type })),
+      },
+      entry: {
+        publish: jest.fn(),
+        getSys: jest.fn(() => ({ publishedCounter: 1 })),
+        onSysChanged: jest.fn((cb) => {
+          cb({
+            id: 'sys-id',
+            publishedCounter: 2,
+            space: { sys: { id: 'space-id' } },
+            publishedAt: '2026-06-11T18:00:00.000Z',
+          });
+          return jest.fn();
+        }),
+        fields: Object.fromEntries(
+          Object.entries(fields).map(([id, { values }]) => [
+            id,
+            {
+              getValue: jest
+                .fn()
+                .mockReturnValueOnce(values[0])
+                .mockReturnValueOnce(values[1]),
+            },
+          ]),
+        ),
+      },
+    });
+
+    it('stamps when the first of the two observed fields changes', () => {
+      const sdk = buildSdk('alumniSinceDate, alumniLocation', {
+        alumniSinceDate: {
+          type: 'Date',
+          values: [undefined, '2026-06-10T00:00:00.000Z'],
+        },
+        alumniLocation: {
+          type: 'Symbol',
+          values: ['Lisbon', 'Lisbon'],
+        },
+      });
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+
+      expect(sdk.field.setValue).toHaveBeenCalledWith(
+        '2026-06-11T18:00:00.000Z',
+      );
+    });
+
+    it('stamps when only the second observed field changes', () => {
+      const sdk = buildSdk('alumniSinceDate,alumniLocation', {
+        alumniSinceDate: {
+          type: 'Date',
+          values: ['2026-06-10T00:00:00.000Z', '2026-06-10T00:00:00.000Z'],
+        },
+        alumniLocation: {
+          type: 'Symbol',
+          values: ['Lisbon', 'Berlin'],
+        },
+      });
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+
+      expect(sdk.field.setValue).toHaveBeenCalledWith(
+        '2026-06-11T18:00:00.000Z',
+      );
+    });
+
+    it('stamps once when both observed fields change in the same publish', () => {
+      const sdk = buildSdk('alumniSinceDate,alumniLocation', {
+        alumniSinceDate: {
+          type: 'Date',
+          values: ['2026-06-10T00:00:00.000Z', '2026-06-11T00:00:00.000Z'],
+        },
+        alumniLocation: {
+          type: 'Symbol',
+          values: ['Lisbon', 'Berlin'],
+        },
+      });
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+
+      expect(sdk.field.setValue).toHaveBeenCalledTimes(1);
+      expect(sdk.field.setValue).toHaveBeenCalledWith(
+        '2026-06-11T18:00:00.000Z',
+      );
+    });
+
+    it('does not stamp when none of the observed fields change', () => {
+      const sdk = buildSdk('alumniSinceDate,alumniLocation', {
+        alumniSinceDate: {
+          type: 'Date',
+          values: ['2026-06-10T00:00:00.000Z', '2026-06-10T00:00:00.000Z'],
+        },
+        alumniLocation: {
+          type: 'Symbol',
+          values: ['Lisbon', 'Lisbon'],
+        },
+      });
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+
+      expect(sdk.field.setValue).not.toHaveBeenCalled();
+      expect(sdk.entry.publish).not.toHaveBeenCalled();
+    });
+
+    it('clears the timestamp when all observed values are emptied', () => {
+      const sdk = buildSdk('alumniSinceDate,alumniLocation', {
+        alumniSinceDate: {
+          type: 'Date',
+          values: ['2026-06-10T00:00:00.000Z', undefined],
+        },
+        alumniLocation: {
+          type: 'Symbol',
+          values: ['Lisbon', undefined],
+        },
+      });
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+
+      expect(sdk.field.setValue).toHaveBeenCalledWith(undefined);
+    });
   });
 });

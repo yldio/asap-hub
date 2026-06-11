@@ -143,7 +143,7 @@ export const useOutputs = (options: OutputListOptions) => {
       pendingPromise = getOutputs(client, options)
         .then(
           (data): gp2.ListOutputResponse => ({
-            total: data.nbHits,
+            total: data.nbHits ?? 0,
             items: data.hits,
             algoliaQueryId: data.queryID,
             algoliaIndexName: data.index,

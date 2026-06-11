@@ -145,7 +145,7 @@ export const getAlgoliaTeams = async (
 
   return {
     items: result.hits,
-    total: result.nbHits,
+    total: result.nbHits ?? 0,
     algoliaIndexName: result.index,
     algoliaQueryId: result.queryID,
   };
@@ -431,7 +431,7 @@ export const getManuscripts = async (
 
   return {
     items: result.hits,
-    total: result.nbHits,
+    total: result.nbHits ?? 0,
     algoliaIndexName: result.index,
     algoliaQueryId: result.queryID,
   };
@@ -516,7 +516,7 @@ export const getManuscriptVersions = async (
 
   return {
     items: result.hits,
-    total: result.nbHits,
+    total: result.nbHits ?? 0,
     algoliaIndexName: result.index,
     algoliaQueryId: result.queryID,
   };

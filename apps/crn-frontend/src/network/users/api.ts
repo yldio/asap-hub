@@ -65,7 +65,7 @@ export const getUsers = async (
 
   return {
     items: result.hits,
-    total: result.nbHits,
+    total: result.nbHits ?? 0,
     algoliaIndexName: result.index,
     algoliaQueryId: result.queryID,
   };
@@ -84,7 +84,7 @@ export const getOpenScienceMembers = async (
 
   return {
     items: result.hits,
-    total: result.nbHits,
+    total: result.nbHits ?? 0,
     algoliaIndexName: result.index,
     algoliaQueryId: result.queryID,
   };
@@ -107,7 +107,7 @@ export const getUsersAndExternalAuthors = async (
 
   return {
     items: result.hits,
-    total: result.nbHits,
+    total: result.nbHits ?? 0,
     algoliaIndexName: result.index,
     algoliaQueryId: result.queryID,
   };

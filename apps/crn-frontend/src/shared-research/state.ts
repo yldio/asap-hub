@@ -160,7 +160,7 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
         ? getDraftResearchOutputs(options, authorization)
         : getResearchOutputs(client, options).then(
             (data): ListResearchOutputResponse => ({
-              total: data.nbHits,
+              total: data.nbHits ?? 0,
               items: data.hits,
               algoliaQueryId: data.queryID,
               algoliaIndexName: data.index,

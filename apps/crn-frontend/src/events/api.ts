@@ -32,7 +32,7 @@ export const getEvents = async (
 
   return {
     items: result.hits,
-    total: result.nbHits,
+    total: result.nbHits ?? 0,
     algoliaIndexName: result.index,
     algoliaQueryId: result.queryID,
   };

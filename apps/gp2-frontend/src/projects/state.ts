@@ -94,7 +94,7 @@ export const useProjects = (options: ProjectListOptions) => {
     throw getProjects(client, options)
       .then(
         (data): gp2.ListProjectResponse => ({
-          total: data.nbHits,
+          total: data.nbHits ?? 0,
           items: data.hits,
           algoliaQueryId: data.queryID,
           algoliaIndexName: data.index,

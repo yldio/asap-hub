@@ -13,16 +13,21 @@ import {
 import { AlgoliaSearchClient, ClientSearchResponse } from '../src/client';
 import { getAlgoliaSearchIndexMock } from './mocks/algolia.mocks';
 
+const INDEX_NAME = 'test-index';
+const REVERSE_INDEX_NAME = 'test-index-reverse-timestamp';
+
 describe('Algolia Search Client', () => {
   beforeEach(jest.resetAllMocks);
   const algoliaSearchIndex = getAlgoliaSearchIndexMock();
-  const reverseAlgoliaSearchIndex = getAlgoliaSearchIndexMock();
   const algoliaSearchClient = new AlgoliaSearchClient<'crn'>(
-    algoliaSearchIndex,
-    reverseAlgoliaSearchIndex,
+    algoliaSearchIndex as never,
+    INDEX_NAME,
+    REVERSE_INDEX_NAME,
   );
 
   test('Should do save many on entities', async () => {
+    algoliaSearchIndex.saveObjects.mockResolvedValueOnce({} as never);
+
     await algoliaSearchClient.saveMany([
       {
         data: {
@@ -54,36 +59,40 @@ describe('Algolia Search Client', () => {
       },
     ]);
 
-    expect(algoliaSearchIndex.saveObjects).toBeCalledWith([
-      {
-        objectID: `ro-id-1`,
-        id: `ro-id-1`,
-        title: 'ro-title',
-        __meta: { type: 'research-output' },
-      },
-      {
-        objectID: `user-id-1`,
-        id: `user-id-1`,
-        displayName: 'user-display-name',
-        __meta: { type: 'user' },
-      },
-      {
-        objectID: `external-author-id-1`,
-        id: `external-author-id-1`,
-        displayName: 'external-author-display-name',
-        __meta: { type: 'external-author' },
-      },
-      {
-        objectID: `lab-id-1`,
-        id: `lab-id-1`,
-        name: 'lab-title',
-        __meta: { type: 'lab' },
-      },
-    ]);
+    expect(algoliaSearchIndex.saveObjects).toBeCalledWith({
+      indexName: INDEX_NAME,
+      objects: [
+        {
+          objectID: `ro-id-1`,
+          id: `ro-id-1`,
+          title: 'ro-title',
+          __meta: { type: 'research-output' },
+        },
+        {
+          objectID: `user-id-1`,
+          id: `user-id-1`,
+          displayName: 'user-display-name',
+          __meta: { type: 'user' },
+        },
+        {
+          objectID: `external-author-id-1`,
+          id: `external-author-id-1`,
+          displayName: 'external-author-display-name',
+          __meta: { type: 'external-author' },
+        },
+        {
+          objectID: `lab-id-1`,
+          id: `lab-id-1`,
+          name: 'lab-title',
+          __meta: { type: 'lab' },
+        },
+      ],
+    });
   });
 
   test('Should save the Research Output', async () => {
     const researchOutput = createResearchOutputResponse();
+    algoliaSearchIndex.saveObject.mockResolvedValueOnce({} as never);
 
     await algoliaSearchClient.save({
       data: researchOutput,
@@ -91,14 +100,18 @@ describe('Algolia Search Client', () => {
     });
 
     expect(algoliaSearchIndex.saveObject).toBeCalledWith({
-      ...researchOutput,
-      objectID: researchOutput.id,
-      __meta: { type: 'research-output' },
+      indexName: INDEX_NAME,
+      body: {
+        ...researchOutput,
+        objectID: researchOutput.id,
+        __meta: { type: 'research-output' },
+      },
     });
   });
 
   test('Should save the User', async () => {
     const user = createUserResponse();
+    algoliaSearchIndex.saveObject.mockResolvedValueOnce({} as never);
 
     await algoliaSearchClient.save({
       data: user,
@@ -106,22 +119,29 @@ describe('Algolia Search Client', () => {
     });
 
     expect(algoliaSearchIndex.saveObject).toBeCalledWith({
-      ...user,
-      objectID: user.id,
-      __meta: { type: 'user' },
+      indexName: INDEX_NAME,
+      body: {
+        ...user,
+        objectID: user.id,
+        __meta: { type: 'user' },
+      },
     });
   });
 
   test('Should remove the entity', async () => {
     const researchOutputId = '1';
+    algoliaSearchIndex.deleteObject.mockResolvedValueOnce({} as never);
 
     await algoliaSearchClient.remove(researchOutputId);
 
-    expect(algoliaSearchIndex.deleteObject).toBeCalledWith(researchOutputId);
+    expect(algoliaSearchIndex.deleteObject).toBeCalledWith({
+      indexName: INDEX_NAME,
+      objectID: researchOutputId,
+    });
   });
 
   test('Should search research-output entity', async () => {
-    algoliaSearchIndex.search.mockResolvedValueOnce(
+    algoliaSearchIndex.searchSingleIndex.mockResolvedValueOnce(
       searchResearchOutputResponse,
     );
 
@@ -135,16 +155,23 @@ describe('Algolia Search Client', () => {
       },
     );
 
-    expect(response).toEqual(searchResearchOutputResponse);
-    expect(algoliaSearchIndex.search).toBeCalledWith('query', {
-      hitsPerPage: 10,
-      page: 0,
-      filters: 'some-filters AND (__meta.type:"research-output")',
+    expect(response).toEqual({
+      ...searchResearchOutputResponse,
+      index: INDEX_NAME,
+    });
+    expect(algoliaSearchIndex.searchSingleIndex).toBeCalledWith({
+      indexName: INDEX_NAME,
+      searchParams: {
+        query: 'query',
+        hitsPerPage: 10,
+        page: 0,
+        filters: 'some-filters AND (__meta.type:"research-output")',
+      },
     });
   });
 
   test('Should throw Error when search throws', async () => {
-    algoliaSearchIndex.search.mockRejectedValue({
+    algoliaSearchIndex.searchSingleIndex.mockRejectedValue({
       message: 'Some Algolia ERROR',
     });
 
@@ -158,18 +185,26 @@ describe('Algolia Search Client', () => {
   });
 
   test('Should search user entity', async () => {
-    algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
+    algoliaSearchIndex.searchSingleIndex.mockResolvedValueOnce(
+      searchUserResponse,
+    );
 
     const response = await algoliaSearchClient.search(['user'], 'query');
 
-    expect(response).toEqual(searchUserResponse);
-    expect(algoliaSearchIndex.search).toBeCalledWith('query', {
-      filters: '__meta.type:"user"',
+    expect(response).toEqual({ ...searchUserResponse, index: INDEX_NAME });
+    expect(algoliaSearchIndex.searchSingleIndex).toBeCalledWith({
+      indexName: INDEX_NAME,
+      searchParams: {
+        query: 'query',
+        filters: '__meta.type:"user"',
+      },
     });
   });
 
   test('Should search event entity in the past', async () => {
-    reverseAlgoliaSearchIndex.search.mockResolvedValueOnce(searchEventResponse);
+    algoliaSearchIndex.searchSingleIndex.mockResolvedValueOnce(
+      searchEventResponse,
+    );
 
     const response = await algoliaSearchClient.search(
       ['event'],
@@ -178,14 +213,23 @@ describe('Algolia Search Client', () => {
       true,
     );
 
-    expect(response).toEqual(searchEventResponse);
-    expect(reverseAlgoliaSearchIndex.search).toBeCalledWith('query', {
-      filters: '__meta.type:"event"',
+    expect(response).toEqual({
+      ...searchEventResponse,
+      index: REVERSE_INDEX_NAME,
+    });
+    expect(algoliaSearchIndex.searchSingleIndex).toBeCalledWith({
+      indexName: REVERSE_INDEX_NAME,
+      searchParams: {
+        query: 'query',
+        filters: '__meta.type:"event"',
+      },
     });
   });
 
   test('Should search multiple entities', async () => {
-    algoliaSearchIndex.search.mockResolvedValueOnce(searchUserResponse);
+    algoliaSearchIndex.searchSingleIndex.mockResolvedValueOnce(
+      searchUserResponse,
+    );
 
     const response = await algoliaSearchClient.search(
       ['user', 'external-author'],
@@ -195,28 +239,39 @@ describe('Algolia Search Client', () => {
       },
     );
 
-    expect(response).toEqual(searchUserResponse);
-    expect(algoliaSearchIndex.search).toBeCalledWith('query', {
-      filters:
-        'some-filters AND (__meta.type:"user" OR __meta.type:"external-author")',
+    expect(response).toEqual({ ...searchUserResponse, index: INDEX_NAME });
+    expect(algoliaSearchIndex.searchSingleIndex).toBeCalledWith({
+      indexName: INDEX_NAME,
+      searchParams: {
+        query: 'query',
+        filters:
+          'some-filters AND (__meta.type:"user" OR __meta.type:"external-author")',
+      },
     });
   });
 
   test('Should do facet value search', async () => {
+    algoliaSearchIndex.searchForFacetValues.mockResolvedValueOnce({
+      facetHits: [],
+      exhaustiveFacetsCount: true,
+    });
+
     await algoliaSearchClient.searchForTagValues(
       ['research-output'],
       'query',
       {},
     );
 
-    expect(algoliaSearchIndex.searchForFacetValues).toBeCalledWith(
-      '_tags',
-      'query',
-      expect.objectContaining({
+    expect(algoliaSearchIndex.searchForFacetValues).toBeCalledWith({
+      indexName: INDEX_NAME,
+      facetName: '_tags',
+      searchForFacetValuesRequest: expect.objectContaining({
+        facetQuery: 'query',
         filters: '__meta.type:"research-output"',
       }),
-    );
+    });
   });
+
   test('Should throw Error when facet search throws', async () => {
     algoliaSearchIndex.searchForFacetValues.mockRejectedValue({
       message: 'Some Algolia ERROR',
@@ -231,18 +286,24 @@ describe('Algolia Search Client', () => {
       new Error('Could not search for facet values: Some Algolia ERROR'),
     );
   });
+
   test('Should do facet value search with tags', async () => {
+    algoliaSearchIndex.searchForFacetValues.mockResolvedValueOnce({
+      facetHits: [],
+      exhaustiveFacetsCount: true,
+    });
+
     await algoliaSearchClient.searchForTagValues(['research-output'], 'query', {
       tagFilters: ['tag1', 'tag2'],
     });
 
-    expect(algoliaSearchIndex.searchForFacetValues).toBeCalledWith(
-      '_tags',
-      'query',
-      expect.objectContaining({
+    expect(algoliaSearchIndex.searchForFacetValues).toBeCalledWith({
+      indexName: INDEX_NAME,
+      facetName: '_tags',
+      searchForFacetValuesRequest: expect.objectContaining({
         tagFilters: ['tag1', 'tag2'],
       }),
-    );
+    });
   });
 });
 

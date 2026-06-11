@@ -124,7 +124,7 @@ export const useTagSearch = <ResponsesKey extends CRNTagSearchEntities>(
 
     throw getTagSearch(client, entityTypes, options)
       .then((data) => ({
-        total: data.nbHits,
+        total: data.nbHits ?? 0,
         items: data.hits,
         algoliaQueryId: data.queryID,
         algoliaIndexName: data.index,

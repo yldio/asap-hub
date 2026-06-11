@@ -1,8 +1,8 @@
 import {
+  SearchClient,
   SearchForFacetValuesResponse,
-  SearchOptions,
   SearchResponse,
-} from '@algolia/client-search';
+} from 'algoliasearch';
 import {
   DocumentCategoryOption,
   EventResponse,
@@ -23,7 +23,6 @@ import {
   ManuscriptVersionResponse,
   ProjectResponse,
 } from '@asap-hub/model';
-import { SearchIndex } from 'algoliasearch';
 import {
   EVENT_ENTITY_TYPE,
   EXTERNAL_AUTHOR_ENTITY_TYPE,
@@ -114,6 +113,16 @@ export type EntityResponses = {
     [WORKING_GROUP_ENTITY_TYPE]: gp2Model.WorkingGroupResponse;
   };
 };
+
+export type SearchOptions = {
+  filters?: string;
+  userToken?: string;
+  clickAnalytics?: boolean;
+  hitsPerPage?: number;
+  page?: number;
+  [key: string]: unknown;
+};
+
 export type SavePayload = Payload | GP2Payload;
 export type DistributeToEntityRecords<
   Responses extends EntityResponses[Apps],
@@ -142,42 +151,50 @@ export type ClientSearch<
   requestOptions?: SearchOptions,
   descendingEvents?: boolean,
 ) => Promise<ClientSearchResponse<App, keyof EntityResponses[App]>>;
-export interface SearchClient {
-  search: ClientSearch<Apps, keyof EntityResponses[Apps]>;
+export interface SearchClientInterface<App extends Apps = Apps> {
+  search: ClientSearch<App, keyof EntityResponses[App]>;
   save: (payload: SavePayload) => Promise<void>;
   saveMany: (payload: SavePayload[]) => Promise<void>;
   remove: (id: string) => Promise<void>;
-  searchForTagValues: <ResponsesKey extends keyof EntityResponses[Apps]>(
+  searchForTagValues: <ResponsesKey extends keyof EntityResponses[App]>(
     entityTypes: ResponsesKey[],
     query: string,
     requestOptions?: SearchOptions | undefined,
   ) => Promise<SearchForFacetValuesResponse>;
 }
 
-export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
+export class AlgoliaSearchClient<App extends Apps>
+  implements SearchClientInterface<App>
+{
   constructor(
-    private index: SearchIndex,
-    private reverseEventsIndex: SearchIndex,
-    private userToken?: SearchOptions['userToken'],
-    private clickAnalytics?: SearchOptions['clickAnalytics'],
+    private client: SearchClient,
+    private indexName: string,
+    private reverseEventsIndexName: string,
+    private userToken?: string,
+    private clickAnalytics?: boolean,
   ) {} // eslint-disable-line no-empty-function
 
   async save({ data, type }: SavePayload) {
-    await this.index.saveObject(
-      AlgoliaSearchClient.getAlgoliaObject(data, type),
-    );
+    await this.client.saveObject({
+      indexName: this.indexName,
+      body: AlgoliaSearchClient.getAlgoliaObject(data, type),
+    });
   }
 
   async saveMany(payload: SavePayload[]) {
-    await this.index.saveObjects(
-      payload.map(({ data, type }) =>
+    await this.client.saveObjects({
+      indexName: this.indexName,
+      objects: payload.map(({ data, type }) =>
         AlgoliaSearchClient.getAlgoliaObject(data, type),
       ),
-    );
+    });
   }
 
   async remove(id: string) {
-    await this.index.deleteObject(id);
+    await this.client.deleteObject({
+      indexName: this.indexName,
+      objectID: id,
+    });
   }
 
   private getSearchOptions<ResponsesKey extends keyof EntityResponses[App]>(
@@ -207,22 +224,28 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
     const options = this.getSearchOptions(entityTypes, requestOptions);
     try {
       if (descendingEvents) {
-        const result = await this.reverseEventsIndex.search<
+        const result = await this.client.searchSingleIndex<
           DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
-        >(query, options);
+        >({
+          indexName: this.reverseEventsIndexName,
+          searchParams: { query, ...options },
+        });
         return {
           ...result,
-          index: this.reverseEventsIndex.indexName,
-        };
+          index: this.reverseEventsIndexName,
+        } as ClientSearchResponse<App, ResponsesKey>;
       }
 
-      const result = await this.index.search<
+      const result = await this.client.searchSingleIndex<
         DistributeToEntityRecords<EntityResponses[App], ResponsesKey>
-      >(query, options);
+      >({
+        indexName: this.indexName,
+        searchParams: { query, ...options },
+      });
       return {
         ...result,
-        index: this.index.indexName,
-      };
+        index: this.indexName,
+      } as ClientSearchResponse<App, ResponsesKey>;
     } catch (error) {
       throw new Error(`Could not search: ${(error as Error).message}`);
     }
@@ -245,11 +268,12 @@ export class AlgoliaSearchClient<App extends Apps> implements SearchClient {
     requestOptions?: SearchOptions,
   ): Promise<SearchForFacetValuesResponse> {
     try {
-      const result = await this.index.searchForFacetValues(
-        '_tags',
-        query,
-        this.getSearchOptions(entityTypes, requestOptions),
-      );
+      const options = this.getSearchOptions(entityTypes, requestOptions);
+      const result = await this.client.searchForFacetValues({
+        indexName: this.indexName,
+        facetName: '_tags',
+        searchForFacetValuesRequest: { facetQuery: query, ...options },
+      });
       return result;
     } catch (error) {
       throw new Error(

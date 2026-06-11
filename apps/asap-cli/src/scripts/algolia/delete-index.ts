@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import algoliasearch from 'algoliasearch';
+import { algoliasearch } from 'algoliasearch';
 
 export type DeleteAlgoliaIndex = {
   algoliaAppId: string;
@@ -13,21 +13,31 @@ export const deleteAlgoliaIndex = async ({
   indexName,
 }: DeleteAlgoliaIndex): Promise<void> => {
   const client = algoliasearch(algoliaAppId, algoliaCiApiKey);
+
   const unlinkIndex = async (name: string) => {
-    const index = client.initIndex(name);
-    return index.setSettings({ replicas: [] }).wait();
+    const taskResponse = await client.setSettings({
+      indexName: name,
+      indexSettings: { replicas: [] },
+    });
+    await client.waitForTask({
+      indexName: name,
+      taskID: taskResponse.taskID,
+    });
   };
-  const indices = await client.listIndices();
+
+  const { items } = await client.listIndices();
   await Promise.all(
-    indices.items
+    items
       .filter(({ name }) => name.startsWith(indexName))
-      .map(async ({ name }) => {
-        const indexToDelete = client.initIndex(name);
-        const { primary, replicas } = await indexToDelete.getSettings();
-        if (primary || replicas) {
+      .map(async ({ name, primary, replicas }) => {
+        if (primary || (replicas && replicas.length > 0)) {
           await unlinkIndex(primary || name);
         }
-        await indexToDelete.delete().wait();
+        const taskResponse = await client.deleteIndex({ indexName: name });
+        await client.waitForTask({
+          indexName: name,
+          taskID: taskResponse.taskID,
+        });
       }),
   );
 };

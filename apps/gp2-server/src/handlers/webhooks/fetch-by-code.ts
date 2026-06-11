@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-import { algoliaSearchClientNativeFactory } from '@asap-hub/algolia';
 import { ValidationError } from '@asap-hub/errors';
 import { gp2 } from '@asap-hub/model';
 import { validateAuth0Request } from '@asap-hub/server-common';
@@ -8,20 +6,13 @@ import { SearchClient } from 'algoliasearch';
 import {
   algoliaApiKey,
   algoliaApiKeyTtl,
-  algoliaAppId,
   auth0SharedSecret,
 } from '../../config';
 import UserController from '../../controllers/user.controller';
-import { getContentfulGraphQLClientFactory } from '../../dependencies/clients.dependency';
-import {
-  getAssetDataProvider,
-  getUserDataProvider,
-} from '../../dependencies/user.dependency';
-import { sentryWrapper } from '../../utils/sentry-wrapper';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
-  algoliaClient: SearchClient,
+  algoliaClient: Pick<SearchClient, 'generateSecuredApiKey'>,
   date = new Date(),
   ttl = algoliaApiKeyTtl,
 ): lambda.Handler =>
@@ -32,11 +23,14 @@ export const fetchUserByCodeHandlerFactory = (
 
     const user = await userController.fetchByCode(code);
     const apiKey = user.onboarded
-      ? algoliaClient.generateSecuredApiKey(algoliaApiKey, {
-          validUntil: getValidUntilTimestampInSeconds({
-            date,
-            ttl,
-          }),
+      ? algoliaClient.generateSecuredApiKey({
+          parentApiKey: algoliaApiKey,
+          restrictions: {
+            validUntil: getValidUntilTimestampInSeconds({
+              date,
+              ttl,
+            }),
+          },
         })
       : null;
 
@@ -57,18 +51,6 @@ export const getValidUntilTimestampInSeconds = ({
   ttl,
 }: GetValidUntilTimestampInSecondsArgs): number =>
   Math.floor(date.getTime() / 1000) + Math.floor(ttl);
-
-const contentfulGraphQLClient = getContentfulGraphQLClientFactory();
-const userDataProvider = getUserDataProvider(contentfulGraphQLClient);
-const assetDataProvider = getAssetDataProvider();
-
-/* istanbul ignore next */
-export const handler = sentryWrapper(
-  fetchUserByCodeHandlerFactory(
-    new UserController(userDataProvider, assetDataProvider),
-    algoliaSearchClientNativeFactory({ algoliaAppId, algoliaApiKey }),
-  ),
-);
 
 const validateParams = (
   params:

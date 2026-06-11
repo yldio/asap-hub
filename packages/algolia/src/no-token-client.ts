@@ -1,14 +1,11 @@
-import {
-  SearchForFacetValuesResponse,
-  SearchOptions,
-} from '@algolia/client-search';
-import { SearchIndex } from 'algoliasearch';
+import { SearchForFacetValuesResponse } from 'algoliasearch';
 import {
   Apps,
   ClientSearchResponse,
   EntityResponses,
   SavePayload,
-  SearchClient,
+  SearchClientInterface,
+  SearchOptions,
 } from './client';
 
 export const EMPTY_ALGOLIA_RESPONSE = {
@@ -38,20 +35,22 @@ export const EMPTY_ALGOLIA_FACET_HITS = {
     It is used in case the user is not onboarded yet.
 */
 
-export class NoTokenAlgoliaClient<App extends Apps> implements SearchClient {
+export class NoTokenAlgoliaClient<App extends Apps>
+  implements SearchClientInterface<App>
+{
   constructor(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    private _index: SearchIndex | string,
+    private _indexName: string,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    private _reverseEventsIndex: SearchIndex | string,
+    private _reverseEventsIndexName: string,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    private _userToken?: SearchOptions['userToken'],
+    private _userToken?: string,
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    private _clickAnalytics?: SearchOptions['clickAnalytics'],
+    private _clickAnalytics?: boolean,
   ) {} // eslint-disable-line no-empty-function
 
   // eslint-disable-next-line class-methods-use-this

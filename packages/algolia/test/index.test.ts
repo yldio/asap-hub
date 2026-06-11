@@ -1,4 +1,4 @@
-import algoliasearch, { SearchClient } from 'algoliasearch';
+import { algoliasearch, SearchClient } from 'algoliasearch';
 import {
   algoliaSearchClientFactory,
   algoliaSearchClientNativeFactory,
@@ -9,9 +9,7 @@ jest.mock('algoliasearch');
 const algoliasearchMock = algoliasearch as jest.MockedFunction<
   typeof algoliasearch
 >;
-const algoliaSearchClientMock = {
-  initIndex: jest.fn(),
-} as unknown as jest.Mocked<SearchClient>;
+const algoliaSearchClientMock = {} as unknown as jest.Mocked<SearchClient>;
 
 describe('Algolia Search Client', () => {
   beforeEach(jest.resetAllMocks);
@@ -27,10 +25,6 @@ describe('Algolia Search Client', () => {
     });
 
     expect(algoliasearchMock).toBeCalledWith('test-app-id', 'test-key');
-    expect(algoliaSearchClientMock.initIndex).toBeCalledWith('test-index');
-    expect(algoliaSearchClientMock.initIndex).toBeCalledWith(
-      'test-index-reverse-timestamp',
-    );
   });
 
   test('Should instantiate the No Token Search Client', () => {
@@ -41,7 +35,6 @@ describe('Algolia Search Client', () => {
     });
 
     expect(algoliasearchMock).not.toBeCalled();
-    expect(algoliaSearchClientMock.initIndex).not.toBeCalled();
   });
 
   test('Should instantiate the native client', () => {

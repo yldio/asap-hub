@@ -79,7 +79,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
           ...paginationParams,
         }).then((response) => ({
           items: response.hits,
-          total: response.nbHits,
+          total: response.nbHits ?? 0,
           algoliaIndexName: response.index,
           algoliaQueryId: response.queryID,
         })),

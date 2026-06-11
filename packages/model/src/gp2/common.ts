@@ -43,6 +43,7 @@ export type Member<T> = {
   displayName: string;
   avatarUrl?: string;
   alumniSinceDate?: string;
+  inactiveSinceDate?: string;
 };
 
 export type UpdateMember<T> = Pick<Member<T>, 'id' | 'userId' | 'role'>;

@@ -8737,6 +8737,7 @@ export type Users = Entry &
     activeCampaignCreatedAt?: Maybe<Scalars['DateTime']>;
     activeCampaignId?: Maybe<Scalars['String']>;
     alternativeEmail?: Maybe<Scalars['String']>;
+    alumniLastUpdated?: Maybe<Scalars['DateTime']>;
     alumniLocation?: Maybe<Scalars['String']>;
     alumniSinceDate?: Maybe<Scalars['DateTime']>;
     avatar?: Maybe<Asset>;
@@ -16531,6 +16532,7 @@ export type FetchUserByIdQuery = {
       | 'onboarded'
       | 'alumniSinceDate'
       | 'alumniLocation'
+      | 'alumniLastUpdated'
       | 'positions'
     > & {
       sys: Pick<
@@ -16688,6 +16690,7 @@ export type FetchUsersQuery = {
             | 'onboarded'
             | 'alumniSinceDate'
             | 'alumniLocation'
+            | 'alumniLastUpdated'
             | 'positions'
           > & {
             sys: Pick<
@@ -20165,6 +20168,10 @@ export const UsersContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniSinceDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniLocation' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'alumniLastUpdated' },
+          },
           { kind: 'Field', name: { kind: 'Name', value: 'positions' } },
           { kind: 'Field', name: { kind: 'Name', value: 'activatedDate' } },
           {

@@ -17750,7 +17750,7 @@ export type FetchWorkingGroupByIdQuery = {
         Pick<WorkingGroupsMembersCollection, 'total'> & {
           items: Array<
             Maybe<
-              Pick<WorkingGroupMembership, 'role'> & {
+              Pick<WorkingGroupMembership, 'role' | 'inactiveSinceDate'> & {
                 sys: Pick<Sys, 'id'>;
                 user?: Maybe<
                   Pick<
@@ -17828,7 +17828,7 @@ export type FetchWorkingGroupsQuery = {
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
                   Maybe<
-                    Pick<WorkingGroupMembership, 'role'> & {
+                    Pick<WorkingGroupMembership, 'role' | 'inactiveSinceDate'> & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
                         Pick<

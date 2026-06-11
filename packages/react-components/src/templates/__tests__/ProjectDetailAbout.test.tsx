@@ -237,7 +237,7 @@ describe('ProjectDetailAbout', () => {
       expect(screen.getByText('Collaborators (2)')).toBeInTheDocument();
     });
 
-    it('does not render Collaborators tab when collaboratingMembers is not provided', () => {
+    it('renders Collaborators tab with empty state message when collaboratingMembers is not provided', () => {
       const resourceMemberProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Resource Project',
@@ -256,7 +256,7 @@ describe('ProjectDetailAbout', () => {
 
       render(<ProjectDetailAbout {...resourceMemberProject} />);
       expect(screen.getByText('Contributors')).toBeInTheDocument();
-      expect(screen.queryByText(/Collaborators/)).not.toBeInTheDocument();
+      expect(screen.getByText('Collaborators (0)')).toBeInTheDocument();
     });
   });
 
@@ -330,7 +330,7 @@ describe('ProjectDetailAbout', () => {
       expect(screen.getByText('Collaborators (2)')).toBeInTheDocument();
     });
 
-    it('does not render Collaborators tab when collaboratingMembers is not provided', () => {
+    it('renders Collaborators tab with empty state message when collaboratingMembers is not provided', () => {
       const traineeProject: ProjectDetailWithFetch = {
         ...baseProject,
         projectType: 'Trainee Project',
@@ -348,7 +348,7 @@ describe('ProjectDetailAbout', () => {
 
       render(<ProjectDetailAbout {...traineeProject} />);
       expect(screen.getByText('Contributors')).toBeInTheDocument();
-      expect(screen.queryByText(/Collaborators/)).not.toBeInTheDocument();
+      expect(screen.getByText('Collaborators (0)')).toBeInTheDocument();
     });
   });
 

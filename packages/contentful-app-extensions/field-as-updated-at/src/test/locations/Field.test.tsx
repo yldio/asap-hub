@@ -4,6 +4,7 @@ import Field from '../../locations/Field';
 import { render, screen, waitFor } from '@testing-library/react';
 
 import { useSDK } from '@contentful/react-apps-toolkit';
+import { EntrySys } from '@contentful/app-sdk';
 
 jest.mock('@contentful/react-apps-toolkit', () => ({
   useSDK: jest.fn(),
@@ -27,16 +28,7 @@ describe('Field component', () => {
         getSys: jest.fn(() => ({
           publishedCounter: 1,
         })),
-        onSysChanged: jest.fn(() => ({
-          id: '123',
-          space: {
-            sys: {
-              id: '456',
-            },
-          },
-          publishedCounter: 2,
-          updatedAt: '2390-08-23T15:27:27.861Z',
-        })),
+        onSysChanged: jest.fn(() => jest.fn()),
         fields: {
           video: {
             getValue: jest.fn(),
@@ -198,54 +190,6 @@ describe('Field component', () => {
     });
   });
 
-  it('updates the field value when observed Symbol field changes', () => {
-    const getMockContent = () => ({
-      id: '456',
-      publishedCounter: 2,
-      space: { sys: { id: '123' } },
-      publishedAt: '2026-06-11T18:00:00.000Z',
-    });
-
-    const mockTestSdk = {
-      field: {
-        getValue: jest.fn(() => undefined),
-        setValue: jest.fn(),
-      },
-      parameters: {
-        instance: {
-          observedField: 'orcid',
-        },
-      },
-      contentType: {
-        fields: [{ id: 'orcid', type: 'Symbol' }],
-      },
-      entry: {
-        publish: jest.fn(),
-        getSys: jest.fn(() => ({ publishedCounter: 1 })),
-        onSysChanged: jest.fn((cb) => {
-          cb(getMockContent());
-          return jest.fn();
-        }),
-        fields: {
-          orcid: {
-            getValue: jest
-              .fn()
-              .mockReturnValueOnce('0000-0000-0000-0001')
-              .mockReturnValueOnce('0000-0000-0000-0002'),
-          },
-        },
-      },
-    };
-    (useSDK as jest.Mock).mockReturnValue(mockTestSdk);
-
-    render(<Field />);
-
-    expect(screen.getByText('2026-06-11T18:00:00.000Z')).toBeInTheDocument();
-    expect(mockTestSdk.field.setValue).toHaveBeenCalledWith(
-      '2026-06-11T18:00:00.000Z',
-    );
-  });
-
   it('does not stamp when publishedCounter has not increased', () => {
     const mockTestSdk = {
       field: {
@@ -290,62 +234,15 @@ describe('Field component', () => {
     expect(mockTestSdk.entry.publish).not.toHaveBeenCalled();
   });
 
-  it('clears the displayed field when observed value is cleared on publish', () => {
-    const getMockContent = () => ({
-      id: '456',
-      publishedCounter: 2,
-      space: { sys: { id: '123' } },
-      publishedAt: '2026-06-11T18:00:00.000Z',
-    });
-
-    const mockTestSdk = {
-      field: {
-        getValue: jest.fn(() => '2026-06-10T18:00:00.000Z'),
-        setValue: jest.fn(),
-      },
-      parameters: {
-        instance: {
-          observedField: 'alumniSinceDate',
-        },
-      },
-      contentType: {
-        fields: [{ id: 'alumniSinceDate', type: 'Date' }],
-      },
-      entry: {
-        publish: jest.fn(),
-        getSys: jest.fn(() => ({ publishedCounter: 1 })),
-        onSysChanged: jest.fn((cb) => {
-          cb(getMockContent());
-          return jest.fn();
-        }),
-        fields: {
-          alumniSinceDate: {
-            getValue: jest
-              .fn()
-              .mockReturnValueOnce('2026-06-10T00:00:00.000Z')
-              .mockReturnValueOnce(undefined),
-          },
-        },
-      },
-    };
-    (useSDK as jest.Mock).mockReturnValue(mockTestSdk);
-
-    render(<Field />);
-
-    expect(mockTestSdk.field.setValue).toHaveBeenCalledWith(undefined);
-  });
-
   describe('multi-field observedField', () => {
     const buildSdk = (
       observedField: string,
-      fields: Record<
-        string,
-        { type: string; values: [unknown, unknown] }
-      >,
+      fields: Record<string, { type: string; values: [unknown, unknown] }>,
     ) => ({
       field: {
         getValue: jest.fn(() => undefined),
         setValue: jest.fn(),
+        removeValue: jest.fn(),
       },
       parameters: {
         instance: { observedField },
@@ -474,7 +371,107 @@ describe('Field component', () => {
 
       render(<Field />);
 
-      expect(sdk.field.setValue).toHaveBeenCalledWith(undefined);
+      expect(sdk.field.removeValue).toHaveBeenCalled();
+      expect(sdk.field.setValue).not.toHaveBeenCalled();
+    });
+
+    it('bails out of in-flight callbacks after unmount', async () => {
+      let storedCallback: ((sys: EntrySys) => Promise<void>) | null = null;
+
+      const sdk = {
+        field: {
+          getValue: jest.fn(() => undefined),
+          setValue: jest.fn(),
+          removeValue: jest.fn(),
+        },
+        parameters: { instance: { observedField: 'alumniSinceDate' } },
+        contentType: { fields: [{ id: 'alumniSinceDate', type: 'Date' }] },
+        entry: {
+          publish: jest.fn(),
+          getSys: jest.fn(() => ({ publishedCounter: 1 })),
+          onSysChanged: jest.fn((cb) => {
+            storedCallback = cb;
+            return jest.fn();
+          }),
+          fields: {
+            alumniSinceDate: {
+              getValue: jest
+                .fn()
+                .mockReturnValueOnce('2026-06-10T00:00:00.000Z')
+                .mockReturnValueOnce('2026-06-11T00:00:00.000Z'),
+            },
+          },
+        },
+      };
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      const { unmount } = render(<Field />);
+      unmount();
+
+      await storedCallback!({
+        publishedCounter: 2,
+        publishedAt: '2026-06-11T18:00:00.000Z',
+      } as EntrySys);
+
+      expect(sdk.field.setValue).not.toHaveBeenCalled();
+      expect(sdk.field.removeValue).not.toHaveBeenCalled();
+      expect(sdk.entry.publish).not.toHaveBeenCalled();
+    });
+
+    it('keeps listening after the first stamp so a subsequent clear publish clears the timestamp', async () => {
+      let storedCallback: ((sys: EntrySys) => Promise<void>) | null = null;
+      let publishedCounter = 1;
+
+      const observedValue = jest
+        .fn()
+        .mockReturnValueOnce('2026-06-10T00:00:00.000Z')
+        .mockReturnValueOnce('2026-06-11T00:00:00.000Z')
+        .mockReturnValueOnce(undefined);
+
+      const sdk = {
+        field: {
+          getValue: jest.fn(() => undefined),
+          setValue: jest.fn(),
+          removeValue: jest.fn(),
+        },
+        parameters: { instance: { observedField: 'alumniSinceDate' } },
+        contentType: { fields: [{ id: 'alumniSinceDate', type: 'Date' }] },
+        entry: {
+          publish: jest.fn(() => {
+            publishedCounter += 1;
+            return Promise.resolve();
+          }),
+          getSys: jest.fn(() => ({ publishedCounter })),
+          onSysChanged: jest.fn((cb) => {
+            storedCallback = cb;
+            return jest.fn();
+          }),
+          fields: { alumniSinceDate: { getValue: observedValue } },
+        },
+      };
+      (useSDK as jest.Mock).mockReturnValue(sdk);
+
+      render(<Field />);
+
+      // First publish: alumniSinceDate moves from 2026-06-10 to 2026-06-11
+      publishedCounter = 2;
+      await storedCallback!({
+        publishedCounter: 2,
+        publishedAt: '2026-06-11T18:00:00.000Z',
+      } as EntrySys);
+
+      expect(sdk.field.setValue).toHaveBeenCalledWith(
+        '2026-06-11T18:00:00.000Z',
+      );
+
+      // Second publish: user clears alumniSinceDate
+      publishedCounter = 4;
+      await storedCallback!({
+        publishedCounter: 4,
+        publishedAt: '2026-06-12T18:00:00.000Z',
+      } as EntrySys);
+
+      expect(sdk.field.removeValue).toHaveBeenCalled();
     });
   });
 });

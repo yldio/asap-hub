@@ -55,4 +55,13 @@ const projects = route(
   { discoveryProjects, resourceProjects, traineeProjects },
 );
 
+export const projectRouteByType = {
+  'Discovery Project': (projectId: string) =>
+    projects({}).discoveryProjects({}).discoveryProject({ projectId }),
+  'Resource Project': (projectId: string) =>
+    projects({}).resourceProjects({}).resourceProject({ projectId }),
+  'Trainee Project': (projectId: string) =>
+    projects({}).traineeProjects({}).traineeProject({ projectId }),
+} as const;
+
 export default projects;

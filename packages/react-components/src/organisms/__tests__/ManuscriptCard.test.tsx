@@ -4,10 +4,14 @@ import {
   manuscriptAuthor,
 } from '@asap-hub/fixtures';
 import { User } from '@asap-hub/auth';
-import { ManuscriptDiscussion, ManuscriptVersion } from '@asap-hub/model';
+import {
+  ManuscriptDataObject,
+  ManuscriptDiscussion,
+  ManuscriptVersion,
+} from '@asap-hub/model';
 import { cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentProps, useEffect } from 'react';
+import { ComponentProps, Dispatch, SetStateAction, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import ManuscriptCard from '../ManuscriptCard';
 
@@ -28,13 +32,28 @@ const LocationCapture = () => {
   return null;
 };
 
+const createTestManuscript = (
+  overrides: Partial<ManuscriptDataObject> = {},
+): ManuscriptDataObject => ({
+  ...createManuscriptResponse(),
+  id: 'manuscript_0',
+  title: 'Mock Manuscript Title',
+  status: 'Waiting for Report',
+  ...overrides,
+});
+
+const mockUseManuscriptById = (
+  overrides: Partial<ManuscriptDataObject> = {},
+): ComponentProps<typeof ManuscriptCard>['useManuscriptById'] =>
+  jest.fn(
+    (): [
+      ManuscriptDataObject,
+      Dispatch<SetStateAction<ManuscriptDataObject | undefined>>,
+    ] => [createTestManuscript(overrides), jest.fn()],
+  );
+
 const useManuscriptById = jest.fn().mockImplementation(() => {
-  const manuscript = {
-    id: 'manuscript_0',
-    title: 'Mock Manuscript Title',
-    status: 'Waiting for Report',
-    versions: [],
-  };
+  const manuscript = createTestManuscript();
 
   const setManuscript = jest.fn((newData) => {
     Object.assign(manuscript, newData);
@@ -120,12 +139,7 @@ const user: User = {
 beforeEach(() => {
   currentLocation = null;
   useManuscriptById.mockImplementation(() => {
-    const manuscript = {
-      id: 'manuscript_0',
-      title: 'Mock Manuscript Title',
-      status: 'Waiting for Report',
-      versions: [mockVersion],
-    };
+    const manuscript = createTestManuscript({ versions: [mockVersion] });
 
     const setManuscript = jest.fn((newData) => {
       Object.assign(manuscript, newData);
@@ -134,12 +148,9 @@ beforeEach(() => {
     return [manuscript, setManuscript];
   });
   useManuscriptByIdWithReport.mockImplementation(() => {
-    const manuscript = {
-      id: 'manuscript_0',
-      title: 'Mock Manuscript Title',
-      status: 'Waiting for Report',
+    const manuscript = createTestManuscript({
       versions: [mockVersionWithReport],
-    };
+    });
 
     const setManuscript = jest.fn((newData) => {
       Object.assign(manuscript, newData);
@@ -497,6 +508,236 @@ it('uses override getResubmitManuscriptHref for the resubmit manuscript button',
   );
   expect(currentLocation?.pathname).toBe(
     `/projects/discovery/project-1/workspace/resubmit-manuscript/${props.id}`,
+  );
+});
+
+it.each([
+  ['Discovery Project', 'discovery'],
+  ['Resource Project', 'resource'],
+  ['Trainee Project', 'trainee'],
+] as const)(
+  'uses %s project route for edit when manuscript.projectId is set',
+  async (projectType, routeSegment) => {
+    const userActions = userEvent.setup({ delay: null });
+    const { getByRole, getByTestId } = render(
+      <MemoryRouter>
+        <Routes>
+          <Route
+            path="*"
+            element={
+              <>
+                <LocationCapture />
+                <ManuscriptCard
+                  {...props}
+                  useManuscriptById={mockUseManuscriptById({
+                    versions: [{ ...mockVersion, firstAuthors: [user] }],
+                    projectId: 'proj-1',
+                    projectType,
+                  })}
+                />
+              </>
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+    await userActions.click(getByTestId('collapsible-button'));
+    await userActions.click(getByRole('button', { name: 'Edit' }));
+    expect(currentLocation?.pathname).toBe(
+      `/projects/${routeSegment}/proj-1/workspace/edit-manuscript/${props.id}`,
+    );
+  },
+);
+
+it.each([
+  ['Discovery Project', 'discovery'],
+  ['Resource Project', 'resource'],
+  ['Trainee Project', 'trainee'],
+] as const)(
+  'uses %s project route for compliance report when manuscript.projectId is set',
+  async (projectType, routeSegment) => {
+    const userActions = userEvent.setup({ delay: null });
+    const { getByRole, getByTestId } = render(
+      <MemoryRouter>
+        <Routes>
+          <Route
+            path="*"
+            element={
+              <>
+                <LocationCapture />
+                <ManuscriptCard
+                  {...props}
+                  isComplianceReviewer
+                  useManuscriptById={mockUseManuscriptById({
+                    versions: [],
+                    projectId: 'proj-1',
+                    projectType,
+                  })}
+                />
+              </>
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+    await userActions.click(getByTestId('collapsible-button'));
+    await userActions.click(
+      getByRole('button', { name: /Share Compliance Report Icon/i }),
+    );
+    expect(currentLocation?.pathname).toBe(
+      `/projects/${routeSegment}/proj-1/workspace/create-compliance-report/${props.id}`,
+    );
+  },
+);
+
+it.each([
+  ['Discovery Project', 'discovery'],
+  ['Resource Project', 'resource'],
+  ['Trainee Project', 'trainee'],
+] as const)(
+  'uses %s project route for resubmit when manuscript.projectId is set',
+  async (projectType, routeSegment) => {
+    const userActions = userEvent.setup({ delay: null });
+    const { getByRole, getByTestId } = render(
+      <MemoryRouter>
+        <Routes>
+          <Route
+            path="*"
+            element={
+              <>
+                <LocationCapture />
+                <ManuscriptCard
+                  {...props}
+                  useManuscriptById={mockUseManuscriptById({
+                    versions: [
+                      { ...mockVersionWithReport, firstAuthors: [user] },
+                    ],
+                    projectId: 'proj-1',
+                    projectType,
+                  })}
+                />
+              </>
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+    );
+    await userActions.click(getByTestId('collapsible-button'));
+    await userActions.click(
+      getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+    );
+    expect(currentLocation?.pathname).toBe(
+      `/projects/${routeSegment}/proj-1/workspace/resubmit-manuscript/${props.id}`,
+    );
+  },
+);
+
+it('project route takes precedence over injected getEditManuscriptHref when manuscript.projectId is set', async () => {
+  const userActions = userEvent.setup({ delay: null });
+  const { getByRole, getByTestId } = render(
+    <MemoryRouter>
+      <Routes>
+        <Route
+          path="*"
+          element={
+            <>
+              <LocationCapture />
+              <ManuscriptCard
+                {...props}
+                getEditManuscriptHref={() =>
+                  `/network/teams/${props.teamId}/workspace/edit-manuscript/${props.id}`
+                }
+                useManuscriptById={mockUseManuscriptById({
+                  versions: [{ ...mockVersion, firstAuthors: [user] }],
+                  projectId: 'proj-1',
+                  projectType: 'Discovery Project',
+                })}
+              />
+            </>
+          }
+        />
+      </Routes>
+    </MemoryRouter>,
+  );
+  await userActions.click(getByTestId('collapsible-button'));
+  await userActions.click(getByRole('button', { name: 'Edit' }));
+  expect(currentLocation?.pathname).toBe(
+    `/projects/discovery/proj-1/workspace/edit-manuscript/${props.id}`,
+  );
+});
+
+it('project route takes precedence over injected getCreateComplianceReportHref when manuscript.projectId is set', async () => {
+  const userActions = userEvent.setup({ delay: null });
+  const { getByRole, getByTestId } = render(
+    <MemoryRouter>
+      <Routes>
+        <Route
+          path="*"
+          element={
+            <>
+              <LocationCapture />
+              <ManuscriptCard
+                {...props}
+                isComplianceReviewer
+                getCreateComplianceReportHref={() =>
+                  `/network/teams/${props.teamId}/workspace/create-compliance-report/${props.id}`
+                }
+                useManuscriptById={mockUseManuscriptById({
+                  versions: [],
+                  projectId: 'proj-1',
+                  projectType: 'Discovery Project',
+                })}
+              />
+            </>
+          }
+        />
+      </Routes>
+    </MemoryRouter>,
+  );
+  await userActions.click(getByTestId('collapsible-button'));
+  await userActions.click(
+    getByRole('button', { name: /Share Compliance Report Icon/i }),
+  );
+  expect(currentLocation?.pathname).toBe(
+    `/projects/discovery/proj-1/workspace/create-compliance-report/${props.id}`,
+  );
+});
+
+it('project route takes precedence over injected getResubmitManuscriptHref when manuscript.projectId is set', async () => {
+  const userActions = userEvent.setup({ delay: null });
+  const { getByRole, getByTestId } = render(
+    <MemoryRouter>
+      <Routes>
+        <Route
+          path="*"
+          element={
+            <>
+              <LocationCapture />
+              <ManuscriptCard
+                {...props}
+                getResubmitManuscriptHref={() =>
+                  `/network/teams/${props.teamId}/workspace/resubmit-manuscript/${props.id}`
+                }
+                useManuscriptById={mockUseManuscriptById({
+                  versions: [
+                    { ...mockVersionWithReport, firstAuthors: [user] },
+                  ],
+                  projectId: 'proj-1',
+                  projectType: 'Discovery Project',
+                })}
+              />
+            </>
+          }
+        />
+      </Routes>
+    </MemoryRouter>,
+  );
+  await userActions.click(getByTestId('collapsible-button'));
+  await userActions.click(
+    getByRole('button', { name: /Resubmit Manuscript Icon/i }),
+  );
+  expect(currentLocation?.pathname).toBe(
+    `/projects/discovery/proj-1/workspace/resubmit-manuscript/${props.id}`,
   );
 });
 

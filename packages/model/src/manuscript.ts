@@ -351,6 +351,7 @@ export type ManuscriptDataObject = {
   status?: ManuscriptStatus;
   teamId?: string;
   projectId?: string;
+  projectType?: ProjectType;
   versions: ManuscriptVersion[];
   count: number;
   assignedUsers: ManuscriptAssignedUser[];

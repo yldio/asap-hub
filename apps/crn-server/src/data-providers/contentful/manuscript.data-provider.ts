@@ -711,6 +711,10 @@ const parseGraphQLManuscript = (
   const projectId = resolvedProject?.project.projectId || '';
   const grantId = resolvedProject?.project.grantId || '';
   const count = manuscript.count || 1;
+  const rawProjectType = resolvedProject?.project.projectType;
+  const projectType = isProjectType(rawProjectType)
+    ? rawProjectType
+    : undefined;
   return {
     id: manuscript.sys.id,
     count,
@@ -718,6 +722,7 @@ const parseGraphQLManuscript = (
     url: manuscript.url || undefined,
     teamId: isProjectManuscript ? undefined : teamData?.sys.id,
     projectId: isProjectManuscript ? manuscript.project?.sys.id : undefined,
+    projectType: isProjectManuscript ? projectType : undefined,
     status: manuscriptMapStatus(manuscript.status) || undefined,
     discussions: parseGraphQLManuscriptDiscussions(
       manuscript.discussionsCollection?.items,

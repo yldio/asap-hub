@@ -75,6 +75,7 @@ const memberAvatarStyles = css({
 });
 
 const teamNameStyles = css({
+  color: lead.rgb,
   [nonMobileQuery]: {
     overflow: 'hidden',
     whiteSpace: 'nowrap',

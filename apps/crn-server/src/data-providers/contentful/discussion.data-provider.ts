@@ -58,8 +58,15 @@ export class DiscussionContentfulDataProvider
 
   async create(input: DiscussionCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
-    const { userId, manuscriptId, title, text, files, notificationList, workspaceLink } =
-      input;
+    const {
+      userId,
+      manuscriptId,
+      title,
+      text,
+      files,
+      notificationList,
+      workspaceLink,
+    } = input;
 
     const messageId = await createAndPublishMessage(environment, {
       text,
@@ -112,7 +119,8 @@ export class DiscussionContentfulDataProvider
     const environment = await this.getRestClient();
     const discussion = await environment.getEntry(id);
 
-    const { notificationList, reply, manuscriptId, userId, workspaceLink } = update;
+    const { notificationList, reply, manuscriptId, userId, workspaceLink } =
+      update;
 
     if (reply?.text) {
       const publishedReplyId = await createAndPublishMessage(environment, {

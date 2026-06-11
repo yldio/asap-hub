@@ -79,8 +79,14 @@ export const discussionRouteFactory = (
     async (req, res: Response<DiscussionResponse>) => {
       const { body } = req;
 
-      const { manuscriptId, text, title, files, notificationList, workspaceLink } =
-        validateDiscussionCreateRequest(body);
+      const {
+        manuscriptId,
+        text,
+        title,
+        files,
+        notificationList,
+        workspaceLink,
+      } = validateDiscussionCreateRequest(body);
 
       if (!req.loggedInUser) throw Boom.forbidden();
 

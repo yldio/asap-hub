@@ -279,6 +279,7 @@ describe('Discussions Contentful Data Provider', () => {
         discussionRequestObject.manuscriptId,
         '',
         { id: discussionId, userName: 'Jane Doe' },
+        undefined,
       );
     });
 
@@ -302,6 +303,7 @@ describe('Discussions Contentful Data Provider', () => {
         discussionRequestObject.manuscriptId,
         '',
         { id: discussionId, userName: 'Jane Doe' },
+        undefined,
       );
     });
   });
@@ -702,6 +704,7 @@ describe('Discussions Contentful Data Provider', () => {
             id: discussionId,
             userName: 'Jane Doe',
           },
+          undefined,
         );
       });
 
@@ -738,6 +741,7 @@ describe('Discussions Contentful Data Provider', () => {
             id: discussionId,
             userName: 'Jane Doe',
           },
+          undefined,
         );
       });
     });

@@ -212,6 +212,7 @@ describe('/discussions/ route', () => {
         reply,
         manuscriptId,
         notificationList,
+        '',
       );
     });
 

@@ -167,7 +167,6 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
     draftOutputsCount,
   } = project;
   const { isEnabled } = useFlags();
-  const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
   const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
 
   const membersWithHref =
@@ -194,9 +193,7 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
           nav={
             <TabNav>
               <TabLink href={aboutHref}>About</TabLink>
-              {isProjectMilestonesEnabled && (
-                <TabLink href={milestonesHref}>Milestones</TabLink>
-              )}
+              <TabLink href={milestonesHref}>Milestones</TabLink>
               {isEnabled('PROJECT_WORKSPACE') && workspaceHref ? (
                 <TabLink href={workspaceHref}>Workspace</TabLink>
               ) : null}

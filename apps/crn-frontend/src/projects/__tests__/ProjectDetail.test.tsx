@@ -738,7 +738,6 @@ describe.each(variants)(
     });
 
     it('renders milestones route and covers hasSupplementGrant logic', async () => {
-      enable('PROJECT_AIMS_AND_MILESTONES');
       await renderProjectDetail(
         Component,
         routeKeyword,

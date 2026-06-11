@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, screen, waitFor } from '@testing-library/react';
-import { enable, disable, reset } from '@asap-hub/flags';
 import { RecoilRoot } from 'recoil';
 import { projects } from '@asap-hub/routing';
 import type {
@@ -107,7 +106,6 @@ describe('TraineeProjectDetail', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
-    reset();
   });
 
   it('renders Trainee Project detail page when project type matches', async () => {
@@ -139,39 +137,7 @@ describe('TraineeProjectDetail', () => {
     ).toBe(true);
   });
 
-  it('does not allow accessing milestones route when PROJECT_AIMS_AND_MILESTONES flag is disabled', async () => {
-    disable('PROJECT_AIMS_AND_MILESTONES');
-    const path = `${projects.template}/trainee/trainee-1/milestones`;
-
-    render(
-      <RecoilRoot>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter initialEntries={[path]}>
-                <Routes>
-                  <Route
-                    path={`${projects.template}/trainee/:projectId/*`}
-                    element={<TraineeProjectDetail />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </RecoilRoot>,
-    );
-
-    const headings = await screen.findAllByRole('heading');
-    expect(
-      headings.some((h) =>
-        (h.textContent || '').match(/Sorry! We can.+t seem to find that page/),
-      ),
-    ).toBe(true);
-  });
-
-  it('allows accessing milestones route when PROJECT_AIMS_AND_MILESTONES flag is enabled', async () => {
-    enable('PROJECT_AIMS_AND_MILESTONES');
+  it('allows accessing milestones route', async () => {
     const path = `${projects.template}/trainee/trainee-1/milestones`;
 
     render(

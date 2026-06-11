@@ -142,7 +142,6 @@ const ProjectDetail: FC<Props> = ({ config }) => {
   const canCreateComplianceReport = showWorkspace && isOpenScienceMember;
 
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
-  const isProjectMilestonesEnabled = isEnabled('PROJECT_AIMS_AND_MILESTONES');
   const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
 
   const hasSupplementGrant =
@@ -267,24 +266,20 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                         <Route
                           path="milestones"
                           element={
-                            isProjectMilestonesEnabled ? (
-                              <Frame title="Project Milestones">
-                                <ProjectMilestones
-                                  projectId={projectId}
-                                  projectName={projectDetail.title || ''}
-                                  seeAimsHref={route.about({}).$}
-                                  hasSupplementGrant={hasSupplementGrant}
-                                  aims={activeProjectAims}
-                                  isLead={isLead}
-                                  loadArticleOptions={loadArticleOptions}
-                                  milestonesLastUpdated={
-                                    projectDetail.milestonesLastUpdated
-                                  }
-                                />
-                              </Frame>
-                            ) : (
-                              <NotFoundPage />
-                            )
+                            <Frame title="Project Milestones">
+                              <ProjectMilestones
+                                projectId={projectId}
+                                projectName={projectDetail.title || ''}
+                                seeAimsHref={route.about({}).$}
+                                hasSupplementGrant={hasSupplementGrant}
+                                aims={activeProjectAims}
+                                isLead={isLead}
+                                loadArticleOptions={loadArticleOptions}
+                                milestonesLastUpdated={
+                                  projectDetail.milestonesLastUpdated
+                                }
+                              />
+                            </Frame>
                           }
                         />
                         {showWorkspace && (

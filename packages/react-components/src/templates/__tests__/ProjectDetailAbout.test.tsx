@@ -579,27 +579,12 @@ describe('ProjectDetailAbout', () => {
       },
     };
 
-    it('renders Aims section when PROJECT_AIMS_AND_MILESTONES flag is enabled and aims exist', () => {
-      mockIsEnabled.mockImplementation(
-        (flag: string) => flag === 'PROJECT_AIMS_AND_MILESTONES',
-      );
-
+    it('renders Aims section when aims exist', () => {
       render(<ProjectDetailAbout {...projectWithAims} />);
       expect(screen.getByText('Aims')).toBeInTheDocument();
     });
 
-    it('does not render Aims section when PROJECT_AIMS_AND_MILESTONES flag is disabled', () => {
-      mockIsEnabled.mockReturnValue(false);
-
-      render(<ProjectDetailAbout {...projectWithAims} />);
-      expect(screen.queryByText('Aims')).not.toBeInTheDocument();
-    });
-
     it('renders tabs with counts when both grant types have aims', () => {
-      mockIsEnabled.mockImplementation(
-        (flag: string) => flag === 'PROJECT_AIMS_AND_MILESTONES',
-      );
-
       render(<ProjectDetailAbout {...projectWithBothAims} />);
       expect(screen.getByText('Supplement Grant (1)')).toBeInTheDocument();
       expect(screen.getByText('Original Grant (1)')).toBeInTheDocument();

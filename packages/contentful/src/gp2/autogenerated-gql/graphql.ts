@@ -1294,6 +1294,8 @@ export enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder 
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlternativeEmailAsc = 'alternativeEmail_ASC',
   AlternativeEmailDesc = 'alternativeEmail_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -1367,6 +1369,8 @@ export enum ContributingCohortsMembershipLinkingCollectionsUsersCursorCollection
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlternativeEmailAsc = 'alternativeEmail_ASC',
   AlternativeEmailDesc = 'alternativeEmail_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -5913,11 +5917,18 @@ export type ProjectMembership = Entry &
   _Node & {
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
+    inactiveSinceDate?: Maybe<Scalars['DateTime']>;
     linkedFrom?: Maybe<ProjectMembershipLinkingCollections>;
     role?: Maybe<Scalars['String']>;
     sys: Sys;
     user?: Maybe<Users>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
+export type ProjectMembershipInactiveSinceDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/projectMembership) */
 export type ProjectMembershipLinkedFromArgs = {
@@ -5955,6 +5966,15 @@ export type ProjectMembershipFilter = {
   AND?: InputMaybe<Array<InputMaybe<ProjectMembershipFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<ProjectMembershipFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   role?: InputMaybe<Scalars['String']>;
   role_contains?: InputMaybe<Scalars['String']>;
   role_exists?: InputMaybe<Scalars['Boolean']>;
@@ -6089,6 +6109,8 @@ export enum ProjectMembershipLinkingCollectionsProjectsCursorCollectionOrder {
 }
 
 export enum ProjectMembershipOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -6571,6 +6593,8 @@ export type ProjectsMembersCollection = {
 };
 
 export enum ProjectsMembersCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -6590,6 +6614,8 @@ export type ProjectsMembersCursorCollection = {
 };
 
 export enum ProjectsMembersCursorCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -8522,6 +8548,8 @@ export enum TagsLinkingCollectionsUsersCollectionOrder {
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlternativeEmailAsc = 'alternativeEmail_ASC',
   AlternativeEmailDesc = 'alternativeEmail_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -8595,6 +8623,8 @@ export enum TagsLinkingCollectionsUsersCursorCollectionOrder {
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlternativeEmailAsc = 'alternativeEmail_ASC',
   AlternativeEmailDesc = 'alternativeEmail_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -8802,6 +8832,12 @@ export type UsersActiveCampaignIdArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
 export type UsersAlternativeEmailArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/users) */
+export type UsersAlumniLastUpdatedArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -9163,6 +9199,15 @@ export type UsersFilter = {
   alternativeEmail_not?: InputMaybe<Scalars['String']>;
   alternativeEmail_not_contains?: InputMaybe<Scalars['String']>;
   alternativeEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  alumniLastUpdated?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  alumniLastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  alumniLastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   alumniLocation?: InputMaybe<Scalars['String']>;
   alumniLocation_contains?: InputMaybe<Scalars['String']>;
   alumniLocation_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9629,6 +9674,8 @@ export enum UsersLinkingCollectionsOutputsCursorCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsProjectMembershipCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -9642,6 +9689,8 @@ export enum UsersLinkingCollectionsProjectMembershipCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsProjectMembershipCursorCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -9655,6 +9704,8 @@ export enum UsersLinkingCollectionsProjectMembershipCursorCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -9668,6 +9719,8 @@ export enum UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder {
 }
 
 export enum UsersLinkingCollectionsWorkingGroupMembershipCursorCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -9689,6 +9742,8 @@ export enum UsersOrder {
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
   AlternativeEmailAsc = 'alternativeEmail_ASC',
   AlternativeEmailDesc = 'alternativeEmail_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -9797,11 +9852,18 @@ export type WorkingGroupMembership = Entry &
   _Node & {
     _id: Scalars['ID'];
     contentfulMetadata: ContentfulMetadata;
+    inactiveSinceDate?: Maybe<Scalars['DateTime']>;
     linkedFrom?: Maybe<WorkingGroupMembershipLinkingCollections>;
     role?: Maybe<Scalars['String']>;
     sys: Sys;
     user?: Maybe<Users>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership) */
+export type WorkingGroupMembershipInactiveSinceDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/6ekgyp1432o9/content_types/workingGroupMembership) */
 export type WorkingGroupMembershipLinkedFromArgs = {
@@ -9839,6 +9901,15 @@ export type WorkingGroupMembershipFilter = {
   AND?: InputMaybe<Array<InputMaybe<WorkingGroupMembershipFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<WorkingGroupMembershipFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   role?: InputMaybe<Scalars['String']>;
   role_contains?: InputMaybe<Scalars['String']>;
   role_exists?: InputMaybe<Scalars['Boolean']>;
@@ -9948,6 +10019,8 @@ export enum WorkingGroupMembershipLinkingCollectionsWorkingGroupsCursorCollectio
 }
 
 export enum WorkingGroupMembershipOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -10837,6 +10910,8 @@ export type WorkingGroupsMembersCollection = {
 };
 
 export enum WorkingGroupsMembersCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -10856,6 +10931,8 @@ export type WorkingGroupsMembersCursorCollection = {
 };
 
 export enum WorkingGroupsMembersCursorCollectionOrder {
+  InactiveSinceDateAsc = 'inactiveSinceDate_ASC',
+  InactiveSinceDateDesc = 'inactiveSinceDate_DESC',
   RoleAsc = 'role_ASC',
   RoleDesc = 'role_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -11624,6 +11701,15 @@ export type CfProjectMembershipNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfProjectMembershipNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfProjectMembershipNestedFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   role?: InputMaybe<Scalars['String']>;
   role_contains?: InputMaybe<Scalars['String']>;
   role_exists?: InputMaybe<Scalars['Boolean']>;
@@ -11723,6 +11809,15 @@ export type CfUsersNestedFilter = {
   alternativeEmail_not?: InputMaybe<Scalars['String']>;
   alternativeEmail_not_contains?: InputMaybe<Scalars['String']>;
   alternativeEmail_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  alumniLastUpdated?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  alumniLastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  alumniLastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   alumniLocation?: InputMaybe<Scalars['String']>;
   alumniLocation_contains?: InputMaybe<Scalars['String']>;
   alumniLocation_exists?: InputMaybe<Scalars['Boolean']>;
@@ -11957,6 +12052,15 @@ export type CfWorkingGroupMembershipNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfWorkingGroupMembershipNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfWorkingGroupMembershipNestedFilter>>>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  inactiveSinceDate?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_exists?: InputMaybe<Scalars['Boolean']>;
+  inactiveSinceDate_gt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_gte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  inactiveSinceDate_lt?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_lte?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not?: InputMaybe<Scalars['DateTime']>;
+  inactiveSinceDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   role?: InputMaybe<Scalars['String']>;
   role_contains?: InputMaybe<Scalars['String']>;
   role_exists?: InputMaybe<Scalars['Boolean']>;
@@ -16383,6 +16487,7 @@ export type UsersContentDataFragment = Pick<
   | 'onboarded'
   | 'alumniSinceDate'
   | 'alumniLocation'
+  | 'alumniLastUpdated'
   | 'positions'
 > & {
   sys: Pick<
@@ -20168,10 +20273,7 @@ export const UsersContentDataFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'onboarded' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniSinceDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniLocation' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'alumniLastUpdated' },
-          },
+          { kind: 'Field', name: { kind: 'Name', value: 'alumniLastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'positions' } },
           { kind: 'Field', name: { kind: 'Name', value: 'activatedDate' } },
           {

@@ -10,6 +10,7 @@ import {
   pixels,
   RichText,
   TagList,
+  TabbedContent,
 } from '@asap-hub/react-components';
 
 import { css } from '@emotion/react';
@@ -55,6 +56,31 @@ const columnStyles = css({
   },
 });
 
+const memberGridStyles = css({
+  display: 'grid',
+  columnGap: rem(32),
+  rowGap: rem(16),
+  paddingTop: rem(16),
+  [crossQuery]: {
+    gridTemplateColumns: '1fr 1fr',
+  },
+});
+
+const tabDescriptionStyles = css({
+  fontWeight: 'bold',
+  margin: '8px 0',
+});
+
+const LEADER_ROLES: ReadonlySet<gp2.WorkingGroupMemberRole> = new Set([
+  'Lead',
+  'Co-lead',
+]);
+
+const isActive = (member: gp2.WorkingGroupMember) =>
+  !member.alumniSinceDate && !member.inactiveSinceDate;
+
+type MemberListProps = { data: gp2.WorkingGroupMember[] };
+
 const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   description,
   primaryEmail,
@@ -63,89 +89,184 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   calendar,
   milestones,
   tags,
-}) => (
-  <div css={containerStyles}>
-    <Card overrideStyles={cardStyles}>
-      <Headline3 noMargin>Description</Headline3>
-      <div css={contentStyles}>
-        <ExpandableText>
-          <RichText text={description} />
-        </ExpandableText>
-      </div>
-    </Card>
-    <div css={columnStyles}>
+}) => {
+  const leaders = members.filter(({ role }) => LEADER_ROLES.has(role));
+  const regularMembers = members.filter(({ role }) => !LEADER_ROLES.has(role));
+
+  const activeLeaders = leaders.filter(isActive);
+  const pastLeaders = leaders.filter((m) => !isActive(m));
+  const activeMembers = regularMembers.filter(isActive);
+  const pastMembers = regularMembers.filter((m) => !isActive(m));
+
+  return (
+    <div css={containerStyles}>
       <Card overrideStyles={cardStyles}>
-        <Headline3 noMargin>Contact Details</Headline3>
+        <Headline3 noMargin>Description</Headline3>
         <div css={contentStyles}>
-          <EmailSection
-            contactEmails={[
-              { email: primaryEmail, contact: 'WG Email' },
-              { email: secondaryEmail, contact: 'Lead Email' },
-            ]}
-          />
+          <ExpandableText>
+            <RichText text={description} />
+          </ExpandableText>
         </div>
       </Card>
-      {calendar ? (
+      <div css={columnStyles}>
         <Card overrideStyles={cardStyles}>
-          <Headline3 noMargin>Events</Headline3>
-          <Events
-            calendarId={calendar.id}
-            paragraph={
-              'Subscribe this working group calendar to stay always updated with the latest events.'
-            }
-          />
+          <Headline3 noMargin>Contact Details</Headline3>
+          <div css={contentStyles}>
+            <EmailSection
+              contactEmails={[
+                { email: primaryEmail, contact: 'WG Email' },
+                { email: secondaryEmail, contact: 'Lead Email' },
+              ]}
+            />
+          </div>
         </Card>
-      ) : undefined}
-    </div>
-    {tags.length ? (
-      <Card overrideStyles={cardStyles}>
-        <Headline3 noMargin>Tags</Headline3>
-        <Paragraph accent="lead">
-          Explore keywords related to skills, techniques, resources, and tools.
-        </Paragraph>
-        <div css={contentStyles}>
-          <TagList tags={tags.map(({ name }) => name)} />
-        </div>
-      </Card>
-    ) : null}
-    <Card overrideStyles={cardStyles}>
-      <Headline3
-        noMargin
-      >{`Working Group Members (${members.length})`}</Headline3>
-      <div css={contentStyles}>
-        <MembersList
-          members={members.map(
-            ({
-              role,
-              firstName,
-              lastName,
-              displayName,
-              avatarUrl,
-              alumniSinceDate,
-              userId: id,
-            }) => ({
-              firstLine: displayName,
-              secondLine: role,
-              avatarUrl,
-              firstName,
-              lastName,
-              alumniSinceDate,
-              id,
-            }),
-          )}
-          userRoute={gp2Routing.users({}).user}
-          overrideNameStyles={css({ overflowWrap: 'anywhere' })}
-        />
+        {calendar ? (
+          <Card overrideStyles={cardStyles}>
+            <Headline3 noMargin>Events</Headline3>
+            <Events
+              calendarId={calendar.id}
+              paragraph={
+                'Subscribe this working group calendar to stay always updated with the latest events.'
+              }
+            />
+          </Card>
+        ) : undefined}
       </div>
-    </Card>
-    <Card overrideStyles={cardStyles}>
-      <Milestones
-        milestones={milestones}
-        title="Working Group Milestones"
-        description=""
-      />
-    </Card>
-  </div>
-);
+      {tags.length ? (
+        <Card overrideStyles={cardStyles}>
+          <Headline3 noMargin>Tags</Headline3>
+          <Paragraph accent="lead">
+            Explore keywords related to skills, techniques, resources, and
+            tools.
+          </Paragraph>
+          <div css={contentStyles}>
+            <TagList tags={tags.map(({ name }) => name)} />
+          </div>
+        </Card>
+      ) : null}
+      <Card overrideStyles={cardStyles}>
+        <TabbedContent
+          title={`Working Group Members (${members.length})`}
+          description={
+            <Paragraph noMargin styles={tabDescriptionStyles}>
+              Leaders
+            </Paragraph>
+          }
+          tabs={[
+            {
+              tabTitle: `Active Leaders (${activeLeaders.length})`,
+              items: activeLeaders,
+              empty: (
+                <Paragraph accent="lead">
+                  There are no active leaders.
+                </Paragraph>
+              ),
+            },
+            {
+              tabTitle: `Past Leaders (${pastLeaders.length})`,
+              items: pastLeaders,
+              empty: (
+                <Paragraph accent="lead">There are no past leaders.</Paragraph>
+              ),
+            },
+          ]}
+        >
+          {({ data }: MemberListProps) => (
+            <div css={memberGridStyles}>
+              <MembersList
+                members={data.map(
+                  ({
+                    role,
+                    firstName,
+                    lastName,
+                    displayName,
+                    avatarUrl,
+                    alumniSinceDate,
+                    userId: id,
+                  }) => ({
+                    firstLine: displayName,
+                    secondLine: role,
+                    avatarUrl,
+                    firstName,
+                    lastName,
+                    alumniSinceDate,
+                    id,
+                  }),
+                )}
+                userRoute={gp2Routing.users({}).user}
+                overrideNameStyles={css({ overflowWrap: 'anywhere' })}
+              />
+            </div>
+          )}
+        </TabbedContent>
+        <TabbedContent
+          description={
+            <Paragraph noMargin styles={tabDescriptionStyles}>
+              Members
+            </Paragraph>
+          }
+          tabs={[
+            {
+              tabTitle: `Active Members (${activeMembers.length})`,
+              items: activeMembers,
+              truncateFrom: 8,
+              empty: (
+                <Paragraph accent="lead">
+                  There are no active members.
+                </Paragraph>
+              ),
+            },
+            {
+              tabTitle: `Past Members (${pastMembers.length})`,
+              items: pastMembers,
+              truncateFrom: 8,
+              empty: (
+                <Paragraph accent="lead">There are no past members.</Paragraph>
+              ),
+            },
+          ]}
+          getShowMoreText={(showMore: boolean) =>
+            `View ${showMore ? 'Less' : 'More'} Members`
+          }
+        >
+          {({ data }: MemberListProps) => (
+            <div css={memberGridStyles}>
+              <MembersList
+                members={data.map(
+                  ({
+                    role,
+                    firstName,
+                    lastName,
+                    displayName,
+                    avatarUrl,
+                    alumniSinceDate,
+                    userId: id,
+                  }) => ({
+                    firstLine: displayName,
+                    secondLine: role,
+                    avatarUrl,
+                    firstName,
+                    lastName,
+                    alumniSinceDate,
+                    id,
+                  }),
+                )}
+                userRoute={gp2Routing.users({}).user}
+                overrideNameStyles={css({ overflowWrap: 'anywhere' })}
+              />
+            </div>
+          )}
+        </TabbedContent>
+      </Card>
+      <Card overrideStyles={cardStyles}>
+        <Milestones
+          milestones={milestones}
+          title="Working Group Milestones"
+          description=""
+        />
+      </Card>
+    </div>
+  );
+};
 
 export default WorkingGroupOverview;

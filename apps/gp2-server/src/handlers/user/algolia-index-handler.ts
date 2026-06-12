@@ -34,6 +34,9 @@ export const indexUserHandler =
           const data = {
             ...user,
             _tags: getTagsNames(user.tags),
+            membershipStatus: user.alumniSinceDate
+              ? 'Alumni Member'
+              : 'GP2 Member',
           };
 
           await algoliaClient.save({

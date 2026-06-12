@@ -44,6 +44,7 @@
     "documentType",
     "eventTypes",
     "id",
+    "membershipStatus",
     "project.id",
     "projects.id",
     "projectIds",

@@ -45,6 +45,9 @@ export const userRegions = [
   'South America',
 ] as const;
 
+export const userMembershipStatus = ['GP2 Member', 'Alumni Member'] as const;
+export type UserMembershipStatus = (typeof userMembershipStatus)[number];
+
 export type UserOutput = Pick<
   OutputResponse,
   'id' | 'title' | 'shortDescription' | 'gp2Supported' | 'sharingStatus'
@@ -245,6 +248,7 @@ export type FetchUsersSearchFilter = {
   workingGroups?: string[];
   regions?: UserRegion[];
   tags?: string[];
+  membershipStatus?: UserMembershipStatus[];
 };
 export type FetchUsersFilter = FetchUsersSearchFilter & {
   code?: string;

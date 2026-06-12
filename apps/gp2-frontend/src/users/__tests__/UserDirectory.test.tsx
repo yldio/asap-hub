@@ -150,6 +150,7 @@ it.each`
       tags: [],
       projects: [],
       workingGroups: [],
+      membershipStatus: [],
       [name]: [value],
     });
   },

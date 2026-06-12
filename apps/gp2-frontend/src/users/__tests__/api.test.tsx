@@ -171,7 +171,7 @@ describe('getAlgoliaUsers', () => {
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
       ['user'],
       '',
-      expect.objectContaining({ filters: 'region:"Europe"' }),
+      expect.objectContaining({ filters: '(region:"Europe")' }),
     );
   });
 
@@ -187,7 +187,7 @@ describe('getAlgoliaUsers', () => {
       ['user'],
       '',
       expect.objectContaining({
-        filters: 'region:"Europe" OR region:"Asia"',
+        filters: '(region:"Europe" OR region:"Asia")',
       }),
     );
   });
@@ -207,7 +207,7 @@ describe('getAlgoliaUsers', () => {
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
       ['user'],
       '',
-      expect.objectContaining({ filters: `${expected}:"42"` }),
+      expect.objectContaining({ filters: `(${expected}:"42")` }),
     );
   });
 
@@ -228,7 +228,42 @@ describe('getAlgoliaUsers', () => {
       ['user'],
       '',
       expect.objectContaining({
-        filters: `${expected}:"42" OR ${expected}:"11"`,
+        filters: `(${expected}:"42" OR ${expected}:"11")`,
+      }),
+    );
+  });
+
+  it('builds a single membershipStatus filter query', async () => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      membershipStatus: ['Alumni Member'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({
+        filters: '(membershipStatus:"Alumni Member")',
+      }),
+    );
+  });
+
+  it('builds a multiple membershipStatus filter query', async () => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      membershipStatus: ['GP2 Member', 'Alumni Member'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({
+        filters:
+          '(membershipStatus:"GP2 Member" OR membershipStatus:"Alumni Member")',
       }),
     );
   });
@@ -240,6 +275,7 @@ describe('getAlgoliaUsers', () => {
       tags: ['7'],
       projects: ['11'],
       workingGroups: ['23'],
+      membershipStatus: ['Alumni Member'],
       currentPage: 1,
       pageSize: 20,
     });
@@ -249,7 +285,7 @@ describe('getAlgoliaUsers', () => {
       '',
       expect.objectContaining({
         filters:
-          'region:"Europe" AND tagIds:"7" AND projectIds:"11" AND workingGroupIds:"23"',
+          '(region:"Europe") AND (tagIds:"7") AND (projectIds:"11") AND (workingGroupIds:"23") AND (membershipStatus:"Alumni Member")',
       }),
     );
   });
@@ -374,11 +410,12 @@ describe('createUserApiUrl', () => {
   });
 
   it.each`
-    name               | value
-    ${'regions'}       | ${['Africa', 'Asia']}
-    ${'tags'}          | ${['Cohort', 'BLAAC-PD']}
-    ${'projects'}      | ${['a project', 'another project']}
-    ${'workingGroups'} | ${['a working group', 'another working group']}
+    name                  | value
+    ${'regions'}          | ${['Africa', 'Asia']}
+    ${'tags'}             | ${['Cohort', 'BLAAC-PD']}
+    ${'projects'}         | ${['a project', 'another project']}
+    ${'workingGroups'}    | ${['a working group', 'another working group']}
+    ${'membershipStatus'} | ${['GP2 Member', 'Alumni Member']}
   `(
     'handles requests with filters for $name - new',
     async ({ name, value }) => {

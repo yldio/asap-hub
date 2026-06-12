@@ -28,7 +28,13 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
     setSearchQuery,
     debouncedSearchQuery,
     updateFilters,
-  } = useSearch(['regions', 'tags', 'projects', 'workingGroups']);
+  } = useSearch([
+    'regions',
+    'tags',
+    'projects',
+    'workingGroups',
+    'membershipStatus',
+  ]);
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';
 

@@ -23,6 +23,7 @@ export const createUserApiUrl = ({
   addFilter('tags', filter?.tags);
   addFilter('projects', filter?.projects);
   addFilter('workingGroups', filter?.workingGroups);
+  addFilter('membershipStatus', filter?.membershipStatus);
 
   if (typeof filter?.onlyOnboarded === 'boolean') {
     url.searchParams.set(
@@ -39,6 +40,7 @@ const getAllFilters = ({
   workingGroups,
   regions,
   tags,
+  membershipStatus,
 }: gp2.FetchUsersFilter) => {
   const addFilter = ({
     name,
@@ -46,13 +48,17 @@ const getAllFilters = ({
   }: {
     name: string;
     items?: string[];
-  }) => items?.map((item) => `${name}:"${item}"`).join(' OR ');
+  }) => {
+    const inner = items.map((item) => `${name}:"${item}"`).join(' OR ');
+    return inner ? `(${inner})` : '';
+  };
 
   return [
     { name: 'region', items: regions },
     { name: 'tagIds', items: tags },
     { name: 'projectIds', items: projects },
     { name: 'workingGroupIds', items: workingGroups },
+    { name: 'membershipStatus', items: membershipStatus },
   ]
     .map(addFilter)
     .filter(Boolean)

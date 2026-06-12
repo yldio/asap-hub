@@ -499,3 +499,22 @@ export const convertBooleanToDecision = (bool?: boolean): DecisionOption => {
   }
   return bool ? 'Yes' : 'No';
 };
+
+export const RESEARCH_OUTPUT_FLOW_IDS = {
+  TEAM_CREATE_MANUAL: 'team-create-manual',
+  TEAM_CREATE_IMPORTED_FROM_MANUSCRIPT: 'team-create-imported-from-manuscript',
+  TEAM_EDIT_DRAFT: 'team-edit-draft',
+  TEAM_EDIT_PUBLISHED: 'team-edit-published',
+  TEAM_ADD_VERSION: 'team-add-version',
+  TEAM_ADD_VERSION_FROM_MANUSCRIPT: 'team-add-version-from-manuscript',
+  TEAM_DUPLICATE: 'team-duplicate',
+
+  WORKING_GROUP_CREATE: 'working-group-create',
+  WORKING_GROUP_EDIT_DRAFT: 'working-group-edit-draft',
+  WORKING_GROUP_EDIT_PUBLISHED: 'working-group-edit-published',
+  WORKING_GROUP_ADD_VERSION: 'working-group-add-version',
+  WORKING_GROUP_DUPLICATE: 'working-group-duplicate',
+} as const;
+
+export type ResearchOutputFlowId =
+  (typeof RESEARCH_OUTPUT_FLOW_IDS)[keyof typeof RESEARCH_OUTPUT_FLOW_IDS];

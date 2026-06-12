@@ -162,6 +162,7 @@ describe('FiltersModal', () => {
       tags: [],
       projects: [],
       workingGroups: [],
+      membershipStatus: [],
     });
   });
   it('calls the onApplyClick function with correct expertise filters', async () => {
@@ -174,6 +175,7 @@ describe('FiltersModal', () => {
       tags: [tags[0]!.id],
       projects: [],
       workingGroups: [],
+      membershipStatus: [],
     });
   });
   it('calls the onApplyClick function with correct project filters', async () => {
@@ -186,6 +188,7 @@ describe('FiltersModal', () => {
       tags: [],
       projects: [projects[0]!.id],
       workingGroups: [],
+      membershipStatus: [],
     });
   });
   it('calls the onApplyClick function with correct working group filters', async () => {
@@ -198,7 +201,95 @@ describe('FiltersModal', () => {
       tags: [],
       projects: [],
       workingGroups: [workingGroups[0]!.id],
+      membershipStatus: [],
     });
+  });
+
+  it('renders the Type of Users checkboxes', () => {
+    render(<FiltersModal {...defaultProps} />);
+    expect(screen.getByText('Type of Users')).toBeVisible();
+    expect(
+      screen.getByRole('checkbox', { name: 'GP2 Member' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    ).toBeInTheDocument();
+  });
+
+  it('toggling a membership status updates the filter count', async () => {
+    render(<FiltersModal {...defaultProps} />);
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('0 filters');
+    await userEvent.click(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    );
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('1 filter');
+    await userEvent.click(
+      screen.getByRole('checkbox', { name: 'GP2 Member' }),
+    );
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('2 filters');
+    await userEvent.click(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    );
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('1 filter');
+  });
+
+  it('calls onApplyClick with correct membershipStatus selection', async () => {
+    render(<FiltersModal {...defaultProps} />);
+    await userEvent.click(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    );
+    await userEvent.click(getApplyButton());
+    expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
+      regions: [],
+      tags: [],
+      projects: [],
+      workingGroups: [],
+      membershipStatus: ['Alumni Member'],
+    });
+  });
+
+  it('pre-checks membershipStatus values from filters prop', () => {
+    render(
+      <FiltersModal
+        {...defaultProps}
+        filters={{ membershipStatus: ['GP2 Member'] }}
+      />,
+    );
+    expect(screen.getByRole('checkbox', { name: 'GP2 Member' })).toBeChecked();
+    expect(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    ).not.toBeChecked();
+  });
+
+  it('resets membershipStatus on Reset', async () => {
+    render(<FiltersModal {...defaultProps} />);
+    await userEvent.click(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    );
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('1 filter');
+    await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('0 filters');
+    expect(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    ).not.toBeChecked();
   });
 
   it.each`

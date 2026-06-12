@@ -7,7 +7,7 @@ const { rem } = pixels;
 
 type FiltersType = Pick<
   gp2Model.FetchUsersFilter,
-  'tags' | 'regions' | 'workingGroups' | 'projects'
+  'tags' | 'regions' | 'workingGroups' | 'projects' | 'membershipStatus'
 >;
 
 type FilterType = keyof FiltersType;
@@ -87,6 +87,14 @@ const FilterPills: React.FC<FilterPillsProps> = ({
           onRemove={() => onRemove(filter, 'projects')}
         >
           {lookupProject(filter)}
+        </Tag>
+      ))}
+      {filters.membershipStatus?.map((filter: string) => (
+        <Tag
+          key={`filter-pill-${filter}`}
+          onRemove={() => onRemove(filter, 'membershipStatus')}
+        >
+          {filter}
         </Tag>
       ))}
     </div>

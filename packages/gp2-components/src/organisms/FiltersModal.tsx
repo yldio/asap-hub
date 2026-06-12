@@ -1,5 +1,6 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
+  CheckboxGroup,
   LabeledMultiSelect,
   Modal,
   FormCard,
@@ -8,7 +9,7 @@ import {
 import { useState } from 'react';
 import FilterModalFooter from '../molecules/FilterModalFooter';
 
-const { userRegions } = gp2Model;
+const { userRegions, userMembershipStatus } = gp2Model;
 
 type FiltersModalProps = {
   onBackClick: () => void;
@@ -65,18 +66,23 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
       .filter(({ id }) => filters.workingGroups?.includes(id))
       .map(entityToSelect),
   );
+  const [selectedMembershipStatus, setSelectedMembershipStatus] = useState<
+    Set<gp2Model.UserMembershipStatus>
+  >(new Set(filters.membershipStatus ?? []));
   const resetFilters = () => {
     setSelectedRegions([]);
     setSelectedExpertise([]);
     setSelectedProjects([]);
     setSelectedWorkingGroups([]);
+    setSelectedMembershipStatus(new Set());
   };
 
   const numberOfFilter =
     selectedRegions.length +
     selectedExpertise.length +
     selectedProjects.length +
-    selectedWorkingGroups.length;
+    selectedWorkingGroups.length +
+    selectedMembershipStatus.size;
 
   const ModalDescription = () => (
     <>
@@ -134,6 +140,20 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
               setSelectedProjects([...newValues]);
             }}
           />
+          <CheckboxGroup<gp2Model.UserMembershipStatus>
+            options={[
+              { title: 'Type of Users' },
+              ...userMembershipStatus.map((value) => ({ value, label: value })),
+            ]}
+            values={selectedMembershipStatus}
+            onChange={(value) =>
+              setSelectedMembershipStatus((prev) => {
+                const next = new Set(prev);
+                next.has(value) ? next.delete(value) : next.add(value);
+                return next;
+              })
+            }
+          />
           <FilterModalFooter
             onApply={() => {
               onApplyClick({
@@ -141,6 +161,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
                 tags: selectedExpertise.map(({ value }) => value),
                 projects: selectedProjects.map(({ value }) => value),
                 workingGroups: selectedWorkingGroups.map(({ value }) => value),
+                membershipStatus: [...selectedMembershipStatus],
               });
             }}
             onClose={onBackClick}

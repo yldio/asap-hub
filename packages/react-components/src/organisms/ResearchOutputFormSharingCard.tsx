@@ -147,20 +147,16 @@ const ResearchOutputFormSharingCard: React.FC<
     }[]
   >([]);
 
-  const getImpactOptions = useCallback(async () => {
-    const impactSuggestions = await getImpactSuggestions('');
-    setImpactOptions(impactSuggestions || []);
-  }, [getImpactSuggestions]);
-
   useEffect(() => {
-    const fetchImpactOptions = async () => {
-      if (documentType === 'Article') {
-        await getImpactOptions();
-      }
+    if (documentType !== 'Article') return;
+
+    const loadImpactOptions = async () => {
+      const options = await getImpactSuggestions('');
+      setImpactOptions(options || []);
     };
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    fetchImpactOptions();
-  }, [getImpactOptions, documentType]);
+
+    void loadImpactOptions();
+  }, [documentType, getImpactSuggestions]);
 
   useEffect(() => {
     setUrlValidationMessage(

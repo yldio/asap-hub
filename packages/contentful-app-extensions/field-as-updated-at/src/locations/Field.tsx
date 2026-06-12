@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Paragraph } from '@contentful/f36-components';
 import { EntrySys, FieldExtensionSDK } from '@contentful/app-sdk';
-import { useSDK } from '@contentful/react-apps-toolkit';
+import { useAutoResizer, useSDK } from '@contentful/react-apps-toolkit';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 
 const Field = () => {
   const sdk = useSDK<FieldExtensionSDK>();
+  useAutoResizer();
   const [field, setField] = useState(sdk.field.getValue());
 
   useEffect(() => {

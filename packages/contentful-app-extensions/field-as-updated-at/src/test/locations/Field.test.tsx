@@ -8,6 +8,7 @@ import { EntrySys } from '@contentful/app-sdk';
 
 jest.mock('@contentful/react-apps-toolkit', () => ({
   useSDK: jest.fn(),
+  useAutoResizer: jest.fn(),
 }));
 
 describe('Field component', () => {

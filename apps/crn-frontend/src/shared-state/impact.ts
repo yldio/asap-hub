@@ -14,6 +14,6 @@ export const useImpactSuggestions = () => {
             value: id,
           })),
       ),
-    [],
+    [authorization],
   );
 };

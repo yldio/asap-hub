@@ -24,7 +24,7 @@ export const fetchUserByCodeHandlerFactory = (
     const user = await userController.fetchByCode(code);
 
     const apiKey = user.onboarded
-      ? algoliaClient.generateSecuredApiKey({
+      ? await algoliaClient.generateSecuredApiKey({
           parentApiKey: algoliaApiKey,
           restrictions: {
             validUntil: getValidUntilTimestampInSeconds({

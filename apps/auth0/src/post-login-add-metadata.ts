@@ -116,6 +116,16 @@ const parseUserMetadata = ({
   role,
   openScienceTeamMember,
 });
+
+const parseKRSyncMetadata = ({
+  teams,
+  role,
+  openScienceTeamMember,
+}: UserMetadataResponse) => ({
+  teams: groupTeams(teams),
+  role,
+  openScienceTeamMember,
+});
 const extractUser = (response: Auth0UserResponse): User | gp2Auth.User => ({
   ...parseCommonUserMetadata(response),
   ...(isUserMetadataResponse(response)
@@ -174,7 +184,18 @@ export const onExecutePostLogin = async (
         return api.access.deny('alumni-user-access-denied');
       }
 
-      console.log('Successfully verified KR-Sync user');
+      if (isUserMetadataResponse(response)) {
+        const dataSeerUser = parseKRSyncMetadata(response);
+        api.idToken.setCustomClaim(
+          new URL('/user', apiUrl).toString(),
+          dataSeerUser,
+        );
+        console.log(
+          `KR-Sync user metadata set: ${JSON.stringify(dataSeerUser)}`,
+        );
+      } else {
+        console.log('Successfully verified KR-Sync user');
+      }
       return true;
     }
     const [apiUrl, redirect_uri] = getApiUrls(event);

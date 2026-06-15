@@ -932,10 +932,10 @@ describe('User data provider', () => {
     );
 
     test.each`
-      values                                 | expected
-      ${['Alumni Member']}                   | ${[{ alumniSinceDate_exists: true }]}
-      ${['GP2 Member']}                      | ${[{ alumniSinceDate_exists: false }]}
-      ${['Alumni Member', 'GP2 Member']}     | ${[{ alumniSinceDate_exists: true }, { alumniSinceDate_exists: false }]}
+      values                             | expected
+      ${['Alumni Member']}               | ${[{ alumniSinceDate_exists: true }]}
+      ${['GP2 Member']}                  | ${[{ alumniSinceDate_exists: false }]}
+      ${['Alumni Member', 'GP2 Member']} | ${[{ alumniSinceDate_exists: true }, { alumniSinceDate_exists: false }]}
     `(
       'Should translate membershipStatus $values to alumniSinceDate_exists OR clauses',
       async ({ values, expected }) => {

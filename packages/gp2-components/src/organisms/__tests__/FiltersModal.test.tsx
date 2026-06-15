@@ -229,9 +229,7 @@ describe('FiltersModal', () => {
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,
     ).toContain('1 filter');
-    await userEvent.click(
-      screen.getByRole('checkbox', { name: 'GP2 Member' }),
-    );
+    await userEvent.click(screen.getByRole('checkbox', { name: 'GP2 Member' }));
     expect(
       screen.getByText(/Apply filters to narrow down your search results.*/i)
         .textContent,

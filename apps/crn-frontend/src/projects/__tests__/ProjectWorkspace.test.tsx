@@ -216,7 +216,7 @@ describe('ProjectWorkspace', () => {
         'Test Title',
         'Test message',
         undefined,
-        'http://localhost/',
+        'project',
       );
       expect(result).toBe('disc-1');
       expect(mockSetFormType).toHaveBeenCalledWith({
@@ -288,7 +288,7 @@ describe('ProjectWorkspace', () => {
       expect(mockReplyToDiscussion).toHaveBeenCalledWith('ms-1', 'disc-1', {
         text: 'Reply text',
         manuscriptId: 'ms-1',
-        workspaceLink: 'http://localhost/',
+        workspaceType: 'project',
       });
       expect(mockSetFormType).toHaveBeenCalledWith({
         type: 'reply-to-discussion',

@@ -214,13 +214,44 @@ describe('Email Notification Service', () => {
       );
     });
 
+    const projectLinkedManuscriptFor = (projectType: string) => ({
+      ...manuscript,
+      teamsCollection: {
+        items: [
+          {
+            ...manuscript.teamsCollection!.items[0],
+            linkedFrom: {
+              projectMembershipCollection: {
+                items: [
+                  {
+                    linkedFrom: {
+                      projectsCollection: {
+                        items: [
+                          {
+                            sys: { id: 'project-7' },
+                            projectId: 'P7',
+                            projectType,
+                            grantId: 'g7',
+                          },
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    });
+
     test.each`
       projectType            | segment
       ${'Discovery Project'} | ${'discovery'}
       ${'Resource Project'}  | ${'resource'}
       ${'Trainee Project'}   | ${'trainee'}
     `(
-      'Discussion email link points at the $projectType workspace when the manuscript is in one',
+      'Discussion email link points at the $projectType workspace when the reply came from the project workspace',
       async ({
         projectType,
         segment,
@@ -229,36 +260,7 @@ describe('Email Notification Service', () => {
         segment: string;
       }) => {
         mockEnvironmentGetter.mockReturnValueOnce('production');
-        const projectLinkedManuscript = {
-          ...manuscript,
-          teamsCollection: {
-            items: [
-              {
-                ...manuscript.teamsCollection!.items[0],
-                linkedFrom: {
-                  projectMembershipCollection: {
-                    items: [
-                      {
-                        linkedFrom: {
-                          projectsCollection: {
-                            items: [
-                              {
-                                sys: { id: 'project-7' },
-                                projectId: 'P7',
-                                projectType,
-                                grantId: 'g7',
-                              },
-                            ],
-                          },
-                        },
-                      },
-                    ],
-                  },
-                },
-              },
-            ],
-          },
-        };
+        const projectLinkedManuscript = projectLinkedManuscriptFor(projectType);
         contentfulGraphqlClientMock.request.mockResolvedValue({
           manuscripts: projectLinkedManuscript,
         });
@@ -268,6 +270,7 @@ describe('Email Notification Service', () => {
           projectLinkedManuscript.sys.id,
           '',
           discussionDetails,
+          'project',
         );
 
         expect(mockedPostmark).toHaveBeenCalledWith(
@@ -282,6 +285,84 @@ describe('Email Notification Service', () => {
         );
       },
     );
+
+    test('Discussion email link points at the team workspace when the reply came from the team workspace even if the manuscript is in a project', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
+      const projectLinkedManuscript =
+        projectLinkedManuscriptFor('Discovery Project');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: projectLinkedManuscript,
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'discussion_created_by_grantee',
+        projectLinkedManuscript.sys.id,
+        '',
+        discussionDetails,
+        'team',
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          TemplateModel: expect.objectContaining({
+            discussion: expect.objectContaining({
+              link: `https://dev.hub.asap.science/network/teams/team-1/workspace?tab=discussions#${projectLinkedManuscript.sys.id}`,
+            }),
+          }),
+        }),
+      );
+    });
+
+    test('Discussion email link falls back to the team workspace when no workspaceType is provided even if the manuscript is in a project', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
+      const projectLinkedManuscript =
+        projectLinkedManuscriptFor('Discovery Project');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: projectLinkedManuscript,
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'discussion_created_by_grantee',
+        projectLinkedManuscript.sys.id,
+        '',
+        discussionDetails,
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          TemplateModel: expect.objectContaining({
+            discussion: expect.objectContaining({
+              link: `https://dev.hub.asap.science/network/teams/team-1/workspace?tab=discussions#${projectLinkedManuscript.sys.id}`,
+            }),
+          }),
+        }),
+      );
+    });
+
+    test('Discussion email link falls back to the team workspace when the reply came from a project workspace but the manuscript is not in a project', async () => {
+      mockEnvironmentGetter.mockReturnValueOnce('production');
+      contentfulGraphqlClientMock.request.mockResolvedValue({
+        manuscripts: manuscript,
+      });
+
+      await emailNotificationService.sendEmailNotification(
+        'discussion_created_by_grantee',
+        manuscript.sys.id,
+        '',
+        discussionDetails,
+        'project',
+      );
+
+      expect(mockedPostmark).toHaveBeenCalledWith(
+        expect.objectContaining({
+          TemplateModel: expect.objectContaining({
+            discussion: expect.objectContaining({
+              link: `https://dev.hub.asap.science/network/teams/team-1/workspace?tab=discussions#${manuscript.sys.id}`,
+            }),
+          }),
+        }),
+      );
+    });
 
     test('Should send email notification to OS team and alternative OS team member when discussion is created by grantee and there is no assignee', async () => {
       mockEnvironmentGetter.mockReturnValueOnce('production');

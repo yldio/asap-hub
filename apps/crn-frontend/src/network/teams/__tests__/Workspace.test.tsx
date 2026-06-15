@@ -215,7 +215,7 @@ describe('Manuscript', () => {
           notificationList: undefined,
           text: 'test message',
           title: 'Test',
-          workspaceLink: 'http://localhost/',
+          workspaceType: 'team',
         },
         'Bearer access_token',
       );
@@ -301,7 +301,7 @@ describe('Manuscript', () => {
           text: 'test message',
           manuscriptId: 'manuscript_0',
           files: [],
-          workspaceLink: 'http://localhost/',
+          workspaceType: 'team',
         },
       );
     });

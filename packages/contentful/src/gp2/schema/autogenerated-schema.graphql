@@ -798,6 +798,8 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCollectionOrder {
   activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
+  alumniLastUpdated_ASC
+  alumniLastUpdated_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -871,6 +873,8 @@ enum ContributingCohortsMembershipLinkingCollectionsUsersCursorCollectionOrder {
   activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
+  alumniLastUpdated_ASC
+  alumniLastUpdated_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -3998,6 +4002,7 @@ type PagesTextResourcesInline implements ResourceLink {
 type ProjectMembership implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
+  inactiveSinceDate(locale: String, useFallbackLocale: Boolean): DateTime
   linkedFrom(allowedLocales: [String]): ProjectMembershipLinkingCollections
   role(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
@@ -4021,6 +4026,15 @@ input ProjectMembershipFilter {
   AND: [ProjectMembershipFilter]
   OR: [ProjectMembershipFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
   role: String
   role_contains: String
   role_exists: Boolean
@@ -4111,6 +4125,8 @@ enum ProjectMembershipLinkingCollectionsProjectsCursorCollectionOrder {
 }
 
 enum ProjectMembershipOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -4363,6 +4379,8 @@ type ProjectsMembersCollection {
 }
 
 enum ProjectsMembersCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -4382,6 +4400,8 @@ type ProjectsMembersCursorCollection {
 }
 
 enum ProjectsMembersCursorCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -5264,6 +5284,8 @@ enum TagsLinkingCollectionsUsersCollectionOrder {
   activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
+  alumniLastUpdated_ASC
+  alumniLastUpdated_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -5337,6 +5359,8 @@ enum TagsLinkingCollectionsUsersCursorCollectionOrder {
   activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
+  alumniLastUpdated_ASC
+  alumniLastUpdated_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -5478,6 +5502,7 @@ type Users implements Entry & _Node {
   activeCampaignCreatedAt(locale: String, useFallbackLocale: Boolean): DateTime
   activeCampaignId(locale: String, useFallbackLocale: Boolean): String
   alternativeEmail(locale: String, useFallbackLocale: Boolean): String
+  alumniLastUpdated(locale: String, useFallbackLocale: Boolean): DateTime
   alumniLocation(locale: String, useFallbackLocale: Boolean): String
   alumniSinceDate(locale: String, useFallbackLocale: Boolean): DateTime
   avatar(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
@@ -5609,6 +5634,15 @@ input UsersFilter {
   alternativeEmail_not: String
   alternativeEmail_not_contains: String
   alternativeEmail_not_in: [String]
+  alumniLastUpdated: DateTime
+  alumniLastUpdated_exists: Boolean
+  alumniLastUpdated_gt: DateTime
+  alumniLastUpdated_gte: DateTime
+  alumniLastUpdated_in: [DateTime]
+  alumniLastUpdated_lt: DateTime
+  alumniLastUpdated_lte: DateTime
+  alumniLastUpdated_not: DateTime
+  alumniLastUpdated_not_in: [DateTime]
   alumniLocation: String
   alumniLocation_contains: String
   alumniLocation_exists: Boolean
@@ -5955,6 +5989,8 @@ enum UsersLinkingCollectionsOutputsCursorCollectionOrder {
 }
 
 enum UsersLinkingCollectionsProjectMembershipCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -5968,6 +6004,8 @@ enum UsersLinkingCollectionsProjectMembershipCollectionOrder {
 }
 
 enum UsersLinkingCollectionsProjectMembershipCursorCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -5981,6 +6019,8 @@ enum UsersLinkingCollectionsProjectMembershipCursorCollectionOrder {
 }
 
 enum UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -5994,6 +6034,8 @@ enum UsersLinkingCollectionsWorkingGroupMembershipCollectionOrder {
 }
 
 enum UsersLinkingCollectionsWorkingGroupMembershipCursorCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -6015,6 +6057,8 @@ enum UsersOrder {
   activeCampaignId_DESC
   alternativeEmail_ASC
   alternativeEmail_DESC
+  alumniLastUpdated_ASC
+  alumniLastUpdated_DESC
   alumniLocation_ASC
   alumniLocation_DESC
   alumniSinceDate_ASC
@@ -6122,6 +6166,7 @@ enum UsersTagsCursorCollectionOrder {
 type WorkingGroupMembership implements Entry & _Node {
   _id: ID!
   contentfulMetadata: ContentfulMetadata!
+  inactiveSinceDate(locale: String, useFallbackLocale: Boolean): DateTime
   linkedFrom(allowedLocales: [String]): WorkingGroupMembershipLinkingCollections
   role(locale: String, useFallbackLocale: Boolean): String
   sys: Sys!
@@ -6145,6 +6190,15 @@ input WorkingGroupMembershipFilter {
   AND: [WorkingGroupMembershipFilter]
   OR: [WorkingGroupMembershipFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
   role: String
   role_contains: String
   role_exists: Boolean
@@ -6207,6 +6261,8 @@ enum WorkingGroupMembershipLinkingCollectionsWorkingGroupsCursorCollectionOrder 
 }
 
 enum WorkingGroupMembershipOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -6747,6 +6803,8 @@ type WorkingGroupsMembersCollection {
 }
 
 enum WorkingGroupsMembersCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -6766,6 +6824,8 @@ type WorkingGroupsMembersCursorCollection {
 }
 
 enum WorkingGroupsMembersCursorCollectionOrder {
+  inactiveSinceDate_ASC
+  inactiveSinceDate_DESC
   role_ASC
   role_DESC
   sys_firstPublishedAt_ASC
@@ -7520,6 +7580,15 @@ input cfProjectMembershipNestedFilter {
   AND: [cfProjectMembershipNestedFilter]
   OR: [cfProjectMembershipNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
   role: String
   role_contains: String
   role_exists: Boolean
@@ -7615,6 +7684,15 @@ input cfUsersNestedFilter {
   alternativeEmail_not: String
   alternativeEmail_not_contains: String
   alternativeEmail_not_in: [String]
+  alumniLastUpdated: DateTime
+  alumniLastUpdated_exists: Boolean
+  alumniLastUpdated_gt: DateTime
+  alumniLastUpdated_gte: DateTime
+  alumniLastUpdated_in: [DateTime]
+  alumniLastUpdated_lt: DateTime
+  alumniLastUpdated_lte: DateTime
+  alumniLastUpdated_not: DateTime
+  alumniLastUpdated_not_in: [DateTime]
   alumniLocation: String
   alumniLocation_contains: String
   alumniLocation_exists: Boolean
@@ -7845,6 +7923,15 @@ input cfWorkingGroupMembershipNestedFilter {
   AND: [cfWorkingGroupMembershipNestedFilter]
   OR: [cfWorkingGroupMembershipNestedFilter]
   contentfulMetadata: ContentfulMetadataFilter
+  inactiveSinceDate: DateTime
+  inactiveSinceDate_exists: Boolean
+  inactiveSinceDate_gt: DateTime
+  inactiveSinceDate_gte: DateTime
+  inactiveSinceDate_in: [DateTime]
+  inactiveSinceDate_lt: DateTime
+  inactiveSinceDate_lte: DateTime
+  inactiveSinceDate_not: DateTime
+  inactiveSinceDate_not_in: [DateTime]
   role: String
   role_contains: String
   role_exists: Boolean

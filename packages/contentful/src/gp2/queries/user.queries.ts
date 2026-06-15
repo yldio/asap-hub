@@ -58,6 +58,7 @@ export const usersContentQueryFragment = gql`
     onboarded
     alumniSinceDate
     alumniLocation
+    alumniLastUpdated
     positions
     activatedDate
     contributingCohortsCollection(limit: 10) {

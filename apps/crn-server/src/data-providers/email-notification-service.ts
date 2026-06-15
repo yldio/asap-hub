@@ -14,6 +14,7 @@ import {
   emailNotificationMapping,
   EmailTriggerAction,
   manuscriptNotificationAttachmentContent,
+  WorkspaceType,
 } from '@asap-hub/model';
 import { cleanArray } from '@asap-hub/server-common';
 import * as postmark from 'postmark';
@@ -111,7 +112,7 @@ export class EmailNotificationService {
     manuscriptId: string,
     emailList: string,
     discussionDetails?: DiscussionNotificationInfo,
-    workspaceLink?: string,
+    workspaceType?: WorkspaceType,
   ): Promise<void> {
     const isProduction = environmentName === 'production';
     const isDiscussionCreatedAction = [
@@ -181,8 +182,13 @@ export class EmailNotificationService {
 
     const teamWorkspaceUrl = `${origin}/network/teams/${submittingTeam?.sys.id}/workspace`;
     const projectWorkspaceUrl = getProjectWorkspaceUrl(project);
+    // The discussion link points to the manuscript's own workspace. When the
+    // reply came from the project workspace we prefer it, otherwise we fall
+    // back to the team workspace the manuscript was submitted from.
     const baseWorkspaceUrl =
-      workspaceLink || projectWorkspaceUrl || teamWorkspaceUrl;
+      workspaceType === 'project' && projectWorkspaceUrl
+        ? projectWorkspaceUrl
+        : teamWorkspaceUrl;
     const discussionLink = `${baseWorkspaceUrl}?tab=discussions#${manuscriptId}`;
 
     const notificationData = (

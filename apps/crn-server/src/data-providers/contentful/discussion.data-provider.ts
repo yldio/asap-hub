@@ -65,7 +65,7 @@ export class DiscussionContentfulDataProvider
       text,
       files,
       notificationList,
-      workspaceLink,
+      workspaceType,
     } = input;
 
     const messageId = await createAndPublishMessage(environment, {
@@ -109,7 +109,7 @@ export class DiscussionContentfulDataProvider
         id: discussionEntry.sys.id,
         userName: `${user.fields?.firstName?.['en-US']} ${user.fields?.lastName?.['en-US']}`,
       },
-      workspaceLink,
+      workspaceType,
     );
 
     return discussionEntry.sys.id;
@@ -119,7 +119,7 @@ export class DiscussionContentfulDataProvider
     const environment = await this.getRestClient();
     const discussion = await environment.getEntry(id);
 
-    const { notificationList, reply, manuscriptId, userId, workspaceLink } =
+    const { notificationList, reply, manuscriptId, userId, workspaceType } =
       update;
 
     if (reply?.text) {
@@ -155,7 +155,7 @@ export class DiscussionContentfulDataProvider
             id,
             userName: `${user.fields.firstName['en-US']} ${user.fields.lastName['en-US']}`,
           },
-          workspaceLink,
+          workspaceType,
         );
       }
     } else {

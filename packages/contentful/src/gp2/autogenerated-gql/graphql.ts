@@ -17002,7 +17002,10 @@ export type WorkingGroupNetworkContentDataFragment = {
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
                   Maybe<
-                    Pick<WorkingGroupMembership, 'role'> & {
+                    Pick<
+                      WorkingGroupMembership,
+                      'role' | 'inactiveSinceDate'
+                    > & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
                         Pick<
@@ -17082,7 +17085,10 @@ export type WorkingGroupNetworkContentDataFragment = {
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
                   Maybe<
-                    Pick<WorkingGroupMembership, 'role'> & {
+                    Pick<
+                      WorkingGroupMembership,
+                      'role' | 'inactiveSinceDate'
+                    > & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
                         Pick<
@@ -17162,7 +17168,10 @@ export type WorkingGroupNetworkContentDataFragment = {
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
                   Maybe<
-                    Pick<WorkingGroupMembership, 'role'> & {
+                    Pick<
+                      WorkingGroupMembership,
+                      'role' | 'inactiveSinceDate'
+                    > & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
                         Pick<
@@ -17242,7 +17251,10 @@ export type WorkingGroupNetworkContentDataFragment = {
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
                   Maybe<
-                    Pick<WorkingGroupMembership, 'role'> & {
+                    Pick<
+                      WorkingGroupMembership,
+                      'role' | 'inactiveSinceDate'
+                    > & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
                         Pick<
@@ -17336,7 +17348,10 @@ export type FetchWorkingGroupNetworkQuery = {
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
                           Maybe<
-                            Pick<WorkingGroupMembership, 'role'> & {
+                            Pick<
+                              WorkingGroupMembership,
+                              'role' | 'inactiveSinceDate'
+                            > & {
                               sys: Pick<Sys, 'id'>;
                               user?: Maybe<
                                 Pick<
@@ -17422,7 +17437,10 @@ export type FetchWorkingGroupNetworkQuery = {
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
                           Maybe<
-                            Pick<WorkingGroupMembership, 'role'> & {
+                            Pick<
+                              WorkingGroupMembership,
+                              'role' | 'inactiveSinceDate'
+                            > & {
                               sys: Pick<Sys, 'id'>;
                               user?: Maybe<
                                 Pick<
@@ -17508,7 +17526,10 @@ export type FetchWorkingGroupNetworkQuery = {
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
                           Maybe<
-                            Pick<WorkingGroupMembership, 'role'> & {
+                            Pick<
+                              WorkingGroupMembership,
+                              'role' | 'inactiveSinceDate'
+                            > & {
                               sys: Pick<Sys, 'id'>;
                               user?: Maybe<
                                 Pick<
@@ -17594,7 +17615,10 @@ export type FetchWorkingGroupNetworkQuery = {
                       Pick<WorkingGroupsMembersCollection, 'total'> & {
                         items: Array<
                           Maybe<
-                            Pick<WorkingGroupMembership, 'role'> & {
+                            Pick<
+                              WorkingGroupMembership,
+                              'role' | 'inactiveSinceDate'
+                            > & {
                               sys: Pick<Sys, 'id'>;
                               user?: Maybe<
                                 Pick<
@@ -17679,7 +17703,7 @@ export type WorkingGroupsContentDataFragment = Pick<
     Pick<WorkingGroupsMembersCollection, 'total'> & {
       items: Array<
         Maybe<
-          Pick<WorkingGroupMembership, 'role'> & {
+          Pick<WorkingGroupMembership, 'role' | 'inactiveSinceDate'> & {
             sys: Pick<Sys, 'id'>;
             user?: Maybe<
               Pick<
@@ -17828,7 +17852,10 @@ export type FetchWorkingGroupsQuery = {
               Pick<WorkingGroupsMembersCollection, 'total'> & {
                 items: Array<
                   Maybe<
-                    Pick<WorkingGroupMembership, 'role' | 'inactiveSinceDate'> & {
+                    Pick<
+                      WorkingGroupMembership,
+                      'role' | 'inactiveSinceDate'
+                    > & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
                         Pick<
@@ -20899,6 +20926,10 @@ export const WorkingGroupsContentDataFragmentDoc = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'inactiveSinceDate' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'user' },

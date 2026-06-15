@@ -1,4 +1,8 @@
-import { DiscussionRequest, ManuscriptFileResponse } from '@asap-hub/model';
+import {
+  DiscussionRequest,
+  ManuscriptFileResponse,
+  WorkspaceType,
+} from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   useCreateDiscussion,
@@ -7,7 +11,7 @@ import {
 } from './state';
 import { useManuscriptToast } from './useManuscriptToast';
 
-const useDiscussionHandlers = () => {
+const useDiscussionHandlers = (workspaceType: WorkspaceType) => {
   const createDiscussion = useCreateDiscussion();
   const replyToDiscussion = useReplyToDiscussion();
   const markDiscussionAsRead = useMarkDiscussionAsRead();
@@ -19,14 +23,13 @@ const useDiscussionHandlers = () => {
     message: string,
     files?: ManuscriptFileResponse[],
   ): Promise<string | undefined> => {
-    const workspaceLink = `${window.location.origin}${window.location.pathname}`;
     try {
       const discussionId = await createDiscussion(
         manuscriptId,
         title,
         message,
         files,
-        workspaceLink,
+        workspaceType,
       );
       setFormType({ type: 'discussion-started', accent: 'successLarge' });
       return discussionId;
@@ -49,11 +52,10 @@ const useDiscussionHandlers = () => {
     discussionId: string,
     patch: DiscussionRequest,
   ): Promise<void> => {
-    const workspaceLink = `${window.location.origin}${window.location.pathname}`;
     try {
       await replyToDiscussion(manuscriptId, discussionId, {
         ...patch,
-        workspaceLink,
+        workspaceType,
       });
       setFormType({ type: 'reply-to-discussion', accent: 'successLarge' });
     } catch (error: unknown) {

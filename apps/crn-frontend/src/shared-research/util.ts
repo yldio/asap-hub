@@ -67,9 +67,9 @@ export type ResolveFlowIdParams = {
 export const resolveResearchOutputFlowId = ({
   entityType,
   versionAction,
-  published = false,
-  isImportedFromManuscript = false,
-  isDuplicate = false,
+  published,
+  isImportedFromManuscript,
+  isDuplicate,
   hasResearchOutputId,
 }: ResolveFlowIdParams): ResearchOutputFlowId => {
   const isTeam = entityType === 'team';

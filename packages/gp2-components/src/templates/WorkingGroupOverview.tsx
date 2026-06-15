@@ -31,6 +31,8 @@ type WorkingGroupOverviewProps = Pick<
   children?: React.ReactNode;
 };
 
+type MemberListProps = { data: gp2.WorkingGroupMember[] };
+
 const { rem } = pixels;
 
 const containerStyles = css({
@@ -57,7 +59,7 @@ const columnStyles = css({
 });
 
 const memberListStyles = css({
-  paddingTop: rem(16),
+  paddingTop: rem(32),
 });
 
 const tabDescriptionStyles = css({
@@ -73,7 +75,16 @@ const LEADER_ROLES: ReadonlySet<gp2.WorkingGroupMemberRole> = new Set([
 const isActive = (member: gp2.WorkingGroupMember) =>
   !member.alumniSinceDate && !member.inactiveSinceDate;
 
-type MemberListProps = { data: gp2.WorkingGroupMember[] };
+const splitActivePast = <T,>(
+  arr: T[],
+  predicate: (item: T) => boolean,
+): [T[], T[]] => {
+  const active = [];
+  const past = [];
+  for (const elmnt of arr)
+    predicate(elmnt) ? active.push(elmnt) : past.push(elmnt);
+  return [active, past];
+};
 
 const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   description,
@@ -87,10 +98,11 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   const leaders = members.filter(({ role }) => LEADER_ROLES.has(role));
   const regularMembers = members.filter(({ role }) => !LEADER_ROLES.has(role));
 
-  const activeLeaders = leaders.filter(isActive);
-  const pastLeaders = leaders.filter((m) => !isActive(m));
-  const activeMembers = regularMembers.filter(isActive);
-  const pastMembers = regularMembers.filter((m) => !isActive(m));
+  const [activeLeaders, pastLeaders] = splitActivePast(leaders, isActive);
+  const [activeMembers, pastMembers] = splitActivePast(
+    regularMembers,
+    isActive,
+  );
 
   return (
     <div css={containerStyles}>
@@ -160,7 +172,11 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
               tabTitle: `Past Leaders (${pastLeaders.length})`,
               items: pastLeaders,
               empty: (
-                <Paragraph accent="lead">There are no past leaders.</Paragraph>
+                <div css={{ marginBottom: rem(56) }}>
+                  <Paragraph accent="lead">
+                    There are no past leaders.
+                  </Paragraph>
+                </div>
               ),
             },
           ]}
@@ -193,64 +209,70 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
             </div>
           )}
         </TabbedContent>
-        <TabbedContent
-          description={
-            <Paragraph noMargin styles={tabDescriptionStyles}>
-              Members
-            </Paragraph>
-          }
-          tabs={[
-            {
-              tabTitle: `Active Members (${activeMembers.length})`,
-              items: activeMembers,
-              truncateFrom: 8,
-              empty: (
-                <Paragraph accent="lead">
-                  There are no active members.
-                </Paragraph>
-              ),
-            },
-            {
-              tabTitle: `Past Members (${pastMembers.length})`,
-              items: pastMembers,
-              truncateFrom: 8,
-              empty: (
-                <Paragraph accent="lead">There are no past members.</Paragraph>
-              ),
-            },
-          ]}
-          getShowMoreText={(showMore: boolean) =>
-            `View ${showMore ? 'Less' : 'More'} Members`
-          }
-        >
-          {({ data }: MemberListProps) => (
-            <div css={memberListStyles}>
-              <MembersList
-                members={data.map(
-                  ({
-                    role,
-                    firstName,
-                    lastName,
-                    displayName,
-                    avatarUrl,
-                    alumniSinceDate,
-                    userId: id,
-                  }) => ({
-                    firstLine: displayName,
-                    secondLine: role,
-                    avatarUrl,
-                    firstName,
-                    lastName,
-                    alumniSinceDate,
-                    id,
-                  }),
-                )}
-                userRoute={gp2Routing.users({}).user}
-                overrideNameStyles={css({ overflowWrap: 'anywhere' })}
-              />
-            </div>
-          )}
-        </TabbedContent>
+        <div css={{ marginTop: rem(-24) }}>
+          <TabbedContent
+            description={
+              <Paragraph noMargin styles={tabDescriptionStyles}>
+                Members
+              </Paragraph>
+            }
+            tabs={[
+              {
+                tabTitle: `Active Members (${activeMembers.length})`,
+                items: activeMembers,
+                truncateFrom: 8,
+                empty: (
+                  <Paragraph accent="lead">
+                    There are no active members.
+                  </Paragraph>
+                ),
+              },
+              {
+                tabTitle: `Past Members (${pastMembers.length})`,
+                items: pastMembers,
+                truncateFrom: 8,
+                empty: (
+                  <div css={{ marginBottom: rem(8) }}>
+                    <Paragraph accent="lead" noMargin>
+                      There are no past members.
+                    </Paragraph>
+                  </div>
+                ),
+              },
+            ]}
+            getShowMoreText={(showMore: boolean) =>
+              `View ${showMore ? 'Less' : 'More'} Members`
+            }
+          >
+            {({ data }: MemberListProps) => (
+              <div css={memberListStyles}>
+                <MembersList
+                  members={data.map(
+                    ({
+                      role,
+                      firstName,
+                      lastName,
+                      displayName,
+                      avatarUrl,
+                      alumniSinceDate,
+                      userId: id,
+                    }) => ({
+                      firstLine: displayName,
+                      secondLine: role,
+                      avatarUrl,
+                      firstName,
+                      lastName,
+                      alumniSinceDate,
+                      id,
+                    }),
+                  )}
+                  userRoute={gp2Routing.users({}).user}
+                  overrideNameStyles={css({ overflowWrap: 'anywhere' })}
+                />
+              </div>
+            )}
+          </TabbedContent>
+        </div>
       </Card>
       <Card overrideStyles={cardStyles}>
         <Milestones

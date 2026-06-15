@@ -20,9 +20,11 @@ const successfulApiGatewayEvent = getApiGatewayEvent({
 });
 
 describe('Fetch-user-by-code handler', () => {
-  const algoliaClientMock = {
-    generateSecuredApiKey: jest.fn(),
-  } as unknown as jest.Mocked<Pick<SearchClient, 'generateSecuredApiKey'>>;
+  const generateSecuredApiKey = jest.fn<Promise<string>, []>();
+  const algoliaClientMock = { generateSecuredApiKey } as unknown as Pick<
+    SearchClient,
+    'generateSecuredApiKey'
+  >;
   const handler = fetchUserByCodeHandlerFactory(
     userControllerMock,
     algoliaClientMock,
@@ -38,12 +40,12 @@ describe('Fetch-user-by-code handler', () => {
       1,
     );
 
-    algoliaClientMock.generateSecuredApiKey.mockReturnValueOnce('test-api-key');
+    generateSecuredApiKey.mockResolvedValueOnce('test-api-key');
     userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
 
     await customHandler(successfulApiGatewayEvent);
 
-    expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith({
+    expect(generateSecuredApiKey).toBeCalledWith({
       parentApiKey: algoliaApiKey,
       restrictions: {
         validUntil: expect.any(Number),
@@ -151,7 +153,7 @@ describe('Fetch-user-by-code handler', () => {
     });
     test('should return an algolia API key', async () => {
       const mockApiKey = 'test-api-key';
-      algoliaClientMock.generateSecuredApiKey.mockReturnValueOnce(mockApiKey);
+      generateSecuredApiKey.mockResolvedValueOnce(mockApiKey);
       userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
 
       const result = (await handler(
@@ -169,7 +171,7 @@ describe('Fetch-user-by-code handler', () => {
       expect(JSON.parse(result.body)).toMatchObject({
         algoliaApiKey: mockApiKey,
       });
-      expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith({
+      expect(generateSecuredApiKey).toBeCalledWith({
         parentApiKey: algoliaApiKey,
         restrictions: {
           validUntil: expect.any(Number),
@@ -216,7 +218,7 @@ describe('Fetch-user-by-code handler', () => {
           tenHoursOneMinuteLater.getTime() / 1000,
         );
 
-        expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith({
+        expect(generateSecuredApiKey).toBeCalledWith({
           parentApiKey: algoliaApiKey,
           restrictions: {
             validUntil: expectedValidUntil,
@@ -226,7 +228,7 @@ describe('Fetch-user-by-code handler', () => {
     });
 
     test('should return status 500 when algolia API key generation fails', async () => {
-      algoliaClientMock.generateSecuredApiKey.mockImplementationOnce(() => {
+      generateSecuredApiKey.mockImplementationOnce(() => {
         throw new Error('some error');
       });
       userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());

@@ -55,7 +55,7 @@ export const parseMembers = <T extends string>(members: MembersItem) =>
     .filter((member): member is MemberItem => member !== null)
     .reduce((membersList: gp2Model.Member<T>[], rawMember) => {
       const member = rawMember as MemberItem;
-      const user = member.user;
+      const { user } = member;
       if (!user?.onboarded) {
         return membersList;
       }

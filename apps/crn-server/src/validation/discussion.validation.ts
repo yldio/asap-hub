@@ -46,7 +46,11 @@ const DiscussionRequestValidationSchema: JSONSchemaType<DiscussionRequest> = {
       nullable: true,
     },
     notificationList: { type: 'string', nullable: true },
-    workspaceType: { type: 'string', enum: ['team', 'project'], nullable: true },
+    workspaceType: {
+      type: 'string',
+      enum: ['team', 'project'],
+      nullable: true,
+    },
   },
   required: ['text'],
   additionalProperties: false,

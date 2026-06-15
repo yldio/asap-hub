@@ -31,12 +31,12 @@ export const indexUserHandler =
         log.debug(`Fetched user ${user.id}`);
 
         if (user.onboarded && user.role !== 'Hidden') {
+          const membershipStatus: gp2Model.UserMembershipStatus =
+            user.alumniSinceDate ? 'Alumni Member' : 'GP2 Member';
           const data = {
             ...user,
             _tags: getTagsNames(user.tags),
-            membershipStatus: user.alumniSinceDate
-              ? 'Alumni Member'
-              : 'GP2 Member',
+            membershipStatus,
           };
 
           await algoliaClient.save({

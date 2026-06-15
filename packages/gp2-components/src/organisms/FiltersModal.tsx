@@ -1,15 +1,41 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
-  CheckboxGroup,
+  LabeledCheckbox,
   LabeledMultiSelect,
   Modal,
   FormCard,
+  Paragraph,
+  pixels,
 } from '@asap-hub/react-components';
+import { css } from '@emotion/react';
 
 import { useState } from 'react';
+import { mobileQuery } from '../layout';
 import FilterModalFooter from '../molecules/FilterModalFooter';
 
+const { rem } = pixels;
 const { userRegions, userMembershipStatus } = gp2Model;
+
+const membershipStatusTitleStyles = css({ paddingBottom: rem(14) });
+
+const membershipStatusSectionStyles = css({
+  marginBottom: rem(-24),
+});
+
+const membershipStatusRowStyles = css({
+  display: 'flex',
+  gap: rem(24),
+  '& p': { margin: 0 },
+  '& input[type="checkbox"]': { marginTop: 0, marginBottom: 0 },
+  [mobileQuery]: {
+    flexDirection: 'column',
+    gap: rem(16),
+  },
+});
+
+const membershipStatusItemStyles = css({
+  flex: 1,
+});
 
 type FiltersModalProps = {
   onBackClick: () => void;
@@ -68,7 +94,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   );
   const [selectedMembershipStatus, setSelectedMembershipStatus] = useState<
     Set<gp2Model.UserMembershipStatus>
-  >(new Set(filters.membershipStatus ?? []));
+  >(new Set(filters.membershipStatus));
   const resetFilters = () => {
     setSelectedRegions([]);
     setSelectedExpertise([]);
@@ -140,20 +166,34 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
               setSelectedProjects([...newValues]);
             }}
           />
-          <CheckboxGroup<gp2Model.UserMembershipStatus>
-            options={[
-              { title: 'Type of Users' },
-              ...userMembershipStatus.map((value) => ({ value, label: value })),
-            ]}
-            values={selectedMembershipStatus}
-            onChange={(value) =>
-              setSelectedMembershipStatus((prev) => {
-                const next = new Set(prev);
-                next.has(value) ? next.delete(value) : next.add(value);
-                return next;
-              })
-            }
-          />
+          <div css={membershipStatusSectionStyles}>
+            <Paragraph noMargin styles={membershipStatusTitleStyles}>
+              <strong>Type of Users</strong>
+            </Paragraph>
+            <div css={membershipStatusRowStyles}>
+              {userMembershipStatus.map((value) => (
+                <div key={value} css={membershipStatusItemStyles}>
+                  <LabeledCheckbox
+                    wrapLabel={false}
+                    groupName="membershipStatus"
+                    title={value}
+                    checked={selectedMembershipStatus.has(value)}
+                    onSelect={() =>
+                      setSelectedMembershipStatus((prev) => {
+                        const next = new Set(prev);
+                        if (next.has(value)) {
+                          next.delete(value);
+                        } else {
+                          next.add(value);
+                        }
+                        return next;
+                      })
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
           <FilterModalFooter
             onApply={() => {
               onApplyClick({

@@ -100,6 +100,7 @@ export type UserDataObject = {
   activeCampaignId?: string;
   alumniSinceDate?: string;
   alumniLocation?: string;
+  alumniLastUpdated?: string;
   alternativeEmail?: string;
   avatarUrl?: string;
   biography?: string;
@@ -171,6 +172,7 @@ export type UserPatchRequest = Omit<
   UserUpdateDataObject,
   | 'alumniSinceDate'
   | 'alumniLocation'
+  | 'alumniLastUpdated'
   | 'avatar'
   | 'connections'
   | 'email'

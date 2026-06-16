@@ -219,9 +219,15 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
     const cohortFields = getCohortFields(nextContributingCohorts);
 
+    const shouldStampAlumni =
+      'alumniSinceDate' in data || 'alumniLocation' in data;
+
     const result = await patchAndPublish(user, {
       ...fields,
       ...cohortFields,
+      ...(shouldStampAlumni
+        ? { alumniLastUpdated: new Date().toISOString() }
+        : {}),
       ...(data.tags
         ? { tags: getLinkEntities(data.tags.map((tag) => tag.id)) }
         : {}),
@@ -345,6 +351,7 @@ export const parseUserToDataObject = (
     onboarded: !!user.onboarded,
     alumniSinceDate: user.alumniSinceDate ?? undefined,
     alumniLocation: user.alumniLocation ?? undefined,
+    alumniLastUpdated: user.alumniLastUpdated ?? undefined,
     email: user.email ?? '',
     alternativeEmail: user.alternativeEmail ?? undefined,
     firstName: user.firstName ?? '',

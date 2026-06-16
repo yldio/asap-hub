@@ -79,6 +79,17 @@ describe('User data provider', () => {
       },
     );
 
+    test('Should default alumniLastUpdated to undefined when null', async () => {
+      const mockResponse = getContentfulGraphqlUser();
+      mockResponse.alumniLastUpdated = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: mockResponse,
+      });
+
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result!.alumniLastUpdated).toBeUndefined();
+    });
+
     test('Should throw an error when the ORCID Works field has invalid data', async () => {
       const mockResponse = getContentfulGraphqlUser();
       mockResponse.orcidWorks = [null];
@@ -2422,6 +2433,54 @@ describe('User data provider', () => {
       });
       expect(patchAndPublish).toHaveBeenCalledWith(entry, {
         tags: [{ sys: { id: '1', linkType: 'Entry', type: 'Link' } }],
+      });
+    });
+
+    describe('alumniLastUpdated stamping', () => {
+      const now = '2026-06-11T12:00:00.000Z';
+
+      beforeEach(() => {
+        jest.useFakeTimers().setSystemTime(new Date(now));
+      });
+      afterEach(() => {
+        jest.useRealTimers();
+      });
+
+      test('Should stamp alumniLastUpdated when alumniSinceDate is in the payload', async () => {
+        await userDataProvider.update(userId, {
+          alumniSinceDate: '2026-06-11T12:00:00.000Z',
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          alumniSinceDate: '2026-06-11T12:00:00.000Z',
+          alumniLastUpdated: now,
+        });
+      });
+
+      test('Should stamp alumniLastUpdated when alumniLocation is in the payload', async () => {
+        await userDataProvider.update(userId, {
+          alumniLocation: 'New York',
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          alumniLocation: 'New York',
+          alumniLastUpdated: now,
+        });
+      });
+
+      test('Should stamp alumniLastUpdated when alumniSinceDate is explicitly cleared', async () => {
+        await userDataProvider.update(userId, {
+          alumniSinceDate: undefined,
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          alumniSinceDate: undefined,
+          alumniLastUpdated: now,
+        });
+      });
+
+      test('Should not stamp alumniLastUpdated when no alumni field is in the payload', async () => {
+        await userDataProvider.update(userId, { firstName: 'Tony' });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          firstName: 'Tony',
+        });
       });
     });
 

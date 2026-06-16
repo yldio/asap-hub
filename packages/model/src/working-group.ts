@@ -15,7 +15,7 @@ export const workingGroupRole = [
   'Chair',
   'Project Manager',
   'Lead',
-  'Co-Lead',
+  'Co-lead',
 ] as const;
 export type WorkingGroupRole = (typeof workingGroupRole)[number];
 
@@ -60,7 +60,7 @@ export type WorkingGroupResponseMember = WorkingGroupMember & {
 export type WorkingGroupMembership = {
   id: string;
   name: string;
-  role: 'Chair' | 'Project Manager' | 'Lead' | 'Co-Lead' | 'Member';
+  role: 'Chair' | 'Project Manager' | 'Lead' | 'Co-lead' | 'Member';
   active: boolean;
 };
 

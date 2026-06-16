@@ -23,9 +23,9 @@ describe('isProjectManagerAndActive', () => {
     ${'Lead'}             | ${undefined}      | ${true}      | ${'workingGroups'} | ${true}
     ${'Lead'}             | ${undefined}      | ${false}     | ${'workingGroups'} | ${false}
     ${'Lead'}             | ${undefined}      | ${undefined} | ${'teams'}         | ${false}
-    ${'Co-Lead'}          | ${undefined}      | ${true}      | ${'workingGroups'} | ${true}
-    ${'Co-Lead'}          | ${undefined}      | ${false}     | ${'workingGroups'} | ${false}
-    ${'Co-Lead'}          | ${undefined}      | ${undefined} | ${'teams'}         | ${false}
+    ${'Co-lead'}          | ${undefined}      | ${true}      | ${'workingGroups'} | ${true}
+    ${'Co-lead'}          | ${undefined}      | ${false}     | ${'workingGroups'} | ${false}
+    ${'Co-lead'}          | ${undefined}      | ${undefined} | ${'teams'}         | ${false}
     ${'Collaborating PI'} | ${undefined}      | ${undefined} | ${'teams'}         | ${false}
     ${'Collaborating PI'} | ${'2023-07-26'}   | ${undefined} | ${'teams'}         | ${false}
     ${'Collaborating PI'} | ${undefined}      | ${true}      | ${'workingGroups'} | ${false}
@@ -118,7 +118,7 @@ describe.each`
     });
 
     if (association === 'workingGroups') {
-      test.each(['Lead', 'Co-Lead'])(
+      test.each(['Lead', 'Co-lead'])(
         'returns Staff when user is active %s of workingGroups',
         (leaderRole) => {
           expect(
@@ -130,7 +130,7 @@ describe.each`
                   {
                     id: associationId,
                     name: 'Working Group',
-                    role: leaderRole as 'Lead' | 'Co-Lead',
+                    role: leaderRole as 'Lead' | 'Co-lead',
                     active: true,
                   },
                 ],

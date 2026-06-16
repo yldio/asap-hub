@@ -38,7 +38,7 @@ export const isActiveAndBelongsToAssociation = (
 const ELEVATED_WORKING_GROUP_ROLES = new Set([
   'Project Manager',
   'Lead',
-  'Co-Lead',
+  'Co-lead',
 ]);
 
 export const isProjectManagerAndActive = (

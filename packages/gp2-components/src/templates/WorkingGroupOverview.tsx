@@ -64,7 +64,7 @@ const memberListStyles = css({
 
 const tabDescriptionStyles = css({
   fontWeight: 'bold',
-  margin: '8px 0',
+  margin: `${rem(8)} 0`,
 });
 
 const LEADER_ROLES: ReadonlySet<gp2.WorkingGroupMemberRole> = new Set([

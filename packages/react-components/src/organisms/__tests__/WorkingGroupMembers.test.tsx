@@ -43,7 +43,7 @@ describe('leaders section', () => {
               ...createUserResponse(),
               displayName: 'Test User 1',
             },
-            role: 'Co-Lead',
+            role: 'Co-lead',
             workstreamRole: 'A test role',
             isActive: false,
           },
@@ -62,7 +62,7 @@ describe('leaders section', () => {
       pastTabButton.click();
     });
     expect(getByText('Test User 1')).toBeVisible();
-    expect(getByText('Co-Lead')).toBeVisible();
+    expect(getByText('Co-lead')).toBeVisible();
 
     act(() => {
       activeTabButton.click();

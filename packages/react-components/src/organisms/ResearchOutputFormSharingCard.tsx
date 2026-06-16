@@ -152,7 +152,7 @@ const ResearchOutputFormSharingCard: React.FC<
 
     const loadImpactOptions = async () => {
       const options = await getImpactSuggestions('');
-      setImpactOptions(options || []);
+      setImpactOptions(options);
     };
 
     void loadImpactOptions();

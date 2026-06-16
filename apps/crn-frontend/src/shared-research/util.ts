@@ -56,7 +56,7 @@ export const mapManuscriptVersionToResearchOutput = (
 });
 
 export type ResolveFlowIdParams = {
-  entityType: 'project' | 'team' | 'working-group';
+  entityType: 'team' | 'working-group';
   versionAction?: 'create' | 'edit';
   published: boolean;
   isImportedFromManuscript: boolean;

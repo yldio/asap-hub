@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 
 import ResearchOutputForm from '../../ResearchOutputForm';
-import { defaultProps } from '../../test-utils/research-output-form';
+import { getDefaultProps } from '../../test-utils/research-output-form';
 
 const getCategorySuggestionsMock = jest.fn();
 
@@ -22,7 +22,7 @@ afterEach(() => {
 it('displays impact and category fields when document type is Article', async () => {
   render(
     <MemoryRouter>
-      <ResearchOutputForm {...defaultProps} documentType="Article" />
+      <ResearchOutputForm {...getDefaultProps()} documentType="Article" />
     </MemoryRouter>,
   );
 
@@ -39,7 +39,10 @@ it.each(notArticleDocumentTypes)(
   async (documentType) => {
     render(
       <MemoryRouter>
-        <ResearchOutputForm {...defaultProps} documentType={documentType} />
+        <ResearchOutputForm
+          {...getDefaultProps()}
+          documentType={documentType}
+        />
       </MemoryRouter>,
     );
 
@@ -52,7 +55,7 @@ it('renders impact input and does not throw when getImpactSuggestions is noop', 
   render(
     <MemoryRouter>
       <ResearchOutputForm
-        {...defaultProps}
+        {...getDefaultProps()}
         documentType="Article"
         getImpactSuggestions={() => Promise.resolve([])}
       />
@@ -75,7 +78,7 @@ it('renders category input and does not throw when getCategorySuggestions is noo
   render(
     <MemoryRouter>
       <ResearchOutputForm
-        {...defaultProps}
+        {...getDefaultProps()}
         documentType="Article"
         getCategorySuggestions={undefined}
       />

@@ -12,7 +12,7 @@ import {
 import { render, screen, waitFor } from '@testing-library/react';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import { fern, paper } from '../../../colors';
-import { defaultProps } from '../../test-utils/research-output-form';
+import { getDefaultProps } from '../../test-utils/research-output-form';
 import { mockActErrorsInConsole } from '../../../test-utils';
 
 jest.setTimeout(60000);
@@ -77,7 +77,7 @@ describe('form buttons', () => {
       <InnerToastContext.Provider value={jest.fn()}>
         <MemoryRouter>
           <ResearchOutputForm
-            {...defaultProps}
+            {...getDefaultProps()}
             versionAction={versionAction}
             researchOutputData={researchOutputData}
             descriptionUnchangedWarning={descriptionUnchangedWarning}

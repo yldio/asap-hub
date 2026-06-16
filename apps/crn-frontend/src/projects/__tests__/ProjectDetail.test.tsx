@@ -314,6 +314,29 @@ const renderProjectDetail = async (
   });
 };
 
+const getWorkspaceRoute = (routeKeyword: string, projectId: string) => {
+  const base = projects({});
+  switch (routeKeyword) {
+    case 'discovery':
+      return base
+        .discoveryProjects({})
+        .discoveryProject({ projectId })
+        .workspace({});
+    case 'resource':
+      return base
+        .resourceProjects({})
+        .resourceProject({ projectId })
+        .workspace({});
+    case 'trainee':
+      return base
+        .traineeProjects({})
+        .traineeProject({ projectId })
+        .workspace({});
+    default:
+      throw new Error(`Unknown route keyword: ${routeKeyword}`);
+  }
+};
+
 // --- Test variants ---
 
 type TestVariant = {
@@ -747,57 +770,48 @@ describe.each(variants)(
       );
       expect(await screen.findByText('Supplement')).toBeInTheDocument();
     });
+
+    it('builds correct manuscript hrefs from workspace callbacks', async () => {
+      enable('PROJECT_WORKSPACE');
+      await renderProjectDetail(
+        Component,
+        routeKeyword,
+        mainProjectId,
+        memberUser,
+        'workspace',
+      );
+      await screen.findByRole('heading', { name: 'Compliance Review' });
+
+      const getEditManuscriptHref =
+        lastWorkspaceProps.getEditManuscriptHref as (
+          manuscriptId: string,
+        ) => string;
+      const getResubmitManuscriptHref =
+        lastWorkspaceProps.getResubmitManuscriptHref as (
+          manuscriptId: string,
+        ) => string;
+      const getCreateComplianceReportHref =
+        lastWorkspaceProps.getCreateComplianceReportHref as (
+          manuscriptId: string,
+        ) => string;
+
+      const manuscriptId = 'manuscript-1';
+      const workspaceRoute = getWorkspaceRoute(routeKeyword, mainProjectId);
+
+      expect(getEditManuscriptHref(manuscriptId)).toBe(
+        workspaceRoute.editManuscript({ manuscriptId }).$,
+      );
+      expect(getResubmitManuscriptHref(manuscriptId)).toBe(
+        workspaceRoute.resubmitManuscript({ manuscriptId }).$,
+      );
+      expect(getCreateComplianceReportHref(manuscriptId)).toBe(
+        workspaceRoute.createComplianceReport({ manuscriptId }).$,
+      );
+    });
   },
 );
 
 // --- Variant-specific tests ---
-
-describe('Workspace href callbacks', () => {
-  it('builds edit, resubmit, and create-compliance-report hrefs from manuscriptId', async () => {
-    const memberUser = {
-      id: 'user-team',
-      projects: [],
-      teams: [{ id: 'team-1', role: 'Project Manager' }],
-      role: 'Grantee',
-    };
-    enable('PROJECT_WORKSPACE');
-    await renderProjectDetail(
-      DiscoveryProjectDetail,
-      'discovery',
-      'discovery-1',
-      memberUser,
-      'workspace',
-    );
-    await screen.findByRole('heading', { name: 'Compliance Review' });
-
-    const getEditManuscriptHref = lastWorkspaceProps.getEditManuscriptHref as (
-      manuscriptId: string,
-    ) => string;
-    const getResubmitManuscriptHref =
-      lastWorkspaceProps.getResubmitManuscriptHref as (
-        manuscriptId: string,
-      ) => string;
-    const getCreateComplianceReportHref =
-      lastWorkspaceProps.getCreateComplianceReportHref as (
-        manuscriptId: string,
-      ) => string;
-
-    const workspaceRoute = projects({})
-      .discoveryProjects({})
-      .discoveryProject({ projectId: 'discovery-1' })
-      .workspace({});
-
-    expect(getEditManuscriptHref('ms-1')).toBe(
-      workspaceRoute.editManuscript({ manuscriptId: 'ms-1' }).$,
-    );
-    expect(getResubmitManuscriptHref('ms-1')).toBe(
-      workspaceRoute.resubmitManuscript({ manuscriptId: 'ms-1' }).$,
-    );
-    expect(getCreateComplianceReportHref('ms-1')).toBe(
-      workspaceRoute.createComplianceReport({ manuscriptId: 'ms-1' }).$,
-    );
-  });
-});
 
 describe('DiscoveryProjectDetail - specific', () => {
   it('passes manuscripts and collaborationManuscripts to ProjectWorkspace', async () => {

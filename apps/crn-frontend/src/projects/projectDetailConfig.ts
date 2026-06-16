@@ -1,16 +1,10 @@
 import type { ProjectDetail, ProjectType } from '@asap-hub/model';
-import { projects } from '@asap-hub/routing';
+import { projectRouteByType } from '@asap-hub/routing';
 
 export type ProjectDetailConfig = {
   projectType: ProjectType;
   projectTypeKey: 'discovery' | 'resource' | 'trainee';
-  getRoute: (
-    projectId: string,
-  ) => ReturnType<
-    ReturnType<
-      ReturnType<typeof projects>['discoveryProjects']
-    >['discoveryProject']
-  >;
+  getRoute: (typeof projectRouteByType)[ProjectType];
   getIsTeamBased: (projectDetail: ProjectDetail) => boolean;
   getContactName: (projectDetail: ProjectDetail) => string | undefined;
 };
@@ -18,8 +12,7 @@ export type ProjectDetailConfig = {
 export const discoveryConfig: ProjectDetailConfig = {
   projectType: 'Discovery Project',
   projectTypeKey: 'discovery',
-  getRoute: (projectId) =>
-    projects({}).discoveryProjects({}).discoveryProject({ projectId }),
+  getRoute: projectRouteByType['Discovery Project'],
   getIsTeamBased: () => true,
   getContactName: (pd) =>
     pd.projectType === 'Discovery Project'
@@ -30,8 +23,7 @@ export const discoveryConfig: ProjectDetailConfig = {
 export const resourceConfig: ProjectDetailConfig = {
   projectType: 'Resource Project',
   projectTypeKey: 'resource',
-  getRoute: (projectId) =>
-    projects({}).resourceProjects({}).resourceProject({ projectId }),
+  getRoute: projectRouteByType['Resource Project'],
   getIsTeamBased: (pd) =>
     pd.projectType === 'Resource Project' ? pd.isTeamBased : true,
   getContactName: (pd) =>
@@ -44,8 +36,7 @@ export const resourceConfig: ProjectDetailConfig = {
 export const traineeConfig: ProjectDetailConfig = {
   projectType: 'Trainee Project',
   projectTypeKey: 'trainee',
-  getRoute: (projectId) =>
-    projects({}).traineeProjects({}).traineeProject({ projectId }),
+  getRoute: projectRouteByType['Trainee Project'],
   getIsTeamBased: () => false,
   getContactName: (pd) =>
     pd.projectType === 'Trainee Project'

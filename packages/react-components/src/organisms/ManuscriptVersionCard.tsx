@@ -395,6 +395,12 @@ const ManuscriptVersionCard: React.FC<ManuscriptVersionCardProps> = ({
                       key={additionalFile.id}
                     />
                   ))}
+                {version.complianceReportResponse && (
+                  <ManuscriptFileSection
+                    filename={version.complianceReportResponse.filename}
+                    url={version.complianceReportResponse.url}
+                  />
+                )}
               </div>
               {quickCheckDetails.length > 0 && (
                 <>

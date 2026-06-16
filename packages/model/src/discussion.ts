@@ -32,11 +32,14 @@ export type Reply = {
   files?: ManuscriptFileResponse[];
 };
 
+export type WorkspaceType = 'team' | 'project';
+
 export type DiscussionUpdateDataObject = {
   userId: string;
   reply?: Reply;
   manuscriptId?: string;
   notificationList?: string;
+  workspaceType?: WorkspaceType;
 };
 
 export type DiscussionRequest = {
@@ -44,6 +47,7 @@ export type DiscussionRequest = {
   files?: ManuscriptFileResponse[];
   manuscriptId: string;
   notificationList?: string;
+  workspaceType?: WorkspaceType;
 };
 
 export type DiscussionEndRequest = {
@@ -56,6 +60,7 @@ export type DiscussionCreateRequest = {
   text: string;
   files?: ManuscriptFileResponse[];
   notificationList?: string;
+  workspaceType?: WorkspaceType;
 };
 
 export type DiscussionCreateDataObject = DiscussionCreateRequest & {

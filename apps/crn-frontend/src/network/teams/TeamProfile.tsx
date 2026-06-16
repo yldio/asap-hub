@@ -7,6 +7,7 @@ import { NotFoundPage, TeamProfilePage } from '@asap-hub/react-components';
 import {
   ResearchOutputPermissionsContext,
   useCurrentUserCRN,
+  useFlags,
 } from '@asap-hub/react-context';
 import { network, useRouteParams } from '@asap-hub/routing';
 
@@ -83,6 +84,9 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
   const { teamId } = useRouteParams(route);
   const team = useTeamById(teamId);
   const user = useCurrentUserCRN();
+  const { isEnabled } = useFlags();
+  const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
+
   const isStaff = user?.role === 'Staff';
   const isAsapTeam = team?.displayName === 'ASAP';
   const canDisplayCompliancePage = isStaff && isAsapTeam;
@@ -207,7 +211,7 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
                   }
                 />
               )}
-              {canShareResearchOutput && (
+              {canShareResearchOutput && !isProjectOutputsEnabled && (
                 <Route
                   path="create-output/:outputDocumentType"
                   element={

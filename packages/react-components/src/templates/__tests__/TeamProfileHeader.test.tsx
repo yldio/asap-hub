@@ -6,6 +6,20 @@ import { formatISO } from 'date-fns';
 import { ComponentProps } from 'react';
 import TeamProfileHeader from '../TeamProfileHeader';
 
+const mockIsEnabled = jest.fn();
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+  useCurrentUserCRN: jest.fn(),
+}));
+
+beforeEach(() => {
+  mockIsEnabled.mockReturnValue(false);
+});
+afterAll(() => {
+  mockIsEnabled.mockClear();
+});
+
 const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   id: '42',
   teamId: 'TI1',
@@ -190,7 +204,8 @@ describe('Share an output button dropdown', () => {
       </ResearchOutputPermissionsContext.Provider>,
     );
 
-  it('renders share an output button when user can share research output', () => {
+  it('renders share an output button when user can share research output and flag PROJECT_OUTPUTS is not enabled', () => {
+    mockIsEnabled.mockReturnValue(false);
     renderWithPermissionsContext();
 
     expect(
@@ -201,6 +216,16 @@ describe('Share an output button dropdown', () => {
     expect(
       screen.getByText(/article/i, { selector: 'span' }).closest('a'),
     ).toHaveAttribute('href', '/network/teams/42/create-output/article');
+  });
+
+  it('does not render share an output button when flag PROJECT_OUTPUTS is enabled', () => {
+    mockIsEnabled.mockImplementation(
+      (flag: string) => flag === 'PROJECT_OUTPUTS',
+    );
+    renderWithPermissionsContext();
+    expect(
+      screen.queryByRole('button', { name: /Share an output/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('does not render share an output button dropdown when user cannot share research output', () => {

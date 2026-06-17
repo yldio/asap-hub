@@ -120,6 +120,17 @@ describe('User data provider', () => {
       },
     );
 
+    test('defaults alumniLastUpdated to undefined when null', async () => {
+      const mockResponse = getContentfulGraphqlUser();
+      (mockResponse as any).alumniLastUpdated = null;
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: mockResponse,
+      });
+
+      const result = await userDataProvider.fetchById('user-id');
+      expect(result!.alumniLastUpdated).toBeUndefined();
+    });
+
     test('should map social properties and orcid onto `social` object', async () => {
       const socialProps = {
         github: '@github',
@@ -1478,6 +1489,63 @@ describe('User data provider', () => {
         });
       });
     });
+
+    describe('alumniLastUpdated stamping', () => {
+      beforeEach(() => {
+        jest
+          .useFakeTimers()
+          .setSystemTime(new Date('2026-06-16T12:00:00.000Z'));
+      });
+      afterEach(() => {
+        jest.useRealTimers();
+      });
+
+      test('stamps alumniLastUpdated when alumniSinceDate is in the payload', async () => {
+        await userDataProvider.update('123', {
+          alumniSinceDate: '2026-06-16T12:00:00.000Z',
+        } as any);
+        expect(patchAndPublish).toHaveBeenCalledWith(
+          entry,
+          expect.objectContaining({
+            alumniLastUpdated: '2026-06-16T12:00:00.000Z',
+          }),
+        );
+      });
+
+      test('stamps alumniLastUpdated when alumniLocation is in the payload', async () => {
+        await userDataProvider.update('123', {
+          alumniLocation: 'New York',
+        } as any);
+        expect(patchAndPublish).toHaveBeenCalledWith(
+          entry,
+          expect.objectContaining({
+            alumniLastUpdated: '2026-06-16T12:00:00.000Z',
+          }),
+        );
+      });
+
+      test('stamps alumniLastUpdated when alumniSinceDate is explicitly cleared', async () => {
+        await userDataProvider.update('123', {
+          alumniSinceDate: undefined,
+        } as any);
+        expect(patchAndPublish).toHaveBeenCalledWith(
+          entry,
+          expect.objectContaining({
+            alumniLastUpdated: '2026-06-16T12:00:00.000Z',
+          }),
+        );
+      });
+
+      test('does not stamp alumniLastUpdated for unrelated fields', async () => {
+        await userDataProvider.update('123', {
+          firstName: 'Colin',
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          firstName: 'Colin',
+        });
+      });
+    });
+
     describe('suppressConflict true', () => {
       test('fetches entry from contentful and passes to `patchAndPublishConflict`', async () => {
         await userDataProvider.update(

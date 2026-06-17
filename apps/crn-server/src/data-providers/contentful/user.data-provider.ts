@@ -352,11 +352,20 @@ export class UserContentfulDataProvider implements UserDataProvider {
         ? previousAvatarId
         : undefined;
 
+    const isAlumni = user.fields.alumniSinceDate?.['en-US'] != null;
+    const shouldStampAlumni =
+      'alumniSinceDate' in data ||
+      'alumniLocation' in data ||
+      (isAlumni && 'email' in data);
+
     const patchMethod = suppressConflict
       ? patchAndPublishConflict
       : patchAndPublish;
     const result = await patchMethod(user, {
       ...fields,
+      ...(shouldStampAlumni
+        ? { alumniLastUpdated: new Date().toISOString() }
+        : {}),
       ...(data.tagIds ? { researchTags: getLinkEntities(data.tagIds) } : {}),
     });
 
@@ -698,6 +707,7 @@ export const parseContentfulGraphQlUsers = (item: UserItem): UserDataObject => {
     orcidLastModifiedDate: item.orcidLastModifiedDate ?? undefined,
     orcidLastSyncDate: item.orcidLastSyncDate ?? undefined,
     orcidWorks,
+    alumniLastUpdated: item.alumniLastUpdated ?? undefined,
     alumniLocation: item.alumniLocation ?? undefined,
     alumniSinceDate: item.alumniSinceDate ?? undefined,
     reachOut: item.reachOut ?? undefined,

@@ -20887,6 +20887,7 @@ export type Users = Entry &
     activeCampaignId?: Maybe<Scalars['String']>;
     adminNotes?: Maybe<Scalars['String']>;
     alumniLocation?: Maybe<Scalars['String']>;
+    alumniLastUpdated?: Maybe<Scalars['DateTime']>;
     alumniSinceDate?: Maybe<Scalars['DateTime']>;
     avatar?: Maybe<Asset>;
     biography?: Maybe<Scalars['String']>;
@@ -38135,6 +38136,7 @@ export type UsersContentFragment = Pick<
   | 'activeCampaignId'
   | 'lastUpdated'
   | 'alumniSinceDate'
+  | 'alumniLastUpdated'
   | 'alumniLocation'
   | 'biography'
   | 'connections'
@@ -38503,6 +38505,7 @@ export type FetchUserByIdQuery = {
       Users,
       | 'activeCampaignId'
       | 'lastUpdated'
+      | 'alumniLastUpdated'
       | 'alumniSinceDate'
       | 'alumniLocation'
       | 'biography'

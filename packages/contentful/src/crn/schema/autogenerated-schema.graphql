@@ -13344,6 +13344,7 @@ type Users implements Entry & _Node {
   activeCampaignId(locale: String, useFallbackLocale: Boolean): String
   adminNotes(locale: String, useFallbackLocale: Boolean): String
   alumniLocation(locale: String, useFallbackLocale: Boolean): String
+  alumniLastUpdated(locale: String, useFallbackLocale: Boolean): DateTime
   alumniSinceDate(locale: String, useFallbackLocale: Boolean): DateTime
   avatar(locale: String, preview: Boolean, useFallbackLocale: Boolean): Asset
   biography(locale: String, useFallbackLocale: Boolean): String

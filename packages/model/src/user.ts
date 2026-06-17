@@ -85,6 +85,7 @@ export interface Connection {
 export interface UserDataObject extends Invitee {
   activeCampaignId?: string;
   membershipStatus?: UserMembershipStatus[];
+  alumniLastUpdated?: string;
   alumniLocation?: string;
   alumniSinceDate?: string;
   connections?: Connection[];

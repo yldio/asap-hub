@@ -159,6 +159,28 @@ describe('UserDetailHeaderCard', () => {
         screen.queryByText(/their next role was at/),
       ).not.toBeInTheDocument();
     });
+    it('shows alumniLastUpdated date instead of lastModifiedDate when available', () => {
+      render(
+        <UserDetailHeaderCard
+          {...defaultProps}
+          alumniSinceDate="2022-06-30T00:00:00.000Z"
+          alumniLastUpdated="2023-03-15T00:00:00.000Z"
+          lastModifiedDate="2024-01-01T00:00:00.000Z"
+        />,
+      );
+      expect(screen.getByText(/15th March 2023/)).toBeInTheDocument();
+      expect(screen.queryByText(/1st January 2024/)).not.toBeInTheDocument();
+    });
+    it('falls back to lastModifiedDate when alumniLastUpdated is not set', () => {
+      render(
+        <UserDetailHeaderCard
+          {...defaultProps}
+          alumniSinceDate="2022-06-30T00:00:00.000Z"
+          lastModifiedDate="2023-01-08T00:00:00.000Z"
+        />,
+      );
+      expect(screen.getByText(/8th January 2023/)).toBeInTheDocument();
+    });
   });
 
   describe('external profiles', () => {

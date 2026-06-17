@@ -174,6 +174,7 @@ type UserProfileHeaderProps = Pick<
   | 'id'
   | 'lastModifiedDate'
   | 'alumniSinceDate'
+  | 'alumniLastUpdated'
   | 'alumniLocation'
   | 'avatarUrl'
   | 'contactEmail'
@@ -215,6 +216,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   id,
   lastModifiedDate,
   alumniSinceDate,
+  alumniLastUpdated,
   alumniLocation,
   fullDisplayName,
   country,
@@ -255,7 +257,10 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           </strong>
           , their contact details were last updated on the{' '}
           <strong>
-            {formatDateToTimezone(lastModifiedDate, 'do MMMM yyyy')}
+            {formatDateToTimezone(
+              alumniLastUpdated || lastModifiedDate,
+              'do MMMM yyyy',
+            )}
           </strong>
           {alumniLocation && (
             <span>

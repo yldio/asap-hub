@@ -17,8 +17,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { ENTER_KEYCODE } from '../../../atoms/Dropdown';
 import ResearchOutputForm from '../../ResearchOutputForm';
 import {
-  defaultProps,
   expectedRequest,
+  getDefaultProps,
 } from '../../test-utils/research-output-form';
 import { editorRef } from '../../../atoms';
 import { mockActErrorsInConsole } from '../../../test-utils';
@@ -91,7 +91,7 @@ describe('on submit 2', () => {
     render(
       <MemoryRouter>
         <ResearchOutputForm
-          {...defaultProps}
+          {...getDefaultProps()}
           researchOutputData={researchOutputData}
           selectedTeams={[{ value: 'TEAMID', label: 'Example Team' }]}
           documentType={documentType}

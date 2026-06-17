@@ -5,7 +5,9 @@ import {
 import { ComponentProps } from 'react';
 import ResearchOutputForm from '../ResearchOutputForm';
 
-export const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
+export const getDefaultProps = (): ComponentProps<
+  typeof ResearchOutputForm
+> => ({
   displayChangelog: false,
   onSave: jest.fn(),
   onSaveDraft: jest.fn(),
@@ -23,9 +25,11 @@ export const defaultProps: ComponentProps<typeof ResearchOutputForm> = {
   getRelatedResearchSuggestions: jest.fn(),
   getRelatedEventSuggestions: jest.fn(),
   getShortDescriptionFromDescription: jest.fn(),
-  getImpactSuggestions: jest.fn(),
+  getImpactSuggestions: jest.fn(() => Promise.resolve([])),
   getCategorySuggestions: jest.fn(),
-};
+});
+
+export const defaultProps = getDefaultProps();
 
 export const expectedRequest: ResearchOutputPostRequest = {
   documentType: 'Bioinformatics',

@@ -39,6 +39,7 @@ type UserDetailHeaderCardProps = Pick<
   | 'positions'
   | 'social'
   | 'alumniSinceDate'
+  | 'alumniLastUpdated'
   | 'alumniLocation'
   | 'lastModifiedDate'
 > & {
@@ -143,6 +144,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
   positions,
   social,
   alumniSinceDate,
+  alumniLastUpdated,
   alumniLocation,
   lastModifiedDate,
   editHref,
@@ -170,7 +172,9 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
             user became alumni on the{' '}
             <strong>{formatDate(new Date(alumniSinceDate))}</strong>, their
             contact details were last updated on the{' '}
-            <strong>{formatDate(new Date(lastModifiedDate))}</strong>
+            <strong>
+              {formatDate(new Date(alumniLastUpdated || lastModifiedDate))}
+            </strong>
             {alumniLocation && (
               <>
                 {' '}

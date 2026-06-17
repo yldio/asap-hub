@@ -1,4 +1,8 @@
-import { DiscussionRequest, ManuscriptFileResponse } from '@asap-hub/model';
+import {
+  DiscussionRequest,
+  ManuscriptFileResponse,
+  WorkspaceType,
+} from '@asap-hub/model';
 import { BackendError } from '@asap-hub/frontend-utils';
 import {
   useCreateDiscussion,
@@ -7,7 +11,7 @@ import {
 } from './state';
 import { useManuscriptToast } from './useManuscriptToast';
 
-const useDiscussionHandlers = () => {
+const useDiscussionHandlers = (workspaceType: WorkspaceType) => {
   const createDiscussion = useCreateDiscussion();
   const replyToDiscussion = useReplyToDiscussion();
   const markDiscussionAsRead = useMarkDiscussionAsRead();
@@ -25,6 +29,7 @@ const useDiscussionHandlers = () => {
         title,
         message,
         files,
+        workspaceType,
       );
       setFormType({ type: 'discussion-started', accent: 'successLarge' });
       return discussionId;
@@ -48,7 +53,10 @@ const useDiscussionHandlers = () => {
     patch: DiscussionRequest,
   ): Promise<void> => {
     try {
-      await replyToDiscussion(manuscriptId, discussionId, patch);
+      await replyToDiscussion(manuscriptId, discussionId, {
+        ...patch,
+        workspaceType,
+      });
       setFormType({ type: 'reply-to-discussion', accent: 'successLarge' });
     } catch (error: unknown) {
       if (

@@ -11,7 +11,7 @@ import {
   statusButtonOptions,
   TeamManuscript,
 } from '@asap-hub/model';
-import { network } from '@asap-hub/routing';
+import { network, projectRouteByType } from '@asap-hub/routing';
 import { css, Theme } from '@emotion/react';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
@@ -267,6 +267,23 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
   >(isTargetManuscript ? targetTabFromUrl : 'manuscripts-and-reports');
   const [manuscript, setManuscript] = useManuscriptById(id);
   const { title, status, versions } = manuscript ?? { versions: [] };
+
+  const projectWorkspaceRoute =
+    manuscript?.projectId && manuscript.projectType
+      ? projectRouteByType[manuscript.projectType](
+          manuscript.projectId,
+        ).workspace({})
+      : undefined;
+
+  const teamWorkspaceRoute = network({})
+    .teams({})
+    .team({ teamId })
+    .workspace({});
+
+  const resolvedGetEditManuscriptHref = (manuscriptId: string): string =>
+    projectWorkspaceRoute?.editManuscript({ manuscriptId }).$ ??
+    getEditManuscriptHref?.(manuscriptId) ??
+    teamWorkspaceRoute.editManuscript({ manuscriptId }).$;
   const [displayConfirmStatusChangeModal, setDisplayConfirmStatusChangeModal] =
     useState(false);
   const targetManuscriptRef = useRef<HTMLDivElement>(null);
@@ -307,21 +324,15 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
     if (expandedState) syncUrl(true, next);
   };
 
-  const complianceReportRoute = getCreateComplianceReportHref
-    ? getCreateComplianceReportHref(id)
-    : network({})
-        .teams({})
-        .team({ teamId })
-        .workspace({})
-        .createComplianceReport({ manuscriptId: id }).$;
+  const complianceReportRoute =
+    projectWorkspaceRoute?.createComplianceReport({ manuscriptId: id }).$ ??
+    getCreateComplianceReportHref?.(id) ??
+    teamWorkspaceRoute.createComplianceReport({ manuscriptId: id }).$;
 
-  const resubmitManuscriptRoute = getResubmitManuscriptHref
-    ? getResubmitManuscriptHref(id)
-    : network({})
-        .teams({})
-        .team({ teamId })
-        .workspace({})
-        .resubmitManuscript({ manuscriptId: id }).$;
+  const resubmitManuscriptRoute =
+    projectWorkspaceRoute?.resubmitManuscript({ manuscriptId: id }).$ ??
+    getResubmitManuscriptHref?.(id) ??
+    teamWorkspaceRoute.resubmitManuscript({ manuscriptId: id }).$;
 
   const handleShareComplianceReport = () => {
     void navigate(complianceReportRoute, { state: { fromButton: true } });
@@ -583,7 +594,7 @@ const ManuscriptCard: React.FC<ManuscriptCardProps> = ({
                         categories={manuscript?.categories || []}
                         impact={manuscript?.impact}
                         showTeamName={showTeamName}
-                        getEditManuscriptHref={getEditManuscriptHref}
+                        getEditManuscriptHref={resolvedGetEditManuscriptHref}
                       />
                     ))}
                   {versions.length > VERSION_LIMIT && (

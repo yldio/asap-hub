@@ -215,6 +215,7 @@ describe('Manuscript', () => {
           notificationList: undefined,
           text: 'test message',
           title: 'Test',
+          workspaceType: 'team',
         },
         'Bearer access_token',
       );
@@ -296,7 +297,12 @@ describe('Manuscript', () => {
       expect(mockReplyToDiscussion).toHaveBeenCalledWith(
         'manuscript_0',
         'discussion-id-1',
-        { text: 'test message', manuscriptId: 'manuscript_0', files: [] },
+        {
+          text: 'test message',
+          manuscriptId: 'manuscript_0',
+          files: [],
+          workspaceType: 'team',
+        },
       );
     });
     await waitFor(() => {

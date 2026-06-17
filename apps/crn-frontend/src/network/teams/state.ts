@@ -17,6 +17,7 @@ import {
   TeamListItemResponse,
   TeamPatchRequest,
   TeamResponse,
+  WorkspaceType,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useCallback, useState } from 'react';
@@ -564,6 +565,7 @@ export const useCreateDiscussion = () => {
     title: string,
     text: string,
     files?: ManuscriptFileResponse[],
+    workspaceType?: WorkspaceType,
   ): Promise<string | undefined> => {
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
@@ -576,6 +578,7 @@ export const useCreateDiscussion = () => {
           text,
           files,
           notificationList,
+          workspaceType,
         },
         authorization,
       );

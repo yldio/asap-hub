@@ -73,6 +73,7 @@ export const updateAvatarBody: { avatar: string } = {
 
 export const getUserResponse = (): UserResponse => ({
   membershipStatus: [inactiveUserMembershipStatus],
+  alumniLastUpdated: '2020-09-23T20:45:22.000Z',
   alumniLocation: 'some alumni location',
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
   id: 'user-id-1',

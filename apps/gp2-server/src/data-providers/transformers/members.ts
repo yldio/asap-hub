@@ -15,7 +15,10 @@ type MembersItem =
   | GraphQLWorkingGroup['membersCollection']
   | GraphQLProject['membersCollection'];
 
-type MemberItem = NonNullable<NonNullable<MembersItem>['items'][number]>;
+type RawMemberItem = NonNullable<NonNullable<MembersItem>['items'][number]>;
+type MemberItem = NonNullable<
+  NonNullable<GraphQLProject['membersCollection']>['items'][number]
+>;
 const parseMember = <T extends string>(
   id: string,
   user: NonNullable<MemberItem['user']>,
@@ -47,9 +50,10 @@ const parseMember = <T extends string>(
 
 export const parseMembers = <T extends string>(members: MembersItem) =>
   members?.items
-    .filter((member): member is MemberItem => member !== null)
-    .reduce((membersList: gp2Model.Member<T>[], member) => {
-      const user = member?.user;
+    .filter((member): member is RawMemberItem => member !== null)
+    .reduce((membersList: gp2Model.Member<T>[], rawMember) => {
+      const member = rawMember as MemberItem;
+      const { user } = member;
       if (!user?.onboarded) {
         return membersList;
       }

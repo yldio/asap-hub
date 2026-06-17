@@ -15986,7 +15986,7 @@ export type ProjectsContentFieldsFragment = Pick<
     Pick<ProjectsMembersCollection, 'total'> & {
       items: Array<
         Maybe<
-          Pick<ProjectMembership, 'role'> & {
+          Pick<ProjectMembership, 'role' | 'inactiveSinceDate'> & {
             sys: Pick<Sys, 'id'>;
             user?: Maybe<
               Pick<
@@ -16064,7 +16064,7 @@ export type FetchProjectByIdQuery = {
         Pick<ProjectsMembersCollection, 'total'> & {
           items: Array<
             Maybe<
-              Pick<ProjectMembership, 'role'> & {
+              Pick<ProjectMembership, 'role' | 'inactiveSinceDate'> & {
                 sys: Pick<Sys, 'id'>;
                 user?: Maybe<
                   Pick<
@@ -16155,7 +16155,7 @@ export type FetchProjectsQuery = {
               Pick<ProjectsMembersCollection, 'total'> & {
                 items: Array<
                   Maybe<
-                    Pick<ProjectMembership, 'role'> & {
+                    Pick<ProjectMembership, 'role' | 'inactiveSinceDate'> & {
                       sys: Pick<Sys, 'id'>;
                       user?: Maybe<
                         Pick<
@@ -16259,7 +16259,7 @@ export type FetchProjectsByUserQuery = {
                         Pick<ProjectsMembersCollection, 'total'> & {
                           items: Array<
                             Maybe<
-                              Pick<ProjectMembership, 'role'> & {
+                              Pick<ProjectMembership, 'role' | 'inactiveSinceDate'> & {
                                 sys: Pick<Sys, 'id'>;
                                 user?: Maybe<
                                   Pick<
@@ -19912,6 +19912,10 @@ export const ProjectsContentFieldsFragmentDoc = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'inactiveSinceDate' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'user' },

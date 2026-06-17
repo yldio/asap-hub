@@ -2542,6 +2542,8 @@ export enum DiscoverMembersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -2625,6 +2627,8 @@ export enum DiscoverMembersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -2720,6 +2724,8 @@ export enum DiscoverScientificAdvisoryBoardCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -2803,6 +2809,8 @@ export enum DiscoverScientificAdvisoryBoardCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -3134,6 +3142,8 @@ export enum DiscussionsReadByCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -3217,6 +3227,8 @@ export enum DiscussionsReadByCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -7383,6 +7395,8 @@ export enum LabMembershipLinkingCollectionsUsersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -7460,6 +7474,8 @@ export enum LabMembershipLinkingCollectionsUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -7969,6 +7985,8 @@ export enum LabsLinkingCollectionsUsersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -8046,6 +8064,8 @@ export enum LabsLinkingCollectionsUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -9728,6 +9748,8 @@ export enum ManuscriptsAssignedUsersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -9811,6 +9833,8 @@ export enum ManuscriptsAssignedUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -12791,6 +12815,8 @@ export enum ProjectsScientificFacilitatorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -12874,6 +12900,8 @@ export enum ProjectsScientificFacilitatorCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -17586,6 +17614,8 @@ export enum ResearchTagsLinkingCollectionsUsersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -17663,6 +17693,8 @@ export enum ResearchTagsLinkingCollectionsUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -18682,6 +18714,8 @@ export enum TeamMembershipLinkingCollectionsUsersCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -18759,6 +18793,8 @@ export enum TeamMembershipLinkingCollectionsUsersCursorCollectionOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -20814,8 +20850,8 @@ export type Users = Entry &
     activeCampaignCreatedAt?: Maybe<Scalars['DateTime']>;
     activeCampaignId?: Maybe<Scalars['String']>;
     adminNotes?: Maybe<Scalars['String']>;
-    alumniLocation?: Maybe<Scalars['String']>;
     alumniLastUpdated?: Maybe<Scalars['DateTime']>;
+    alumniLocation?: Maybe<Scalars['String']>;
     alumniSinceDate?: Maybe<Scalars['DateTime']>;
     avatar?: Maybe<Asset>;
     biography?: Maybe<Scalars['String']>;
@@ -20883,6 +20919,12 @@ export type UsersActiveCampaignIdArgs = {
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
 export type UsersAdminNotesArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/users) */
+export type UsersAlumniLastUpdatedArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -21274,6 +21316,15 @@ export type UsersFilter = {
   adminNotes_not?: InputMaybe<Scalars['String']>;
   adminNotes_not_contains?: InputMaybe<Scalars['String']>;
   adminNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  alumniLastUpdated?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  alumniLastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  alumniLastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   alumniLocation?: InputMaybe<Scalars['String']>;
   alumniLocation_contains?: InputMaybe<Scalars['String']>;
   alumniLocation_exists?: InputMaybe<Scalars['Boolean']>;
@@ -22773,6 +22824,8 @@ export enum UsersOrder {
   ActiveCampaignCreatedAtDesc = 'activeCampaignCreatedAt_DESC',
   ActiveCampaignIdAsc = 'activeCampaignId_ASC',
   ActiveCampaignIdDesc = 'activeCampaignId_DESC',
+  AlumniLastUpdatedAsc = 'alumniLastUpdated_ASC',
+  AlumniLastUpdatedDesc = 'alumniLastUpdated_DESC',
   AlumniLocationAsc = 'alumniLocation_ASC',
   AlumniLocationDesc = 'alumniLocation_DESC',
   AlumniSinceDateAsc = 'alumniSinceDate_ASC',
@@ -25593,6 +25646,15 @@ export type CfUsersNestedFilter = {
   adminNotes_not?: InputMaybe<Scalars['String']>;
   adminNotes_not_contains?: InputMaybe<Scalars['String']>;
   adminNotes_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  alumniLastUpdated?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_exists?: InputMaybe<Scalars['Boolean']>;
+  alumniLastUpdated_gt?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_gte?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  alumniLastUpdated_lt?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_lte?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_not?: InputMaybe<Scalars['DateTime']>;
+  alumniLastUpdated_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   alumniLocation?: InputMaybe<Scalars['String']>;
   alumniLocation_contains?: InputMaybe<Scalars['String']>;
   alumniLocation_exists?: InputMaybe<Scalars['Boolean']>;
@@ -38055,8 +38117,8 @@ export type UsersContentFragment = Pick<
   | 'activeCampaignId'
   | 'lastUpdated'
   | 'alumniSinceDate'
-  | 'alumniLastUpdated'
   | 'alumniLocation'
+  | 'alumniLastUpdated'
   | 'biography'
   | 'connections'
   | 'createdDate'
@@ -38422,9 +38484,9 @@ export type FetchUserByIdQuery = {
       Users,
       | 'activeCampaignId'
       | 'lastUpdated'
-      | 'alumniLastUpdated'
       | 'alumniSinceDate'
       | 'alumniLocation'
+      | 'alumniLastUpdated'
       | 'biography'
       | 'connections'
       | 'createdDate'
@@ -46908,6 +46970,7 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'lastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniSinceDate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'alumniLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'alumniLastUpdated' } },
           { kind: 'Field', name: { kind: 'Name', value: 'biography' } },
           { kind: 'Field', name: { kind: 'Name', value: 'connections' } },
           { kind: 'Field', name: { kind: 'Name', value: 'createdDate' } },

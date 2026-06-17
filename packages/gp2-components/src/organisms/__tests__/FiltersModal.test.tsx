@@ -1,3 +1,4 @@
+import { disable, enable, reset } from '@asap-hub/flags';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -7,6 +8,13 @@ import FiltersModal from '../FiltersModal';
 const { userRegions } = gp2Model;
 
 describe('FiltersModal', () => {
+  beforeEach(() => {
+    enable('STAGING_MODE');
+  });
+  afterEach(() => {
+    reset();
+  });
+
   const defaultProps = {
     onBackClick: jest.fn(),
     onApplyClick: jest.fn(),
@@ -214,6 +222,18 @@ describe('FiltersModal', () => {
     expect(
       screen.getByRole('checkbox', { name: 'Alumni Member' }),
     ).toBeInTheDocument();
+  });
+
+  it('does not render the Type of Users section when STAGING_MODE is disabled', () => {
+    disable('STAGING_MODE');
+    render(<FiltersModal {...defaultProps} />);
+    expect(screen.queryByText('Type of Users')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('checkbox', { name: 'GP2 Member' }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('checkbox', { name: 'Alumni Member' }),
+    ).not.toBeInTheDocument();
   });
 
   it('toggling a membership status updates the filter count', async () => {

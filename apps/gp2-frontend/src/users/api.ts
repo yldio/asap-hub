@@ -1,4 +1,5 @@
 import { AlgoliaClient } from '@asap-hub/algolia';
+import { isEnabled } from '@asap-hub/flags';
 import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { API_BASE_URL } from '../config';
@@ -23,7 +24,9 @@ export const createUserApiUrl = ({
   addFilter('tags', filter?.tags);
   addFilter('projects', filter?.projects);
   addFilter('workingGroups', filter?.workingGroups);
-  addFilter('membershipStatus', filter?.membershipStatus);
+  if (isEnabled('STAGING_MODE')) {
+    addFilter('membershipStatus', filter?.membershipStatus);
+  }
 
   if (typeof filter?.onlyOnboarded === 'boolean') {
     url.searchParams.set(
@@ -58,7 +61,9 @@ const getAllFilters = ({
     { name: 'tagIds', items: tags },
     { name: 'projectIds', items: projects },
     { name: 'workingGroupIds', items: workingGroups },
-    { name: 'membershipStatus', items: membershipStatus },
+    ...(isEnabled('STAGING_MODE')
+      ? [{ name: 'membershipStatus', items: membershipStatus }]
+      : []),
   ]
     .map(addFilter)
     .filter(Boolean)

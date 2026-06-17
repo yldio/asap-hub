@@ -1,9 +1,17 @@
+import { disable, enable, reset } from '@asap-hub/flags';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
 import FilterPills from '../FilterPills';
 
 describe('FilterPills', () => {
+  beforeEach(() => {
+    enable('STAGING_MODE');
+  });
+  afterEach(() => {
+    reset();
+  });
+
   const props = {
     filters: {
       tags: ['tag-1'],
@@ -62,5 +70,10 @@ describe('FilterPills', () => {
       'Alumni Member',
       'membershipStatus',
     );
+  });
+  it('does not render the membership status pill when STAGING_MODE is disabled', () => {
+    disable('STAGING_MODE');
+    render(<FilterPills {...props} />);
+    expect(screen.queryByText('Alumni Member')).not.toBeInTheDocument();
   });
 });

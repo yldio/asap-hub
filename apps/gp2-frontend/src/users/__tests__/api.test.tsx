@@ -1,4 +1,5 @@
 import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
+import { disable, enable, reset } from '@asap-hub/flags';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
@@ -26,7 +27,13 @@ type Search = () => Promise<
   ClientSearchResponse<'gp2', 'user' | 'external-user'>
 >;
 
-beforeEach(() => nock.cleanAll());
+beforeEach(() => {
+  nock.cleanAll();
+  enable('STAGING_MODE');
+});
+afterEach(() => {
+  reset();
+});
 describe('getUser', () => {
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -268,6 +275,22 @@ describe('getAlgoliaUsers', () => {
     );
   });
 
+  it('omits the membershipStatus filter when STAGING_MODE is disabled', async () => {
+    disable('STAGING_MODE');
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      membershipStatus: ['Alumni Member'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({ filters: '' }),
+    );
+  });
+
   it('builds a multiple filter query', async () => {
     await getAlgoliaUsers(mockAlgoliaSearchClient, {
       ...options,
@@ -426,6 +449,14 @@ describe('createUserApiUrl', () => {
       expect(url.searchParams.get('filter[onlyOnboarded]')).toEqual('false');
     },
   );
+
+  it('omits the membershipStatus filter from REST URL when STAGING_MODE is disabled', () => {
+    disable('STAGING_MODE');
+    const url = createUserApiUrl({
+      filter: { membershipStatus: ['Alumni Member'], onlyOnboarded: false },
+    });
+    expect(url.searchParams.getAll('filter[membershipStatus]')).toEqual([]);
+  });
 });
 
 describe('postUserAvatar', () => {

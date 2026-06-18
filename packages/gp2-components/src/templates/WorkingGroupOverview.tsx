@@ -65,6 +65,7 @@ const memberListStyles = css({
 const tabDescriptionStyles = css({
   fontWeight: 'bold',
   margin: `${rem(8)} 0`,
+  fontSize: rem(21),
 });
 
 const LEADER_ROLES: ReadonlySet<gp2.WorkingGroupMemberRole> = new Set([
@@ -163,8 +164,11 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
               tabTitle: `Active Leaders (${activeLeaders.length})`,
               items: activeLeaders,
               empty: (
-                <Paragraph accent="lead">
-                  There are no active leaders.
+                <Paragraph
+                  accent="lead"
+                  styles={css({ fontWeight: 600, fontSize: rem(17) })}
+                >
+                  No active leaders available.
                 </Paragraph>
               ),
             },
@@ -173,8 +177,12 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
               items: pastLeaders,
               empty: (
                 <div css={{ marginBottom: rem(56) }}>
-                  <Paragraph accent="lead">
-                    There are no past leaders.
+                  <Paragraph
+                    accent="lead"
+                    noMargin
+                    styles={css({ fontWeight: 600, fontSize: rem(17) })}
+                  >
+                    No past leaders available.
                   </Paragraph>
                 </div>
               ),
@@ -222,8 +230,11 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
                 items: activeMembers,
                 truncateFrom: 8,
                 empty: (
-                  <Paragraph accent="lead">
-                    There are no active members.
+                  <Paragraph
+                    accent="lead"
+                    styles={css({ fontWeight: 600, fontSize: rem(17) })}
+                  >
+                    No active members available.
                   </Paragraph>
                 ),
               },
@@ -233,8 +244,12 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
                 truncateFrom: 8,
                 empty: (
                   <div css={{ marginBottom: rem(8) }}>
-                    <Paragraph accent="lead" noMargin>
-                      There are no past members.
+                    <Paragraph
+                      accent="lead"
+                      noMargin
+                      styles={css({ fontWeight: 600, fontSize: rem(17) })}
+                    >
+                      No past members available.
                     </Paragraph>
                   </div>
                 ),

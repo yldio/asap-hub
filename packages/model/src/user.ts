@@ -72,6 +72,7 @@ export interface UserSocialLinks {
   orcid?: string;
   researcherId?: string;
   twitter?: string;
+  blueSky?: string;
   github?: string;
   googleScholar?: string;
   researchGate?: string;

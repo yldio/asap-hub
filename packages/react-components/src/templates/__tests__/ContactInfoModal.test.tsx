@@ -126,6 +126,7 @@ it.each`
   ${'Website 2'}      | ${`website2`}
   ${'Researcher ID'}  | ${`researcherId`}
   ${'X'}              | ${`twitter`}
+  ${'BlueSky'}        | ${`blueSky`}
   ${'Github'}         | ${`github`}
   ${'LinkedIn'}       | ${`linkedIn`}
   ${'Research Gate'}  | ${`researchGate`}
@@ -139,6 +140,7 @@ it.each`
     researchGate: 'researchGate',
     researcherId: 'researcherId',
     twitter: 'twitter',
+    blueSky: 'blueSky',
     website1: 'website1',
     website2: 'website2',
   };

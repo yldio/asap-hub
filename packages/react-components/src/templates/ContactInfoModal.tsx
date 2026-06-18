@@ -6,6 +6,7 @@ import { FunctionComponent, useState } from 'react';
 import { Link } from '../atoms';
 import { charcoal, lead } from '../colors';
 import {
+  BlueSkyIcon,
   GithubIcon,
   GlobeIcon,
   GoogleScholarIcon,
@@ -61,6 +62,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
     researchGate = '',
     researcherId = '',
     twitter = '',
+    blueSky = '',
   } = {},
 
   backHref,
@@ -76,6 +78,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
   const [newResearchGate, setNewResearchGate] = useState(researchGate);
   const [newResearcherId, setNewResearcherId] = useState(researcherId);
   const [newTwitter, setNewTwitter] = useState(twitter);
+  const [newBlueSky, setNewBlueSky] = useState(blueSky);
 
   return (
     <EditUserModal
@@ -87,6 +90,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           contactEmail: newEmail || undefined,
           social: {
             twitter: formatUserSocial(newTwitter, 'twitter') || undefined,
+            blueSky: newBlueSky || undefined,
             researcherId: newResearcherId || undefined,
             researchGate:
               formatUserSocial(newResearchGate, 'researchGate') || undefined,
@@ -188,6 +192,16 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               enabled={!isSaving}
               labelIndicator={wrapIcon(XIcon)}
               placeholder="https://twitter.com/yourprofilename"
+            />
+            <LabeledTextField
+              title="BlueSky"
+              subtitle="(optional)"
+              description="Type your BlueSky profile URL."
+              onChange={setNewBlueSky}
+              value={newBlueSky}
+              enabled={!isSaving}
+              labelIndicator={wrapIcon(BlueSkyIcon)}
+              placeholder="https://bsky.app/profile/yourprofilename"
             />
             <LabeledTextField
               title="Github"

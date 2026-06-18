@@ -38084,6 +38084,7 @@ export type UsersContentFragment = Pick<
   | 'researcherId'
   | 'researchGate'
   | 'twitter'
+  | 'blueSky'
   | 'website1'
   | 'website2'
   | 'role'
@@ -38289,6 +38290,7 @@ export type FetchPublicUsersQuery = {
             | 'orcid'
             | 'researcherId'
             | 'twitter'
+            | 'blueSky'
             | 'github'
             | 'googleScholar'
             | 'researchGate'
@@ -38451,6 +38453,7 @@ export type FetchUserByIdQuery = {
       | 'researcherId'
       | 'researchGate'
       | 'twitter'
+      | 'blueSky'
       | 'website1'
       | 'website2'
       | 'role'
@@ -46943,6 +46946,7 @@ export const UsersContentFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'researcherId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'researchGate' } },
           { kind: 'Field', name: { kind: 'Name', value: 'twitter' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'blueSky' } },
           { kind: 'Field', name: { kind: 'Name', value: 'website1' } },
           { kind: 'Field', name: { kind: 'Name', value: 'website2' } },
           { kind: 'Field', name: { kind: 'Name', value: 'role' } },
@@ -71347,6 +71351,10 @@ export const FetchPublicUsersDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'twitter' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'blueSky' },
                       },
                       {
                         kind: 'Field',

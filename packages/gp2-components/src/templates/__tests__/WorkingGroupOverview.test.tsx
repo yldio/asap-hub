@@ -1,6 +1,11 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import WorkingGroupOverview from '../WorkingGroupOverview';
 
+const mockIsEnabled = jest.fn().mockReturnValue(true);
+jest.mock('@asap-hub/react-context', () => ({
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
 describe('WorkingGroupOverview', () => {
   const defaultProps = {
     description: 'this is a description',
@@ -269,5 +274,47 @@ describe('WorkingGroupOverview', () => {
     expect(
       screen.getByRole('heading', { name: /the milestone/ }),
     ).toBeInTheDocument();
+  });
+
+  describe('when STAGING_MODE is disabled', () => {
+    beforeEach(() => {
+      mockIsEnabled.mockReturnValue(false);
+    });
+
+    afterEach(() => {
+      mockIsEnabled.mockReturnValue(true);
+    });
+
+    it('renders flat members list without tabs', () => {
+      render(
+        <WorkingGroupOverview
+          {...defaultProps}
+          members={[
+            {
+              userId: 'uuid-lead',
+              firstName: 'Jane',
+              lastName: 'Lead',
+              displayName: 'Jane Lead',
+              role: 'Lead',
+            },
+            {
+              userId: 'uuid-member',
+              firstName: 'John',
+              lastName: 'Member',
+              displayName: 'John Member',
+              role: 'Working group member',
+            },
+          ]}
+        />,
+      );
+      expect(
+        screen.getByRole('heading', { name: 'Working Group Members (2)' }),
+      ).toBeInTheDocument();
+      expect(screen.getByText('Jane Lead')).toBeInTheDocument();
+      expect(screen.getByText('John Member')).toBeInTheDocument();
+      expect(
+        screen.queryByText('Active Leaders (1)'),
+      ).not.toBeInTheDocument();
+    });
   });
 });

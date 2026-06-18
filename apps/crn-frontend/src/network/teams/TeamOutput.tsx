@@ -33,7 +33,10 @@ import React, {
   useState,
 } from 'react';
 import { useNavigate } from 'react-router';
-import { mapManuscriptVersionToResearchOutput } from '../../shared-research/util';
+import {
+  mapManuscriptVersionToResearchOutput,
+  resolveResearchOutputFlowId,
+} from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
   handleError,
@@ -182,6 +185,14 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
     published,
     isImportedFromManuscript,
   );
+  const flowId = resolveResearchOutputFlowId({
+    entityType: 'team',
+    versionAction,
+    published,
+    isImportedFromManuscript,
+    isDuplicate,
+    hasResearchOutputId: !!researchOutputData?.id,
+  });
   const getShortDescriptionFromDescription = useGeneratedContent();
   const researchSuggestions = researchTags
     .filter((tag) => tag.category === 'Keyword')
@@ -435,6 +446,7 @@ const TeamOutput: React.FC<TeamOutputProps> = ({
                       published: false,
                     }).catch(handleError(['/link', '/title'], setErrors))
               }
+              flowId={flowId}
             />
           </InnerToastContext.Provider>
         </Frame>

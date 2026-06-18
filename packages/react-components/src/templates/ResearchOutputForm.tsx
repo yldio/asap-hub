@@ -2,6 +2,7 @@ import {
   DecisionOption,
   EventResponse,
   ResearchOutputDocumentType,
+  ResearchOutputFlowId,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
@@ -90,6 +91,7 @@ type ResearchOutputFormProps = Pick<
     permissions: ResearchOutputPermissions;
     descriptionUnchangedWarning?: boolean;
     isImportedFromManuscript?: boolean;
+    flowId?: ResearchOutputFlowId;
   };
 
 const mainStyles = css({
@@ -184,6 +186,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   permissions,
   versionAction,
   isImportedFromManuscript,
+  flowId,
 }) => {
   const navigate = useNavigate();
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
@@ -570,7 +573,7 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
                   }
                 />
               )}
-              <div css={contentStyles}>
+              <div css={contentStyles} data-flow-id={flowId}>
                 <ResearchOutputFormSharingCard
                   isFormSubmitted={isFormSubmitted}
                   isCreatingNewVersion={versionAction === 'create'}

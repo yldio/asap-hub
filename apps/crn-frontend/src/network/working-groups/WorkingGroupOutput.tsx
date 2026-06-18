@@ -22,6 +22,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { resolveResearchOutputFlowId } from '../../shared-research/util';
 import { useResearchOutputPermissions } from '../../shared-research/state';
 import {
   handleError,
@@ -104,6 +105,13 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     [workingGroupId],
     published,
   );
+
+  const flowId = resolveResearchOutputFlowId({
+    entityType: 'working-group',
+    versionAction,
+    published,
+    hasResearchOutputId: !!researchOutputData?.id,
+  });
 
   const researchSuggestions = researchTags
     .filter((tag) => tag.category === 'Keyword')
@@ -224,6 +232,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
                     published: false,
                   }).catch(handleError(['/link', '/title'], setErrors))
             }
+            flowId={flowId}
           />
         </InnerToastContext.Provider>
       </Frame>

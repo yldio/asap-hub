@@ -63,12 +63,14 @@ async function renderPage({
   outputDocumentType = 'article',
   researchOutputData,
   versionAction,
+  descriptionUnchangedWarning,
 }: {
   user?: UserResponse;
   workingGroupId: string;
   versionAction?: 'create' | 'edit';
   outputDocumentType?: OutputDocumentTypeParameter;
   researchOutputData?: ResearchOutputResponse;
+  descriptionUnchangedWarning?: boolean;
 }) {
   const path =
     network.template +
@@ -96,6 +98,7 @@ async function renderPage({
                       workingGroupId={workingGroupId}
                       researchOutputData={researchOutputData}
                       versionAction={versionAction}
+                      descriptionUnchangedWarning={descriptionUnchangedWarning}
                     />
                   }
                 />
@@ -157,4 +160,17 @@ it('passes WORKING_GROUP_ADD_VERSION when creating a new research output version
   });
 
   expect(getFlowId()).toBe(RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_ADD_VERSION);
+});
+
+it('passes WORKING_GROUP_DUPLICATE when duplicating a research output', async () => {
+  await renderPage({
+    workingGroupId: 'wg1',
+    researchOutputData: {
+      ...baseResearchOutput,
+      published: false,
+    },
+    descriptionUnchangedWarning: true,
+  });
+
+  expect(getFlowId()).toBe(RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_DUPLICATE);
 });

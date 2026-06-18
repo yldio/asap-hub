@@ -111,6 +111,7 @@ const WorkingGroupOutput: React.FC<WorkingGroupOutputProps> = ({
     versionAction,
     published,
     hasResearchOutputId: !!researchOutputData?.id,
+    isDuplicate: !!descriptionUnchangedWarning,
   });
 
   const researchSuggestions = researchTags

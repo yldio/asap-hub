@@ -60,7 +60,7 @@ export type ResolveFlowIdParams = {
   versionAction?: 'create' | 'edit';
   published: boolean;
   isImportedFromManuscript?: boolean;
-  isDuplicate?: boolean;
+  isDuplicate: boolean;
   hasResearchOutputId: boolean;
 };
 
@@ -69,13 +69,15 @@ export const resolveResearchOutputFlowId = ({
   versionAction,
   published,
   isImportedFromManuscript = false,
-  isDuplicate = false,
+  isDuplicate,
   hasResearchOutputId,
 }: ResolveFlowIdParams): ResearchOutputFlowId => {
   const isTeam = entityType === 'team';
 
   if (isDuplicate) {
-    return RESEARCH_OUTPUT_FLOW_IDS.TEAM_DUPLICATE;
+    return isTeam
+      ? RESEARCH_OUTPUT_FLOW_IDS.TEAM_DUPLICATE
+      : RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_DUPLICATE;
   }
 
   if (versionAction === 'create' && hasResearchOutputId) {

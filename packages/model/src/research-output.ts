@@ -513,6 +513,7 @@ export const RESEARCH_OUTPUT_FLOW_IDS = {
   WORKING_GROUP_EDIT_DRAFT: 'working-group-edit-draft',
   WORKING_GROUP_EDIT_PUBLISHED: 'working-group-edit-published',
   WORKING_GROUP_ADD_VERSION: 'working-group-add-version',
+  WORKING_GROUP_DUPLICATE: 'working-group-duplicate',
 } as const;
 
 export type ResearchOutputFlowId =

@@ -10,6 +10,7 @@ import {
   pixels,
   TabbedContent,
   TagList,
+  utils,
 } from '@asap-hub/react-components';
 import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
@@ -84,17 +85,6 @@ const isActive = (status: gp2.ProjectStatus) => (member: gp2.ProjectMember) =>
   !member.alumniSinceDate &&
   !member.inactiveSinceDate;
 
-const splitActivePast = <T,>(
-  arr: T[],
-  predicate: (item: T) => boolean,
-): [T[], T[]] => {
-  const active = [];
-  const past = [];
-  for (const elmnt of arr)
-    predicate(elmnt) ? active.push(elmnt) : past.push(elmnt);
-  return [active, past];
-};
-
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   status,
   description,
@@ -111,11 +101,11 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   const leaders = members.filter(({ role }) => LEADER_ROLES.has(role));
   const regularMembers = members.filter(({ role }) => !LEADER_ROLES.has(role));
 
-  const [activeLeaders, pastLeaders] = splitActivePast(
+  const [activeLeaders, pastLeaders] = utils.splitListBy(
     leaders,
     isActive(status),
   );
-  const [activeMembers, pastMembers] = splitActivePast(
+  const [activeMembers, pastMembers] = utils.splitListBy(
     regularMembers,
     isActive(status),
   );

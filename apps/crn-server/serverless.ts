@@ -460,6 +460,12 @@ const serverlessConfig: AWS = {
       target: 'node20',
       bundle: true,
       concurrency: 8,
+      // AWS SDK v3 is preinstalled in the nodejs20.x Lambda runtime, so
+      // bundling it is wasted work that slows packaging considerably.
+      // `external` keeps esbuild from bundling it; `exclude` keeps the
+      // per-function packager (yarn) from reinstalling it into each zip.
+      external: ['@aws-sdk/*'],
+      exclude: ['@aws-sdk/*'],
     },
     'serverless-offline-ssm': {
       stages: ['local'],

@@ -312,9 +312,7 @@ describe('WorkingGroupOverview', () => {
       ).toBeInTheDocument();
       expect(screen.getByText('Jane Lead')).toBeInTheDocument();
       expect(screen.getByText('John Member')).toBeInTheDocument();
-      expect(
-        screen.queryByText('Active Leaders (1)'),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText('Active Leaders (1)')).not.toBeInTheDocument();
     });
   });
 });

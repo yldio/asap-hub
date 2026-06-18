@@ -8,13 +8,11 @@ import {
   MembersList,
   Paragraph,
   pixels,
-  TabbedContent,
   TagList,
-  utils,
 } from '@asap-hub/react-components';
 import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
-import { Milestones } from '../organisms';
+import { MembersTabbedCard, Milestones } from '../organisms';
 import EmailSection from '../organisms/EmailSection';
 import Events from '../organisms/Events';
 
@@ -31,8 +29,6 @@ type ProjectOverviewProps = Pick<
 > & {
   children?: React.ReactNode;
 };
-
-type MemberListProps = { data: gp2.ProjectMember[] };
 
 const { rem } = pixels;
 
@@ -60,30 +56,11 @@ const cardStyles = css({
   padding: rem(24),
 });
 
-const memberListStyles = css({
-  paddingTop: rem(32),
-});
-
-const emptyStyles = css({
-  marginTop: rem(-1),
-  marginBottom: rem(12),
-});
-
-const tabDescriptionStyles = css({
-  fontWeight: 'bold',
-  margin: `${rem(8)} 0`,
-});
-
 const LEADER_ROLES: ReadonlySet<gp2.ProjectMemberRole> = new Set([
   'Project co-lead',
   'Project lead',
   'Project manager',
 ]);
-
-const isActive = (status: gp2.ProjectStatus) => (member: gp2.ProjectMember) =>
-  status !== 'Completed' &&
-  !member.alumniSinceDate &&
-  !member.inactiveSinceDate;
 
 const ProjectOverview: React.FC<ProjectOverviewProps> = ({
   status,
@@ -100,17 +77,6 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
 
   const leaders = members.filter(({ role }) => LEADER_ROLES.has(role));
   const regularMembers = members.filter(({ role }) => !LEADER_ROLES.has(role));
-
-  const [activeLeaders, pastLeaders] = utils.splitListBy(
-    leaders,
-    isActive(status),
-  );
-  const [activeMembers, pastMembers] = utils.splitListBy(
-    regularMembers,
-    isActive(status),
-  );
-
-  const activeTabIndex = status === 'Completed' ? 1 : 0;
 
   return (
     <div css={containerStyles}>
@@ -160,136 +126,12 @@ const ProjectOverview: React.FC<ProjectOverviewProps> = ({
         </Card>
       ) : null}
       {isStagingMode ? (
-        <Card overrideStyles={cardStyles}>
-          <TabbedContent
-            title={`Project Members (${members.length})`}
-            description={
-              <Paragraph noMargin styles={tabDescriptionStyles}>
-                Leaders
-              </Paragraph>
-            }
-            activeTabIndex={activeTabIndex}
-            tabs={[
-              {
-                tabTitle: `Active Leaders (${activeLeaders.length})`,
-                items: activeLeaders,
-                empty: (
-                  <div css={[emptyStyles, { marginBottom: rem(44) }]}>
-                    <Paragraph accent="lead" noMargin>
-                      There are no active leaders.
-                    </Paragraph>
-                  </div>
-                ),
-              },
-              {
-                tabTitle: `Past Leaders (${pastLeaders.length})`,
-                items: pastLeaders,
-                empty: (
-                  <div css={[emptyStyles, { marginBottom: rem(44) }]}>
-                    <Paragraph accent="lead" noMargin>
-                      There are no past leaders.
-                    </Paragraph>
-                  </div>
-                ),
-              },
-            ]}
-          >
-            {({ data }: MemberListProps) => (
-              <div css={memberListStyles}>
-                <MembersList
-                  members={data.map(
-                    ({
-                      role,
-                      firstName,
-                      lastName,
-                      displayName,
-                      avatarUrl,
-                      alumniSinceDate,
-                      userId: id,
-                    }) => ({
-                      firstLine: displayName,
-                      secondLine: role,
-                      avatarUrl,
-                      firstName,
-                      lastName,
-                      alumniSinceDate,
-                      id,
-                    }),
-                  )}
-                  userRoute={gp2Routing.users({}).user}
-                  overrideNameStyles={css({ overflowWrap: 'anywhere' })}
-                />
-              </div>
-            )}
-          </TabbedContent>
-          <div css={{ marginTop: rem(-24) }}>
-            <TabbedContent
-              description={
-                <Paragraph noMargin styles={tabDescriptionStyles}>
-                  Members
-                </Paragraph>
-              }
-              activeTabIndex={activeTabIndex}
-              tabs={[
-                {
-                  tabTitle: `Active Members (${activeMembers.length})`,
-                  items: activeMembers,
-                  truncateFrom: 8,
-                  empty: (
-                    <div css={emptyStyles}>
-                      <Paragraph accent="lead" noMargin>
-                        There are no active members.
-                      </Paragraph>
-                    </div>
-                  ),
-                },
-                {
-                  tabTitle: `Past Members (${pastMembers.length})`,
-                  items: pastMembers,
-                  truncateFrom: 8,
-                  empty: (
-                    <div css={emptyStyles}>
-                      <Paragraph accent="lead" noMargin>
-                        There are no past members.
-                      </Paragraph>
-                    </div>
-                  ),
-                },
-              ]}
-              getShowMoreText={(showMore: boolean) =>
-                `View ${showMore ? 'Less' : 'More'} Members`
-              }
-            >
-              {({ data }: MemberListProps) => (
-                <div css={memberListStyles}>
-                  <MembersList
-                    members={data.map(
-                      ({
-                        role,
-                        firstName,
-                        lastName,
-                        displayName,
-                        avatarUrl,
-                        alumniSinceDate,
-                        userId: id,
-                      }) => ({
-                        firstLine: displayName,
-                        secondLine: role,
-                        avatarUrl,
-                        firstName,
-                        lastName,
-                        alumniSinceDate,
-                        id,
-                      }),
-                    )}
-                    userRoute={gp2Routing.users({}).user}
-                    overrideNameStyles={css({ overflowWrap: 'anywhere' })}
-                  />
-                </div>
-              )}
-            </TabbedContent>
-          </div>
-        </Card>
+        <MembersTabbedCard
+          title={`Project Members (${members.length})`}
+          leaders={leaders}
+          members={regularMembers}
+          isComplete={status === 'Completed'}
+        />
       ) : (
         <Card>
           <Headline3

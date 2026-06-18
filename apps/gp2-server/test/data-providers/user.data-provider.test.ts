@@ -574,7 +574,7 @@ describe('User data provider', () => {
                       id: '42',
                     },
                   },
-                  role: 'Co-Lead',
+                  role: 'Co-lead',
                   linkedFrom: {
                     workingGroupsCollection: {
                       items: [],

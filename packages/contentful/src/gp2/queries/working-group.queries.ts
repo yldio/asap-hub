@@ -25,6 +25,7 @@ export const workingGroupsContentQueryFragment = gql`
           id
         }
         role
+        inactiveSinceDate
         user {
           sys {
             id

@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { css } from '@emotion/react';
 import { layoutStyles } from '../text';
 import { rem } from '../pixels';
-import { fern, lead, charcoal } from '../colors';
+import { fern, lead, charcoal, info500 } from '../colors';
 
 const styles = css({
   display: 'inline-block',
@@ -22,6 +22,9 @@ const activeStyles = css({
   color: charcoal.rgb,
   cursor: 'default',
   fontWeight: 'bold',
+  "[data-app='gp2'] &": {
+    borderBottomColor: info500.rgb,
+  },
 });
 
 const disabledStyles = css({

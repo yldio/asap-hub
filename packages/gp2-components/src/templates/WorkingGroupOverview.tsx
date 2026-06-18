@@ -13,6 +13,7 @@ import {
   TabbedContent,
 } from '@asap-hub/react-components';
 
+import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import EmailSection from '../organisms/EmailSection';
 import Events from '../organisms/Events';
@@ -96,6 +97,9 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
   milestones,
   tags,
 }) => {
+  const { isEnabled } = useFlags();
+  const isStagingMode = isEnabled('STAGING_MODE');
+
   const leaders = members.filter(({ role }) => LEADER_ROLES.has(role));
   const regularMembers = members.filter(({ role }) => !LEADER_ROLES.has(role));
 
@@ -151,113 +155,44 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
           </div>
         </Card>
       ) : null}
-      <Card overrideStyles={cardStyles}>
-        <TabbedContent
-          title={`Working Group Members (${members.length})`}
-          description={
-            <Paragraph noMargin styles={tabDescriptionStyles}>
-              Leaders
-            </Paragraph>
-          }
-          tabs={[
-            {
-              tabTitle: `Active Leaders (${activeLeaders.length})`,
-              items: activeLeaders,
-              empty: (
-                <Paragraph
-                  accent="lead"
-                  styles={css({ fontWeight: 600, fontSize: rem(17) })}
-                >
-                  No active leaders available.
-                </Paragraph>
-              ),
-            },
-            {
-              tabTitle: `Past Leaders (${pastLeaders.length})`,
-              items: pastLeaders,
-              empty: (
-                <div css={{ marginBottom: rem(56) }}>
-                  <Paragraph
-                    accent="lead"
-                    noMargin
-                    styles={css({ fontWeight: 600, fontSize: rem(17) })}
-                  >
-                    No past leaders available.
-                  </Paragraph>
-                </div>
-              ),
-            },
-          ]}
-        >
-          {({ data }: MemberListProps) => (
-            <div css={memberListStyles}>
-              <MembersList
-                members={data.map(
-                  ({
-                    role,
-                    firstName,
-                    lastName,
-                    displayName,
-                    avatarUrl,
-                    alumniSinceDate,
-                    userId: id,
-                  }) => ({
-                    firstLine: displayName,
-                    secondLine: role,
-                    avatarUrl,
-                    firstName,
-                    lastName,
-                    alumniSinceDate,
-                    id,
-                  }),
-                )}
-                userRoute={gp2Routing.users({}).user}
-                overrideNameStyles={css({ overflowWrap: 'anywhere' })}
-              />
-            </div>
-          )}
-        </TabbedContent>
-        <div css={{ marginTop: rem(-24) }}>
+      {isStagingMode ? (
+        <Card overrideStyles={cardStyles}>
           <TabbedContent
+            title={`Working Group Members (${members.length})`}
             description={
               <Paragraph noMargin styles={tabDescriptionStyles}>
-                Members
+                Leaders
               </Paragraph>
             }
             tabs={[
               {
-                tabTitle: `Active Members (${activeMembers.length})`,
-                items: activeMembers,
-                truncateFrom: 8,
+                tabTitle: `Active Leaders (${activeLeaders.length})`,
+                items: activeLeaders,
                 empty: (
                   <Paragraph
                     accent="lead"
                     styles={css({ fontWeight: 600, fontSize: rem(17) })}
                   >
-                    No active members available.
+                    No active leaders available.
                   </Paragraph>
                 ),
               },
               {
-                tabTitle: `Past Members (${pastMembers.length})`,
-                items: pastMembers,
-                truncateFrom: 8,
+                tabTitle: `Past Leaders (${pastLeaders.length})`,
+                items: pastLeaders,
                 empty: (
-                  <div css={{ marginBottom: rem(8) }}>
+                  <div css={{ marginBottom: rem(56) }}>
                     <Paragraph
                       accent="lead"
                       noMargin
                       styles={css({ fontWeight: 600, fontSize: rem(17) })}
                     >
-                      No past members available.
+                      No past leaders available.
                     </Paragraph>
                   </div>
                 ),
               },
             ]}
-            getShowMoreText={(showMore: boolean) =>
-              `View ${showMore ? 'Less' : 'More'} Members`
-            }
           >
             {({ data }: MemberListProps) => (
               <div css={memberListStyles}>
@@ -287,8 +222,110 @@ const WorkingGroupOverview: React.FC<WorkingGroupOverviewProps> = ({
               </div>
             )}
           </TabbedContent>
-        </div>
-      </Card>
+          <div css={{ marginTop: rem(-24) }}>
+            <TabbedContent
+              description={
+                <Paragraph noMargin styles={tabDescriptionStyles}>
+                  Members
+                </Paragraph>
+              }
+              tabs={[
+                {
+                  tabTitle: `Active Members (${activeMembers.length})`,
+                  items: activeMembers,
+                  truncateFrom: 8,
+                  empty: (
+                    <Paragraph
+                      accent="lead"
+                      styles={css({ fontWeight: 600, fontSize: rem(17) })}
+                    >
+                      No active members available.
+                    </Paragraph>
+                  ),
+                },
+                {
+                  tabTitle: `Past Members (${pastMembers.length})`,
+                  items: pastMembers,
+                  truncateFrom: 8,
+                  empty: (
+                    <div css={{ marginBottom: rem(8) }}>
+                      <Paragraph
+                        accent="lead"
+                        noMargin
+                        styles={css({ fontWeight: 600, fontSize: rem(17) })}
+                      >
+                        No past members available.
+                      </Paragraph>
+                    </div>
+                  ),
+                },
+              ]}
+              getShowMoreText={(showMore: boolean) =>
+                `View ${showMore ? 'Less' : 'More'} Members`
+              }
+            >
+              {({ data }: MemberListProps) => (
+                <div css={memberListStyles}>
+                  <MembersList
+                    members={data.map(
+                      ({
+                        role,
+                        firstName,
+                        lastName,
+                        displayName,
+                        avatarUrl,
+                        alumniSinceDate,
+                        userId: id,
+                      }) => ({
+                        firstLine: displayName,
+                        secondLine: role,
+                        avatarUrl,
+                        firstName,
+                        lastName,
+                        alumniSinceDate,
+                        id,
+                      }),
+                    )}
+                    userRoute={gp2Routing.users({}).user}
+                    overrideNameStyles={css({ overflowWrap: 'anywhere' })}
+                  />
+                </div>
+              )}
+            </TabbedContent>
+          </div>
+        </Card>
+      ) : (
+        <Card overrideStyles={cardStyles}>
+          <Headline3
+            noMargin
+          >{`Working Group Members (${members.length})`}</Headline3>
+          <div css={contentStyles}>
+            <MembersList
+              members={members.map(
+                ({
+                  role,
+                  firstName,
+                  lastName,
+                  displayName,
+                  avatarUrl,
+                  alumniSinceDate,
+                  userId: id,
+                }) => ({
+                  firstLine: displayName,
+                  secondLine: role,
+                  avatarUrl,
+                  firstName,
+                  lastName,
+                  alumniSinceDate,
+                  id,
+                }),
+              )}
+              userRoute={gp2Routing.users({}).user}
+              overrideNameStyles={css({ overflowWrap: 'anywhere' })}
+            />
+          </div>
+        </Card>
+      )}
       <Card overrideStyles={cardStyles}>
         <Milestones
           milestones={milestones}

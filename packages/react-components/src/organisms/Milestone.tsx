@@ -179,7 +179,7 @@ const Milestone: FC<MilestoneProps> = ({
         <div css={articlesWrapperStyles}>
           {articleCount === 0 ? (
             <div css={articlesHeaderStyles}>
-              <span css={noArticlesTextStyles}>No articles added</span>
+              <span css={noArticlesTextStyles}>No articles associated</span>
               {isLead && (
                 <>
                   <span css={articlesSeparatorStyles}>•</span>

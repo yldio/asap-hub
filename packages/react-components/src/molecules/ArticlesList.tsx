@@ -16,6 +16,7 @@ import {
   articlesListStyles,
   articlesListWrapperStyles,
   articlesTitleStyles,
+  noArticlesTextStyles,
 } from '../organisms/shared-aim-milestones-styles';
 
 export type ArticlesListProps = {
@@ -52,6 +53,14 @@ const ArticlesList: FC<ArticlesListProps> = ({
   }, [aimId, initiallyExpanded, fetchArticles]);
 
   const displayedCount = hasFetched ? articles.length : articlesCount;
+
+  if (displayedCount === 0) {
+    return (
+      <div css={articlesHeaderStyles}>
+        <span css={noArticlesTextStyles}>No articles associated</span>
+      </div>
+    );
+  }
 
   return (
     <div>

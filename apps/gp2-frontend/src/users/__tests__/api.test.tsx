@@ -1,4 +1,5 @@
 import { AlgoliaSearchClient, ClientSearchResponse } from '@asap-hub/algolia';
+import { disable, enable, reset } from '@asap-hub/flags';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { GetListOptions } from '@asap-hub/frontend-utils';
 import { gp2 as gp2Model } from '@asap-hub/model';
@@ -26,7 +27,13 @@ type Search = () => Promise<
   ClientSearchResponse<'gp2', 'user' | 'external-user'>
 >;
 
-beforeEach(() => nock.cleanAll());
+beforeEach(() => {
+  nock.cleanAll();
+  enable('STAGING_MODE');
+});
+afterEach(() => {
+  reset();
+});
 describe('getUser', () => {
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
@@ -171,7 +178,7 @@ describe('getAlgoliaUsers', () => {
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
       ['user'],
       '',
-      expect.objectContaining({ filters: 'region:"Europe"' }),
+      expect.objectContaining({ filters: '(region:"Europe")' }),
     );
   });
 
@@ -187,7 +194,7 @@ describe('getAlgoliaUsers', () => {
       ['user'],
       '',
       expect.objectContaining({
-        filters: 'region:"Europe" OR region:"Asia"',
+        filters: '(region:"Europe" OR region:"Asia")',
       }),
     );
   });
@@ -207,7 +214,7 @@ describe('getAlgoliaUsers', () => {
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
       ['user'],
       '',
-      expect.objectContaining({ filters: `${expected}:"42"` }),
+      expect.objectContaining({ filters: `(${expected}:"42")` }),
     );
   });
 
@@ -228,8 +235,59 @@ describe('getAlgoliaUsers', () => {
       ['user'],
       '',
       expect.objectContaining({
-        filters: `${expected}:"42" OR ${expected}:"11"`,
+        filters: `(${expected}:"42" OR ${expected}:"11")`,
       }),
+    );
+  });
+
+  it('builds a single membershipStatus filter query', async () => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      membershipStatus: ['Alumni Member'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({
+        filters: '(membershipStatus:"Alumni Member")',
+      }),
+    );
+  });
+
+  it('builds a multiple membershipStatus filter query', async () => {
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      membershipStatus: ['GP2 Member', 'Alumni Member'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({
+        filters:
+          '(membershipStatus:"GP2 Member" OR membershipStatus:"Alumni Member")',
+      }),
+    );
+  });
+
+  it('omits the membershipStatus filter when STAGING_MODE is disabled', async () => {
+    disable('STAGING_MODE');
+    await getAlgoliaUsers(mockAlgoliaSearchClient, {
+      ...options,
+      membershipStatus: ['Alumni Member'],
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
+      ['user'],
+      '',
+      expect.objectContaining({ filters: '' }),
     );
   });
 
@@ -240,6 +298,7 @@ describe('getAlgoliaUsers', () => {
       tags: ['7'],
       projects: ['11'],
       workingGroups: ['23'],
+      membershipStatus: ['Alumni Member'],
       currentPage: 1,
       pageSize: 20,
     });
@@ -249,7 +308,7 @@ describe('getAlgoliaUsers', () => {
       '',
       expect.objectContaining({
         filters:
-          'region:"Europe" AND tagIds:"7" AND projectIds:"11" AND workingGroupIds:"23"',
+          '(region:"Europe") AND (tagIds:"7") AND (projectIds:"11") AND (workingGroupIds:"23") AND (membershipStatus:"Alumni Member")',
       }),
     );
   });
@@ -374,11 +433,12 @@ describe('createUserApiUrl', () => {
   });
 
   it.each`
-    name               | value
-    ${'regions'}       | ${['Africa', 'Asia']}
-    ${'tags'}          | ${['Cohort', 'BLAAC-PD']}
-    ${'projects'}      | ${['a project', 'another project']}
-    ${'workingGroups'} | ${['a working group', 'another working group']}
+    name                  | value
+    ${'regions'}          | ${['Africa', 'Asia']}
+    ${'tags'}             | ${['Cohort', 'BLAAC-PD']}
+    ${'projects'}         | ${['a project', 'another project']}
+    ${'workingGroups'}    | ${['a working group', 'another working group']}
+    ${'membershipStatus'} | ${['GP2 Member', 'Alumni Member']}
   `(
     'handles requests with filters for $name - new',
     async ({ name, value }) => {
@@ -389,6 +449,14 @@ describe('createUserApiUrl', () => {
       expect(url.searchParams.get('filter[onlyOnboarded]')).toEqual('false');
     },
   );
+
+  it('omits the membershipStatus filter from REST URL when STAGING_MODE is disabled', () => {
+    disable('STAGING_MODE');
+    const url = createUserApiUrl({
+      filter: { membershipStatus: ['Alumni Member'], onlyOnboarded: false },
+    });
+    expect(url.searchParams.getAll('filter[membershipStatus]')).toEqual([]);
+  });
 });
 
 describe('postUserAvatar', () => {

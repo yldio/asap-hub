@@ -10,6 +10,7 @@
     "authors.id",
     "documentType",
     "eventTypes",
+    "membershipStatus",
     "project.id",
     "projects.id",
     "projectIds",

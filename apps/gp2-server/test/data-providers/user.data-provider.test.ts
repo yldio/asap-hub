@@ -931,6 +931,56 @@ describe('User data provider', () => {
       },
     );
 
+    test.each`
+      values                             | expected
+      ${['Alumni Member']}               | ${[{ alumniSinceDate_exists: true }]}
+      ${['GP2 Member']}                  | ${[{ alumniSinceDate_exists: false }]}
+      ${['Alumni Member', 'GP2 Member']} | ${[{ alumniSinceDate_exists: true }, { alumniSinceDate_exists: false }]}
+    `(
+      'Should translate membershipStatus $values to alumniSinceDate_exists OR clauses',
+      async ({ values, expected }) => {
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+          getContentfulUsersGraphqlResponse(),
+        );
+        const fetchOptions: gp2Model.FetchUsersOptions = {
+          take: 12,
+          skip: 2,
+          filter: {
+            membershipStatus: values,
+          },
+        };
+        await userDataProvider.fetch(fetchOptions);
+
+        expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+          gp2Contentful.FETCH_USERS,
+          expect.objectContaining({
+            where: expect.objectContaining({
+              OR: expected,
+            }),
+          }),
+        );
+      },
+    );
+
+    test('Should not add membershipStatus filter when array is empty', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce(
+        getContentfulUsersGraphqlResponse(),
+      );
+      const fetchOptions: gp2Model.FetchUsersOptions = {
+        take: 12,
+        skip: 2,
+        filter: { membershipStatus: [] },
+      };
+      await userDataProvider.fetch(fetchOptions);
+
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        gp2Contentful.FETCH_USERS,
+        expect.objectContaining({
+          where: expect.not.objectContaining({ OR: expect.anything() }),
+        }),
+      );
+    });
+
     describe('projects filter', () => {
       test('it should return empty when no members', async () => {
         const projectId = '140f5e15-922d-4cbf-9d39-35dd39225b03';

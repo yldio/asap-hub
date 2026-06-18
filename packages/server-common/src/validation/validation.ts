@@ -121,6 +121,11 @@ export const fetchUsersOptionsValidationSchema: JSONSchemaType<gp2.FetchUsersApi
           onlyOnboarded: { type: 'boolean', nullable: true, default: true },
           hidden: { type: 'boolean', nullable: true },
           email: { type: 'string', nullable: true },
+          membershipStatus: {
+            type: 'array',
+            items: { type: 'string', enum: gp2.userMembershipStatus },
+            nullable: true,
+          },
         },
         nullable: true,
       },

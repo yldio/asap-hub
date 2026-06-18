@@ -96,6 +96,7 @@ describe('UsersPageList', () => {
         tags: [],
         projects: [],
         workingGroups: [],
+        membershipStatus: [],
         [name]: [value],
       });
     },

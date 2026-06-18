@@ -1,8 +1,20 @@
 import { Button, pixels } from '@asap-hub/react-components';
 import { css } from '@emotion/react';
-import { footerStyles, mobileQuery, padding24Styles } from '../layout';
+import colors from '../templates/colors';
+import { mobileQuery, padding24Styles } from '../layout';
 
 const { rem } = pixels;
+
+const footerStyles = css({
+  display: 'flex',
+  gap: rem(24),
+  justifyContent: 'space-between',
+  borderTop: `1px solid ${colors.neutral500.rgb}`,
+  [mobileQuery]: {
+    display: 'flex',
+    flexDirection: 'column-reverse',
+  },
+});
 
 type FilterModalFooterProps = {
   onReset: () => void;

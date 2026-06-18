@@ -49,6 +49,7 @@ const renderUserList = async ({
       tags: [],
       projects: [],
       workingGroups: [],
+      membershipStatus: [],
       ...filters,
     },
     updateFilters: mockUpdateFilter,
@@ -97,7 +98,13 @@ const renderUserList = async ({
 beforeEach(jest.resetAllMocks);
 it('fetches the user information', async () => {
   await renderUserList({
-    filters: { regions: [], tags: [], projects: [], workingGroups: [] },
+    filters: {
+      regions: [],
+      tags: [],
+      projects: [],
+      workingGroups: [],
+      membershipStatus: ['Alumni Member'],
+    },
   });
 
   await waitFor(() =>
@@ -108,6 +115,7 @@ it('fetches the user information', async () => {
         tags: [],
         projects: [],
         workingGroups: [],
+        membershipStatus: ['Alumni Member'],
         searchQuery: '',
         currentPage: 0,
         pageSize: 10,

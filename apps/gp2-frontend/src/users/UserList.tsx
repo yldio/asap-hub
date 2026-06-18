@@ -18,6 +18,7 @@ const UserList: React.FC<UserListProps> = ({ searchQuery, filters }) => {
     regions: filters.regions,
     projects: filters.projects,
     workingGroups: filters.workingGroups,
+    membershipStatus: filters.membershipStatus,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(

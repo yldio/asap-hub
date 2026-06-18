@@ -406,6 +406,7 @@ const generateFetchQueryFilter = (
     orcidLastSyncDate,
     hidden = true,
     email,
+    membershipStatus,
   } = filter || {};
 
   const filterCode: gp2Contentful.UsersFilter = code
@@ -428,6 +429,16 @@ const generateFetchQueryFilter = (
   const filterUserId =
     userIdFilter.length > 0 ? { sys: { id_in: userIdFilter } } : {};
   const filterEmail = email ? { email } : {};
+  const filterMembershipStatus: gp2Contentful.UsersFilter =
+    membershipStatus?.length
+      ? {
+          OR: membershipStatus.map((status) =>
+            status === 'Alumni Member'
+              ? { alumniSinceDate_exists: true }
+              : { alumniSinceDate_exists: false },
+          ),
+        }
+      : {};
   return {
     ...filterUserId,
     ...filterCode,
@@ -438,6 +449,7 @@ const generateFetchQueryFilter = (
     ...filterOrcidLastSyncDate,
     ...searchFilter,
     ...filterEmail,
+    ...filterMembershipStatus,
   };
 };
 

@@ -81,6 +81,16 @@ describe('resolveResearchOutputFlowId', () => {
   });
 
   describe('working group flows', () => {
+    it('returns WORKING_GROUP_DUPLICATE when duplicating', () => {
+      expect(
+        resolveResearchOutputFlowId({
+          ...baseParams,
+          entityType: 'working-group',
+          isDuplicate: true,
+        }),
+      ).toBe(RESEARCH_OUTPUT_FLOW_IDS.WORKING_GROUP_DUPLICATE);
+    });
+
     it('returns WORKING_GROUP_ADD_VERSION when creating a version', () => {
       expect(
         resolveResearchOutputFlowId({

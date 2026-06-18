@@ -40,6 +40,14 @@ Projects can have their own `jest.config.js`, completely replacing the default o
 
 There are some special `jest-*.config`s in the root or in projects, which run test files with a name matching their particular pattern.
 
+## Task orchestration (Turbo)
+
+[Turborepo](https://turborepo.dev) (**2.x**) orchestrates the `build`, `build:babel`, `typecheck`, `test`, and `test:coverage` tasks across the workspace, caching outputs in `.turbo/`. The task graph lives in the root `turbo.json` under the `tasks` key (this was `pipeline` in Turbo 1.x — renamed in the 2.0 upgrade). `build:typecheck:tsc` is a root-only task (the `//#` prefix), and `topo` is a synthetic task used only to enforce topological ordering for `test`.
+
+`turbo.json` sets `"envMode": "loose"` on purpose. Turbo 2.x defaults to **strict** env mode, where only env vars declared in a task's `env`/`passThroughEnv` (plus a small built-in passlist) reach the task process. Several tasks here depend on ambient env passthrough — most notably `build:babel`, which runs `babel-plugin-transform-inline-environment-variables` to inline `VITE_APP_*` (and similar) values at compile time. Under strict mode those undeclared vars would be stripped and inlined as `undefined`, silently corrupting build output. Loose mode preserves the Turbo 1.x behaviour. To move to strict later, declare the needed vars per task (`passThroughEnv` for `VITE_APP_*` on the frontend build, `VITE_APP_ENVIRONMENT` on `build:babel`) and then drop `envMode`.
+
+All CLI invocations (`--filter`, `--only`, `--cache-dir`, `--dry-run=json`) are unchanged from v1 — none of the removed v1 flags (`--scope`, `--since`) were in use.
+
 ## Known bundle issues
 
 ### `react-router` pulled into the server bundles

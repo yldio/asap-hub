@@ -34,27 +34,26 @@ if (isPullRequest && runnableTasks.length === 0) {
 }
 
 // create a matrix of tasks
-const taskList = runnableTasks
-  .flatMap(({ package }) => {
-    const shardCount = SHARDED_PACKAGES[package];
+const taskList = runnableTasks.flatMap(({ package }) => {
+  const shardCount = SHARDED_PACKAGES[package];
 
-    if (shardCount) {
-      // Create multiple shards for this package
-      const shards = [];
-      for (let shardIndex = 1; shardIndex <= shardCount; shardIndex++) {
-        shards.push({
-          package,
-          shard: `${shardIndex}/${shardCount}`,
-          shardIndex,
-          shardCount,
-        });
-      }
-      return shards;
+  if (shardCount) {
+    // Create multiple shards for this package
+    const shards = [];
+    for (let shardIndex = 1; shardIndex <= shardCount; shardIndex++) {
+      shards.push({
+        package,
+        shard: `${shardIndex}/${shardCount}`,
+        shardIndex,
+        shardCount,
+      });
     }
+    return shards;
+  }
 
-    // Regular package without sharding
-    return [{ package }];
-  });
+  // Regular package without sharding
+  return [{ package }];
+});
 
 // print the matrix, stringify the json
 console.log(`${JSON.stringify({ include: taskList })}`);

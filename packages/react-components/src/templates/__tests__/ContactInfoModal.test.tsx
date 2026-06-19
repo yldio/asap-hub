@@ -27,6 +27,7 @@ it('indicates which fields are optional', () => {
     { title: 'Website 2', subtitle: 'optional' },
     { title: 'Researcher ID', subtitle: 'optional' },
     { title: 'X', subtitle: 'optional' },
+    { title: 'BlueSky', subtitle: 'optional' },
     { title: 'Github', subtitle: 'optional' },
     { title: 'LinkedIn', subtitle: 'optional' },
     { title: 'Research Gate', subtitle: 'optional' },

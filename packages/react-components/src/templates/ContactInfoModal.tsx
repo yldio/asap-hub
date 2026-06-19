@@ -90,7 +90,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           contactEmail: newEmail || undefined,
           social: {
             twitter: formatUserSocial(newTwitter, 'twitter') || undefined,
-            blueSky: newBlueSky || undefined,
+            blueSky: formatUserSocial(newBlueSky, 'blueSky') || undefined,
             researcherId: newResearcherId || undefined,
             researchGate:
               formatUserSocial(newResearchGate, 'researchGate') || undefined,

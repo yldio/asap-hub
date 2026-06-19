@@ -21,6 +21,7 @@ export const formatUserLocation = (
 };
 
 const baseUrls = {
+  blueSky: 'https://bsky.app/profile/',
   twitter: 'https://twitter.com/',
   linkedIn: 'https://www.linkedin.com/in/',
   github: 'https://github.com/',

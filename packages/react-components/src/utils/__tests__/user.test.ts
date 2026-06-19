@@ -21,10 +21,11 @@ describe('formatUserLocation', () => {
 
 describe('formatUserSocial', () => {
   it.each`
-    social                            | type               | result
-    ${'https://twitter.com/username'} | ${'twitter'}       | ${'username'}
-    ${'https://github.com/username'}  | ${'linkedIn'}      | ${'https://github.com/username'}
-    ${''}                             | ${'googleScholar'} | ${''}
+    social                                 | type               | result
+    ${'https://twitter.com/username'}      | ${'twitter'}       | ${'username'}
+    ${'https://bsky.app/profile/username'} | ${'blueSky'}       | ${'username'}
+    ${'https://github.com/username'}       | ${'linkedIn'}      | ${'https://github.com/username'}
+    ${''}                                  | ${'googleScholar'} | ${''}
   `(
     'generates the correct result for "$type" type',
     ({ social, type, result }) => {

@@ -424,6 +424,38 @@ it('renders additional files details and download link when provided', async () 
   );
 });
 
+it('renders compliance report response and download link when provided', async () => {
+  const user = userEvent.setup();
+  const { getAllByText, getByText, getByLabelText } = render(
+    <MemoryRouter>
+      <ManuscriptVersionCard
+        {...props}
+        version={{
+          ...baseVersion,
+          manuscriptFile: {
+            filename: 'manuscript_file.pdf',
+            url: 'https://example.com/main-file.pdf',
+            id: 'file-1',
+          },
+          keyResourceTable: undefined,
+          complianceReportResponse: {
+            filename: 'compliance_report_response.pdf',
+            url: 'https://example.com/compliance-report-response.pdf',
+            id: 'compliance-report-response-1',
+          },
+        }}
+      />
+    </MemoryRouter>,
+  );
+  await user.click(getByLabelText('Expand Version'));
+
+  expect(getByText('compliance_report_response.pdf')).toBeVisible();
+  expect(getAllByText('Download')[1]!.closest('a')).toHaveAttribute(
+    'href',
+    'https://example.com/compliance-report-response.pdf',
+  );
+});
+
 it('displays compliance report section when present', async () => {
   const user = userEvent.setup();
   const { getByLabelText, queryByRole } = render(

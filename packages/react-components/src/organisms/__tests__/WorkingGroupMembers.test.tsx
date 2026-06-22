@@ -20,7 +20,7 @@ describe('leaders section', () => {
         leaders={[
           {
             user: { ...createUserResponse(), displayName: 'Test User 1' },
-            role: 'Chair',
+            role: 'Lead',
             workstreamRole: 'A test role',
             isActive: true,
           },
@@ -30,7 +30,7 @@ describe('leaders section', () => {
     expect(getByText('Active Leaders (1)')).toBeVisible();
     expect(getByText('Past Leaders (0)')).toBeVisible();
     expect(getByText('Test User 1')).toBeVisible();
-    expect(getByText('A test role')).toBeVisible();
+    expect(getByText('Lead')).toBeVisible();
   });
 
   it('renders past leaders', () => {
@@ -43,7 +43,7 @@ describe('leaders section', () => {
               ...createUserResponse(),
               displayName: 'Test User 1',
             },
-            role: 'Chair',
+            role: 'Co-lead',
             workstreamRole: 'A test role',
             isActive: false,
           },
@@ -62,7 +62,7 @@ describe('leaders section', () => {
       pastTabButton.click();
     });
     expect(getByText('Test User 1')).toBeVisible();
-    expect(getByText('A test role')).toBeVisible();
+    expect(getByText('Co-lead')).toBeVisible();
 
     act(() => {
       activeTabButton.click();

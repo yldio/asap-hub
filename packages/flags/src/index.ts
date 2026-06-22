@@ -2,7 +2,8 @@ export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'COMPLIANCE_NOTIFICATION_LIST'
   | 'PROJECT_WORKSPACE'
-  | 'PROJECT_OUTPUTS';
+  | 'PROJECT_OUTPUTS'
+  | 'STAGING_MODE';
 
 export type Flags = Partial<Record<Flag, boolean | string | undefined>>;
 let overrides: Flags = {
@@ -11,6 +12,7 @@ let overrides: Flags = {
   COMPLIANCE_NOTIFICATION_LIST: '',
   PROJECT_WORKSPACE: false,
   PROJECT_OUTPUTS: false,
+  STAGING_MODE: false,
 };
 
 const envDefaults: Record<string, boolean> = {

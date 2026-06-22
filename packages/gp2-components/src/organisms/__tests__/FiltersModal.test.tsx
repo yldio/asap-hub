@@ -1,3 +1,4 @@
+import { disable, enable, reset } from '@asap-hub/flags';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -7,6 +8,13 @@ import FiltersModal from '../FiltersModal';
 const { userRegions } = gp2Model;
 
 describe('FiltersModal', () => {
+  beforeEach(() => {
+    enable('STAGING_MODE');
+  });
+  afterEach(() => {
+    reset();
+  });
+
   const defaultProps = {
     onBackClick: jest.fn(),
     onApplyClick: jest.fn(),
@@ -162,6 +170,7 @@ describe('FiltersModal', () => {
       tags: [],
       projects: [],
       workingGroups: [],
+      membershipStatus: [],
     });
   });
   it('calls the onApplyClick function with correct expertise filters', async () => {
@@ -174,6 +183,7 @@ describe('FiltersModal', () => {
       tags: [tags[0]!.id],
       projects: [],
       workingGroups: [],
+      membershipStatus: [],
     });
   });
   it('calls the onApplyClick function with correct project filters', async () => {
@@ -186,6 +196,7 @@ describe('FiltersModal', () => {
       tags: [],
       projects: [projects[0]!.id],
       workingGroups: [],
+      membershipStatus: [],
     });
   });
   it('calls the onApplyClick function with correct working group filters', async () => {
@@ -198,7 +209,105 @@ describe('FiltersModal', () => {
       tags: [],
       projects: [],
       workingGroups: [workingGroups[0]!.id],
+      membershipStatus: [],
     });
+  });
+
+  it('renders the Type of Users checkboxes', () => {
+    render(<FiltersModal {...defaultProps} />);
+    expect(screen.getByText('Type of Users')).toBeVisible();
+    expect(
+      screen.getByRole('checkbox', { name: 'GP2 Member' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    ).toBeInTheDocument();
+  });
+
+  it('does not render the Type of Users section when STAGING_MODE is disabled', () => {
+    disable('STAGING_MODE');
+    render(<FiltersModal {...defaultProps} />);
+    expect(screen.queryByText('Type of Users')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('checkbox', { name: 'GP2 Member' }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('checkbox', { name: 'Alumni Member' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('toggling a membership status updates the filter count', async () => {
+    render(<FiltersModal {...defaultProps} />);
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('0 filters');
+    await userEvent.click(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    );
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('1 filter');
+    await userEvent.click(screen.getByRole('checkbox', { name: 'GP2 Member' }));
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('2 filters');
+    await userEvent.click(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    );
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('1 filter');
+  });
+
+  it('calls onApplyClick with correct membershipStatus selection', async () => {
+    render(<FiltersModal {...defaultProps} />);
+    await userEvent.click(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    );
+    await userEvent.click(getApplyButton());
+    expect(defaultProps.onApplyClick).toHaveBeenCalledWith({
+      regions: [],
+      tags: [],
+      projects: [],
+      workingGroups: [],
+      membershipStatus: ['Alumni Member'],
+    });
+  });
+
+  it('pre-checks membershipStatus values from filters prop', () => {
+    render(
+      <FiltersModal
+        {...defaultProps}
+        filters={{ membershipStatus: ['GP2 Member'] }}
+      />,
+    );
+    expect(screen.getByRole('checkbox', { name: 'GP2 Member' })).toBeChecked();
+    expect(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    ).not.toBeChecked();
+  });
+
+  it('resets membershipStatus on Reset', async () => {
+    render(<FiltersModal {...defaultProps} />);
+    await userEvent.click(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    );
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('1 filter');
+    await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+    expect(
+      screen.getByText(/Apply filters to narrow down your search results.*/i)
+        .textContent,
+    ).toContain('0 filters');
+    expect(
+      screen.getByRole('checkbox', { name: 'Alumni Member' }),
+    ).not.toBeChecked();
   });
 
   it.each`

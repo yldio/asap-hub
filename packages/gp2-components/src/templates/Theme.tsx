@@ -8,7 +8,11 @@ const theme = {
 };
 
 const Theme: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <ThemeProvider theme={theme}>{children}</ThemeProvider>
+  <ThemeProvider theme={theme}>
+    <div data-app="gp2" style={{ display: 'contents' }}>
+      {children}
+    </div>
+  </ThemeProvider>
 );
 
 export default Theme;

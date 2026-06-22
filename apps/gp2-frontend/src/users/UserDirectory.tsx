@@ -1,6 +1,6 @@
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
 import { UsersPageList } from '@asap-hub/gp2-components';
-import { useCurrentUserGP2 } from '@asap-hub/react-context';
+import { useCurrentUserGP2, useFlags } from '@asap-hub/react-context';
 import { gp2 } from '@asap-hub/routing';
 import { ComponentProps, FC } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -21,6 +21,7 @@ type UserDirectoryProps = Pick<
 
 const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
   const { users } = gp2;
+  const { isEnabled } = useFlags();
   const {
     changeLocation,
     filters,
@@ -28,7 +29,13 @@ const UserDirectory: FC<UserDirectoryProps> = ({ displayFilters = false }) => {
     setSearchQuery,
     debouncedSearchQuery,
     updateFilters,
-  } = useSearch(['regions', 'tags', 'projects', 'workingGroups']);
+  } = useSearch([
+    'regions',
+    'tags',
+    'projects',
+    'workingGroups',
+    ...(isEnabled('STAGING_MODE') ? (['membershipStatus'] as const) : []),
+  ]);
   const currentUser = useCurrentUserGP2();
   const isAdministrator = currentUser?.role === 'Administrator';
 

@@ -39,7 +39,35 @@ describe('User index handler', () => {
       data: {
         ...userResponse,
         _tags: expect.arrayContaining(['user tag']),
+        membershipStatus: 'Alumni Member',
       },
+      type: 'user',
+    });
+  });
+
+  test('Should set membershipStatus to "GP2 Member" when alumniSinceDate is undefined', async () => {
+    const userResponse = { ...getUserResponse(), alumniSinceDate: undefined };
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+    await indexHandler(publishedEvent('42'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: expect.objectContaining({ membershipStatus: 'GP2 Member' }),
+      type: 'user',
+    });
+  });
+
+  test('Should set membershipStatus to "Alumni Member" when alumniSinceDate is set', async () => {
+    const userResponse = {
+      ...getUserResponse(),
+      alumniSinceDate: '2025-01-01',
+    };
+    userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+
+    await indexHandler(publishedEvent('42'));
+
+    expect(algoliaSearchClientMock.save).toHaveBeenCalledWith({
+      data: expect.objectContaining({ membershipStatus: 'Alumni Member' }),
       type: 'user',
     });
   });

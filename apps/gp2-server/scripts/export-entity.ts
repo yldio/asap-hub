@@ -1,5 +1,5 @@
 import { EntityResponses } from '@asap-hub/algolia';
-import { ListResponse } from '@asap-hub/model';
+import { gp2 as gp2Model, ListResponse } from '@asap-hub/model';
 import { promises as fs } from 'fs';
 import Events from '../src/controllers/event.controller';
 import ExternalUsers from '../src/controllers/external-user.controller';
@@ -127,7 +127,10 @@ const getController = (entity: keyof EntityResponsesGP2) => {
   return controllerMap[entity];
 };
 
-const transformRecords = <T extends EntityResponsesGP2, K extends keyof T>(
+export const transformRecords = <
+  T extends EntityResponsesGP2,
+  K extends keyof T,
+>(
   record: T[K] extends EntityResponsesGP2[keyof EntityResponsesGP2]
     ? T[K] & { id: string }
     : never,
@@ -139,6 +142,11 @@ const transformRecords = <T extends EntityResponsesGP2, K extends keyof T>(
     __meta: {
       type,
     },
+    ...(type === 'user' && {
+      membershipStatus: (record as gp2Model.UserResponse).alumniSinceDate
+        ? 'Alumni Member'
+        : 'GP2 Member',
+    }),
   };
 
   if ('tags' in record) {

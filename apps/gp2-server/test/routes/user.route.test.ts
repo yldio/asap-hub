@@ -113,13 +113,15 @@ describe('/users/ route', () => {
       });
 
       test.each`
-        name               | value
-        ${'regions'}       | ${['Africa']}
-        ${'projects'}      | ${['a project']}
-        ${'workingGroups'} | ${['a working group']}
-        ${'regions'}       | ${['Africa', 'Asia']}
-        ${'projects'}      | ${['a project', 'another project']}
-        ${'workingGroups'} | ${['a working group', 'another working group']}
+        name                  | value
+        ${'regions'}          | ${['Africa']}
+        ${'projects'}         | ${['a project']}
+        ${'workingGroups'}    | ${['a working group']}
+        ${'regions'}          | ${['Africa', 'Asia']}
+        ${'projects'}         | ${['a project', 'another project']}
+        ${'workingGroups'}    | ${['a working group', 'another working group']}
+        ${'membershipStatus'} | ${['GP2 Member']}
+        ${'membershipStatus'} | ${['GP2 Member', 'Alumni Member']}
       `(
         'Should return the results correctly when a filter is used for $name',
         async ({ name, value }) => {
@@ -134,6 +136,16 @@ describe('/users/ route', () => {
           expect(response.status).toBe(200);
         },
       );
+
+      test('Should reject an invalid membershipStatus value', async () => {
+        const response = await supertest(app)
+          .get('/users')
+          .query({
+            filter: { membershipStatus: ['not a member'] },
+          });
+
+        expect(response.status).toBe(400);
+      });
 
       test('Should return 200 when an administrator asks for non-onboarded users', async () => {
         userControllerMock.fetch.mockResolvedValueOnce(fetchExpectation);

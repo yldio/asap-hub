@@ -1,14 +1,42 @@
 import { gp2 as gp2Model } from '@asap-hub/model';
 import {
+  LabeledCheckbox,
   LabeledMultiSelect,
   Modal,
   FormCard,
+  Paragraph,
+  pixels,
 } from '@asap-hub/react-components';
+import { useFlags } from '@asap-hub/react-context';
+import { css } from '@emotion/react';
 
 import { useState } from 'react';
+import { mobileQuery } from '../layout';
 import FilterModalFooter from '../molecules/FilterModalFooter';
 
-const { userRegions } = gp2Model;
+const { rem } = pixels;
+const { userRegions, userMembershipStatus } = gp2Model;
+
+const membershipStatusTitleStyles = css({ paddingBottom: rem(14) });
+
+const membershipStatusSectionStyles = css({
+  marginBottom: rem(-24),
+});
+
+const membershipStatusRowStyles = css({
+  display: 'flex',
+  gap: rem(24),
+  '& p': { margin: 0 },
+  '& input[type="checkbox"]': { marginTop: 0, marginBottom: 0 },
+  [mobileQuery]: {
+    flexDirection: 'column',
+    gap: rem(16),
+  },
+});
+
+const membershipStatusItemStyles = css({
+  flex: 1,
+});
 
 type FiltersModalProps = {
   onBackClick: () => void;
@@ -41,6 +69,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
   workingGroups,
   tags,
 }) => {
+  const { isEnabled } = useFlags();
   const entityToSelect = <T extends { title: string; id: string }>({
     title,
     id,
@@ -65,18 +94,23 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
       .filter(({ id }) => filters.workingGroups?.includes(id))
       .map(entityToSelect),
   );
+  const [selectedMembershipStatus, setSelectedMembershipStatus] = useState<
+    Set<gp2Model.UserMembershipStatus>
+  >(new Set(filters.membershipStatus));
   const resetFilters = () => {
     setSelectedRegions([]);
     setSelectedExpertise([]);
     setSelectedProjects([]);
     setSelectedWorkingGroups([]);
+    setSelectedMembershipStatus(new Set());
   };
 
   const numberOfFilter =
     selectedRegions.length +
     selectedExpertise.length +
     selectedProjects.length +
-    selectedWorkingGroups.length;
+    selectedWorkingGroups.length +
+    selectedMembershipStatus.size;
 
   const ModalDescription = () => (
     <>
@@ -134,6 +168,36 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
               setSelectedProjects([...newValues]);
             }}
           />
+          {isEnabled('STAGING_MODE') && (
+            <div css={membershipStatusSectionStyles}>
+              <Paragraph noMargin styles={membershipStatusTitleStyles}>
+                <strong>Type of Users</strong>
+              </Paragraph>
+              <div css={membershipStatusRowStyles}>
+                {userMembershipStatus.map((value) => (
+                  <div key={value} css={membershipStatusItemStyles}>
+                    <LabeledCheckbox
+                      wrapLabel={false}
+                      groupName="membershipStatus"
+                      title={value}
+                      checked={selectedMembershipStatus.has(value)}
+                      onSelect={() =>
+                        setSelectedMembershipStatus((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(value)) {
+                            next.delete(value);
+                          } else {
+                            next.add(value);
+                          }
+                          return next;
+                        })
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <FilterModalFooter
             onApply={() => {
               onApplyClick({
@@ -141,6 +205,7 @@ const FiltersModal: React.FC<FiltersModalProps> = ({
                 tags: selectedExpertise.map(({ value }) => value),
                 projects: selectedProjects.map(({ value }) => value),
                 workingGroups: selectedWorkingGroups.map(({ value }) => value),
+                membershipStatus: [...selectedMembershipStatus],
               });
             }}
             onClose={onBackClick}

@@ -138,6 +138,7 @@ export {
   UsersList,
   UtilityBar,
   WorkingGroupsList,
+  TabbedContent,
 } from './molecules';
 export {
   AdditionalMaterials,

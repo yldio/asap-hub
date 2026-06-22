@@ -459,7 +459,9 @@ const serverlessConfig: AWS = {
       platform: 'node',
       target: 'node24',
       bundle: true,
-      concurrency: 8,
+      // Lower than gp2: crn has more handlers and 8-way parallel esbuild
+      // intermittently OOMs the esbuild service ("The service was stopped").
+      concurrency: 4,
     },
     'serverless-offline-ssm': {
       stages: ['local'],

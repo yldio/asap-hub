@@ -39,6 +39,7 @@ export const projectsContentQueryFragment = gql`
           id
         }
         role
+        inactiveSinceDate
         user {
           sys {
             id

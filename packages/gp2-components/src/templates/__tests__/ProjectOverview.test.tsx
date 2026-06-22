@@ -1,6 +1,16 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { ComponentProps } from 'react';
 import ProjectOverview from '../ProjectOverview';
+
+const mockIsEnabled = jest.fn();
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+
+beforeEach(() => {
+  mockIsEnabled.mockReturnValue(true);
+});
 
 describe('ProjectOverview', () => {
   const defaultProps: ComponentProps<typeof ProjectOverview> = {
@@ -105,42 +115,349 @@ describe('ProjectOverview', () => {
       screen.getByRole('heading', { name: /the milestone/ }),
     ).toBeInTheDocument();
   });
-  it('renders the members list', () => {
-    render(
-      <ProjectOverview
-        {...defaultProps}
-        members={[
-          {
-            userId: '11',
-            firstName: 'Tony',
-            lastName: 'Stark',
-            displayName: 'Tony Stark',
-            role: 'Project manager',
-          },
-        ]}
-      >
-        Body
-      </ProjectOverview>,
-    );
 
-    expect(screen.getByText('Project Members (1)')).toBeInTheDocument();
-    const avatar = screen.getByText(/tony stark/i);
-    expect(avatar).toBeVisible();
-    expect(avatar.closest('a')).toHaveAttribute(
-      'href',
-      expect.stringMatching(/11/i),
-    );
-    expect(screen.getByText('Project manager')).toBeInTheDocument();
+  describe('members section', () => {
+    it('renders the members count in the title', () => {
+      render(
+        <ProjectOverview
+          {...defaultProps}
+          members={[
+            {
+              userId: 'uuid-lead',
+              firstName: 'Jane',
+              lastName: 'Lead',
+              displayName: 'Jane Lead',
+              role: 'Project lead',
+            },
+            {
+              userId: 'uuid-member',
+              firstName: 'John',
+              lastName: 'Member',
+              displayName: 'John Member',
+              role: 'Contributor',
+            },
+          ]}
+        />,
+      );
+      expect(screen.getByText('Project Members (2)')).toBeInTheDocument();
+    });
+
+    it('renders the member list with count of 0 even if there are no members', () => {
+      render(<ProjectOverview {...defaultProps} members={[]} />);
+      expect(screen.getByText('Project Members (0)')).toBeInTheDocument();
+    });
+
+    describe('leaders section', () => {
+      it('displays Project lead, Project co-lead and Project manager roles in the Leaders section', () => {
+        render(
+          <ProjectOverview
+            {...defaultProps}
+            members={[
+              {
+                userId: 'uuid-lead',
+                firstName: 'Jane',
+                lastName: 'Lead',
+                displayName: 'Jane Lead',
+                role: 'Project lead',
+              },
+              {
+                userId: 'uuid-colead',
+                firstName: 'Bob',
+                lastName: 'CoLead',
+                displayName: 'Bob CoLead',
+                role: 'Project co-lead',
+              },
+              {
+                userId: 'uuid-manager',
+                firstName: 'Mary',
+                lastName: 'Manager',
+                displayName: 'Mary Manager',
+                role: 'Project manager',
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText('Active Leaders (3)')).toBeInTheDocument();
+        expect(screen.getByText('Jane Lead')).toBeInTheDocument();
+        expect(screen.getByText('Bob CoLead')).toBeInTheDocument();
+        expect(screen.getByText('Mary Manager')).toBeInTheDocument();
+      });
+
+      it('puts leaders with inactiveSinceDate in the Past Leaders tab', () => {
+        render(
+          <ProjectOverview
+            {...defaultProps}
+            members={[
+              {
+                userId: 'uuid-lead',
+                firstName: 'Jane',
+                lastName: 'Lead',
+                displayName: 'Jane Lead',
+                role: 'Project lead',
+                inactiveSinceDate: '2024-01-01',
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText('Active Leaders (0)')).toBeInTheDocument();
+        expect(screen.getByText('Past Leaders (1)')).toBeInTheDocument();
+        expect(screen.queryByText('Jane Lead')).toBeNull();
+
+        fireEvent.click(screen.getByText('Past Leaders (1)'));
+        expect(screen.getByText('Jane Lead')).toBeVisible();
+      });
+
+      it('puts leaders with alumniSinceDate in the Past Leaders tab', () => {
+        render(
+          <ProjectOverview
+            {...defaultProps}
+            members={[
+              {
+                userId: 'uuid-lead',
+                firstName: 'Jane',
+                lastName: 'Lead',
+                displayName: 'Jane Lead',
+                role: 'Project co-lead',
+                alumniSinceDate: '2023-06-01',
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText('Active Leaders (0)')).toBeInTheDocument();
+        expect(screen.getByText('Past Leaders (1)')).toBeInTheDocument();
+      });
+    });
+
+    describe('project members section', () => {
+      it('displays Contributor and Investigator roles in the Members section', () => {
+        render(
+          <ProjectOverview
+            {...defaultProps}
+            members={[
+              {
+                userId: 'uuid-member',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                role: 'Contributor',
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText('Active Members (1)')).toBeInTheDocument();
+        expect(screen.getByText('John Doe')).toBeInTheDocument();
+        expect(screen.getByText('Contributor')).toBeInTheDocument();
+      });
+
+      it('puts members with inactiveSinceDate in the Past Members tab', () => {
+        render(
+          <ProjectOverview
+            {...defaultProps}
+            members={[
+              {
+                userId: 'uuid-member',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                role: 'Investigator',
+                inactiveSinceDate: '2024-03-01',
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText('Active Members (0)')).toBeInTheDocument();
+        expect(screen.getByText('Past Members (1)')).toBeInTheDocument();
+        expect(screen.queryByText('John Doe')).toBeNull();
+
+        fireEvent.click(screen.getByText('Past Members (1)'));
+        expect(screen.getByText('John Doe')).toBeVisible();
+      });
+
+      it('shows View More / View Less for members when count exceeds 8', () => {
+        render(
+          <ProjectOverview
+            {...defaultProps}
+            members={Array.from({ length: 10 }, (_, i) => ({
+              userId: `uuid-${i}`,
+              firstName: `First${i}`,
+              lastName: `Last${i}`,
+              displayName: `User ${i}`,
+              role: 'Contributor' as const,
+            }))}
+          />,
+        );
+        fireEvent.click(screen.getByText('View More Members'));
+        expect(screen.getByText('View Less Members')).toBeVisible();
+      });
+    });
+
+    it('does not show leaders in the Members section', () => {
+      render(
+        <ProjectOverview
+          {...defaultProps}
+          members={[
+            {
+              userId: 'uuid-lead',
+              firstName: 'Jane',
+              lastName: 'Lead',
+              displayName: 'Jane Lead',
+              role: 'Project lead',
+            },
+          ]}
+        />,
+      );
+      expect(screen.getByText('Active Leaders (1)')).toBeInTheDocument();
+      expect(screen.getByText('Active Members (0)')).toBeInTheDocument();
+    });
+
+    it('treats all members as past when the project status is Completed and focuses the Past tabs', () => {
+      render(
+        <ProjectOverview
+          {...defaultProps}
+          status="Completed"
+          members={[
+            {
+              userId: 'uuid-lead',
+              firstName: 'Jane',
+              lastName: 'Lead',
+              displayName: 'Jane Lead',
+              role: 'Project lead',
+            },
+            {
+              userId: 'uuid-member',
+              firstName: 'John',
+              lastName: 'Doe',
+              displayName: 'John Doe',
+              role: 'Contributor',
+            },
+          ]}
+        />,
+      );
+      expect(screen.getByText('Active Leaders (0)')).toBeInTheDocument();
+      expect(screen.getByText('Past Leaders (1)')).toBeInTheDocument();
+      expect(screen.getByText('Active Members (0)')).toBeInTheDocument();
+      expect(screen.getByText('Past Members (1)')).toBeInTheDocument();
+      expect(screen.getByText('Jane Lead')).toBeVisible();
+      expect(screen.getByText('John Doe')).toBeVisible();
+    });
+
+    describe('when STAGING_MODE flag is disabled', () => {
+      beforeEach(() => {
+        mockIsEnabled.mockReturnValue(false);
+      });
+
+      it('renders a flat member list with count in the title', () => {
+        render(
+          <ProjectOverview
+            {...defaultProps}
+            members={[
+              {
+                userId: 'uuid-lead',
+                firstName: 'Jane',
+                lastName: 'Lead',
+                displayName: 'Jane Lead',
+                role: 'Project lead',
+              },
+              {
+                userId: 'uuid-member',
+                firstName: 'John',
+                lastName: 'Member',
+                displayName: 'John Member',
+                role: 'Contributor',
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText('Project Members (2)')).toBeInTheDocument();
+      });
+
+      it('renders the member list with count of 0 even if there are no members', () => {
+        render(<ProjectOverview {...defaultProps} members={[]} />);
+        expect(screen.getByText('Project Members (0)')).toBeInTheDocument();
+      });
+
+      it('renders all members in a single list without leader or member tabs', () => {
+        render(
+          <ProjectOverview
+            {...defaultProps}
+            members={[
+              {
+                userId: 'uuid-lead',
+                firstName: 'Jane',
+                lastName: 'Lead',
+                displayName: 'Jane Lead',
+                role: 'Project lead',
+              },
+              {
+                userId: 'uuid-member',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                role: 'Contributor',
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText('Jane Lead')).toBeInTheDocument();
+        expect(screen.getByText('John Doe')).toBeInTheDocument();
+        expect(screen.queryByText(/Active Leaders/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Past Leaders/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Active Members/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Past Members/)).not.toBeInTheDocument();
+      });
+
+      it('does not split inactive members into a past tab', () => {
+        render(
+          <ProjectOverview
+            {...defaultProps}
+            members={[
+              {
+                userId: 'uuid-member',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                role: 'Contributor',
+                inactiveSinceDate: '2024-03-01',
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText('John Doe')).toBeVisible();
+        expect(screen.queryByText(/Past Members/)).not.toBeInTheDocument();
+      });
+
+      it('shows all members in a flat list when the project status is Completed', () => {
+        render(
+          <ProjectOverview
+            {...defaultProps}
+            status="Completed"
+            members={[
+              {
+                userId: 'uuid-lead',
+                firstName: 'Jane',
+                lastName: 'Lead',
+                displayName: 'Jane Lead',
+                role: 'Project lead',
+              },
+              {
+                userId: 'uuid-member',
+                firstName: 'John',
+                lastName: 'Doe',
+                displayName: 'John Doe',
+                role: 'Contributor',
+              },
+            ]}
+          />,
+        );
+        expect(screen.getByText('Project Members (2)')).toBeInTheDocument();
+        expect(screen.getByText('Jane Lead')).toBeVisible();
+        expect(screen.getByText('John Doe')).toBeVisible();
+        expect(screen.queryByText(/Active Leaders/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/Past Members/)).not.toBeInTheDocument();
+      });
+    });
   });
 
-  it('renders the member list if there are no members. It displays a count of 0', () => {
-    render(
-      <ProjectOverview {...defaultProps} members={[]}>
-        Body
-      </ProjectOverview>,
-    );
-    expect(screen.getByText('Project Members (0)')).toBeInTheDocument();
-  });
   it('renders the events', () => {
     render(
       <ProjectOverview
@@ -164,7 +481,7 @@ describe('ProjectOverview', () => {
       screen.queryByRole('heading', { name: 'Events' }),
     ).not.toBeInTheDocument();
   });
-  it('does not renders the events if there is no calendar', () => {
+  it('does not render the events if there is no calendar', () => {
     render(<ProjectOverview {...defaultProps} calendar={undefined} />);
 
     expect(

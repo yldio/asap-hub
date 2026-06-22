@@ -12,6 +12,7 @@ export { default as Form } from './Form';
 export { default as FundingProviderModal } from './FundingProviderModal';
 export { default as KeyInformationModal } from './KeyInformationModal';
 export { default as MainNavigation } from './MainNavigation';
+export { default as MembersTabbedCard } from './MembersTabbedCard';
 export { default as Milestone } from './Milestone';
 export { default as Milestones } from './Milestones';
 export { default as NavigationHeader } from './NavigationHeader';

@@ -1524,16 +1524,32 @@ describe('User data provider', () => {
         );
       });
 
-      test('stamps alumniLastUpdated when email is in the payload', async () => {
+      test('stamps alumniLastUpdated when email is in the payload and user is alumni', async () => {
+        const alumniEntry = getEntry({
+          firstName: 'Test',
+          lastName: 'User',
+          alumniSinceDate: { 'en-US': '2024-01-01T00:00:00.000Z' },
+        });
+        environmentMock.getEntry.mockReset();
+        environmentMock.getEntry.mockResolvedValueOnce(alumniEntry);
         await userDataProvider.update('123', {
           email: 'new@example.com',
         });
         expect(patchAndPublish).toHaveBeenCalledWith(
-          entry,
+          alumniEntry,
           expect.objectContaining({
             alumniLastUpdated: '2026-06-16T12:00:00.000Z',
           }),
         );
+      });
+
+      test('does not stamp alumniLastUpdated when email changes on non-alumni user', async () => {
+        await userDataProvider.update('123', {
+          email: 'new@example.com',
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          email: 'new@example.com',
+        });
       });
 
       test('stamps alumniLastUpdated when alumniSinceDate is explicitly cleared', async () => {

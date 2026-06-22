@@ -2526,10 +2526,11 @@ describe('User data provider', () => {
         });
         environmentMock.getEntry.mockReset();
         environmentMock.getEntry.mockResolvedValueOnce(alumniEntry);
-        (patchAndPublish as jest.MockedFunction<typeof patchAndPublish>)
-          .mockResolvedValueOnce({
-            sys: { publishedVersion: 2 },
-          } as Entry);
+        (
+          patchAndPublish as jest.MockedFunction<typeof patchAndPublish>
+        ).mockResolvedValueOnce({
+          sys: { publishedVersion: 2 },
+        } as Entry);
         contentfulGraphqlClientMock.request.mockResolvedValueOnce({
           users: { sys: { publishedVersion: 2 } },
         });

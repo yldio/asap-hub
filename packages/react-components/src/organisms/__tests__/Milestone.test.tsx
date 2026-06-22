@@ -239,7 +239,7 @@ describe('Milestone', () => {
       Promise.resolve(sampleArticles),
     );
 
-    it('displays "No articles added" when no related articles', () => {
+    it('displays "No articles associated" when no related articles', () => {
       render(
         <Milestone
           milestone={mockMilestone}
@@ -249,7 +249,7 @@ describe('Milestone', () => {
           onSaveArticles={mockOnSaveArticles}
         />,
       );
-      expect(screen.getByText('No articles added')).toBeInTheDocument();
+      expect(screen.getByText('No articles associated')).toBeInTheDocument();
     });
 
     it('displays article count with expand button when articles exist', () => {

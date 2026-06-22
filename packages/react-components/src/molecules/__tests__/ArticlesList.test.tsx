@@ -22,7 +22,21 @@ describe('ArticlesList', () => {
       fetchArticles: mockFetchArticles,
     } as unknown as ArticlesListProps;
     render(<ArticlesList {...props} />);
-    expect(screen.getByText('Articles (0)')).toBeInTheDocument();
+    expect(screen.getByText('No articles associated')).toBeInTheDocument();
+  });
+
+  it('displays empty state and no expand button when count is 0', () => {
+    render(
+      <ArticlesList
+        aimId="aim-1"
+        articlesCount={0}
+        fetchArticles={mockFetchArticles}
+      />,
+    );
+    expect(screen.getByText('No articles associated')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Expand articles' }),
+    ).not.toBeInTheDocument();
   });
 
   it('displays the article count in the header', () => {

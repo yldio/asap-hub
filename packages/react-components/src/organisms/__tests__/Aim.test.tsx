@@ -1,9 +1,11 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Aim as AimType, AimStatus } from '@asap-hub/model';
+import { Aim as AimType, AimStatus, ArticleItem } from '@asap-hub/model';
 import Aim, { getAimStatusAccent } from '../Aim';
 
-const mockFetchArticles = jest.fn(() => Promise.resolve([]));
+const mockFetchArticles = jest.fn(
+  (): Promise<ReadonlyArray<ArticleItem>> => Promise.resolve([]),
+);
 
 const mockAim: AimType = {
   id: '1',
@@ -39,6 +41,11 @@ const mockClientHeight = (element: HTMLElement, clientHeight: number) => {
 };
 
 describe('Aim', () => {
+  beforeEach(() => {
+    mockFetchArticles.mockClear();
+    mockFetchArticles.mockResolvedValue([]);
+  });
+
   it('renders aim description', () => {
     render(<Aim aim={mockAim} {...defaultAimProps} />);
     expect(screen.getByText(mockAim.description)).toBeInTheDocument();
@@ -54,9 +61,12 @@ describe('Aim', () => {
     expect(screen.getByText('Complete')).toBeInTheDocument();
   });
 
-  it('shows ArticlesList with count 0 when articleCount is 0', () => {
+  it('shows empty state when articleCount is 0', () => {
     render(<Aim aim={mockAim} {...defaultAimProps} />);
-    expect(screen.getByText('Articles (0)')).toBeInTheDocument();
+    expect(screen.getByText('No articles associated')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Expand articles' }),
+    ).not.toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: 'Edit' }),
     ).not.toBeInTheDocument();
@@ -74,6 +84,9 @@ describe('Aim', () => {
   });
 
   it('toggles articles section on click', async () => {
+    mockFetchArticles.mockResolvedValueOnce([
+      { id: 'a1', title: 'Article one', href: '/articles/a1' },
+    ]);
     render(<Aim aim={longAim} {...defaultAimProps} />);
 
     const articlesButton = screen.getByRole('button', {

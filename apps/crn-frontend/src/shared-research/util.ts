@@ -59,7 +59,7 @@ export type ResolveFlowIdParams = {
   entityType: 'team' | 'working-group';
   versionAction?: 'create' | 'edit';
   published: boolean;
-  isImportedFromManuscript: boolean;
+  isImportedFromManuscript?: boolean;
   isDuplicate: boolean;
   hasResearchOutputId: boolean;
 };
@@ -68,7 +68,7 @@ export const resolveResearchOutputFlowId = ({
   entityType,
   versionAction,
   published,
-  isImportedFromManuscript,
+  isImportedFromManuscript = false,
   isDuplicate,
   hasResearchOutputId,
 }: ResolveFlowIdParams): ResearchOutputFlowId => {

@@ -1524,6 +1524,18 @@ describe('User data provider', () => {
         );
       });
 
+      test('stamps alumniLastUpdated when email is in the payload', async () => {
+        await userDataProvider.update('123', {
+          email: 'new@example.com',
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(
+          entry,
+          expect.objectContaining({
+            alumniLastUpdated: '2026-06-16T12:00:00.000Z',
+          }),
+        );
+      });
+
       test('stamps alumniLastUpdated when alumniSinceDate is explicitly cleared', async () => {
         await userDataProvider.update('123', {
           alumniSinceDate: undefined,

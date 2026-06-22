@@ -2516,6 +2516,16 @@ describe('User data provider', () => {
         });
       });
 
+      test('Should stamp alumniLastUpdated when email is in the payload', async () => {
+        await userDataProvider.update(userId, {
+          email: 'new@example.com',
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          email: 'new@example.com',
+          alumniLastUpdated: now,
+        });
+      });
+
       test('Should stamp alumniLastUpdated when alumniSinceDate is explicitly cleared', async () => {
         await userDataProvider.update(userId, {
           alumniSinceDate: undefined,

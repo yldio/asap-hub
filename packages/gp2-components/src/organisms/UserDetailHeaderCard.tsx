@@ -171,7 +171,7 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
             This alumni might not have all content updated or available. This
             user became alumni on the{' '}
             <strong>{formatDate(new Date(alumniSinceDate))}</strong>, their
-            contact details were last updated on the{' '}
+            alumni information was last updated on the{' '}
             <strong>
               {formatDate(new Date(alumniLastUpdated || lastModifiedDate))}
             </strong>

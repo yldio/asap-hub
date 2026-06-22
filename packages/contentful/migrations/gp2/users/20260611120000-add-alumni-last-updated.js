@@ -19,7 +19,7 @@ module.exports.up = (migration) => {
     'app',
     'mqvX9KU5AthRTlnIRhNNh',
     {
-      observedField: 'alumniSinceDate,alumniLocation',
+      observedField: 'alumniSinceDate,alumniLocation,email',
     },
   );
 

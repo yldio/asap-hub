@@ -255,7 +255,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           <strong>
             {formatDateToTimezone(alumniSinceDate, 'do MMMM yyyy')}
           </strong>
-          , their contact details were last updated on the{' '}
+          , their alumni information was last updated on the{' '}
           <strong>
             {formatDateToTimezone(
               alumniLastUpdated || lastModifiedDate,

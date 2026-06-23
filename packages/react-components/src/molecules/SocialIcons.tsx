@@ -2,6 +2,7 @@ import { UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { Link } from '../atoms';
+import { neutral900 } from '../colors';
 import {
   BlueSkyIcon,
   LinkedInIcon,
@@ -77,7 +78,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
           ? new URL(`https://bsky.app/profile/${blueSky}`).toString()
           : undefined
       }
-      icon={<BlueSkyIcon />}
+      icon={<BlueSkyIcon color={neutral900.hex} />}
     />
     <SocialIconLink
       link={

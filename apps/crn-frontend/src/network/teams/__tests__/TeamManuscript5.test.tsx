@@ -221,7 +221,7 @@ it('can resubmit a manuscript and navigates to team workspace', async () => {
   manuscript.impact = { id: 'impact-id-1', name: 'My Impact' };
   manuscript.categories = [{ id: 'category-id-1', name: 'My Category' }];
   manuscript.layImpactStatement = 'an impact statement';
-  manuscript.firstPublicDate = '2023-01-03T10:00:00.000Z';
+  manuscript.preprintDate = '2023-01-03T10:00:00.000Z';
 
   mockGetManuscript.mockResolvedValue(manuscript);
   mockResubmitManuscript.mockResolvedValue(manuscript);

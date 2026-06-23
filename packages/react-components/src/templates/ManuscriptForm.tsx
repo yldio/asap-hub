@@ -268,7 +268,7 @@ type ManuscriptFormProps = Omit<
   Partial<
     Pick<
       ManuscriptPostRequest,
-      'title' | 'url' | 'firstPublicDate' | 'layImpactStatement'
+      'title' | 'url' | 'preprintDate' | 'layImpactStatement'
     >
   > & {
     isOpenScienceTeamMember?: boolean;
@@ -346,7 +346,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   projectId,
   isOpenScienceTeamMember,
   title,
-  firstPublicDate,
+  preprintDate,
   url,
   impact,
   layImpactStatement,
@@ -436,9 +436,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const isEditMode = !!manuscriptId && !resubmitManuscript;
   const canSubmitComplianceReportResponse =
     resubmitManuscript || (isEditMode && versionsCount > 1);
-  const shouldEnableFirstPublicDateField =
-    !resubmitManuscript || !firstPublicDate;
-  const firstPublicDateFieldDescription = shouldEnableFirstPublicDateField
+  const shouldEnableFirstPublicDateField = !resubmitManuscript || !preprintDate;
+  const preprintDateFieldDescription = shouldEnableFirstPublicDateField
     ? 'Enter the date this manuscript was first shared publicly, whether as a preprint or publication. This cannot be changed later.'
     : 'The date this manuscript was first shared publicly. Set on a previous version and cannot be edited.';
 
@@ -447,7 +446,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     defaultValues: {
       title: title || '',
       url: url || undefined,
-      firstPublicDate: firstPublicDate ? firstPublicDate.slice(0, 10) : '',
+      preprintDate: preprintDate ? preprintDate.slice(0, 10) : '',
       layImpactStatement: layImpactStatement || '',
       impact,
       categories: categories || [],
@@ -940,8 +939,8 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     clearFormToast();
     const versionData = data.versions[0];
     const urlValue = data.url || undefined;
-    const firstPublicDateValue = data.firstPublicDate
-      ? new Date(data.firstPublicDate).toISOString()
+    const preprintDateValue = data.preprintDate
+      ? new Date(data.preprintDate).toISOString()
       : undefined;
 
     if (versionData?.type && versionData.lifecycle) {
@@ -986,7 +985,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
           await onCreate({
             ...data,
             url: urlValue,
-            firstPublicDate: firstPublicDateValue,
+            preprintDate: preprintDateValue,
             impact: data.impact?.value,
             categories:
               data.categories?.map((category) => category.value) || [],
@@ -1004,7 +1003,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             title: data.title,
             url: urlValue,
             impact: data.impact?.value,
-            firstPublicDate: firstPublicDateValue,
+            preprintDate: preprintDateValue,
             categories:
               data.categories?.map((category) => category.value) || [],
             layImpactStatement: data.layImpactStatement,
@@ -1021,7 +1020,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             title: data.title,
             url: urlValue,
             impact: data.impact?.value,
-            firstPublicDate: firstPublicDateValue,
+            preprintDate: preprintDateValue,
             categories:
               data.categories?.map((category) => category.value) || [],
             layImpactStatement: data.layImpactStatement,
@@ -1223,13 +1222,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             {watchType &&
               watchLifecycle &&
               manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
-                'firstPublicDate',
+                'preprintDate',
               ) && (
                 <Suspense
                   fallback={<div>Loading date first made public...</div>}
                 >
                   <Controller
-                    name="firstPublicDate"
+                    name="preprintDate"
                     control={control}
                     rules={{
                       required: 'This field is required.',
@@ -1241,7 +1240,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                       <LabeledDateInput
                         title="Date first made public"
                         subtitle="(required)"
-                        description={firstPublicDateFieldDescription}
+                        description={preprintDateFieldDescription}
                         onChange={onChange}
                         value={value}
                         enabled={

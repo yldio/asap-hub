@@ -1284,6 +1284,7 @@ describe('User data provider', () => {
           researcherId: null,
           github: 'yldio',
           twitter: 'yldio',
+          blueSky: null,
         });
       });
       test('maps avatar value to a linked resource', async () => {
@@ -1456,6 +1457,7 @@ describe('User data provider', () => {
           researcherId: null,
           github: 'yldio',
           twitter: 'yldio',
+          blueSky: null,
         });
       });
       test('maps avatar value to a linked resource', async () => {

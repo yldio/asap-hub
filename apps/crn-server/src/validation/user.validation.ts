@@ -58,6 +58,7 @@ const userPatchRequestValidationSchema: JSONSchemaType<UserPatchRequest> = {
         linkedIn: { type: 'string', nullable: true },
         researcherId: { type: 'string', nullable: true },
         twitter: { type: 'string', nullable: true },
+        blueSky: { type: 'string', nullable: true },
         github: { type: 'string', nullable: true },
         googleScholar: { type: 'string', nullable: true },
         researchGate: { type: 'string', nullable: true },

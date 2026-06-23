@@ -43,6 +43,7 @@ export const usersContentQueryFragment = gql`
     researcherId
     researchGate
     twitter
+    blueSky
     website1
     website2
     role
@@ -255,6 +256,7 @@ export const FETCH_PUBLIC_USERS = gql`
         orcid
         researcherId
         twitter
+        blueSky
         github
         googleScholar
         researchGate

@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
-import { UserProfileContext } from '@asap-hub/react-context';
 
 import SocialIcons from '../SocialIcons';
 
 it('renders icon and link', () => {
   const { queryAllByRole } = render(
     <SocialIcons
+      blueSky="test"
       github="test"
       linkedIn="test"
       orcid="test"
@@ -31,6 +31,10 @@ it('renders icon and link', () => {
       [
         "ResearcherID",
         "https://publons.com/researcher/test",
+      ],
+      [
+        "Blue Sky",
+        "https://bsky.app/profile/test",
       ],
       [
         "Twitter",
@@ -69,13 +73,11 @@ it('does not contain content when there are no social icons', () => {
   expect(container.firstChild).toBeEmptyDOMElement();
 });
 
-it('renders social icons without links for own profile', () => {
-  const { getByTitle } = render(
-    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
-      <SocialIcons />
-    </UserProfileContext.Provider>,
+it('renders only defined social icons', () => {
+  const { queryAllByRole, queryByTitle } = render(
+    <SocialIcons github="test" />,
   );
-  const element = getByTitle('Research Gate');
-  expect(element).toBeInTheDocument();
-  expect(element.closest('a')).not.toHaveAttribute('href');
+  expect(queryAllByRole('link')).toHaveLength(1);
+  expect(queryByTitle('GitHub')).toBeInTheDocument();
+  expect(queryByTitle('Research Gate')).not.toBeInTheDocument();
 });

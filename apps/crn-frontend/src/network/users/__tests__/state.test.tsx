@@ -7,18 +7,22 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 
-import { deleteUserAvatar } from '../api';
-import { useDeleteUserAvatarById } from '../state';
+import { deleteUserAvatar, postUserAvatar } from '../api';
+import { useDeleteUserAvatarById, usePatchUserAvatarById } from '../state';
 
 jest.mock('../api');
 
 const mockDeleteUserAvatar = deleteUserAvatar as jest.MockedFunction<
   typeof deleteUserAvatar
 >;
+const mockPostUserAvatar = postUserAvatar as jest.MockedFunction<
+  typeof postUserAvatar
+>;
 
 const id = '42';
 
-const renderDeleteAvatarHook = (
+const renderAvatarHook = <T,>(
+  useHook: () => T,
   refreshUser = jest.fn().mockResolvedValue(undefined),
 ) => {
   const wrapper = ({ children }: { children: ReactNode }) => (
@@ -30,18 +34,53 @@ const renderDeleteAvatarHook = (
       </Suspense>
     </RecoilRoot>
   );
-  const { result } = renderHook(() => useDeleteUserAvatarById(id), { wrapper });
+  const { result } = renderHook(useHook, { wrapper });
   return { result, refreshUser };
 };
 
 beforeEach(() => {
   jest.resetAllMocks();
   mockDeleteUserAvatar.mockResolvedValue({ ...createUserResponse(), id });
+  mockPostUserAvatar.mockResolvedValue({ ...createUserResponse(), id });
+});
+
+describe('usePatchUserAvatarById', () => {
+  it('refreshes the Auth0 user by default', async () => {
+    const { result, refreshUser } = renderAvatarHook(() =>
+      usePatchUserAvatarById(id),
+    );
+    await waitFor(() => expect(result.current).toBeDefined());
+
+    await act(() => result.current('data:image/jpeg;base64,abc'));
+
+    expect(mockPostUserAvatar).toHaveBeenCalledWith(
+      id,
+      { avatar: 'data:image/jpeg;base64,abc' },
+      expect.any(String),
+    );
+    expect(refreshUser).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not refresh the Auth0 user when refreshToken is false', async () => {
+    const { result, refreshUser } = renderAvatarHook(() =>
+      usePatchUserAvatarById(id),
+    );
+    await waitFor(() => expect(result.current).toBeDefined());
+
+    await act(() =>
+      result.current('data:image/jpeg;base64,abc', { refreshToken: false }),
+    );
+
+    expect(mockPostUserAvatar).toHaveBeenCalled();
+    expect(refreshUser).not.toHaveBeenCalled();
+  });
 });
 
 describe('useDeleteUserAvatarById', () => {
   it('refreshes the Auth0 user by default', async () => {
-    const { result, refreshUser } = renderDeleteAvatarHook();
+    const { result, refreshUser } = renderAvatarHook(() =>
+      useDeleteUserAvatarById(id),
+    );
     await waitFor(() => expect(result.current).toBeDefined());
 
     await act(() => result.current());
@@ -51,7 +90,9 @@ describe('useDeleteUserAvatarById', () => {
   });
 
   it('does not refresh the Auth0 user when refreshToken is false', async () => {
-    const { result, refreshUser } = renderDeleteAvatarHook();
+    const { result, refreshUser } = renderAvatarHook(() =>
+      useDeleteUserAvatarById(id),
+    );
     await waitFor(() => expect(result.current).toBeDefined());
 
     await act(() => result.current({ refreshToken: false }));

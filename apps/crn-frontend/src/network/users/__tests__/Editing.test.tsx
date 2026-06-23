@@ -109,6 +109,8 @@ describe('the personal info modal', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockLoadInstitutionOptions.mockResolvedValue([]);
+    URL.createObjectURL = jest.fn(() => 'blob:preview');
+    URL.revokeObjectURL = jest.fn();
   });
 
   it('searches and displays results from organisations api', async () => {
@@ -185,8 +187,8 @@ describe('the personal info modal', () => {
     );
   });
 
-  it('uploads a profile photo', async () => {
-    const { findByLabelText } = renderWithRoot(
+  it('uploads the staged profile photo on save', async () => {
+    const { findByLabelText, findByText } = renderWithRoot(
       <Auth0Provider user={{ id }}>
         <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
           <Routes>
@@ -215,6 +217,11 @@ describe('the personal info modal', () => {
       file,
     );
 
+    // staged only, not yet uploaded
+    expect(mockPostUserAvatar).not.toHaveBeenCalled();
+
+    await userEvent.click(await findByText(/save/i));
+
     await waitFor(() =>
       expect(mockPostUserAvatar).toHaveBeenCalledWith(
         id,
@@ -224,8 +231,8 @@ describe('the personal info modal', () => {
     );
   });
 
-  it('removes the profile photo', async () => {
-    const { findByRole } = renderWithRoot(
+  it('removes the profile photo on save', async () => {
+    const { findByRole, findByText } = renderWithRoot(
       <Auth0Provider user={{ id }}>
         <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
           <Routes>
@@ -248,6 +255,11 @@ describe('the personal info modal', () => {
     );
 
     await userEvent.click(await findByRole('button', { name: /remove/i }));
+
+    // staged only, not yet removed
+    expect(mockDeleteUserAvatar).not.toHaveBeenCalled();
+
+    await userEvent.click(await findByText(/save/i));
 
     await waitFor(() =>
       expect(mockDeleteUserAvatar).toHaveBeenCalledWith(id, expect.any(String)),

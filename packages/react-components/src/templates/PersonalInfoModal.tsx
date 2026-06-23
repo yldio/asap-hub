@@ -1,5 +1,5 @@
 import { UserDegree, UserPatchRequest, UserResponse } from '@asap-hub/model';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
   EditUserAvatar,
@@ -28,11 +28,15 @@ type PersonalInfoModalProps = Pick<
     countrySuggestions: string[];
     loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
     onSave?: (data: UserPatchRequest) => void | Promise<void>;
-    onImageSelect?: (file: File) => void;
-    onImageRemove?: () => void;
-    avatarSaving?: boolean;
+    onImageSelect?: (file: File) => void | Promise<void>;
+    onImageRemove?: () => void | Promise<void>;
     backHref: string;
   };
+
+type StagedAvatar =
+  | { type: 'keep' }
+  | { type: 'upload'; file: File; previewUrl: string }
+  | { type: 'remove' };
 
 const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   firstName = '',
@@ -52,7 +56,6 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   onSave = noop,
   onImageSelect,
   onImageRemove,
-  avatarSaving = false,
   backHref,
 }) => {
   const navigate = useNavigate();
@@ -67,6 +70,35 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   const [newStateOrProvince, setNewStateOrProvince] =
     useState<string>(stateOrProvince);
   const [newCountry, setNewCountry] = useState<string>(country);
+  const [stagedAvatar, setStagedAvatar] = useState<StagedAvatar>({
+    type: 'keep',
+  });
+
+  const canEditAvatar = !!onImageSelect && !!onImageRemove;
+  const previewAvatarUrl =
+    stagedAvatar.type === 'upload'
+      ? stagedAvatar.previewUrl
+      : stagedAvatar.type === 'remove'
+        ? undefined
+        : avatarUrl;
+
+  // revoke the object URL of the staged preview when it is replaced or unmounted
+  useEffect(
+    () => () => {
+      if (stagedAvatar.type === 'upload') {
+        URL.revokeObjectURL(stagedAvatar.previewUrl);
+      }
+    },
+    [stagedAvatar],
+  );
+
+  const commitAvatar = async () => {
+    if (stagedAvatar.type === 'upload') {
+      await onImageSelect?.(stagedAvatar.file);
+    } else if (stagedAvatar.type === 'remove') {
+      await onImageRemove?.();
+    }
+  };
 
   return (
     <EditUserModal
@@ -81,10 +113,12 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
         newJobTitle !== jobTitle ||
         newCity !== city ||
         newCountry !== country ||
-        newStateOrProvince !== stateOrProvince
+        newStateOrProvince !== stateOrProvince ||
+        stagedAvatar.type !== 'keep'
       }
       backHref={backHref}
       onSave={async () => {
+        await commitAvatar();
         await onSave(
           Object.fromEntries(
             Object.entries({
@@ -106,14 +140,20 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
     >
       {({ isSaving }) => (
         <FormSection>
-          {onImageSelect && onImageRemove && (
+          {canEditAvatar && (
             <EditUserAvatar
-              avatarUrl={avatarUrl}
+              avatarUrl={previewAvatarUrl}
               firstName={newFirstName}
               lastName={newLastName}
-              onImageSelect={onImageSelect}
-              onImageRemove={onImageRemove}
-              enabled={!isSaving && !avatarSaving}
+              onImageSelect={(file) =>
+                setStagedAvatar({
+                  type: 'upload',
+                  file,
+                  previewUrl: URL.createObjectURL(file),
+                })
+              }
+              onImageRemove={() => setStagedAvatar({ type: 'remove' })}
+              enabled={!isSaving}
             />
           )}
           <LabeledTextField

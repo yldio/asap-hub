@@ -22,9 +22,7 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
   const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);
-  const { avatarSaving, onImageSelect, onImageRemove } = useManageUserAvatar(
-    user.id,
-  );
+  const { onImageSelect, onImageRemove } = useManageUserAvatar(user.id);
 
   return (
     <Routes>
@@ -42,7 +40,6 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
               onSave={patchUser}
               onImageSelect={onImageSelect}
               onImageRemove={onImageRemove}
-              avatarSaving={avatarSaving}
             />
           </Frame>
         }

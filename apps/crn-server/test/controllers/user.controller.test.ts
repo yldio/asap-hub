@@ -393,6 +393,27 @@ describe('Users controller', () => {
     });
   });
 
+  describe('removeAvatar', () => {
+    test('clears the avatar and returns the updated user', async () => {
+      userDataProviderMock.fetchById.mockResolvedValueOnce(getUserDataObject());
+
+      const result = await userController.removeAvatar('user-id');
+
+      expect(result).toEqual(getUserResponse());
+      expect(userDataProviderMock.update).toHaveBeenCalledWith(
+        'user-id',
+        {
+          avatar: null,
+        },
+        { suppressConflict: false, polling: true },
+      );
+      expect(userDataProviderMock.fetchById).toHaveBeenCalledWith(
+        'user-id',
+        false,
+      );
+    });
+  });
+
   describe('connectByCode', () => {
     test('should replace the welcome code with the connection code and return the user on success', async () => {
       const userId = '42';

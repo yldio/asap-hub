@@ -186,6 +186,10 @@ export default class UserController {
     return this.update(id, { avatar: assetId });
   }
 
+  async removeAvatar(id: string): Promise<UserResponse> {
+    return this.update(id, { avatar: null });
+  }
+
   async connectByCode(
     welcomeCode: string,
     userId: string,

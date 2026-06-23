@@ -57,6 +57,7 @@ import { DocumentNode } from 'graphql';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
 import { parseResearchTags } from './research-tag.data-provider';
+import logger from '../../utils/logger';
 
 export type QueryUserListItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -334,6 +335,14 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const fields = cleanUser(data);
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
+
+    // When the avatar is being cleared, keep a reference to the existing asset
+    // so it can be deleted from Contentful once the link has been removed.
+    const removedAvatarId =
+      'avatar' in fields && fields.avatar === null
+        ? (user.fields.avatar?.['en-US']?.sys?.id as string | undefined)
+        : undefined;
+
     const patchMethod = suppressConflict
       ? patchAndPublishConflict
       : patchAndPublish;
@@ -341,10 +350,30 @@ export class UserContentfulDataProvider implements UserDataProvider {
       ...fields,
       ...(data.tagIds ? { researchTags: getLinkEntities(data.tagIds) } : {}),
     });
+
+    if (removedAvatarId) {
+      await this.deleteAsset(environment, removedAvatarId);
+    }
+
     if (!result || !polling) {
       return;
     }
     await pollForUpdate(result.sys.publishedVersion);
+  }
+
+  private async deleteAsset(environment: Environment, assetId: string) {
+    try {
+      const asset = await environment.getAsset(assetId);
+      if (asset.isPublished()) {
+        await asset.unpublish();
+      }
+      await asset.delete();
+    } catch (error) {
+      logger.warn(
+        { error, assetId },
+        'Failed to delete avatar asset from Contentful',
+      );
+    }
   }
 }
 
@@ -357,13 +386,15 @@ const cleanUser = ({
       if (key === 'avatar') {
         return {
           ...acc,
-          avatar: {
-            sys: {
-              type: 'Link',
-              linkType: 'Asset',
-              id: value,
-            },
-          },
+          avatar: value
+            ? {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Asset',
+                  id: value,
+                },
+              }
+            : null,
         };
       }
       if (key === 'social') {

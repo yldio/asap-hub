@@ -136,6 +136,19 @@ export const userRouteFactory = (
     res.json(result);
   });
 
+  userRoutes.delete('/users/:userId/avatar', async (req, res) => {
+    const { userId } = validateUserParameters(req.params);
+
+    // user is trying to update someone else
+    if (req.loggedInUser!.id !== userId) {
+      throw Boom.forbidden();
+    }
+
+    const result = await userController.removeAvatar(userId);
+
+    res.json(result);
+  });
+
   userRoutes.patch('/users/:userId', async (req, res) => {
     const { userId } = validateUserParameters(req.params);
 

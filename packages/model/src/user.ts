@@ -213,7 +213,7 @@ export type UserMetadataResponse = Omit<
 };
 
 export type UserCreateDataObject = {
-  avatar?: string;
+  avatar?: string | null;
   biography?: string;
   city?: string;
   connections?: Connection[];

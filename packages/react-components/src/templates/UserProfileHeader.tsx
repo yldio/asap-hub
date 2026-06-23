@@ -120,6 +120,11 @@ const avatarContainer = css({
   [middleSizeQuery]: {
     justifySelf: 'end',
   },
+
+  // counteract the relativeAnchor left shift so the avatar stays flush right
+  [bigSizeQuery]: {
+    transform: `translateX(${rem(64)})`,
+  },
 });
 const avatarStyles = css({
   width: rem(avatarSize),

@@ -105,15 +105,16 @@ describe('an edit button', () => {
     expect(onImageSelect).toHaveBeenCalledWith(testFile);
   });
 
-  it('disables the upload while the avatar is saving', () => {
-    const { getByLabelText } = render(
+  it('shows a spinner and hides the upload while the avatar is saving', () => {
+    const { getByRole, queryByLabelText } = render(
       <UserProfileHeader
         {...boilerplateProps}
         onImageSelect={jest.fn()}
         avatarSaving
       />,
     );
-    expect(getByLabelText(/upload.+avatar/i)).toHaveAttribute('disabled');
+    expect(getByRole('progressbar')).toBeInTheDocument();
+    expect(queryByLabelText(/upload.+avatar/i)).not.toBeInTheDocument();
   });
 });
 

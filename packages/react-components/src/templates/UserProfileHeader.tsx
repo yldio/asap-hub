@@ -1,10 +1,10 @@
 import { UserResponse } from '@asap-hub/model';
 import { UserProfileContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import { useContext } from 'react';
 import { Avatar, Display, Link, TabLink, StateTag, CopyButton } from '../atoms';
-import { tin } from '../colors';
+import { paper, tin } from '../colors';
 import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
 import { createMailTo } from '../mail';
 import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
@@ -145,6 +145,28 @@ const uploadOverlayStyles = css({
   ':hover, :focus-within': {
     opacity: 1,
   },
+});
+
+const spin = keyframes({
+  from: { transform: 'rotate(0deg)' },
+  to: { transform: 'rotate(360deg)' },
+});
+const savingOverlayStyles = css({
+  position: 'absolute',
+  inset: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '50%',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+});
+const spinnerStyles = css({
+  width: rem(24),
+  height: rem(24),
+  border: `${rem(3)} solid rgba(255, 255, 255, 0.4)`,
+  borderTopColor: paper.rgb,
+  borderRadius: '50%',
+  animation: `${spin} 1s linear infinite`,
 });
 
 type UserProfileHeaderProps = Pick<
@@ -305,23 +327,27 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                   lastName={lastName}
                   overrideStyles={avatarStyles}
                 />
-                {onImageSelect && (
-                  <label css={uploadOverlayStyles} aria-label="Edit Avatar">
-                    {uploadIcon}
-                    <input
-                      disabled={avatarSaving}
-                      type="file"
-                      accept="image/x-png,image/jpeg"
-                      aria-label="Upload Avatar"
-                      onChange={(event) =>
-                        event.target.files?.length &&
-                        event.target.files[0] &&
-                        onImageSelect(event.target.files[0])
-                      }
-                      css={{ display: 'none' }}
-                    />
-                  </label>
-                )}
+                {onImageSelect &&
+                  (avatarSaving ? (
+                    <div css={savingOverlayStyles} aria-label="Saving Avatar">
+                      <div css={spinnerStyles} role="progressbar" />
+                    </div>
+                  ) : (
+                    <label css={uploadOverlayStyles} aria-label="Edit Avatar">
+                      {uploadIcon}
+                      <input
+                        type="file"
+                        accept="image/x-png,image/jpeg"
+                        aria-label="Upload Avatar"
+                        onChange={(event) =>
+                          event.target.files?.length &&
+                          event.target.files[0] &&
+                          onImageSelect(event.target.files[0])
+                        }
+                        css={{ display: 'none' }}
+                      />
+                    </label>
+                  ))}
               </div>
               {editPersonalInfoHref && (
                 <div css={editPersonalInfoStyles}>

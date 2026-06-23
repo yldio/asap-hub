@@ -1,5 +1,6 @@
 import { UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
+import { cloneElement } from 'react';
 
 import { Link } from '../atoms';
 import { neutral900 } from '../colors';
@@ -16,6 +17,7 @@ import {
 } from '../icons';
 import { rem } from '../pixels';
 
+const SOCIAL_ICON_COLOR = neutral900.hex;
 const ROW_GAP = 12;
 const socialContainerStyles = css({
   display: 'flex',
@@ -35,11 +37,13 @@ const iconStyles = css({
 
 const SocialIconLink: React.FC<{
   link?: string;
-  icon: JSX.Element;
+  icon: React.ReactElement<{ color?: string }>;
 }> = ({ link, icon }) =>
   link ? (
     <Link href={link}>
-      <div css={iconStyles}>{icon}</div>
+      <div css={iconStyles}>
+        {cloneElement(icon, { color: SOCIAL_ICON_COLOR })}
+      </div>
     </Link>
   ) : null;
 
@@ -78,7 +82,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
           ? new URL(`https://bsky.app/profile/${blueSky}`).toString()
           : undefined
       }
-      icon={<BlueSkyIcon color={neutral900.hex} />}
+      icon={<BlueSkyIcon />}
     />
     <SocialIconLink
       link={

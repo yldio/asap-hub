@@ -11,6 +11,7 @@ export { default as asapLogo } from './asap-logo';
 export { default as averageIcon } from './average';
 export { default as belowAverageIcon } from './below-average';
 export { default as asapLogoMobile } from './asap-logo-mobile';
+export { default as binIcon } from './bin';
 export { default as bioinformatics } from './bioinformatics';
 export { default as BlueSkyIcon } from './blue-sky';
 export { default as budgetIcon } from './budget';

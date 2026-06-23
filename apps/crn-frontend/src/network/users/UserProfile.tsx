@@ -4,10 +4,7 @@ import {
   UserProfilePage,
   NoEvents,
 } from '@asap-hub/react-components';
-import {
-  useCurrentUserCRN,
-  UserProfileContext,
-} from '@asap-hub/react-context';
+import { useCurrentUserCRN, UserProfileContext } from '@asap-hub/react-context';
 import { events, network, useRouteParams } from '@asap-hub/routing';
 import { ComponentProps, FC, lazy } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';

@@ -1,10 +1,7 @@
 import { ToastContext } from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
 import { useContext, useState } from 'react';
-import {
-  useDeleteUserAvatarById,
-  usePatchUserAvatarById,
-} from './state';
+import { useDeleteUserAvatarById, usePatchUserAvatarById } from './state';
 
 export const useManageUserAvatar = (id: string) => {
   const [avatarSaving, setAvatarSaving] = useState(false);

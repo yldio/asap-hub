@@ -156,3 +156,23 @@ export const postUserAvatar = async (
   }
   return resp.json();
 };
+
+export const deleteUserAvatar = async (
+  id: string,
+  authorization: string,
+): Promise<UserResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/users/${id}/avatar`, {
+    method: 'DELETE',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+      ...createSentryHeaders(),
+    },
+  });
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to remove avatar for user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};

@@ -16,7 +16,13 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import { useAlgolia } from '../../hooks/algolia';
-import { getUser, getUsers, patchUser, postUserAvatar } from './api';
+import {
+  deleteUserAvatar,
+  getUser,
+  getUsers,
+  patchUser,
+  postUserAvatar,
+} from './api';
 
 const userIndexState = atomFamily<
   | {
@@ -152,5 +158,22 @@ export const usePatchUserAvatarById = (id: string) => {
     await refreshUser();
 
     setSetPatchedUserState(user);
+  };
+};
+
+export const useDeleteUserAvatarById = (id: string) => {
+  const { getTokenSilently, refreshUser } = useAuth0CRN();
+  const authorization = useRecoilValue(authorizationState);
+  const setPatchedUser = useSetRecoilState(patchedUserState(id));
+  return async () => {
+    const user = await deleteUserAvatar(id, authorization);
+    await getTokenSilently({
+      redirect_uri: window.location.origin,
+      ignoreCache: true,
+    });
+
+    await refreshUser();
+
+    setPatchedUser(user);
   };
 };

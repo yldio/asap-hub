@@ -3,7 +3,16 @@ import imageCompression from 'browser-image-compression';
 import { useContext, useState } from 'react';
 import { useDeleteUserAvatarById, usePatchUserAvatarById } from './state';
 
-export const useManageUserAvatar = (id: string) => {
+type UseManageUserAvatarOptions = {
+  // when false the Auth0 token is not refreshed by the avatar mutation;
+  // used when a following mutation (e.g. patchUser on form save) refreshes it
+  refreshToken?: boolean;
+};
+
+export const useManageUserAvatar = (
+  id: string,
+  { refreshToken = true }: UseManageUserAvatarOptions = {},
+) => {
   const [avatarSaving, setAvatarSaving] = useState(false);
   const patchUserAvatar = usePatchUserAvatarById(id);
   const deleteUserAvatar = useDeleteUserAvatarById(id);
@@ -16,7 +25,7 @@ export const useManageUserAvatar = (id: string) => {
       .then((compressedFile) =>
         imageCompression.getDataUrlFromFile(compressedFile),
       )
-      .then((encodedFile) => patchUserAvatar(encodedFile))
+      .then((encodedFile) => patchUserAvatar(encodedFile, { refreshToken }))
       .catch(() =>
         toast('There was an error and we were unable to save your picture'),
       )
@@ -25,7 +34,7 @@ export const useManageUserAvatar = (id: string) => {
 
   const onImageRemove = () => {
     setAvatarSaving(true);
-    return deleteUserAvatar()
+    return deleteUserAvatar({ refreshToken })
       .catch(() =>
         toast('There was an error and we were unable to remove your picture'),
       )

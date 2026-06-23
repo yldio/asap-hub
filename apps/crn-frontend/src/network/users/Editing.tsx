@@ -22,7 +22,11 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
   const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);
-  const { onImageSelect, onImageRemove } = useManageUserAvatar(user.id);
+  // the avatar is committed on form save, immediately followed by patchUser
+  // which refreshes the Auth0 token, so the avatar mutation skips its own refresh
+  const { onImageSelect, onImageRemove } = useManageUserAvatar(user.id, {
+    refreshToken: false,
+  });
 
   return (
     <Routes>

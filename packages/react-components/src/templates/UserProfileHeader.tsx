@@ -25,11 +25,12 @@ const bigSizeQuery = `@media (min-width: ${smallDesktopScreen.width}px)`;
 const containerStyles = css({
   display: 'grid',
   grid: `
-    ".             edit-personal-info avatar" ${rem(24)}
-    "personal-info personal-info     avatar" auto
-    "contact       edit-contact-info avatar" auto
-    "social        social            avatar" auto
-      / 1fr ${rem(36)} max-content
+    "avatar       avatar            " auto
+    ".            edit-personal-info" ${rem(24)}
+    "personal-info personal-info    " auto
+    "contact      edit-contact-info " auto
+    "social       social            " auto
+      / 1fr ${rem(36)}
   `,
   gridColumnGap: rem(12),
 
@@ -107,17 +108,27 @@ const socialIconStyles = css({
   gridArea: 'social',
 });
 
+const avatarSize = 90;
+
 const avatarContainer = css({
   gridArea: 'avatar',
-  display: 'grid',
-  width: 90,
-  height: 90,
-  justifySelf: 'end',
+  position: 'relative',
+  width: rem(avatarSize),
+  height: rem(avatarSize),
+  justifySelf: 'start',
+
+  [middleSizeQuery]: {
+    justifySelf: 'end',
+  },
 });
-const imageContainer = css({ gridRow: 1, gridColumn: 1 });
+const avatarStyles = css({
+  width: rem(avatarSize),
+  height: rem(avatarSize),
+  margin: 0,
+});
 const uploadOverlayStyles = css({
-  gridRow: 1,
-  gridColumn: 1,
+  position: 'absolute',
+  inset: 0,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -283,13 +294,12 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                 </div>
               </section>
               <div css={avatarContainer}>
-                <div css={imageContainer}>
-                  <Avatar
-                    imageUrl={avatarUrl}
-                    firstName={firstName}
-                    lastName={lastName}
-                  />
-                </div>
+                <Avatar
+                  imageUrl={avatarUrl}
+                  firstName={firstName}
+                  lastName={lastName}
+                  overrideStyles={avatarStyles}
+                />
                 {onImageSelect && (
                   <label css={uploadOverlayStyles} aria-label="Edit Avatar">
                     {uploadIcon}

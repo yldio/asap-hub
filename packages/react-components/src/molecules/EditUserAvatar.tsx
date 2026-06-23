@@ -64,7 +64,6 @@ const EditUserAvatar: React.FC<EditUserAvatarProps> = ({
           buttonStyle
           noMargin
           href={undefined}
-          label="Upload profile photo"
           enabled={enabled}
         >
           <span css={buttonContentStyles}>

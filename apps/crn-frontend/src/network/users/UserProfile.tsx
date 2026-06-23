@@ -5,13 +5,11 @@ import {
   NoEvents,
 } from '@asap-hub/react-components';
 import {
-  ToastContext,
   useCurrentUserCRN,
   UserProfileContext,
 } from '@asap-hub/react-context';
 import { events, network, useRouteParams } from '@asap-hub/routing';
-import imageCompression from 'browser-image-compression';
-import { ComponentProps, FC, lazy, useContext, useState } from 'react';
+import { ComponentProps, FC, lazy } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 
 import { useEvents } from '../../events/state';
@@ -20,7 +18,8 @@ import {
   usePaginationParams,
 } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
-import { usePatchUserAvatarById, useUserById } from './state';
+import { useUserById } from './state';
+import { useManageUserAvatar } from './useManageUserAvatar';
 
 const loadResearch = () =>
   import(/* webpackChunkName: "network-profile-research" */ './Research');
@@ -51,8 +50,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const user = useUserById(userId);
   const currentUser = useCurrentUserCRN();
 
-  const patchUserAvatar = usePatchUserAvatarById(userId);
-  const [avatarSaving, setAvatarSaving] = useState(false);
+  const { avatarSaving, onImageSelect } = useManageUserAvatar(userId);
 
   const { pageSize } = usePaginationParams();
   const researchOutputsResult = useResearchOutputs({
@@ -63,7 +61,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   });
 
   const { pathname } = useLocation();
-  const toast = useContext(ToastContext);
 
   const isOwnProfile = currentUser?.id === user?.id;
   const isUserOnboarded = currentUser?.onboarded;
@@ -101,23 +98,7 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
         isOwnProfile && tabRoute
           ? tabRoute({}).editContactInfo({}).$
           : undefined,
-      onImageSelect:
-        isOwnProfile && tabRoute
-          ? (file: File) => {
-              setAvatarSaving(true);
-              return imageCompression(file, { maxSizeMB: 2 })
-                .then((compressedFile) =>
-                  imageCompression.getDataUrlFromFile(compressedFile),
-                )
-                .then((encodedFile) => patchUserAvatar(encodedFile))
-                .catch(() =>
-                  toast(
-                    'There was an error and we were unable to save your picture',
-                  ),
-                )
-                .finally(() => setAvatarSaving(false));
-            }
-          : undefined,
+      onImageSelect: isOwnProfile && tabRoute ? onImageSelect : undefined,
       avatarSaving,
       sharedOutputsCount: isUserOnboarded
         ? researchOutputsResult.total

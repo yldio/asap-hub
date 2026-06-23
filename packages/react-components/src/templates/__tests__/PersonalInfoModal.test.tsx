@@ -245,3 +245,46 @@ it('triggers the save function', async () => {
     expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
   );
 });
+
+describe('profile photo', () => {
+  it('is not shown when no image handlers are provided', async () => {
+    renderModal(<PersonalInfoModal {...props} />);
+    await screen.findByText('First name');
+    expect(screen.queryByText(/profile photo/i)).not.toBeInTheDocument();
+  });
+
+  it('uploads the chosen image', async () => {
+    const onImageSelect = jest.fn();
+    renderModal(
+      <PersonalInfoModal
+        {...props}
+        onImageSelect={onImageSelect}
+        onImageRemove={jest.fn()}
+      />,
+    );
+    const file = new File(['avatar'], 'avatar.jpg', { type: 'image/jpeg' });
+
+    await userEvent.upload(
+      screen.getByLabelText(/upload profile photo/i, { selector: 'input' }),
+      file,
+    );
+
+    expect(onImageSelect).toHaveBeenCalledWith(file);
+  });
+
+  it('removes the existing image', async () => {
+    const onImageRemove = jest.fn();
+    renderModal(
+      <PersonalInfoModal
+        {...props}
+        avatarUrl="https://example.com/a.png"
+        onImageSelect={jest.fn()}
+        onImageRemove={onImageRemove}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /remove/i }));
+
+    expect(onImageRemove).toHaveBeenCalled();
+  });
+});

@@ -1,7 +1,8 @@
-import { UserDegree, UserPatchRequest } from '@asap-hub/model';
+import { UserDegree, UserPatchRequest, UserResponse } from '@asap-hub/model';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
+  EditUserAvatar,
   FormSection,
   LabeledDropdown,
   LabeledTextField,
@@ -22,12 +23,16 @@ type PersonalInfoModalProps = Pick<
   | 'stateOrProvince'
   | 'city'
   | 'jobTitle'
-> & {
-  countrySuggestions: string[];
-  loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
-  onSave?: (data: UserPatchRequest) => void | Promise<void>;
-  backHref: string;
-};
+> &
+  Pick<UserResponse, 'avatarUrl'> & {
+    countrySuggestions: string[];
+    loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
+    onSave?: (data: UserPatchRequest) => void | Promise<void>;
+    onImageSelect?: (file: File) => void;
+    onImageRemove?: () => void;
+    avatarSaving?: boolean;
+    backHref: string;
+  };
 
 const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   firstName = '',
@@ -40,10 +45,14 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   stateOrProvince = '',
   city = '',
   jobTitle = '',
+  avatarUrl,
 
   countrySuggestions,
   loadInstitutionOptions,
   onSave = noop,
+  onImageSelect,
+  onImageRemove,
+  avatarSaving = false,
   backHref,
 }) => {
   const navigate = useNavigate();
@@ -97,6 +106,16 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
     >
       {({ isSaving }) => (
         <FormSection>
+          {onImageSelect && onImageRemove && (
+            <EditUserAvatar
+              avatarUrl={avatarUrl}
+              firstName={newFirstName}
+              lastName={newLastName}
+              onImageSelect={onImageSelect}
+              onImageRemove={onImageRemove}
+              enabled={!isSaving && !avatarSaving}
+            />
+          )}
           <LabeledTextField
             title="First name"
             subtitle="(required)"

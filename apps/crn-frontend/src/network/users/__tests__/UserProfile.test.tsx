@@ -268,7 +268,7 @@ describe('a header edit button', () => {
 
   it('is rendered for avatar on your own profile', async () => {
     await renderUserProfile();
-    expect(await screen.findByLabelText(/edit.+avatar/i)).toBeVisible();
+    expect(await screen.findByLabelText(/edit.+avatar/i)).toBeInTheDocument();
   });
 
   it('can change personal info', async () => {

@@ -9,6 +9,7 @@ import { network } from '@asap-hub/routing';
 import { Frame, loadInstitutionOptions } from '@asap-hub/frontend-utils';
 
 import { usePatchUserById } from './state';
+import { useManageUserAvatar } from './useManageUserAvatar';
 import countrySuggestions from './country-suggestions';
 
 interface EditingProps {
@@ -21,6 +22,9 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
   const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);
+  const { avatarSaving, onImageSelect, onImageRemove } = useManageUserAvatar(
+    user.id,
+  );
 
   return (
     <Routes>
@@ -36,6 +40,9 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
               loadInstitutionOptions={loadInstitutionOptions}
               backHref={backHref}
               onSave={patchUser}
+              onImageSelect={onImageSelect}
+              onImageRemove={onImageRemove}
+              avatarSaving={avatarSaving}
             />
           </Frame>
         }

@@ -11,12 +11,14 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
+import imageCompression from 'browser-image-compression';
 
 import Editing from '../Editing';
-import { patchUser } from '../api';
+import { patchUser, postUserAvatar, deleteUserAvatar } from '../api';
 import CheckOnboarded from '../../../auth/CheckOnboarded';
 
 jest.mock('../api');
+jest.mock('browser-image-compression');
 jest.mock('@asap-hub/frontend-utils', () => {
   const actual = jest.requireActual('@asap-hub/frontend-utils');
   return {
@@ -26,8 +28,20 @@ jest.mock('@asap-hub/frontend-utils', () => {
 });
 
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+const mockPostUserAvatar = postUserAvatar as jest.MockedFunction<
+  typeof postUserAvatar
+>;
+const mockDeleteUserAvatar = deleteUserAvatar as jest.MockedFunction<
+  typeof deleteUserAvatar
+>;
 const mockLoadInstitutionOptions =
   loadInstitutionOptions as jest.MockedFunction<typeof loadInstitutionOptions>;
+const imageCompressionMock = imageCompression as jest.MockedFunction<
+  typeof imageCompression
+>;
+imageCompressionMock.getDataUrlFromFile = jest.requireActual(
+  'browser-image-compression',
+).getDataUrlFromFile;
 
 const id = '42';
 
@@ -168,6 +182,75 @@ describe('the personal info modal', () => {
         city: 'London',
       }),
       expect.any(String),
+    );
+  });
+
+  it('uploads a profile photo', async () => {
+    const { findByLabelText } = renderWithRoot(
+      <Auth0Provider user={{ id }}>
+        <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
+          <Routes>
+            <Route
+              path={`${aboutPath}/*`}
+              element={
+                <Editing
+                  user={{ ...createUserResponse(), id }}
+                  backHref={aboutPath}
+                />
+              }
+            />
+          </Routes>
+        </MemoryRouter>
+      </Auth0Provider>,
+    );
+
+    imageCompressionMock.mockImplementationOnce((fileToCompress) =>
+      Promise.resolve(fileToCompress),
+    );
+    const file = new File(['avatar'], 'avatar.jpg', { type: 'image/jpeg' });
+    await userEvent.upload(
+      (await findByLabelText(/upload profile photo/i, {
+        selector: 'input',
+      })) as HTMLInputElement,
+      file,
+    );
+
+    await waitFor(() =>
+      expect(mockPostUserAvatar).toHaveBeenCalledWith(
+        id,
+        expect.objectContaining({ avatar: expect.any(String) }),
+        expect.any(String),
+      ),
+    );
+  });
+
+  it('removes the profile photo', async () => {
+    const { findByRole } = renderWithRoot(
+      <Auth0Provider user={{ id }}>
+        <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
+          <Routes>
+            <Route
+              path={`${aboutPath}/*`}
+              element={
+                <Editing
+                  user={{
+                    ...createUserResponse(),
+                    id,
+                    avatarUrl: 'https://example.com/a.png',
+                  }}
+                  backHref={aboutPath}
+                />
+              }
+            />
+          </Routes>
+        </MemoryRouter>
+      </Auth0Provider>,
+    );
+
+    await userEvent.click(await findByRole('button', { name: /remove/i }));
+
+    await waitFor(() =>
+      expect(mockDeleteUserAvatar).toHaveBeenCalledWith(id, expect.any(String)),
     );
   });
 });

@@ -1317,9 +1317,13 @@ describe('User data provider', () => {
             avatar: { 'en-US': { sys: { id: 'asset-1' } } },
           });
 
-        test('clears the avatar link when avatar is null', async () => {
+        beforeEach(() => {
+          // replace the parent's default entry with one that has an avatar link
           environmentMock.getEntry.mockReset();
           environmentMock.getEntry.mockResolvedValueOnce(entryWithAvatar());
+        });
+
+        test('clears the avatar link when avatar is null', async () => {
           environmentMock.getAsset.mockResolvedValueOnce(buildAssetMock());
 
           await userDataProvider.update('123', { avatar: null });
@@ -1332,8 +1336,6 @@ describe('User data provider', () => {
 
         test('unpublishes and deletes the previous asset', async () => {
           const asset = buildAssetMock();
-          environmentMock.getEntry.mockReset();
-          environmentMock.getEntry.mockResolvedValueOnce(entryWithAvatar());
           environmentMock.getAsset.mockResolvedValueOnce(asset);
 
           await userDataProvider.update('123', { avatar: null });
@@ -1345,8 +1347,6 @@ describe('User data provider', () => {
 
         test('does not unpublish an unpublished asset', async () => {
           const asset = buildAssetMock(false);
-          environmentMock.getEntry.mockReset();
-          environmentMock.getEntry.mockResolvedValueOnce(entryWithAvatar());
           environmentMock.getAsset.mockResolvedValueOnce(asset);
 
           await userDataProvider.update('123', { avatar: null });
@@ -1367,8 +1367,6 @@ describe('User data provider', () => {
         });
 
         test('swallows errors when the asset deletion fails', async () => {
-          environmentMock.getEntry.mockReset();
-          environmentMock.getEntry.mockResolvedValueOnce(entryWithAvatar());
           environmentMock.getAsset.mockRejectedValueOnce(
             new Error('asset gone'),
           );

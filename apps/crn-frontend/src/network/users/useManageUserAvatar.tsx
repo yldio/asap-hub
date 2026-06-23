@@ -1,17 +1,15 @@
 import { ToastContext } from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
 import { useContext, useState } from 'react';
-import { useDeleteUserAvatarById, usePatchUserAvatarById } from './state';
-
-type UseManageUserAvatarOptions = {
-  // when false the Auth0 token is not refreshed by the avatar mutation;
-  // used when a following mutation (e.g. patchUser on form save) refreshes it
-  refreshToken?: boolean;
-};
+import {
+  AvatarMutationOptions,
+  useDeleteUserAvatarById,
+  usePatchUserAvatarById,
+} from './state';
 
 export const useManageUserAvatar = (
   id: string,
-  { refreshToken = true }: UseManageUserAvatarOptions = {},
+  { refreshToken = true }: AvatarMutationOptions = {},
 ) => {
   const [avatarSaving, setAvatarSaving] = useState(false);
   const patchUserAvatar = usePatchUserAvatarById(id);

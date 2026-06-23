@@ -11,6 +11,7 @@ import {
   WhenReady,
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import { loadInstitutionOptions } from '@asap-hub/frontend-utils';
+import { ToastContext } from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
 
 import Editing from '../Editing';
@@ -263,6 +264,94 @@ describe('the personal info modal', () => {
 
     await waitFor(() =>
       expect(mockDeleteUserAvatar).toHaveBeenCalledWith(id, expect.any(String)),
+    );
+  });
+
+  it('refreshes the Auth0 user only once on save (not per avatar mutation)', async () => {
+    // refreshUser is only invoked by the mutation hooks (not auth bootstrap),
+    // so it is a reliable signal that the avatar mutation deferred its refresh
+    const refreshUser = jest.fn().mockResolvedValue(undefined);
+    const { findByLabelText, findByText } = render(
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{ id }} auth0Overrides={() => ({ refreshUser })}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
+                <Routes>
+                  <Route
+                    path={`${aboutPath}/*`}
+                    element={
+                      <Editing
+                        user={{ ...createUserResponse(), id }}
+                        backHref={aboutPath}
+                      />
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>,
+    );
+
+    imageCompressionMock.mockImplementationOnce((fileToCompress) =>
+      Promise.resolve(fileToCompress),
+    );
+    const file = new File(['avatar'], 'avatar.jpg', { type: 'image/jpeg' });
+    await userEvent.upload(
+      (await findByLabelText(/upload profile photo/i, {
+        selector: 'input',
+      })) as HTMLInputElement,
+      file,
+    );
+    await userEvent.click(await findByText(/save/i));
+
+    await waitFor(() => expect(mockPostUserAvatar).toHaveBeenCalled());
+    // patchUser refreshes once; the avatar mutation defers its refresh
+    await waitFor(() => expect(refreshUser).toHaveBeenCalledTimes(1));
+  });
+
+  it('toasts when removing the profile photo fails on save', async () => {
+    const toast = jest.fn();
+    mockDeleteUserAvatar.mockRejectedValueOnce(new Error('500'));
+    const { findByRole, findByText } = render(
+      <RecoilRoot>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{ id }}>
+            <WhenReady>
+              <ToastContext.Provider value={toast}>
+                <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
+                  <Routes>
+                    <Route
+                      path={`${aboutPath}/*`}
+                      element={
+                        <Editing
+                          user={{
+                            ...createUserResponse(),
+                            id,
+                            avatarUrl: 'https://example.com/a.png',
+                          }}
+                          backHref={aboutPath}
+                        />
+                      }
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </ToastContext.Provider>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </RecoilRoot>,
+    );
+
+    await userEvent.click(await findByRole('button', { name: /remove/i }));
+    await userEvent.click(await findByText(/save/i));
+
+    await waitFor(() =>
+      expect(toast).toHaveBeenCalledWith(
+        expect.stringMatching(/unable to remove your picture/i),
+      ),
     );
   });
 });

@@ -466,7 +466,8 @@ describe('deleteUserAvatar', () => {
 
   it('returns the successfully updated user', async () => {
     const updated: Partial<UserResponse> = {
-      avatarUrl: undefined,
+      id: '42',
+      email: 'someone@example.com',
     };
     nock(API_BASE_URL).delete('/users/42/avatar').reply(200, updated);
 

@@ -338,4 +338,24 @@ describe('profile photo', () => {
     expect(onImageSelect).not.toHaveBeenCalled();
     expect(onImageRemove).not.toHaveBeenCalled();
   });
+
+  it('commits only the latest staged change when removed then re-uploaded', async () => {
+    const { onImageSelect, onImageRemove } = renderWithAvatar({
+      avatarUrl: 'https://example.com/a.png',
+    });
+    const file = new File(['avatar'], 'avatar.jpg', { type: 'image/jpeg' });
+
+    // remove the existing photo...
+    await userEvent.click(screen.getByRole('button', { name: /remove/i }));
+    // ...then change your mind and upload a new one before saving
+    await userEvent.upload(
+      screen.getByLabelText(/upload profile photo/i, { selector: 'input' }),
+      file,
+    );
+    await userEvent.click(screen.getByText(/save/i));
+
+    // only the final staged upload is committed, not the intermediate removal
+    expect(onImageSelect).toHaveBeenCalledWith(file);
+    expect(onImageRemove).not.toHaveBeenCalled();
+  });
 });

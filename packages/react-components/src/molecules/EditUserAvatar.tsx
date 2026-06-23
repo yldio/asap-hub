@@ -73,7 +73,7 @@ const EditUserAvatar: React.FC<EditUserAvatarProps> = ({
           <input
             disabled={!enabled}
             type="file"
-            accept="image/x-png,image/jpeg"
+            accept="image/png,image/jpeg"
             aria-label="Upload profile photo"
             onChange={(event) =>
               event.target.files?.length &&

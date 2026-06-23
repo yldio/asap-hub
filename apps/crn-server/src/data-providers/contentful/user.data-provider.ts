@@ -351,11 +351,18 @@ export class UserContentfulDataProvider implements UserDataProvider {
       ...(data.tagIds ? { researchTags: getLinkEntities(data.tagIds) } : {}),
     });
 
+    // only delete the old asset once the entry update actually applied,
+    // otherwise a suppressed conflict would leave the entry linking a
+    // deleted asset
+    if (!result) {
+      return;
+    }
+
     if (removedAvatarId) {
       await this.deleteAsset(environment, removedAvatarId);
     }
 
-    if (!result || !polling) {
+    if (!polling) {
       return;
     }
     await pollForUpdate(result.sys.publishedVersion);

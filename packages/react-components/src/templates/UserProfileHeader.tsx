@@ -329,8 +329,13 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                 />
                 {onImageSelect &&
                   (avatarSaving ? (
-                    <div css={savingOverlayStyles} aria-label="Saving Avatar">
-                      <div css={spinnerStyles} role="progressbar" />
+                    <div css={savingOverlayStyles}>
+                      <div
+                        css={spinnerStyles}
+                        role="progressbar"
+                        aria-label="Saving avatar"
+                        aria-busy
+                      />
                     </div>
                   ) : (
                     <label css={uploadOverlayStyles} aria-label="Edit Avatar">

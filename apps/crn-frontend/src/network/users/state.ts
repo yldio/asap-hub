@@ -144,7 +144,7 @@ export const usePatchUserById = (id: string) => {
   };
 };
 
-type AvatarMutationOptions = {
+export type AvatarMutationOptions = {
   // skip the Auth0 token refresh when a following mutation (e.g. patchUser)
   // will refresh it, avoiding a redundant silent-auth round-trip
   refreshToken?: boolean;
@@ -153,12 +153,13 @@ type AvatarMutationOptions = {
 export const usePatchUserAvatarById = (id: string) => {
   const { getTokenSilently, refreshUser } = useAuth0CRN();
   const authorization = useRecoilValue(authorizationState);
-  const setSetPatchedUserState = useSetRecoilState(patchedUserState(id));
+  const setPatchedUser = useSetRecoilState(patchedUserState(id));
   return async (
     avatar: string,
     { refreshToken = true }: AvatarMutationOptions = {},
   ) => {
     const user = await postUserAvatar(id, { avatar }, authorization);
+    setPatchedUser(user);
     if (refreshToken) {
       await getTokenSilently({
         redirect_uri: window.location.origin,
@@ -167,8 +168,6 @@ export const usePatchUserAvatarById = (id: string) => {
 
       await refreshUser();
     }
-
-    setSetPatchedUserState(user);
   };
 };
 
@@ -178,6 +177,7 @@ export const useDeleteUserAvatarById = (id: string) => {
   const setPatchedUser = useSetRecoilState(patchedUserState(id));
   return async ({ refreshToken = true }: AvatarMutationOptions = {}) => {
     const user = await deleteUserAvatar(id, authorization);
+    setPatchedUser(user);
     if (refreshToken) {
       await getTokenSilently({
         redirect_uri: window.location.origin,
@@ -186,7 +186,5 @@ export const useDeleteUserAvatarById = (id: string) => {
 
       await refreshUser();
     }
-
-    setPatchedUser(user);
   };
 };

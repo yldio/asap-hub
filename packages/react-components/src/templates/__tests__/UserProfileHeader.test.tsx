@@ -91,18 +91,29 @@ describe('an edit button', () => {
     );
   });
 
-  it('is rendered for avatar', async () => {
+  it('lets the user upload an avatar', async () => {
     const onImageSelect = jest.fn((_file: File) => {});
     const testFile = new File(['foo'], 'foo.png', { type: 'image/png' });
     const { getByLabelText } = render(
       <UserProfileHeader {...boilerplateProps} onImageSelect={onImageSelect} />,
     );
-    const editButton = getByLabelText(/edit.+avatar/i);
+    const uploadOverlay = getByLabelText(/edit.+avatar/i);
     const uploadInput = getByLabelText(/upload.+avatar/i) as HTMLInputElement;
-    expect(editButton).toBeVisible();
+    expect(uploadOverlay).toBeInTheDocument();
     expect(uploadInput).not.toHaveAttribute('disabled');
     fireEvent.change(uploadInput, { target: { files: [testFile] } });
     expect(onImageSelect).toHaveBeenCalledWith(testFile);
+  });
+
+  it('disables the upload while the avatar is saving', () => {
+    const { getByLabelText } = render(
+      <UserProfileHeader
+        {...boilerplateProps}
+        onImageSelect={jest.fn()}
+        avatarSaving
+      />,
+    );
+    expect(getByLabelText(/upload.+avatar/i)).toHaveAttribute('disabled');
   });
 });
 

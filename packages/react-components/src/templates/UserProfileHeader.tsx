@@ -25,28 +25,28 @@ const bigSizeQuery = `@media (min-width: ${smallDesktopScreen.width}px)`;
 const containerStyles = css({
   display: 'grid',
   grid: `
-    ".             edit-personal-info" ${rem(24)}
-    "personal-info personal-info     " auto
-    "contact       edit-contact-info " auto
-    "social        social            " auto
-      / 1fr ${rem(36)}
+    ".             edit-personal-info avatar" ${rem(24)}
+    "personal-info personal-info     avatar" auto
+    "contact       edit-contact-info avatar" auto
+    "social        social            avatar" auto
+      / 1fr ${rem(36)} max-content
   `,
   gridColumnGap: rem(12),
 
   [middleSizeQuery]: {
     grid: `
-      ".             .             edit-personal-info" ${rem(24)}
-      "personal-info personal-info personal-info     " auto
-      "contact       social        edit-contact-info " auto
-        / max-content 1fr ${rem(36)}
+      ".             .             edit-personal-info avatar" ${rem(24)}
+      "personal-info personal-info personal-info      avatar" auto
+      "contact       social        edit-contact-info  avatar" auto
+        / max-content 1fr ${rem(36)} max-content
     `,
   },
 
   [bigSizeQuery]: {
     grid: `
-      "edit-personal-info personal-info personal-info ."
-      "edit-contact-info  contact       social        ."
-        / ${rem(36)} max-content 1fr ${rem(36)}
+      "edit-personal-info personal-info personal-info avatar"
+      "edit-contact-info  contact       social        avatar"
+        / ${rem(36)} max-content 1fr max-content
     `,
     gridColumnGap: vminLinearCalc(
       mobileScreen,
@@ -74,7 +74,7 @@ const personalInfoStyles = css({
   gridArea: 'personal-info',
 
   display: 'flex',
-  flexDirection: 'column-reverse',
+  flexDirection: 'column',
 
   justifyContent: 'space-between',
   alignItems: 'start',
@@ -108,17 +108,27 @@ const socialIconStyles = css({
 });
 
 const avatarContainer = css({
+  gridArea: 'avatar',
   display: 'grid',
   width: 90,
   height: 90,
-  paddingBottom: rem(12),
+  justifySelf: 'end',
 });
 const imageContainer = css({ gridRow: 1, gridColumn: 1 });
-const editButtonContainer = css({
+const uploadOverlayStyles = css({
   gridRow: 1,
   gridColumn: 1,
-  alignSelf: 'flex-end',
-  justifySelf: 'flex-end',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '50%',
+  cursor: 'pointer',
+  opacity: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  transition: 'opacity 150ms ease-in-out',
+  ':hover, :focus-within': {
+    opacity: 1,
+  },
 });
 
 type UserProfileHeaderProps = Pick<
@@ -271,44 +281,33 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                     isAlumni={!!alumniSinceDate}
                   />
                 </div>
-                <div css={avatarContainer}>
-                  <div css={imageContainer}>
-                    <Avatar
-                      imageUrl={avatarUrl}
-                      firstName={firstName}
-                      lastName={lastName}
-                    />
-                  </div>
-                  {onImageSelect && (
-                    <div css={editButtonContainer}>
-                      <label>
-                        <Link
-                          buttonStyle
-                          small
-                          primary
-                          href={undefined}
-                          label="Edit Avatar"
-                          enabled={!avatarSaving}
-                        >
-                          {uploadIcon}
-                          <input
-                            disabled={avatarSaving}
-                            type="file"
-                            accept="image/x-png,image/jpeg"
-                            aria-label="Upload Avatar"
-                            onChange={(event) =>
-                              event.target.files?.length &&
-                              event.target.files[0] &&
-                              onImageSelect(event.target.files[0])
-                            }
-                            css={{ display: 'none' }}
-                          />
-                        </Link>
-                      </label>
-                    </div>
-                  )}
-                </div>
               </section>
+              <div css={avatarContainer}>
+                <div css={imageContainer}>
+                  <Avatar
+                    imageUrl={avatarUrl}
+                    firstName={firstName}
+                    lastName={lastName}
+                  />
+                </div>
+                {onImageSelect && (
+                  <label css={uploadOverlayStyles} aria-label="Edit Avatar">
+                    {uploadIcon}
+                    <input
+                      disabled={avatarSaving}
+                      type="file"
+                      accept="image/x-png,image/jpeg"
+                      aria-label="Upload Avatar"
+                      onChange={(event) =>
+                        event.target.files?.length &&
+                        event.target.files[0] &&
+                        onImageSelect(event.target.files[0])
+                      }
+                      css={{ display: 'none' }}
+                    />
+                  </label>
+                )}
+              </div>
               {editPersonalInfoHref && (
                 <div css={editPersonalInfoStyles}>
                   <Link

@@ -6,10 +6,14 @@ import {
   FetchOptions,
   ResearchOutputVersionPostRequest,
   ResearchOutputSharingStatus,
+  ResearchOutputPublishingEntities,
 } from '@asap-hub/model';
 
 export type FetchResearchOutputFilter = {
   documentType?: string | string[];
+  source?:
+    | ResearchOutputPublishingEntities
+    | ResearchOutputPublishingEntities[];
   title?: string;
   link?: string;
   relatedManuscriptVersion?: string;

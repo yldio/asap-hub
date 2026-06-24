@@ -19,7 +19,6 @@ import {
 } from '@asap-hub/model';
 import {
   FetchResearchOutputFilter,
-  FetchResearchOutputOptions,
   ResearchOutputDataProvider,
   ResearchTagDataProvider,
 } from '../data-providers/types';
@@ -59,13 +58,7 @@ export default class ResearchOutputController {
   async fetch(
     options: ResearchOutputFetchOptions,
   ): Promise<ListResearchOutputResponse> {
-    const { filter: fetchFilter, ...fetchOptions } = options;
-
-    const filter: FetchResearchOutputOptions['filter'] = Array.isArray(
-      fetchFilter,
-    )
-      ? { documentType: fetchFilter }
-      : fetchFilter;
+    const { filter, ...fetchOptions } = options;
 
     const researchOutputList = await this.researchOutputDataProvider.fetch({
       ...fetchOptions,
@@ -526,14 +519,10 @@ const mapResearchTag = (
   ]);
 };
 
-type ResearchOutputFilter = FetchResearchOutputFilter &
-  (
-    | string[]
-    | {
-        title?: string;
-        link?: string;
-      }
-  );
+type ResearchOutputFilter = FetchResearchOutputFilter & {
+  title?: string;
+  link?: string;
+};
 
 type ResearchOutputInputTags = {
   methods: string[];

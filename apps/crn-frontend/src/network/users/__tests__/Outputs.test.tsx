@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import { FetchResearchOutputsFilter } from '@asap-hub/model';
 import { RecoilRoot } from 'recoil';
 
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
@@ -46,7 +47,7 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
 
 const renderOutputs = async (
   searchQuery = '',
-  filters = new Set<string>(),
+  filters: FetchResearchOutputsFilter = {},
   userId = '42',
 ) => {
   // Build URL with query parameters for searchQuery and filters
@@ -54,8 +55,8 @@ const renderOutputs = async (
   if (searchQuery) {
     urlParams.set('searchQuery', searchQuery);
   }
-  filters.forEach((filter) => {
-    urlParams.append('filter', filter);
+  filters.documentType?.forEach((filter) => {
+    urlParams.append('documentType', filter);
   });
   const search = urlParams.toString();
   const pathname = network({}).users({}).user({ userId }).outputs({}).$;
@@ -70,7 +71,7 @@ const renderOutputs = async (
         reset(
           researchOutputsState({
             searchQuery,
-            filters,
+            ...filters,
             userId,
             currentPage: 0,
             pageSize: CARD_VIEW_PAGE_SIZE,
@@ -79,7 +80,7 @@ const renderOutputs = async (
         reset(
           researchOutputsState({
             searchQuery,
-            filters,
+            ...filters,
             userId,
             currentPage: 0,
             pageSize: MAX_ALGOLIA_RESULTS,
@@ -134,14 +135,16 @@ it('renders a list of research outputs', async () => {
 it('calls getResearchOutputs with the right arguments', async () => {
   const searchQuery = 'searchterm';
   const userId = '12345';
-  const filters = new Set(['Grant Document']);
+  const filters = {
+    documentType: ['Grant Document'],
+  };
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(2),
   });
   // Start with searchQuery via URL and empty filters, then add filters via UI interaction
   const { getByText, getByLabelText } = await renderOutputs(
     searchQuery,
-    new Set(),
+    {},
     userId,
   );
   // searchQuery is already set via URL, so no need to type it again
@@ -157,7 +160,7 @@ it('calls getResearchOutputs with the right arguments', async () => {
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
       searchQuery,
       userId,
-      filters,
+      ...filters,
       currentPage: 0,
       pageSize: CARD_VIEW_PAGE_SIZE,
     }),
@@ -170,7 +173,9 @@ it('triggers export with the same parameters and custom filename', async () => {
     firstName: 'John',
     lastName: 'Smith',
   });
-  const filters = new Set(['Grant Document']);
+  const filters = {
+    documentType: ['Grant Document'],
+  } as FetchResearchOutputsFilter;
   const searchQuery = 'Some Search';
   const userId = '12345';
   mockGetResearchOutputs.mockResolvedValue({
@@ -190,7 +195,7 @@ it('triggers export with the same parameters and custom filename', async () => {
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
       searchQuery,
-      filters,
+      ...filters,
       userId,
       currentPage: 0,
       pageSize: CARD_VIEW_PAGE_SIZE,
@@ -209,7 +214,7 @@ it('triggers export with the same parameters and custom filename', async () => {
   );
   expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
     searchQuery,
-    filters,
+    ...filters,
     userId,
     currentPage: 0,
     pageSize: MAX_ALGOLIA_RESULTS,

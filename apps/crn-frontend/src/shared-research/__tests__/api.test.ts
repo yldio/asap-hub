@@ -4,10 +4,8 @@ import {
   createResearchOutputResponse,
   createResearchTagListResponse,
 } from '@asap-hub/fixtures';
-import { GetListOptions } from '@asap-hub/frontend-utils';
 import {
   researchOutputDocumentTypes,
-  ResearchOutputFilterOptionTypes,
   ResearchOutputPublishingEntitiesValues,
 } from '@asap-hub/model';
 import nock from 'nock';
@@ -21,6 +19,7 @@ import {
   getResearchTags,
   getResearchThemes,
   getResourceTypes,
+  ResearchOutputListOptions,
 } from '../api';
 
 jest.mock('../../config');
@@ -29,8 +28,7 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-const options: GetListOptions = {
-  filters: new Set<string>(),
+const options: ResearchOutputListOptions = {
   pageSize: CARD_VIEW_PAGE_SIZE,
   currentPage: 0,
   searchQuery: '',
@@ -78,7 +76,7 @@ describe('getResearchOutputs', () => {
     async (documentType) => {
       await getResearchOutputs(mockAlgoliaSearchClient, {
         ...options,
-        filters: new Set<ResearchOutputFilterOptionTypes>([documentType]),
+        documentType: [documentType],
       });
 
       expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -96,7 +94,7 @@ describe('getResearchOutputs', () => {
     async (publishingEntity) => {
       await getResearchOutputs(mockAlgoliaSearchClient, {
         ...options,
-        filters: new Set<ResearchOutputFilterOptionTypes>([publishingEntity]),
+        source: [publishingEntity],
       });
 
       expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -112,11 +110,8 @@ describe('getResearchOutputs', () => {
   it('builds a multiple filter query', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputFilterOptionTypes>([
-        'Article',
-        'Grant Document',
-        'Team',
-      ]),
+      documentType: ['Article', 'Grant Document'],
+      source: ['Team'],
     });
 
     expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
@@ -125,26 +120,6 @@ describe('getResearchOutputs', () => {
       expect.objectContaining({
         filters:
           '(publishingEntity:"Team") AND (documentType:"Article" OR documentType:"Grant Document")',
-      }),
-    );
-  });
-
-  it('ignores unknown filters', async () => {
-    await getResearchOutputs(mockAlgoliaSearchClient, {
-      ...options,
-      filters: new Set<ResearchOutputFilterOptionTypes | 'invalid'>([
-        'Article',
-        'Working Group',
-        'invalid',
-      ]),
-    });
-
-    expect(mockAlgoliaSearchClient.search).toHaveBeenLastCalledWith(
-      ['research-output'],
-      '',
-      expect.objectContaining({
-        filters:
-          '(publishingEntity:"Working Group") AND (documentType:"Article")',
       }),
     );
   });
@@ -182,7 +157,7 @@ describe('getResearchOutputs', () => {
   it('adds projectId to documentType filter', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputFilterOptionTypes>(['Article']),
+      documentType: ['Article'],
       projectId: 'proj-1',
     });
 
@@ -198,7 +173,7 @@ describe('getResearchOutputs', () => {
   it('adds workingGroupId to documentType filter', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputFilterOptionTypes>(['Report']),
+      documentType: ['Report'],
       workingGroupId: 'wg',
     });
 
@@ -214,7 +189,7 @@ describe('getResearchOutputs', () => {
   it('adds teamId to documentType filter', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputFilterOptionTypes>(['Article']),
+      documentType: ['Article'],
       teamId: '12345',
     });
 
@@ -230,10 +205,7 @@ describe('getResearchOutputs', () => {
   it('adds teamId to documentType filters', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputFilterOptionTypes>([
-        'Article',
-        'Grant Document',
-      ]),
+      documentType: ['Article', 'Grant Document'],
       teamId: '12345',
     });
 
@@ -264,7 +236,8 @@ describe('getResearchOutputs', () => {
   it('adds userId to filter', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputFilterOptionTypes>(['Article', 'Team']),
+      documentType: ['Article'],
+      source: ['Team'],
       userId: '12345',
     });
 
@@ -281,10 +254,7 @@ describe('getResearchOutputs', () => {
   it('adds userId to documentType filters', async () => {
     await getResearchOutputs(mockAlgoliaSearchClient, {
       ...options,
-      filters: new Set<ResearchOutputFilterOptionTypes>([
-        'Article',
-        'Grant Document',
-      ]),
+      documentType: ['Article', 'Grant Document'],
       userId: '12345',
     });
 
@@ -462,7 +432,6 @@ describe('getDraftResearchOutputs', () => {
         teamId: '123',
         currentPage: 0,
         draftsOnly: true,
-        filters: new Set(),
       },
       'Bearer x',
     );
@@ -488,7 +457,6 @@ describe('getDraftResearchOutputs', () => {
           teamId: '123',
           currentPage: 0,
           draftsOnly: true,
-          filters: new Set(),
         },
         '',
       ),
@@ -515,7 +483,6 @@ describe('getDraftResearchOutputs', () => {
           workingGroupId: '123',
           currentPage: 0,
           draftsOnly: true,
-          filters: new Set(),
         },
         '',
       ),
@@ -542,7 +509,6 @@ describe('getDraftResearchOutputs', () => {
           projectId: 'project-123',
           currentPage: 0,
           draftsOnly: true,
-          filters: new Set(),
         },
         '',
       ),
@@ -560,7 +526,6 @@ describe('getDraftResearchOutputs', () => {
           teamId: '123',
           currentPage: 0,
           draftsOnly: true,
-          filters: new Set(),
         },
         '',
       ),
@@ -581,7 +546,6 @@ describe('getDraftResearchOutputs', () => {
           teamId: '123',
           currentPage: 0,
           draftsOnly: true,
-          filters: new Set(),
         },
         '',
       ),

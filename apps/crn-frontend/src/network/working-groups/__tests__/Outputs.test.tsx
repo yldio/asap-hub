@@ -60,7 +60,6 @@ const renderOutputs = async (
         reset(
           researchOutputsState({
             searchQuery: '',
-            filters: new Set<string>(),
             workingGroupId: workingGroup.id,
             currentPage: 0,
             pageSize: CARD_VIEW_PAGE_SIZE,
@@ -69,7 +68,6 @@ const renderOutputs = async (
         reset(
           researchOutputsState({
             searchQuery: '',
-            filters: new Set<string>(),
             workingGroupId: workingGroup.id,
             currentPage: 0,
             pageSize: MAX_ALGOLIA_RESULTS,
@@ -167,7 +165,6 @@ it('renders the no outputs component correctly for a different working group', a
 });
 
 it('triggers research output export with custom file name', async () => {
-  const filters = new Set();
   const workingGroupId = '12345';
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(2),
@@ -182,7 +179,8 @@ it('triggers research output export with custom file name', async () => {
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
       searchQuery: '',
-      filters,
+      documentType: [],
+      source: [],
       workingGroupId,
       currentPage: 0,
       pageSize: MAX_ALGOLIA_RESULTS,
@@ -197,7 +195,6 @@ it('triggers research output export with custom file name', async () => {
 });
 
 it('triggers draft research output export with custom file name', async () => {
-  const filters = new Set();
   const workingGroupId = '12345';
   mockGetDraftResearchOutputs.mockResolvedValue({
     ...createListResearchOutputResponse(2),
@@ -218,7 +215,8 @@ it('triggers draft research output export with custom file name', async () => {
     expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
       {
         searchQuery: '',
-        filters,
+        documentType: [],
+        source: [],
         workingGroupId,
         draftsOnly: true,
         userAssociationMember: true,

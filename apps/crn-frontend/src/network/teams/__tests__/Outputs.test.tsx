@@ -55,7 +55,7 @@ const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
 
 const renderOutputs = async (
   searchQuery = '',
-  filters = new Set<string>(),
+  filters = {},
   team = createTeamResponse(),
   userAssociationMember = false,
   draftOutputs = false,
@@ -66,7 +66,7 @@ const renderOutputs = async (
         resetState(
           researchOutputsState({
             searchQuery,
-            filters,
+            ...filters,
             teamId: team.id,
             currentPage: 0,
             pageSize: CARD_VIEW_PAGE_SIZE,
@@ -75,7 +75,7 @@ const renderOutputs = async (
         resetState(
           researchOutputsState({
             searchQuery,
-            filters,
+            ...filters,
             teamId: team.id,
             currentPage: 0,
             pageSize: MAX_ALGOLIA_RESULTS,
@@ -145,7 +145,9 @@ it('renders a list of research outputs', async () => {
 });
 
 it('calls getResearchOutputs with the right arguments', async () => {
-  const filters = new Set(['Grant Document']);
+  const filters = {
+    documentType: ['Grant Document'],
+  };
   const searchQuery = 'searchterm';
   const teamId = '1234';
   mockGetResearchOutputs.mockResolvedValue({
@@ -171,14 +173,17 @@ it('calls getResearchOutputs with the right arguments', async () => {
       expect.objectContaining({
         teamId,
         searchQuery,
-        filters,
+        ...filters,
       }),
     ),
   );
 });
 
 it('triggers export with the same parameters and custom file name', async () => {
-  const filters = new Set(['Grant Document']);
+  const filters = {
+    documentType: ['Grant Document'],
+    source: [],
+  };
   const searchQuery = 'Some Search';
   const teamId = '12345';
   mockGetResearchOutputs.mockResolvedValue({
@@ -196,7 +201,7 @@ it('triggers export with the same parameters and custom file name', async () => 
   await waitFor(() =>
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
       searchQuery,
-      filters,
+      ...filters,
       teamId,
       currentPage: 0,
       pageSize: CARD_VIEW_PAGE_SIZE,
@@ -216,7 +221,7 @@ it('triggers export with the same parameters and custom file name', async () => 
   );
   expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
     searchQuery,
-    filters,
+    ...filters,
     teamId,
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
@@ -224,7 +229,6 @@ it('triggers export with the same parameters and custom file name', async () => 
 });
 
 it('triggers draft research output export with custom file name', async () => {
-  const filters = new Set();
   const teamId = '12345';
   mockGetDraftResearchOutputs.mockResolvedValue({
     ...createListResearchOutputResponse(2),
@@ -250,7 +254,8 @@ it('triggers draft research output export with custom file name', async () => {
   expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
     {
       searchQuery: '',
-      filters,
+      documentType: [],
+      source: [],
       teamId,
       draftsOnly: true,
       userAssociationMember: true,

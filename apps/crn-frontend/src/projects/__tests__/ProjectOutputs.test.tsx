@@ -62,6 +62,7 @@ type RenderOptions = {
   projectTeamId?: string;
   draftResearchOutputsError?: Error;
   userAssociationMember?: boolean;
+  hasOutputs?: boolean;
 };
 
 const renderPage = async ({
@@ -71,6 +72,7 @@ const renderPage = async ({
   projectTeamId,
   draftResearchOutputsError,
   userAssociationMember = true,
+  hasOutputs = true,
 }: RenderOptions = {}) => {
   const basePath = draftOutputs
     ? projects({})
@@ -91,7 +93,7 @@ const renderPage = async ({
 
   const publishedOptions = {
     searchQuery: '',
-    filters: new Set<string>(),
+    documentType: [],
     currentPage,
     pageSize,
     ...listScope,
@@ -138,6 +140,7 @@ const renderPage = async ({
                         projectId={projectId}
                         teamId={projectTeamId}
                         userAssociationMember={userAssociationMember}
+                        hasOutputs={hasOutputs}
                       />
                     </Frame>
                   }
@@ -151,6 +154,7 @@ const renderPage = async ({
                         teamId={projectTeamId}
                         draftOutputs
                         userAssociationMember={userAssociationMember}
+                        hasOutputs={hasOutputs}
                       />
                     </Frame>
                   }
@@ -174,7 +178,7 @@ const renderPage = async ({
 
 describe('ProjectOutputs', () => {
   it('renders NoOutputsPage when there are no published outputs', async () => {
-    await renderPage();
+    await renderPage({ hasOutputs: false });
 
     expect(screen.getByText('No outputs available.')).toBeInTheDocument();
     expect(
@@ -185,7 +189,7 @@ describe('ProjectOutputs', () => {
   });
 
   it('renders NoOutputsPage with draft copy when there are no drafts', async () => {
-    await renderPage({ draftOutputs: true });
+    await renderPage({ draftOutputs: true, hasOutputs: false });
 
     expect(screen.getByText('No draft outputs available.')).toBeInTheDocument();
     expect(
@@ -216,7 +220,7 @@ describe('ProjectOutputs', () => {
         );
       });
 
-      expect(screen.getByText('Output 1')).toBeInTheDocument();
+      expect(await screen.findByText('Output 1')).toBeInTheDocument();
     });
 
     it('does not use teamId filter for user-based projects', async () => {
@@ -323,14 +327,11 @@ describe('ProjectOutputs', () => {
       await renderPage({
         draftOutputs: true,
         userAssociationMember: false,
+        hasOutputs: false,
       });
 
       await waitFor(() =>
         expect(screen.getByText('No draft outputs available.')).toBeVisible(),
-      );
-      expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
-        expect.objectContaining({ userAssociationMember: false }),
-        'Bearer access_token',
       );
     });
 
@@ -348,7 +349,7 @@ describe('ProjectOutputs', () => {
 
       await renderPage({ draftOutputs: true });
 
-      expect(screen.getByText('Draft Only Output')).toBeInTheDocument();
+      expect(await screen.findByText('Draft Only Output')).toBeInTheDocument();
       expect(
         screen.queryByText('Published Algolia Output'),
       ).not.toBeInTheDocument();

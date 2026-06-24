@@ -115,6 +115,17 @@ export const usersContentQueryFragment = gql`
         }
         role
         inactiveSinceDate
+        awardsCollection(limit: 10) {
+          items {
+            date
+            awardType {
+              name
+              icon {
+                url
+              }
+            }
+          }
+        }
       }
     }
     labsCollection(limit: 10) {
@@ -437,6 +448,17 @@ export const userListItemContentQueryFragment = gql`
           displayName
         }
         role
+        awardsCollection(limit: 10) {
+          items {
+            date
+            awardType {
+              name
+              icon {
+                url
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -563,6 +585,17 @@ export const FETCH_USER_BY_ID_FOR_ALGOLIA_LIST = gql`
             displayName
           }
           role
+          awardsCollection(limit: 10) {
+            items {
+              date
+              awardType {
+                name
+                icon {
+                  url
+                }
+              }
+            }
+          }
         }
       }
       researchTagsCollection(limit: 20) {

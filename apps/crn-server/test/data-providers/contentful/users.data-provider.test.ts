@@ -15,6 +15,7 @@ import { UserDataObject, UserSocialLinks } from '@asap-hub/model';
 import {
   GroupLeaderItemPublic,
   GroupMemberItemPublic,
+  parseAwardsCollection,
   parseToWorkingGroups,
   parseToWorkingGroupsForPublicUser,
   UserContentfulDataProvider,
@@ -2357,6 +2358,60 @@ describe('User data provider', () => {
 
       const result = await userDataProvider.fetchById('123');
       expect(result?.projects).toEqual([]);
+    });
+  });
+
+  describe('parseAwardsCollection', () => {
+    it('maps award entries to name, date and icon url', () => {
+      expect(
+        parseAwardsCollection({
+          awardsCollection: {
+            items: [
+              {
+                date: '2024-01-01',
+                awardType: {
+                  name: 'Open Science Champion',
+                  icon: { url: 'https://example.com/badge.png' },
+                },
+              },
+            ],
+          },
+        }),
+      ).toEqual([
+        {
+          name: 'Open Science Champion',
+          date: '2024-01-01',
+          iconUrl: 'https://example.com/badge.png',
+        },
+      ]);
+    });
+
+    it('returns an empty array when there is no awards collection', () => {
+      expect(parseAwardsCollection({})).toEqual([]);
+    });
+
+    it('skips awards missing an award type name or a date', () => {
+      expect(
+        parseAwardsCollection({
+          awardsCollection: {
+            items: [
+              null,
+              { date: '2024-01-01', awardType: null },
+              { date: null, awardType: { name: 'Open Science Champion' } },
+              {
+                date: '2024-02-01',
+                awardType: { name: 'Open Science Champion', icon: null },
+              },
+            ],
+          },
+        }),
+      ).toEqual([
+        {
+          name: 'Open Science Champion',
+          date: '2024-02-01',
+          iconUrl: undefined,
+        },
+      ]);
     });
   });
 });

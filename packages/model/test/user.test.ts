@@ -1,4 +1,6 @@
 import {
+  getLatestUserAward,
+  getUserAwards,
   isUserDegree,
   isUserRole,
   userDegree,
@@ -123,6 +125,58 @@ describe('User', () => {
             role: 'Project Manager',
           },
         ],
+      });
+    });
+  });
+
+  describe('awards selectors', () => {
+    const teams = [
+      {
+        displayName: 'Team A',
+        awards: [
+          { name: 'Open Science Champion', date: '2023-01-01', iconUrl: 'a' },
+        ],
+      },
+      {
+        displayName: 'Team B',
+        awards: [
+          { name: 'Open Science Champion', date: '2024-06-01', iconUrl: 'b' },
+        ],
+      },
+      { displayName: 'Team C' },
+    ];
+
+    describe('getUserAwards', () => {
+      it('flattens awards across teams with the awarding team name', () => {
+        expect(getUserAwards(teams)).toEqual([
+          {
+            name: 'Open Science Champion',
+            date: '2023-01-01',
+            iconUrl: 'a',
+            teamName: 'Team A',
+          },
+          {
+            name: 'Open Science Champion',
+            date: '2024-06-01',
+            iconUrl: 'b',
+            teamName: 'Team B',
+          },
+        ]);
+      });
+
+      it('returns an empty array when teams are undefined', () => {
+        expect(getUserAwards()).toEqual([]);
+      });
+    });
+
+    describe('getLatestUserAward', () => {
+      it('returns the most recent award by date', () => {
+        expect(getLatestUserAward(teams)?.date).toEqual('2024-06-01');
+        expect(getLatestUserAward(teams)?.teamName).toEqual('Team B');
+      });
+
+      it('returns undefined when there are no awards', () => {
+        expect(getLatestUserAward([{ displayName: 'Team C' }])).toBeUndefined();
       });
     });
   });

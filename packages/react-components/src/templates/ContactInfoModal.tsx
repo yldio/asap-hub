@@ -2,6 +2,7 @@ import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 import { urlExpression, USER_SOCIAL_RESEARCHER_ID } from '@asap-hub/validation';
 import { css } from '@emotion/react';
 import { FunctionComponent, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import { Link } from '../atoms';
 import { charcoal, lead } from '../colors';
@@ -68,6 +69,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
   backHref,
   onSave = noop,
 }) => {
+  const navigate = useNavigate();
   const [newEmail, setNewEmail] = useState(email);
   const [newWebsite1, setNewWebsite1] = useState(website1);
   const [newWebsite2, setNewWebsite2] = useState(website2);
@@ -85,8 +87,8 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
       backHref={backHref}
       title="Contact Details"
       dirty={newEmail !== email}
-      onSave={() =>
-        onSave({
+      onSave={async () => {
+        await onSave({
           contactEmail: newEmail || undefined,
           social: {
             twitter: formatUserSocial(newTwitter, 'twitter') || undefined,
@@ -101,8 +103,9 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             website1: newWebsite1 || undefined,
             website2: newWebsite2 || undefined,
           },
-        })
-      }
+        });
+        void navigate(backHref);
+      }}
     >
       {({ isSaving }) => (
         <FormSection>

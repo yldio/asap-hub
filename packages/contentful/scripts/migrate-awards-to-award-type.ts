@@ -49,18 +49,21 @@ const backfillAwards = async (
     limit: 1000,
   });
 
+  let alreadyLinked = 0;
+  let linked = 0;
+  const unmapped: string[] = [];
+  const failed: string[] = [];
+
   for (const award of awards.items) {
     const typeName = award.fields?.type?.['en-US'];
     const awardTypeId = typeName && awardTypesByName.get(typeName);
 
     if (award.fields?.awardType?.['en-US']) {
-      console.log(`Award ${award.sys.id} already linked, skipping`);
+      alreadyLinked += 1;
       continue;
     }
     if (!awardTypeId) {
-      console.log(
-        `Award ${award.sys.id} has unmapped type "${typeName}", skipping`,
-      );
+      unmapped.push(`${award.sys.id} (type: "${typeName ?? 'none'}")`);
       continue;
     }
 
@@ -73,10 +76,29 @@ const backfillAwards = async (
       if (isPublishedEntry) {
         await updated.publish();
       }
+      linked += 1;
       console.log(`Linked award ${award.sys.id} to awardType "${typeName}"`);
     } catch (err) {
-      console.log(`Failed to update award ${award.sys.id}: ${err}`);
+      failed.push(`${award.sys.id}: ${err}`);
     }
+  }
+
+  console.log('\n--- Awards backfill summary ---');
+  console.log(`Total awards:    ${awards.total}`);
+  console.log(`Newly linked:    ${linked}`);
+  console.log(`Already linked:  ${alreadyLinked}`);
+  console.log(`Unmapped:        ${unmapped.length}`);
+  unmapped.forEach((u) => console.log(`  - unmapped: ${u}`));
+  console.log(`Failed:          ${failed.length}`);
+  failed.forEach((f) => console.log(`  - failed: ${f}`));
+
+  if (unmapped.length || failed.length) {
+    console.log(
+      '\nDo NOT run the remove-awards-type-field migration until every ' +
+        'award is linked (unmapped and failed must both be 0).',
+    );
+  } else {
+    console.log('\nAll awards linked — safe to drop the legacy `type` field.');
   }
 };
 

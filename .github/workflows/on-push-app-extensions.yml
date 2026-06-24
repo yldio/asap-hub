@@ -9,7 +9,7 @@ jobs:
   check-updates:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -17,7 +17,7 @@ jobs:
       GIT_DIFF: ${{ steps.diff.outputs.diff }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Re-Build
         uses: ./.github/actions/build-rebuild
       - name: Cache build typecheck output
@@ -41,22 +41,22 @@ jobs:
     if: ${{ needs.check-updates.outputs.GIT_DIFF != '' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run contentful app extension tests
-        run: yarn workspaces foreach -j 2 --include "*/contentful-app-*" -vp run test:no-watch
+        run: yarn workspaces foreach -A -j 2 --include "*/contentful-app-*" -vp run test:no-watch
 
   build-and-deploy:
     needs: [test]
     if: ${{ needs.check-updates.outputs.GIT_DIFF != '' }}
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/yldio/asap-hub/node-python-sq:86a189edc900d4e1afdcf3935c697292f69d409b
+      image: ghcr.io/yldio/asap-hub/node-python-sq:92bd02a49ed4fd0c99c86d1966869791bc1530fe
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -83,7 +83,7 @@ jobs:
           - project-membership-role
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment

@@ -242,7 +242,7 @@ jobs:
     if: failure()
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: ./.github/actions/slack/
         with:
           message: 'Build failed on master branch!'
@@ -258,7 +258,7 @@ jobs:
       url: ${{ steps.setup.outputs.crn-app-url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup
         id: setup
         uses: ./.github/actions/setup-environment

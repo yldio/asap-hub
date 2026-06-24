@@ -8,7 +8,7 @@
     "@types/*"
   ],
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "repository": {
     "type": "git",
@@ -77,7 +77,7 @@
     "typecheck": "turbo typecheck",
     "update:browser-list": "yarn up -R caniuse-lite",
     "watch": "yarn watch:babel & yarn watch:typecheck",
-    "watch:babel": "yarn workspaces foreach -vpi -j 1 run build:babel && yarn workspaces foreach -vpi -j 1000 run watch:babel",
+    "watch:babel": "yarn workspaces foreach -A -vpi -j 1 run build:babel && yarn workspaces foreach -A -vpi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck:tsc -w"
   },
   "resolutions": {
@@ -110,10 +110,10 @@
     "fsevents": {
       "built": false
     },
-    "serverless-offline@8.8.1": {
+    "serverless-offline@13.10.0": {
       "unplugged": true
     },
-    "serverless-offline-aws-eventbridge@1.6.7": {
+    "serverless-offline-aws-eventbridge@2.2.4": {
       "unplugged": true
     },
     "serverless-offline-ssm@6.2.0": {
@@ -124,6 +124,9 @@
     },
     "thrift": {
       "unplugged": false
+    },
+    "unrs-resolver": {
+      "built": false
     }
   },
   "prettier": {
@@ -194,5 +197,5 @@
     "ts-node": "10.9.2",
     "uuid": "8.3.2"
   },
-  "packageManager": "yarn@3.8.7"
+  "packageManager": "yarn@4.12.0"
 }

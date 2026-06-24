@@ -67,8 +67,6 @@ const UserProfileBadges: React.FC<UserProfileBadgesProps> = ({ badges }) => {
         <ul css={listStyles}>
           {visibleBadges.map((badge, index) => (
             <li
-              // award entries have no stable id; index within a stable list is fine
-              // eslint-disable-next-line react/no-array-index-key
               key={`${badge.name}-${badge.teamName}-${badge.date}-${index}`}
               css={itemStyles}
             >

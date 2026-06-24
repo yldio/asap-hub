@@ -1,9 +1,14 @@
 import { css } from '@emotion/react';
-import { UserListItemResponse } from '@asap-hub/model';
+import { getLatestUserAward, UserListItemResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Card, Avatar, Caption, StateTag } from '../atoms';
-import { LinkHeadline, UserProfilePersonalText, ImageLink } from '../molecules';
+import {
+  AvatarWithBadge,
+  LinkHeadline,
+  UserProfilePersonalText,
+  ImageLink,
+} from '../molecules';
 import { tabletScreen, rem } from '../pixels';
 import { formatDate } from '../date';
 import { alumniBadgeIcon } from '../icons';
@@ -56,7 +61,17 @@ const PeopleCard: React.FC<UserListItemResponse> = ({
   ...props
 }) => {
   const userHref = network({}).users({}).user({ userId: id }).$;
-  const userAvatar = (
+  const latestAward = getLatestUserAward(props.teams);
+  const userAvatar = latestAward?.iconUrl ? (
+    <AvatarWithBadge
+      imageUrl={avatarUrl}
+      firstName={firstName}
+      lastName={lastName}
+      badgeUrl={latestAward.iconUrl}
+      badgeAlt={latestAward.name}
+      badgeSize={24}
+    />
+  ) : (
     <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
   );
   return (

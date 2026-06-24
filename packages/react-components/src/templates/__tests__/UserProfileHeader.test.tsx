@@ -303,3 +303,50 @@ it('displays number of past events', () => {
   );
   expect(screen.queryByText('Past Events (9)')).toBeInTheDocument();
 });
+
+describe('award badge', () => {
+  const teamsWithAwards = [
+    {
+      id: 'team-1',
+      displayName: 'Team 1',
+      role: 'Project Manager' as const,
+      awards: [
+        { name: 'Open Science Champion', date: '2023-01-01', iconUrl: 'old' },
+        { name: 'Open Science Champion', date: '2024-01-01', iconUrl: 'new' },
+      ],
+    },
+  ];
+
+  it('shows the latest award badge linking to the badges section', () => {
+    render(
+      <StaticRouter location="/">
+        <UserProfileHeader
+          {...boilerplateProps}
+          id="u1"
+          teams={teamsWithAwards}
+        />
+      </StaticRouter>,
+    );
+
+    const badgeLink = screen.getByRole('link', {
+      name: /open science champion badge/i,
+    });
+    expect(badgeLink.getAttribute('href')).toContain('#badges');
+    expect(screen.getByAltText('Open Science Champion')).toHaveAttribute(
+      'src',
+      'new',
+    );
+  });
+
+  it('shows no award badge when the user has none', () => {
+    render(
+      <StaticRouter location="/">
+        <UserProfileHeader {...boilerplateProps} teams={[]} />
+      </StaticRouter>,
+    );
+
+    expect(
+      screen.queryByRole('link', { name: /badge/i }),
+    ).not.toBeInTheDocument();
+  });
+});

@@ -67,3 +67,34 @@ describe('alumni badge', () => {
     expect(screen.queryByTitle('Alumni Member')).not.toBeInTheDocument();
   });
 });
+
+describe('award badge', () => {
+  const teamWithAwards = [
+    {
+      id: 'team-1',
+      displayName: 'Team 1',
+      role: 'Project Manager' as const,
+      awards: [
+        { name: 'Open Science Champion', date: '2023-01-01', iconUrl: 'old' },
+        { name: 'Open Science Champion', date: '2024-01-01', iconUrl: 'new' },
+      ],
+    },
+  ];
+
+  it('overlays the most recent award badge on the avatar', () => {
+    render(<PeopleCard {...props} teams={teamWithAwards} />);
+
+    const badge = screen.getByAltText('Open Science Champion');
+    expect(badge).toHaveAttribute('src', 'new');
+  });
+
+  it('does not render an award badge when the user has none', () => {
+    render(
+      <PeopleCard {...props} teams={[{ ...teamWithAwards[0]!, awards: [] }]} />,
+    );
+
+    expect(
+      screen.queryByAltText('Open Science Champion'),
+    ).not.toBeInTheDocument();
+  });
+});

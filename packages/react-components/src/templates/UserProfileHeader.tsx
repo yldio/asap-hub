@@ -1,14 +1,23 @@
-import { UserResponse } from '@asap-hub/model';
+import { getLatestUserAward, UserResponse } from '@asap-hub/model';
 import { UserProfileContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css, keyframes } from '@emotion/react';
 import { useContext } from 'react';
-import { Avatar, Display, Link, TabLink, StateTag, CopyButton } from '../atoms';
+import {
+  Anchor,
+  Avatar,
+  Display,
+  Link,
+  TabLink,
+  StateTag,
+  CopyButton,
+} from '../atoms';
 import { paper, tin } from '../colors';
 import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
 import { createMailTo } from '../mail';
 import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
 import { Toast } from '../organisms';
+import { badgesAnchorId } from '../organisms/UserProfileBadges';
 import {
   largeDesktopScreen,
   mobileScreen,
@@ -168,6 +177,20 @@ const spinnerStyles = css({
   borderRadius: '50%',
   animation: `${spin} 1s linear infinite`,
 });
+const badgeStyles = css({
+  position: 'absolute',
+  right: 0,
+  bottom: 0,
+  display: 'inline-flex',
+  width: rem(28),
+  height: rem(28),
+});
+const badgeImageStyles = css({
+  width: '100%',
+  height: '100%',
+  borderRadius: '50%',
+  objectFit: 'cover',
+});
 
 type UserProfileHeaderProps = Pick<
   UserResponse,
@@ -245,6 +268,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 }) => {
   const tabRoutes = network({}).users({}).user({ userId: id });
   const { isOwnProfile } = useContext(UserProfileContext);
+  const latestAward = getLatestUserAward(teams);
 
   return (
     <>
@@ -358,6 +382,20 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                       />
                     </label>
                   ))}
+                {latestAward?.iconUrl && (
+                  <span css={badgeStyles}>
+                    <Anchor
+                      href={`${tabRoutes.research({}).$}#${badgesAnchorId}`}
+                      aria-label={`${latestAward.name} badge`}
+                    >
+                      <img
+                        css={badgeImageStyles}
+                        src={latestAward.iconUrl}
+                        alt={latestAward.name}
+                      />
+                    </Anchor>
+                  </span>
+                )}
               </div>
               {editPersonalInfoHref && (
                 <div css={editPersonalInfoStyles}>

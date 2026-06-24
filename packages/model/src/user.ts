@@ -408,7 +408,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
 export type UserAwardWithTeam = UserAward & { teamName?: string };
 
 export const getUserAwards = (
-  teams: Pick<UserListItemTeam, 'displayName' | 'awards'>[],
+  teams: Pick<UserListItemTeam, 'displayName' | 'awards'>[] = [],
 ): UserAwardWithTeam[] =>
   teams.flatMap(
     (team) =>
@@ -419,10 +419,9 @@ export const getUserAwards = (
   );
 
 export const getLatestUserAward = (
-  teams: Pick<UserListItemTeam, 'displayName' | 'awards'>[],
+  teams: Pick<UserListItemTeam, 'displayName' | 'awards'>[] = [],
 ): UserAwardWithTeam | undefined =>
   getUserAwards(teams).reduce<UserAwardWithTeam | undefined>(
-    (latest, award) =>
-      !latest || award.date > latest.date ? award : latest,
+    (latest, award) => (!latest || award.date > latest.date ? award : latest),
     undefined,
   );

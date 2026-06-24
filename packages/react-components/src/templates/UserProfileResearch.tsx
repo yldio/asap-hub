@@ -1,11 +1,12 @@
 import React, { ComponentProps, ReactNode } from 'react';
-import { UserResponse } from '@asap-hub/model';
+import { getUserAwards, UserResponse } from '@asap-hub/model';
 
 import {
   ProfileExpertiseAndResources,
   QuestionsSection,
   ProfileCardList,
   HelpSection,
+  UserProfileBadges,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
@@ -15,7 +16,7 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<
     UserResponse,
-    'email' | 'contactEmail' | 'displayName' | 'alumniSinceDate'
+    'email' | 'contactEmail' | 'displayName' | 'alumniSinceDate' | 'teams'
   > &
   ComponentProps<typeof UserProfileRole> & {
     userProfileGroupsCard?: ReactNode;
@@ -46,8 +47,10 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   editRoleHref,
   role,
   tags,
+  teams,
   ...roleProps
 }) => {
+  const badges = getUserAwards(teams);
   const isRoleEmpty =
     !roleProps.researchInterests && !roleProps.responsibilities;
   const showRoleSection = isOwnProfile ? true : !isRoleEmpty;
@@ -134,6 +137,9 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                 },
         },
         ...(role === 'Staff' ? staffCards : defaultCards),
+        badges.length > 0 && {
+          card: <UserProfileBadges badges={badges} />,
+        },
       ].filter(Boolean)}
     </ProfileCardList>
   );

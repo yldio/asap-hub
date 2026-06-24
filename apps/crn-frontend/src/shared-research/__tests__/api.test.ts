@@ -516,6 +516,122 @@ describe('getDraftResearchOutputs', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  it('filters research outputs by document type and returns results for user association members', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        status: 'draft',
+        workingGroupId: '123',
+        'filter[documentType]': 'Article',
+        take: 10,
+        skip: 0,
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getDraftResearchOutputs(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          userAssociationMember: true,
+          workingGroupId: '123',
+          documentType: ['Article'],
+          currentPage: 0,
+          draftsOnly: true,
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('filters research outputs by multiple document types and returns results for user association members', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        status: 'draft',
+        workingGroupId: '123',
+        'filter[documentType]': ['Article', 'Grant Document'],
+        take: 10,
+        skip: 0,
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getDraftResearchOutputs(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          userAssociationMember: true,
+          workingGroupId: '123',
+          documentType: ['Article', 'Grant Document'],
+          currentPage: 0,
+          draftsOnly: true,
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('filters research outputs by source and returns results for user association members', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        status: 'draft',
+        teamId: 'team-123',
+        filter: {
+          source: 'Working Group',
+        },
+        take: 10,
+        skip: 0,
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getDraftResearchOutputs(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          userAssociationMember: true,
+          teamId: 'team-123',
+          source: ['Working Group'],
+          currentPage: 0,
+          draftsOnly: true,
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('filters research outputs by multiple sources and returns results for user association members', async () => {
+    nock(API_BASE_URL)
+      .get('/research-outputs')
+      .query({
+        status: 'draft',
+        teamId: 'team-123',
+        filter: {
+          source: ['Working Group', 'Team'],
+        },
+        take: 10,
+        skip: 0,
+      })
+      .reply(200, createListResearchOutputResponse(1));
+    expect(
+      await getDraftResearchOutputs(
+        {
+          pageSize: 10,
+          searchQuery: '',
+          userAssociationMember: true,
+          teamId: 'team-123',
+          source: ['Working Group', 'Team'],
+          currentPage: 0,
+          draftsOnly: true,
+        },
+        '',
+      ),
+    ).toEqual(createListResearchOutputResponse(1));
+    expect(nock.isDone()).toBe(true);
+  });
+
   it('returns an empty result when not an association member', async () => {
     expect(
       await getDraftResearchOutputs(

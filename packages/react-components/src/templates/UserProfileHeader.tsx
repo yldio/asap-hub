@@ -356,6 +356,20 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                   lastName={lastName}
                   overrideStyles={avatarStyles}
                 />
+                {latestAward?.iconUrl && (
+                  <span css={badgeStyles}>
+                    <Anchor
+                      href={`${tabRoutes.research({}).$}#${badgesAnchorId}`}
+                      aria-label={`${latestAward.name} badge`}
+                    >
+                      <img
+                        css={badgeImageStyles}
+                        src={latestAward.iconUrl}
+                        alt={latestAward.name}
+                      />
+                    </Anchor>
+                  </span>
+                )}
                 {onImageSelect &&
                   (avatarSaving ? (
                     <div css={savingOverlayStyles}>
@@ -382,20 +396,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                       />
                     </label>
                   ))}
-                {latestAward?.iconUrl && (
-                  <span css={badgeStyles}>
-                    <Anchor
-                      href={`${tabRoutes.research({}).$}#${badgesAnchorId}`}
-                      aria-label={`${latestAward.name} badge`}
-                    >
-                      <img
-                        css={badgeImageStyles}
-                        src={latestAward.iconUrl}
-                        alt={latestAward.name}
-                      />
-                    </Anchor>
-                  </span>
-                )}
               </div>
               {editPersonalInfoHref && (
                 <div css={editPersonalInfoStyles}>

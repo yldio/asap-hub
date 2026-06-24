@@ -2414,4 +2414,73 @@ describe('User data provider', () => {
       ]);
     });
   });
+
+  describe('awards on user teams', () => {
+    const teamWithAwards = {
+      role: 'Lead PI (Core Leadership)',
+      inactiveSinceDate: null,
+      team: { sys: { id: 'team-1' }, displayName: 'Team 1' },
+      awardsCollection: {
+        items: [
+          {
+            date: '2024-01-01',
+            awardType: {
+              name: 'Open Science Champion',
+              icon: { url: 'https://example.com/badge.png' },
+            },
+          },
+        ],
+      },
+    };
+
+    it('parses awards onto a team when fetching a user by id', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          teamsCollection: { items: [teamWithAwards] },
+        }),
+      });
+
+      const result = await userDataProvider.fetchById('123');
+
+      expect(result!.teams[0]!.awards).toEqual([
+        {
+          name: 'Open Science Champion',
+          date: '2024-01-01',
+          iconUrl: 'https://example.com/badge.png',
+        },
+      ]);
+    });
+
+    it('omits the awards key when a team has no awards', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          teamsCollection: {
+            items: [{ ...teamWithAwards, awardsCollection: { items: [] } }],
+          },
+        }),
+      });
+
+      const result = await userDataProvider.fetchById('123');
+
+      expect(result!.teams[0]).not.toHaveProperty('awards');
+    });
+
+    it('parses awards onto a team in the Algolia list item', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUserListItem({
+          teamsCollection: { items: [teamWithAwards] },
+        }),
+      });
+
+      const result = await userDataProvider.fetchByIdForAlgoliaList('user-id');
+
+      expect(result!.teams[0]!.awards).toEqual([
+        {
+          name: 'Open Science Champion',
+          date: '2024-01-01',
+          iconUrl: 'https://example.com/badge.png',
+        },
+      ]);
+    });
+  });
 });

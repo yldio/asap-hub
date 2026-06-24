@@ -97,4 +97,22 @@ describe('award badge', () => {
       screen.queryByAltText('Open Science Champion'),
     ).not.toBeInTheDocument();
   });
+
+  it('does not render an award badge when the latest award has no icon', () => {
+    render(
+      <PeopleCard
+        {...props}
+        teams={[
+          {
+            ...teamWithAwards[0]!,
+            awards: [{ name: 'Open Science Champion', date: '2024-01-01' }],
+          },
+        ]}
+      />,
+    );
+
+    expect(
+      screen.queryByAltText('Open Science Champion'),
+    ).not.toBeInTheDocument();
+  });
 });

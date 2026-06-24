@@ -178,6 +178,21 @@ describe('User', () => {
       it('returns undefined when there are no awards', () => {
         expect(getLatestUserAward([{ displayName: 'Team C' }])).toBeUndefined();
       });
+
+      it('keeps the first award on equal dates', () => {
+        expect(
+          getLatestUserAward([
+            {
+              displayName: 'Team A',
+              awards: [{ name: 'Open Science Champion', date: '2024-01-01' }],
+            },
+            {
+              displayName: 'Team B',
+              awards: [{ name: 'Open Science Champion', date: '2024-01-01' }],
+            },
+          ])?.teamName,
+        ).toEqual('Team A');
+      });
     });
   });
 });

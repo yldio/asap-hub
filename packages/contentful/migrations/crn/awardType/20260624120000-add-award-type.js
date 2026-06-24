@@ -1,4 +1,5 @@
-module.exports.description = 'Create awardType content type and link it from awards';
+module.exports.description =
+  'Create awardType content type and link it from awards';
 
 module.exports.up = (migration) => {
   const awardType = migration

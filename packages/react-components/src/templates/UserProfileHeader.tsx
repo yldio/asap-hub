@@ -250,24 +250,24 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
     <>
       {alumniSinceDate && (
         <Toast accent="warning">
-          This alumni might not have all content updated or available. This user
-          became alumni on the{' '}
+          Records indicate the individual transitioned to alumni status on{' '}
           <strong>
             {formatDateToTimezone(alumniSinceDate, 'do MMMM yyyy')}
           </strong>
-          , their alumni information was last updated on the{' '}
+          {alumniLocation && (
+            <span>
+              , with their final affiliation noted at{' '}
+              <strong>{alumniLocation}</strong>
+            </span>
+          )}
+          . Because this individual can not access the Hub, current details may
+          not be up to date. The profile was last modified on{' '}
           <strong>
             {formatDateToTimezone(
               alumniLastUpdated || lastModifiedDate,
               'do MMMM yyyy',
             )}
           </strong>
-          {alumniLocation && (
-            <span>
-              {' '}
-              and their role is now at <strong>{alumniLocation}</strong>
-            </span>
-          )}
           .
         </Toast>
       )}

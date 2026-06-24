@@ -168,19 +168,19 @@ const UserDetailHeaderCard: React.FC<UserDetailHeaderCardProps> = ({
       {alumniSinceDate && (
         <div>
           <Toast accent="warning" rounded>
-            This alumni might not have all content updated or available. This
-            user became alumni on the{' '}
-            <strong>{formatDate(new Date(alumniSinceDate))}</strong>, their
-            alumni information was last updated on the{' '}
+            Records indicate the individual transitioned to alumni status on{' '}
+            <strong>{formatDate(new Date(alumniSinceDate))}</strong>
+            {alumniLocation && (
+              <>
+                , with their final affiliation noted at{' '}
+                <strong>{alumniLocation}</strong>
+              </>
+            )}
+            . Because this individual can not access the Hub, current details
+            may not be up to date. The profile was last modified on{' '}
             <strong>
               {formatDate(new Date(alumniLastUpdated || lastModifiedDate))}
             </strong>
-            {alumniLocation && (
-              <>
-                {' '}
-                and their next role was at <strong>{alumniLocation}</strong>
-              </>
-            )}
             .
           </Toast>
         </div>

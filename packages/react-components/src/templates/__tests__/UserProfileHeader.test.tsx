@@ -178,14 +178,10 @@ describe('alumni', () => {
           lastModifiedDate={new Date('2021-09-01T12:00:00').toISOString()}
           degree={undefined}
         />
-        ,
       </UserProfileContext.Provider>,
     );
     expect(
-      queryByText(
-        'This alumni might not have all content updated or available.',
-        { exact: false },
-      ),
+      queryByText(/Records indicate the individual transitioned to alumni/),
     ).toBeInTheDocument();
     rerender(
       <UserProfileContext.Provider value={{ isOwnProfile: false }}>
@@ -196,13 +192,10 @@ describe('alumni', () => {
           alumniLocation={'Some University'}
           degree={undefined}
         />
-        ,
       </UserProfileContext.Provider>,
     );
     expect(
-      queryByText('and their role is now at', {
-        exact: false,
-      }),
+      queryByText(/final affiliation noted at/, { exact: false }),
     ).toBeInTheDocument();
   });
 

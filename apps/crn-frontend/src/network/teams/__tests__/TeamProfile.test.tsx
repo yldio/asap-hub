@@ -893,7 +893,7 @@ describe('The draft output tab', () => {
     );
     await userEvent.click(screen.getByText('Draft Outputs (10)'));
     await waitFor(() => expect(mockGetDraftResearchOutputs).toHaveBeenCalled());
-    expect(screen.getByText('Draft Output0')).toBeVisible();
+    expect(await screen.findByText('Draft Output0')).toBeVisible();
     jest.useFakeTimers();
   });
   it('does not render the draft outputs tab if the team is inactive', async () => {

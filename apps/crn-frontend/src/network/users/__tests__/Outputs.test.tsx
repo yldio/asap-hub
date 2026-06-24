@@ -137,6 +137,7 @@ it('calls getResearchOutputs with the right arguments', async () => {
   const userId = '12345';
   const filters = {
     documentType: ['Grant Document'],
+    source: [],
   };
   mockGetResearchOutputs.mockResolvedValue({
     ...createResearchOutputListAlgoliaResponse(2),
@@ -175,6 +176,7 @@ it('triggers export with the same parameters and custom filename', async () => {
   });
   const filters = {
     documentType: ['Grant Document'],
+    source: [],
   } as FetchResearchOutputsFilter;
   const searchQuery = 'Some Search';
   const userId = '12345';

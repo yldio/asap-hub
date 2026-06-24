@@ -16,9 +16,10 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<
     UserResponse,
-    'email' | 'contactEmail' | 'displayName' | 'alumniSinceDate' | 'teams'
+    'email' | 'contactEmail' | 'displayName' | 'alumniSinceDate'
   > &
   ComponentProps<typeof UserProfileRole> & {
+    teams?: UserResponse['teams'];
     userProfileGroupsCard?: ReactNode;
     userProfileProjectsCard?: ReactNode;
     userProfileWorkingGroupsCard?: ReactNode;

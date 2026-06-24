@@ -256,7 +256,7 @@ describe('ProjectOutputs', () => {
         );
       });
 
-      expect(screen.getByText('Output 1')).toBeInTheDocument();
+      expect(await screen.findByText('Output 1')).toBeInTheDocument();
     });
 
     it('does not use projectId filter for team-based projects', async () => {
@@ -298,7 +298,7 @@ describe('ProjectOutputs', () => {
         );
       });
 
-      expect(screen.getByText('Example draft')).toBeInTheDocument();
+      expect(await screen.findByText('Example draft')).toBeInTheDocument();
       expect(
         screen.queryByText('No draft outputs available.'),
       ).not.toBeInTheDocument();

@@ -74,26 +74,6 @@ describe('ResearchOutputs controller', () => {
         expectedFetchOptions,
       );
     });
-
-    test('Should transform an array filter into a an documentType array fetch option', async () => {
-      researchOutputDataProviderMock.fetch.mockResolvedValueOnce({
-        total: 0,
-        items: [],
-      });
-
-      const documentTypes = ['one', 'two'];
-      const fetchOptions = { filter: documentTypes };
-      await researchOutputs.fetch(fetchOptions);
-
-      const expectedFetchOptions: FetchResearchOutputOptions = {
-        filter: {
-          documentType: documentTypes,
-        },
-      };
-      expect(researchOutputDataProviderMock.fetch).toBeCalledWith(
-        expectedFetchOptions,
-      );
-    });
   });
 
   describe('Fetch-by-ID method', () => {

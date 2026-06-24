@@ -3,7 +3,11 @@ import {
   createCsvFileStream,
   SearchFrame,
 } from '@asap-hub/frontend-utils';
-import { ResearchOutputResponse, UserResponse } from '@asap-hub/model';
+import {
+  FetchResearchOutputsFilter,
+  ResearchOutputResponse,
+  UserResponse,
+} from '@asap-hub/model';
 import {
   UserProfileResearchOutputs,
   UserProfileSearchAndFilter,
@@ -30,7 +34,7 @@ type OutputsListProps = Pick<
 > &
   Pick<UserResponse, 'lastName'> & {
     searchQuery: string;
-    filters: Set<string>;
+    filtersMap: FetchResearchOutputsFilter;
     userId: string;
   };
 
@@ -40,7 +44,7 @@ type OutputsProps = {
 
 const OutputsList: React.FC<OutputsListProps> = ({
   searchQuery,
-  filters,
+  filtersMap,
   userId,
   firstName,
   lastName,
@@ -52,7 +56,8 @@ const OutputsList: React.FC<OutputsListProps> = ({
 
   const result = useResearchOutputs({
     searchQuery,
-    filters,
+    documentType: filtersMap.documentType,
+    source: filtersMap.source,
     currentPage,
     pageSize,
     userId,
@@ -73,7 +78,8 @@ const OutputsList: React.FC<OutputsListProps> = ({
       ),
       (paginationParams) =>
         getResearchOutputs(client, {
-          filters,
+          documentType: filtersMap.documentType,
+          source: filtersMap.source,
           searchQuery,
           userId,
           ...paginationParams,
@@ -111,15 +117,15 @@ const OutputsList: React.FC<OutputsListProps> = ({
 const Outputs: FC<OutputsProps> = ({ userId }) => {
   const {
     filters,
+    filtersMap,
     searchQuery,
     toggleFilter,
     setSearchQuery,
     debouncedSearchQuery,
-  } = useSearch();
+  } = useSearch(['source', 'documentType']);
   const { currentPage, pageSize } = usePaginationParams();
   const hasOutputs = !!useResearchOutputs({
     searchQuery: '',
-    filters: new Set(),
     currentPage,
     pageSize,
     userId,
@@ -140,7 +146,7 @@ const Outputs: FC<OutputsProps> = ({ userId }) => {
         <OutputsList
           userId={userId}
           searchQuery={debouncedSearchQuery}
-          filters={filters}
+          filtersMap={filtersMap}
           hasOutputs={hasOutputs}
           ownUser={ownUser}
           firstName={user?.firstName ?? ''}

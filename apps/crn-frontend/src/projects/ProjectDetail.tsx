@@ -347,6 +347,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                                   projectId={projectId}
                                   teamId={outputsTeamId}
                                   userAssociationMember={isMemberOrStaff}
+                                  hasOutputs={(publishedOutputsCount ?? 0) > 0}
                                 />
                               </Frame>
                             ) : (
@@ -364,6 +365,10 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                                   teamId={outputsTeamId}
                                   draftOutputs
                                   userAssociationMember={isMemberOrStaff}
+                                  hasOutputs={
+                                    isMemberOrStaff &&
+                                    (draftOutputsCount ?? 0) > 0
+                                  }
                                 />
                               </Frame>
                             ) : (

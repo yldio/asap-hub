@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-import { Anchor, Avatar } from '../atoms';
+import { Avatar } from '../atoms';
 import { rem } from '../pixels';
 
 const avatarSize = 90;
@@ -17,7 +17,7 @@ const badgeSlotStyles = (size: number) =>
   css({
     position: 'absolute',
     right: rem(-6),
-    bottom: rem(-18),
+    bottom: rem(-16),
     display: 'inline-flex',
     width: rem(size),
     height: rem(size),
@@ -33,35 +33,21 @@ const badgeImageStyles = css({
 type AvatarWithBadgeProps = ComponentProps<typeof Avatar> & {
   readonly badgeUrl: string;
   readonly badgeAlt: string;
-  readonly badgeHref?: string;
   readonly badgeSize?: number;
 };
 
 const AvatarWithBadge: React.FC<AvatarWithBadgeProps> = ({
   badgeUrl,
   badgeAlt,
-  badgeHref,
   badgeSize = 28,
   ...avatarProps
-}) => {
-  const badgeImage = (
-    <img css={badgeImageStyles} src={badgeUrl} alt={badgeAlt} />
-  );
-
-  return (
-    <span css={containerStyles}>
-      <Avatar {...avatarProps} />
-      <span css={badgeSlotStyles(badgeSize)}>
-        {badgeHref ? (
-          <Anchor href={badgeHref} aria-label={badgeAlt}>
-            {badgeImage}
-          </Anchor>
-        ) : (
-          badgeImage
-        )}
-      </span>
+}) => (
+  <span css={containerStyles}>
+    <Avatar {...avatarProps} />
+    <span css={badgeSlotStyles(badgeSize)}>
+      <img css={badgeImageStyles} src={badgeUrl} alt={badgeAlt} />
     </span>
-  );
-};
+  </span>
+);
 
 export default AvatarWithBadge;

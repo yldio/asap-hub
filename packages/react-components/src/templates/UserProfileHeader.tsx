@@ -179,8 +179,8 @@ const spinnerStyles = css({
 });
 const badgeStyles = css({
   position: 'absolute',
-  right: 0,
-  bottom: 0,
+  right: rem(-8),
+  bottom: rem(-8),
   display: 'inline-flex',
   width: rem(48),
   height: rem(48),

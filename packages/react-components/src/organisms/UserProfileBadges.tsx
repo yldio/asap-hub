@@ -10,16 +10,19 @@ export const badgesAnchorId = 'badges';
 
 const MAX_VISIBLE_BADGES = 4;
 
+const badgeSize = 72;
+
 const listStyles = css({
-  display: 'grid',
-  gridTemplateColumns: `repeat(auto-fill, minmax(${rem(120)}, 1fr))`,
-  gap: rem(24),
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: rem(40),
   padding: 0,
   margin: 0,
   listStyle: 'none',
 });
 
 const itemStyles = css({
+  width: rem(badgeSize),
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -28,13 +31,14 @@ const itemStyles = css({
 });
 
 const iconStyles = css({
-  width: rem(72),
-  height: rem(72),
+  width: rem(badgeSize),
+  height: rem(badgeSize),
   objectFit: 'contain',
 });
 
 const teamNameStyles = css({
   color: lead.rgb,
+  overflowWrap: 'anywhere',
 });
 
 const showMoreStyles = css({

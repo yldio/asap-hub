@@ -178,15 +178,10 @@ const spinnerStyles = css({
   animation: `${spin} 1s linear infinite`,
 });
 const badgeSize = 48;
-// place the badge so its centre sits on the avatar circle's bottom-right edge
-// (the 45° point). badge centre = avatarSize/2 + radius/√2 from the container
-// edge; the resulting right/bottom offset is negative (badge spills outside).
-const badgeCentreFromEdge = avatarSize / 2 + avatarSize / 2 / Math.SQRT2;
-const badgeOffset = avatarSize - (badgeCentreFromEdge + badgeSize / 2);
 const badgeStyles = css({
   position: 'absolute',
-  right: rem(badgeOffset),
-  bottom: rem(badgeOffset),
+  right: rem(-10),
+  bottom: rem(-8),
   display: 'inline-flex',
   width: rem(badgeSize),
   height: rem(badgeSize),

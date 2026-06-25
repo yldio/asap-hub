@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 import deepEqual from 'fast-deep-equal';
 
@@ -16,6 +17,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
   onSave = noop,
   backHref,
 }) => {
+  const navigate = useNavigate();
   const [newQuestions, setNewQuestions] = useState<string[]>(questions);
 
   return (
@@ -24,11 +26,12 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
       description="Share questions that drive your work or get you out of bed in the morning. Help other ASAP researchers get to know you and spark discussions and collaborations in the Network!"
       dirty={!deepEqual(newQuestions, questions)}
       backHref={backHref}
-      onSave={() =>
-        onSave({
+      onSave={async () => {
+        await onSave({
           questions: newQuestions.filter((item) => item.trim() !== ''),
-        })
-      }
+        });
+        void navigate(backHref);
+      }}
     >
       {({ isSaving }) => (
         <>

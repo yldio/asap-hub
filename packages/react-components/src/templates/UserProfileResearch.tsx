@@ -52,6 +52,9 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   ...roleProps
 }) => {
   const badges = getUserAwards(teams);
+  const badgesCard = badges.length > 0 && {
+    card: <UserProfileBadges badges={badges} />,
+  };
   const isRoleEmpty =
     !roleProps.researchInterests && !roleProps.responsibilities;
   const showRoleSection = isOwnProfile ? true : !isRoleEmpty;
@@ -70,6 +73,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
     },
   ];
   const staffCards = [
+    badgesCard,
     userProfileWorkingGroupsCard !== undefined && {
       card: userProfileWorkingGroupsCard,
     },
@@ -91,6 +95,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
               label: 'Edit open questions',
             },
     },
+    badgesCard,
     userProfileWorkingGroupsCard !== undefined && {
       card: userProfileWorkingGroupsCard,
     },
@@ -138,9 +143,6 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                 },
         },
         ...(role === 'Staff' ? staffCards : defaultCards),
-        badges.length > 0 && {
-          card: <UserProfileBadges badges={badges} />,
-        },
       ].filter(Boolean)}
     </ProfileCardList>
   );

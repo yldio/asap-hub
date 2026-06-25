@@ -179,6 +179,10 @@ describe('User', () => {
         expect(getLatestUserAward([{ displayName: 'Team C' }])).toBeUndefined();
       });
 
+      it('returns undefined when teams are undefined', () => {
+        expect(getLatestUserAward()).toBeUndefined();
+      });
+
       it('keeps the first award on equal dates', () => {
         expect(
           getLatestUserAward([

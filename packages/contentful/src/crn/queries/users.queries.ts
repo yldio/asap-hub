@@ -115,7 +115,7 @@ export const usersContentQueryFragment = gql`
         }
         role
         inactiveSinceDate
-        awardsCollection(limit: 10) {
+        awardsCollection(limit: 20, order: [date_DESC]) {
           items {
             date
             awardType {
@@ -448,7 +448,7 @@ export const userListItemContentQueryFragment = gql`
           displayName
         }
         role
-        awardsCollection(limit: 10) {
+        awardsCollection(limit: 20, order: [date_DESC]) {
           items {
             date
             awardType {
@@ -585,7 +585,7 @@ export const FETCH_USER_BY_ID_FOR_ALGOLIA_LIST = gql`
             displayName
           }
           role
-          awardsCollection(limit: 10) {
+          awardsCollection(limit: 20, order: [date_DESC]) {
             items {
               date
               awardType {

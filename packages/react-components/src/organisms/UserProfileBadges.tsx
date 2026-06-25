@@ -28,7 +28,7 @@ const itemStyles = css({
   flexDirection: 'column',
   alignItems: 'center',
   textAlign: 'center',
-  gap: rem(8),
+  gap: rem(12),
 });
 
 const iconStyles = css({
@@ -65,8 +65,14 @@ const UserProfileBadges: React.FC<UserProfileBadgesProps> = ({ badges }) => {
   return (
     <div id={badgesAnchorId}>
       <Card>
-        <Headline2 styleAsHeading={3}>Badges</Headline2>
-        <Paragraph accent="lead">
+        <Headline2 styleAsHeading={3} noMargin>
+          Badges
+        </Headline2>
+        <Paragraph
+          accent="lead"
+          noMargin
+          styles={css({ marginBlock: `${rem(24)} ${rem(32)}` })}
+        >
           Explore all badges this member has achieved.
         </Paragraph>
         <ul css={listStyles}>

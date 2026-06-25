@@ -22,7 +22,8 @@ const listStyles = css({
 });
 
 const itemStyles = css({
-  maxWidth: rem(85),
+  width: rem(85),
+  flexShrink: 0,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',

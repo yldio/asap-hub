@@ -10,7 +10,7 @@ export const badgesAnchorId = 'badges';
 
 const MAX_VISIBLE_BADGES = 4;
 
-const badgeSize = 72;
+const badgeSize = 80;
 
 const listStyles = css({
   display: 'flex',
@@ -22,7 +22,7 @@ const listStyles = css({
 });
 
 const itemStyles = css({
-  width: rem(badgeSize),
+  maxWidth: rem(85),
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',

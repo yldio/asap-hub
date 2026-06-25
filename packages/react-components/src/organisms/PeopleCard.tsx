@@ -69,7 +69,7 @@ const PeopleCard: React.FC<UserListItemResponse> = ({
       lastName={lastName}
       badgeUrl={latestAward.iconUrl}
       badgeAlt={latestAward.name}
-      badgeSize={24}
+      badgeSize={42}
     />
   ) : (
     <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />

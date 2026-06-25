@@ -3,16 +3,21 @@ import { css } from '@emotion/react';
 import { Anchor, Avatar } from '../atoms';
 import { rem } from '../pixels';
 
+const avatarSize = 90;
+
 const containerStyles = css({
   position: 'relative',
-  display: 'inline-flex',
+  display: 'flex',
+  alignSelf: 'start',
+  width: rem(avatarSize),
+  height: rem(avatarSize),
 });
 
 const badgeSlotStyles = (size: number) =>
   css({
     position: 'absolute',
-    right: 0,
-    bottom: 0,
+    right: rem(-6),
+    bottom: rem(-18),
     display: 'inline-flex',
     width: rem(size),
     height: rem(size),

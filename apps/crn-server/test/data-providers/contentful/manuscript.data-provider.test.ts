@@ -698,7 +698,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           url: 'https://example.com/manuscript',
           impact: 'impact-id',
           categories: ['category-id-1'],
-          firstPublicDate: '2022-01-03T10:00:00.000Z',
+          preprintDate: '2022-01-03T10:00:00.000Z',
           layImpactStatement: 'impact statement',
           versions: [
             {
@@ -792,7 +792,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         },
         {
           op: 'add',
-          path: '/fields/firstPublicDate',
+          path: '/fields/preprintDate',
           value: {
             'en-US': '2022-01-03T10:00:00.000Z',
           },
@@ -1029,7 +1029,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           title: 'New Title',
           impact: 'impact-id',
           categories: ['category-id-1'],
-          firstPublicDate: '2022-01-03T10:00:00.000Z',
+          preprintDate: '2022-01-03T10:00:00.000Z',
           layImpactStatement: 'impact statement',
           versions: [
             {
@@ -1116,7 +1116,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           url: 'https://example.com/manuscript',
           impact: 'impact-id',
           categories: ['category-id-1'],
-          firstPublicDate: '2022-01-03T10:00:00.000Z',
+          preprintDate: '2022-01-03T10:00:00.000Z',
           layImpactStatement: 'impact statement',
           versions: [
             {
@@ -1186,7 +1186,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         },
         {
           op: 'add',
-          path: '/fields/firstPublicDate',
+          path: '/fields/preprintDate',
           value: {
             'en-US': '2022-01-03T10:00:00.000Z',
           },
@@ -2158,7 +2158,7 @@ describe('Manuscripts Contentful Data Provider', () => {
       layImpactStatement: {
         'en-US': 'impact statement',
       },
-      firstPublicDate: {
+      preprintDate: {
         'en-US': '2022-01-03T10:00:00.000Z',
       },
     };
@@ -2657,7 +2657,7 @@ describe('Manuscripts Contentful Data Provider', () => {
         },
         {
           op: 'add',
-          path: '/fields/firstPublicDate',
+          path: '/fields/preprintDate',
           value: {
             'en-US': '2022-01-03T10:00:00.000Z',
           },

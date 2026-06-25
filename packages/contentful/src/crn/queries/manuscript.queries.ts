@@ -60,7 +60,7 @@ export const manuscriptContentQueryFragment = gql`
       name
     }
     layImpactStatement
-    firstPublicDate
+    preprintDate
     categoriesCollection(limit: 2) {
       items {
         sys {

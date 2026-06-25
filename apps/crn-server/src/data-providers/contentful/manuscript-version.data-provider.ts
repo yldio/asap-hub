@@ -355,7 +355,7 @@ const parseGraphQLManucriptVersion = (
       ) === 'Preprint'
         ? latestVersion?.preprintDoi
         : latestVersion?.publicationDoi) || undefined,
-    firstPublicDate: manuscript.firstPublicDate || undefined,
+    preprintDate: manuscript.preprintDate || undefined,
   };
 };
 
@@ -467,7 +467,7 @@ const parseGraphQLComplianceManuscriptVersion = (
       .join(', '),
     impact: manuscript?.impact?.name || '',
     layImpactStatement: manuscript?.layImpactStatement || '',
-    firstPublicDate: manuscript?.firstPublicDate || '',
+    preprintDate: manuscript?.preprintDate || '',
     categories: cleanArray(manuscript?.categoriesCollection?.items)
       .map((category) => category.name)
       .join(', '),

@@ -52,7 +52,7 @@ export const mapManuscriptVersionToResearchOutput = (
   relatedManuscriptVersion: manuscriptVersion.versionId,
   relatedManuscript: manuscriptVersion.id.split('mv-')[1],
   doi: manuscriptVersion.doi,
-  publishDate: manuscriptVersion.firstPublicDate,
+  publishDate: manuscriptVersion.preprintDate,
 });
 
 export type ResolveFlowIdParams = {

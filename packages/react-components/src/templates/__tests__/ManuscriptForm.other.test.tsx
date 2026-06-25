@@ -153,7 +153,7 @@ describe('authors', () => {
               onCreate={onCreate}
               type="Original Research"
               lifecycle="Publication"
-              firstPublicDate="2022-01-03T00:00:00.000Z"
+              preprintDate="2022-01-03T00:00:00.000Z"
               url="http://example.com"
               preprintDoi="10.4444/test"
               publicationDoi="10.4467/test"
@@ -224,7 +224,7 @@ describe('authors', () => {
                 onCreate={onCreate}
                 type="Original Research"
                 lifecycle="Publication"
-                firstPublicDate="2022-01-03T00:00:00.000Z"
+                preprintDate="2022-01-03T00:00:00.000Z"
                 url="http://example.com"
                 preprintDoi="10.4444/test"
                 publicationDoi="10.4467/test"
@@ -304,7 +304,7 @@ describe('authors', () => {
                 onCreate={onCreate}
                 type="Original Research"
                 lifecycle="Publication"
-                firstPublicDate="2022-01-03T00:00:00.000Z"
+                preprintDate="2022-01-03T00:00:00.000Z"
                 url="http://example.com"
                 preprintDoi="10.4444/test"
                 publicationDoi="10.4467/test"
@@ -391,7 +391,7 @@ describe('renders the necessary fields', () => {
   const fieldInputMapping = {
     preprintDoi: 'Preprint DOI',
     publicationDoi: 'Publication DOI',
-    firstPublicDate: 'Date first made public',
+    preprintDate: 'Date first made public',
     manuscriptFile: 'Upload the main manuscript file',
     keyResourceTable: 'Upload a key resource table',
     additionalFiles: 'Upload any additional files',
@@ -1249,7 +1249,7 @@ it('user can add teams', async () => {
           onCreate={onCreate}
           type="Original Research"
           lifecycle="Publication"
-          firstPublicDate="2022-01-03T00:00:00.000Z"
+          preprintDate="2022-01-03T00:00:00.000Z"
           url="http://example.com"
           preprintDoi="10.4444/test"
           publicationDoi="10.4467/test"
@@ -1311,7 +1311,7 @@ it('user can add labs', async () => {
           onCreate={onCreate}
           type="Original Research"
           lifecycle="Publication"
-          firstPublicDate="2022-01-03T00:00:00.000Z"
+          preprintDate="2022-01-03T00:00:00.000Z"
           url="http://example.com"
           preprintDoi="10.4444/test"
           publicationDoi="10.4467/test"

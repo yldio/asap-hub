@@ -40,51 +40,66 @@ const getOrCreateAwardType = async (
   return created;
 };
 
+const PAGE_SIZE = 1000;
+
 const backfillAwards = async (
   environment: Environment,
   awardTypesByName: Map<string, string>,
 ) => {
-  const awards = await environment.getEntries({
-    content_type: 'awards',
-    limit: 1000,
-  });
-
   let alreadyLinked = 0;
   let linked = 0;
+  let processed = 0;
+  let total = 0;
   const unmapped: string[] = [];
   const failed: string[] = [];
 
-  for (const award of awards.items) {
-    const typeName = award.fields?.type?.['en-US'];
-    const awardTypeId = typeName && awardTypesByName.get(typeName);
+  // page through every awards entry; getEntries caps each request at 1000
+  for (let skip = 0; skip === 0 || processed < total; skip += PAGE_SIZE) {
+    const page = await environment.getEntries({
+      content_type: 'awards',
+      limit: PAGE_SIZE,
+      skip,
+    });
+    total = page.total;
 
-    if (award.fields?.awardType?.['en-US']) {
-      alreadyLinked += 1;
-      continue;
-    }
-    if (!awardTypeId) {
-      unmapped.push(`${award.sys.id} (type: "${typeName ?? 'none'}")`);
-      continue;
+    if (page.items.length === 0) {
+      break;
     }
 
-    try {
-      await rateLimiter.removeTokens(1);
-      const isPublishedEntry = award.isPublished();
-      const updated = await updateEntryFields(award, {
-        awardType: createLink(awardTypeId),
-      }).update();
-      if (isPublishedEntry) {
-        await updated.publish();
+    for (const award of page.items) {
+      processed += 1;
+      const typeName = award.fields?.type?.['en-US'];
+      const awardTypeId = typeName && awardTypesByName.get(typeName);
+
+      if (award.fields?.awardType?.['en-US']) {
+        alreadyLinked += 1;
+        continue;
       }
-      linked += 1;
-      console.log(`Linked award ${award.sys.id} to awardType "${typeName}"`);
-    } catch (err) {
-      failed.push(`${award.sys.id}: ${err}`);
+      if (!awardTypeId) {
+        unmapped.push(`${award.sys.id} (type: "${typeName ?? 'none'}")`);
+        continue;
+      }
+
+      try {
+        await rateLimiter.removeTokens(1);
+        const isPublishedEntry = award.isPublished();
+        const updated = await updateEntryFields(award, {
+          awardType: createLink(awardTypeId),
+        }).update();
+        if (isPublishedEntry) {
+          await updated.publish();
+        }
+        linked += 1;
+        console.log(`Linked award ${award.sys.id} to awardType "${typeName}"`);
+      } catch (err) {
+        failed.push(`${award.sys.id}: ${err}`);
+      }
     }
   }
 
   console.log('\n--- Awards backfill summary ---');
-  console.log(`Total awards:    ${awards.total}`);
+  console.log(`Total awards:    ${total}`);
+  console.log(`Processed:       ${processed}`);
   console.log(`Newly linked:    ${linked}`);
   console.log(`Already linked:  ${alreadyLinked}`);
   console.log(`Unmapped:        ${unmapped.length}`);
@@ -92,10 +107,11 @@ const backfillAwards = async (
   console.log(`Failed:          ${failed.length}`);
   failed.forEach((f) => console.log(`  - failed: ${f}`));
 
-  if (unmapped.length || failed.length) {
+  if (unmapped.length || failed.length || processed < total) {
     console.log(
       '\nDo NOT run the remove-awards-type-field migration until every ' +
-        'award is linked (unmapped and failed must both be 0).',
+        'award is linked (processed must equal total, and unmapped and ' +
+        'failed must both be 0).',
     );
   } else {
     console.log('\nAll awards linked — safe to drop the legacy `type` field.');

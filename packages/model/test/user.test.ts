@@ -147,19 +147,19 @@ describe('User', () => {
     ];
 
     describe('getUserAwards', () => {
-      it('flattens awards across teams with the awarding team name', () => {
+      it('flattens awards across teams, newest first, with the awarding team name', () => {
         expect(getUserAwards(teams)).toEqual([
-          {
-            name: 'Open Science Champion',
-            date: '2023-01-01',
-            iconUrl: 'a',
-            teamName: 'Team A',
-          },
           {
             name: 'Open Science Champion',
             date: '2024-06-01',
             iconUrl: 'b',
             teamName: 'Team B',
+          },
+          {
+            name: 'Open Science Champion',
+            date: '2023-01-01',
+            iconUrl: 'a',
+            teamName: 'Team A',
           },
         ]);
       });

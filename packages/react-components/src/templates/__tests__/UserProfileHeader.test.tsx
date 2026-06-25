@@ -332,10 +332,7 @@ describe('award badge', () => {
       name: /open science champion badge/i,
     });
     expect(badgeLink.getAttribute('href')).toContain('#badges');
-    expect(screen.getByAltText('Open Science Champion')).toHaveAttribute(
-      'src',
-      'new',
-    );
+    expect(badgeLink.querySelector('img')).toHaveAttribute('src', 'new');
   });
 
   it('shows no award badge when the user has none', () => {

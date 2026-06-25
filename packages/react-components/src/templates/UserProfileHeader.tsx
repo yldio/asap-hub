@@ -366,7 +366,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                       <img
                         css={badgeImageStyles}
                         src={latestAward.iconUrl}
-                        alt={latestAward.name}
+                        alt=""
                       />
                     </Anchor>
                   </span>
@@ -386,7 +386,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                       {uploadIcon}
                       <input
                         type="file"
-                        accept="image/x-png,image/jpeg"
+                        accept="image/png,image/jpeg"
                         aria-label="Upload Avatar"
                         onChange={(event) =>
                           event.target.files?.length &&

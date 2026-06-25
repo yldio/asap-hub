@@ -410,13 +410,17 @@ export type UserAwardWithTeam = UserAward & { teamName?: string };
 export const getUserAwards = (
   teams: Pick<UserListItemTeam, 'displayName' | 'awards'>[] = [],
 ): UserAwardWithTeam[] =>
-  teams.flatMap(
-    (team) =>
-      team.awards?.map((award) => ({
-        ...award,
-        teamName: team.displayName,
-      })) ?? [],
-  );
+  teams
+    .flatMap(
+      (team) =>
+        team.awards?.map((award) => ({
+          ...award,
+          teamName: team.displayName,
+        })) ?? [],
+    )
+    // newest first across all teams so the badges card's "view more"
+    // cut-off shows the latest awards regardless of which team they came from
+    .sort((a, b) => b.date.localeCompare(a.date));
 
 export const getLatestUserAward = (
   teams: Pick<UserListItemTeam, 'displayName' | 'awards'>[] = [],

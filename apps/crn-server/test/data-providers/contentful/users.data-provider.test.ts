@@ -1409,6 +1409,22 @@ describe('User data provider', () => {
             userDataProvider.update('123', { avatar: null }),
           ).resolves.not.toThrow();
         });
+
+        test('does not delete the asset when a suppressed conflict skips the update', async () => {
+          // patchAndPublishConflict resolves undefined on a 409, so the entry
+          // was not modified and still links the asset — it must not be deleted
+          mockPatchAndPublishConflict.mockResolvedValueOnce(
+            undefined as unknown as Entry,
+          );
+
+          await userDataProvider.update(
+            '123',
+            { avatar: null },
+            { suppressConflict: true },
+          );
+
+          expect(environmentMock.getAsset).not.toHaveBeenCalled();
+        });
       });
       test('map tag value to a linked resource', async () => {
         await userDataProvider.update('123', {

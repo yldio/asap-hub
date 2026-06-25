@@ -1303,7 +1303,7 @@ describe('User data provider', () => {
         });
       });
 
-      describe('removing the avatar', () => {
+      describe('changing the avatar', () => {
         const buildAssetMock = (isPublished = true) =>
           ({
             isPublished: jest.fn().mockReturnValue(isPublished),
@@ -1334,7 +1334,7 @@ describe('User data provider', () => {
           );
         });
 
-        test('unpublishes and deletes the previous asset', async () => {
+        test('unpublishes and deletes the previous asset when cleared', async () => {
           const asset = buildAssetMock();
           environmentMock.getAsset.mockResolvedValueOnce(asset);
 
@@ -1343,6 +1343,28 @@ describe('User data provider', () => {
           expect(environmentMock.getAsset).toHaveBeenCalledWith('asset-1');
           expect(asset.unpublish).toHaveBeenCalled();
           expect(asset.delete).toHaveBeenCalled();
+        });
+
+        test('deletes the previous asset when the avatar is replaced', async () => {
+          const asset = buildAssetMock();
+          environmentMock.getAsset.mockResolvedValueOnce(asset);
+
+          await userDataProvider.update('123', { avatar: 'asset-2' });
+
+          expect(environmentMock.getAsset).toHaveBeenCalledWith('asset-1');
+          expect(asset.delete).toHaveBeenCalled();
+        });
+
+        test('does not delete the asset when the avatar is unchanged', async () => {
+          await userDataProvider.update('123', { avatar: 'asset-1' });
+
+          expect(environmentMock.getAsset).not.toHaveBeenCalled();
+        });
+
+        test('does not delete any asset when the avatar field is not updated', async () => {
+          await userDataProvider.update('123', { firstName: 'New' });
+
+          expect(environmentMock.getAsset).not.toHaveBeenCalled();
         });
 
         test('does not unpublish an unpublished asset', async () => {
@@ -1361,7 +1383,7 @@ describe('User data provider', () => {
             getEntry({ firstName: { 'en-US': 'Test' } }),
           );
 
-          await userDataProvider.update('123', { avatar: null });
+          await userDataProvider.update('123', { avatar: 'asset-2' });
 
           expect(environmentMock.getAsset).not.toHaveBeenCalled();
         });

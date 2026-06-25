@@ -336,11 +336,20 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
 
-    // When the avatar is being cleared, keep a reference to the existing asset
-    // so it can be deleted from Contentful once the link has been removed.
-    const removedAvatarId =
-      'avatar' in fields && fields.avatar === null
+    // When the avatar field is being changed (cleared or replaced), keep a
+    // reference to the previously linked asset so it can be deleted from
+    // Contentful once the entry no longer points at it.
+    const previousAvatarId =
+      'avatar' in fields
         ? (user.fields.avatar?.['en-US']?.sys?.id as string | undefined)
+        : undefined;
+    const newAvatarId =
+      typeof fields.avatar === 'object' && fields.avatar
+        ? (fields.avatar as { sys?: { id?: string } }).sys?.id ?? undefined
+        : undefined;
+    const orphanedAvatarId =
+      previousAvatarId && previousAvatarId !== newAvatarId
+        ? previousAvatarId
         : undefined;
 
     const patchMethod = suppressConflict
@@ -358,8 +367,8 @@ export class UserContentfulDataProvider implements UserDataProvider {
       return;
     }
 
-    if (removedAvatarId) {
-      await this.deleteAsset(environment, removedAvatarId);
+    if (orphanedAvatarId) {
+      await this.deleteAsset(environment, orphanedAvatarId);
     }
 
     if (!polling) {

@@ -58,6 +58,9 @@ const renderOutputs = async (
   filters.documentType?.forEach((filter) => {
     urlParams.append('documentType', filter);
   });
+  filters.source?.forEach((filter) => {
+    urlParams.append('documentType', filter);
+  });
   const search = urlParams.toString();
   const pathname = network({}).users({}).user({ userId }).outputs({}).$;
   const initialEntry = search

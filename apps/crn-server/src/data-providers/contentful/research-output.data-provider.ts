@@ -128,12 +128,11 @@ export class ResearchOutputContentfulDataProvider
       }
 
       if (filter.source) {
-        if (Array.isArray(filter.source)) {
-          where.OR = getResearchOutputSourceFilter(filter.source);
-        } else {
-          where.OR = getResearchOutputSourceFilter([filter.source]);
-        }
+        where.OR = getResearchOutputSourceFilter(
+          Array.isArray(filter.source) ? filter.source : [filter.source],
+        );
       }
+
       if (filter.title) {
         where.title = filter.title;
       }

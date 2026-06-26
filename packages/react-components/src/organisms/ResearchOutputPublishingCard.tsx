@@ -115,9 +115,7 @@ const ResearchOutputFormSharingCard: React.FC<
       <LabeledDateField
         title={'Date made public'}
         subtitle={'(required)'}
-        description={
-          'This should be the date your output was shared publicly on its repository.'
-        }
+        description={'The date this output first became publicly available.'}
         required
         enabled={!isImportedFromManuscript}
         onChange={onChangePublishDate}

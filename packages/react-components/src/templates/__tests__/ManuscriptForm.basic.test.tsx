@@ -676,7 +676,7 @@ describe('Manuscript form', () => {
     expect(await findByLabelText(/Preprint Date/i)).toBeDisabled();
     expect(
       getByText(
-        'The date that version 1 of this manuscript was originally uploaded as a preprint to a repository. Set on a previous version and cannot be edited.',
+        'The date that version 1 of this manuscript was originally uploaded as a preprint to a repository. This date cannot be edited.',
       ),
     ).toBeInTheDocument();
   });
@@ -695,9 +695,27 @@ describe('Manuscript form', () => {
     expect(await findByLabelText(/Publication Date/i)).toBeDisabled();
     expect(
       getByText(
-        'The date that this manuscript was originally published (i.e., not the preprint date). Set on a previous version and cannot be edited.',
+        'The date that this manuscript was originally published (i.e., not the preprint date). This date cannot be edited.',
       ),
     ).toBeInTheDocument();
+  });
+
+  it('disables both date fields in edit mode when they are already populated', async () => {
+    const { findByLabelText } = await renderManuscriptForm({
+      ...defaultProps,
+      preprintDate: '2022-01-03T00:00:00.000Z',
+      publicationDate: '2023-04-05T00:00:00.000Z',
+      manuscriptId: 'test-id',
+      resubmitManuscript: false,
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(
+      await findByLabelText(/version 1 of this manuscript/i),
+    ).toBeDisabled();
+    expect(await findByLabelText(/originally published/i)).toBeDisabled();
   });
 
   it('displays both date fields when both are already populated', async () => {

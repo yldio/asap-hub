@@ -212,43 +212,7 @@ describe('/discussions/ route', () => {
         reply,
         manuscriptId,
         notificationList,
-        undefined,
       );
-    });
-
-    test('Should forward the workspaceType to the controller', async () => {
-      const discussionId = 'discussion-id-1';
-      const text = 'test reply';
-      const manuscriptId = 'manuscript-id';
-
-      const reply: Reply = { text, isOpenScienceMember: false };
-
-      await supertest(app).patch(`/discussions/${discussionId}`).send({
-        text,
-        manuscriptId,
-        workspaceType: 'project',
-      });
-
-      expect(discussionControllerMock.update).toHaveBeenCalledWith(
-        discussionId,
-        'user-id-0',
-        reply,
-        manuscriptId,
-        '',
-        'project',
-      );
-    });
-
-    test('Should reject an invalid workspaceType', async () => {
-      const response = await supertest(app)
-        .patch(`/discussions/discussion-id-1`)
-        .send({
-          text: 'test reply',
-          manuscriptId: 'manuscript-id',
-          workspaceType: 'invalid',
-        });
-
-      expect(response.status).toBe(400);
     });
 
     test('Should accept a string of over 256 characters for the reply', async () => {
@@ -402,39 +366,6 @@ describe('/discussions/ route', () => {
       });
 
       expect(response.body).toEqual(discussionResponse);
-    });
-
-    test('Should forward the workspaceType to the controller', async () => {
-      discussionControllerMock.create.mockResolvedValueOnce(discussionResponse);
-
-      await supertest(app).post(`/discussions`).send({
-        manuscriptId: 'manuscript-id',
-        title: 'A good title',
-        text: 'A good message',
-        notificationList: 'user1,user2',
-        workspaceType: 'project',
-      });
-
-      expect(discussionControllerMock.create).toHaveBeenCalledWith(
-        'user-id-0',
-        'manuscript-id',
-        'A good title',
-        'A good message',
-        undefined,
-        'user1,user2',
-        'project',
-      );
-    });
-
-    test('Should return a 400 error for an invalid workspaceType', async () => {
-      const response = await supertest(app).post(`/discussions`).send({
-        manuscriptId: 'manuscript-id',
-        title: 'A good title',
-        text: 'A good message',
-        workspaceType: 'invalid',
-      });
-
-      expect(response.status).toBe(400);
     });
 
     test('Should not accept discussion title over 100 characters', async () => {

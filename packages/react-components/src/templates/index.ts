@@ -42,6 +42,7 @@ export {
 } from './LoadingLayout';
 export { default as ManuscriptForm } from './ManuscriptForm';
 export { default as ManuscriptOutputSelection } from './ManuscriptOutputSelection';
+export { default as ManuscriptWorkspaceUnavailablePage } from './ManuscriptWorkspaceUnavailablePage';
 export { default as NetworkInterestGroups } from './NetworkInterestGroups';
 export { default as NetworkPage } from './NetworkPage';
 export { default as NetworkPageHeader } from './NetworkPageHeader';

@@ -58,15 +58,8 @@ export class DiscussionContentfulDataProvider
 
   async create(input: DiscussionCreateDataObject): Promise<string> {
     const environment = await this.getRestClient();
-    const {
-      userId,
-      manuscriptId,
-      title,
-      text,
-      files,
-      notificationList,
-      workspaceType,
-    } = input;
+    const { userId, manuscriptId, title, text, files, notificationList } =
+      input;
 
     const messageId = await createAndPublishMessage(environment, {
       text,
@@ -109,7 +102,6 @@ export class DiscussionContentfulDataProvider
         id: discussionEntry.sys.id,
         userName: `${user.fields?.firstName?.['en-US']} ${user.fields?.lastName?.['en-US']}`,
       },
-      workspaceType,
     );
 
     return discussionEntry.sys.id;
@@ -119,8 +111,7 @@ export class DiscussionContentfulDataProvider
     const environment = await this.getRestClient();
     const discussion = await environment.getEntry(id);
 
-    const { notificationList, reply, manuscriptId, userId, workspaceType } =
-      update;
+    const { notificationList, reply, manuscriptId, userId } = update;
 
     if (reply?.text) {
       const publishedReplyId = await createAndPublishMessage(environment, {
@@ -155,7 +146,6 @@ export class DiscussionContentfulDataProvider
             id,
             userName: `${user.fields.firstName['en-US']} ${user.fields.lastName['en-US']}`,
           },
-          workspaceType,
         );
       }
     } else {

@@ -15,7 +15,6 @@ import {
   emailHeaderLinkUrl,
   emailNotificationMapping,
   EmailTriggerAction,
-  WorkspaceType,
 } from '@asap-hub/model';
 import { cleanArray } from '@asap-hub/server-common';
 import * as postmark from 'postmark';
@@ -27,6 +26,7 @@ import {
   postmarkServerToken,
 } from '../config';
 import logger from '../utils/logger';
+import { getManuscriptComplianceRedirectUrl } from '../utils/manuscript-workspace-url';
 import { getCommaAndString } from '../utils/text';
 import { getManuscriptVersionUID } from './contentful/manuscript.data-provider';
 
@@ -48,28 +48,6 @@ type TemplateModel = {
     submitterName: string;
     link: string;
   };
-};
-
-const projectTypeUrlSegment: Record<string, string> = {
-  'Discovery Project': 'discovery',
-  'Resource Project': 'resource',
-  'Trainee Project': 'trainee',
-};
-
-const getProjectWorkspaceUrl = (
-  project:
-    | {
-        sys?: { id?: string | null } | null;
-        projectType?: string | null;
-      }
-    | null
-    | undefined,
-): string | null => {
-  const segment = project?.projectType
-    ? projectTypeUrlSegment[project.projectType]
-    : undefined;
-  if (!segment || !project?.sys?.id) return null;
-  return `${origin}/projects/${segment}/${project.sys.id}/workspace`;
 };
 
 type DiscussionNotificationInfo = {
@@ -107,7 +85,6 @@ export class EmailNotificationService {
     manuscriptId: string,
     emailList: string,
     discussionDetails?: DiscussionNotificationInfo,
-    workspaceType?: WorkspaceType,
   ): Promise<void> {
     const isProduction = environmentName === 'production';
     const isDiscussionCreatedAction = [
@@ -176,15 +153,11 @@ export class EmailNotificationService {
     }
 
     const teamWorkspaceUrl = `${origin}/network/teams/${submittingTeam?.sys.id}/workspace`;
-    const projectWorkspaceUrl = getProjectWorkspaceUrl(project);
-    // The discussion link points to the manuscript's own workspace. When the
-    // reply came from the project workspace we prefer it, otherwise we fall
-    // back to the team workspace the manuscript was submitted from.
-    const baseWorkspaceUrl =
-      workspaceType === 'project' && projectWorkspaceUrl
-        ? projectWorkspaceUrl
-        : teamWorkspaceUrl;
-    const discussionLink = `${baseWorkspaceUrl}?tab=discussions#${manuscriptId}`;
+    const discussionLink = getManuscriptComplianceRedirectUrl(
+      manuscriptId,
+      origin,
+      { tab: 'discussions' },
+    );
 
     const notificationData = (
       recipientType: 'open_science_team' | 'grantee',

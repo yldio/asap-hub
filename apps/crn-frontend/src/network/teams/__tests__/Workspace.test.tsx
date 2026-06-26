@@ -215,7 +215,6 @@ describe('Manuscript', () => {
           notificationList: undefined,
           text: 'test message',
           title: 'Test',
-          workspaceType: 'team',
         },
         'Bearer access_token',
       );
@@ -301,7 +300,6 @@ describe('Manuscript', () => {
           text: 'test message',
           manuscriptId: 'manuscript_0',
           files: [],
-          workspaceType: 'team',
         },
       );
     });

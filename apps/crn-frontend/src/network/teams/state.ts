@@ -12,12 +12,13 @@ import {
   ManuscriptPostRequest,
   ManuscriptPutRequest,
   ManuscriptResponse,
+  ManuscriptWorkspaceTab,
+  ManuscriptWorkspaceUrlResponse,
   PartialManuscriptResponse,
   ResearchOutputResponse,
   TeamListItemResponse,
   TeamPatchRequest,
   TeamResponse,
-  WorkspaceType,
 } from '@asap-hub/model';
 import { useCurrentUserCRN } from '@asap-hub/react-context';
 import { useCallback, useState } from 'react';
@@ -42,6 +43,7 @@ import {
   createPreprintResearchOutput,
   downloadFullComplianceDataset,
   getManuscript,
+  getManuscriptWorkspaceUrl,
   getManuscriptsByIds,
   getManuscripts,
   getManuscriptVersions,
@@ -214,6 +216,51 @@ export const useInvalidateManuscriptIndex = () => {
 
 export const useManuscriptById = (id: string) =>
   useRecoilState(manuscriptState(id));
+
+type ManuscriptWorkspaceUrlParams = {
+  manuscriptId: string;
+  tab?: ManuscriptWorkspaceTab;
+  projectWorkspaceEnabled?: boolean;
+};
+
+const fetchManuscriptWorkspaceUrlState = selectorFamily<
+  ManuscriptWorkspaceUrlResponse | undefined,
+  ManuscriptWorkspaceUrlParams
+>({
+  key: 'fetchManuscriptWorkspaceUrl',
+  get:
+    ({ manuscriptId, tab, projectWorkspaceEnabled }) =>
+    async ({ get }) => {
+      const authorization = get(authorizationState);
+      return getManuscriptWorkspaceUrl(
+        manuscriptId,
+        authorization,
+        tab,
+        projectWorkspaceEnabled,
+      );
+    },
+});
+
+const manuscriptWorkspaceUrlState = atomFamily<
+  ManuscriptWorkspaceUrlResponse | undefined,
+  ManuscriptWorkspaceUrlParams
+>({
+  key: 'manuscriptWorkspaceUrl',
+  default: fetchManuscriptWorkspaceUrlState,
+});
+
+export const useManuscriptWorkspaceUrl = (
+  manuscriptId: string,
+  tab?: ManuscriptWorkspaceTab,
+  projectWorkspaceEnabled?: boolean,
+) =>
+  useRecoilValue(
+    manuscriptWorkspaceUrlState({
+      manuscriptId,
+      tab,
+      projectWorkspaceEnabled,
+    }),
+  );
 
 const batchManuscriptsResolvedState = atomFamily<boolean, string>({
   key: 'batchManuscriptsResolved',
@@ -565,7 +612,6 @@ export const useCreateDiscussion = () => {
     title: string,
     text: string,
     files?: ManuscriptFileResponse[],
-    workspaceType?: WorkspaceType,
   ): Promise<string | undefined> => {
     const notificationList = getOverrides()
       .COMPLIANCE_NOTIFICATION_LIST as string;
@@ -578,7 +624,6 @@ export const useCreateDiscussion = () => {
           text,
           files,
           notificationList,
-          workspaceType,
         },
         authorization,
       );

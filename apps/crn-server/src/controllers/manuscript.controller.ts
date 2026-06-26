@@ -11,7 +11,10 @@ import {
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptResubmitControllerDataObject,
+  ManuscriptWorkspaceTab,
+  ManuscriptWorkspaceUrlResponse,
   ResearchOutputDataObject,
+  UserResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
 
@@ -20,6 +23,10 @@ import {
   ManuscriptDataProvider,
 } from '../data-providers/types';
 import { ExternalAuthorDataProvider } from '../data-providers/types/external-authors.data-provider.types';
+import {
+  getManuscriptWorkspaceContextFromResponse,
+  resolveManuscriptWorkspacePath,
+} from '../utils/manuscript-workspace-url';
 
 export default class ManuscriptController {
   constructor(
@@ -45,6 +52,48 @@ export default class ManuscriptController {
     }
 
     return manuscript;
+  }
+
+  async fetchWorkspaceUrl(
+    manuscriptId: string,
+    user: UserResponse,
+    tab?: ManuscriptWorkspaceTab,
+    projectWorkspaceEnabled?: boolean,
+  ): Promise<ManuscriptWorkspaceUrlResponse> {
+    const manuscript = await this.manuscriptDataProvider.fetchById(
+      manuscriptId,
+      user.id,
+    );
+
+    if (!manuscript) {
+      throw new NotFoundError(
+        undefined,
+        `Manuscript with id ${manuscriptId} not found`,
+      );
+    }
+
+    const workspaceContext =
+      getManuscriptWorkspaceContextFromResponse(manuscript);
+
+    if (!workspaceContext) {
+      throw new NotFoundError(
+        undefined,
+        `Unable to resolve workspace for manuscript with id ${manuscriptId}`,
+      );
+    }
+
+    const url = resolveManuscriptWorkspacePath(workspaceContext, user, {
+      tab,
+      projectWorkspaceEnabled,
+    });
+
+    if (!url) {
+      throw Boom.forbidden(
+        'You do not have access to this manuscript workspace',
+      );
+    }
+
+    return { url };
   }
 
   async fetchByIds(

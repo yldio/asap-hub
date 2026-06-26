@@ -43,7 +43,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
     handleCreateDiscussion,
     handleReplyToDiscussion,
     handleMarkDiscussionAsRead,
-  } = useDiscussionHandlers('team');
+  } = useDiscussionHandlers();
   const handleFileUpload = useUploadManuscriptFileViaPresignedUrl();
   const user = useCurrentUserCRN();
   const isTeamMember = !!user?.teams.find(({ id }) => team.id === id);

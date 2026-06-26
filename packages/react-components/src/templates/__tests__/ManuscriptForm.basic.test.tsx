@@ -676,7 +676,7 @@ describe('Manuscript form', () => {
     expect(await findByLabelText(/Preprint Date/i)).toBeDisabled();
     expect(
       getByText(
-        'The date this manuscript was uploaded to a repository as a preprint. Set on a previous version and cannot be edited.',
+        'The date that version 1 of this manuscript was originally uploaded as a preprint to a repository. Set on a previous version and cannot be edited.',
       ),
     ).toBeInTheDocument();
   });
@@ -695,7 +695,7 @@ describe('Manuscript form', () => {
     expect(await findByLabelText(/Publication Date/i)).toBeDisabled();
     expect(
       getByText(
-        'The date this manuscript was published. Set on a previous version and cannot be edited.',
+        'The date that this manuscript was originally published (i.e., not the preprint date). Set on a previous version and cannot be edited.',
       ),
     ).toBeInTheDocument();
   });
@@ -711,8 +711,10 @@ describe('Manuscript form', () => {
       lifecycle: 'Preprint',
     });
 
-    expect(await findByLabelText(/Preprint Date/i)).toBeVisible();
-    expect(await findByLabelText(/Publication Date/i)).toBeVisible();
+    expect(
+      await findByLabelText(/version 1 of this manuscript/i),
+    ).toBeVisible();
+    expect(await findByLabelText(/originally published/i)).toBeVisible();
   });
 
   it('should default to false for isOpenScienceTeamMember if not provided', async () => {

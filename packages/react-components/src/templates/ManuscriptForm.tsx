@@ -443,13 +443,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     resubmitManuscript || (isEditMode && versionsCount > 1);
   const shouldEnablePreprintDateField = !resubmitManuscript || !preprintDate;
   const preprintDateFieldDescription = shouldEnablePreprintDateField
-    ? 'Enter the date this manuscript was uploaded to a repository as a preprint. This cannot be changed later.'
-    : 'The date this manuscript was uploaded to a repository as a preprint. Set on a previous version and cannot be edited.';
+    ? 'Enter the date that version 1 of this manuscript was originally uploaded as a preprint to a repository. This date cannot be changed later.'
+    : 'The date that version 1 of this manuscript was originally uploaded as a preprint to a repository. Set on a previous version and cannot be edited.';
   const shouldEnablePublicationDateField =
     !resubmitManuscript || !publicationDate;
   const publicationDateFieldDescription = shouldEnablePublicationDateField
-    ? 'Enter the date this manuscript was published. This cannot be changed later.'
-    : 'The date this manuscript was published. Set on a previous version and cannot be edited.';
+    ? 'Enter the date that this manuscript was originally published (i.e., not the preprint date). This date cannot be changed later.'
+    : 'The date that this manuscript was originally published (i.e., not the preprint date). Set on a previous version and cannot be edited.';
 
   const methods = useForm<ManuscriptFormData>({
     mode: 'all',

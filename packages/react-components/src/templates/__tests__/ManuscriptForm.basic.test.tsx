@@ -673,7 +673,9 @@ describe('Manuscript form', () => {
     await userEvent.click(lifecycleCombobox);
     await userEvent.type(lifecycleCombobox, 'Preprint{enter}');
 
-    expect(await findByLabelText(/Preprint Date/i)).toBeDisabled();
+    expect(
+      await findByLabelText(/version 1 of this manuscript/i),
+    ).toBeDisabled();
     expect(
       getByText(
         'The date that version 1 of this manuscript was originally uploaded as a preprint to a repository. This date cannot be edited.',
@@ -723,6 +725,23 @@ describe('Manuscript form', () => {
       ...defaultProps,
       preprintDate: '2022-01-03T00:00:00.000Z',
       publicationDate: '2023-04-05T00:00:00.000Z',
+      manuscriptId: 'test-id',
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Preprint',
+    });
+
+    expect(
+      await findByLabelText(/version 1 of this manuscript/i),
+    ).toBeVisible();
+    expect(await findByLabelText(/originally published/i)).toBeVisible();
+  });
+
+  it('displays both date fields when only one of them is populated', async () => {
+    const { findByLabelText } = await renderManuscriptForm({
+      ...defaultProps,
+      preprintDate: '2022-01-03T00:00:00.000Z',
+      publicationDate: undefined,
       manuscriptId: 'test-id',
       isOpenScienceTeamMember: false,
       type: 'Original Research',

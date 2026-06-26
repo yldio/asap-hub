@@ -586,9 +586,10 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
         'publicationDate',
       ),
   );
-  const showPreprintDateField = isPreprintDateRequired || !!preprintDate;
+  const hasAnyDatePopulated = !!preprintDate || !!publicationDate;
+  const showPreprintDateField = isPreprintDateRequired || hasAnyDatePopulated;
   const showPublicationDateField =
-    isPublicationDateRequired || !!publicationDate;
+    isPublicationDateRequired || hasAnyDatePopulated;
 
   const watchFirstAuthors = watch('versions.0.firstAuthors');
   const watchCorrespondingAuthor = watch('versions.0.correspondingAuthor');

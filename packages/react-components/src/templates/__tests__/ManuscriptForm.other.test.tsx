@@ -154,6 +154,7 @@ describe('authors', () => {
               type="Original Research"
               lifecycle="Publication"
               preprintDate="2022-01-03T00:00:00.000Z"
+              publicationDate="2022-01-03T00:00:00.000Z"
               url="http://example.com"
               preprintDoi="10.4444/test"
               publicationDoi="10.4467/test"
@@ -225,6 +226,7 @@ describe('authors', () => {
                 type="Original Research"
                 lifecycle="Publication"
                 preprintDate="2022-01-03T00:00:00.000Z"
+                publicationDate="2022-01-03T00:00:00.000Z"
                 url="http://example.com"
                 preprintDoi="10.4444/test"
                 publicationDoi="10.4467/test"
@@ -305,6 +307,7 @@ describe('authors', () => {
                 type="Original Research"
                 lifecycle="Publication"
                 preprintDate="2022-01-03T00:00:00.000Z"
+                publicationDate="2022-01-03T00:00:00.000Z"
                 url="http://example.com"
                 preprintDoi="10.4444/test"
                 publicationDoi="10.4467/test"
@@ -391,7 +394,8 @@ describe('renders the necessary fields', () => {
   const fieldInputMapping = {
     preprintDoi: 'Preprint DOI',
     publicationDoi: 'Publication DOI',
-    preprintDate: 'Date first made public',
+    preprintDate: 'Preprint Date',
+    publicationDate: 'Publication Date',
     manuscriptFile: 'Upload the main manuscript file',
     keyResourceTable: 'Upload a key resource table',
     additionalFiles: 'Upload any additional files',
@@ -1250,6 +1254,7 @@ it('user can add teams', async () => {
           type="Original Research"
           lifecycle="Publication"
           preprintDate="2022-01-03T00:00:00.000Z"
+          publicationDate="2022-01-03T00:00:00.000Z"
           url="http://example.com"
           preprintDoi="10.4444/test"
           publicationDoi="10.4467/test"
@@ -1312,6 +1317,7 @@ it('user can add labs', async () => {
           type="Original Research"
           lifecycle="Publication"
           preprintDate="2022-01-03T00:00:00.000Z"
+          publicationDate="2022-01-03T00:00:00.000Z"
           url="http://example.com"
           preprintDoi="10.4444/test"
           publicationDoi="10.4467/test"

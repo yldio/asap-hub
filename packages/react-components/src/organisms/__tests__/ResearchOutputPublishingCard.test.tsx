@@ -37,16 +37,12 @@ it('conditionally shows date published field', async () => {
   const { rerender } = render(
     <ResearchOutputPublishingCard {...props} sharingStatus={'Network Only'} />,
   );
-  expect(
-    screen.queryByLabelText(/public repository published date/i),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByLabelText(/date made public/i)).not.toBeInTheDocument();
 
   rerender(
     <ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />,
   );
-  expect(
-    screen.queryByLabelText(/public repository published date/i),
-  ).toBeVisible();
+  expect(screen.queryByLabelText(/date made public/i)).toBeVisible();
 });
 
 it('triggers an on change for date published', async () => {
@@ -61,7 +57,7 @@ it('triggers an on change for date published', async () => {
   );
 
   await userEvent.type(
-    screen.getByLabelText(/public repository published date/i),
+    screen.getByLabelText(/date made public/i),
     '2020-12-02',
   );
   expect(onChangeFn).toHaveBeenCalledWith(new Date('2020-12-02'));
@@ -78,7 +74,7 @@ it('shows the custom error message for a date in the future', async () => {
       publishDate={startOfTomorrow()}
     />,
   );
-  const dateInput = screen.getByLabelText(/public repository published date/i);
+  const dateInput = screen.getByLabelText(/date made public/i);
   await userEvent.click(dateInput);
   await userEvent.tab();
   expect(
@@ -114,4 +110,26 @@ describe('getPublishDateValidationMessage returns', () => {
       'Date published should be complete or removed',
     );
   });
+
+  it('a message when the date is missing', () => {
+    expect(
+      getPublishDateValidationMessage({ ...e, valueMissing: true }),
+    ).toEqual('Please enter the date made public.');
+  });
+});
+
+it('disables the date field when imported from a manuscript', () => {
+  render(
+    <ResearchOutputPublishingCard
+      {...props}
+      sharingStatus={'Public'}
+      isImportedFromManuscript
+    />,
+  );
+  expect(screen.getByLabelText(/date made public/i)).toBeDisabled();
+});
+
+it('keeps the date field enabled when not imported from a manuscript', () => {
+  render(<ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />);
+  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
 });

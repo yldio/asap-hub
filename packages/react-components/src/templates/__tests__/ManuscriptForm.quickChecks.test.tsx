@@ -166,6 +166,7 @@ describe('QuickCheck logic', () => {
               publicationDoi="10.0777"
               lifecycle="Publication"
               preprintDate="2022-01-03T00:00:00.000Z"
+              publicationDate="2022-01-03T00:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -192,6 +193,7 @@ describe('QuickCheck logic', () => {
         impact: 'impact-id-1',
         layImpactStatement: 'manuscript impact statement',
         preprintDate: '2022-01-03T00:00:00.000Z',
+        publicationDate: '2022-01-03T00:00:00.000Z',
         categories: ['category-id-1'],
         versions: [
           {
@@ -279,6 +281,7 @@ describe('QuickCheck logic', () => {
               publicationDoi="10.0777"
               lifecycle="Publication"
               preprintDate="2022-01-03T00:00:00.000Z"
+              publicationDate="2022-01-03T00:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -305,6 +308,7 @@ describe('QuickCheck logic', () => {
         impact: 'impact-id-1',
         layImpactStatement: 'manuscript impact statement',
         preprintDate: '2022-01-03T00:00:00.000Z',
+        publicationDate: '2022-01-03T00:00:00.000Z',
         categories: ['category-id-1'],
         versions: [
           {
@@ -387,6 +391,7 @@ describe('QuickCheck logic', () => {
               publicationDoi="10.0777"
               lifecycle="Publication"
               preprintDate="2022-01-03T00:00:00.000Z"
+              publicationDate="2022-01-03T00:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -426,6 +431,7 @@ describe('QuickCheck logic', () => {
           layImpactStatement: 'manuscript impact statement',
           categories: ['category-id-1'],
           preprintDate: '2022-01-03T00:00:00.000Z',
+          publicationDate: '2022-01-03T00:00:00.000Z',
           versions: [
             expect.objectContaining({
               acknowledgedGrantNumber: 'Yes',

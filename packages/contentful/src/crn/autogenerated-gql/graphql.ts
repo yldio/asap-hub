@@ -32409,7 +32409,12 @@ export type FetchManuscriptVersionByIdQuery = {
           Maybe<
             Pick<
               Manuscripts,
-              'title' | 'url' | 'count' | 'layImpactStatement' | 'preprintDate'
+              | 'title'
+              | 'url'
+              | 'count'
+              | 'layImpactStatement'
+              | 'preprintDate'
+              | 'publicationDate'
             > & {
               sys: Pick<Sys, 'id'>;
               relatedResearchOutput?: Maybe<{ sys: Pick<Sys, 'id'> }>;
@@ -32668,6 +32673,7 @@ export type FetchComplianceManuscriptVersionsQuery = {
                       | 'status'
                       | 'layImpactStatement'
                       | 'preprintDate'
+                      | 'publicationDate'
                       | 'apcRequested'
                       | 'apcAmountRequested'
                       | 'apcCoverageRequestStatus'
@@ -32747,7 +32753,12 @@ export type FetchVersionsByManuscriptQuery = {
         Maybe<
           Pick<
             Manuscripts,
-            'title' | 'url' | 'count' | 'layImpactStatement' | 'preprintDate'
+            | 'title'
+            | 'url'
+            | 'count'
+            | 'layImpactStatement'
+            | 'preprintDate'
+            | 'publicationDate'
           > & {
             sys: Pick<Sys, 'id'>;
             relatedResearchOutput?: Maybe<{ sys: Pick<Sys, 'id'> }>;
@@ -33404,6 +33415,7 @@ export type ManuscriptsContentFragment = Pick<
   | 'declinedReason'
   | 'layImpactStatement'
   | 'preprintDate'
+  | 'publicationDate'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
   project?: Maybe<
@@ -33446,6 +33458,7 @@ export type FetchManuscriptByIdQuery = {
       | 'declinedReason'
       | 'layImpactStatement'
       | 'preprintDate'
+      | 'publicationDate'
     > & {
       teamsCollection?: Maybe<{
         items: Array<
@@ -42663,6 +42676,7 @@ export const ManuscriptsContentFragmentDoc = {
             name: { kind: 'Name', value: 'layImpactStatement' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'preprintDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'publicationDate' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'categoriesCollection' },
@@ -58280,6 +58294,13 @@ export const FetchManuscriptVersionByIdDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
+                                      value: 'publicationDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
                                       value: 'categoriesCollection',
                                     },
                                     arguments: [
@@ -59168,6 +59189,13 @@ export const FetchComplianceManuscriptVersionsDocument = {
                                           kind: 'Field',
                                           name: {
                                             kind: 'Name',
+                                            value: 'publicationDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
                                             value: 'assignedUsersCollection',
                                           },
                                           arguments: [
@@ -59922,6 +59950,10 @@ export const FetchVersionsByManuscriptDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'preprintDate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publicationDate' },
                       },
                       {
                         kind: 'Field',

@@ -673,12 +673,46 @@ describe('Manuscript form', () => {
     await userEvent.click(lifecycleCombobox);
     await userEvent.type(lifecycleCombobox, 'Preprint{enter}');
 
-    expect(await findByLabelText(/Date first made public/i)).toBeDisabled();
+    expect(await findByLabelText(/Preprint Date/i)).toBeDisabled();
     expect(
       getByText(
-        'The date this manuscript was first shared publicly. Set on a previous version and cannot be edited.',
+        'The date this manuscript was uploaded to a repository as a preprint. Set on a previous version and cannot be edited.',
       ),
     ).toBeInTheDocument();
+  });
+
+  it('should disable publicationDate field if user is resubmitting and publicationDate has already been provided', async () => {
+    const { findByLabelText, getByText } = await renderManuscriptForm({
+      ...defaultProps,
+      publicationDate: '2022-01-03T00:00:00.000Z',
+      resubmitManuscript: true,
+      manuscriptId: 'test-id',
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(await findByLabelText(/Publication Date/i)).toBeDisabled();
+    expect(
+      getByText(
+        'The date this manuscript was published. Set on a previous version and cannot be edited.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('displays both date fields when both are already populated', async () => {
+    const { findByLabelText } = await renderManuscriptForm({
+      ...defaultProps,
+      preprintDate: '2022-01-03T00:00:00.000Z',
+      publicationDate: '2023-04-05T00:00:00.000Z',
+      manuscriptId: 'test-id',
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Preprint',
+    });
+
+    expect(await findByLabelText(/Preprint Date/i)).toBeVisible();
+    expect(await findByLabelText(/Publication Date/i)).toBeVisible();
   });
 
   it('should default to false for isOpenScienceTeamMember if not provided', async () => {

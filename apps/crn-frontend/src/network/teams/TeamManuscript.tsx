@@ -173,6 +173,7 @@ const TeamManuscript: React.FC<TeamManuscriptProps> = ({
           impact={selectedImpact}
           layImpactStatement={manuscript?.layImpactStatement}
           preprintDate={manuscript?.preprintDate}
+          publicationDate={manuscript?.publicationDate}
           categories={selectedCategories}
           firstAuthors={convertAuthorsToSelectOptions(manuscriptFirstAuthors)}
           correspondingAuthor={convertAuthorsToSelectOptions(

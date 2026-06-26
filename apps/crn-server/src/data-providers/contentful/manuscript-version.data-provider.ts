@@ -356,6 +356,7 @@ const parseGraphQLManucriptVersion = (
         ? latestVersion?.preprintDoi
         : latestVersion?.publicationDoi) || undefined,
     preprintDate: manuscript.preprintDate || undefined,
+    publicationDate: manuscript.publicationDate || undefined,
   };
 };
 
@@ -468,6 +469,7 @@ const parseGraphQLComplianceManuscriptVersion = (
     impact: manuscript?.impact?.name || '',
     layImpactStatement: manuscript?.layImpactStatement || '',
     preprintDate: manuscript?.preprintDate || '',
+    publicationDate: manuscript?.publicationDate || '',
     categories: cleanArray(manuscript?.categoriesCollection?.items)
       .map((category) => category.name)
       .join(', '),

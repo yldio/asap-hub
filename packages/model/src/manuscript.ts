@@ -176,6 +176,7 @@ export const manuscriptFormFieldsMapping: Record<
           | 'versionUID'
         >
       | 'preprintDate'
+      | 'publicationDate'
     >
   >
 > = {
@@ -226,7 +227,7 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'availabilityStatement',
       'keyResourceTable',
-      'preprintDate',
+      'publicationDate',
     ],
     'Publication with addendum or corrigendum': [
       'preprintDoi',
@@ -240,7 +241,7 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'availabilityStatement',
       'keyResourceTable',
-      'preprintDate',
+      'publicationDate',
     ],
     Other: [
       'otherDetails',
@@ -271,14 +272,14 @@ export const manuscriptFormFieldsMapping: Record<
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
-      'preprintDate',
+      'publicationDate',
     ],
     'Publication with addendum or corrigendum': [
       'publicationDoi',
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
-      'preprintDate',
+      'publicationDate',
     ],
     Other: [
       'otherDetails',
@@ -347,6 +348,7 @@ export type ManuscriptDataObject = {
   id: string;
   title: string;
   preprintDate?: string;
+  publicationDate?: string;
   url?: string;
   status?: ManuscriptStatus;
   teamId?: string;
@@ -389,6 +391,7 @@ export type ManuscriptPostCreateRequest = Pick<
   | 'projectId'
   | 'url'
   | 'preprintDate'
+  | 'publicationDate'
   | 'layImpactStatement'
 > & {
   eligibilityReasons: string[];
@@ -504,6 +507,7 @@ export type ManuscriptFormData = Pick<
   'title' | 'teamId' | 'eligibilityReasons' | 'url' | 'layImpactStatement'
 > & {
   preprintDate?: string;
+  publicationDate?: string;
   impact: MultiselectOption;
   categories: MultiselectOption[];
   versions: (Pick<
@@ -752,6 +756,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
       },
       notificationList: { type: 'string', nullable: true },
       preprintDate: { type: 'string', nullable: true },
+      publicationDate: { type: 'string', nullable: true },
       impact: { type: 'string', nullable: true },
       layImpactStatement: { type: 'string' },
       categories: { type: 'array', items: { type: 'string' }, nullable: true },
@@ -803,6 +808,7 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
       impact: { type: 'string', nullable: true },
       categories: { type: 'array', items: { type: 'string' }, nullable: true },
       preprintDate: { type: 'string', nullable: true },
+      publicationDate: { type: 'string', nullable: true },
       layImpactStatement: { type: 'string', nullable: true },
     },
     additionalProperties: false,
@@ -1015,6 +1021,7 @@ export type ManuscriptVersionResponse = {
   doi?: string;
   researchOutputId?: string;
   preprintDate?: string;
+  publicationDate?: string;
 };
 
 export type ListManuscriptVersionResponse =
@@ -1080,6 +1087,7 @@ export type ManuscriptVersionExport = {
   teams: string;
   status: string;
   preprintDate?: string;
+  publicationDate?: string;
   apcRequested?: string;
   apcAmountRequested?: string;
   apcCoverageRequestStatus?: string;

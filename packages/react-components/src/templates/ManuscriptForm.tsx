@@ -268,7 +268,11 @@ type ManuscriptFormProps = Omit<
   Partial<
     Pick<
       ManuscriptPostRequest,
-      'title' | 'url' | 'preprintDate' | 'layImpactStatement'
+      | 'title'
+      | 'url'
+      | 'preprintDate'
+      | 'publicationDate'
+      | 'layImpactStatement'
     >
   > & {
     isOpenScienceTeamMember?: boolean;
@@ -347,6 +351,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   isOpenScienceTeamMember,
   title,
   preprintDate,
+  publicationDate,
   url,
   impact,
   layImpactStatement,
@@ -438,8 +443,13 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     resubmitManuscript || (isEditMode && versionsCount > 1);
   const shouldEnablePreprintDateField = !resubmitManuscript || !preprintDate;
   const preprintDateFieldDescription = shouldEnablePreprintDateField
-    ? 'Enter the date this manuscript was first shared publicly, whether as a preprint or publication. This cannot be changed later.'
-    : 'The date this manuscript was first shared publicly. Set on a previous version and cannot be edited.';
+    ? 'Enter the date this manuscript was uploaded to a repository as a preprint. This cannot be changed later.'
+    : 'The date this manuscript was uploaded to a repository as a preprint. Set on a previous version and cannot be edited.';
+  const shouldEnablePublicationDateField =
+    !resubmitManuscript || !publicationDate;
+  const publicationDateFieldDescription = shouldEnablePublicationDateField
+    ? 'Enter the date this manuscript was published. This cannot be changed later.'
+    : 'The date this manuscript was published. Set on a previous version and cannot be edited.';
 
   const methods = useForm<ManuscriptFormData>({
     mode: 'all',
@@ -447,6 +457,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
       title: title || '',
       url: url || undefined,
       preprintDate: preprintDate ? preprintDate.slice(0, 10) : '',
+      publicationDate: publicationDate ? publicationDate.slice(0, 10) : '',
       layImpactStatement: layImpactStatement || '',
       impact,
       categories: categories || [],
@@ -561,6 +572,24 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
 
   const watchType = watch('versions.0.type');
   const watchLifecycle = watch('versions.0.lifecycle');
+
+  const isPreprintDateRequired = Boolean(
+    watchType &&
+      watchLifecycle &&
+      manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
+        'preprintDate',
+      ),
+  );
+  const isPublicationDateRequired = Boolean(
+    watchType &&
+      watchLifecycle &&
+      manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
+        'publicationDate',
+      ),
+  );
+  const showPreprintDateField = isPreprintDateRequired || !!preprintDate;
+  const showPublicationDateField =
+    isPublicationDateRequired || !!publicationDate;
 
   const watchFirstAuthors = watch('versions.0.firstAuthors');
   const watchCorrespondingAuthor = watch('versions.0.correspondingAuthor');
@@ -942,6 +971,9 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     const preprintDateValue = data.preprintDate
       ? new Date(data.preprintDate).toISOString()
       : undefined;
+    const publicationDateValue = data.publicationDate
+      ? new Date(data.publicationDate).toISOString()
+      : undefined;
 
     if (versionData?.type && versionData.lifecycle) {
       const {
@@ -986,6 +1018,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             ...data,
             url: urlValue,
             preprintDate: preprintDateValue,
+            publicationDate: publicationDateValue,
             impact: data.impact?.value,
             categories:
               data.categories?.map((category) => category.value) || [],
@@ -1004,6 +1037,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             url: urlValue,
             impact: data.impact?.value,
             preprintDate: preprintDateValue,
+            publicationDate: publicationDateValue,
             categories:
               data.categories?.map((category) => category.value) || [],
             layImpactStatement: data.layImpactStatement,
@@ -1021,6 +1055,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
             url: urlValue,
             impact: data.impact?.value,
             preprintDate: preprintDateValue,
+            publicationDate: publicationDateValue,
             categories:
               data.categories?.map((category) => category.value) || [],
             layImpactStatement: data.layImpactStatement,
@@ -1219,37 +1254,67 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
               </Suspense>
             )}
 
-            {watchType &&
-              watchLifecycle &&
-              manuscriptFormFieldsMapping[watchType][watchLifecycle].includes(
-                'preprintDate',
-              ) && (
-                <Suspense
-                  fallback={<div>Loading date first made public...</div>}
-                >
-                  <Controller
-                    name="preprintDate"
-                    control={control}
-                    rules={{
-                      required: 'This field is required.',
-                    }}
-                    render={({
-                      field: { value, onChange },
-                      fieldState: { error },
-                    }) => (
-                      <LabeledDateInput
-                        title="Date first made public"
-                        subtitle="(required)"
-                        description={preprintDateFieldDescription}
-                        onChange={onChange}
-                        value={value}
-                        enabled={!isSubmitting && shouldEnablePreprintDateField}
-                        customValidationMessage={error?.message}
-                      />
-                    )}
-                  />
-                </Suspense>
-              )}
+            {showPreprintDateField && (
+              <Suspense fallback={<div>Loading preprint date...</div>}>
+                <Controller
+                  name="preprintDate"
+                  control={control}
+                  rules={{
+                    required: isPreprintDateRequired
+                      ? 'This field is required.'
+                      : false,
+                  }}
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <LabeledDateInput
+                      title="Preprint Date"
+                      subtitle={
+                        isPreprintDateRequired ? '(required)' : '(optional)'
+                      }
+                      description={preprintDateFieldDescription}
+                      onChange={onChange}
+                      value={value}
+                      enabled={!isSubmitting && shouldEnablePreprintDateField}
+                      customValidationMessage={error?.message}
+                    />
+                  )}
+                />
+              </Suspense>
+            )}
+
+            {showPublicationDateField && (
+              <Suspense fallback={<div>Loading publication date...</div>}>
+                <Controller
+                  name="publicationDate"
+                  control={control}
+                  rules={{
+                    required: isPublicationDateRequired
+                      ? 'This field is required.'
+                      : false,
+                  }}
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <LabeledDateInput
+                      title="Publication Date"
+                      subtitle={
+                        isPublicationDateRequired ? '(required)' : '(optional)'
+                      }
+                      description={publicationDateFieldDescription}
+                      onChange={onChange}
+                      value={value}
+                      enabled={
+                        !isSubmitting && shouldEnablePublicationDateField
+                      }
+                      customValidationMessage={error?.message}
+                    />
+                  )}
+                />
+              </Suspense>
+            )}
 
             <Controller
               name="url"

@@ -1,5 +1,10 @@
 import { RESEARCH_OUTPUT_FLOW_IDS } from '@asap-hub/model';
-import { ResolveFlowIdParams, resolveResearchOutputFlowId } from '../util';
+import { createManuscriptVersionResponse } from '@asap-hub/fixtures';
+import {
+  mapManuscriptVersionToResearchOutput,
+  ResolveFlowIdParams,
+  resolveResearchOutputFlowId,
+} from '../util';
 
 describe('resolveResearchOutputFlowId', () => {
   const baseParams: ResolveFlowIdParams = {
@@ -144,4 +149,41 @@ describe('resolveResearchOutputFlowId', () => {
       ).toBe(RESEARCH_OUTPUT_FLOW_IDS.TEAM_DUPLICATE);
     });
   });
+});
+
+describe('mapManuscriptVersionToResearchOutput', () => {
+  it('copies the preprint date over when lifecycle is Preprint', () => {
+    const manuscriptVersion = createManuscriptVersionResponse({
+      lifecycle: 'Preprint',
+      preprintDate: '2023-01-02T00:00:00.000Z',
+      publicationDate: '2024-05-06T00:00:00.000Z',
+    });
+
+    const output = mapManuscriptVersionToResearchOutput(
+      undefined,
+      manuscriptVersion,
+      'Team',
+    );
+
+    expect(output.publishDate).toBe('2023-01-02T00:00:00.000Z');
+  });
+
+  it.each(['Publication', 'Publication with addendum or corrigendum'] as const)(
+    'copies the publication date over when lifecycle is %s',
+    (lifecycle) => {
+      const manuscriptVersion = createManuscriptVersionResponse({
+        lifecycle,
+        preprintDate: '2023-01-02T00:00:00.000Z',
+        publicationDate: '2024-05-06T00:00:00.000Z',
+      });
+
+      const output = mapManuscriptVersionToResearchOutput(
+        undefined,
+        manuscriptVersion,
+        'Team',
+      );
+
+      expect(output.publishDate).toBe('2024-05-06T00:00:00.000Z');
+    },
+  );
 });

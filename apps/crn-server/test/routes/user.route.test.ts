@@ -717,4 +717,34 @@ describe('/users/ route', () => {
       });
     });
   });
+
+  describe('DELETE /users/{user_id}/avatar', () => {
+    const userId = userMock.id;
+
+    test('Should return the results correctly', async () => {
+      userControllerMock.removeAvatar.mockResolvedValueOnce(getUserResponse());
+
+      const response = await supertest(appWithMockedAuth).delete(
+        `/users/${userId}/avatar`,
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(getUserResponse());
+    });
+
+    test('Should call the controller method with the user id', async () => {
+      userControllerMock.removeAvatar.mockResolvedValueOnce(getUserResponse());
+
+      await supertest(appWithMockedAuth).delete(`/users/${userId}/avatar`);
+
+      expect(userControllerMock.removeAvatar).toBeCalledWith(userId);
+    });
+
+    test('Returns 403 when user is changing other user', async () => {
+      const response = await supertest(appWithMockedAuth).delete(
+        '/users/not-me/avatar',
+      );
+      expect(response.status).toBe(403);
+    });
+  });
 });

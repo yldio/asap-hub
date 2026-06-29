@@ -9,6 +9,7 @@ import { network } from '@asap-hub/routing';
 import { Frame, loadInstitutionOptions } from '@asap-hub/frontend-utils';
 
 import { usePatchUserById } from './state';
+import { useManageUserAvatar } from './useManageUserAvatar';
 import countrySuggestions from './country-suggestions';
 
 interface EditingProps {
@@ -21,6 +22,11 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
   const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);
+  // the avatar is committed on form save, immediately followed by patchUser
+  // which refreshes the Auth0 token, so the avatar mutation skips its own refresh
+  const { onImageSelect, onImageRemove } = useManageUserAvatar(user.id, {
+    refreshToken: false,
+  });
 
   return (
     <Routes>
@@ -36,6 +42,8 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
               loadInstitutionOptions={loadInstitutionOptions}
               backHref={backHref}
               onSave={patchUser}
+              onImageSelect={onImageSelect}
+              onImageRemove={onImageRemove}
             />
           </Frame>
         }

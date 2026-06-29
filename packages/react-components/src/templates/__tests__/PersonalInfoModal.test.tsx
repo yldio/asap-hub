@@ -245,3 +245,117 @@ it('triggers the save function', async () => {
     expect(screen.getByText(/save/i).closest('button')).toBeEnabled(),
   );
 });
+
+describe('profile photo', () => {
+  beforeAll(() => {
+    URL.createObjectURL = jest.fn(() => 'blob:preview');
+    URL.revokeObjectURL = jest.fn();
+  });
+
+  const renderWithAvatar = (
+    overrides: Partial<ComponentProps<typeof PersonalInfoModal>> = {},
+  ) => {
+    const onImageSelect = jest.fn();
+    const onImageRemove = jest.fn();
+    const onSave = jest.fn();
+    renderModal(
+      <PersonalInfoModal
+        {...props}
+        onImageSelect={onImageSelect}
+        onImageRemove={onImageRemove}
+        onSave={onSave}
+        {...overrides}
+      />,
+    );
+    return { onImageSelect, onImageRemove, onSave };
+  };
+
+  it('is not shown when no image handlers are provided', async () => {
+    renderModal(<PersonalInfoModal {...props} />);
+    await screen.findByText('First name');
+    expect(screen.queryByText(/profile photo/i)).not.toBeInTheDocument();
+  });
+
+  it('stages an upload as a preview without committing it', async () => {
+    const { onImageSelect } = renderWithAvatar();
+    const file = new File(['avatar'], 'avatar.jpg', { type: 'image/jpeg' });
+
+    await userEvent.upload(
+      screen.getByLabelText(/upload profile photo/i, { selector: 'input' }),
+      file,
+    );
+
+    // the chosen image is previewed but not yet uploaded
+    expect(screen.getByLabelText(/profile picture/i)).toHaveStyle({
+      backgroundImage: `url(blob:preview)`,
+    });
+    expect(onImageSelect).not.toHaveBeenCalled();
+  });
+
+  it('commits a staged upload only when the form is saved', async () => {
+    const { onImageSelect, onSave } = renderWithAvatar();
+    const file = new File(['avatar'], 'avatar.jpg', { type: 'image/jpeg' });
+
+    await userEvent.upload(
+      screen.getByLabelText(/upload profile photo/i, { selector: 'input' }),
+      file,
+    );
+    await userEvent.click(screen.getByText(/save/i));
+
+    expect(onImageSelect).toHaveBeenCalledWith(file);
+    expect(onSave).toHaveBeenCalled();
+  });
+
+  it('stages a removal but only commits it on save', async () => {
+    const { onImageRemove } = renderWithAvatar({
+      avatarUrl: 'https://example.com/a.png',
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: /remove/i }));
+
+    // remove button disappears because there is no longer a previewed avatar
+    expect(
+      screen.queryByRole('button', { name: /remove/i }),
+    ).not.toBeInTheDocument();
+    expect(onImageRemove).not.toHaveBeenCalled();
+
+    await userEvent.click(screen.getByText(/save/i));
+    expect(onImageRemove).toHaveBeenCalled();
+  });
+
+  it('does not commit avatar changes when cancelled', async () => {
+    const { onImageSelect, onImageRemove } = renderWithAvatar({
+      avatarUrl: 'https://example.com/a.png',
+    });
+    const file = new File(['avatar'], 'avatar.jpg', { type: 'image/jpeg' });
+
+    await userEvent.upload(
+      screen.getByLabelText(/upload profile photo/i, { selector: 'input' }),
+      file,
+    );
+    await userEvent.click(screen.getByText(/cancel/i));
+
+    expect(onImageSelect).not.toHaveBeenCalled();
+    expect(onImageRemove).not.toHaveBeenCalled();
+  });
+
+  it('commits only the latest staged change when removed then re-uploaded', async () => {
+    const { onImageSelect, onImageRemove } = renderWithAvatar({
+      avatarUrl: 'https://example.com/a.png',
+    });
+    const file = new File(['avatar'], 'avatar.jpg', { type: 'image/jpeg' });
+
+    // remove the existing photo...
+    await userEvent.click(screen.getByRole('button', { name: /remove/i }));
+    // ...then change your mind and upload a new one before saving
+    await userEvent.upload(
+      screen.getByLabelText(/upload profile photo/i, { selector: 'input' }),
+      file,
+    );
+    await userEvent.click(screen.getByText(/save/i));
+
+    // only the final staged upload is committed, not the intermediate removal
+    expect(onImageSelect).toHaveBeenCalledWith(file);
+    expect(onImageRemove).not.toHaveBeenCalled();
+  });
+});

@@ -57,6 +57,7 @@ import { DocumentNode } from 'graphql';
 import { isTeamRole, parseOrcidWorkFromCMS } from '../transformers';
 import { UserDataProvider } from '../types';
 import { parseResearchTags } from './research-tag.data-provider';
+import logger from '../../utils/logger';
 
 export type QueryUserListItem = NonNullable<
   NonNullable<FetchUsersQuery['usersCollection']>['items'][number]
@@ -334,6 +335,23 @@ export class UserContentfulDataProvider implements UserDataProvider {
     const fields = cleanUser(data);
     const environment = await this.getRestClient();
     const user = await environment.getEntry(id);
+
+    // When the avatar field is being changed (cleared or replaced), keep a
+    // reference to the previously linked asset so it can be deleted from
+    // Contentful once the entry no longer points at it.
+    const previousAvatarId =
+      'avatar' in fields
+        ? (user.fields.avatar?.['en-US']?.sys?.id as string | undefined)
+        : undefined;
+    const newAvatarId =
+      typeof fields.avatar === 'object' && fields.avatar
+        ? (fields.avatar as { sys?: { id?: string } }).sys?.id ?? undefined
+        : undefined;
+    const orphanedAvatarId =
+      previousAvatarId && previousAvatarId !== newAvatarId
+        ? previousAvatarId
+        : undefined;
+
     const patchMethod = suppressConflict
       ? patchAndPublishConflict
       : patchAndPublish;
@@ -341,10 +359,37 @@ export class UserContentfulDataProvider implements UserDataProvider {
       ...fields,
       ...(data.tagIds ? { researchTags: getLinkEntities(data.tagIds) } : {}),
     });
-    if (!result || !polling) {
+
+    // only delete the old asset once the entry update actually applied,
+    // otherwise a suppressed conflict would leave the entry linking a
+    // deleted asset
+    if (!result) {
+      return;
+    }
+
+    if (orphanedAvatarId) {
+      await this.deleteAsset(environment, orphanedAvatarId);
+    }
+
+    if (!polling) {
       return;
     }
     await pollForUpdate(result.sys.publishedVersion);
+  }
+
+  private async deleteAsset(environment: Environment, assetId: string) {
+    try {
+      const asset = await environment.getAsset(assetId);
+      if (asset.isPublished()) {
+        await asset.unpublish();
+      }
+      await asset.delete();
+    } catch (error) {
+      logger.warn(
+        { error, assetId },
+        'Failed to delete avatar asset from Contentful',
+      );
+    }
   }
 }
 
@@ -357,13 +402,15 @@ const cleanUser = ({
       if (key === 'avatar') {
         return {
           ...acc,
-          avatar: {
-            sys: {
-              type: 'Link',
-              linkType: 'Asset',
-              id: value,
-            },
-          },
+          avatar: value
+            ? {
+                sys: {
+                  type: 'Link',
+                  linkType: 'Asset',
+                  id: value,
+                },
+              }
+            : null,
         };
       }
       if (key === 'social') {

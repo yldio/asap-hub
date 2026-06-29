@@ -1,4 +1,5 @@
 import {
+  Asset,
   Entry,
   Environment,
   FETCH_PUBLIC_USERS,
@@ -1299,6 +1300,102 @@ describe('User data provider', () => {
               id: 'abc123',
             },
           },
+        });
+      });
+
+      describe('changing the avatar', () => {
+        const buildAssetMock = (isPublished = true) =>
+          ({
+            isPublished: jest.fn().mockReturnValue(isPublished),
+            unpublish: jest.fn().mockResolvedValue(undefined),
+            delete: jest.fn().mockResolvedValue(undefined),
+          }) as unknown as Asset;
+
+        const entryWithAvatar = () =>
+          getEntry({
+            firstName: { 'en-US': 'Test' },
+            avatar: { 'en-US': { sys: { id: 'asset-1' } } },
+          });
+
+        beforeEach(() => {
+          // replace the parent's default entry with one that has an avatar link
+          environmentMock.getEntry.mockReset();
+          environmentMock.getEntry.mockResolvedValueOnce(entryWithAvatar());
+        });
+
+        test('clears the avatar link when avatar is null', async () => {
+          environmentMock.getAsset.mockResolvedValueOnce(buildAssetMock());
+
+          await userDataProvider.update('123', { avatar: null });
+
+          expect(patchAndPublish).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({ avatar: null }),
+          );
+        });
+
+        test('unpublishes and deletes the previous asset when cleared', async () => {
+          const asset = buildAssetMock();
+          environmentMock.getAsset.mockResolvedValueOnce(asset);
+
+          await userDataProvider.update('123', { avatar: null });
+
+          expect(environmentMock.getAsset).toHaveBeenCalledWith('asset-1');
+          expect(asset.unpublish).toHaveBeenCalled();
+          expect(asset.delete).toHaveBeenCalled();
+        });
+
+        test('deletes the previous asset when the avatar is replaced', async () => {
+          const asset = buildAssetMock();
+          environmentMock.getAsset.mockResolvedValueOnce(asset);
+
+          await userDataProvider.update('123', { avatar: 'asset-2' });
+
+          expect(environmentMock.getAsset).toHaveBeenCalledWith('asset-1');
+          expect(asset.delete).toHaveBeenCalled();
+        });
+
+        test('does not delete the asset when the avatar is unchanged', async () => {
+          await userDataProvider.update('123', { avatar: 'asset-1' });
+
+          expect(environmentMock.getAsset).not.toHaveBeenCalled();
+        });
+
+        test('does not delete any asset when the avatar field is not updated', async () => {
+          await userDataProvider.update('123', { firstName: 'New' });
+
+          expect(environmentMock.getAsset).not.toHaveBeenCalled();
+        });
+
+        test('does not unpublish an unpublished asset', async () => {
+          const asset = buildAssetMock(false);
+          environmentMock.getAsset.mockResolvedValueOnce(asset);
+
+          await userDataProvider.update('123', { avatar: null });
+
+          expect(asset.unpublish).not.toHaveBeenCalled();
+          expect(asset.delete).toHaveBeenCalled();
+        });
+
+        test('does not attempt to delete an asset when none existed', async () => {
+          environmentMock.getEntry.mockReset();
+          environmentMock.getEntry.mockResolvedValueOnce(
+            getEntry({ firstName: { 'en-US': 'Test' } }),
+          );
+
+          await userDataProvider.update('123', { avatar: 'asset-2' });
+
+          expect(environmentMock.getAsset).not.toHaveBeenCalled();
+        });
+
+        test('swallows errors when the asset deletion fails', async () => {
+          environmentMock.getAsset.mockRejectedValueOnce(
+            new Error('asset gone'),
+          );
+
+          await expect(
+            userDataProvider.update('123', { avatar: null }),
+          ).resolves.not.toThrow();
         });
       });
       test('map tag value to a linked resource', async () => {

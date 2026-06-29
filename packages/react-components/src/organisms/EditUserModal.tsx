@@ -75,6 +75,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({
               fullWidth
               onClick={() => asyncWrapper(onSave)}
               enabled={!isSaving}
+              loading={isSaving}
               noMargin
             >
               {buttonText}

@@ -1,10 +1,10 @@
 import { UserResponse } from '@asap-hub/model';
 import { UserProfileContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import { useContext } from 'react';
 import { Avatar, Display, Link, TabLink, StateTag, CopyButton } from '../atoms';
-import { tin } from '../colors';
+import { paper, tin } from '../colors';
 import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
 import { createMailTo } from '../mail';
 import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
@@ -25,28 +25,29 @@ const bigSizeQuery = `@media (min-width: ${smallDesktopScreen.width}px)`;
 const containerStyles = css({
   display: 'grid',
   grid: `
-    ".             edit-personal-info" ${rem(24)}
-    "personal-info personal-info     " auto
-    "contact       edit-contact-info " auto
-    "social        social            " auto
+    "avatar       avatar            " auto
+    ".            edit-personal-info" ${rem(24)}
+    "personal-info personal-info    " auto
+    "contact      edit-contact-info " auto
+    "social       social            " auto
       / 1fr ${rem(36)}
   `,
   gridColumnGap: rem(12),
 
   [middleSizeQuery]: {
     grid: `
-      ".             .             edit-personal-info" ${rem(24)}
-      "personal-info personal-info personal-info     " auto
-      "contact       social        edit-contact-info " auto
-        / max-content 1fr ${rem(36)}
+      ".             .             edit-personal-info avatar" ${rem(24)}
+      "personal-info personal-info personal-info      avatar" auto
+      "contact       social        edit-contact-info  avatar" auto
+        / max-content 1fr ${rem(36)} max-content
     `,
   },
 
   [bigSizeQuery]: {
     grid: `
-      "edit-personal-info personal-info personal-info ."
-      "edit-contact-info  contact       social        ."
-        / ${rem(36)} max-content 1fr ${rem(36)}
+      "edit-personal-info personal-info personal-info avatar"
+      "edit-contact-info  contact       social        avatar"
+        / ${rem(36)} max-content 1fr max-content
     `,
     gridColumnGap: vminLinearCalc(
       mobileScreen,
@@ -74,7 +75,7 @@ const personalInfoStyles = css({
   gridArea: 'personal-info',
 
   display: 'flex',
-  flexDirection: 'column-reverse',
+  flexDirection: 'column',
 
   justifyContent: 'space-between',
   alignItems: 'start',
@@ -107,18 +108,65 @@ const socialIconStyles = css({
   gridArea: 'social',
 });
 
+const avatarSize = 90;
+
 const avatarContainer = css({
-  display: 'grid',
-  width: 90,
-  height: 90,
-  paddingBottom: rem(12),
+  gridArea: 'avatar',
+  position: 'relative',
+  width: rem(avatarSize),
+  height: rem(avatarSize),
+  justifySelf: 'start',
+
+  [middleSizeQuery]: {
+    justifySelf: 'end',
+  },
+
+  // counteract the relativeAnchor left shift so the avatar stays flush right
+  [bigSizeQuery]: {
+    transform: `translateX(${rem(64)})`,
+  },
 });
-const imageContainer = css({ gridRow: 1, gridColumn: 1 });
-const editButtonContainer = css({
-  gridRow: 1,
-  gridColumn: 1,
-  alignSelf: 'flex-end',
-  justifySelf: 'flex-end',
+const avatarStyles = css({
+  width: rem(avatarSize),
+  height: rem(avatarSize),
+  margin: 0,
+});
+const uploadOverlayStyles = css({
+  position: 'absolute',
+  inset: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '50%',
+  cursor: 'pointer',
+  opacity: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  transition: 'opacity 150ms ease-in-out',
+  ':hover, :focus-within': {
+    opacity: 1,
+  },
+});
+
+const spin = keyframes({
+  from: { transform: 'rotate(0deg)' },
+  to: { transform: 'rotate(360deg)' },
+});
+const savingOverlayStyles = css({
+  position: 'absolute',
+  inset: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '50%',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+});
+const spinnerStyles = css({
+  width: rem(24),
+  height: rem(24),
+  border: `${rem(3)} solid rgba(255, 255, 255, 0.4)`,
+  borderTopColor: paper.rgb,
+  borderRadius: '50%',
+  animation: `${spin} 1s linear infinite`,
 });
 
 type UserProfileHeaderProps = Pick<
@@ -271,44 +319,41 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                     isAlumni={!!alumniSinceDate}
                   />
                 </div>
-                <div css={avatarContainer}>
-                  <div css={imageContainer}>
-                    <Avatar
-                      imageUrl={avatarUrl}
-                      firstName={firstName}
-                      lastName={lastName}
-                    />
-                  </div>
-                  {onImageSelect && (
-                    <div css={editButtonContainer}>
-                      <label>
-                        <Link
-                          buttonStyle
-                          small
-                          primary
-                          href={undefined}
-                          label="Edit Avatar"
-                          enabled={!avatarSaving}
-                        >
-                          {uploadIcon}
-                          <input
-                            disabled={avatarSaving}
-                            type="file"
-                            accept="image/x-png,image/jpeg"
-                            aria-label="Upload Avatar"
-                            onChange={(event) =>
-                              event.target.files?.length &&
-                              event.target.files[0] &&
-                              onImageSelect(event.target.files[0])
-                            }
-                            css={{ display: 'none' }}
-                          />
-                        </Link>
-                      </label>
-                    </div>
-                  )}
-                </div>
               </section>
+              <div css={avatarContainer}>
+                <Avatar
+                  imageUrl={avatarUrl}
+                  firstName={firstName}
+                  lastName={lastName}
+                  overrideStyles={avatarStyles}
+                />
+                {onImageSelect &&
+                  (avatarSaving ? (
+                    <div css={savingOverlayStyles}>
+                      <div
+                        css={spinnerStyles}
+                        role="progressbar"
+                        aria-label="Saving avatar"
+                        aria-busy
+                      />
+                    </div>
+                  ) : (
+                    <label css={uploadOverlayStyles} aria-label="Edit Avatar">
+                      {uploadIcon}
+                      <input
+                        type="file"
+                        accept="image/x-png,image/jpeg"
+                        aria-label="Upload Avatar"
+                        onChange={(event) =>
+                          event.target.files?.length &&
+                          event.target.files[0] &&
+                          onImageSelect(event.target.files[0])
+                        }
+                        css={{ display: 'none' }}
+                      />
+                    </label>
+                  ))}
+              </div>
               {editPersonalInfoHref && (
                 <div css={editPersonalInfoStyles}>
                   <Link

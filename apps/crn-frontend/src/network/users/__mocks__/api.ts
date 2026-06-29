@@ -34,6 +34,16 @@ export const postUserAvatar = jest.fn(
   },
 );
 
+export const deleteUserAvatar = jest.fn(
+  async (id: string): Promise<UserResponse> => {
+    const user = await getUser(id);
+    return {
+      ...user,
+      avatarUrl: undefined,
+    };
+  },
+);
+
 export const getUsers = jest.fn(
   async (): Promise<ListUserResponse> => createListUserResponse(10),
 );

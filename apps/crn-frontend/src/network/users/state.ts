@@ -16,7 +16,13 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import { useAlgolia } from '../../hooks/algolia';
-import { getUser, getUsers, patchUser, postUserAvatar } from './api';
+import {
+  deleteUserAvatar,
+  getUser,
+  getUsers,
+  patchUser,
+  postUserAvatar,
+} from './api';
 
 const userIndexState = atomFamily<
   | {
@@ -138,19 +144,47 @@ export const usePatchUserById = (id: string) => {
   };
 };
 
+export type AvatarMutationOptions = {
+  // skip the Auth0 token refresh when a following mutation (e.g. patchUser)
+  // will refresh it, avoiding a redundant silent-auth round-trip
+  refreshToken?: boolean;
+};
+
 export const usePatchUserAvatarById = (id: string) => {
   const { getTokenSilently, refreshUser } = useAuth0CRN();
   const authorization = useRecoilValue(authorizationState);
-  const setSetPatchedUserState = useSetRecoilState(patchedUserState(id));
-  return async (avatar: string) => {
+  const setPatchedUser = useSetRecoilState(patchedUserState(id));
+  return async (
+    avatar: string,
+    { refreshToken = true }: AvatarMutationOptions = {},
+  ) => {
     const user = await postUserAvatar(id, { avatar }, authorization);
-    await getTokenSilently({
-      redirect_uri: window.location.origin,
-      ignoreCache: true,
-    });
+    setPatchedUser(user);
+    if (refreshToken) {
+      await getTokenSilently({
+        redirect_uri: window.location.origin,
+        ignoreCache: true,
+      });
 
-    await refreshUser();
+      await refreshUser();
+    }
+  };
+};
 
-    setSetPatchedUserState(user);
+export const useDeleteUserAvatarById = (id: string) => {
+  const { getTokenSilently, refreshUser } = useAuth0CRN();
+  const authorization = useRecoilValue(authorizationState);
+  const setPatchedUser = useSetRecoilState(patchedUserState(id));
+  return async ({ refreshToken = true }: AvatarMutationOptions = {}) => {
+    const user = await deleteUserAvatar(id, authorization);
+    setPatchedUser(user);
+    if (refreshToken) {
+      await getTokenSilently({
+        redirect_uri: window.location.origin,
+        ignoreCache: true,
+      });
+
+      await refreshUser();
+    }
   };
 };

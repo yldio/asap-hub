@@ -21,6 +21,7 @@ import { GetListOptions } from '@asap-hub/frontend-utils';
 
 import { API_BASE_URL } from '../../../config';
 import {
+  deleteUserAvatar,
   getOpenScienceMembers,
   getUser,
   getUsers,
@@ -449,6 +450,37 @@ describe('postUserAvatar', () => {
       postUserAvatar('42', post, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update avatar for user with id 42. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('deleteUserAvatar', () => {
+  it('makes an authorized DELETE request for the user id', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .delete('/users/42/avatar')
+      .reply(200, {});
+
+    await deleteUserAvatar('42', 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns the successfully updated user', async () => {
+    const updated: Partial<UserResponse> = {
+      id: '42',
+      email: 'someone@example.com',
+    };
+    nock(API_BASE_URL).delete('/users/42/avatar').reply(200, updated);
+
+    expect(await deleteUserAvatar('42', '')).toEqual(updated);
+  });
+
+  it('errors for an error status', async () => {
+    nock(API_BASE_URL).delete('/users/42/avatar').reply(500, {});
+
+    await expect(
+      deleteUserAvatar('42', ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to remove avatar for user with id 42. Expected status 2xx. Received status 500."`,
     );
   });
 });

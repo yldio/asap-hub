@@ -1,5 +1,8 @@
 import { format } from 'date-fns';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import {
+  FetchResearchOutputsFilter,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
 import { resultsToStream, createCsvFileStream } from '@asap-hub/frontend-utils';
@@ -12,18 +15,19 @@ import { MAX_ALGOLIA_RESULTS, researchOutputToCSV } from './export';
 
 interface ResearchOutputListProps {
   searchQuery?: string;
-  filters?: Set<string>;
+  filtersMap?: FetchResearchOutputsFilter;
 }
 
 const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
   searchQuery = '',
-  filters = new Set(),
+  filtersMap,
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
   const result = useResearchOutputs({
     searchQuery,
-    filters,
+    source: filtersMap?.source,
+    documentType: filtersMap?.documentType,
     currentPage,
     pageSize,
   });
@@ -40,7 +44,8 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
       }),
       (paginationParams) =>
         getResearchOutputs(client, {
-          filters,
+          source: filtersMap?.source,
+          documentType: filtersMap?.documentType,
           searchQuery,
           ...paginationParams,
         }).then((response) => ({

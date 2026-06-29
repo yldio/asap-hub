@@ -1,8 +1,10 @@
 import {
   FetchOptions,
+  FetchResearchOutputsFilter,
   researchOutputDocumentTypes,
   ResearchOutputIdentifierType,
   ResearchOutputPostRequest,
+  ResearchOutputPublishingEntitiesValues,
   ResearchOutputPutRequest,
   researchOutputToIdentifierType,
   researchOutputTypes,
@@ -22,7 +24,7 @@ type ResearchOutputParameters = {
   researchOutputId: string;
 };
 
-type ResearchOutputFetchOptions = FetchOptions & {
+type ResearchOutputFetchOptions = FetchOptions<FetchResearchOutputsFilter> & {
   status?: string;
   teamId?: string;
   workingGroupId?: string;
@@ -33,7 +35,31 @@ const researchOutputFetchOptionsValidationSchema: JSONSchemaType<ResearchOutputF
   {
     type: 'object',
     properties: {
-      ...fetchOptionsValidationSchema.properties,
+      take: fetchOptionsValidationSchema.properties.take,
+      skip: fetchOptionsValidationSchema.properties.skip,
+      search: fetchOptionsValidationSchema.properties.search,
+      filter: {
+        type: 'object',
+        properties: {
+          source: {
+            type: 'array',
+            items: {
+              type: 'string',
+              enum: ResearchOutputPublishingEntitiesValues,
+            },
+            nullable: true,
+          },
+          documentType: {
+            type: 'array',
+            items: {
+              type: 'string',
+              enum: researchOutputDocumentTypes,
+            },
+            nullable: true,
+          },
+        },
+        nullable: true,
+      },
       status: { type: 'string', enum: ['draft'], nullable: true },
       teamId: { type: 'string', nullable: true },
       workingGroupId: { type: 'string', nullable: true },

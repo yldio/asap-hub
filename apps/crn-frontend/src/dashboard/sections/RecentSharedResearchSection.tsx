@@ -12,7 +12,6 @@ import { useResearchOutputs } from '../../shared-research/state';
 const RecentSharedResearchSection: FC = () => {
   const recentSharedOutputs = useResearchOutputs({
     searchQuery: '',
-    filters: new Set(),
     currentPage: 0,
     pageSize: 5,
   });

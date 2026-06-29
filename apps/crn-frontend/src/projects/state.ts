@@ -313,7 +313,7 @@ export const useProjectArticlesSuggestions = (teamId: string) => {
       searchQuery,
       currentPage: null,
       pageSize: 5, // check the size
-      filters: new Set(['Article']),
+      documentType: ['Article'],
       teamId,
     }).then(({ hits }) =>
       (hits as ResearchOutputResponse[]).map(

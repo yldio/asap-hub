@@ -11,7 +11,11 @@ import {
 import { network } from '@asap-hub/routing';
 import format from 'date-fns/format';
 import { ComponentProps } from 'react';
-import { ResearchOutputResponse, TeamResponse } from '@asap-hub/model';
+import {
+  FetchResearchOutputsFilter,
+  ResearchOutputResponse,
+  TeamResponse,
+} from '@asap-hub/model';
 import { useRecoilValue } from 'recoil';
 
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
@@ -35,7 +39,7 @@ type OutputsListProps = Pick<
 > & {
   displayName: string;
   searchQuery: string;
-  filters: Set<string>;
+  filtersMap: FetchResearchOutputsFilter;
   teamId: string;
   userAssociationMember: boolean;
   draftOutputs?: boolean;
@@ -49,7 +53,7 @@ type OutputsProps = {
 
 const OutputsList: React.FC<OutputsListProps> = ({
   searchQuery,
-  filters,
+  filtersMap,
   teamId,
   userAssociationMember,
   contactEmail,
@@ -62,7 +66,8 @@ const OutputsList: React.FC<OutputsListProps> = ({
 
   const result = useResearchOutputs({
     searchQuery,
-    filters,
+    documentType: filtersMap.documentType,
+    source: filtersMap.source,
     currentPage,
     pageSize,
     ...(draftOutputs
@@ -94,7 +99,8 @@ const OutputsList: React.FC<OutputsListProps> = ({
           (paginationParams) =>
             getDraftResearchOutputs(
               {
-                filters,
+                documentType: filtersMap.documentType,
+                source: filtersMap.source,
                 searchQuery,
                 userAssociationMember,
                 teamId,
@@ -114,7 +120,8 @@ const OutputsList: React.FC<OutputsListProps> = ({
           ),
           (paginationParams) =>
             getResearchOutputs(client, {
-              filters,
+              documentType: filtersMap.documentType,
+              source: filtersMap.source,
               searchQuery,
               teamId,
               ...paginationParams,
@@ -160,15 +167,15 @@ const Outputs: React.FC<OutputsProps> = ({
 }) => {
   const {
     filters,
+    filtersMap,
     searchQuery,
     toggleFilter,
     setSearchQuery,
     debouncedSearchQuery,
-  } = useSearch();
+  } = useSearch(['source', 'documentType']);
   const { currentPage, pageSize } = usePaginationParams();
   const hasOutputs = !!useResearchOutputs({
     searchQuery: '',
-    filters: new Set(),
     currentPage,
     pageSize,
     teamId: team.id,
@@ -189,7 +196,7 @@ const Outputs: React.FC<OutputsProps> = ({
           draftOutputs={draftOutputs}
           teamId={team.id}
           searchQuery={debouncedSearchQuery}
-          filters={filters}
+          filtersMap={filtersMap}
           userAssociationMember={userAssociationMember}
           contactEmail={team?.pointOfContact}
           displayName={team?.displayName ?? ''}

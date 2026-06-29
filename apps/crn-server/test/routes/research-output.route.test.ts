@@ -104,7 +104,9 @@ describe('/research-outputs/ route', () => {
           take: 15,
           skip: 5,
           search: 'something',
-          filter: ['one', 'two'],
+          filter: {
+            documentType: ['Article', 'Grant Document'],
+          },
         });
 
       const expectedParams = {
@@ -112,7 +114,7 @@ describe('/research-outputs/ route', () => {
         skip: 5,
         search: 'something',
         filter: {
-          documentType: ['one', 'two'],
+          documentType: ['Article', 'Grant Document'],
         },
       };
 
@@ -171,7 +173,9 @@ describe('/research-outputs/ route', () => {
             status: 'draft',
             teamId: 'team-id-0',
             workingGroupId: 'workingGroup-id-0',
-            filter: ['one', 'two'],
+            filter: {
+              documentType: ['Article', 'Grant Document'],
+            },
           });
 
         const expectedParams = {
@@ -181,7 +185,7 @@ describe('/research-outputs/ route', () => {
             teamId: 'team-id-0',
             status: 'draft',
             workingGroupId: 'workingGroup-id-0',
-            documentType: ['one', 'two'],
+            documentType: ['Article', 'Grant Document'],
           },
           includeDrafts: true,
         };

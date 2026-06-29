@@ -1,12 +1,10 @@
-import { AlgoliaClient } from '@asap-hub/algolia';
+import { AlgoliaClient, buildAlgoliaFilters } from '@asap-hub/algolia';
 import { createSentryHeaders, GetListOptions } from '@asap-hub/frontend-utils';
 import {
   FetchResearchTagsOptions,
   ListResponse,
   ResearchOutputDocumentType,
-  researchOutputDocumentTypes,
   ResearchOutputPublishingEntities,
-  ResearchOutputPublishingEntitiesValues,
   ResearchOutputResponse,
   ResearchTagResponse,
   ResearchThemeResponse,
@@ -27,14 +25,16 @@ type BasicOptions = {
   workingGroupId?: string;
   tags?: string[];
   noResultsWithoutCriteria?: boolean;
+  documentType?: ResearchOutputDocumentType[];
+  source?: ResearchOutputPublishingEntities[];
 };
 
-type ResearchOutputPublishedListOptions = GetListOptions &
+type ResearchOutputPublishedListOptions = Omit<GetListOptions, 'filters'> &
   BasicOptions & {
     userId?: string;
     draftsOnly?: false;
   };
-type ResearchOutputDraftListOptions = GetListOptions &
+type ResearchOutputDraftListOptions = Omit<GetListOptions, 'filters'> &
   BasicOptions & {
     userAssociationMember: boolean;
     draftsOnly: true;
@@ -62,45 +62,27 @@ export const getResearchOutput = async (
 };
 
 export const getAllFilters = (
-  filters: Set<string>,
+  documentType?: ResearchOutputDocumentType[],
+  source?: ResearchOutputPublishingEntities[],
   teamId?: string,
   userId?: string,
   workingGroupId?: string,
   projectId?: string,
 ) => {
-  const filterArray = Array.from(filters);
-  const isSourceFilter = (filter: string) =>
-    ResearchOutputPublishingEntitiesValues.includes(
-      filter as ResearchOutputPublishingEntities,
-    );
-  const sourceFilter = filterArray
-    .filter(isSourceFilter)
-    .map((filter) => `publishingEntity:"${filter}"`)
-    .join(' OR ');
+  const publishingEntityFilter = buildAlgoliaFilters(
+    'publishingEntity',
+    source,
+  );
+  const documentTypeFilter = buildAlgoliaFilters('documentType', documentType);
 
-  const isDocumentTypeFilter = (filter: string) =>
-    researchOutputDocumentTypes.includes(filter as ResearchOutputDocumentType);
-
-  const documentTypesFilter = filterArray
-    .filter((filter) => isDocumentTypeFilter(filter))
-    .map((filter) => `documentType:"${filter}"`)
-    .join(' OR ');
-
-  const algoliaFilters =
-    sourceFilter && documentTypesFilter
-      ? `(${sourceFilter}) AND (${documentTypesFilter})`
-      : sourceFilter
-        ? `(${sourceFilter})`
-        : documentTypesFilter
-          ? `(${documentTypesFilter})`
-          : '';
-
-  const teamFilter = teamId ? `teams.id:"${teamId}"` : '';
-  const projectFilter = projectId ? `project.id:"${projectId}"` : '';
-  const wgFilter = workingGroupId ? `workingGroups.id:"${workingGroupId}"` : '';
-  const authorFilter = userId ? `authors.id:"${userId}"` : '';
-
-  return [algoliaFilters, teamFilter, projectFilter, authorFilter, wgFilter]
+  return [
+    publishingEntityFilter && `(${publishingEntityFilter})`,
+    documentTypeFilter && `(${documentTypeFilter})`,
+    teamId && `teams.id:"${teamId}"`,
+    projectId && `project.id:"${projectId}"`,
+    workingGroupId && `workingGroups.id:"${workingGroupId}"`,
+    userId && `authors.id:"${userId}"`,
+  ]
     .filter(Boolean)
     .join(' AND ');
 };
@@ -114,7 +96,8 @@ export const getResearchOutputs = (
     hitsPerPage: options.pageSize ?? 10,
     tagFilters: options.tags,
     filters: getAllFilters(
-      options.filters,
+      options.documentType,
+      options.source,
       options.teamId,
       options.userId,
       options.workingGroupId,
@@ -127,8 +110,17 @@ export const getDraftResearchOutputs = async (
   authorization: string,
 ): Promise<ListResponse<ResearchOutputResponse>> => {
   if (options.userAssociationMember) {
-    const url = createListApiUrl(`research-outputs`, options);
+    const url = createListApiUrl(`research-outputs`, {
+      ...options,
+      filters: new Set(),
+    });
     url.searchParams.set('status', 'draft');
+    const addFilter = (name: string, items?: string[]) =>
+      items?.forEach((item) =>
+        url.searchParams.append(`filter[${name}]`, item),
+      );
+    addFilter('documentType', options.documentType);
+    addFilter('source', options.source);
     if (options.workingGroupId) {
       url.searchParams.set('workingGroupId', options.workingGroupId);
     }

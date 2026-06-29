@@ -40,7 +40,6 @@ const renderResearchOutputList = async (searchQuery = '') => {
           researchOutputsState({
             searchQuery,
             currentPage: 0,
-            filters: new Set(),
             pageSize: CARD_VIEW_PAGE_SIZE,
           }),
         );
@@ -97,13 +96,11 @@ it('triggers and export with the same parameters', async () => {
   );
   expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
     searchQuery: '',
-    filters: new Set(),
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
   });
   expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
     searchQuery: '',
-    filters: new Set(),
     currentPage: 0,
     pageSize: MAX_ALGOLIA_RESULTS,
   });

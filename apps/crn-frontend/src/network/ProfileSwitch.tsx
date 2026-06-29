@@ -70,15 +70,13 @@ const ProfileSwitch: FC<ProfileSwitchProps> = ({
         {Outputs && (
           <Route
             path={paths.outputs}
-            element={<SearchFrame title="Outputs">{Outputs}</SearchFrame>}
+            element={<Frame title="Outputs">{Outputs}</Frame>}
           />
         )}
         {DraftOutputs && (
           <Route
             path={paths.draftOutputs}
-            element={
-              <SearchFrame title="Draft Outputs">{DraftOutputs}</SearchFrame>
-            }
+            element={<Frame title="Draft Outputs">{DraftOutputs}</Frame>}
           />
         )}
         {Workspace && (

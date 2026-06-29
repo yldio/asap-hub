@@ -1,8 +1,15 @@
 import { useMemo } from 'react';
 import { useLocation } from 'react-router';
-import { NoOutputsPage, ProjectOutputList } from '@asap-hub/react-components';
+import {
+  NoOutputsPage,
+  ProjectOutputList,
+  ResearchOutputsSearch,
+  outputTypeFilters,
+} from '@asap-hub/react-components';
+import { SearchFrame } from '@asap-hub/frontend-utils';
+import { FetchResearchOutputsFilter } from '@asap-hub/model';
 
-import { usePagination, usePaginationParams } from '../hooks';
+import { usePagination, usePaginationParams, useSearch } from '../hooks';
 import { useResearchOutputs } from '../shared-research/state';
 import { getProjectResearchOutputListScope } from './projectResearchOutputScope';
 import { researchOutputToProjectOutput } from './researchOutputToProjectOutput';
@@ -12,13 +19,25 @@ type ProjectOutputsProps = {
   teamId?: string;
   draftOutputs?: boolean;
   userAssociationMember: boolean;
+  hasOutputs: boolean;
 };
 
-const ProjectOutputs: React.FC<ProjectOutputsProps> = ({
-  projectId,
+type OutputsListProps = {
+  searchQuery: string;
+  filtersMap: FetchResearchOutputsFilter;
+  projectId: string;
+  teamId?: string;
+  userAssociationMember: boolean;
+  draftOutputs?: boolean;
+};
+
+const OutputsList: React.FC<OutputsListProps> = ({
+  searchQuery,
+  filtersMap,
   teamId,
-  draftOutputs = false,
+  projectId,
   userAssociationMember,
+  draftOutputs,
 }) => {
   const location = useLocation();
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
@@ -26,8 +45,9 @@ const ProjectOutputs: React.FC<ProjectOutputsProps> = ({
 
   const listScope = getProjectResearchOutputListScope({ projectId, teamId });
   const listOptions = {
-    searchQuery: '',
-    filters: new Set<string>(),
+    searchQuery,
+    documentType: filtersMap.documentType,
+    source: filtersMap.source,
     currentPage,
     pageSize,
     ...listScope,
@@ -49,7 +69,39 @@ const ProjectOutputs: React.FC<ProjectOutputsProps> = ({
     pageSize,
   );
 
-  if (result.total === 0) {
+  return (
+    <ProjectOutputList
+      researchOutputs={researchOutputs}
+      numberOfItems={result.total}
+      numberOfPages={numberOfPages}
+      currentPageIndex={currentPage}
+      renderPageHref={renderPageHref}
+      isListView={isListView}
+      cardViewHref={location.pathname + cardViewParams}
+      listViewHref={location.pathname + listViewParams}
+      exportResults={/* istanbul ignore next */ () => Promise.resolve()}
+      showTags
+    />
+  );
+};
+
+const ProjectOutputs: React.FC<ProjectOutputsProps> = ({
+  projectId,
+  teamId,
+  draftOutputs = false,
+  userAssociationMember,
+  hasOutputs,
+}) => {
+  const {
+    filters,
+    filtersMap,
+    toggleFilter,
+    setSearchQuery,
+    searchQuery,
+    debouncedSearchQuery,
+  } = useSearch(['documentType']);
+
+  if (!hasOutputs) {
     return (
       <NoOutputsPage
         title={
@@ -66,18 +118,25 @@ const ProjectOutputs: React.FC<ProjectOutputsProps> = ({
   }
 
   return (
-    <ProjectOutputList
-      researchOutputs={researchOutputs}
-      numberOfItems={result.total}
-      numberOfPages={numberOfPages}
-      currentPageIndex={currentPage}
-      renderPageHref={renderPageHref}
-      isListView={isListView}
-      cardViewHref={location.pathname + cardViewParams}
-      listViewHref={location.pathname + listViewParams}
-      exportResults={/* istanbul ignore next */ () => Promise.resolve()}
-      showTags
-    />
+    <>
+      <ResearchOutputsSearch
+        onChangeSearch={setSearchQuery}
+        searchQuery={searchQuery}
+        onChangeFilter={toggleFilter}
+        filters={filters}
+        filterOptions={outputTypeFilters}
+      />
+      <SearchFrame title="">
+        <OutputsList
+          draftOutputs={draftOutputs}
+          teamId={teamId}
+          projectId={projectId}
+          searchQuery={debouncedSearchQuery}
+          filtersMap={filtersMap}
+          userAssociationMember={userAssociationMember}
+        />
+      </SearchFrame>
+    </>
   );
 };
 

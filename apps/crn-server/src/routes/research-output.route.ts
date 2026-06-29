@@ -75,14 +75,14 @@ export const researchOutputRouteFactory = (
           ? {
               includeDrafts: true,
               filter: {
-                documentType: filter,
+                ...filter,
                 status,
                 ...scopeFilter,
               },
             }
           : {
               filter: {
-                ...(Array.isArray(filter) ? { documentType: filter } : filter),
+                ...filter,
                 ...scopeFilter,
               },
             }),

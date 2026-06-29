@@ -79,6 +79,11 @@ export type ResearchOutputFilterOptionTypes =
   | ResearchOutputPublishingEntities
   | ResearchOutputDocumentType;
 
+export type FetchResearchOutputsFilter = {
+  source?: ResearchOutputPublishingEntities[];
+  documentType?: ResearchOutputDocumentType[];
+};
+
 export const researchOutputDocumentTypeToType: Record<
   ResearchOutputDocumentType,
   Set<ResearchOutputType>

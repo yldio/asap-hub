@@ -1,4 +1,4 @@
-import { FetchTeamsFilter } from '@asap-hub/model';
+import { FetchResearchOutputsFilter, FetchTeamsFilter } from '@asap-hub/model';
 import { searchQueryParam } from '@asap-hub/routing';
 import { useLocation, useNavigate } from 'react-router';
 import { useDebounce } from 'use-debounce';
@@ -6,7 +6,8 @@ import { usePaginationParams } from './pagination';
 
 type Filter = {
   filter?: string[];
-} & FetchTeamsFilter;
+} & FetchTeamsFilter &
+  FetchResearchOutputsFilter;
 
 export const useSearch = (filterNames: (keyof Filter)[] = ['filter']) => {
   const location = useLocation();

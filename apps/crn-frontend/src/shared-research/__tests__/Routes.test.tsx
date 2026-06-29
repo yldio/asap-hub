@@ -67,14 +67,14 @@ describe('the shared research listing page', () => {
     await waitFor(() => expect(checkbox).toBeChecked());
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),
-      expect.objectContaining({ filters: new Set(['Grant Document']) }),
+      expect.objectContaining({ documentType: ['Grant Document'] }),
     );
   });
 
   it('reads filters from url', async () => {
     await renderSharedResearchPage(
       '/shared-research',
-      '?filter=Grant+Document',
+      '?documentType=Grant+Document',
     );
 
     await userEvent.click(screen.getByText('Filters'));
@@ -83,7 +83,7 @@ describe('the shared research listing page', () => {
 
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),
-      expect.objectContaining({ filters: new Set(['Grant Document']) }),
+      expect.objectContaining({ documentType: ['Grant Document'] }),
     );
   });
   it('renders when when the request it not a 2XX', async () => {

@@ -83,7 +83,6 @@ export const useRelatedResearchSuggestions = (currentId?: string) => {
   return (searchQuery: string) =>
     getResearchOutputs(algoliaClient.client, {
       searchQuery,
-      filters: new Set(),
       currentPage: null,
       pageSize: null,
     })

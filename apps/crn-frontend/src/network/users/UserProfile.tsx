@@ -57,7 +57,6 @@ const UserProfile: FC<UserProfileProps> = ({ currentTime }) => {
   const { pageSize } = usePaginationParams();
   const researchOutputsResult = useResearchOutputs({
     currentPage: 0,
-    filters: new Set(),
     pageSize,
     searchQuery: '',
     userId,

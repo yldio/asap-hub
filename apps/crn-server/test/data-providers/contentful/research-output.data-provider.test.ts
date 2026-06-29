@@ -259,6 +259,29 @@ describe('Research Outputs Data Provider', () => {
           );
         });
 
+        test('Should pass the parameters to filter by source as expected', async () => {
+          await researchOutputDataProvider.fetch({
+            take: 13,
+            skip: 7,
+            filter: {
+              source: 'Working Group',
+            },
+          });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              where: {
+                OR: [
+                  {
+                    workingGroup_exists: true,
+                  },
+                ],
+              },
+            }),
+          );
+        });
+
         test('Should pass the parameters to filter by asapFunded and sharing status as expected', async () => {
           await researchOutputDataProvider.fetch({
             take: 13,
@@ -296,6 +319,35 @@ describe('Research Outputs Data Provider', () => {
                 relatedManuscriptVersion: {
                   sys: { id: 'manuscript-version-1' },
                 },
+              },
+            }),
+          );
+        });
+
+        test('Should pass the parameters to filter by source as expected when source is an array', async () => {
+          await researchOutputDataProvider.fetch({
+            take: 13,
+            skip: 7,
+            filter: {
+              source: ['Team', 'Working Group'],
+            },
+          });
+
+          expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              where: {
+                OR: [
+                  {
+                    workingGroup_exists: true,
+                  },
+                  {
+                    AND: [
+                      { workingGroup_exists: false },
+                      { project_exists: false },
+                    ],
+                  },
+                ],
               },
             }),
           );

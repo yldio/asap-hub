@@ -117,14 +117,12 @@ const TeamProfile: FC<TeamProfileProps> = ({ currentTime }) => {
 
   const { pageSize } = usePaginationParams();
   const teamOutputsResult = useResearchOutputs({
-    filters: new Set(),
     currentPage: 0,
     searchQuery: '',
     pageSize,
     teamId,
   });
   const outputDraftResults = useResearchOutputs({
-    filters: new Set(),
     draftsOnly: true,
     userAssociationMember: canShareResearchOutput,
     currentPage: 0,

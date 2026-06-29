@@ -4,6 +4,7 @@ import {
   resultsToStream,
 } from '@asap-hub/frontend-utils';
 import {
+  FetchResearchOutputsFilter,
   ResearchOutputResponse,
   WorkingGroupDataObject,
 } from '@asap-hub/model';
@@ -37,7 +38,7 @@ type OutputsListProps = Pick<
 > & {
   displayName: string;
   searchQuery: string;
-  filters: Set<string>;
+  filtersMap: FetchResearchOutputsFilter;
   workingGroupId: string;
   draftOutputs?: boolean;
   hasOutputs: boolean;
@@ -52,7 +53,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   workingGroupId,
   userAssociationMember,
   searchQuery,
-  filters,
+  filtersMap,
   draftOutputs,
   displayName,
   hasOutputs,
@@ -61,7 +62,8 @@ const OutputsList: React.FC<OutputsListProps> = ({
     usePaginationParams();
   const result = useResearchOutputs({
     searchQuery,
-    filters,
+    documentType: filtersMap.documentType,
+    source: filtersMap.source,
     currentPage,
     pageSize,
     ...(draftOutputs
@@ -88,7 +90,8 @@ const OutputsList: React.FC<OutputsListProps> = ({
           (paginationParams) =>
             getDraftResearchOutputs(
               {
-                filters,
+                documentType: filtersMap.documentType,
+                source: filtersMap.source,
                 searchQuery,
                 userAssociationMember,
                 workingGroupId,
@@ -108,7 +111,8 @@ const OutputsList: React.FC<OutputsListProps> = ({
           ),
           (paginationParams) =>
             getResearchOutputs(client, {
-              filters,
+              documentType: filtersMap.documentType,
+              source: filtersMap.source,
               searchQuery,
               workingGroupId,
               ...paginationParams,
@@ -164,15 +168,15 @@ const Outputs: React.FC<OutputsProps> = ({
 }) => {
   const {
     filters,
+    filtersMap,
     searchQuery,
     toggleFilter,
     setSearchQuery,
     debouncedSearchQuery,
-  } = useSearch();
+  } = useSearch(['source', 'documentType']);
   const { pageSize } = usePaginationParams();
   const hasOutputs = !!useResearchOutputs({
     searchQuery: '',
-    filters: new Set(),
     currentPage: 0,
     pageSize,
     workingGroupId: workingGroup.id,
@@ -192,7 +196,7 @@ const Outputs: React.FC<OutputsProps> = ({
           draftOutputs={draftOutputs}
           workingGroupId={workingGroup.id}
           searchQuery={debouncedSearchQuery}
-          filters={filters}
+          filtersMap={filtersMap}
           displayName={workingGroup.title}
           userAssociationMember={userAssociationMember}
           hasOutputs={hasOutputs}

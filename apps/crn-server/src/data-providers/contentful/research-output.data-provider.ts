@@ -7,6 +7,7 @@ import {
   ResearchOutputCreateDataObject,
   ResearchOutputDataObject,
   researchOutputMapType,
+  ResearchOutputPublishingEntities,
   ResearchOutputUpdateDataObject,
   TeamType,
 } from '@asap-hub/model';
@@ -125,6 +126,13 @@ export class ResearchOutputContentfulDataProvider
           where.documentType = filter.documentType;
         }
       }
+
+      if (filter.source) {
+        where.OR = getResearchOutputSourceFilter(
+          Array.isArray(filter.source) ? filter.source : [filter.source],
+        );
+      }
+
       if (filter.title) {
         where.title = filter.title;
       }
@@ -393,6 +401,26 @@ const mapRelatedResearch = (
         : [],
       isOwnRelatedResearchLink,
     }));
+
+const getResearchOutputSourceFilter = (
+  sourceFilter: ResearchOutputPublishingEntities[],
+) => {
+  const sourceConditions = [];
+  if (sourceFilter?.length) {
+    if (sourceFilter.includes('Working Group')) {
+      sourceConditions.push({
+        workingGroup_exists: true,
+      });
+    }
+
+    if (sourceFilter.includes('Team')) {
+      sourceConditions.push({
+        AND: [{ workingGroup_exists: false }, { project_exists: false }],
+      });
+    }
+  }
+  return sourceConditions;
+};
 
 export const parseGraphQLResearchOutput = (
   researchOutputs: ResearchOutputItem,

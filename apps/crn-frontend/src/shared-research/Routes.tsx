@@ -24,11 +24,12 @@ const SharedResearch: FC<Record<string, never>> = () => {
 
   const {
     filters,
+    filtersMap,
     searchQuery,
     toggleFilter,
     setSearchQuery,
     debouncedSearchQuery,
-  } = useSearch();
+  } = useSearch(['source', 'documentType']);
 
   const { pathname } = useLocation();
 
@@ -47,7 +48,7 @@ const SharedResearch: FC<Record<string, never>> = () => {
               <SearchFrame title={null}>
                 <ResearchOutputList
                   searchQuery={debouncedSearchQuery}
-                  filters={filters}
+                  filtersMap={filtersMap}
                 />
               </SearchFrame>
             </SharedResearchPage>

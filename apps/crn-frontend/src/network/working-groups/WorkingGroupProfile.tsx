@@ -92,14 +92,12 @@ const WorkingGroupProfile: FC<WorkingGroupProfileProps> = ({ currentTime }) => {
   const { pageSize } = usePaginationParams();
 
   const outputResults = useResearchOutputs({
-    filters: new Set(),
     currentPage: 0,
     searchQuery: '',
     pageSize,
     workingGroupId,
   });
   const outputDraftResults = useResearchOutputs({
-    filters: new Set(),
     draftsOnly: true,
     userAssociationMember: canShareResearchOutput,
     currentPage: 0,

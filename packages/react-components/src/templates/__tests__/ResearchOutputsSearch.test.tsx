@@ -32,6 +32,6 @@ it('calls the onChangeFilter when filter is selected', async () => {
 
   expect(props.onChangeFilter).toHaveBeenCalledWith(
     'Grant Document',
-    undefined,
+    'documentType',
   );
 });

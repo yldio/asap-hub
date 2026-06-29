@@ -11,10 +11,20 @@ const avatarStyles = css({
   height: rem(avatarSize),
 });
 
+// equal-width columns sized to fit content, so Upload and Remove match the
+// wider of the two without stretching to the full row
 const buttonRowStyles = css({
-  display: 'flex',
+  display: 'grid',
+  gridAutoFlow: 'column',
+  gridAutoColumns: '1fr',
+  justifyContent: 'start',
+  width: 'fit-content',
   gap: rem(12),
   marginTop: rem(12),
+});
+
+const buttonSlotStyles = css({
+  display: 'flex',
 });
 
 const buttonContentStyles = css({
@@ -57,11 +67,12 @@ const EditUserAvatar: React.FC<EditUserAvatarProps> = ({
       overrideStyles={avatarStyles}
     />
     <div css={buttonRowStyles}>
-      <label>
+      <label css={buttonSlotStyles}>
         <Link
           primary
           small
           buttonStyle
+          fullWidth
           noMargin
           href={undefined}
           enabled={enabled}
@@ -85,12 +96,20 @@ const EditUserAvatar: React.FC<EditUserAvatarProps> = ({
         </Link>
       </label>
       {avatarUrl && (
-        <Button small noMargin enabled={enabled} onClick={onImageRemove}>
-          <span css={buttonContentStyles}>
-            {binIcon}
-            Remove
-          </span>
-        </Button>
+        <div css={buttonSlotStyles}>
+          <Button
+            small
+            fullWidth
+            noMargin
+            enabled={enabled}
+            onClick={onImageRemove}
+          >
+            <span css={buttonContentStyles}>
+              {binIcon}
+              Remove
+            </span>
+          </Button>
+        </div>
       )}
     </div>
   </div>

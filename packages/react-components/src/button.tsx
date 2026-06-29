@@ -7,7 +7,7 @@ import {
   error900,
   fern,
   lead,
-  neutral300,
+  neutral500,
   OpaqueColor,
   paper,
   pine,
@@ -290,8 +290,8 @@ const spin = keyframes`
 export const buttonSpinnerStyles = css({
   width: rem(16),
   height: rem(16),
-  border: `${rem(2)} solid ${neutral300.rgb}`,
-  borderTop: `${rem(2)} solid white`,
+  border: `${rem(2)} solid ${neutral500.rgb}`,
+  borderTopColor: lead.rgb,
   borderRadius: '50%',
   animation: `${spin} 1s linear infinite`,
 });

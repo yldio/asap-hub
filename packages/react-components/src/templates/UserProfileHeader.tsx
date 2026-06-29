@@ -185,6 +185,7 @@ const badgeStyles = css({
   display: 'inline-flex',
   width: rem(badgeSize),
   height: rem(badgeSize),
+  zIndex: 1,
 });
 const badgeImageStyles = css({
   width: '100%',

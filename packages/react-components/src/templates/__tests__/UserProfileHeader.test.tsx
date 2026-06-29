@@ -178,14 +178,10 @@ describe('alumni', () => {
           lastModifiedDate={new Date('2021-09-01T12:00:00').toISOString()}
           degree={undefined}
         />
-        ,
       </UserProfileContext.Provider>,
     );
     expect(
-      queryByText(
-        'This alumni might not have all content updated or available.',
-        { exact: false },
-      ),
+      queryByText(/Records indicate the individual transitioned to alumni/),
     ).toBeInTheDocument();
     rerender(
       <UserProfileContext.Provider value={{ isOwnProfile: false }}>
@@ -196,14 +192,41 @@ describe('alumni', () => {
           alumniLocation={'Some University'}
           degree={undefined}
         />
-        ,
       </UserProfileContext.Provider>,
     );
     expect(
-      queryByText('and their role is now at', {
-        exact: false,
-      }),
+      queryByText(/final affiliation noted at/, { exact: false }),
     ).toBeInTheDocument();
+  });
+
+  it('shows alumniLastUpdated date instead of lastModifiedDate when available', () => {
+    render(
+      <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+        <UserProfileHeader
+          {...boilerplateProps}
+          alumniSinceDate={new Date('2022-09-12T12:00:00').toISOString()}
+          alumniLastUpdated={new Date('2023-03-15T12:00:00').toISOString()}
+          lastModifiedDate={new Date('2024-01-01T12:00:00').toISOString()}
+          degree={undefined}
+        />
+      </UserProfileContext.Provider>,
+    );
+    expect(screen.getByText(/15th March 2023/)).toBeInTheDocument();
+    expect(screen.queryByText(/1st January 2024/)).not.toBeInTheDocument();
+  });
+
+  it('falls back to lastModifiedDate when alumniLastUpdated is not set', () => {
+    render(
+      <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+        <UserProfileHeader
+          {...boilerplateProps}
+          alumniSinceDate={new Date('2022-09-12T12:00:00').toISOString()}
+          lastModifiedDate={new Date('2021-09-01T12:00:00').toISOString()}
+          degree={undefined}
+        />
+      </UserProfileContext.Provider>,
+    );
+    expect(screen.getByText(/1st September 2021/)).toBeInTheDocument();
   });
 });
 

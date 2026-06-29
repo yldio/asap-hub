@@ -219,8 +219,11 @@ export class UserContentfulDataProvider implements UserDataProvider {
 
     const cohortFields = getCohortFields(nextContributingCohorts);
 
+    const isAlumni = user.fields.alumniSinceDate?.['en-US'] != null;
     const shouldStampAlumni =
-      'alumniSinceDate' in data || 'alumniLocation' in data;
+      'alumniSinceDate' in data ||
+      'alumniLocation' in data ||
+      (isAlumni && 'email' in data);
 
     const result = await patchAndPublish(user, {
       ...fields,

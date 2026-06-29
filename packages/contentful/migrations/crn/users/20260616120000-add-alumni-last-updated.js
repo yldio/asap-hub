@@ -1,5 +1,5 @@
 module.exports.description =
-  'Add alumniLastUpdated field to GP2 users (auto-stamped via field-as-updated-at app)';
+  'Add alumniLastUpdated field to CRN users (auto-stamped via field-as-updated-at app)';
 
 module.exports.up = (migration) => {
   const users = migration.editContentType('users');

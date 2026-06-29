@@ -2516,6 +2516,44 @@ describe('User data provider', () => {
         });
       });
 
+      test('Should stamp alumniLastUpdated when email is in the payload and user is alumni', async () => {
+        const alumniEntry = getEntry({
+          fields: {
+            firstName: 'Test',
+            lastName: 'User',
+            alumniSinceDate: { 'en-US': '2024-01-01T00:00:00.000Z' },
+          },
+        });
+        environmentMock.getEntry.mockReset();
+        environmentMock.getEntry.mockResolvedValueOnce(alumniEntry);
+        (
+          patchAndPublish as jest.MockedFunction<typeof patchAndPublish>
+        ).mockResolvedValueOnce({
+          sys: { publishedVersion: 2 },
+        } as Entry);
+        contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+          users: { sys: { publishedVersion: 2 } },
+        });
+        await userDataProvider.update(userId, {
+          email: 'new@example.com',
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(
+          alumniEntry,
+          expect.objectContaining({
+            alumniLastUpdated: now,
+          }),
+        );
+      });
+
+      test('Should not stamp alumniLastUpdated when email changes on non-alumni user', async () => {
+        await userDataProvider.update(userId, {
+          email: 'new@example.com',
+        });
+        expect(patchAndPublish).toHaveBeenCalledWith(entry, {
+          email: 'new@example.com',
+        });
+      });
+
       test('Should stamp alumniLastUpdated when alumniSinceDate is explicitly cleared', async () => {
         await userDataProvider.update(userId, {
           alumniSinceDate: undefined,

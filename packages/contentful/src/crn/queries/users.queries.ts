@@ -14,6 +14,7 @@ export const usersContentQueryFragment = gql`
     lastUpdated
     alumniSinceDate
     alumniLocation
+    alumniLastUpdated
     biography
     connections
     createdDate

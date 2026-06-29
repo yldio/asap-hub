@@ -73,6 +73,7 @@ export const updateAvatarBody: { avatar: string } = {
 
 export const getUserResponse = (): UserResponse => ({
   membershipStatus: [inactiveUserMembershipStatus],
+  alumniLastUpdated: '2020-09-23T20:45:22.000Z',
   alumniLocation: 'some alumni location',
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
   id: 'user-id-1',
@@ -325,6 +326,7 @@ export const getUserDataObject = (): UserDataObject => ({
       code: 'some-code',
     },
   ],
+  alumniLastUpdated: '2020-09-23T20:45:22.000Z',
   alumniLocation: 'some alumni location',
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
   expertiseAndResourceDescription: 'some expertise and resource description',
@@ -440,6 +442,7 @@ export const getUserCreateDataObject = (): UserCreateDataObject => {
     workingGroups,
     interestGroups,
     connections,
+    alumniLastUpdated,
     alumniLocation,
     alumniSinceDate,
     membershipStatus,
@@ -485,6 +488,7 @@ export const getContentfulGraphqlUser = (
   createdDate: '2020-09-23T20:45:22.000Z',
   dismissedGettingStarted: false,
   connections: ['some-code'],
+  alumniLastUpdated: '2020-09-23T20:45:22.000Z',
   alumniLocation: 'some alumni location',
   alumniSinceDate: '2020-09-23T20:45:22.000Z',
   expertiseAndResourceDescription: 'some expertise and resource description',

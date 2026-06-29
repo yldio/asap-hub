@@ -120,7 +120,7 @@ describe('UserDetailHeaderCard', () => {
     it('does not show alumni banner when alumniSinceDate is not set', () => {
       render(<UserDetailHeaderCard {...defaultProps} />);
       expect(
-        screen.queryByText(/This alumni might not have/),
+        screen.queryByText(/Records indicate the individual transitioned/),
       ).not.toBeInTheDocument();
       expect(screen.queryByText('Alumni')).not.toBeInTheDocument();
     });
@@ -132,12 +132,12 @@ describe('UserDetailHeaderCard', () => {
         />,
       );
       expect(
-        screen.getByText(/This alumni might not have/),
+        screen.getByText(/Records indicate the individual transitioned/),
       ).toBeInTheDocument();
       expect(screen.getByText(/30th June 2022/)).toBeInTheDocument();
       expect(screen.getByText('Alumni')).toBeInTheDocument();
     });
-    it('includes next role location in banner when alumniLocation is set', () => {
+    it('includes final affiliation in banner when alumniLocation is set', () => {
       render(
         <UserDetailHeaderCard
           {...defaultProps}
@@ -145,10 +145,12 @@ describe('UserDetailHeaderCard', () => {
           alumniLocation="University College London"
         />,
       );
-      expect(screen.getByText(/their next role was at/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/final affiliation noted at/),
+      ).toBeInTheDocument();
       expect(screen.getByText('University College London')).toBeInTheDocument();
     });
-    it('omits next role sentence when alumniLocation is not set', () => {
+    it('omits final affiliation when alumniLocation is not set', () => {
       render(
         <UserDetailHeaderCard
           {...defaultProps}
@@ -156,8 +158,30 @@ describe('UserDetailHeaderCard', () => {
         />,
       );
       expect(
-        screen.queryByText(/their next role was at/),
+        screen.queryByText(/final affiliation noted at/),
       ).not.toBeInTheDocument();
+    });
+    it('shows alumniLastUpdated date instead of lastModifiedDate when available', () => {
+      render(
+        <UserDetailHeaderCard
+          {...defaultProps}
+          alumniSinceDate="2022-06-30T00:00:00.000Z"
+          alumniLastUpdated="2023-03-15T00:00:00.000Z"
+          lastModifiedDate="2024-01-01T00:00:00.000Z"
+        />,
+      );
+      expect(screen.getByText(/15th March 2023/)).toBeInTheDocument();
+      expect(screen.queryByText(/1st January 2024/)).not.toBeInTheDocument();
+    });
+    it('falls back to lastModifiedDate when alumniLastUpdated is not set', () => {
+      render(
+        <UserDetailHeaderCard
+          {...defaultProps}
+          alumniSinceDate="2022-06-30T00:00:00.000Z"
+          lastModifiedDate="2023-01-08T00:00:00.000Z"
+        />,
+      );
+      expect(screen.getByText(/8th January 2023/)).toBeInTheDocument();
     });
   });
 

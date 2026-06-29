@@ -720,25 +720,25 @@ describe('Manuscript form', () => {
     expect(await findByLabelText(/originally published/i)).toBeDisabled();
   });
 
-  it('displays both date fields when both are already populated', async () => {
-    const { findByLabelText } = await renderManuscriptForm({
+  it('keeps the preprint date visible and locked when a manuscript moves to publication', async () => {
+    const { findByLabelText, queryByLabelText } = await renderManuscriptForm({
       ...defaultProps,
       preprintDate: '2022-01-03T00:00:00.000Z',
-      publicationDate: '2023-04-05T00:00:00.000Z',
+      publicationDate: undefined,
       manuscriptId: 'test-id',
       isOpenScienceTeamMember: false,
       type: 'Original Research',
-      lifecycle: 'Preprint',
+      lifecycle: 'Publication',
     });
 
     expect(
       await findByLabelText(/version 1 of this manuscript/i),
-    ).toBeVisible();
-    expect(await findByLabelText(/originally published/i)).toBeVisible();
+    ).toBeDisabled();
+    expect(queryByLabelText(/originally published/i)).toBeEnabled();
   });
 
-  it('displays both date fields when only one of them is populated', async () => {
-    const { findByLabelText } = await renderManuscriptForm({
+  it('shows only the preprint date for a manuscript still in the preprint lifecycle', async () => {
+    const { findByLabelText, queryByLabelText } = await renderManuscriptForm({
       ...defaultProps,
       preprintDate: '2022-01-03T00:00:00.000Z',
       publicationDate: undefined,
@@ -751,7 +751,7 @@ describe('Manuscript form', () => {
     expect(
       await findByLabelText(/version 1 of this manuscript/i),
     ).toBeVisible();
-    expect(await findByLabelText(/originally published/i)).toBeVisible();
+    expect(queryByLabelText(/originally published/i)).not.toBeInTheDocument();
   });
 
   it('should default to false for isOpenScienceTeamMember if not provided', async () => {

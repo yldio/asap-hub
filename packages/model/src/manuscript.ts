@@ -227,7 +227,6 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'availabilityStatement',
       'keyResourceTable',
-      'preprintDate',
       'publicationDate',
     ],
     'Publication with addendum or corrigendum': [
@@ -242,7 +241,6 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'availabilityStatement',
       'keyResourceTable',
-      'preprintDate',
       'publicationDate',
     ],
     Other: [
@@ -274,7 +272,6 @@ export const manuscriptFormFieldsMapping: Record<
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
-      'preprintDate',
       'publicationDate',
     ],
     'Publication with addendum or corrigendum': [
@@ -282,7 +279,6 @@ export const manuscriptFormFieldsMapping: Record<
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
-      'preprintDate',
       'publicationDate',
     ],
     Other: [

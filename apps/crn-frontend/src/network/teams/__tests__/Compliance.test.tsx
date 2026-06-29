@@ -290,6 +290,81 @@ it('updates manuscript and refreshes data when handleUpdateManuscript is called 
       }),
     ).toBeInTheDocument();
   });
+
+  expect(
+    screen.queryByText('User(s) assigned to a manuscript successfully.'),
+  ).not.toBeInTheDocument();
+}, 30000);
+
+it('does not display success message when apc coverage details are updated', async () => {
+  const manuscriptId = 'manuscript-id-1';
+  const mockManuscript: PartialManuscriptResponse = {
+    ...createPartialManuscriptResponse(),
+    id: manuscriptId,
+    status: 'Compliant',
+    apcRequested: false,
+  };
+
+  mockGetManuscripts.mockResolvedValue({
+    items: [mockManuscript],
+    total: 1,
+  });
+
+  mockUpdateManuscript.mockResolvedValue({
+    ...createManuscriptResponse(),
+    id: manuscriptId,
+    status: 'Compliant',
+    apcRequested: true,
+    apcAmountRequested: 200,
+    apcCoverageRequestStatus: 'notPaid',
+  });
+
+  await renderCompliancePage();
+
+  await waitFor(() => {
+    expect(screen.getByTestId('compliance-table-row')).toBeInTheDocument();
+  });
+
+  await userEvent.click(
+    screen.getByRole('button', { name: 'Edit APC Coverage Details' }),
+  );
+
+  const dialog = await screen.findByRole('dialog');
+
+  expect(
+    within(dialog).getByRole('heading', { name: 'APC Coverage' }),
+  ).toBeInTheDocument();
+
+  await userEvent.click(
+    within(dialog).getByRole('radio', { name: 'Requested' }),
+  );
+
+  await userEvent.type(within(dialog).getByRole('spinbutton'), '200');
+
+  await userEvent.click(
+    within(dialog).getByRole('radio', { name: 'Not Paid' }),
+  );
+
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Update' }));
+
+  await waitFor(() => {
+    expect(mockUpdateManuscript).toHaveBeenCalledWith(
+      manuscriptId,
+      {
+        apcRequested: true,
+        apcAmountRequested: 200,
+        apcCoverageRequestStatus: 'notPaid',
+        apcAmountPaid: undefined,
+        declinedReason: undefined,
+        notificationList: '',
+      },
+      expect.any(String),
+    );
+  });
+
+  expect(
+    screen.queryByText('User(s) assigned to a manuscript successfully.'),
+  ).not.toBeInTheDocument();
 }, 30000);
 
 it('manuscripts remain the same when there is not a match between the manuscript ids', async () => {

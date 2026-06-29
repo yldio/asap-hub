@@ -478,7 +478,7 @@ export class ManuscriptContentfulDataProvider
       status: 'Manuscript Resubmitted',
       impact: getLinkEntity(input.impact || ''),
       layImpactStatement: input.layImpactStatement,
-      firstPublicDate: input.firstPublicDate,
+      preprintDate: input.preprintDate,
       categories: getLinkEntities(input.categories || []),
     });
 
@@ -553,7 +553,7 @@ export class ManuscriptContentfulDataProvider
         teams: getLinkEntities(version.teams),
         impact: getLinkEntity(manuscriptData.impact || ''),
         layImpactStatement: manuscriptData.layImpactStatement,
-        firstPublicDate: manuscriptData.firstPublicDate,
+        preprintDate: manuscriptData.preprintDate,
         categories: getLinkEntities(manuscriptData.categories || []),
       });
 
@@ -762,7 +762,7 @@ const parseGraphQLManuscript = (
         id: category.sys.id,
         name: category.name,
       })),
-    firstPublicDate: manuscript.firstPublicDate,
+    preprintDate: manuscript.preprintDate,
   };
 };
 

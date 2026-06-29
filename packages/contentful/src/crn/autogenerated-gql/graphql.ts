@@ -1736,10 +1736,12 @@ export enum CategoryLinkingCollectionsManuscriptsCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -1771,10 +1773,12 @@ export enum CategoryLinkingCollectionsManuscriptsCursorCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -3052,10 +3056,12 @@ export enum DiscussionsLinkingCollectionsManuscriptsCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -3087,10 +3093,12 @@ export enum DiscussionsLinkingCollectionsManuscriptsCursorCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -6356,10 +6364,12 @@ export enum ImpactLinkingCollectionsManuscriptsCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -6391,10 +6401,12 @@ export enum ImpactLinkingCollectionsManuscriptsCursorCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -9110,10 +9122,12 @@ export enum ManuscriptVersionsLinkingCollectionsManuscriptsCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -9145,10 +9159,12 @@ export enum ManuscriptVersionsLinkingCollectionsManuscriptsCursorCollectionOrder
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -9178,6 +9194,8 @@ export enum ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCollection
   DoiDesc = 'doi_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   RridAsc = 'rrid_ASC',
   RridDesc = 'rrid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -9205,6 +9223,8 @@ export enum ManuscriptVersionsLinkingCollectionsResearchOutputVersionsCursorColl
   DoiDesc = 'doi_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   RridAsc = 'rrid_ASC',
   RridDesc = 'rrid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -9451,12 +9471,13 @@ export type Manuscripts = Entry &
     discussionsCollection?: Maybe<ManuscriptsDiscussionsCollection>;
     discussionsCursorCollection?: Maybe<ManuscriptsDiscussionsCursorCollection>;
     eligibilityReasons?: Maybe<Array<Maybe<Scalars['String']>>>;
-    firstPublicDate?: Maybe<Scalars['DateTime']>;
     impact?: Maybe<Impact>;
     layImpactStatement?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ManuscriptsLinkingCollections>;
+    preprintDate?: Maybe<Scalars['DateTime']>;
     previousStatus?: Maybe<Scalars['String']>;
     project?: Maybe<Projects>;
+    publicationDate?: Maybe<Scalars['DateTime']>;
     relatedResearchOutput?: Maybe<ResearchOutputs>;
     status?: Maybe<Scalars['String']>;
     statusUpdatedAt?: Maybe<Scalars['DateTime']>;
@@ -9590,12 +9611,6 @@ export type ManuscriptsEligibilityReasonsArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
-export type ManuscriptsFirstPublicDateArgs = {
-  locale?: InputMaybe<Scalars['String']>;
-  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsImpactArgs = {
   locale?: InputMaybe<Scalars['String']>;
   preview?: InputMaybe<Scalars['Boolean']>;
@@ -9615,6 +9630,12 @@ export type ManuscriptsLinkedFromArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsPreprintDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
 export type ManuscriptsPreviousStatusArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
@@ -9626,6 +9647,12 @@ export type ManuscriptsProjectArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<ProjectsFilter>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
+export type ManuscriptsPublicationDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/manuscripts) */
@@ -10042,15 +10069,6 @@ export type ManuscriptsFilter = {
     Array<InputMaybe<Scalars['String']>>
   >;
   eligibilityReasons_exists?: InputMaybe<Scalars['Boolean']>;
-  firstPublicDate?: InputMaybe<Scalars['DateTime']>;
-  firstPublicDate_exists?: InputMaybe<Scalars['Boolean']>;
-  firstPublicDate_gt?: InputMaybe<Scalars['DateTime']>;
-  firstPublicDate_gte?: InputMaybe<Scalars['DateTime']>;
-  firstPublicDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
-  firstPublicDate_lt?: InputMaybe<Scalars['DateTime']>;
-  firstPublicDate_lte?: InputMaybe<Scalars['DateTime']>;
-  firstPublicDate_not?: InputMaybe<Scalars['DateTime']>;
-  firstPublicDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   impact?: InputMaybe<CfImpactNestedFilter>;
   impact_exists?: InputMaybe<Scalars['Boolean']>;
   layImpactStatement?: InputMaybe<Scalars['String']>;
@@ -10060,6 +10078,15 @@ export type ManuscriptsFilter = {
   layImpactStatement_not?: InputMaybe<Scalars['String']>;
   layImpactStatement_not_contains?: InputMaybe<Scalars['String']>;
   layImpactStatement_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  preprintDate?: InputMaybe<Scalars['DateTime']>;
+  preprintDate_exists?: InputMaybe<Scalars['Boolean']>;
+  preprintDate_gt?: InputMaybe<Scalars['DateTime']>;
+  preprintDate_gte?: InputMaybe<Scalars['DateTime']>;
+  preprintDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  preprintDate_lt?: InputMaybe<Scalars['DateTime']>;
+  preprintDate_lte?: InputMaybe<Scalars['DateTime']>;
+  preprintDate_not?: InputMaybe<Scalars['DateTime']>;
+  preprintDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   previousStatus?: InputMaybe<Scalars['String']>;
   previousStatus_contains?: InputMaybe<Scalars['String']>;
   previousStatus_exists?: InputMaybe<Scalars['Boolean']>;
@@ -10069,6 +10096,15 @@ export type ManuscriptsFilter = {
   previousStatus_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   project?: InputMaybe<CfProjectsNestedFilter>;
   project_exists?: InputMaybe<Scalars['Boolean']>;
+  publicationDate?: InputMaybe<Scalars['DateTime']>;
+  publicationDate_exists?: InputMaybe<Scalars['Boolean']>;
+  publicationDate_gt?: InputMaybe<Scalars['DateTime']>;
+  publicationDate_gte?: InputMaybe<Scalars['DateTime']>;
+  publicationDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  publicationDate_lt?: InputMaybe<Scalars['DateTime']>;
+  publicationDate_lte?: InputMaybe<Scalars['DateTime']>;
+  publicationDate_not?: InputMaybe<Scalars['DateTime']>;
+  publicationDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedResearchOutput?: InputMaybe<CfResearchOutputsNestedFilter>;
   relatedResearchOutput_exists?: InputMaybe<Scalars['Boolean']>;
   status?: InputMaybe<Scalars['String']>;
@@ -10145,10 +10181,12 @@ export enum ManuscriptsOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -12486,10 +12524,12 @@ export enum ProjectsLinkingCollectionsManuscriptsCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -12521,10 +12561,12 @@ export enum ProjectsLinkingCollectionsManuscriptsCursorCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -14596,6 +14638,7 @@ export type ResearchOutputVersions = Entry &
     doi?: Maybe<Scalars['String']>;
     link?: Maybe<Scalars['String']>;
     linkedFrom?: Maybe<ResearchOutputVersionsLinkingCollections>;
+    publishDate?: Maybe<Scalars['DateTime']>;
     relatedManuscriptVersion?: Maybe<ManuscriptVersions>;
     rrid?: Maybe<Scalars['String']>;
     sys: Sys;
@@ -14636,6 +14679,12 @@ export type ResearchOutputVersionsLinkArgs = {
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
 export type ResearchOutputVersionsLinkedFromArgs = {
   allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
+export type ResearchOutputVersionsPublishDateArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/researchOutputVersions) */
@@ -14718,6 +14767,15 @@ export type ResearchOutputVersionsFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publishDate?: InputMaybe<Scalars['DateTime']>;
+  publishDate_exists?: InputMaybe<Scalars['Boolean']>;
+  publishDate_gt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_gte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  publishDate_lt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_lte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedManuscriptVersion?: InputMaybe<CfManuscriptVersionsNestedFilter>;
   relatedManuscriptVersion_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
@@ -14899,6 +14957,8 @@ export enum ResearchOutputVersionsOrder {
   DoiDesc = 'doi_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   RridAsc = 'rrid_ASC',
   RridDesc = 'rrid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -16133,10 +16193,12 @@ export enum ResearchOutputsLinkingCollectionsManuscriptsCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -16168,10 +16230,12 @@ export enum ResearchOutputsLinkingCollectionsManuscriptsCursorCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -16832,6 +16896,8 @@ export enum ResearchOutputsVersionsCollectionOrder {
   DoiDesc = 'doi_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   RridAsc = 'rrid_ASC',
   RridDesc = 'rrid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -16865,6 +16931,8 @@ export enum ResearchOutputsVersionsCursorCollectionOrder {
   DoiDesc = 'doi_DESC',
   LinkAsc = 'link_ASC',
   LinkDesc = 'link_DESC',
+  PublishDateAsc = 'publishDate_ASC',
+  PublishDateDesc = 'publishDate_DESC',
   RridAsc = 'rrid_ASC',
   RridDesc = 'rrid_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
@@ -19591,10 +19659,12 @@ export enum TeamsLinkingCollectionsManuscriptsCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -19626,10 +19696,12 @@ export enum TeamsLinkingCollectionsManuscriptsCursorCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -22315,10 +22387,12 @@ export enum UsersLinkingCollectionsManuscriptsCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -22350,10 +22424,12 @@ export enum UsersLinkingCollectionsManuscriptsCursorCollectionOrder {
   CountDesc = 'count_DESC',
   DeclinedReasonAsc = 'declinedReason_ASC',
   DeclinedReasonDesc = 'declinedReason_DESC',
-  FirstPublicDateAsc = 'firstPublicDate_ASC',
-  FirstPublicDateDesc = 'firstPublicDate_DESC',
+  PreprintDateAsc = 'preprintDate_ASC',
+  PreprintDateDesc = 'preprintDate_DESC',
   PreviousStatusAsc = 'previousStatus_ASC',
   PreviousStatusDesc = 'previousStatus_DESC',
+  PublicationDateAsc = 'publicationDate_ASC',
+  PublicationDateDesc = 'publicationDate_DESC',
   StatusUpdatedAtAsc = 'statusUpdatedAt_ASC',
   StatusUpdatedAtDesc = 'statusUpdatedAt_DESC',
   StatusAsc = 'status_ASC',
@@ -25044,6 +25120,15 @@ export type CfResearchOutputVersionsNestedFilter = {
   link_not?: InputMaybe<Scalars['String']>;
   link_not_contains?: InputMaybe<Scalars['String']>;
   link_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  publishDate?: InputMaybe<Scalars['DateTime']>;
+  publishDate_exists?: InputMaybe<Scalars['Boolean']>;
+  publishDate_gt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_gte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  publishDate_lt?: InputMaybe<Scalars['DateTime']>;
+  publishDate_lte?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not?: InputMaybe<Scalars['DateTime']>;
+  publishDate_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
   relatedManuscriptVersion_exists?: InputMaybe<Scalars['Boolean']>;
   rrid?: InputMaybe<Scalars['String']>;
   rrid_contains?: InputMaybe<Scalars['String']>;
@@ -32261,11 +32346,7 @@ export type FetchManuscriptVersionByIdQuery = {
           Maybe<
             Pick<
               Manuscripts,
-              | 'title'
-              | 'url'
-              | 'count'
-              | 'layImpactStatement'
-              | 'firstPublicDate'
+              'title' | 'url' | 'count' | 'layImpactStatement' | 'preprintDate'
             > & {
               sys: Pick<Sys, 'id'>;
               relatedResearchOutput?: Maybe<{ sys: Pick<Sys, 'id'> }>;
@@ -32523,7 +32604,7 @@ export type FetchComplianceManuscriptVersionsQuery = {
                       | 'count'
                       | 'status'
                       | 'layImpactStatement'
-                      | 'firstPublicDate'
+                      | 'preprintDate'
                       | 'apcRequested'
                       | 'apcAmountRequested'
                       | 'apcCoverageRequestStatus'
@@ -32603,7 +32684,7 @@ export type FetchVersionsByManuscriptQuery = {
         Maybe<
           Pick<
             Manuscripts,
-            'title' | 'url' | 'count' | 'layImpactStatement' | 'firstPublicDate'
+            'title' | 'url' | 'count' | 'layImpactStatement' | 'preprintDate'
           > & {
             sys: Pick<Sys, 'id'>;
             relatedResearchOutput?: Maybe<{ sys: Pick<Sys, 'id'> }>;
@@ -33259,7 +33340,7 @@ export type ManuscriptsContentFragment = Pick<
   | 'apcAmountPaid'
   | 'declinedReason'
   | 'layImpactStatement'
-  | 'firstPublicDate'
+  | 'preprintDate'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
   project?: Maybe<
@@ -33301,7 +33382,7 @@ export type FetchManuscriptByIdQuery = {
       | 'apcAmountPaid'
       | 'declinedReason'
       | 'layImpactStatement'
-      | 'firstPublicDate'
+      | 'preprintDate'
     > & {
       teamsCollection?: Maybe<{
         items: Array<
@@ -42516,7 +42597,7 @@ export const ManuscriptsContentFragmentDoc = {
             kind: 'Field',
             name: { kind: 'Name', value: 'layImpactStatement' },
           },
-          { kind: 'Field', name: { kind: 'Name', value: 'firstPublicDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'preprintDate' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'categoriesCollection' },
@@ -58126,7 +58207,7 @@ export const FetchManuscriptVersionByIdDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
-                                      value: 'firstPublicDate',
+                                      value: 'preprintDate',
                                     },
                                   },
                                   {
@@ -59014,7 +59095,7 @@ export const FetchComplianceManuscriptVersionsDocument = {
                                           kind: 'Field',
                                           name: {
                                             kind: 'Name',
-                                            value: 'firstPublicDate',
+                                            value: 'preprintDate',
                                           },
                                         },
                                         {
@@ -59774,7 +59855,7 @@ export const FetchVersionsByManuscriptDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'firstPublicDate' },
+                        name: { kind: 'Name', value: 'preprintDate' },
                       },
                       {
                         kind: 'Field',

@@ -56,7 +56,7 @@ export const mapToSheetRow = (
     safe(manuscriptVersion.impact),
     safe(manuscriptVersion.layImpactStatement),
     safe(manuscriptVersion.categories),
-    safe(manuscriptVersion.firstPublicDate),
+    safe(manuscriptVersion.preprintDate),
     safe(manuscriptVersion.versionLastUpdatedDate),
   ];
 };

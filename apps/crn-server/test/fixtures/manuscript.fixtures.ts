@@ -591,7 +591,7 @@ export const getManuscriptCreateDataObject = (): ManuscriptCreateDataObject => {
     eligibilityReasons: [],
     impact: 'impact-id',
     layImpactStatement: 'impact statement',
-    firstPublicDate: '2022-01-03T10:00:00.000Z',
+    preprintDate: '2022-01-03T10:00:00.000Z',
     categories: ['category-id-1'],
     versions: [
       {

@@ -175,7 +175,7 @@ export const manuscriptFormFieldsMapping: Record<
           | 'additionalAuthors'
           | 'versionUID'
         >
-      | 'firstPublicDate'
+      | 'preprintDate'
     >
   >
 > = {
@@ -201,7 +201,7 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'availabilityStatement',
       'keyResourceTable',
-      'firstPublicDate',
+      'preprintDate',
     ],
     'Typeset proof': [
       'acknowledgedGrantNumber',
@@ -226,7 +226,7 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'availabilityStatement',
       'keyResourceTable',
-      'firstPublicDate',
+      'preprintDate',
     ],
     'Publication with addendum or corrigendum': [
       'preprintDoi',
@@ -240,7 +240,7 @@ export const manuscriptFormFieldsMapping: Record<
       'labMaterialsRegistered',
       'availabilityStatement',
       'keyResourceTable',
-      'firstPublicDate',
+      'preprintDate',
     ],
     Other: [
       'otherDetails',
@@ -260,7 +260,7 @@ export const manuscriptFormFieldsMapping: Record<
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
     ],
-    Preprint: ['firstPublicDate'],
+    Preprint: ['preprintDate'],
     'Typeset proof': [
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
@@ -271,14 +271,14 @@ export const manuscriptFormFieldsMapping: Record<
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
-      'firstPublicDate',
+      'preprintDate',
     ],
     'Publication with addendum or corrigendum': [
       'publicationDoi',
       'acknowledgedGrantNumber',
       'asapAffiliationIncluded',
       'manuscriptLicense',
-      'firstPublicDate',
+      'preprintDate',
     ],
     Other: [
       'otherDetails',
@@ -346,7 +346,7 @@ export type ManuscriptCategory = {
 export type ManuscriptDataObject = {
   id: string;
   title: string;
-  firstPublicDate?: string;
+  preprintDate?: string;
   url?: string;
   status?: ManuscriptStatus;
   teamId?: string;
@@ -388,7 +388,7 @@ export type ManuscriptPostCreateRequest = Pick<
   | 'teamId'
   | 'projectId'
   | 'url'
-  | 'firstPublicDate'
+  | 'preprintDate'
   | 'layImpactStatement'
 > & {
   eligibilityReasons: string[];
@@ -503,7 +503,7 @@ export type ManuscriptFormData = Pick<
   ManuscriptPostCreateRequest,
   'title' | 'teamId' | 'eligibilityReasons' | 'url' | 'layImpactStatement'
 > & {
-  firstPublicDate?: string;
+  preprintDate?: string;
   impact: MultiselectOption;
   categories: MultiselectOption[];
   versions: (Pick<
@@ -751,7 +751,7 @@ export const manuscriptPostRequestSchema: JSONSchemaType<ManuscriptPostRequest> 
         items: manuscriptVersionSchema,
       },
       notificationList: { type: 'string', nullable: true },
-      firstPublicDate: { type: 'string', nullable: true },
+      preprintDate: { type: 'string', nullable: true },
       impact: { type: 'string', nullable: true },
       layImpactStatement: { type: 'string' },
       categories: { type: 'array', items: { type: 'string' }, nullable: true },
@@ -802,7 +802,7 @@ export const manuscriptPutRequestSchema: JSONSchemaType<ManuscriptPutRequest> =
       notificationList: { type: 'string', nullable: true },
       impact: { type: 'string', nullable: true },
       categories: { type: 'array', items: { type: 'string' }, nullable: true },
-      firstPublicDate: { type: 'string', nullable: true },
+      preprintDate: { type: 'string', nullable: true },
       layImpactStatement: { type: 'string', nullable: true },
     },
     additionalProperties: false,
@@ -1014,7 +1014,7 @@ export type ManuscriptVersionResponse = {
   versionId?: string;
   doi?: string;
   researchOutputId?: string;
-  firstPublicDate?: string;
+  preprintDate?: string;
 };
 
 export type ListManuscriptVersionResponse =
@@ -1079,7 +1079,7 @@ export type ManuscriptVersionExport = {
   mainProject: string;
   teams: string;
   status: string;
-  firstPublicDate?: string;
+  preprintDate?: string;
   apcRequested?: string;
   apcAmountRequested?: string;
   apcCoverageRequestStatus?: string;

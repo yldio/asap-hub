@@ -270,7 +270,7 @@ export const researchOutputRouteFactory = (
       categories: manuscript.categories?.map((category) => category.id),
       relatedManuscriptVersion: preprintManuscriptVersion.id,
       relatedManuscript: manuscript.id,
-      publishDate: manuscript.firstPublicDate,
+      publishDate: manuscript.preprintDate,
       published: true,
     });
 

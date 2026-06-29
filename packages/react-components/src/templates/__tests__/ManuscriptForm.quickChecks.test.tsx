@@ -165,7 +165,7 @@ describe('QuickCheck logic', () => {
               type="Original Research"
               publicationDoi="10.0777"
               lifecycle="Publication"
-              firstPublicDate="2022-01-03T00:00:00.000Z"
+              preprintDate="2022-01-03T00:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -191,7 +191,7 @@ describe('QuickCheck logic', () => {
         eligibilityReasons: [],
         impact: 'impact-id-1',
         layImpactStatement: 'manuscript impact statement',
-        firstPublicDate: '2022-01-03T00:00:00.000Z',
+        preprintDate: '2022-01-03T00:00:00.000Z',
         categories: ['category-id-1'],
         versions: [
           {
@@ -278,7 +278,7 @@ describe('QuickCheck logic', () => {
               type="Original Research"
               publicationDoi="10.0777"
               lifecycle="Publication"
-              firstPublicDate="2022-01-03T00:00:00.000Z"
+              preprintDate="2022-01-03T00:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -304,7 +304,7 @@ describe('QuickCheck logic', () => {
         eligibilityReasons: [],
         impact: 'impact-id-1',
         layImpactStatement: 'manuscript impact statement',
-        firstPublicDate: '2022-01-03T00:00:00.000Z',
+        preprintDate: '2022-01-03T00:00:00.000Z',
         categories: ['category-id-1'],
         versions: [
           {
@@ -386,7 +386,7 @@ describe('QuickCheck logic', () => {
               type="Original Research"
               publicationDoi="10.0777"
               lifecycle="Publication"
-              firstPublicDate="2022-01-03T00:00:00.000Z"
+              preprintDate="2022-01-03T00:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -425,7 +425,7 @@ describe('QuickCheck logic', () => {
           impact: 'impact-id-1',
           layImpactStatement: 'manuscript impact statement',
           categories: ['category-id-1'],
-          firstPublicDate: '2022-01-03T00:00:00.000Z',
+          preprintDate: '2022-01-03T00:00:00.000Z',
           versions: [
             expect.objectContaining({
               acknowledgedGrantNumber: 'Yes',

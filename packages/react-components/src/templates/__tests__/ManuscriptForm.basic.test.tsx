@@ -655,11 +655,11 @@ describe('Manuscript form', () => {
     ).toBeDisabled();
   });
 
-  it('should disable firstPublicDate field if user is resubmitting and firstPublicDate has already been provided', async () => {
+  it('should disable preprintDate field if user is resubmitting and preprintDate has already been provided', async () => {
     const { findByLabelText, getByRole, getByText } =
       await renderManuscriptForm({
         ...defaultProps,
-        firstPublicDate: '2022-01-03T00:00:00.000Z',
+        preprintDate: '2022-01-03T00:00:00.000Z',
         resubmitManuscript: true,
         manuscriptId: 'test-id',
         isOpenScienceTeamMember: false,

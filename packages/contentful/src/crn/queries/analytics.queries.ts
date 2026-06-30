@@ -381,7 +381,7 @@ export const FETCH_OS_CHAMPION = gql`
                 limit: 10
                 where: {
                   date_exists: true
-                  type_exists: true
+                  awardType: { name: "Open Science Champion" }
                   date_gte: $dateFilter
                 }
               ) {

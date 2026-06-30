@@ -129,7 +129,23 @@ it('disables the date field when imported from a manuscript', () => {
   expect(screen.getByLabelText(/date made public/i)).toBeDisabled();
 });
 
-it('keeps the date field enabled when not imported from a manuscript', () => {
-  render(<ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />);
-  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
+it('prompts for the date when editing a public output that has no date', async () => {
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
+  const { findByText } = render(
+    <ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />,
+  );
+
+  const dateInput = screen.getByLabelText(/date made public/i);
+  expect(dateInput).toBeEnabled();
+  expect(dateInput).toBeRequired();
+  expect(dateInput).toHaveValue('');
+
+  await userEvent.click(dateInput);
+  await userEvent.tab();
+
+  expect(await findByText(/please enter the date made public/i)).toBeVisible();
+
+  consoleMock.mockRestore();
 });

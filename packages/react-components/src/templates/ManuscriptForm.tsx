@@ -967,12 +967,14 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
     clearFormToast();
     const versionData = data.versions[0];
     const urlValue = data.url || undefined;
-    const preprintDateValue = data.preprintDate
-      ? new Date(data.preprintDate).toISOString()
-      : undefined;
-    const publicationDateValue = data.publicationDate
-      ? new Date(data.publicationDate).toISOString()
-      : undefined;
+    const preprintDateValue =
+      showPreprintDateField && data.preprintDate
+        ? new Date(data.preprintDate).toISOString()
+        : undefined;
+    const publicationDateValue =
+      showPublicationDateField && data.publicationDate
+        ? new Date(data.publicationDate).toISOString()
+        : undefined;
 
     if (versionData?.type && versionData.lifecycle) {
       const {

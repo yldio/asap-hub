@@ -186,4 +186,23 @@ describe('mapManuscriptVersionToResearchOutput', () => {
       expect(output.publishDate).toBe('2024-05-06T00:00:00.000Z');
     },
   );
+
+  it.each(['Publication', 'Publication with addendum or corrigendum'] as const)(
+    'falls back to the preprint date when the publication date is missing for %s',
+    (lifecycle) => {
+      const manuscriptVersion = createManuscriptVersionResponse({
+        lifecycle,
+        preprintDate: '2023-01-02T00:00:00.000Z',
+        publicationDate: undefined,
+      });
+
+      const output = mapManuscriptVersionToResearchOutput(
+        undefined,
+        manuscriptVersion,
+        'Team',
+      );
+
+      expect(output.publishDate).toBe('2023-01-02T00:00:00.000Z');
+    },
+  );
 });

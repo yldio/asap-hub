@@ -55,7 +55,10 @@ export const mapManuscriptVersionToResearchOutput = (
   publishDate:
     manuscriptVersion.lifecycle === 'Publication' ||
     manuscriptVersion.lifecycle === 'Publication with addendum or corrigendum'
-      ? manuscriptVersion.publicationDate
+      ? // Older publication manuscripts stored the publication date in
+        // preprintDate (the single "Date first made public" field), so fall
+        // back to it when publicationDate is not populated.
+        manuscriptVersion.publicationDate || manuscriptVersion.preprintDate
       : manuscriptVersion.preprintDate,
 });
 

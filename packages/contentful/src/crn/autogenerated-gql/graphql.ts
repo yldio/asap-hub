@@ -54788,11 +54788,25 @@ export const FetchOsChampionDocument = {
                                                     kind: 'ObjectField',
                                                     name: {
                                                       kind: 'Name',
-                                                      value: 'type_exists',
+                                                      value: 'awardType',
                                                     },
                                                     value: {
-                                                      kind: 'BooleanValue',
-                                                      value: true,
+                                                      kind: 'ObjectValue',
+                                                      fields: [
+                                                        {
+                                                          kind: 'ObjectField',
+                                                          name: {
+                                                            kind: 'Name',
+                                                            value: 'name',
+                                                          },
+                                                          value: {
+                                                            kind: 'StringValue',
+                                                            value:
+                                                              'Open Science Champion',
+                                                            block: false,
+                                                          },
+                                                        },
+                                                      ],
                                                     },
                                                   },
                                                   {

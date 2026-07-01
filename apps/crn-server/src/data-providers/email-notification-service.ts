@@ -11,9 +11,10 @@ import {
   GraphQLClient,
 } from '@asap-hub/contentful';
 import {
+  emailHeaderImageUrl,
+  emailHeaderLinkUrl,
   emailNotificationMapping,
   EmailTriggerAction,
-  manuscriptNotificationAttachmentContent,
   WorkspaceType,
 } from '@asap-hub/model';
 import { cleanArray } from '@asap-hub/server-common';
@@ -30,6 +31,8 @@ import { getCommaAndString } from '../utils/text';
 import { getManuscriptVersionUID } from './contentful/manuscript.data-provider';
 
 type TemplateModel = {
+  headerImage: string;
+  headerLink: string;
   manuscript: {
     title: string;
     type: string;
@@ -92,14 +95,6 @@ export class EmailNotificationService {
       MessageStream: 'outbound',
       TemplateAlias: templateAlias,
       TemplateModel: templateModel,
-      Attachments: [
-        {
-          Name: 'asaplogo.jpg',
-          ContentType: 'image/jpeg',
-          ContentID: 'cid:asaplogo',
-          Content: manuscriptNotificationAttachmentContent,
-        },
-      ],
     });
     if (response.ErrorCode !== 0)
       logger.error(
@@ -194,6 +189,8 @@ export class EmailNotificationService {
     const notificationData = (
       recipientType: 'open_science_team' | 'grantee',
     ): TemplateModel => ({
+      headerImage: emailHeaderImageUrl,
+      headerLink: emailHeaderLinkUrl,
       manuscript: manuscriptData,
       team: {
         name:

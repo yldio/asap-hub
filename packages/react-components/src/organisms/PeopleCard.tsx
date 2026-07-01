@@ -47,8 +47,6 @@ const moveStyles = css({
   },
 });
 
-const alumniBadgeStyles = css({});
-
 const PeopleCard: React.FC<UserListItemResponse> = ({
   id,
   alumniSinceDate,
@@ -85,9 +83,7 @@ const PeopleCard: React.FC<UserListItemResponse> = ({
               {degree && `, ${degree}`}
             </LinkHeadline>
             {alumniSinceDate && (
-              <span css={alumniBadgeStyles}>
-                <StateTag icon={alumniBadgeIcon} label="Alumni" />
-              </span>
+              <StateTag icon={alumniBadgeIcon} label="Alumni" />
             )}
           </div>
 

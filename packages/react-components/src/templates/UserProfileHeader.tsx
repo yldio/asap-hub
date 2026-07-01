@@ -16,6 +16,7 @@ import { paper, tin } from '../colors';
 import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
 import { createMailTo } from '../mail';
 import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
+import { badgeImageStyles } from '../molecules/AvatarWithBadge';
 import { Toast } from '../organisms';
 import { badgesAnchorId } from '../organisms/UserProfileBadges';
 import {
@@ -185,13 +186,8 @@ const badgeStyles = css({
   display: 'inline-flex',
   width: rem(badgeSize),
   height: rem(badgeSize),
+  // sit above the hover/upload and saving overlays, which have no z-index
   zIndex: 1,
-});
-const badgeImageStyles = css({
-  width: '100%',
-  height: '100%',
-  borderRadius: '50%',
-  objectFit: 'cover',
 });
 
 type UserProfileHeaderProps = Pick<

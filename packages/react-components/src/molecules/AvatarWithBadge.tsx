@@ -23,7 +23,8 @@ const badgeSlotStyles = (size: number) =>
     height: rem(size),
   });
 
-const badgeImageStyles = css({
+// shared with the profile-header badge overlay so the circular crop can't drift
+export const badgeImageStyles = css({
   width: '100%',
   height: '100%',
   borderRadius: '50%',

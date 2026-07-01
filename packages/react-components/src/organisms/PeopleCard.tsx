@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { getLatestUserAward, UserListItemResponse } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 
 import { Card, Avatar, Caption, StateTag } from '../atoms';
@@ -59,7 +60,10 @@ const PeopleCard: React.FC<UserListItemResponse> = ({
   ...props
 }) => {
   const userHref = network({}).users({}).user({ userId: id }).$;
-  const latestAward = getLatestUserAward(props.teams);
+  const { isEnabled } = useFlags();
+  const latestAward = isEnabled('STAGING_MODE')
+    ? getLatestUserAward(props.teams)
+    : undefined;
   const userAvatar = latestAward?.iconUrl ? (
     <AvatarWithBadge
       imageUrl={avatarUrl}

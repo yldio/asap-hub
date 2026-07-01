@@ -1,5 +1,6 @@
 import React, { ComponentProps, ReactNode } from 'react';
 import { getUserAwards, UserResponse } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 
 import {
   ProfileExpertiseAndResources,
@@ -51,7 +52,8 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   teams,
   ...roleProps
 }) => {
-  const badges = getUserAwards(teams);
+  const { isEnabled } = useFlags();
+  const badges = isEnabled('STAGING_MODE') ? getUserAwards(teams) : [];
   const badgesCard = badges.length > 0 && {
     card: <UserProfileBadges badges={badges} />,
   };

@@ -1,5 +1,5 @@
 import { getLatestUserAward, UserResponse } from '@asap-hub/model';
-import { UserProfileContext } from '@asap-hub/react-context';
+import { UserProfileContext, useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css, keyframes } from '@emotion/react';
 import { useContext } from 'react';
@@ -266,7 +266,10 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 }) => {
   const tabRoutes = network({}).users({}).user({ userId: id });
   const { isOwnProfile } = useContext(UserProfileContext);
-  const latestAward = getLatestUserAward(teams);
+  const { isEnabled } = useFlags();
+  const latestAward = isEnabled('STAGING_MODE')
+    ? getLatestUserAward(teams)
+    : undefined;
 
   return (
     <>

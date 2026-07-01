@@ -4,6 +4,15 @@ import { createUserListItemResponse } from '@asap-hub/fixtures';
 
 import PeopleCard from '../PeopleCard';
 
+const mockIsEnabled = jest.fn();
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+beforeEach(() => {
+  mockIsEnabled.mockReturnValue(true);
+});
+
 const props: ComponentProps<typeof PeopleCard> = createUserListItemResponse();
 
 it('renders the display name', () => {
@@ -110,6 +119,15 @@ describe('award badge', () => {
         ]}
       />,
     );
+
+    expect(
+      screen.queryByAltText('Open Science Champion'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not render an award badge when STAGING_MODE is disabled', () => {
+    mockIsEnabled.mockReturnValue(false);
+    render(<PeopleCard {...props} teams={teamWithAwards} />);
 
     expect(
       screen.queryByAltText('Open Science Champion'),

@@ -14,6 +14,7 @@ import {
 } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
 import { network } from '@asap-hub/routing';
+import { enable, disable, reset } from '@asap-hub/flags';
 
 import {
   Auth0Provider,
@@ -247,9 +248,9 @@ describe('UserDetail', () => {
   });
 
   describe('badges', () => {
-    it('renders the Badges card for a user with awards', async () => {
+    const userWithAwards = () => {
       const baseUser = createUserResponse();
-      const user = {
+      return {
         ...baseUser,
         teams: [
           {
@@ -265,14 +266,28 @@ describe('UserDetail', () => {
           },
         ],
       };
+    };
 
-      await renderResearch(user);
+    afterEach(() => {
+      reset();
+    });
+
+    it('renders the Badges card for a user with awards when STAGING_MODE is enabled', async () => {
+      enable('STAGING_MODE');
+      await renderResearch(userWithAwards());
 
       expect(screen.getByText('Badges')).toBeInTheDocument();
       expect(screen.getByText('Award Team')).toBeInTheDocument();
     });
 
+    it('does not render the Badges card when STAGING_MODE is disabled', async () => {
+      disable('STAGING_MODE');
+      await renderResearch(userWithAwards());
+      expect(screen.queryByText('Badges')).not.toBeInTheDocument();
+    });
+
     it('does not render the Badges card when the user has no awards', async () => {
+      enable('STAGING_MODE');
       await renderResearch(createUserResponse());
       expect(screen.queryByText('Badges')).not.toBeInTheDocument();
     });

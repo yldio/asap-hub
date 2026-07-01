@@ -1187,6 +1187,8 @@ export type AwardTypeLinkingCollectionsEntryCursorCollectionArgs = {
 export enum AwardTypeLinkingCollectionsAwardsCollectionOrder {
   DateAsc = 'date_ASC',
   DateDesc = 'date_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -1195,13 +1197,13 @@ export enum AwardTypeLinkingCollectionsAwardsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
 }
 
 export enum AwardTypeLinkingCollectionsAwardsCursorCollectionOrder {
   DateAsc = 'date_ASC',
   DateDesc = 'date_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -1210,8 +1212,6 @@ export enum AwardTypeLinkingCollectionsAwardsCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
 }
 
 export enum AwardTypeOrder {
@@ -1235,8 +1235,8 @@ export type Awards = Entry &
     contentfulMetadata: ContentfulMetadata;
     date?: Maybe<Scalars['DateTime']>;
     linkedFrom?: Maybe<AwardsLinkingCollections>;
+    shortDescription?: Maybe<Scalars['String']>;
     sys: Sys;
-    type?: Maybe<Scalars['String']>;
   };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awards) */
@@ -1259,7 +1259,7 @@ export type AwardsLinkedFromArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awards) */
-export type AwardsTypeArgs = {
+export type AwardsShortDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -1292,14 +1292,14 @@ export type AwardsFilter = {
   date_lte?: InputMaybe<Scalars['DateTime']>;
   date_not?: InputMaybe<Scalars['DateTime']>;
   date_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  type?: InputMaybe<Scalars['String']>;
-  type_contains?: InputMaybe<Scalars['String']>;
-  type_exists?: InputMaybe<Scalars['Boolean']>;
-  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  type_not?: InputMaybe<Scalars['String']>;
-  type_not_contains?: InputMaybe<Scalars['String']>;
-  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type AwardsLinkingCollections = {
@@ -1384,6 +1384,8 @@ export enum AwardsLinkingCollectionsTeamMembershipCursorCollectionOrder {
 export enum AwardsOrder {
   DateAsc = 'date_ASC',
   DateDesc = 'date_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -1392,8 +1394,6 @@ export enum AwardsOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
@@ -18863,6 +18863,8 @@ export type TeamMembershipAwardsCollection = {
 export enum TeamMembershipAwardsCollectionOrder {
   DateAsc = 'date_ASC',
   DateDesc = 'date_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -18871,8 +18873,6 @@ export enum TeamMembershipAwardsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
 }
 
 export type TeamMembershipAwardsCursorCollection = {
@@ -18884,6 +18884,8 @@ export type TeamMembershipAwardsCursorCollection = {
 export enum TeamMembershipAwardsCursorCollectionOrder {
   DateAsc = 'date_ASC',
   DateDesc = 'date_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -18892,8 +18894,6 @@ export enum TeamMembershipAwardsCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
 }
 
 export type TeamMembershipCollection = {
@@ -24407,14 +24407,14 @@ export type CfAwardsNestedFilter = {
   date_lte?: InputMaybe<Scalars['DateTime']>;
   date_not?: InputMaybe<Scalars['DateTime']>;
   date_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  type?: InputMaybe<Scalars['String']>;
-  type_contains?: InputMaybe<Scalars['String']>;
-  type_exists?: InputMaybe<Scalars['Boolean']>;
-  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  type_not?: InputMaybe<Scalars['String']>;
-  type_not_contains?: InputMaybe<Scalars['String']>;
-  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CfCalendarsNestedFilter = {

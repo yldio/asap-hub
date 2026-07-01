@@ -80,6 +80,32 @@ describe('CookiesModal', () => {
     expect(mockOnSaveCookiePreferences).toHaveBeenCalledWith(true);
   });
 
+  it('disables the button while saving (showing the loading spinner) and re-enables it when done', async () => {
+    let resolveSave: () => void = () => undefined;
+    mockOnSaveCookiePreferences.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        resolveSave = resolve;
+      }),
+    );
+
+    await renderCookiesModal();
+
+    const saveButton = screen.getByRole('button', { name: /save and close/i });
+
+    await userEvent.click(saveButton);
+
+    // While saving the button is disabled and shows the loading spinner.
+    expect(saveButton).toBeDisabled();
+
+    await act(async () => {
+      resolveSave();
+    });
+
+    await waitFor(() => {
+      expect(saveButton).toBeEnabled();
+    });
+  });
+
   it('displays the third party cookie pill', async () => {
     await renderCookiesModal();
 

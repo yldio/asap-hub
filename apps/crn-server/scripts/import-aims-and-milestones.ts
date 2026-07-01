@@ -26,8 +26,6 @@ const REQUIRED_MILESTONES_COLUMNS = [
   'Milestone Status',
 ];
 
-export type MilestoneStatus = (typeof milestoneStatuses)[number];
-
 type GrantBucket = 'original' | 'supplement';
 const GRANT_TYPES: GrantBucket[] = ['original', 'supplement'];
 

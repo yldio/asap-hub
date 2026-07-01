@@ -246,6 +246,38 @@ describe('UserDetail', () => {
     });
   });
 
+  describe('badges', () => {
+    it('renders the Badges card for a user with awards', async () => {
+      const baseUser = createUserResponse();
+      const user = {
+        ...baseUser,
+        teams: [
+          {
+            ...baseUser.teams[0]!,
+            displayName: 'Award Team',
+            awards: [
+              {
+                name: 'Open Science Champion',
+                date: '2024-01-01',
+                iconUrl: 'https://example.com/badge.png',
+              },
+            ],
+          },
+        ],
+      };
+
+      await renderResearch(user);
+
+      expect(screen.getByText('Badges')).toBeInTheDocument();
+      expect(screen.getByText('Award Team')).toBeInTheDocument();
+    });
+
+    it('does not render the Badges card when the user has no awards', async () => {
+      await renderResearch(createUserResponse());
+      expect(screen.queryByText('Badges')).not.toBeInTheDocument();
+    });
+  });
+
   describe('UserProjectsCard feature flag', () => {
     const userWithProjects = {
       ...createUserResponse(),

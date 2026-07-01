@@ -127,6 +127,58 @@ describe('User', () => {
         ],
       });
     });
+
+    it('carries team awards through to the algolia list item', () => {
+      const awards = [
+        { name: 'Open Science Champion', date: '2024-01-01', iconUrl: 'icon' },
+      ];
+      const listItem = toUserListItem({
+        id: 'user-2',
+        createdDate: '2020-09-07T17:36:54Z',
+        lastModifiedDate: '2020-09-07T17:36:54Z',
+        onboarded: true,
+        displayName: 'Awarded User',
+        fullDisplayName: 'Awarded User',
+        firstName: 'Awarded',
+        lastName: 'User',
+        email: 'awarded.user@asap.com',
+        orcidWorks: [],
+        tags: [],
+        questions: [],
+        role: 'Grantee',
+        social: {},
+        workingGroups: [],
+        interestGroups: [],
+        labs: [],
+        teams: [
+          {
+            displayName: 'Alessi',
+            id: 'team-alessi',
+            role: 'Project Manager',
+            awards,
+          },
+          {
+            displayName: 'De Camilli',
+            id: 'team-de-camilli',
+            role: 'Project Manager',
+          },
+        ],
+      });
+
+      expect(listItem.teams).toEqual([
+        {
+          displayName: 'Alessi',
+          id: 'team-alessi',
+          role: 'Project Manager',
+          awards,
+        },
+        {
+          displayName: 'De Camilli',
+          id: 'team-de-camilli',
+          role: 'Project Manager',
+        },
+      ]);
+    });
   });
 
   describe('awards selectors', () => {

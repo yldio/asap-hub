@@ -399,7 +399,7 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
       id: teamItem.id,
       role: teamItem.role,
       displayName: teamItem.displayName,
-      awards: teamItem.awards,
+      ...(teamItem.awards ? { awards: teamItem.awards } : {}),
     })),
     _tags: tags?.map(({ name }) => name) || [],
   };
@@ -425,7 +425,5 @@ export const getUserAwards = (
 export const getLatestUserAward = (
   teams: Pick<UserListItemTeam, 'displayName' | 'awards'>[] = [],
 ): UserAwardWithTeam | undefined =>
-  getUserAwards(teams).reduce<UserAwardWithTeam | undefined>(
-    (latest, award) => (!latest || award.date > latest.date ? award : latest),
-    undefined,
-  );
+  // getUserAwards is already sorted newest-first, so the head is the latest
+  getUserAwards(teams)[0];

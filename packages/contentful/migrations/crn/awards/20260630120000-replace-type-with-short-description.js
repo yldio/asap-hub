@@ -2,6 +2,10 @@ module.exports.description =
   'Replace awards type with a required short description and reorder fields';
 
 module.exports.up = (migration) => {
+  // Depends on the awardType/ migration (which creates awards.awardType) having
+  // run first. ctf-migrate orders content-type folders by readdir, not by
+  // timestamp across folders, so ensure that migration is applied to the target
+  // environment before this one.
   const awards = migration.editContentType('awards');
 
   awards

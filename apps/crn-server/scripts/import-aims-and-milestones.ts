@@ -1,4 +1,5 @@
 import { Entry, getLinkEntity } from '@asap-hub/contentful';
+import { MilestoneStatus, milestoneStatuses } from '@asap-hub/model';
 import {
   cell,
   col,
@@ -11,6 +12,7 @@ import {
 const REQUIRED_AIMS_COLUMNS = [
   'Project ID',
   'Project Title',
+  'Grant Type',
   'Aim Number',
   'Aim Description',
 ];
@@ -18,10 +20,16 @@ const REQUIRED_AIMS_COLUMNS = [
 const REQUIRED_MILESTONES_COLUMNS = [
   'Project ID',
   'Project Title',
+  'Grant Type',
   'Milestone Description',
   'Related Aim Number(s)',
   'Milestone Status',
 ];
+
+export type MilestoneStatus = (typeof milestoneStatuses)[number];
+
+type GrantBucket = 'original' | 'supplement';
+const GRANT_TYPES: GrantBucket[] = ['original', 'supplement'];
 
 type MilestoneImport = {
   description: string;
@@ -39,9 +47,41 @@ type AimImport = {
 type ProjectImport = {
   projectId: string;
   title: string;
-  aims: Record<number, AimImport>;
-  milestones: Record<string, MilestoneImport>;
+  aimsByGrantType: Record<GrantBucket, Record<number, AimImport>>;
+  milestonesByGrantType: Record<GrantBucket, Record<string, MilestoneImport>>;
   entry?: Entry;
+};
+
+const normalizeGrantType = (value: string): GrantBucket => {
+  if (GRANT_TYPES.includes(value as GrantBucket)) {
+    return value as GrantBucket;
+  }
+  if (value === 'Original Grant') return 'original';
+  if (value === 'Supplement Grant') return 'supplement';
+  throw new Error(`Unknown Grant Type: ${value}`);
+};
+
+const statusMap = {
+  'Not Started': 'Pending',
+  Active: 'In Progress',
+  Completed: 'Complete',
+  Pivoted: 'Terminated',
+} as const;
+
+const normalizeMilestoneStatus = (value: string): MilestoneStatus => {
+  if (!value) {
+    return 'Pending';
+  }
+
+  if (milestoneStatuses.includes(value as MilestoneStatus)) {
+    return value as MilestoneStatus;
+  }
+
+  const normalized = statusMap[value as keyof typeof statusMap];
+  if (normalized) {
+    return normalized;
+  }
+  throw new Error(`Unknown Milestone Status: ${value}`);
 };
 
 /**
@@ -49,15 +89,15 @@ type ProjectImport = {
  *
  * 1. Read aims and milestones CSV files.
  * 2. Build an in-memory project model by:
- *    - Grouping aims by project.
- *    - Grouping milestones by project.
+ *    - Grouping aims by project and grant type.
+ *    - Grouping milestones by project and grant type.
  *    - Linking milestones to their related aims.
  * 3. Resolve each project against an existing Contentful Project entry.
  * 4. For each project:
  *    - Create and publish milestone entries.
  *    - Create and publish aim entries linked to those milestones.
- *    - Update and publish the project entry with links to the newly
- *      created aims.
+ *    - Update the Project entry with Original Grant aims.
+ *    - Update the Supplement Grant entry linked to Project (if present) with Supplement Grant aims.
  *
  * Notes:
  * - Projects must already exist in Contentful.
@@ -84,6 +124,7 @@ const app = async () => {
   const aimColumns = {
     projectId: col(aimHeaders, 'Project ID'),
     projectTitle: col(aimHeaders, 'Project Title'),
+    grantType: col(aimHeaders, 'Grant Type'),
     aimNumber: col(aimHeaders, 'Aim Number'),
     aimDescription: col(aimHeaders, 'Aim Description'),
   };
@@ -91,6 +132,7 @@ const app = async () => {
   const milestoneColumns = {
     projectId: col(milestoneHeaders, 'Project ID'),
     projectTitle: col(milestoneHeaders, 'Project Title'),
+    grantType: col(milestoneHeaders, 'Grant Type'),
     milestoneDescription: col(milestoneHeaders, 'Milestone Description'),
     aimNumbers: col(milestoneHeaders, 'Related Aim Number(s)'),
     status: col(milestoneHeaders, 'Milestone Status'),
@@ -104,6 +146,7 @@ const app = async () => {
     if (!isEmptyRow(row)) {
       const projectId = cell(row, aimColumns.projectId);
       const title = cell(row, aimColumns.projectTitle);
+      const grantType = normalizeGrantType(cell(row, aimColumns.grantType));
       const aimDescription = cell(row, aimColumns.aimDescription);
       const aimNumber = Number(cell(row, aimColumns.aimNumber));
 
@@ -113,13 +156,19 @@ const app = async () => {
         project = {
           projectId,
           title,
-          aims: {},
-          milestones: {},
+          aimsByGrantType: {
+            original: {},
+            supplement: {},
+          },
+          milestonesByGrantType: {
+            original: {},
+            supplement: {},
+          },
         };
         projects[projectId] = project;
       }
 
-      project.aims[aimNumber] = {
+      project.aimsByGrantType[grantType][aimNumber] = {
         aimNumber,
         description: aimDescription,
         milestoneKeys: [],
@@ -130,13 +179,21 @@ const app = async () => {
   for (const row of milestoneRows) {
     if (!isEmptyRow(row)) {
       const projectId = cell(row, milestoneColumns.projectId);
+      const grantType = normalizeGrantType(
+        cell(row, milestoneColumns.grantType),
+      );
       const milestoneKey = cell(row, milestoneColumns.milestoneDescription);
-      const status = cell(row, milestoneColumns.status);
+      const status = normalizeMilestoneStatus(
+        cell(row, milestoneColumns.status),
+      );
 
       const project = projects[projectId];
 
       if (project) {
-        project.milestones[milestoneKey] = {
+        const milestonesBucket = project.milestonesByGrantType[grantType];
+        const aimsBucket = project.aimsByGrantType[grantType];
+
+        milestonesBucket[milestoneKey] = {
           description: milestoneKey,
           status,
         };
@@ -146,7 +203,7 @@ const app = async () => {
           .map((x) => Number(x.trim()));
 
         for (const aimNumber of relatedAimNumbers) {
-          const aim = project.aims[aimNumber];
+          const aim = aimsBucket[aimNumber];
 
           if (!aim) {
             throw new Error(
@@ -166,18 +223,6 @@ const app = async () => {
 
   console.log(`Loaded ${Object.keys(projects).length} projects from CSVs`);
 
-  const totalAims = Object.values(projects).reduce(
-    (sum, p) => sum + Object.keys(p.aims).length,
-    0,
-  );
-
-  const totalMilestones = Object.values(projects).reduce(
-    (sum, p) => sum + Object.keys(p.milestones).length,
-    0,
-  );
-
-  console.log(`Found ${totalAims} aims and ${totalMilestones} milestones`);
-
   console.log('\n--- Resolving Contentful projects ---');
 
   for (const project of Object.values(projects)) {
@@ -187,7 +232,7 @@ const app = async () => {
     });
 
     const projectEntry = response.items.find(
-      (entry) => entry.fields.title?.['en-US'] === project.title,
+      (entry: Entry) => entry.fields.title?.['en-US'] === project.title,
     );
 
     if (!projectEntry) {
@@ -204,85 +249,100 @@ const app = async () => {
     console.log(
       `\n=== Importing aims and milestones for project ${project.projectId} (${project.title}) ===`,
     );
-    const milestones = Object.values(project.milestones);
-
-    console.log(`Creating ${milestones.length} milestones...`);
-
-    for (let i = 0; i < milestones.length; i += 10) {
-      const batch = milestones.slice(i, i + 10);
-
-      await Promise.all(
-        batch.map(async (milestone) => {
-          const milestoneEntry = await env.createEntry('milestones', {
-            fields: {
-              description: {
-                'en-US': milestone.description,
-              },
-              status: {
-                'en-US': milestone.status,
-              },
-              bulkImported: {
-                'en-US': true,
-              },
-            },
-          });
-
-          const publishedMilestone = await milestoneEntry.publish();
-
-          milestone.entryId = publishedMilestone.sys.id;
-        }),
-      );
-    }
-
-    const orderedAims = Object.values(project.aims).sort(
-      (a, b) => a.aimNumber - b.aimNumber,
-    );
-
-    console.log(`Creating ${orderedAims.length} aims...`);
-    for (const aim of orderedAims) {
-      const milestoneLinks = aim.milestoneKeys.map((milestoneKey) => {
-        const milestone = project.milestones[milestoneKey];
-
-        if (!milestone?.entryId) {
-          throw new Error(`Missing entryId for milestone "${milestoneKey}"`);
-        }
-
-        return getLinkEntity(milestone.entryId);
-      });
-
-      const aimEntry = await env.createEntry('aims', {
-        fields: {
-          description: {
-            'en-US': aim.description,
-          },
-          milestones: {
-            'en-US': milestoneLinks,
-          },
-        },
-      });
-
-      const publishedAim = await aimEntry.publish();
-
-      aim.entryId = publishedAim.sys.id;
-    }
-
-    const aimLinks = orderedAims.map((aim) => {
-      if (!aim.entryId) {
-        throw new Error(`Missing entryId for aim ${aim.aimNumber}`);
-      }
-
-      return getLinkEntity(aim.entryId);
-    });
 
     const entry = project.entry;
+    if (!entry) throw new Error(`Missing entry for ${project.projectId}`);
 
-    if (!entry) {
-      throw new Error(`Project ${project.projectId} missing Contentful entry`);
+    // create project's milestones
+    for (const grantType of GRANT_TYPES) {
+      const milestones = Object.values(
+        project.milestonesByGrantType[grantType],
+      );
+
+      console.log(`Creating ${milestones.length} ${grantType} milestones...`);
+
+      for (let i = 0; i < milestones.length; i += 10) {
+        const batch = milestones.slice(i, i + 10);
+
+        await Promise.all(
+          batch.map(async (milestone) => {
+            const milestoneEntry = await env.createEntry('milestones', {
+              fields: {
+                description: {
+                  'en-US': milestone.description,
+                },
+                status: {
+                  'en-US': milestone.status,
+                },
+                bulkImported: {
+                  'en-US': true,
+                },
+              },
+            });
+
+            const publishedMilestone = await milestoneEntry.publish();
+
+            milestone.entryId = publishedMilestone.sys.id;
+          }),
+        );
+      }
     }
 
-    entry.fields.originalGrantAims = {
-      'en-US': aimLinks,
+    const createGrantAims = async (grantType: GrantBucket) => {
+      const aims = Object.values(project.aimsByGrantType[grantType]).sort(
+        (a, b) => a.aimNumber - b.aimNumber,
+      );
+
+      console.log(`Creating ${grantType} aims (${aims.length})...`);
+
+      for (const aim of aims) {
+        const milestoneLinks = aim.milestoneKeys.map((key) => {
+          const milestone = project.milestonesByGrantType[grantType][key];
+
+          if (!milestone?.entryId) {
+            throw new Error(`Missing entryId for milestone ${key}`);
+          }
+
+          return getLinkEntity(milestone.entryId);
+        });
+
+        const aimEntry = await env.createEntry('aims', {
+          fields: {
+            description: { 'en-US': aim.description },
+            milestones: { 'en-US': milestoneLinks },
+          },
+        });
+
+        const published = await aimEntry.publish();
+        aim.entryId = published.sys.id;
+      }
+
+      return aims;
     };
+
+    const originalAims = await createGrantAims('original');
+
+    entry.fields.originalGrantAims = {
+      'en-US': originalAims.map((a) => getLinkEntity(a.entryId!)),
+    };
+
+    const supplementAims = await createGrantAims('supplement');
+
+    const supplementGrantLink = entry.fields.supplementGrant?.['en-US'];
+
+    if (supplementGrantLink) {
+      const supplementGrant = await env.getEntry(supplementGrantLink.sys.id);
+      supplementGrant.fields.aims = {
+        'en-US': supplementAims.map((a) => getLinkEntity(a.entryId!)),
+      };
+
+      const updatedSupplementGrant = await supplementGrant.update();
+      await updatedSupplementGrant.publish();
+    } else if (supplementAims.length > 0) {
+      console.warn(
+        `Project ${project.projectId} has ${supplementAims.length} supplement aims but no supplement grant entry.`,
+      );
+    }
 
     const updatedProject = await entry.update();
 

@@ -1,3 +1,4 @@
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
@@ -118,15 +119,31 @@ describe('getPublishDateValidationMessage returns', () => {
   });
 });
 
-it('disables the date field when imported from a manuscript', () => {
+it('disables the date field when imported from a manuscript with a date', () => {
   render(
     <ResearchOutputPublishingCard
       {...props}
       sharingStatus={'Public'}
       isImportedFromManuscript
+      researchOutputData={createResearchOutputResponse()}
     />,
   );
   expect(screen.getByLabelText(/date made public/i)).toBeDisabled();
+});
+
+it('enables the date field when imported from a manuscript without a date', () => {
+  render(
+    <ResearchOutputPublishingCard
+      {...props}
+      sharingStatus={'Public'}
+      isImportedFromManuscript
+      researchOutputData={{
+        ...createResearchOutputResponse(),
+        publishDate: undefined,
+      }}
+    />,
+  );
+  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
 });
 
 it('prompts for the date when editing a public output that has no date', async () => {

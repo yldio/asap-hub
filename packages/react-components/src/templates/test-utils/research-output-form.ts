@@ -78,6 +78,7 @@ export const initialResearchOutputData = {
   relatedEvents: [],
   relatedResearch: [],
   sharingStatus: 'Public' as const,
+  publishDate: '2020-12-10T20:36:54.000Z',
   contactEmails: [],
   labs: [],
   methods: [],

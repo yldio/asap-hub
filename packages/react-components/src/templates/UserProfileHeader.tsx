@@ -123,6 +123,8 @@ const avatarSize = 90;
 const avatarContainer = css({
   gridArea: 'avatar',
   position: 'relative',
+  // keep the badge's z-index scoped here so it can't float over the nav drawer
+  isolation: 'isolate',
   width: rem(avatarSize),
   height: rem(avatarSize),
   justifySelf: 'start',
@@ -186,7 +188,8 @@ const badgeStyles = css({
   display: 'inline-flex',
   width: rem(badgeSize),
   height: rem(badgeSize),
-  // sit above the hover/upload and saving overlays, which have no z-index
+  // above the hover/upload and saving overlays; scoped by the container's
+  // isolate so it does not escape over page-level layers like the nav drawer
   zIndex: 1,
 });
 

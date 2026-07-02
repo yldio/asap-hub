@@ -186,6 +186,7 @@ export default class ResearchOutputController {
         doi: currentResearchOutput.doi,
         rrid: currentResearchOutput.rrid,
         accession: currentResearchOutput.accession,
+        publishDate: currentResearchOutput.publishDate,
         relatedManuscriptVersion:
           currentResearchOutput.relatedManuscriptVersion,
       };

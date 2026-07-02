@@ -240,6 +240,7 @@ export type ResearchOutputVersionCoreObject = Pick<
   | 'doi'
   | 'rrid'
   | 'accession'
+  | 'publishDate'
   | 'relatedManuscriptVersion'
 >;
 

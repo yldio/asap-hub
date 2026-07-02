@@ -11,6 +11,8 @@ export {
   useAuth0CRN,
   useAuth0GP2,
 } from './auth0';
+export { Auth0SpaProvider } from './Auth0SpaProvider';
+export { createAuthProvider } from './createAuthProvider';
 export { FlagsContext, LiveFlagsProvider, useFlags } from './flags';
 export { ResearchOutputPermissionsContext } from './permissions/research-output';
 export type { ResearchOutputPermissions } from './permissions/research-output';

@@ -118,9 +118,9 @@ const App: FC<Record<string, never>> = () => {
             containerId={GTM_CONTAINER_ID}
             disabledTracking={!cookieData?.preferences.analytics}
           />
-          <AuthProvider>
-            <SentryAuth0 />
-            <BrowserRouter>
+          <BrowserRouter>
+            <AuthProvider>
+              <SentryAuth0 />
               <NavigationBlockerProvider>
                 <Frame title={null}>
                   <SentryRoutes>
@@ -183,8 +183,8 @@ const App: FC<Record<string, never>> = () => {
                   </SentryRoutes>
                 </Frame>
               </NavigationBlockerProvider>
-            </BrowserRouter>
-          </AuthProvider>
+            </AuthProvider>
+          </BrowserRouter>
           <CookiesModal
             cookieData={cookieData}
             onSaveCookiePreferences={onSaveCookiePreferences}

@@ -1,5 +1,5 @@
 import { ToastContext } from '@asap-hub/react-context';
-import { css, keyframes } from '@emotion/react';
+import { css } from '@emotion/react';
 import {
   ReactNode,
   useCallback,
@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Button } from '../atoms';
+import { Button, Spinner } from '../atoms';
 import { lead, neutral500 } from '../colors';
 import { ExportIcon } from '../icons';
 import { mobileScreen, rem, tabletScreen } from '../pixels';
@@ -62,23 +62,6 @@ const exportIconStyles = css({
   flexShrink: 0,
 });
 
-const spin = keyframes`
-  from { transform: rotate(0deg) }
-  to { transform: rotate(360deg) }
-`;
-
-// Dark-grey spinner that matches secondary button text/icon colour (lead).
-const exportSpinnerStyles = css({
-  display: 'block',
-  boxSizing: 'border-box',
-  width: rem(16),
-  height: rem(16),
-  border: `${rem(2)} solid ${neutral500.rgb}`,
-  borderTopColor: lead.rgb,
-  borderRadius: '50%',
-  animation: `${spin} 1s linear infinite`,
-  flexShrink: 0,
-});
 type ExportButtonProps = {
   readonly exportResults?: () => Promise<void>;
   readonly buttons?: Array<{
@@ -185,10 +168,13 @@ const ExportButton: React.FC<ExportButtonProps> = ({
             <>
               <div css={exportIconStyles}>
                 {isLoading ? (
-                  <div
-                    css={exportSpinnerStyles}
-                    role="progressbar"
-                    aria-label="Exporting"
+                  <Spinner
+                    size={16}
+                    thickness={2}
+                    color={lead.rgb}
+                    trackColor={neutral500.rgb}
+                    ariaLabel="Exporting"
+                    css={{ flexShrink: 0 }}
                   />
                 ) : (
                   ExportIcon

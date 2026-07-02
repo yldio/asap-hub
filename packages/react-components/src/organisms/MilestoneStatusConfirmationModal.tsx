@@ -1,10 +1,10 @@
-import { css, keyframes } from '@emotion/react';
+import { css } from '@emotion/react';
 import { ComponentProps, useEffect, useState } from 'react';
 import { ArticleItem, ResearchOutputType } from '@asap-hub/model';
 
 import { LabeledMultiSelect, Modal } from '../molecules';
 import { crossIcon } from '../icons';
-import { Button, Headline3, Paragraph } from '../atoms';
+import { Button, Headline3, Paragraph, Spinner } from '../atoms';
 import { mobileScreen, rem } from '../pixels';
 import { error500, neutral300, neutral900 } from '../colors';
 import { ResearchOutputOption } from '../utils';
@@ -80,11 +80,6 @@ const selectWrapperStyles = css({
   marginTop: rem(32),
 });
 
-const spin = keyframes({
-  '0%': { transform: 'rotate(0deg)' },
-  '100%': { transform: 'rotate(360deg)' },
-});
-
 const loadingWrapperStyles = css({
   marginTop: rem(72),
   display: 'flex',
@@ -92,15 +87,6 @@ const loadingWrapperStyles = css({
   alignItems: 'center',
   gap: rem(12),
   height: rem(40),
-});
-
-const spinnerStyles = css({
-  width: rem(18),
-  height: rem(18),
-  border: `${rem(3)} solid ${neutral300.rgb}`,
-  borderTop: `${rem(3)} solid ${neutral900.rgb}`,
-  borderRadius: '50%',
-  animation: `${spin} 1s linear infinite`,
 });
 
 const errorMessageStyles = css({
@@ -112,17 +98,6 @@ const confirmButtonContentStyles = css({
   display: 'flex',
   alignItems: 'center',
   gap: rem(8),
-});
-
-const inlineSpinnerStyles = css({
-  boxSizing: 'border-box',
-  width: rem(16),
-  height: rem(16),
-  border: `${rem(2)} solid transparent`,
-  borderTopColor: 'currentColor',
-  borderRightColor: 'currentColor',
-  borderRadius: '50%',
-  animation: `${spin} 1s linear infinite`,
 });
 
 export type MilestoneStatusConfirmationStatus = 'Complete' | 'Terminated';
@@ -204,7 +179,11 @@ const MilestoneStatusConfirmationModal: React.FC<
         </Paragraph>
         {isLoadingArticles ? (
           <div css={loadingWrapperStyles}>
-            <div css={spinnerStyles} />
+            <Spinner
+              size={18}
+              color={neutral900.rgb}
+              trackColor={neutral300.rgb}
+            />
             <Paragraph noMargin>Loading...</Paragraph>
           </div>
         ) : (
@@ -253,7 +232,9 @@ const MilestoneStatusConfirmationModal: React.FC<
               }}
             >
               <span css={confirmButtonContentStyles}>
-                {isSaving && <div css={inlineSpinnerStyles} />}
+                {isSaving && (
+                  <Spinner size={16} thickness={2} color="currentColor" arc />
+                )}
                 Confirm and Notify
               </span>
             </Button>

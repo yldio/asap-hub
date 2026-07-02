@@ -1,9 +1,7 @@
 import { css } from '@emotion/react';
 import { useNavigate } from 'react-router';
-import Lottie from 'react-lottie';
-import { Button, crossIcon, Headline3, Modal, Paragraph } from '..';
+import { Button, crossIcon, Headline3, Modal, Paragraph, Spinner } from '..';
 import { mobileScreen, rem } from '../pixels';
-import loading from '../lotties/loading.json';
 
 type modal = 'submit' | 'cancel' | null;
 
@@ -111,20 +109,7 @@ const ManuscriptFormModals: React.FC<ManuscriptFormModalsProps> = ({
                 })}
               >
                 Submit Manuscript
-                {isSubmitting && (
-                  <Lottie
-                    options={{
-                      loop: true,
-                      autoplay: true,
-                      animationData: loading,
-                      rendererSettings: {
-                        preserveAspectRatio: 'xMidYMid slice',
-                      },
-                    }}
-                    height={24}
-                    width={24}
-                  />
-                )}
+                {isSubmitting && <Spinner color="currentColor" />}
               </Button>
             </div>
           </div>

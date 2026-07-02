@@ -2,5 +2,8 @@
   "Name": "Email Layout - OS Team",
   "Alias": "email-layout-os-team",
   "TemplateType": "Layout",
-  "TestRenderModel": {}
+  "TestRenderModel": {
+    "headerImage": "https://asap-public.s3.us-east-1.amazonaws.com/asaplogo.jpg",
+    "headerLink": "https://parkinsonsroadmap.org"
+  }
 }

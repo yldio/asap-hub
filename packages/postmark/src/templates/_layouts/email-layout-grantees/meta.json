@@ -2,5 +2,8 @@
   "Name": "Email Layout - Grantees",
   "Alias": "email-layout-grantees",
   "TemplateType": "Layout",
-  "TestRenderModel": {}
+  "TestRenderModel": {
+    "headerImage": "https://asap-public.s3.us-east-1.amazonaws.com/asaplogo.jpg",
+    "headerLink": "https://parkinsonsroadmap.org"
+  }
 }

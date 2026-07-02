@@ -26,6 +26,13 @@
 
       .email-header {
         width: 100%;
+        display: block;
+        border: 0;
+        height: auto;
+      }
+
+      img.email-header + div {
+        display: none !important;
       }
 
       .email-content {
@@ -91,7 +98,18 @@
 
   <body>
     <div class="email-wrapper">
-      <img class="email-header" src="cid:asaplogo" />
+      <a
+        href="{{ headerLink }}"
+        target="_blank"
+        style="text-decoration: none; display: block"
+      >
+        <img
+          class="email-header"
+          src="{{ headerImage }}"
+          alt="ASAP - Aligning Science Across Parkinson's"
+          width="620"
+        />
+      </a>
 
       <div class="email-content">
         <div class="email-message">{{{ @content }}}</div>

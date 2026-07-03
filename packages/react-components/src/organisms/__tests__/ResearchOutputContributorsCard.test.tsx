@@ -136,6 +136,27 @@ describe('Labs Multiselect', () => {
 
     expect(onChangeLabs).toHaveBeenCalled();
   });
+
+  it('shows a required error when no labs are selected and clears it once a lab is added', async () => {
+    const { getByLabelText, getByText, queryByText, rerender } = render(
+      <ResearchOutputContributorsCard {...props} labs={[]} />,
+    );
+
+    await userEvent.click(getByLabelText(/Labs\(required\)/i));
+    await userEvent.tab();
+
+    expect(getByText('Please add at least one lab.')).toBeVisible();
+
+    rerender(
+      <ResearchOutputContributorsCard
+        {...props}
+        labs={[{ label: 'One Lab', value: '1' }]}
+      />,
+    );
+    await userEvent.click(getByLabelText(/Labs\(required\)/i));
+
+    expect(queryByText('Please add at least one lab.')).not.toBeInTheDocument();
+  });
 });
 
 describe('Teams Multiselect', () => {

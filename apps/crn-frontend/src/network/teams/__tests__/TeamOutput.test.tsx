@@ -67,6 +67,7 @@ const baseResearchOutput: ResearchOutputResponse = {
       teamType: 'Discovery Team',
     },
   ],
+  labs: [{ id: 'l0', name: 'Example 1' }],
 };
 
 // Helper to capture location in tests
@@ -702,6 +703,11 @@ it('will show server side validation error for link', async () => {
     user,
   );
 
+  await user.click(screen.getByRole('combobox', { name: /Labs/i }));
+  await user.click(
+    await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
+  );
+
   await publish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalled();
@@ -744,6 +750,11 @@ it('will toast server side errors for unknown errors', async () => {
     false,
     true,
     user,
+  );
+
+  await user.click(screen.getByRole('combobox', { name: /Labs/i }));
+  await user.click(
+    await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
   );
 
   await publish();
@@ -1008,6 +1019,11 @@ describe('manuscript outputs flow', () => {
       fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
         target: { value: doi },
       });
+
+      await user.click(screen.getByRole('combobox', { name: /Labs/i }));
+      await user.click(
+        await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
+      );
 
       await user.click(screen.getByRole('button', { name: /Publish/i }));
 
@@ -1292,6 +1308,11 @@ describe('manuscript outputs flow', () => {
       target: { value: doi },
     });
 
+    await user.click(screen.getByRole('combobox', { name: /Labs/i }));
+    await user.click(
+      await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
+    );
+
     await user.click(screen.getByRole('button', { name: /Publish/i }));
     const button = screen.getByRole('button', { name: /Publish Output/i });
     await user.click(button);
@@ -1318,7 +1339,7 @@ describe('manuscript outputs flow', () => {
           },
         ],
         methods: [],
-        labs: [],
+        labs: ['l0'],
         organisms: [],
         environments: [],
         keywords: [],
@@ -1360,6 +1381,7 @@ describe('manuscript outputs flow', () => {
       lifecycle,
       publicationDate: '2024-01-01T00:00:00.000Z',
       teams: [{ id: teamId, displayName: 'Test Team' }],
+      labs: [{ id: 'l0', name: 'Example 1' }],
     };
 
     await renderPage({

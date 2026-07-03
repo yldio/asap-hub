@@ -47,7 +47,7 @@ describe('on submit', () => {
     currentLocation = null;
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
-    getLabSuggestions.mockResolvedValue([]);
+    getLabSuggestions.mockResolvedValue([{ label: 'One Lab', value: '1' }]);
     getAuthorSuggestions.mockResolvedValue([]);
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
@@ -165,6 +165,11 @@ describe('on submit', () => {
     fireEvent.change(screen.getByPlaceholderText('e.g. 10.5555/YFRU1371'), {
       target: { value: '10.1234' },
     });
+
+    await userEvent.click(
+      await screen.findByRole('combobox', { name: /Labs/i }),
+    );
+    await userEvent.click(await screen.findByText('One Lab'));
   };
   const submitForm = async () => {
     const button = screen.getByRole('button', { name: /Publish/i });

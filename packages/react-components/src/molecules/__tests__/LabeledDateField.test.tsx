@@ -1,4 +1,4 @@
-import { formatISO, startOfTomorrow } from 'date-fns';
+import { startOfTomorrow } from 'date-fns';
 import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 
 import LabeledDateField, { parseDateToString } from '../LabeledDateField';
@@ -59,9 +59,7 @@ it('reports changes as date objects', async () => {
 
   expect(handleChange).toHaveBeenCalled();
   const [newDate] = handleChange.mock.calls.slice(-1)[0]!;
-  expect(formatISO(newDate as Date, { representation: 'date' })).toBe(
-    '2019-02-01',
-  );
+  expect((newDate as Date).toISOString().slice(0, 10)).toBe('2019-02-01');
 });
 
 it('handles clearing the date field', () => {
@@ -91,5 +89,10 @@ describe('Tests that the parseDateTostring function returns', () => {
   });
   it('the stringified date when the date is defined', () => {
     expect(parseDateToString(new Date('2020-01-01'))).toBe('2020-01-01');
+  });
+  it('the same calendar day for a UTC-midnight instant', () => {
+    expect(parseDateToString(new Date('2026-04-01T00:00:00.000Z'))).toBe(
+      '2026-04-01',
+    );
   });
 });

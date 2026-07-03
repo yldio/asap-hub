@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { format, formatISO, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 import { ComponentProps } from 'react';
 
 import { Label, Paragraph, TextField } from '../atoms';
@@ -29,10 +29,12 @@ const descriptionStyles = css({
   color: lead.rgb,
 });
 
+// publishDate is a date-only value stored at UTC midnight; format it in UTC so the
+// calendar day does not shift for viewers in timezones behind UTC.
 export const parseDateToString = (date?: Date): string => {
   try {
     if (date) {
-      return formatISO(date, { representation: 'date' });
+      return date.toISOString().slice(0, 10);
     }
     throw new Error('Date is undefined');
   } catch {
@@ -59,9 +61,11 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
           id={id}
           value={parseDateToString(value)}
           onChange={(newDate) => {
-            onChange(newDate ? parseISO(newDate) : undefined);
+            onChange(
+              newDate ? parseISO(`${newDate}T00:00:00.000Z`) : undefined,
+            );
           }}
-          max={max ? format(max, 'yyyy-MM-dd') : undefined}
+          max={max ? parseDateToString(max) : undefined}
         />
       )}
     >

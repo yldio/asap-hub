@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { ComponentProps } from 'react';
 
 import { Label, Paragraph, TextField } from '../atoms';
@@ -29,7 +29,7 @@ const descriptionStyles = css({
   color: lead.rgb,
 });
 
-// publishDate is a date-only value stored at UTC midnight; format it in UTC so the
+// The value is a date-only field stored at UTC midnight; format it in UTC so the
 // calendar day does not shift for viewers in timezones behind UTC.
 export const parseDateToString = (date?: Date): string => {
   try {
@@ -65,7 +65,9 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
               newDate ? parseISO(`${newDate}T00:00:00.000Z`) : undefined,
             );
           }}
-          max={max ? parseDateToString(max) : undefined}
+          // max is a "today" selection ceiling that the user reasons about in their
+          // local calendar, so it stays in local time (unlike the UTC-anchored value).
+          max={max ? format(max, 'yyyy-MM-dd') : undefined}
         />
       )}
     >

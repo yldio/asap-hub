@@ -2,7 +2,7 @@ import { getLatestUserAward, UserResponse } from '@asap-hub/model';
 import { UserProfileContext, useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css, keyframes } from '@emotion/react';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import {
   Anchor,
   Avatar,
@@ -274,6 +274,16 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
     ? getLatestUserAward(teams)
     : undefined;
 
+  const scrollHandler = useCallback(() => {
+    // scroll imperatively too: re-clicking when the hash is
+    // already #badges is a no-op for the router, so the
+    // hash-based scroll would not fire on the second click
+    document.getElementById(badgesAnchorId)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }, []);
+
   return (
     <>
       {alumniSinceDate && (
@@ -365,6 +375,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                     <Anchor
                       href={`${tabRoutes.research({}).$}#${badgesAnchorId}`}
                       aria-label={`${latestAward.name} badge`}
+                      onClick={scrollHandler}
                     >
                       <img
                         css={badgeImageStyles}

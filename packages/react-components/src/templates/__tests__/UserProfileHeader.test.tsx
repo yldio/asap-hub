@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router';
+import { MemoryRouter, StaticRouter } from 'react-router';
 
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -342,6 +342,33 @@ describe('award badge', () => {
     });
     expect(badgeLink.getAttribute('href')).toContain('#badges');
     expect(badgeLink.querySelector('img')).toHaveAttribute('src', 'new');
+  });
+
+  it('scrolls to the badges section on each click, not just the first', async () => {
+    const scrollIntoView = jest.fn();
+    const badgesSection = document.createElement('div');
+    badgesSection.id = 'badges';
+    badgesSection.scrollIntoView = scrollIntoView;
+    document.body.appendChild(badgesSection);
+
+    render(
+      <MemoryRouter>
+        <UserProfileHeader
+          {...boilerplateProps}
+          id="u1"
+          teams={teamsWithAwards}
+        />
+      </MemoryRouter>,
+    );
+
+    const badgeLink = screen.getByRole('link', {
+      name: /open science champion badge/i,
+    });
+    await userEvent.click(badgeLink);
+    await userEvent.click(badgeLink);
+    expect(scrollIntoView).toHaveBeenCalledTimes(2);
+
+    badgesSection.remove();
   });
 
   it('shows no award badge when the user has none', () => {

@@ -15,6 +15,7 @@ import { UserDataObject, UserSocialLinks } from '@asap-hub/model';
 import {
   GroupLeaderItemPublic,
   GroupMemberItemPublic,
+  parseAwardsCollection,
   parseToWorkingGroups,
   parseToWorkingGroupsForPublicUser,
   UserContentfulDataProvider,
@@ -1408,6 +1409,22 @@ describe('User data provider', () => {
             userDataProvider.update('123', { avatar: null }),
           ).resolves.not.toThrow();
         });
+
+        test('does not delete the asset when a suppressed conflict skips the update', async () => {
+          // patchAndPublishConflict resolves undefined on a 409, so the entry
+          // was not modified and still links the asset — it must not be deleted
+          mockPatchAndPublishConflict.mockResolvedValueOnce(
+            undefined as unknown as Entry,
+          );
+
+          await userDataProvider.update(
+            '123',
+            { avatar: null },
+            { suppressConflict: true },
+          );
+
+          expect(environmentMock.getAsset).not.toHaveBeenCalled();
+        });
       });
       test('map tag value to a linked resource', async () => {
         await userDataProvider.update('123', {
@@ -2357,6 +2374,129 @@ describe('User data provider', () => {
 
       const result = await userDataProvider.fetchById('123');
       expect(result?.projects).toEqual([]);
+    });
+  });
+
+  describe('parseAwardsCollection', () => {
+    it('maps award entries to name, date and icon url', () => {
+      expect(
+        parseAwardsCollection({
+          awardsCollection: {
+            items: [
+              {
+                date: '2024-01-01',
+                awardType: {
+                  name: 'Open Science Champion',
+                  icon: { url: 'https://example.com/badge.png' },
+                },
+              },
+            ],
+          },
+        }),
+      ).toEqual([
+        {
+          name: 'Open Science Champion',
+          date: '2024-01-01',
+          iconUrl: 'https://example.com/badge.png',
+        },
+      ]);
+    });
+
+    it('returns an empty array when there is no awards collection', () => {
+      expect(parseAwardsCollection({})).toEqual([]);
+    });
+
+    it('skips awards missing an award type name or a date', () => {
+      expect(
+        parseAwardsCollection({
+          awardsCollection: {
+            items: [
+              null,
+              { date: '2024-01-01', awardType: null },
+              { date: null, awardType: { name: 'Open Science Champion' } },
+              {
+                date: '2024-02-01',
+                awardType: { name: 'Open Science Champion', icon: null },
+              },
+            ],
+          },
+        }),
+      ).toEqual([
+        {
+          name: 'Open Science Champion',
+          date: '2024-02-01',
+          iconUrl: undefined,
+        },
+      ]);
+    });
+  });
+
+  describe('awards on user teams', () => {
+    const teamWithAwards = {
+      role: 'Lead PI (Core Leadership)',
+      inactiveSinceDate: null,
+      team: { sys: { id: 'team-1' }, displayName: 'Team 1' },
+      awardsCollection: {
+        items: [
+          {
+            date: '2024-01-01',
+            awardType: {
+              name: 'Open Science Champion',
+              icon: { url: 'https://example.com/badge.png' },
+            },
+          },
+        ],
+      },
+    };
+
+    it('parses awards onto a team when fetching a user by id', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          teamsCollection: { items: [teamWithAwards] },
+        }),
+      });
+
+      const result = await userDataProvider.fetchById('123');
+
+      expect(result!.teams[0]!.awards).toEqual([
+        {
+          name: 'Open Science Champion',
+          date: '2024-01-01',
+          iconUrl: 'https://example.com/badge.png',
+        },
+      ]);
+    });
+
+    it('omits the awards key when a team has no awards', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUser({
+          teamsCollection: {
+            items: [{ ...teamWithAwards, awardsCollection: { items: [] } }],
+          },
+        }),
+      });
+
+      const result = await userDataProvider.fetchById('123');
+
+      expect(result!.teams[0]).not.toHaveProperty('awards');
+    });
+
+    it('parses awards onto a team in the Algolia list item', async () => {
+      contentfulGraphqlClientMock.request.mockResolvedValueOnce({
+        users: getContentfulGraphqlUserListItem({
+          teamsCollection: { items: [teamWithAwards] },
+        }),
+      });
+
+      const result = await userDataProvider.fetchByIdForAlgoliaList('user-id');
+
+      expect(result!.teams[0]!.awards).toEqual([
+        {
+          name: 'Open Science Champion',
+          date: '2024-01-01',
+          iconUrl: 'https://example.com/badge.png',
+        },
+      ]);
     });
   });
 });

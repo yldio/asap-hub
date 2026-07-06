@@ -1,3 +1,4 @@
+import { FETCH_OS_CHAMPION } from '@asap-hub/contentful';
 import { AnalyticsContentfulDataProvider } from '../../../../src/data-providers/contentful/analytics.data-provider';
 import { getOsChampionQuery } from '../../../fixtures/analytics.fixtures';
 import { getContentfulGraphqlClientMock } from '../../../mocks/contentful-graphql-client.mock';
@@ -53,6 +54,11 @@ test('Should return the correct team awards, user awards and time range when the
   const result = await analyticsDataProvider.fetchOSChampion({
     filter: { timeRange: '90d' },
   });
+
+  expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+    FETCH_OS_CHAMPION,
+    { limit: 10, skip: 0, dateFilter: expect.any(String) },
+  );
 
   expect(result).toEqual({
     total: 1,

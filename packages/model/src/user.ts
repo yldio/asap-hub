@@ -49,6 +49,12 @@ export interface Invitee {
   nickname?: string;
 }
 
+export interface UserAward {
+  name: string;
+  date: string;
+  iconUrl?: string;
+}
+
 export interface UserTeam {
   id: string;
   displayName?: string;
@@ -56,6 +62,7 @@ export interface UserTeam {
   proposal?: string;
   role: TeamRole;
   inactiveSinceDate?: string;
+  awards?: UserAward[];
 }
 
 export interface UserProjectMembership {
@@ -165,7 +172,10 @@ export interface PublicUserResponse
   researchOutputs: string[];
 }
 
-export type UserListItemTeam = Pick<UserTeam, 'id' | 'displayName' | 'role'>;
+export type UserListItemTeam = Pick<
+  UserTeam,
+  'id' | 'displayName' | 'role' | 'awards'
+>;
 export type UserListItemDataObject = Pick<
   UserDataObject,
   | 'alumniSinceDate'
@@ -389,7 +399,31 @@ export const toUserListItem = (user: UserResponse): UserListItemResponse => {
       id: teamItem.id,
       role: teamItem.role,
       displayName: teamItem.displayName,
+      ...(teamItem.awards ? { awards: teamItem.awards } : {}),
     })),
     _tags: tags?.map(({ name }) => name) || [],
   };
 };
+
+export type UserAwardWithTeam = UserAward & { teamName?: string };
+
+export const getUserAwards = (
+  teams: Pick<UserListItemTeam, 'displayName' | 'awards'>[] = [],
+): UserAwardWithTeam[] =>
+  teams
+    .flatMap(
+      (team) =>
+        team.awards?.map((award) => ({
+          ...award,
+          teamName: team.displayName,
+        })) ?? [],
+    )
+    // newest first across all teams so the badges card's "view more"
+    // cut-off shows the latest awards regardless of which team they came from
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+export const getLatestUserAward = (
+  teams: Pick<UserListItemTeam, 'displayName' | 'awards'>[] = [],
+): UserAwardWithTeam | undefined =>
+  // getUserAwards is already sorted newest-first, so the head is the latest
+  getUserAwards(teams)[0];

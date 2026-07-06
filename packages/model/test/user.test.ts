@@ -1,4 +1,6 @@
 import {
+  getLatestUserAward,
+  getUserAwards,
   isUserDegree,
   isUserRole,
   userDegree,
@@ -123,6 +125,129 @@ describe('User', () => {
             role: 'Project Manager',
           },
         ],
+      });
+    });
+
+    it('carries team awards through to the algolia list item', () => {
+      const awards = [
+        { name: 'Open Science Champion', date: '2024-01-01', iconUrl: 'icon' },
+      ];
+      const listItem = toUserListItem({
+        id: 'user-2',
+        createdDate: '2020-09-07T17:36:54Z',
+        lastModifiedDate: '2020-09-07T17:36:54Z',
+        onboarded: true,
+        displayName: 'Awarded User',
+        fullDisplayName: 'Awarded User',
+        firstName: 'Awarded',
+        lastName: 'User',
+        email: 'awarded.user@asap.com',
+        orcidWorks: [],
+        tags: [],
+        questions: [],
+        role: 'Grantee',
+        social: {},
+        workingGroups: [],
+        interestGroups: [],
+        labs: [],
+        teams: [
+          {
+            displayName: 'Alessi',
+            id: 'team-alessi',
+            role: 'Project Manager',
+            awards,
+          },
+          {
+            displayName: 'De Camilli',
+            id: 'team-de-camilli',
+            role: 'Project Manager',
+          },
+        ],
+      });
+
+      expect(listItem.teams).toEqual([
+        {
+          displayName: 'Alessi',
+          id: 'team-alessi',
+          role: 'Project Manager',
+          awards,
+        },
+        {
+          displayName: 'De Camilli',
+          id: 'team-de-camilli',
+          role: 'Project Manager',
+        },
+      ]);
+    });
+  });
+
+  describe('awards selectors', () => {
+    const teams = [
+      {
+        displayName: 'Team A',
+        awards: [
+          { name: 'Open Science Champion', date: '2023-01-01', iconUrl: 'a' },
+        ],
+      },
+      {
+        displayName: 'Team B',
+        awards: [
+          { name: 'Open Science Champion', date: '2024-06-01', iconUrl: 'b' },
+        ],
+      },
+      { displayName: 'Team C' },
+    ];
+
+    describe('getUserAwards', () => {
+      it('flattens awards across teams, newest first, with the awarding team name', () => {
+        expect(getUserAwards(teams)).toEqual([
+          {
+            name: 'Open Science Champion',
+            date: '2024-06-01',
+            iconUrl: 'b',
+            teamName: 'Team B',
+          },
+          {
+            name: 'Open Science Champion',
+            date: '2023-01-01',
+            iconUrl: 'a',
+            teamName: 'Team A',
+          },
+        ]);
+      });
+
+      it('returns an empty array when teams are undefined', () => {
+        expect(getUserAwards()).toEqual([]);
+      });
+    });
+
+    describe('getLatestUserAward', () => {
+      it('returns the most recent award by date', () => {
+        expect(getLatestUserAward(teams)?.date).toEqual('2024-06-01');
+        expect(getLatestUserAward(teams)?.teamName).toEqual('Team B');
+      });
+
+      it('returns undefined when there are no awards', () => {
+        expect(getLatestUserAward([{ displayName: 'Team C' }])).toBeUndefined();
+      });
+
+      it('returns undefined when teams are undefined', () => {
+        expect(getLatestUserAward()).toBeUndefined();
+      });
+
+      it('keeps the first award on equal dates', () => {
+        expect(
+          getLatestUserAward([
+            {
+              displayName: 'Team A',
+              awards: [{ name: 'Open Science Champion', date: '2024-01-01' }],
+            },
+            {
+              displayName: 'Team B',
+              awards: [{ name: 'Open Science Champion', date: '2024-01-01' }],
+            },
+          ])?.teamName,
+        ).toEqual('Team A');
       });
     });
   });

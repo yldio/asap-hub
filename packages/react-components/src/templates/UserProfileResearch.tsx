@@ -1,11 +1,13 @@
 import React, { ComponentProps, ReactNode } from 'react';
-import { UserResponse } from '@asap-hub/model';
+import { getUserAwards, UserResponse } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 
 import {
   ProfileExpertiseAndResources,
   QuestionsSection,
   ProfileCardList,
   HelpSection,
+  UserProfileBadges,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
@@ -18,6 +20,7 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
     'email' | 'contactEmail' | 'displayName' | 'alumniSinceDate'
   > &
   ComponentProps<typeof UserProfileRole> & {
+    teams?: UserResponse['teams'];
     userProfileGroupsCard?: ReactNode;
     userProfileProjectsCard?: ReactNode;
     userProfileWorkingGroupsCard?: ReactNode;
@@ -46,8 +49,14 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   editRoleHref,
   role,
   tags,
+  teams,
   ...roleProps
 }) => {
+  const { isEnabled } = useFlags();
+  const badges = isEnabled('STAGING_MODE') ? getUserAwards(teams) : [];
+  const badgesCard = badges.length > 0 && {
+    card: <UserProfileBadges badges={badges} />,
+  };
   const isRoleEmpty =
     !roleProps.researchInterests && !roleProps.responsibilities;
   const showRoleSection = isOwnProfile ? true : !isRoleEmpty;
@@ -66,6 +75,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
     },
   ];
   const staffCards = [
+    badgesCard,
     userProfileWorkingGroupsCard !== undefined && {
       card: userProfileWorkingGroupsCard,
     },
@@ -87,6 +97,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
               label: 'Edit open questions',
             },
     },
+    badgesCard,
     userProfileWorkingGroupsCard !== undefined && {
       card: userProfileWorkingGroupsCard,
     },

@@ -4,6 +4,7 @@ export { default as AnalyticsControls } from './AnalyticsControls';
 export { default as ArticlesList } from './ArticlesList';
 export { default as AssignedUsersAvatarList } from './AssignedUsersAvatarList';
 export { default as AssociationList } from './AssociationList';
+export { default as AvatarWithBadge } from './AvatarWithBadge';
 export { default as BackLink } from './BackLink';
 export { default as BannerCard } from './BannerCard';
 export { default as CalendarLink } from './CalendarLink';

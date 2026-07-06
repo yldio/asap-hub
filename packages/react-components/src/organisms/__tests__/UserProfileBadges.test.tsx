@@ -14,7 +14,9 @@ const makeBadge = (i: number): UserAwardWithTeam => ({
 // perRow = floor((width + rowGap) / (itemWidth + rowGap)); with itemWidth 85 and
 // rowGap 40, width 500 => 4 per row, width 600 => 5 per row, width 2000 => wide.
 const mockListClientWidth = (value: number) =>
-  jest.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(value);
+  jest
+    .spyOn(HTMLElement.prototype, 'clientWidth', 'get')
+    .mockReturnValue(value);
 
 afterEach(() => {
   jest.restoreAllMocks();

@@ -1,3 +1,4 @@
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { startOfTomorrow } from 'date-fns';
@@ -37,16 +38,12 @@ it('conditionally shows date published field', async () => {
   const { rerender } = render(
     <ResearchOutputPublishingCard {...props} sharingStatus={'Network Only'} />,
   );
-  expect(
-    screen.queryByLabelText(/public repository published date/i),
-  ).not.toBeInTheDocument();
+  expect(screen.queryByLabelText(/date made public/i)).not.toBeInTheDocument();
 
   rerender(
     <ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />,
   );
-  expect(
-    screen.queryByLabelText(/public repository published date/i),
-  ).toBeVisible();
+  expect(screen.queryByLabelText(/date made public/i)).toBeVisible();
 });
 
 it('triggers an on change for date published', async () => {
@@ -61,7 +58,7 @@ it('triggers an on change for date published', async () => {
   );
 
   await userEvent.type(
-    screen.getByLabelText(/public repository published date/i),
+    screen.getByLabelText(/date made public/i),
     '2020-12-02',
   );
   expect(onChangeFn).toHaveBeenCalledWith(new Date('2020-12-02'));
@@ -78,7 +75,7 @@ it('shows the custom error message for a date in the future', async () => {
       publishDate={startOfTomorrow()}
     />,
   );
-  const dateInput = screen.getByLabelText(/public repository published date/i);
+  const dateInput = screen.getByLabelText(/date made public/i);
   await userEvent.click(dateInput);
   await userEvent.tab();
   expect(
@@ -114,4 +111,58 @@ describe('getPublishDateValidationMessage returns', () => {
       'Date published should be complete or removed',
     );
   });
+
+  it('a message when the date is missing', () => {
+    expect(
+      getPublishDateValidationMessage({ ...e, valueMissing: true }),
+    ).toEqual('Please enter the date made public.');
+  });
+});
+
+it('disables the date field when imported from a manuscript with a date', () => {
+  render(
+    <ResearchOutputPublishingCard
+      {...props}
+      sharingStatus={'Public'}
+      isImportedFromManuscript
+      researchOutputData={createResearchOutputResponse()}
+    />,
+  );
+  expect(screen.getByLabelText(/date made public/i)).toBeDisabled();
+});
+
+it('enables the date field when imported from a manuscript without a date', () => {
+  render(
+    <ResearchOutputPublishingCard
+      {...props}
+      sharingStatus={'Public'}
+      isImportedFromManuscript
+      researchOutputData={{
+        ...createResearchOutputResponse(),
+        publishDate: undefined,
+      }}
+    />,
+  );
+  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
+});
+
+it('prompts for the date when editing a public output that has no date', async () => {
+  // Suppress act() warnings from TextField's internal async validation state updates
+  const consoleMock = mockActErrorsInConsole();
+
+  const { findByText } = render(
+    <ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />,
+  );
+
+  const dateInput = screen.getByLabelText(/date made public/i);
+  expect(dateInput).toBeEnabled();
+  expect(dateInput).toBeRequired();
+  expect(dateInput).toHaveValue('');
+
+  await userEvent.click(dateInput);
+  await userEvent.tab();
+
+  expect(await findByText(/please enter the date made public/i)).toBeVisible();
+
+  consoleMock.mockRestore();
 });

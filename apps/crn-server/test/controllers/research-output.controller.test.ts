@@ -1571,6 +1571,7 @@ describe('ResearchOutputs controller', () => {
       currentResearchOutput.doi = doi;
       currentResearchOutput.rrid = rrid;
       currentResearchOutput.accession = accession;
+      currentResearchOutput.publishDate = '2021-05-21T13:18:31Z';
       researchOutputDataProviderMock.fetchById.mockResolvedValueOnce(
         currentResearchOutput,
       );
@@ -1602,6 +1603,7 @@ describe('ResearchOutputs controller', () => {
             doi,
             rrid,
             accession,
+            publishDate: '2021-05-21T13:18:31Z',
           },
           publish: true,
         },

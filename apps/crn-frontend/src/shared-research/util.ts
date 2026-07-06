@@ -52,7 +52,11 @@ export const mapManuscriptVersionToResearchOutput = (
   relatedManuscriptVersion: manuscriptVersion.versionId,
   relatedManuscript: manuscriptVersion.id.split('mv-')[1],
   doi: manuscriptVersion.doi,
-  publishDate: manuscriptVersion.preprintDate,
+  publishDate:
+    manuscriptVersion.lifecycle === 'Publication' ||
+    manuscriptVersion.lifecycle === 'Publication with addendum or corrigendum'
+      ? manuscriptVersion.publicationDate
+      : manuscriptVersion.preprintDate,
 });
 
 export type ResolveFlowIdParams = {

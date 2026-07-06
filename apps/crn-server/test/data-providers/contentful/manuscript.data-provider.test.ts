@@ -699,6 +699,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           impact: 'impact-id',
           categories: ['category-id-1'],
           preprintDate: '2022-01-03T10:00:00.000Z',
+          publicationDate: '2024-05-06T10:00:00.000Z',
           layImpactStatement: 'impact statement',
           versions: [
             {
@@ -795,6 +796,13 @@ describe('Manuscripts Contentful Data Provider', () => {
           path: '/fields/preprintDate',
           value: {
             'en-US': '2022-01-03T10:00:00.000Z',
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/publicationDate',
+          value: {
+            'en-US': '2024-05-06T10:00:00.000Z',
           },
         },
         {
@@ -1030,6 +1038,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           impact: 'impact-id',
           categories: ['category-id-1'],
           preprintDate: '2022-01-03T10:00:00.000Z',
+          publicationDate: '2024-05-06T10:00:00.000Z',
           layImpactStatement: 'impact statement',
           versions: [
             {
@@ -1117,6 +1126,7 @@ describe('Manuscripts Contentful Data Provider', () => {
           impact: 'impact-id',
           categories: ['category-id-1'],
           preprintDate: '2022-01-03T10:00:00.000Z',
+          publicationDate: '2024-05-06T10:00:00.000Z',
           layImpactStatement: 'impact statement',
           versions: [
             {
@@ -1189,6 +1199,13 @@ describe('Manuscripts Contentful Data Provider', () => {
           path: '/fields/preprintDate',
           value: {
             'en-US': '2022-01-03T10:00:00.000Z',
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/publicationDate',
+          value: {
+            'en-US': '2024-05-06T10:00:00.000Z',
           },
         },
         {
@@ -2505,6 +2522,7 @@ describe('Manuscripts Contentful Data Provider', () => {
 
       const manuscriptCreateDataObject = getManuscriptCreateDataObject();
       manuscriptCreateDataObject.versions[0]!.keyResourceTable = undefined;
+      manuscriptCreateDataObject.publicationDate = '2024-05-06T10:00:00.000Z';
 
       const manuscriptType = manuscriptCreateDataObject.versions[0]!
         .type as ManuscriptType;
@@ -2660,6 +2678,13 @@ describe('Manuscripts Contentful Data Provider', () => {
           path: '/fields/preprintDate',
           value: {
             'en-US': '2022-01-03T10:00:00.000Z',
+          },
+        },
+        {
+          op: 'add',
+          path: '/fields/publicationDate',
+          value: {
+            'en-US': '2024-05-06T10:00:00.000Z',
           },
         },
         {

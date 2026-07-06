@@ -279,6 +279,34 @@ describe('/manuscripts/ route', () => {
 
         expect(response.status).toEqual(400);
       });
+
+      test('Should return 400 when preprintDate is not a valid date-time', async () => {
+        const createManuscriptRequest = {
+          ...getManuscriptCreateDataObject(),
+          preprintDate: 'not-a-date',
+        };
+
+        const response = await supertest(app)
+          .post('/manuscripts')
+          .send(createManuscriptRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
+
+      test('Should return 400 when publicationDate is not a valid date-time', async () => {
+        const createManuscriptRequest = {
+          ...getManuscriptCreateDataObject(),
+          publicationDate: 'not-a-date',
+        };
+
+        const response = await supertest(app)
+          .post('/manuscripts')
+          .send(createManuscriptRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
     });
   });
 

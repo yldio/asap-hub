@@ -340,6 +340,9 @@ describe('ProjectManuscript', () => {
       expect(screen.getByText(/what are you sharing/i)).toBeInTheDocument();
     });
     expect(mockUseManuscriptById).toHaveBeenCalledWith('ms-1');
+    expect(
+      screen.getByRole('heading', { name: /Edit Manuscript/i }),
+    ).toBeInTheDocument();
   });
 
   it('uses fundedTeam from projectDetail for teamId and team display name', async () => {

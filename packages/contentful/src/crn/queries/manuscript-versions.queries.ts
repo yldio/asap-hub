@@ -153,6 +153,7 @@ export const FETCH_MANUSCRIPT_VERSION_BY_ID = gql`
             }
             layImpactStatement
             preprintDate
+            publicationDate
             categoriesCollection(limit: 2) {
               items {
                 sys {
@@ -307,6 +308,7 @@ export const FETCH_COMPLIANCE_MANUSCRIPT_VERSIONS = gql`
               status
               layImpactStatement
               preprintDate
+              publicationDate
               assignedUsersCollection(limit: 5) {
                 items {
                   firstName
@@ -420,6 +422,7 @@ export const FETCH_VERSIONS_BY_MANUSCRIPT = gql`
           }
         }
         preprintDate
+        publicationDate
         versionsCollection(
           order: count_DESC
           where: {

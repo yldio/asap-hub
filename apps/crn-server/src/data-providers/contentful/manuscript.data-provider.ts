@@ -479,6 +479,7 @@ export class ManuscriptContentfulDataProvider
       impact: getLinkEntity(input.impact || ''),
       layImpactStatement: input.layImpactStatement,
       preprintDate: input.preprintDate,
+      publicationDate: input.publicationDate,
       categories: getLinkEntities(input.categories || []),
     });
 
@@ -554,6 +555,7 @@ export class ManuscriptContentfulDataProvider
         impact: getLinkEntity(manuscriptData.impact || ''),
         layImpactStatement: manuscriptData.layImpactStatement,
         preprintDate: manuscriptData.preprintDate,
+        publicationDate: manuscriptData.publicationDate,
         categories: getLinkEntities(manuscriptData.categories || []),
       });
 
@@ -763,6 +765,7 @@ const parseGraphQLManuscript = (
         name: category.name,
       })),
     preprintDate: manuscript.preprintDate,
+    publicationDate: manuscript.publicationDate,
   };
 };
 

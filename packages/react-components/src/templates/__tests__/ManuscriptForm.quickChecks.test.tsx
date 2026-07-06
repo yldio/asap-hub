@@ -1,4 +1,4 @@
-import { render, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, waitFor, within } from '@testing-library/react';
 import { ComponentProps, Suspense } from 'react';
 import { StaticRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
@@ -166,6 +166,7 @@ describe('QuickCheck logic', () => {
               publicationDoi="10.0777"
               lifecycle="Publication"
               preprintDate="2022-01-03T00:00:00.000Z"
+              publicationDate="2022-01-03T00:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -192,6 +193,7 @@ describe('QuickCheck logic', () => {
         impact: 'impact-id-1',
         layImpactStatement: 'manuscript impact statement',
         preprintDate: '2022-01-03T00:00:00.000Z',
+        publicationDate: '2022-01-03T00:00:00.000Z',
         categories: ['category-id-1'],
         versions: [
           {
@@ -279,6 +281,7 @@ describe('QuickCheck logic', () => {
               publicationDoi="10.0777"
               lifecycle="Publication"
               preprintDate="2022-01-03T00:00:00.000Z"
+              publicationDate="2022-01-03T00:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -305,6 +308,7 @@ describe('QuickCheck logic', () => {
         impact: 'impact-id-1',
         layImpactStatement: 'manuscript impact statement',
         preprintDate: '2022-01-03T00:00:00.000Z',
+        publicationDate: '2022-01-03T00:00:00.000Z',
         categories: ['category-id-1'],
         versions: [
           {
@@ -387,6 +391,7 @@ describe('QuickCheck logic', () => {
               publicationDoi="10.0777"
               lifecycle="Publication"
               preprintDate="2022-01-03T00:00:00.000Z"
+              publicationDate="2022-01-03T00:00:00.000Z"
               manuscriptFile={{
                 id: '123',
                 filename: 'test.pdf',
@@ -426,6 +431,7 @@ describe('QuickCheck logic', () => {
           layImpactStatement: 'manuscript impact statement',
           categories: ['category-id-1'],
           preprintDate: '2022-01-03T00:00:00.000Z',
+          publicationDate: '2022-01-03T00:00:00.000Z',
           versions: [
             expect.objectContaining({
               acknowledgedGrantNumber: 'Yes',
@@ -569,4 +575,58 @@ describe('QuickCheck logic', () => {
       await findByText(/Reason cannot exceed 256 characters./i),
     ).toBeVisible();
   });
+});
+
+it('does not submit the publication date when the lifecycle no longer shows it', async () => {
+  const onCreate = jest.fn();
+  const { findByRole, getByRole, getByLabelText } = render(
+    <StaticRouter location="/">
+      <Suspense fallback={<div>Loading...</div>}>
+        <ManuscriptForm
+          {...defaultProps}
+          title="manuscript title"
+          type="Original Research"
+          publicationDoi="10.0777"
+          lifecycle="Publication"
+          preprintDate="2022-01-03T00:00:00.000Z"
+          manuscriptFile={{
+            id: '123',
+            filename: 'test.pdf',
+            url: 'http://example.com/test.pdf',
+          }}
+          keyResourceTable={{
+            id: '124',
+            filename: 'test.csv',
+            url: 'http://example.com/test.csv',
+          }}
+          onCreate={onCreate}
+        />
+      </Suspense>
+    </StaticRouter>,
+  );
+
+  await findByRole('button', { name: /Submit/ }, { timeout: 15000 });
+
+  fireEvent.change(getByLabelText(/Publication Date/i), {
+    target: { value: '2024-05-06' },
+  });
+
+  const lifecycleCombobox = getByRole('combobox', {
+    name: /Where is the manuscript in the life cycle/i,
+  });
+  await userEvent.click(lifecycleCombobox);
+  await userEvent.type(
+    lifecycleCombobox,
+    'Draft Manuscript (prior to Publication){enter}',
+  );
+
+  await userEvent.click(await findByRole('button', { name: /Submit/ }));
+  await userEvent.click(
+    await findByRole('button', { name: /Submit Manuscript/i }),
+  );
+
+  await waitFor(() => {
+    expect(onCreate).toHaveBeenCalled();
+  });
+  expect(onCreate.mock.calls[0]![0].publicationDate).toBeUndefined();
 });

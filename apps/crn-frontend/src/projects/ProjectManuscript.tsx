@@ -224,7 +224,10 @@ const ProjectManuscript: React.FC<ProjectManuscriptProps> = ({
   return (
     <FormProvider {...form}>
       <Frame title="Create Manuscript">
-        <ManuscriptHeader resubmitManuscript={resubmitManuscript} />
+        <ManuscriptHeader
+          resubmitManuscript={resubmitManuscript}
+          isEditMode={!!manuscriptId && !resubmitManuscript}
+        />
         <ManuscriptForm
           getShortDescriptionFromDescription={
             getShortDescriptionFromDescription

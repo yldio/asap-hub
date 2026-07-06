@@ -25,25 +25,39 @@ const contentStyles = css({
 
 type ManuscriptHeaderProps = {
   resubmitManuscript?: boolean;
+  isEditMode?: boolean;
 };
 
 const ManuscriptHeader: React.FC<ManuscriptHeaderProps> = ({
   resubmitManuscript = false,
-}) => (
-  <header css={headerStyles}>
-    <div css={contentStyles}>
-      <Display styleAsHeading={2}>{`Submit ${
-        resubmitManuscript ? 'Revised' : 'New'
-      } Manuscript`}</Display>
-      <div>
-        <Paragraph noMargin accent="lead">
-          {resubmitManuscript
-            ? 'Resubmit your manuscript based on the last compliance report you received. All details below were duplicated from the previous manuscript.'
-            : 'Start a new manuscript to receive an itemized compliance report outlining action items for compliance with the ASAP Open Science Policy.'}
-        </Paragraph>
+  isEditMode = false,
+}) => {
+  const title = isEditMode
+    ? 'Edit Manuscript'
+    : `Submit ${resubmitManuscript ? 'Revised' : 'New'} Manuscript`;
+
+  const getDescription = () => {
+    if (isEditMode) {
+      return 'This manuscript has already been submitted. Some fields may not be available to edit. If you need to correct something that is blocked, contact your PM.';
+    }
+    if (resubmitManuscript) {
+      return 'Resubmit your manuscript based on the last compliance report you received. All details below were duplicated from the previous manuscript.';
+    }
+    return 'Start a new manuscript to receive an itemized compliance report outlining action items for compliance with the ASAP Open Science Policy.';
+  };
+
+  return (
+    <header css={headerStyles}>
+      <div css={contentStyles}>
+        <Display styleAsHeading={2}>{title}</Display>
+        <div>
+          <Paragraph noMargin accent="lead">
+            {getDescription()}
+          </Paragraph>
+        </div>
       </div>
-    </div>
-  </header>
-);
+    </header>
+  );
+};
 
 export default ManuscriptHeader;

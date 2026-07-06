@@ -25,3 +25,15 @@ it('renders the manuscript header content when resubmitting manuscript', () => {
     ),
   ).toBeInTheDocument();
 });
+
+it('renders the manuscript header content when editing a manuscript', () => {
+  render(<ManuscriptHeader isEditMode />);
+  expect(
+    screen.getByRole('heading', { name: /Edit Manuscript/i }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByText(
+      'This manuscript has already been submitted. Some fields may not be available to edit. If you need to correct something that is blocked, contact your PM.',
+    ),
+  ).toBeInTheDocument();
+});

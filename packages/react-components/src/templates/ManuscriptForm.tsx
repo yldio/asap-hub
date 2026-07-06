@@ -449,6 +449,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
   const publicationDateFieldDescription = shouldEnablePublicationDateField
     ? 'Enter the date that this manuscript was originally published (i.e., not the preprint date). This date cannot be changed later.'
     : 'The date that this manuscript was originally published (i.e., not the preprint date). This date cannot be edited.';
+  const shouldEnableUrlField = !url || isOpenScienceTeamMember;
 
   const methods = useForm<ManuscriptFormData>({
     mode: 'all',
@@ -1337,7 +1338,7 @@ const ManuscriptForm: React.FC<ManuscriptFormProps> = ({
                   value={value ?? ''}
                   onChange={onChange}
                   onBlur={onBlur}
-                  enabled={!isSubmitting}
+                  enabled={!isSubmitting && shouldEnableUrlField}
                   customValidationMessage={error?.message}
                   labelIndicator={<GlobeIcon />}
                   placeholder="https://example.com"

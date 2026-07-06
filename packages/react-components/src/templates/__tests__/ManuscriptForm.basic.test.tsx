@@ -720,6 +720,45 @@ describe('Manuscript form', () => {
     expect(await findByLabelText(/originally published/i)).toBeDisabled();
   });
 
+  it('disables the URL field when a url has already been provided', async () => {
+    const { findByRole } = await renderManuscriptForm({
+      ...defaultProps,
+      url: 'https://example.com/existing-manuscript',
+      manuscriptId: 'test-id',
+      resubmitManuscript: false,
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(await findByRole('textbox', { name: /url/i })).toBeDisabled();
+  });
+
+  it('keeps the URL field editable for an open science team member even when a url has already been provided', async () => {
+    const { findByRole } = await renderManuscriptForm({
+      ...defaultProps,
+      url: 'https://example.com/existing-manuscript',
+      manuscriptId: 'test-id',
+      resubmitManuscript: false,
+      isOpenScienceTeamMember: true,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(await findByRole('textbox', { name: /url/i })).toBeEnabled();
+  });
+
+  it('enables the URL field when no url has been provided yet', async () => {
+    const { findByRole } = await renderManuscriptForm({
+      ...defaultProps,
+      url: undefined,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(await findByRole('textbox', { name: /url/i })).toBeEnabled();
+  });
+
   it('keeps the preprint date visible and locked when a manuscript moves to publication', async () => {
     const { findByLabelText, queryByLabelText } = await renderManuscriptForm({
       ...defaultProps,

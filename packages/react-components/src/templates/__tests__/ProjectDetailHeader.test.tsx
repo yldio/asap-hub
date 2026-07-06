@@ -405,18 +405,38 @@ describe('ProjectDetailHeader', () => {
       expect(teamText).toBeNull();
     });
 
-    /* eslint-disable jest/no-commented-out-tests */
-    // TODO: Add test for Share an Output dropdown button when it is implemented
-    // it('renders Share an Output dropdown button', () => {
-    //   render(
-    //     <ProjectDetailHeader
-    //       {...mockDiscoveryProject}
-    //       aboutHref="/projects/discovery/1/about"
-    //     />,
-    //   );
-    //   expect(screen.getByText('Share an Output')).toBeInTheDocument();
-    // });
-    /* eslint-enable jest/no-commented-out-tests */
+    it('renders share an output button when project is discovery project and PROJECT_OUTPUTS flag is enabled', () => {
+      mockIsEnabled.mockReturnValue(true);
+
+      const { getByRole } = render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+        />,
+      );
+      expect(
+        getByRole('button', { name: /Share an output/i }),
+      ).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: /Share an output/i }));
+      expect(screen.getByText(/article/i, { selector: 'span' })).toBeVisible();
+    });
+
+    it('does not render share an output button when project is discovery project and PROJECT_OUTPUTS flag is disabled', () => {
+      mockIsEnabled.mockReturnValue(false);
+
+      const { queryByRole } = render(
+        <ProjectDetailHeader
+          {...mockDiscoveryProject}
+          aboutHref="/projects/discovery/1/about"
+          milestonesHref="/projects/discovery/1/milestones"
+        />,
+      );
+      expect(
+        queryByRole('button', { name: /Share an output/i }),
+      ).not.toBeInTheDocument();
+    });
   });
 
   describe('Resource projects (team-based)', () => {
@@ -457,18 +477,20 @@ describe('ProjectDetailHeader', () => {
       );
     });
 
-    /* eslint-disable jest/no-commented-out-tests */
-    // TODO: Add test for Share an Output dropdown button when it is implemented
-    // it('does not render Share an Output button', () => {
-    //   render(
-    //     <ProjectDetailHeader
-    //       {...mockResourceTeamProject}
-    //       aboutHref="/projects/resource/1/about"
-    //     />,
-    //   );
-    //   expect(screen.queryByText('Share an Output')).not.toBeInTheDocument();
-    // });
-    /* eslint-enable jest/no-commented-out-tests */
+    it('does not render share an output button when project is resource project and PROJECT_OUTPUTS flag is enabled', () => {
+      mockIsEnabled.mockReturnValue(true);
+
+      const { queryByRole } = render(
+        <ProjectDetailHeader
+          {...mockResourceTeamProject}
+          aboutHref="/projects/resource/1/about"
+          milestonesHref="/projects/resource/1/milestones"
+        />,
+      );
+      expect(
+        queryByRole('button', { name: /Share an output/i }),
+      ).not.toBeInTheDocument();
+    });
 
     it('renders team name for team-based resource projects', () => {
       render(
@@ -630,18 +652,20 @@ describe('ProjectDetailHeader', () => {
       expect(screen.getByText('Dr. Jane Key')).toBeInTheDocument();
     });
 
-    /* eslint-disable jest/no-commented-out-tests */
-    // TODO: Add test for Share an Output dropdown button when it is implemented
-    // it('does not render Share an Output button', () => {
-    //   render(
-    //     <ProjectDetailHeader
-    //       {...mockTraineeProject}
-    //       aboutHref="/projects/trainee/1/about"
-    //     />,
-    //   );
-    //   expect(screen.queryByText('Share an Output')).not.toBeInTheDocument();
-    // });
-    /* eslint-enable jest/no-commented-out-tests */
+    it('does not render share an output button when project is trainee project and PROJECT_OUTPUTS flag is enabled', () => {
+      mockIsEnabled.mockReturnValue(true);
+
+      const { queryByRole } = render(
+        <ProjectDetailHeader
+          {...mockTraineeProject}
+          aboutHref="/projects/trainee/1/about"
+          milestonesHref="/projects/trainee/1/milestones"
+        />,
+      );
+      expect(
+        queryByRole('button', { name: /Share an output/i }),
+      ).not.toBeInTheDocument();
+    });
   });
 
   describe('Duration display', () => {

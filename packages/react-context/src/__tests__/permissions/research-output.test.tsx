@@ -1,6 +1,9 @@
 import { render } from '@testing-library/react';
 
-import { useResearchOutputPermissionsContext } from '../../permissions/research-output';
+import {
+  getVisibleResearchOutputActions,
+  useResearchOutputPermissionsContext,
+} from '../../permissions/research-output';
 
 const TestComponent: React.FC<{ index?: number }> = () => {
   const {
@@ -28,4 +31,41 @@ it('passes through default profile context', () => {
   expect(getByText('canShareResearchOutput: false')).toBeVisible();
   expect(getByText('canEditResearchOutput: false')).toBeVisible();
   expect(getByText('canPublishResearchOutput: false')).toBeVisible();
+});
+
+describe('getVisibleResearchOutputActions', () => {
+  const permissions = {
+    canEditResearchOutput: false,
+    canDuplicateResearchOutput: false,
+    canRequestReview: false,
+    canVersionResearchOutput: false,
+    canPublishResearchOutput: false,
+  };
+
+  const state = {
+    published: false,
+    isInReview: false,
+    hasRelatedManuscript: false,
+    isWorkingGroupOutput: false,
+  };
+
+  it('sets canEdit to true if output is in review and you are a pm member', () => {
+    expect(
+      getVisibleResearchOutputActions(
+        {
+          ...permissions,
+          canEditResearchOutput: true,
+          canPublishResearchOutput: true,
+        },
+        {
+          ...state,
+          isInReview: true,
+        },
+      ),
+    ).toEqual(
+      expect.objectContaining({
+        canEdit: true,
+      }),
+    );
+  });
 });

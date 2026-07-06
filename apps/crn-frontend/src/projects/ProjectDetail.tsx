@@ -10,7 +10,10 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUserCRN, useFlags } from '@asap-hub/react-context';
 import { useProjectArticlesSuggestions, useProjectById } from './state';
-import { useResearchOutputs } from '../shared-research/state';
+import {
+  useResearchOutputById,
+  useResearchOutputs,
+} from '../shared-research/state';
 import { getProjectResearchOutputListScope } from './projectResearchOutputScope';
 import { useFetchAimArticles } from './articles-state';
 import { ManuscriptToastProvider } from '../network/teams/ManuscriptToastProvider';
@@ -18,6 +21,7 @@ import { EligibilityReasonProvider } from '../network/teams/EligibilityReasonPro
 import ProjectWorkspace from './ProjectWorkspace';
 import ProjectOutputs from './ProjectOutputs';
 import type { ProjectDetailConfig } from './projectDetailConfig';
+import ProjectOutput from './ProjectOutput';
 
 const loadProjectManuscript = () =>
   import(/* webpackChunkName: "project-manuscript" */ './ProjectManuscript');
@@ -93,6 +97,28 @@ const ProjectOutputCounts: FC<
     <>{children({})}</>
   );
 
+const DuplicateOutput: FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const output = useResearchOutputById(id ?? '');
+  if (output && output.teams[0]?.id) {
+    return (
+      <ProjectOutput
+        researchOutputData={{
+          ...output,
+          id: '',
+          published: false,
+          link: undefined,
+          title: `Copy of ${output.title}`,
+        }}
+        descriptionUnchangedWarning
+        isDuplicate
+        teamId={output.teams[0].id}
+      />
+    );
+  }
+  return <NotFoundPage />;
+};
+
 const ProjectDetail: FC<Props> = ({ config }) => {
   const { projectId: rawProjectId } = useParams<{ projectId: string }>();
   const projectId = rawProjectId ?? '';
@@ -143,6 +169,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
 
   const workspaceHref = showWorkspace ? route.workspace({}).$ : undefined;
   const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
+  const isDiscoveryProject = config.projectType === 'Discovery Project';
 
   const hasSupplementGrant =
     'supplementGrant' in projectDetail && !!projectDetail.supplementGrant;
@@ -218,6 +245,30 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                 }
               />
             )}
+            <Route
+              path="create-output/:outputDocumentType"
+              element={
+                isProjectOutputsEnabled && teamId && isDiscoveryProject ? (
+                  <Frame title="Share Output">
+                    <ProjectOutput teamId={teamId} />
+                  </Frame>
+                ) : (
+                  <NotFoundPage />
+                )
+              }
+            />
+            <Route
+              path="duplicate/:id"
+              element={
+                isProjectOutputsEnabled && isDiscoveryProject ? (
+                  <Frame title="Duplicate Output">
+                    <DuplicateOutput />
+                  </Frame>
+                ) : (
+                  <NotFoundPage />
+                )
+              }
+            />
             <Route
               path="*"
               element={

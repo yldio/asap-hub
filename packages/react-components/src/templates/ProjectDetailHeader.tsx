@@ -1,6 +1,6 @@
 import { ProjectDetail, ProjectMember } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
+import { network, projects } from '@asap-hub/routing';
 import { css } from '@emotion/react';
 import { Display, Pill, Link, CopyButton, TabLink } from '../atoms';
 import { lead } from '../colors';
@@ -11,9 +11,21 @@ import {
   ResourceMemberIcon,
   MemberIcon,
   TraineeIcon,
+  plusIcon,
+  article,
+  bioinformatics,
+  crnReportIcon,
+  dataset,
+  labMaterial,
+  protocol,
 } from '../icons';
 import { createMailTo } from '../mail';
-import { UsersList, TabNav, ProjectDuration } from '../molecules';
+import {
+  UsersList,
+  TabNav,
+  ProjectDuration,
+  DropdownButton,
+} from '../molecules';
 import { rem, tabletScreen } from '../pixels';
 import { getStatusPillAccent } from '../organisms/ProjectCard';
 import PageInfoContainer from './PageInfoContainer';
@@ -120,11 +132,10 @@ const toastContainerStyles = css({
   marginBottom: rem(24),
 });
 
-// not used yet - will be included when sharing outputs is implemented
-// const dropdownButtonStyling = css({
-//   display: 'flex',
-//   columnGap: rem(8),
-// });
+const dropdownButtonStyling = css({
+  display: 'flex',
+  columnGap: rem(8),
+});
 
 type ProjectDetailHeaderProps = ProjectDetail & {
   readonly pointOfContactEmail?: string;
@@ -168,6 +179,10 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
   } = project;
   const { isEnabled } = useFlags();
   const isProjectOutputsEnabled = isEnabled('PROJECT_OUTPUTS');
+
+  const route = projects({}).discoveryProjects({}).discoveryProject({
+    projectId: project.id,
+  });
 
   const membersWithHref =
     'members' in project
@@ -257,34 +272,58 @@ const ProjectDetailHeader = (project: ProjectDetailHeaderProps) => {
                 </div>
               )}
 
-              {/* Share Output button for Discovery projects - not included yet */}
-              {/* {project.projectType === 'Discovery' && (
-            <div css={css({ marginLeft: 'auto' })}>
-              <DropdownButton
-                noMargin
-                buttonChildren={() => (
-                  <span css={dropdownButtonStyling}>
-                    {plusIcon}
-                    Share an Output
-                  </span>
+              {project.projectType === 'Discovery Project' &&
+                isProjectOutputsEnabled && (
+                  <div css={css({ marginLeft: 'auto' })}>
+                    <DropdownButton
+                      noMargin
+                      buttonChildren={() => (
+                        <span css={dropdownButtonStyling}>
+                          {plusIcon}
+                          Share an Output
+                        </span>
+                      )}
+                      primary
+                    >
+                      {{
+                        item: <>{article} Article</>,
+                        href: route.createOutput({
+                          outputDocumentType: 'article',
+                        }).$,
+                      }}
+                      {{
+                        item: <>{bioinformatics} Bioinformatics</>,
+                        href: route.createOutput({
+                          outputDocumentType: 'bioinformatics',
+                        }).$,
+                      }}
+                      {{
+                        item: <>{crnReportIcon} CRN Report</>,
+                        href: route.createOutput({
+                          outputDocumentType: 'report',
+                        }).$,
+                      }}
+                      {{
+                        item: <>{dataset} Dataset</>,
+                        href: route.createOutput({
+                          outputDocumentType: 'dataset',
+                        }).$,
+                      }}
+                      {{
+                        item: <>{labMaterial} Lab Material</>,
+                        href: route.createOutput({
+                          outputDocumentType: 'lab-material',
+                        }).$,
+                      }}
+                      {{
+                        item: <>{protocol} Protocol</>,
+                        href: route.createOutput({
+                          outputDocumentType: 'protocol',
+                        }).$,
+                      }}
+                    </DropdownButton>
+                  </div>
                 )}
-                primary
-              >
-                {{
-                  item: <>Article</>,
-                  href: '#',
-                }}
-                {{
-                  item: <>Dataset</>,
-                  href: '#',
-                }}
-                {{
-                  item: <>Protocol</>,
-                  href: '#',
-                }}
-              </DropdownButton>
-            </div>
-          )} */}
             </div>
           )}
 

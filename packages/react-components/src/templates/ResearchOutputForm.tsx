@@ -10,7 +10,10 @@ import {
 } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
-import { ResearchOutputPermissions } from '@asap-hub/react-context';
+import {
+  ResearchOutputAvailableActions,
+  ResearchOutputPermissions,
+} from '@asap-hub/react-context';
 import { network, sharedResearch } from '@asap-hub/routing';
 import equal from 'fast-deep-equal';
 import React, { ComponentProps, useEffect, useState } from 'react';
@@ -92,6 +95,8 @@ type ResearchOutputFormProps = Pick<
     descriptionUnchangedWarning?: boolean;
     isImportedFromManuscript?: boolean;
     flowId?: ResearchOutputFlowId;
+    behaviorMode?: 'legacy' | 'flow';
+    availableActions?: ResearchOutputAvailableActions;
   };
 
 const mainStyles = css({
@@ -187,12 +192,18 @@ const ResearchOutputForm: React.FC<ResearchOutputFormProps> = ({
   versionAction,
   isImportedFromManuscript,
   flowId,
+  behaviorMode = 'legacy',
+  availableActions,
 }) => {
   const navigate = useNavigate();
   const { canShareResearchOutput, canPublishResearchOutput } = permissions;
 
-  const showSaveDraftButton =
-    !isImportedFromManuscript && !published && canShareResearchOutput;
+  const useFlowMode = behaviorMode === 'flow' && !!availableActions;
+
+  const showSaveDraftButton = useFlowMode
+    ? availableActions.canSaveDraft
+    : !isImportedFromManuscript && !published && canShareResearchOutput;
+
   const showPublishButton = canPublishResearchOutput;
   const displayThreeButtons = showSaveDraftButton && showPublishButton;
 

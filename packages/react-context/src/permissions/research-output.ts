@@ -1,3 +1,4 @@
+import { FLOW_REGISTRY, ResearchOutputFlowId } from '@asap-hub/model';
 import { createContext, useContext } from 'react';
 
 export type ResearchOutputPermissions = {
@@ -21,3 +22,66 @@ export const ResearchOutputPermissionsContext =
 
 export const useResearchOutputPermissionsContext =
   (): ResearchOutputPermissions => useContext(ResearchOutputPermissionsContext);
+
+export type ResearchOutputAvailableActions = {
+  canSaveDraft: boolean;
+  // canPublish: boolean;
+};
+
+export type ResearchOutputDetailActionAvailability = {
+  canEdit: boolean;
+  canDuplicate: boolean;
+  canRequestReview: boolean;
+  canAddVersion: boolean;
+  canImportManuscriptVersion: boolean;
+  canSwitchToDraft: boolean;
+  canPublish: boolean;
+};
+
+export const resolveResearchOutputAvailableActions = ({
+  flowId,
+  permissions,
+}: {
+  flowId: ResearchOutputFlowId;
+  permissions: ResearchOutputPermissions;
+}): ResearchOutputAvailableActions => {
+  const flow = FLOW_REGISTRY[flowId];
+  return {
+    canSaveDraft: flow.supportsDrafts && !!permissions.canShareResearchOutput,
+    // canPublish: !!permissions.canPublishResearchOutput,
+  };
+};
+
+export type ResearchOutputDetailState = {
+  published: boolean;
+  isInReview: boolean;
+  hasRelatedManuscript: boolean;
+  isWorkingGroupOutput: boolean;
+};
+
+export const getVisibleResearchOutputActions = (
+  permissions: ResearchOutputPermissions,
+  state: ResearchOutputDetailState,
+): ResearchOutputDetailActionAvailability => ({
+  canEdit:
+    !!permissions.canEditResearchOutput &&
+    (!state.isInReview || !!permissions.canPublishResearchOutput),
+  canDuplicate:
+    !!permissions.canDuplicateResearchOutput &&
+    (state.isWorkingGroupOutput || !state.hasRelatedManuscript),
+  canRequestReview:
+    !state.published && !!permissions.canRequestReview && !state.isInReview,
+  canAddVersion:
+    !!permissions.canVersionResearchOutput &&
+    state.published &&
+    !state.hasRelatedManuscript,
+  canImportManuscriptVersion:
+    !!permissions.canVersionResearchOutput &&
+    state.published &&
+    state.hasRelatedManuscript,
+  canSwitchToDraft:
+    !state.published &&
+    state.isInReview &&
+    !!permissions.canPublishResearchOutput,
+  canPublish: !state.published && !!permissions.canPublishResearchOutput,
+});

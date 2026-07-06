@@ -1,7 +1,11 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
+import {
+  getVisibleResearchOutputActions,
+  ResearchOutputPermissionsContext,
+} from '@asap-hub/react-context';
 import { network, sharedResearch } from '@asap-hub/routing';
 import { css } from '@emotion/react';
-import React, { ComponentProps, useState } from 'react';
+import React, { ComponentProps, useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Card, Headline2, Link, Markdown } from '../atoms';
@@ -95,6 +99,15 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   const navigate = useNavigate();
   const { relatedManuscriptVersion } = props;
 
+  const permissions = useContext(ResearchOutputPermissionsContext);
+
+  const visibleActions = getVisibleResearchOutputActions(permissions, {
+    published,
+    isInReview,
+    hasRelatedManuscript: !!relatedManuscriptVersion,
+    isWorkingGroupOutput: !!(props.workingGroups && props.workingGroups[0]?.id),
+  });
+
   const isGrantDocument = ['Grant Document', 'Presentation'].includes(
     props.documentType,
   );
@@ -186,14 +199,10 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             checkForNewerManuscriptVersion={checkForNewerManuscriptVersion}
             isInReview={isInReview}
             duplicateLink={duplicateLink}
-            published={published}
             displayPublishModal={displayPublishModal}
             setDisplayPublishModal={setDisplayPublishModal}
             hasRelatedManuscript={!!relatedManuscriptVersion}
-            canDuplicate={
-              Boolean(props.workingGroups && props.workingGroups[0]?.id) ||
-              !relatedManuscriptVersion
-            }
+            actions={visibleActions}
           />
         )}
         {displayReviewModal && (

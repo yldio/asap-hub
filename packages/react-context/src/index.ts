@@ -16,8 +16,16 @@ export {
 // chunks via this barrel. Import them from their module path instead so they
 // stay in the lazy-loaded AuthProvider chunk.
 export { FlagsContext, LiveFlagsProvider, useFlags } from './flags';
-export { ResearchOutputPermissionsContext } from './permissions/research-output';
-export type { ResearchOutputPermissions } from './permissions/research-output';
+export {
+  ResearchOutputPermissionsContext,
+  getVisibleResearchOutputActions,
+  resolveResearchOutputAvailableActions,
+} from './permissions/research-output';
+export type {
+  ResearchOutputAvailableActions,
+  ResearchOutputDetailActionAvailability,
+  ResearchOutputPermissions,
+} from './permissions/research-output';
 export { ToastContext, InnerToastContext } from './toast';
 export {
   useNotificationContext,

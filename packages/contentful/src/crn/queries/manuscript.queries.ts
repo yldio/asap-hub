@@ -187,6 +187,22 @@ export const FETCH_MANUSCRIPT_VERSIONS = gql`
               }
               displayName
               inactiveSince
+              linkedFrom {
+                projectMembershipCollection(limit: 1) {
+                  items {
+                    linkedFrom {
+                      projectsCollection(limit: 1) {
+                        items {
+                          sys {
+                            id
+                          }
+                          projectType
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
           labsCollection(limit: 10) {

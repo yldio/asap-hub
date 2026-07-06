@@ -78,28 +78,7 @@ describe('Discussion Controller', () => {
           reply,
           manuscriptId: 'manuscript-id-1',
           notificationList: '',
-          workspaceType: undefined,
         },
-      );
-    });
-
-    test('Should pass the workspaceType to the data provider', async () => {
-      discussionDataProviderMock.fetchById.mockResolvedValue(
-        getDiscussionDataObject(),
-      );
-
-      await discussionController.update(
-        'discussion-id',
-        'user-id-0',
-        reply,
-        'manuscript-id-1',
-        '',
-        'project',
-      );
-
-      expect(discussionDataProviderMock.update).toHaveBeenCalledWith(
-        'discussion-id',
-        expect.objectContaining({ workspaceType: 'project' }),
       );
     });
   });
@@ -157,28 +136,7 @@ describe('Discussion Controller', () => {
       expect(discussionDataProviderMock.create).toHaveBeenCalledWith({
         ...input,
         notificationList: '',
-        workspaceType: undefined,
       });
-    });
-
-    test('Should pass the workspaceType to the data provider', async () => {
-      discussionDataProviderMock.fetchById.mockResolvedValue(
-        getDiscussionDataObject(),
-      );
-
-      await discussionController.create(
-        input.userId,
-        input.manuscriptId,
-        input.title,
-        input.text,
-        undefined,
-        '',
-        'project',
-      );
-
-      expect(discussionDataProviderMock.create).toHaveBeenCalledWith(
-        expect.objectContaining({ workspaceType: 'project' }),
-      );
     });
   });
 });

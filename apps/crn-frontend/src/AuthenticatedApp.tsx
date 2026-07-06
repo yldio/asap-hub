@@ -9,6 +9,7 @@ import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
 import {
   about,
   analytics,
+  compliance,
   dashboard,
   discover,
   events,
@@ -48,6 +49,10 @@ const loadAnalytics = () =>
   import(/* webpackChunkName: "analytics" */ './analytics/Routes');
 const loadProjects = () =>
   import(/* webpackChunkName: "projects" */ './projects/Projects');
+const loadCompliance = () =>
+  import(
+    /* webpackChunkName: "compliance" */ './compliance/ManuscriptWorkspaceRedirect'
+  );
 
 const News = lazy(loadNews);
 const Network = lazy(loadNetwork);
@@ -59,6 +64,7 @@ const About = lazy(loadAbout);
 const Analytics = lazy(loadAnalytics);
 const Tags = lazy(loadTags);
 const Projects = lazy(loadProjects);
+const ComplianceRedirect = lazy(loadCompliance);
 
 const AuthenticatedApp: FC<{
   setIsOnboardable?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -80,6 +86,7 @@ const AuthenticatedApp: FC<{
       .then(loadNetwork)
       .then(loadSharedResearch)
       .then(loadProjects)
+      .then(loadCompliance)
       .then(loadDiscover)
       .then(loadAbout)
       .then(loadAnalytics)
@@ -236,6 +243,16 @@ const AuthenticatedApp: FC<{
                     element={
                       <Frame title={null}>
                         <Projects />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path={
+                      compliance.template + compliance({}).manuscript.template
+                    }
+                    element={
+                      <Frame title="Compliance">
+                        <ComplianceRedirect />
                       </Frame>
                     }
                   />

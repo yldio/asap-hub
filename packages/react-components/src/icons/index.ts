@@ -92,6 +92,7 @@ export { default as linkIcon } from './link';
 export { default as listViewIcon } from './list-view';
 export { default as locationIcon } from './location';
 export { default as logoutIcon } from './logout';
+export { default as LockIcon } from './lock';
 export { default as menuIcon } from './menu';
 export { default as MemberIcon } from './member';
 export { default as minusRectIcon } from './minus-rect';

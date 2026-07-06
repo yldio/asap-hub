@@ -647,28 +647,6 @@ describe('useCreateDiscussion', () => {
 
     expect(getManuscript).toHaveBeenCalledWith(manuscriptId, mockAuthorization);
   });
-
-  it('forwards the workspaceType to the createDiscussion api', async () => {
-    (createDiscussion as jest.Mock).mockResolvedValueOnce({ id: discussionId });
-    (getManuscript as jest.Mock).mockResolvedValueOnce(mockUpdatedManuscript);
-
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
-    );
-
-    const { result } = renderHook(() => stateModule.useCreateDiscussion(), {
-      wrapper,
-    });
-
-    await act(async () => {
-      await result.current(manuscriptId, 'title', 'content', undefined, 'team');
-    });
-
-    expect(createDiscussion).toHaveBeenCalledWith(
-      expect.objectContaining({ workspaceType: 'team' }),
-      mockAuthorization,
-    );
-  });
 });
 
 describe('usePostPreprintResearchOutput', () => {

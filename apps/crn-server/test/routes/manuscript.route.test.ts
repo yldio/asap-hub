@@ -364,6 +364,61 @@ describe('/manuscripts/ route', () => {
     });
   });
 
+  describe('GET /manuscripts/{id}/workspace-url', () => {
+    test('Should return 403 when not logged in', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: false,
+      });
+
+      const response = await supertest(app).get(
+        '/manuscripts/123/workspace-url',
+      );
+
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should return the resolved workspace url', async () => {
+      manuscriptControllerMock.fetchWorkspaceUrl.mockResolvedValueOnce({
+        url: '/network/teams/team-1/workspace?tab=discussions#manuscript-1',
+      });
+
+      const response = await supertest(app).get(
+        '/manuscripts/123/workspace-url?tab=discussions',
+      );
+
+      expect(response.body).toEqual({
+        url: '/network/teams/team-1/workspace?tab=discussions#manuscript-1',
+      });
+    });
+
+    test('Should call the controller with the right parameters', async () => {
+      await supertest(app).get(
+        '/manuscripts/abc123/workspace-url?tab=discussions',
+      );
+
+      expect(manuscriptControllerMock.fetchWorkspaceUrl).toHaveBeenCalledWith(
+        'abc123',
+        expect.objectContaining({ id: 'user-id-0' }),
+        'discussions',
+        false,
+      );
+    });
+
+    test('Should call the controller with projectWorkspaceEnabled set to true when requested', async () => {
+      await supertest(app).get(
+        '/manuscripts/abc123/workspace-url?tab=discussions&projectWorkspaceEnabled=true',
+      );
+
+      expect(manuscriptControllerMock.fetchWorkspaceUrl).toHaveBeenCalledWith(
+        'abc123',
+        expect.objectContaining({ id: 'user-id-0' }),
+        'discussions',
+        true,
+      );
+    });
+  });
+
   describe('POST /manuscripts/file-upload-from-url', () => {
     const manuscriptFileResponse = getManuscriptFileResponse();
     test('should call createFile with the correct parameters when the file information is correctly provided', async () => {

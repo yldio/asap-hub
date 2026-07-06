@@ -279,29 +279,6 @@ describe('Discussions Contentful Data Provider', () => {
         discussionRequestObject.manuscriptId,
         '',
         { id: discussionId, userName: 'Jane Doe' },
-        undefined,
-      );
-    });
-
-    test('Should forward the workspaceType to the email notification service', async () => {
-      getManuscriptMock({
-        'en-US': [],
-      });
-
-      await discussionDataProviderMock.create({
-        ...discussionRequestObject,
-        notificationList: '',
-        workspaceType: 'project',
-      });
-
-      expect(
-        emailNotificationServiceMock.sendEmailNotification,
-      ).toHaveBeenCalledWith(
-        'discussion_created_by_grantee',
-        discussionRequestObject.manuscriptId,
-        '',
-        { id: discussionId, userName: 'Jane Doe' },
-        'project',
       );
     });
 
@@ -325,7 +302,6 @@ describe('Discussions Contentful Data Provider', () => {
         discussionRequestObject.manuscriptId,
         '',
         { id: discussionId, userName: 'Jane Doe' },
-        undefined,
       );
     });
   });
@@ -726,7 +702,6 @@ describe('Discussions Contentful Data Provider', () => {
             id: discussionId,
             userName: 'Jane Doe',
           },
-          undefined,
         );
       });
 
@@ -763,45 +738,6 @@ describe('Discussions Contentful Data Provider', () => {
             id: discussionId,
             userName: 'Jane Doe',
           },
-          undefined,
-        );
-      });
-
-      test('Should forward the workspaceType to the email notification service', async () => {
-        const reply = {
-          text: 'test reply',
-          userId,
-          isOpenScienceMember: false,
-        };
-
-        const replyMock = getEntry({});
-        replyMock.sys.id = 'new-reply';
-        environmentMock.createEntry.mockResolvedValueOnce(replyMock);
-        replyMock.publish = jest.fn().mockResolvedValueOnce(replyMock);
-
-        await discussionDataProviderMock.update(discussionId, {
-          userId,
-          reply,
-          manuscriptId: 'manuscript-id-1',
-          notificationList: '',
-          workspaceType: 'project',
-        });
-
-        const emailNotificationServiceMock = jest.mocked(
-          discussionDataProviderMock['emailNotificationService'],
-        );
-
-        expect(
-          emailNotificationServiceMock.sendEmailNotification,
-        ).toHaveBeenCalledWith(
-          'grantee_replied_to_discussion',
-          'manuscript-id-1',
-          '',
-          {
-            id: discussionId,
-            userName: 'Jane Doe',
-          },
-          'project',
         );
       });
     });

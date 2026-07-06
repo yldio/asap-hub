@@ -46,6 +46,7 @@ import {
   getManuscripts,
   getManuscriptVersionByManuscriptId,
   getManuscriptVersions,
+  getManuscriptWorkspaceUrl,
   getTeam,
   getTeams,
   GetTeamsListOptions,
@@ -591,6 +592,63 @@ describe('Manuscript', () => {
         getManuscript('42', ''),
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"Failed to fetch manuscript with id 42. Expected status 2xx or 404. Received status 500."`,
+      );
+    });
+  });
+
+  describe('GET workspace-url', () => {
+    it('makes an authorized GET request for the manuscript workspace url', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .get('/manuscripts/42/workspace-url')
+        .reply(200, {});
+      await getManuscriptWorkspaceUrl('42', 'Bearer x');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('makes a GET request with tab query param', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .get('/manuscripts/42/workspace-url')
+        .query({ tab: 'discussions' })
+        .reply(200, {});
+      await getManuscriptWorkspaceUrl('42', 'Bearer x', 'discussions');
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('makes a GET request with tab and projectWorkspaceEnabled query params', async () => {
+      nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+        .get('/manuscripts/42/workspace-url')
+        .query({ tab: 'discussions', projectWorkspaceEnabled: 'true' })
+        .reply(200, {});
+      await getManuscriptWorkspaceUrl('42', 'Bearer x', 'discussions', true);
+      expect(nock.isDone()).toBe(true);
+    });
+
+    it('returns a successfully resolved workspace url', async () => {
+      const workspaceUrl = {
+        url: '/network/teams/team-1/workspace#manuscript-1',
+      };
+      nock(API_BASE_URL)
+        .get('/manuscripts/42/workspace-url')
+        .reply(200, workspaceUrl);
+      expect(await getManuscriptWorkspaceUrl('42', '')).toEqual(workspaceUrl);
+    });
+
+    it('returns undefined for a 404', async () => {
+      nock(API_BASE_URL).get('/manuscripts/42/workspace-url').reply(404);
+      expect(await getManuscriptWorkspaceUrl('42', '')).toBe(undefined);
+    });
+
+    it('returns undefined for a 403', async () => {
+      nock(API_BASE_URL).get('/manuscripts/42/workspace-url').reply(403);
+      expect(await getManuscriptWorkspaceUrl('42', '')).toBe(undefined);
+    });
+
+    it('errors for another status', async () => {
+      nock(API_BASE_URL).get('/manuscripts/42/workspace-url').reply(500);
+      await expect(
+        getManuscriptWorkspaceUrl('42', ''),
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Failed to resolve manuscript workspace url for id 42. Expected status 2xx, 403 or 404. Received status 500."`,
       );
     });
   });

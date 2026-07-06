@@ -121,7 +121,13 @@ export type ManuscriptVersion = {
   labMaterialsRegisteredDetails?: string;
   availabilityStatementDetails?: string;
 
-  teams: { displayName: string; id: string; inactiveSince?: string }[];
+  teams: {
+    displayName: string;
+    id: string;
+    inactiveSince?: string;
+    projectId?: string;
+    projectType?: ProjectType;
+  }[];
   labs: { name: string; id: string; labPi?: string; labPITeamIds?: string[] }[];
   url?: string;
 
@@ -1064,6 +1070,13 @@ export type ManuscriptError = {
     };
   };
 };
+
+export type {
+  ManuscriptWorkspaceContext,
+  ManuscriptWorkspaceTab,
+  ManuscriptWorkspaceUrlResponse,
+  ManuscriptWorkspaceUserContext,
+} from './manuscript-workspace-url';
 
 export type ManuscriptVersionExport = {
   id: string;

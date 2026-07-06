@@ -60,7 +60,7 @@ const ProjectWorkspace: FC<ProjectWorkspaceProps> = ({
     handleCreateDiscussion,
     handleReplyToDiscussion,
     handleMarkDiscussionAsRead,
-  } = useDiscussionHandlers('project');
+  } = useDiscussionHandlers();
   const handleFileUpload = useUploadManuscriptFileViaPresignedUrl();
 
   const [deleteToolIndex, setDeleteToolIndex] = useState<number | null>(null);

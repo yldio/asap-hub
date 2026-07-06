@@ -3,7 +3,6 @@ import {
   DiscussionResponse,
   ManuscriptFileResponse,
   Reply,
-  WorkspaceType,
 } from '@asap-hub/model';
 
 import { DiscussionDataProvider } from '../data-providers/types';
@@ -31,14 +30,12 @@ export default class DiscussionController {
     reply?: Reply,
     manuscriptId?: string,
     notificationList?: string,
-    workspaceType?: WorkspaceType,
   ): Promise<DiscussionResponse> {
     await this.discussionDataProvider.update(id, {
       userId,
       reply,
       notificationList,
       manuscriptId,
-      workspaceType,
     });
 
     return this.fetchById(id);
@@ -57,7 +54,6 @@ export default class DiscussionController {
     text: string,
     files: ManuscriptFileResponse[] | undefined,
     notificationList: string,
-    workspaceType?: WorkspaceType,
   ): Promise<DiscussionResponse> {
     const id = await this.discussionDataProvider.create({
       userId,
@@ -66,7 +62,6 @@ export default class DiscussionController {
       text,
       files,
       notificationList,
-      workspaceType,
     });
 
     return this.fetchById(id);

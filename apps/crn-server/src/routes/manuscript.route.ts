@@ -4,6 +4,8 @@ import {
   ManuscriptPostCreateRequest,
   ManuscriptPostResubmitRequest,
   ManuscriptResponse,
+  ManuscriptWorkspaceTab,
+  ManuscriptWorkspaceUrlResponse,
 } from '@asap-hub/model';
 import Boom from '@hapi/boom';
 import { RequestHandler, Response, Router } from 'express';
@@ -27,6 +29,9 @@ type FileUploadFromUrlRequest = {
 
 const upload = multer();
 
+const parseWorkspaceTab = (tab: unknown): ManuscriptWorkspaceTab | undefined =>
+  tab === 'discussions' ? 'discussions' : undefined;
+
 export const manuscriptRouteFactory = (
   manuscriptController: ManuscriptController,
 ): Router => {
@@ -44,6 +49,28 @@ export const manuscriptRouteFactory = (
       const result = await manuscriptController.fetchById(
         manuscriptId,
         loggedInUser.id,
+      );
+
+      res.json(result);
+    },
+  );
+
+  manuscriptRoutes.get<{ manuscriptId: string }>(
+    '/manuscripts/:manuscriptId/workspace-url',
+    async (req, res: Response<ManuscriptWorkspaceUrlResponse>) => {
+      const { params, loggedInUser, query } = req;
+
+      if (!loggedInUser) throw Boom.forbidden();
+
+      const { manuscriptId } = validateManuscriptParameters(params);
+      const tab = parseWorkspaceTab(query.tab);
+      const projectWorkspaceEnabled = query.projectWorkspaceEnabled === 'true';
+
+      const result = await manuscriptController.fetchWorkspaceUrl(
+        manuscriptId,
+        loggedInUser,
+        tab,
+        projectWorkspaceEnabled,
       );
 
       res.json(result);

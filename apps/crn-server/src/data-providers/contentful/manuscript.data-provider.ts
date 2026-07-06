@@ -966,11 +966,19 @@ export const parseGraphqlManuscriptVersion = (
       updatedBy: parseGraphqlManuscriptUser(version?.updatedBy || undefined),
       createdDate: version?.sys.firstPublishedAt,
       publishedAt: version?.sys.publishedAt,
-      teams: version?.teamsCollection?.items.map((teamItem) => ({
-        id: teamItem?.sys.id,
-        displayName: teamItem?.displayName,
-        inactiveSince: teamItem?.inactiveSince || undefined,
-      })),
+      teams: version?.teamsCollection?.items.map((teamItem) => {
+        const project =
+          teamItem?.linkedFrom?.projectMembershipCollection?.items[0]
+            ?.linkedFrom?.projectsCollection?.items[0];
+
+        return {
+          id: teamItem?.sys.id,
+          displayName: teamItem?.displayName,
+          inactiveSince: teamItem?.inactiveSince || undefined,
+          projectId: project?.sys.id,
+          projectType: project?.projectType,
+        };
+      }),
       labs: version?.labsCollection?.items.map((labItem) => ({
         id: labItem?.sys.id,
         name: labItem?.name,

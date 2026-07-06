@@ -1,4 +1,5 @@
-import { Auth0ContextCRN, createAuthProvider } from '@asap-hub/react-context';
+import { Auth0ContextCRN } from '@asap-hub/react-context';
+import { createAuthProvider } from '@asap-hub/react-context/src/createAuthProvider';
 
 import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN } from '../config';
 

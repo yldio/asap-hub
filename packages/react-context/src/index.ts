@@ -11,8 +11,10 @@ export {
   useAuth0CRN,
   useAuth0GP2,
 } from './auth0';
-export { Auth0SpaProvider } from './Auth0SpaProvider';
-export { createAuthProvider } from './createAuthProvider';
+// Auth0SpaProvider/createAuthProvider are deliberately not re-exported here:
+// they pull in @auth0/auth0-spa-js, which would end up in the apps' entry
+// chunks via this barrel. Import them from their module path instead so they
+// stay in the lazy-loaded AuthProvider chunk.
 export { FlagsContext, LiveFlagsProvider, useFlags } from './flags';
 export { ResearchOutputPermissionsContext } from './permissions/research-output';
 export type { ResearchOutputPermissions } from './permissions/research-output';

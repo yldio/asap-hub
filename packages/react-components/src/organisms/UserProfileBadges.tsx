@@ -11,22 +11,28 @@ export const badgesAnchorId = 'badges';
 const badgeSize = 80;
 const rowGap = 40;
 const itemWidth = 85;
-// icon + inner gap + up to two lines of team name; keeps every row a uniform
-// height so wrapping stays predictable regardless of content
-const itemHeight = 132;
 
+const containerStyles = css({
+  padding: `${rem(32)} 0 0`,
+});
+
+const headerStyles = css({
+  paddingInline: rem(16),
+});
 const listStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
   gap: rem(rowGap),
-  padding: 0,
-  margin: 0,
+  paddingInline: rem(24),
+  marginBottom: rem(32),
+  marginTop: 0,
+  // marginBottom: rem(32),
+  marginInline: 0,
   listStyle: 'none',
 });
 
 const itemStyles = css({
   width: rem(85),
-  height: rem(itemHeight),
   flexShrink: 0,
   display: 'flex',
   flexDirection: 'column',
@@ -54,7 +60,7 @@ const showMoreButtonStyles = css({
   fontWeight: 'normal',
   color: fern.rgba,
   borderTop: `1px solid ${steel.rgb}`,
-  marginTop: rem(16),
+  marginTop: rem(32),
   paddingTop: rem(16),
   textDecoration: 'none',
   ':hover': {
@@ -66,7 +72,7 @@ const showMoreButtonTextStyles = css({
   height: rem(24),
   display: 'flex',
   alignItems: 'center',
-  gap: rem(4),
+  marginBottom: rem(16),
 });
 
 type UserProfileBadgesProps = {
@@ -113,14 +119,14 @@ const UserProfileBadges: React.FC<UserProfileBadgesProps> = ({ badges }) => {
 
   return (
     <div id={badgesAnchorId}>
-      <Card>
-        <Headline2 styleAsHeading={3} noMargin>
+      <Card padding={false} overrideStyles={containerStyles}>
+        <Headline2 styleAsHeading={3} noMargin overrideStyles={headerStyles}>
           Badges
         </Headline2>
         <Paragraph
           accent="lead"
           noMargin
-          styles={css({ marginBlock: `${rem(24)} ${rem(32)}` })}
+          styles={css({ margin: `${rem(24)} ${rem(24)} ${rem(32)}` })}
         >
           Explore all badges this member has achieved.
         </Paragraph>
@@ -148,7 +154,7 @@ const UserProfileBadges: React.FC<UserProfileBadgesProps> = ({ badges }) => {
             overrideStyles={showMoreButtonStyles}
           >
             <span css={showMoreButtonTextStyles}>
-              {showMore ? 'Show less ↑' : 'Show more ↓'}
+              {showMore ? 'View Less Badges' : 'View More Badges'}
             </span>
           </Button>
         )}

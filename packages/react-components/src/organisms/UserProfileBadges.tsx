@@ -10,7 +10,9 @@ export const badgesAnchorId = 'badges';
 
 const badgeSize = 80;
 const rowGap = 40;
-const itemWidth = 85;
+// minimum badges shown before "View More Badges"; on mobile a row holds fewer
+// than this, so show two rows there
+const MIN_COLLAPSED = 4;
 
 const containerStyles = css({
   padding: `${rem(32)} 0 0`,
@@ -81,38 +83,49 @@ type UserProfileBadgesProps = {
 
 const UserProfileBadges: React.FC<UserProfileBadgesProps> = ({ badges }) => {
   const [showMore, setShowMore] = useState(false);
-  // how many badges to show when collapsed: one fewer than fit the first row,
-  // so there is always a visible cue that more badges exist behind "Show more"
-  // when collapsed, show as many badges as fit one row (measured from the
-  // container width); starts at all so it stays correct before first measure
-  const [collapsedCount, setCollapsedCount] = useState(badges.length);
+  // how many badges fit the first row; null until measured, during which every
+  // badge is rendered so the measurement sees the real wrap
+  const [firstRowCount, setFirstRowCount] = useState<number | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
-  // How many badges fit one row depends on the list's width. Derive it from the
-  // container width and the known item metrics so the count is correct whether
-  // the list is currently collapsed (fewer items rendered) or expanded.
+  // Count the badges that actually sit on the first row by their offsetTop,
+  // rather than estimating from widths (team names vary in width). Measurement
+  // must run with every badge rendered, so it is gated on firstRowCount === null.
   useLayoutEffect(() => {
-    const measure = () => {
-      const list = listRef.current;
-      if (!list) {
-        return;
+    const list = listRef.current;
+    if (firstRowCount === null && list) {
+      const [firstItem, ...restItems] = Array.from(
+        list.children,
+      ) as HTMLElement[];
+      if (firstItem) {
+        const topOfFirstRow = firstItem.offsetTop;
+        setFirstRowCount(
+          1 +
+            restItems.filter((item) => item.offsetTop === topOfFirstRow).length,
+        );
       }
-      const width = list.clientWidth;
-      const perRow = Math.max(
-        1,
-        Math.floor((width + rowGap) / (itemWidth + rowGap)),
-      );
-      setCollapsedCount(perRow);
-    };
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [badges]);
+    }
+  }, [firstRowCount, badges]);
+
+  // Re-measure on resize: drop back to "all rendered" so the next layout effect
+  // recounts the first row at the new width.
+  useLayoutEffect(() => {
+    const remeasure = () => setFirstRowCount(null);
+    window.addEventListener('resize', remeasure);
+    return () => window.removeEventListener('resize', remeasure);
+  }, []);
 
   if (badges.length === 0) {
     return null;
   }
 
+  // Show at least MIN_COLLAPSED badges, but always fill whole rows so the
+  // collapsed view never leaves an orphan on a partial last row. On wide screens
+  // the first row already exceeds the minimum; on narrow ones we round the
+  // minimum up to a whole number of rows (e.g. 3-per-row shows 6, not 3 + 1).
+  const perRow = firstRowCount ?? badges.length;
+  const collapsedCount =
+    Math.ceil(Math.max(perRow, MIN_COLLAPSED) / perRow) * perRow;
   const hasMore = badges.length > collapsedCount;
   const visibleBadges =
     showMore || !hasMore ? badges : badges.slice(0, collapsedCount);

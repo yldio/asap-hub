@@ -10,13 +10,20 @@ const makeBadge = (i: number): UserAwardWithTeam => ({
   teamName: `Team ${i}`,
 });
 
-// jsdom does no layout, so drive the row-fit calc via the list's clientWidth.
-// perRow = floor((width + rowGap) / (itemWidth + rowGap)); with itemWidth 85 and
-// rowGap 40, width 500 => 4 per row, width 600 => 5 per row, width 2000 => wide.
-const mockListClientWidth = (value: number) =>
+// jsdom does no layout (every element reports offsetTop 0), so simulate row
+// wrapping: assign each list item an offsetTop based on its index and the given
+// per-row count, matching how the component counts the first row.
+const mockRowWrap = (perRow: number) =>
   jest
-    .spyOn(HTMLElement.prototype, 'clientWidth', 'get')
-    .mockReturnValue(value);
+    .spyOn(HTMLElement.prototype, 'offsetTop', 'get')
+    .mockImplementation(function offsetTop(this: HTMLElement) {
+      const parent = this.parentElement;
+      if (!parent || this.tagName !== 'LI') {
+        return 0;
+      }
+      const index = Array.from(parent.children).indexOf(this);
+      return Math.floor(index / perRow) * 100;
+    });
 
 afterEach(() => {
   jest.restoreAllMocks();
@@ -28,7 +35,7 @@ it('renders nothing when there are no badges', () => {
 });
 
 it('shows each badge icon and awarding team name', () => {
-  mockListClientWidth(2000); // wide enough that both fit collapsed
+  mockRowWrap(5); // both fit the first row
   render(<UserProfileBadges badges={[makeBadge(1), makeBadge(2)]} />);
 
   expect(screen.getAllByAltText('Open Science Champion')).toHaveLength(2);
@@ -41,24 +48,42 @@ it('exposes the badges anchor for the profile-photo badge link', () => {
   expect(container.querySelector(`#${badgesAnchorId}`)).toBeInTheDocument();
 });
 
-it('collapses to the badges that fit one row, then shows all on Show more', async () => {
+it('collapses to the first row, then shows all on View More Badges', async () => {
   const badges = [1, 2, 3, 4, 5, 6].map(makeBadge);
-  mockListClientWidth(500); // 4 fit a row -> collapsed shows 4
+  mockRowWrap(5); // 5 fit a row -> collapsed shows 5
+  render(<UserProfileBadges badges={badges} />);
+
+  expect(screen.getAllByRole('listitem')).toHaveLength(5);
+
+  await userEvent.click(screen.getByText(/view more badges/i));
+  expect(screen.getAllByRole('listitem')).toHaveLength(6);
+
+  await userEvent.click(screen.getByText(/view less badges/i));
+  expect(screen.getAllByRole('listitem')).toHaveLength(5);
+});
+
+it('shows at least 4 badges across full rows on narrow screens', () => {
+  const badges = [1, 2, 3, 4, 5, 6].map(makeBadge);
+  mockRowWrap(2); // 2 per row -> two full rows of 2 = 4
   render(<UserProfileBadges badges={badges} />);
 
   expect(screen.getAllByRole('listitem')).toHaveLength(4);
-
-  await userEvent.click(screen.getByText(/show more/i));
-  expect(screen.getAllByRole('listitem')).toHaveLength(6);
-
-  await userEvent.click(screen.getByText(/show less/i));
-  expect(screen.getAllByRole('listitem')).toHaveLength(4);
+  expect(screen.getByText(/view more badges/i)).toBeInTheDocument();
 });
 
-it('does not show Show more when every badge fits one row', () => {
-  mockListClientWidth(600); // 5 fit a row
+it('fills whole rows so the collapsed view has no orphan badge', () => {
+  const badges = [1, 2, 3, 4, 5, 6, 7].map(makeBadge);
+  mockRowWrap(3); // 3 per row -> rounds the 4 minimum up to two full rows = 6
+  render(<UserProfileBadges badges={badges} />);
+
+  expect(screen.getAllByRole('listitem')).toHaveLength(6);
+  expect(screen.getByText(/view more badges/i)).toBeInTheDocument();
+});
+
+it('does not show View More Badges when every badge fits the collapsed view', () => {
+  mockRowWrap(5); // 5 fit a row, only 4 badges
   render(<UserProfileBadges badges={[1, 2, 3, 4].map(makeBadge)} />);
 
   expect(screen.getAllByRole('listitem')).toHaveLength(4);
-  expect(screen.queryByText(/show more/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/view more badges/i)).not.toBeInTheDocument();
 });

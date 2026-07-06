@@ -1,4 +1,5 @@
 import { route, stringParser } from 'typesafe-routes';
+import { outputDocumentTypeParser } from './network';
 
 const createProjectRoute = () => {
   const about = route('/about', {}, {});
@@ -34,11 +35,25 @@ const createProjectRoute = () => {
   const milestones = route('/milestones', {}, {});
   const outputs = route('/outputs', {}, {});
   const draftOutputs = route('/draft-outputs', {}, {});
+  const createOutput = route(
+    '/create-output/:outputDocumentType',
+    { outputDocumentType: outputDocumentTypeParser },
+    {},
+  );
+  const duplicateOutput = route('/duplicate/:id', { id: stringParser }, {});
 
   return route(
     '/:projectId',
     { projectId: stringParser },
-    { about, workspace, milestones, outputs, draftOutputs },
+    {
+      about,
+      workspace,
+      milestones,
+      outputs,
+      draftOutputs,
+      createOutput,
+      duplicateOutput,
+    },
   );
 };
 

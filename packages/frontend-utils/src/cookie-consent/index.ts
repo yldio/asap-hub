@@ -140,23 +140,28 @@ export const useCookieConsent = ({
     };
 
     setConsentCookie(name, updatedCookieData);
-    setShowCookieModal(false);
 
-    // Step 2: Attempt to save to backend (errors will be caught by Sentry)
-    const response = await fetch(saveUrl, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(updatedCookieData),
-    });
+    // Step 2: Attempt to save to backend (errors will be caught by Sentry).
+    // Keep the modal open while the request is in flight so the Save button
+    // can show a loading state, then close it regardless of the outcome.
+    try {
+      const response = await fetch(saveUrl, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(updatedCookieData),
+      });
 
-    if (!response || !response.ok) {
-      throw new Error(
-        `Failed to save cookie preferences: ${response?.status || 'unknown'}`,
-      );
+      if (!response || !response.ok) {
+        throw new Error(
+          `Failed to save cookie preferences: ${response?.status || 'unknown'}`,
+        );
+      }
+      // If saved successfully: do nothing (prefs already saved locally)
+    } finally {
+      setShowCookieModal(false);
     }
-    // If saved successfully: do nothing (prefs already saved locally)
   };
 
   useEffect(() => {

@@ -38,7 +38,7 @@ const ManuscriptHeader: React.FC<ManuscriptHeaderProps> = ({
 
   const getDescription = () => {
     if (isEditMode) {
-      return 'This manuscript has already been submitted. Some fields may not be available to edit. If you need to correct something that is blocked, contact your PM.';
+      return "Edit the details of this manuscript. It has already been submitted, so some fields may not be available. If you need to correct something that's blocked, contact your PM.";
     }
     if (resubmitManuscript) {
       return 'Resubmit your manuscript based on the last compliance report you received. All details below were duplicated from the previous manuscript.';

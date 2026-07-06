@@ -33,7 +33,7 @@ it('renders the manuscript header content when editing a manuscript', () => {
   ).toBeInTheDocument();
   expect(
     screen.getByText(
-      'This manuscript has already been submitted. Some fields may not be available to edit. If you need to correct something that is blocked, contact your PM.',
+      "Edit the details of this manuscript. It has already been submitted, so some fields may not be available. If you need to correct something that's blocked, contact your PM.",
     ),
   ).toBeInTheDocument();
 });

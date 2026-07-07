@@ -72,9 +72,9 @@ export const researchOutputToCSV = (
   output: ResearchOutputResponse,
 ): ResearchOutputCSV => {
   const project =
-    output.publishingEntity !== 'Working Group'
-      ? output.project ?? output.teams[0]?.project
-      : null;
+    output.publishingEntity === 'Working Group'
+      ? null
+      : output.project ?? output.teams[0]?.project;
   return {
     title: output.title,
     documentType: output.documentType,

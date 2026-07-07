@@ -12,8 +12,9 @@ module.exports.up = (migration) => {
 
 module.exports.down = (migration) => {
   const interestGroups = migration.editContentType('interestGroups');
-  interestGroups.changeFieldControl('leaders', 'builtin', 'entryLinksEditor', {
-    showLinkEntityAction: true,
-    showCreateEntityAction: false,
+  interestGroups.changeFieldControl('leaders', 'builtin', 'entryCardsEditor', {
+    bulkEditing: false,
+    showLinkEntityAction: false,
+    showCreateEntityAction: true,
   });
 };

@@ -347,6 +347,7 @@ const mapTeams = (items: (TeamItem | null)[]) =>
               id: projectItem.sys.id,
               title: projectItem.title || '',
               projectType: projectItem.projectType as ProjectType,
+              projectId: projectItem.projectId || '',
             }
           : undefined,
       };
@@ -506,6 +507,7 @@ export const parseGraphQLResearchOutput = (
           id: researchOutputs.project.sys.id,
           title: researchOutputs.project.title || '',
           projectType: researchOutputs.project.projectType as ProjectType,
+          projectId: researchOutputs.project.projectId || '',
         }
       : undefined,
     authors:

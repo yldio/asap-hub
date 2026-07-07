@@ -2,10 +2,11 @@ import { listViewValue, projects, viewParam } from '@asap-hub/routing';
 import { render, waitFor, screen } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { Frame } from '@asap-hub/frontend-utils';
+import { createCsvFileStream, Frame } from '@asap-hub/frontend-utils';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import userEvent from '@testing-library/user-event';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { CARD_VIEW_PAGE_SIZE, LIST_VIEW_PAGE_SIZE } from '../../hooks';
@@ -16,7 +17,17 @@ import {
 import ProjectOutputs from '../ProjectOutputs';
 import { researchOutputsState } from '../../shared-research/state';
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
+import { MAX_ALGOLIA_RESULTS } from '../../shared-research/export';
 
+jest.mock('@asap-hub/frontend-utils', () => {
+  const original = jest.requireActual('@asap-hub/frontend-utils');
+  return {
+    ...original,
+    createCsvFileStream: jest
+      .fn()
+      .mockImplementation(() => ({ write: jest.fn(), end: jest.fn() })),
+  };
+});
 jest.mock('../../shared-research/api');
 
 afterEach(() => {
@@ -32,8 +43,12 @@ const mockGetDraftResearchOutputs =
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
 
 const projectId = 'proj-1';
+const projectTitle = 'Test One';
 const teamId = 'team-1';
 
 const buildOutput = (i: number) => ({
@@ -138,6 +153,7 @@ const renderPage = async ({
                     <Frame title="Project Outputs">
                       <ProjectOutputs
                         projectId={projectId}
+                        projectTitle={projectTitle}
                         teamId={projectTeamId}
                         userAssociationMember={userAssociationMember}
                         hasOutputs={hasOutputs}
@@ -151,6 +167,7 @@ const renderPage = async ({
                     <Frame title="Project Draft Outputs">
                       <ProjectOutputs
                         projectId={projectId}
+                        projectTitle={projectTitle}
                         teamId={projectTeamId}
                         draftOutputs
                         userAssociationMember={userAssociationMember}
@@ -271,6 +288,47 @@ describe('ProjectOutputs', () => {
     });
   });
 
+  it('triggers export with custom filename', async () => {
+    mockGetResearchOutputs.mockResolvedValueOnce({
+      ...createResearchOutputListAlgoliaResponse(1),
+      hits: [buildOutput(1) as never],
+    });
+
+    const { getByText } = await renderPage({ projectTeamId: teamId });
+
+    await waitFor(() => {
+      expect(mockGetResearchOutputs).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          teamId,
+          searchQuery: '',
+          currentPage: 0,
+          pageSize: CARD_VIEW_PAGE_SIZE,
+        }),
+      );
+    });
+
+    const csvButton = getByText(/csv/i).closest('button');
+    await userEvent.click(getByText(/csv/i));
+    // ExportButton disables the button while the export is in flight; wait for
+    // it to re-enable so the trailing setLoading(false) is flushed inside act.
+    await waitFor(() => expect(csvButton).toBeEnabled());
+
+    expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
+      expect.stringMatching(/SharedOutputs_Project_TestOne_\d+\.csv/),
+      expect.anything(),
+    );
+    expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        teamId,
+        searchQuery: '',
+        currentPage: 0,
+        pageSize: MAX_ALGOLIA_RESULTS,
+      }),
+    );
+  });
+
   describe('draft outputs', () => {
     it('fetches draft outputs from the research outputs API', async () => {
       mockGetDraftResearchOutputs.mockResolvedValueOnce({
@@ -321,6 +379,55 @@ describe('ProjectOutputs', () => {
           'Bearer access_token',
         );
       });
+    });
+
+    it('triggers draft export with custom filename', async () => {
+      mockGetDraftResearchOutputs.mockResolvedValueOnce({
+        total: 1,
+        items: [
+          {
+            ...buildOutput(1),
+            id: 'd1',
+            title: 'Example draft',
+            published: false,
+          },
+        ],
+      });
+
+      const { getByText } = await renderPage({ draftOutputs: true });
+
+      await waitFor(() => {
+        expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
+          expect.objectContaining({
+            projectId,
+            draftsOnly: true,
+            userAssociationMember: true,
+          }),
+          'Bearer access_token',
+        );
+      });
+
+      const csvButton = getByText(/csv/i).closest('button');
+      await userEvent.click(getByText(/csv/i));
+      // ExportButton disables the button while the export is in flight; wait for
+      // it to re-enable so the trailing setLoading(false) is flushed inside act.
+      await waitFor(() => expect(csvButton).toBeEnabled());
+
+      expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
+        expect.stringMatching(/SharedOutputs_Drafts_Project_TestOne_\d+\.csv/),
+        expect.anything(),
+      );
+      expect(mockGetDraftResearchOutputs).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          projectId,
+          draftsOnly: true,
+          searchQuery: '',
+          userAssociationMember: true,
+          currentPage: 0,
+          pageSize: CARD_VIEW_PAGE_SIZE,
+        }),
+        'Bearer access_token',
+      );
     });
 
     it('shows no drafts when the user is not associated with the project', async () => {

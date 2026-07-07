@@ -937,6 +937,7 @@ describe('manuscript outputs flow', () => {
       impact,
       layImpactStatement,
       teams,
+      publicationDate: '2024-01-01T00:00:00.000Z',
     };
 
     mockGetManuscriptVersions.mockResolvedValue({
@@ -1274,6 +1275,7 @@ describe('manuscript outputs flow', () => {
           impact,
           layImpactStatement,
           teams,
+          preprintDate: '2024-01-01T00:00:00.000Z',
         },
       ],
     });
@@ -1332,7 +1334,7 @@ describe('manuscript outputs flow', () => {
         relatedResearch: [],
         relatedEvents: [],
         labCatalogNumber: undefined,
-        publishDate: undefined,
+        publishDate: '2024-01-01T00:00:00.000Z',
         usageNotes: '',
         asapFunded: true,
         usedInPublication: true,
@@ -1364,6 +1366,7 @@ describe('manuscript outputs flow', () => {
       shortDescription,
       doi,
       lifecycle,
+      publicationDate: '2024-01-01T00:00:00.000Z',
       teams: [{ id: teamId, displayName: 'Test Team' }],
     };
 

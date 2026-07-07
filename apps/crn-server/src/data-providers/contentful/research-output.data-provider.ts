@@ -493,7 +493,7 @@ export const parseGraphQLResearchOutput = (
       isSharingStatus(researchOutputs.sharingStatus)
         ? researchOutputs.sharingStatus
         : 'Network Only',
-    publishingEntity: researchOutputs.workingGroup ? 'Working Group' : 'Team',
+    publishingEntity: getPublishingEntity(researchOutputs),
     workingGroups: researchOutputs.workingGroup
       ? [
           {
@@ -688,4 +688,10 @@ const prepareInputForUpdate = (input: ResearchOutputUpdateDataObject) => {
       ? getLinkEntity(_statusChangedById)
       : null,
   };
+};
+
+const getPublishingEntity = (researchOutputs: ResearchOutputItem) => {
+  if (researchOutputs.workingGroup) return 'Working Group';
+  if (researchOutputs.project) return 'Project';
+  return 'Team';
 };

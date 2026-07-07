@@ -66,6 +66,7 @@ export const researchOutputTypes = [
 ] as const;
 
 export const ResearchOutputPublishingEntitiesValues = <const>[
+  'Project',
   'Team',
   'Working Group',
 ];

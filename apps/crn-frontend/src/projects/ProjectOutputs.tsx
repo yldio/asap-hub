@@ -192,7 +192,7 @@ const ProjectOutputs: React.FC<ProjectOutputsProps> = ({
   }
 
   return (
-    <>
+    <article style={{ display: 'flex', flexFlow: 'column', gap: 48 }}>
       <ResearchOutputsSearch
         onChangeSearch={setSearchQuery}
         searchQuery={searchQuery}
@@ -211,7 +211,7 @@ const ProjectOutputs: React.FC<ProjectOutputsProps> = ({
           userAssociationMember={userAssociationMember}
         />
       </SearchFrame>
-    </>
+    </article>
   );
 };
 

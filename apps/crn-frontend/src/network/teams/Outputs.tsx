@@ -182,7 +182,7 @@ const Outputs: React.FC<OutputsProps> = ({
   }).total;
 
   return (
-    <article>
+    <article style={{ display: 'flex', flexFlow: 'column', gap: 48 }}>
       {hasOutputs && (
         <ResearchOutputsSearch
           onChangeSearch={setSearchQuery}

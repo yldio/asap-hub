@@ -25,7 +25,6 @@ export const useResearchOutputPermissionsContext =
 
 export type ResearchOutputAvailableActions = {
   canSaveDraft: boolean;
-  // canPublish: boolean;
 };
 
 export type ResearchOutputDetailActionAvailability = {
@@ -48,7 +47,6 @@ export const resolveResearchOutputAvailableActions = ({
   const flow = FLOW_REGISTRY[flowId];
   return {
     canSaveDraft: flow.supportsDrafts && !!permissions.canShareResearchOutput,
-    // canPublish: !!permissions.canPublishResearchOutput,
   };
 };
 

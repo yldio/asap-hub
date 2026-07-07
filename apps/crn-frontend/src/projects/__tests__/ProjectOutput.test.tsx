@@ -1477,7 +1477,7 @@ async function renderPage({
   researchOutputData,
   versionAction,
   latestManuscriptVersion,
-  isDuplicate = false,
+  isDuplicate,
 }: RenderPageOptions) {
   const path =
     network.template +

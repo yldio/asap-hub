@@ -26,20 +26,30 @@ const props: ComponentProps<typeof SharedResearchOutputButtons> = {
   },
 };
 
-it('displays edit button when user has permission', () => {
-  const { queryByTitle, rerender } = render(
+it.each([
+  ['canEdit', 'link', /edit/i],
+  ['canDuplicate', 'link', /duplicate/i],
+  ['canRequestReview', 'button', /ready for pm review/i],
+  ['canImportManuscriptVersion', 'button', /import manuscript version/i],
+  ['canAddVersion', 'link', /add version/i],
+  ['canSwitchToDraft', 'button', /switch to draft/i],
+  ['canPublish', 'button', /publish/i],
+] as const)('renders %s when %s is true', (action, role, name) => {
+  const { getByRole, queryByRole, rerender } = render(
     <SharedResearchOutputButtons
       {...props}
-      actions={{ ...defaultActions, canEdit: false }}
+      actions={{ ...defaultActions, [action]: false }}
     />,
   );
-  expect(queryByTitle('Edit')).toBeNull();
+
+  expect(queryByRole(role, { name })).not.toBeInTheDocument();
 
   rerender(
     <SharedResearchOutputButtons
       {...props}
-      actions={{ ...defaultActions, canEdit: true }}
+      actions={{ ...defaultActions, [action]: true }}
     />,
   );
-  expect(queryByTitle('Edit')).toBeInTheDocument();
+
+  expect(getByRole(role, { name })).toBeInTheDocument();
 });

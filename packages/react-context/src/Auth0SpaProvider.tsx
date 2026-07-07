@@ -4,29 +4,38 @@
 /* istanbul ignore file */
 /* eslint-disable no-shadow */
 
-import { Auth0, Auth0User, gp2 } from '@asap-hub/auth';
-import { Auth0ContextGP2 } from '@asap-hub/react-context';
+import { Auth0, Auth0User } from '@asap-hub/auth';
 import {
   Auth0Client,
   Auth0ClientOptions,
   RedirectLoginResult,
 } from '@auth0/auth0-spa-js';
-import { useEffect, useState } from 'react';
+import { Context, useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 
-const DEFAULT_REDIRECT_CALLBACK = () =>
-  window.history.replaceState({}, document.title, window.location.pathname);
-
-interface Auth0ProviderProps extends Auth0ClientOptions {
+interface Auth0SpaProviderProps<TUser> extends Auth0ClientOptions {
+  context: Context<Auth0<TUser>>;
   children: React.ReactNode;
-  onRedirectCallback: (appState: RedirectLoginResult['appState']) => void;
 }
-export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
-  children,
-  onRedirectCallback = DEFAULT_REDIRECT_CALLBACK,
-  ...initOptions
-}) => {
+
+export const Auth0SpaProvider = <TUser,>(
+  props: Auth0SpaProviderProps<TUser>,
+) => {
+  const { children, context: ContextProvider, ...initOptions } = props;
+  const navigate = useNavigate();
+  const onRedirectCallback = useCallback(
+    (appState: RedirectLoginResult['appState']) => {
+      const targetUrl =
+        appState && appState.targetUrl
+          ? appState.targetUrl
+          : window.location.pathname;
+
+      void navigate(targetUrl, { replace: true });
+    },
+    [navigate],
+  );
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>();
-  const [user, setUser] = useState<Auth0User<gp2.User>>();
+  const [user, setUser] = useState<Auth0User<TUser>>();
   const [auth0Client, setAuth0Client] = useState<Auth0Client>();
   const [loading, setLoading] = useState(true);
   const [popupOpen, setPopupOpen] = useState(false);
@@ -52,7 +61,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
       setIsAuthenticated(isAuthenticated);
 
       if (isAuthenticated) {
-        const user = await auth0FromHook.getUser<Auth0User<gp2.User>>();
+        const user = await auth0FromHook.getUser<Auth0User<TUser>>();
         setUser(user);
       }
 
@@ -76,7 +85,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     } finally {
       setPopupOpen(false);
     }
-    const user = await auth0Client.getUser<Auth0User<gp2.User>>();
+    const user = await auth0Client.getUser<Auth0User<TUser>>();
     setUser(user);
     setIsAuthenticated(true);
   };
@@ -87,7 +96,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     }
     setLoading(true);
     const result = await auth0Client.handleRedirectCallback();
-    const user = await auth0Client.getUser<Auth0User<gp2.User>>();
+    const user = await auth0Client.getUser<Auth0User<TUser>>();
     setLoading(false);
     setIsAuthenticated(true);
     setUser(user);
@@ -122,12 +131,12 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     setUser(await auth0Client.getUser());
   };
 
-  const auth0: Auth0<gp2.User> = {
+  const auth0: Auth0<TUser> = {
     isAuthenticated,
     user,
+    refreshUser,
     loading,
     popupOpen,
-    refreshUser,
     loginWithPopup,
     handleRedirectCallback,
     getTokenSilently:
@@ -143,8 +152,8 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
   };
 
   return (
-    <Auth0ContextGP2.Provider value={auth0}>
+    <ContextProvider.Provider value={auth0}>
       {children}
-    </Auth0ContextGP2.Provider>
+    </ContextProvider.Provider>
   );
 };

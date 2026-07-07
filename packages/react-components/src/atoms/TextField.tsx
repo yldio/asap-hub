@@ -28,6 +28,9 @@ type FieldType =
 const disabledStyles = css({
   color: lead.rgb,
   backgroundColor: silver.rgb,
+  '&[type="date"]': {
+    color: lead.rgb,
+  },
 });
 
 const LABEL_INDICATOR_CLASS_NAME = 'labelIndicator';

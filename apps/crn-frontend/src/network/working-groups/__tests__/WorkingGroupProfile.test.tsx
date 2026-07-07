@@ -290,6 +290,7 @@ describe('Duplicate Output', () => {
       ...createResearchOutputResponse(),
       id: '123',
       workingGroups: [{ title: wgResponse.title, id: wgResponse.id }],
+      labs: [{ id: 'l0', name: 'Example 1' }],
       title: 'Example',
       link: 'http://example.com',
     };

@@ -117,7 +117,12 @@ const ResearchOutputFormSharingCard: React.FC<
         subtitle={'(required)'}
         description={'The date this output first became publicly available.'}
         required
-        enabled={!isImportedFromManuscript || !researchOutputData?.publishDate}
+        enabled={
+          !(
+            researchOutputData?.publishDate &&
+            (isImportedFromManuscript || researchOutputData?.id)
+          )
+        }
         onChange={onChangePublishDate}
         value={publishDate}
         max={new Date()}

@@ -135,6 +135,39 @@ describe('getResearchOutputPayload', () => {
       relatedResearch: ['r99'],
     });
   });
+
+  it('does not send publishDate when sharing status is not Public', () => {
+    const currentPayload: ResearchOutputPayload = {
+      identifierType: ResearchOutputIdentifierType.Empty,
+      identifier: '',
+      documentType: researchOutputDocumentTypes[6],
+      link: 'https://www.google.com',
+      description: 'description',
+      descriptionMD: 'description MD',
+      shortDescription: 'shortDescription',
+      title: 'title',
+      type: 'Preprint',
+      authors: [],
+      labs: [],
+      teams: [],
+      usageNotes: 'usage notes',
+      asapFunded: getDecision(true),
+      usedInPublication: getDecision(true),
+      sharingStatus: 'Network Only',
+      publishDate: new Date('2020-01-01'),
+      labCatalogNumber: undefined,
+      methods: [],
+      organisms: [],
+      environments: [],
+      keywords: [],
+      relatedEvents: [],
+      relatedResearch: [],
+      subtype: 'Preclinical',
+      published: true,
+      changelog: 'changelog',
+    };
+    expect(getPayload(currentPayload).publishDate).toBeUndefined();
+  });
 });
 describe('getOwnRelatedResearchLinks', () => {
   it('returns empty array', () => {

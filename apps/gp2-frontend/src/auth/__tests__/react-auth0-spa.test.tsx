@@ -25,16 +25,16 @@ jest.mock('@auth0/auth0-spa-js', () => ({
 it('Checks auth0 is still logged in when changing pages', async () => {
   const { getByRole, findByText } = render(
     <RecoilRoot>
-      <Auth0Provider>
-        <MemoryRouter>
+      <MemoryRouter>
+        <Auth0Provider>
           <CheckAuth>
             {({ isAuthenticated }) => (
               <>Authenticated: {isAuthenticated ? 'true' : 'false'}</>
             )}
           </CheckAuth>
           <Link href="/2">Another Page</Link>
-        </MemoryRouter>
-      </Auth0Provider>
+        </Auth0Provider>
+      </MemoryRouter>
     </RecoilRoot>,
   );
   expect(await findByText(/Authenticated: true/i)).toBeVisible();

@@ -394,7 +394,7 @@ describe('ProjectOutputs', () => {
         ],
       });
 
-      const { getByText } = await renderPage({ draftOutputs: true });
+      const { findByText } = await renderPage({ draftOutputs: true });
 
       await waitFor(() => {
         expect(mockGetDraftResearchOutputs).toHaveBeenCalledWith(
@@ -407,8 +407,8 @@ describe('ProjectOutputs', () => {
         );
       });
 
-      const csvButton = getByText(/csv/i).closest('button');
-      await userEvent.click(getByText(/csv/i));
+      const csvButton = (await findByText(/csv/i)).closest('button');
+      await userEvent.click(await findByText(/csv/i));
       // ExportButton disables the button while the export is in flight; wait for
       // it to re-enable so the trailing setLoading(false) is flushed inside act.
       await waitFor(() => expect(csvButton).toBeEnabled());

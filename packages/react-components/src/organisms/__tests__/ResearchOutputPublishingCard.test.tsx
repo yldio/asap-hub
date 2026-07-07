@@ -46,6 +46,54 @@ it('conditionally shows date published field', async () => {
   expect(screen.queryByLabelText(/date made public/i)).toBeVisible();
 });
 
+it('enables the date made public field when creating an output', () => {
+  render(<ResearchOutputPublishingCard {...props} sharingStatus={'Public'} />);
+  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
+});
+
+it('disables the date made public field when editing an output that already has a date', () => {
+  render(
+    <ResearchOutputPublishingCard
+      {...props}
+      sharingStatus={'Public'}
+      researchOutputData={{
+        ...createResearchOutputResponse(),
+        publishDate: '2022-03-24',
+      }}
+    />,
+  );
+  expect(screen.getByLabelText(/date made public/i)).toBeDisabled();
+});
+
+it('enables the date made public field when editing an output without a date', () => {
+  render(
+    <ResearchOutputPublishingCard
+      {...props}
+      sharingStatus={'Public'}
+      researchOutputData={{
+        ...createResearchOutputResponse(),
+        publishDate: undefined,
+      }}
+    />,
+  );
+  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
+});
+
+it('enables the date made public field when duplicating an output that has a date', () => {
+  render(
+    <ResearchOutputPublishingCard
+      {...props}
+      sharingStatus={'Public'}
+      researchOutputData={{
+        ...createResearchOutputResponse(),
+        id: '',
+        publishDate: '2022-03-24',
+      }}
+    />,
+  );
+  expect(screen.getByLabelText(/date made public/i)).toBeEnabled();
+});
+
 it('triggers an on change for date published', async () => {
   const onChangeFn = jest.fn();
 

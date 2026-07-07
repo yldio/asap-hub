@@ -85,7 +85,9 @@ const ResearchOutputContributorsCard: React.FC<
     <LabeledMultiSelect
       title="Labs"
       description="Add ASAP labs that contributed to this output. The Lead PI of each lab must have one of their teams listed in the Teams field. Only labs with ASAP registered PI's will appear."
-      subtitle="(optional)"
+      subtitle="(required)"
+      required
+      getValidationMessage={() => 'Please add at least one lab.'}
       enabled={!isSaving}
       placeholder="Start typing..."
       loadOptions={getLabSuggestions}

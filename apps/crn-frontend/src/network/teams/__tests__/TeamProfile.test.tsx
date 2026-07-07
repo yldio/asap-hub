@@ -622,6 +622,7 @@ describe('Duplicate Output', () => {
           teamType: 'Discovery Team',
         },
       ],
+      labs: [{ id: 'l0', name: 'Example 1' }],
       title: 'Example',
       link: 'http://example.com',
     };

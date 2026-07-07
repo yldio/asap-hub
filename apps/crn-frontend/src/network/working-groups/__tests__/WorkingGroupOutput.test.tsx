@@ -145,6 +145,11 @@ const mandatoryFields = async (
     await screen.findByText('Abu-Remaileh, M 1', {}, { timeout: 5000 }),
   );
 
+  await user.click(screen.getByRole('combobox', { name: /Labs/i }));
+  await user.click(
+    await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
+  );
+
   return {
     publish: async () => {
       const button = screen.getByRole('button', { name: /Publish/i });
@@ -361,11 +366,6 @@ it('can submit a form when form data is valid', async () => {
     user,
   );
 
-  await user.click(screen.getByRole('combobox', { name: /Labs/i }));
-  await user.click(
-    await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
-  );
-
   await publish();
 
   expect(mockCreateResearchOutput).toHaveBeenCalledWith(
@@ -449,11 +449,6 @@ it('can save draft when form data is valid', async () => {
     },
     true,
     user,
-  );
-
-  await user.click(screen.getByRole('combobox', { name: /Labs/i }));
-  await user.click(
-    await screen.findByText('Example 1 Lab', {}, { timeout: 5000 }),
   );
 
   await saveDraft();
@@ -668,6 +663,7 @@ it.each([
         descriptionMD,
         shortDescription,
         published,
+        labs: [{ id: 'l0', name: 'Example 1' }],
         statusChangedBy: {
           id: 'user-id-1',
           firstName: 'User',

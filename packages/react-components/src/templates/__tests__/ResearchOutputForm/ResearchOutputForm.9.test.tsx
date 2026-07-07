@@ -33,7 +33,7 @@ describe('on submit 3', () => {
   beforeEach(() => {
     saveDraftFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
     saveFn.mockResolvedValue({ ...createResearchOutputResponse(), id });
-    getLabSuggestions.mockResolvedValue([]);
+    getLabSuggestions.mockResolvedValue([{ label: 'One Lab', value: '1' }]);
     getAuthorSuggestions.mockResolvedValue([]);
     getRelatedResearchSuggestions.mockResolvedValue([]);
     getShortDescriptionFromDescription.mockReturnValue('short description');
@@ -147,6 +147,12 @@ describe('on submit 3', () => {
       await screen.findByRole('combobox', { name: /environments/i }),
     );
     await userEvent.click(screen.getByText('In Vitro'));
+
+    await userEvent.click(
+      await screen.findByRole('combobox', { name: /Labs/i }),
+    );
+    await userEvent.click(await screen.findByText('One Lab'));
+
     await submitForm();
     expect(saveFn).toHaveBeenLastCalledWith({
       ...expectedRequest,

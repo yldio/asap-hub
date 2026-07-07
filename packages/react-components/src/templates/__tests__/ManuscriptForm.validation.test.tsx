@@ -764,7 +764,60 @@ describe('ManuscriptForm labs validation on the submit journey', () => {
     });
   });
 
-  it('keeps the selected labs when the lifecycle changes', async () => {
+  it('blocks submission and shows the required author error when no first author was added', async () => {
+    const onCreate = jest.fn(() => Promise.resolve());
+    const onInvalid = jest.fn();
+
+    render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            onCreate={onCreate}
+            onInvalid={onInvalid}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Draft Manuscript (prior to Publication)"
+            manuscriptFile={{
+              id: '123',
+              filename: 'test.pdf',
+              url: 'http://example.com/test.pdf',
+            }}
+            keyResourceTable={{
+              id: '124',
+              filename: 'test.csv',
+              url: 'http://example.com/test.csv',
+            }}
+            shortDescription="A good short description"
+            layImpactStatement="manuscript impact statement"
+            selectedLabs={[
+              { value: 'lab-1', label: 'Lab One', isFixed: false },
+            ]}
+            firstAuthors={[]}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+
+    expect(
+      await screen.findByText('Please add at least one author.'),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole('button', { name: /Submit Manuscript/i }),
+    ).not.toBeInTheDocument();
+    expect(onCreate).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(onInvalid).toHaveBeenCalled();
+    });
+  });
+
+  it('keeps the selected labs and teams when the lifecycle changes', async () => {
     const getLabSuggestions = jest
       .fn()
       .mockResolvedValue([
@@ -801,7 +854,13 @@ describe('ManuscriptForm labs validation on the submit journey', () => {
     await userEvent.click(await screen.findByText('Lab One'));
     await userEvent.tab();
 
+    // Add a second team so the assertion does not depend on the fixed default team
+    await userEvent.click(screen.getByRole('combobox', { name: /Teams/i }));
+    await userEvent.click(await screen.findByText('Team B'));
+    await userEvent.tab();
+
     expect(screen.getByText('Lab One')).toBeVisible();
+    expect(screen.getByText('Team B')).toBeVisible();
 
     await userEvent.click(
       screen.getByRole('combobox', {
@@ -812,5 +871,6 @@ describe('ManuscriptForm labs validation on the submit journey', () => {
     await userEvent.tab();
 
     expect(screen.getByText('Lab One')).toBeVisible();
+    expect(screen.getByText('Team B')).toBeVisible();
   });
 });

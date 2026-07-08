@@ -3349,7 +3349,7 @@ const RAW_RUNTIME_STATE =
     ],\
     [\
       "@tanstack/query-core",\
-      "npm:4.41.0"\
+      "npm:5.90.20"\
     ],\
     [\
       "@tanstack/query-devtools",\
@@ -13048,6 +13048,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/preset-react", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.28.5"],\
           ["@babel/runtime-corejs3", "npm:7.28.6"],\
           ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:8.55.0"],\
+          ["@tanstack/react-query", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.90.21"],\
           ["@testing-library/dom", "npm:10.4.1"],\
           ["@testing-library/jest-dom", "npm:6.9.1"],\
           ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.2"],\
@@ -13062,6 +13063,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react-router", null],\
           ["@types/sentry__react", null],\
           ["@types/streamsaver", "npm:2.0.5"],\
+          ["@types/tanstack__react-query", null],\
           ["@types/uuid", "npm:8.3.4"],\
           ["core-js", null],\
           ["csv-stringify", "npm:6.4.5"],\
@@ -13081,12 +13083,14 @@ const RAW_RUNTIME_STATE =
           "@asap-hub/model",\
           "@asap-hub/react-components",\
           "@sentry/react",\
+          "@tanstack/react-query",\
           "@types/asap-hub__model",\
           "@types/asap-hub__react-components",\
           "@types/core-js",\
           "@types/react-error-boundary",\
           "@types/react-router",\
           "@types/sentry__react",\
+          "@types/tanstack__react-query",\
           "core-js",\
           "react-error-boundary",\
           "react-router"\
@@ -13106,6 +13110,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/preset-react", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.28.5"],\
           ["@babel/runtime-corejs3", "npm:7.28.6"],\
           ["@sentry/react", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:8.55.0"],\
+          ["@tanstack/react-query", "virtual:9d902e8fa3d0aec40e001519f3af8204bbaacbb7348be367280bb310f9537e3019252456410d2b71e7b1075fd4a7eb26825f777fb5c7d4d6219fc027ca539fa7#npm:5.90.21"],\
           ["@testing-library/dom", "npm:10.4.1"],\
           ["@testing-library/jest-dom", "npm:6.9.1"],\
           ["@testing-library/react", "virtual:62c7ec58dd69955f8ac9a6b533186c9c2adfe613fbc53211111199550b42e49684cf8582ccf253607db2a5e90990a1492b1a6d2645fd102ea82501f845583321#npm:16.3.2"],\

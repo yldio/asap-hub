@@ -8,7 +8,11 @@ import {
   LoadingContentHeader,
   NotFoundPage,
 } from '@asap-hub/react-components';
-import { useAuth0CRN, useCurrentUserCRN } from '@asap-hub/react-context';
+import {
+  useAuth0CRN,
+  useCurrentUserCRN,
+  useFlags,
+} from '@asap-hub/react-context';
 import {
   about,
   analytics,
@@ -23,6 +27,7 @@ import {
   tags,
 } from '@asap-hub/routing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { FC, Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
@@ -303,10 +308,14 @@ const AuthenticatedAppWithRecoil: FC<
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
   );
+  const { isEnabled } = useFlags();
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
+        {isEnabled('QUERY_DEVTOOLS') && (
+          <ReactQueryDevtools initialIsOpen={false} />
+        )}
       </QueryClientProvider>
     </RecoilRoot>
   );

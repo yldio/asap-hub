@@ -5,10 +5,12 @@ import { Loading, NotFoundPage } from '@asap-hub/react-components';
 import {
   useAuth0GP2,
   useCurrentUserGP2,
+  useFlags,
   useNotificationContext,
 } from '@asap-hub/react-context';
 import { queryClientDefaultOptions } from '@asap-hub/frontend-utils';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
@@ -93,12 +95,16 @@ const AuthenticatedAppWithRecoil: FC<Record<string, never>> = () => {
   const [queryClient] = useState(
     () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
   );
+  const { isEnabled } = useFlags();
   return (
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <NotificationMessages>
           <AuthenticatedApp />
         </NotificationMessages>
+        {isEnabled('QUERY_DEVTOOLS') && (
+          <ReactQueryDevtools initialIsOpen={false} />
+        )}
       </QueryClientProvider>
     </RecoilRoot>
   );

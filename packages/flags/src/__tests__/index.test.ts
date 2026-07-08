@@ -116,3 +116,17 @@ describe('in test', () => {
     });
   });
 });
+
+describe('QUERY_DEVTOOLS', () => {
+  // the jest setup resets the overrides before each test, so the
+  // module-initial overrides are only observable on a fresh module instance
+  it('is explicitly off by default, even where unlisted flags default to on', () => {
+    jest.isolateModules(() => {
+      // eslint-disable-next-line global-require, @typescript-eslint/no-var-requires
+      const flags: typeof import('..') = require('..');
+      flags.setEnvironment('development');
+      expect(flags.isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+      expect(flags.isEnabled('QUERY_DEVTOOLS')).toBe(false);
+    });
+  });
+});

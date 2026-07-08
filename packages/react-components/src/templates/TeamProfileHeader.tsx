@@ -192,6 +192,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
 
   const isActive = !inactiveSince;
 
+  const uniqueMembers = members.filter(
+    (member, index) =>
+      members.findIndex(({ id: memberId }) => memberId === member.id) === index,
+  );
+
   return (
     <header>
       <PageInfoContainer
@@ -243,7 +248,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         >
           {teamStatus === 'Active' && (
             <UserAvatarList
-              members={members}
+              members={uniqueMembers}
               fullListRoute={`${route.about({}).$}#${teamListElementId}`}
             />
           )}

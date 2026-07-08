@@ -2228,6 +2228,7 @@ describe('mapOutputVersions ', () => {
       addedDate: '2022-01-01T12:00:00.000Z',
       rrid: 'RRID',
       accession: 'Accession',
+      doi: 'DOI',
     };
 
     const versions = mapOutputVersions([

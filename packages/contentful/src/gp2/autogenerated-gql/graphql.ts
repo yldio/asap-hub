@@ -14542,6 +14542,7 @@ export type OutputsContentDataFragment = Pick<
             | 'link'
             | 'rrid'
             | 'accessionNumber'
+            | 'doi'
           > & { sys: Pick<Sys, 'id'> }
         >
       >;
@@ -14699,6 +14700,7 @@ export type FetchOutputByIdQuery = {
                 | 'link'
                 | 'rrid'
                 | 'accessionNumber'
+                | 'doi'
               > & { sys: Pick<Sys, 'id'> }
             >
           >;
@@ -14872,6 +14874,7 @@ export type FetchOutputsQuery = {
                       | 'link'
                       | 'rrid'
                       | 'accessionNumber'
+                      | 'doi'
                     > & { sys: Pick<Sys, 'id'> }
                   >
                 >;
@@ -15050,6 +15053,7 @@ export type FetchOutputsByWorkingGroupIdQuery = {
                           | 'link'
                           | 'rrid'
                           | 'accessionNumber'
+                          | 'doi'
                         > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
@@ -15230,6 +15234,7 @@ export type FetchOutputsByUserIdQuery = {
                           | 'link'
                           | 'rrid'
                           | 'accessionNumber'
+                          | 'doi'
                         > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
@@ -15410,6 +15415,7 @@ export type FetchOutputsByExternalUserIdQuery = {
                           | 'link'
                           | 'rrid'
                           | 'accessionNumber'
+                          | 'doi'
                         > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
@@ -15590,6 +15596,7 @@ export type FetchOutputsByProjectIdQuery = {
                           | 'link'
                           | 'rrid'
                           | 'accessionNumber'
+                          | 'doi'
                         > & { sys: Pick<Sys, 'id'> }
                       >
                     >;
@@ -15770,6 +15777,7 @@ export type FetchOutputsByEventIdQuery = {
                           | 'link'
                           | 'rrid'
                           | 'accessionNumber'
+                          | 'doi'
                         > & { sys: Pick<Sys, 'id'> }
                       >
                     >;

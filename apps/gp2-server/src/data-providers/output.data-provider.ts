@@ -400,6 +400,7 @@ export const getOutputVersions = (items?: GraphQLOutputVersions) =>
       addedDate: output?.addedDate || '',
       rrid: output?.rrid || '',
       accessionNumber: output?.accessionNumber || '',
+      doi: output?.doi || undefined,
     })) || [];
 export const parseContentfulGraphQLOutput = (
   data: OutputItem,

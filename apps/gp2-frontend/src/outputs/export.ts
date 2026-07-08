@@ -1,4 +1,4 @@
-import { caseInsensitive, CSVValue } from '@asap-hub/frontend-utils';
+import { caseInsensitive, CSVValue, emptyToNA } from '@asap-hub/frontend-utils';
 import { gp2 } from '@asap-hub/model';
 import { formatDate } from '@asap-hub/react-components';
 import { isInternalUser } from '@asap-hub/validation';
@@ -32,6 +32,7 @@ export const outputFields = {
   firstVersionRRID: 'First Version RRID',
   firstVersionAccession: 'First Version Accession',
   firstVersionLink: 'First Version Link',
+  firstVersionDOI: 'First Version DOI',
 };
 
 type OutputCSV = Record<keyof typeof outputFields, CSVValue>;
@@ -63,39 +64,40 @@ export const outputToCSV = ({
   publishDate,
   lastUpdatedPartial,
   versions,
-}: gp2.OutputResponse): OutputCSV => ({
-  title,
-  documentType,
-  type,
-  subtype,
-  link,
-  authors: sorted(
-    authors.map((author) =>
-      isInternalUser(author)
-        ? author.displayName
-        : `${author.displayName} (external)`,
+}: gp2.OutputResponse): OutputCSV =>
+  emptyToNA({
+    title,
+    documentType,
+    type,
+    subtype,
+    link,
+    authors: sorted(
+      authors.map((author) =>
+        isInternalUser(author)
+          ? author.displayName
+          : `${author.displayName} (external)`,
+      ),
     ),
-  ),
-  tags: sorted(tags?.map(({ name }) => name)) || '',
-  contributingCohorts:
-    sorted(contributingCohorts?.map(({ name }) => name)) || '',
-  workingGroups:
-    sorted(workingGroups?.map((workingGroup) => workingGroup.title)) || '',
-  projects: sorted(projects?.map((project) => project.title)) || '',
-  date: formatDate(new Date(addedDate)),
-  description,
-  shortDescription,
-  relatedEvents: sorted(relatedEvents.map((event) => event.title)) || '',
-  relatedResearch: sorted(relatedOutputs.map((event) => event.title)) || '',
-  gp2Supported,
-  sharingStatus,
-  doi,
-  rrid,
-  accession: accessionNumber,
-  publishDate,
-  lastUpdatedPartial,
-  ...getVersionFields(versions),
-});
+    tags: sorted(tags?.map(({ name }) => name)) || '',
+    contributingCohorts:
+      sorted(contributingCohorts?.map(({ name }) => name)) || '',
+    workingGroups:
+      sorted(workingGroups?.map((workingGroup) => workingGroup.title)) || '',
+    projects: sorted(projects?.map((project) => project.title)) || '',
+    date: formatDate(new Date(addedDate)),
+    description,
+    shortDescription,
+    relatedEvents: sorted(relatedEvents.map((event) => event.title)) || '',
+    relatedResearch: sorted(relatedOutputs.map((event) => event.title)) || '',
+    gp2Supported,
+    sharingStatus,
+    doi,
+    rrid,
+    accession: accessionNumber,
+    publishDate,
+    lastUpdatedPartial,
+    ...getVersionFields(versions),
+  });
 
 export const getVersionFields = (versions?: gp2.OutputVersion[]) => {
   if (versions?.[0]) {
@@ -105,6 +107,7 @@ export const getVersionFields = (versions?: gp2.OutputVersion[]) => {
       firstVersionRRID: versions[0]?.rrid,
       firstVersionAccession: versions[0]?.accessionNumber,
       firstVersionLink: versions[0]?.link,
+      firstVersionDOI: versions[0]?.doi ?? 'NA',
     };
   }
 
@@ -114,6 +117,7 @@ export const getVersionFields = (versions?: gp2.OutputVersion[]) => {
     firstVersionRRID: '',
     firstVersionAccession: '',
     firstVersionLink: '',
+    firstVersionDOI: 'NA',
   };
 };
 

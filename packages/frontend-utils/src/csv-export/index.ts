@@ -6,6 +6,14 @@ import { GetListOptions } from '../api-util/api-util';
 
 export type CSVValue = string | undefined | boolean;
 
+export const emptyToNA = <T extends Record<string, CSVValue>>(row: T): T =>
+  Object.fromEntries(
+    Object.entries(row).map(([key, value]) => [
+      key,
+      value === undefined || value === '' ? 'NA' : value,
+    ]),
+  ) as T;
+
 export const EXCEL_CELL_CHARACTER_LIMIT = 32767;
 const EXCEL_CELL_SAFE_CHARACTER_LIMIT = Math.floor(
   (EXCEL_CELL_CHARACTER_LIMIT - 2) / 2, // Cell likely wrapped with ""; " escapes to ""

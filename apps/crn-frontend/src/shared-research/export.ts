@@ -1,10 +1,12 @@
 import {
   caseInsensitive,
   CSVValue,
+  emptyToNA,
   GetListOptions,
   htmlToCsvText,
 } from '@asap-hub/frontend-utils';
 import {
+  convertBooleanToDecision,
   ListResponse,
   ResearchOutputResponse,
   ResearchOutputVersion,
@@ -22,6 +24,7 @@ type FirstVersionCSV = {
   firstVersionRrid: string;
   firstVersionAccession: string;
   firstVersionLink: string;
+  firstVersionDOI: string;
 };
 
 type ResearchOutputCSV = Record<
@@ -49,6 +52,7 @@ const getFirstVersionData = (
       rrid = '',
       accession = '',
       link = '',
+      doi = 'NA',
     } = versions[0];
     return {
       firstVersionTitle: title,
@@ -56,6 +60,7 @@ const getFirstVersionData = (
       firstVersionRrid: rrid,
       firstVersionAccession: accession,
       firstVersionLink: link,
+      firstVersionDOI: doi,
     };
   }
 
@@ -65,6 +70,7 @@ const getFirstVersionData = (
     firstVersionRrid: '',
     firstVersionAccession: '',
     firstVersionLink: '',
+    firstVersionDOI: 'NA',
   };
 };
 
@@ -75,7 +81,7 @@ export const researchOutputToCSV = (
     output.publishingEntity === 'Working Group'
       ? null
       : output.project ?? output.teams[0]?.project;
-  return {
+  return emptyToNA({
     title: output.title,
     documentType: output.documentType,
     type: output.type,
@@ -126,9 +132,9 @@ export const researchOutputToCSV = (
       .map((item) => item)
       .sort(caseInsensitive)
       .join(','),
-    usedInPublication: output.usedInPublication,
+    usedInPublication: convertBooleanToDecision(output.usedInPublication),
     sharingStatus: output.sharingStatus,
-    asapFunded: output.asapFunded,
+    asapFunded: convertBooleanToDecision(output.asapFunded),
     link: output.link,
     doi: output.doi ?? 'NA',
     rrid: output.rrid,
@@ -156,7 +162,7 @@ export const researchOutputToCSV = (
     layImpactStatement: output.layImpactStatement,
     categories: output.categories?.map((category) => category.name).join(','),
     ...getFirstVersionData(output.versions),
-  };
+  });
 };
 
 export const squidexResultsToStream = async <T>(

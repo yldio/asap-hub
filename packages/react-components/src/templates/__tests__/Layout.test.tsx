@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import { useScrollToTop } from '@asap-hub/react-context';
@@ -193,6 +193,94 @@ it('calls scrollToTop with merged options', async () => {
   expect(scrollToMock).toHaveBeenCalledWith({
     top: 0,
     behavior: 'auto', // overridden from default 'smooth'
+  });
+});
+
+describe('the collapsible menu', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  // The toggle only renders at desktop widths (display:none below), so under
+  // jsdom (no media queries) role queries must opt in to hidden elements.
+  it('toggles between Collapse Menu and Expand Menu', async () => {
+    const { getByRole, queryByRole } = render(
+      <MemoryRouter>
+        <Layout {...props} />
+      </MemoryRouter>,
+    );
+    expect(
+      getByRole('button', { name: 'Collapse Menu', hidden: true }),
+    ).toBeInTheDocument();
+
+    await userEvent.click(
+      getByRole('button', { name: 'Collapse Menu', hidden: true }),
+    );
+    expect(
+      getByRole('button', { name: 'Expand Menu', hidden: true }),
+    ).toBeInTheDocument();
+    expect(
+      queryByRole('button', { name: 'Collapse Menu', hidden: true }),
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(
+      getByRole('button', { name: 'Expand Menu', hidden: true }),
+    );
+    expect(
+      getByRole('button', { name: 'Collapse Menu', hidden: true }),
+    ).toBeInTheDocument();
+  });
+
+  it('persists the collapsed state across mounts', async () => {
+    const { getByRole, unmount } = render(
+      <MemoryRouter>
+        <Layout {...props} />
+      </MemoryRouter>,
+    );
+    await userEvent.click(
+      getByRole('button', { name: 'Collapse Menu', hidden: true }),
+    );
+    unmount();
+
+    const { getByRole: getByRoleRemounted } = render(
+      <MemoryRouter>
+        <Layout {...props} />
+      </MemoryRouter>,
+    );
+    expect(
+      getByRoleRemounted('button', { name: 'Expand Menu', hidden: true }),
+    ).toBeInTheDocument();
+  });
+
+  it('hides nav labels while expanding, then reveals them', () => {
+    jest.useFakeTimers();
+    try {
+      const { getByRole, container } = render(
+        <MemoryRouter>
+          <Layout {...props} />
+        </MemoryRouter>,
+      );
+      // Count only the nav-item tooltips (the toggle keeps its own tooltip in
+      // the DOM in every state, so scope to the list).
+      const navTooltips = () =>
+        container.querySelectorAll('nav ul [role="tooltip"]');
+      // Collapse (immediate) then start expanding.
+      fireEvent.click(
+        getByRole('button', { name: 'Collapse Menu', hidden: true }),
+      );
+      fireEvent.click(
+        getByRole('button', { name: 'Expand Menu', hidden: true }),
+      );
+      // Mid-expand: labels are still hidden, so items keep their tooltip spans.
+      expect(navTooltips().length).toBeGreaterThan(0);
+      // After the animation window the labels are revealed (tooltip spans gone).
+      act(() => {
+        jest.advanceTimersByTime(300);
+      });
+      expect(navTooltips()).toHaveLength(0);
+    } finally {
+      jest.useRealTimers();
+    }
   });
 });
 

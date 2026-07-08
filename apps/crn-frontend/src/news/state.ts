@@ -1,97 +1,35 @@
-import { GetListOptions } from '@asap-hub/frontend-utils';
-import { ListNewsResponse, NewsResponse } from '@asap-hub/model';
-import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import { authorizationState } from '../auth/state';
+import { GetListOptions, normalizeListOptions } from '@asap-hub/frontend-utils';
+import { NewsResponse } from '@asap-hub/model';
+import { useSuspenseQuery } from '@tanstack/react-query';
+
+import { useAuthorization } from '../auth/useAuthorization';
 import { getNews, getNewsById } from './api';
 
-export const newsIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  GetListOptions
->({
-  key: 'newsIndex',
-  default: undefined,
-});
-
-export const refreshNewsItemState = atomFamily<number, string>({
-  key: 'refreshNewsItem',
-  default: 0,
-});
-
-export const fetchNewsItemState = selectorFamily<
-  NewsResponse | undefined,
-  string
->({
-  key: 'fetchNewsItem',
-  get:
-    (id) =>
-    ({ get }) => {
-      get(refreshNewsItemState(id));
-      const authorization = get(authorizationState);
-      return getNewsById(id, authorization);
-    },
-});
-
-const newsItemState = atomFamily<NewsResponse | undefined, string>({
-  key: 'newsItem',
-  default: fetchNewsItemState,
-});
-
-const newsListState = selectorFamily<
-  ListNewsResponse | Error | undefined,
-  GetListOptions
->({
-  key: 'newsList',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(newsIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const newsList = index.ids.reduce((acc: NewsResponse[], id) => {
-        const newsItem = get(newsItemState(id));
-        if (newsItem === undefined) {
-          return acc;
-        }
-        return [...acc, newsItem];
-      }, []);
-      return { total: index.total, items: newsList };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, updatedNews) => {
-      if (updatedNews === undefined || updatedNews instanceof DefaultValue) {
-        const oldNews = get(newsIndexState(options));
-        if (!(oldNews instanceof Error)) {
-          oldNews?.ids?.forEach((id) => reset(newsItemState(id)));
-        }
-        reset(newsIndexState(options));
-      } else if (updatedNews instanceof Error) {
-        set(newsIndexState(options), updatedNews);
-      } else {
-        updatedNews?.items.forEach((news) => set(newsItemState(news.id), news));
-        set(newsIndexState(options), {
-          total: updatedNews.total,
-          ids: updatedNews.items.map((news) => news.id),
-        });
-      }
-    },
-});
-
-export const useNews = (options: GetListOptions) => {
-  const authorization = useRecoilValue(authorizationState);
-  const [newsList, setNewsList] = useRecoilState(newsListState(options));
-  if (newsList === undefined) {
-    throw getNews(options, authorization).then(setNewsList).catch(setNewsList);
-  }
-  if (newsList instanceof Error) {
-    throw newsList;
-  }
-  return newsList;
+export const newsQueryKeys = {
+  all: ['news'] as const,
+  lists: () => [...newsQueryKeys.all, 'list'] as const,
+  list: (options: GetListOptions) =>
+    [...newsQueryKeys.lists(), normalizeListOptions(options)] as const,
+  details: () => [...newsQueryKeys.all, 'detail'] as const,
+  detail: (id: string) => [...newsQueryKeys.details(), id] as const,
 };
 
-export const useNewsById = (id: string) => useRecoilValue(newsItemState(id));
+export const useNews = (options: GetListOptions) => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: newsQueryKeys.list(options),
+    queryFn: async () => getNews(options, await getAuthorization()),
+  }).data;
+};
+
+export const useNewsById = (id: string): NewsResponse | undefined => {
+  const getAuthorization = useAuthorization();
+  const { data } = useSuspenseQuery({
+    queryKey: newsQueryKeys.detail(id),
+    // getNewsById resolves `undefined` on 404, but a queryFn must not return
+    // undefined — cache `null` and map it back for the consumer.
+    queryFn: async () =>
+      (await getNewsById(id, await getAuthorization())) ?? null,
+  });
+  return data ?? undefined;
+};

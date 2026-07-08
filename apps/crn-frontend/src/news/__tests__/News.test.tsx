@@ -1,4 +1,5 @@
-import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
@@ -8,7 +9,6 @@ import { news } from '@asap-hub/routing';
 import News from '../News';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshNewsItemState } from '../state';
 import { getNewsById } from '../api';
 
 jest.mock('../api');
@@ -24,11 +24,8 @@ const mockGetNewsById = getNewsById as jest.MockedFunction<typeof getNewsById>;
 
 const renderPage = async () => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ set }) =>
-        set(refreshNewsItemState(newsOrEvent.id), Math.random())
-      }
-    >
+    // fresh query client per render replaces the recoil refresh-counter bump
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -47,7 +44,7 @@ const renderPage = async () => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
 
   await waitFor(() =>

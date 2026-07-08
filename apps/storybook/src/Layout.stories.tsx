@@ -1,14 +1,21 @@
 import { ComponentProps } from 'react';
+import { Decorator } from '@storybook/react-vite';
+import { MemoryRouter } from 'react-router';
 import { Layout, authTestUtils } from '@asap-hub/react-components';
 
 import { number, optionsKnob } from './knobs';
 import { NoPaddingDecorator } from './layout';
 import { toastGenerator } from './toast';
 
+// Layout's navigation calls useLocation(), so it needs a router in scope.
+const RouterDecorator: Decorator = (storyFn) => (
+  <MemoryRouter>{storyFn()}</MemoryRouter>
+);
+
 export default {
   title: 'Organisms / Layout / Layout',
   component: Layout,
-  decorators: [NoPaddingDecorator],
+  decorators: [RouterDecorator, NoPaddingDecorator],
 };
 
 const props: Omit<ComponentProps<typeof Layout>, 'children'> = {

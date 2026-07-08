@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 
 import {
   getVisibleResearchOutputActions,
+  resolveResearchOutputAvailableActions,
   useResearchOutputPermissionsContext,
 } from '../../permissions/research-output';
 
@@ -556,5 +557,20 @@ describe('getVisibleResearchOutputActions', () => {
         }),
       );
     });
+  });
+});
+
+describe('resolveResearchOutputAvailableActions', () => {
+  it('resolves saveDraft action correctly', () => {
+    expect(
+      resolveResearchOutputAvailableActions({
+        flowId: 'team-create-manual',
+        permissions: { canShareResearchOutput: true },
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        canSaveDraft: true,
+      }),
+    );
   });
 });

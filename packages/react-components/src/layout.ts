@@ -18,6 +18,11 @@ export const drawerQuery = `@media (max-width: ${
 }px)`;
 export const crossQuery = `@media (min-width: ${smallDesktopScreen.width}px)`;
 
+// Duration of the desktop menu collapse/expand width animation. Shared by the
+// Layout grid transition, the label-reveal timer, and the nav padding easing so
+// they stay in lockstep.
+export const menuTransitionMs = 250;
+
 const largeDesktopColWidth = 66;
 const largeDesktopColGap = 30;
 export const contentSidePaddingWithoutNavigation = (

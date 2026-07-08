@@ -14,7 +14,6 @@ import { rem, mobileScreen } from '../pixels';
 import { Link } from '../atoms';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
-import { ExternalLinkIcon } from '../icons';
 
 type EventCardProps = ComponentProps<typeof EventInfo> &
   Pick<
@@ -38,12 +37,6 @@ const buttonStyle = css({
   },
 });
 
-const externalIconStyle = css({
-  display: 'flex',
-  alignSelf: 'center',
-  marginLeft: rem(8),
-});
-
 const EventCard: React.FC<EventCardProps> = ({
   status,
   displayToast = true,
@@ -65,7 +58,7 @@ const EventCard: React.FC<EventCardProps> = ({
     }
     if (status === 'Cancelled') {
       return {
-        toastContent: 'This event has been cancelled',
+        toastContent: 'The event has been cancelled.',
         type: 'alert',
       };
     }
@@ -77,7 +70,7 @@ const EventCard: React.FC<EventCardProps> = ({
             {props.hideMeetingLink || !props.meetingLink ? (
               <span>This in-person event is currently happening.</span>
             ) : (
-              <span>This event is currently live.</span>
+              <span>This event is happening now.</span>
             )}
           </>
         ),
@@ -92,10 +85,7 @@ const EventCard: React.FC<EventCardProps> = ({
                   buttonStyle
                   small
                 >
-                  Join now
-                  <span css={externalIconStyle}>
-                    <ExternalLinkIcon />
-                  </span>
+                  Join Meeting Now
                 </Link>
               </div>
             )}

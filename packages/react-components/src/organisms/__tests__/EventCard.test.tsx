@@ -15,12 +15,12 @@ it('shows that an event has been cancelled', () => {
   const { getByTitle, getByText, queryByTitle, queryByText, rerender } = render(
     <EventCard {...props} status="Confirmed" />,
   );
-  expect(queryByTitle('Error Icon')).not.toBeInTheDocument();
+  expect(queryByTitle('Warning')).not.toBeInTheDocument();
   expect(queryByText(/cancelled/i)).not.toBeInTheDocument();
 
   rerender(<EventCard {...props} status="Cancelled" />);
-  expect(getByTitle('Error Icon')).toBeInTheDocument();
-  expect(getByText(/cancelled/i)).toBeVisible();
+  expect(getByTitle('Warning')).toBeInTheDocument();
+  expect(getByText('The event has been cancelled.')).toBeVisible();
 });
 
 it('renders the event tags', () => {
@@ -53,7 +53,7 @@ describe('current events', () => {
         endDate={addMinutes(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByTitle('Error Icon')).toBeInTheDocument();
+    expect(screen.getByTitle('Warning')).toBeInTheDocument();
     expect(screen.getByText(/cancelled/i)).toBeVisible();
   });
   it('toasts for meetings without meeting link', () => {
@@ -78,8 +78,8 @@ describe('current events', () => {
         endDate={addMinutes(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByText(/currently live/i)).toBeVisible();
-    expect(screen.getByText(/join/i).closest('a')).toHaveAttribute(
+    expect(screen.getByText('This event is happening now.')).toBeVisible();
+    expect(screen.getByText('Join Meeting Now').closest('a')).toHaveAttribute(
       'href',
       'http://example.com',
     );
@@ -122,7 +122,7 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByTitle(/error icon/i)).toBeInTheDocument();
+    expect(screen.getByTitle(/warning/i)).toBeInTheDocument();
     expect(screen.getByText(/cancelled/i)).toBeVisible();
   });
   it('toasts meeting materials coming soon', () => {
@@ -192,7 +192,7 @@ describe('past events', () => {
 
     expect(screen.queryByText(/to be announced/)).not.toBeInTheDocument();
     expect(screen.queryByText(/cancelled/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/currently live/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/happening now/)).not.toBeInTheDocument();
     expect(screen.queryByText(/currently happening/)).not.toBeInTheDocument();
   });
 });

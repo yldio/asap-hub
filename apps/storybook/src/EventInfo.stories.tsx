@@ -14,7 +14,6 @@ export default {
 const props = (): ComponentProps<typeof EventInfo> => ({
   ...createEventResponse(),
   tags: [],
-  thumbnail: text('Thumbnail', 'https://placekitten.com/150/150'),
   title: text('Title', 'GBA/LRRK2 Convergence workshops'),
   titleLimit: boolean('Title unlimited', false) ? null : undefined,
   eventOwner: <div>ASAP Team</div>,

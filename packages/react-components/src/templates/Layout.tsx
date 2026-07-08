@@ -60,8 +60,7 @@ const UserNavigation = lazy(
     ),
 );
 
-// Fires its callback once mounted. Placed inside a Suspense boundary, its
-// effect runs only after the boundary's lazy children have resolved.
+// Inside a Suspense boundary, fires only after its lazy siblings have resolved.
 const OnMount: FC<{ onMount: () => void }> = ({ onMount }) => {
   useEffect(() => {
     onMount();
@@ -73,8 +72,7 @@ const menuCollapsedStorageKey = 'asap-crn-menu-collapsed';
 
 // Fixed rail width when the desktop menu is collapsed (icon-only).
 const collapsedMenuWidth = 72;
-// Fixed width of the expanded desktop menu. A length (rather than
-// `max-content`) so the grid column can animate between the two states.
+// A length (not `max-content`) so the grid column can animate between states.
 const expandedMenuWidth = 268;
 
 export const styles = css({
@@ -89,8 +87,7 @@ export const styles = css({
     "footer     footer  footer"         auto   / max-content 1fr 72px`,
 
   [crossQuery]: {
-    // Full-width top bar spanning all columns, above a sidebar/content row.
-    // The logo therefore never shifts or clips as the sidebar collapses.
+    // Full-width top bar row so the logo doesn't shift as the sidebar collapses.
     grid: `
       "header     header   header"  max-content
       "main-menu  content  content" 1fr
@@ -98,8 +95,7 @@ export const styles = css({
     transition: `grid-template-columns ${menuTransitionMs}ms ease`,
   },
 });
-// Only affects the desktop layout; the mobile drawer overlays and is unaffected
-// by the first grid column's width.
+// Desktop only; the mobile drawer overlays and ignores the column width.
 const collapsedStyles = css({
   [crossQuery]: {
     gridTemplateColumns: `${rem(collapsedMenuWidth)} 1fr 72px`,
@@ -111,8 +107,6 @@ export const headerStyles = css({
 
   boxSizing: 'border-box',
   borderBottom: `1px solid ${steel.rgb}`,
-  // On desktop the top bar owns the full width; lay the logo out on the left
-  // with the search/profile controls pushed to the right.
   [crossQuery]: {
     display: 'flex',
     alignItems: 'stretch',
@@ -165,8 +159,7 @@ export const userButtonStyles = css({
   justifyContent: 'flex-end',
   alignContent: 'center',
 
-  // On desktop the top bar is a single full-width row: sit the profile control
-  // at the right of the header row with no dividing borders inside the bar.
+  // Sit at the right of the full-width header row, no dividing borders.
   [crossQuery]: {
     gridColumn: '2 / 3',
     gridRow: '1 / 2',
@@ -226,8 +219,7 @@ export const searchButtonAreaStyles = css({
   boxSizing: 'border-box',
   borderBottom: `1px solid ${steel.rgb}`,
   borderLeft: `1px solid ${steel.rgb}`,
-  // On desktop the search-button grid area no longer exists (the header spans
-  // the full width); pin it to the top-right of the header row.
+  // The header spans full width on desktop, so pin this to the header row.
   [crossQuery]: {
     gridColumn: '3 / 4',
     gridRow: '1 / 2',
@@ -318,13 +310,10 @@ const Layout: FC<LayoutProps> = ({
       return false;
     }
   });
-  // The menu (MainNavigation) is lazy-loaded behind Suspense. Keep the layout
-  // expanded until it has mounted, otherwise the full-width loading shimmer
-  // would overflow the narrow collapsed rail.
+  // Stay expanded until the lazy menu mounts, so the full-width loading shimmer
+  // doesn't overflow the narrow collapsed rail.
   const [menuLoaded, setMenuLoaded] = useState(false);
   const markMenuLoaded = useCallback(() => setMenuLoaded(true), []);
-  // True while the rail is animating open; keeps nav labels hidden until the
-  // rail reaches full width so they don't wrap inside a narrow column.
   const [menuAnimating, setMenuAnimating] = useState(false);
   const animateTimer = useRef<ReturnType<typeof setTimeout>>();
   useEffect(
@@ -333,25 +322,25 @@ const Layout: FC<LayoutProps> = ({
     },
     [],
   );
-  const toggleMenuCollapsed = () =>
-    setMenuCollapsed((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(menuCollapsedStorageKey, String(next));
-      } catch {
-        // ignore storage failures (e.g. privacy mode); state still updates
-      }
-      // Flag the width transition in both directions so the icons stay
-      // left-aligned (unmoved) while the rail animates; centring only snaps in
-      // once the collapsed rail reaches its final width.
-      setMenuAnimating(true);
-      if (animateTimer.current) clearTimeout(animateTimer.current);
-      animateTimer.current = setTimeout(
-        () => setMenuAnimating(false),
-        menuTransitionMs,
-      );
-      return next;
-    });
+  const toggleMenuCollapsed = useCallback(
+    () =>
+      setMenuCollapsed((prev) => {
+        const next = !prev;
+        try {
+          localStorage.setItem(menuCollapsedStorageKey, String(next));
+        } catch {
+          // storage may be unavailable (e.g. privacy mode); state still updates
+        }
+        setMenuAnimating(true);
+        if (animateTimer.current) clearTimeout(animateTimer.current);
+        animateTimer.current = setTimeout(
+          () => setMenuAnimating(false),
+          menuTransitionMs,
+        );
+        return next;
+      }),
+    [],
+  );
 
   let location: ReturnType<typeof useLocation> | undefined;
   let prevLocation: ReturnType<typeof useLocation> | undefined;
@@ -437,8 +426,6 @@ const Layout: FC<LayoutProps> = ({
         <div css={[menuStyles, drawerShown && menuMenuShownStyles]}>
           <div css={[mainMenuStyles]}>
             <Suspense fallback={<LoadingMenu />}>
-              {/* Runs only once the lazy chunk has resolved (never while the
-                  fallback shows), marking the menu ready to collapse. */}
               <OnMount onMount={markMenuLoaded} />
               <MainNavigation
                 userOnboarded={userNavProps.userOnboarded}

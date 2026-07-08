@@ -6,6 +6,8 @@ import {
   EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
 import { createUserListItemResponse } from '@asap-hub/fixtures';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   fireEvent,
   render,
@@ -16,13 +18,11 @@ import {
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useAlgolia } from '../../hooks/algolia';
 
 import { getTagSearch } from '../api';
-import { refreshTagSearchIndex } from '../state';
 
 import Routes from '../Routes';
 
@@ -60,11 +60,8 @@ beforeEach(() => {
 
 const renderTagsPage = async (query = '') => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshTagSearchIndex, Math.random());
-      }}
-    >
+    // fresh query client per render replaces the recoil refresh-token bump
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
@@ -74,7 +71,7 @@ const renderTagsPage = async (query = '') => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
   return waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 };

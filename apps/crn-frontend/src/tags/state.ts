@@ -2,138 +2,56 @@ import {
   CRNTagSearchEntities,
   EMPTY_ALGOLIA_RESPONSE,
 } from '@asap-hub/algolia';
-import { GetListOptions } from '@asap-hub/frontend-utils';
-import { TagSearchResponse, ListResponse } from '@asap-hub/model';
-
-import {
-  atom,
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-} from 'recoil';
+import { normalizeListOptions } from '@asap-hub/frontend-utils';
+import { ListResponse, TagSearchResponse } from '@asap-hub/model';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { useAlgolia } from '../hooks/algolia';
 import { getTagSearch, TagSearchListOptions } from './api';
 
-type RefreshTagSearchListOptions = Omit<GetListOptions, 'filters'> & {
-  refreshToken: number;
+export type TagSearchResult = ListResponse<TagSearchResponse> & {
+  readonly algoliaQueryId?: string;
+  readonly algoliaIndexName?: string;
 };
 
-const tagSearchIndexState = atomFamily<
-  | {
-      ids: ReadonlyArray<string>;
-      total: number;
-      algoliaQueryId?: string;
-      algoliaIndexName?: string;
-    }
-  | Error
-  | undefined,
-  RefreshTagSearchListOptions
->({
-  key: 'tagSearchIndex',
-  default: undefined,
-});
-
-export const refreshTagSearchIndex = atom<number>({
-  key: 'refreshTagSearchIndex',
-  default: 0,
-});
-
-export const tagsSearchState = selectorFamily<
-  ListResponse<TagSearchResponse> | Error | undefined,
-  TagSearchListOptions & { entityTypes: CRNTagSearchEntities[] }
->({
-  key: 'tagSearch',
-  get:
-    (options) =>
-    ({ get }) => {
-      const refreshToken = get(refreshTagSearchIndex);
-      const index = get(
-        tagSearchIndexState({
-          ...options,
-          refreshToken,
-        }),
-      );
-      if (index === undefined || index instanceof Error) return index;
-      const tagSearchList: TagSearchResponse[] = [];
-      for (const id of index.ids) {
-        const tagSearch = get(tagSearchListState(id));
-        if (tagSearch === undefined) return undefined;
-        tagSearchList.push(tagSearch);
-      }
-      return {
-        total: index.total,
-        items: tagSearchList,
-        algoliaQueryId: index.algoliaQueryId,
-        algoliaIndexName: index.algoliaIndexName,
-      };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, tagSearch) => {
-      const refreshToken = get(refreshTagSearchIndex);
-      const indexStateOptions = { ...options, refreshToken };
-
-      if (tagSearch === undefined || tagSearch instanceof DefaultValue) {
-        reset(tagSearchIndexState(indexStateOptions));
-      } else if (tagSearch instanceof Error) {
-        set(tagSearchIndexState(indexStateOptions), tagSearch);
-      } else {
-        tagSearch.items.forEach((item) =>
-          set(tagSearchListState(item.id), item),
-        );
-        set(tagSearchIndexState(indexStateOptions), {
-          total: tagSearch.total,
-          ids: tagSearch.items.map(({ id }) => id),
-          algoliaIndexName: tagSearch.algoliaIndexName,
-          algoliaQueryId: tagSearch.algoliaQueryId,
-        });
-      }
-    },
-});
-
-export const tagSearchState = atomFamily<TagSearchResponse | undefined, string>(
-  {
-    key: 'tagSearch',
-    default: undefined,
-  },
-);
-
-export const tagSearchListState = atomFamily<
-  TagSearchResponse | undefined,
-  string
->({
-  key: 'tagSearchList',
-  default: tagSearchState,
-});
+export const tagQueryKeys = {
+  all: ['tags'] as const,
+  searches: () => [...tagQueryKeys.all, 'search'] as const,
+  search: (
+    options: TagSearchListOptions & { entityTypes: CRNTagSearchEntities[] },
+  ) => [...tagQueryKeys.searches(), normalizeListOptions(options)] as const,
+};
 
 export const useTagSearch = <ResponsesKey extends CRNTagSearchEntities>(
   entityTypes: ResponsesKey[],
   options: TagSearchListOptions,
-) => {
-  const [tagSearch, setTagSearch] = useRecoilState(
-    tagsSearchState({ ...options, entityTypes }),
-  );
+): TagSearchResult => {
   const { client } = useAlgolia();
-
-  if (tagSearch === undefined) {
-    if (options.searchQuery === '' && options.tags.length === 0) {
-      return EMPTY_ALGOLIA_RESPONSE;
-    }
-
-    throw getTagSearch(client, entityTypes, options)
-      .then((data) => ({
-        total: data.nbHits ?? 0,
-        items: data.hits,
-        algoliaQueryId: data.queryID,
-        algoliaIndexName: data.index,
-      }))
-      .then(setTagSearch)
-      .catch(setTagSearch);
-  }
-  if (tagSearch instanceof Error) {
-    throw tagSearch;
-  }
-  return tagSearch;
+  return useSuspenseQuery({
+    queryKey: tagQueryKeys.search({ ...options, entityTypes }),
+    queryFn: async (): Promise<TagSearchResult> => {
+      // Preserved from the recoil hook: an empty search never hits Algolia.
+      if (options.searchQuery === '' && options.tags.length === 0) {
+        return EMPTY_ALGOLIA_RESPONSE;
+      }
+      try {
+        const data = await getTagSearch(client, entityTypes, options);
+        return {
+          total: data.nbHits ?? 0,
+          items: data.hits,
+          algoliaQueryId: data.queryID,
+          algoliaIndexName: data.index,
+        };
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setTagSearch)`: an Error
+        // rejection was cached and re-thrown to the error boundary, while a
+        // non-Error rejection was swallowed (stored as `undefined`, so the
+        // page kept rendering). Map non-Errors to the empty response.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return EMPTY_ALGOLIA_RESPONSE;
+      }
+    },
+  }).data;
 };

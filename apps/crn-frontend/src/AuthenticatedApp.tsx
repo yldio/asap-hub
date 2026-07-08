@@ -1,4 +1,7 @@
-import { SkeletonHeaderFrame as Frame } from '@asap-hub/frontend-utils';
+import {
+  SkeletonHeaderFrame as Frame,
+  queryClientDefaultOptions,
+} from '@asap-hub/frontend-utils';
 import {
   Layout,
   Loading,
@@ -19,7 +22,8 @@ import {
   sharedResearch,
   tags,
 } from '@asap-hub/routing';
-import { FC, Suspense, lazy, useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { FC, Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
 
@@ -292,10 +296,20 @@ const AuthenticatedApp: FC<{
 };
 const AuthenticatedAppWithRecoil: FC<
   Record<string, React.Dispatch<React.SetStateAction<boolean>> | never>
-> = ({ setIsOnboardable }) => (
-  <RecoilRoot>
-    <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
-  </RecoilRoot>
-);
+> = ({ setIsOnboardable }) => {
+  // The QueryClient lives and dies with this component, exactly like the
+  // RecoilRoot next to it: on logout the AuthenticatedApp unmounts and the
+  // whole cache is discarded (same semantics recoil has today).
+  const [queryClient] = useState(
+    () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
+  );
+  return (
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <AuthenticatedApp setIsOnboardable={setIsOnboardable} />
+      </QueryClientProvider>
+    </RecoilRoot>
+  );
+};
 
 export default AuthenticatedAppWithRecoil;

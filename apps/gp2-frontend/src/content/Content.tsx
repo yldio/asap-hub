@@ -1,6 +1,8 @@
 import { RecoilRoot } from 'recoil';
 import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
-import { Frame } from '@asap-hub/frontend-utils';
+import { Frame, queryClientDefaultOptions } from '@asap-hub/frontend-utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { usePageByPageId } from './state';
 
@@ -25,10 +27,19 @@ const Content: React.FC<ContentProps> = ({ pageId }) => {
   return <NotFoundPage />;
 };
 
-const ContentWithRecoil: React.FC<ContentProps> = (props) => (
-  <RecoilRoot>
-    <Content {...props} />
-  </RecoilRoot>
-);
+const ContentWithRecoil: React.FC<ContentProps> = (props) => {
+  // The QueryClient lives and dies with this component, exactly like the
+  // RecoilRoot next to it: unmounting the content page discards the cache.
+  const [queryClient] = useState(
+    () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
+  );
+  return (
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <Content {...props} />
+      </QueryClientProvider>
+    </RecoilRoot>
+  );
+};
 
 export default ContentWithRecoil;

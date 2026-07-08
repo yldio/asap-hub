@@ -7,6 +7,8 @@ import {
   useCurrentUserGP2,
   useNotificationContext,
 } from '@asap-hub/react-context';
+import { queryClientDefaultOptions } from '@asap-hub/frontend-utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FC, lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router';
 import { RecoilRoot, useRecoilState, useResetRecoilState } from 'recoil';
@@ -84,12 +86,22 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   );
 };
 
-const AuthenticatedAppWithRecoil: FC<Record<string, never>> = () => (
-  <RecoilRoot>
-    <NotificationMessages>
-      <AuthenticatedApp />
-    </NotificationMessages>
-  </RecoilRoot>
-);
+const AuthenticatedAppWithRecoil: FC<Record<string, never>> = () => {
+  // The QueryClient lives and dies with this component, exactly like the
+  // RecoilRoot next to it: on logout the AuthenticatedApp unmounts and the
+  // whole cache is discarded (same semantics recoil has today).
+  const [queryClient] = useState(
+    () => new QueryClient({ defaultOptions: queryClientDefaultOptions }),
+  );
+  return (
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <NotificationMessages>
+          <AuthenticatedApp />
+        </NotificationMessages>
+      </QueryClientProvider>
+    </RecoilRoot>
+  );
+};
 
 export default AuthenticatedAppWithRecoil;

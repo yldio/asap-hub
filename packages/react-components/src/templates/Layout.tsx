@@ -31,6 +31,7 @@ import {
   drawerQuery,
   networkContentTopPadding,
   menuTransitionMs,
+  shortViewportQuery,
 } from '../layout';
 import { Loading } from '../molecules';
 import { usePrevious, useDismiss } from '../hooks';
@@ -183,9 +184,14 @@ export const menuStyles = css({
   display: 'flex',
   flexDirection: 'column',
   maxWidth: '100vw',
-  // Let the collapsed-rail hover tooltips escape the narrow column on desktop.
+  // Must not clip, so the absolutely-positioned collapsed tooltips can escape
+  // the narrow column (a scroll container would clip both axes).
   [crossQuery]: {
     overflow: 'visible',
+  },
+  // Too short to fit the nav: reaching every item beats the tooltip escaping.
+  [shortViewportQuery]: {
+    overflowY: 'auto',
   },
   [drawerQuery]: {
     maxWidth: rem(302),

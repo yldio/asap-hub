@@ -18,9 +18,11 @@ export const drawerQuery = `@media (max-width: ${
 }px)`;
 export const crossQuery = `@media (min-width: ${smallDesktopScreen.width}px)`;
 
-// Duration of the desktop menu collapse/expand width animation. Shared by the
-// Layout grid transition, the label-reveal timer, and the nav padding easing so
-// they stay in lockstep.
+// Below this desktop height the nav won't fit, so the rail scrolls instead.
+export const shortMenuViewportHeight = 700;
+export const shortViewportQuery = `@media (min-width: ${smallDesktopScreen.width}px) and (max-height: ${shortMenuViewportHeight}px)`;
+
+// Collapse/expand width animation; shared by the grid transition and JS timer.
 export const menuTransitionMs = 250;
 
 const largeDesktopColWidth = 66;

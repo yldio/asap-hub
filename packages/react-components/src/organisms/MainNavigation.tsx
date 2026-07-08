@@ -72,7 +72,12 @@ const toggleContainerStyles = css({
 const dividerStyles = css({
   border: 'none',
   borderTop: `1px solid ${steel.rgb}`,
-  margin: `${rem(12)} 0`,
+  width: rem(225),
+  maxWidth: '100%',
+  margin: `${rem(12)} auto`,
+});
+const collapsedDividerStyles = css({
+  width: rem(24),
 });
 const toggleButtonStyles = css({
   boxSizing: 'border-box',
@@ -252,7 +257,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </ul>
       {onToggleCollapse && (
         <div css={toggleContainerStyles}>
-          <hr css={dividerStyles} />
+          <hr css={[dividerStyles, collapsed && collapsedDividerStyles]} />
           <button
             type="button"
             css={[

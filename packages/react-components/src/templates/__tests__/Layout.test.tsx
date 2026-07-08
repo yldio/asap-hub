@@ -257,6 +257,26 @@ describe('the collapsible menu', () => {
     ).toBeInTheDocument();
   });
 
+  it('falls back to expanded when localStorage is unavailable', async () => {
+    const getItem = jest
+      .spyOn(Storage.prototype, 'getItem')
+      .mockImplementation(() => {
+        throw new Error('localStorage blocked');
+      });
+    try {
+      const { findByRole } = render(
+        <MemoryRouter>
+          <Layout {...props} />
+        </MemoryRouter>,
+      );
+      expect(
+        await findByRole('button', { name: 'Collapse Menu', hidden: true }),
+      ).toBeInTheDocument();
+    } finally {
+      getItem.mockRestore();
+    }
+  });
+
   it('hides nav labels while expanding, then reveals them', async () => {
     const { container, findByRole } = render(
       <MemoryRouter>

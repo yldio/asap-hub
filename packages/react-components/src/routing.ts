@@ -2,22 +2,97 @@ import { searchQueryParam } from '@asap-hub/routing';
 import { useNavigate, useLocation, NavigateFunction } from 'react-router';
 import { useRef, useEffect } from 'react';
 
+const GIVE_UP_AFTER_MS = 10000;
+const FRAMES_STILL_BEFORE_SCROLL = 5;
+const FRAMES_STILL_UNTIL_SETTLED = 10;
+const SCROLL_ANYWAY_AFTER_MS = 1000;
+
+const isMeasurable = (rect: DOMRect): boolean =>
+  rect.width > 0 || rect.height > 0;
+
+const isWithinViewport = (rect: DOMRect): boolean =>
+  rect.bottom > 0 && rect.top < window.innerHeight;
+
+type ScrollPhase = 'awaiting-settle' | 'animating-scroll' | 'holding-position';
+
 export const useScrollToHash = (): void => {
   const { hash, pathname } = useLocation();
 
   useEffect(() => {
-    if (hash) {
-      // Delay to allow React to render the target element
-      const timeoutId = setTimeout(() => {
-        const element = document.getElementById(hash.slice(1));
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
-
-      return () => clearTimeout(timeoutId);
+    if (!hash) {
+      return undefined;
     }
-    return undefined;
+
+    const targetId = decodeURIComponent(hash.slice(1));
+    const giveUpAt = performance.now() + GIVE_UP_AFTER_MS;
+    let rafId = 0;
+    let previousTop: number | undefined;
+    let framesUnchanged = 0;
+    let firstSeenAt: number | undefined;
+    let phase: ScrollPhase = 'awaiting-settle';
+
+    const stop = () => {
+      window.cancelAnimationFrame(rafId);
+    };
+
+    const startSmoothScroll = (element: HTMLElement) => {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      phase = 'animating-scroll';
+      framesUnchanged = 0;
+    };
+
+    const scheduleNextFrame = () => {
+      rafId = requestAnimationFrame(step);
+    };
+
+    const processFrame = (): boolean => {
+      const element = document.getElementById(targetId);
+      if (element) {
+        const now = performance.now();
+        firstSeenAt = firstSeenAt ?? now;
+        const rect = element.getBoundingClientRect();
+        framesUnchanged = rect.top === previousTop ? framesUnchanged + 1 : 0;
+        previousTop = rect.top;
+
+        const layoutHasQuieted = framesUnchanged >= FRAMES_STILL_BEFORE_SCROLL;
+        const scrollAnimationFinished =
+          framesUnchanged >= FRAMES_STILL_UNTIL_SETTLED;
+
+        if (phase === 'animating-scroll') {
+          if (scrollAnimationFinished) {
+            phase = 'holding-position';
+          }
+        } else if (phase === 'awaiting-settle') {
+          const waitedLongEnough = now - firstSeenAt > SCROLL_ANYWAY_AFTER_MS;
+          if (layoutHasQuieted || waitedLongEnough) {
+            startSmoothScroll(element);
+          }
+        } else if (isMeasurable(rect) && !isWithinViewport(rect)) {
+          startSmoothScroll(element);
+        } else if (scrollAnimationFinished) {
+          return false;
+        }
+      }
+      return true;
+    };
+
+    const step = () => {
+      const shouldContinue = processFrame();
+      if (!shouldContinue) {
+        stop();
+        return;
+      }
+
+      if (performance.now() < giveUpAt) {
+        scheduleNextFrame();
+      } else {
+        stop();
+      }
+    };
+
+    scheduleNextFrame();
+
+    return stop;
   }, [hash, pathname]);
 };
 

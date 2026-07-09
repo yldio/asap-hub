@@ -11,7 +11,6 @@ import { createListGuidesResponse } from '@asap-hub/fixtures';
 import Guides from '../Guides';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getGuides } from '../../guides/api';
-import { refreshDiscoverState } from '../../about/state';
 
 jest.mock('../../guides/api');
 
@@ -24,11 +23,7 @@ const mockGetGuides = getGuides as jest.MockedFunction<typeof getGuides>;
 const renderGuides = async (user: Partial<User>) => {
   render(
     <Suspense fallback="loading">
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(refreshDiscoverState, Math.random());
-        }}
-      >
+      <RecoilRoot>
         <Auth0Provider user={user}>
           <WhenReady>
             <Guides />

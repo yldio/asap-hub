@@ -1,18 +1,14 @@
 import { Suspense } from 'react';
 import { User } from '@asap-hub/auth';
-import {
-  render,
-  waitForElementToBeRemoved,
-  screen,
-} from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
+import { render, waitFor, screen } from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { DiscoverResponse } from '@asap-hub/model';
 
 import About from '../About';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { refreshDiscoverState } from '../state';
 import { getDiscover } from '../api';
 
 jest.mock('../api');
@@ -31,11 +27,8 @@ const props: DiscoverResponse = {
 
 const renderPage = async (user: Partial<User>) => {
   render(
-    <RecoilRoot
-      initializeState={({ set }) => {
-        set(refreshDiscoverState, Math.random());
-      }}
-    >
+    // fresh query client per render replaces the recoil refresh-counter bump
+    <QueryClientProvider client={createTestQueryClient()}>
       <Suspense fallback="loading">
         <Auth0Provider user={user}>
           <WhenReady>
@@ -47,9 +40,12 @@ const renderPage = async (user: Partial<User>) => {
           </WhenReady>
         </Auth0Provider>
       </Suspense>
-    </RecoilRoot>,
+    </QueryClientProvider>,
   );
-  await waitForElementToBeRemoved(screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 it('renders about with members', async () => {

@@ -279,6 +279,34 @@ describe('/manuscripts/ route', () => {
 
         expect(response.status).toEqual(400);
       });
+
+      test('Should return 400 when preprintDate is not a valid date-time', async () => {
+        const createManuscriptRequest = {
+          ...getManuscriptCreateDataObject(),
+          preprintDate: 'not-a-date',
+        };
+
+        const response = await supertest(app)
+          .post('/manuscripts')
+          .send(createManuscriptRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
+
+      test('Should return 400 when publicationDate is not a valid date-time', async () => {
+        const createManuscriptRequest = {
+          ...getManuscriptCreateDataObject(),
+          publicationDate: 'not-a-date',
+        };
+
+        const response = await supertest(app)
+          .post('/manuscripts')
+          .send(createManuscriptRequest)
+          .set('Accept', 'application/json');
+
+        expect(response.status).toEqual(400);
+      });
     });
   });
 
@@ -332,6 +360,61 @@ describe('/manuscripts/ route', () => {
       expect(manuscriptControllerMock.fetchByIds).toHaveBeenCalledWith(
         ['manuscript-1', 'manuscript-2'],
         'user-id-0',
+      );
+    });
+  });
+
+  describe('GET /manuscripts/{id}/workspace-url', () => {
+    test('Should return 403 when not logged in', async () => {
+      userMockFactory.mockReturnValueOnce({
+        ...createUserResponse(),
+        onboarded: false,
+      });
+
+      const response = await supertest(app).get(
+        '/manuscripts/123/workspace-url',
+      );
+
+      expect(response.status).toEqual(403);
+    });
+
+    test('Should return the resolved workspace url', async () => {
+      manuscriptControllerMock.fetchWorkspaceUrl.mockResolvedValueOnce({
+        url: '/network/teams/team-1/workspace?tab=discussions#manuscript-1',
+      });
+
+      const response = await supertest(app).get(
+        '/manuscripts/123/workspace-url?tab=discussions',
+      );
+
+      expect(response.body).toEqual({
+        url: '/network/teams/team-1/workspace?tab=discussions#manuscript-1',
+      });
+    });
+
+    test('Should call the controller with the right parameters', async () => {
+      await supertest(app).get(
+        '/manuscripts/abc123/workspace-url?tab=discussions',
+      );
+
+      expect(manuscriptControllerMock.fetchWorkspaceUrl).toHaveBeenCalledWith(
+        'abc123',
+        expect.objectContaining({ id: 'user-id-0' }),
+        'discussions',
+        false,
+      );
+    });
+
+    test('Should call the controller with projectWorkspaceEnabled set to true when requested', async () => {
+      await supertest(app).get(
+        '/manuscripts/abc123/workspace-url?tab=discussions&projectWorkspaceEnabled=true',
+      );
+
+      expect(manuscriptControllerMock.fetchWorkspaceUrl).toHaveBeenCalledWith(
+        'abc123',
+        expect.objectContaining({ id: 'user-id-0' }),
+        'discussions',
+        true,
       );
     });
   });

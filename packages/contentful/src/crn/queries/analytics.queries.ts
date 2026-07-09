@@ -351,6 +351,8 @@ export const FETCH_ENGAGEMENT = gql`
   }
 `;
 
+// The awardType name below must match the Contentful awardType.name exactly;
+// renaming it there silently drops the Open Science Champion metric to zero.
 export const FETCH_OS_CHAMPION = gql`
   query FetchOsChampion($limit: Int, $skip: Int, $dateFilter: DateTime) {
     teamsCollection(order: sys_id_ASC, limit: $limit, skip: $skip) {
@@ -381,7 +383,7 @@ export const FETCH_OS_CHAMPION = gql`
                 limit: 10
                 where: {
                   date_exists: true
-                  type_exists: true
+                  awardType: { name: "Open Science Champion" }
                   date_gte: $dateFilter
                 }
               ) {

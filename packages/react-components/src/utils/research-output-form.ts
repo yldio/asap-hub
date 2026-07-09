@@ -218,7 +218,8 @@ export const getPayload = ({
   asapFunded: convertDecisionToBoolean(asapFunded),
   usedInPublication: convertDecisionToBoolean(usedInPublication),
   sharingStatus,
-  publishDate: publishDate?.toISOString(),
+  publishDate:
+    sharingStatus === 'Public' ? publishDate?.toISOString() : undefined,
   workingGroups: [],
   labCatalogNumber: labCatalogNumber || undefined,
   methods,

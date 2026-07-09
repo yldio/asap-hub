@@ -29,6 +29,11 @@ type EmailNotificationMapping = Record<
   Partial<Record<'open_science_team' | 'grantee', TemplateAlias>>
 >;
 
+export const emailHeaderImageUrl =
+  'https://asap-public.s3.us-east-1.amazonaws.com/asaplogo.jpg';
+
+export const emailHeaderLinkUrl = 'https://parkinsonsroadmap.org';
+
 export const emailNotificationMapping: EmailNotificationMapping = {
   manuscript_submitted: {
     grantee: 'waiting-for-report-grantees',

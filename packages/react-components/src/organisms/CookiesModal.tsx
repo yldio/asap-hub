@@ -108,7 +108,9 @@ type CookiesModalProps = {
     cookieId?: string;
     preferences: { essential?: boolean; analytics?: boolean };
   } | null;
-  readonly onSaveCookiePreferences: (analytics: boolean) => void;
+  readonly onSaveCookiePreferences: (
+    analytics: boolean,
+  ) => void | Promise<void>;
   readonly toggleCookieModal?: () => void;
   readonly showCookieModal?: boolean;
   readonly customStyles?: CSSInterpolation[];
@@ -125,9 +127,13 @@ const CookiesModal: React.FC<CookiesModalProps> = ({
   const [isAnalyticsConsentGiven, setIsAnalyticsConsentGiven] = useState(
     Boolean(cookieData?.preferences?.analytics),
   );
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleCookiePreferencesSaving = () => {
-    onSaveCookiePreferences(isAnalyticsConsentGiven);
+    setIsSaving(true);
+    void Promise.resolve(
+      onSaveCookiePreferences(isAnalyticsConsentGiven),
+    ).finally(() => setIsSaving(false));
   };
 
   return (
@@ -208,7 +214,8 @@ const CookiesModal: React.FC<CookiesModalProps> = ({
             <div css={buttonContainerStyles}>
               <Button
                 primary
-                enabled
+                enabled={!isSaving}
+                loading={isSaving}
                 noMargin
                 onClick={handleCookiePreferencesSaving}
                 overrideStyles={css({ width: 'fit-content' })}

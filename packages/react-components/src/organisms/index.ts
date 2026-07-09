@@ -131,6 +131,7 @@ export { default as UserCollaborationTable } from './UserCollaborationTable';
 export { default as UserInterestGroupCard } from './UserInterestGroupCard';
 export { default as UserNavigation } from './UserNavigation';
 export { default as UserProductivityTable } from './UserProductivityTable';
+export { default as UserProfileBadges } from './UserProfileBadges';
 export { default as UserProfileBiography } from './UserProfileBiography';
 export { default as UserProfileInterestGroups } from './UserProfileInterestGroups';
 export { default as UserProfilePlaceholderCard } from './UserProfilePlaceholderCard';

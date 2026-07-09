@@ -29,6 +29,9 @@ type ResearchOutputFormSharingCardProps = Pick<
 };
 
 export const getPublishDateValidationMessage = (e: ValidityState): string => {
+  if (e.valueMissing) {
+    return 'Please enter the date made public.';
+  }
   if (e.badInput) {
     return 'Date published should be complete or removed';
   }
@@ -110,10 +113,15 @@ const ResearchOutputFormSharingCard: React.FC<
 
     {sharingStatus === 'Public' ? (
       <LabeledDateField
-        title={'Public Repository Published Date'}
-        subtitle={'(optional)'}
-        description={
-          'This should be the date your output was shared publicly on its repository.'
+        title={'Date made public'}
+        subtitle={'(required)'}
+        description={'The date this output first became publicly available.'}
+        required
+        enabled={
+          !(
+            researchOutputData?.publishDate &&
+            (isImportedFromManuscript || researchOutputData?.id)
+          )
         }
         onChange={onChangePublishDate}
         value={publishDate}

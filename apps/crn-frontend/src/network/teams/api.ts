@@ -21,6 +21,8 @@ import {
   ManuscriptPutRequest,
   ManuscriptResponse,
   ManuscriptStatus,
+  ManuscriptWorkspaceTab,
+  ManuscriptWorkspaceUrlResponse,
   ResearchOutputPostRequest,
   ResearchOutputResponse,
   TeamPatchRequest,
@@ -455,6 +457,42 @@ export const getManuscript = async (
       `Failed to fetch manuscript with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
+  return resp.json();
+};
+
+export const getManuscriptWorkspaceUrl = async (
+  id: string,
+  authorization: string,
+  tab?: ManuscriptWorkspaceTab,
+  projectWorkspaceEnabled?: boolean,
+): Promise<ManuscriptWorkspaceUrlResponse | undefined> => {
+  const params = new URLSearchParams();
+  if (tab) {
+    params.set('tab', tab);
+  }
+  if (projectWorkspaceEnabled) {
+    params.set('projectWorkspaceEnabled', 'true');
+  }
+  const query = params.toString() ? `?${params.toString()}` : '';
+  const resp = await fetch(
+    `${API_BASE_URL}/manuscripts/${id}/workspace-url${query}`,
+    {
+      headers: {
+        authorization,
+        ...createSentryHeaders(),
+      },
+    },
+  );
+
+  if (!resp.ok) {
+    if (resp.status === 404 || resp.status === 403) {
+      return undefined;
+    }
+    throw new Error(
+      `Failed to resolve manuscript workspace url for id ${id}. Expected status 2xx, 403 or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+
   return resp.json();
 };
 

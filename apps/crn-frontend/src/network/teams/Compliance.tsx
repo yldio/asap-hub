@@ -100,7 +100,11 @@ const ComplianceList: React.FC<ComplianceListProps> = ({
   ) => {
     const manuscriptResponse = await updateManuscript(id, manuscript);
     result.refresh(manuscriptResponse);
-    setFormType({ type: 'assigned-users', accent: 'successLarge' });
+
+    if ('assignedUsers' in manuscript) {
+      setFormType({ type: 'assigned-users', accent: 'successLarge' });
+    }
+
     return manuscriptResponse;
   };
 

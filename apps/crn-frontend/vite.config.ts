@@ -18,6 +18,10 @@ export default defineConfig({
       ),
 
       // Context & State
+      '@asap-hub/react-context/src': path.resolve(
+        __dirname,
+        '../../packages/react-context/src',
+      ),
       '@asap-hub/react-context': path.resolve(
         __dirname,
         '../../packages/react-context/src',

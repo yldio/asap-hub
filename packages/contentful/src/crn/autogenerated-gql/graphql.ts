@@ -652,6 +652,8 @@ export type AssetFilter = {
 };
 
 export type AssetLinkingCollections = {
+  awardTypeCollection?: Maybe<AwardTypeCollection>;
+  awardTypeCursorCollection?: Maybe<AwardTypeCursorCollection>;
   entryCollection?: Maybe<EntryCollection>;
   entryCursorCollection?: Maybe<EntryCursorCollection>;
   eventsCollection?: Maybe<EventsCollection>;
@@ -670,6 +672,23 @@ export type AssetLinkingCollections = {
   tutorialsCursorCollection?: Maybe<TutorialsCursorCollection>;
   usersCollection?: Maybe<UsersCollection>;
   usersCursorCollection?: Maybe<UsersCursorCollection>;
+};
+
+export type AssetLinkingCollectionsAwardTypeCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AssetLinkingCollectionsAwardTypeCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type AssetLinkingCollectionsEntryCollectionArgs = {
@@ -1061,16 +1080,172 @@ export enum AttendanceOrder {
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
 }
 
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
+export type AwardType = Entry &
+  _Node & {
+    _id: Scalars['ID'];
+    contentfulMetadata: ContentfulMetadata;
+    icon?: Maybe<Asset>;
+    linkedFrom?: Maybe<AwardTypeLinkingCollections>;
+    name?: Maybe<Scalars['String']>;
+    sys: Sys;
+  };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
+export type AwardTypeIconArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
+export type AwardTypeLinkedFromArgs = {
+  allowedLocales?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+};
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awardType) */
+export type AwardTypeNameArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AwardTypeCollection = {
+  items: Array<Maybe<AwardType>>;
+  limit: Scalars['Int'];
+  skip: Scalars['Int'];
+  total: Scalars['Int'];
+};
+
+export type AwardTypeCursorCollection = {
+  items: Array<Maybe<AwardType>>;
+  limit: Scalars['Int'];
+  pages: CursorPages;
+};
+
+export type AwardTypeFilter = {
+  AND?: InputMaybe<Array<InputMaybe<AwardTypeFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<AwardTypeFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  icon_exists?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
+export type AwardTypeLinkingCollections = {
+  awardsCollection?: Maybe<AwardsCollection>;
+  awardsCursorCollection?: Maybe<AwardsCursorCollection>;
+  entryCollection?: Maybe<EntryCollection>;
+  entryCursorCollection?: Maybe<EntryCursorCollection>;
+};
+
+export type AwardTypeLinkingCollectionsAwardsCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AwardTypeLinkingCollectionsAwardsCollectionOrder>>
+  >;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AwardTypeLinkingCollectionsAwardsCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<
+    Array<InputMaybe<AwardTypeLinkingCollectionsAwardsCursorCollectionOrder>>
+  >;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AwardTypeLinkingCollectionsEntryCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AwardTypeLinkingCollectionsEntryCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export enum AwardTypeLinkingCollectionsAwardsCollectionOrder {
+  DateAsc = 'date_ASC',
+  DateDesc = 'date_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AwardTypeLinkingCollectionsAwardsCursorCollectionOrder {
+  DateAsc = 'date_ASC',
+  DateDesc = 'date_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
+export enum AwardTypeOrder {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
+  SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
+  SysIdAsc = 'sys_id_ASC',
+  SysIdDesc = 'sys_id_DESC',
+  SysPublishedAtAsc = 'sys_publishedAt_ASC',
+  SysPublishedAtDesc = 'sys_publishedAt_DESC',
+  SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
+  SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
+}
+
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awards) */
 export type Awards = Entry &
   _Node & {
     _id: Scalars['ID'];
+    awardType?: Maybe<AwardType>;
     contentfulMetadata: ContentfulMetadata;
     date?: Maybe<Scalars['DateTime']>;
     linkedFrom?: Maybe<AwardsLinkingCollections>;
+    shortDescription?: Maybe<Scalars['String']>;
     sys: Sys;
-    type?: Maybe<Scalars['String']>;
   };
+
+/** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awards) */
+export type AwardsAwardTypeArgs = {
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AwardTypeFilter>;
+};
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awards) */
 export type AwardsDateArgs = {
@@ -1084,7 +1259,7 @@ export type AwardsLinkedFromArgs = {
 };
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/awards) */
-export type AwardsTypeArgs = {
+export type AwardsShortDescriptionArgs = {
   locale?: InputMaybe<Scalars['String']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
 };
@@ -1105,6 +1280,8 @@ export type AwardsCursorCollection = {
 export type AwardsFilter = {
   AND?: InputMaybe<Array<InputMaybe<AwardsFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<AwardsFilter>>>;
+  awardType?: InputMaybe<CfAwardTypeNestedFilter>;
+  awardType_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   date?: InputMaybe<Scalars['DateTime']>;
   date_exists?: InputMaybe<Scalars['Boolean']>;
@@ -1115,14 +1292,14 @@ export type AwardsFilter = {
   date_lte?: InputMaybe<Scalars['DateTime']>;
   date_not?: InputMaybe<Scalars['DateTime']>;
   date_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  type?: InputMaybe<Scalars['String']>;
-  type_contains?: InputMaybe<Scalars['String']>;
-  type_exists?: InputMaybe<Scalars['Boolean']>;
-  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  type_not?: InputMaybe<Scalars['String']>;
-  type_not_contains?: InputMaybe<Scalars['String']>;
-  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type AwardsLinkingCollections = {
@@ -1207,6 +1384,8 @@ export enum AwardsLinkingCollectionsTeamMembershipCursorCollectionOrder {
 export enum AwardsOrder {
   DateAsc = 'date_ASC',
   DateDesc = 'date_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -1215,8 +1394,6 @@ export enum AwardsOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
 }
 
 /** [See type definition](https://app.contentful.com/spaces/5v6w5j61tndm/content_types/calendars) */
@@ -13078,6 +13255,9 @@ export type Query = {
   attendance?: Maybe<Attendance>;
   attendanceCollection?: Maybe<AttendanceCollection>;
   attendanceCursorCollection?: Maybe<AttendanceCursorCollection>;
+  awardType?: Maybe<AwardType>;
+  awardTypeCollection?: Maybe<AwardTypeCollection>;
+  awardTypeCursorCollection?: Maybe<AwardTypeCursorCollection>;
   awards?: Maybe<Awards>;
   awardsCollection?: Maybe<AwardsCollection>;
   awardsCursorCollection?: Maybe<AwardsCursorCollection>;
@@ -13344,6 +13524,34 @@ export type QueryAttendanceCursorCollectionArgs = {
   preview?: InputMaybe<Scalars['Boolean']>;
   useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
   where?: InputMaybe<AttendanceFilter>;
+};
+
+export type QueryAwardTypeArgs = {
+  id: Scalars['String'];
+  locale?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type QueryAwardTypeCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AwardTypeOrder>>>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AwardTypeFilter>;
+};
+
+export type QueryAwardTypeCursorCollectionArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  locale?: InputMaybe<Scalars['String']>;
+  order?: InputMaybe<Array<InputMaybe<AwardTypeOrder>>>;
+  pageNext?: InputMaybe<Scalars['String']>;
+  pagePrev?: InputMaybe<Scalars['String']>;
+  preview?: InputMaybe<Scalars['Boolean']>;
+  useFallbackLocale?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<AwardTypeFilter>;
 };
 
 export type QueryAwardsArgs = {
@@ -18655,6 +18863,8 @@ export type TeamMembershipAwardsCollection = {
 export enum TeamMembershipAwardsCollectionOrder {
   DateAsc = 'date_ASC',
   DateDesc = 'date_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -18663,8 +18873,6 @@ export enum TeamMembershipAwardsCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
 }
 
 export type TeamMembershipAwardsCursorCollection = {
@@ -18676,6 +18884,8 @@ export type TeamMembershipAwardsCursorCollection = {
 export enum TeamMembershipAwardsCursorCollectionOrder {
   DateAsc = 'date_ASC',
   DateDesc = 'date_DESC',
+  ShortDescriptionAsc = 'shortDescription_ASC',
+  ShortDescriptionDesc = 'shortDescription_DESC',
   SysFirstPublishedAtAsc = 'sys_firstPublishedAt_ASC',
   SysFirstPublishedAtDesc = 'sys_firstPublishedAt_DESC',
   SysIdAsc = 'sys_id_ASC',
@@ -18684,8 +18894,6 @@ export enum TeamMembershipAwardsCursorCollectionOrder {
   SysPublishedAtDesc = 'sys_publishedAt_DESC',
   SysPublishedVersionAsc = 'sys_publishedVersion_ASC',
   SysPublishedVersionDesc = 'sys_publishedVersion_DESC',
-  TypeAsc = 'type_ASC',
-  TypeDesc = 'type_DESC',
 }
 
 export type TeamMembershipCollection = {
@@ -24170,9 +24378,25 @@ export type CfAttendanceNestedFilter = {
   team_exists?: InputMaybe<Scalars['Boolean']>;
 };
 
+export type CfAwardTypeNestedFilter = {
+  AND?: InputMaybe<Array<InputMaybe<CfAwardTypeNestedFilter>>>;
+  OR?: InputMaybe<Array<InputMaybe<CfAwardTypeNestedFilter>>>;
+  contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
+  icon_exists?: InputMaybe<Scalars['Boolean']>;
+  name?: InputMaybe<Scalars['String']>;
+  name_contains?: InputMaybe<Scalars['String']>;
+  name_exists?: InputMaybe<Scalars['Boolean']>;
+  name_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  name_not?: InputMaybe<Scalars['String']>;
+  name_not_contains?: InputMaybe<Scalars['String']>;
+  name_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  sys?: InputMaybe<SysFilter>;
+};
+
 export type CfAwardsNestedFilter = {
   AND?: InputMaybe<Array<InputMaybe<CfAwardsNestedFilter>>>;
   OR?: InputMaybe<Array<InputMaybe<CfAwardsNestedFilter>>>;
+  awardType_exists?: InputMaybe<Scalars['Boolean']>;
   contentfulMetadata?: InputMaybe<ContentfulMetadataFilter>;
   date?: InputMaybe<Scalars['DateTime']>;
   date_exists?: InputMaybe<Scalars['Boolean']>;
@@ -24183,14 +24407,14 @@ export type CfAwardsNestedFilter = {
   date_lte?: InputMaybe<Scalars['DateTime']>;
   date_not?: InputMaybe<Scalars['DateTime']>;
   date_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  shortDescription?: InputMaybe<Scalars['String']>;
+  shortDescription_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_exists?: InputMaybe<Scalars['Boolean']>;
+  shortDescription_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  shortDescription_not?: InputMaybe<Scalars['String']>;
+  shortDescription_not_contains?: InputMaybe<Scalars['String']>;
+  shortDescription_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   sys?: InputMaybe<SysFilter>;
-  type?: InputMaybe<Scalars['String']>;
-  type_contains?: InputMaybe<Scalars['String']>;
-  type_exists?: InputMaybe<Scalars['Boolean']>;
-  type_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  type_not?: InputMaybe<Scalars['String']>;
-  type_not_contains?: InputMaybe<Scalars['String']>;
-  type_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
 };
 
 export type CfCalendarsNestedFilter = {
@@ -27319,6 +27543,9 @@ export type FetchDashboardQuery = {
                             | ({ __typename: 'Attendance' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
+                            | ({ __typename: 'AwardType' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
                             | ({ __typename: 'Awards' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
@@ -27505,6 +27732,9 @@ export type FetchDashboardQuery = {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Attendance' } & {
+                                sys: Pick<Sys, 'id'>;
+                              })
+                            | ({ __typename: 'AwardType' } & {
                                 sys: Pick<Sys, 'id'>;
                               })
                             | ({ __typename: 'Awards' } & {
@@ -27717,6 +27947,7 @@ export type FetchDiscoverQuery = {
                         sys: Pick<Sys, 'id'>;
                       })
                     | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+                    | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                     | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -28072,6 +28303,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -28161,6 +28393,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -28250,6 +28483,7 @@ export type EventsContentFragment = Pick<
               | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -28456,6 +28690,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -28561,6 +28796,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -28666,6 +28902,7 @@ export type FetchEventByIdQuery = {
                   | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -28907,6 +29144,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Attendance' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'AwardType' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
@@ -29058,6 +29298,9 @@ export type FetchEventsQuery = {
                         | ({ __typename: 'Attendance' } & {
                             sys: Pick<Sys, 'id'>;
                           })
+                        | ({ __typename: 'AwardType' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
                         | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
                         | ({ __typename: 'Calendars' } & {
                             sys: Pick<Sys, 'id'>;
@@ -29207,6 +29450,9 @@ export type FetchEventsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Attendance' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'AwardType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -29513,6 +29759,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Attendance' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'AwardType' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Awards' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -29687,6 +29936,9 @@ export type FetchEventsByUserIdQuery = {
                                     | ({ __typename: 'Attendance' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'AwardType' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Awards' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -29859,6 +30111,9 @@ export type FetchEventsByUserIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Attendance' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'AwardType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Awards' } & {
@@ -30211,6 +30466,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Attendance' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'AwardType' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Awards' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -30385,6 +30643,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                     | ({ __typename: 'Attendance' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'AwardType' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Awards' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -30557,6 +30818,9 @@ export type FetchEventsByExternalAuthorIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Attendance' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'AwardType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Awards' } & {
@@ -30909,6 +31173,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Attendance' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'AwardType' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Awards' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -31083,6 +31350,9 @@ export type FetchEventsByTeamIdQuery = {
                                     | ({ __typename: 'Attendance' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
+                                    | ({ __typename: 'AwardType' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
                                     | ({ __typename: 'Awards' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
@@ -31255,6 +31525,9 @@ export type FetchEventsByTeamIdQuery = {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Attendance' } & {
+                                        sys: Pick<Sys, 'id'>;
+                                      })
+                                    | ({ __typename: 'AwardType' } & {
                                         sys: Pick<Sys, 'id'>;
                                       })
                                     | ({ __typename: 'Awards' } & {
@@ -32409,7 +32682,12 @@ export type FetchManuscriptVersionByIdQuery = {
           Maybe<
             Pick<
               Manuscripts,
-              'title' | 'url' | 'count' | 'layImpactStatement' | 'preprintDate'
+              | 'title'
+              | 'url'
+              | 'count'
+              | 'layImpactStatement'
+              | 'preprintDate'
+              | 'publicationDate'
             > & {
               sys: Pick<Sys, 'id'>;
               relatedResearchOutput?: Maybe<{ sys: Pick<Sys, 'id'> }>;
@@ -32668,6 +32946,7 @@ export type FetchComplianceManuscriptVersionsQuery = {
                       | 'status'
                       | 'layImpactStatement'
                       | 'preprintDate'
+                      | 'publicationDate'
                       | 'apcRequested'
                       | 'apcAmountRequested'
                       | 'apcCoverageRequestStatus'
@@ -32747,7 +33026,12 @@ export type FetchVersionsByManuscriptQuery = {
         Maybe<
           Pick<
             Manuscripts,
-            'title' | 'url' | 'count' | 'layImpactStatement' | 'preprintDate'
+            | 'title'
+            | 'url'
+            | 'count'
+            | 'layImpactStatement'
+            | 'preprintDate'
+            | 'publicationDate'
           > & {
             sys: Pick<Sys, 'id'>;
             relatedResearchOutput?: Maybe<{ sys: Pick<Sys, 'id'> }>;
@@ -32952,6 +33236,9 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                           | ({ __typename: 'Attendance' } & {
                               sys: Pick<Sys, 'id'>;
                             })
+                          | ({ __typename: 'AwardType' } & {
+                              sys: Pick<Sys, 'id'>;
+                            })
                           | ({ __typename: 'Awards' } & {
                               sys: Pick<Sys, 'id'>;
                             })
@@ -33142,7 +33429,7 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                                     Maybe<
                                       Pick<
                                         Projects,
-                                        'title' | 'projectType'
+                                        'title' | 'projectType' | 'projectId'
                                       > & { sys: Pick<Sys, 'id'> }
                                     >
                                   >;
@@ -33173,7 +33460,7 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                 >;
               }>;
               project?: Maybe<
-                Pick<Projects, 'title' | 'projectType'> & {
+                Pick<Projects, 'title' | 'projectType' | 'projectId'> & {
                   sys: Pick<Sys, 'id'>;
                 }
               >;
@@ -33404,6 +33691,7 @@ export type ManuscriptsContentFragment = Pick<
   | 'declinedReason'
   | 'layImpactStatement'
   | 'preprintDate'
+  | 'publicationDate'
 > & {
   sys: Pick<Sys, 'id' | 'publishedVersion'>;
   project?: Maybe<
@@ -33446,6 +33734,7 @@ export type FetchManuscriptByIdQuery = {
       | 'declinedReason'
       | 'layImpactStatement'
       | 'preprintDate'
+      | 'publicationDate'
     > & {
       teamsCollection?: Maybe<{
         items: Array<
@@ -33557,6 +33846,25 @@ export type FetchManuscriptVersionsQuery = {
                 Maybe<
                   Pick<Teams, 'displayName' | 'inactiveSince'> & {
                     sys: Pick<Sys, 'id'>;
+                    linkedFrom?: Maybe<{
+                      projectMembershipCollection?: Maybe<{
+                        items: Array<
+                          Maybe<{
+                            linkedFrom?: Maybe<{
+                              projectsCollection?: Maybe<{
+                                items: Array<
+                                  Maybe<
+                                    Pick<Projects, 'projectType'> & {
+                                      sys: Pick<Sys, 'id'>;
+                                    }
+                                  >
+                                >;
+                              }>;
+                            }>;
+                          }>
+                        >;
+                      }>;
+                    }>;
                   }
                 >
               >;
@@ -34011,6 +34319,7 @@ export type NewsContentFragment = Pick<
               | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -34115,6 +34424,7 @@ export type FetchNewsByIdQuery = {
                   | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -34252,6 +34562,9 @@ export type FetchNewsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Attendance' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'AwardType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -34416,6 +34729,7 @@ export type PageContentFragment = Pick<
               | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -34520,6 +34834,9 @@ export type FetchPagesQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Attendance' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'AwardType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -36209,6 +36526,7 @@ export type ResearchOutputsContentFragment = Pick<
               | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -36326,9 +36644,10 @@ export type ResearchOutputsContentFragment = Pick<
                     projectsCollection?: Maybe<{
                       items: Array<
                         Maybe<
-                          Pick<Projects, 'title' | 'projectType'> & {
-                            sys: Pick<Sys, 'id'>;
-                          }
+                          Pick<
+                            Projects,
+                            'title' | 'projectType' | 'projectId'
+                          > & { sys: Pick<Sys, 'id'> }
                         >
                       >;
                     }>;
@@ -36355,7 +36674,9 @@ export type ResearchOutputsContentFragment = Pick<
     >;
   }>;
   project?: Maybe<
-    Pick<Projects, 'title' | 'projectType'> & { sys: Pick<Sys, 'id'> }
+    Pick<Projects, 'title' | 'projectType' | 'projectId'> & {
+      sys: Pick<Sys, 'id'>;
+    }
   >;
   workingGroup?: Maybe<Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }>;
   methodsCollection?: Maybe<{
@@ -36490,6 +36811,7 @@ export type FetchResearchOutputByIdQuery = {
                   | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -36625,9 +36947,10 @@ export type FetchResearchOutputByIdQuery = {
                         projectsCollection?: Maybe<{
                           items: Array<
                             Maybe<
-                              Pick<Projects, 'title' | 'projectType'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
+                              Pick<
+                                Projects,
+                                'title' | 'projectType' | 'projectId'
+                              > & { sys: Pick<Sys, 'id'> }
                             >
                           >;
                         }>;
@@ -36654,7 +36977,9 @@ export type FetchResearchOutputByIdQuery = {
         >;
       }>;
       project?: Maybe<
-        Pick<Projects, 'title' | 'projectType'> & { sys: Pick<Sys, 'id'> }
+        Pick<Projects, 'title' | 'projectType' | 'projectId'> & {
+          sys: Pick<Sys, 'id'>;
+        }
       >;
       workingGroup?: Maybe<
         Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
@@ -36805,6 +37130,9 @@ export type FetchResearchOutputsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Attendance' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'AwardType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -36987,9 +37315,10 @@ export type FetchResearchOutputsQuery = {
                               projectsCollection?: Maybe<{
                                 items: Array<
                                   Maybe<
-                                    Pick<Projects, 'title' | 'projectType'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
+                                    Pick<
+                                      Projects,
+                                      'title' | 'projectType' | 'projectId'
+                                    > & { sys: Pick<Sys, 'id'> }
                                   >
                                 >;
                               }>;
@@ -37019,7 +37348,9 @@ export type FetchResearchOutputsQuery = {
               >;
             }>;
             project?: Maybe<
-              Pick<Projects, 'title' | 'projectType'> & { sys: Pick<Sys, 'id'> }
+              Pick<Projects, 'title' | 'projectType' | 'projectId'> & {
+                sys: Pick<Sys, 'id'>;
+              }
             >;
             workingGroup?: Maybe<
               Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
@@ -37649,6 +37980,7 @@ export type TutorialsContentFragment = Pick<
               | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -37802,6 +38134,7 @@ export type FetchTutorialByIdQuery = {
                   | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -37988,6 +38321,9 @@ export type FetchTutorialsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Attendance' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'AwardType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -38296,6 +38632,19 @@ export type UsersContentFragment = Pick<
               }>;
             }
           >;
+          awardsCollection?: Maybe<{
+            items: Array<
+              Maybe<
+                Pick<Awards, 'date'> & {
+                  awardType?: Maybe<
+                    Pick<AwardType, 'name'> & {
+                      icon?: Maybe<Pick<Asset, 'url'>>;
+                    }
+                  >;
+                }
+              >
+            >;
+          }>;
         }
       >
     >;
@@ -38668,6 +39017,19 @@ export type FetchUserByIdQuery = {
                   }>;
                 }
               >;
+              awardsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Awards, 'date'> & {
+                      awardType?: Maybe<
+                        Pick<AwardType, 'name'> & {
+                          icon?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }>;
             }
           >
         >;
@@ -38822,6 +39184,19 @@ export type UserListItemContentFragment = Pick<
       Maybe<
         Pick<TeamMembership, 'role'> & {
           team?: Maybe<Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }>;
+          awardsCollection?: Maybe<{
+            items: Array<
+              Maybe<
+                Pick<Awards, 'date'> & {
+                  awardType?: Maybe<
+                    Pick<AwardType, 'name'> & {
+                      icon?: Maybe<Pick<Asset, 'url'>>;
+                    }
+                  >;
+                }
+              >
+            >;
+          }>;
         }
       >
     >;
@@ -38887,6 +39262,19 @@ export type FetchUsersQuery = {
                     team?: Maybe<
                       Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
                     >;
+                    awardsCollection?: Maybe<{
+                      items: Array<
+                        Maybe<
+                          Pick<Awards, 'date'> & {
+                            awardType?: Maybe<
+                              Pick<AwardType, 'name'> & {
+                                icon?: Maybe<Pick<Asset, 'url'>>;
+                              }
+                            >;
+                          }
+                        >
+                      >;
+                    }>;
                   }
                 >
               >;
@@ -38964,6 +39352,19 @@ export type FetchUsersByTeamIdQuery = {
                                 sys: Pick<Sys, 'id'>;
                               }
                             >;
+                            awardsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Awards, 'date'> & {
+                                    awardType?: Maybe<
+                                      Pick<AwardType, 'name'> & {
+                                        icon?: Maybe<Pick<Asset, 'url'>>;
+                                      }
+                                    >;
+                                  }
+                                >
+                              >;
+                            }>;
                           }
                         >
                       >;
@@ -39045,6 +39446,19 @@ export type FetchUsersByTeamMembershipIdQuery = {
                                 sys: Pick<Sys, 'id'>;
                               }
                             >;
+                            awardsCollection?: Maybe<{
+                              items: Array<
+                                Maybe<
+                                  Pick<Awards, 'date'> & {
+                                    awardType?: Maybe<
+                                      Pick<AwardType, 'name'> & {
+                                        icon?: Maybe<Pick<Asset, 'url'>>;
+                                      }
+                                    >;
+                                  }
+                                >
+                              >;
+                            }>;
                           }
                         >
                       >;
@@ -39130,6 +39544,19 @@ export type FetchUsersByLabIdQuery = {
                                     sys: Pick<Sys, 'id'>;
                                   }
                                 >;
+                                awardsCollection?: Maybe<{
+                                  items: Array<
+                                    Maybe<
+                                      Pick<Awards, 'date'> & {
+                                        awardType?: Maybe<
+                                          Pick<AwardType, 'name'> & {
+                                            icon?: Maybe<Pick<Asset, 'url'>>;
+                                          }
+                                        >;
+                                      }
+                                    >
+                                  >;
+                                }>;
                               }
                             >
                           >;
@@ -39185,6 +39612,19 @@ export type FetchUserByIdForAlgoliaListQuery = {
               team?: Maybe<
                 Pick<Teams, 'displayName'> & { sys: Pick<Sys, 'id'> }
               >;
+              awardsCollection?: Maybe<{
+                items: Array<
+                  Maybe<
+                    Pick<Awards, 'date'> & {
+                      awardType?: Maybe<
+                        Pick<AwardType, 'name'> & {
+                          icon?: Maybe<Pick<Asset, 'url'>>;
+                        }
+                      >;
+                    }
+                  >
+                >;
+              }>;
             }
           >
         >;
@@ -39215,6 +39655,7 @@ export type WorkingGroupsContentFragment = Pick<
               | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+              | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
               | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -39403,6 +39844,7 @@ export type FetchWorkingGroupByIdQuery = {
                   | ({ __typename: 'Aims' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Announcements' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Attendance' } & { sys: Pick<Sys, 'id'> })
+                  | ({ __typename: 'AwardType' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Calendars' } & { sys: Pick<Sys, 'id'> })
                   | ({ __typename: 'Category' } & { sys: Pick<Sys, 'id'> })
@@ -39621,6 +40063,9 @@ export type FetchWorkingGroupsQuery = {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Attendance' } & {
+                            sys: Pick<Sys, 'id'>;
+                          })
+                        | ({ __typename: 'AwardType' } & {
                             sys: Pick<Sys, 'id'>;
                           })
                         | ({ __typename: 'Awards' } & { sys: Pick<Sys, 'id'> })
@@ -42663,6 +43108,7 @@ export const ManuscriptsContentFragmentDoc = {
             name: { kind: 'Name', value: 'layImpactStatement' },
           },
           { kind: 'Field', name: { kind: 'Name', value: 'preprintDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'publicationDate' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'categoriesCollection' },
@@ -45585,6 +46031,14 @@ export const ResearchOutputsContentFragmentDoc = {
                                                                 'projectType',
                                                             },
                                                           },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'projectId',
+                                                            },
+                                                          },
                                                         ],
                                                       },
                                                     },
@@ -45734,6 +46188,7 @@ export const ResearchOutputsContentFragmentDoc = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'projectType' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'projectId' } },
               ],
             },
           },
@@ -47518,6 +47973,74 @@ export const UsersContentFragmentDoc = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'inactiveSinceDate' },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'awardsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '20' },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order' },
+                            value: {
+                              kind: 'ListValue',
+                              values: [
+                                { kind: 'EnumValue', value: 'date_DESC' },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'date' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'awardType' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'name' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'icon' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'url',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -48376,6 +48899,74 @@ export const UserListItemContentFragmentDoc = {
                         },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'awardsCollection' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: { kind: 'IntValue', value: '20' },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order' },
+                            value: {
+                              kind: 'ListValue',
+                              values: [
+                                { kind: 'EnumValue', value: 'date_DESC' },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'items' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'date' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'awardType' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'name' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'icon' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'url',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -54248,11 +54839,25 @@ export const FetchOsChampionDocument = {
                                                     kind: 'ObjectField',
                                                     name: {
                                                       kind: 'Name',
-                                                      value: 'type_exists',
+                                                      value: 'awardType',
                                                     },
                                                     value: {
-                                                      kind: 'BooleanValue',
-                                                      value: true,
+                                                      kind: 'ObjectValue',
+                                                      fields: [
+                                                        {
+                                                          kind: 'ObjectField',
+                                                          name: {
+                                                            kind: 'Name',
+                                                            value: 'name',
+                                                          },
+                                                          value: {
+                                                            kind: 'StringValue',
+                                                            value:
+                                                              'Open Science Champion',
+                                                            block: false,
+                                                          },
+                                                        },
+                                                      ],
                                                     },
                                                   },
                                                   {
@@ -58280,6 +58885,13 @@ export const FetchManuscriptVersionByIdDocument = {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
+                                      value: 'publicationDate',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
                                       value: 'categoriesCollection',
                                     },
                                     arguments: [
@@ -59168,6 +59780,13 @@ export const FetchComplianceManuscriptVersionsDocument = {
                                           kind: 'Field',
                                           name: {
                                             kind: 'Name',
+                                            value: 'publicationDate',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
                                             value: 'assignedUsersCollection',
                                           },
                                           arguments: [
@@ -59922,6 +60541,10 @@ export const FetchVersionsByManuscriptDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'preprintDate' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'publicationDate' },
                       },
                       {
                         kind: 'Field',
@@ -60908,6 +61531,145 @@ export const FetchManuscriptVersionsDocument = {
                                           name: {
                                             kind: 'Name',
                                             value: 'inactiveSince',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'linkedFrom',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value:
+                                                    'projectMembershipCollection',
+                                                },
+                                                arguments: [
+                                                  {
+                                                    kind: 'Argument',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'limit',
+                                                    },
+                                                    value: {
+                                                      kind: 'IntValue',
+                                                      value: '1',
+                                                    },
+                                                  },
+                                                ],
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'items',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'linkedFrom',
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'projectsCollection',
+                                                                  },
+                                                                  arguments: [
+                                                                    {
+                                                                      kind: 'Argument',
+                                                                      name: {
+                                                                        kind: 'Name',
+                                                                        value:
+                                                                          'limit',
+                                                                      },
+                                                                      value: {
+                                                                        kind: 'IntValue',
+                                                                        value:
+                                                                          '1',
+                                                                      },
+                                                                    },
+                                                                  ],
+                                                                  selectionSet:
+                                                                    {
+                                                                      kind: 'SelectionSet',
+                                                                      selections:
+                                                                        [
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'items',
+                                                                            },
+                                                                            selectionSet:
+                                                                              {
+                                                                                kind: 'SelectionSet',
+                                                                                selections:
+                                                                                  [
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'sys',
+                                                                                      },
+                                                                                      selectionSet:
+                                                                                        {
+                                                                                          kind: 'SelectionSet',
+                                                                                          selections:
+                                                                                            [
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'id',
+                                                                                                },
+                                                                                              },
+                                                                                            ],
+                                                                                        },
+                                                                                    },
+                                                                                    {
+                                                                                      kind: 'Field',
+                                                                                      name: {
+                                                                                        kind: 'Name',
+                                                                                        value:
+                                                                                          'projectType',
+                                                                                      },
+                                                                                    },
+                                                                                  ],
+                                                                              },
+                                                                          },
+                                                                        ],
+                                                                    },
+                                                                },
+                                                              ],
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
                                           },
                                         },
                                       ],
@@ -73062,6 +73824,83 @@ export const FetchUserByIdForAlgoliaListDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'role' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'awardsCollection' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'limit' },
+                                  value: { kind: 'IntValue', value: '20' },
+                                },
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'order' },
+                                  value: {
+                                    kind: 'ListValue',
+                                    values: [
+                                      { kind: 'EnumValue', value: 'date_DESC' },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'items' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'date' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'awardType',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'name',
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'icon',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'url',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },

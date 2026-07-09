@@ -347,6 +347,7 @@ const mapTeams = (items: (TeamItem | null)[]) =>
               id: projectItem.sys.id,
               title: projectItem.title || '',
               projectType: projectItem.projectType as ProjectType,
+              projectId: projectItem.projectId || '',
             }
           : undefined,
       };
@@ -492,7 +493,7 @@ export const parseGraphQLResearchOutput = (
       isSharingStatus(researchOutputs.sharingStatus)
         ? researchOutputs.sharingStatus
         : 'Network Only',
-    publishingEntity: researchOutputs.workingGroup ? 'Working Group' : 'Team',
+    publishingEntity: getPublishingEntity(researchOutputs),
     workingGroups: researchOutputs.workingGroup
       ? [
           {
@@ -506,6 +507,7 @@ export const parseGraphQLResearchOutput = (
           id: researchOutputs.project.sys.id,
           title: researchOutputs.project.title || '',
           projectType: researchOutputs.project.projectType as ProjectType,
+          projectId: researchOutputs.project.projectId || '',
         }
       : undefined,
     authors:
@@ -686,4 +688,10 @@ const prepareInputForUpdate = (input: ResearchOutputUpdateDataObject) => {
       ? getLinkEntity(_statusChangedById)
       : null,
   };
+};
+
+const getPublishingEntity = (researchOutputs: ResearchOutputItem) => {
+  if (researchOutputs.workingGroup) return 'Working Group';
+  if (researchOutputs.project) return 'Project';
+  return 'Team';
 };

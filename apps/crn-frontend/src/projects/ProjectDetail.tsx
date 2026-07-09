@@ -55,7 +55,6 @@ const ProjectOutputCountsLoader: FC<ProjectOutputCountsProps> = ({
   const listScope = getProjectResearchOutputListScope({ projectId, teamId });
   const listOptions = {
     searchQuery: '',
-    filters: new Set<string>(),
     currentPage: 0,
     pageSize: 10,
     ...listScope,
@@ -346,6 +345,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                                 <ProjectOutputs
                                   projectId={projectId}
                                   teamId={outputsTeamId}
+                                  projectTitle={projectDetail.title}
                                   userAssociationMember={isMemberOrStaff}
                                   hasOutputs={(publishedOutputsCount ?? 0) > 0}
                                 />
@@ -362,6 +362,7 @@ const ProjectDetail: FC<Props> = ({ config }) => {
                               <Frame title="Project Draft Outputs">
                                 <ProjectOutputs
                                   projectId={projectId}
+                                  projectTitle={projectDetail.title}
                                   teamId={outputsTeamId}
                                   draftOutputs
                                   userAssociationMember={isMemberOrStaff}

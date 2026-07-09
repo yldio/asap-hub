@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { StaticRouter } from 'react-router';
+import { MemoryRouter, StaticRouter } from 'react-router';
 
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -8,6 +8,15 @@ import { UserProfileContext } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 
 import UserProfileHeader from '../UserProfileHeader';
+
+const mockIsEnabled = jest.fn();
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+beforeEach(() => {
+  mockIsEnabled.mockReturnValue(true);
+});
 
 const boilerplateProps: ComponentProps<typeof UserProfileHeader> = {
   ...createUserResponse(),
@@ -302,4 +311,92 @@ it('displays number of past events', () => {
     </StaticRouter>,
   );
   expect(screen.queryByText('Past Events (9)')).toBeInTheDocument();
+});
+
+describe('award badge', () => {
+  const teamsWithAwards = [
+    {
+      id: 'team-1',
+      displayName: 'Team 1',
+      role: 'Project Manager' as const,
+      awards: [
+        { name: 'Open Science Champion', date: '2023-01-01', iconUrl: 'old' },
+        { name: 'Open Science Champion', date: '2024-01-01', iconUrl: 'new' },
+      ],
+    },
+  ];
+
+  it('shows the latest award badge linking to the badges section', () => {
+    render(
+      <StaticRouter location="/">
+        <UserProfileHeader
+          {...boilerplateProps}
+          id="u1"
+          teams={teamsWithAwards}
+        />
+      </StaticRouter>,
+    );
+
+    const badgeLink = screen.getByRole('link', {
+      name: /open science champion badge/i,
+    });
+    expect(badgeLink.getAttribute('href')).toContain('#badges');
+    expect(badgeLink.querySelector('img')).toHaveAttribute('src', 'new');
+  });
+
+  it('scrolls to the badges section on each click, not just the first', async () => {
+    const scrollIntoView = jest.fn();
+    const badgesSection = document.createElement('div');
+    badgesSection.id = 'badges';
+    badgesSection.scrollIntoView = scrollIntoView;
+    document.body.appendChild(badgesSection);
+
+    render(
+      <MemoryRouter>
+        <UserProfileHeader
+          {...boilerplateProps}
+          id="u1"
+          teams={teamsWithAwards}
+        />
+      </MemoryRouter>,
+    );
+
+    const badgeLink = screen.getByRole('link', {
+      name: /open science champion badge/i,
+    });
+    await userEvent.click(badgeLink);
+    await userEvent.click(badgeLink);
+    expect(scrollIntoView).toHaveBeenCalledTimes(2);
+
+    badgesSection.remove();
+  });
+
+  it('shows no award badge when the user has none', () => {
+    render(
+      <StaticRouter location="/">
+        <UserProfileHeader {...boilerplateProps} teams={[]} />
+      </StaticRouter>,
+    );
+
+    expect(
+      screen.queryByRole('link', { name: /badge/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('hides the award badge when STAGING_MODE is disabled', () => {
+    mockIsEnabled.mockReturnValue(false);
+    render(
+      <StaticRouter location="/">
+        <UserProfileHeader
+          {...boilerplateProps}
+          id="u1"
+          teams={teamsWithAwards}
+        />
+      </StaticRouter>,
+    );
+
+    expect(
+      screen.queryByRole('link', { name: /badge/i }),
+    ).not.toBeInTheDocument();
+  });
 });

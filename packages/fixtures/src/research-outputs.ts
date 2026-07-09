@@ -52,6 +52,7 @@ const researchOutputResponse: Omit<
   ],
   relatedResearch: [],
   sharingStatus: 'Public',
+  publishDate: '2020-12-10T20:36:54.000Z',
   contactEmails: [],
   labs: [],
   methods: ['Activity Assay', 'RNA Single Cell'],

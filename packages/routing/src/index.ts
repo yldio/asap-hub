@@ -5,6 +5,7 @@ import * as gp2 from './gp2';
 
 export { default as about } from './about';
 export { default as analytics } from './analytics';
+export { default as compliance } from './compliance';
 export { default as discover } from './discover';
 export { default as events } from './events';
 export { default as logout } from './logout';

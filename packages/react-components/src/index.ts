@@ -300,6 +300,7 @@ export {
   LoadingContentBodyTable,
   LoadingContentHeader,
   ManuscriptOutputSelection,
+  ManuscriptWorkspaceUnavailablePage,
   NetworkInterestGroups,
   NetworkPage,
   NetworkPeople,

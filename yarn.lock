@@ -1773,6 +1773,7 @@ __metadata:
     "@asap-hub/flags": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/validation": "workspace:*"
+    "@auth0/auth0-spa-js": "npm:1.22.6"
     "@babel/core": "npm:7.28.6"
     "@babel/preset-react": "npm:7.28.5"
     "@babel/runtime-corejs3": "npm:7.28.6"
@@ -1784,9 +1785,11 @@ __metadata:
     core-js: "npm:3.34.0"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
+    react-router: "npm:7.13.0"
     react-test-renderer: "npm:18.3.1"
   peerDependencies:
     react: ^18.3.0
+    react-router: 7.13.0
   languageName: unknown
   linkType: soft
 

@@ -1,14 +1,24 @@
-import { UserResponse } from '@asap-hub/model';
-import { UserProfileContext } from '@asap-hub/react-context';
+import { getLatestUserAward, UserResponse } from '@asap-hub/model';
+import { UserProfileContext, useFlags } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 import { css, keyframes } from '@emotion/react';
-import { useContext } from 'react';
-import { Avatar, Display, Link, TabLink, StateTag, CopyButton } from '../atoms';
+import { useCallback, useContext } from 'react';
+import {
+  Anchor,
+  Avatar,
+  Display,
+  Link,
+  TabLink,
+  StateTag,
+  CopyButton,
+} from '../atoms';
 import { paper, tin } from '../colors';
 import { editIcon, uploadIcon, alumniBadgeIcon } from '../icons';
 import { createMailTo } from '../mail';
 import { SocialIcons, TabNav, UserProfilePersonalText } from '../molecules';
+import { badgeImageStyles } from '../molecules/AvatarWithBadge';
 import { Toast } from '../organisms';
+import { badgesAnchorId } from '../organisms/UserProfileBadges';
 import {
   largeDesktopScreen,
   mobileScreen,
@@ -113,6 +123,8 @@ const avatarSize = 90;
 const avatarContainer = css({
   gridArea: 'avatar',
   position: 'relative',
+  // keep the badge's z-index scoped here so it can't float over the nav drawer
+  isolation: 'isolate',
   width: rem(avatarSize),
   height: rem(avatarSize),
   justifySelf: 'start',
@@ -167,6 +179,18 @@ const spinnerStyles = css({
   borderTopColor: paper.rgb,
   borderRadius: '50%',
   animation: `${spin} 1s linear infinite`,
+});
+const badgeSize = 48;
+const badgeStyles = css({
+  position: 'absolute',
+  right: rem(-10),
+  bottom: rem(-8),
+  display: 'inline-flex',
+  width: rem(badgeSize),
+  height: rem(badgeSize),
+  // above the hover/upload and saving overlays; scoped by the container's
+  // isolate so it does not escape over page-level layers like the nav drawer
+  zIndex: 1,
 });
 
 type UserProfileHeaderProps = Pick<
@@ -245,6 +269,20 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
 }) => {
   const tabRoutes = network({}).users({}).user({ userId: id });
   const { isOwnProfile } = useContext(UserProfileContext);
+  const { isEnabled } = useFlags();
+  const latestAward = isEnabled('STAGING_MODE')
+    ? getLatestUserAward(teams)
+    : undefined;
+
+  const scrollHandler = useCallback(() => {
+    // scroll imperatively too: re-clicking when the hash is
+    // already #badges is a no-op for the router, so the
+    // hash-based scroll would not fire on the second click
+    document.getElementById(badgesAnchorId)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }, []);
 
   return (
     <>
@@ -332,6 +370,21 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                   lastName={lastName}
                   overrideStyles={avatarStyles}
                 />
+                {latestAward?.iconUrl && (
+                  <span css={badgeStyles}>
+                    <Anchor
+                      href={`${tabRoutes.research({}).$}#${badgesAnchorId}`}
+                      aria-label={`${latestAward.name} badge`}
+                      onClick={scrollHandler}
+                    >
+                      <img
+                        css={badgeImageStyles}
+                        src={latestAward.iconUrl}
+                        alt=""
+                      />
+                    </Anchor>
+                  </span>
+                )}
                 {onImageSelect &&
                   (avatarSaving ? (
                     <div css={savingOverlayStyles}>
@@ -347,7 +400,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                       {uploadIcon}
                       <input
                         type="file"
-                        accept="image/x-png,image/jpeg"
+                        accept="image/png,image/jpeg"
                         aria-label="Upload Avatar"
                         onChange={(event) =>
                           event.target.files?.length &&

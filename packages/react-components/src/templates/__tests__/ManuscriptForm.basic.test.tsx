@@ -673,12 +673,124 @@ describe('Manuscript form', () => {
     await userEvent.click(lifecycleCombobox);
     await userEvent.type(lifecycleCombobox, 'Preprint{enter}');
 
-    expect(await findByLabelText(/Date first made public/i)).toBeDisabled();
+    expect(
+      await findByLabelText(/version 1 of this manuscript/i),
+    ).toBeDisabled();
     expect(
       getByText(
-        'The date this manuscript was first shared publicly. Set on a previous version and cannot be edited.',
+        'The date that version 1 of this manuscript was originally uploaded as a preprint to a repository. This date cannot be edited.',
       ),
     ).toBeInTheDocument();
+  });
+
+  it('should disable publicationDate field if user is resubmitting and publicationDate has already been provided', async () => {
+    const { findByLabelText, getByText } = await renderManuscriptForm({
+      ...defaultProps,
+      publicationDate: '2022-01-03T00:00:00.000Z',
+      resubmitManuscript: true,
+      manuscriptId: 'test-id',
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(await findByLabelText(/Publication Date/i)).toBeDisabled();
+    expect(
+      getByText(
+        'The date that this manuscript was originally published (i.e., not the preprint date). This date cannot be edited.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('disables both date fields in edit mode when they are already populated', async () => {
+    const { findByLabelText } = await renderManuscriptForm({
+      ...defaultProps,
+      preprintDate: '2022-01-03T00:00:00.000Z',
+      publicationDate: '2023-04-05T00:00:00.000Z',
+      manuscriptId: 'test-id',
+      resubmitManuscript: false,
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(
+      await findByLabelText(/version 1 of this manuscript/i),
+    ).toBeDisabled();
+    expect(await findByLabelText(/originally published/i)).toBeDisabled();
+  });
+
+  it('disables the URL field when a url has already been provided', async () => {
+    const { findByRole } = await renderManuscriptForm({
+      ...defaultProps,
+      url: 'https://example.com/existing-manuscript',
+      manuscriptId: 'test-id',
+      resubmitManuscript: false,
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(await findByRole('textbox', { name: /url/i })).toBeDisabled();
+  });
+
+  it('keeps the URL field editable for an open science team member even when a url has already been provided', async () => {
+    const { findByRole } = await renderManuscriptForm({
+      ...defaultProps,
+      url: 'https://example.com/existing-manuscript',
+      manuscriptId: 'test-id',
+      resubmitManuscript: false,
+      isOpenScienceTeamMember: true,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(await findByRole('textbox', { name: /url/i })).toBeEnabled();
+  });
+
+  it('enables the URL field when no url has been provided yet', async () => {
+    const { findByRole } = await renderManuscriptForm({
+      ...defaultProps,
+      url: undefined,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(await findByRole('textbox', { name: /url/i })).toBeEnabled();
+  });
+
+  it('keeps the preprint date visible and locked when a manuscript moves to publication', async () => {
+    const { findByLabelText, queryByLabelText } = await renderManuscriptForm({
+      ...defaultProps,
+      preprintDate: '2022-01-03T00:00:00.000Z',
+      publicationDate: undefined,
+      manuscriptId: 'test-id',
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Publication',
+    });
+
+    expect(
+      await findByLabelText(/version 1 of this manuscript/i),
+    ).toBeDisabled();
+    expect(queryByLabelText(/originally published/i)).toBeEnabled();
+  });
+
+  it('shows only the preprint date for a manuscript still in the preprint lifecycle', async () => {
+    const { findByLabelText, queryByLabelText } = await renderManuscriptForm({
+      ...defaultProps,
+      preprintDate: '2022-01-03T00:00:00.000Z',
+      publicationDate: undefined,
+      manuscriptId: 'test-id',
+      isOpenScienceTeamMember: false,
+      type: 'Original Research',
+      lifecycle: 'Preprint',
+    });
+
+    expect(
+      await findByLabelText(/version 1 of this manuscript/i),
+    ).toBeVisible();
+    expect(queryByLabelText(/originally published/i)).not.toBeInTheDocument();
   });
 
   it('should default to false for isOpenScienceTeamMember if not provided', async () => {

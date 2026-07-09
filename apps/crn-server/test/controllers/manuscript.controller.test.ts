@@ -24,6 +24,7 @@ import {
   getManuscriptUpdateAPCCoverageDataObject,
 } from '../fixtures/manuscript.fixtures';
 import { getResearchOutputDataObject } from '../fixtures/research-output.fixtures';
+import { getUserResponse } from '../fixtures/users.fixtures';
 import { getDataProviderMock } from '../mocks/data-provider.mock';
 import { manuscriptDataProviderMock as manuscriptDataProviderContentfulMock } from '../mocks/manuscript.data-provider.mock';
 
@@ -87,6 +88,149 @@ describe('Manuscript controller', () => {
         'missing-id',
         'user-id-1',
       );
+    });
+  });
+
+  describe('Fetch workspace URL method', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      manuscriptDataProviderMock.fetchById.mockReset();
+    });
+
+    test('Should throw when the manuscript is not found', async () => {
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(null);
+
+      await expect(
+        manuscriptController.fetchWorkspaceUrl('not-found', getUserResponse()),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('Should throw when the manuscript has no versions', async () => {
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
+        getManuscriptDataObject({ versions: [] }),
+      );
+
+      await expect(
+        manuscriptController.fetchWorkspaceUrl(
+          'manuscript-id-1',
+          getUserResponse(),
+        ),
+      ).rejects.toThrow(NotFoundError);
+    });
+
+    test('Should throw when the user does not have access to the manuscript workspace', async () => {
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
+        getManuscriptDataObject(),
+      );
+
+      await expect(
+        manuscriptController.fetchWorkspaceUrl(
+          'manuscript-id-1',
+          getUserResponse(),
+        ),
+      ).rejects.toThrow(
+        Boom.forbidden('You do not have access to this manuscript workspace'),
+      );
+    });
+
+    test('Should return the workspace URL when the user belongs to the submitting team', async () => {
+      const user = {
+        ...getUserResponse(),
+        teams: [{ ...getUserResponse().teams[0]!, id: 'team-1' }],
+      };
+
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
+        getManuscriptDataObject(),
+      );
+
+      const result = await manuscriptController.fetchWorkspaceUrl(
+        'manuscript-id-1',
+        user,
+      );
+
+      expect(result).toEqual({
+        url: '/network/teams/team-1/workspace#manuscript-id-1',
+      });
+      expect(manuscriptDataProviderMock.fetchById).toHaveBeenCalledWith(
+        'manuscript-id-1',
+        'user-id-1',
+      );
+    });
+
+    test('Should return the workspace URL for open science team members', async () => {
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
+        getManuscriptDataObject(),
+      );
+
+      const result = await manuscriptController.fetchWorkspaceUrl(
+        'manuscript-id-1',
+        {
+          ...getUserResponse(),
+          openScienceTeamMember: true,
+          teams: [],
+        },
+      );
+
+      expect(result).toEqual({
+        url: '/network/teams/team-1/workspace#manuscript-id-1',
+      });
+    });
+
+    test('Should include the discussions tab in the workspace URL when requested', async () => {
+      const user = {
+        ...getUserResponse(),
+        teams: [{ ...getUserResponse().teams[0]!, id: 'team-1' }],
+      };
+
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(
+        getManuscriptDataObject(),
+      );
+
+      const result = await manuscriptController.fetchWorkspaceUrl(
+        'manuscript-id-1',
+        user,
+        'discussions',
+      );
+
+      expect(result).toEqual({
+        url: '/network/teams/team-1/workspace?tab=discussions#manuscript-id-1',
+      });
+    });
+
+    test('Should return the project workspace URL when projectWorkspaceEnabled is true', async () => {
+      const user = {
+        ...getUserResponse(),
+        teams: [{ ...getUserResponse().teams[0]!, id: 'team-1' }],
+      };
+      const baseManuscript = getManuscriptDataObject();
+      const manuscript = getManuscriptDataObject({
+        versions: [
+          {
+            ...baseManuscript.versions[0]!,
+            teams: [
+              {
+                id: 'team-1',
+                displayName: 'Test 1',
+                projectId: 'project-alpha',
+                projectType: 'Resource Project',
+              },
+            ],
+          },
+        ],
+      });
+
+      manuscriptDataProviderMock.fetchById.mockResolvedValueOnce(manuscript);
+
+      const result = await manuscriptController.fetchWorkspaceUrl(
+        'manuscript-id-1',
+        user,
+        undefined,
+        true,
+      );
+
+      expect(result).toEqual({
+        url: '/projects/resource/project-alpha/workspace#manuscript-id-1',
+      });
     });
   });
 

@@ -14,6 +14,7 @@ import {
   TeamRole,
   UserDataObject,
   UserListItemDataObject,
+  UserAward,
   UserListItemTeam,
   UserProjectMembership,
   UserSocialLinks,
@@ -753,12 +754,17 @@ export const parseContentfulGraphQlUserListItem = (
         return userListItemTeams;
       }
 
+      const awards = parseAwardsCollection(
+        teamItem as TeamMembershipWithAwards,
+      );
+
       return [
         ...userListItemTeams,
         {
           id: teamItem?.team?.sys.id || '',
           displayName: teamItem?.team?.displayName || '',
           role: teamItem?.role,
+          ...(awards.length ? { awards } : {}),
         },
       ];
     },
@@ -861,6 +867,42 @@ export const parseLabsCollection = (
     [],
   );
 
+// Minimal awardsCollection shape shared by the three team-membership query
+// results (detail, list, algolia). Declared locally so the one parser can
+// accept all three without coupling to a single codegen query type.
+type TeamMembershipWithAwards = {
+  awardsCollection?: {
+    items: ({
+      date?: string | null;
+      awardType?: {
+        name?: string | null;
+        icon?: { url?: string | null } | null;
+      } | null;
+    } | null)[];
+  } | null;
+};
+
+export const parseAwardsCollection = (
+  team: TeamMembershipWithAwards,
+): UserAward[] =>
+  cleanArray(team.awardsCollection?.items).reduce(
+    (awards: UserAward[], award): UserAward[] => {
+      const name = award.awardType?.name;
+      if (!name || !award.date) {
+        return awards;
+      }
+      return [
+        ...awards,
+        {
+          name,
+          date: award.date,
+          iconUrl: award.awardType?.icon?.url ?? undefined,
+        },
+      ];
+    },
+    [],
+  );
+
 export const parseTeamsCollection = (
   teamsCollection: TeamsCollection,
 ): UserTeam[] =>
@@ -880,6 +922,8 @@ export const parseTeamsCollection = (
         team.team?.linkedFrom?.projectMembershipCollection?.items[0]?.linkedFrom
           ?.projectsCollection?.items[0];
 
+      const awards = parseAwardsCollection(team as TeamMembershipWithAwards);
+
       return [
         ...userTeams,
         {
@@ -889,6 +933,7 @@ export const parseTeamsCollection = (
           id: team.team?.sys.id || '',
           teamInactiveSince: team.team?.inactiveSince || '',
           proposal: project?.proposal ? project.proposal.sys.id : undefined,
+          ...(awards.length ? { awards } : {}),
         },
       ];
     },

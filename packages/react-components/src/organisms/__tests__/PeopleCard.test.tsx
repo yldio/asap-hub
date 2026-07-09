@@ -4,6 +4,15 @@ import { createUserListItemResponse } from '@asap-hub/fixtures';
 
 import PeopleCard from '../PeopleCard';
 
+const mockIsEnabled = jest.fn();
+jest.mock('@asap-hub/react-context', () => ({
+  ...jest.requireActual('@asap-hub/react-context'),
+  useFlags: () => ({ isEnabled: mockIsEnabled }),
+}));
+beforeEach(() => {
+  mockIsEnabled.mockReturnValue(true);
+});
+
 const props: ComponentProps<typeof PeopleCard> = createUserListItemResponse();
 
 it('renders the display name', () => {
@@ -65,5 +74,63 @@ describe('alumni badge', () => {
 
     expect(screen.queryByText('Alumni')).not.toBeInTheDocument();
     expect(screen.queryByTitle('Alumni Member')).not.toBeInTheDocument();
+  });
+});
+
+describe('award badge', () => {
+  const teamWithAwards = [
+    {
+      id: 'team-1',
+      displayName: 'Team 1',
+      role: 'Project Manager' as const,
+      awards: [
+        { name: 'Open Science Champion', date: '2023-01-01', iconUrl: 'old' },
+        { name: 'Open Science Champion', date: '2024-01-01', iconUrl: 'new' },
+      ],
+    },
+  ];
+
+  it('overlays the most recent award badge on the avatar', () => {
+    render(<PeopleCard {...props} teams={teamWithAwards} />);
+
+    const badge = screen.getByAltText('Open Science Champion');
+    expect(badge).toHaveAttribute('src', 'new');
+  });
+
+  it('does not render an award badge when the user has none', () => {
+    render(
+      <PeopleCard {...props} teams={[{ ...teamWithAwards[0]!, awards: [] }]} />,
+    );
+
+    expect(
+      screen.queryByAltText('Open Science Champion'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not render an award badge when the latest award has no icon', () => {
+    render(
+      <PeopleCard
+        {...props}
+        teams={[
+          {
+            ...teamWithAwards[0]!,
+            awards: [{ name: 'Open Science Champion', date: '2024-01-01' }],
+          },
+        ]}
+      />,
+    );
+
+    expect(
+      screen.queryByAltText('Open Science Champion'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not render an award badge when STAGING_MODE is disabled', () => {
+    mockIsEnabled.mockReturnValue(false);
+    render(<PeopleCard {...props} teams={teamWithAwards} />);
+
+    expect(
+      screen.queryByAltText('Open Science Champion'),
+    ).not.toBeInTheDocument();
   });
 });

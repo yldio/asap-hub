@@ -57,6 +57,7 @@ export const Learn = () => components.learnIcon;
 export const Link = () => components.linkIcon;
 export const LinkedIn = () => <components.LinkedInIcon />;
 export const ListView = () => components.listViewIcon;
+export const Live = () => components.liveIcon;
 export const Location = () => components.locationIcon;
 export const Logout = () => components.logoutIcon;
 export const Menu = () => components.menuIcon;

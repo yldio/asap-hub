@@ -53,6 +53,7 @@ const materialListStyles = css({
   flexDirection: 'row',
   flexWrap: 'wrap',
   columnGap: rem(8),
+  rowGap: rem(4),
 
   a: {
     color: 'inherit',

@@ -51,7 +51,6 @@ export { default as editIcon } from './edit';
 export { default as EngagementIcon } from './engagement';
 export { default as errorIcon } from './error';
 export { default as EventIcon } from './event';
-export { default as eventPlaceholderIcon } from './event-placeholder';
 export { default as ExportIcon } from './export';
 export { default as ExternalLinkIcon } from './external-link';
 export { default as feedbackIcon } from './feedback';

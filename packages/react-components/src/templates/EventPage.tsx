@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { ComponentProps, ReactNode, useEffect } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
 import { BasicEvent, EventResponse, gp2 } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
@@ -17,6 +17,7 @@ import {
   RelatedTutorialsCard,
 } from '../organisms';
 import { createMailTo, TECH_SUPPORT_EMAIL } from '../mail';
+import { useScrollToHash } from '../routing';
 
 const cardsStyles = css({
   display: 'grid',
@@ -86,16 +87,7 @@ const EventPage = <
   tableTitles,
   ...props
 }: EventPageProps<T>) => {
-  useEffect(() => {
-    const { hash } = window.location;
-    if (!hash) return undefined;
-    const timeout = window.setTimeout(() => {
-      document
-        .getElementById(hash.substring(1))
-        ?.scrollIntoView({ behavior: 'smooth' });
-    });
-    return () => window.clearTimeout(timeout);
-  }, []);
+  useScrollToHash();
 
   return (
     <div css={({ components }) => [components?.EventPage?.containerStyles]}>

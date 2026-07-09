@@ -1,6 +1,12 @@
-import { ComponentProps } from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { ComponentProps, ReactElement, ReactNode } from 'react';
+import {
+  render as baseRender,
+  RenderResult,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
 import { addDays, formatISO, subDays, subYears } from 'date-fns';
 import {
   createCalendarResponse,
@@ -8,6 +14,17 @@ import {
 } from '@asap-hub/fixtures';
 
 import EventPage from '../EventPage';
+
+const render = (ui: ReactElement, initialEntry = '/'): RenderResult => {
+  const wrap = (element: ReactNode) => (
+    <MemoryRouter initialEntries={[initialEntry]}>{element}</MemoryRouter>
+  );
+  const result = baseRender(wrap(ui));
+  return {
+    ...result,
+    rerender: (element: ReactNode) => result.rerender(wrap(element)),
+  };
+};
 
 const props: ComponentProps<typeof EventPage> = {
   ...createEventResponse(),
@@ -216,18 +233,24 @@ describe('footer', () => {
 });
 
 it('scrolls to the material section referenced by the url hash', async () => {
-  const scrollIntoView = jest.fn();
-  Element.prototype.scrollIntoView = scrollIntoView;
-  window.history.replaceState(null, '', '/#event-notes');
-
-  render(
+  const { container } = render(
     <EventPage
       {...props}
       notes="My notes"
       endDate={subDays(new Date(), 2).toISOString()}
     />,
+    '/events/event-0#event-notes',
   );
 
-  await waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
-  window.history.replaceState(null, '', '/');
+  const scrollIntoView = jest.fn();
+  Object.assign(container.querySelector('#event-notes')!, { scrollIntoView });
+
+  await waitFor(
+    () =>
+      expect(scrollIntoView).toHaveBeenCalledWith({
+        behavior: 'smooth',
+        block: 'start',
+      }),
+    { timeout: 200 },
+  );
 });

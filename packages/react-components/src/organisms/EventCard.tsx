@@ -162,18 +162,6 @@ const EventCard: React.FC<EventCardProps> = ({
           ),
         };
       }
-      if (eventMaterialTypes.every((value) => props[value] === null)) {
-        return {
-          type: 'attachment',
-          accent: 'neutral200',
-          toastContent: 'No meeting materials available',
-        };
-      }
-      return {
-        type: 'attachment',
-        accent: 'neutral200',
-        toastContent: 'Meeting materials coming soon…',
-      };
     }
     return {};
   };

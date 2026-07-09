@@ -125,7 +125,7 @@ describe('past events', () => {
     expect(screen.getByTitle(/warning/i)).toBeInTheDocument();
     expect(screen.getByText(/cancelled/i)).toBeVisible();
   });
-  it('toasts meeting materials coming soon', () => {
+  it('does not display a toast while materials are still pending', () => {
     render(
       <EventCard
         {...props}
@@ -139,8 +139,7 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByText(/coming soon/i)).toBeVisible();
-    expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
+    expect(screen.queryByTitle(/paper/i)).not.toBeInTheDocument();
   });
   it('toasts the names of the available materials', () => {
     render(
@@ -204,7 +203,7 @@ describe('past events', () => {
     );
   });
 
-  it('toasts no materials are available', () => {
+  it('does not display a toast when no materials are available', () => {
     render(
       <EventCard
         {...props}
@@ -218,8 +217,7 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByText(/no meeting materials/i)).toBeVisible();
-    expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
+    expect(screen.queryByTitle(/paper/i)).not.toBeInTheDocument();
   });
 
   it("doesn't display toast if none of the conditions are match", () => {

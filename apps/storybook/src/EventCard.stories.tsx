@@ -13,12 +13,28 @@ export default {
   decorators: [CenterDecorator],
 };
 
+const teamNames = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta'];
+const namedTeam = <T extends { id: string; displayName: string }>(
+  team: T,
+): T => ({
+  ...team,
+  displayName:
+    teamNames[Number(team.id.split('-').pop()) % teamNames.length] ??
+    team.displayName,
+});
+
 const cardProps = (
   overrides: Partial<EventResponse> = {},
   fixtureOptions: Parameters<typeof createEventResponse>[0] = {},
-): ComponentProps<typeof EventCard> =>
-  eventMapper({
-    ...createEventResponse(fixtureOptions),
+): ComponentProps<typeof EventCard> => {
+  const event = createEventResponse(fixtureOptions);
+  return eventMapper({
+    ...event,
+    speakers: event.speakers.map((speaker) =>
+      'team' in speaker
+        ? { ...speaker, team: namedTeam(speaker.team) }
+        : speaker,
+    ),
     tags: [
       { id: 't1', name: 'Neurological Diseases' },
       { id: 't2', name: 'Clinical Neurology' },
@@ -29,6 +45,7 @@ const cardProps = (
     ],
     ...overrides,
   });
+};
 
 const meetingMaterialOptions = ['Yes', 'No', 'Coming Soon'];
 const meetingMaterialValue = (option: string) =>
@@ -168,25 +185,14 @@ export const WithInactiveTeams = () => (
 export const PastWithMaterials = () => (
   <EventCard {...cardProps(past, { meetingMaterials: 3 })} />
 );
-export const PastMaterialsComingSoon = () => (
+export const PastWithSomeMaterials = () => (
   <EventCard
     {...cardProps({
       ...past,
       notes: undefined,
-      videoRecording: undefined,
-      presentation: undefined,
+      videoRecording: 'recording',
+      presentation: 'presentation',
       meetingMaterials: [],
-    })}
-  />
-);
-export const PastNoMaterials = () => (
-  <EventCard
-    {...cardProps({
-      ...past,
-      notes: null,
-      videoRecording: null,
-      presentation: null,
-      meetingMaterials: null,
     })}
   />
 );

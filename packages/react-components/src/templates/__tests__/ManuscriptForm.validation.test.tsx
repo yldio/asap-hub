@@ -817,6 +817,69 @@ describe('ManuscriptForm labs validation on the submit journey', () => {
     });
   });
 
+  it('blocks submission when a selected lab PI team is not among the selected teams', async () => {
+    const onCreate = jest.fn(() => Promise.resolve());
+    const onInvalid = jest.fn();
+    const labPiTeamError =
+      /The following lab\(s\) do not list their corresponding PI’s team as a contributor\./;
+
+    render(
+      <StaticRouter location="/">
+        <Suspense fallback={<div>Loading...</div>}>
+          <ManuscriptForm
+            {...defaultProps}
+            onCreate={onCreate}
+            onInvalid={onInvalid}
+            title="manuscript title"
+            type="Original Research"
+            lifecycle="Draft Manuscript (prior to Publication)"
+            manuscriptFile={{
+              id: '123',
+              filename: 'test.pdf',
+              url: 'http://example.com/test.pdf',
+            }}
+            keyResourceTable={{
+              id: '124',
+              filename: 'test.csv',
+              url: 'http://example.com/test.csv',
+            }}
+            shortDescription="A good short description"
+            layImpactStatement="manuscript impact statement"
+            firstAuthors={[
+              {
+                label: 'Author 1',
+                value: 'author-1',
+                id: 'author-1',
+                displayName: 'Author 1',
+              } as AuthorResponse & AuthorSelectOption,
+            ]}
+          />
+        </Suspense>
+      </StaticRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+    });
+
+    // Lab One's PI team is 'team-a', which is NOT among the selected teams
+    // (the fixed default team has value '1'), so submission must be blocked.
+    // Select the lab and click Submit without blurring the field first.
+    await userEvent.click(screen.getByRole('combobox', { name: /Labs/i }));
+    await userEvent.click(await screen.findByText('Lab One'));
+
+    await userEvent.click(screen.getByRole('button', { name: /Submit/ }));
+
+    expect(await screen.findByText(labPiTeamError)).toBeVisible();
+    expect(
+      screen.queryByRole('button', { name: /Submit Manuscript/i }),
+    ).not.toBeInTheDocument();
+    expect(onCreate).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(onInvalid).toHaveBeenCalled();
+    });
+  });
+
   it('keeps the selected labs and teams when the lifecycle changes', async () => {
     const getLabSuggestions = jest
       .fn()

@@ -46787,6 +46787,7 @@ export const ResearchOutputsContentFragmentDoc = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'accession' },
                       },
+                      { kind: 'Field', name: { kind: 'Name', value: 'doi' } },
                     ],
                   },
                 },

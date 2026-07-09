@@ -1,5 +1,10 @@
 import { searchQueryParam } from '@asap-hub/routing';
-import { useNavigate, useLocation, NavigateFunction } from 'react-router';
+import {
+  useNavigate,
+  useLocation,
+  useNavigationType,
+  NavigateFunction,
+} from 'react-router';
 import { useRef, useEffect } from 'react';
 
 const GIVE_UP_AFTER_MS = 10000;
@@ -16,10 +21,22 @@ const isWithinViewport = (rect: DOMRect): boolean =>
 type ScrollPhase = 'awaiting-settle' | 'animating-scroll' | 'holding-position';
 
 export const useScrollToHash = (): void => {
-  const { hash, pathname } = useLocation();
+  const { hash, pathname, state } = useLocation();
+  const navigationType = useNavigationType();
+
+  const scrollRequestedByState =
+    (state as { scrollToHash?: boolean } | null)?.scrollToHash === true;
 
   useEffect(() => {
     if (!hash) {
+      return undefined;
+    }
+
+    // Only scroll when the user actually arrives at this URL by
+    // - opening a deep link (POP)
+    // - following a link (PUSH)
+    // The exception is when it is requested by the state (ManuscriptWorkspaceRedirect)
+    if (navigationType === 'REPLACE' && !scrollRequestedByState) {
       return undefined;
     }
 
@@ -30,11 +47,9 @@ export const useScrollToHash = (): void => {
     let framesUnchanged = 0;
     let firstSeenAt: number | undefined;
     let phase: ScrollPhase = 'awaiting-settle';
-
     const stop = () => {
       window.cancelAnimationFrame(rafId);
     };
-
     const startSmoothScroll = (element: HTMLElement) => {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       phase = 'animating-scroll';
@@ -64,10 +79,13 @@ export const useScrollToHash = (): void => {
           }
         } else if (phase === 'awaiting-settle') {
           const waitedLongEnough = now - firstSeenAt > SCROLL_ANYWAY_AFTER_MS;
+
           if (layoutHasQuieted || waitedLongEnough) {
             startSmoothScroll(element);
           }
         } else if (isMeasurable(rect) && !isWithinViewport(rect)) {
+          // holding-position: late-loading content pushed the target out of
+          // view, so chase it back.
           startSmoothScroll(element);
         } else if (scrollAnimationFinished) {
           return false;
@@ -93,7 +111,7 @@ export const useScrollToHash = (): void => {
     scheduleNextFrame();
 
     return stop;
-  }, [hash, pathname]);
+  }, [hash, pathname, navigationType, scrollRequestedByState]);
 };
 
 export const queryParamString = (searchQuery: string | undefined): string => {

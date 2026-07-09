@@ -458,6 +458,102 @@ describe('useScrollToHash', () => {
     document.body.removeChild(targetElement);
   });
 
+  it('does not scroll when the hash changes via a replace navigation', async () => {
+    navigateToPath = null;
+    const targetElement = createTargetElement();
+
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/page']}>
+        <NavigationHelper />
+        {children}
+      </MemoryRouter>
+    );
+
+    renderHook(() => useScrollToHash(), { wrapper });
+
+    await waitFor(() => {
+      expect(navigateToPath).not.toBeNull();
+    });
+
+    act(() => {
+      void navigateToPath?.('/page#section', { replace: true });
+    });
+
+    // Give the hook time to (not) scroll
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 150);
+    });
+
+    expect(targetElement.scrollIntoView).not.toHaveBeenCalled();
+
+    document.body.removeChild(targetElement);
+  });
+
+  it('scrolls on a replace navigation that requests it via state', async () => {
+    navigateToPath = null;
+    const targetElement = createTargetElement();
+
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/page']}>
+        <NavigationHelper />
+        {children}
+      </MemoryRouter>
+    );
+
+    renderHook(() => useScrollToHash(), { wrapper });
+
+    await waitFor(() => {
+      expect(navigateToPath).not.toBeNull();
+    });
+
+    act(() => {
+      void navigateToPath?.('/page#section', {
+        replace: true,
+        state: { scrollToHash: true },
+      });
+    });
+
+    await waitFor(() => {
+      expect(targetElement.scrollIntoView).toHaveBeenCalledWith({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+
+    document.body.removeChild(targetElement);
+  });
+
+  it('scrolls when navigating to a hash via a push', async () => {
+    navigateToPath = null;
+    const targetElement = createTargetElement();
+
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <MemoryRouter initialEntries={['/page']}>
+        <NavigationHelper />
+        {children}
+      </MemoryRouter>
+    );
+
+    renderHook(() => useScrollToHash(), { wrapper });
+
+    await waitFor(() => {
+      expect(navigateToPath).not.toBeNull();
+    });
+
+    act(() => {
+      void navigateToPath?.('/page#section');
+    });
+
+    await waitFor(() => {
+      expect(targetElement.scrollIntoView).toHaveBeenCalledWith({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+
+    document.body.removeChild(targetElement);
+  });
+
   it('does not throw if element does not exist', async () => {
     // This should not throw even if element doesn't exist
     const { result } = renderScrollToHash('/page#nonexistent');
@@ -513,7 +609,7 @@ describe('useScrollToHash', () => {
       jest.restoreAllMocks();
     });
 
-    it('stops polling once scroll animation has settled in view', () => {
+    it('stops polling once the scroll animation has settled in view', () => {
       const top = 0;
       const targetElement = createTargetElement({
         getBoundingClientRect: jest.fn(
@@ -534,14 +630,17 @@ describe('useScrollToHash', () => {
 
       renderScrollToHash('/page#section');
 
+      // once the layout has been still long enough, it scrolls exactly once
       settleLayout();
-      expect(targetElement.scrollIntoView).toHaveBeenCalled();
+      expect(targetElement.scrollIntoView).toHaveBeenCalledTimes(1);
 
+      // the scroll animation finishes and one more settled frame stops polling
       finishSmoothScroll();
       settleHoldingPosition();
 
       expect(cancelAnimationFrameSpy).toHaveBeenCalled();
       expect(rafCallbacks).toHaveLength(0);
+      expect(targetElement.scrollIntoView).toHaveBeenCalledTimes(1);
 
       document.body.removeChild(targetElement);
     });

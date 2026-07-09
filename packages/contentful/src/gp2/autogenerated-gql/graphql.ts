@@ -16267,7 +16267,10 @@ export type FetchProjectsByUserQuery = {
                         Pick<ProjectsMembersCollection, 'total'> & {
                           items: Array<
                             Maybe<
-                              Pick<ProjectMembership, 'role' | 'inactiveSinceDate'> & {
+                              Pick<
+                                ProjectMembership,
+                                'role' | 'inactiveSinceDate'
+                              > & {
                                 sys: Pick<Sys, 'id'>;
                                 user?: Maybe<
                                   Pick<
@@ -19647,6 +19650,7 @@ export const OutputsContentDataFragmentDoc = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'accessionNumber' },
                       },
+                      { kind: 'Field', name: { kind: 'Name', value: 'doi' } },
                     ],
                   },
                 },

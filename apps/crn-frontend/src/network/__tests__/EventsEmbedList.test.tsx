@@ -1,19 +1,15 @@
 import { createListEventResponse } from '@asap-hub/fixtures';
 import { EventConstraint } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
-import { eventsState } from '../../events/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import Events from '../EventsEmbedList';
 import { refreshTeamState } from '../teams/state';
@@ -46,50 +42,45 @@ const renderEvents = async ({
     : refreshTeamState(constraint.teamId || '');
   render(
     <RecoilRoot
-      initializeState={({ reset, set }) => {
+      initializeState={({ set }) => {
         set(state, Math.random());
-        reset(
-          eventsState({
-            after: '2021-12-28T14:00:00.000Z',
-            searchQuery,
-            filters: new Set<string>(),
-            constraint,
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-          }),
-        );
       }}
     >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                {
-                  pathname: pathName,
-                },
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={pathName}
-                  element={
-                    <Events
-                      constraint={constraint}
-                      currentTime={date}
-                      past={isPast}
-                      noEventsComponent={noEventsComponent}
-                    />
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  {
+                    pathname: pathName,
+                  },
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={pathName}
+                    element={
+                      <Events
+                        constraint={constraint}
+                        currentTime={date}
+                        past={isPast}
+                        noEventsComponent={noEventsComponent}
+                      />
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 const userPath = (userId: string) =>

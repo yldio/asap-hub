@@ -1,5 +1,6 @@
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { Route, Routes, StaticRouter } from 'react-router';
 import { render } from '@testing-library/react';
 import {
@@ -16,7 +17,6 @@ import {
 } from '@asap-hub/crn-frontend/src/auth/test-utils';
 import Event from '../Event';
 import { getEvent } from '../api';
-import { refreshEventState } from '../state';
 
 jest.mock('../api');
 
@@ -33,9 +33,7 @@ beforeEach(() => {
 });
 
 const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <RecoilRoot
-    initializeState={({ set }) => set(refreshEventState(id), Math.random())}
-  >
+  <QueryClientProvider client={createTestQueryClient()}>
     <Auth0Provider user={{}}>
       <WhenReady>
         <Suspense fallback="Loading...">
@@ -50,7 +48,7 @@ const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
         </Suspense>
       </WhenReady>
     </Auth0Provider>
-  </RecoilRoot>
+  </QueryClientProvider>
 );
 
 it('displays the event with given id', async () => {

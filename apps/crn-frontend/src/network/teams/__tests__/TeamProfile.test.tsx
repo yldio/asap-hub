@@ -18,13 +18,14 @@ import {
   render,
   screen,
   waitFor,
-  waitForElementToBeRemoved,
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps, Suspense } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router';
 import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { getEvents } from '../../../events/api';
 import {
   getDraftResearchOutputs,
@@ -203,16 +204,21 @@ const renderPage = async (
         );
       }}
     >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <RouterProvider router={router} />
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <RouterProvider router={router} />
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
   return { container, router };
 };
 

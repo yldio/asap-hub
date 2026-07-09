@@ -1,132 +1,80 @@
 import { User } from '@asap-hub/auth';
-import { GetEventListOptions } from '@asap-hub/frontend-utils';
-import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import {
-  atomFamily,
-  DefaultValue,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from 'recoil';
+  GetEventListOptions,
+  normalizeListOptions,
+} from '@asap-hub/frontend-utils';
+import { EventResponse, ListEventResponse } from '@asap-hub/model';
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { authorizationState } from '../auth/state';
+
+import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
 import { getEvent, getEvents } from './api';
 
-const eventIndexState = atomFamily<
-  | {
-      ids: ReadonlyArray<string>;
-      total: number;
-      algoliaQueryId?: string;
-      algoliaIndexName?: string;
-    }
-  | Error
-  | undefined,
-  GetEventListOptions
->({
-  key: 'eventIndex',
-  default: undefined,
-});
-export const eventsState = selectorFamily<
-  ListEventResponse | Error | undefined,
-  GetEventListOptions
->({
-  key: 'events',
-  get:
-    (options) =>
-    ({ get }) => {
-      const index = get(eventIndexState(options));
-      if (index === undefined || index instanceof Error) return index;
-      const events: EventResponse[] = [];
-      for (const id of index.ids) {
-        const event = get(eventListState(id));
-        if (event === undefined) return undefined;
-        events.push(event);
-      }
-      return {
-        total: index.total,
-        items: events,
-        algoliaIndexName: index.algoliaIndexName,
-        algoliaQueryId: index.algoliaQueryId,
-      };
-    },
-  set:
-    (options) =>
-    ({ get, set, reset }, newEvents) => {
-      if (newEvents === undefined || newEvents instanceof DefaultValue) {
-        reset(eventIndexState(options));
-      } else if (newEvents instanceof Error) {
-        set(eventIndexState(options), newEvents);
-      } else {
-        newEvents?.items.forEach((event) =>
-          set(eventListState(event.id), event),
-        );
-        set(eventIndexState(options), {
-          total: newEvents.total,
-          ids: newEvents.items.map((event) => event.id),
-          algoliaIndexName: newEvents.algoliaIndexName,
-          algoliaQueryId: newEvents.algoliaQueryId,
-        });
-      }
-    },
-});
-export const refreshEventState = atomFamily<number, string>({
-  key: 'refreshEvent',
-  default: 0,
-});
-const fetchEventState = selectorFamily<EventResponse | undefined, string>({
-  key: 'fetchEvent',
-  get:
-    (id) =>
-    async ({ get }) => {
-      get(refreshEventState(id));
-      const authorization = get(authorizationState);
-      return getEvent(id, authorization);
-    },
-});
-export const eventState = atomFamily<EventResponse | undefined, string>({
-  key: 'event',
-  default: fetchEventState,
-});
-export const eventListState = atomFamily<EventResponse | undefined, string>({
-  key: 'eventList',
-  default: eventState,
-});
+export const eventQueryKeys = {
+  all: ['events'] as const,
+  lists: () => [...eventQueryKeys.all, 'list'] as const,
+  list: (options: GetEventListOptions) =>
+    [...eventQueryKeys.lists(), normalizeListOptions(options)] as const,
+  details: () => [...eventQueryKeys.all, 'detail'] as const,
+  detail: (id: string) => [...eventQueryKeys.details(), id] as const,
+};
 
-export const useEventById = (id: string) => useRecoilValue(eventState(id));
+export const useEventById = (id: string): EventResponse | undefined => {
+  const getAuthorization = useAuthorization();
+  const { data } = useSuspenseQuery({
+    queryKey: eventQueryKeys.detail(id),
+    // getEvent resolves undefined on a 404, but a queryFn must not return
+    // undefined — cache null and map it back below.
+    queryFn: async () => (await getEvent(id, await getAuthorization())) ?? null,
+  });
+  return data ?? undefined;
+};
+
 export const useQuietRefreshEventById = (id: string) => {
-  const authorization = useRecoilValue(authorizationState);
-  const setEvent = useSetRecoilState(eventState(id));
+  const getAuthorization = useAuthorization();
+  const queryClient = useQueryClient();
   return async () => {
-    setEvent(await getEvent(id, authorization));
+    const event = await getEvent(id, await getAuthorization());
+    queryClient.setQueryData(eventQueryKeys.detail(id), event ?? null);
   };
 };
 
 export const usePrefetchEvents = (options: GetEventListOptions) => {
-  const authorization = useRecoilValue(authorizationState);
-  const algoliaClient = useAlgolia();
-  const [events, setEvents] = useRecoilState(eventsState(options));
+  const { client } = useAlgolia();
+  const queryClient = useQueryClient();
 
   useDeepCompareEffect(() => {
-    if (events === undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      getEvents(algoliaClient.client, options).then(setEvents).catch();
-    }
-  }, [authorization, events, options, setEvents]);
+    // prefetchQuery is a no-op when the key is already cached (staleTime
+    // Infinity), mirroring the recoil effect's `if (events === undefined)`.
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    queryClient.prefetchQuery({
+      queryKey: eventQueryKeys.list(options),
+      queryFn: () => getEvents(client, options),
+    });
+  }, [options, client, queryClient]);
 };
 
-export const useEvents = (options: GetEventListOptions, user?: User | null) => {
-  const [events, setEvents] = useRecoilState(eventsState(options));
+export const useEvents = (
+  options: GetEventListOptions,
+  // Kept for signature compatibility with the recoil hook; it was never used.
+  _user?: User | null,
+): ListEventResponse => {
   const { client } = useAlgolia();
-
-  if (events === undefined) {
-    throw getEvents(client, options).then(setEvents).catch(setEvents);
-  }
-
-  if (events instanceof Error) {
-    throw events;
-  }
-
-  return events;
+  return useSuspenseQuery({
+    queryKey: eventQueryKeys.list(options),
+    queryFn: async (): Promise<ListEventResponse> => {
+      try {
+        return await getEvents(client, options);
+      } catch (error) {
+        // Preserved from the recoil hook's `.catch(setEvents)`: an Error
+        // rejection was cached and re-thrown to the error boundary, while a
+        // non-Error rejection was swallowed. Map non-Errors to an empty list.
+        if (error instanceof Error) {
+          throw error;
+        }
+        return { total: 0, items: [] };
+      }
+    },
+  }).data;
 };

@@ -20,6 +20,8 @@ import { join } from 'path';
 import { ContextType, Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { getEvents } from '../../../events/api';
 import { getResearchOutputs } from '../../../shared-research/api';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
@@ -132,31 +134,33 @@ const renderUserProfile = async (
         set(refreshUserState(userResponse.id), Math.random());
       }}
     >
-      <Suspense fallback="loading">
-        <ToastContext.Provider value={mockToast}>
-          <Auth0Provider
-            user={{ id: ownUserId, onboarded }}
-            auth0Overrides={auth0Overrides}
-          >
-            <WhenReady>
-              <MemoryRouter
-                initialEntries={[
-                  network({}).users({}).user({ userId: routeProfileId }).$,
-                ]}
-              >
-                <Routes>
-                  <Route
-                    path={`${network.template}${network({}).users.template}${
-                      network({}).users({}).user.template
-                    }/*`}
-                    element={<UserProfile currentTime={currentTime} />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </ToastContext.Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <ToastContext.Provider value={mockToast}>
+            <Auth0Provider
+              user={{ id: ownUserId, onboarded }}
+              auth0Overrides={auth0Overrides}
+            >
+              <WhenReady>
+                <MemoryRouter
+                  initialEntries={[
+                    network({}).users({}).user({ userId: routeProfileId }).$,
+                  ]}
+                >
+                  <Routes>
+                    <Route
+                      path={`${network.template}${network({}).users.template}${
+                        network({}).users({}).user.template
+                      }/*`}
+                      element={<UserProfile currentTime={currentTime} />}
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </ToastContext.Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
   await waitFor(() =>

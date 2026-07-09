@@ -1,23 +1,33 @@
-import { useRecoilValue, atom, selector, useRecoilValueLoadable } from 'recoil';
 import { ListCalendarResponse } from '@asap-hub/model';
+import {
+  useQuery,
+  UseQueryResult,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
-import { authorizationState } from '@asap-hub/crn-frontend/src/auth/state';
+import { useAuthorization } from '../../auth/useAuthorization';
 import { getCalendars } from './api';
 
-export const refreshCalendarsState = atom({
-  key: 'refreshCalendars',
-  default: 0,
-});
+export const calendarQueryKeys = {
+  all: ['calendars'] as const,
+};
 
-export const calendarsState = selector<ListCalendarResponse>({
-  key: 'calendars',
-  get: async ({ get }) => {
-    get(refreshCalendarsState);
-    const authorization = get(authorizationState);
-    return getCalendars(authorization);
-  },
-});
+// Non-suspending warm-up (was useRecoilValueLoadable(calendarsState) — R6):
+// kicks the fetch off without suspending the caller; useCalendars below picks
+// the cached result up from the same key.
+export const usePrefetchCalendars =
+  (): UseQueryResult<ListCalendarResponse> => {
+    const getAuthorization = useAuthorization();
+    return useQuery({
+      queryKey: calendarQueryKeys.all,
+      queryFn: async () => getCalendars(await getAuthorization()),
+    });
+  };
 
-export const usePrefetchCalendars = () =>
-  useRecoilValueLoadable(calendarsState);
-export const useCalendars = () => useRecoilValue(calendarsState);
+export const useCalendars = (): ListCalendarResponse => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: calendarQueryKeys.all,
+    queryFn: async () => getCalendars(await getAuthorization()),
+  }).data;
+};

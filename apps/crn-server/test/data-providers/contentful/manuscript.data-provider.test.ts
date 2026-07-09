@@ -3,6 +3,7 @@ import {
   Entry,
   Environment,
   FetchManuscriptNotificationDetailsQuery,
+  FETCH_LABS,
   FETCH_MANUSCRIPT_BY_ID,
   FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID,
   FETCH_MANUSCRIPT_VERSIONS,
@@ -101,6 +102,31 @@ const mockFetchManuscriptById = (
             versionsCollection: {
               ...getContentfulGraphqlManuscriptVersions(),
             },
+          },
+        };
+      }
+
+      if (query === (FETCH_LABS as unknown as RequestOptions)) {
+        return {
+          labsCollection: {
+            total: 1,
+            items: [
+              {
+                sys: { id: 'lab-1' },
+                name: 'Lab 1',
+                labPi: {
+                  sys: { id: 'lab-pi-1' },
+                  teamsCollection: {
+                    items: [
+                      {
+                        inactiveSinceDate: null,
+                        team: { sys: { id: 'team-1' }, inactiveSince: null },
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
           },
         };
       }
@@ -1402,6 +1428,30 @@ describe('Manuscripts Contentful Data Provider', () => {
       );
 
       expect(result).toMatchObject(getManuscriptDataObject());
+    });
+
+    test('resolves each lab PI team via a separate labs query', async () => {
+      mockFetchManuscriptById(
+        contentfulGraphqlClientMock,
+        getContentfulGraphqlManuscript(),
+      );
+
+      const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
+
+      // The manuscript version query returns lab-1; its PI teams come from the
+      // flat labs query (mocked to return team-1 for lab-1).
+      expect(contentfulGraphqlClientMock.request).toHaveBeenCalledWith(
+        FETCH_LABS,
+        expect.objectContaining({
+          where: { sys: { id_in: ['lab-1'] } },
+        }),
+      );
+      expect(result!.versions[0]!.labs).toEqual([
+        expect.objectContaining({
+          id: 'lab-1',
+          labPITeamIds: ['team-1'],
+        }),
+      ]);
     });
 
     test('Should prefer the direct manuscript project when building version identifiers', async () => {

@@ -61738,7 +61738,7 @@ export const FetchManuscriptVersionsDocument = {
                                                     },
                                                     value: {
                                                       kind: 'IntValue',
-                                                      value: '10',
+                                                      value: '3',
                                                     },
                                                   },
                                                 ],

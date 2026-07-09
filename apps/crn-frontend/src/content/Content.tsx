@@ -12,16 +12,18 @@ interface ContentProps {
   pageId: string;
 }
 const Content: React.FC<ContentProps> = ({ pageId }) => {
-  const pageLoadable = usePageByPageId(pageId);
+  // Same branching as the recoil Loadable: loading → Loading, value →
+  // ContentPage, error or missing page → NotFoundPage.
+  const { isPending, data: page } = usePageByPageId(pageId);
 
-  if (pageLoadable.state === 'loading') {
+  if (isPending) {
     return <Loading />;
   }
 
-  if (pageLoadable.state === 'hasValue' && pageLoadable.contents) {
+  if (page) {
     return (
-      <Frame title={pageLoadable.contents.title}>
-        <ContentPage {...pageLoadable.contents} />
+      <Frame title={page.title}>
+        <ContentPage {...page} />
       </Frame>
     );
   }

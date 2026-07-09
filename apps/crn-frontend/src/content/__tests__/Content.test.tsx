@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 import { render, waitFor, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { createPageResponse } from '@asap-hub/fixtures';
@@ -20,17 +19,18 @@ const mockGetPageByPath = getPageByPath as jest.MockedFunction<
 
 const renderPage = async (pageId: string = 'privacy-notice') => {
   const result = render(
-    <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter>
-              <Content pageId={pageId} />
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
-    </RecoilRoot>,
+    // Content mounts its own RecoilRoot + QueryClientProvider (public
+    // content pages render outside AuthenticatedApp), so no outer providers
+    // are needed here.
+    <Suspense fallback="loading">
+      <Auth0Provider user={{}}>
+        <WhenReady>
+          <MemoryRouter>
+            <Content pageId={pageId} />
+          </MemoryRouter>
+        </WhenReady>
+      </Auth0Provider>
+    </Suspense>,
   );
 
   await waitFor(() =>

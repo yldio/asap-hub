@@ -196,3 +196,14 @@ export const PastWithSomeMaterials = () => (
     })}
   />
 );
+export const PastWithoutMaterials = () => (
+  <EventCard
+    {...cardProps({
+      ...past,
+      notes: null,
+      videoRecording: null,
+      presentation: null,
+      meetingMaterials: null,
+    })}
+  />
+);

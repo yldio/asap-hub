@@ -1,19 +1,20 @@
 import { useCallback } from 'react';
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useAuthorization } from '../auth/useAuthorization';
 import { getImpacts } from '../shared-api/impact';
 
 export const useImpactSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   return useCallback(
-    (searchQuery: string) =>
-      getImpacts({ search: searchQuery, take: 1000 }, authorization).then(
-        ({ items }) =>
-          items.map(({ id, name }) => ({
-            label: name,
-            value: id,
-          })),
+    async (searchQuery: string) =>
+      getImpacts(
+        { search: searchQuery, take: 1000 },
+        await getAuthorization(),
+      ).then(({ items }) =>
+        items.map(({ id, name }) => ({
+          label: name,
+          value: id,
+        })),
       ),
-    [authorization],
+    [getAuthorization],
   );
 };

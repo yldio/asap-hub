@@ -1,10 +1,9 @@
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useAuthorization } from '../auth/useAuthorization';
 import { getTeams } from '../network/teams/api';
 
 export const useTeamSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (searchQuery: string) =>
+  const getAuthorization = useAuthorization();
+  return async (searchQuery: string) =>
     getTeams(
       {
         searchQuery,
@@ -13,7 +12,7 @@ export const useTeamSuggestions = () => {
         pageSize: null,
         teamType: 'all',
       },
-      authorization,
+      await getAuthorization(),
     ).then(({ items }) =>
       items.map(({ id, displayName }) => ({
         label: displayName,

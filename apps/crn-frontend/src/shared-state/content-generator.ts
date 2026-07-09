@@ -1,12 +1,11 @@
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useAuthorization } from '../auth/useAuthorization';
 import { getGeneratedShortDescription } from '../shared-api';
 
 export const useGeneratedContent = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
 
-  return (description: string): Promise<string> =>
-    getGeneratedShortDescription(description, authorization).then(
+  return async (description: string): Promise<string> =>
+    getGeneratedShortDescription(description, await getAuthorization()).then(
       ({ shortDescription }) => shortDescription || '',
     );
 };

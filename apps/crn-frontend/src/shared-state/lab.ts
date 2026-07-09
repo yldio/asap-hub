@@ -1,13 +1,12 @@
-import { useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useAuthorization } from '../auth/useAuthorization';
 import { getLabs } from '../network/teams/api';
 
 export const useLabSuggestions = () => {
-  const authorization = useRecoilValue(authorizationState);
-  return (searchQuery: string) =>
+  const getAuthorization = useAuthorization();
+  return async (searchQuery: string) =>
     getLabs(
       { searchQuery, filters: new Set(), currentPage: null, pageSize: null },
-      authorization,
+      await getAuthorization(),
     ).then(({ items }) =>
       items.map(({ id, name, labPITeamIds, labPrincipalInvestigatorId }) => ({
         label: `${name} Lab`,

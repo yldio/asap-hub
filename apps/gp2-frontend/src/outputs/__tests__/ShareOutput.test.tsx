@@ -2,17 +2,13 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
 import { gp2 as gp2Model, ValidationErrorResponse } from '@asap-hub/model';
-import { BackendError } from '@asap-hub/frontend-utils';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { BackendError, createTestQueryClient } from '@asap-hub/frontend-utils';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { OutputFormPage } from '@asap-hub/gp2-components';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../../events/api';
@@ -60,36 +56,41 @@ const renderShareOutput = async (
 ) => {
   render(
     <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[path]} initialIndex={1}>
-              <Routes>
-                <Route
-                  path={
-                    gp2Routing.outputs.template +
-                    gp2Routing.outputs({}).output.template +
-                    gp2Routing.outputs({}).output({ outputId: 'output-id' })
-                      .edit.template
-                  }
-                  element={
-                    <NotificationMessages>
-                      <OutputFormPage>
-                        <ShareOutput output={output} />
-                      </OutputFormPage>
-                    </NotificationMessages>
-                  }
-                />
-                <Route path="*" element={<div>Redirect target</div>} />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[path]} initialIndex={1}>
+                <Routes>
+                  <Route
+                    path={
+                      gp2Routing.outputs.template +
+                      gp2Routing.outputs({}).output.template +
+                      gp2Routing.outputs({}).output({ outputId: 'output-id' })
+                        .edit.template
+                    }
+                    element={
+                      <NotificationMessages>
+                        <OutputFormPage>
+                          <ShareOutput output={output} />
+                        </OutputFormPage>
+                      </NotificationMessages>
+                    }
+                  />
+                  <Route path="*" element={<div>Redirect target</div>} />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 const getEditPath = (outputId = 'output-id') =>

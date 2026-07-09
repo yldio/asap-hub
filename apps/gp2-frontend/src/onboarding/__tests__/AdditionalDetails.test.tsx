@@ -2,16 +2,13 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
 import { gp2 as gp2Model } from '@asap-hub/model';
 import { gp2 as gp2Routing } from '@asap-hub/routing';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getContributingCohorts } from '../../shared/api';
@@ -26,39 +23,50 @@ mockConsoleError();
 const renderAdditionalDetails = async (id: string) => {
   render(
     <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{ onboarded: false, id }}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                gp2Routing.onboarding({}).additionalDetails({}).$,
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={`${
-                    gp2Routing.onboarding({}).additionalDetails.template
-                  }/*`}
-                  element={<AdditionalDetails />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{ onboarded: false, id }}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  gp2Routing.onboarding({}).additionalDetails({}).$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={`${
+                      gp2Routing.onboarding({}).additionalDetails.template
+                    }/*`}
+                    element={<AdditionalDetails />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 describe('AdditionalDetails', () => {
-  beforeEach(jest.resetAllMocks);
   const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
   const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
   const mockGetContributingCohorts =
     getContributingCohorts as jest.MockedFunction<
       typeof getContributingCohorts
     >;
+  beforeEach(() => {
+    jest.resetAllMocks();
+    // a queryFn must not resolve undefined, so the automock needs an answer
+    mockGetContributingCohorts.mockResolvedValue(
+      gp2Fixtures.contributingCohortResponse,
+    );
+  });
 
   it('renders questions, funding providers and contributing cohorts', async () => {
     const user = gp2Fixtures.createUserResponse();

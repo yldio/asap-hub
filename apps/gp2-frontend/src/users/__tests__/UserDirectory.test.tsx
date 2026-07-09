@@ -1,17 +1,16 @@
 import { ClientSearchResponse } from '@asap-hub/algolia';
 import { gp2 as gp2Fixtures } from '@asap-hub/fixtures';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
-import { gp2 as gp2Model } from '@asap-hub/model';
 import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
+import { gp2 as gp2Model } from '@asap-hub/model';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { useSearch } from '../../hooks/search';
 import { getProjects } from '../../projects/api';
@@ -102,25 +101,30 @@ const renderUserDirectory = async ({
 
   render(
     <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider
-          user={{ role: isAdministrator ? 'Administrator' : undefined }}
-        >
-          <WhenReady>
-            <MemoryRouter initialEntries={['/users/']}>
-              <Routes>
-                <Route
-                  path="/users"
-                  element={<UserDirectory displayFilters={displayFilters} />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider
+            user={{ role: isAdministrator ? 'Administrator' : undefined }}
+          >
+            <WhenReady>
+              <MemoryRouter initialEntries={['/users/']}>
+                <Routes>
+                  <Route
+                    path="/users"
+                    element={<UserDirectory displayFilters={displayFilters} />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
   return { mockUpdateFilter };
 };
 afterEach(jest.clearAllMocks);

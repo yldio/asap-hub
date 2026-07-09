@@ -8,7 +8,11 @@ import {
   createWorkingGroupResponse,
 } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
 import userEvent from '@testing-library/user-event';
 
 import Outputs from '../Outputs';
@@ -22,8 +26,6 @@ import {
   MAX_ALGOLIA_RESULTS,
   MAX_CONTENTFUL_RESULTS,
 } from '../../../shared-research/export';
-import { researchOutputsState } from '../../../shared-research/state';
-import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('@asap-hub/frontend-utils', () => {
   const original = jest.requireActual('@asap-hub/frontend-utils');
@@ -55,60 +57,43 @@ const renderOutputs = async (
   draftOutputs = false,
 ) => {
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset }) => {
-        reset(
-          researchOutputsState({
-            searchQuery: '',
-            workingGroupId: workingGroup.id,
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-          }),
-        );
-        reset(
-          researchOutputsState({
-            searchQuery: '',
-            workingGroupId: workingGroup.id,
-            currentPage: 0,
-            pageSize: MAX_ALGOLIA_RESULTS,
-          }),
-        );
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                {
-                  pathname: network({})
-                    .workingGroups({})
-                    .workingGroup({ workingGroupId: workingGroup.id })
-                    .outputs({}).$,
-                },
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={
-                    network({})
+    <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  {
+                    pathname: network({})
                       .workingGroups({})
                       .workingGroup({ workingGroupId: workingGroup.id })
-                      .outputs({}).$
-                  }
-                  element={
-                    <Outputs
-                      userAssociationMember={userAssociationMember}
-                      workingGroup={workingGroup}
-                      draftOutputs={draftOutputs}
-                    />
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+                      .outputs({}).$,
+                  },
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={
+                      network({})
+                        .workingGroups({})
+                        .workingGroup({ workingGroupId: workingGroup.id })
+                        .outputs({}).$
+                    }
+                    element={
+                      <Outputs
+                        userAssociationMember={userAssociationMember}
+                        workingGroup={workingGroup}
+                        draftOutputs={draftOutputs}
+                      />
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 

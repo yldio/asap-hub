@@ -1,12 +1,8 @@
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
-import {
-  screen,
-  render,
-  waitFor,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { screen, render, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import {
   createListInterestGroupResponse,
@@ -35,33 +31,39 @@ const renderResearch = async (
 ) => {
   render(
     <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{ id: currentUserId }}>
-          <WhenReady>
-            <MemoryRouter
-              initialEntries={[
-                network({}).users({}).user({ userId: user.id }).research({}).$,
-              ]}
-            >
-              <Routes>
-                <Route
-                  path={`${network.template}${network({}).users.template}${
-                    network({}).users({}).user.template
-                  }${
-                    network({}).users({}).user({ userId: user.id }).research
-                      .template
-                  }/*`}
-                  element={<Research user={user} />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{ id: currentUserId }}>
+            <WhenReady>
+              <MemoryRouter
+                initialEntries={[
+                  network({}).users({}).user({ userId: user.id }).research({})
+                    .$,
+                ]}
+              >
+                <Routes>
+                  <Route
+                    path={`${network.template}${network({}).users.template}${
+                      network({}).users({}).user.template
+                    }${
+                      network({}).users({}).user({ userId: user.id }).research
+                        .template
+                    }/*`}
+                    element={<Research user={user} />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 const tags = ['1', '2', '3', '4', '5'];

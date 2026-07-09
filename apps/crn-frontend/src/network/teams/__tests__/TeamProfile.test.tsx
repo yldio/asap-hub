@@ -32,7 +32,6 @@ import {
   getResearchOutput,
   getResearchOutputs,
 } from '../../../shared-research/api';
-import { refreshResearchOutputState } from '../../../shared-research/state';
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import { createResearchOutput, getTeam } from '../api';
 import { EligibilityReasonProvider } from '../EligibilityReasonProvider';
@@ -191,7 +190,6 @@ const renderPage = async (
     <RecoilRoot
       initializeState={({ set, reset }) => {
         set(refreshTeamState(teamResponse.id), Math.random());
-        set(refreshResearchOutputState('123'), Math.random());
         reset(
           manuscriptsState({
             currentPage: 0,

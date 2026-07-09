@@ -8,6 +8,8 @@ import {
   act,
 } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { projects } from '@asap-hub/routing';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';
@@ -177,17 +179,22 @@ jest.mock('../../shared-research/state', () => ({
 const renderProjectsPage = async (pathname: string, query = '') => {
   const { container } = render(
     <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Routes>
-                <Route path={`${projects.template}/*`} element={<Projects />} />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[{ pathname, search: query }]}>
+                <Routes>
+                  <Route
+                    path={`${projects.template}/*`}
+                    element={<Projects />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 

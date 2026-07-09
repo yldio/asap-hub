@@ -2,9 +2,14 @@ import { listViewValue, projects, viewParam } from '@asap-hub/routing';
 import { render, waitFor, screen } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { createCsvFileStream, Frame } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+  Frame,
+} from '@asap-hub/frontend-utils';
 import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import userEvent from '@testing-library/user-event';
 
@@ -15,7 +20,6 @@ import {
   getResearchOutputs,
 } from '../../shared-research/api';
 import ProjectOutputs from '../ProjectOutputs';
-import { researchOutputsState } from '../../shared-research/state';
 import { createResearchOutputListAlgoliaResponse } from '../../__fixtures__/algolia';
 import { MAX_ALGOLIA_RESULTS } from '../../shared-research/export';
 
@@ -100,87 +104,66 @@ const renderPage = async ({
         .outputs({}).$;
 
   const path = queryString ? `${basePath}?${queryString}` : basePath;
-  const searchParams = new URLSearchParams(queryString);
-  const currentPage = Number(searchParams.get('currentPage')) ?? 0;
-  const isListView = searchParams.get(viewParam) === listViewValue;
-  const pageSize = isListView ? LIST_VIEW_PAGE_SIZE : CARD_VIEW_PAGE_SIZE;
-  const listScope = projectTeamId ? { teamId: projectTeamId } : { projectId };
 
-  const publishedOptions = {
-    searchQuery: '',
-    documentType: [],
-    currentPage,
-    pageSize,
-    ...listScope,
-  };
-
-  const draftOptions = {
-    ...publishedOptions,
-    draftsOnly: true as const,
-    userAssociationMember,
-  };
-
+  if (draftResearchOutputsError) {
+    // Previously seeded into the recoil cache; with react-query the same
+    // error state is produced by making the draft fetch reject.
+    mockGetDraftResearchOutputs.mockRejectedValue(draftResearchOutputsError);
+  }
   const result = render(
-    <RecoilRoot
-      initializeState={({ reset, set }) => {
-        if (draftResearchOutputsError) {
-          set(researchOutputsState(draftOptions), draftResearchOutputsError);
-        } else {
-          reset(researchOutputsState(publishedOptions));
-          reset(researchOutputsState(draftOptions));
-        }
-      }}
-    >
-      <Suspense fallback="loading">
-        <Auth0Provider
-          user={{
-            projects: [
-              {
-                id: projectId,
-                title: 'Project Alpha',
-                projectType: 'Discovery Project',
-                status: 'Active',
-              },
-            ],
-          }}
-        >
-          <WhenReady>
-            <MemoryRouter initialEntries={[path]}>
-              <Routes>
-                <Route
-                  path="/projects/discovery/:projectId/outputs?"
-                  element={
-                    <Frame title="Project Outputs">
-                      <ProjectOutputs
-                        projectId={projectId}
-                        projectTitle={projectTitle}
-                        teamId={projectTeamId}
-                        userAssociationMember={userAssociationMember}
-                        hasOutputs={hasOutputs}
-                      />
-                    </Frame>
-                  }
-                />
-                <Route
-                  path="/projects/discovery/:projectId/draft-outputs?"
-                  element={
-                    <Frame title="Project Draft Outputs">
-                      <ProjectOutputs
-                        projectId={projectId}
-                        projectTitle={projectTitle}
-                        teamId={projectTeamId}
-                        draftOutputs
-                        userAssociationMember={userAssociationMember}
-                        hasOutputs={hasOutputs}
-                      />
-                    </Frame>
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+    <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider
+            user={{
+              projects: [
+                {
+                  id: projectId,
+                  title: 'Project Alpha',
+                  projectType: 'Discovery Project',
+                  status: 'Active',
+                },
+              ],
+            }}
+          >
+            <WhenReady>
+              <MemoryRouter initialEntries={[path]}>
+                <Routes>
+                  <Route
+                    path="/projects/discovery/:projectId/outputs?"
+                    element={
+                      <Frame title="Project Outputs">
+                        <ProjectOutputs
+                          projectId={projectId}
+                          projectTitle={projectTitle}
+                          teamId={projectTeamId}
+                          userAssociationMember={userAssociationMember}
+                          hasOutputs={hasOutputs}
+                        />
+                      </Frame>
+                    }
+                  />
+                  <Route
+                    path="/projects/discovery/:projectId/draft-outputs?"
+                    element={
+                      <Frame title="Project Draft Outputs">
+                        <ProjectOutputs
+                          projectId={projectId}
+                          projectTitle={projectTitle}
+                          teamId={projectTeamId}
+                          draftOutputs
+                          userAssociationMember={userAssociationMember}
+                          hasOutputs={hasOutputs}
+                        />
+                      </Frame>
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 

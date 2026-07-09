@@ -7,7 +7,7 @@ import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { BackendError } from '@asap-hub/frontend-utils';
+import { BackendError, createTestQueryClient } from '@asap-hub/frontend-utils';
 import {
   ManuscriptLifecycle,
   ManuscriptVersionResponse,
@@ -16,18 +16,13 @@ import {
   ValidationErrorResponse,
 } from '@asap-hub/model';
 import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { editorRef } from '@asap-hub/react-components';
 import { Suspense, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { getGeneratedShortDescription } from '../../../shared-api/content-generator';
 import {
   createResearchOutput,
@@ -1512,30 +1507,35 @@ async function renderPage({
         set(refreshTeamState(teamId), Math.random())
       }
     >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[initialPath]}>
-              <LocationCapture />
-              <Routes>
-                <Route
-                  path={path}
-                  element={
-                    <TeamOutput
-                      teamId={teamId}
-                      researchOutputData={researchOutputData}
-                      versionAction={versionAction}
-                      latestManuscriptVersion={latestManuscriptVersion}
-                      isDuplicate={isDuplicate}
-                    />
-                  }
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[initialPath]}>
+                <LocationCapture />
+                <Routes>
+                  <Route
+                    path={path}
+                    element={
+                      <TeamOutput
+                        teamId={teamId}
+                        researchOutputData={researchOutputData}
+                        versionAction={versionAction}
+                        latestManuscriptVersion={latestManuscriptVersion}
+                        isDuplicate={isDuplicate}
+                      />
+                    }
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 }

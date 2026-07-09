@@ -15,8 +15,8 @@ import {
   ResourceTypeResponse,
   ValidationErrorResponse,
 } from '@asap-hub/model';
-import { atom, selector, selectorFamily, useRecoilValue } from 'recoil';
-import { authorizationState } from '../auth/state';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useAuthorization } from '../auth/useAuthorization';
 import { useAlgolia } from '../hooks/algolia';
 import {
   createResearchOutput,
@@ -141,84 +141,75 @@ export const useAuthorSuggestions = () => {
     }).then(({ items }) => items);
 };
 
-const researchTagsState = atom<ResearchTagResponse[]>({
-  key: 'researchTagsState',
-  default: [],
-});
+export const researchTagQueryKeys = {
+  all: ['research-tags'] as const,
+};
 
-export const researchTagsSelector = selector({
-  key: 'researchTags',
-  get: ({ get }) => {
-    get(researchTagsState);
-    const authorization = get(authorizationState);
-    return getResearchTags(authorization);
-  },
-});
+export const useResearchTags = (): ResearchTagResponse[] => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: researchTagQueryKeys.all,
+    queryFn: async () => getResearchTags(await getAuthorization()),
+  }).data;
+};
 
-export const useResearchTags = () => useRecoilValue(researchTagsSelector);
-
-const researchThemesState = atom<ResearchThemeResponse[]>({
-  key: 'researchThemesState',
-  default: [],
-});
-
-export const researchThemesByTypesSelector = selectorFamily<
-  ResearchThemeResponse[],
-  string
->({
-  key: 'researchThemesByTypes',
-  get:
-    (typesKey) =>
-    ({ get }) => {
-      get(researchThemesState);
-      const authorization = get(authorizationState);
-      const types = typesKey
-        ? (typesKey.split(',') as ResearchThemeType[])
-        : undefined;
-      return getResearchThemes(authorization, types);
-    },
-});
+export const researchThemeQueryKeys = {
+  all: ['research-themes'] as const,
+  byTypes: (typesKey: string) =>
+    [...researchThemeQueryKeys.all, typesKey] as const,
+};
 
 export const useResearchThemes = (
   types?: ReadonlyArray<ResearchThemeType>,
-): ResearchThemeResponse[] =>
-  useRecoilValue(researchThemesByTypesSelector(types ? types.join(',') : ''));
+): ResearchThemeResponse[] => {
+  const getAuthorization = useAuthorization();
+  // The recoil selectorFamily was keyed by the comma-joined types; keep that
+  // (including its quirk that an empty array means "all types").
+  const typesKey = types ? types.join(',') : '';
+  return useSuspenseQuery({
+    queryKey: researchThemeQueryKeys.byTypes(typesKey),
+    queryFn: async () =>
+      getResearchThemes(
+        await getAuthorization(),
+        typesKey ? (typesKey.split(',') as ResearchThemeType[]) : undefined,
+      ),
+  }).data;
+};
 
-const resourceTypesState = atom<ResourceTypeResponse[]>({
-  key: 'resourceTypesState',
-  default: [],
-});
+export const resourceTypeQueryKeys = {
+  all: ['resource-types'] as const,
+};
 
-export const resourceTypesSelector = selector({
-  key: 'resourceTypes',
-  get: ({ get }) => {
-    get(resourceTypesState);
-    const authorization = get(authorizationState);
-    return getResourceTypes(authorization);
-  },
-});
-
-export const useResourceTypes = () => useRecoilValue(resourceTypesSelector);
+export const useResourceTypes = (): ResourceTypeResponse[] => {
+  const getAuthorization = useAuthorization();
+  return useSuspenseQuery({
+    queryKey: resourceTypeQueryKeys.all,
+    queryFn: async () => getResourceTypes(await getAuthorization()),
+  }).data;
+};
 
 export const usePostResearchOutput = () => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const setResearchOutputItem = useSetResearchOutputItem();
   return async (payload: ResearchOutputPostRequest) => {
-    const researchOutput = await createResearchOutput(payload, authorization);
+    const researchOutput = await createResearchOutput(
+      payload,
+      await getAuthorization(),
+    );
     setResearchOutputItem(researchOutput);
     return researchOutput;
   };
 };
 
 export const usePutResearchOutput = (shouldInvalidate?: boolean) => {
-  const authorization = useRecoilValue(authorizationState);
+  const getAuthorization = useAuthorization();
   const setResearchOutputItem = useSetResearchOutputItem();
   const invalidateResearchOutputIndex = useInvalidateResearchOutputIndex();
   return async (id: string, payload: ResearchOutputPutRequest) => {
     const researchOutput = await updateTeamResearchOutput(
       id,
       payload,
-      authorization,
+      await getAuthorization(),
     );
     setResearchOutputItem(researchOutput);
     if (shouldInvalidate) {

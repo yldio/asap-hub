@@ -1,5 +1,6 @@
 import { TeamDataObject, TeamStatus, TeamType } from '@asap-hub/model';
-import { BackendError } from '@asap-hub/frontend-utils';
+import { BackendError, createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { waitFor } from '@testing-library/dom';
 import { act, renderHook } from '@testing-library/react';
 import { startTransition, Suspense } from 'react';
@@ -632,7 +633,11 @@ describe('useCreateDiscussion', () => {
     (getManuscript as jest.Mock).mockResolvedValueOnce(mockUpdatedManuscript);
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
+      <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
+          {children}
+        </QueryClientProvider>
+      </RecoilRoot>
     );
 
     const { result } = renderHook(() => stateModule.useCreateDiscussion(), {
@@ -678,7 +683,11 @@ describe('usePostPreprintResearchOutput', () => {
     );
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
+      <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
+          {children}
+        </QueryClientProvider>
+      </RecoilRoot>
     );
 
     const { result } = renderHook(
@@ -704,7 +713,11 @@ describe('usePostPreprintResearchOutput', () => {
     (createPreprintResearchOutput as jest.Mock).mockRejectedValue(mockError);
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
+      <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
+          {children}
+        </QueryClientProvider>
+      </RecoilRoot>
     );
 
     const { result } = renderHook(
@@ -732,7 +745,11 @@ describe('usePostPreprintResearchOutput', () => {
     );
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <RecoilRoot>{children}</RecoilRoot>
+      <RecoilRoot>
+        <QueryClientProvider client={createTestQueryClient()}>
+          {children}
+        </QueryClientProvider>
+      </RecoilRoot>
     );
 
     const { result } = renderHook(
@@ -837,7 +854,11 @@ describe('useBatchManuscriptsByIds', () => {
   it('returns immediately when ids are empty', () => {
     const { result } = renderHook(() => useBatchManuscriptsByIds([]), {
       wrapper: ({ children }: { children: React.ReactNode }) => (
-        <RecoilRoot>{children}</RecoilRoot>
+        <RecoilRoot>
+          <QueryClientProvider client={createTestQueryClient()}>
+            {children}
+          </QueryClientProvider>
+        </RecoilRoot>
       ),
     });
 

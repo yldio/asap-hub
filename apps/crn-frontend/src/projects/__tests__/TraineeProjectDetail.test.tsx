@@ -2,6 +2,8 @@ import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { render, screen, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { projects } from '@asap-hub/routing';
 import type {
   DiscoveryProject,
@@ -77,20 +79,22 @@ const renderTraineeProjectDetail = async (projectId: string) => {
 
   render(
     <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[path]}>
-              <Routes>
-                <Route
-                  path={`${projects.template}/trainee/:projectId/*`}
-                  element={<TraineeProjectDetail />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[path]}>
+                <Routes>
+                  <Route
+                    path={`${projects.template}/trainee/:projectId/*`}
+                    element={<TraineeProjectDetail />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 
@@ -142,20 +146,22 @@ describe('TraineeProjectDetail', () => {
 
     render(
       <RecoilRoot>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter initialEntries={[path]}>
-                <Routes>
-                  <Route
-                    path={`${projects.template}/trainee/:projectId/*`}
-                    element={<TraineeProjectDetail />}
-                  />
-                </Routes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
+        <QueryClientProvider client={createTestQueryClient()}>
+          <Suspense fallback="loading">
+            <Auth0Provider user={{}}>
+              <WhenReady>
+                <MemoryRouter initialEntries={[path]}>
+                  <Routes>
+                    <Route
+                      path={`${projects.template}/trainee/:projectId/*`}
+                      element={<TraineeProjectDetail />}
+                    />
+                  </Routes>
+                </MemoryRouter>
+              </WhenReady>
+            </Auth0Provider>
+          </Suspense>
+        </QueryClientProvider>
       </RecoilRoot>,
     );
 

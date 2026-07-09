@@ -6,7 +6,7 @@ import {
   createResearchOutputResponse,
   createUserResponse,
 } from '@asap-hub/fixtures';
-import { BackendError } from '@asap-hub/frontend-utils';
+import { BackendError, createTestQueryClient } from '@asap-hub/frontend-utils';
 import {
   ResearchOutputResponse,
   UserResponse,
@@ -14,17 +14,12 @@ import {
 } from '@asap-hub/model';
 import { editorRef } from '@asap-hub/react-components';
 import { network, OutputDocumentTypeParameter } from '@asap-hub/routing';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense, useEffect } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   createResearchOutput,
   updateTeamResearchOutput,
@@ -254,31 +249,36 @@ const renderPage = async ({
         set(refreshWorkingGroupState(workingGroupId), Math.random())
       }
     >
-      <Suspense fallback="loading">
-        <Auth0Provider user={user}>
-          <WhenReady>
-            <MemoryRouter initialEntries={initialEntries}>
-              <LocationCapture />
-              <Routes>
-                <Route
-                  path={path}
-                  element={
-                    <WorkingGroupOutput
-                      workingGroupId={workingGroupId}
-                      researchOutputData={researchOutputData}
-                      versionAction={versionAction}
-                    />
-                  }
-                />
-                <Route path="*" element={<div>Redirected</div>} />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={user}>
+            <WhenReady>
+              <MemoryRouter initialEntries={initialEntries}>
+                <LocationCapture />
+                <Routes>
+                  <Route
+                    path={path}
+                    element={
+                      <WorkingGroupOutput
+                        workingGroupId={workingGroupId}
+                        researchOutputData={researchOutputData}
+                        versionAction={versionAction}
+                      />
+                    }
+                  />
+                  <Route path="*" element={<div>Redirected</div>} />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 };
 
 beforeEach(() => {

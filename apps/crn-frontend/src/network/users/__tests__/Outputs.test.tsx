@@ -4,15 +4,18 @@ import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
 import { FetchResearchOutputsFilter } from '@asap-hub/model';
 import { RecoilRoot } from 'recoil';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import { createResearchOutputListAlgoliaResponse } from '../../../__fixtures__/algolia';
 import Outputs from '../Outputs';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getResearchOutputs } from '../../../shared-research/api';
-import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 import { MAX_ALGOLIA_RESULTS } from '../../../shared-research/export';
 import { getUser } from '../api';
@@ -69,42 +72,26 @@ const renderOutputs = async (
 
   const result = render(
     <RecoilRoot
-      initializeState={({ reset, set }) => {
+      initializeState={({ set }) => {
         set(refreshUserState(userId), Math.random());
-        reset(
-          researchOutputsState({
-            searchQuery,
-            ...filters,
-            userId,
-            currentPage: 0,
-            pageSize: CARD_VIEW_PAGE_SIZE,
-          }),
-        );
-        reset(
-          researchOutputsState({
-            searchQuery,
-            ...filters,
-            userId,
-            currentPage: 0,
-            pageSize: MAX_ALGOLIA_RESULTS,
-          }),
-        );
       }}
     >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[initialEntry]}>
-              <Routes>
-                <Route
-                  path={network({}).users({}).user({ userId }).outputs({}).$}
-                  element={<Outputs userId={userId} />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[initialEntry]}>
+                <Routes>
+                  <Route
+                    path={network({}).users({}).user({ userId }).outputs({}).$}
+                    element={<Outputs userId={userId} />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 

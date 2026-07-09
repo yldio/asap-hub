@@ -142,7 +142,7 @@ describe('past events', () => {
     expect(screen.getByText(/coming soon/i)).toBeVisible();
     expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
   });
-  it('toasts number of available materials', () => {
+  it('toasts the names of the available materials', () => {
     render(
       <EventCard
         {...props}
@@ -159,8 +159,49 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.getByText(/materials \(3\)/i)).toBeVisible();
+    expect(screen.getByText('Presentation').closest('a')).toHaveAttribute(
+      'href',
+      '/events/event-0#event-presentation',
+    );
+    expect(screen.getByText('Meeting Materials').closest('a')).toHaveAttribute(
+      'href',
+      '/events/event-0#event-additional-materials',
+    );
+    expect(screen.getByText('Notes')).toBeVisible();
+    expect(screen.getByText('Notes').closest('a')).toBeNull();
+    expect(screen.getByText('Recording').closest('a')).toBeNull();
     expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
+  });
+
+  it('links every material name when every material is available', () => {
+    render(
+      <EventCard
+        {...props}
+        status="Confirmed"
+        meetingMaterials={[{ title: '123', url: 'http://example.com' }]}
+        presentation="presentation"
+        notes="notes"
+        videoRecording="recording"
+        startDate={subDays(new Date(), 2).toISOString()}
+        endDate={subDays(new Date(), 1).toISOString()}
+      />,
+    );
+    expect(screen.getByText('Notes').closest('a')).toHaveAttribute(
+      'href',
+      '/events/event-0#event-notes',
+    );
+    expect(screen.getByText('Recording').closest('a')).toHaveAttribute(
+      'href',
+      '/events/event-0#event-video-recording',
+    );
+    expect(screen.getByText('Presentation').closest('a')).toHaveAttribute(
+      'href',
+      '/events/event-0#event-presentation',
+    );
+    expect(screen.getByText('Meeting Materials').closest('a')).toHaveAttribute(
+      'href',
+      '/events/event-0#event-additional-materials',
+    );
   });
 
   it('toasts no materials are available', () => {

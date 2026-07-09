@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, Fragment } from 'react';
 import { css } from '@emotion/react';
 
 import {
@@ -6,14 +6,17 @@ import {
   eventMaterialTypes,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
 } from '@asap-hub/model';
+import { events } from '@asap-hub/routing';
 
 import { subMinutes, parseISO } from 'date-fns';
 
 import { ToastCard, EventInfo } from '../molecules';
 import { rem, mobileScreen } from '../pixels';
 import { Link } from '../atoms';
+import { tin } from '../colors';
 import { useDateHasPassed } from '../date';
 import { considerEndedAfter } from '../utils';
+import { eventMaterialSectionIds } from './EventMaterials';
 
 type EventCardProps = ComponentProps<typeof EventInfo> &
   Pick<
@@ -35,6 +38,30 @@ const buttonStyle = css({
     marginTop: rem(15),
     width: '100%',
   },
+});
+
+const eventMaterialLabels: Record<(typeof eventMaterialTypes)[number], string> =
+  {
+    notes: 'Notes',
+    videoRecording: 'Recording',
+    presentation: 'Presentation',
+    meetingMaterials: 'Meeting Materials',
+  };
+
+const materialListStyles = css({
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  columnGap: rem(8),
+
+  a: {
+    color: 'inherit',
+    textDecoration: 'underline',
+  },
+});
+
+const unavailableMaterialStyles = css({
+  color: tin.rgb,
 });
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -101,30 +128,50 @@ const EventCard: React.FC<EventCardProps> = ({
     }
 
     if (hasFinished) {
-      const materialCount = eventMaterialTypes.reduce((count, key) => {
+      const isMaterialAvailable = (
+        key: (typeof eventMaterialTypes)[number],
+      ): boolean => {
         const value = props[key];
-        if (Array.isArray(value)) {
-          return count + value.length;
-        }
-        if (value) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
-      if (materialCount > 0) {
+        return Array.isArray(value) ? value.length > 0 : Boolean(value);
+      };
+      if (eventMaterialTypes.some(isMaterialAvailable)) {
+        const displayedMaterials = eventMaterialTypes.filter(
+          (key) => key !== 'meetingMaterials' || isMaterialAvailable(key),
+        );
+        const eventHref = events({}).event({ eventId: props.id }).$;
         return {
           type: 'attachment',
-          toastContent: `Meeting materials (${materialCount})`,
+          accent: 'neutral200',
+          toastContent: (
+            <span css={materialListStyles}>
+              {displayedMaterials.map((key, index) => (
+                <Fragment key={key}>
+                  {index > 0 && <span>•</span>}
+                  {isMaterialAvailable(key) ? (
+                    <Link href={`${eventHref}#${eventMaterialSectionIds[key]}`}>
+                      {eventMaterialLabels[key]}
+                    </Link>
+                  ) : (
+                    <span css={unavailableMaterialStyles}>
+                      {eventMaterialLabels[key]}
+                    </span>
+                  )}
+                </Fragment>
+              ))}
+            </span>
+          ),
         };
       }
       if (eventMaterialTypes.every((value) => props[value] === null)) {
         return {
           type: 'attachment',
+          accent: 'neutral200',
           toastContent: 'No meeting materials available',
         };
       }
       return {
         type: 'attachment',
+        accent: 'neutral200',
         toastContent: 'Meeting materials coming soon…',
       };
     }

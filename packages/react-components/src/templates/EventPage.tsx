@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps, ReactNode, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { BasicEvent, EventResponse, gp2 } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
@@ -85,76 +85,89 @@ const EventPage = <
   getSourceIcon,
   tableTitles,
   ...props
-}: EventPageProps<T>) => (
-  <div css={({ components }) => [components?.EventPage?.containerStyles]}>
-    {backHref && <BackLink href={backHref} />}
-    <>
-      <div css={cardsStyles}>
-        <Card>
-          <EventInfo {...props} titleLimit={null} tags={[]} />
-          <Paragraph accent="lead" styles={updatedParagraphStyles}>
-            <small>
-              Last updated:{' '}
-              {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-            </small>
-          </Paragraph>
-          {children}
-          {!hideMeetingLink && <JoinEvent {...props} />}
-          <EventAbout {...props} />
-        </Card>
-        {relatedResearch && relatedResearch?.length > 0 && (
-          <RelatedResearchCard
-            title={titleOutputs}
-            description={descriptionOutput || 'Find all related research.'}
-            relatedResearch={relatedResearch}
-            getIconForDocumentType={getIconForDocumentType}
-            getSourceIcon={getSourceIcon}
-            tableTitles={tableTitles}
-          />
-        )}
-        {relatedTutorials && relatedTutorials.length > 0 && (
-          <RelatedTutorialsCard
-            relatedTutorials={relatedTutorials}
-            truncateFrom={3}
-          />
-        )}
-        <EventMaterials {...props} />
-        {eventConversation}
-        {displayCalendar && (
-          <CalendarList
-            calendars={[calendar]}
-            title="Subscribe to this event's Calendar"
-            hideSupportText
-          />
-        )}
+}: EventPageProps<T>) => {
+  useEffect(() => {
+    const { hash } = window.location;
+    if (!hash) return undefined;
+    const timeout = window.setTimeout(() => {
+      document
+        .getElementById(hash.substring(1))
+        ?.scrollIntoView({ behavior: 'smooth' });
+    });
+    return () => window.clearTimeout(timeout);
+  }, []);
 
+  return (
+    <div css={({ components }) => [components?.EventPage?.containerStyles]}>
+      {backHref && <BackLink href={backHref} />}
+      <>
+        <div css={cardsStyles}>
+          <Card>
+            <EventInfo {...props} titleLimit={null} tags={[]} />
+            <Paragraph accent="lead" styles={updatedParagraphStyles}>
+              <small>
+                Last updated:{' '}
+                {formatDistance(new Date(), new Date(lastModifiedDate))} ago
+              </small>
+            </Paragraph>
+            {children}
+            {!hideMeetingLink && <JoinEvent {...props} />}
+            <EventAbout {...props} />
+          </Card>
+          {relatedResearch && relatedResearch?.length > 0 && (
+            <RelatedResearchCard
+              title={titleOutputs}
+              description={descriptionOutput || 'Find all related research.'}
+              relatedResearch={relatedResearch}
+              getIconForDocumentType={getIconForDocumentType}
+              getSourceIcon={getSourceIcon}
+              tableTitles={tableTitles}
+            />
+          )}
+          {relatedTutorials && relatedTutorials.length > 0 && (
+            <RelatedTutorialsCard
+              relatedTutorials={relatedTutorials}
+              truncateFrom={3}
+            />
+          )}
+          <EventMaterials {...props} />
+          {eventConversation}
+          {displayCalendar && (
+            <CalendarList
+              calendars={[calendar]}
+              title="Subscribe to this event's Calendar"
+              hideSupportText
+            />
+          )}
+
+          {!hasFinished && (
+            <CtaCard
+              href={createMailTo(TECH_SUPPORT_EMAIL)}
+              buttonText="Contact tech support"
+              displayCopy
+            >
+              <strong>Having trouble accessing this event?</strong>
+              <br /> The tech support team is here to help.
+            </CtaCard>
+          )}
+        </div>
         {!hasFinished && (
-          <CtaCard
-            href={createMailTo(TECH_SUPPORT_EMAIL)}
-            buttonText="Contact tech support"
-            displayCopy
-          >
-            <strong>Having trouble accessing this event?</strong>
-            <br /> The tech support team is here to help.
-          </CtaCard>
+          <Paragraph noMargin accent="lead">
+            Having issues? Set up your calendar manually with these instructions
+            for{' '}
+            <Link href="https://support.apple.com/en-us/guide/calendar/icl1022/mac">
+              Apple Calendar
+            </Link>{' '}
+            or{' '}
+            <Link href="https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c">
+              Outlook
+            </Link>
+            .
+          </Paragraph>
         )}
-      </div>
-      {!hasFinished && (
-        <Paragraph noMargin accent="lead">
-          Having issues? Set up your calendar manually with these instructions
-          for{' '}
-          <Link href="https://support.apple.com/en-us/guide/calendar/icl1022/mac">
-            Apple Calendar
-          </Link>{' '}
-          or{' '}
-          <Link href="https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c">
-            Outlook
-          </Link>
-          .
-        </Paragraph>
-      )}
-    </>
-  </div>
-);
+      </>
+    </div>
+  );
+};
 
 export default EventPage;

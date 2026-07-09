@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { css } from '@emotion/react';
 
 import { rem, mobileScreen } from '../pixels';
@@ -90,14 +90,16 @@ interface ToastCardProps {
   readonly toastContent?: ReactNode;
   readonly toastAction?: ReactNode;
   readonly type?: Type;
+  readonly accent?: ComponentProps<typeof Card>['accent'];
 }
 const ToastCard: React.FC<ToastCardProps> = ({
   children,
   toastContent,
   toastAction,
   type = 'alert',
+  accent,
 }) => (
-  <Card padding={false}>
+  <Card padding={false} accent={accent}>
     {toastContent && (
       <>
         <span css={[toastStyles, accentMap[type]]}>

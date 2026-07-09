@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { addDays, formatISO, subDays, subYears } from 'date-fns';
 import {
@@ -213,4 +213,21 @@ describe('footer', () => {
       expect.stringMatching(/techsupport@asap.science/i),
     );
   });
+});
+
+it('scrolls to the material section referenced by the url hash', async () => {
+  const scrollIntoView = jest.fn();
+  Element.prototype.scrollIntoView = scrollIntoView;
+  window.history.replaceState(null, '', '/#event-notes');
+
+  render(
+    <EventPage
+      {...props}
+      notes="My notes"
+      endDate={subDays(new Date(), 2).toISOString()}
+    />,
+  );
+
+  await waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
+  window.history.replaceState(null, '', '/');
 });

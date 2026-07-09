@@ -56,8 +56,16 @@ const listStyles = css({
     marginBottom: '3px',
   },
 });
+// Fixed 56px so the item doesn't stretch when the rail widens for a scrollbar.
+const collapsedListStyles = css({
+  [crossQuery]: {
+    'li > a': {
+      display: 'block',
+      width: rem(56),
+    },
+  },
+});
 
-// The collapse toggle is desktop-only; the mobile drawer has no collapse.
 const toggleContainerStyles = css({
   display: 'none',
   [crossQuery]: {
@@ -72,8 +80,11 @@ const dividerStyles = css({
   maxWidth: '100%',
   margin: `${rem(12)} auto`,
 });
+// 16px left aligns it under the left-anchored icons rather than centring.
 const collapsedDividerStyles = css({
   width: rem(24),
+  marginLeft: rem(16),
+  marginRight: 'auto',
 });
 const toggleButtonStyles = css({
   boxSizing: 'border-box',
@@ -95,7 +106,11 @@ const toggleButtonStyles = css({
     backgroundColor: silver.rgb,
   },
 });
-// Matches the disabled nav items and blocks collapsing until the menu is ready.
+const collapsedToggleButtonStyles = css({
+  [crossQuery]: {
+    width: rem(56),
+  },
+});
 const toggleButtonDisabledStyles = css({
   opacity: 0.3,
   pointerEvents: 'none',
@@ -151,7 +166,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
   const railSettled = collapsed && !animating;
   return (
     <nav>
-      <ul css={listStyles}>
+      <ul css={[listStyles, railSettled && collapsedListStyles]}>
         <li>
           <NavigationLink
             href={network({}).$}
@@ -258,6 +273,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
             type="button"
             css={[
               toggleButtonStyles,
+              railSettled && collapsedToggleButtonStyles,
               !userOnboarded && toggleButtonDisabledStyles,
             ]}
             onClick={onToggleCollapse}

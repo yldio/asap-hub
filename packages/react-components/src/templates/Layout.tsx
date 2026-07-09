@@ -72,6 +72,9 @@ const menuCollapsedStorageKey = 'asap-crn-menu-collapsed';
 
 // Fixed rail width when the desktop menu is collapsed (icon-only).
 const collapsedMenuWidth = 72;
+// Extra column width to host the scrollbar when the short-viewport rail
+// scrolls, so the bar sits beside the icons instead of squeezing them.
+const scrollbarAllowance = 16;
 // A length (not `max-content`) so the grid column can animate between states.
 const expandedMenuWidth = 268;
 
@@ -99,6 +102,13 @@ export const styles = css({
 const collapsedStyles = css({
   [crossQuery]: {
     gridTemplateColumns: `${rem(collapsedMenuWidth)} 1fr 72px`,
+  },
+  // Widen the rail by the scrollbar strip when it scrolls, so the icons keep
+  // their full width and stay centred.
+  [shortViewportQuery]: {
+    gridTemplateColumns: `${rem(
+      collapsedMenuWidth + scrollbarAllowance,
+    )} 1fr 72px`,
   },
 });
 
@@ -177,14 +187,16 @@ export const menuStyles = css({
   display: 'flex',
   flexDirection: 'column',
   maxWidth: '100vw',
-  // Must not clip, so the absolutely-positioned collapsed tooltips can escape
-  // the narrow column (a scroll container would clip both axes).
   [crossQuery]: {
     overflow: 'visible',
   },
-  // Too short to fit the nav: reaching every item beats the tooltip escaping.
+  // Too short to fit the nav: scroll so every item is reachable, keeping the
+  // default scrollbar (matching the content area). The rail column is widened
+  // by the scrollbar strip so the bar never squeezes the icons; pad the bottom
+  // so the last item clears the fixed cookie button.
   [shortViewportQuery]: {
     overflowY: 'auto',
+    paddingBottom: rem(72),
   },
   [drawerQuery]: {
     maxWidth: rem(302),

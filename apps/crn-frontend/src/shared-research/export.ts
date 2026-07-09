@@ -25,16 +25,17 @@ type FirstVersionCSV = {
 };
 
 type ResearchOutputCSV = Record<
-  keyof (Omit<
-    ResearchOutputResponse,
-    | 'team'
-    | 'descriptionMD'
-    | 'usageNotesMD'
-    | 'versions'
-    | 'relatedManuscriptVersion'
-    | 'relatedManuscript'
-  > &
-    FirstVersionCSV),
+  | keyof (Omit<
+      ResearchOutputResponse,
+      | 'team'
+      | 'descriptionMD'
+      | 'usageNotesMD'
+      | 'versions'
+      | 'relatedManuscriptVersion'
+      | 'relatedManuscript'
+    > &
+      FirstVersionCSV)
+  | 'projectId',
   CSVValue
 >;
 
@@ -69,87 +70,94 @@ const getFirstVersionData = (
 
 export const researchOutputToCSV = (
   output: ResearchOutputResponse,
-): ResearchOutputCSV => ({
-  title: output.title,
-  documentType: output.documentType,
-  type: output.type,
-  subtype: output.subtype,
-  addedDate: output.addedDate,
-  lastUpdatedPartial: output.lastUpdatedPartial,
-  publishingEntity: output.publishingEntity,
-  teams: output.teams
-    .map((team) => team.displayName)
-    .sort(caseInsensitive)
-    .join(','),
-  labs: output.labs
-    .map((lab) => lab.name)
-    .sort(caseInsensitive)
-    .join(','),
-  authors: output.authors
-    .map(
-      (user) =>
-        `${user.displayName}${user.orcid ? ` (${user.orcid})` : ''}${
-          isInternalUser(user) ? '' : ' [ext]'
-        }`,
-    )
-    .join(','),
-  relatedResearch: output.relatedResearch.map(({ title }) => title).join(','),
-  relatedEvents: output.relatedEvents.map(({ title }) => title).join(','),
-  workingGroups: output.workingGroups
-    ? output.workingGroups
-        .map((wg) => wg.title)
-        .sort(caseInsensitive)
-        .join(',')
-    : '',
-  project: output.project?.title,
-  researchTheme: output.researchTheme?.join(','),
-  methods: output.methods
-    .map((item) => item)
-    .sort(caseInsensitive)
-    .join(','),
-  keywords: output.keywords
-    .map((item) => item)
-    .sort(caseInsensitive)
-    .join(','),
-  organisms: output.organisms
-    .map((item) => item)
-    .sort(caseInsensitive)
-    .join(','),
-  environments: output.environments
-    .map((item) => item)
-    .sort(caseInsensitive)
-    .join(','),
-  usedInPublication: output.usedInPublication,
-  sharingStatus: output.sharingStatus,
-  asapFunded: output.asapFunded,
-  link: output.link,
-  doi: output.doi ?? 'NA',
-  rrid: output.rrid,
-  accession: output.accession,
-  labCatalogNumber: output.labCatalogNumber,
-  description: output.descriptionMD || htmlToCsvText(output.description),
-  shortDescription: output.shortDescription,
-  changelog: output.changelog,
-  usageNotes: output.usageNotesMD || htmlToCsvText(output.usageNotes),
-  contactEmails: output.contactEmails
-    .map((item) => item)
-    .sort(caseInsensitive)
-    .join(','),
-  publishDate: output.publishDate,
-  id: output.id,
-  created: output.created,
-  lastModifiedDate: output.lastModifiedDate,
-  published: output.published,
-  statusChangedBy: output.statusChangedBy
-    ? `${output.statusChangedBy.firstName} ${output.statusChangedBy.lastName}`
-    : undefined,
-  statusChangedAt: output.statusChangedAt,
-  isInReview: output.isInReview,
-  impact: output.impact?.name,
-  layImpactStatement: output.layImpactStatement,
-  categories: output.categories?.map((category) => category.name).join(','),
-  ...getFirstVersionData(output.versions),
-});
+): ResearchOutputCSV => {
+  const project =
+    output.publishingEntity === 'Working Group'
+      ? null
+      : output.project ?? output.teams[0]?.project;
+  return {
+    title: output.title,
+    documentType: output.documentType,
+    type: output.type,
+    subtype: output.subtype,
+    addedDate: output.addedDate,
+    lastUpdatedPartial: output.lastUpdatedPartial,
+    publishingEntity: output.publishingEntity,
+    teams: output.teams
+      .map((team) => team.displayName)
+      .sort(caseInsensitive)
+      .join(','),
+    labs: output.labs
+      .map((lab) => lab.name)
+      .sort(caseInsensitive)
+      .join(','),
+    authors: output.authors
+      .map(
+        (user) =>
+          `${user.displayName}${user.orcid ? ` (${user.orcid})` : ''}${
+            isInternalUser(user) ? '' : ' [ext]'
+          }`,
+      )
+      .join(','),
+    relatedResearch: output.relatedResearch.map(({ title }) => title).join(','),
+    relatedEvents: output.relatedEvents.map(({ title }) => title).join(','),
+    workingGroups: output.workingGroups
+      ? output.workingGroups
+          .map((wg) => wg.title)
+          .sort(caseInsensitive)
+          .join(',')
+      : '',
+    project: project?.title ?? '',
+    projectId: project?.projectId ?? '',
+    researchTheme: output.researchTheme?.join(','),
+    methods: output.methods
+      .map((item) => item)
+      .sort(caseInsensitive)
+      .join(','),
+    keywords: output.keywords
+      .map((item) => item)
+      .sort(caseInsensitive)
+      .join(','),
+    organisms: output.organisms
+      .map((item) => item)
+      .sort(caseInsensitive)
+      .join(','),
+    environments: output.environments
+      .map((item) => item)
+      .sort(caseInsensitive)
+      .join(','),
+    usedInPublication: output.usedInPublication,
+    sharingStatus: output.sharingStatus,
+    asapFunded: output.asapFunded,
+    link: output.link,
+    doi: output.doi ?? 'NA',
+    rrid: output.rrid,
+    accession: output.accession,
+    labCatalogNumber: output.labCatalogNumber,
+    description: output.descriptionMD || htmlToCsvText(output.description),
+    shortDescription: output.shortDescription,
+    changelog: output.changelog,
+    usageNotes: output.usageNotesMD || htmlToCsvText(output.usageNotes),
+    contactEmails: output.contactEmails
+      .map((item) => item)
+      .sort(caseInsensitive)
+      .join(','),
+    publishDate: output.publishDate,
+    id: output.id,
+    created: output.created,
+    lastModifiedDate: output.lastModifiedDate,
+    published: output.published,
+    statusChangedBy: output.statusChangedBy
+      ? `${output.statusChangedBy.firstName} ${output.statusChangedBy.lastName}`
+      : undefined,
+    statusChangedAt: output.statusChangedAt,
+    isInReview: output.isInReview,
+    impact: output.impact?.name,
+    layImpactStatement: output.layImpactStatement,
+    categories: output.categories?.map((category) => category.name).join(','),
+    ...getFirstVersionData(output.versions),
+  };
+};
 
 export const squidexResultsToStream = async <T>(
   csvStream: Stringifier,

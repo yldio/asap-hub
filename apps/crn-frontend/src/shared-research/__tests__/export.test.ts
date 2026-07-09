@@ -94,6 +94,8 @@ describe('researchOutputToCSV', () => {
       categories: 'Category 1',
       impact: 'Impact 1',
       layImpactStatement: 'lay impact statement',
+      project: '',
+      projectId: '',
     });
   });
   it('flattens authors, preserves order, displays orcid and external status when available', () => {
@@ -169,6 +171,49 @@ describe('researchOutputToCSV', () => {
       researchOutputToCSV({ ...output, workingGroups: undefined })
         .workingGroups,
     ).toMatchInlineSnapshot(`""`);
+  });
+  it('handles project based research outputs', () => {
+    const output: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      workingGroups: undefined,
+      publishingEntity: 'Project',
+      project: {
+        id: 'project-id',
+        title: 'Discovery Project One',
+        projectType: 'Discovery Project',
+        projectId: 'discovery-project-one',
+      },
+    };
+    expect(researchOutputToCSV(output).project).toMatchInlineSnapshot(
+      `"Discovery Project One"`,
+    );
+    expect(researchOutputToCSV(output).projectId).toMatchInlineSnapshot(
+      `"discovery-project-one"`,
+    );
+  });
+  it('handles projects on team-based research outputs', () => {
+    const output: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      workingGroups: undefined,
+      publishingEntity: 'Team',
+      teams: [
+        {
+          ...createTeamResponse({}),
+          project: {
+            id: 'project-id',
+            title: 'Discovery Project Two',
+            projectType: 'Discovery Project',
+            projectId: 'discovery-project-two',
+          },
+        },
+      ],
+    };
+    expect(researchOutputToCSV(output).project).toMatchInlineSnapshot(
+      `"Discovery Project Two"`,
+    );
+    expect(researchOutputToCSV(output).projectId).toMatchInlineSnapshot(
+      `"discovery-project-two"`,
+    );
   });
   it('flattens and orders contact emails', () => {
     const output: ResearchOutputResponse = {

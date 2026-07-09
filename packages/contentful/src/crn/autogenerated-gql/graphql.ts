@@ -33429,7 +33429,7 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                                     Maybe<
                                       Pick<
                                         Projects,
-                                        'title' | 'projectType'
+                                        'title' | 'projectType' | 'projectId'
                                       > & { sys: Pick<Sys, 'id'> }
                                     >
                                   >;
@@ -33460,7 +33460,7 @@ export type FetchResearchOutputByManuscriptVersionIdQuery = {
                 >;
               }>;
               project?: Maybe<
-                Pick<Projects, 'title' | 'projectType'> & {
+                Pick<Projects, 'title' | 'projectType' | 'projectId'> & {
                   sys: Pick<Sys, 'id'>;
                 }
               >;
@@ -36644,9 +36644,10 @@ export type ResearchOutputsContentFragment = Pick<
                     projectsCollection?: Maybe<{
                       items: Array<
                         Maybe<
-                          Pick<Projects, 'title' | 'projectType'> & {
-                            sys: Pick<Sys, 'id'>;
-                          }
+                          Pick<
+                            Projects,
+                            'title' | 'projectType' | 'projectId'
+                          > & { sys: Pick<Sys, 'id'> }
                         >
                       >;
                     }>;
@@ -36673,7 +36674,9 @@ export type ResearchOutputsContentFragment = Pick<
     >;
   }>;
   project?: Maybe<
-    Pick<Projects, 'title' | 'projectType'> & { sys: Pick<Sys, 'id'> }
+    Pick<Projects, 'title' | 'projectType' | 'projectId'> & {
+      sys: Pick<Sys, 'id'>;
+    }
   >;
   workingGroup?: Maybe<Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }>;
   methodsCollection?: Maybe<{
@@ -36944,9 +36947,10 @@ export type FetchResearchOutputByIdQuery = {
                         projectsCollection?: Maybe<{
                           items: Array<
                             Maybe<
-                              Pick<Projects, 'title' | 'projectType'> & {
-                                sys: Pick<Sys, 'id'>;
-                              }
+                              Pick<
+                                Projects,
+                                'title' | 'projectType' | 'projectId'
+                              > & { sys: Pick<Sys, 'id'> }
                             >
                           >;
                         }>;
@@ -36973,7 +36977,9 @@ export type FetchResearchOutputByIdQuery = {
         >;
       }>;
       project?: Maybe<
-        Pick<Projects, 'title' | 'projectType'> & { sys: Pick<Sys, 'id'> }
+        Pick<Projects, 'title' | 'projectType' | 'projectId'> & {
+          sys: Pick<Sys, 'id'>;
+        }
       >;
       workingGroup?: Maybe<
         Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
@@ -37309,9 +37315,10 @@ export type FetchResearchOutputsQuery = {
                               projectsCollection?: Maybe<{
                                 items: Array<
                                   Maybe<
-                                    Pick<Projects, 'title' | 'projectType'> & {
-                                      sys: Pick<Sys, 'id'>;
-                                    }
+                                    Pick<
+                                      Projects,
+                                      'title' | 'projectType' | 'projectId'
+                                    > & { sys: Pick<Sys, 'id'> }
                                   >
                                 >;
                               }>;
@@ -37341,7 +37348,9 @@ export type FetchResearchOutputsQuery = {
               >;
             }>;
             project?: Maybe<
-              Pick<Projects, 'title' | 'projectType'> & { sys: Pick<Sys, 'id'> }
+              Pick<Projects, 'title' | 'projectType' | 'projectId'> & {
+                sys: Pick<Sys, 'id'>;
+              }
             >;
             workingGroup?: Maybe<
               Pick<WorkingGroups, 'title'> & { sys: Pick<Sys, 'id'> }
@@ -46022,6 +46031,14 @@ export const ResearchOutputsContentFragmentDoc = {
                                                                 'projectType',
                                                             },
                                                           },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value:
+                                                                'projectId',
+                                                            },
+                                                          },
                                                         ],
                                                       },
                                                     },
@@ -46171,6 +46188,7 @@ export const ResearchOutputsContentFragmentDoc = {
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'projectType' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'projectId' } },
               ],
             },
           },

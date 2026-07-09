@@ -66,6 +66,7 @@ export const researchOutputTypes = [
 ] as const;
 
 export const ResearchOutputPublishingEntitiesValues = <const>[
+  'Project',
   'Team',
   'Working Group',
 ];
@@ -281,10 +282,16 @@ export type ResearchOutputDataObject = ResearchOutputCoreObject & {
   keywords: string[];
   teams: (Pick<TeamResponse, 'id' | 'displayName'> & {
     teamType?: TeamType;
-    project?: Pick<ProjectDataObject, 'id' | 'title' | 'projectType'>;
+    project?: Pick<
+      ProjectDataObject,
+      'id' | 'title' | 'projectType' | 'projectId'
+    >;
   })[];
   workingGroups: Pick<WorkingGroupResponse, 'id' | 'title'>[];
-  project?: Pick<ProjectDataObject, 'id' | 'title' | 'projectType'>;
+  project?: Pick<
+    ProjectDataObject,
+    'id' | 'title' | 'projectType' | 'projectId'
+  >;
   published: boolean;
   relatedResearch: Array<
     Pick<

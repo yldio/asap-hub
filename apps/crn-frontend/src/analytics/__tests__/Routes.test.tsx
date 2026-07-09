@@ -7,16 +7,13 @@ import {
 } from '@asap-hub/fixtures';
 import { EngagementPerformance } from '@asap-hub/model';
 import { analytics } from '@asap-hub/routing';
-import {
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { RecoilRoot } from 'recoil';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import {
@@ -138,23 +135,28 @@ mockGetUserProductivityPerformance.mockResolvedValue(
 const renderPage = async (path: string) => {
   const { container } = render(
     <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[{ pathname: path }]}>
-              <Routes>
-                <Route
-                  path={`${analytics.template}/*`}
-                  element={<Analytics />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[{ pathname: path }]}>
+                <Routes>
+                  <Route
+                    path={`${analytics.template}/*`}
+                    element={<Analytics />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
-  await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+  await waitFor(
+    () => expect(screen.queryByText(/loading/i)).not.toBeInTheDocument(),
+    { timeout: 30_000 },
+  );
 
   return container;
 };

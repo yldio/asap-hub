@@ -1,6 +1,7 @@
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, renderHook, screen, waitFor } from '@testing-library/react';
 import { Component, ReactNode, Suspense } from 'react';
-import { RecoilRoot } from 'recoil';
 
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { OpensearchClient } from '../../analytics/utils/opensearch';
@@ -38,6 +39,16 @@ const mockOpensearchClient = OpensearchClient as jest.MockedClass<
   typeof OpensearchClient
 >;
 
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <QueryClientProvider client={createTestQueryClient()}>
+    <Suspense fallback="loading">
+      <Auth0Provider user={{ id: 'user-id' }}>
+        <WhenReady>{children}</WhenReady>
+      </Auth0Provider>
+    </Suspense>
+  </QueryClientProvider>
+);
+
 describe('useOpensearchMetrics', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -53,34 +64,24 @@ describe('useOpensearchMetrics', () => {
     };
 
     render(
-      <RecoilRoot>
+      <QueryClientProvider client={createTestQueryClient()}>
         <ErrorBoundary>
           <Suspense fallback={<div>Loading...</div>}>
             <TestComponent />
           </Suspense>
         </ErrorBoundary>
-      </RecoilRoot>,
+      </QueryClientProvider>,
     );
 
     await waitFor(() => {
       expect(screen.getByTestId('error')).toHaveTextContent(
-        'Auth0 not available',
+        'Auth0 is not ready; cannot get an authorization token yet',
       );
     });
   });
 
   it('returns all metric functions', async () => {
-    const { result } = renderHook(() => useOpensearchMetrics(), {
-      wrapper: ({ children }) => (
-        <RecoilRoot>
-          <Suspense fallback="loading">
-            <Auth0Provider user={{ id: 'user-id' }}>
-              <WhenReady>{children}</WhenReady>
-            </Auth0Provider>
-          </Suspense>
-        </RecoilRoot>
-      ),
-    });
+    const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
     await waitFor(() => {
       expect(result.current).toHaveProperty('getPublicationCompliance');
@@ -130,17 +131,7 @@ describe('useOpensearchMetrics', () => {
           total: 0,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -179,17 +170,7 @@ describe('useOpensearchMetrics', () => {
           total: 0,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -236,17 +217,7 @@ describe('useOpensearchMetrics', () => {
           total: 1,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -292,17 +263,7 @@ describe('useOpensearchMetrics', () => {
           total: 1,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -344,17 +305,7 @@ describe('useOpensearchMetrics', () => {
           }) as unknown as OpensearchClient<unknown>,
       );
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -393,17 +344,7 @@ describe('useOpensearchMetrics', () => {
           total: 1,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -457,17 +398,7 @@ describe('useOpensearchMetrics', () => {
           total: 1,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -506,17 +437,7 @@ describe('useOpensearchMetrics', () => {
           }) as unknown as OpensearchClient<unknown>,
       );
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -568,17 +489,7 @@ describe('useOpensearchMetrics', () => {
           },
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -623,17 +534,7 @@ describe('useOpensearchMetrics', () => {
           total: 1,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -676,17 +577,7 @@ describe('useOpensearchMetrics', () => {
           }) as unknown as OpensearchClient<unknown>,
       );
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -754,17 +645,7 @@ describe('useOpensearchMetrics', () => {
           },
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -798,17 +679,7 @@ describe('useOpensearchMetrics', () => {
           total: 0,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -847,17 +718,7 @@ describe('useOpensearchMetrics', () => {
           }) as unknown as OpensearchClient<unknown>,
       );
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -884,17 +745,7 @@ describe('useOpensearchMetrics', () => {
         .spyOn(collaborationApi, 'getUserCollaborationPerformance')
         .mockResolvedValue(undefined);
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -928,17 +779,7 @@ describe('useOpensearchMetrics', () => {
           total: 0,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -977,17 +818,7 @@ describe('useOpensearchMetrics', () => {
           }) as unknown as OpensearchClient<unknown>,
       );
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -1014,17 +845,7 @@ describe('useOpensearchMetrics', () => {
         .spyOn(collaborationApi, 'getTeamCollaborationPerformance')
         .mockResolvedValue(undefined);
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -1058,17 +879,7 @@ describe('useOpensearchMetrics', () => {
           total: 0,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -1104,17 +915,7 @@ describe('useOpensearchMetrics', () => {
           }) as unknown as OpensearchClient<unknown>,
       );
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -1172,17 +973,7 @@ describe('useOpensearchMetrics', () => {
           },
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -1209,17 +1000,7 @@ describe('useOpensearchMetrics', () => {
   });
 
   it('uses the same authorization for all OpenSearch clients', async () => {
-    const { result } = renderHook(() => useOpensearchMetrics(), {
-      wrapper: ({ children }) => (
-        <RecoilRoot>
-          <Suspense fallback="loading">
-            <Auth0Provider user={{ id: 'user-id' }}>
-              <WhenReady>{children}</WhenReady>
-            </Auth0Provider>
-          </Suspense>
-        </RecoilRoot>
-      ),
-    });
+    const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
     await waitFor(() => {
       expect(result.current).toBeTruthy();
@@ -1259,17 +1040,7 @@ describe('useOpensearchMetrics', () => {
           total: 0,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -1306,17 +1077,7 @@ describe('useOpensearchMetrics', () => {
           }) as unknown as OpensearchClient<unknown>,
       );
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -1348,17 +1109,7 @@ describe('useOpensearchMetrics', () => {
           total: 0,
         });
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();
@@ -1397,17 +1148,7 @@ describe('useOpensearchMetrics', () => {
           }) as unknown as OpensearchClient<unknown>,
       );
 
-      const { result } = renderHook(() => useOpensearchMetrics(), {
-        wrapper: ({ children }) => (
-          <RecoilRoot>
-            <Suspense fallback="loading">
-              <Auth0Provider user={{ id: 'user-id' }}>
-                <WhenReady>{children}</WhenReady>
-              </Auth0Provider>
-            </Suspense>
-          </RecoilRoot>
-        ),
-      });
+      const { result } = renderHook(() => useOpensearchMetrics(), { wrapper });
 
       await waitFor(() => {
         expect(result.current).toBeTruthy();

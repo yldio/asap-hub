@@ -67,10 +67,6 @@ const statusMap = {
 } as const;
 
 const normalizeMilestoneStatus = (value: string): MilestoneStatus => {
-  if (!value) {
-    return 'Pending';
-  }
-
   if (milestoneStatuses.includes(value as MilestoneStatus)) {
     return value as MilestoneStatus;
   }

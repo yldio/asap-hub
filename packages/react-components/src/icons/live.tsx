@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 import { css, keyframes } from '@emotion/react';
 
+import { fern } from '../colors';
+
 const pulse = keyframes({
   '0%': { transform: 'scale(0.5)', opacity: 0.5 },
   '100%': { transform: 'scale(1.25)', opacity: 0 },
@@ -26,8 +28,8 @@ const live = (
     xmlns="http://www.w3.org/2000/svg"
   >
     <title>Live</title>
-    <circle css={pulseStyles} cx="12" cy="12" r="8" fill="#34A270" />
-    <circle cx="12" cy="12" r="4" fill="#34A270" />
+    <circle css={pulseStyles} cx="12" cy="12" r="8" fill={fern.hex} />
+    <circle cx="12" cy="12" r="4" fill={fern.hex} />
   </svg>
 );
 

@@ -222,8 +222,8 @@ describe('the collapse toggle', () => {
     ).toHaveStyle('justify-content: flex-start');
   });
 
-  it('shows a tooltip on the collapsed toggle, like the nav items', () => {
-    const { getByRole } = render(
+  it('shows a tooltip on the collapsed toggle when hovered', () => {
+    const { getByRole, queryByRole } = render(
       <MemoryRouter>
         <MainNavigation
           userOnboarded={true}
@@ -233,60 +233,32 @@ describe('the collapse toggle', () => {
       </MemoryRouter>,
     );
     const toggle = getByRole('button', { name: 'Expand Menu', hidden: true });
-    expect(toggle.querySelector('[role="tooltip"]')?.textContent).toBe(
-      'Expand Menu',
-    );
+    expect(queryByRole('tooltip')).not.toBeInTheDocument();
+    fireEvent.mouseEnter(toggle.querySelector('span')!);
+    expect(getByRole('tooltip')).toHaveTextContent('Expand Menu');
   });
 });
 
 describe('a collapsed navigation item', () => {
-  it('renders a tooltip with the item label', () => {
-    const { getAllByRole } = render(
+  it('reveals its label in a tooltip on hover', () => {
+    const { getAllByRole, getByRole, queryByRole } = render(
       <MemoryRouter>
         <MainNavigation userOnboarded={true} collapsed />
       </MemoryRouter>,
     );
-    const tooltips = getAllByRole('tooltip', { hidden: true }).map(
-      (t) => t.textContent,
-    );
-    expect(tooltips).toEqual(
-      expect.arrayContaining([
-        'Network',
-        'Projects',
-        'Shared Research',
-        'Calendar & Events',
-        'News',
-        'Guides & Tutorials',
-        'About ASAP',
-      ]),
-    );
+    expect(queryByRole('tooltip')).not.toBeInTheDocument();
+    const firstItem = getAllByRole('listitem')[0]!;
+    fireEvent.mouseEnter(firstItem.querySelector('a div > span')!);
+    expect(getByRole('tooltip')).toHaveTextContent('Network');
   });
-});
 
-describe('while the menu is animating open', () => {
-  // Labels are kept in the collapsed (icon-only) layout until the rail reaches
-  // full width, so they can't wrap inside a not-yet-full-width column.
-  it('keeps labels hidden even though the menu is expanded', () => {
-    const { queryAllByRole, rerender } = render(
+  it('does not show a tooltip when expanded', () => {
+    const { getByRole, queryByRole } = render(
       <MemoryRouter>
-        <MainNavigation userOnboarded={true} collapsed={false} animating />
+        <MainNavigation userOnboarded={true} />
       </MemoryRouter>,
     );
-    // The icon-only layout renders a tooltip span per item (label hidden).
-    expect(queryAllByRole('tooltip', { hidden: true }).length).toBeGreaterThan(
-      0,
-    );
-
-    // Once the animation finishes, labels are shown and the tooltip spans go.
-    rerender(
-      <MemoryRouter>
-        <MainNavigation
-          userOnboarded={true}
-          collapsed={false}
-          animating={false}
-        />
-      </MemoryRouter>,
-    );
-    expect(queryAllByRole('tooltip', { hidden: true })).toHaveLength(0);
+    fireEvent.mouseEnter(getByRole('link', { name: /network/i }));
+    expect(queryByRole('tooltip')).not.toBeInTheDocument();
   });
 });

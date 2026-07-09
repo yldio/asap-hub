@@ -3,12 +3,13 @@ import { css, keyframes, Theme } from '@emotion/react';
 import { PropsWithChildren } from 'react';
 import { NavLink, useLocation } from 'react-router';
 import { activePrimaryStyles } from '../button';
-import { charcoal, lead, paper, silver } from '../colors';
+import { charcoal, lead, silver } from '../colors';
 import { crossQuery } from '../layout';
 import { useBlockedClick } from '../navigation';
 import { lineHeight, rem } from '../pixels';
 import { useHasRouter } from '../routing';
 import { isInternalLink } from '../utils';
+import RailTooltip from './RailTooltip';
 
 const styles = css({
   display: 'block',
@@ -25,12 +26,6 @@ const styles = css({
   transition: 'background-color 100ms ease-in-out, color 100ms ease-in-out',
   ':hover, :focus': {
     backgroundColor: silver.rgb,
-  },
-  [crossQuery]: {
-    '&:hover [role="tooltip"], &:focus-visible [role="tooltip"]': {
-      visibility: 'visible',
-      opacity: 1,
-    },
   },
 });
 
@@ -83,56 +78,6 @@ const squareBorderStyles = css({
   borderRadius: 'unset',
 });
 
-// Tooltip to the right of a collapsed icon; exported so the toggle can reuse it.
-export const railTooltipWrapperStyles = css({
-  position: 'relative',
-  display: 'flex',
-  flex: 1,
-});
-export const railTooltipStyles = css({
-  display: 'none',
-  [crossQuery]: {
-    display: 'block',
-    visibility: 'hidden',
-    opacity: 0,
-    transition: 'opacity 100ms ease-in-out',
-    position: 'absolute',
-    left: '100%',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    marginLeft: rem(16),
-    zIndex: 1,
-    pointerEvents: 'none',
-
-    backgroundColor: charcoal.rgb,
-    color: paper.rgb,
-    borderRadius: rem(4),
-    padding: `${rem(6)} ${rem(12)}`,
-    whiteSpace: 'nowrap',
-    fontWeight: 'normal',
-
-    '::before': {
-      content: '""',
-      position: 'absolute',
-      right: '100%',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      borderTop: `${rem(5)} solid transparent`,
-      borderBottom: `${rem(5)} solid transparent`,
-      borderRight: `${rem(5)} solid ${charcoal.rgb}`,
-    },
-  },
-});
-// Hover/focus-visible trigger for the toggle button's tooltip (see `styles`).
-export const railTooltipShownStyles = css({
-  [crossQuery]: {
-    '&:hover [role="tooltip"], &:focus-visible [role="tooltip"]': {
-      visibility: 'visible',
-      opacity: 1,
-    },
-  },
-});
-
 type NavigationLinkProps = NavigationProps & {
   readonly icon?: JSX.Element;
   readonly collapsed?: boolean;
@@ -150,7 +95,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
 }) =>
   labelsHidden ? (
     <Navigation {...props}>
-      <span css={railTooltipWrapperStyles}>
+      <RailTooltip label={children} enabled={collapsed}>
         <p css={textStyles}>
           {icon && (
             <span css={[iconStyles, collapsedIconStyles, iconNoTitleStyles]}>
@@ -159,10 +104,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
           )}
           <span css={collapsedLabelStyles}>{children}</span>
         </p>
-        <span role="tooltip" css={railTooltipStyles}>
-          {children}
-        </span>
-      </span>
+      </RailTooltip>
     </Navigation>
   ) : (
     <Navigation {...props}>

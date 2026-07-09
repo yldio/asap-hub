@@ -18,11 +18,7 @@ import {
   lineHeight,
 } from '../pixels';
 import { NavigationLink } from '../atoms';
-import {
-  railTooltipShownStyles,
-  railTooltipStyles,
-  railTooltipWrapperStyles,
-} from '../atoms/NavigationLink';
+import RailTooltip from '../atoms/RailTooltip';
 import { charcoal, silver, steel } from '../colors';
 import { crossQuery } from '../layout';
 import {
@@ -262,7 +258,6 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
             type="button"
             css={[
               toggleButtonStyles,
-              railSettled && railTooltipShownStyles,
               !userOnboarded && toggleButtonDisabledStyles,
             ]}
             onClick={onToggleCollapse}
@@ -270,7 +265,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
             aria-label={collapsed ? 'Expand Menu' : 'Collapse Menu'}
             aria-expanded={!collapsed}
           >
-            <span css={railTooltipWrapperStyles}>
+            <RailTooltip label="Expand Menu" enabled={railSettled}>
               <span
                 css={[
                   toggleIconStyles,
@@ -285,10 +280,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
                   Collapse Menu
                 </span>
               )}
-              <span role="tooltip" css={railTooltipStyles}>
-                Expand Menu
-              </span>
-            </span>
+            </RailTooltip>
           </button>
         </div>
       )}

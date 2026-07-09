@@ -6,6 +6,8 @@ import {
   createUserResponse,
 } from '@asap-hub/fixtures';
 import { activeUserMembershipStatus } from '@asap-hub/model';
+import { createTestQueryClient } from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Suspense } from 'react';
@@ -82,11 +84,13 @@ const renderDashboard = async (user: Partial<User>) => {
             set(refreshUserState(userResponse.id), Math.random());
           }}
         >
-          <Auth0Provider user={user}>
-            <WhenReady>
-              <Dashboard />
-            </WhenReady>
-          </Auth0Provider>
+          <QueryClientProvider client={createTestQueryClient()}>
+            <Auth0Provider user={user}>
+              <WhenReady>
+                <Dashboard />
+              </WhenReady>
+            </Auth0Provider>
+          </QueryClientProvider>
         </RecoilRoot>
       </Suspense>
     </MemoryRouter>,

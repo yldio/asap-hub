@@ -21,7 +21,15 @@ interface BackLinkProps {
 }
 const BackLink: React.FC<BackLinkProps> = ({ href }) => (
   <div css={containerStyles}>
-    <Link href={href}>
+    <Link
+      href={href}
+      onClick={(event) => {
+        if (window.history.state?.idx > 0) {
+          event.preventDefault();
+          window.history.back();
+        }
+      }}
+    >
       <span css={iconStyles}>{chevronCircleLeftIcon}</span>Back
     </Link>
   </div>

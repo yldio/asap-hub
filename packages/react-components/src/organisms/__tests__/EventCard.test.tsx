@@ -67,6 +67,7 @@ describe('current events', () => {
       />,
     );
     expect(screen.getByText(/currently happening/i)).toBeVisible();
+    expect(screen.queryByText('Join Meeting Now')).not.toBeInTheDocument();
   });
   it('toasts for meetings with meeting link', () => {
     render(

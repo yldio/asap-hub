@@ -214,7 +214,7 @@ export const FETCH_MANUSCRIPT_VERSIONS = gql`
                 sys {
                   id
                 }
-                teamsCollection(limit: 3) {
+                teamsCollection(limit: 10) {
                   items {
                     inactiveSinceDate
                     team {

@@ -3,7 +3,6 @@ import { MemoryRouter, Route, Routes as RouterRoutes } from 'react-router';
 import { render, waitFor, screen } from '@testing-library/react';
 import { createTestQueryClient } from '@asap-hub/frontend-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { RecoilRoot } from 'recoil';
 import {
   Auth0Provider,
   WhenReady,
@@ -30,21 +29,19 @@ const mockGetTutorialById = getTutorialById as jest.MockedFunction<
 
 const renderDiscoverPage = (pathname: string, query = '') => {
   const { container } = render(
-    <RecoilRoot>
-      <QueryClientProvider client={createTestQueryClient()}>
-        <Suspense fallback="loading">
-          <Auth0Provider user={{}}>
-            <WhenReady>
-              <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-                <RouterRoutes>
-                  <Route path={`${discover.template}/*`} element={<Routes />} />
-                </RouterRoutes>
-              </MemoryRouter>
-            </WhenReady>
-          </Auth0Provider>
-        </Suspense>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={createTestQueryClient()}>
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
+              <RouterRoutes>
+                <Route path={`${discover.template}/*`} element={<Routes />} />
+              </RouterRoutes>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </QueryClientProvider>,
   );
 
   return container;

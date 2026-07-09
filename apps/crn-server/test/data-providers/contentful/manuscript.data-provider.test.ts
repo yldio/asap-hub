@@ -1454,6 +1454,79 @@ describe('Manuscripts Contentful Data Provider', () => {
       ]);
     });
 
+    test('skips null lab items when resolving lab PI teams', async () => {
+      const manuscript = getContentfulGraphqlManuscript();
+      const { discussionsCollection, ...manuscriptWithoutDiscussions } =
+        manuscript;
+
+      jest
+        .spyOn(contentfulGraphqlClientMock, 'request')
+        .mockImplementation(async (query) => {
+          if (query === (FETCH_MANUSCRIPT_BY_ID as unknown as RequestOptions)) {
+            return { manuscripts: manuscriptWithoutDiscussions };
+          }
+          if (
+            query ===
+            (FETCH_MANUSCRIPT_DISCUSSIONS_BY_ID as unknown as RequestOptions)
+          ) {
+            return {
+              manuscripts: {
+                sys: { id: manuscript.sys.id },
+                discussionsCollection: discussionsCollection ?? null,
+              },
+            };
+          }
+          if (
+            query === (FETCH_MANUSCRIPT_VERSIONS as unknown as RequestOptions)
+          ) {
+            return {
+              manuscripts: {
+                versionsCollection: {
+                  ...getContentfulGraphqlManuscriptVersions(),
+                },
+              },
+            };
+          }
+          if (query === (FETCH_LABS as unknown as RequestOptions)) {
+            return {
+              labsCollection: {
+                total: 2,
+                // A null item (Contentful can return these) must be skipped
+                // without throwing.
+                items: [
+                  null,
+                  {
+                    sys: { id: 'lab-1' },
+                    name: 'Lab 1',
+                    labPi: {
+                      sys: { id: 'lab-pi-1' },
+                      teamsCollection: {
+                        items: [
+                          {
+                            inactiveSinceDate: null,
+                            team: {
+                              sys: { id: 'team-1' },
+                              inactiveSince: null,
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  },
+                ],
+              },
+            };
+          }
+          throw new Error('Unexpected query');
+        });
+
+      const result = await manuscriptDataProvider.fetchById('1', 'user-id-1');
+
+      expect(result!.versions[0]!.labs).toEqual([
+        expect.objectContaining({ id: 'lab-1', labPITeamIds: ['team-1'] }),
+      ]);
+    });
+
     test('Should prefer the direct manuscript project when building version identifiers', async () => {
       const directProject = getContentfulGraphqlManuscriptProject({
         sys: { id: 'direct-project-id' },

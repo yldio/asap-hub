@@ -11,15 +11,11 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useRecoilValueLoadable,
 } from 'recoil';
 
 import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { useAnalyticsOpensearch } from '../../hooks';
-import {
-  makeFlagBasedPerformanceHook,
-  makePerformanceState,
-} from '../utils/state';
+import { makePerformanceQuery } from '../utils/state';
 import {
   EngagementListOptions,
   getEngagement,
@@ -112,22 +108,18 @@ export const useAnalyticsEngagement = (
   return engagement;
 };
 
-export const engagementPerformanceState =
-  makePerformanceState<EngagementPerformance>('analyticsEngagementPerformance');
+const engagementPerformanceQuery = makePerformanceQuery<EngagementPerformance>(
+  'presenter-representation-performance',
+);
 
 export const useEngagementPerformance =
-  makeFlagBasedPerformanceHook<EngagementPerformance>(
-    engagementPerformanceState,
+  engagementPerformanceQuery.useSuspenseHook(
     getEngagementPerformance,
     'presenter-representation-performance',
   );
 
-export const useEngagementPerformanceValue = (
-  options: Parameters<typeof getEngagementPerformance>[1],
-) => {
-  const loadable = useRecoilValueLoadable(engagementPerformanceState(options));
-  return loadable.state === 'hasValue' ? loadable.contents : undefined;
-};
+export const useEngagementPerformanceValue =
+  engagementPerformanceQuery.useValueHook;
 
 const analyticsMeetingRepAttendanceState = atomFamily<
   ListMeetingRepAttendanceResponse | Error | undefined,

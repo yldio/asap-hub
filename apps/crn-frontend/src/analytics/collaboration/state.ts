@@ -19,14 +19,10 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useRecoilValueLoadable,
 } from 'recoil';
 import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
-import {
-  makeFlagBasedPerformanceHook,
-  makePerformanceState,
-} from '../utils/state';
+import { makePerformanceQuery } from '../utils/state';
 import {
   getUserCollaboration,
   getTeamCollaboration,
@@ -217,47 +213,33 @@ export const useAnalyticsTeamCollaboration = (
   return { ...teamCollaboration };
 };
 
-export const teamCollaborationPerformanceState =
-  makePerformanceState<TeamCollaborationPerformance>(
-    'analyticsTeamCollaborationPerformance',
+const teamCollaborationPerformanceQuery =
+  makePerformanceQuery<TeamCollaborationPerformance>(
+    'team-collaboration-performance',
   );
 
 export const useTeamCollaborationPerformance =
-  makeFlagBasedPerformanceHook<TeamCollaborationPerformance>(
-    teamCollaborationPerformanceState,
+  teamCollaborationPerformanceQuery.useSuspenseHook(
     getTeamCollaborationPerformance,
     'team-collaboration-performance',
   );
 
-export const useTeamCollaborationPerformanceValue = (
-  options: Parameters<typeof getTeamCollaborationPerformance>[1],
-) => {
-  const loadable = useRecoilValueLoadable(
-    teamCollaborationPerformanceState(options),
-  );
-  return loadable.state === 'hasValue' ? loadable.contents : undefined;
-};
+export const useTeamCollaborationPerformanceValue =
+  teamCollaborationPerformanceQuery.useValueHook;
 
-export const userCollaborationPerformanceState =
-  makePerformanceState<UserCollaborationPerformance>(
-    'analyticsUserCollaborationPerformance',
+const userCollaborationPerformanceQuery =
+  makePerformanceQuery<UserCollaborationPerformance>(
+    'user-collaboration-performance',
   );
 
 export const useUserCollaborationPerformance =
-  makeFlagBasedPerformanceHook<UserCollaborationPerformance>(
-    userCollaborationPerformanceState,
+  userCollaborationPerformanceQuery.useSuspenseHook(
     getUserCollaborationPerformance,
     'user-collaboration-performance',
   );
 
-export const useUserCollaborationPerformanceValue = (
-  options: Parameters<typeof getUserCollaborationPerformance>[1],
-) => {
-  const loadable = useRecoilValueLoadable(
-    userCollaborationPerformanceState(options),
-  );
-  return loadable.state === 'hasValue' ? loadable.contents : undefined;
-};
+export const useUserCollaborationPerformanceValue =
+  userCollaborationPerformanceQuery.useValueHook;
 
 const analyticsPreliminaryDataSharingState = atomFamily<
   ListPreliminaryDataSharingResponse | Error | undefined,

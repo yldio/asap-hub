@@ -1,5 +1,9 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   performanceByDocumentType,
   userProductivityPerformance,
@@ -198,20 +202,22 @@ const teamProductivityResponse: TeamProductivityResponse = {
 const renderPage = async (path: string) => {
   const result = render(
     <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[path]}>
-              <Routes>
-                <Route
-                  path="/analytics/productivity/:metric"
-                  element={<Productivity />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[path]}>
+                <Routes>
+                  <Route
+                    path="/analytics/productivity/:metric"
+                    element={<Productivity />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 
@@ -372,7 +378,7 @@ describe('team productivity', () => {
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );
 
-    expect(screen.getByText('50')).toBeVisible();
+    expect(await screen.findByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
     const rangeButton = screen.getByRole('button', {
@@ -426,7 +432,7 @@ describe('team productivity', () => {
       analytics({}).productivity({}).metric({ metric: 'team' }).$,
     );
 
-    expect(screen.getByText('50')).toBeVisible();
+    expect(await screen.findByText('50')).toBeVisible();
     expect(screen.queryByText('60')).not.toBeInTheDocument();
 
     const outputTypeButton = screen.getByRole('button', {

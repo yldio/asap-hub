@@ -1,5 +1,9 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   EngagementPerformance,
   EngagementResponse,
@@ -199,20 +203,22 @@ const renderPage = async (path: string) => {
         );
       }}
     >
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[path]}>
-              <Routes>
-                <Route
-                  path="/analytics/engagement/:metric"
-                  element={<Engagement />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[path]}>
+                <Routes>
+                  <Route
+                    path="/analytics/engagement/:metric"
+                    element={<Engagement />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 

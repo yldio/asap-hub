@@ -4,7 +4,11 @@ import {
   userCollaborationPerformance,
   preliminaryDataSharingResponse,
 } from '@asap-hub/fixtures';
-import { createCsvFileStream } from '@asap-hub/frontend-utils';
+import {
+  createCsvFileStream,
+  createTestQueryClient,
+} from '@asap-hub/frontend-utils';
+import { QueryClientProvider } from '@tanstack/react-query';
 import {
   ListTeamCollaborationResponse,
   ListUserCollaborationResponse,
@@ -221,20 +225,22 @@ const renderPage = async (
 
   const result = render(
     <RecoilRoot>
-      <Suspense fallback="loading">
-        <Auth0Provider user={{}}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[path]}>
-              <Routes>
-                <Route
-                  path="/analytics/collaboration/:metric/:type?"
-                  element={<Collaboration />}
-                />
-              </Routes>
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
-      </Suspense>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <Suspense fallback="loading">
+          <Auth0Provider user={{}}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[path]}>
+                <Routes>
+                  <Route
+                    path="/analytics/collaboration/:metric/:type?"
+                    element={<Collaboration />}
+                  />
+                </Routes>
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </Suspense>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 

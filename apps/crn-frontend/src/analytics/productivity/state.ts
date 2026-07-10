@@ -13,14 +13,10 @@ import {
   DefaultValue,
   selectorFamily,
   useRecoilState,
-  useRecoilValueLoadable,
 } from 'recoil';
 import { AnalyticsSearchOptionsWithFiltering } from '../utils/analytics-options';
 import { useAnalyticsOpensearch } from '../../hooks/opensearch';
-import {
-  makeFlagBasedPerformanceHook,
-  makePerformanceState,
-} from '../utils/state';
+import { makePerformanceQuery } from '../utils/state';
 import {
   getTeamProductivity,
   getTeamProductivityPerformance,
@@ -116,47 +112,33 @@ export const useAnalyticsUserProductivity = (
   return { ...userProductivity };
 };
 
-export const userProductivityPerformanceState =
-  makePerformanceState<UserProductivityPerformance>(
-    'analyticsUserProductivityPerformance',
+const userProductivityPerformanceQuery =
+  makePerformanceQuery<UserProductivityPerformance>(
+    'user-productivity-performance',
   );
 
 export const useUserProductivityPerformance =
-  makeFlagBasedPerformanceHook<UserProductivityPerformance>(
-    userProductivityPerformanceState,
+  userProductivityPerformanceQuery.useSuspenseHook(
     getUserProductivityPerformance,
     'user-productivity-performance',
   );
 
-export const useUserProductivityPerformanceValue = (
-  options: Parameters<typeof getUserProductivityPerformance>[1],
-) => {
-  const loadable = useRecoilValueLoadable(
-    userProductivityPerformanceState(options),
-  );
-  return loadable.state === 'hasValue' ? loadable.contents : undefined;
-};
+export const useUserProductivityPerformanceValue =
+  userProductivityPerformanceQuery.useValueHook;
 
-export const teamProductivityPerformanceState =
-  makePerformanceState<TeamProductivityPerformance>(
-    'analyticsTeamProductivityPerformance',
+const teamProductivityPerformanceQuery =
+  makePerformanceQuery<TeamProductivityPerformance>(
+    'team-productivity-performance',
   );
 
 export const useTeamProductivityPerformance =
-  makeFlagBasedPerformanceHook<TeamProductivityPerformance>(
-    teamProductivityPerformanceState,
+  teamProductivityPerformanceQuery.useSuspenseHook(
     getTeamProductivityPerformance,
     'team-productivity-performance',
   );
 
-export const useTeamProductivityPerformanceValue = (
-  options: Parameters<typeof getTeamProductivityPerformance>[1],
-) => {
-  const loadable = useRecoilValueLoadable(
-    teamProductivityPerformanceState(options),
-  );
-  return loadable.state === 'hasValue' ? loadable.contents : undefined;
-};
+export const useTeamProductivityPerformanceValue =
+  teamProductivityPerformanceQuery.useValueHook;
 
 const analyticsTeamProductivityIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,

@@ -126,7 +126,7 @@ describe('past events', () => {
     expect(screen.getByTitle(/warning/i)).toBeInTheDocument();
     expect(screen.getByText(/cancelled/i)).toBeVisible();
   });
-  it('does not display a toast while materials are still pending', () => {
+  it('lists every material greyed out and non-clickable while they are still pending', () => {
     render(
       <EventCard
         {...props}
@@ -140,7 +140,11 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.queryByTitle(/paper/i)).not.toBeInTheDocument();
+    expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
+    ['Notes', 'Recording', 'Presentation'].forEach((label) => {
+      expect(screen.getByText(label)).toBeVisible();
+      expect(screen.getByText(label).closest('a')).toBeNull();
+    });
   });
   it('toasts the names of the available materials', () => {
     render(
@@ -204,7 +208,7 @@ describe('past events', () => {
     );
   });
 
-  it('does not display a toast when no materials are available', () => {
+  it('lists every material greyed out and non-clickable when none are available', () => {
     render(
       <EventCard
         {...props}
@@ -218,7 +222,11 @@ describe('past events', () => {
         endDate={subDays(new Date(), 1).toISOString()}
       />,
     );
-    expect(screen.queryByTitle(/paper/i)).not.toBeInTheDocument();
+    expect(screen.getByTitle(/paper/i)).toBeInTheDocument();
+    ['Notes', 'Recording', 'Presentation'].forEach((label) => {
+      expect(screen.getByText(label)).toBeVisible();
+      expect(screen.getByText(label).closest('a')).toBeNull();
+    });
   });
 
   it("doesn't display toast if none of the conditions are match", () => {

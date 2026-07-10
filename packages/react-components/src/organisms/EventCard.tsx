@@ -57,7 +57,10 @@ const materialListStyles = css({
 
   a: {
     color: 'inherit',
-    textDecoration: 'underline',
+    textDecoration: 'none',
+    ':hover': {
+      textDecoration: 'underline',
+    },
   },
 });
 
@@ -135,20 +138,28 @@ const EventCard: React.FC<EventCardProps> = ({
         const value = props[key];
         return Array.isArray(value) ? value.length > 0 : Boolean(value);
       };
-      if (eventMaterialTypes.some(isMaterialAvailable)) {
-        const displayedMaterials = eventMaterialTypes.filter(
-          (key) => key !== 'meetingMaterials' || isMaterialAvailable(key),
-        );
-        const eventHref = events({}).event({ eventId: props.id }).$;
-        return {
-          type: 'attachment',
-          accent: 'neutral200',
-          toastContent: (
-            <span css={materialListStyles}>
-              {displayedMaterials.map((key, index) => (
+      const displayedMaterials = eventMaterialTypes.filter(
+        (key) => key !== 'meetingMaterials' || isMaterialAvailable(key),
+      );
+      const eventHref = events({}).event({ eventId: props.id }).$;
+      return {
+        type: 'attachment',
+        accent: 'neutral200',
+        mutedIcon: !displayedMaterials.some(isMaterialAvailable),
+        toastContent: (
+          <span css={materialListStyles}>
+            {displayedMaterials.map((key, index) => {
+              const available = isMaterialAvailable(key);
+              return (
                 <Fragment key={key}>
-                  {index > 0 && <span>•</span>}
-                  {isMaterialAvailable(key) ? (
+                  {index > 0 && (
+                    <span
+                      css={available ? undefined : unavailableMaterialStyles}
+                    >
+                      •
+                    </span>
+                  )}
+                  {available ? (
                     <Link href={`${eventHref}#${eventMaterialSectionIds[key]}`}>
                       {eventMaterialLabels[key]}
                     </Link>
@@ -158,11 +169,11 @@ const EventCard: React.FC<EventCardProps> = ({
                     </span>
                   )}
                 </Fragment>
-              ))}
-            </span>
-          ),
-        };
-      }
+              );
+            })}
+          </span>
+        ),
+      };
     }
     return {};
   };
